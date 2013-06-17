@@ -445,9 +445,9 @@
 		{
 			static $_location_name = array();
 
-			$control_id = phpgw::get_var('control_id');
+			$control_id = phpgw::get_var('control_id', 'int');
 			$control = $this->so_control->get_single($control_id);
-			$year = phpgw::get_var('year');
+			$year = phpgw::get_var('year', 'int');
 
 			if (is_numeric($control_id) & $control_id > 0)
 			{
@@ -574,13 +574,13 @@
 			$heading_array = year_calendar::get_heading_array();
 
 			$data = array
-				(
-				'my_locations' => $my_locations,
-				'control' => $control->toArray(),
-				'heading_array' => $heading_array,
-				'locations_with_calendar_array' => $locations_with_calendar_array,
-				'components_with_calendar_array' => $components_with_calendar_array,
-				'current_year' => $year,
+			(
+				'my_locations'						=> $my_locations,
+				'control'							=> $control->toArray(),
+				'heading_array'						=> $heading_array,
+				'locations_with_calendar_array'		=> $locations_with_calendar_array,
+				'components_with_calendar_array'	=> $components_with_calendar_array,
+				'current_year'						=> $year,
 			);
 
 			self::render_template_xsl(array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager',

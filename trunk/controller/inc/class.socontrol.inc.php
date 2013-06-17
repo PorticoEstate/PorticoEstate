@@ -654,12 +654,22 @@
 
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
+				$location_arr = explode('-', $location_code);
+				$loc_name_arr = array();
+				$i = 1;
+				foreach ($location_arr as $_part)
+				{
+					$loc_name_arr[] = $location_array["loc{$i}_name"];
+					$i++;
+				}
+
 				$controls_array[] = array
 				(
-					"id"			=> $control_id, 
-					"title"			=> $title, 
-					"location_code"	=> $location_code, 
-					"loc1_name"		=> $location_array["loc1_name"]
+					'id'			=> $control_id, 
+					'title'			=> $title, 
+					'location_code'	=> $location_code, 
+					'loc1_name'		=> $location_array['loc1_name'],
+					'loc_name'		=> implode(', ', $loc_name_arr)
 				);
 			}
 
