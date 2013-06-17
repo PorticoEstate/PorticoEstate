@@ -84,6 +84,7 @@
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
+				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
 					
 				return $case;
 			}
@@ -124,7 +125,8 @@
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
-				
+				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));				
+
 				$cases_array[] = $case;
 			}
 
@@ -152,7 +154,8 @@
 					'modified_date',
 					'modified_by',
 					'measurement',
-					'location_code'
+					'location_code',
+					'component_id'
 			);
 
 			$values = array(
@@ -166,7 +169,8 @@
 				$this->marshal($case->get_modified_date(), 'int'),
 				$this->marshal($case->get_modified_by(), 'int'),
 				$this->marshal($case->get_measurement(), 'string'),
-				$this->marshal($case->get_location_code(), 'string')
+				$this->marshal($case->get_location_code(), 'string'),
+				$this->marshal($case->get_component_id(), 'int'),
 			);
 
 			$sql = 'INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
@@ -287,16 +291,7 @@
 		function delete($case_id)
 		{
 			$case_id = (int) $case_id;
-			$status = $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
-					
-			if( $status )
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
 		}
 		
 		function get_id_field_name(){}

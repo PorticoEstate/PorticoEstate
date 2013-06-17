@@ -33,6 +33,20 @@
               <!--  ==================== COL2: CASE CONTENT ===================== -->
               <div class="col_2">
                 <div class="case_info">
+
+	                 <xsl:choose>
+	                      <xsl:when test="component_descr != ''">
+			                  <div class="row">
+			                    <label>
+									<xsl:value-of select="php:function('lang','component')" />
+			                    </label> 
+			                  </div>
+			                   <div class="component_descr">
+			                    <xsl:value-of select="component_descr"/>
+			                  </div>
+	                     </xsl:when>
+                    </xsl:choose>
+
                   <!-- STATUS -->
                   <xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
             	

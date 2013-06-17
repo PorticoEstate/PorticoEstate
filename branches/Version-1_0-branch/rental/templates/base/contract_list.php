@@ -9,7 +9,7 @@
 		function(e)
 		{
 	  	YAHOO.util.Event.stopEvent(e);
-	  	
+
 		window.location = 'index.php?menuaction=rental.uicontract.add&amp;location_id=' + document.getElementById('location_id').value;
     }
    );
@@ -36,7 +36,7 @@ if($this->isAdministrator() || $this->isExecutiveOfficer())
 				if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
 				{
 				?>
-					<option 
+					<option
 						value="<?php echo $id ?>"
 					>
 						<?php echo lang($label) ?>
@@ -52,7 +52,7 @@ if($this->isAdministrator() || $this->isExecutiveOfficer())
 <?php
 }
 
-$list_form = true; 
+$list_form = true;
 $list_id = 'all_contracts';
 $url_add_on = '&amp;type='.$list_id;
 $editable = false;
@@ -60,6 +60,7 @@ $extra_cols = array(
 	array("key" => "type", "label" => lang('responsibility'), "index" => 3),
 	array("key" => "composite", "label" => lang('composite'), "sortable"=>'true', "index" => 4),
 	array("key" => "party", "label" => lang('party'), "sortable"=>'true', "index" => 5),
+	array("key" => "department", "label" => lang('department'), "sortable" => 'false', "index" => 6),
 	array("key" => "contract_notification_status", "label" => lang('notification_status'), "sortable"=>false)
 );
 include('contract_list_partial.php');

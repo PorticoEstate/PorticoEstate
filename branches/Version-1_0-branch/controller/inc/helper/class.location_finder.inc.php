@@ -49,9 +49,19 @@
 			return $locations;
 		}
     
-    function get_buildings_on_property($user_role, $location_code, $level)
+		function get_buildings_on_property($user_role, $parent_location_code, $level)
 		{
 
+			$children =  execMethod('property.solocation.get_children', $parent_location_code);
+			
+			foreach ($children as &$entry)
+			{
+				$entry['id'] = "{$parent_location_code}-{$entry['id']}";
+			}
+
+			return $children;
+
+/*
 			// Property level
 			if ($level == 1)
 			{
@@ -79,9 +89,11 @@
 			}
 
 			return $buildings_on_property;
+
+*/
 		}
     
-    function get_building_location_code($location_code)
+		function get_building_location_code($location_code)
 		{
 			if( strlen( $location_code ) == 6 )
 			{

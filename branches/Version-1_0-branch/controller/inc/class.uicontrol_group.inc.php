@@ -221,14 +221,18 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.index'));
 				}
 
+				$entity_id = phpgw::get_var('entity_id', 'int');
+				$category_id = phpgw::get_var('category_id', 'int');
+				$component_location_id = $GLOBALS['phpgw']->locations->get_id('property',".entity.{$entity_id}.{$category_id}");
+
 				if(isset($control_group)) // Add new values to the control item
 				{
 					$control_group->set_group_name(phpgw::get_var('group_name'));
 					$control_group->set_procedure_id( phpgw::get_var('procedure') );
 					$control_group->set_control_area_id( phpgw::get_var('control_area') );
 					$control_group->set_building_part_id( phpgw::get_var('building_part') );
-
-					//$this->so->store($control_item);
+					$control_group->set_component_location_id($component_location_id);
+					$control_group->set_component_criteria( phpgw::get_var('attributes') );
 
 					if(isset($control_group_id) && $control_group_id > 0)
 					{
@@ -451,6 +455,7 @@
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
+						'selected' => $control_group->get_control_area_id() == $cat_list['cat_id'] ? 1 : 0
 					);
 				}
 				// END as categories
@@ -464,46 +469,15 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
-/*				foreach ($control_area_array as $control_area)
-				{
-					if($control_group->get_control_area_id() && $control_area->get_id() == $control_group->get_control_area_id())
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title(),
-							'selected' => 'yes'
-						);
-					}
-					else
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title()
-						);
-					}
-				}*/
 
 				foreach ($procedure_array as $procedure)
 				{
-					if($control_group->get_procedure_id() && $procedure->get_id() == $control_group->get_procedure_id())
-					{
-						$procedure_options[] = array
-						(
-							'id'	=> $procedure->get_id(),
-							'name'	=> $procedure->get_title(),
-							'selected' => 'yes'
-						);
-					}
-					else
-					{
-						$procedure_options[] = array
-						(
-							'id'	=> $procedure->get_id(),
-							'name'	=> $procedure->get_title()
-						);
-					}
+					$procedure_options[] = array
+					(
+						'id'	=> $procedure->get_id(),
+						'name'	=> $procedure->get_title(),
+						'selected' => $procedure->get_id() == $control_group->get_procedure_id() ? 1 : 0
+					);
 				}
 				array_unshift($procedure_options,array ('id'=>'','name'=> lang('select value')));
 
@@ -529,8 +503,66 @@
 				}
 				phpgwapi_yui::tabview_setup('control_group_tabview');
 
+
+
+				//--- sigurd 10.juni 13
+				$entity_so	= CreateObject('property.soadmin_entity');
+				$custom	= createObject('phpgwapi.custom_fields');
+				$entity_list = $entity_so->read(array('allrows' => true));
+
+				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
+
+				$component_location_id = $control_group->get_component_location_id();
+				if($component_location_id)
+				{
+					$loc_arr = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+					$entity_arr = explode('.',$loc_arr['location']);
+
+					$entity = $entity_so->read_single($entity_arr[2]);
+					$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+					foreach ($entity_list as &$e)
+					{
+						if($e['id'] == $entity['id'])
+						{
+							$e['selected'] = 1;
+						}
+					}
+					$category_list = $entity_so->read_category(array('allrows'=>true,'entity_id'=>$entity_arr[2]));
+					array_unshift($category_list,array ('id'=>'','name'=> lang('select value')));
+					foreach ($category_list as &$c)
+					{
+						if($c['id'] == $category['id'])
+						{
+							$c['selected'] = 1;
+						}
+					}
+
+					$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
+
+					$component_criteria = $control_group->get_component_criteria();
+					foreach ($attributes as $key => &$a)
+					{
+						if(isset($component_criteria[$key]) && $component_criteria[$key])
+						{
+							$a['value'] = $component_criteria[$key];
+							if(isset($a['choice']) && $a['choice'])
+							{
+								foreach($a['choice'] as &$choise)
+								{
+									$choise['selected'] = $choise['id'] == $component_criteria[$key] ? 1 : 0;
+								}
+							}
+						}
+					}
+				}
+
+			//---
+
 				$data = array
 				(
+					'entities' 					=> array('options' => $entity_list),
+					'categories'				=> array('options' => $category_list),
+					'attributes'				=> $attributes,
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $tab_to_display),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
 					'editable' 					=> true,
@@ -557,6 +589,7 @@
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'controller', 'control_group_to_component.js');
 				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 		}
@@ -732,6 +765,8 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 
+			$entity_so	= CreateObject('property.soadmin_entity');
+
 			$tabs = array
 			(
 				'control_group'		=> array('label' => lang('Control_group'), 'link' => '#control_group'),
@@ -766,6 +801,31 @@
 				$control_group_array = $control_group->toArray();
 				//var_dump($control_group_array);
 
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($control_group->get_component_location_id());
+				$entity_arr = explode('.',$loc_arr['location']);
+
+				$entity = $entity_so->read_single($entity_arr[2]);
+				$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+
+				$custom	= createObject('phpgwapi.custom_fields');
+				$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
+
+				$component_criteria = $control_group->get_component_criteria();
+				foreach ($attributes as $key => &$a)
+				{
+					if(isset($component_criteria[$key]) && $component_criteria[$key])
+					{
+						$a['value'] = $component_criteria[$key];
+						if(isset($a['choice']) && $a['choice'])
+						{
+							foreach($a['choice'] as &$choise)
+							{
+								$choise['selected'] = $choise['id'] == $component_criteria[$key] ? 1 : 0;
+							}
+						}
+					}
+				}
+
 				$control_items_array = $this->so_control_item_list->get_control_items($control_group_id);
 
 				$control_items = array();
@@ -782,6 +842,9 @@
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'control_group'),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
 					'control_group'				=> $control_group_array,
+					'entity'					=> $entity,
+					'category'					=> $category,
+					'attributes'				=> $attributes,
 					'selected_control_items'	=> $control_items,
 				);
 

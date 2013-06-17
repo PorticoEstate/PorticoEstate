@@ -24,46 +24,65 @@
 					<li>
 						<h3 class="expand-trigger"><img src="controller/images/arrow_right.png" /><xsl:value-of select="control_group/group_name"/></h3>				
 						<ul class="expand_list" style="display:none;">
+								<xsl:choose>
+									<xsl:when test="components_at_location/child::node()">
+										<select name="component_at_control_group_{control_group/id}" id="component_at_control_group_{control_group/id}">
+											<xsl:apply-templates select="components_at_location/component_options"/>
+										</select>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
 							<xsl:for-each select="control_items">
 								<li>
-									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>	
+									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>
+										<form class="frm_register_case expand_item" action="{$action_url}" method="post">
+						            	<input type="hidden" name="location_code"  value="" class="required" />
+						            	<input type="hidden" name="control_group_id"  value="{$control_group_id}" />
+						            	<input type="hidden" name="component_id"  value="" />
+
+										<xsl:choose>
+											<xsl:when test="what_to_do !=''">
+												  <!--  WHAT TO DO -->
+												  <div class="row what-to-do">
+												    <label>Hva skal sjekkes:</label> 
+												    <div>
+												      <xsl:value-of disable-output-escaping="yes" select="what_to_do"/>
+												    </div>
+												  </div>
+											</xsl:when>
+										</xsl:choose>
+
+										<xsl:choose>
+											<xsl:when test="how_to_do !=''">
+												<!--  HOW TO DO -->
+												<div class="row how-to-do">
+													<label>Utførelsesbeskrivelse:</label> 
+												    <div>
+												      <xsl:value-of disable-output-escaping="yes" select="how_to_do"/>
+												    </div>
+												</div>
+											</xsl:when>
+										</xsl:choose>
+
 										<xsl:choose>
 											<xsl:when test="type = 'control_item_type_1'">
-												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
-												  <input type="hidden" name="status" value="0" />
-                          <input type="hidden" name="type" value="control_item_type_1" />
-                          <input type="hidden" name="location_code"  value="" class="required" />
-													  
-                          <!--  WHAT TO DO -->
-                          <div class="row what-to-do">
-                            <label>Hva skal sjekkes:</label> 
-                            <div>
-                              <xsl:value-of disable-output-escaping="yes" select="what_to_do"/>
-                            </div>
-                          </div>
-
-                          <!--  HOW TO DO -->
-                          <div class="row how-to-do">
-                            <label>Utførelsesbeskrivelse:</label> 
-                            <div>
-                              <xsl:value-of disable-output-escaping="yes" select="how_to_do"/>
-                            </div>
-                          </div>
-                            
-											    <div>
-                            <label class="comment">Beskrivelse av sak</label>
+													<input type="hidden" name="status" value="0" />
+									            	<input type="hidden" name="type" value="control_item_type_1" />
+												    
+													<div>
+												    <label class="comment">Beskrivelse av sak</label>
 													  <textarea name="case_descr" class="required">
 															<xsl:value-of select="comment"/>
 														</textarea>
 													</div>
 												 	<input type="submit" class="btn" name="save_control" value="Lagre sak" />
-												</form>
+
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_2'">
-											<form class="frm_register_case expand_item" action="{$action_url}" method="post">
+
 												<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -95,10 +114,10 @@
 												   </div>
 											       <xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
 												   <input type="submit" name="save_control" value="Lagre måling" title="{$lang_save}" />
-												</form>
+
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_3'">
-												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
+
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -131,10 +150,10 @@
 												   </div>
 											       <xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
 												   <input type="submit" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
-												</form>
+
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_4'">
-												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
+
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -167,9 +186,10 @@
 												   </div>
 											       <xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
 												   <input type="submit" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
-												</form>
+
 											</xsl:when>
 										</xsl:choose>	
+										</form>
 								</li>
 							</xsl:for-each>
 						</ul>
@@ -188,3 +208,13 @@
 </div>
 </div>
 </xsl:template>
+
+<xsl:template match="component_options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected" />
+		</xsl:if>
+		<xsl:value-of select="id"/> - <xsl:value-of disable-output-escaping="yes" select="short_description"/>
+	</option>
+</xsl:template>
+

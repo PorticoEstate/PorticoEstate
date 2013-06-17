@@ -46,6 +46,7 @@
 		protected $control_area_id;
 		protected $control_area_name;
 		protected $type;
+		protected $component_location_id;
 		
 		protected $options_array;
 		protected $error_msg_array;
@@ -131,11 +132,22 @@
 		
 		public function get_type() { return $this->type; }
 		
+
+		public function set_component_location_id($component_location_id)
+		{
+			$this->component_location_id = $component_location_id;
+		}
+		
+		public function get_component_location_id()
+		{
+			return $this->component_location_id;
+		}
+
 		public function set_options_array($options_array)
 		{
 			$this->options_array = $options_array;
 		}
-		
+
 		public function get_options_array() { return $this->options_array; }
 		
 		public function get_control_item_types()

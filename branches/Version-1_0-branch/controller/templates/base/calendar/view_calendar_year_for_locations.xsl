@@ -70,7 +70,7 @@
 							<xsl:value-of select="location/location_code"/>
 						</td>
 						<td class="location-name">
-							<xsl:value-of select="location/loc1_name"/>
+							<xsl:value-of select="location/loc_name"/>
 						</td>
 							
 						<xsl:for-each select="calendar_array">

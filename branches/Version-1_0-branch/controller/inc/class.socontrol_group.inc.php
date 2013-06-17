@@ -62,7 +62,9 @@
 					'group_name',
 					'procedure_id',
 					'control_area_id',
-					'building_part_id'
+					'building_part_id',
+					'component_location_id',
+					'component_criteria'
 			);
 
 			$values = array(
@@ -70,6 +72,8 @@
 				$this->marshal($control_group->get_procedure_id(), 'int'),
 				$this->marshal($control_group->get_control_area_id(), 'int'),
 				$this->marshal($control_group->get_building_part_id(), 'string'),
+				$this->marshal($control_group->get_component_location_id(), 'int'),
+				$this->marshal(serialize($control_group->get_component_criteria()), 'string')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -100,7 +104,9 @@
 				'group_name = ' . $this->marshal($control_group->get_group_name(), 'string'),
 				'procedure_id = '. $this->marshal($control_group->get_procedure_id(), 'int'),
 				'control_area_id = ' . $this->marshal($control_group->get_control_area_id(), 'int'),
-				'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'string')
+				'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'string'),
+				'component_location_id = '. $this->marshal($control_group->get_component_location_id(), 'int'),
+				'component_criteria = ' . $this->marshal(serialize($control_group->get_component_criteria()), 'string')
 			);
 
 			$result = $this->db->query('UPDATE controller_control_group SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -135,6 +141,10 @@
 
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 			$control_group->set_control_area_name($category[0]['name']);
+
+			$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
+			$component_criteria = $this->db->f('component_criteria') ? unserialize($this->db->f('component_criteria',true)) : array();
+			$control_group->set_component_criteria($component_criteria);
 
 			return $control_group;
 		}
@@ -225,6 +235,7 @@
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 
 				$results[] = $control_group->toArray();
 			}
@@ -322,6 +333,9 @@
 
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control_group->set_control_area_name($category[0]['name']);
+
+				$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
+
 			}
 
 			return $control_group;
@@ -353,7 +367,7 @@
 				$control_group->set_control_area_name($category[0]['name']);
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr', true), 'string'));
-
+				$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$control_groups_array[] = $control_group->toArray();
 			}
 
@@ -439,13 +453,16 @@
 		 * @param $component id component id
 		 * @return void
 		 */
+
+		//FIXME: Sigurd : Not used
 		function add_component_to_control_group($control_group_id, $location_id)
 		{
 			$sql =  "INSERT INTO controller_control_group_component_list (control_group_id, location_id) values($control_group_id, $location_id)";
 			$this->db->query($sql);
 		}
 		
-	  function exist_component_control_group($control_group_id, $location_id)
+		//FIXME: Sigurd : Not used
+		function exist_component_control_group($control_group_id, $location_id)
 		{
 			$sql =  "SELECT * FROM controller_control_group_component_list WHERE control_group_id=$control_group_id AND location_id=$location_id";
 			$this->db->query($sql);
