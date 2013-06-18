@@ -502,7 +502,7 @@
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$expired_conditions = $this->find_expired_sql_conditions();
-			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 1000));
+			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 'all'));
 		}
 		
 		protected function find_expired_sql_conditions() {
@@ -511,11 +511,30 @@
 			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
 		}
 		
-		public function complete_expired(&$bookings) {
+		public function complete_expired(&$bookings)
+		{
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$ids = join(', ', array_map(array($this, 'select_id'), $bookings));
 			$sql = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
 			$db->query($sql, __LINE__, __FILE__);
+
+			//Avoid double invoices
+			if($ids)
+			{
+				$allocations = array();
+				$sql = "SELECT DISTINCT allocation_id FROM bb_booking WHERE id IN ($ids) AND allocation_id IS NOT NULL";
+				$db->query($sql, __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$allocations[] = $db->f('allocation_id');
+				}
+
+				if($allocations)
+				{
+					$sql = 'UPDATE bb_allocation SET completed = 1 WHERE id IN (' . implode(',', $allocations) . ')';
+					$db->query($sql, __LINE__, __FILE__);
+				}
+			}
 		}
 	}
