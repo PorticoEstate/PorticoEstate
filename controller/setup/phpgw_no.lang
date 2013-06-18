@@ -12,6 +12,7 @@ control_item_type_3	controller	no	Ved valg av verdi fra nedtrekksliste
 control_item_type_4	controller	no	Ved valg av verdi fra radioknapper
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
 Check_list	controller	no	Sjekkliste
+chosen attributes	controller	no	Valgte datafelter
 Calendar_overview	controller	no	Kontrollplan
 Check_lists	controller	no	Sjekklister
 Choose_control_groups	controller	no	Velg kontrollgrupper
