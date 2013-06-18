@@ -169,7 +169,7 @@ phpgw::import_class('booking.sopermission');
 							'label' => lang('Event id'),
 						),
 						array(
-							'key' => 'event_description',
+							'key' => 'description',
 							'label' => lang('Description'),
 						),
 						array(
@@ -328,7 +328,7 @@ phpgw::import_class('booking.sopermission');
 					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 					$this->db->next_record();
 					$reservation['event_id'] = $reservation['reservation_id'];
-					$reservation['event_description'] = $this->db->f('description', false);
+					$reservation['description'] = $this->db->f('description', false);
 					$reservation['contact_name'] = $this->db->f('contact_name', false);
 
 				} elseif ($reservation['reservation_type']['label'] == 'Booking') {
@@ -344,7 +344,7 @@ phpgw::import_class('booking.sopermission');
 						$reservation['contact_name'] = $this->db->f('contact_name', false);
 					}
 					$reservation['event_id'] = '';
-					$reservation['event_description'] = '';
+					$reservation['description'] = '';
 				} else {
 					$sql = "select  application_id from bb_allocation where id=".$reservation['reservation_id'];
 					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
@@ -358,7 +358,7 @@ phpgw::import_class('booking.sopermission');
 						$reservation['contact_name'] = $this->db->f('contact_name', false);
 					}
 					$reservation['event_id'] = '';
-					$reservation['event_description'] = '';
+					$reservation['description'] = '';
 				}
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
