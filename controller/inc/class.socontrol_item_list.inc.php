@@ -255,7 +255,7 @@
 			$sql .= "AND ci.control_group_id=$control_group_id ";
 			$sql .= "ORDER BY cl.order_nr";
 			
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -304,7 +304,7 @@
 			$sql .= "AND ci.control_group_id=$control_group_id ";
 			$sql .= "ORDER BY cl.order_nr";
 			
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 			
 			$control_item_id = 0;
 			$control_item = null;
