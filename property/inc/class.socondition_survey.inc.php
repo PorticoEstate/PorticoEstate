@@ -378,9 +378,10 @@
 
 			foreach ($import_data as &$entry)
 			{
-				$entry['amount_investment'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_investment']);
-				$entry['amount_operation'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_operation']);
-				$entry['amount_potential_grants'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
+				$entry['amount_investment']			= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_investment']);
+				$entry['amount_operation']			= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_operation']);
+				$entry['amount_potential_grants']	= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
+				$entry['import_type']				= (int) $entry['import_type'];
 			}
 
 			unset($entry);
