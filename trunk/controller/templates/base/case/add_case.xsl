@@ -134,6 +134,7 @@
 											       <div class="row">
 											         <label class="comment">Velg verdi fra liste</label>
 											         	<select name="option_value">
+															<option value="" >Velg</option>
 											         		<xsl:for-each select="options_array"> 
 																<option>
 																	<xsl:attribute name="value"><xsl:value-of select="option_value"/></xsl:attribute>
@@ -170,6 +171,7 @@
 											       <div class="row">
 											         <label class="comment">Velg verdi fra liste</label>
 											         	<select name="option_value">
+															<option value="" >Velg</option>
 											         		<xsl:for-each select="options_array"> 
 																<option>
 																	<xsl:attribute name="value"><xsl:value-of select="option_value"/></xsl:attribute>
