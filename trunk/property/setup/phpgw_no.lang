@@ -935,7 +935,7 @@ invoice	property	no	Faktura
 invoice address	property	no	Fakturaadresse
 invoice date	property	no	Fakturadato
 invoice id	property	no	Faktura ID
-invoice id already taken for this vendor	property	no	Fakturanummeret er allerede registrert for denne leverandøren 
+invoice id already taken for this vendor	property	no	Fakturanummeret er allerede registrert for denne leverandøren
 invoice is not added!	property	no	Fakturaen er IKKE lagt til!
 invoice number	property	no	FakturaNr
 invoice transferred	property	no	bilag er overført
@@ -1304,7 +1304,7 @@ please type a subject for this ticket !	property	no	angi overskrift for denne me
 popup calendar	property	no	Kalender
 post	property	no	post
 power meter	property	no	Strømmåler
-potential grants	property	no	Pos.Off.St
+potential grants	property	no	Potensiale offentlig tilskudd
 precision	property	no	Presisjon
 prefix	property	no	prefiks
 preview html	property	no	Forhåndsvis som HTML
@@ -1354,7 +1354,7 @@ re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 receipt date	property	no	Kvitteringsdato
 reconciliation	property	no	Avstemming
-recommended year	property	no	Anbefalt år
+recommended year	property	no	Anbefalt tiltaksår
 record	property	no	Post
 reference level	property	no	Referanse nivå
 regulations	property	no	Forskrifter
@@ -1389,9 +1389,9 @@ request end date	property	no	Behov frist
 request entry date	property	no	Registreringsdato for tiltak
 request id	property	no	Behov ID
 request start date	property	no	Behov startdato
-request status	property	no	Status Behov
-request title	property	no	Tiltak tittel
-request description	property	no	Tilstandbeskrivelse
+request status	property	no	Status
+request title	property	no	Tiltaksbeskrivelse / Beskriv tiltak
+request description	property	no	Tilstandbeskrivelse / Beskriv tilstand
 requirement	property	no	Behov/pålegg
 resend workorder	property	no	Send ordre på nytt
 reserve	property	no	reserve
@@ -1994,3 +1994,8 @@ first	property	no	Første
 previous	property	no	Forrige
 next	property	no	Neste
 last	property	no	Siste
+action year	property	no	Tiltaksår
+action cost overview	property	no	Kostnadsoversikt
+request operation	share	property	no	Andel driftskostnad i kr.
+request investment share	property	no	Andel investering i kr
+grants category	property	no	Tilskuddskategori
