@@ -124,14 +124,14 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-		public function get_assigned_check_list_at_location($from_date, $to_date, $repeat_type, $user_id, $return_type = "return_object")
+		public function get_assigned_check_list_at_location($from_date, $to_date, $repeat_type, $user_id,$completed = null, $return_type = "return_object")
 		{
 			$user_id = (int) $user_id;
 			$repeat_type = (int) $repeat_type;
 
 			$check_list_array = array();
 			
-			$sql  = "SELECT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+			$sql  = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
 				. " procedure_id,requirement_id,costresponsibility_id,control_area_id,description, start_date, end_date,deadline,planned_date, completed_date,"
 				. " control_area_id, repeat_type,repeat_interval, title"
 				. " FROM controller_check_list"
@@ -146,8 +146,13 @@
 			}
 
 			
-			$sql .= "AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
-			$sql .= "OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+			$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
+			$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+
+			if($completed)
+			{
+				$sql .= " AND controller_check_list.completed_date IS NULL ";			
+			}
 			
 //_debug_array($sql);
 			$this->db->query($sql);
@@ -197,13 +202,13 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_assigned_check_list_by_component($from_date, $to_date, $repeat_type, $user_id, $return_type = "return_object")
+		public function get_assigned_check_list_by_component($from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object")
 		{
 			$repeat_type = $repeat_type;
 			$user_id = (int)$user_id;
 
 		
-			$sql  = "SELECT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+			$sql  = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
 				. " procedure_id,requirement_id,costresponsibility_id,control_area_id, controller_control.description, start_date, end_date, deadline,"
 				. " control_area_id, repeat_type,repeat_interval, title,"
 				. " bim_item.guid,bim_item.type as component_type, bim_item.id as component_id, bim_item.address,"
@@ -220,9 +225,14 @@
 //				$sql .= "AND controller_control.repeat_type = $repeat_type ";
 			}
 
-			$sql .= "AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
-			$sql .= "OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
-			$sql .= "ORDER BY bim_item.id ";
+			if($completed)
+			{
+				$sql .= " AND controller_check_list.completed_date IS NULL ";			
+			}
+
+			$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
+			$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+			$sql .= " ORDER BY bim_item.id ";
 			 
 			$this->db->query($sql);
 			
