@@ -162,18 +162,20 @@
 
 						$component_criteria = $control_group->get_component_criteria();
 						$conditions = array();
-						foreach ($component_criteria as $attribute_id => $condition_value)
+						foreach ($component_criteria as $attribute_id => $condition)
 						{
-							if($condition_value)
+							if($condition['value'])
 							{
+								eval('$condition_value = ' . "{$condition['value']};");
 								$conditions[] = array
 								(
 									'attribute_id'	=> $attribute_id,
-									'operator'		=> 'equal',
-									'value'			=> $condition_value,
+									'operator'		=> $condition['operator'],
+									'value'			=> $condition_value
 								);
 							}
 						}
+
 						$criterias_array['conditions'] = $conditions;
 						
 						if( !isset($components_at_location[$component_location_id][$location_code_search_components])  || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
@@ -669,6 +671,8 @@
 		
 			if($status)
 			{
+
+
 				return json_encode( array( "status" => "deleted" ) );
 			}
 			else

@@ -116,7 +116,7 @@
 			$sql .= "WHERE ci.id = {$check_item_id} ";
 			$sql .= "AND ci.control_item_id=coi.id";
 
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			if($this->db->next_record())
 			{
@@ -234,8 +234,8 @@
 			$sql .= "WHERE ci.check_list_id = {$check_list_id} ";
 			$sql .= "AND ci.control_item_id = coi.id ";
 			$sql .= "AND ci.control_item_id = {$control_item_id}";
-			
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			if($this->db->next_record())
 			{

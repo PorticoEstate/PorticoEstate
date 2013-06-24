@@ -118,7 +118,7 @@
 			$id = (int)$id;
 
 			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			if($this->db->next_record())
 			{
@@ -148,7 +148,7 @@
 			$control_group_id = (int) $control_group_id;
 
 			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.control_id={$control_id} AND p.control_group_id={$control_group_id}";
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			if($this->db->next_record())
 			{

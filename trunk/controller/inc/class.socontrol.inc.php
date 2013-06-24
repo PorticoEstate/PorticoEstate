@@ -744,8 +744,8 @@
 			$sql .= "WHERE control_id = $control_id ";
 			$sql .= "AND location_code = '$location_code'";
 			
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			if($this->db->next_record())
 			{
 				$control_location = new controller_control_location($this->unmarshal($this->db->f('id'), 'int'));
@@ -1072,7 +1072,7 @@
 			$sql .= "FROM controller_control c {$joins} "; 
 			$sql .= "WHERE c.id = " . $id;
 			
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			
 			$control = new controller_control((int) $id);

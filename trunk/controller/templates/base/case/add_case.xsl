@@ -74,7 +74,13 @@
 												    
 													<div>
 												    <label class="comment">Beskrivelse av sak</label>
-													  <textarea name="case_descr" class="required">
+													  <textarea name="case_descr" >
+															<xsl:if test="required = 1">
+																<xsl:attribute name="class" >
+																	<xsl:text>required</xsl:text>
+																</xsl:attribute>			
+															</xsl:if>
+
 															<xsl:value-of select="comment"/>
 														</textarea>
 													</div>
@@ -99,6 +105,12 @@
 											       <div class="row">
 											         <label class="comment">Registrer målingsverdi</label>
 											           <input>
+														<xsl:if test="required = 1">
+															<xsl:attribute name="class" >
+																<xsl:text>required</xsl:text>
+															</xsl:attribute>			
+														</xsl:if>
+
 													      <xsl:attribute name="name">measurement</xsl:attribute>
 													      <xsl:attribute name="type">text</xsl:attribute>
 													      <xsl:attribute name="value">
@@ -134,6 +146,11 @@
 											       <div class="row">
 											         <label class="comment">Velg verdi fra liste</label>
 											         	<select name="option_value">
+															<xsl:if test="required = 1">
+																<xsl:attribute name="class" >
+																	<xsl:text>required</xsl:text>
+																</xsl:attribute>			
+															</xsl:if>
 															<option value="" >Velg</option>
 											         		<xsl:for-each select="options_array"> 
 																<option>
@@ -169,8 +186,13 @@
 												   		</select>
 												   </div>
 											       <div class="row">
-											         <label class="comment">Velg verdi fra liste</label>
+											         <label class="comment">Velg verdi fra lister</label>
 											         	<select name="option_value">
+															<xsl:if test="required = 1">
+																<xsl:attribute name="class" >
+																	<xsl:text>required</xsl:text>
+																</xsl:attribute>			
+															</xsl:if>
 															<option value="" >Velg</option>
 											         		<xsl:for-each select="options_array"> 
 																<option>

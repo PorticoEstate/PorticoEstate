@@ -68,7 +68,7 @@
 			$sql .= "WHERE id = {$case_id}";
 			
 
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			if($this->db->next_record())
 			{
