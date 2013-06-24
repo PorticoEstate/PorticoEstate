@@ -303,18 +303,6 @@
 
 		// Fetches controls current user is responsible for 3 months back in time
 			$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
-
-//
-			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type);
-
-			$_assigned_list = array();
-			foreach ($my_check_lists as $_key => $my_check_list)
-			{
-				$_assigned_list[$my_check_list['location_code']][$_key] = $my_check_list;
-			}
-
-//
-
 			$my_undone_controls = array();
 
 			// Generates an array containing undone controls
@@ -380,15 +368,28 @@
 						{
 							$my_undone_controls[$deadline_ts][] = array("edit", $deadline_ts, $my_control, $check_list->get_id(), $location_code );
 						}
-
-						//Add assigned
-						foreach ($my_check_lists as $_key => $my_check_list)
-						{
-							$my_undone_controls[$my_check_list['deadline']][] = array("edit", $my_check_list['deadline'], $my_check_list, $_key, $my_check_list['location_code'] );
-						}
 					}
+
 				}
+
 			}
+
+			//Add assigned
+			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type, true);
+
+			$_assigned_list = array();
+			foreach ($my_check_lists as $_key => $my_check_list)
+			{
+				$_assigned_list[$my_check_list['location_code']][$_key] = $my_check_list;
+			}
+
+			foreach ($my_check_lists as $_key => $my_check_list)
+			{
+				$my_undone_controls[$my_check_list['deadline']][] = array("edit", $my_check_list['deadline'], $my_check_list, $_key, $my_check_list['location_code'] );
+			}
+	
+			ksort($my_undone_controls);
+
 
 			$my_undone_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
 
@@ -713,14 +714,14 @@
 		/* ================================  FUNCTIONS  ======================================== */
 
 
-		function get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type)
+		function get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type, $completed = null)
 		{
 			$check_list_array = array();
 
 			$so_control = CreateObject('controller.socontrol');
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$assigned_check_list_at_location = $so_control->get_assigned_check_list_at_location( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
+			$assigned_check_list_at_location = $so_control->get_assigned_check_list_at_location( $from_date_ts, $to_date_ts, $repeat_type, $user_id,$completed, 'return_array');
 
 			foreach ($assigned_check_list_at_location as $assigned_check_list)
 			{
@@ -728,7 +729,7 @@
 			}
 			unset($assigned_check_list);
 
-			$assigned_check_list_at_component = $so_control->get_assigned_check_list_by_component( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
+			$assigned_check_list_at_component = $so_control->get_assigned_check_list_by_component( $from_date_ts, $to_date_ts, $repeat_type, $user_id, $completed, 'return_array');
 
 			foreach ($assigned_check_list_at_component as $assigned_check_list)
 			{
