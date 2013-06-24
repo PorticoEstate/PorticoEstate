@@ -132,7 +132,7 @@
 			$check_list_array = array();
 			
 			$sql  = "SELECT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
-				. " procedure_id,requirement_id,costresponsibility_id,control_area_id,description, start_date, end_date,deadline,"
+				. " procedure_id,requirement_id,costresponsibility_id,control_area_id,description, start_date, end_date,deadline,planned_date, completed_date,"
 				. " control_area_id, repeat_type,repeat_interval, title"
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
@@ -161,13 +161,13 @@
 				$check_list->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$check_list->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
-	//			$check_list->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-	//			$check_list->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
-	//			$check_list->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
+				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));	
 				$check_list->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 	//			$check_list->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 	//			$check_list->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 	//			$check_list->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_assigned_to($this->unmarshal($user_id, 'int'));				
 
 				if($return_type == "return_object")

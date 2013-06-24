@@ -273,6 +273,8 @@ class controller_socheck_list extends controller_socommon
 			$sql .= "AND status = {$status} ";
 		}  
 	
+		$sql .= "AND assigned_to IS NULL";
+
 		$this->db->query($sql);
 		
 		$check_list = null;
@@ -565,7 +567,7 @@ class controller_socheck_list extends controller_socommon
 	 * @param $repeat_type_expr repeat type expression
 	 * @return array with check list objects
 	*/
-	function get_check_lists_for_control_and_location( $control_id, $location_code, $from_date_ts, $to_date_ts, $repeat_type = null )
+	function get_check_lists_for_control_and_location( $control_id, $location_code, $from_date_ts, $to_date_ts, $repeat_type = null , $filter_assigned_to = null)
 	{
 		$control_id = (int) $control_id;
 
@@ -582,7 +584,11 @@ class controller_socheck_list extends controller_socommon
 		}
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
-		
+		if($filter_assigned_to)
+		{
+			$sql .= "AND assigned_to IS NULL";
+		}
+
 		$this->db->query($sql);
 		
 		while ($this->db->next_record())
