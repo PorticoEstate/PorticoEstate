@@ -357,11 +357,9 @@
 					$_POST['contact_email'] = $organization['contacts'][0]['email'];
 					$_POST['contact_phone'] = $organization['contacts'][0]['phone'];
 				} 
-
 				if (!$_POST['application_id'])
 				{
-					$event['active'] = '0';
-                    $temp_errors = array();
+                   $temp_errors = array();
 					foreach( $event['dates'] as $checkdate)				
 					{
 						$event['from_'] = $checkdate['from_'];
@@ -386,6 +384,7 @@
 				}
 				else
 				{
+	 				$event['active'] = '0';
 					list($event, $errors) = $this->extract_and_validate($event);
 					$time_from = split(" ",$_POST['from_']);
 					$time_to = split(" ",$_POST['to_']);
@@ -396,7 +395,7 @@
 						}
 					}  
 				}
-
+				
 				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				}

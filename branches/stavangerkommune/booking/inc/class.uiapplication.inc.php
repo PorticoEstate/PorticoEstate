@@ -332,7 +332,8 @@
 					$dates[] = $data['from_'];
 					break;
 				}
-				$application['from_'] = implode(',',$dates);
+				$fromdate = implode(',',$dates);
+				$application['from_'] = pretty_timestamp($fromdate);
 				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);

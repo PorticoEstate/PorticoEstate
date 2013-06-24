@@ -29,28 +29,45 @@
 				$body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
 
 			} elseif ($application['status'] == 'PENDING') {
-				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er".lang($application['status']); 
-				$body .= "<pre>".$config->config_data['application_mail_pending']."</pre>";
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']); 
+				$body .= "</p><pre>".$config->config_data['application_mail_pending']."</pre>";
 				$body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
 			} elseif ($application['status'] == 'ACCEPTED') {
-				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er".lang($application['status']); 
-				$body .= '<pre>'.$config->config_data['application_mail_pending'].' <a href="'.$link.'">Link til '.$config->config_data
+				$accepted = $this->so->get_accepted($application['id']);				
+				$adates = "";
+				foreach ($accepted as $key => $date) {
+						if($key === 0)
+							$adates .= implode(" - ",$date)."\n";
+						else						
+							$adates .= "\t".implode(" - ",$date)."\n";
+				}
+				$rejected = $this->so->get_rejected($application['id']);				
+				$rdates = "";
+				foreach ($rejected as $key => $date) {
+						if($key === 0)
+							$rdates .= implode(" - ",$date)."\n";
+						else						
+							$rdates .= "\t".implode(" - ",$date)."\n";
+				}
+
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']); 
+				$body .= '</p><pre>'.$config->config_data['application_mail_pending'].' <a href="'.$link.'">Link til '.$config->config_data
 ['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
+				$body .= "<pre>Godkjent: ".$adates."</pre>";
+				$body .= "<pre>Avvist: ".$rdates."</pre>";
+
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
 				$buildingemail = $this->get_tilsyn_email($application['building_id']);
+
 				if ($buildingemail != '') {
 					$resourcename = implode(",",$this->get_resource_name($application['resources']));
-					$dates = "";
-					foreach ($application['dates'] as $date) {
-						$dates .=implode(", ",$date)." ";
-					}
 					$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." i ".$application[building_name]."</p>"; 
-					$bbody .= "<p>Den ".$dates."er Godkjent</p>";
+					$bbody .= "<p>Den ".$adates."er Godkjent</p>";
 				
 					try
 					{
@@ -63,8 +80,8 @@
 				}
 		
 			} elseif ($application['status'] == 'REJECTED') {
-				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er".lang($application['status']); 
-				$body .= '<pre>'.$config->config_data['application_mail_rejected'].'<a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']); 
+				$body .= '</p><pre>'.$config->config_data['application_mail_rejected'].' <a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}

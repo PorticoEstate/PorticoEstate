@@ -398,7 +398,6 @@
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
-
 			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);

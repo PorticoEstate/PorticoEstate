@@ -115,6 +115,47 @@
 						 'name' => $this->db->f('name', false));
 		}
 
+		function get_accepted($id)
+		{
+			$sql = "SELECT bad.from_, bad.to_
+					FROM bb_application ba, bb_application_date bad, bb_event be
+					WHERE ba.id=($id)
+					AND ba.id=bad.application_id
+					AND ba.id=be.application_id
+					AND be.from_=bad.from_
+					AND be.to_=bad.to_";
+			$results = array();		
+			$this->db->query($sql,__LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('from_' => $this->db->f('from_', false),
+						           'to_' => $this->db->f('to_', false));
+			}
+			return $results;
+		}
+
+		function get_rejected($id)
+		{
+			$sql = "SELECT bad.from_, bad.to_ FROM bb_application ba, bb_application_date bad 
+					WHERE ba.id=($id)
+					AND ba.id=bad.application_id
+					AND bad.id NOT IN (SELECT bad.id
+					FROM bb_application ba, bb_application_date bad, bb_event be
+					WHERE ba.id=($id) 
+					AND ba.id=bad.application_id
+					AND ba.id=be.application_id
+					AND be.from_=bad.from_
+					AND be.to_=bad.to_)";
+			$results = array();		
+			$this->db->query($sql,__LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('from_' => $this->db->f('from_', false),
+						           'to_' => $this->db->f('to_', false));
+			}
+			return $results;
+		}
+
 		function get_tilsyn_email($id)
 		{
 			$this->db->limit_query("SELECT tilsyn_email FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
@@ -137,7 +178,7 @@
 			return $results;
 
 		}
-
+		
 		function get_building($id)
 		{
 			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);

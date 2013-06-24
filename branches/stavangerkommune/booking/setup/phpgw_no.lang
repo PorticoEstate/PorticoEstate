@@ -613,7 +613,7 @@ Signature	booking	no	Signatur
 Tilsynsvakt name	booking	no	Tilsynsvakt navn
 Tilsynsvakt email	booking	no	Tilsynsvakt epost
 Tilsynsvakt telephone	booking	no	Tilsynsvakt telefon
-Metadata	booking	no	Metadata
+Metadata	common	no	Metadata
 Author	booking	no	Forfatter
 Robots	booking	no	Søkerobot parameter
 Frontpage text	booking	no	Forside tekst
