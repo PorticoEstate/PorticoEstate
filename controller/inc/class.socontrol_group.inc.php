@@ -128,7 +128,7 @@
 			$joins .= "	{$this->left_join} controller_procedure ON (p.procedure_id = controller_procedure.id)";
 
 			$sql = "SELECT p.*, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title FROM controller_control_group p {$joins} WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));

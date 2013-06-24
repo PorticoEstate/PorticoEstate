@@ -97,6 +97,11 @@
 													<xsl:value-of select="input_text" /> &nbsp;( <xsl:value-of select="trans_datatype" /> )
 												</td>
 												<td>
+													<select name='attributes_operator[{id}]' id='attribute_{id}'>;
+														<xsl:apply-templates select="operator/options"/>
+													</select>
+												</td>
+												<td>
 													<xsl:choose>
 														<xsl:when test="choice!=''">
 															<select name='attributes[{id}]' id='attribute_{id}'>;
@@ -149,7 +154,17 @@
 														<xsl:value-of select="input_text" /> &nbsp;( <xsl:value-of select="trans_datatype" /> )
 													</td>
 													 <td>
-														 <xsl:text>	=> </xsl:text>
+
+														<xsl:choose>
+															<xsl:when test="operator/options!=''">
+																<xsl:for-each select="operator/options">
+																	<xsl:if test="selected != 0">
+																		<xsl:value-of disable-output-escaping="yes" select="name"/>
+																	</xsl:if>
+																</xsl:for-each>
+															</xsl:when>
+														</xsl:choose>
+
 													 </td> 
 													<td>
 														<xsl:choose>

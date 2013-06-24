@@ -106,7 +106,7 @@
 		{
 			$id = (int)$id;
 			$sql = "SELECT p.* FROM controller_control_item_option p {$joins} WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$control_item_option = new controller_control_item_option($this->unmarshal($this->db->f('id'), 'int'));

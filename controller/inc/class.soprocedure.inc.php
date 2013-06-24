@@ -312,7 +312,7 @@
 
 			$condition = "WHERE end_date IS NULL";
 			$sql = "SELECT * FROM controller_procedure $condition $order";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
 			while ($this->db->next_record())
 			{
@@ -346,7 +346,7 @@
 
 			//$condition = "WHERE end_date IS NULL";
 			$sql = "SELECT * FROM controller_procedure $condition $order";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
 			while ($this->db->next_record())
 			{
@@ -375,7 +375,7 @@
 			$results = array();
 
 			$sql = "SELECT p.* FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
