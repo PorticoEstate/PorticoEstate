@@ -604,7 +604,7 @@
 						<div class="requirement-action-sub-left">
 								<div>
 									<label class="requirement-action-label">
-										<xsl:value-of select="php:function('lang', 'request operation	share')"/>
+										<xsl:value-of select="php:function('lang', 'operation')"/>
 									</label>
 									<input type="text" name="values[amount_operation]" value="{value_amount_operation}">
 										<xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute>
@@ -613,7 +613,7 @@
 								</div>
 								<div>
 									<label class="requirement-action-label">
-										<xsl:value-of select="php:function('lang', 'request investment share')"/>
+										<xsl:value-of select="php:function('lang', 'investment')"/>
 									</label>
 									<input type="text" name="values[amount_investment]" value="{value_amount_investment}">
 										<xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute>
@@ -663,7 +663,7 @@
 								</div>
 								<div>
 									<label class="requirement-action-label-wide">
-										<xsl:value-of select="php:function('lang', 'grants category')"/>
+										<xsl:value-of select="php:function('lang', 'category')"/>
 									</label>
 									<xsl:call-template name="categories"/>
 								</div>
