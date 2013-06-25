@@ -192,21 +192,22 @@
 				<div class="yui-content">
 					<div id="general" class="content-wrp requirement">
 						<div class="requirement-responsibility-left">
-							<span class="messages">
+							<h2><xsl:value-of select="php:function('lang', 'request')"/></h2>
+<!--							<span class="messages">
 								<xsl:choose>
 									<xsl:when test="value_request_id!=''">
-										<label class="messages">
+										<label>
 											<xsl:value-of select="lang_request_id"/>
 										</label>
 										<xsl:value-of select="value_request_id"/>
 									</xsl:when>
 								</xsl:choose>
-							</span>
+							</span> -->
 							<span class="messages">
 								<xsl:choose>
 									<xsl:when test="value_request_id!=''">
 										<xsl:for-each select="value_origin">
-											<label class="messages" for="msg_table">
+											<label for="msg_table" class="messages">
 												<xsl:value-of select="descr"/>
 											</label>
 											<table name="msg_table">
@@ -232,7 +233,7 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:for-each select="value_origin">
-											<label>
+											<label class="messages">
 												<xsl:value-of select="descr"/>
 											</label>
 											<table>
@@ -377,20 +378,20 @@
 							</select>
 							<br/>
 							<xsl:variable name="lang_request_title">
-								<xsl:value-of select="php:function('lang', 'enter request title')"/>
+								<xsl:value-of select="php:function('lang', 'request action mouseover title')"/>
 							</xsl:variable>
 							<label title="{$lang_request_title}">
-								<xsl:value-of select="php:function('lang', 'request title')"/>
+								<xsl:value-of select="php:function('lang', 'request action title')"/>
 							</label>
 							<br/>
 							<input type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}">
 							</input>
 							<br/>
 							<xsl:variable name="lang_request_description">
-								<xsl:value-of select="php:function('lang', 'enter a description of the request')"/>
+								<xsl:value-of select="php:function('lang', 'request condition mouseover description')"/>
 							</xsl:variable>
 							<label title="{$lang_request_description}">
-								<xsl:value-of select="php:function('lang', 'request description')"/>
+								<xsl:value-of select="php:function('lang', 'request condition description')"/>
 							</label>
 							<br/>
 							<textarea cols="120" rows="6" name="values[descr]" title="{$lang_request_description}">
@@ -510,7 +511,7 @@
 								<div class="requirement-action-sub-left">
 									<div>
 										<label class="requirement-action-label">
-											<xsl:value-of select="php:function('lang', 'operation')"/>
+											<xsl:value-of select="php:function('lang', 'cost operation')"/>
 										</label>
 										<input type="text" name="values[amount_operation]" value="{value_amount_operation}">
 											<xsl:attribute name="title">
@@ -521,7 +522,7 @@
 									</div>
 									<div>
 										<label class="requirement-action-label">
-											<xsl:value-of select="php:function('lang', 'investment')"/>
+											<xsl:value-of select="php:function('lang', 'cost investment')"/>
 										</label>
 										<input type="text" name="values[amount_investment]" value="{value_amount_investment}">
 											<xsl:attribute name="title">
@@ -547,7 +548,7 @@
 									</div>
 									<div>
 										<label class="requirement-action-label-wide">
-											<xsl:value-of select="php:function('lang', 'category')"/>
+											<xsl:value-of select="php:function('lang', 'grant category')"/>
 										</label>
 										<xsl:call-template name="categories"/>
 									</div>

@@ -1997,3 +1997,11 @@ last	property	no	Siste
 action year	property	no	Tiltaksår
 action cost overview	property	no	Kostnadsoversikt
 request ID condition	property	no	Fra tilstandsanalyse ID
+request coordinator	property	no	Byggforvalter
+request action mouseover title	property	no	Beskriv tiltak
+request action title	property	no	Tiltaksbeskrivelse
+request condition mouseover description	property	no	Beskriv tilstand
+request condition description	property	no	Tilstandsbeskrivelse
+cost operation	property	no	Andel driftskonstnad i kr.
+cost investment	property	no	Andel investering i kr.
+grant category	property	no	Tilskuddskategori

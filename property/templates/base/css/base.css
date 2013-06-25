@@ -1397,6 +1397,10 @@ p.no_items_msg {
 	float: left;
 	margin-left: 1em;
 }
+.requirement-responsibility-left h2 {
+	text-transform: uppercase;
+	margin-bottom: 0em;;
+}
 .requirement-responsibility-left-sub {
 	float: left;
 }
@@ -1434,7 +1438,7 @@ p.no_items_msg {
 	width: 45%;
 }
 .requirement-action-label-wide {
-	width: 52%;
+	width: 45%;
 }
 .requirement-action-sub-left {
 	float:left;
@@ -1446,7 +1450,7 @@ p.no_items_msg {
 .requirement-action-sub-right {
 	float: right;
 	text-align: left;
-	width: 40%;
+	width: 50%;
 }
 .requirement-action-sub-right div {
 	line-height: 2;
@@ -1455,8 +1459,7 @@ p.no_items_msg {
 	clear: both;
 }
 .messages {
-	font-size: 20px;
-	margin-right: 0.5em;
+	font-size: 15px;
 }
 .messages table {
 	display: inline;
@@ -1469,4 +1472,21 @@ p.no_items_msg {
 	margin-left: 2em;
 	margin-right: 1.5em;
 	float: right;
+}
+.requirement-condition .proplist-col table tr td table {
+	border: none;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.requirement-condition .proplist-col table tr td table th {
+	border: none;
+	background: none;
+	font-weight: bold;
+	padding-right: 1em;
+}
+.requirement-condition .proplist-col table tr td table td {
+	border: none;
+	padding-right: 1em;
+	text-align: center;
+	font-weight: bold;
 }
