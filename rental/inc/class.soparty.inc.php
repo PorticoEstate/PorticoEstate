@@ -340,16 +340,27 @@ class rental_soparty extends rental_socommon
 
 	function get_org_unit_ids_from_top($org_unit_id){
 		$unit_ids = array();
-		$q="select * from v_org_knytning where org_enhet_id_knytning=$org_unit_id";
+		$q="SELECT * FROM V_ORG_KNYTNING WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
 
 		if(!$external_db = $this->get_external_db())
 		{
 			return;
 		}
+		if($external_db->Type == "postgres")
+		{
+			$q = strtolower($q);
+		}
 		$result = $this->external_db->query($q);
 
 		while($this->external_db->next_record()){
-			$unit_id = $this->external_db->f('org_enhet_id');
+			if($external_db->Type == "postgres")
+			{
+				$unit_id = $this->external_db->f('org_enhet_id');
+			}
+			else
+			{
+				$unit_id = $this->external_db->f('ORG_ENHET_ID');
+			}
 			$unit_ids[] = $unit_id;
 		}
 		return $unit_ids;
