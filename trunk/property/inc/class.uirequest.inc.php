@@ -1725,7 +1725,7 @@
 
 					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 
-					'lang_coordinator'					=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('coordinator'),
+					'lang_coordinator'					=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('request coordinator'),
 
 					'lang_user_statustext'				=> lang('Select the coordinator the request belongs to. To do not use a category select NO USER'),
 					'select_user_name'					=> 'values[coordinator]',
