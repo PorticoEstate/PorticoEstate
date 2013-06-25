@@ -791,10 +791,16 @@
 			$application['status'] = $application['status'];
 			// Check if any bookings, allocations or events are associated with this application
 			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id']),'sort'=>'from_', 'dir' => 'asc'));
+			$from = array();		
+			foreach($associations['results'] as $assoc)
+			{	
+							$from[] = $assoc['from_'];
+			}
+			$from = array("data" => implode(',',$from));
 			$num_associations = $associations['total_records'];
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations,'comments' => $comments,'config' => $application_text));
+								  'num_associations'=>$num_associations, 'assoc' =>$from, 'comments' => $comments,'config' => $application_text));
 		}
 	}

@@ -114,6 +114,10 @@
 							'label' => lang('District'),
 						),
 						array(
+							'key' => 'active',
+							'label' => lang('Active'),
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -139,7 +143,7 @@
 			foreach($buildings['results'] as &$building)
 			{
 				$building['link'] = $this->link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
-				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
+#				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
 			return $this->yui_results($buildings);
 		}

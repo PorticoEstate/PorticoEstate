@@ -95,6 +95,10 @@
 							'key' => 'building_district',
 							'label' => lang('District')
 						),
+						array(
+							'key' => 'active',
+							'label' => lang('Active'),
+						),
 					)
 				)
 			);

@@ -117,6 +117,10 @@
 							'label' => lang('Email')
 						),
 						array(
+							'key' => 'active',
+							'label' => lang('Active')
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)

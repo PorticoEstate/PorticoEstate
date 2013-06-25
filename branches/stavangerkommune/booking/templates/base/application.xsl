@@ -3,6 +3,7 @@
 	<xsl:param name="true"/>
 	<xsl:param name="false"/>
 
+
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
@@ -133,9 +134,17 @@
 				var bookingParams = {};
 				var eventParams = {};
 			</script>
+
+			<xsl:variable name='assocdata'>
+				 <xsl:value-of select="assoc/data" />
+			</xsl:variable>
+			<dd></dd>
+			
 			<xsl:for-each select="application/dates">
 				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/></dd>
 				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
+
+
 				<xsl:if test="../edit_link">
 				<script type="text/javascript">
 					allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
@@ -143,14 +152,20 @@
 					eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
 				</script>
 				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
+
 					<xsl:if test="not(../case_officer/is_current_user)">
 						<xsl:attribute name="disabled">disabled</xsl:attribute>		
 					</xsl:if>
-					
-					<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
-					<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
-					<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
-					<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+
+						<xsl:if test="not(contains($assocdata, from_))">
+							<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
+							<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
+							<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
+							<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+						</xsl:if>
+						<xsl:if test="contains($assocdata, from_)">
+							<option><xsl:value-of select="php:function('lang', '- Created -')" /></option>
+						</xsl:if>
 				</select>
 				</xsl:if>
 			</xsl:for-each>
@@ -335,7 +350,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		{key: 'type', label: lang['Type']},
 		{key: 'from_', label: lang['From']},
 		{key: 'to_', label: lang['To']},
-		{key: 'active', label: lang['Active']}];
+		{key: 'active', label: lang['active']}];
 	    YAHOO.booking.inlineTableHelper('associated_container', url2, colDefs);
     }
 

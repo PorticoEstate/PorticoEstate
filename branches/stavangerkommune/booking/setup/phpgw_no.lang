@@ -281,6 +281,7 @@ Account Codes	booking	no	Konteringsstrenger
 Account Codes	booking	no	Konteringsstreng
 New Account Codes	booking	no	Ny konteringsstreng
 - Actions -	booking	no	- Valg -
+- Created -	booking	no	- Opprettet -
 Create allocation	booking	no	Lag tildeling
 Create booking	booking	no	Lag booking
 Create event	booking	no	Lag arrangement
