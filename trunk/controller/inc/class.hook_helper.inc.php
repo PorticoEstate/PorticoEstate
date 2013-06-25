@@ -288,6 +288,8 @@
 				$my_planned_controls_HTML .= "</li></ul>";
 			}
 
+			$my_planned_controls_HTML .= "</div>"; // home_portal
+
 			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
 
 
@@ -401,88 +403,28 @@
 			foreach($my_undone_controls as $date_ts => $controls_on_date)
 			{
 				// If number of controls on a date exceeds 1 it will be put in expand list
-					if(count( $controls_on_date) > 1 )
+				if(count( $controls_on_date) > 1 )
+				{
+					$my_undone_controls_HTML .= "<li>";
+					$my_undone_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>"  . date($dateformat, $date_ts) .  "</span><span class='num_check_lists'>(" .  count($controls_on_date) . " kontroller)</span></h4></a>";
+					$my_undone_controls_HTML .= "<ul class='expand_list'>";
+				}
+
+				foreach($controls_on_date as $my_undone_control)
+				{
+					$check_list_status = $my_undone_control[0];
+					$deadline_ts = $my_undone_control[1];
+					$my_control = $my_undone_control[2];
+					$control_area_name = $this->get_control_area_name( $my_control["control_area_id"] );
+
+					$date_str = date($dateformat, $deadline_ts);
+
+					if($check_list_status == "add")
 					{
-						$my_undone_controls_HTML .= "<li>";
-						$my_undone_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>"  . date($dateformat, $date_ts) .  "</span><span class='num_check_lists'>(" .  count($controls_on_date) . " kontroller)</span></h4></a>";
-						$my_undone_controls_HTML .= "<ul class='expand_list'>";
-					}
-
-					foreach($controls_on_date as $my_undone_control)
-					{
-						$check_list_status = $my_undone_control[0];
-						$deadline_ts = $my_undone_control[1];
-						$my_control = $my_undone_control[2];
-
-						$control_area_name = $this->get_control_area_name( $my_control["control_area_id"] );
-
-						$date_str = date($dateformat, $deadline_ts);
-
-						if($check_list_status == "add")
+						$check_list_type = $my_undone_control[3];
+						if($check_list_type == "location")
 						{
-							$check_list_type = $my_undone_control[3];
-
-							if($check_list_type == "location")
-							{
-								$location_code = $my_undone_control[4];
-								if(!isset($location_array[$location_code]) || !$location_array[$location_code])
-								{
-									$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-								}
-								$location_name = $location_array[$location_code]["loc1_name"];
-
-								if(count( $controls_on_date) > 1 )
-								{
-									$link = "";
-									$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
-
-									$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-								}
-								else
-								{
-									$link = "";
-									$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
-
-									$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
-								}
-
-							}
-							else if($check_list_type == "component")
-							{
-								$location_id = $my_undone_control[4];
-								$component_id = $my_undone_control[5];
-
-								if(!isset($component_short_desc[$location_id][$component_id]))
-								{
-									$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
-								}
-
-								if($component_short_desc[$location_id][$component_id])
-								{
-									$short_desc_arr = $component_short_desc[$location_id][$component_id];
-								}
-
-								if(count( $controls_on_date) > 1 )
-								{
-									$link = "";
-									$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
-
-									$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-								}
-								else
-								{
-									$link = "";
-									$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
-
-									$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a>";
-								}
-							}
-						}
-						else if($check_list_status == "edit")
-						{
-							$check_list_id = $my_undone_control[3];
 							$location_code = $my_undone_control[4];
-
 							if(!isset($location_array[$location_code]) || !$location_array[$location_code])
 							{
 								$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
@@ -492,34 +434,95 @@
 							if(count( $controls_on_date) > 1 )
 							{
 								$link = "";
-								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
 
 								$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 							}
 							else
 							{
 								$link = "";
-								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
 
 								$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 							}
+
+						}
+						else if($check_list_type == "component")
+						{
+							$location_id = $my_undone_control[4];
+							$component_id = $my_undone_control[5];
+
+							if(!isset($component_short_desc[$location_id][$component_id]))
+							{
+								$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+							}
+
+							if($component_short_desc[$location_id][$component_id])
+							{
+								$short_desc_arr = $component_short_desc[$location_id][$component_id];
+							}
+
+							if(count( $controls_on_date) > 1 )
+							{
+								$link = "";
+								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+
+								$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+							}
+							else
+							{
+								$link = "";
+								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+
+								$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a>";
+							}
 						}
 					}
-
-					if(count( $controls_on_date) > 1 )
+					else if($check_list_status == "edit")
 					{
-						$my_undone_controls_HTML .= "</ul>";
+						$check_list_id = $my_undone_control[3];
+						$location_code = $my_undone_control[4];
+
+						if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+						{
+							$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+						}
+						$location_name = $location_array[$location_code]["loc1_name"];
+
+						if(count( $controls_on_date) > 1 )
+						{
+							$link = "";
+							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+
+							$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+						}
+						else
+						{
+							$link = "";
+							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+
+							$my_undone_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+						}
 					}
 				}
 
-				$my_undone_controls_HTML .= "</div>"; // home_portal
+				if(count( $controls_on_date ) > 1 )
+				{
+					$my_undone_controls_HTML .= "</ul>";
+					$my_undone_controls_HTML .= "</li>";
+				}
+			}
 
-				echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine ugjorte kontroller</h2><div class='home-box'>".$my_undone_controls_HTML."</div>\n".'<!-- END checklist info -->'."\n";
+			$my_undone_controls_HTML .= "</ul>";
+
+			$my_undone_controls_HTML .= "</div>"; // home_portal
+
+			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine ugjorte kontroller</h2><div class='home-box'>".$my_undone_controls_HTML."</div>\n".'<!-- END checklist info -->'."\n";
 
 
-				/* ================================  CONTROLS ASSIGNED TO CURRENT USER  ================================= */
+			/* ================================  CONTROLS ASSIGNED TO CURRENT USER  ================================= */
 
-				$my_assigned_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
+			$my_assigned_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
 
 
 			$from_date_ts =  strtotime("now");
@@ -614,10 +617,6 @@
 				{
 					$my_assigned_controls_HTML .= "<li>";
 					$my_assigned_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>"  . date($dateformat, $date_ts) .  "</span><span class='num_controls'>(" .  count($assigned_controls_on_date) . " kontroller)</span></h4></a>";
-				}
-
-				if(count( $assigned_controls_on_date ) > 1 )
-				{
 					$my_assigned_controls_HTML .= "<ul class='expand_list'>";
 				}
 
@@ -700,16 +699,16 @@
 				if(count( $assigned_controls_on_date ) > 1 )
 				{
 					$my_assigned_controls_HTML .= "</li>";
-				}
-
-				if(count( $assigned_controls_on_date ) > 1 )
-				{
 					$my_assigned_controls_HTML .= "</ul>";
 				}
+
 			}
 
+			$my_assigned_controls_HTML .= "</ul>";
+			$my_assigned_controls_HTML .= "</div>"; // home_portal
+
 			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>" . $my_assigned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
-      }
+     		}
 		}
 		/* ================================  FUNCTIONS  ======================================== */
 
