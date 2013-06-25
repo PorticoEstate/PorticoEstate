@@ -1456,10 +1456,17 @@ p.no_items_msg {
 }
 .messages {
 	font-size: 20px;
+	margin-right: 0.5em;
+}
+.messages table {
+	display: inline;
+	position: absolute;
 }
 .coordinator_select dd select{
 	width:300px;
 }
 .controlButton {
 	margin-left: 2em;
+	margin-right: 1.5em;
+	float: right;
 }

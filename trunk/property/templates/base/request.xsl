@@ -202,9 +202,6 @@
 									</xsl:when>
 								</xsl:choose>
 							</span>
-						</div>
-						<div class="clearBoth">&nbsp;</div>
-						<div class="requirement-responsibility-left">
 							<span class="messages">
 								<xsl:choose>
 									<xsl:when test="value_request_id!=''">
@@ -647,12 +644,12 @@
 					</div>
 				</div>
 			</div>
-			<xsl:choose>
-				<xsl:when test="mode = 'edit'">
-					<div class="controlButton">
-						<table>
-							<tr height="50">
-								<td>
+			<div class="controlButton">
+				<table>
+					<tr height="50">
+						<xsl:choose>
+							<xsl:when test="mode = 'edit'">
+								<td style="padding-right: 5px;">
 									<xsl:variable name="lang_save">
 										<xsl:value-of select="lang_save"/>
 									</xsl:variable>
@@ -662,52 +659,42 @@
 										</xsl:attribute>
 									</input>
 								</td>
-							</tr>
-						</table>
-					</div>
-				</xsl:when>
-			</xsl:choose>
-		</form>
-		<div class="controlButton">
-			<table>
-				<tr>
-					<td>
-						<xsl:variable name="done_action">
-							<xsl:value-of select="done_action"/>
-						</xsl:variable>
-						<xsl:variable name="lang_done">
-							<xsl:value-of select="lang_done"/>
-						</xsl:variable>
-						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}">
+							</xsl:when>
+						</xsl:choose>
+						<td>
+							<xsl:variable name="done_action">
+								<xsl:value-of select="done_action"/>
+							</xsl:variable>
+							<xsl:variable name="lang_done">
+								<xsl:value-of select="lang_done"/>
+							</xsl:variable>
+							<input type="button" name="done" value="{$lang_done}" onclick="location.href='{$done_action}'">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_done_statustext"/>
 								</xsl:attribute>
 							</input>
-						</form>
-					</td>
-					<xsl:choose>
-						<xsl:when test="mode = 'view'">
-							<td>
-								<xsl:variable name="edit_action">
-									<xsl:value-of select="edit_action"/>
-								</xsl:variable>
-								<xsl:variable name="lang_edit">
-									<xsl:value-of select="php:function('lang', 'edit')"/>
-								</xsl:variable>
-								<form method="post" action="{$edit_action}">
-									<input type="submit" class="forms" name="edit" value="{$lang_edit}">
+						</td>
+						<xsl:choose>
+							<xsl:when test="mode = 'view'">
+								<td>
+									<xsl:variable name="edit_action">
+										<xsl:value-of select="edit_action"/>
+									</xsl:variable>
+									<xsl:variable name="lang_edit">
+										<xsl:value-of select="php:function('lang', 'edit')"/>
+									</xsl:variable>
+									<input type="button" class="forms" name="edit" value="{$lang_edit}" onclick="location.href='{$edit_action}'">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'edit')"/>
 										</xsl:attribute>
 									</input>
-								</form>
-							</td>
-						</xsl:when>
-					</xsl:choose>
-				</tr>
-			</table>
-		</div>
+								</td>
+							</xsl:when>
+						</xsl:choose>
+					</tr>
+				</table>
+			</div>
+		</form>
 	</xsl:template>
 
 	<!-- New template-->
