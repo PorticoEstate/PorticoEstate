@@ -69,6 +69,7 @@
 		 */
 		protected $_like;
 
+		protected $_global_lock = false;
 
 		public function __construct()
 		{
@@ -108,7 +109,14 @@
 
 			$value_set	= $this->_db->validate_update($value_set);
 
-			$this->_db->transaction_begin();
+			if ( $this->_db->get_transaction() )
+			{
+				$this->_global_lock = true;
+			}
+			else
+			{
+				$this->_db->transaction_begin();
+			}
 
 			$sql = "UPDATE {$table} SET $value_set WHERE id= {$id}";
 
@@ -127,7 +135,11 @@
 				}
 			}
 
-			$this->_db->transaction_commit();
+			if ( !$this->_global_lock )
+			{
+				$this->_db->transaction_commit();
+			}
+
 			return $id;
 		}
 
@@ -173,9 +185,9 @@
 				}
 			}
 
-			if(isset($values['attributes']) && is_array($values['attributes']))
+			if(isset($data['attributes']) && is_array($data['attributes']))
 			{
-				$data_attribute = $this->custom->prepare_for_db($table, $values['attributes']);
+				$data_attribute = $this->custom->prepare_for_db($table, $data['attributes']);
 				if(isset($data_attribute['value_set']))
 				{
 					foreach($data_attribute['value_set'] as $input_name => $value)

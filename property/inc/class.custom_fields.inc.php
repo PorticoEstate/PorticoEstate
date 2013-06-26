@@ -51,7 +51,7 @@
 		public function __construct($appname = null)
 		{
 			parent::__construct($appname);
-			$this->_db2 = clone($this->_db);			
+			$this->_db2 = clone($this->_db);
 			$this->contacts = CreateObject('phpgwapi.contacts');
 		}
 
@@ -129,7 +129,7 @@ JS;
 								var attribute_{$i}_min = document.getElementById('values_attribute_{$i}_min');
 								attribute_{$i}_date.value = '';
 								attribute_{$i}_hour.value = '';
-								attribute_{$i}_min.value = '';								
+								attribute_{$i}_min.value = '';
 							}
 JS;
 							$m++;
@@ -256,7 +256,7 @@ JS;
 					foreach ($attributes['choice'] as &$_choice)
 					{
 						$_choice['selected'] = $_choice['id'] == $attributes['value'] ? 1 : 0;
-					}					
+					}
 				}
 				else if($attributes['datatype'] == 'custom2') //lookup
 				{
@@ -412,8 +412,8 @@ JS;
 					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',"
 						."location:'{$location}',"
 						."attrib_id:'{$attributes['id']}'";
-					$lookup_functions[$m]['action'] .=	isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';		
-					$lookup_functions[$m]['action'] .=	isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';		
+					$lookup_functions[$m]['action'] .=	isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';
+					$lookup_functions[$m]['action'] .=	isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';
 					$lookup_functions[$m]['action'] .= "};\n";
 					$lookup_functions[$m]['action'] .= "if(document.form.{$attributes['name']}.value)\n";
 					$lookup_functions[$m]['action'] .= "{\n";
@@ -488,39 +488,84 @@ JS;
 
 
 		function prepare_for_db($table, $values_attribute, $id = 0)
-		{	
+		{
 			$id = (int)$id;
 			$data = array();
-			if (isset($values_attribute) AND is_array($values_attribute))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype']!='AB' && $entry['datatype']!='ABO' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
+					switch ($entry['datatype'])
 					{
-						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
-						{
-							$entry['value'] = $this->_db2->db_addslashes($entry['value']);
-						}
-
-						if($entry['datatype'] == 'pwd' && $entry['value'] && $entry['value2'])
-						{
-							if($entry['value'] || $entry['value2'])
+						case 'C':
+						case 'T':
+						case 'V':
+						case 'link':
+						case 'email':
+						case 'link':
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $this->_db2->db_addslashes(phpgw::clean_value($entry['value'], 'string')) : '';
+							$entry['value'] = $this->_db2->db_addslashes($entry['value']); // in case of history entries
+							break;
+						case 'LB':
+						case 'R':
+						case 'AB':
+						case 'ABO':
+						case 'AB':
+						case 'ABO':
+						case 'VENDOR':
+						case 'event':
+						case 'I':
+						case 'custom3':
+						case 'user':
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? phpgw::clean_value($entry['value'], 'int') : '';
+							break;
+						case 'bolean':
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? phpgw::clean_value($entry['value'], 'bool') : '';
+							break;
+						case 'N':
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? phpgw::clean_value($entry['value'], 'float') : '';
+							break;
+						case 'CH':
+							$_value = ',' . implode(',', phpgw::clean_value($entry['value'])) . ',';
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $_value : '';
+						break;
+						case 'D':
+							$ts = phpgwapi_datetime::date_to_timestamp($entry['value']) - phpgwapi_datetime::user_timezone();
+							$_value = date($this->_dateformat, $ts);
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $_value : '';
+							break;
+						case 'DT':
+							$date_array	= phpgwapi_datetime::date_array($attrib['value']['date']);
+							$ts = mktime ((int)$attrib['value']['hour'], (int)$attrib['value']['min'], 0, $date_array['month'], $date_array['day'], $date_array['year']) - phpgwapi_datetime::user_timezone();
+							$_value = date($this->_datetimeformat, $ts);
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $_value : '';
+							break;
+						case 'pwd':
+							if($entry['value'] && $entry['value2'])
 							{
-								if($entry['value'] == $entry['value2'])
+								if($entry['value'] || $entry['value2'])
 								{
-									$data['value_set'][$entry['name']]	= md5($entry['value']);
-								}
-								else
-								{
-									$data['receipt']['error'][]=array('msg'=>lang('Passwords do not match!'));
+									if($entry['value'] == $entry['value2'])
+									{
+										$data['value_set'][$entry['name']]	= md5($entry['value']);
+									}
+									else
+									{
+										throw new Exception(lang('Passwords do not match!'));
+									}
 								}
 							}
-						}
-						else
-						{
-							$data['value_set'][$entry['name']]	= isset($entry['value'])?$entry['value']:'';
-						}
+							else
+							{
+								$data['value_set'][$entry['name']]	= isset($entry['value'])?$entry['value']:'';
+							}
+
+							break;
+
+						default:
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $this->_db2->db_addslashes(phpgw::clean_value($entry['value'], 'string')) : '';
 					}
+
 
 					if($entry['history'] == 1)
 					{
@@ -532,7 +577,7 @@ JS;
 							if($entry['value'] != $old_value)
 							{
 								$data['history_set'][$entry['attrib_id']] = array
-									('
+								('
 									value'	=> $entry['value'],
 									'date'	=> phpgwapi_datetime::date_to_timestamp($entry['date'])
 								);
@@ -659,7 +704,7 @@ JS;
 					$ret =   lang('yes');
 					break;
 				case 'custom1':
-					
+
 					$ret = '';
 					if($data['value'] && $data['get_single_function'])
 					{
@@ -717,7 +762,7 @@ JS;
 				default:
 					if(is_array($data['value']))
 					{
-						$ret =  $data['value'];								
+						$ret =  $data['value'];
 					}
 					else
 					{
