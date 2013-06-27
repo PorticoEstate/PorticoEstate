@@ -7544,3 +7544,42 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+
+
+	/**
+	* Update property version from 0.9.17.668 to 0.9.17.669
+	* Add check for missing budgets
+	*/
+	$test[] = '0.9.17.668';
+	function property_upgrade0_9_17_668()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_eco_period_transition', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+					'month' => array('type' => 'int','precision' => '4','nullable' => False),
+					'day' => array('type' => 'int','precision' => '4','nullable' => true),
+					'hour' => array('type' => 'int','precision' => '4','nullable' => true),
+					'remark' => array('type' => 'varchar','precision' => '60','nullable' => true),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array('month')
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.669';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

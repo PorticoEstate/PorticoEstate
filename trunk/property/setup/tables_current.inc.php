@@ -1354,6 +1354,22 @@
 			'fk' => array('fm_eco_periodization' => array('periodization_id' => 'id') ),
 			'uc' => array('periodization_id', 'month')
 		),
+		'fm_eco_period_transition' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'month' => array('type' => 'int','precision' => '4','nullable' => False),
+				'day' => array('type' => 'int','precision' => '4','nullable' => true),
+				'hour' => array('type' => 'int','precision' => '4','nullable' => true),
+				'remark' => array('type' => 'varchar','precision' => '60','nullable' => true),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array('month')
+		),
 		'fm_order_dim1' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),

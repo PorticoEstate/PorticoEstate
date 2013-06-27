@@ -248,6 +248,26 @@
 
 		function period_list($selected='')
 		{
+			
+			$sogeneric		= CreateObject('property.sogeneric','period_transition');
+			$config			= $sogeneric->read(array('allrows' => true));
+			
+			$period_transition = array();
+			foreach($config as $entry)
+			{
+				$period_transition[$entry['month']] = $entry;
+			}
+			
+			$current_month = date('n');
+			
+			if(isset($period_transition[$current_month]))
+			{
+				$_lag_day = (int)$period_transition[$current_month]['day'];
+				$_lag_hour = (int)$period_transition[$current_month]['hour'];
+				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+			}
+			
+//_debug_array($period_transition);			
 			$time = time();
 
 			$_lag = date('n') == 1 ? 17 : 7;//6 days into next month, 16 days into next year
