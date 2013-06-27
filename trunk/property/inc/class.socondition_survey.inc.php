@@ -48,8 +48,8 @@
 			$start		= isset($data['start'])  ? (int) $data['start'] : 0;
 			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
 			$query		= isset($data['query']) ? $data['query'] : '';
-			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
-			$dir		= isset($data['dir']) ? $data['dir'] : '' ;
+			$sort		= isset($data['sort']) ? $data['sort'] : '';
+			$dir		= isset($data['dir']) ? $data['dir'] :  'DESC';
 			$cat_id		= isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
 			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 
