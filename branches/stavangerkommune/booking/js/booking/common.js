@@ -118,6 +118,13 @@ YAHOO.booking.formatLink = function(elCell, oRecord, oColumn, oData) {
 	elCell.innerHTML = '<a href="' + link + '">' + name + '</a>'; 
 };
 
+YAHOO.booking.formatLink2 = function(elCell, oRecord, oColumn, oData) { 
+	var name = 'slett';
+	var text = "'Er du sikker på at du vil slette denne?'";
+	var link = oRecord.getData('dellink');
+	elCell.innerHTML = '<a onclick="return confirm('+ text +');" href="' + link + '">' + name + '</a>'; 
+};
+
 YAHOO.booking.formatGenericLink = function() {
 	var links = [];
 	var nOfLinks = arguments.length;

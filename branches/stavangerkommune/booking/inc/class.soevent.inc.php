@@ -249,6 +249,30 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
+		public function delete_event($id)
+        {
+			$db = $this->db;
+			$table_name = $this->table_name.'_comment';
+			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name.'_agegroup';
+			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name.'_targetaudience';
+			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name.'_date';
+			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name.'_resource';
+			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name;
+			$sql = "DELETE FROM $table_name WHERE id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			return True;
+		}
+
 		public function update_id_string() {
 			$table_name = $this->table_name;
 			$db = $this->db;

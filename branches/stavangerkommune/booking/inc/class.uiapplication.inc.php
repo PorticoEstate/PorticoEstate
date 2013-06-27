@@ -363,6 +363,7 @@
 				$association['from_'] = pretty_timestamp($association['from_']);
 				$association['to_'] = pretty_timestamp($association['to_']);
 				$association['link'] = self::link(array('menuaction' => 'booking.ui'.$association['type'].'.edit', 'id'=>$association['id']));
+				$association['dellink'] = self::link(array('menuaction' => 'booking.ui'.$association['type'].'.delete', 'event_id'=>$association['id'], 'application_id'=>$association['application_id']));
 				$association['type'] = lang($association['type']);
 
 			}
@@ -753,7 +754,6 @@
 				
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
-			
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
 			$application['applications_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$application['edit_link'] = self::link(array('menuaction' => 'booking.uiapplication.edit', 'id' => $application['id']));
@@ -798,6 +798,10 @@
 			}
 			$from = array("data" => implode(',',$from));
 			$num_associations = $associations['total_records'];
+			if ($this->is_assigned_to_current_user($application) && $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+				$application['currentuser'] = true;
+			else
+				$application['currentuser'] = false;
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,

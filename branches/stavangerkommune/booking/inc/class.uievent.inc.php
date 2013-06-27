@@ -9,6 +9,7 @@
 			'index'			=>	true,
 			'add'			=>	true,
 			'edit'			=>	true,
+			'delete'			=>	true,
 			'info'			=>	true,
 			'toggle_show_inactive'	=>	true,
 		);
@@ -725,7 +726,17 @@
 			$this->add_template_helpers();
 			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
 		}
-
+		public function delete()
+		{
+			$event_id = phpgw::get_var('event_id', 'GET');
+			$application_id = phpgw::get_var('application_id', 'GET');
+			
+			$this->bo->so->delete_event($event_id);
+			if (isset($application_id))
+				$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id'=>$application_id));
+			else
+				$this->redirect(array('menuaction' => 'booking.uievent.index'));
+		}
 		public function info()
 		{
 			$event = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));

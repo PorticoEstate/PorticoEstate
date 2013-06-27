@@ -322,10 +322,11 @@
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
+    var currentuser = '<xsl:value-of select="application/currentuser"/>';
 	 if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 	 }
-	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del')"/>;
 	var app_id = <xsl:value-of select="application/id"/>;
 	var building_id = <xsl:value-of select="application/building_id"/>;	
 	var resources = <xsl:value-of select="application/resources"/>;
@@ -345,12 +346,22 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		]]>
 	    var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
 	    YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
-	    var colDefs = [
-		{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
-		{key: 'type', label: lang['Type']},
-		{key: 'from_', label: lang['From']},
-		{key: 'to_', label: lang['To']},
-		{key: 'active', label: lang['active']}];
+		if (currentuser == 1) {
+		    var colDefs = [
+				{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
+				{key: 'type', label: lang['Type']},
+				{key: 'from_', label: lang['From']},
+				{key: 'to_', label: lang['To']},
+				{key: 'active', label: lang['Active']},
+				{key: 'dellink', label: lang['Delete'], formatter: YAHOO.booking.formatLink2}];
+		} else {
+		    var colDefs = [
+				{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
+				{key: 'type', label: lang['Type']},
+				{key: 'from_', label: lang['From']},
+				{key: 'to_', label: lang['To']},
+				{key: 'active', label: lang['Active']}];
+		}
 	    YAHOO.booking.inlineTableHelper('associated_container', url2, colDefs);
     }
 
