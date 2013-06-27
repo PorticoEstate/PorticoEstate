@@ -251,6 +251,11 @@
 							'text'	=> lang('periodization outline'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization_outline') )
 						),
+						'period_transition'	=> array
+						(
+							'text'	=> lang('period transition'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'period_transition') )
+						),
 						'accounting_config'	=> array
 						(
 							'text'	=> lang('Configuration'),
