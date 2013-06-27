@@ -266,15 +266,28 @@
 				$_lag_hour = (int)$period_transition[$current_month]['hour'];
 				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
 			}
+			else if(isset($period_transition[13]))
+			{
+				$_lag_day = (int)$period_transition[13]['day'];
+				$_lag_hour = (int)$period_transition[13]['hour'];
+				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+			}
+			else
+			{
+				$_lag			= date('n') == 1 ? 17 : 7;//6 days into next month, 16 days into next year
+				$_lag_seconds	= $_lag * 24 * 3600;
+			}
+			
+			$_lag_seconds -= phpgwapi_datetime::user_timezone();
 			
 //_debug_array($period_transition);			
 			$time = time();
+			$timestamp_at_start_month =  mktime( $hour = 0, $minute = 0, $second = 0, $month = date("n"), $day = 0, $year = date("Y") );
 
-			$_lag = date('n') == 1 ? 17 : 7;//6 days into next month, 16 days into next year
 
-			if ( date('j',$time) < $_lag ) //Day of the month without leading zeros
+			if(($time - $timestamp_at_start_month) < $_lag_seconds)
 			{
-				$time = $time - ($_lag * 24 * 3600);
+				$time = $time - $_lag_seconds;			
 			}
 
 			$month = date('n', $time);
