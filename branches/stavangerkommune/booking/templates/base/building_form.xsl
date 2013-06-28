@@ -152,6 +152,15 @@
 			<div class="clr"/>
 
 			<dl class="form-col">
+				<dt><label for="field_calendar_text"><xsl:value-of select="php:function('lang', 'Calendar text')" /></label></dt>
+				<dd class="yui-skin-sam">
+					<textarea id="field_calendar_text" name="calendar_text" type="text"><xsl:value-of select="building/calendar_text"/></textarea>
+				</dd>
+			</dl>
+
+			<div class="clr"/>
+
+			<dl class="form-col">
 				<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 				<dd class="yui-skin-sam">
 					<textarea id="field_description" name="description" type="text"><xsl:value-of select="building/description"/></textarea>

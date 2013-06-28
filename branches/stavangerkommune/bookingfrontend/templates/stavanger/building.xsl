@@ -19,7 +19,12 @@
 			<dl class="proplist-col main">
 				<div>
 			     	<button onclick="window.location.href='{schedule_link}'"><xsl:value-of select="php:function('lang', 'Building schedule')" /></button>
-	- 				Søk ledig tid/informasjon om hva som skjer
+					<xsl:if test="not(calendar_text and normalize-space(calendar_text))">
+					- Søk ledig tid/informasjon om hva som skjer
+					</xsl:if>
+					<xsl:if test="calendar_text and normalize-space(calendar_text)">
+					- <xsl:value-of select="calendar_text" disable-output-escaping="yes"/>
+					</xsl:if>
 				</div>
 				<xsl:if test="normalize-space(description)">
 					<dl class="proplist description">

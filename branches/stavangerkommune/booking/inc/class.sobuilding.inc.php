@@ -10,6 +10,7 @@
 					'id' => array('type' => 'int'),
 					'name' => array('type' => 'string', 'query' => true, 'required' => true),
 					'homepage' => array('type' => 'string'),
+					'calendar_text' => array('type' => 'string'),
 					'description' => array('type' => 'string'),
 					'phone' => array('type' => 'string'),
 					'email' => array('type' => 'string'),

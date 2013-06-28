@@ -26,7 +26,7 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'tilsyn_name', 'tilsyn_email', 'tilsyn_phone', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'tilsyn_name', 'tilsyn_email', 'tilsyn_phone', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage','calendar_text');
 		}
 		
 		public function properties()
@@ -177,6 +177,7 @@
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 			$building['top-nav-bar-buildings'] = lang('Buildings');
+			
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

@@ -730,12 +730,16 @@
 		{
 			$event_id = phpgw::get_var('event_id', 'GET');
 			$application_id = phpgw::get_var('application_id', 'GET');
-			
-			$this->bo->so->delete_event($event_id);
-			if (isset($application_id))
+
+			if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking')) {
+				$this->bo->so->delete_event($event_id);
+			}
+			if (isset($application_id)) {
 				$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id'=>$application_id));
-			else
+			} else {
 				$this->redirect(array('menuaction' => 'booking.uievent.index'));
+			}
+
 		}
 		public function info()
 		{

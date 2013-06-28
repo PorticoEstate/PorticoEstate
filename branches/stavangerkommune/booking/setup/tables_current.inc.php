@@ -35,6 +35,7 @@
 				'district' => array('type' => 'varchar','precision' => '255', 'nullable' => True),
 				'city' => array('type' => 'varchar','precision' => '255', 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
+				'calendar_text' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
