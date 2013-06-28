@@ -154,6 +154,30 @@
 					if($component_location_id)
 					{
 						//// start components
+
+						//------------- START find already registered cases -------------//
+
+/*
+						$cases_at_component = array();
+						$existing_check_items_and_cases = array();
+						if( $_components_at_location )
+						{
+							$existing_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'all', null, null);//$location_code_search_components);
+						}
+						foreach($existing_check_items_and_cases as $check_item)
+						{
+							foreach($check_item->get_cases_array() as $case)
+							{
+								$component_id = $case->get_component_id();
+								if($component_id)
+								{
+									$cases_at_component[$check_item->get_id()][$component_id] ++;
+								}
+							}
+						}
+*/
+						//------------- END find already registered cases -------------//
+
 						$criterias_array = array();
 						$loc_arr = $GLOBALS['phpgw']->locations->get_name($component_location_id);
 						$criterias_array['location_id'] = $component_location_id;
@@ -208,6 +232,7 @@
 
 			}
 			
+
 			$level = $this->location_finder->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
