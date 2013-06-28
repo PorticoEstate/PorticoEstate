@@ -64,6 +64,7 @@
 		 */
 		public function home()
 		{
+
 			$location_array = array();
 			$component_short_desc = array();
 
@@ -158,8 +159,16 @@
 
 		/* =======================================  PLANNED CONTROLS FOR CURRENT USER  ================================= */
 
-			$my_planned_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Planlagt dato</div><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
-
+			$my_planned_controls_HTML = <<<HTML
+				<div class='home_portal'>
+					<h2>
+						<div class='date heading'>Planlagt dato</div>
+						<div class='date heading'>Fristdato</div>
+						<div class='control heading'>Tittel på kontroll</div>
+						<div class='title heading'>Lokasjonsnavn</div>
+						<div class='control-area heading'>Kontrollområde</div>
+					</h2>
+HTML;
 			// Todays date
 			$from_date_ts =  mktime(0, 0, 0, date("n"), date("j"), date("Y") );
 			// One month ahead in time
@@ -290,10 +299,10 @@
 
 			$my_planned_controls_HTML .= "</div>"; // home_portal
 
-			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
+			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div>\n".'<!-- END checklist info -->'."\n";
 
 
-      {
+	      {
 			/* =======================================  UNDONE ASSIGNED CONTROLS FOR CURRENT USER  ================================= */
 
 		// from date is set to 3 months back in time
@@ -392,9 +401,15 @@
 	
 			ksort($my_undone_controls);
 
-
-			$my_undone_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
-
+			$my_undone_controls_HTML = <<<HTML
+			 <div class='home_portal'>
+			 	<h2>
+			 		<div class='date heading'>Fristdato</div>
+			 		<div class='control heading'>Tittel på kontroll</div>
+			 		<div class='title heading'>Lokasjonsnavn</div>
+			 		<div class='control-area heading'>Kontrollområde</div>
+			 	</h2>
+HTML;
 			// Sorts my_undone_controls by deadline date
 			ksort($my_undone_controls);
 
@@ -522,8 +537,15 @@
 
 			/* ================================  CONTROLS ASSIGNED TO CURRENT USER  ================================= */
 
-			$my_assigned_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
-
+			$my_assigned_controls_HTML = <<<HTML
+				<div class='home_portal'>
+					<h2>
+						<div class='date heading'>Fristdato</div>
+						<div class='control heading'>Tittel på kontroll</div>
+						<div class='title heading'>Lokasjonsnavn</div>
+						<div class='control-area heading'>Kontrollområde</div>
+					</h2>
+HTML;
 
 			$from_date_ts =  strtotime("now");
 			$to_date_ts = mktime(0, 0, 0, date("n")+1, date("j"), date("Y") );
@@ -707,7 +729,7 @@
 			$my_assigned_controls_HTML .= "</ul>";
 			$my_assigned_controls_HTML .= "</div>"; // home_portal
 
-			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>" . $my_assigned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
+			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>" . $my_assigned_controls_HTML . "</div>\n".'<!-- END checklist info -->'."\n";
      		}
 		}
 		/* ================================  FUNCTIONS  ======================================== */
@@ -735,8 +757,6 @@
 				$check_list_array[$assigned_check_list['id']] = $assigned_check_list;
 			}
 
-//_debug_array($check_list_array);
-//_debug_array($assigned_check_list_at_component);
 			return $check_list_array;
 		}
 
