@@ -117,7 +117,11 @@
 															</select>
 														</xsl:when>
 														<xsl:otherwise>
-															<input type= 'text' name='attributes[{id}]' id='attribute_{id}' value = '{value}'/>			
+															<input type= 'text' name='attributes[{id}]' id='attribute_{id}' value = '{value}'>
+																<xsl:attribute name="title" value="selected" >
+																	<xsl:text>Verdi eller formel - f.eks: date('Y') - 20</xsl:text>
+																</xsl:attribute>
+															</input>			
 														</xsl:otherwise>
 													</xsl:choose>
 												</td>
