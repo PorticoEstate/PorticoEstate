@@ -941,7 +941,19 @@
 			}
 			if(isset($filters['control_areas']))
 			{
-				$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+//				$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+
+				$cat_id = (int) $filters['control_areas'];
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+
+				$filter_clauses[] = "controller_control.control_area_id IN (" .  implode(',', $cat_filter) .')';
 			}
 			if(isset($filters['responsibilities']))
 			{

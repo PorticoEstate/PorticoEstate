@@ -201,9 +201,9 @@
 				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
 			);
 			$tab_to_display = 'control_group';
-			$control_group_id = phpgw::get_var('id');
+			$control_group_id = phpgw::get_var('id', 'int');
 			$new_control_group = false;
-			if(isset($control_group_id) && $control_group_id > 0)
+			if( $control_group_id )
 			{
 				$control_group = $this->so->get_single($control_group_id);
 			}
@@ -331,39 +331,18 @@
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
+						'selected' => $control_group->get_control_area_id() == $cat_list['cat_id'] ? 1 : 0
 					);
 				}
 				// END as categories
 
-				//$control_area_array = $this->so_control_area->get_control_area_array();
-				$procedure_array = $this->so_procedure->get_procedures(null,null,'title','ASC',null,null,null);
+				$procedure_array = $this->so_procedure->get_procedures(0,0,'title','ASC',null,null,array('control_areas' => $control_group->get_control_area_id()));
 
 				if($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-
-/*				foreach ($control_area_array as $control_area)
-				{
-					if($control_group->get_control_area_id() && $control_area->get_id() == $control_group->get_control_area_id())
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title(),
-							'selected' => 'yes'
-						);
-					}
-					else
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title()
-						);
-					}
-				}*/
 
 				foreach ($procedure_array as $procedure)
 				{
@@ -478,8 +457,7 @@
 				}
 				// END as categories
 
-				//$control_area_array = $this->so_control_area->get_control_area_array();
-				$procedure_array = $this->so_procedure->get_procedures(null,null,'title','ASC',null,null,null);
+				$procedure_array = $this->so_procedure->get_procedures(0,0,'title','ASC',null,null,array('control_areas' => $control_group->get_control_area_id()));
 
 				if($this->flash_msgs)
 				{
