@@ -94,7 +94,7 @@
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			$month = phpgw::get_var('month');
-			$role = phpgw::get_var('role');
+			$role = phpgw::get_var('role', 'int', 'REQUEST', -1);
 			$repeat_type = phpgw::get_var('repeat_type');
 
 			// Validates year. If year is not set, current year is chosen
@@ -107,7 +107,7 @@
 			$repeat_type = $this->validate_repeat_type($repeat_type);
 
 			// Validates role.
-			$role = $this->validate_role($role);
+//			$role = $this->validate_role($role);
 
 			// Gets timestamp value of first day in month
 			$from_date_ts = month_calendar::get_start_date_month_ts($year, intval($month));
@@ -133,7 +133,8 @@
 				if ($level == 1)
 				{
 					// Fetches all controls for the components for a location within time period
-					$filter = "bim_item.location_code = '$location_code' ";
+//					$filter = "bim_item.location_code = '$location_code' ";
+					$filter = "bim_item.location_code LIKE '$location_code%' ";
 					$components_with_controls_array = $this->so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);
 				}
 				else
@@ -248,7 +249,8 @@
 		{
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
-			$role = phpgw::get_var('role');
+			$role = phpgw::get_var('role', 'int', 'REQUEST', -1);
+
 			$repeat_type = phpgw::get_var('repeat_type');
 
 			// Validates year. If year is not set, current year is chosen
@@ -258,7 +260,7 @@
 			$repeat_type = $this->validate_repeat_type($repeat_type);
 
 			// Validates role.
-			$role = $this->validate_role($role);
+//			$role = $this->validate_role($role);
 
 			// Gets timestamp of first day in year
 			$from_date_ts = $this->get_start_date_year_ts($year);
@@ -287,7 +289,8 @@
 				if ($level == 1)
 				{
 					// Fetches all controls for the components for a location within time period
-					$filter = "bim_item.location_code = '$location_code' ";
+//					$filter = "bim_item.location_code = '$location_code' ";
+					$filter = "bim_item.location_code LIKE '$location_code%' ";
 					$components_with_controls_array = $this->so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);
 				}
 				else

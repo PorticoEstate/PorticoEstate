@@ -124,7 +124,7 @@ function chooseLocation( label, value ){
 						</a>
 					</xsl:if>
 
-					<label>Velg et annet bygg på eiendommen</label>
+					<label>Velg en annen lokalisering på eiendommen</label>
 					<xsl:call-template name="select_buildings_on_property" />
 				</div>
 

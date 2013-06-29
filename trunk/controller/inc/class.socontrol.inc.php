@@ -284,12 +284,12 @@
 
 			$controls_array = array();
 			
-			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name "; 
+			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name,location_code "; 
 			$sql .= "FROM controller_control_location_list cll "; 
 			$sql .= "LEFT JOIN controller_control c on cll.control_id=c.id ";
 			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
-			$sql .= "WHERE cll.location_code = '$location_code' ";
-			
+	//		$sql .= "WHERE cll.location_code = '$location_code' ";
+			$sql .= "WHERE cll.location_code LIKE '$location_code%' ";			
 			if( $repeat_type )
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
@@ -308,8 +308,10 @@
 
 			while($this->db->next_record())
 			{
+				$_location_code = $this->db->f('location_code', true);
+
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
-				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_title($this->unmarshal($this->db->f('title', true)  . " [{$_location_code}]", 'string'));
 				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
@@ -322,7 +324,7 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
-				
+
 				if($return_type == "return_object")
 				{
 					$controls_array[] = $control;
