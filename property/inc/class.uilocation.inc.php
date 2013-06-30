@@ -880,7 +880,6 @@ JS;
 			if($lookup)
 			{
 				$input_name		= phpgwapi_cache::session_get('property', 'lookup_fields');
-
 				$function_exchange_values = '';
 
 				if(is_array($input_name))
@@ -1661,6 +1660,7 @@ JS;
 			{
 				return $json;
 			}
+
 
 
 			$datatable['json_data'] = json_encode($json);
