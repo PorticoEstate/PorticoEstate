@@ -564,10 +564,11 @@
 					$location['location'][$i]['statustext']						= lang('click this link to select') .' ' . $entity['name'];
 
 					$location['location'][$i]['extra'][0]['input_name']			= 'entity_cat_name_' . $entity['id'];
-					$input_name_entity[]												= $location['location'][$i]['extra'][0]['input_name'];
+					$input_name_entity[]										= $location['location'][$i]['extra'][0]['input_name'];
 					$location['location'][$i]['extra'][0]['input_type']			= 'text';
 					$location['location'][$i]['extra'][0]['size']				= 30;
 					$location['location'][$i]['extra'][0]['lookup_function_call']	= 'lookup_entity_' . $entity['id'] .'()';
+					$location['location'][$i]['extra'][0]['is_entity']			= true;
 
 					if (is_array($data['entity_data']))
 					{

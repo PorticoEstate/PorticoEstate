@@ -1991,8 +1991,19 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
+			$function_blank_entity_values = '';
+			$input_name_entity	= phpgwapi_cache::session_get('property', 'lookup_fields_entity');
+			if($input_name_entity && is_array($input_name_entity))
+			{
+				for ($k=0;$k<count($input_name_entity);$k++)
+				{
+					$function_blank_entity_values .= 'document.getElementsByName("'.$input_name_entity[$k].'")[0].value = "";' ."\r\n";
+				}
+			}
+
 			$data = array
-				(
+			(
+					'function_blank_entity_values'	=> $function_blank_entity_values,
 					'custom_attributes'				=> array('attributes' => $values['attributes']),
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'contact_data'					=> $contact_data,
