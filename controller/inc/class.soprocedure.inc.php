@@ -269,10 +269,8 @@
 		{
 			$cat_id = (int) $control_area_id;
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-			$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
-			$cat_filter = array($cat_id);
-			foreach ($cat_list as $_category)
+			$cat_path = $cats->get_path($cat_id);
+			foreach ($cat_path as $_category)
 			{
 				$cat_filter[] = $_category['id'];
 			}

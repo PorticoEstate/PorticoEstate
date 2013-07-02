@@ -361,11 +361,21 @@
 		 */
 		function get_control_groups_by_control_area($control_area_id)
 		{
-			$control_area_id = (int) $control_area_id;
-			$controls_array = array();
 
-			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
+			$cat_id = (int) $control_area_id;
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cat_path = $cats->get_path($cat_id);
+			foreach ($cat_path as $_category)
+			{
+				$cat_filter[] = $_category['id'];
+			}
+
+			$filter_control_area = "control_area_id IN (" .  implode(',', $cat_filter) .')';
+
+			$sql = "SELECT * FROM controller_control_group WHERE {$filter_control_area}";
+
 			$this->db->query($sql);
+			$controls_array = array();
 
 			while($this->db->next_record())
 			{

@@ -287,7 +287,9 @@
 			$control_areas_array = $control_areas['cat_list'];
 		
 			if($control != null)
+			{
 				$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
+			}
 			
 			$role_array = $this->so->get_roles();
 			
