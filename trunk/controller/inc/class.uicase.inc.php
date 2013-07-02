@@ -223,6 +223,9 @@
 									$_component_at_location['short_description'] .= ' (' . $cases_at_component_group[$control_group->get_id()][$_component_at_location['id']] . ')';
 								}
 							}
+							
+							array_unshift ($_components_at_location, array('id'=>'', 'short_description' => lang('select')));
+							
 							$control_groups_with_items_array[] = array
 							(
 								'control_group'				=> $control_group->toArray(),
@@ -264,6 +267,7 @@
 				'current_year' 						=> $year,
 				'current_month_nr' 					=> $month,
 			    'cases_view'						=> 'add_case',
+		//	    'location_required'					=> true
 			);
 			
 			phpgwapi_jquery::load_widget('core');
@@ -298,6 +302,8 @@
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$control_id = $check_list->get_control_id();
+			
+			$location_code = $location_code ? $location_code : $check_list->get_location_code();
 			$control = $this->so_control->get_single( $control_id );
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
