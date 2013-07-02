@@ -89,9 +89,11 @@
 				$querymethod	= " {$where} {$table}.title {$this->_like} '%{$query}%'";
 			}
 
-			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id";
-			$sql = "SELECT DISTINCT $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id , count(condition_survey_id) AS cnt"
-			. " FROM {$table} {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
+			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id, org_name";
+			$sql = "SELECT DISTINCT $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id,"
+			. " count(condition_survey_id) AS cnt, org_name as vendor FROM {$table} "
+			. " {$this->_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
+			. " {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
 
 	
 			$this->_db->query($sql,__LINE__,__FILE__);
@@ -115,6 +117,7 @@
 					'title'			=> $this->_db->f('title',true),
 					'descr'			=> $this->_db->f('descr',true),
 					'address'		=> $this->_db->f('address',true),
+					'vendor'		=> $this->_db->f('vendor',true),
 					'entry_date'	=> $this->_db->f('entry_date'),
 					'user'			=> $this->_db->f('user_id'),
 					'cnt'			=> $this->_db->f('cnt'),
@@ -170,7 +173,7 @@
 
 			$this->_db->transaction_begin();
 
-			$value_set						= $this->_get_value_set( $data );
+			$value_set	= $this->_get_value_set( $data );
 
 			$id = $this->_db->next_id($table);
 

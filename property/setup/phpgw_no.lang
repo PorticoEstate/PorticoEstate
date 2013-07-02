@@ -925,11 +925,11 @@ integer	property	no	heltall
 interval	property	no	intervall
 inventory	common	no	Beholdning
 add inventory	common	no	Legg til beholdning
-investment	property	no	investering
+investment	property	no	Investering
 investment added !	property	no	Investering er lagt til
 investment history	property	no	Investerings historie
-investment id	property	no	investering ID
-investment id:	property	no	investering ID:
+investment id	property	no	Investering ID
+investment id:	property	no	Investering ID:
 investment value	property	no	Avskrivning
 invoice	property	no	Faktura
 invoice address	property	no	Fakturaadresse
