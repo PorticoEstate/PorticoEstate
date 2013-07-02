@@ -5,9 +5,14 @@
 <div id="main_content" class="medium">
  <xsl:call-template name="check_list_top_section" />
 
- <div id="choose-building-wrp">
-			<xsl:call-template name="select_buildings_on_property" />
- </div>
+	<xsl:choose>
+		<xsl:when test="buildings_on_property/child::node()">
+  			<div id="choose-building-wrp">
+				<xsl:call-template name="select_buildings_on_property" />
+			</div>
+		</xsl:when>  
+  </xsl:choose>
+
  
 <div id="view_cases">
 	<xsl:call-template name="cases_tab_menu">

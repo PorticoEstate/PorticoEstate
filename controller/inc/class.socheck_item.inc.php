@@ -326,6 +326,8 @@
 			
 			$check_item_id = 0;
 			$check_item = null;
+			$check_items_array=array();
+
 			while ($this->db->next_record())
 			{
 				if( $this->db->f('ci_id') != $check_item_id )
@@ -381,13 +383,9 @@
 				$check_item->set_cases_array($cases_array);
 							
 				$check_items_array[] = $check_item;
-				
-				return $check_items_array;
 			}
-			else
-			{
-				return null;
-			}
+
+			return $check_items_array;
 		}
 		
 		/**

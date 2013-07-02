@@ -4,11 +4,16 @@
 
 <div id="main_content" class="medium">
   
-	<xsl:call-template name="check_list_top_section" />
+    <xsl:call-template name="check_list_top_section">
+    </xsl:call-template>
 		
-	<div id="choose-building-wrp">
-    <xsl:call-template name="select_buildings_on_property" />
-  </div>
+	<xsl:choose>
+		<xsl:when test="buildings_on_property/child::node()">
+  			<div id="choose-building-wrp">
+				<xsl:call-template name="select_buildings_on_property" />
+			</div>
+		</xsl:when>  
+  </xsl:choose>
 
 	<div id="view_cases">
 
@@ -39,6 +44,11 @@
 						            	<input type="hidden" name="location_code"  value="" class="required" />
 						            	<input type="hidden" name="control_group_id"  value="{$control_group_id}" />
 						            	<input type="hidden" name="component_id"  value="" />
+										<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+										<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
+										<input type="hidden" name="check_list_id">
+											<xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute
+										></input>
 
 										<xsl:choose>
 											<xsl:when test="what_to_do !=''">
@@ -66,9 +76,6 @@
 
 										<xsl:choose>
 											<xsl:when test="type = 'control_item_type_1'">
-													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input type="hidden" name="status" value="0" />
 									            	<input type="hidden" name="type" value="control_item_type_1" />
 												    
@@ -88,10 +95,6 @@
 
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_2'">
-
-												<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input name="type" type="hidden" value="control_item_type_2" />
 												
 													<div class="row">
@@ -129,10 +132,6 @@
 
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_3'">
-
-													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input name="type" type="hidden" value="control_item_type_3" />
 												
 													<div class="row">
@@ -172,9 +171,6 @@
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_4'">
 
-													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input name="type" type="hidden" value="control_item_type_4" />
 												
 													<div class="row">
@@ -213,7 +209,7 @@
 
 											</xsl:when>
 										</xsl:choose>	
-										</form>
+									</form>
 								</li>
 							</xsl:for-each>
 						</ul>

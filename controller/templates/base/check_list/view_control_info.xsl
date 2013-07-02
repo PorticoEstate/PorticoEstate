@@ -67,7 +67,9 @@
 				
 	</script>
 		
-	<xsl:call-template name="check_list_top_section" />
+    <xsl:call-template name="check_list_top_section">
+      <xsl:with-param name="active_tab">view_control_info</xsl:with-param>
+    </xsl:call-template>
 				
 	<div class="tab_menu">
 		<a id="view_control_details" class="active">
