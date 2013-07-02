@@ -577,16 +577,16 @@
 
 			$data = array
 			(
-				'control' => $control,
-				'check_list' => $check_list,
-				'buildings_on_property' => $buildings_on_property,
-				'location_array' => $location_array,
-				'component_array' => $component_array,
-				'type' => $type,
-				'current_year' => $year,
-				'current_month_nr' => $month,
-				'building_location_code' => $building_location_code,
-				'location_level' => $level
+				'control'					=> $control,
+				'check_list'				=> $check_list,
+				'buildings_on_property'		=> $buildings_on_property,
+				'location_array'			=> $location_array,
+				'component_array'			=> $component_array,
+				'type'						=> $type,
+				'current_year'				=> $year,
+				'current_month_nr'			=> $month,
+				'building_location_code'	=> $building_location_code,
+				'location_level'			=> $level
 			);
 
 			phpgwapi_jquery::load_widget('core');
