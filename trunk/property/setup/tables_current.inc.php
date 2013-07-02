@@ -1684,7 +1684,7 @@
 				'title' => array('type' => 'varchar','precision' => '100','nullable' => True),
 				'document_name' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'link' => array('type' => 'text','nullable' => True),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => True),
+				'descr' => array('type' => 'text','nullable' => True),
 				'version' => array('type' => 'varchar','precision' => '10','nullable' => True),
 				'document_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
