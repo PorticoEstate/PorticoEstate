@@ -41,7 +41,14 @@
 								<li>
 									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>
 										<form class="frm_register_case expand_item" action="{$action_url}" method="post">
-						            	<input type="hidden" name="location_code"  value="" class="required" />
+						            	<!--input type="hidden" name="location_code"  value="" class="required" /-->
+						            	<input type="hidden" name="location_code"  value="" >
+											<xsl:if test="//location_required = 1">
+													<xsl:attribute name="class" >
+														<xsl:text>required</xsl:text>
+													</xsl:attribute>			
+											</xsl:if>
+						            	</input>
 						            	<input type="hidden" name="control_group_id"  value="{$control_group_id}" />
 						            	<input type="hidden" name="component_id"  value="" />
 										<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
