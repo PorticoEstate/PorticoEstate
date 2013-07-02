@@ -234,15 +234,15 @@ HTML;
 					else if($control_type == "component")
 					{
 						$component = $container_arr[3];
-						$check_list_array = $so_check_list->get_check_lists_for_control_and_component( $my_control['id'], $component['location_id'], $component['id'], $from_date_ts, $to_date_ts, $repeat_type = null );
+						$check_lists_for_control_and_component = $so_check_list->get_check_lists_for_control_and_component( $my_control['id'], $component['location_id'], $component['id'], $from_date_ts, $to_date_ts, $repeat_type = null );
 
-						foreach($check_list_array as $check_list)
+						foreach($check_lists_for_control_and_component['check_lists_array'] as $check_list)
 						{
 							$planned_date_for_check_list = $check_list->get_planned_date();
 
 							if($planned_date_for_check_list > 0)
 							{
-								$my_planned_controls[$planned_date_for_check_list][] = array($check_list->get_deadline(), $my_control, "component", $component['location_id'], $component['id'] );
+								$my_planned_controls[$planned_date_for_check_list][] = array($check_list->get_deadline(), $my_control, $check_list->get_id(), "component", $component['location_id'], $component['id'] );
 							}
 						}
 					}

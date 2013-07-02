@@ -644,6 +644,7 @@ class controller_socheck_list extends controller_socommon
 		
 		$this->db->query($sql);
 		
+		$check_lists_array = array();
 		while ($this->db->next_record())
 		{
 			$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
