@@ -208,7 +208,7 @@
 
 			if(isset($data['location_name']) && $data['location_name'])
 			{
-				$_address[] = $data['location_name'];
+				$_address[] = ucfirst(strtolower($data['location_name']));
 			}
 
 			if(isset($data['additional_info']) && $data['additional_info'])

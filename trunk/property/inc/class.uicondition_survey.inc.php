@@ -173,7 +173,7 @@
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
 						),
-						array(
+		/*				array(
 							'key' => 'title',
 							'label' => lang('title'),
 							'sortable' => true,
@@ -183,10 +183,15 @@
 							'key' => 'descr',
 							'label' => lang('description'),
 							'sortable' => false,
-						),
+						),*/
 						array(
 							'key' => 'address',
 							'label' => lang('buildingname'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'vendor',
+							'label' => lang('vendor'),
 							'sortable' => true
 						),
 						array(
