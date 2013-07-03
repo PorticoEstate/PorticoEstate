@@ -74,6 +74,7 @@ no district	controller	no	Distrikt ikke valgt
 calendar_months	controller	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 calendar_weekdays	controller	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 select_date	controller	no	Velg dato
+select	controller	no	Velg
 year controller	no	År
 location_code	controller	no	Enhetsnummer
 included_units	controller	no	Kontrollens enheter
