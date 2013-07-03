@@ -4,11 +4,16 @@
 
 <div id="main_content" class="medium">
   
-	<xsl:call-template name="check_list_top_section" />
+    <xsl:call-template name="check_list_top_section">
+    </xsl:call-template>
 		
-	<div id="choose-building-wrp">
-    <xsl:call-template name="select_buildings_on_property" />
-  </div>
+	<xsl:choose>
+		<xsl:when test="buildings_on_property/child::node()">
+  			<div id="choose-building-wrp">
+				<xsl:call-template name="select_buildings_on_property" />
+			</div>
+		</xsl:when>  
+  </xsl:choose>
 
 	<div id="view_cases">
 
@@ -36,9 +41,21 @@
 								<li>
 									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>
 										<form class="frm_register_case expand_item" action="{$action_url}" method="post">
-						            	<input type="hidden" name="location_code"  value="" class="required" />
+						            	<!--input type="hidden" name="location_code"  value="" class="required" /-->
+						            	<input type="hidden" name="location_code"  value="" >
+											<xsl:if test="//location_required = 1">
+													<xsl:attribute name="class" >
+														<xsl:text>required</xsl:text>
+													</xsl:attribute>			
+											</xsl:if>
+						            	</input>
 						            	<input type="hidden" name="control_group_id"  value="{$control_group_id}" />
 						            	<input type="hidden" name="component_id"  value="" />
+										<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+										<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
+										<input type="hidden" name="check_list_id">
+											<xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute
+										></input>
 
 										<xsl:choose>
 											<xsl:when test="what_to_do !=''">
@@ -66,15 +83,18 @@
 
 										<xsl:choose>
 											<xsl:when test="type = 'control_item_type_1'">
-													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input type="hidden" name="status" value="0" />
 									            	<input type="hidden" name="type" value="control_item_type_1" />
 												    
 													<div>
 												    <label class="comment">Beskrivelse av sak</label>
-													  <textarea name="case_descr" class="required">
+													  <textarea name="case_descr" >
+															<xsl:if test="required = 1">
+																<xsl:attribute name="class" >
+																	<xsl:text>required</xsl:text>
+																</xsl:attribute>			
+															</xsl:if>
+
 															<xsl:value-of select="comment"/>
 														</textarea>
 													</div>
@@ -82,10 +102,6 @@
 
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_2'">
-
-												<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input name="type" type="hidden" value="control_item_type_2" />
 												
 													<div class="row">
@@ -99,6 +115,12 @@
 											       <div class="row">
 											         <label class="comment">Registrer målingsverdi</label>
 											           <input>
+														<xsl:if test="required = 1">
+															<xsl:attribute name="class" >
+																<xsl:text>required</xsl:text>
+															</xsl:attribute>			
+														</xsl:if>
+
 													      <xsl:attribute name="name">measurement</xsl:attribute>
 													      <xsl:attribute name="type">text</xsl:attribute>
 													      <xsl:attribute name="value">
@@ -117,10 +139,6 @@
 
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_3'">
-
-													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input name="type" type="hidden" value="control_item_type_3" />
 												
 													<div class="row">
@@ -134,6 +152,12 @@
 											       <div class="row">
 											         <label class="comment">Velg verdi fra liste</label>
 											         	<select name="option_value">
+															<xsl:if test="required = 1">
+																<xsl:attribute name="class" >
+																	<xsl:text>required</xsl:text>
+																</xsl:attribute>			
+															</xsl:if>
+															<option value="" >Velg</option>
 											         		<xsl:for-each select="options_array"> 
 																<option>
 																	<xsl:attribute name="value"><xsl:value-of select="option_value"/></xsl:attribute>
@@ -154,9 +178,6 @@
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_4'">
 
-													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input name="type" type="hidden" value="control_item_type_4" />
 												
 													<div class="row">
@@ -168,8 +189,14 @@
 												   		</select>
 												   </div>
 											       <div class="row">
-											         <label class="comment">Velg verdi fra liste</label>
+											         <label class="comment">Velg verdi fra lister</label>
 											         	<select name="option_value">
+															<xsl:if test="required = 1">
+																<xsl:attribute name="class" >
+																	<xsl:text>required</xsl:text>
+																</xsl:attribute>			
+															</xsl:if>
+															<option value="" >Velg</option>
 											         		<xsl:for-each select="options_array"> 
 																<option>
 																	<xsl:attribute name="value"><xsl:value-of select="option_value"/></xsl:attribute>
@@ -189,7 +216,7 @@
 
 											</xsl:when>
 										</xsl:choose>	
-										</form>
+									</form>
 								</li>
 							</xsl:for-each>
 						</ul>

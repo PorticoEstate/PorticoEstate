@@ -48,8 +48,8 @@
 			$start		= isset($data['start'])  ? (int) $data['start'] : 0;
 			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
 			$query		= isset($data['query']) ? $data['query'] : '';
-			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
-			$dir		= isset($data['dir']) ? $data['dir'] : '' ;
+			$sort		= isset($data['sort']) ? $data['sort'] : '';
+			$dir		= isset($data['dir']) ? $data['dir'] :  'DESC';
 			$cat_id		= isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
 			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 
@@ -89,9 +89,11 @@
 				$querymethod	= " {$where} {$table}.title {$this->_like} '%{$query}%'";
 			}
 
-			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id";
-			$sql = "SELECT DISTINCT $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id , count(condition_survey_id) AS cnt"
-			. " FROM {$table} {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
+			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id, org_name";
+			$sql = "SELECT DISTINCT $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id,"
+			. " count(condition_survey_id) AS cnt, org_name as vendor FROM {$table} "
+			. " {$this->_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
+			. " {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
 
 	
 			$this->_db->query($sql,__LINE__,__FILE__);
@@ -115,6 +117,7 @@
 					'title'			=> $this->_db->f('title',true),
 					'descr'			=> $this->_db->f('descr',true),
 					'address'		=> $this->_db->f('address',true),
+					'vendor'		=> $this->_db->f('vendor',true),
 					'entry_date'	=> $this->_db->f('entry_date'),
 					'user'			=> $this->_db->f('user_id'),
 					'cnt'			=> $this->_db->f('cnt'),
@@ -170,7 +173,7 @@
 
 			$this->_db->transaction_begin();
 
-			$value_set						= $this->_get_value_set( $data );
+			$value_set	= $this->_get_value_set( $data );
 
 			$id = $this->_db->next_id($table);
 
@@ -234,21 +237,42 @@
 			$value_set['user_id']			= $this->account;
 			$value_set['modified_date']		= time();
 
+
+
+			$this->_db->query("SELECT coordinator_id FROM fm_condition_survey WHERE id = {$id}",__LINE__,__FILE__);
+			$this->_db->next_record();
+			$old_coordinator_id		= (int)$this->_db->f('coordinator_id');
+
+
+			$this->_db->transaction_begin();
 			try
 			{
+				$sql = "UPDATE {$table} SET $value_set WHERE id= {$id}";
+
+				$this->_db->Exception_On_Error = true;
+
+				if($old_coordinator_id != $value_set['coordinator_id'])
+				{
+					$this->_db->query("UPDATE fm_request SET coordinator = {$value_set['coordinator_id']} WHERE condition_survey_id = {$id}",__LINE__,__FILE__);
+				}
+
 				$this->_edit($id, $value_set, 'fm_condition_survey');
+				$this->_db->Exception_On_Error = false;
 			}
 
 			catch(Exception $e)
 			{
 				if ( $e )
 				{
+					$this->_db->transaction_abort();
 					throw $e;
 				}
 			}
 
+			$this->_db->transaction_commit();
 			return $id;
 		}
+
 
 		public function edit_title($data)
 		{
@@ -378,12 +402,18 @@
 
 			foreach ($import_data as &$entry)
 			{
-				$entry['amount_investment'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_investment']);
-				$entry['amount_operation'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_operation']);
-				$entry['amount_potential_grants'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
+				$entry['amount_investment']			= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_investment']);
+				$entry['amount_operation']			= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_operation']);
+				$entry['amount_potential_grants']	= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
+				$entry['import_type']				= (int) $entry['import_type'];
 			}
 
 			unset($entry);
+
+			$custom	= createObject('phpgwapi.custom_fields');
+			$attributes = $custom->find('property','.project.request', 0, '','','',true, true);
+
+
 
 			$origin_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
 			foreach ($import_data as $entry)
@@ -431,8 +461,8 @@
 					$request['origin_id']				= $origin_id;
 					$request['origin_item_id']			= (int)$survey['id'];
 					$request['title']					= substr($entry['title'], 0, 255);
-					$request['descr']					= $entry['descr'];
-					$request['building_part']			= $entry['building_part'];
+					$request['descr']					= phpgw::clean_value($entry['descr'], 'string');
+					$request['building_part']			= phpgw::clean_value($entry['building_part'], 'string');
 					$request['coordinator']				= $survey['coordinator_id'];
 
 					if($entry['import_type'] == 1)
@@ -465,8 +495,23 @@
 						)
 					);
 
-//_debug_array($request);
-					$sorequest->add($request, $values_attribute = array());
+					$values_attribute = array();
+					foreach($entry as $_field => $_value)
+					{
+						if(preg_match('/^custom_attribute_/', $_field) && $_value)
+						{
+							$attribute_id = (int)ltrim($_field, 'custom_attribute_');
+							
+							$values_attribute[] = array
+							(
+								'name'		=> $attributes[$attribute_id]['column_name'],
+								'value'		=> $_value,
+								'datatype'	=> $attributes[$attribute_id]['datatype'],
+							);
+						}
+					}
+
+					$sorequest->add($request, $values_attribute);
 				}
 			}
 
@@ -550,9 +595,42 @@
 
 		public function delete($id)
 		{
+
+			$this->_db->transaction_begin();
+
+			try
+			{
+				$this->_db->Exception_On_Error = true;
+				$this->delete_imported_records($id);
+				$this->_db->query("DELETE FROM fm_condition_survey WHERE id = {$id}",__LINE__,__FILE__);
+				$this->_db->Exception_On_Error = false;
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					$this->_db->transaction_abort();
+					throw $e;
+				}
+			}
+
+			$this->_db->transaction_commit();
+		}
+
+		public function delete_imported_records($id)
+		{
 			$id = (int) $id;
 			$interlink 	= CreateObject('property.interlink');
-			$this->_db->transaction_begin();
+
+			if ( $this->_db->get_transaction() )
+			{
+				$this->_global_lock = true;
+			}
+			else
+			{
+				$this->_db->transaction_begin();
+			}
 			
 			$requests = array();
 			$this->_db->query("SELECT id AS request_id FROM fm_request WHERE condition_survey_id={$id}",__LINE__,__FILE__);
@@ -572,7 +650,6 @@
 					$this->_db->query('DELETE FROM fm_request_history  WHERE  history_record_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
 				}
 				$this->_db->query("DELETE FROM fm_request WHERE condition_survey_id = {$id}",__LINE__,__FILE__);
-				$this->_db->query("DELETE FROM fm_condition_survey WHERE id = {$id}",__LINE__,__FILE__);
 			
 				foreach ($requests as $request_id)
 				{
@@ -586,11 +663,18 @@
 			{
 				if ( $e )
 				{
-					$this->_db->transaction_abort();
+					if ( !$this->_global_lock )
+					{
+						$this->_db->transaction_abort();
+					}
+
 					throw $e;
 				}
 			}
 
-			$this->_db->transaction_commit();
+			if ( !$this->_global_lock )
+			{
+				$this->_db->transaction_commit();
+			}
 		}
 	}

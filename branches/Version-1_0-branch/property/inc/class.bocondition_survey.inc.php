@@ -385,4 +385,20 @@
 				}
 			}
 		}
+
+		public function delete_imported_records($id)
+		{
+			try
+			{
+				$this->so->delete_imported_records($id);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+		}
 	}

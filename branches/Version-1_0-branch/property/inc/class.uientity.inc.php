@@ -2316,9 +2316,20 @@ JS;
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
 
+			$function_blank_entity_values = '';
+			$input_name_entity	= phpgwapi_cache::session_get('property', 'lookup_fields_entity');
+			if($input_name_entity && is_array($input_name_entity))
+			{
+				for ($k=0;$k<count($input_name_entity);$k++)
+				{
+					$function_blank_entity_values .= 'document.getElementsByName("'.$input_name_entity[$k].'")[0].value = "";' ."\r\n";
+				}
+			}
+
 			$data = array
 			(
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+					'function_blank_entity_values'	=> $function_blank_entity_values,
+					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
 					'enable_bulk'					=> $category['enable_bulk'],

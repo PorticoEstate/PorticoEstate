@@ -9,7 +9,7 @@
     </input>
 		
     <select id="choose-building-on-property" class="select-location">
-      <option value="">Velg bygg</option>
+      <option value="">Velg lokalisering</option>
       <xsl:for-each select="buildings_on_property">
         <option>
           <xsl:if test="id = //current_location/location_code">

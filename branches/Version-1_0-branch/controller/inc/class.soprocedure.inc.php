@@ -267,10 +267,19 @@
 
 		function get_procedures_by_control_area($control_area_id)
 		{
-			$control_area_id = (int) $control_area_id;
+			$cat_id = (int) $control_area_id;
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cat_path = $cats->get_path($cat_id);
+			foreach ($cat_path as $_category)
+			{
+				$cat_filter[] = $_category['id'];
+			}
+
+			$filter_control_area = "controller_procedure.control_area_id IN (" .  implode(',', $cat_filter) .')';
+
 			$results = array();
 
-			$sql = "SELECT * FROM controller_procedure WHERE control_area_id={$control_area_id} AND end_date IS NULL ORDER BY title ASC";
+			$sql = "SELECT * FROM controller_procedure WHERE {$filter_control_area} AND end_date IS NULL ORDER BY title ASC";
 			$this->db->query($sql);
 
 			while($this->db->next_record())
@@ -301,19 +310,42 @@
 			}
 		}
 
-		function get_procedures($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		function get_procedures($start = 0, $results = 0, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 		{
-			$results = array();
-
 			//$condition = $this->get_conditions($query, $filters,$search_option);
 			$order = $sort ? "ORDER BY $sort $dir ": '';
 
 			//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 
 			$condition = "WHERE end_date IS NULL";
-			$sql = "SELECT * FROM controller_procedure $condition $order";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
+			if(isset($filters['control_areas']) && $filters['control_areas'])
+			{
+				$cat_id = (int) $filters['control_areas'];
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+
+				$condition .= " AND control_area_id IN (" .  implode(',', $cat_filter) .')';
+			}
+
+			$sql = "SELECT * FROM controller_procedure $condition $order";
+
+			if($results)
+			{
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+
+			$values = array();
 			while ($this->db->next_record())
 			{
 				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
@@ -329,10 +361,10 @@
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 
-				$results[] = $procedure;
+				$values[] = $procedure;
 			}
 
-			return $results;
+			return $values;
 		}
 
 		function get_procedures_as_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
@@ -346,7 +378,7 @@
 
 			//$condition = "WHERE end_date IS NULL";
 			$sql = "SELECT * FROM controller_procedure $condition $order";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
 			while ($this->db->next_record())
 			{
@@ -375,7 +407,7 @@
 			$results = array();
 
 			$sql = "SELECT p.* FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -459,7 +491,19 @@
 			}
 			if(isset($filters['control_areas']))
 			{
-				$filter_clauses[] = "procedure.control_area_id = {$this->marshal($filters['control_areas'], 'int')}";
+//				$filter_clauses[] = "procedure.control_area_id = {$this->marshal($filters['control_areas'], 'int')}";
+
+				$cat_id = (int) $filters['control_areas'];
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+
+				$filter_clauses[] = "procedure.control_area_id IN (" .  implode(',', $cat_filter) .')';
 			}
 
 			if(count($filter_clauses))

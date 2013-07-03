@@ -71,7 +71,9 @@
         <xsl:choose>
         <xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">
             <xsl:call-template name="check_list_menu">
-                <xsl:with-param name="active_tab">view_details</xsl:with-param>
+                <xsl:with-param name="active_tab">
+                	<xsl:value-of select="$active_tab" />
+               	</xsl:with-param>
             </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>

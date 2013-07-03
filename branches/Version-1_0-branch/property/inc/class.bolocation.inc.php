@@ -532,6 +532,7 @@
 				}
 			}
 
+			$input_name_entity = array();
 			if (isset($data['lookup_entity']) && is_array($data['lookup_entity']))
 			{
 				foreach($data['lookup_entity'] as $entity)
@@ -548,7 +549,7 @@
 
 					$location['location'][$i]['input_type']						= 'text';
 					$location['location'][$i]['input_name']						= 'entity_num_' . $entity['id'];
-					$input_name[]												= 'entity_num_' . $entity['id'];
+					$input_name_entity[]										= 'entity_num_' . $entity['id'];
 					$insert_record['extra']['entity_num_' . $entity['id']]		= 'p_num';
 
 					$location['location'][$i]['size']							= 8;
@@ -563,10 +564,11 @@
 					$location['location'][$i]['statustext']						= lang('click this link to select') .' ' . $entity['name'];
 
 					$location['location'][$i]['extra'][0]['input_name']			= 'entity_cat_name_' . $entity['id'];
-					$input_name[]												= $location['location'][$i]['extra'][0]['input_name'];
+					$input_name_entity[]										= $location['location'][$i]['extra'][0]['input_name'];
 					$location['location'][$i]['extra'][0]['input_type']			= 'text';
 					$location['location'][$i]['extra'][0]['size']				= 30;
 					$location['location'][$i]['extra'][0]['lookup_function_call']	= 'lookup_entity_' . $entity['id'] .'()';
+					$location['location'][$i]['extra'][0]['is_entity']			= true;
 
 					if (is_array($data['entity_data']))
 					{
@@ -575,7 +577,7 @@
 
 					$location['location'][$i]['extra'][1]['input_type']			= 'hidden';
 					$location['location'][$i]['extra'][1]['input_name']			= 'entity_id_' . $entity['id'];
-					$input_name[]												= 'entity_id_' . $entity['id'];
+					$input_name_entity[]										= 'entity_id_' . $entity['id'];
 					$insert_record['extra']['entity_id_' . $entity['id']]		= 'p_entity_id';
 					if (is_array($data['entity_data']))
 					{
@@ -584,7 +586,7 @@
 
 					$location['location'][$i]['extra'][2]['input_type']			= 'hidden';
 					$location['location'][$i]['extra'][2]['input_name']			= 'cat_id_' . $entity['id'];
-					$input_name[]												= 'cat_id_' . $entity['id'];
+					$input_name_entity[]										= 'cat_id_' . $entity['id'];
 					$insert_record['extra']['cat_id_' . $entity['id']]			= 'p_cat_id';
 
 					if (is_array($data['entity_data']))
@@ -599,16 +601,17 @@
 			//_debug_array($location['location']);
 			if(isset($input_name))
 			{
-				$GLOBALS['phpgw']->session->appsession('lookup_fields','property',$input_name);
+				phpgwapi_cache::session_set('property', 'lookup_fields',$input_name);
 			}
+			if($input_name_entity)
+			{
+				phpgwapi_cache::session_set('property', 'lookup_fields_entity',$input_name_entity);
+			}
+
 			if(isset($insert_record))
 			{
-	//			$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
 				phpgwapi_cache::session_set('property', 'insert_record',$insert_record);
-
 			}
-			//			$GLOBALS['phpgw']->session->appsession('input_name','property',$input_name);
-
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{

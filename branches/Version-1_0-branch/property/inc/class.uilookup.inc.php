@@ -2114,7 +2114,14 @@ JS;
 			}
 
 			$entity_list = $boentity->read(array('lookup'=>true));
-			$input_name = $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
+
+			$input_name			= phpgwapi_cache::session_get('property', 'lookup_fields');
+			$input_name_entity	= phpgwapi_cache::session_get('property', 'lookup_fields_entity');
+			$input_name = $input_name ? $input_name : array();
+			$input_name_entity = $input_name_entity ? $input_name_entity : array();
+			
+			$input_name = array_merge($input_name,$input_name_entity);
+
 			$uicols	= $boentity->uicols;
 
 			if (count($uicols['name']) > 0)

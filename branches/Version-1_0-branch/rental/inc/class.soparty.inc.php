@@ -16,6 +16,7 @@ class rental_soparty extends rental_socommon
 	const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
 
 	protected static $so;
+	protected $external_db = null;
 
 	/**
 	 * Get a static reference to the storage object associated with this model object
@@ -29,6 +30,54 @@ class rental_soparty extends rental_socommon
 		}
 		return self::$so;
 	}
+
+	/* our simple php ping function */
+	function ping($host)
+	{
+				exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
+				return $rval === 0;
+	}
+
+	public function get_external_db()
+		{
+			if($this->external_db && is_object($this->external_db))
+			{
+				return $this->external_db;
+			}
+
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+
+			if(! $config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
+			{
+				$message ="Database server {$config->config_data['external_db_host']} is not accessible";
+				phpgwapi_cache::message_set($message, 'error');
+				return false;
+			}
+
+			$db = createObject('phpgwapi.db', null, null, true);
+
+			$db->debug = !!$config->config_data['external_db_debug'];
+			$db->Host = $config->config_data['external_db_host'];
+			$db->Port = $config->config_data['external_db_port'];
+			$db->Type = $config->config_data['external_db_type'];
+			$db->Database = $config->config_data['external_db_name'];
+			$db->User = $config->config_data['external_db_user'];
+			$db->Password = $config->config_data['external_db_password'];
+
+			try
+			{
+				$db->connect();
+				$connected = true;
+			}
+			catch(Exception $e)
+			{
+				$status = lang('unable_to_connect_to_database');
+			}
+
+			$this->external_db = $db;
+			return $db;
+		}
 
 	/**
 	 * Generate SQL query
@@ -129,17 +178,17 @@ class rental_soparty extends rental_socommon
 				$filter_clauses[] = "contract.location_id = {$party_type}";
 			}
 		}
-		
+
 		if(isset($filters['active']))
 		{
 			if($filters['active'] == 'active')
 			{
 				$filter_clauses[] = "NOT party.is_inactive";
-			} 
+			}
 			else if($filters['active'] == 'inactive')
 			{
 				$filter_clauses[] = "party.is_inactive = TRUE";
-			} 
+			}
 		}
 
 		if(isset($filters['contract_id'])){
@@ -162,10 +211,19 @@ class rental_soparty extends rental_socommon
 			$org_unit_id = $this->marshal($filters['org_unit_id'],'string');
 			if(isset($org_unit_id))
 			{
-				$filter_clauses[] = "party.org_enhet_id = {$org_unit_id}";
+				//check if org_unit is on top level
+				if($this->org_unit_is_top_level($org_unit_id)){
+					//get connected units on level 4
+					$org_unit_ids_tmp = $this->get_org_unit_ids_from_top($org_unit_id);
+					$org_unit_ids = implode(',',$org_unit_ids_tmp);
+					$filter_clauses[] = "party.org_enhet_id IN ({$org_unit_ids})";
+				}
+				else{
+					$filter_clauses[] = "party.org_enhet_id = {$org_unit_id}";
+				}
 			}
 		}
-		
+
 		if(isset($filters['email'])){
 			$email = $this->marshal($filters['email'],'string');
 			if(isset($email))
@@ -177,7 +235,7 @@ class rental_soparty extends rental_socommon
 		if(isset($filters['sync']))
 		{
 			$filter_clauses[] = "NOT party.is_inactive";
-			
+
 			if($filters['sync'] == 'sync_parties')
 			{
 				// involved in contract with service- and responsibility identifiers
@@ -209,7 +267,7 @@ class rental_soparty extends rental_socommon
 				$filter_clauses[] = "party.result_unit_number IS NULL";
 			}
 		}
-		
+
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -261,7 +319,52 @@ class rental_soparty extends rental_socommon
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 
+	function org_unit_is_top_level($org_unit_id)
+	{
+		$q = "select * from V_ORG_ENHET where org_enhet_id=$org_unit_id and org_nivaa < 4";
 
+		if(!$external_db = $this->get_external_db())
+		{
+			return;
+		}
+		$result = $this->external_db->query($q);
+
+		if($this->external_db->next_record()) {
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_org_unit_ids_from_top($org_unit_id){
+		$unit_ids = array();
+		$q="SELECT * FROM V_ORG_KNYTNING WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
+
+		if(!$external_db = $this->get_external_db())
+		{
+			return;
+		}
+		if($external_db->Type == "postgres")
+		{
+			$q = strtolower($q);
+		}
+		$result = $this->external_db->query($q);
+
+		while($this->external_db->next_record()){
+			if($external_db->Type == "postgres")
+			{
+				$unit_id = $this->external_db->f('org_enhet_id');
+			}
+			else
+			{
+				$unit_id = $this->external_db->f('ORG_ENHET_ID');
+			}
+			$unit_ids[] = $unit_id;
+		}
+		return $unit_ids;
+	}
 
 	/**
 	 * Function for adding a new party to the database. Updates the party object.
@@ -296,19 +399,19 @@ class rental_soparty extends rental_socommon
 	function update($party)
 	{
 		$id = intval($party->get_id());
-		
-		
+
+
 		$location_id = $this->marshal($party->get_location_id(), 'int');
-		
+
 		if($location_id)
 		{
 			$loc = $GLOBALS['phpgw']->locations->get_name($location_id);
 			$name = $loc['location'];
 			$level_identifier = result_unit::get_identifier_from_name($name);
 		}
-		
+
 		$result_unit_number = $this->marshal($level_identifier, 'string');
-		
+
 		$values = array(
 			'identifier = '		. $this->marshal($party->get_identifier(), 'string'),
 			'first_name = '     . $this->marshal($party->get_first_name(), 'string'),
@@ -334,9 +437,9 @@ class rental_soparty extends rental_socommon
 			'location_id = '	. $location_id,
 			'result_unit_number = ' . $result_unit_number
 		);
-		
+
 		$result = $this->db->query('UPDATE rental_party SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
-			
+
 		return isset($result);
 	}
 
@@ -399,14 +502,14 @@ class rental_soparty extends rental_socommon
 		}
 		return $party;
 	}
-	
+
 	public function get_export_data()
 	{
 		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, null);
 		$exportable = new rental_agresso_cs15($parties);
 		return $exportable->get_contents();
 	}
-	
+
 	public function get_number_of_parties()
 	{
 		$q ="SELECT COUNT(id) FROM rental_party";
@@ -415,7 +518,7 @@ class rental_soparty extends rental_socommon
 		$this->db->next_record();
 		return (int) $this->db->f('count',true);
 	}
-	
+
 	public function has_contract($party_id)
 	{
 		$sql = "SELECT * FROM rental_contract_party WHERE party_id={$party_id}";
@@ -429,7 +532,7 @@ class rental_soparty extends rental_socommon
 			return false;
 		}
 	}
-	
+
 	public function delete_party($party_id)
 	{
 		if($party_id)
@@ -440,10 +543,10 @@ class rental_soparty extends rental_socommon
 		}
 	}
 
- 
+
  		/**
 		 * Check to see if this user is an administrator
-		 * 
+		 *
 		 * @return true if private permission on root, false otherwise
 		 */
 
@@ -451,10 +554,10 @@ class rental_soparty extends rental_socommon
 		{
 			return $GLOBALS['phpgw']->acl->check(self::LOCATION_ROOT,PHPGW_ACL_PRIVATE,'rental');
 		}
-		
+
 		/**
 		 * Check to see if the user is an executive officer
-		 * 
+		 *
 		 * @return true if at least add permission on fields of responsibilities (locations: .RESPONSIBIITY.*)
 		 */
 		protected function isExecutiveOfficer()
@@ -468,7 +571,7 @@ class rental_soparty extends rental_socommon
 
  	/**
  	 * Synchronization job to update company name on contract parties which are connected to Fellesdata.
- 	 * 
+ 	 *
  	 * Uses property org_enhet_id on party to link party with unit from Fellesdata.
  	 * To be run as a scheduled job
  	 */
@@ -477,7 +580,7 @@ class rental_soparty extends rental_socommon
  		$config	= CreateObject('phpgwapi.config','rental');
 		$config->read();
 
-		$use_fellesdata = $config->config_data['use_fellesdata'];	
+		$use_fellesdata = $config->config_data['use_fellesdata'];
 		if(!$use_fellesdata){
 			return;
 		}
@@ -486,9 +589,9 @@ class rental_soparty extends rental_socommon
 		$parties = rental_soparty::get_instance()->get();
 		$result_count = rental_soparty::get_instance()->get_count();
 		$updated_parties;
-		
+
 		$updated_parties[] = "Total number of parties: {$result_count}";
-		
+
 		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
 		{
 			$count = 0;
@@ -529,21 +632,21 @@ class rental_soparty extends rental_socommon
 			$this->log_sync_messages($updated_parties);
 		}
  	}
- 	
+
 	private function log_sync_messages($messages)
 	{
 		$msgs = array_merge(
 			array('---------------Messages-------------------'),
 			$messages
 		);
-			
+
 		//use PHPGW tmp-catalog to store log-file
 		$path = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			
+
 		//Write to the log-file
 		$date_now = date('Y-m-d');
 		file_put_contents("{$path}/FD_name_sync_{$date_now}.log", implode(PHP_EOL, $msgs));
 	}
-	
+
 }
 

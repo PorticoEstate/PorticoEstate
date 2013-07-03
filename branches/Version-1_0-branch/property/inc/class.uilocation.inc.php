@@ -879,8 +879,7 @@ JS;
 			// for POP-UPs
 			if($lookup)
 			{
-				$input_name		= $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
-
+				$input_name		= phpgwapi_cache::session_get('property', 'lookup_fields');
 				$function_exchange_values = '';
 
 				if(is_array($input_name))
@@ -904,17 +903,21 @@ JS;
 
 				$datatable['exchange_values'] = $function_exchange_values;
 
-				$function_valida  = "var pos = data.indexOf('</a>');"."\r\n";
-				$function_valida .= "if(pos==-1){"."\r\n";
-				$function_valida .= "return data;"."\r\n";
-				$function_valida .= "}else{"."\r\n";
-				$function_valida .= "pos = data.indexOf('>');"."\r\n";
-				$function_valida .= "var valor = data.slice(pos+1);"."\r\n";
-				$function_valida .= "pos = valor.indexOf('<');"."\r\n";
-				$function_valida .= "valor = valor.slice(0,pos);"."\r\n";
-				$function_valida .= "return valor;"."\r\n";
-				$function_valida .= "}"."\r\n";
-
+				$function_valida  = <<<JS
+					var pos = data.indexOf('</a>');
+						if(pos==-1)
+						{
+							return data;
+						}
+						else
+						{
+							pos = data.indexOf('>');
+							var valor = data.slice(pos+1);
+							pos = valor.indexOf('<');
+							valor = valor.slice(0,pos);
+							return valor;
+						}
+JS;
 				$datatable['valida'] = $function_valida;
 			}
 
@@ -1657,6 +1660,7 @@ JS;
 			{
 				return $json;
 			}
+
 
 
 			$datatable['json_data'] = json_encode($json);

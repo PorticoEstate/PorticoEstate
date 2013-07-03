@@ -27,8 +27,8 @@
 	phpgw::import_class('frontend.bofrontend');
 	phpgw::import_class('frontend.bofellesdata');
 	phpgw::import_class('frontend.borental');
-	
-	
+
+
 	/**
 	 * Frontend main class
 	 *
@@ -41,7 +41,7 @@
 		 * Used to save state of header (select box, ++) between requests
 		 * @var array
 		 */
-		public $header_state;	
+		public $header_state;
 
 		public $public_functions = array
 			(
@@ -53,7 +53,7 @@
 		{
 			// This module uses XSLT templates
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			
+
 			$this->config	= CreateObject('phpgwapi.config','frontend');
 			$this->config->read();
 			$use_fellesdata = $this->config->config_data['use_fellesdata'];
@@ -62,7 +62,7 @@
 			// Get the mode: in frame or full screen
 			$mode = phpgwapi_cache::session_get('frontend', 'noframework');
 			$noframework = isset($mode) ? $mode : true;
-			
+
 			/* Get the tabs and check to see whether the user has specified a tab or has a selected tab on session */
 			$tabs = $this->get_tabs();
 			$location_id = phpgw::get_var('location_id', 'int', 'REQUEST');
@@ -70,23 +70,23 @@
 			$selected = isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			phpgwapi_cache::session_set('frontend','tab',$selected);
-			
+
 			// Get header state
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
 			$this->header_state['use_fellesdata'] = $use_fellesdata;
 			$this->header_state['logo_path'] = $logo_path;
 			$this->header_state['form_action'] = $tabs[$selected]['link'];
-			
+
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
 			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
 			$param_only_org_unit = phpgw::get_var('org_enhet_id'); 	// Frontend access from rental module regarding specific organisational unit
-			
+
 			//Refresh organisation list
-			$refresh = phpgw::get_var('refresh','bool'); 
+			$refresh = phpgw::get_var('refresh','bool');
 
 			$property_locations_update = false;
-			
+
 			/* If the user has selected an organisational unit or all units */
 			if(isset($param_selected_org_unit))
 			{
@@ -120,15 +120,15 @@
 				//Update locations according to organisational unit specification
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
 				$property_locations_update = true;
-				
+
 			}
 			/* If the user selects a organisational unit in rental module */
-			else if(isset($param_only_org_unit)) 
+			else if(isset($param_only_org_unit))
 			{
 				//TODO: check permissions
 				if($use_fellesdata){
 					$name_and_result_number = frontend_bofellesdata::get_instance()->get_organisational_unit_info($param_only_org_unit);
-									
+
 					//Specify unit
 					$org_unit_ids = array(
 						array(
@@ -137,23 +137,23 @@
 							"UNIT_ID" => $name_and_result_number['UNIT_NUMBER']
 						)
 					);
-									
+
 					//Update header state
 					$this->header_state['org_unit'] = $org_unit_ids;
 					$this->header_state['number_of_org_units'] = '1';
 					//$this->header_state['selected_org_unit'] = $name_and_result_number['UNIT_NUMBER'];
 					$this->header_state['selected_org_unit'] = $param_only_org_unit;
-					
+
 					//Update locations
 					$property_locations = frontend_borental::get_property_locations($org_unit_ids);
 					$property_locations_update = true;
-					
+
 					$noframework = false; // In regular frames
 					phpgwapi_cache::session_set('frontend', 'noframework', $noframework); // Store mode on session
 					$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 					$this->insert_links_on_header_state();
 				}
-			} 
+			}
 			/* No state, first visit after login, or refresh request*/
 			else if(!isset($this->header_state) || isset($refresh) || !isset($this->header_state['locations']))
 			{
@@ -161,7 +161,7 @@
 				{
 					//Specify organisational units
 					$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
-					
+
 					//Merge with delegation units
 					$delegation_org_ids = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
 					if(count($delegation_org_ids) > 0)
@@ -169,30 +169,30 @@
 						$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
 						$org_units = array_merge($org_units,$delegation_units);
 					}
-					
+
 					//Update org units on header state
 					$this->header_state['org_unit'] = $org_units;
 					$this->header_state['number_of_org_units'] = count($org_units);
 					$this->header_state['selected_org_unit'] = 'all';
-					
+
 					//Update locations
 					$property_locations = frontend_borental::get_property_locations($org_units);
 				}
-				else 
+				else
 				{
 					//If no organisational database is in use: get rented properties based on username
 					$usernames[] = $GLOBALS['phpgw_info']['user']['account_lid'];
 					$property_locations = frontend_borental::get_property_locations($usernames);
 				}
-				
+
 				$property_locations_update = true;
 				$this->insert_links_on_header_state();
-				
+
 			}
-			
-			
+
+
 			if($property_locations_update)
-			{	
+			{
 				if(count($property_locations) > 0)
 				{
 					$this->header_state['selected_location'] = $property_locations[0]['location_code'];
@@ -203,13 +203,13 @@
 					$this->header_state['selected_location'] = '';
 					$param_selected_location = '';
 				}
-				
+
 				$this->header_state['locations'] = $property_locations;
 				$this->header_state['number_of_locations'] = count($property_locations);
 				$this->calculate_totals($property_locations);
 			}
-			
-			
+
+
 			/* If the user has selected a location or as a side-effect from selecting organisational unit */
 			if(isset($param_selected_location))
 			{
@@ -254,15 +254,15 @@
 			}
 			else
 			{
-				$this->header_state['new_messages'] = lang('no_new_messages');	
+				$this->header_state['new_messages'] = lang('no_new_messages');
 			}
-						
+
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
 			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 		}
-		
+
 		function get_tabs()
 		{
 			// Get tabs from location hierarchy
@@ -284,7 +284,7 @@
 				}
 				unset($location);
 			}
-			
+
 
 			// this one is for generic entitysupport from the app 'property'
 			$entity_frontend = isset($this->config->config_data['entity_frontend']) && $this->config->config_data['entity_frontend'] ? $this->config->config_data['entity_frontend'] : array();
@@ -300,7 +300,7 @@
 				{
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', $location);
 					$location_arr = explode('.', $location);
-					
+
 					$category = $entity->read_single_category($location_arr[2], $location_arr[3]);
 					$tabs[$location_id] = array(
 						'label' => $category['name'],
@@ -310,17 +310,17 @@
 			}
 
 			$extra_tabs = phpgwapi_cache::session_get('frontend', 'extra_tabs');
-			
+
 			if(isset($extra_tabs))
 			{
 				$tabs = array_merge($extra_tabs,$tabs);
 			}
-			
+
 			phpgwapi_cache::session_clear('frontend', 'extra_tabs');
-			
+
 			return $tabs;
 		}
-		
+
 		function insert_links_on_header_state()
 		{
 			$help_url = "";
@@ -329,12 +329,12 @@
 			$fileName = '/frontend/help/NO/helpdesk.index.pdf';
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
-	
+
 			$file = array('string' => $fileName, RELATIVE_NONE);
 			if($vfs->file_exists($file)){
 				$help_in_vfs = true;
 			}
-			
+
 			if($help_in_vfs)
 			{
 				$help_url = "javascript:openwindow('"
@@ -343,7 +343,7 @@
 						 	'menuaction'=> 'frontend.uidocumentupload.read_helpfile_from_vfs',
 						 	'app' => 'frontend'
 						 )) . "','700','600')";
-			}else{			
+			}else{
 				$help_url = "javascript:openwindow('"
 						 . $GLOBALS['phpgw']->link('/index.php', array
 						 (
@@ -353,7 +353,7 @@
 						 	'referer' => phpgw::get_var('menuaction')
 						 )) . "','700','600')";
 			}
-			
+
 			$contact_url = "javascript:openwindow('"
 				 . $GLOBALS['phpgw']->link('/index.php', array
 				 (
@@ -361,7 +361,7 @@
 				 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
 				 	'section' => 'contact'
 				 )) . "','700','600')";
-		 
+
 			$folder_url = "javascript:openwindow('"
 				 . $GLOBALS['phpgw']->link('/index.php', array
 				 (
@@ -369,9 +369,9 @@
 				 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
 				 	'section' => 'folder'
 				 )) . "','700','600')";
-				 
+
 			$name_of_user = $GLOBALS['phpgw_info']['user']['firstname']." ".$GLOBALS['phpgw_info']['user']['lastname'];
-				 
+
 			if(count($GLOBALS['phpgw_info']['user']['apps']) > 1)
 			{
 				$home_url = $GLOBALS['phpgw']->link('/home.php');
@@ -390,23 +390,23 @@
 			$this->header_state['folder_url'] = $folder_url;
 			$this->header_state['name_of_user'] = $name_of_user;
 		}
-		
+
 		function calculate_totals($property_locations)
 		{
-			
+
 			// Calculate
 			$total_area = 0;
 		//	$rented_area_per_location = phpgwapi_cache::user_get('frontend','rented_area_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
 			$rented_area_per_location = phpgwapi_cache::session_get('frontend','rented_area_per_location');
 			foreach($rented_area_per_location as $location_code => $area_per_location)
 			{
-				
+
 				if($this->location_in_selection($location_code,$property_locations))
 				{
 					$total_area += $area_per_location;
 				}
 			}
-			
+
 			$total_price = 0;
 		//	$total_price_per_location = phpgwapi_cache::user_get('frontend','total_price_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
 			$total_price_per_location = phpgwapi_cache::session_get('frontend','total_price_per_location');
@@ -420,7 +420,7 @@
 			$this->header_state['total_price'] = number_format($total_price, 0, ","," ")." kr";
 			$this->header_state['total_area'] = number_format($total_area, 0, ",", " ")." kvm";
 		}
-		
+
 		function location_in_selection($location_code, $property_locations)
 		{
 			foreach($property_locations as $property_location)
@@ -432,7 +432,7 @@
 			}
 			return false;
 		}
-		
+
 		function org_unit_in_selection($unit_id, $org_units)
 		{
 			foreach($org_units as $org_unit)
@@ -444,7 +444,7 @@
 			}
 			return false;
 		}
-		
+
 		public function get_org_enhet_id($result_unit_number, $org_units)
 		{
 			foreach($org_units as $org_unit)

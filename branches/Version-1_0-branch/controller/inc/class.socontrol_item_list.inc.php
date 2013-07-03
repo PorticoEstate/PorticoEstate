@@ -114,7 +114,7 @@
 			$id = (int)$id;
 
 			$sql = "SELECT p.* FROM controller_control_item_list p WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
@@ -138,7 +138,7 @@
 			$control_item_id = (int) $control_item_id;
 
 			$sql = "SELECT cil.* FROM controller_control_item_list cil WHERE cil.control_id = " . $control_id . " AND cil.control_item_id = " . $control_item_id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$result = $this->db->next_record();
 
 			if( $result )
@@ -255,7 +255,7 @@
 			$sql .= "AND ci.control_group_id=$control_group_id ";
 			$sql .= "ORDER BY cl.order_nr";
 			
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -304,7 +304,7 @@
 			$sql .= "AND ci.control_group_id=$control_group_id ";
 			$sql .= "ORDER BY cl.order_nr";
 			
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 			
 			$control_item_id = 0;
 			$control_item = null;

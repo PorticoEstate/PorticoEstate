@@ -1054,4 +1054,38 @@
 			$this->location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			$this->grants		= $GLOBALS['phpgw']->acl->get_grants($appname, $location);
 		}
+
+		/**
+		 * used for retrive the path for a particular node from a hierarchy
+		 *
+		 * @param integer $cat_id is the id of the node we want the path of
+		 * @return array $path Path
+		 */
+
+		public function get_path($cat_id)
+		{
+			$cat_id = (int) $cat_id;
+			$sql = "SELECT cat_parent, cat_name FROM phpgw_categories WHERE cat_id = {$cat_id}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$parent_id = $this->db->f('cat_parent');
+			$name = $this->db->f('cat_name', true);
+			$path = array
+			(
+				array
+				(
+					'id' => $cat_id,
+					'name' => $name
+				)
+			);
+
+			if ($parent_id)
+			{
+				$path = array_merge($this->get_path($parent_id), $path);
+			}
+
+			return $path;
+		}
 	}
