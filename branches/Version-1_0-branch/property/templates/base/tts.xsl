@@ -22,12 +22,6 @@
 		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
-
-			function blank_entity_values()
-			{
-				<xsl:value-of select="function_blank_entity_values"/>
-			}
-
 		</script>
 
 		<xsl:choose>
