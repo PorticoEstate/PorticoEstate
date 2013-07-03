@@ -302,6 +302,9 @@ check to show this attribute in entity list	property	no	Merk av for å vise denn
 check to show this attribute in list	property	no	Merk av for å vise denne attributten i oversikt
 check to show this attribute in location list	property	no	Merk av for å vise denne attributten i oversikt
 check to update the email-address for this vendor	property	no	kryss av for å oppdatere adressa til denne levedrandøren
+Check to activate period	property	no	Merk for å aktivere periode
+Check to close period	property	no	Merk for å avslutte periode
+Check to delete period	property	no	Merk for å slette periode
 child_date	property	no	Dato for referert element
 choice	property	no	Valg
 choose a category	property	no	Velg en kategori
