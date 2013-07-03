@@ -608,6 +608,20 @@
 				phpgwapi_cache::session_set('property', 'lookup_fields_entity',$input_name_entity);
 			}
 
+			if($input_name_entity && is_array($input_name_entity))
+			{
+				$function_blank_entity_values = "function blank_entity_values()\n{\n";
+
+				for ($k=0;$k<count($input_name_entity);$k++)
+				{
+					$function_blank_entity_values .= "\tdocument.getElementsByName('{$input_name_entity[$k]}')[0].value = '';\n";
+				}
+				$function_blank_entity_values .= "}\n";
+
+				$GLOBALS['phpgw']->js->add_code('', $function_blank_entity_values);
+			}
+
+
 			if(isset($insert_record))
 			{
 				phpgwapi_cache::session_set('property', 'insert_record',$insert_record);
