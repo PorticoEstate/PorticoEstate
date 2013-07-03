@@ -123,7 +123,7 @@ from logistic
 #user_messages { float: right; width: 40%;}
 
 div.content {
-  margin: 2em;	
+  margin: 2em;
 }
 .hd {
   margin-bottom: 0;
@@ -154,7 +154,7 @@ label {
 }
 
 a{
-  cursor: pointer;	
+  cursor: pointer;
 }
 
 .row{
@@ -193,7 +193,7 @@ h3 {
 }
 
 .breadcrumbs{
-  margin-left: 20px;	
+  margin-left: 20px;
 }
 
 ul.pathway {
@@ -203,7 +203,7 @@ ul.pathway {
 }
 ul.pathway li a { color: #000; text-decoration: none;}
 ul.pathway li a:hover { color: #008; }
-ul.pathway li { 
+ul.pathway li {
   display: inline;
   background: url(../images/pathwaysep.png) no-repeat 0% 50%;
   padding-left: 16px;
@@ -275,7 +275,7 @@ dl.form-col {
 
 div.identifier-header {
   padding-left: 2em;
-  margin-bottom: 1em;	
+  margin-bottom: 1em;
 }
 
 div.identifier-header label {
@@ -300,8 +300,8 @@ div.identifier-header label {
 }
 
 .date-picker .container,
-.datetime-picker .container { 
-  display:none; 
+.datetime-picker .container {
+  display:none;
   position:absolute; z-index:1;
 }
 
@@ -340,7 +340,7 @@ table.datatableToolbar {
 }
 td.toolbarlabel {
   width: 10em;
-  font-weight: bold;	
+  font-weight: bold;
 }
 td.toolbarcol {
   padding-left: 1em;
@@ -480,7 +480,7 @@ input.postcode {
   margin-right: 2em;
 }
 
-h1 img, li img { 
+h1 img, li img {
   vertical-align: middle;
 }
 /* Set up common form styles.  TODO: needs refinement. */
@@ -513,7 +513,7 @@ fieldset {
 }
 
 textarea{
-  padding: 4px;	
+  padding: 4px;
 }
 
 h1 em {
@@ -586,7 +586,7 @@ a#innertoolbar-button {
   border: none !important;
 }
 
-.yui-skin-sam .yui-dt TABLE TD{ 
+.yui-skin-sam .yui-dt TABLE TD{
   border: none !important;
 }
 
@@ -714,7 +714,7 @@ dl.proplist, dl.proplist-col {
 }
 
 .yui-button.yui-link-button.new_button{
-  margin-left:30px;	
+  margin-left:30px;
 }
 
 #view_check_lists {
@@ -724,7 +724,7 @@ dl.proplist, dl.proplist-col {
 
 ul.th {
   font-weight: bold;
-  overflow:hidden;	
+  overflow:hidden;
 }
 
 ul.th li {
@@ -735,11 +735,11 @@ ul.th li {
 }
 
 ul.row{
-  overflow: hidden;	
+  overflow: hidden;
 }
 
 ul.row li{
-  float:left;	
+  float:left;
   margin-right: 20px;
   padding: 3px 6px;
   width: 100px;
@@ -828,7 +828,7 @@ ul.row li{
 }
 
 #main_content.groups{
-  cursor: default;	
+  cursor: default;
 }
 
 #main_content h1{
@@ -894,7 +894,7 @@ fieldset.tab_check_list_details {
 }
 
 ul.check_list {
-  width: 925px;	
+  width: 925px;
 }
 
 /* =============================  SEARCH LOCATION BOX  ======================= */
@@ -922,23 +922,23 @@ ul.check_list {
   float: left;
 }
 
-.select-box { 
+.select-box {
   background: none repeat scroll 0 0 #FEFBF4;
   border: 1px solid #DDDDDD;
   border-radius: 4px;
-  padding: 1em;	
+  padding: 1em;
 }
 
 .select-box label{
   margin-bottom:5px;
-  display: block;	
+  display: block;
 }
 
 .select-box a{
   display: block;
   font-weight: bold;
   padding: 0 0 10px;
-  text-align: justify;	
+  text-align: justify;
 }
 
 .select-box a.last{
@@ -956,7 +956,7 @@ ul.check_list {
 }
 
 #choose-loc .btn.active{
-  background: #3F7EC1;	
+  background: #3F7EC1;
 }
 #choose-loc label {
   display: inline-block;
@@ -966,16 +966,16 @@ ul.check_list {
 
 .yui-pg-first{
   margin-left: 14px;
-  margin-top: 5px;	
+  margin-top: 5px;
 }
 
 #data_paginator, #loc_paginator{
-  margin:8px;	
+  margin:8px;
   clear:left;
 }
 
 ul#filters li, ul#search_list li{
-  float:left;	
+  float:left;
 }
 
 ul#filters input[type="text"], ul#filters select {
@@ -1009,7 +1009,7 @@ ul#search_list input[type="text"] {
 }
 
 fieldset.add_check_list div{
-  padding:2px; 
+  padding:2px;
 }
 fieldset.add_check_list label{
   display:inline-table;
@@ -1018,7 +1018,7 @@ fieldset.add_check_list label{
 
 
 label.comment{
-  vertical-align:top;	
+  vertical-align:top;
 }
 /* ======================== TAB MENU ========================== */
 
@@ -1040,7 +1040,7 @@ label.comment{
   font-weight: bold;
 }
 .tab_menu a, .tab_menu a.active{
-  border-bottom: 0;	
+  border-bottom: 0;
 }
 
 #tab_content {
@@ -1067,14 +1067,14 @@ label.comment{
   padding: 3px 6px;
 }
 .tab_item h2.last{
-  margin:20px 0 10px;	
+  margin:20px 0 10px;
 }
 
 #main_content fieldset.location_details{
   background: none repeat scroll 0 0 #EDF5FF;
   border: 1px solid #CCCCCC;
   padding: 15px;
-  float:left;	
+  float:left;
   border: 1px solid #ddd;
 }
 fieldset.location_details div{
@@ -1119,12 +1119,12 @@ fieldset.location_details div{
 #error_message_menu a {
   text-align: center;
   width: 140px;
-  margin: 2px 0;  
+  margin: 2px 0;
   display:block;
 }
 #register_errors_content {
   float: right;
-  margin-top: 20px;   
+  margin-top: 20px;
 }
 
 
@@ -1134,7 +1134,7 @@ fieldset.location_details div{
   margin-bottom: 1em;
 }
 .frm_register_case input[type="text"]{
- 	width: 170px;  
+ 	width: 170px;
 }
 .frm_register_case select {
   width: 184px;
@@ -1194,7 +1194,7 @@ fieldset.location_details div{
 
 #select_all {
   float: right;
-  margin-right: 805px;	
+  margin-right: 805px;
 }
 
 #save_location {
@@ -1214,11 +1214,11 @@ img#loading {
   margin:20px 0 0 40px;
 }
 
-#yui-history-iframe { 
+#yui-history-iframe {
   position:absolute;
-  top:0; 
+  top:0;
   left:0;
-  width:1px; 
+  width:1px;
   height:1px;
   visibility:hidden;
 }
@@ -1234,7 +1234,7 @@ img#loading {
 }
 
 #control_location #queryForm{
-  margin: 20px; 
+  margin: 20px;
   width: 65%;
 }
 
@@ -1248,29 +1248,29 @@ table.yui-skin-sam {
   padding: 10px;
   margin: 10px;
   text-align: left;
-  margin-left: 1em;	
+  margin-left: 1em;
 }
 
 #details table td{
   text-align: left;
-  padding-right: 10px;	
+  padding-right: 10px;
 }
 
 
 .yui-skin-sam td.auto{
-  width: 160px;	
+  width: 160px;
 }
 
 .yui-skin-sam div.auto{
-  width: 140px;	
+  width: 140px;
 }
 
 .yui-skin-sam thead{
-  background: none;	
+  background: none;
 }
 
 p.no_items_msg {
-  padding: 5px;	
+  padding: 5px;
 }
 
 .no-comp-msg {
@@ -1283,15 +1283,15 @@ p.no_items_msg {
 }
 
 .option-list{
-  margin-top: 5px;	
+  margin-top: 5px;
 }
 
 .option-list{
-  padding-left:10px;	
+  padding-left:10px;
 }
 
 .option-list li{
-  margin-bottom: 5px;  
+  margin-bottom: 5px;
 }
 
 .input_error_msg {
@@ -1386,4 +1386,107 @@ p.no_items_msg {
 
 .yui-skin-sam .autocomplete .yui-ac-content li {
     white-space: wrap;
+}
+.requirement {
+	line-height:2;
+}
+.requirement hr {
+	border: 1px solid white;
+}
+.requirement-responsibility-left {
+	float: left;
+	margin-left: 1em;
+}
+.requirement-responsibility-left h2 {
+	text-transform: uppercase;
+	margin-bottom: 0em;;
+}
+.requirement-responsibility-left-sub {
+	float: left;
+}
+.requirement-responsibility-right {
+	float: right;
+	margin-left: 1em;
+}
+
+.requirement-responsibility-right .proplist-col {
+	width: auto;
+}
+.requirement-description {
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+.requirement-condition {
+	margin-left: 1em;
+	line-height: 2.2;
+}
+.requirement-related {
+	margin-left: 1em;
+}
+.requirement-action-left {
+	float:left;
+	width: 20%;
+	margin-left:1em;
+	border-right: 1px solid white;
+}
+.requirement-action-right {
+	margin-left: 1em;
+	width: 75%;
+	float:right;
+}
+.requirement-action-label {
+	width: 45%;
+}
+.requirement-action-label-wide {
+	width: 45%;
+}
+.requirement-action-sub-left {
+	float:left;
+	width:45%;
+}
+.requirement-action-sub-left div {
+	line-height: 2;
+}
+.requirement-action-sub-right {
+	float: right;
+	text-align: left;
+	width: 50%;
+}
+.requirement-action-sub-right div {
+	line-height: 2;
+}
+.clearBoth {
+	clear: both;
+}
+.messages {
+	font-size: 15px;
+}
+.messages table {
+	display: inline;
+	position: absolute;
+}
+.coordinator_select dd select{
+	width:300px;
+}
+.controlButton {
+	margin-left: 2em;
+	margin-right: 1.5em;
+	float: right;
+}
+.requirement-condition .proplist-col table tr td table {
+	border: none;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.requirement-condition .proplist-col table tr td table th {
+	border: none;
+	background: none;
+	font-weight: bold;
+	padding-right: 1em;
+}
+.requirement-condition .proplist-col table tr td table td {
+	border: none;
+	padding-right: 1em;
+	text-align: center;
+	font-weight: bold;
 }

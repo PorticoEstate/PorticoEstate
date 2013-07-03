@@ -124,15 +124,15 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-		public function get_assigned_check_list_at_location($from_date, $to_date, $repeat_type, $user_id, $return_type = "return_object")
+		public function get_assigned_check_list_at_location($from_date, $to_date, $repeat_type, $user_id,$completed = null, $return_type = "return_object")
 		{
 			$user_id = (int) $user_id;
 			$repeat_type = (int) $repeat_type;
 
 			$check_list_array = array();
 			
-			$sql  = "SELECT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
-				. " procedure_id,requirement_id,costresponsibility_id,control_area_id,description, start_date, end_date,deadline,"
+			$sql  = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+				. " procedure_id,requirement_id,costresponsibility_id,description, start_date, end_date,deadline,planned_date, completed_date,"
 				. " control_area_id, repeat_type,repeat_interval, title"
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
@@ -146,8 +146,13 @@
 			}
 
 			
-			$sql .= "AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
-			$sql .= "OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+			$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
+			$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+
+			if($completed)
+			{
+				$sql .= " AND controller_check_list.completed_date IS NULL ";			
+			}
 			
 //_debug_array($sql);
 			$this->db->query($sql);
@@ -161,13 +166,10 @@
 				$check_list->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$check_list->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
-	//			$check_list->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-	//			$check_list->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
-	//			$check_list->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
+				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));	
 				$check_list->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-	//			$check_list->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
-	//			$check_list->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
-	//			$check_list->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_assigned_to($this->unmarshal($user_id, 'int'));				
 
 				if($return_type == "return_object")
@@ -197,14 +199,14 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_assigned_check_list_by_component($from_date, $to_date, $repeat_type, $user_id, $return_type = "return_object")
+		public function get_assigned_check_list_by_component($from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object")
 		{
 			$repeat_type = $repeat_type;
 			$user_id = (int)$user_id;
 
 		
-			$sql  = "SELECT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
-				. " procedure_id,requirement_id,costresponsibility_id,control_area_id, controller_control.description, start_date, end_date, deadline,"
+			$sql  = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+				. " procedure_id,requirement_id,costresponsibility_id, controller_control.description, start_date, end_date, deadline,planned_date, completed_date,"
 				. " control_area_id, repeat_type,repeat_interval, title,"
 				. " bim_item.guid,bim_item.type as component_type, bim_item.id as component_id, bim_item.address,"
 				. " bim_item.loc1"
@@ -220,45 +222,21 @@
 //				$sql .= "AND controller_control.repeat_type = $repeat_type ";
 			}
 
-			$sql .= "AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
-			$sql .= "OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
-			$sql .= "ORDER BY bim_item.id ";
+			if($completed)
+			{
+				$sql .= " AND controller_check_list.completed_date IS NULL ";			
+			}
+
+			$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
+			$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+			$sql .= " ORDER BY bim_item.id ";
 			 
 			$this->db->query($sql);
 			
 			$check_list_array = array();
-			$components_array = array();
-			$component_id = 0;
-			$component = null;
+
 			while($this->db->next_record()) 
 			{
-				if( $this->db->f('component_id') != $component_id )
-				{
-					if($component_id != 0)
-					{
-						$component->set_controls_array($controls_array);
-						$controls_array = array();
-						
-						if($return_type == "return_array")
-						{
-							$components_array[] = $component->toArray();
-						}
-						else
-						{
-							$components_array[] = $component;
-						}
-					}
-					
-					$component = new controller_component();
-					$component->set_type($this->unmarshal($this->db->f('component_type'), 'int'));
-					$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
-					$component->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
-					$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
-					$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
-					$component->set_loc_1($this->unmarshal($this->db->f('loc1', true), 'string'));
-					$component->set_address($this->unmarshal($this->db->f('address', true), 'string'));
-				}
-				
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('check_list_id'), 'int'));
 				$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 				$check_list->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -266,18 +244,12 @@
 				$check_list->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$check_list->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
-	//			$check_list->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-	//			$check_list->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
-	//			$check_list->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
 				$check_list->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-	//			$check_list->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
-	//			$check_list->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
-	//			$check_list->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 				$check_list->set_assigned_to($this->unmarshal($user_id, 'int'));				
+				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
+				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));	
+				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 
-
-
-			
 				if($return_type == "return_object")
 				{
 					$check_list_array[] = $check_list;
@@ -286,28 +258,10 @@
 				{
 					$check_list_array[] = $check_list->toArray();
 				}
-							
-				$component_id = $component->get_id();
-			}
-					
-			if($component != null)
-			{
-				$component->set_controls_array($check_list_array);
-				
-				if($return_type == "return_array")
-				{
-					$components_array[] = $component->toArray();
-				}
-				else
-				{
-					$components_array[] = $component;
-				}
 			}
 
-			return $components_array;
+			return $check_list_array;					
 		}
-
-
 
 //--------
 
@@ -330,12 +284,12 @@
 
 			$controls_array = array();
 			
-			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name "; 
+			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name,location_code "; 
 			$sql .= "FROM controller_control_location_list cll "; 
 			$sql .= "LEFT JOIN controller_control c on cll.control_id=c.id ";
 			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
-			$sql .= "WHERE cll.location_code = '$location_code' ";
-			
+	//		$sql .= "WHERE cll.location_code = '$location_code' ";
+			$sql .= "WHERE cll.location_code LIKE '$location_code%' ";			
 			if( $repeat_type )
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
@@ -354,8 +308,10 @@
 
 			while($this->db->next_record())
 			{
+				$_location_code = $this->db->f('location_code', true);
+
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
-				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_title($this->unmarshal($this->db->f('title', true)  . " [{$_location_code}]", 'string'));
 				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
@@ -368,7 +324,7 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
-				
+
 				if($return_type == "return_object")
 				{
 					$controls_array[] = $control;
@@ -744,8 +700,8 @@
 			$sql .= "WHERE control_id = $control_id ";
 			$sql .= "AND location_code = '$location_code'";
 			
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			if($this->db->next_record())
 			{
 				$control_location = new controller_control_location($this->unmarshal($this->db->f('id'), 'int'));
@@ -987,7 +943,19 @@
 			}
 			if(isset($filters['control_areas']))
 			{
-				$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+//				$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+
+				$cat_id = (int) $filters['control_areas'];
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+
+				$filter_clauses[] = "controller_control.control_area_id IN (" .  implode(',', $cat_filter) .')';
 			}
 			if(isset($filters['responsibilities']))
 			{
@@ -1072,7 +1040,7 @@
 			$sql .= "FROM controller_control c {$joins} "; 
 			$sql .= "WHERE c.id = " . $id;
 			
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			
 			$control = new controller_control((int) $id);

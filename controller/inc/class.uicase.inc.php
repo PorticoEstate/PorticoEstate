@@ -131,6 +131,7 @@
 				
 				$type = 'component';
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+				$buildings_on_property = array();
 			}
 			else
 			{
@@ -138,7 +139,33 @@
 				$location_code_search_components = $case_location_code ? $case_location_code : $location_code;
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
+				// Fetches buildings on property
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				foreach ( $buildings_on_property as &$building)
+				{
+					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
+				}
 			}
+
+
+			//------------- START find already registered cases -------------//
+
+			$cases_at_component_group = array();
+			$existing_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'all', null, null);//$location_code_search_components);
+			foreach($existing_check_items_and_cases as $check_item)
+			{
+				foreach($check_item->get_cases_array() as $case)
+				{
+					$component_id = $case->get_component_id();
+					if($component_id)
+					{
+						$cases_at_component_group[$check_item->get_control_item()->get_control_group_id()][$component_id] ++;
+					}
+				}
+			}
+
+			//------------- END find already registered cases -------------//
+
 
 			//Populating array with saved control items for each group
 			//Cache result
@@ -151,9 +178,10 @@
 				if(count($saved_control_items) > 0)
 				{				
 					$component_location_id = $control_group->get_component_location_id();
-					if($component_location_id)
+
+					if($component_location_id && $type == 'location')
 					{
-						//// start components
+						//--- start components -------------//
 						$criterias_array = array();
 						$loc_arr = $GLOBALS['phpgw']->locations->get_name($component_location_id);
 						$criterias_array['location_id'] = $component_location_id;
@@ -162,18 +190,20 @@
 
 						$component_criteria = $control_group->get_component_criteria();
 						$conditions = array();
-						foreach ($component_criteria as $attribute_id => $condition_value)
+						foreach ($component_criteria as $attribute_id => $condition)
 						{
-							if($condition_value)
+							if($condition['value'])
 							{
+								eval('$condition_value = ' . "{$condition['value']};");
 								$conditions[] = array
 								(
 									'attribute_id'	=> $attribute_id,
-									'operator'		=> 'equal',
-									'value'			=> $condition_value,
+									'operator'		=> $condition['operator'],
+									'value'			=> $condition_value
 								);
 							}
 						}
+
 						$criterias_array['conditions'] = $conditions;
 						
 						if( !isset($components_at_location[$component_location_id][$location_code_search_components])  || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
@@ -182,10 +212,20 @@
 							$components_at_location[$component_location_id][$location_code_search_components] = $_components_at_location;
 						}
 						
-						/// end components
+						//--- end components -------------//
 
 						if($_components_at_location)
 						{
+							foreach($_components_at_location as &$_component_at_location)
+							{
+								if(isset($cases_at_component_group[$control_group->get_id()][$_component_at_location['id']]))
+								{
+									$_component_at_location['short_description'] .= ' (' . $cases_at_component_group[$control_group->get_id()][$_component_at_location['id']] . ')';
+								}
+							}
+							
+							array_unshift ($_components_at_location, array('id'=>'', 'short_description' => lang('select')));
+							
 							$control_groups_with_items_array[] = array
 							(
 								'control_group'				=> $control_group->toArray(),
@@ -206,18 +246,12 @@
 
 			}
 			
+
 			$level = $this->location_finder->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 							
 			$user_role = true;
-
-			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
-			foreach ( $buildings_on_property as &$building)
-			{
-				$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
-			}
 
 			$data = array
 			(
@@ -233,6 +267,7 @@
 				'current_year' 						=> $year,
 				'current_month_nr' 					=> $month,
 			    'cases_view'						=> 'add_case',
+		//	    'location_required'					=> true
 			);
 			
 			phpgwapi_jquery::load_widget('core');
@@ -267,6 +302,8 @@
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$control_id = $check_list->get_control_id();
+			
+			$location_code = $location_code ? $location_code : $check_list->get_location_code();
 			$control = $this->so_control->get_single( $control_id );
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
@@ -669,6 +706,8 @@
 		
 			if($status)
 			{
+
+
 				return json_encode( array( "status" => "deleted" ) );
 			}
 			else
@@ -754,12 +793,15 @@
 				
 				$type = 'component';
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+				$buildings_on_property = array();
 			}
 			else
 			{
 				
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list_location_code));
 				$type = 'location';
+				// Fetches locations on property
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
 			}
       
       
@@ -769,20 +811,15 @@
 							
 			$user_role = true;
 
-			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting', null, $case_location_code);
+
       
-			if( count($buildings_on_property) > 0 )
+			if( $buildings_on_property )
 			{
-		//		$case_location_code = $case_location_code ? $case_location_code : $buildings_on_property[0]['id'];
-
-				$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, $case_location_code);
-
 				foreach ( $buildings_on_property as &$building)
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 				}
-
 			}
       
 			foreach($open_check_items_and_cases as $key => $check_item)
@@ -807,7 +844,7 @@
       
 			$data = array
 			(
-			    'control'			           => $control,
+			    'control'						=> $control,
 				'check_list' 					=> $check_list,
 				'buildings_on_property'         => $buildings_on_property,
 			    'location_array'				=> $location_array,
@@ -858,12 +895,15 @@
 				
 				$type = 'component';
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+				$buildings_on_property = array();
 			}
 			else
 			{
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
+				// Fetches buildings on property
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 			}
 			// Check list top section info
       
@@ -873,13 +913,10 @@
 
 			$user_role = true;
 
-			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, $case_location_code);
 
-			if( count($buildings_on_property) > 0 )
+			if( $buildings_on_property )
 			{
-		//		$building_location_code = $buildings_on_property[0]['id'];
-				$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, $case_location_code);
 				foreach ( $buildings_on_property as &$building)
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;

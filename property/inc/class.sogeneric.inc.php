@@ -1223,7 +1223,6 @@
 					);
 				break;
 
-
 				//-------- ID type varchar
 			case 'project_status':
 				$info = array
@@ -2488,6 +2487,110 @@
 						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::periodization_outline'
+					);
+
+				break;
+
+			case 'period_transition':
+				$valueset_month = array();
+				$valueset_day = array();
+				$valueset_hour = array();
+
+				$lang_default = lang('default');
+				for ($i=1;$i<14;$i++)
+				{
+					$valueset_month[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i == 13 ?  "{$i} ({$lang_default})" : $i
+					);
+				}
+
+				for ($i=1;$i<32;$i++)
+				{
+					$valueset_day[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i
+					);
+				}
+
+				for ($i=1;$i<25;$i++)
+				{
+					$valueset_hour[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i
+					);
+				}
+
+				$info = array
+					(
+						'table' 			=> 'fm_eco_period_transition',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name'			=> 'month',
+								'descr'			=> lang('month'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'		=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> $valueset_month,
+								)
+							),
+							array
+							(
+								'name'		=> 'day',
+								'descr'		=> lang('day'),
+								'type'		=> 'select',
+								'nullable'	=> false,
+								'size'		=> 4,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> $valueset_day,
+								)
+							),
+							array
+							(
+								'name'		=> 'hour',
+								'descr'		=> lang('hour'),
+								'type'		=> 'select',
+								'nullable'	=> true,
+								'size'		=> 4,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> $valueset_hour,
+								)
+							),
+							array
+							(
+								'name'		=> 'remark',
+								'descr'		=> lang('remark'),
+								'type'		=> 'varchar',
+								'nullable'	=> true,
+								'size'		=> 60,
+								'sortable'	=> true
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('period transition'),
+						'acl_app' 			=> 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::period_transition',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						)
 					);
 
 				break;

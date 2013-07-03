@@ -31,12 +31,15 @@ class date_generator
 	{
 		$control_start_date = $this->find_control_start_date();
 		$control_end_date = $this->end_date;
-				
+
 		if($control_end_date == null)
 		{
 			$control_end_date = $this->period_end_date;
 		}
-		
+/*		
+_debug_array($control_start_date);
+_debug_array($control_end_date);
+*/
 		$period_start_date = $this->find_start_date_for_period( $control_start_date );
 	  
 		$interval_date = $period_start_date;

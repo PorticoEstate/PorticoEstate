@@ -128,7 +128,7 @@
 			$joins .= "	{$this->left_join} controller_procedure ON (p.procedure_id = controller_procedure.id)";
 
 			$sql = "SELECT p.*, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title FROM controller_control_group p {$joins} WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
@@ -290,7 +290,19 @@
 			}
 			if(isset($filters['control_areas']))
 			{
-				$filter_clauses[] = "controller_control_group.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+//				$filter_clauses[] = "controller_control_group.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+
+				$cat_id = (int) $filters['control_areas'];
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+
+				$filter_clauses[] = "controller_control_group.control_area_id IN (" .  implode(',', $cat_filter) .')';
 			}
 
 			if(count($filter_clauses))
@@ -349,11 +361,21 @@
 		 */
 		function get_control_groups_by_control_area($control_area_id)
 		{
-			$control_area_id = (int) $control_area_id;
-			$controls_array = array();
 
-			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
+			$cat_id = (int) $control_area_id;
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cat_path = $cats->get_path($cat_id);
+			foreach ($cat_path as $_category)
+			{
+				$cat_filter[] = $_category['id'];
+			}
+
+			$filter_control_area = "control_area_id IN (" .  implode(',', $cat_filter) .')';
+
+			$sql = "SELECT * FROM controller_control_group WHERE {$filter_control_area}";
+
 			$this->db->query($sql);
+			$controls_array = array();
 
 			while($this->db->next_record())
 			{

@@ -997,8 +997,7 @@
 			$data = $request;
 			$data['attributes'] = $values_attribute;
 			
-			$value_set						= $this->_get_value_set( $data );
-
+			$value_set			= $this->_get_value_set( $data );
 
 			if ( $this->_db->get_transaction() )
 			{

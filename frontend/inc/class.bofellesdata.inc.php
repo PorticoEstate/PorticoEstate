@@ -3,10 +3,10 @@
 
     	// Instance variable
 	    protected static $bo;
-		
+
     	/**
 		 * Get a static reference to the storage object associated with this model object
-		 * 
+		 *
 		 * @return the storage object
 		 */
 		public static function get_instance()
@@ -23,7 +23,7 @@
 	        exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
 	        return $rval === 0;
 		}
-		
+
 		public function get_db()
 		{
 			if($this->db && is_object($this->db))
@@ -52,45 +52,46 @@
 			$db->Password = $config->config_data['external_db_password'];
 
 			$db->Halt_On_Error = 'no';
-			
+
 			try
 			{
 				$db->connect();
 			}
 			catch(Exception $e)
 			{
-				phpgwapi_cache::message_set('Could not connect to backend-server ' . $config->config_data['external_db_host'], 'error'); 
+				phpgwapi_cache::message_set('Could not connect to backend-server ' . $config->config_data['external_db_host'], 'error');
 				$GLOBALS['phpgw']->redirect_link('/home.php');
 			}
 			$this->db = $db;
 			return $db;
 
 		}
-		
+
 		public function populate_result_units(array $unit_ids)
 		{
 			$this->log(__class__, __function__);
 
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 	        $table = "V_ORG_ENHET";
-	        	
+
 			if(!$db = $this->get_db())
 			{
 				return;
 			}
-	       
+
 	        $result_units = array();
-	        
+
 	        $unit_ids_string = implode(',',$unit_ids);
-	        
-			
-			$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string) AND V_ORG_ENHET.ORG_NIVAA = 4";
+
+
+			$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string)";
+			//var_dump($sql);
 			if($db->Type == 'postgres')
 			{
 			    $sql = strtolower($sql);
 			}
 			$db->query($sql,__LINE__,__FILE__);
-						
+
 			while ($db->next_record())
 			{
 			    if($db->Type == 'postgres')
@@ -100,7 +101,7 @@
     					"ORG_NAME" => $db->f('org_navn'),
     					"UNIT_ID" => $db->f('resultatenhet'),
     					"LEADER" => false
-    				);    
+    				);
 			    }
 			    else
 			    {
@@ -112,13 +113,13 @@
     				);
 			    }
 			}
-			
+
 			return $result_units;
 		}
-    	
+
         /**
          * Method for retrieving the result units this user has access to
-         * 
+         *
          * @param string $username the username
          * @return an array of (result unit number => result unit name)
          */
@@ -132,14 +133,15 @@
              */
         	$result_units = array();
         	$org_unit_ids = array();
-        	
+
         	$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
         	$table = "V_ORG_ENHET";
         	$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_PERSON_ENHET.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID) ".
         				"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
-        	
+
         	$sql = "SELECT $columns FROM $table $joins WHERE V_ORG_PERSON.BRUKERNAVN = '$username'";
-        	
+					//var_dump($sql);
+
 			if(!$db = $this->get_db())
 			{
 				return;
@@ -153,14 +155,14 @@
 			}
 			//var_dump($sql);
         	$db->query($sql,__LINE__,__FILE__);
-        	
-        	
-        	
+
+
+
        		while ($db->next_record())
 			{
 			    if($db->Type == "postgres")
 			    {
-			        $identifier  = (int)$db->f('org_enhet_id');
+			      $identifier  = (int)$db->f('org_enhet_id');
     				$level = (int)$db->f('org_nivaa','int');
     				$name = $db->f('org_navn');
     				$unit_id = $db->f('resultatenhet');
@@ -172,17 +174,17 @@
     				$name = $db->f('ORG_NAVN');
     				$unit_id = $db->f('RESULTATENHET');
 			    }
-				
+
 				switch($level)
 				{
 					case 1: break;	// TODO: Access to all result units
-					case 2: 		// LEVEL: Byrådsavdeling 
+					case 2: 		// LEVEL: Byrådsavdeling
 						//Must traverse down the hierarchy
 						$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
 						$tables = "V_ORG_ENHET";
 						$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
 						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = {$identifier}";
-						
+
         				if($db1->Type == "postgres")
             			{
             			    $sql = strtolower($sql);
@@ -200,7 +202,7 @@
     									"UNIT_ID" => $db1->f('resultatenhet'),
     									"LEADER" => true
     								);
-    								
+
     								$org_unit_ids[(int)$db1->f('org_enhet_id')] = true;
     							}
 			                }
@@ -214,7 +216,7 @@
     									"UNIT_ID" => $db1->f('RESULTATENHET'),
     									"LEADER" => true
     								);
-    								
+
     								$org_unit_ids[(int)$db1->f('ORG_ENHET_ID')] = true;
     							}
 			                }
@@ -224,7 +226,7 @@
 					case 4:			// LEVEL: Resultatenhet
 						//Insert in result array
 						if(!isset($org_unit_ids[$identifier]))
-						{	
+						{
 							$result_units[] = array(
 								"ORG_UNIT_ID" => $identifier,
 								"ORG_NAME" => $name,
@@ -233,10 +235,10 @@
 							);
 							$org_unit_ids[$identifier] = true;
 						}
-						break;	
+						break;
 				}
 			}
-        	
+
         	return $result_units;
         	/*
 			return array(
@@ -253,12 +255,12 @@
 			);
 			*/
         }
-        
+
         /**
-         * 
+         *
          * @param int $number the result unit number
          */
-        public function get_organisational_unit_name($number) 
+        public function get_organisational_unit_name($number)
         {
  			$this->log(__class__, __function__);
 
@@ -286,7 +288,7 @@
 			        {
 	        		    return 	$db->f('ORG_NAVN', true);
 			        }
-	        	} 
+	        	}
         	}
         	else
         	{
@@ -294,8 +296,8 @@
         	}
         	//return "No name";
         }
-        
-        public function get_organisational_unit_info($number) 
+
+        public function get_organisational_unit_info($number)
         {
 			$this->log(__class__, __function__);
 
@@ -328,16 +330,16 @@
 	        		    );
 			        }
 	        	}
-        	} 
+        	}
         	else
         	{
         		return lang('no_name_organisational_unit');
         	}
         }
-        
+
         /**
          * Get user info from Fellesdata based on a username
-         * 
+         *
          * @param $username the username in question
          * @return an array containing username, firstname, lastname and email if user exist, false otherwise
          */
@@ -377,11 +379,11 @@
         				'email'		=> $db->f('EPOST', true)
         		    );
 		        }
-        	} 
+        	}
         	else
         	{
         		return false;
-        	}		
+        	}
         }
 
 		protected function log($class, $function)

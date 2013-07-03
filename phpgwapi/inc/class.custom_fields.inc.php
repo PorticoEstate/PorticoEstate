@@ -795,26 +795,25 @@
 
 			}
 
-			if($attrib_table)
+			if($attrib_table) // not eav
 			{
 				$table_def = $this->get_table_def($attrib_table);	
 				$this->_oProc->m_aTables = $table_def;
 
-			}
-
-			if($OldColumnName !=$attrib['column_name'])
-			{
-				$value_set=array('column_name'	=> $attrib['column_name']);
-
-				if( !$doubled )
+				if($OldColumnName !=$attrib['column_name'])
 				{
-					$value_set	= $this->_db->validate_update($value_set);
-					$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
-				}
+					$value_set=array('column_name'	=> $attrib['column_name']);
 
-				if($attrib_table)
-				{
-					$this->_oProc->RenameColumn($attrib_table, $OldColumnName, $attrib['column_name']);
+					if( !$doubled )
+					{
+						$value_set	= $this->_db->validate_update($value_set);
+						$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
+					}
+	
+					if($attrib_table)
+					{
+						$this->_oProc->RenameColumn($attrib_table, $OldColumnName, $attrib['column_name']);
+					}
 				}
 			}
 
@@ -853,14 +852,14 @@
 					unset($attrib['column_info']['default']);
 				}
 
-				$value_set=array(
-					'column_name'	=> $attrib['column_name'],
+				$value_set=array
+				(
 					'datatype'		=> $attrib['column_info']['type'],
 					'precision_'	=> $attrib['column_info']['precision'],
 					'scale'			=> $attrib['column_info']['scale'],
 					'default_value'	=> $attrib['column_info']['default'],
 					'nullable'		=> $attrib['column_info']['nullable']
-					);
+				);
 
 				if( !$doubled )
 				{

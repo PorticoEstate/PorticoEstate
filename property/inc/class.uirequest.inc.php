@@ -309,7 +309,7 @@
 
 				$_filter_buildingpart = array();
 				$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
-			
+
 				if($filter_key = array_search('.project.request', $filter_buildingpart))
 				{
 					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
@@ -824,7 +824,7 @@
 
 				//all colums should be have formatter
 				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-				$datatable['headers']['header'][$i]['className'] = $uicols['classname'][$i] ? $uicols['classname'][$i] : '';				
+				$datatable['headers']['header'][$i]['className'] = $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -874,7 +874,7 @@
 
 			if($dry_run)
 			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
@@ -1234,7 +1234,7 @@
 
 				$_condition = array_keys($values['condition']);
 				$__condition = isset($_condition[0]) && $_condition[0] ? $_condition[0] : 0;
-				
+
  				if(!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a condition!'));
@@ -1499,9 +1499,9 @@
 				else
 				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
-				}				
+				}
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
-			}									
+			}
 
 			$datavalues[1] = array
 				(
@@ -1596,7 +1596,7 @@
 
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->config->config_data['filter_buildingpart']) ? $this->config->config_data['filter_buildingpart'] : array();
-			
+
 			if($filter_key = array_search('.project.request', $filter_buildingpart))
 			{
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
@@ -1709,7 +1709,7 @@
 					'lang_save'							=> lang('save'),
 					'lang_done'							=> lang('done'),
 
-					'lang_request_id'					=> lang('request ID'),
+					'lang_request_id'					=> lang('request ID condition'),
 					'value_request_id'					=> $id,
 
 					'value_title'						=> $values['title'],
@@ -1725,7 +1725,7 @@
 
 					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 
-					'lang_coordinator'					=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('coordinator'),
+					'lang_coordinator'					=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('request coordinator'),
 
 					'lang_user_statustext'				=> lang('Select the coordinator the request belongs to. To do not use a category select NO USER'),
 					'select_user_name'					=> 'values[coordinator]',
@@ -1852,7 +1852,7 @@
 			{
 				return array();
 			}
-		
+
 			$interlink 	= CreateObject('property.interlink');
 			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
 
@@ -1919,7 +1919,7 @@
 
 			$total_records = count($values);
 
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 
 			if($allrows)
 			{

@@ -136,7 +136,7 @@
 			$id = (int)$id;
 			$joins = " {$this->left_join} controller_control_group ON (p.control_group_id = controller_control_group.id)";
 			$sql = "SELECT p.*, controller_control_group.group_name AS control_group_name FROM controller_control_item p {$joins} WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
@@ -219,7 +219,7 @@
 			$control_item_id = (int)$control_item_id;
 			$sql  = "delete from controller_control_item_option where control_item_id={$control_item_id}";
 			
-      return $this->db->query($sql);
+			return $this->db->query($sql);
 		}
 
 		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
@@ -312,7 +312,19 @@
 			}
 			if(isset($filters['control_areas']))
 			{
-				$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+//				$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+
+				$cat_id = (int) $filters['control_areas'];
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+
+				$filter_clauses[] = "controller_control_item.control_area_id IN (" .  implode(',', $cat_filter) .')';
 			}
 			
 

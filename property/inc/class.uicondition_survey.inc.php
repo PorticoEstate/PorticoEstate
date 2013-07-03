@@ -37,22 +37,23 @@
 		private $receipt = array();
 		public $public_functions = array
 		(
-			'query'				=> true,
-			'index'				=> true,
-			'view'				=> true,
-			'add'				=> true,
-			'edit'				=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'get_vendors'		=> true,
-			'get_users'			=> true,
-			'edit_survey_title'	=> true,
-			'get_files'			=> true,
-			'get_request'	=> true,
-			'get_summation'		=> true,
-			'view_file'			=> true,
-			'import'			=> true,
-			'download'			=> true
+			'query'						=> true,
+			'index'						=> true,
+			'view'						=> true,
+			'add'						=> true,
+			'edit'						=> true,
+			'save'						=> true,
+			'delete'					=> true,
+			'delete_imported_records'	=> true,
+			'get_vendors'				=> true,
+			'get_users'					=> true,
+			'edit_survey_title'			=> true,
+			'get_files'					=> true,
+			'get_request'				=> true,
+			'get_summation'				=> true,
+			'view_file'					=> true,
+			'import'					=> true,
+			'download'					=> true
 		);
 
 		public function __construct()
@@ -172,7 +173,7 @@
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
 						),
-						array(
+		/*				array(
 							'key' => 'title',
 							'label' => lang('title'),
 							'sortable' => true,
@@ -182,10 +183,15 @@
 							'key' => 'descr',
 							'label' => lang('description'),
 							'sortable' => false,
-						),
+						),*/
 						array(
 							'key' => 'address',
 							'label' => lang('buildingname'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'vendor',
+							'label' => lang('vendor'),
 							'sortable' => true
 						),
 						array(
@@ -251,6 +257,21 @@
 						'parameters'	=> json_encode($parameters)
 					);
 
+
+			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'delete_imported_records',
+						'text' 			=> lang('delete imported records'),
+						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.delete_imported_records'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
 
 			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
 			{
@@ -561,7 +582,7 @@
 				else
 				{
 					phpgwapi_cache::message_set('ok!', 'message'); 
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.edit', 'id' => $id));
 				}
 			}
 		}
@@ -1018,7 +1039,6 @@
 					'building_part'				=> 'bygningsdels kode',
 					'descr'						=> 'Tilstandbeskrivelse',
 					'title'						=> 'Tiltak/overskrift',
-					'hjemmel'					=> 'Hjemmel/ krav',
 					'condition_degree'			=> 'Tilstandsgrad',
 					'condition_type'			=> 'Konsekvenstype',
 					'consequence'				=> 'Konsekvensgrad',
@@ -1028,6 +1048,14 @@
 					'amount_operation'			=> 'Beløp drift',
 					'amount_potential_grants'	=> 'Potensial for offentlig støtte',
 				);
+
+				$custom	= createObject('phpgwapi.custom_fields');
+				$attributes = $custom->find('property','.project.request', 0, '','','',true, true);
+
+				foreach($attributes as $attribute)
+				{
+					$_options["custom_attribute_{$attribute['id']}"] = $attribute['input_text'];
+				}
 
 				phpgw::import_class('phpgwapi.sbox');
 
@@ -1244,6 +1272,36 @@
 			try
 			{
 				$this->bo->delete($id);
+			}
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					return $e->getMessage(); 
+				}
+			}
+			return 'Deleted';
+		}
+
+		/**
+		* Delete related requests only
+		*
+		* @param int  $id  id of entity
+		*
+		* @return string text to appear in ui as receipt on action
+		*/
+
+		public function delete_imported_records()
+		{
+			if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				return 'No access';
+			}
+			$id = phpgw::get_var('id', 'int', 'GET');
+
+			try
+			{
+				$this->bo->delete_imported_records($id);
 			}
 			catch(Exception $e)
 			{

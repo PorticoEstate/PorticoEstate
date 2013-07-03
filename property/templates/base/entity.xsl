@@ -405,6 +405,11 @@
 				document.form.active_tab.value = active_tab;			
 			}
 
+			function blank_entity_values()
+			{
+				<xsl:value-of select="function_blank_entity_values"/>
+			}
+
 			var property_js = <xsl:value-of select="property_js"/>;
 			var base_java_url = <xsl:value-of select="base_java_url"/>;
 			var datatable = new Array();

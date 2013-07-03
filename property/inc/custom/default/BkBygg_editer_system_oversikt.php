@@ -8,22 +8,18 @@
 
 	class ikt_systemoversikt extends property_boentity
 	{
-		protected $db;
 
 		function __construct()
 		{
 			parent::__construct();
-			$this->db 		= & $GLOBALS['phpgw']->db;
 			if($this->acl_location != '.entity.5.1')
 			{
 				throw new Exception("'ikt_systemoversikt'  is intended for location = '.entity.5.1'");
 			}
-
 		}
 
 		function set_classification($values,$values_attribute,$entity_id,$cat_id,$receipt)
 		{
-
 			$value_set = array();
 			$value_set['konf_rangering']			= 0;
 			$value_set['integritet_rangering']		= 0;
@@ -31,7 +27,6 @@
 
 			foreach($values_attribute as $entry)
 			{
-				$konf_rangering =  $entry['value'];
 				switch($entry['name'])
 				{
 					case 'konf_1':
@@ -109,11 +104,20 @@
 						break;
 				}
 			}
+			unset($entry);
 
-			$value_set	= $this->db->validate_update($value_set);
+			reset($values_attribute);
 
-			$sql = "UPDATE fm_entity_5_1 SET {$value_set} WHERE id =" . (int)$receipt['id'];
+			foreach($values_attribute as &$entry)
+			{
+				if($value_set[$entry['name']])
+				{
+					$entry['value'] = $value_set[$entry['name']];
+				}
+			}
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$_values = $values;
+			$_values['id'] = (int)$receipt['id'];
+			$this->so->edit($_values,$values_attribute,$entity_id,$cat_id);
 		}
 	}

@@ -201,9 +201,9 @@
 				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
 			);
 			$tab_to_display = 'control_group';
-			$control_group_id = phpgw::get_var('id');
+			$control_group_id = phpgw::get_var('id', 'int');
 			$new_control_group = false;
-			if(isset($control_group_id) && $control_group_id > 0)
+			if( $control_group_id )
 			{
 				$control_group = $this->so->get_single($control_group_id);
 			}
@@ -232,7 +232,25 @@
 					$control_group->set_control_area_id( phpgw::get_var('control_area') );
 					$control_group->set_building_part_id( phpgw::get_var('building_part') );
 					$control_group->set_component_location_id($component_location_id);
-					$control_group->set_component_criteria( phpgw::get_var('attributes') );
+					
+					$attributes = phpgw::get_var('attributes');
+					$attributes_operator = phpgw::get_var('attributes_operator');
+					
+					$criteria = array();
+					if(is_array($attributes))
+					{
+						foreach ($attributes as $_key => $_value)
+						{
+							if($_value)
+							{
+								$criteria[$_key]['value']		= $_value;
+								$criteria[$_key]['operator']	= $attributes_operator[$_key];
+							}
+						
+						}
+					}
+
+					$control_group->set_component_criteria( $criteria );
 
 					if(isset($control_group_id) && $control_group_id > 0)
 					{
@@ -313,39 +331,18 @@
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
+						'selected' => $control_group->get_control_area_id() == $cat_list['cat_id'] ? 1 : 0
 					);
 				}
 				// END as categories
 
-				//$control_area_array = $this->so_control_area->get_control_area_array();
-				$procedure_array = $this->so_procedure->get_procedures(null,null,'title','ASC',null,null,null);
+				$procedure_array = $this->so_procedure->get_procedures(0,0,'title','ASC',null,null,array('control_areas' => $control_group->get_control_area_id()));
 
 				if($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-
-/*				foreach ($control_area_array as $control_area)
-				{
-					if($control_group->get_control_area_id() && $control_area->get_id() == $control_group->get_control_area_id())
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title(),
-							'selected' => 'yes'
-						);
-					}
-					else
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title()
-						);
-					}
-				}*/
 
 				foreach ($procedure_array as $procedure)
 				{
@@ -460,8 +457,7 @@
 				}
 				// END as categories
 
-				//$control_area_array = $this->so_control_area->get_control_area_array();
-				$procedure_array = $this->so_procedure->get_procedures(null,null,'title','ASC',null,null,null);
+				$procedure_array = $this->so_procedure->get_procedures(0,0,'title','ASC',null,null,array('control_areas' => $control_group->get_control_area_id()));
 
 				if($this->flash_msgs)
 				{
@@ -509,7 +505,7 @@
 				$entity_so	= CreateObject('property.soadmin_entity');
 				$custom	= createObject('phpgwapi.custom_fields');
 				$entity_list = $entity_so->read(array('allrows' => true));
-
+				$attributes = array();
 				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
 
 				$component_location_id = $control_group->get_component_location_id();
@@ -539,17 +535,67 @@
 
 					$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
 
+					$operator1 = array
+					(
+						array
+						(
+							'id' => 'eq',
+							'name'	=> '='
+						),
+					);
+
+					$operator2 = array
+					(
+						array
+						(
+							'id' => 'eq',
+							'name'	=> '='
+						),
+						array
+						(
+							'id' => 'lt',
+							'name'	=> '<'
+						),
+						array
+						(
+							'id' => 'gt',
+							'name'	=> '>'
+						),
+					);
+
 					$component_criteria = $control_group->get_component_criteria();
+
 					foreach ($attributes as $key => &$a)
 					{
-						if(isset($component_criteria[$key]) && $component_criteria[$key])
+						switch ($a['datatype'])
 						{
-							$a['value'] = $component_criteria[$key];
+							case 'LB':
+							case 'R':
+							case 'CH':
+								$a['operator'] = array('options' => $operator1);
+								break;
+							default:
+								$a['operator'] = array('options' => $operator2);												 
+						}
+
+						if(isset($component_criteria[$key]['value']) && $component_criteria[$key]['value'])
+						{
+							$a['value'] = $component_criteria[$key]['value'];
 							if(isset($a['choice']) && $a['choice'])
 							{
 								foreach($a['choice'] as &$choise)
 								{
-									$choise['selected'] = $choise['id'] == $component_criteria[$key] ? 1 : 0;
+									$choise['selected'] = $choise['id'] == $component_criteria[$key]['value'] ? 1 : 0;
+								}
+							}
+						}
+						if(isset($component_criteria[$key]['operator']) && $component_criteria[$key]['operator'])
+						{
+							if(isset($a['operator']) && $a['operator'])
+							{
+								foreach($a['operator']['options'] as &$_operator)
+								{
+									$_operator['selected'] = $_operator['id'] == $component_criteria[$key]['operator'] ? 1 : 0;
 								}
 							}
 						}
@@ -810,17 +856,67 @@
 				$custom	= createObject('phpgwapi.custom_fields');
 				$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
 
+				$operator1 = array
+				(
+					array
+					(
+						'id' => 'eq',
+						'name'	=> '='
+					),
+				);
+
+				$operator2 = array
+				(
+					array
+					(
+						'id' => 'eq',
+						'name'	=> '='
+					),
+					array
+					(
+						'id' => 'lt',
+						'name'	=> '<'
+					),
+					array
+					(
+						'id' => 'gt',
+						'name'	=> '>'
+					),
+				);
+
 				$component_criteria = $control_group->get_component_criteria();
+
 				foreach ($attributes as $key => &$a)
 				{
-					if(isset($component_criteria[$key]) && $component_criteria[$key])
+					switch ($a['datatype'])
 					{
-						$a['value'] = $component_criteria[$key];
+						case 'LB':
+						case 'R':
+						case 'CH':
+							$a['operator'] = array('options' => $operator1);
+							break;
+						default:
+							$a['operator'] = array('options' => $operator2);												 
+					}
+
+					if(isset($component_criteria[$key]['value']) && $component_criteria[$key]['value'])
+					{
+						$a['value'] = $component_criteria[$key]['value'];
 						if(isset($a['choice']) && $a['choice'])
 						{
 							foreach($a['choice'] as &$choise)
 							{
-								$choise['selected'] = $choise['id'] == $component_criteria[$key] ? 1 : 0;
+								$choise['selected'] = $choise['id'] == $component_criteria[$key]['value'] ? 1 : 0;
+							}
+						}
+					}
+					if(isset($component_criteria[$key]['operator']) && $component_criteria[$key]['operator'])
+					{
+						if(isset($a['operator']) && $a['operator'])
+						{
+							foreach($a['operator']['options'] as &$_operator)
+							{
+								$_operator['selected'] = $_operator['id'] == $component_criteria[$key]['operator'] ? 1 : 0;
 							}
 						}
 					}
