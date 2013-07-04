@@ -33,6 +33,11 @@
 	 */
 	class phpgwapi_menu
 	{
+		var $public_functions = array
+		(
+			'get_local_menu_ajax' => true
+		);
+		
 		/**
 		* Clear the user's menu so it can be regenerated cleanly
 		*
@@ -364,6 +369,35 @@ HTML;
 			return $menu;
 		}
 
+		public function get_local_menu_ajax()
+		{
+			$node		= phpgw::get_var('node');
+
+			$selection = explode('::',$node);
+
+			$app = $selection[0];
+
+			if(!isset($GLOBALS['phpgw_info']['user']['apps'][$app]))
+			{
+				return array();
+			}
+
+//			if(!$menu = phpgwapi_cache::session_get('phpgwapi', "menu_{$node}"))
+			{
+				$menu_gross = execMethod("{$app}.menu.get_menu");
+				$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$level=0;
+				$menu = self::_get_sub_menu($menu_gross['navigation'],$selection,$level);
+				phpgwapi_cache::session_set('phpgwapi', "menu_{$node}",$menu);
+				unset($menu_gross);
+			}
+
+_debug_array($menu);
+			return $menu;
+		}
+
+
+
 		protected static function _get_sub_menu($children = array(), $selection=array(),$level=0)
 		{
 			$level++;
@@ -378,7 +412,7 @@ HTML;
 					$menu[$i]['this'] = true;
 					if(isset($menu[$i]['children']))
 					{
-						$menu[$i]['children'] = self::_get_sub_menu($menu[$i]['children'],$selection,$level);
+						$menu[$i]['children'] = self::_get_sub_menu_($menu[$i]['children'],$selection,$level);
 					}
 				}
 				else
