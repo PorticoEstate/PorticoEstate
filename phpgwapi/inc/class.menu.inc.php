@@ -412,7 +412,7 @@ _debug_array($menu);
 					$menu[$i]['this'] = true;
 					if(isset($menu[$i]['children']))
 					{
-						$menu[$i]['children'] = self::_get_sub_menu_($menu[$i]['children'],$selection,$level);
+						$menu[$i]['children'] = self::_get_sub_menu($menu[$i]['children'],$selection,$level);
 					}
 				}
 				else
