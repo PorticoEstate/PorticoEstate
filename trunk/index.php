@@ -124,6 +124,11 @@
 		}
 		else
 		{
+			if(phpgw::get_var('phpgw_return_as', 'string', 'GET') =='noframes')
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+				$GLOBALS['phpgw_info']['flags']['headonly']=true;
+			}
 			$GLOBALS[$class]->$method();
 		}
 		unset($app);
