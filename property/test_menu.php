@@ -42,8 +42,9 @@
 			$applications[] = array
 			(
 				'text' => $app_data['text'],
-				'href'	=> $app_data['url'],
+				'href'	=> str_replace('&amp;','&', $app_data['url']) . '&phpgw_return_as=noframes',
 			);
+
 			$mapping[$i] = $app;
 			$i ++;
 		}
@@ -51,18 +52,13 @@
 		$mapping = json_encode($mapping);
 
 $html = <<<HTML
-							<div id="treeDiv1"></div>
-								<!-- Some style for the expand/contract section-->
-								<style>
-									#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-									#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
-								</style>
-								<script type="text/javascript">
-								   var apps = {$applications};
-								   var mapping = {$mapping};
-								</script>
-								<div id="treeDiv1"/>
-
+		<div id="treeDiv1"></div>
+		<!--div id="html_content"></div-->
+		<iframe id="html_content" width="100%" height="100%"><p>Your browser does not support iframes.</p></iframe>
+		<script type="text/javascript">
+		   var apps = {$applications};
+		   var mapping = {$mapping};
+		</script>
 HTML;
 
 
