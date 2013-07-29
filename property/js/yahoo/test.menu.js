@@ -1,55 +1,4 @@
 
-//test_
-
-var items = [
-    {"Id": "1", "Name": "abc", "Parent": "2"},
-    {"Id": "2", "Name": "abc", "Parent": ""},
-    {"Id": "3", "Name": "abc", "Parent": "5"},
-    {"Id": "4", "Name": "abc", "Parent": "2"},
-    {"Id": "5", "Name": "abc", "Parent": ""},
-    {"Id": "6", "Name": "abc", "Parent": "2"},
-    {"Id": "7", "Name": "abc", "Parent": "6"},
-    {"Id": "8", "Name": "abc", "Parent": "6"}
-];
-
-function buildHierarchy(arry) {
-
-    var roots = [], children = {};
-
-    // find the top level nodes and hash the children based on parent
-    for (var i = 0, len = arry.length; i < len; ++i) {
-        var item = arry[i],
-            p = item.Parent,
-            target = !p ? roots : (children[p] || (children[p] = []));
-
-        target.push({ value: item });
-    }
-
-    // function to recursively build the tree
-    var findChildren = function(parent) {
-        if (children[parent.value.Id]) {
-            parent.children = children[parent.value.Id];
-            for (var i = 0, len = parent.children.length; i < len; ++i) {
-                findChildren(parent.children[i]);
-            }
-        }
-    };
-
-    // enumerate through to handle the case where there are multiple roots
-    for (var i = 0, len = roots.length; i < len; ++i) {
-        findChildren(roots[i]);
-    }
-
-    return roots;
-}
-
-
-var test = buildHierarchy(items);
-//console.log(buildHierarchy(items));​
-
-// test
-
-
 
 function get_html (sUrl)
 {
@@ -213,6 +162,7 @@ function get_html (sUrl)
 
 		var menu_tree_data;
 		var menu_arranged_data = {};
+		proxy_data[0] = {};
 
 		if(typeof(Storage)!=="undefined")
 		{
@@ -228,20 +178,24 @@ function get_html (sUrl)
 		{
 			alert(menu_tree_data);
 			menu_tree_data = JSON.parse(menu_tree_data);
-			var k = 0;
-			for (var i=0, j=menu_tree_data.length; i<j; i++)
-			{
-				if(menu_tree_data[i]['parent'] == 0)
-				{
-					menu_arranged_data[k] = menu_tree_data[i];
-					k++;
-				}
-				else
-				{
-				
-				}
-			}
+			console.log(menu_tree_data);
 
+			var test = buildHierarchy(menu_tree_data);
+
+var items = [
+    {"id": "1", "Name": "abc", "parent": "2"},
+    {"id": "2", "Name": "abc", "parent": ""},
+    {"id": "3", "Name": "abc", "parent": "5"},
+    {"id": "4", "Name": "abc", "parent": "2"},
+    {"id": "5", "Name": "abc", "parent": ""},
+    {"id": "6", "Name": "abc", "parent": "2"},
+    {"id": "7", "Name": "abc", "parent": "6"},
+    {"id": "8", "Name": "abc", "parent": "6"}
+];
+
+//			var test = buildHierarchy(items);
+
+			console.log(test);
 
 		}
 
@@ -280,6 +234,65 @@ function get_html (sUrl)
 	   //will be generated as needed by the dynamic loader.
 
 	   tree.draw();
+
+
+
+
+//----------test -------------
+
+
+function buildHierarchy(arry) {
+
+alert(arry.length);
+//console.log(arry);
+    var roots = [], children = {};
+
+    // find the top level nodes and hash the children based on parent
+    for (var i = 0, len = arry.length; i < len; ++i)
+    {
+        var item = arry[i],
+            p = item.parent,
+            target = !p ? roots : (children[p] || (children[p] = []));
+
+// console.log(arry[i]);
+        target.push({ value: item });
+    }
+
+    // function to recursively build the tree
+    var findChildren = function(parent) {
+        if (children[parent.value.id])
+        {
+            parent.children = children[parent.value.id];
+            for (var i = 0, len = parent.children.length; i < len; ++i)
+            {
+                findChildren(parent.children[i]);
+            }
+        }
+    };
+
+    // enumerate through to handle the case where there are multiple roots
+    for (var i = 0, len = roots.length; i < len; ++i) {
+        findChildren(roots[i]);
+    }
+
+    return roots;
+}
+
+
+// ------test -----------
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 

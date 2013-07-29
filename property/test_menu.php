@@ -60,7 +60,7 @@ $html = <<<HTML
 		<script type="text/javascript">
 		   var apps = {$applications};
 		   var mapping = {$mapping};
-		   var proxy_data = {};
+		   var proxy_data = new Array();
 		</script>
 HTML;
 
