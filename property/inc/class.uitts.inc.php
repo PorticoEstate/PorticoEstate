@@ -2011,7 +2011,7 @@
 					'disable_userassign_on_add'		=> isset($this->bo->config->config_data['tts_disable_userassign_on_add'])?$this->bo->config->config_data['tts_disable_userassign_on_add']:'',
 
 					'lang_no_group'					=> lang('No group'),
-					'group_list'					=> $this->bo->get_group_list(),
+					'group_list'					=> $this->bo->get_group_list($values['group_id']),
 					'select_group_name'				=> 'values[group_id]',
 
 					'lang_priority_statustext'		=> lang('Select the priority the selection belongs to.'),
