@@ -20,10 +20,12 @@
 	phpgw::import_class('phpgwapi.yui');
 	$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
 	phpgwapi_yui::load_widget('treeview');
+	phpgwapi_yui::load_widget('cookie');
 	$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'test.menu', 'property' );
 
 		$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 		$applications = array();
+		$mapping = array();
 		$exclude = array('home', 'preferences', 'about', 'logout');
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 
@@ -58,6 +60,7 @@ $html = <<<HTML
 		<script type="text/javascript">
 		   var apps = {$applications};
 		   var mapping = {$mapping};
+		   var proxy_data = {};
 		</script>
 HTML;
 
