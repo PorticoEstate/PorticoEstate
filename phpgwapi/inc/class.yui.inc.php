@@ -75,6 +75,10 @@
 					$load = array("calendar{$_type}");
 					break;
 
+				case 'cookie':
+					$load = array("json{$_type}", "cookie{$_type}");
+					break;
+
 				case 'colorpicker':
 				case 'colourpicker': // be nice to the speakers of H.M. English :)
 					$load = array("colorpicker{$_type}");
