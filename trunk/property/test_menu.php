@@ -43,8 +43,14 @@
 
 			$applications[] = array
 			(
-				'text' => $app_data['text'],
-				'href'	=> str_replace('&amp;','&', $app_data['url']) . '&phpgw_return_as=noframes',
+				'value'=> array
+				(
+					'label' => $app_data['text'],
+				//	'href'	=> str_replace('&amp;','&', $app_data['url']) . '&phpgw_return_as=noframes',
+					'href'	=> str_replace('&amp;','&', $app_data['url']),
+					'expanded'	=> false
+				),
+				'children'	=> array()
 			);
 
 			$mapping[$i] = $app;
@@ -60,11 +66,9 @@ $html = <<<HTML
 		<script type="text/javascript">
 		   var apps = {$applications};
 		   var mapping = {$mapping};
-		   var proxy_data = new Array();
+		   var proxy_data = [];
 		</script>
 HTML;
-
-
 
 // End--------------------------------------------------
 

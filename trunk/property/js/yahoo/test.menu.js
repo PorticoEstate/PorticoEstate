@@ -37,7 +37,6 @@ function get_html (sUrl)
 		//Get the node's label and urlencode it; this is the word/s
 		//on which we'll search for related words:
 		//var nodeLabelElId = encodeURI(node.labelElId);
-//console.log(mapping);
 
 		var mapping_str = node.labelElId
 		mapping_id = mapping_str.replace('ygtvlabelel','');
@@ -72,7 +71,6 @@ function get_html (sUrl)
 							titles[title] = true;
 
 							var myobj = {label: title, href:url}//,target:"_self" };
-							//tempNode = new YAHOO.widget.TextNode(title, node, false);
 							tempNode = new YAHOO.widget.TextNode( myobj, node, false);
 
 							var mapping_str = tempNode.labelElId
@@ -87,15 +85,31 @@ function get_html (sUrl)
 							myobj['parent'] = parent_mapping_id;
 							myobj['id'] = mapping_id;
 							myobj['isLeaf'] = is_leaf;
-							proxy_data[mapping_id] =  myobj;
-							proxy_data[parent_mapping_id]['expanded'] = true;
+							myobj['expanded'] = false;
+							proxy_data.push(myobj);
+//							proxy_data[(mapping_id-1)] =  myobj;
+							if(parent_mapping_id)
+							{
+								proxy_data[(parent_mapping_id -1) ]['expanded'] = true;
+							}
+
+							//FIXME - move outside loop
+							sessionStorage.cached_menu_tree_data = JSON.stringify(proxy_data);
+							sessionStorage.cached_mapping = JSON.stringify(mapping);
 							//----------
 
 							// we can tell the tree node that this is a leaf node so
 							// that it doesn't try to dynamically load children.
 
 					 
-							 tempNode.isLeaf = is_leaf;
+							 if(is_leaf)
+							 {
+							 	tempNode.isLeaf = is_leaf;
+							 }
+							 else
+							 {
+								tempNode.setDynamicLoad(loadNodeData);
+							 }
 
 							// Define a href so that a click on the node will navigate
 							// to the page that has the track that you may be able
@@ -138,176 +152,195 @@ function get_html (sUrl)
 		//asyncRequest method:
 		YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);
 
-		var json_proxy_data = JSON.stringify(proxy_data);
+//console.log(mapping);
+//console.log(proxy_data);
 
-//		alert(json_proxy_data);
-
-		sessionStorage.menu_tree_data = json_proxy_data;
-//		alert(YAHOO.util.Cookie.get("menu_tree_data"));
-
-
-//		var menu_tree_data = tree.getNodesBy(function(o){return true;});
-//		var menu_tree_data = tree.getTreeDefinition();
-//console.log(menu_tree_data);
-//alert(JSON.stringify(menu_tree_data));
-//		YAHOO.util.Cookie.set("menu_tree_data", tree.getNodesBy(function(o){return true;}));
-//console.log(tree.getNodesBy(function(o){return true;}));
-
-
-//		alert(tree_struct_x());
+		//FIXME
+//		var json_proxy_data = JSON.stringify(proxy_data);
+//		sessionStorage.cached_menu_tree_data = json_proxy_data;
+//		sessionStorage.cached_mapping = JSON.stringify(mapping);
 
 	}
 
 	function init() {
 
+	var reset = false;
+
+	if(reset)
+	{
+		sessionStorage.cached_menu_tree_data = '';
+		sessionStorage.cached_mapping = '';
+	}
+
 		var menu_tree_data;
-		var menu_arranged_data = {};
-		proxy_data[0] = {};
+		var cached_menu_tree_data;
+		var cached_mapping;
 
 		if(typeof(Storage)!=="undefined")
 		{
 //			alert('Yes! localStorage and sessionStorage support!');
-			menu_tree_data = sessionStorage.menu_tree_data;
+			cached_menu_tree_data = sessionStorage.cached_menu_tree_data;
+			cached_mapping = sessionStorage.cached_mapping;
 	 	}
 		else
 		{
 			alert('Sorry! No web storage support..');
 		}
-		
-		if(menu_tree_data !=null)
-		{
-			alert(menu_tree_data);
-			menu_tree_data = JSON.parse(menu_tree_data);
-			console.log(menu_tree_data);
 
-			var test = buildHierarchy(menu_tree_data);
-
-var items = [
-    {"id": "1", "Name": "abc", "parent": "2"},
-    {"id": "2", "Name": "abc", "parent": ""},
-    {"id": "3", "Name": "abc", "parent": "5"},
-    {"id": "4", "Name": "abc", "parent": "2"},
-    {"id": "5", "Name": "abc", "parent": ""},
-    {"id": "6", "Name": "abc", "parent": "2"},
-    {"id": "7", "Name": "abc", "parent": "6"},
-    {"id": "8", "Name": "abc", "parent": "6"}
-];
-
-//			var test = buildHierarchy(items);
-
-			console.log(test);
-
-		}
+//		console.log(apps);
+		menu_tree_data = apps;
 
 //		console.log(menu_tree_data);
+
+		if(cached_mapping)
+		{
+			mapping = JSON.parse(cached_mapping);
+		}
+
+		if(cached_menu_tree_data !=null && cached_menu_tree_data)
+		{
+
+			cached_menu_tree_data = JSON.parse(cached_menu_tree_data);
+			proxy_data = cached_menu_tree_data;
+
+			if(apps.length < cached_menu_tree_data.length)
+			{
+				menu_tree_data = buildHierarchy(cached_menu_tree_data);
+			}
+		}
 
 	   //create a new tree:
 	   tree = new YAHOO.widget.TreeView("treeDiv1");
 
 	   //turn dynamic loading on for entire tree:
-	   tree.setDynamicLoad(loadNodeData);
+//	   tree.setDynamicLoad(loadNodeData);
+
+
+   // Expand and collapse happen prior to the actual expand/collapse,
+    // and can be used to cancel the operation
+    tree.subscribe("expand", function(node) {
+		var mapping_str = node.labelElId
+		var mapping_id = mapping_str.replace('ygtvlabelel','');
+        alert( mapping_id + " was expanded");
+        // return false; // return false to cancel the expand
+    });
+ 
+    tree.subscribe("collapse", function(node) {
+		var mapping_str = node.labelElId
+		var mapping_id = mapping_str.replace('ygtvlabelel','');
+        alert(mapping_id + " was collapsed");
+    });
+
 
 	   //get root node for tree:
 	   var root = tree.getRoot();
 
 	   //add child nodes for tree; our top level nodes are apps - defined in html
 
-	   var id = 0;
-	   for (var i=0, j=apps.length; i<j; i++)
+	   function buildTree(menu_tree_data)
 	   {
-			var myobj = { label: apps[i]['text'], href:'javascript:get_html("' + apps[i]['href'] + '");'}//,target:"_self" };
-			var tempNode = new YAHOO.widget.TextNode(myobj, root, false);
-			
-			id = i + 1;
-			myobj['parent'] = 0;
-			myobj['id'] = id;
-			proxy_data[id] =  myobj;
-			proxy_data[id]['expanded'] = false;
-
-			if(typeof(apps[i]['children']) != 'undefined' && apps[i]['children'].length)
+			var buildBranch = function(node, branch)
 			{
-				buildBranch(tmpNode, apps[i]['children']);
-			}
-	   }
+				for (var i = 0; i < branch.length; i++)
+				{
+					var tempNode = new YAHOO.widget.TextNode({label:branch[i]['value']['label'], href:branch[i]['value']['href']}, node, branch[i]['value']['expanded']);
 
-	   //render tree with these toplevel nodes; all descendants of these nodes
-	   //will be generated as needed by the dynamic loader.
+					if(typeof(branch[i]['children']) != 'undefined' && branch[i]['children'].length)
+					{
+						buildBranch(tempNode, branch[i]['children']);
+					}
+					else
+					{
+						tempNode.isLeaf = branch[i]['value']['isLeaf'];
+						tempNode.setDynamicLoad(loadNodeData);
+					}
+				}
+			};
 
-	   tree.draw();
+		   var id = 0;
+		   for (var i=0, j=menu_tree_data.length; i<j; i++)
+		   {
+				var myobj = { 
+					label: menu_tree_data[i]['value']['label'],
+				//	href:'javascript:get_html("' + menu_tree_data[i]['value']['href'] + '");',
+					href: menu_tree_data[i]['value']['href']
+					}//,target:"_self" };
+
+				var tempNode = new YAHOO.widget.TextNode(myobj, root, menu_tree_data[i]['value']['expanded']);
+
+				id = i + 1;
+				myobj['parent'] = '';
+				myobj['id'] = id;
+				myobj['expanded'] = false;
+				proxy_data.push(myobj);
+			//	proxy_data[id] =  myobj;
+			//	proxy_data[id]['expanded'] = false;
+
+				if(typeof(menu_tree_data[i]['children']) != 'undefined' && menu_tree_data[i]['children'].length)
+				{
+					buildBranch(tempNode, menu_tree_data[i]['children']);
+				}
+				else
+				{
+					tempNode.setDynamicLoad(loadNodeData);
+				}
+		   }
+
+		   //render tree with these toplevel nodes; all descendants of these nodes
+		   //will be generated as needed by the dynamic loader.
+
+		   tree.draw();
+	  }
 
 
-
+		buildTree(menu_tree_data);
 
 //----------test -------------
 
 
-function buildHierarchy(arry) {
+		function buildHierarchy(arry) {
 
-alert(arry.length);
-//console.log(arry);
-    var roots = [], children = {};
+			var roots = [], children = {};
 
-    // find the top level nodes and hash the children based on parent
-    for (var i = 0, len = arry.length; i < len; ++i)
-    {
-        var item = arry[i],
-            p = item.parent,
-            target = !p ? roots : (children[p] || (children[p] = []));
+			// find the top level nodes and hash the children based on parent
+			for (var i = 0, len = arry.length; i < len; ++i)
+			{
+				var item = arry[i],
+				    p = item.parent,
+				    target = !p ? roots : (children[p] || (children[p] = []));
 
-// console.log(arry[i]);
-        target.push({ value: item });
-    }
+				target.push({ value: item });
+//				target.push(item);
+			}
 
-    // function to recursively build the tree
-    var findChildren = function(parent) {
-        if (children[parent.value.id])
-        {
-            parent.children = children[parent.value.id];
-            for (var i = 0, len = parent.children.length; i < len; ++i)
-            {
-                findChildren(parent.children[i]);
-            }
-        }
-    };
+			// function to recursively build the tree
+			var findChildren = function(parent)
+			{
+				if (children[parent.value.id])
+				{
+				    parent.children = children[parent.value.id];
+				    for (var i = 0, len = parent.children.length; i < len; ++i)
+				    {
+				        findChildren(parent.children[i]);
+				    }
+				}
+			};
 
-    // enumerate through to handle the case where there are multiple roots
-    for (var i = 0, len = roots.length; i < len; ++i) {
-        findChildren(roots[i]);
-    }
+			// enumerate through to handle the case where there are multiple roots
+			for (var i = 0, len = roots.length; i < len; ++i) {
+				findChildren(roots[i]);
+			}
 
-    return roots;
-}
+			return roots;
+		}
 
 
 // ------test -----------
 
 
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 
-	function buildBranch(node, branch)
-	{
-		for (var i = 0; i < branch.length; i++)
-		{
-			var tmpNode = new YAHOO.widget.TextNode({label:branch[i]['text'], href:branch[i]['link']}, node, false);
-			if(branch[i]['children'])
-			{
-				buildBranch(tmpNode, branch[i]['children']);
-			}
-		}
-	}
-	
 
 	//once the DOM has loaded, we can go ahead and set up our tree:
 	YAHOO.util.Event.onDOMReady(init);
