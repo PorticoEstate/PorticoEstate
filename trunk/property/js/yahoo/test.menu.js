@@ -38,9 +38,10 @@ function get_html (sUrl)
 		//on which we'll search for related words:
 		//var nodeLabelElId = encodeURI(node.labelElId);
 
+
 		var mapping_str = node.labelElId
 		mapping_id = mapping_str.replace('ygtvlabelel','');
-		var app = mapping[mapping_id];
+		var app = mapping[mapping_id]['name'];
 
 		//prepare URL for XHR request:
 		var oArgs = {menuaction:'phpgwapi.menu.get_local_menu_ajax',node:app};
@@ -75,8 +76,7 @@ function get_html (sUrl)
 
 							var mapping_str = tempNode.labelElId
 							mapping_id = mapping_str.replace('ygtvlabelel','');
-							mapping[mapping_id] = app + '|' + key;
-
+							mapping[mapping_id] = {id: mapping_id, name: app + '|' + key, expanded: false, highlight: false};
 
 							//----------
 							var parent_mapping_str = node.labelElId
@@ -86,17 +86,15 @@ function get_html (sUrl)
 							myobj['id'] = mapping_id;
 							myobj['isLeaf'] = is_leaf;
 							myobj['expanded'] = false;
-							proxy_data.push(myobj);
-//							proxy_data[(mapping_id-1)] =  myobj;
+//							proxy_data.push(myobj);
+
+//console.log(myobj);
+							proxy_data[mapping_id] =  myobj;
 							if(parent_mapping_id)
 							{
-								proxy_data[(parent_mapping_id -1) ]['expanded'] = true;
+								proxy_data[parent_mapping_id]['expanded'] = true;
+								mapping[parent_mapping_id]['expanded'] = true;
 							}
-
-							//FIXME - move outside loop
-							sessionStorage.cached_menu_tree_data = JSON.stringify(proxy_data);
-							sessionStorage.cached_mapping = JSON.stringify(mapping);
-							//----------
 
 							// we can tell the tree node that this is a leaf node so
 							// that it doesn't try to dynamically load children.
@@ -117,6 +115,13 @@ function get_html (sUrl)
 							tempNode.href = url;
 						}
 					}
+
+console.log(proxy_data);
+console.log(mapping);
+
+					sessionStorage.cached_menu_tree_data = JSON.stringify(proxy_data);
+					sessionStorage.cached_mapping = JSON.stringify(mapping);
+
 				}
 
 				//When we're done creating child nodes, we execute the node's
@@ -151,44 +156,36 @@ function get_html (sUrl)
 		//make our XHR call using Connection Manager's
 		//asyncRequest method:
 		YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);
-
-//console.log(mapping);
-//console.log(proxy_data);
-
-		//FIXME
-//		var json_proxy_data = JSON.stringify(proxy_data);
-//		sessionStorage.cached_menu_tree_data = json_proxy_data;
-//		sessionStorage.cached_mapping = JSON.stringify(mapping);
-
 	}
 
 	function init() {
 
-	var reset = false;
+		var reset = false;
 
-	if(reset)
-	{
-		sessionStorage.cached_menu_tree_data = '';
-		sessionStorage.cached_mapping = '';
-	}
+		if(reset)
+		{
+			sessionStorage.cached_menu_tree_data = '';
+			sessionStorage.cached_mapping = '';
+		}
 
 		var menu_tree_data;
 		var cached_menu_tree_data;
 		var cached_mapping;
+		var new_mapping = [{name:'first_element_is_dummy'}];
+		var new_proxy_data = ['first_element_is_dummy'];
 
 		if(typeof(Storage)!=="undefined")
 		{
 //			alert('Yes! localStorage and sessionStorage support!');
 			cached_menu_tree_data = sessionStorage.cached_menu_tree_data;
 			cached_mapping = sessionStorage.cached_mapping;
+
+//alert(cached_menu_tree_data);
 	 	}
 		else
 		{
 			alert('Sorry! No web storage support..');
 		}
-
-//		console.log(apps);
-		menu_tree_data = apps;
 
 //		console.log(menu_tree_data);
 
@@ -197,23 +194,17 @@ function get_html (sUrl)
 			mapping = JSON.parse(cached_mapping);
 		}
 
-		if(cached_menu_tree_data !=null && cached_menu_tree_data)
+		menu_tree_data = apps;
+		if(cached_menu_tree_data)
 		{
-
+//alert(cached_menu_tree_data);
 			cached_menu_tree_data = JSON.parse(cached_menu_tree_data);
-			proxy_data = cached_menu_tree_data;
-
-			if(apps.length < cached_menu_tree_data.length)
-			{
-				menu_tree_data = buildHierarchy(cached_menu_tree_data);
-			}
+	//		proxy_data = cached_menu_tree_data;
+			menu_tree_data = buildHierarchy(cached_menu_tree_data);
 		}
 
 	   //create a new tree:
 	   tree = new YAHOO.widget.TreeView("treeDiv1");
-
-	   //turn dynamic loading on for entire tree:
-//	   tree.setDynamicLoad(loadNodeData);
 
 
    // Expand and collapse happen prior to the actual expand/collapse,
@@ -221,14 +212,18 @@ function get_html (sUrl)
     tree.subscribe("expand", function(node) {
 		var mapping_str = node.labelElId
 		var mapping_id = mapping_str.replace('ygtvlabelel','');
-        alert( mapping_id + " was expanded");
+		alert(mapping_id);
+ //       mapping[mapping_id]['expanded'] = true;
+//		sessionStorage.cached_mapping = JSON.stringify(mapping);
         // return false; // return false to cancel the expand
     });
  
     tree.subscribe("collapse", function(node) {
 		var mapping_str = node.labelElId
 		var mapping_id = mapping_str.replace('ygtvlabelel','');
-        alert(mapping_id + " was collapsed");
+		alert(mapping_id);
+//        mapping[mapping_id]['expanded'] = false;
+//		sessionStorage.cached_mapping = JSON.stringify(mapping);
     });
 
 
@@ -239,12 +234,26 @@ function get_html (sUrl)
 
 	   function buildTree(menu_tree_data)
 	   {
+//console.log(menu_tree_data);
+//console.log(mapping);
+
 			var buildBranch = function(node, branch)
 			{
 				for (var i = 0; i < branch.length; i++)
 				{
-					var tempNode = new YAHOO.widget.TextNode({label:branch[i]['value']['label'], href:branch[i]['value']['href']}, node, branch[i]['value']['expanded']);
+					var tempNode = new YAHOO.widget.TextNode({label:branch[i]['value']['label'], href:branch[i]['value']['href']}, node, mapping[branch[i]['value']['id']]['expanded']);
+					var mapping_str = tempNode.labelElId
+					var mapping_id = mapping_str.replace('ygtvlabelel','');
+					new_mapping[mapping_id] = mapping[branch[i]['value']['id']];
+					new_mapping[mapping_id]['id'] = mapping_id;
 
+					var parent_mapping_str = node.labelElId
+					parent_mapping_id = parent_mapping_str.replace('ygtvlabelel','');
+
+/*					new_proxy_data[mapping_id]			= proxy_data[branch[i]['value']['id']];
+					new_proxy_data[mapping_id]['id']	= mapping_id;
+					new_proxy_data[mapping_id]['parent'] = parent_mapping_id;
+*/
 					if(typeof(branch[i]['children']) != 'undefined' && branch[i]['children'].length)
 					{
 						buildBranch(tempNode, branch[i]['children']);
@@ -262,19 +271,35 @@ function get_html (sUrl)
 		   {
 				var myobj = { 
 					label: menu_tree_data[i]['value']['label'],
-				//	href:'javascript:get_html("' + menu_tree_data[i]['value']['href'] + '");',
 					href: menu_tree_data[i]['value']['href']
 					}//,target:"_self" };
+				
+			
+				var tempNode = new YAHOO.widget.TextNode(myobj, root, mapping[menu_tree_data[i]['value']['id']]['expanded']);
 
-				var tempNode = new YAHOO.widget.TextNode(myobj, root, menu_tree_data[i]['value']['expanded']);
+//				if(mapping[menu_tree_data[i]['value']['id']]['highlight'])
+				{
+//					tempNode.highlight();
+				}
 
-				id = i + 1;
+				var mapping_str = tempNode.labelElId
+				var mapping_id = mapping_str.replace('ygtvlabelel','');
+
+				var old_id = menu_tree_data[i]['value']['id'];
+				new_mapping[mapping_id] = mapping[menu_tree_data[i]['value']['id']];
+				new_mapping[mapping_id]['id'] = mapping_id;
+				
+				if(typeof(proxy_data[old_id]) != 'undefined')
+				{
+					new_proxy_data[mapping_id] = proxy_data[old_id];
+				}
+				//id = i + 1;
+				
+				id = mapping_id;
 				myobj['parent'] = '';
 				myobj['id'] = id;
 				myobj['expanded'] = false;
-				proxy_data.push(myobj);
-			//	proxy_data[id] =  myobj;
-			//	proxy_data[id]['expanded'] = false;
+				proxy_data[id] =  myobj;
 
 				if(typeof(menu_tree_data[i]['children']) != 'undefined' && menu_tree_data[i]['children'].length)
 				{
@@ -290,10 +315,16 @@ function get_html (sUrl)
 		   //will be generated as needed by the dynamic loader.
 
 		   tree.draw();
+			mapping = new_mapping;
+			if(new_proxy_data.length > 1)
+			{
+				proxy_data = new_proxy_data;
+			}
 	  }
 
-
 		buildTree(menu_tree_data);
+
+//console.log(mapping);
 
 //----------test -------------
 
@@ -303,7 +334,8 @@ function get_html (sUrl)
 			var roots = [], children = {};
 
 			// find the top level nodes and hash the children based on parent
-			for (var i = 0, len = arry.length; i < len; ++i)
+			// First element is dummy
+			for (var i = 1, len = arry.length; i < len; ++i)
 			{
 				var item = arry[i],
 				    p = item.parent,
