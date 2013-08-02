@@ -97,13 +97,11 @@
 		phpgwapi_cache::session_set('phpgwapi','breadcrumbs', $breadcrumbs);
 		$breadcrumbs = array_reverse($breadcrumbs);
 		
-//		$var['breadcrumbs'] = implode(' >> ', $history_url);
-
 		$navigation = array();
 		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
 		{
-			prepare_navbar($navbar);
-			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+//moved..
+//			prepare_navbar($navbar);
 		}
 		else
 		{
@@ -115,6 +113,7 @@
 
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
+			$exclude = array('logout', 'about', 'preferences');
 			$i = 1;
 			foreach ( $navbar as $app => $app_data )
 			{
@@ -130,7 +129,6 @@
 						'id'	=> $i,
 						'app'	=> $app,
 						'label' => $app_data['text'],
-					//	'href'	=> str_replace('&amp;','&', $app_data['url']) . '&phpgw_return_as=noframes',
 						'href'	=> str_replace('&amp;','&', $app_data['url']),
 					),
 					'children'	=> array()
@@ -141,7 +139,7 @@
 					'id'		=> $i,
 					'name'		=> $app,
 					'expanded'	=> false,
-					'highlight'	=> true,//$app == $currentapp ? true : false,
+					'highlight'	=> $app == $currentapp ? true : false,
 					'is_leaf'	=> false
 				);
 				
@@ -163,6 +161,8 @@ HTML;
 		}
 		else
 		{		
+			prepare_navbar($navbar);
+			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
 			foreach($navbar as $app => $app_data)
 			{
