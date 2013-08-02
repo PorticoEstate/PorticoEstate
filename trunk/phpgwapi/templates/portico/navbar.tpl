@@ -11,7 +11,7 @@
 		 	}
 
 			var sUrl = phpGWLink('logout.php');
-			window.open(sUrl);
+			window.open(sUrl,'_self');
 		}
 	</script>
 
