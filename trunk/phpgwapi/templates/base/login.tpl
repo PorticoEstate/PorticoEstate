@@ -25,6 +25,19 @@
 	<link rel="stylesheet" href="{rounded_css}" type="text/css">
 
 	{onload}
+
+	<script type="text/javascript">
+		function do_login()
+		{
+			if(typeof(Storage)!=="undefined")
+			{
+				sessionStorage.cached_menu_tree_data = '';
+				sessionStorage.cached_mapping = '';
+		 	}
+		 	document.login.submit();
+		}
+	</script>
+
 </head>
 
 <body>
@@ -124,7 +137,7 @@
 									<div class="button_holder">
 										<div class="button1">
 											<div class="next">
-												<a onclick="document.login.submit();">{lang_login}</a>
+												<a onclick="do_login();">{lang_login}</a>
 											</div>
 										</div>
 									</div>
