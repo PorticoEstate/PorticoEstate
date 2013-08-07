@@ -215,7 +215,7 @@
 					$datet = explode(' ',$to_date[0]);
 					$timet = $_POST['to_'];
 
-					if (strlen($_POST['from_']) < 15)  {
+					if (strlen($_POST['from_']) < 14)  {
 						$allocation['from_'] = $datef[0]." ".$timef;
 						$allocation['to_'] = $datet[0]." ".$timet;
 						$from_date = $allocation['from_'];
