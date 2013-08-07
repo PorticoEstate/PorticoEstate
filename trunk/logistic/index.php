@@ -5,8 +5,7 @@
 	(
 		'noheader'   	=> true,
 		'nonavbar'   	=> true,
-		'currentapp'	=> APP_NAME,
-		'enable_vfs_class' => True,
+		'currentapp'	=> APP_NAME
 	);
 
 	include('../header.inc.php');
@@ -18,8 +17,6 @@
 	}
 	else
 	{
-		$start_page = array('menuaction'=> APP_NAME.'.uifrontpage.index');
+		$start_page = array('menuaction'=> APP_NAME.'.uiproject.index');
 	}
 	$GLOBALS['phpgw']->redirect_link('/index.php',$start_page);
-	
-?>
