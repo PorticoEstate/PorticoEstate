@@ -385,7 +385,6 @@
 				}
 				else
 				{
-	 				$event['active'] = '0';
 					list($event, $errors) = $this->extract_and_validate($event);
 					$time_from = split(" ",$_POST['from_']);
 					$time_to = split(" ",$_POST['to_']);

@@ -85,6 +85,21 @@
 							<dd><xsl:value-of select="tilsyn_phone"/></dd>
 						</xsl:if>
 
+						<xsl:if test="tilsyn_name and normalize-space(tilsyn_name2)">
+							<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></dt>
+							<dd><xsl:value-of select="tilsyn_name2"/></dd>
+						</xsl:if>
+
+						<xsl:if test="tilsyn_email and normalize-space(tilsyn_email2)">
+							<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></dt>
+							<dd><a href='mailto:{tilsyn_email2}'><xsl:value-of select="tilsyn_email2"/></a></dd>
+						</xsl:if>
+					
+						<xsl:if test="tilsyn_phone and normalize-space(tilsyn_phone2)">
+							<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></dt>
+							<dd><xsl:value-of select="tilsyn_phone2"/></dd>
+						</xsl:if>
+
 
 					</dl>
 				</xsl:if>

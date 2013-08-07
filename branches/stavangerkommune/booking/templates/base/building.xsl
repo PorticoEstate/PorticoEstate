@@ -32,7 +32,7 @@
 			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
             <dd><xsl:value-of select="building/district"/></dd>
 
-			<xsl:if test="building/location_code">
+			<xsl:if test="building/location_code !=''">
 				<dt><xsl:value-of select="php:function('lang', 'Location Code')" /></dt>
 	            <dd><a href="{building/location_link}"><xsl:value-of select="building/location_code"/></a></dd>
 			</xsl:if>
@@ -54,7 +54,9 @@
 
 			<dt><xsl:value-of select="php:function('lang', 'Telephone')" /></dt>
             <dd><xsl:value-of select="building/phone"/></dd>
-
+        </dl>
+		<div class="clr"/>
+		<dl class="proplist-col">
 			<xsl:if test="building/tilsyn_name != ''">
 	            <dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></dt>
     	        <dd><xsl:value-of select="building/tilsyn_name"/></dd>
@@ -67,6 +69,21 @@
 
 				<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></dt>
     	        <dd><xsl:value-of select="building/tilsyn_phone"/></dd>
+			</xsl:if>
+        </dl>
+        <dl class="proplist-col">
+			<xsl:if test="building/tilsyn_name2 != ''">
+	            <dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></dt>
+    	        <dd><xsl:value-of select="building/tilsyn_name2"/></dd>
+    	        <dt>
+    	                <xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></dt>
+    	        <dd><a>
+    	            <xsl:attribute name="href">mailto:<xsl:value-of select="building/tilsyn_email2"/></xsl:attribute>
+    	            <xsl:value-of select="building/tilsyn_email2"/></a>
+    	        </dd>
+
+				<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></dt>
+    	        <dd><xsl:value-of select="building/tilsyn_phone2"/></dd>
 			</xsl:if>
         </dl>
 		

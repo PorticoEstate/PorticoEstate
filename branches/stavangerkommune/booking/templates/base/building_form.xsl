@@ -74,6 +74,7 @@
 					</dd>
 				</xsl:if>
 			</dl>
+			<div class="clr"/>
 			<dl class="form-col">
 				<dt><label for="field_tilsyn_name"><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></label></dt>
 				<dd><input name="tilsyn_name" type="text" value="{building/tilsyn_name}"/></dd>
@@ -83,6 +84,17 @@
 
 				<dt><label for="field_tilsyn_email"><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></label></dt>
 				<dd><input id="field_tilsyn_email" name="tilsyn_email" type="text" value="{building/tilsyn_email}"/></dd>
+			</dl>
+			<dl class="form-col">
+
+				<dt><label for="field_tilsyn_name2"><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></label></dt>
+				<dd><input name="tilsyn_name2" type="text" value="{building/tilsyn_name2}"/></dd>
+
+				<dt><label for="field_tilsyn_phone2"><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></label></dt>
+				<dd><input id="field_tilsyn_phone2" name="tilsyn_phone2" type="text" value="{building/tilsyn_phone2}"/></dd>
+
+				<dt><label for="field_tilsyn_email2"><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></label></dt>
+				<dd><input id="field_tilsyn_email2" name="tilsyn_email2" type="text" value="{building/tilsyn_email2}"/></dd>
 			</dl>
 
 			<div class="clr"/>
