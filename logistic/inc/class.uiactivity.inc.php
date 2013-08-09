@@ -301,6 +301,7 @@
 			switch ($query_type)
 			{
 				case 'children':
+					$num_of_objects = null;//get them all
 					$activity_id = phpgw::get_var('activity_id');
 					$filters = array('id' => $activity_id);
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
