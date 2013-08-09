@@ -2196,7 +2196,7 @@
 			$cat_id		= (int) $cat_id;
 			$id			= (int) $id;
 
-			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$admin_entity	= CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
@@ -2217,8 +2217,9 @@
 				$this->db->query("DELETE FROM $table WHERE id = $id",__LINE__,__FILE__);
 			}
 
+			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id ={$location_id} AND location1_item_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id ={$location_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
 
-			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id ={$location2_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
 
