@@ -51,11 +51,18 @@
 		private $so_resource_allocation;
 		private $nonavbar;
 
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+	    private $manage;
+
 		public $public_functions = array(
 			'query' 									=> true,
 			'index' 									=> true,
 			'add' 										=> true,
 			'edit' 										=> true,
+			'delete'									=> true,
 			'view' 										=> true,
 			'save' 										=> true,
 			'add_requirement_values' 	=> true,
@@ -89,6 +96,14 @@
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 			$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+
+
+			$this->read    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_READ, 'logistic');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_ADD, 'logistic');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_EDIT, 'logistic');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
+			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
+
 		}
 
 
@@ -240,6 +255,9 @@
 				//$href = self::link(array('menuaction' => 'logistic.uirequirement.edit', 'id' => $entry['id']));
 				$href = "javascript:load_requirement_edit_id({$entry['id']});";
 				$entry['edit_requirement_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Endre behov</a>";
+
+				$href = "javascript:load_requirement_delete_id({$entry['id']});";
+				$entry['delete_requirement_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Slett behov</a>";
 			}
 
 			// ... add result data
@@ -525,6 +543,12 @@
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
 
+			if(!$this->read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $nonavbar));
+				return false; // in case redirect fail;			
+			}
+
 			if ($requirement_id)
 			{
 				$requirement = $this->so->get_single($requirement_id);
@@ -568,6 +592,42 @@
 			{
 				$this->edit($requirement);
 			}
+		}
+
+		public function delete()
+		{
+			if(!$this->delete)
+			{
+				return false;
+			}
+
+			$requirement_id = phpgw::get_var('id', 'int');
+			$GLOBALS['phpgw']->db->transaction_begin();
+			try
+			{
+				$this->so_requirement_value->delete_values( $requirement_id );
+				$this->so_resource_allocation->delete_resources( $requirement_id );	
+				$this->so->delete( $requirement_id );
+			}
+			catch (Exception $e)
+			{
+				if($e)
+				{
+					$GLOBALS['phpgw']->db->transaction_abort();
+	
+					$GLOBALS['phpgw']->log->error(array(
+						'text'	=> 'uirequirement::delete() : error when trying to delete requirement: %1',
+						'p1'	=> $e->getMessage(),
+						'p2'	=> '',
+						'line'	=> __LINE__,
+						'file'	=> __FILE__
+					));
+
+				}
+
+				return $e->getMessage();
+			}
+			$GLOBALS['phpgw']->db->transaction_commit();
 		}
 		
 		public function add_requirement_values()

@@ -45,6 +45,12 @@
 		private $so_requirement;
 		private $so_resource_allocation;
 
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+	    private $manage;
+
 		public $public_functions = array(
 			'query'			=> true,
 			'add' 			=> true,
@@ -66,6 +72,13 @@
 			$this->so_resource_allocation = CreateObject('logistic.sorequirement_resource_allocation');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
+
+			$this->read    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_READ, 'logistic');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_ADD, 'logistic');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_EDIT, 'logistic');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
+			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
+
 		}
 
 		public function index()
@@ -679,19 +692,39 @@
 							'label' => lang('Status requirement'),
 							'sortable' => false,
 						),
-						array(
-							'key' => 'alloc_link',
-							'label' => lang('Allocate resources'),
-							'sortable' => false,
-						),
-						array(
-							'key' => 'edit_requirement_link',
-							'label' => lang('Edit requirement'),
-							'sortable' => false,
-						)
 					)
 				),
 			);
+
+
+			if($this->add)
+			{
+				$data['datatable']['field'][] = array
+				(
+					'key'		=> 'alloc_link',
+					'label'		=> lang('Allocate resources'),
+					'sortable'	=> false,
+				);
+			}
+			if($this->add)
+			{
+				$data['datatable']['field'][] = array
+				(
+					'key'		=> 'edit_requirement_link',
+					'label'		=> lang('Edit requirement'),
+					'sortable'	=> false,
+				);
+			}
+
+			if($this->delete)
+			{
+				$data['datatable']['field'][] = array
+				(
+					'key'		=> 'delete_requirement_link',
+					'label'		=> lang('Delete requirement'),
+					'sortable'	=> false,
+				);
+			}
 
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
