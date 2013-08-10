@@ -58,6 +58,25 @@
 		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
 	}
 
+	function load_requirement_delete_id( id ){
+		confirm_msg = 'Slette behov?';
+		if(confirm(confirm_msg))
+		{
+			var oArgs = {menuaction: 'logistic.uirequirement.delete', id:id};
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			var callback =	{	success: function(o){
+								//	var message_delete = o.responseText.toString().replace("\"","").replace("\"","");
+									var reqUrl = '<xsl:value-of select="//datatable/source"/>';
+									YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
+									},
+							failure: function(o){window.alert('failed')},
+							timeout: 10000
+						};
+			var request = YAHOO.util.Connect.asyncRequest('POST', requestUrl, callback);
+		}
+	}
+
 	function closeJS_local()
 	{
 		var reqUrl = '<xsl:value-of select="//datatable/source"/>';

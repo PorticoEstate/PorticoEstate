@@ -364,9 +364,16 @@
 		public function delete_resources($requirement_id)
 		{
 			
-			echo "i delete_resources: " . $requirement_id;
-			
-			$this->db->transaction_begin();
+//			echo "i delete_resources: " . $requirement_id;
+
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$requirement_id = (int) $requirement_id;
 			$this->db->query("SELECT id FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
@@ -380,9 +387,16 @@
 			{
 				$this->db->query("DELETE FROM lg_calendar WHERE allocation_id = IN ( " . explode(',', $id) . ')',__LINE__,__FILE__);
 			}
-			$this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
 
-			return !!$this->db->transaction_commit();
+			$ret = $this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
+
+
+			if ( !$this->global_lock )
+			{
+				$ret = $this->db->transaction_commit();
+			}
+
+			return $ret;
 		}
 
 		public static function get_instance()

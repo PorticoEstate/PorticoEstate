@@ -100,8 +100,7 @@
 		$navigation = array();
 		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
 		{
-//moved..
-//			prepare_navbar($navbar);
+			prepare_navbar($navbar);
 		}
 		else
 		{
@@ -161,7 +160,7 @@ HTML;
 		}
 		else
 		{		
-			prepare_navbar($navbar);
+//			prepare_navbar($navbar);
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
 			foreach($navbar as $app => $app_data)
