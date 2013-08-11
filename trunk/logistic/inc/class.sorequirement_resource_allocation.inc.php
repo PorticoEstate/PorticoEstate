@@ -58,7 +58,7 @@
 			(
 				'location_id'			=> $resource_alloc->get_location_id(),
 				'item_id'				=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
-				'item_inventory_id'		=> $this->marshal($resource_alloc->get_inventory_id(), 'int'),
+				'item_inventory_id'		=> (int)$resource_alloc->get_inventory_id(),
 				'item_inventory_amount'	=> $this->marshal($resource_alloc->get_allocated_amount(), 'int'),
 	//			'allocation_id'			=> 0,//not known yet
 				'create_user'			=> $resource_alloc->get_create_user(),
@@ -111,15 +111,15 @@
 
 		protected function update($resource_alloc)
 		{
-			$id = intval($resource_alloc->get_id());
+			$id = (int)$resource_alloc->get_id();
 		
 			$values = array(
-				'requirement_id=' . $this->marshal($resource_alloc->get_requirement_id(), 'string'),
-				'resource_id=' . $this->marshal($resource_alloc->get_resource_id(), 'string'),
+				'requirement_id=' . $this->marshal($resource_alloc->get_requirement_id(), 'int'),
+				'resource_id=' . $this->marshal($resource_alloc->get_resource_id(), 'int'),
 				'location_id=' . $this->marshal($resource_alloc->get_location_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE lg_requirement_resource_allocation SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE lg_requirement_resource_allocation SET ' . join(',', $values) . " WHERE id={$id}", __LINE__,__FILE__);
 
 			$item_inventory_amount = (int)$resource_alloc->get_allocated_amount();
 
