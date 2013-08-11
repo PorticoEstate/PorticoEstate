@@ -2186,7 +2186,10 @@ JS;
 					}
 				}
 
-				$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
+				if (!$category['enable_bulk'])
+				{
+					$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
+				}
 				$_target = array();
 				if(isset($values['target']) && $values['target'])
 				{
