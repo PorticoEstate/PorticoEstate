@@ -273,8 +273,7 @@
 			if (!$export)
 			{
 				//Add action column to each row in result table
-				array_walk(
-								$result_data['results'], array($this, '_add_links'), "logistic.uirequirement.view");
+				array_walk($result_data['results'], array($this, '_add_links'), "logistic.uirequirement.view");
 			}
 			return $this->yui_results($result_data);
 		}

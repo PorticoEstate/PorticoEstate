@@ -343,7 +343,7 @@
 				if (isset($activity))
 				{
 					$filters = array('activity' => $activity->get_id());
-					$requirements_for_activity = $this->so_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$requirements_for_activity = $this->so_requirement->get(0, null, null, null, null, null, $filters);
 
 					if( count( $requirements_for_activity ) > 0 )
 					{
@@ -353,7 +353,7 @@
 						foreach($requirements_for_activity as $requirement)
 						{
 							$filters = array('requirement_id' => $requirement->get_id());
-							$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
+							$num_allocated = $this->so_resource_allocation->get_count(null, null, $filters);
 							 
 							$num_required = $requirement->get_no_of_items();
 
