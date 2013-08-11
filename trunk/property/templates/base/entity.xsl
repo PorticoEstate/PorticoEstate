@@ -672,7 +672,7 @@
 					</xsl:choose>
 
 					<xsl:choose>
-						<xsl:when test="value_id !=''">
+						<xsl:when test="value_id !='' and enable_bulk = ''">
 							<div id="related">
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
