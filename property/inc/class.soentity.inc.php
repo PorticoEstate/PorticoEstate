@@ -2433,6 +2433,7 @@
 				(
 					'inventory_id'	=> $this->db->f('id'),
 					'inventory'		=> $this->db->f('inventory'),
+					'allocated'		=> 0,
 					'unit_id'		=> $this->db->f('unit_id'),
 					'unit'			=> $this->db->f('unit', true),
 					'remark'		=> $this->db->f('remark', true),
@@ -2443,6 +2444,28 @@
 					'active_to'		=> $this->db->f('active_to'),
 					'bookable'		=> $this->db->f('bookable'),
 				);
+			}
+
+
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['logistic']))
+			{
+				$start_date	= time();
+				$end_date	= time();
+
+				foreach ($inventory as &$entry)
+				{
+					$sql = "SELECT SUM(item_inventory_amount) AS allocated"
+					. " FROM lg_calendar"
+					. " WHERE location_id = {$location_id}"
+					. " AND lg_calendar.item_id = {$id}"
+					. " AND item_inventory_id = {$entry['inventory_id']}"
+					. " AND lg_calendar.end_date >= {$start_date} AND lg_calendar.start_date <= {$end_date}";
+
+					$this->db->query($sql,__LINE__,__FILE__);
+			
+					$this->db->next_record();
+					$entry['allocated'] = (int) $this->db->f('allocated');
+				}
 			}
 
 			return $inventory;
