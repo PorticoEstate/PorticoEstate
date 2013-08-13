@@ -347,7 +347,7 @@
 					$i = 0;
 					foreach ( $attrib_data as $attrib )
 					{
-						if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+						if(($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
 						{
 							$datatable['actions']['form'][0]['fields']['field'][] = array
 							(

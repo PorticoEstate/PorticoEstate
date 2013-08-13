@@ -121,7 +121,10 @@
 					<!-- === UPLOAD FILE === -->
 					<div class="row">
 						<label>Filvedlegg:</label>
-						<input type="file" id="file" name="file" />
+						<input type="file" id="file" name="file" >
+							<xsl:attribute name="accept">image/*</xsl:attribute>
+							<xsl:attribute name="capture">camera</xsl:attribute>				    
+						</input>
 					</div>
 			
 					<h3>Velg hvilke saker meldingen gjelder</h3>					

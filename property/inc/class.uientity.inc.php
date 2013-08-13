@@ -68,7 +68,8 @@
 				'get_files'			=> true,
 				'get_inventory'		=> true,
 				'add_inventory'		=> true,
-				'edit_inventory'	=> true
+				'edit_inventory'	=> true,
+				'inventory_calendar'=> true
 			);
 
 		function property_uientity()
@@ -2186,7 +2187,10 @@ JS;
 					}
 				}
 
-				$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
+				if (!$category['enable_bulk'])
+				{
+					$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
+				}
 				$_target = array();
 				if(isset($values['target']) && $values['target'])
 				{
@@ -2294,8 +2298,9 @@ JS;
 							//	array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
 								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+								array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
 								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
-								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCalendar'),
 								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'location_id','hidden'=>true),
 								array('key' => 'id','hidden'=>true),
@@ -3276,6 +3281,24 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_inventory' => $data));
 
+		}
 
+		public function inventory_calendar()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$id				= phpgw::get_var('id', 'int');
+			$inventory_id	= phpgw::get_var('inventory_id', 'int');
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			echo "Planlagt: Visning av kalenderoppføringer for ressursen";
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 	}

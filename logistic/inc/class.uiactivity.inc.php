@@ -45,6 +45,12 @@
 		private $so_requirement;
 		private $so_resource_allocation;
 
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+	    private $manage;
+
 		public $public_functions = array(
 			'query'			=> true,
 			'add' 			=> true,
@@ -66,6 +72,13 @@
 			$this->so_resource_allocation = CreateObject('logistic.sorequirement_resource_allocation');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
+
+			$this->read    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_READ, 'logistic');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_ADD, 'logistic');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_EDIT, 'logistic');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
+			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
+
 		}
 
 		public function index()
@@ -301,6 +314,7 @@
 			switch ($query_type)
 			{
 				case 'children':
+					$num_of_objects = null;//get them all
 					$activity_id = phpgw::get_var('activity_id');
 					$filters = array('id' => $activity_id);
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
@@ -329,7 +343,7 @@
 				if (isset($activity))
 				{
 					$filters = array('activity' => $activity->get_id());
-					$requirements_for_activity = $this->so_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$requirements_for_activity = $this->so_requirement->get(0, null, null, null, null, null, $filters);
 
 					if( count( $requirements_for_activity ) > 0 )
 					{
@@ -339,7 +353,7 @@
 						foreach($requirements_for_activity as $requirement)
 						{
 							$filters = array('requirement_id' => $requirement->get_id());
-							$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
+							$num_allocated = $this->so_resource_allocation->get_count(null, null, $filters);
 							 
 							$num_required = $requirement->get_no_of_items();
 
@@ -678,19 +692,39 @@
 							'label' => lang('Status requirement'),
 							'sortable' => false,
 						),
-						array(
-							'key' => 'alloc_link',
-							'label' => lang('Allocate resources'),
-							'sortable' => false,
-						),
-						array(
-							'key' => 'edit_requirement_link',
-							'label' => lang('Edit requirement'),
-							'sortable' => false,
-						)
 					)
 				),
 			);
+
+
+			if($this->add)
+			{
+				$data['datatable']['field'][] = array
+				(
+					'key'		=> 'alloc_link',
+					'label'		=> lang('Allocate resources'),
+					'sortable'	=> false,
+				);
+			}
+			if($this->add)
+			{
+				$data['datatable']['field'][] = array
+				(
+					'key'		=> 'edit_requirement_link',
+					'label'		=> lang('Edit requirement'),
+					'sortable'	=> false,
+				);
+			}
+
+			if($this->delete)
+			{
+				$data['datatable']['field'][] = array
+				(
+					'key'		=> 'delete_requirement_link',
+					'label'		=> lang('Delete requirement'),
+					'sortable'	=> false,
+				);
+			}
 
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -704,6 +738,8 @@
 			$data['breadcrumb'] = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id');
 
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
+			self::add_javascript('logistic', 'logistic', 'requirement_overview.js');
+
 			self::add_javascript('logistic', 'logistic', 'requirement.js');
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');

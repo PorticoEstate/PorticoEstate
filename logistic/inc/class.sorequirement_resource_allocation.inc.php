@@ -58,7 +58,7 @@
 			(
 				'location_id'			=> $resource_alloc->get_location_id(),
 				'item_id'				=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
-				'item_inventory_id'		=> $this->marshal($resource_alloc->get_inventory_id(), 'int'),
+				'item_inventory_id'		=> (int)$resource_alloc->get_inventory_id(),
 				'item_inventory_amount'	=> $this->marshal($resource_alloc->get_allocated_amount(), 'int'),
 	//			'allocation_id'			=> 0,//not known yet
 				'create_user'			=> $resource_alloc->get_create_user(),
@@ -111,15 +111,15 @@
 
 		protected function update($resource_alloc)
 		{
-			$id = intval($resource_alloc->get_id());
+			$id = (int)$resource_alloc->get_id();
 		
 			$values = array(
-				'requirement_id=' . $this->marshal($resource_alloc->get_requirement_id(), 'string'),
-				'resource_id=' . $this->marshal($resource_alloc->get_resource_id(), 'string'),
+				'requirement_id=' . $this->marshal($resource_alloc->get_requirement_id(), 'int'),
+				'resource_id=' . $this->marshal($resource_alloc->get_resource_id(), 'int'),
 				'location_id=' . $this->marshal($resource_alloc->get_location_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE lg_requirement_resource_allocation SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE lg_requirement_resource_allocation SET ' . join(',', $values) . " WHERE id={$id}", __LINE__,__FILE__);
 
 			$item_inventory_amount = (int)$resource_alloc->get_allocated_amount();
 
@@ -364,9 +364,16 @@
 		public function delete_resources($requirement_id)
 		{
 			
-			echo "i delete_resources: " . $requirement_id;
-			
-			$this->db->transaction_begin();
+//			echo "i delete_resources: " . $requirement_id;
+
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$requirement_id = (int) $requirement_id;
 			$this->db->query("SELECT id FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
@@ -380,9 +387,16 @@
 			{
 				$this->db->query("DELETE FROM lg_calendar WHERE allocation_id = IN ( " . explode(',', $id) . ')',__LINE__,__FILE__);
 			}
-			$this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
 
-			return !!$this->db->transaction_commit();
+			$ret = $this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
+
+
+			if ( !$this->global_lock )
+			{
+				$ret = $this->db->transaction_commit();
+			}
+
+			return $ret;
 		}
 
 		public static function get_instance()

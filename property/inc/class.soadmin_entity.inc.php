@@ -256,11 +256,11 @@
 
 			foreach($categories as $category)
 			{
-				$this->category_tree[] = array
-					(
-						'id'	=> $category['id'],
-						'name'	=> $category['name']
-					);
+				$this->category_tree[$category['id']] = array
+				(
+					'id'	=> $category['id'],
+					'name'	=> $category['name']
+				);
 				$this->get_children2($entity_id, $category['id'], 1);
 			}
 			return $this->category_tree;

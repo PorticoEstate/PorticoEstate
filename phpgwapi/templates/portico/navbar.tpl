@@ -1,6 +1,20 @@
 <div id="debug-navbar">
 {debug}
 </div>
+	<script type="text/javascript">
+		function logout()
+		{
+			if(typeof(Storage)!=="undefined")
+			{
+				sessionStorage.cached_menu_tree_data = '';
+				sessionStorage.cached_mapping = '';
+		 	}
+
+			var sUrl = phpGWLink('logout.php');
+			window.open(sUrl,'_self');
+		}
+	</script>
+
 		<div id="theme-gray">
 			<div class="border-layout" id="border-layout">
 				<div class="layout-north">
@@ -25,7 +39,7 @@
 							<a href="{preferences_url}" class="icon icon-preferences">
 								{preferences_text}
 							</a>
-							<a href="{logout_url}" class="icon icon-logout">
+							<a href="javascript:logout();" class="icon icon-logout">
 								{logout_text}
 							</a>
 						</div>

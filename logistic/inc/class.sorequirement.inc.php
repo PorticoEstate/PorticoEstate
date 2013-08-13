@@ -94,6 +94,25 @@
 			}
 		}
 
+
+		/**
+		* Called from uirequirement - where transactions are initiated
+		*/
+		public function delete($id)
+		{
+			$id = (int) $id;
+
+			if ( !$this->db->get_transaction() )
+			{
+				throw new Exception('sorequirement::delete() really need to be part of a transaction');
+				return false;	
+			}
+
+			$result = $this->db->query("DELETE FROM lg_requirement WHERE id={$id}", __LINE__,__FILE__);
+			return $result;	
+		}
+
+
 		protected function get_id_field_name()
 		{
 			if(!$extended_info)
