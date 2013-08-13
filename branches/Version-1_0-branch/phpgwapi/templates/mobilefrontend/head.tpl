@@ -36,6 +36,7 @@
 					<a href="{home_url}">{home_text}</a>
 					<a href="{logout_url}">{logout_text}</a>
 				</div>
+        		<div id="current_user">{current_user}</div>
 	 			<div id="app_header">{current_app_header}</div>
         		<!--<div id="logo">	</div>
 				<div id="centerimage"></div>-->

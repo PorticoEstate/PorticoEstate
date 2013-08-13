@@ -33,6 +33,11 @@
 	 */
 	class phpgwapi_menu
 	{
+		var $public_functions = array
+		(
+			'get_local_menu_ajax' => true
+		);
+		
 		/**
 		* Clear the user's menu so it can be regenerated cleanly
 		*
@@ -364,6 +369,109 @@ HTML;
 			return $menu;
 		}
 
+		public function get_local_menu_ajax()
+		{
+			$node		= phpgw::get_var('node');
+
+			$selection = explode('|',$node);
+			$app = $selection[0];
+
+			if(!isset($GLOBALS['phpgw_info']['user']['apps'][$app]))
+			{
+				return array();
+			}
+			$menu = array();
+
+			$_section = 'navigation';
+			if($app == 'admin')
+			{
+				if(!isset($selection[1]))
+				{
+
+					$navbar		= $this->get('navbar');
+					$navigation = $this->get('admin');
+
+					foreach ( $GLOBALS['phpgw_info']['user']['apps'] as $_app => $app_info )
+					{
+						if(!in_array($_app, array('logout', 'about', 'preferences')) && isset($navbar[$_app]))
+						{
+							if(isset($navigation[$_app]))
+							{
+								$menu[] = array
+								(
+									'key' 		=> $_app,
+									'is_leaf'	=> count($navigation[$_app]) > 1 ? false : true,
+									'text'		=> $GLOBALS['phpgw']->translation->translate($_app, array(), true),
+									'url'		=> $GLOBALS['phpgw']->link('/index.php',
+													array('menuaction' => 'admin.uiconfig.index', 'appname' => $_app))
+
+								);
+							}
+						}
+					}
+
+					return $menu;				
+				}
+				else
+				{
+					$_section =  'admin';
+					$app =  $selection[1];
+					array_shift($selection);
+				}
+			}
+
+
+			if(!$menu_gross = phpgwapi_cache::session_get('phpgwapi', "menu_{$app}"))
+			{
+				$menu_gross = execMethod("{$app}.menu.get_menu");
+				phpgwapi_cache::session_set('phpgwapi', "menu_{$app}",$menu_gross);
+			}
+
+			$menu_gross = $menu_gross[$_section];
+
+			$count_selection = count($selection);
+			if($count_selection > 1)
+			{
+				for ($i=1;$i<count($selection);$i++)
+				{
+					if(isset($menu_gross[$selection[$i]]))
+					{
+						$menu_gross = $menu_gross[$selection[$i]];
+					}
+					else if (isset($menu_gross['children'][$selection[$i]]))
+					{
+						$menu_gross = $menu_gross['children'][$selection[$i]];
+					}
+					else
+					{
+						$menu_gross = array();
+					}
+				}
+				$children = isset($menu_gross['children']) ? $menu_gross['children'] : array();
+			}
+			else
+			{
+				$children = $menu_gross;
+			}
+
+			$i=0;
+			foreach($children as $key => $vals)
+			{
+				$vals['url'] = str_replace('&amp;','&', $vals['url']);
+				$menu[$i] = $vals;
+				$menu[$i]['key'] = $key;
+				$menu[$i]['is_leaf'] = true;
+				if(isset($menu[$i]['children']))
+				{
+					$menu[$i]['is_leaf'] = false;
+					unset($menu[$i]['children']);
+				}
+				$i++;
+			}
+
+			return $menu;
+		}
+
 		protected static function _get_sub_menu($children = array(), $selection=array(),$level=0)
 		{
 			$level++;
@@ -371,20 +479,24 @@ HTML;
 			$menu = array();
 			foreach($children as $key => $vals)
 			{
-				$menu[] = $vals;
+				$menu[$i] = $vals;
 				$menu[$i]['this'] = false;
+				$menu[$i]['key'] = $key;
+				$menu[$i]['is_leaf'] = true;
 				if($key == $selection[$level])
 				{
 					$menu[$i]['this'] = true;
 					if(isset($menu[$i]['children']))
 					{
 						$menu[$i]['children'] = self::_get_sub_menu($menu[$i]['children'],$selection,$level);
+						$menu[$i]['is_leaf'] = false;
 					}
 				}
 				else
 				{
 					if(isset($menu[$i]['children']))
 					{
+						$menu[$i]['is_leaf'] = false;
 						unset($menu[$i]['children']);
 					}
 				}

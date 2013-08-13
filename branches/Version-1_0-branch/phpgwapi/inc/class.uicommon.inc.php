@@ -281,6 +281,15 @@
 			$shows_from = lang('shows from');
 			$of_total = lang('of total');
 
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$rows_per_page = 10;
+			}
+
 			$data['yui_phpgw_i18n'] = array(
 				'Calendar' => array(
 					'WEEKDAYS_SHORT' => json_encode($this->lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
@@ -303,7 +312,8 @@
 					'firstPageLinkLabel' => json_encode("&lt;&lt; {$first}"),
 					'lastPageLinkLabel' => json_encode("{$last} &gt;&gt;"),
 					'template' => json_encode("{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"),
-					'pageReportTemplate' => json_encode("{$shows_from} {startRecord} {$to} {endRecord} {$of_total} {totalRecords}.")
+					'pageReportTemplate' => json_encode("{$shows_from} {startRecord} {$to} {endRecord} {$of_total} {totalRecords}."),
+					'rowsPerPage'	=> $rows_per_page
 				),
 				'common' => array(
 					'LBL_NAME' => json_encode(lang('Name')),

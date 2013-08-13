@@ -34,6 +34,15 @@
 		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
 	}
 
+	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
+	{
+		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+		phpgwapi_yui::load_widget('treeview');
+		phpgwapi_yui::load_widget('datasource');
+		$javascripts[] = "/phpgwapi/templates/portico/js/menu.js";
+	}
+
+
 	phpgwapi_yui::load_widget('button');
 
 	$stylesheets = array();

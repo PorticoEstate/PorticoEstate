@@ -33,6 +33,7 @@
 		protected $like;
 		protected $join;
 		protected $left_join;
+		protected $global_lock = false;
 
 		public function __construct()
 		{
