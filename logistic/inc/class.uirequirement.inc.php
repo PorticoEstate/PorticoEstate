@@ -57,18 +57,20 @@
 	    private $delete;
 	    private $manage;
 
-		public $public_functions = array(
-			'query' 									=> true,
-			'index' 									=> true,
-			'add' 										=> true,
-			'edit' 										=> true,
-			'delete'									=> true,
-			'view' 										=> true,
-			'save' 										=> true,
-			'add_requirement_values' 	=> true,
-			'view_requirement_values' => true,
-			'save_requirement_values' => true,
-			'get_custom_attributes' 	=> true
+		public $public_functions = array
+		(
+			'query' 						=> true,
+			'index' 						=> true,
+			'add' 							=> true,
+			'edit' 							=> true,
+			'delete'						=> true,
+			'view' 							=> true,
+			'save' 							=> true,
+			'add_requirement_values' 		=> true,
+			'view_requirement_values'		=> true,
+			'save_requirement_values'		=> true,
+			'get_custom_attributes'			=> true,
+			'assign_job'					=> true
 		);
 
 		public function __construct()
@@ -859,48 +861,54 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values', 'requirement_id' => $requirement_id, 'nonavbar' => $this->nonavbar));
 		}		
 		
-		public function get_custom_attributes($location_id, $activity_id){
+		public function get_custom_attributes($location_id, $activity_id)
+		{
+			if($location_id == "")
+			{
+				$location_id = phpgw::get_var('location_id');
+			}
 
-				if($location_id == "")
-				{
-					$location_id = phpgw::get_var('location_id');
-				}
+			if($activity_id == "")
+			{
+				$activity_id = phpgw::get_var('activity_id');
+			}
 
-				if($activity_id == "")
-				{
-					$activity_id = phpgw::get_var('activity_id');
-				}
+			$activity = $this->so_activity->get_single( $activity_id );
+			$project = $this->so_project->get_single( $activity->get_project_id() );
+			$project_type_id = $project->get_project_type_id();
 
-				$activity = $this->so_activity->get_single( $activity_id );
-				$project = $this->so_project->get_single( $activity->get_project_id() );
-				$project_type_id = $project->get_project_type_id();
+			$filters = array('location_id' => $location_id, 'project_type_id' => $project_type_id);
+			$requirement_custom_attributes_array = $this->so_resource_type_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 
-				$filters = array('location_id' => $location_id, 'project_type_id' => $project_type_id);
-				$requirement_custom_attributes_array = $this->so_resource_type_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$custom	= createObject('phpgwapi.custom_fields');
 
-				$custom	= createObject('phpgwapi.custom_fields');
+			$attribute_requirement_array = array();
 
-				$attribute_requirement_array = array();
+			foreach($requirement_custom_attributes_array as $attribute_requirement)
+			{
+				$location_id = $attribute_requirement->get_location_id();
+				$cust_attribute_id = $attribute_requirement->get_cust_attribute_id();
 
-				foreach($requirement_custom_attributes_array as $attribute_requirement){
-					$location_id = $attribute_requirement->get_location_id();
-					$cust_attribute_id = $attribute_requirement->get_cust_attribute_id();
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$entity_arr = explode('.',$loc_arr['location']);
 
-					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-					$entity_arr = explode('.',$loc_arr['location']);
+				$entity_id = $entity_arr[2];
+				$cat_id = $entity_arr[3];
 
-					$entity_id = $entity_arr[2];
-					$cat_id = $entity_arr[3];
+				$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
 
-					$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
+				$attribute_requirement_array[] = $attrib_data;
+			}
 
-					$attribute_requirement_array[] = $attrib_data;
-				}
-
-				return $attribute_requirement_array;
+			return $attribute_requirement_array;
 		}
 
-		function make_tab_menu($requirement_id)
+		public function assign_job()
+		{
+		
+		}
+
+		private function make_tab_menu($requirement_id)
 		{
 			$tabs = array();
 
