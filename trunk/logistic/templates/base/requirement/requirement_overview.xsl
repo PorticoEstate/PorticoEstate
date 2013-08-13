@@ -35,7 +35,12 @@
 			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
 			<h2 style="clear:both;"><xsl:value-of select="php:function('lang', 'Allocated resouces')" /><span style="margin-left:470px;font-size:14px;">(<xsl:value-of select="php:function('lang', 'Click on table above to get allocations')" />)</span></h2>
-			<div id="allocation-container"></div>
+			<form name='assign_task'>
+				
+				<!-- // Needed for case of only one checkbox in datatable-->
+				<input type='hidden' name='assign_requirement' value = '0'/>
+				<div id="allocation-container"></div>
+			</form>
 	</div>
 	<xsl:call-template name="datasource-def" />
 </xsl:template>
@@ -44,44 +49,7 @@
 
 	<script>
 
-	function load_requirement_edit( activity_id ){
-		var oArgs = {menuaction: 'logistic.uirequirement.edit', activity_id:activity_id, nonavbar: true, lean: true};
-		var requestUrl = phpGWLink('index.php', oArgs);
-
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
-	}
-
-	function load_requirement_edit_id( id ){
-		var oArgs = {menuaction: 'logistic.uirequirement.edit', id:id, nonavbar: true, lean: true};
-		var requestUrl = phpGWLink('index.php', oArgs);
-
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
-	}
-
-	function load_requirement_delete_id( id ){
-		confirm_msg = 'Slette behov?';
-		if(confirm(confirm_msg))
-		{
-			var oArgs = {menuaction: 'logistic.uirequirement.delete', id:id};
-			var requestUrl = phpGWLink('index.php', oArgs, true);
-
-			var callback =	{	success: function(o){
-								//	var message_delete = o.responseText.toString().replace("\"","").replace("\"","");
-									var reqUrl = '<xsl:value-of select="//datatable/source"/>';
-									YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
-									},
-							failure: function(o){window.alert('failed')},
-							timeout: 10000
-						};
-			var request = YAHOO.util.Connect.asyncRequest('POST', requestUrl, callback);
-		}
-	}
-
-	function closeJS_local()
-	{
-		var reqUrl = '<xsl:value-of select="//datatable/source"/>';
-		YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
-	}
+	var datatable_source = '<xsl:value-of select="//datatable/source"/>';
 
 	YAHOO.util.Event.onDOMReady(function(){
 	 
@@ -123,23 +91,25 @@
 			var oArgs = {
 					menuaction:'logistic.uirequirement_resource_allocation.index',
 					requirement_id: requirement_id,
-					type: "requirement_id",
-					phpgw_return_as: 'json'
+					type: "requirement_id"
 				};
 				
 				var requestUrl = phpGWLink('index.php', oArgs, true);
 			
-				var myColumnDefs = [ 
+				YAHOO.portico.columnDefs_allocation = [ 
 			        {key:"id", label:'Id', sortable:true},
 			        {key:"fm_bim_item_name", label:'Navn på ressurs', sortable:true},
 			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
 			        {key:"allocated_amount", label:'Antall', sortable:false},
 			        {key:"location_code", label:'Lokasjonskode', sortable:true},
 			        {key:"fm_bim_item_address", label:'Adresse', sortable:true},
-			        {key:"delete_link", label:'Slett bestilling', sortable:true}
+			        {key:"delete_link", label:'Slett bestilling', sortable:true},
+			        {key:"assign_job", label:'Tildel oppdrag', sortable:false},
+			        {key:"related", label:'Link til oppdrag', sortable:false},
+			        {key:"status", label:'status', sortable:true}
 			    ]; 
 			
-				YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);
+				YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, YAHOO.portico.columnDefs_allocation);
 		}
   </script>
 </xsl:template>

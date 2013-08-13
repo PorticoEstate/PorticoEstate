@@ -226,6 +226,8 @@
 			}
 
 			$rows = array();
+			$lang_delete = lang('delete');
+			$lang_assign = lang('assign');
 			foreach ($result_objects as $result)
 			{
 				if (isset($result))
@@ -274,7 +276,13 @@
 																	'id' => $requirement['id'],
 																	'phpgw_return_as' => 'json')
 																);
-					$requirement['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$delete_href}\">Slett</a>";
+
+					$requirement['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$delete_href}\">{$lang_delete}</a>";
+
+					$assign_href = "javascript:load_assign_task(document.assign_task, {$requirement['id']});";
+
+					$requirement['assign_job'] = "<input name='assign_requirement' type='checkbox' value='{$requirement['id']}_{$requirement['location_id']}_{$requirement['resource_id']}' /><a class=\"btn-sm assign\" href=\"{$assign_href}\">{$lang_assign}</a>";
+
 					$rows[] = $requirement;
 				}
 			}

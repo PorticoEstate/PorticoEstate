@@ -738,6 +738,8 @@
 			$data['breadcrumb'] = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id');
 
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
+			self::add_javascript('logistic', 'logistic', 'requirement_overview.js');
+
 			self::add_javascript('logistic', 'logistic', 'requirement.js');
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
