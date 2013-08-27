@@ -53,6 +53,11 @@
 		private $so_requirement;
 		private $so_requirement_value;
 		private $so;
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+	    private $manage;
 
 		public $public_functions = array(
 			'query' => true,
@@ -90,6 +95,12 @@
 			$this->allrows							= $this->bo->allrows;
 			$this->lookup								= $this->bo->lookup;
 			$this->location_code				= $this->bo->location_code;
+
+			$this->read    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_READ, 'logistic');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_ADD, 'logistic');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_EDIT, 'logistic');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
+			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
 		}
 
 		public function index()
@@ -277,11 +288,14 @@
 																	'phpgw_return_as' => 'json')
 																);
 
-					$requirement['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$delete_href}\">{$lang_delete}</a>";
+					$delete_href = "javascript:load_delete_allocation({$requirement['id']});";
+
+					$requirement['delete_link'] = "<a class=\"btn-sm \" href=\"{$delete_href}\">{$lang_delete}</a>";
 
 					$assign_href = "javascript:load_assign_task(document.assign_task, {$requirement['id']});";
 
-					$requirement['assign_job'] = "<input name='assign_requirement' type='checkbox' value='{$requirement['id']}_{$requirement['location_id']}_{$requirement['resource_id']}' /><a class=\"btn-sm assign\" href=\"{$assign_href}\">{$lang_assign}</a>";
+					$requirement['assign_job'] = "<input name='assign_requirement' type='checkbox' value='{$requirement['id']}_{$requirement['location_id']}_{$requirement['resource_id']}_{$requirement['inventory_id']}' />"
+					 . "<a class=\"btn-sm assign\" href=\"{$assign_href}\">{$lang_assign}</a>";
 
 					$rows[] = $requirement;
 				}
@@ -571,6 +585,11 @@
 
 		public function delete()
 		{
+			if(!$this->delete)
+			{
+				return array( "status" => "not_deleted" );			
+			}
+
 			$resource_allocation_id = phpgw::get_var('id');
 
 			$status = $this->so->delete($resource_allocation_id);

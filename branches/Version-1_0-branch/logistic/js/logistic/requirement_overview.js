@@ -32,6 +32,27 @@
 	}
 
 
+	function load_delete_allocation( id ){
+		confirm_msg = 'Slette allokering?';
+		if(confirm(confirm_msg))
+		{
+			var oArgs = {menuaction: 'logistic.uirequirement_resource_allocation.delete', id:id};
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			var callback =	{	success: function(o){
+									//message_delete = YAHOO.lang.JSON.parse(o.responseText);
+									//console.log(message_delete);
+									YAHOO.portico.updateinlineTableHelper('requirement-container');
+									YAHOO.portico.updateinlineTableHelper('allocation-container');
+									},
+							failure: function(o){window.alert('failed')},
+							timeout: 10000
+						};
+			var request = YAHOO.util.Connect.asyncRequest('POST', requestUrl, callback);
+		}
+	}
+
+
 	function load_assign_task(frm, id ){
 
 		var assign_requirement = new Array();
@@ -72,15 +93,5 @@
 
 	function closeJS_local_allocation(requirement_id)
 	{
-
 			YAHOO.portico.updateinlineTableHelper('allocation-container');
-/*
-			var oArgs = {
-					menuaction:'logistic.uirequirement_resource_allocation.index',
-					requirement_id: requirement_id,
-					type: "requirement_id"
-				};
-				
-				var requestUrl = phpGWLink('index.php', oArgs, true);
-*/
 	}
