@@ -246,6 +246,11 @@
 			return null;
 		}
 
+		public function get_count(string $search_for, string $search_type, array $filters)
+		{
+			return $this->total_records;
+		}
+
 
 		/**
 		 * used for retrive the path for a particular node from a hierarchy
