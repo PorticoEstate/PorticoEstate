@@ -70,7 +70,8 @@
 			'view_requirement_values'		=> true,
 			'save_requirement_values'		=> true,
 			'get_custom_attributes'			=> true,
-			'assign_job'					=> true
+			'assign_job'					=> true,
+			'send_job_ticket'				=> true,
 		);
 
 		public function __construct()
@@ -905,8 +906,10 @@
 
 		public function assign_job()
 		{
-			$assign_requirement = json_decode(str_replace('&quot;', '"', phpgw::get_var('assign_requirement')));
+			$assign_requirement_json = str_replace('&quot;', '"', phpgw::get_var('assign_requirement'));
 
+			$assign_requirement=json_decode($assign_requirement_json);
+//_debug_array($assign_requirement);die();
 			if(!$assign_requirement || !is_array($assign_requirement))
 			{
 				echo 'Nothing to do';
@@ -916,14 +919,250 @@
 			foreach ($assign_requirement as $assign_entry)
 			{
 				$assign_arr = explode('_', $assign_entry);
-				$allocation_id = $assign_arr[0];
-				$location_id = $assign_arr[1];
-				$item_id = $assign_arr[2];
-				$inventory_id = (int)$assign_arr[3];
+				$requirement_id = $assign_arr[0];
+				$allocation_id = $assign_arr[1];
+				$location_id = $assign_arr[2];
+				$item_id = $assign_arr[3];
+				$inventory_id = (int)$assign_arr[4];
 			}
 
-			echo 'logistic_uirequirement::assign_job()';
+
+
+			$requirement = $this->so->get_single($requirement_id);
+
+				$custom	= createObject('phpgwapi.custom_fields');
+
+//--
+				$_filters = array('requirement_id' => $requirement_id);
+				$requirement_values_array = $this->so_requirement_value->get(0, false, $sort_field, $sort_ascending, $search_for, $search_type, $_filters);
+
+				$location_id = $requirement->get_location_id();
+				$criterias = array();
+				if( count( $requirement_values_array ) > 0 )
+				{
+					foreach($requirement_values_array as $requirement_value)
+					{
+						$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
+
+						$attrib_data = $custom->get('property', $loc_arr['location'], $cust_attribute_id);
+
+						$_criterie = $attrib_data['input_text'];
+
+						if(isset($attrib_data['choice']))
+						{
+							foreach ($attrib_data['choice'] as $_choice)
+							{
+								if($_choice['id'] == $requirement_value->get_value())
+								{
+									$_criterie .= "::{$_choice['value']}";
+									break;
+								}
+							}
+						}
+						else if($requirement_value->get_value())
+						{
+							$_criterie .= "::{$requirement_value->get_value()}";
+						}
+
+						$criterias[] = $_criterie;
+
+//						$operator	= $requirement_value->get_operator();
+					}
+				}
+				$requirement_descr = $loc_arr['descr'] . '::' . implode(',',$criterias);
+
+//-
+
+
+
+
+//			echo 'logistic_uirequirement::assign_job()';
+
+
+// -------- 
+
+
+	//		$check_list_id = phpgw::get_var('check_list_id');
+	//		$check_list = $this->so_check_list->get_single($check_list_id);
+						
+	//		$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", "no_message_registered");
+
+	//		$control_id = $check_list->get_control_id();
+	//		$control = $this->so_control->get_single( $control_id );
+
+			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+			$catsObj->supress_info = true;
+			
+			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
+
+	//		$component_id = $check_list->get_component_id();
+			
+/*
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+						
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    					
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+			    $component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+							
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+				$type = 'component';
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+*/
+//			$level = $this->location_finder->get_location_level();
+			
+//			$year = date("Y", $check_list->get_deadline());
+//			$month = date("n", $check_list->get_deadline());
+			
+			$data = array
+			(
+				'categories'				=> $categories,
+				'assign_requirement'		=> $assign_requirement,
+				'requirement_descr'			=> $requirement_descr
+			);
+						
+			if(count( $buildings_array ) > 0)
+			{
+				$data['buildings_array']  = $buildings_array;
+			}
+			else
+			{
+				$data['building_array'] = $building_array;
+			}
+						
+			phpgwapi_jquery::load_widget('core');
+
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			
+			self::render_template_xsl(array('allocation/assign_job'), $data);
+
+
+//------
+
+
+
 		}
+
+
+		function send_job_ticket()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$location_code = phpgw::get_var('location_code');
+			$message_title = phpgw::get_var('message_title');
+			$message_cat_id = phpgw::get_var('message_cat_id');
+			$case_ids = phpgw::get_var('case_ids');
+			
+			if(!$this->add && !$this->edit)
+			{
+				phpgwapi_cache::message_set('No access', 'error');
+				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+			}
+
+			$check_list = $this->so_check_list->get_single($check_list_id);
+						
+			$control_id = $check_list->get_control_id();
+			$control = $this->so_control->get_single( $control_id );
+			
+			$message_details = "Kontroll: " .  $control->get_title() . "\n";
+			
+			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			//liste alle
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $_category_acl));
+
+			$control_area_id = $control->get_control_area_id();
+			$control_area = $cats->return_single($control_area_id);
+			$control_area_name = $control_area[0]['name'];
+			
+			$message_details .= "Kontrollområde: " .  $control_area_name . "\n\n";
+			
+			// Generates message details from comment field in check item 
+			$counter = 1;
+			foreach($case_ids as $case_id)
+			{
+				$case = $this->so->get_single($case_id);
+				$message_details .= "Gjøremål $counter: ";
+				$message_details .=  $case->get_descr() . "<br>";
+				$counter++;
+			}
+			
+			// This value represents the type 
+			$location_id = $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
+			
+			$ticket = array
+			(
+				'origin_id'         => $location_id,
+				'origin_item_id'	=> $check_list_id, 
+				'location_code' 	=> $location_code,
+				'cat_id'			=> $message_cat_id,
+				'priority'			=> $priority, //valgfri (1-3)
+				'title'				=> $message_title,
+				'details'			=> $message_details,
+				'file_input_name'	=> 'file' // navn på felt som inneholder fil
+			);
+			
+			$botts = CreateObject('property.botts',true);
+			$message_ticket_id = $botts->add_ticket($ticket);
+			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
+
+//---Sigurd: start register component to ticket
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$user_id = $GLOBALS['phpgw_info']['user']['id'];
+				$component_location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+
+				$interlink_data = array
+				(
+					'location1_id'      => $component_location_id,
+					'location1_item_id' => $component_id,
+					'location2_id'      => $location_id_ticket,
+					'location2_item_id' => $message_ticket_id,
+					'account_id'        => $user_id
+				);
+
+				execMethod('property.interlink.add', $interlink_data);
+			}
+
+//---End register component to ticket
+
+			//Not used
+			//$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
+						
+			// Registers message and updates check items with message ticket id
+
+			foreach($case_ids as $case_id)
+			{
+				$case = $this->so->get_single($case_id);
+				$case->set_location_id($location_id_ticket);
+				$case->set_location_item_id($message_ticket_id);
+				$this->so->store($case);
+			}			
+			
+			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id'=>$check_list_id, 'message_ticket_id'=>$message_ticket_id));
+		}
+
+
+
 
 		private function make_tab_menu($requirement_id)
 		{
