@@ -916,6 +916,7 @@
 				return;
 			}
 
+			$allocations = array();
 			foreach ($assign_requirement as $assign_entry)
 			{
 				$assign_arr = explode('_', $assign_entry);
@@ -924,8 +925,10 @@
 				$location_id = $assign_arr[2];
 				$item_id = $assign_arr[3];
 				$inventory_id = (int)$assign_arr[4];
-			}
 
+				$allocations[] = $this->so_resource_allocation->get_single($allocation_id);
+
+			}
 
 
 			$requirement = $this->so->get_single($requirement_id);
@@ -972,10 +975,57 @@
 					}
 				}
 				$requirement_descr = $loc_arr['descr'] . '::' . implode(',',$criterias);
+				$message = $requirement_descr . "\n\n";
+				
+				foreach ($allocations as $allocation)
+				{
+					$message .= 'get #';
+					$message .= $allocation->get_allocated_amount();
+					$message .= ' from ';
 
+
+					if($allocation->get_inventory_id())
+					{
+						$inventory = execMethod('property.soentity.get_inventory',array('inventory_id' => $allocation->get_inventory_id()));
+
+						$system_location = $GLOBALS['phpgw']->locations->get_name($inventory[0]['p_location_id']);
+
+						$name = 'N∕A';
+						if( preg_match('/.location./i', $system_location['location']) )
+						{
+							$location_code = execMethod('property.solocation.get_location_code', $inventory[0]['p_id']);
+							$location = execMethod('property.solocation.read_single', $location_code);
+							$location_arr = explode('-', $location_code);
+							$i=1;
+							$name_arr = array();
+							foreach($location_arr as $_dummy)
+							{
+								$name_arr[] = $location["loc{$i}_name"];
+								$i++;
+							}
+
+							$name = implode('::', $name_arr);
+						}
+						else if( preg_match('/.entity./i', $system_location['location']) )
+						{
+							$name = execMethod('property.soentity.get_short_description', 
+										array('location_id' => $inventory[0]['p_location_id'], 'id' => $inventory[0]['p_id']));
+						}
+
+						//$requirement['location_code'] = $location_code;
+						//$requirement['fm_bim_item_address'] = $name;
+					}
+
+					$message .= "$name ($location_code)\n";
+
+				}
+				
 //-
 
-
+/*
+				_debug_array($allocations);die();
+				_debug_array($message);die();
+*/
 
 
 //			echo 'logistic_uirequirement::assign_job()';
@@ -1028,11 +1078,25 @@
 //			$year = date("Y", $check_list->get_deadline());
 //			$month = date("n", $check_list->get_deadline());
 			
+
+			$path = $this->so_activity->get_path($requirement->get_activity_id());
+
+			$breadcrumb_array = array();
+			foreach($path as $menu_item)
+			{
+				$breadcrumb_array[] = $menu_item['name'];
+			}
+			
+			$title = implode(' -> ',$breadcrumb_array);
+
 			$data = array
 			(
+				'title'						=> $title,
+				'title_size'				=> strlen($title) > 20 ? strlen($title) : 20,
 				'categories'				=> $categories,
-				'assign_requirement'		=> $assign_requirement,
-				'requirement_descr'			=> $requirement_descr
+				'assign_requirement_json'	=> $assign_requirement_json,
+				'requirement_descr'			=> $requirement_descr,
+				'message'					=> $message
 			);
 						
 			if(count( $buildings_array ) > 0)

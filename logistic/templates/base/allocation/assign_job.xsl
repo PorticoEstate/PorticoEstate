@@ -19,7 +19,7 @@
 		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
 		<div id="caseMessage" class="box ext">
 			<xsl:choose>
-				<xsl:when test="assign_requirement !=''">
+				<xsl:when test="assign_requirement_json !=''">
 				
 				<xsl:variable name="action_url">
 					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.send_job_ticket')" />
@@ -27,7 +27,7 @@
 		
 				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post">
 					
-					<input name="assign_requirement" type="text" value="{assign_requirement}" />					
+					<input name="assign_requirement" type="text" value="{assign_requirement_json}" />					
 					
 					<!-- === TITLE === -->
 
@@ -38,7 +38,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'title')" />
 						</label>
-						<input name="message_title" type="text" class="required" />
+						<input name="message_title" type="text" class="required" value = '{title}' size= '{title_size}'/>
 					</div>
 							</td>
 						</tr>
