@@ -68,7 +68,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'message')" />
 						</label>
-						<textarea name="message">
+						<textarea name="message" cols="60" rows="10">
 							<xsl:value-of select="message"/>
 						</textarea>
 					</div>
