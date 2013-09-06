@@ -954,6 +954,7 @@
 
 		function delete_entity($id)
 		{
+			$this->db->transaction_begin();
 			$id = (int) $id;
 			$category_list=$this->read_category(array('allrows'=>true, 'entity_id'=>$id));
 			$locations = array();
@@ -978,7 +979,7 @@
 					$this->oProc->DropTable("fm_{$this->type}_{$id}_{$entry['id']}");
 				}
 			}
-
+			$this->db->transaction_commit();
 		}
 
 		function delete_category($entity_id, $id)

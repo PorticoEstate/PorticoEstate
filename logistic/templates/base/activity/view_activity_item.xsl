@@ -86,19 +86,18 @@
    var oArgs = {
 					menuaction:'logistic.uiactivity.index',
 					activity_id: '<xsl:value-of select='activity/id'/>',
-					type: 'children',
-					phpgw_return_as: 'json'
+					type: 'children'
 				};
 			
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 			
 		var myColumnDefs = [ 
-	        {key:"id", label:'Id', sortable:true},
-	        {key:"name", label:'Aktivitetsnavn', sortable:true},
-	        {key:"start_date", label:'Startdato', sortable:true}, 
-	        {key:"end_date", label:'Sluttdato', sortable:true},
-	     		{key:"responsible_user_name", label:'Ansvarlig', sortable:true},
-	     		{key:"status", label:'Status', sortable:true}
+	        {key:"id", label:'Id', sortable:false},
+	        {key:"name", label:'Aktivitetsnavn', sortable:false},
+	        {key:"start_date", label:'Startdato', sortable:false}, 
+	        {key:"end_date", label:'Sluttdato', sortable:false},
+	     		{key:"responsible_user_name", label:'Ansvarlig', sortable:false},
+	     		{key:"status", label:'Status', sortable:false}
 	    ]; 
 
 		YAHOO.portico.inlineTableHelper("sub-activities-container", requestUrl, myColumnDefs);

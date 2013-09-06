@@ -201,6 +201,14 @@
 						</tr>
 						<tr>
 							<td valign="top">
+								<xsl:value-of select="php:function('lang', 'entry date')" />
+							</td>
+							<td>
+								<xsl:value-of select="value_entry_date"/>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
 								<xsl:value-of select="lang_start_date"/>
 							</td>
 							<td>
@@ -376,7 +384,7 @@
 
 	<!-- New template-->
 	<!-- view -->
-	<xsl:template match="view">
+	<xsl:template match="view" xmlns:php="http://php.net/xsl">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="79%" align="left">
 				<tr>
@@ -554,6 +562,15 @@
 						</xsl:choose>
 					</xsl:for-each>
 				</tr>
+				<tr>
+					<td valign="top">
+						<xsl:value-of select="php:function('lang', 'entry date')" />
+					</td>
+					<td>
+						<xsl:value-of select="value_entry_date"/>
+					</td>
+				</tr>
+
 				<tr>
 					<td valign="top">
 						<xsl:value-of select="lang_start_date"/>

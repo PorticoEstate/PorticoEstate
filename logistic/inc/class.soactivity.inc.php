@@ -234,6 +234,24 @@
 			return $ret;
 		}
 
+
+		public function get_single(int $id)
+		{
+			$objects = parent::get(null, null, null, null, null, null, array($this->get_id_field_name() => $id));
+			if(count($objects) > 0)
+			{
+				$keys = array_keys($objects);
+				return $objects[$keys[0]];
+			}
+			return null;
+		}
+
+		public function get_count(string $search_for, string $search_type, array $filters)
+		{
+			return $this->total_records;
+		}
+
+
 		/**
 		 * used for retrive the path for a particular node from a hierarchy
 		 *
