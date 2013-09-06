@@ -70,7 +70,8 @@
 			'view_requirement_values'		=> true,
 			'save_requirement_values'		=> true,
 			'get_custom_attributes'			=> true,
-			'assign_job'					=> true
+			'assign_job'					=> true,
+			'send_job_ticket'				=> true,
 		);
 
 		public function __construct()
@@ -905,7 +906,185 @@
 
 		public function assign_job()
 		{
-			$assign_requirement = json_decode(str_replace('&quot;', '"', phpgw::get_var('assign_requirement')));
+			$assign_requirement_json = str_replace('&quot;', '"', phpgw::get_var('assign_requirement'));
+
+			$assign_requirement=json_decode($assign_requirement_json);
+//_debug_array($assign_requirement);die();
+			if(!$assign_requirement || !is_array($assign_requirement))
+			{
+				echo 'Nothing to do';
+				return;
+			}
+
+			$allocations = array();
+			foreach ($assign_requirement as $assign_entry)
+			{
+				$assign_arr = explode('_', $assign_entry);
+				$requirement_id = $assign_arr[0];
+				$allocation_id = $assign_arr[1];
+				$location_id = $assign_arr[2];
+				$item_id = $assign_arr[3];
+				$inventory_id = (int)$assign_arr[4];
+
+				$allocations[] = $this->so_resource_allocation->get_single($allocation_id);
+
+			}
+
+
+			$requirement = $this->so->get_single($requirement_id);
+
+				$custom	= createObject('phpgwapi.custom_fields');
+
+//--
+				$_filters = array('requirement_id' => $requirement_id);
+				$requirement_values_array = $this->so_requirement_value->get(0, false, $sort_field, $sort_ascending, $search_for, $search_type, $_filters);
+
+				$location_id = $requirement->get_location_id();
+				$criterias = array();
+				if( count( $requirement_values_array ) > 0 )
+				{
+					foreach($requirement_values_array as $requirement_value)
+					{
+						$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
+
+						$attrib_data = $custom->get('property', $loc_arr['location'], $cust_attribute_id);
+
+						$_criterie = $attrib_data['input_text'];
+
+						if(isset($attrib_data['choice']))
+						{
+							foreach ($attrib_data['choice'] as $_choice)
+							{
+								if($_choice['id'] == $requirement_value->get_value())
+								{
+									$_criterie .= "::{$_choice['value']}";
+									break;
+								}
+							}
+						}
+						else if($requirement_value->get_value())
+						{
+							$_criterie .= "::{$requirement_value->get_value()}";
+						}
+
+						$criterias[] = $_criterie;
+
+//						$operator	= $requirement_value->get_operator();
+					}
+				}
+				$requirement_descr = $loc_arr['descr'] . '::' . implode(',',$criterias);
+				$message = 'Hva: ' . $requirement_descr . "\n\n";
+				
+				#FIXME timezone..
+				//$GLOBALS['phpgw']->common->show_date($requirement->get_start_date())
+				//$message .= 'Frist:' . $GLOBALS['phpgw']->common->show_date($requirement->get_start_date()) . "\n\n";
+				
+				$datetime_format = "{$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']} H:i";
+				
+				$when = date($datetime_format, $requirement->get_start_date());
+				$message .= 'Frist: ' . $when . "\n\n";
+
+				foreach ($allocations as $allocation)
+				{
+					$message .= 'Antall: ';
+					$message .= $allocation->get_allocated_amount();
+					$message .= ' Fra: ';
+
+
+					if($allocation->get_inventory_id())
+					{
+						$inventory = execMethod('property.soentity.get_inventory',array('inventory_id' => $allocation->get_inventory_id()));
+
+						$system_location = $GLOBALS['phpgw']->locations->get_name($inventory[0]['p_location_id']);
+
+						$name = 'N∕A';
+						if( preg_match('/.location./i', $system_location['location']) )
+						{
+							$location_code = execMethod('property.solocation.get_location_code', $inventory[0]['p_id']);
+							$location = execMethod('property.solocation.read_single', $location_code);
+							$location_arr = explode('-', $location_code);
+							$i=1;
+							$name_arr = array();
+							foreach($location_arr as $_dummy)
+							{
+								$name_arr[] = $location["loc{$i}_name"];
+								$i++;
+							}
+
+							$name = implode('::', $name_arr);
+						}
+						else if( preg_match('/.entity./i', $system_location['location']) )
+						{
+							$name = execMethod('property.soentity.get_short_description', 
+										array('location_id' => $inventory[0]['p_location_id'], 'id' => $inventory[0]['p_id']));
+						}
+
+					}
+
+					$message .= "$name ($location_code)\n";
+
+				}
+				
+// -------- 
+
+
+			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+			$catsObj->supress_info = true;
+			
+			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
+
+
+			$path = $this->so_activity->get_path($requirement->get_activity_id());
+
+			$breadcrumb_array = array();
+			foreach($path as $menu_item)
+			{
+				$breadcrumb_array[] = $menu_item['name'];
+			}
+			
+			$title = implode(' -> ',$breadcrumb_array);
+
+			$data = array
+			(
+				'title'						=> $title,
+				'title_size'				=> strlen($title) > 20 ? strlen($title) : 20,
+				'categories'				=> $categories,
+				'assign_requirement_json'	=> $assign_requirement_json,
+				'requirement_descr'			=> $requirement_descr,
+				'message'					=> $message
+			);
+						
+			if(count( $buildings_array ) > 0)
+			{
+				$data['buildings_array']  = $buildings_array;
+			}
+			else
+			{
+				$data['building_array'] = $building_array;
+			}
+						
+			phpgwapi_jquery::load_widget('core');
+
+			self::add_javascript('logistic', 'logistic', 'assign_job.js');
+			
+			self::render_template_xsl(array('allocation/assign_job'), $data);
+//------
+
+		}
+
+
+		function send_job_ticket()
+		{
+			if(!$this->add && !$this->edit)
+			{
+				phpgwapi_cache::message_set('No access', 'error');
+			}
+
+			$assign_requirement_json = str_replace('&quot;', '"', phpgw::get_var('assign_requirement'));
+
+			$assign_requirement=json_decode($assign_requirement_json);
 
 			if(!$assign_requirement || !is_array($assign_requirement))
 			{
@@ -913,17 +1092,78 @@
 				return;
 			}
 
+			$allocations = array();
 			foreach ($assign_requirement as $assign_entry)
 			{
 				$assign_arr = explode('_', $assign_entry);
-				$allocation_id = $assign_arr[0];
-				$location_id = $assign_arr[1];
-				$item_id = $assign_arr[2];
-				$inventory_id = (int)$assign_arr[3];
+				$requirement_id = $assign_arr[0];
+				$allocation_id = $assign_arr[1];
+				$location_id = $assign_arr[2];
+				$item_id = $assign_arr[3];
+				$inventory_id = (int)$assign_arr[4];
+
+				$allocations[] = $this->so_resource_allocation->get_single($allocation_id);
+
 			}
 
-			echo 'logistic_uirequirement::assign_job()';
+			$requirement = $this->so->get_single($requirement_id);
+			
+			// This value represents the type 
+			$location_id = $GLOBALS['phpgw']->locations->get_id("logistic", ".activity");
+			
+			$ticket = array
+			(
+				'origin_id'         => $location_id,
+				'origin_item_id'	=> $requirement->get_activity_id(), 
+				'location_code' 	=> $location_code,
+				'cat_id'			=> phpgw::get_var('message_cat_id', 'int'),
+				'priority'			=> 3,//$priority, //valgfri (1-3)
+				'title'				=> phpgw::get_var('message_title', 'string'),
+				'details'			=> phpgw::get_var('message', 'string'),
+				'file_input_name'	=> 'file' // navn på felt som inneholder fil
+			);
+			
+			$botts = CreateObject('property.botts',true);
+			$message_ticket_id = $botts->add_ticket($ticket);
+			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
+
+//---Sigurd: start register component to ticket
+
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+
+			foreach ($assign_requirement as $assign_entry)
+			{
+				$assign_arr = explode('_', $assign_entry);
+				$requirement_id = $assign_arr[0];
+				$allocation_id = $assign_arr[1];
+				$location_id = $assign_arr[2];
+				$item_id = $assign_arr[3];
+				$inventory_id = (int)$assign_arr[4];
+
+				$interlink_data = array
+				(
+					'location1_id'      => $location_id,
+					'location1_item_id' => $item_id,
+					'location2_id'      => $location_id_ticket,
+					'location2_item_id' => $message_ticket_id,
+					'account_id'        => $user_id
+				);
+
+				execMethod('property.interlink.add', $interlink_data);
+
+				$allocation = $this->so_resource_allocation->get_single($allocation_id);
+				$allocation->set_ext_location_id($location_id_ticket);
+				$allocation->set_ext_location_item_id($message_ticket_id);
+				$this->so_resource_allocation->store($allocation);
+			}
+
+//---End register component to ticket
+			
 		}
+
+
+
 
 		private function make_tab_menu($requirement_id)
 		{

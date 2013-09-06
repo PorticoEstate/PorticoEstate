@@ -294,7 +294,7 @@
 
 					$assign_href = "javascript:load_assign_task(document.assign_task, {$requirement['id']});";
 
-					$requirement['assign_job'] = "<input name='assign_requirement' type='checkbox' value='{$requirement['id']}_{$requirement['location_id']}_{$requirement['resource_id']}_{$requirement['inventory_id']}' />"
+					$requirement['assign_job'] = "<input name='assign_requirement' type='checkbox' value='{$requirement_id}_{$requirement['id']}_{$requirement['location_id']}_{$requirement['resource_id']}_{$requirement['inventory_id']}' />"
 					 . "<a class=\"btn-sm assign\" href=\"{$assign_href}\">{$lang_assign}</a>";
 
 					$rows[] = $requirement;

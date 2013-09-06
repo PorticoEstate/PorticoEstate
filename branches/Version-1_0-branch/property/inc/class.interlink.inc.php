@@ -325,6 +325,10 @@
 			{
 				$link = array('menuaction' => 'controller.uicheck_list.view_control_info', 'check_list_id' => $id);
 			}
+			else if($type == '.activity')
+			{
+				$link = array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $id);
+			}
 			else if( substr($type, 1, 8) == 'location' )
 			{
 				$type		= explode('.',$type);
