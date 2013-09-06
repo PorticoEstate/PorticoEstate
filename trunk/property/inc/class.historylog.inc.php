@@ -99,6 +99,10 @@
 					$this->attrib_id_field = ',history_attrib_id';
 					$this->detail_id_field = ',history_detail_id';
 				break;
+				case 'tenant_claim':
+					$this->table='fm_tenant_claim_history';
+					break;
+				
 			}
 
 			$this->appname = $appname;
