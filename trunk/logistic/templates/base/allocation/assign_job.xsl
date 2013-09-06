@@ -34,57 +34,68 @@
 				    <table>
 				    	<tr>
 				    		<td>
-				    <div class="row">
-						<label>
-							<xsl:value-of select="php:function('lang', 'title')" />
-						</label>
-						<input name="message_title" type="text" class="required" value = '{title}' size= '{title_size}'/>
-					</div>
+								<div class="row">
+									<label>
+										<xsl:value-of select="php:function('lang', 'title')" />
+									</label>
+									<input name="message_title" type="text" class="required" value = '{title}' size= '{title_size}'/>
+								</div>
 							</td>
 						</tr>
 				    	<tr>
 				    		<td>
-
-					<!-- === CATEGORY === -->
-					<div class="row">
-						<label>
-							<xsl:value-of select="php:function('lang', 'category')" />
-						</label>
-						 <select name="message_cat_id" class="required">
-						 	<option value="0"><xsl:value-of select="php:function('lang', 'select')" /></option>
-							<xsl:for-each select="categories/cat_list">
-								<xsl:variable name="cat_id"><xsl:value-of select="./cat_id"/></xsl:variable>
-								<option value="{$cat_id}">
-									<xsl:value-of select="./name"/>
-								</option>			
-							</xsl:for-each>
-						</select>
-					</div>
+								<!-- === CATEGORY === -->
+								<div class="row">
+									<label>
+										<xsl:value-of select="php:function('lang', 'category')" />
+									</label>
+									 <select name="message_cat_id" class="required">
+									 	<option value="0"><xsl:value-of select="php:function('lang', 'select')" /></option>
+										<xsl:for-each select="categories/cat_list">
+											<xsl:variable name="cat_id"><xsl:value-of select="./cat_id"/></xsl:variable>
+											<option value="{$cat_id}">
+												<xsl:value-of select="./name"/>
+											</option>			
+										</xsl:for-each>
+									</select>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="row">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Priority')"/>
+									</label>
+									<select name="priority" >
+										<xsl:attribute name="title"><xsl:value-of select="php:function('lang', 'select')"/></xsl:attribute>
+										<xsl:apply-templates select="priority_list/options"/>
+									</select>
+									</div>
 							</td>
 						</tr>
 				    	<tr>
 				    		<td>
-					<div class="row">
-						<label>
-							<xsl:value-of select="php:function('lang', 'message')" />
-						</label>
-						<textarea name="message" cols="60" rows="10">
-							<xsl:value-of select="message"/>
-						</textarea>
-					</div>
+								<div class="row">
+									<label>
+										<xsl:value-of select="php:function('lang', 'message')" />
+									</label>
+									<textarea name="message" cols="60" rows="10">
+										<xsl:value-of select="message"/>
+									</textarea>
+								</div>
 					<!-- === UPLOAD FILE === -->
 							</td>
 						</tr>
 				    	<tr>
 				    		<td>
-
-					<div class="row">
-						<label>Filvedlegg:</label>
-						<input type="file" id="file" name="file" >
-							<xsl:attribute name="accept">image/*</xsl:attribute>
-							<xsl:attribute name="capture">camera</xsl:attribute>				    
-						</input>
-					</div>
+								<div class="row">
+									<label>Filvedlegg:</label>
+									<input type="file" id="file" name="file" >
+										<xsl:attribute name="accept">image/*</xsl:attribute>
+										<xsl:attribute name="capture">camera</xsl:attribute>				    
+									</input>
+								</div>
 							</td>
 						</tr>
 					</table>					
@@ -99,6 +110,15 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-			
 </div>
 </xsl:template>
+
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected"/>
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+
