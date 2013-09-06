@@ -307,7 +307,7 @@
 			$uicols['name'][7]['name'] = 'name';
 			$uicols['name'][7]['value'] = 'name';
 
-			$uicols['name'][8]['name'] = 'time created';
+			$uicols['name'][8]['name'] = 'entry date';
 			$uicols['name'][8]['value'] = 'entry_date';
 
 			$uicols['name'][9]['name'] = 'user';
@@ -850,6 +850,7 @@
 					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
 					'lang_start_date'					=> lang('Project start date'),
 					'value_start_date'					=> $project_values['start_date'],
+					'value_entry_date'					=> $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'						=> json_encode(array(menuaction => "property.uitenant_claim.edit",claim_id=>$claim_id)),
@@ -1214,8 +1215,7 @@
 
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
 					'lang_done'							=> lang('done'),
-					'value_date'						=> $GLOBALS['phpgw']->common->show_date($tenant_claim['entry_date'])
-
+					'value_entry_date'					=> $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . '::' . lang('view claim');
 
