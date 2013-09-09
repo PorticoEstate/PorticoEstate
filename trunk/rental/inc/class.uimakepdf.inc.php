@@ -467,6 +467,11 @@
 			
 			$contract_id = phpgw::get_var('id');
 			
+			if(!is_file($pdf_file_name))
+			{
+				throw new Exception('pdf-file not produced');			
+			}
+
 			$this->savePDFToContract($pdf_file_name, $contract_id, 'Kontrakt');
 		}
 		
