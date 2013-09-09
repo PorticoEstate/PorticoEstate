@@ -273,4 +273,52 @@
 				$this->so->delete($params);
 			}
 		}
+
+		function read_record_history($id)
+		{
+			$historylog	= CreateObject('property.historylog','tenant_claim');
+			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
+
+			$status_text = array();
+
+			$status_text['ready']	= lang('ready for processing claim');
+			$status_text['open']	= lang('open');
+			$status_text['closed']	= lang('closed');
+
+			$i=0;
+			foreach ($history_array as $value) 
+			{
+
+				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$record_history[$i]['value_user']	= $value['owner'];
+
+				switch ($value['status'])
+				{
+					case 'S': $type = lang('Status changed'); break;
+					default:
+				}
+
+				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
+				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+
+				$record_history[$i]['value_action']	= $type ? $type:'';
+				unset($type);
+
+				if ($value['status'] == 'S')
+				{
+					$record_history[$i]['value_new_value']	= $status_text[$value['new_value']];
+					$record_history[$i]['value_old_value']	= $status_text[$value['old_value']];
+				}
+				else
+				{
+					$record_history[$i]['value_new_value']	= '';
+				}
+
+				$i++;
+			}
+
+			return $record_history;
+		}
+
+
 	}
