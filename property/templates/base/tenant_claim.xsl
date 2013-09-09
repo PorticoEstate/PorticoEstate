@@ -354,6 +354,12 @@
 								</input>
 							</td>
 						</tr>
+						<tr>
+							<td colspan="2">
+								<div id="datatable-container_1"/>
+							</td>
+						</tr>
+
 					</table>
 				</form>
 				<script type="text/javascript">

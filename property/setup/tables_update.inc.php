@@ -7546,7 +7546,6 @@
 	}
 
 
-
 	/**
 	* Update property version from 0.9.17.668 to 0.9.17.669
 	* Add check for missing budgets
@@ -7589,3 +7588,42 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+
+	/**
+	* Update property version from 0.9.17.669 to 0.9.17.670
+	* Add history for tenant claim
+	*/
+	$test[] = '0.9.17.669';
+	function property_upgrade0_9_17_669()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tenant_claim_history', array(
+				'fd' => array(
+					'history_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'history_record_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_appname' => array('type' => 'varchar','precision' => '64','nullable' => False),
+					'history_owner' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_status' => array('type' => 'char','precision' => '2','nullable' => False),
+					'history_new_value' => array('type' => 'text','nullable' => False),
+					'history_old_value' => array('type' => 'text','nullable' => true),
+					'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
+				),
+				'pk' => array('history_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.670';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

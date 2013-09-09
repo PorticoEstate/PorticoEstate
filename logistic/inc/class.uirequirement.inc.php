@@ -1053,7 +1053,8 @@
 				'categories'				=> $categories,
 				'assign_requirement_json'	=> $assign_requirement_json,
 				'requirement_descr'			=> $requirement_descr,
-				'message'					=> $message
+				'message'					=> $message,
+				'priority_list'				=> array('options' => execMethod('property.botts.get_priority_list'))
 			);
 						
 			if(count( $buildings_array ) > 0)
@@ -1117,7 +1118,7 @@
 				'origin_item_id'	=> $requirement->get_activity_id(), 
 				'location_code' 	=> $location_code,
 				'cat_id'			=> phpgw::get_var('message_cat_id', 'int'),
-				'priority'			=> 3,//$priority, //valgfri (1-3)
+				'priority'			=> phpgw::get_var('priority', 'int'),
 				'title'				=> phpgw::get_var('message_title', 'string'),
 				'details'			=> phpgw::get_var('message', 'string'),
 				'file_input_name'	=> 'file' // navn på felt som inneholder fil
@@ -1153,8 +1154,7 @@
 				execMethod('property.interlink.add', $interlink_data);
 
 				$allocation = $this->so_resource_allocation->get_single($allocation_id);
-				$allocation->set_ext_location_id($location_id_ticket);
-				$allocation->set_ext_location_item_id($message_ticket_id);
+				$allocation->set_ticket_id($message_ticket_id);
 				$this->so_resource_allocation->store($allocation);
 			}
 

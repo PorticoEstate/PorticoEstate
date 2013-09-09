@@ -277,7 +277,16 @@
 
 		function edit($claim)
 		{
+			$historylog	= CreateObject('property.historylog','tenant_claim');
+
 			$this->db->transaction_begin();
+
+			$this->db->query("select status from fm_tenant_claim where id=" . (int)$claim['claim_id'],__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$old_status  			= $this->db->f('status');
+
+
 
 			$claim['name'] = $this->db->db_addslashes($claim['name']);
 			$claim['amount'] =  str_replace(",",".",$claim['amount']);
@@ -294,9 +303,14 @@
 
 			$value_set	= $this->db->validate_update($value_set);
 
-			$this->db->query("UPDATE fm_tenant_claim set $value_set  WHERE id=" . (int)$claim['claim_id'],__LINE__,__FILE__);
+			$claim_id = (int)$claim['claim_id'];
+			$this->db->query("UPDATE fm_tenant_claim set {$value_set} WHERE id={$claim_id}",__LINE__,__FILE__);
 
-			$claim_id = $claim['claim_id'];
+			if($old_status != $claim['status'])
+			{
+
+				$historylog->add('S', $claim_id, $claim['status'], $old_status);
+			}
 
 			$this->interlink->delete_from_target('property', '.tenant_claim', $claim_id, $this->db);
 
