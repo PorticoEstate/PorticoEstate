@@ -843,6 +843,39 @@
 															array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
 				);
 
+
+			if($claim_id)
+			{
+				$record_history = $this->bo->read_record_history($claim_id);
+//_debug_array($content_budget);die();
+			}
+			else
+			{
+				$record_history = array();
+			}
+
+			$datavalues[1] = array
+				(
+					'name'					=> "1",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+
+			$myColumnDefs[1] = array
+				(
+					'name'		=> "1",
+					'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
+														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
+				);
+
+
+
 			$data = array
 				(
 					'table_header_workorder'			=> $table_header_workorder,
