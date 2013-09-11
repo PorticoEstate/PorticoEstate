@@ -195,3 +195,21 @@
 		}
 	}
 
+
+	$test[] = '0.0.6';
+	function logistic_upgrade0_0_6()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_requirement_resource_allocation','ticket_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.7';
+			return $GLOBALS['setup_info']['logistic']['currentver'];
+		}
+	}

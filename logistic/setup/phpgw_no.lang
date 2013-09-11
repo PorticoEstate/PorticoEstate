@@ -115,3 +115,5 @@ Responsible person	logistic	no	Ansvarlig bruker
 Responsible person for activity	logistic	no	Angi hvilken person som skal være ansvarlig for aktiviteten
 allocated date	logistic	no	Allokert når
 allocated where	logistic	no	Allokert hvor
+assign ticket	logistic	no	Bestill oppdrag
+assign	logistic	no	Bestill

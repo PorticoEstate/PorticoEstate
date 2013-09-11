@@ -116,7 +116,8 @@
 			$values = array(
 				'requirement_id=' . $this->marshal($resource_alloc->get_requirement_id(), 'int'),
 				'resource_id=' . $this->marshal($resource_alloc->get_resource_id(), 'int'),
-				'location_id=' . $this->marshal($resource_alloc->get_location_id(), 'int')
+				'location_id=' . $this->marshal($resource_alloc->get_location_id(), 'int'),
+				'ticket_id=' . $this->marshal($resource_alloc->get_ticket_id(), 'int')
 			);
 
 			$result = $this->db->query('UPDATE lg_requirement_resource_allocation SET ' . join(',', $values) . " WHERE id={$id}", __LINE__,__FILE__);
@@ -246,6 +247,7 @@
 				$allocation->set_fm_bim_item_address($this->unmarshal($this->db->f('fm_bim_item_address'), 'string'));
 				$allocation->set_allocated_amount($this->unmarshal($this->db->f('count'), 'int'));
 				$allocation->set_inventory_id($this->unmarshal($this->db->f('inventory_id'), 'int'));
+				$allocation->set_ticket_id($this->unmarshal($this->db->f('ticket_id'), 'int'));
 				
 				$fm_bim_name = $this->unmarshal( $this->db->f('fm_bim_item_name'), 'string');
 				

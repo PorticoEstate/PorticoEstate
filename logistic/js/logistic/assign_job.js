@@ -5,6 +5,8 @@ $(document).ready(function(){
 	// REGISTER MESSAGE
 	$("#frmRegCaseMessage").submit(function(e){
 		
+    	e.preventDefault();
+
 		var thisForm = $(this);
 
 		var $required_input_fields = $(this).find(".required");
@@ -48,10 +50,21 @@ $(document).ready(function(){
 	    	}
 	    });	
 	  
-	    if( !status )
+	    if( status )
 	    {
-	    	e.preventDefault();
-	    }
+
+			var requestUrl = $(thisForm).attr("action");
+			$.ajax({
+				  type: 'POST',
+				  url: requestUrl + "&" + $(thisForm).serialize(),
+				  success: function(data) {
+				  	parent.closeJS_local_allocation(requirement_id);
+				  	parent.TINY.box.hide();
+					}
+			});
+    	}
+
+
 	    	
 	});
 	
