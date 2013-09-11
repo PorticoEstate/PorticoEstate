@@ -36,7 +36,7 @@ class SnappyPdf extends SnappyMedia
         'lowquality' => true,
         'username' => null,
         'password' => null,
-        'minimum-font-size'	=> 8,
+        'minimum-font-size'	=> 16,
     );
     
 }
