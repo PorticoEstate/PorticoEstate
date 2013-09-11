@@ -239,21 +239,22 @@
 			$rows = array();
 			$lang_delete = lang('delete');
 			$lang_assign = lang('assign');
+			$lang_ticket = lang('ticket');
 			foreach ($result_objects as $result)
 			{
 				if (isset($result))
 				{
-					$requirement = $result->serialize();
+					$allocation = $result->serialize();
 
 					if($short_desc = execMethod('property.soentity.get_short_description', 
-							array('location_id' => $requirement['location_id'], 'id' => $requirement['resource_id'])))
+							array('location_id' => $allocation['location_id'], 'id' => $allocation['resource_id'])))
 					{
-						$requirement['fm_bim_item_name'] = $short_desc;
+						$allocation['fm_bim_item_name'] = $short_desc;
 					}
 
-					if($requirement['inventory_id'])
+					if($allocation['inventory_id'])
 					{
-						$inventory = execMethod('property.soentity.get_inventory',array('inventory_id' => $requirement['inventory_id']));
+						$inventory = execMethod('property.soentity.get_inventory',array('inventory_id' => $allocation['inventory_id']));
 
 						$system_location = $GLOBALS['phpgw']->locations->get_name($inventory[0]['p_location_id']);
 
@@ -279,25 +280,40 @@
 										array('location_id' => $inventory[0]['p_location_id'], 'id' => $inventory[0]['p_id']));
 						}
 
-						$requirement['location_code'] = $location_code;
-						$requirement['fm_bim_item_address'] = $name;
+						$allocation['location_code'] = $location_code;
+						$allocation['fm_bim_item_address'] = $name;
 					}
 					
 					$delete_href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.delete', 
-																	'id' => $requirement['id'],
+																	'id' => $allocation['id'],
 																	'phpgw_return_as' => 'json')
 																);
 
-					$delete_href = "javascript:load_delete_allocation({$requirement['id']});";
+					$delete_href = "javascript:load_delete_allocation({$allocation['id']});";
 
-					$requirement['delete_link'] = "<a class=\"btn-sm \" href=\"{$delete_href}\">{$lang_delete}</a>";
+					$allocation['delete_link'] = "<a class=\"btn-sm \" href=\"{$delete_href}\">{$lang_delete}</a>";
 
-					$assign_href = "javascript:load_assign_task(document.assign_task, {$requirement['id']});";
+					$assign_href = "javascript:load_assign_task(document.assign_task, {$allocation['id']});";
+					
+					$disabled = $allocation['ticket_id'] ? 'disabled = "disabled"' : '';
 
-					$requirement['assign_job'] = "<input name='assign_requirement' type='checkbox' value='{$requirement_id}_{$requirement['id']}_{$requirement['location_id']}_{$requirement['resource_id']}_{$requirement['inventory_id']}' />"
+					if($allocation['ticket_id'])
+					{
+
+						 $related_href = self::link(array('menuaction' => 'property.uitts.view','id' => $allocation['ticket_id']));
+						 $allocation['related'] = "<a  href=\"{$related_href}\">{$lang_ticket} #{$allocation['ticket_id']}</a>";
+						
+						$relation_info = execMethod('property.interlink.get_relation_info', 
+										array('location' => '.ticket', 'id' => $allocation['ticket_id']));
+
+						$allocation['status'] = $relation_info['statustext'];
+					}
+
+					$allocation['assign_job'] = "<input name='assign_requirement' type='checkbox' {$disabled} value='{$requirement_id}_{$allocation['id']}_{$allocation['location_id']}_{$allocation['resource_id']}_{$allocation['inventory_id']}' />"
 					 . "<a class=\"btn-sm assign\" href=\"{$assign_href}\">{$lang_assign}</a>";
+					 
 
-					$rows[] = $requirement;
+					$rows[] = $allocation;
 				}
 			}
 
