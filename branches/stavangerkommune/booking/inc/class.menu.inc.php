@@ -212,7 +212,13 @@
                             'text'  => lang('Free time'),
                             'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime') ),
 							'image' => array('property', 'report'),
-                        )
+                        ),
+#                        'free_time2' => array
+#                        (
+#                            'text'  => lang('Free time2'),
+#                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime2') ),
+#							'image' => array('property', 'report'),
+#                        )
                     )       
                 ),      
 			);
@@ -269,6 +275,11 @@
 							(
 								'text'	=> lang('Mail Settings'),
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uimail_settings.index', 'appname' => 'booking') )
+							),
+							'event_mail_settings'	=> array
+							(
+								'text'	=> lang('Event Mail Settings'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uievent_mail_settings.index', 'appname' => 'booking') )
 							),
 							'application_settings'	=> array
 							(

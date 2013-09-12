@@ -75,14 +75,30 @@
 
 		function get_building_info($id)
 		{
-			$this->db->limit_query("SELECT bb_building.id, bb_building.name, bb_building.email FROM bb_building, bb_resource, bb_event_resource WHERE bb_building.id=bb_resource.building_id AND bb_resource.id=bb_event_resource.resource_id AND bb_event_resource.event_id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT bb_building.id, bb_building.name, bb_building.email, bb_building.tilsyn_email, bb_building.tilsyn_email2 FROM bb_building, bb_resource, bb_event_resource WHERE bb_building.id=bb_resource.building_id AND bb_resource.id=bb_event_resource.resource_id AND bb_event_resource.event_id=" . intval($id), 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
 				return False;
 			}
 			return array('id' => $this->db->f('id', false),
 						 'name' => $this->db->f('name', false),
-						 'email' => $this->db->f('email', false));
+						 'email' => $this->db->f('email', false),
+						 'tilsyn_email' => $this->db->f('tilsyn_email', false),
+						 'tilsyn_email2' => $this->db->f('tilsyn_email2', false));
+		}
+
+		function get_ordered_comments($id)
+		{
+			$results = array();
+			$this->db->query("select time,author,comment,type from bb_event_comment where event_id=($id) order by time desc", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('time' => $this->db->f('time', false),
+                                 'author' => $this->db->f('author', false),
+                                 'comment' => $this->db->f('comment', false),
+						         'type' => $this->db->f('type', false));
+			}
+			return $results;
 		}
 
 		function get_resource_info($id)

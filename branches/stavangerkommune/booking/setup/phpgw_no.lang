@@ -619,3 +619,14 @@ Author	booking	no	Forfatter
 Robots	booking	no	Søkerobot parameter
 Frontpage text	booking	no	Forside tekst
 Calendar text	booking	no	Tekst bak kalender knapp.
+Reference	booking	no	Referanse
+Event Mail Settings	booking	no	Arrangement E-post oppsett 
+Booking event email settings	booking	no	Booking arrangement epost oppsett
+Event Change Subject	booking	no	E-post emne for endring
+Mail for event change	booking	no	E-post tekst for endring
+Event Conflict Subject	booking	no	E-post emne for konflikt
+Mail text to event contact when collision	booking	no	E-post tekst til arrangement kontakt person når konflikt 
+Mail text to conflicting event contact when collision	booking	no	E-post tekst til kontaktpersoner når konflikt 
+Mail text to building contact when conflicting event	booking	no	E-post tekst til tilsynsfører/bygg kontakt når konflikt
+Event Canceled Subject	booking	no	E-post emne når arrangement avlyses
+Mail for event canceled	booking	no	E-post tekst når arrangement avlyses
