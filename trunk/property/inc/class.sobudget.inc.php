@@ -710,11 +710,12 @@ ksort($projects);
 				{
 					if($budget['year'] == $year)
 					{
+/*
 $projects3[$projects2[$order_id]]['actual_cost']+= $budget['actual_cost'];
 $projects3[$projects2[$order_id]]['combined_cost']+= $budget['sum_orders'];
 $projects3[$projects2[$order_id]]['budget']+= $budget['budget'];
 $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
-
+*/
 					//	$order_info['actual_cost']		= $budget['actual_cost'];
 					//	$order_info['combined_cost']	= $budget['sum_orders'];
 					//	$order_info['budget']			= $budget['budget'];
