@@ -158,6 +158,8 @@
 
 			foreach ($values['file_action'] as $file_name)
 			{
+				$file_name = html_entity_decode($file_name);
+				
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
 				if($this->vfs->file_exists(array(
@@ -203,10 +205,11 @@
 
 			if(!$file)
 			{
-				$file_name = urldecode(phpgw::get_var('file_name'));
+				$file_name = html_entity_decode(urldecode(phpgw::get_var('file_name')));
 				$id        = phpgw::get_var('id');
 				$file      = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
+
 			// prevent path traversal
 			if ( preg_match('/\.\./', $file) )
 			{

@@ -113,7 +113,7 @@
 				$i++;
 			}
 
-
+			$values['spbudact_code']	= $workorder['b_account_id'];
 			$values['invoice_date']		= $this->date;
 			$values['payment_date']		= $this->date;
 			$values['paid_date']		= $this->date;

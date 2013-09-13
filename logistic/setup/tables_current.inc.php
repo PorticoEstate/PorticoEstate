@@ -99,6 +99,8 @@ $phpgw_baseline = array(
 						'calendar_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
+						'ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						
 				),
 				'pk' => array('id'),
 				'fk' => array(
