@@ -25,6 +25,10 @@
 					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.send_job_ticket')" />
 				</xsl:variable>
 		
+			<script type="text/javascript">
+				var requirement_id = <xsl:value-of select="requirement_id"/>;
+			</script>
+
 				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post">
 					
 					<input name="assign_requirement" type="text" value="{assign_requirement_json}" />					

@@ -351,10 +351,10 @@
 		 * @return string info of the linked item
 		 */
 
-		public function get_relation_info($linkend_location, $id)
+		public function get_relation_info($linkend_location, $id=0)
 		{
 			$relation_info = array();
-			$id = (int)$id;
+			$id = isset($linkend_location['id']) ? (int)$linkend_location['id'] : (int)$id;
 			$type = $linkend_location['location'];
 			if($type == '.ticket')
 			{

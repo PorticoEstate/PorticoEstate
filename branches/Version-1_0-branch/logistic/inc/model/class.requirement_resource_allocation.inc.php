@@ -49,6 +49,8 @@
 		protected $end_date;
 		protected $allocated_amount;
 		protected $allocated_amount_orig;
+		protected $ticket_id;
+
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -213,6 +215,18 @@
 		}
 
 
+
+		public function set_ticket_id($ticket_id)
+		{
+			$this->ticket_id = $ticket_id;
+		}
+
+		public function get_ticket_id()
+		{
+			return $this->ticket_id;
+		}
+
+
 		/**
 		* Get a static reference to the storage object associated with this model object
 		*
@@ -236,6 +250,7 @@
 				'requirement_id' 		=> $this->get_requirement_id(),
 				'resource_id' 			=> $this->get_resource_id(),
 				'inventory_id' 			=> $this->get_inventory_id(),
+				'ticket_id' 			=> $this->get_ticket_id(),
 				//FIXME
 				'inventory_amount' 		=> $this->get_inventory_amount(),
 				'allocated_amount' 		=> $this->get_allocated_amount(),
