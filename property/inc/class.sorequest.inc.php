@@ -323,6 +323,7 @@
 			$attrib_filter			= $data['attrib_filter'] ? $data['attrib_filter'] : array();
 			$condition_survey_id	= $data['condition_survey_id'] ? (int) $data['condition_survey_id'] : 0;
 			$responsible_unit		= (int)$data['responsible_unit'];
+			$recommended_year		= (int)$data['recommended_year'];
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -642,6 +643,12 @@
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_request.category='{$cat_id}'";
+				$where = 'AND';
+			}
+
+			if ($recommended_year > 0)
+			{
+				$filtermethod .= " $where fm_request.recommended_year = {$recommended_year}";
 				$where = 'AND';
 			}
 
@@ -1390,6 +1397,26 @@
 		public function update_status_from_related($data = array())
 		{
 
+		}
+
+		public function get_recommended_year_list()
+		{
+			$sql = "SELECT DISTINCT recommended_year FROM fm_request"
+			. " WHERE recommended_year IS NOT NULL AND recommended_year > 0"
+			. " ORDER BY recommended_year ASC";
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+			while($this->_db->next_record())
+			{
+				$year	= $this->_db->f('recommended_year');
+				$values[] = array
+				(
+					'id' 	=> $year,
+					'name'	=> $year
+				);
+			}
+			return $values;
 		}
 
 	}
