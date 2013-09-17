@@ -90,6 +90,7 @@
 			$end_date			= phpgw::get_var('end_date');
 			$building_part		= phpgw::get_var('building_part');
 			$responsible_unit	= phpgw::get_var('responsible_unit', 'int');
+			$recommended_year	= phpgw::get_var('recommended_year', 'int');
 
 			$this->condition_survey_id = phpgw::get_var('condition_survey_id', 'int', 'REQUEST', 0);
 
@@ -148,6 +149,12 @@
 				$this->responsible_unit = $responsible_unit;
 			}
 
+			if(isset($_POST['recommended_year']) || isset($_GET['recommended_year']))
+			{
+				$this->recommended_year = $recommended_year;
+			}
+
+
 			if($allrows)
 			{
 				$this->allrows = $allrows;
@@ -188,6 +195,7 @@
 			$this->degree_id		= $data['degree_id'];
 			$this->building_part	= $data['building_part'];
 			$this->responsible_unit	= $data['responsible_unit'];
+			$this->recommended_year	= $data['recommended_year'];
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
 			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
 		}
@@ -489,7 +497,7 @@
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
 				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id,
-				'responsible_unit' => $this->responsible_unit));
+				'responsible_unit' => $this->responsible_unit, 'recommended_year' => $this->recommended_year));
 
 			$this->total_records			= $this->so->total_records;
 			$this->sum_investment			= $this->so->sum_investment;
@@ -766,5 +774,10 @@
 		public function get_user_list()
 		{
 			return $this->so->get_user_list();
+		}
+		public function get_recommended_year_list($selected = 0)
+		{
+			$recommended_year_list = $this->so->get_recommended_year_list();
+			return $this->bocommon->select_list($selected,$recommended_year_list);
 		}
 	}

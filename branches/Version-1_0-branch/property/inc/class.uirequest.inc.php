@@ -99,6 +99,8 @@
 			$this->condition_survey_id	= $this->bo->condition_survey_id;
 			$this->nonavbar 			= phpgw::get_var('nonavbar', 'bool');
 			$this->responsible_unit		= $this->bo->responsible_unit;
+			$this->recommended_year		= $this->bo->recommended_year;
+
 
 			if( $this->nonavbar )
 			{
@@ -127,7 +129,8 @@
 				'end_date'			=> $this->end_date,
 				'property_cat_id'	=> $this->property_cat_id,
 				'building_part'		=> $this->building_part,
-				'responsible_unit'	=> $this->responsible_unit
+				'responsible_unit'	=> $this->responsible_unit,
+				'recommended_year'	=> $this->recommended_year
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -307,6 +310,9 @@
 				$responsible_unit_list	= $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
 				array_unshift ($responsible_unit_list,array ('id'=>'0','name'=> lang('responsible unit')));
 
+				$recommended_year_list	= $this->bo->get_recommended_year_list($this->recommended_year);
+				array_unshift ($recommended_year_list,array ('id'=>'0','name'=> lang('recommended year')));
+
 				$_filter_buildingpart = array();
 				$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
 
@@ -341,6 +347,7 @@
 								'end_date' 			=> $this->end_date,
 								'building_part'		=> $this->building_part,
 								'responsible_unit'	=> $this->responsible_unit,
+								'recommended_year'	=> $this->recommended_year,
 							)
 						),
 						'fields'	=> array
@@ -368,7 +375,6 @@
 								array
 								( //boton 	CATEGORY
 									'id' => 'btn_cat_id',
-
 									'name' => 'cat_id',
 									'value'	=> lang('Category'),
 									'type' => 'button',
@@ -416,27 +422,38 @@
 									'tab_index' => 7
 								),
 								array
+								(
+									'id' => 'sel_recommended_year',
+									'name' => 'recommended_year',
+									'value'	=> lang('responsible unit'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values'	=> $recommended_year_list,
+									'onchange'=> 'onChangeSelect("recommended_year");',
+									'tab_index' => 8
+								),
+								array
 								( //boton 	FILTER
 									'id' => 'btn_user_id',
 									'name' => 'filter',
 									'value'	=> lang('User'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 8
+									'tab_index' => 9
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_update',
 									'value'	=> lang('Update project'),
-									'tab_index' => 16
+									'tab_index' => 17
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 15
+									'tab_index' => 16
 								),
 
 								array
@@ -444,7 +461,7 @@
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 14
+									'tab_index' => 15
 								),
 								array
 								(
@@ -472,7 +489,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 13
+									'tab_index' => 14
 								),
 
 								array
@@ -482,7 +499,7 @@
 									'value'    => lang('search'),
 									'onkeypress' => 'return pulsar(event)',
 									'type' => 'button',
-									'tab_index' => 12
+									'tab_index' => 13
 								),
 								array
 								( //hidden request
@@ -499,7 +516,7 @@
 									'type' => 'text',
 									'size'    => 28,
 									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 11
+									'tab_index' => 12
 								),
 								array
 								(
@@ -563,17 +580,17 @@
 
 				if(!$this->acl_manage)//priority_key
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][18]);
+					unset($datatable['actions']['form'][0]['fields']['field'][19]);
 				}
 
 				if(!$this->acl_add) //add
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][10]);
+					unset($datatable['actions']['form'][0]['fields']['field'][11]);
 				}
 
 				if(!$project_id) // update project
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][8]);
+					unset($datatable['actions']['form'][0]['fields']['field'][9]);
 				}
 
 
