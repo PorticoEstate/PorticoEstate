@@ -157,16 +157,11 @@
 			$smtp->IsSMTP();
 			$smtp->Subject = $subject;
 			$smtp->Body    = $body;
-			$smtp->AddCustomHeader('X-Mailer: phpGroupWare (http://www.phpgroupware.org)');
+			$smtp->AddCustomHeader('X-Mailer: fmsystem (http://www.fmsystem.no)');
 			if($receive_notification)
 			{
 				$smtp->AddCustomHeader("Disposition-Notification-To: {$smtp->From}");
 			}
-			$smtp->Port = $GLOBALS['phpgw_info']['server']['smtp_port'] ? $GLOBALS['phpgw_info']['server']['smtp_port'] : 25;
-			$smtp->Host 	= $GLOBALS['phpgw_info']['server']['smtp_server'];
-			$smtp->Encoding = '8bit';
-			$smtp->CharSet = 'utf-8';
-			$smtp->PluginDir = PHPGW_SERVER_ROOT."/phpgwapi/inc/phpmailer/";
 
 			if($content_type =='html')
 			{
@@ -190,13 +185,6 @@
 						$value['type']
 					);
 				}
-			}
-
-			if ( $GLOBALS['phpgw_info']['server']['smtp_auth'] == 'True' )
-			{
-				$smtp->SMTPAuth	= true;
-				$smtp->Username	= $GLOBALS['phpgw_info']['server']['smtp_user'];
-				$smtp->Password	= $GLOBALS['phpgw_info']['server']['smtp_password'];
 			}
 
 			// set a higher timeout for big messages

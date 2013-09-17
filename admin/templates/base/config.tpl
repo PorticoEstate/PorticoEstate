@@ -118,7 +118,31 @@
 			</select>
 		</td>
 	</tr>
+
+	<tr class="row_on">
+    <td>{lang_SMTPDebug}:</td>
+		<td>
+			<select name="newsettings[SMTPDebug]">
+				<option value="0">{lang_No}</option>
+				<option value="1"{selected_SMTPDebug_1}>commands</option>
+				<option value="2"{selected_SMTPDebug_2}>commands and data</option>
+			</select>
+		</td>
+	</tr>
+
+	<tr class="row_off">
+    <td>{lang_Debugoutput}:</td>
+		<td>
+			<select name="newsettings[Debugoutput]">
+				<option value="echo">echo</option>
+				<option value="html"{selected_Debugoutput_html}>html</option>
+				<option value="errorlog"{selected_Debugoutput_errorlog}>error log</option>
+			</select>
+		</td>
+	</tr>
 	
+ 
+ 
    <tr class="th">
     <td colspan="2">&nbsp;<b>{lang_appearance}</b></td>
 	</tr>
