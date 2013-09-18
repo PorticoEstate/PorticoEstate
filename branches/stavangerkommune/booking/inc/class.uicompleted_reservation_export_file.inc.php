@@ -144,7 +144,7 @@ phpgw::import_class('booking.uicommon');
 			$this->db = $GLOBALS['phpgw']->db;
             $config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
-            if ($config->config_data['output_files'] == 'single')
+#            if ($config->config_data['output_files'] == 'single')
 			$export_files = $this->bo->read();
 			array_walk($export_files["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export_file.show");
 			foreach($export_files["results"] as &$export_file) {

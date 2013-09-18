@@ -71,11 +71,43 @@
         </dl>
         <div class="clr"/>
     	<dl class="form">
+    		<dt class="heading"><xsl:value-of select="php:function('lang', 'External account')"/></dt>
+    	</dl>
+
+     	<p><xsl:value-of select="php:function('lang', 'External_account_helptext')"/></p>
+
+       <dl class="form-col">
+            <dt><label for="field_external_format"><xsl:value-of select="php:function('lang', 'External customer output format')"/></label></dt>
+			<dd>
+				<select id="field_external_format" name="external_format">
+                    <option value="AGGRESSO">
+                        <xsl:if test="config_data/external_format='AGGRESSO'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        AGGRESSO
+                    </option>
+                    <option value="CSV">
+                        <xsl:if test="config_data/external_format='CSV'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        CSV
+		           </option>
+                    <option value="KOMMFAKT">
+                        <xsl:if test="config_data/external_format='KOMMFAKT'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        KOMMFAKT
+		           </option>
+		        </select>
+			</dd>
+        </dl>
+
+        <div class="clr"/>
+    	<dl class="form">
     		<dt class="heading"><xsl:value-of select="php:function('lang', 'Internal account')"/></dt>
     	</dl>
 
-     	<p><xsl:value-of select="php:function('lang', 'Internal_account_helptext')"/></p>
-
+    	<p><xsl:value-of select="php:function('lang', 'Internal_account_helptext')"/></p>
        <dl class="form-col">
             <dt><label for="field_organization_value"><xsl:value-of select="php:function('lang', 'Organization number')"/></label></dt>
             <dd>
@@ -97,6 +129,12 @@
                             <xsl:attribute name="selected">checked</xsl:attribute>
                         </xsl:if>
                         CSV
+		           </option>
+                    <option value="KOMMFAKT">
+                        <xsl:if test="config_data/internal_format='KOMMFAKT'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        KOMMFAKT
 		           </option>
 		        </select>
 			</dd>

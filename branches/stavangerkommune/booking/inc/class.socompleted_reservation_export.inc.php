@@ -283,7 +283,21 @@
 		 * @return array with three elements where index 0: total_rows, index 1: total_cost, index 2: formatted data
 		 */
 		public function export_external(array &$reservations, array $account_codes) {
-			$export_format = 'agresso';
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+
+            if ($config->config_data['external_format'] == 'CSV')
+            {
+                $export_format = 'csv';
+            }
+            elseif ($config->config_data['external_format'] == 'AGGRESSO')
+            {
+    			$export_format = 'agresso';
+			} 
+            elseif ($config->config_data['external_format'] == 'KOMMFAKT')
+            {
+    			$export_format = 'kommfakt';
+			} 
 			
 			if (is_array($reservations)) {
 				if (count($external_reservations = array_filter($reservations, array($this, 'select_external'))) > 0) {
@@ -292,12 +306,33 @@
 						throw new UnexpectedValueException("Unable to find sequential number generator for external export");
 					}
 					
-					return $this->build_export_result(
+                    if ($config->config_data['external_format'] == 'CSV')
+                    {
+      					return $this->build_export_result(
+   						$export_format,
+   						count(array_filter($internal_reservations, array($this, 'not_free'))),
+   						$this->calculate_total_cost($internal_reservations),
+   						$this->format_csv($internal_reservations, $account_codes, $number_generator)
+       					);
+                    }
+                    elseif ($config->config_data['external_format'] == 'AGGRESSO')
+                    {
+						return $this->build_export_result(
 						$export_format,
 						count(array_filter($external_reservations, array($this, 'not_free'))),
 						$this->calculate_total_cost($external_reservations),
 						$this->format_agresso($external_reservations, $account_codes, $number_generator)
-					);
+						);
+					}
+                    elseif ($config->config_data['external_format'] == 'KOMMFAKT')
+                    {
+						return $this->build_export_result(
+						$export_format,
+						count(array_filter($external_reservations, array($this, 'not_free'))),
+						$this->calculate_total_cost($external_reservations),
+						$this->format_kommfakt($external_reservations, $account_codes, $number_generator)
+						);
+					}
 				}
 			}
 			return $this->build_export_result($export_format, 0, 0.0);
@@ -317,6 +352,10 @@
             elseif ($config->config_data['internal_format'] == 'AGGRESSO')
             {
     			$export_format = 'agresso';
+			} 
+            elseif ($config->config_data['internal_format'] == 'KOMMFAKT')
+            {
+    			$export_format = 'kommfakt';
 			} 
 			
 			if (is_array($reservations)) {
@@ -341,6 +380,15 @@
     						count(array_filter($internal_reservations, array($this, 'not_free'))),
     						$this->calculate_total_cost($internal_reservations),
     						$this->format_agresso($internal_reservations, $account_codes, $number_generator)
+        					);
+                        }
+                        elseif ($config->config_data['internal_format'] == 'KOMMFAKT')
+                        {
+        					return $this->build_export_result(
+    						$export_format,
+    						count(array_filter($internal_reservations, array($this, 'not_free'))),
+    						$this->calculate_total_cost($internal_reservations),
+    						$this->format_kommfakt($internal_reservations, $account_codes, $number_generator)
         					);
                         }
 				}
@@ -397,6 +445,7 @@
 			$combined_data = array();
 			$export_format = null;
 			$combine_method = null;
+
 			foreach($export_results as &$export_result) {
 				if (!isset($export_result['export_format']) || !is_string($export_result['export_format'])) {
 					throw new InvalidArgumentException('export_format must be specified');
@@ -435,7 +484,7 @@
 				$combined_data[] = substr($export['data'], strpos($export['data'], "\n")+1); //Remove first line (i.e don't to repeat headers in file)
 			}
 		}
-		
+
 		public function format_csv(array &$reservations, array $account_codes, $sequential_number_generator) {
 			$export_info = array();
 			$output = array();
@@ -710,7 +759,7 @@
 					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 				
 					//Topptekst til faktura, knyttet mot fagavdeling
-					$header['long_info1'] = str_pad(substr(iconv("utf-8","ISO-8859-1",$account_codes['invoice_instruction']), 0, 120), 120, ' ');
+					$header['long_info1'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['invoice_instruction']), 0, 120), 120, ' ');
 
 					//Ordrenr. UNIKT, løpenr. genereres i booking ut fra gitt serie, eks. 38000000
 					$header['order_id'] = str_pad($order_id, 9, 0, STR_PAD_LEFT);
@@ -741,7 +790,7 @@
 					/* Data hentes fra booking, tidspunkt legges i eget felt som kommer på 
 					 * linjen under: 78_short_info. <navn på bygg>,  <navn på ressurs>
 					 */
-					$item['art_descr'] = str_pad(substr(iconv("utf-8","ISO-8859-1",$reservation['article_description']), 0, 35), 35, ' '); //35 chars long
+					$item['art_descr'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['article_description']), 0, 35), 35, ' '); //35 chars long
 				
 					//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
 					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
@@ -797,7 +846,7 @@
 					$text['batch_id'] = $header['batch_id'];
 					$text['client'] = $header['client'];
 					$text['line_no'] = $item['line_no']; 
-					$text['short_info'] = str_pad(substr(iconv("utf-8","ISO-8859-1",$reservation['description']), 0, 60), 60, ' ');
+					$text['short_info'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['description']), 0, 60), 60, ' ');
 					$text['trans_type'] = $header['trans_type'];
 					$text['voucher_type'] = $header['voucher_type'];
 				
@@ -855,7 +904,7 @@
 					/* Data hentes fra booking, tidspunkt legges i eget felt som kommer på 
 					 * linjen under: 78_short_info. <navn på bygg>,  <navn på ressurs>
 					 */
-					$item['art_descr'] = str_pad(substr(iconv("utf-8","ISO-8859-1",$reservation['article_description']), 0, 35), 35, ' '); //35 chars long
+					$item['art_descr'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['article_description']), 0, 35), 35, ' '); //35 chars long
 				
 					//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
 					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
@@ -911,7 +960,7 @@
 					$text['batch_id'] = $stored_header['batch_id'];
 					$text['client'] = $stored_header['client'];
 					$text['line_no'] = $item['line_no']; 
-					$text['short_info'] = str_pad(substr(iconv("utf-8","ISO-8859-1",$reservation['description']), 0, 60), 60, ' ');
+					$text['short_info'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['description']), 0, 60), 60, ' ');
 					$text['trans_type'] = $stored_header['trans_type'];
 					$text['voucher_type'] = $stored_header['voucher_type'];
 				
@@ -942,6 +991,205 @@
 			if ($row_template) { return $row_template; }
 			
 			$row_template = array('accept_flag' => str_repeat(' ', 1), 'account' => str_repeat(' ', 8), 'accountable' => str_repeat(' ', 20), 'address' => str_repeat(' ', 160), 'allocation_key' => str_repeat(' ', 2), 'amount' => str_repeat(' ', 17), 'amount_set' => str_repeat(' ', 1), 'apar_id' => str_repeat(' ', 8), 'apar_name' => str_repeat(' ', 30), 'art_descr' => str_repeat(' ', 35), 'article' => str_repeat(' ', 15), 'att_1_id' => str_repeat(' ', 2), 'att_2_id' => str_repeat(' ', 2), 'att_3_id' => str_repeat(' ', 2), 'att_4_id' => str_repeat(' ', 2), 'att_5_id' => str_repeat(' ', 2), 'att_6_id' => str_repeat(' ', 2), 'att_7_id' => str_repeat(' ', 2), 'bank_account' => str_repeat(' ', 35), 'batch_id' => str_repeat(' ', 12), 'client' => str_repeat(' ', 2), 'client_ref' => str_repeat(' ', 2), 'confirm_date' => str_repeat(' ', 17), 'control' => str_repeat(' ', 1), 'cur_amount' => str_repeat(' ', 17), 'currency' => str_repeat(' ', 3), 'del_met_descr' => str_repeat(' ', 60), 'del_term_descr' => str_repeat(' ', 60), 'deliv_addr' => str_repeat(' ', 255), 'deliv_attention' => str_repeat(' ', 50), 'deliv_countr' => str_repeat(' ', 3), 'deliv_date' => str_repeat(' ', 17), 'deliv_method' => str_repeat(' ', 8), 'deliv_terms' => str_repeat(' ', 8), 'dim_1' => str_repeat(' ', 8), 'dim_2' => str_repeat(' ', 8), 'dim_3' => str_repeat(' ', 8), 'dim_4' => str_repeat(' ', 8), 'dim_5' => str_repeat(' ', 12), 'dim_6' => str_repeat(' ', 4), 'dim_7' => str_repeat(' ', 4), 'dim_value_1' => str_repeat(' ', 12), 'dim_value_2' => str_repeat(' ', 12), 'dim_value_3' => str_repeat(' ', 12), 'dim_value_4' => str_repeat(' ', 12), 'dim_value_5' => str_repeat(' ', 12), 'dim_value_6' => str_repeat(' ', 12), 'dim_value_7' => str_repeat(' ', 12), 'disc_percent' => str_repeat(' ', 17), 'exch_rate' => str_repeat(' ', 17), 'ext_ord_ref' => str_repeat(' ', 15), 'intrule_id' => str_repeat(' ', 6), 'line_no' => str_repeat(' ', 4), 'location' => str_repeat(' ', 4), 'long_info1' => str_repeat(' ', 120), 'long_info2' => str_repeat(' ', 120), 'lot' => str_repeat(' ', 10), 'main_apar_id' => str_repeat(' ', 8), 'mark_attention' => str_repeat(' ', 50), 'mark_ctry_cd' => str_repeat(' ', 3), 'markings' => str_repeat(' ', 120), 'obs_date' => str_repeat(' ', 17), 'order_date' => str_repeat(' ', 17), 'order_id' => str_repeat(' ', 9), 'order_type' => str_repeat(' ', 2), 'pay_method' => str_repeat(' ', 2), 'period' => str_repeat(' ', 8), 'place' => str_repeat(' ', 30), 'province' => str_repeat(' ', 40), 'rel_value' => str_repeat(' ', 12), 'responsible' => str_repeat(' ', 8), 'responsible2' => str_repeat(' ', 8), 'sequence_no' => str_repeat(' ', 8), 'sequence_ref' => str_repeat(' ', 8), 'serial_no' => str_repeat(' ', 20), 'short_info' => str_repeat(' ', 60), 'status' => str_repeat(' ', 1), 'tax_code' => str_repeat(' ', 2), 'tax_system' => str_repeat(' ', 2), 'template_id' => str_repeat(' ', 8), 'terms_id' => str_repeat(' ', 2), 'tekx1' => str_repeat(' ', 12), 'tekst2' => str_repeat(' ', 12), 'tekst3' => str_repeat(' ', 12), 'text4' => str_repeat(' ', 12), 'trans_type' => str_repeat(' ', 2), 'unit_code' => str_repeat(' ', 3), 'unit_descr' => str_repeat(' ', 50), 'value_1' => str_repeat(' ', 17), 'voucher_ref' => str_repeat(' ', 9), 'voucher_type' => str_repeat(' ', 2), 'warehouse' => str_repeat(' ', 4), 'zip_code' => str_repeat(' ', 15));
+			return $row_template;
+		}
+
+		protected function combine_kommfakt_export_data(array &$combined_data, $export) {
+			if (count($combined_data) == 0) {
+				$combined_data[] = $export['data'];
+			} else {
+				$combined_data[] = "\n";
+				$combined_data[] = $export['data'];
+			}
+		}
+
+		public function format_kommfakt(array &$reservations, array $account_codes, $sequential_number_generator) {
+			$export_info = array();
+			$output = array();
+			
+			$log = array();
+
+			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
+
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			
+			
+
+			$stored_header = array();			
+			$line_no = 0;
+            $header_count = 0;
+			$log_order_id = '';
+			$log_customer_name = '';
+			$log_customer_nr = '';
+			$log_buidling = '';
+			
+			$internal = false;
+
+			$ant_post = 0;
+			$linjenr = 1;	
+			$lopenr = 1;	
+
+			foreach($reservations as &$reservation) {
+
+				if ($this->get_cost_value($reservation['cost']) <= 0) {
+					continue; //Don't export costless rows
+				}
+
+				if(!empty($reservation['organization_id'])) {
+					$org = $this->organization_bo->read_single($reservation['organization_id']);				
+					$reservation['organization_name'] = $org['name'];
+				} else {
+					$data = $this->event_so->get_org($reservation['customer_organization_number']);
+					if(!empty($data['id'])) {
+						$reservation['organization_name'] = $data['name'];
+					} else {
+						if($reservation['reservation_type'] == 'event') {
+							$data = $this->event_bo->read_single($reservation['reservation_id']);
+							$reservation['organization_name'] = $data['contact_name'];
+#						} elseif ($reservation['reservation_type'] == 'booking') {
+#							$data = $this->booking_bo->read_single($reservation['reservation_id']);
+#							error_log('b'.$data['id']." ".$data['group_id']);
+#						} else {
+#							$data = $this->allocation_bo->read_single($reservation['reservation_id']);
+#							error_log('a'.$data['id']." ".$data['organization_id']);
+						}
+					}
+				}
+
+				$type = $reservation['customer_type'];
+
+				$order_id = $sequential_number_generator->increment()->get_current();
+				$export_info[] = $this->create_export_item_info($reservation, $order_id);
+				$header_count += 1;
+				$stored_header['kundenr'] = $kundenr;
+
+				$kundenr = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 11), 11, '0',STR_PAD_LEFT);
+
+
+				if (strlen($this->get_customer_identifier_value_for($reservation)) > 9) {
+					$name = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['organization_name']), 30, ' ');
+				} else {
+					$name = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['organization_name']), 30, ' ');
+				} 		
+
+				//Startpost ST
+				$startpost = $this->get_kommfakt_ST_row_template();
+				$startpost['posttype'] = 'ST';
+				$startpost['referanse'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['article_description']), 0, 60), 60, ' ');
+#				$startpost['referanse'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['invoice_instruction']), 0, 60), 60, ' ');
+
+				//Fakturalinje FL
+				$fakturalinje = $this->get_kommfakt_FL_row_template();
+				$fakturalinje['posttype'] = 'FL';
+				$fakturalinje['kundenr'] = $kundenr;
+				$fakturalinje['navn'] = $name;
+#				$fakturalinje['adresse1'] = ;
+#				$fakturalinje['adresse2'] = ;
+#				$fakturalinje['postnr'] = ;
+				$fakturalinje['betform'] = 'BG';
+				$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+				$fakturalinje['varenr'] = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['responsible_code']), 4, '0', STR_PAD_LEFT);
+				$fakturalinje['lopenr'] = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$lopenr), 2, '0', STR_PAD_LEFT);
+				$fakturalinje['pris'] = str_pad($reservation['cost']*100,8,'0',STR_PAD_LEFT).' ';
+				$fakturalinje['grunnlag'] = '000000001';
+				$fakturalinje['belop'] = str_pad($reservation['cost']*100,8,'0',STR_PAD_LEFT).' ';
+#				$fakturalinje['saksnr'] = ;
+
+				//Linjetekst LT
+				$linjetekst = $this->get_kommfakt_LT_row_template();
+				$linjetekst['posttype'] = 'LT';
+				$linjetekst['kundenr'] = $kundenr;
+				$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+				$linjetekst['varenr'] = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['responsible_code']), 4, '0', STR_PAD_LEFT) ;
+				$linjetekst['lopenr'] = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$lopenr), 2, '0', STR_PAD_LEFT);
+				$linjetekst['linjenr'] = $linjenr;
+				$linjetekst['tekst'] = str_pad(iconv("utf-8","ISO-8859-1//TRANSLIT",$reservation['description']), 50, ' ');
+				$ant_post += 3;
+
+					//Sluttpost SL
+				$sluttpost = $this->get_kommfakt_SL_row_template();
+				$sluttpost['posttype'] = 'SL';
+				$sluttpost['antpost'] = str_pad(intval($ant_post)+1, 8, '0', STR_PAD_LEFT);
+				$ant_post = 0;
+
+
+				$log_order_id = $order_id;
+
+				if(!empty($reservation['organization_id'])) {
+					$org = $this->organization_bo->read_single($reservation['organization_id']);				
+					$log_customer_name = $org['name'];
+				} else {
+					$data = $this->event_so->get_org($reservation['customer_organization_number']);
+					if(!empty($data['id'])) {
+						$log_customer_name = $data['name'];
+					} else {
+						if($reservation['reservation_type'] == 'event') {
+							$data = $this->event_bo->read_single($reservation['reservation_id']);
+							$log_customer_name = $data['contact_name'];
+#						} elseif ($reservation['reservation_type'] == 'booking') {
+#							$data = $this->booking_bo->read_single($reservation['reservation_id']);
+#							error_log('b'.$data['id']." ".$data['group_id']);
+#						} else {
+#							$data = $this->allocation_bo->read_single($reservation['reservation_id']);
+#							error_log('a'.$data['id']." ".$data['organization_id']);
+						}
+					}
+				}
+
+    			$log_customer_nr = $this->get_customer_identifier_value_for($reservation);
+				$log_buidling = $reservation['building_name'];
+				$log_cost = $reservation['cost'];
+				$log_varelinjer_med_dato = $reservation['article_description'].' - '.$reservation['description'];
+
+				$log[] = $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
+
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $startpost));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $fakturalinje));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $sluttpost));
+
+			}			
+
+			if (count($export_info) == 0) {
+				return null;
+			}
+		
+
+			return array('data' => implode("\r\n", $output), 'data_log' => implode("\n", $log), 'info' => $export_info, 'header_count' => $header_count);
+
+		}		
+
+		protected function get_kommfakt_ST_row_template() {
+			static $row_template = false;
+			if ($row_template) { return $row_template; }
+	
+			$row_template = array('posttype' => str_repeat(' ', 2), 'referanse' => str_repeat(' ', 60));
+			return $row_template;
+		}
+
+		protected function get_kommfakt_FL_row_template() {
+			static $row_template = false;
+			if ($row_template) { return $row_template; }
+
+			$row_template = array('posttype' => str_repeat(' ', 2), 'kundenr' => str_repeat(' ', 11), 'navn' => str_repeat(' ', 30), 'adresse1' => str_repeat(' ', 30), 'adresse2' => str_repeat(' ', 30), 'postnr' => str_repeat(' ', 4), 'betform' => str_repeat(' ', 2), 'oppdrgnr' => str_repeat(' ', 3), 'varenr' => str_repeat(' ', 4), 'lopenr' => str_repeat(' ', 2), 'pris' => str_repeat(' ', 9), 'grunnlag' => str_repeat(' ', 9), 'belop' => str_repeat(' ', 11), 'saksnr' => str_repeat(' ', 16));
+			return $row_template;
+	
+		}
+
+		protected function get_kommfakt_LT_row_template() {
+			static $row_template = false;
+			if ($row_template) { return $row_template; }
+	
+			$row_template = array('posttype' => str_repeat(' ', 2), 'kundenr' => str_repeat(' ', 11), 'oppdrgnr' => str_repeat(' ', 3), 'varenr' => str_repeat(' ', 4), 'lopenr' => str_repeat(' ', 2), 'linjenr' => str_repeat(' ', 2), 'tekst' => str_repeat(' ', 50));
+			return $row_template;
+		}
+
+		protected function get_kommfakt_SL_row_template() {
+			static $row_template = false;
+			if ($row_template) { return $row_template; }
+	
+			$row_template = array('posttype' => str_repeat(' ', 2), 'antpost' => str_repeat(' ', 8));
 			return $row_template;
 		}
 	}

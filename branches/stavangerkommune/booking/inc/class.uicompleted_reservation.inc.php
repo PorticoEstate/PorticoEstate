@@ -250,7 +250,9 @@ phpgw::import_class('booking.sopermission');
 				}
 			}
 
-			$filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
+			$to = strtotime(phpgw::get_var('filter_to', 'string', 'REQUEST', null));
+			$filter_to = date("Y-m-d",$to);
+
 			if ($filter_to) {
 				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}

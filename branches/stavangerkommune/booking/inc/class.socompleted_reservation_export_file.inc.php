@@ -47,8 +47,23 @@
                 {
     			    return 'txt';
                 }
+                elseif ($config->config_data['internal_format'] == 'KOMMFAKT')
+                {
+    			    return 'txt';
+                }
             } elseif ($export_type === 'external'){
-                return 'txt';    
+                if ($config->config_data['external_format'] == 'CSV')
+                {
+                    return 'csv';
+                }
+                elseif ($config->config_data['external_format'] == 'AGGRESSO')
+                {
+    			    return 'txt';
+                }
+                elseif ($config->config_data['external_format'] == 'KOMMFAKT')
+                {
+    			    return 'txt';
+                }
             } else {
                 return 'txt';    
             }
@@ -110,7 +125,7 @@
 			$entity_export_files = array();
 			$export_files = array();
 			$export_conf_updates = array();
-			
+            
 			try {				
 				$this->db->transaction_begin();
 				
@@ -133,6 +148,7 @@
 
                         if ($export_type == 'external') {
 							$export_result['total_items'] = $export_result['export']['header_count'];	
+
 						    if (!is_null($export_result['export']['data_log'])) {
 								$export_log .= $export_result['export']['data_log'];	
 							} else {
@@ -156,7 +172,7 @@
 				}
 			
 				foreach($export_types as $export_type) {
-					$entity_export_file = array();
+                	$entity_export_file = array();
 					$entity_export_file['type'] = $export_type;
 					$entity_export_file['total_cost'] = $total_cost[$export_type];
 					$entity_export_file['total_items'] = $total_items[$export_type];
@@ -167,7 +183,7 @@
 					$entity_export_file['filename'] = 'export_'.$export_type.'_'.$entity_export_file['id'].'.'.$this->file_type_for_export_type($export_type);
 					$export_file = new booking_storage_object($entity_export_file['filename']);
 					$export_files[] = $export_file;
-					
+				
 					$export_file->set_data($export_data[$export_type]);
 			
 					$this->file_storage->attach($export_file)->persist();
