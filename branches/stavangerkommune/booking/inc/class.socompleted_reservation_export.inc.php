@@ -290,7 +290,7 @@
             {
                 $export_format = 'csv';
             }
-            elseif ($config->config_data['external_format'] == 'AGGRESSO')
+            elseif ($config->config_data['external_format'] == 'AGRESSO')
             {
     			$export_format = 'agresso';
 			} 
@@ -315,7 +315,7 @@
    						$this->format_csv($internal_reservations, $account_codes, $number_generator)
        					);
                     }
-                    elseif ($config->config_data['external_format'] == 'AGGRESSO')
+                    elseif ($config->config_data['external_format'] == 'AGRESSO')
                     {
 						return $this->build_export_result(
 						$export_format,
@@ -349,7 +349,7 @@
             {
                 $export_format = 'csv';
             }
-            elseif ($config->config_data['internal_format'] == 'AGGRESSO')
+            elseif ($config->config_data['internal_format'] == 'AGRESSO')
             {
     			$export_format = 'agresso';
 			} 
@@ -373,7 +373,7 @@
     						$this->format_csv($internal_reservations, $account_codes, $number_generator)
         					);
                         }
-                        elseif ($config->config_data['internal_format'] == 'AGGRESSO')
+                        elseif ($config->config_data['internal_format'] == 'AGRESSO')
                         {
         					return $this->build_export_result(
     						$export_format,

@@ -80,11 +80,11 @@
             <dt><label for="field_external_format"><xsl:value-of select="php:function('lang', 'External customer output format')"/></label></dt>
 			<dd>
 				<select id="field_external_format" name="external_format">
-                    <option value="AGGRESSO">
-                        <xsl:if test="config_data/external_format='AGGRESSO'">
+                    <option value="AGRESSO">
+                        <xsl:if test="config_data/external_format='AGRESSO'">
                             <xsl:attribute name="selected">checked</xsl:attribute>
                         </xsl:if>
-                        AGGRESSO
+                        AGRESSO
                     </option>
                     <option value="CSV">
                         <xsl:if test="config_data/external_format='CSV'">
@@ -118,11 +118,11 @@
             <dt><label for="field_internal_format"><xsl:value-of select="php:function('lang', 'Internal customer output format')"/></label></dt>
 			<dd>
 				<select id="field_internal_format" name="internal_format">
-                    <option value="AGGRESSO">
-                        <xsl:if test="config_data/internal_format='AGGRESSO'">
+                    <option value="AGRESSO">
+                        <xsl:if test="config_data/internal_format='AGRESSO'">
                             <xsl:attribute name="selected">checked</xsl:attribute>
                         </xsl:if>
-                        AGGRESSO
+                        AGRESSO
                     </option>
                     <option value="CSV">
                         <xsl:if test="config_data/internal_format='CSV'">
@@ -160,7 +160,7 @@
         <div class="clr"/>
 
     	<dl class="form">
-    		<dt class="heading"><xsl:value-of select="php:function('lang', 'Export aggresso')"/></dt>
+    		<dt class="heading"><xsl:value-of select="php:function('lang', 'Export agresso')"/></dt>
     	</dl>
 
      	<p><xsl:value-of select="php:function('lang', 'export_help_text')"/></p>

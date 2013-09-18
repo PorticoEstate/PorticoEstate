@@ -43,7 +43,7 @@
                 {
                     return 'csv';
                 }
-                elseif ($config->config_data['internal_format'] == 'AGGRESSO')
+                elseif ($config->config_data['internal_format'] == 'AGRESSO')
                 {
     			    return 'txt';
                 }
@@ -56,7 +56,7 @@
                 {
                     return 'csv';
                 }
-                elseif ($config->config_data['external_format'] == 'AGGRESSO')
+                elseif ($config->config_data['external_format'] == 'AGRESSO')
                 {
     			    return 'txt';
                 }
