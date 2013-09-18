@@ -7627,3 +7627,36 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.670 to 0.9.17.671
+	* Convert p_num values to integer
+	*/
+	$test[] = '0.9.17.670';
+	function property_upgrade0_9_17_670()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
+		
+		foreach ($tables as $table)
+		{
+			if(preg_match('/^fm_/', $table))
+			{
+				$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
+
+				if(isset($metadata['p_num']))
+				{
+					$sql = "UPDATE {$table} SET p_num = p_num::integer WHERE p_num IS NOT NULL";
+					$GLOBALS['phpgw_setup']->oProc->query($sql);
+				}
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.671';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

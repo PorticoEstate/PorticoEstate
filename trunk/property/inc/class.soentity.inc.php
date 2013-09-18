@@ -561,7 +561,7 @@
 
 			if ($p_num)
 			{
-				$filtermethod .= " $where $entity_table.p_num='$p_num'";
+				$filtermethod .= " $where $entity_table.p_id='$p_num'";
 				$where= 'AND';
 			}
 
@@ -1855,13 +1855,21 @@
 
 			$this->db->transaction_begin();
 
+			if(isset($values_insert['p_num']) && $values_insert['p_num'])
+			{
+			//	$p_category		= $admin_entity->read_single_category($values_insert['p_entity_id'], $values_insert['p_cat_id']);
+			//	$p_id			= (int) ltrim($values_insert['p_num'], $p_category['prefix']);
+				$p_id			= $values_insert['p_num'];
+				$p_location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
+			}
+
+
 			if($category['is_eav'])
 			{
  				if(isset($values_insert['p_num']) && $values_insert['p_num'])
 				{
-					$p_category = $admin_entity->read_single_category($values_insert['p_entity_id'], $values_insert['p_cat_id']);
-					$values_insert['p_id']			= (int) ltrim($values_insert['p_num'], $p_category['prefix']);
-					$values_insert['p_location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
+					$values_insert['p_id']			= $p_id;
+					$values_insert['p_location_id'] = $p_location_id;
 				}
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
@@ -1876,6 +1884,11 @@
 				$values_insert['num'] = $num;
 				$values_insert['entry_date'] =  time();
 				$values_insert['user_id'] = $this->account;
+
+				if(isset($values_insert['p_num']) && $values_insert['p_num'])
+				{
+					$values_insert['p_num'] = $p_id;
+				}
 
 				$this->db->query("INSERT INTO {$table} (" . implode(',',array_keys($values_insert)) . ') VALUES ('
 				 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
@@ -2157,19 +2170,33 @@
 
 			$this->db->transaction_begin();
 
+
+ 			if(isset($value_set['p_num']) && $value_set['p_num'])
+			{
+			//	$p_category		= $admin_entity->read_single_category($value_set['p_entity_id'], $value_set['p_cat_id']);
+			//	$p_id			= (int) ltrim($value_set['p_num'], $p_category['prefix']);
+				$p_id			= $value_set['p_num'];
+				$p_location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$value_set['p_entity_id']}.{$value_set['p_cat_id']}");
+			}
+
+
 			if($category['is_eav'])
 			{
  				if(isset($value_set['p_num']) && $value_set['p_num'])
 				{
-					$p_category = $admin_entity->read_single_category($value_set['p_entity_id'], $value_set['p_cat_id']);
-					$value_set['p_id']			= (int) ltrim($value_set['p_num'], $p_category['prefix']);
-					$value_set['p_location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$value_set['p_entity_id']}.{$value_set['p_cat_id']}");
+					$value_set['p_id']			= $p_id;
+					$value_set['p_location_id'] = $p_location_id;
 				}
 
 				$this->_edit_eav($value_set, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}", $values['id']);
 			}
 			else
 			{
+	 			if(isset($value_set['p_num']) && $value_set['p_num'])
+				{
+					$value_set['p_num'] = $p_id;
+				}
+
 				$value_set	= $this->db->validate_update($value_set);
 				$this->db->query("UPDATE $table set $value_set WHERE id=" . $values['id'],__LINE__,__FILE__);
 			}
@@ -2561,5 +2588,23 @@
 				 . $this->db->validate_insert(array_values($value_set)) . ')',__LINE__,__FILE__);
 
 			return $this->db->transaction_commit();
+		}
+		
+		public function convert_num_to_id($data = array())
+		{
+			$entity_id = (int) $data['entity_id'];
+			$cat_id = (int) $data['cat_id'];
+			$num	= $data['num'];
+			
+			$id = '';
+			if($num)
+			{
+				$admin_entity	= CreateObject('property.soadmin_entity');
+				$admin_entity->type = isset($data['type']) && $data['type'] ? $data['type'] : 'entity';
+				$category = $admin_entity->read_single_category($entity_id, $cat_id);
+
+				$id	= (int) ltrim($num, $category['prefix']);
+			}
+			return $id;
 		}
 	}
