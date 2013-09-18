@@ -143,14 +143,7 @@
 				case 10:
 					$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
 					$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
-
-					// fix for bug php4 expired sessions bug
-					if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php')
-					{
-//						$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
-					}
-
-					return lang('Your session could not be verified.');
+					return lang('sorry, your session has expired');
 				default:
 					return '&nbsp;';
 			}

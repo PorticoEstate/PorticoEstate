@@ -1979,6 +1979,28 @@
 							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}
 					}
+					
+					if(isset($values['extra']['p_entity_id']) && $values['extra']['p_entity_id'] && isset($values['extra']['p_cat_id']) && $values['extra']['p_cat_id'] && isset($values['extra']['p_num']) && $values['extra']['p_num'] )
+					{
+						//strip prefix and leading zeros
+						$values['extra']['p_num'] = execMethod('property.soentity.convert_num_to_id', array
+							(
+								'type'		=> $values['extra']['type'],
+								'entity_id'	=> $values['extra']['p_entity_id'],
+								'cat_id'	=> $values['extra']['p_cat_id'],
+								'num'		=> $values['extra']['p_num']
+							)
+						);
+
+						$p_entity_id	= $values['extra']['p_entity_id'];
+						$p_cat_id		= $values['extra']['p_cat_id'];
+						$p_num			= $values['extra']['p_num'];
+						$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+						$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+						$values['p'][$p_entity_id]['p_num']			= $p_num;
+						$values['p'][$p_entity_id]['p_cat_name']	= phpgw::get_var("entity_cat_name_{$p_entity_id}");
+						
+					}
 				}
 				if(isset($insert_record['additional_info']) && is_array($insert_record['additional_info']))
 				{

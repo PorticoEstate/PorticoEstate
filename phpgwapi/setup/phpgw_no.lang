@@ -130,7 +130,8 @@ your settings have been updated	common	no	Dine innstillinger har blitt oppdatert
 bad login or password	common	no	Ugyldig login eller passord
 login	login	no	Login
 password	login	no	Passord
-sorry, your login has expired	login	no	Beklager, din login er utgått
+sorry, your login has expired	login	no	Beklager, din bruker er utgått
+sorry, your session has expired	login	no	Beklager, sesjonen din er utløpt
 todays date, eg. %1	common	no	Dagens dato, %1
 use cookies	login	no	use cookies
 username	login	no	Brukernavn

@@ -2211,7 +2211,7 @@ JS;
 					}
 				}
 
-				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$values['num']));
+				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
 
 				$_related = array();
 				if(isset($related['related']))
