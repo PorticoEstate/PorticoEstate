@@ -992,7 +992,6 @@
 
 			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
 
-
 			if (isset($values['save']))
 			{
 				if($GLOBALS['phpgw']->session->is_repost())
@@ -1021,6 +1020,8 @@
 				}
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+
+/*
 				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
 					for ($j=0;$j<count($insert_record_entity);$j++)
@@ -1028,7 +1029,7 @@
 						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
 					}
 				}
-
+*/
 				if(is_array($insert_record))
 				{
 					$values = $this->bocommon->collect_locationdata($values,$insert_record);
