@@ -22,6 +22,9 @@
 			<xsl:value-of select="statustext"/>
 		</xsl:variable>
 
+		<xsl:variable name="textareacols"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|property|textareacols')" /></xsl:variable>
+		<xsl:variable name="textarearows"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|property|textarearows')" /></xsl:variable>
+
 		<xsl:choose>
 			<xsl:when test="datatype='section'">
 				<tr>
@@ -476,6 +479,26 @@
 											</xsl:attribute>
 										</xsl:when>
 									</xsl:choose>
+									<xsl:attribute name="cols">
+										<xsl:choose>
+											<xsl:when test="$textareacols!=''">
+												<xsl:value-of select="$textareacols"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:text>60</xsl:text>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
+									<xsl:attribute name="rows">
+										<xsl:choose>
+											<xsl:when test="$textarearows!=''">
+												<xsl:value-of select="$textarearows"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:text>6</xsl:text>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
 									<xsl:value-of select="value"/>
 								</textarea>
 							</xsl:when>
