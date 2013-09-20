@@ -1729,7 +1729,7 @@
 			{
 				$this->db->query("UPDATE fm_request set project_id = NULL where id='{$request_id}'",__LINE__,__FILE__);
 				$this->interlink->delete_at_origin('property', '.project.request', '.project', $request_id, $this->db);
-				$receipt['message'][] = array('msg'=>lang('Request %1 has been deleted from project %2',$request_id,$project_id));
+				$receipt['message'][] = array('msg'=>lang('request %1 has been deleted from project %2',$request_id,$project_id));
 			}
 			return $receipt;
 		}
@@ -2422,6 +2422,13 @@ if(!$order_budget[0]['closed_order'])
 					$this->interlink->add($interlink_data);
 
 					$this->db->query("UPDATE fm_request SET project_id='$id' WHERE id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
+
+					$request_project_hookup_status = isset($this->config->config_data['request_project_hookup_status']) && $this->config->config_data['request_project_hookup_status'] ? $this->config->config_data['request_project_hookup_status'] : false;
+
+					if($request_project_hookup_status)
+					{
+						$this->db->query("UPDATE fm_request SET status='{$request_project_hookup_status}' WHERE id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);					
+					}
 
 					$receipt['message'][] = array('msg'=>lang('request %1 has been added',$add_request['request_id'][$i]));
 				}

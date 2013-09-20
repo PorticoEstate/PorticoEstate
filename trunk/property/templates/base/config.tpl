@@ -114,6 +114,15 @@
 			</td>
 		</tr>
 
+		<tr class="row_on">
+			<td>{lang_request_status_on_project_hookup}:</td>
+			<td>
+				<select name="newsettings[request_project_hookup_status]">
+					{hook_request_project_hookup_status}
+				</select>
+			</td>
+		</tr>
+
 
 	<tr class="row_off">
 		<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>

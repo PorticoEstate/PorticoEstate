@@ -1386,6 +1386,9 @@ request an email receipt	property	no	Be om kvittering
 request a confirmation email when your email is opened by the recipient	property	no	Be om epost som kvittering når mottaker åpner eposten.
 request %1 has been edited	property	no	Behov %1 er oppdatert
 request %1 has been saved	property	no	Behov %1 er lagret
+request %1 has been deleted from project %2	property	no	Behov %1 er koplet fra prosjekt %2
+request %1 has been added	property	no	Behov %1 er lagt til
+request %1 has already been added to project %2	property	no	Behov %1 er allerede koplet til prosjekt %2
 request budget	property	no	Budsjett for tiltak
 request condition type	property	no	Behov::konsekvenstype
 request descr	property	no	Beskrivelse av tiltak
