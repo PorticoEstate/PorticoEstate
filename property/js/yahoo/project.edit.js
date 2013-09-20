@@ -148,7 +148,7 @@ var  myPaginator_4, myDataTable_4;
 
   		if(typeof(tableYUI0)=='undefined')
   		{
-			tableYUI0 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI0 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;// because:table 6 in front of 0
 			tableYUI0.setAttribute("id","tableYUI0");
   		}
   		else
@@ -184,7 +184,7 @@ var  myPaginator_4, myDataTable_4;
 
   		if(typeof(tableYUI0)=='undefined')
   		{
-			tableYUI0 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI0 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;// because:table 6 in front of 0
 			tableYUI0.setAttribute("id","tableYUI0");
   		}
   		else
@@ -226,7 +226,7 @@ var  myPaginator_4, myDataTable_4;
 
   		if(typeof(tableYUI1)=='undefined')
   		{
-			tableYUI1 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableYUI1 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[2].parentNode;// because:table 6 in front of 0
 			tableYUI1.setAttribute("id","tableYUI1");
   		}
   		else
@@ -263,7 +263,7 @@ var  myPaginator_4, myDataTable_4;
 
   		if(typeof(tableYUI2)=='undefined')
   		{
-			tableYUI2 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[2].parentNode;
+			tableYUI2 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[3].parentNode;// because:table 6 in front of 0
 			tableYUI2.setAttribute("id","tableYUI2");
   		}
  		else

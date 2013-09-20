@@ -218,19 +218,31 @@
 															<xsl:value-of select="id"/>
 														</a>
 														<xsl:text> </xsl:text>
-														<xsl:choose>
-															<xsl:when test="location ='.project.request'">
-																<input type="checkbox" name="values[delete_request][]" value="{id}">
-																	<xsl:attribute name="title">
-																		<xsl:value-of select="//lang_delete_request_statustext"/>
-																	</xsl:attribute>
-																</input>
-															</xsl:when>
-														</xsl:choose>
 													</td>
 												</xsl:for-each>
 											</table>
 										</xsl:for-each>
+										<xsl:choose>
+											<xsl:when test="value_target!=''">
+											<br/>			
+											</xsl:when>
+										</xsl:choose>
+										<xsl:for-each select="value_target">
+											<label>
+												<xsl:value-of select="descr"/>
+											</label>
+											<table name="msg_table">
+												<xsl:for-each select="data">
+													<td class="th_text" align="left">
+														<a href="{link}" title="{statustext}">
+															<xsl:value-of select="id"/>
+														</a>
+														<xsl:text> </xsl:text>
+													</td>
+												</xsl:for-each>
+											</table>
+										</xsl:for-each>
+
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:for-each select="value_origin">
@@ -324,21 +336,6 @@
 												<dl class="proplist-col">
 													<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
 													<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
-													<xsl:for-each select="value_target">
-														<dt>
-															<label>
-																<xsl:value-of select="descr"/>
-															</label>
-														</dt>
-														<dd>
-															<xsl:for-each select="data">
-																<a href="{link}" title="{statustext}">
-																	<xsl:value-of select="id"/>
-																</a>
-																<xsl:text> </xsl:text>
-															</xsl:for-each>
-														</dd>
-													</xsl:for-each>
 													<xsl:choose>
 														<xsl:when test="mode ='edit'">
 															<xsl:call-template name="location_form2"/>
