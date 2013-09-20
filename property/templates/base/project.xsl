@@ -111,13 +111,23 @@ Returns mixed
 											<tr>
 												<td valign="top">
 													<a href="{link_select_request}" title="{lang_select_request_statustext}">
-														<xsl:value-of select="lang_select_request"/>
+														<xsl:value-of select="php:function('lang', 'select request')"/>
 													</a>
 												</td>
 											</tr>
 										</xsl:when>
 									</xsl:choose>
-									<xsl:for-each select="value_origin">
+									<tr>
+										<td width="19%" align="left" valign="top">
+											<xsl:value-of select="php:function('lang', 'related')"/>
+										</td>
+										<td>
+											<div id="paging_6"> </div>
+											<div id="datatable-container_6"/>
+										</td>
+									</tr>
+
+								<!--	<xsl:for-each select="value_origin">
 										<xsl:variable name="origin_location">
 											<xsl:value-of select="location"/>
 										</xsl:variable>
@@ -150,6 +160,7 @@ Returns mixed
 											</td>
 										</tr>
 									</xsl:for-each>
+									-->
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:for-each select="value_origin">
@@ -779,6 +790,7 @@ Returns mixed
 											<xsl:value-of select="php:function('lang', 'files')"/>
 										</td>
 										<td>
+											<div id="paging_5"> </div>
 											<div id="datatable-container_5"/>
 										</td>
 									</tr>
