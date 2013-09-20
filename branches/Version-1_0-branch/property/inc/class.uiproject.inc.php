@@ -2081,7 +2081,8 @@
 				'values' 				=> json_encode($content_files),
 				'total_records'			=> count($content_files),
 				'edit_action'			=> "''",
-				'is_paginator'			=> 0,
+				'is_paginator'			=> 1,
+				'rows_per_page'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'footer'				=> 0
 			);
 
@@ -2093,6 +2094,62 @@
 				);
 
 //--------------files
+
+			$lang_delete_request_statustext	= lang('Check to delete this request from this project');
+			$_origin = array();
+			if(isset($values['origin']) && $values['origin'] )
+			{
+				foreach($values['origin'] as $__origin)
+				{
+					foreach ($__origin['data'] as $_origin_data)
+					{
+						$_select = '';
+						if($__origin['location'] == '.project.request')
+						{
+							$_select = "<input type=\"checkbox\" name=\"values[delete_request][]\" value=\"{$_origin_data['id']}\" title=\"{$lang_delete_request_statustext}\">";
+						}
+
+						$_origin[] = array
+						(
+							'url'			=> "<a href='{$_origin_data['link']}'>{$_origin_data['id']} </a>",
+							'type'			=> $__origin['descr'],
+							'title'			=> $_origin_data['title'],
+							'status'		=> $_origin_data['statustext'],
+				//			'user'			=> $GLOBALS['phpgw']->accounts->get($_origin_data['account_id'])->__toString(),
+				//			'entry_date'	=> $GLOBALS['phpgw']->common->show_date($_origin_data['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							'select'		=> $_select
+						);
+					}
+				} 
+			}
+
+
+			$datavalues[6] = array
+			(
+				'name'					=> "6",
+				'values' 				=> json_encode($_origin),
+				'total_records'			=> count($_origin),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 1,
+				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'footer'				=> 0
+			);
+	
+			$myColumnDefs[6] = array
+			(
+				'name'		=> "6",
+				'values'	=>	json_encode(array(	
+					array('key' => 'url','label'=>lang('id'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+		//			array('key' => 'user','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
+		//			array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true),
+					)
+				)
+			);
+
 
 
 //	_debug_array($myButtons);die();
@@ -2156,6 +2213,7 @@
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
 
+
 			$data = array
 			(
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
@@ -2181,12 +2239,9 @@
 					'year_list'							=> array('options' => $year_list),
 					'order_time_span'					=> array('options' => $this->bo->get_order_time_span($id)),
 					'periodization_list'				=> array('options' => $periodization_list),
-					'lang_select_request'				=> lang('Select request'),
 					'lang_select_request_statustext'	=> lang('Add request for this project'),
 					'lang_request_statustext'			=> lang('Link to the request for this project'),
-					'lang_delete_request_statustext'	=> lang('Check to delete this request from this project'),
 					'link_select_request'				=> $GLOBALS['phpgw']->link('/index.php',$link_request_data),
-					'link_request'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view')),
 
 					'add_sub_entry_action'				=> $GLOBALS['phpgw']->link('/index.php', $sub_entry_action_data ),
 
