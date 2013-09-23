@@ -1,4 +1,5 @@
-account password retrieval	registration	no	Bruker passord re-set
+lost password	registration	no	Glemt passord
+account password retrieval	registration	no	Sett nytt passord
 account registration	registration	no	Ny bruker
 address	registration	no	Adresse
 after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	no	Etter at du angir ditt brukernavn, vil du få en e-post til den adressen du oppga ved registrering for å resette passordet
