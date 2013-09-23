@@ -58,10 +58,14 @@
 			$this->template->set_block('_layout','footer');
 		}
 
-		function header()
+		function header($sub = '')
 		{
+			if(!$sub)
+			{
+				$sub = lang('Account registration');
+			}
 			$this->set_header_footer_blocks();
-			$this->template->set_var('lang_header', $GLOBALS['phpgw_info']['server']['system_name'] . ' - ' . lang('Account registration'));
+			$this->template->set_var('lang_header', $GLOBALS['phpgw_info']['server']['system_name'] . ' :: ' . $sub);
 			$this->template->pfp('out','header');
 		}
 
@@ -301,7 +305,8 @@ HTML;
 		//
 		function lostpw1($errors = '',$r_reg = '')
 		{
-			$this->header();
+			$sub = lang('lost password');
+			$this->header($sub);
 			$this->template->set_file(array(
 				'_lostpw_select' => 'lostpw_select.tpl'
 			));
