@@ -82,6 +82,12 @@
    <td>{lang_Anonymous_password}:</td>
    <td><input type="password" name="newsettings[anonymous_pass]" value="{value_anonymous_pass}"></td>
   </tr>
+
+  <tr bgcolor="{row_on}">
+    <td>{lang_Email_address_registration_admin}:</td>
+    <td><input name="newsettings[registration_admin]" value="{value_registration_admin}"></td>
+  </tr>
+
   <tr bgcolor="{row_on}">
     <td>{lang_Email_address_to_send_notices_from}:</td>
     <td><input name="newsettings[mail_nobody]" value="{value_mail_nobody}"></td>

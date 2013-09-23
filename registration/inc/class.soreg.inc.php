@@ -77,8 +77,34 @@
 				. time() . "', reg_info='" . base64_encode(serialize($fields))
 				. "' WHERE reg_lid='$account_lid'",__LINE__,__FILE__);
 
+			$smtp = createobject('phpgwapi.send');
+
 			if ($this->config['activate_account'] == 'pending_approval' )
 			{
+
+				$url = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'registration.uipending.index', 'domain' => $_REQUEST['logindomain']),false,true);
+				$body = <<<HTML
+
+	New user: {$info['n_given']} {$info['n_family']} is pending approval for {$GLOBALS['phpgw_info']['server']['system_name']}::{$GLOBALS['phpgw_info']['server']['site_title']}.
+	Click on the following link to manage pending approvals. 
+	
+	<a href='$url'>Login.</a>
+	
+HTML;
+				$body = nl2br($body);
+				$subject = lang('Account registration');
+				$noreply = 'No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>';
+				if($this->config['registration_admin'])
+				{
+					try
+					{
+						$smtp->msg('email',$this->config['registration_admin'],$subject,$body,'','','',$noreply,'','html');
+					}
+					catch(Exception $e)
+					{
+					}
+				}
+
 				return $this->reg_id;
 			}
 
@@ -101,7 +127,7 @@
 	{$support_email_text} {$support_email}
 	
 HTML;
-			$body = nl2br($body);
+				$body = nl2br($body);
 			}
 			else
 			{
@@ -135,8 +161,6 @@ HTML;
 
 			$subject = $this->config['subject_confirm'] ? lang($this->config['subject_confirm']) : lang('Account registration');
 			$noreply = $this->config['mail_nobody'] ? ('No reply <' . $this->config['mail_nobody'] . '>') : ('No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>');
-
-			$smtp = createobject('phpgwapi.send');
 
 			try
 			{
