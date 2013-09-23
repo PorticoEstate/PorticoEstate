@@ -105,7 +105,7 @@
 			$lang_denied = lang('Anonymous access not correctly configured');
 			if($GLOBALS['phpgw']->session->reason)
 			{
-				$lang_denied = $GLOBALS['phpgw']->session->reason;
+	//			$lang_denied = $GLOBALS['phpgw']->session->reason;
 			}
 			echo <<<HTML
 				<div class="error">$lang_denied</div>
