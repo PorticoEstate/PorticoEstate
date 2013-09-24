@@ -7637,6 +7637,22 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+		
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_category");
+		
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			if($prefix = $GLOBALS['phpgw_setup']->oProc->f('prefix'))
+			{
+				$categories[] = array
+				(
+					'prefix'	=> $prefix,
+					'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+					'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id')
+				);
+			}
+		}
 
 		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
 		
@@ -7646,8 +7662,50 @@
 			{
 				$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
 
+				$primary_keys = array();
+				foreach($metadata as $key => $info)
+				{
+					if(isset($info->primary_key) && $info->primary_key)
+					{
+						$primary_keys[] = $key;
+					}
+				}
+
 				if(isset($metadata['p_num']))
 				{
+
+					foreach ($categories as $category)
+					{
+					
+						$cols = array_merge($primary_keys, array('p_num'));
+						$records = array();
+						$i = 0;
+						$GLOBALS['phpgw_setup']->oProc->query("SELECT " . implode(',', $cols) . " FROM {$table} WHERE p_entity_id = '{$category[entity_id]}' AND p_cat_id = '{$category[cat_id]}'");
+
+						while ($GLOBALS['phpgw_setup']->oProc->next_record())
+						{
+							foreach ($cols as $col)
+							{
+								$records[$i][$col] = $GLOBALS['phpgw_setup']->oProc->f($col);
+							}
+							$i++;
+						}
+						
+						foreach ($records as $record)
+						{
+							$p_num = (int) ltrim($record['p_num'], $category['prefix']);
+							$condition_arr = array();
+							foreach ($primary_keys as $primary_key)
+							{
+								$condition_arr[] = "{$primary_key} = '{$record[$primary_key]}'";
+							}
+
+							$sql = "UPDATE {$table} SET p_num = '{$p_num}' WHERE ". implode(' AND ', $condition_arr);
+
+							$GLOBALS['phpgw_setup']->oProc->query($sql);
+						}
+					}
+
 					$sql = "UPDATE {$table} SET p_num = p_num::integer WHERE p_num IS NOT NULL";
 					$GLOBALS['phpgw_setup']->oProc->query($sql);
 				}
