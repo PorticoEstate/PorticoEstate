@@ -982,8 +982,14 @@
 			if (count($export_info) == 0) {
 				return null;
 			}
+
+            if ($config->config_data['external_format_linebreak'] == 'Windows') {
+                $file_format_linebreak = "\r\n";
+            } else {
+                $file_format_linebreak = "\n";
+            }    
 		
-			return array('data' => implode("\n", $output), 'data_log' => implode("\n", $log), 'info' => $export_info, 'header_count' => $header_count);
+			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode("\n", $log), 'info' => $export_info, 'header_count' => $header_count);
 		}
 		
 		protected function get_agresso_row_template() {
@@ -1154,9 +1160,13 @@
 			if (count($export_info) == 0) {
 				return null;
 			}
-		
+            if ($config->config_data['external_format_linebreak'] == 'Windows') {
+                $file_format_linebreak = "\r\n";
+            } else {
+                $file_format_linebreak = "\n";
+            }    
 
-			return array('data' => implode("\r\n", $output), 'data_log' => implode("\n", $log), 'info' => $export_info, 'header_count' => $header_count);
+			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode("\n", $log), 'info' => $export_info, 'header_count' => $header_count);
 
 		}		
 
