@@ -100,6 +100,23 @@
 		           </option>
 		        </select>
 			</dd>
+            <dt><label for="field_external_format_linebreak"><xsl:value-of select="php:function('lang', 'External file linebreak ')"/></label></dt>
+			<dd>
+				<select id="field_external_format_linebreak" name="external_format_linebreak">
+                    <option value="Windows">
+                        <xsl:if test="config_data/external_format_linebreak='Windows'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        Windows
+		           </option>
+                    <option value="Linux">
+                        <xsl:if test="config_data/external_format_linebreak='Linux'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        Linux
+                    </option>
+		        </select>
+			</dd>
         </dl>
 
         <div class="clr"/>

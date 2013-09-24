@@ -140,6 +140,7 @@
 					</dd>
 				</xsl:if>
 			</dl>
+			<div class="clr"/>
 			<dl class="form-col">
 				<xsl:if test="not(new_form)">
 					<dt><label for="field_deactivate_sendmessage"><xsl:value-of select="php:function('lang', 'Deactivate send message')"/></label></dt>
@@ -153,6 +154,28 @@
 							</option>
 							<option value="0">
 								<xsl:if test="building/deactivate_sendmessage=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</dd>
+				</xsl:if>
+			</dl>
+			<dl class="form-col">
+				<xsl:if test="not(new_form) and building/extra=1">
+					<dt><label for="field_extra_kalendar"><xsl:value-of select="php:function('lang', 'Extra kalendar for public opening times')"/></label></dt>
+
+					<dd>
+						<select id="for_extra_kalendar" name="extra_kalendar">
+							<option value="1">
+								<xsl:if test="building/extra_kalendar=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="building/extra_kalendar=0">
 									<xsl:attribute name="selected">checked</xsl:attribute>
 								</xsl:if>
 								<xsl:value-of select="php:function('lang', 'No')"/>

@@ -237,6 +237,71 @@ function array_minus($a, $b)
 			return array('total_records'=>count($results), 'results'=>$results);
 		}
 
+		function building_extraschedule($building_id, $date)
+		{
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+
+			$from = clone $date;
+			$from->setTime(0, 0, 0);
+			// Make sure $from is a monday
+			if($from->format('w') != 1)
+			{
+				$from->modify('last monday');
+			}
+			$to = clone $from;
+			$to->modify('+7 days');
+			$allocation_ids = $this->so->allocation_ids_for_building($building_id, $from, $to);
+            
+            $orgids = explode(",", $config->config_data['extra_schedule_ids']);
+            
+			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids, 'organization_id' => $orgids)));
+			$allocations = $allocations['results'];
+			foreach($allocations as &$allocation)
+			{
+				$allocation['name'] = $allocation['organization_name'];
+				$allocation['shortname'] = $allocation['organization_shortname'];
+				$allocation['type'] = 'allocation';
+			}
+			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
+			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
+			$bookings = $bookings['results'];
+			foreach($bookings as &$booking)
+			{
+				$booking['name'] = $booking['group_name'];
+				$booking['shortname'] = $booking['group_shortname'];
+				$booking['type'] = 'booking';
+			}
+			$allocations = $this->split_allocations($allocations, $bookings);
+
+			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
+			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events = $events['results'];
+			foreach($events as &$event)
+			{
+				$event['name'] = $event['description'];
+				$event['type'] = 'event';
+			}
+			$bookings = array_merge($allocations, $bookings);
+			$bookings = $this->_remove_event_conflicts($bookings, $events);
+
+			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
+			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
+			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
+			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
+			$resources = $resources['results'];
+			foreach ($resources as $key => $row) {
+    			$sort[$key] = $row['sort'];
+			}
+
+			// Sort the resources with sortkey ascending
+			// Add $resources as the last parameter, to sort by the common key
+			array_multisort($sort, SORT_ASC, $resources);
+			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
+			$results = build_schedule_table($bookings, $resources);
+			return array('total_records'=>count($results), 'results'=>$results);
+		}
+
 		/**
 		 * Return a resource's schedule for a given week in a YUI DataSource
 		 * compatible format

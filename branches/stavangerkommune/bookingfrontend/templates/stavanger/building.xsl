@@ -26,6 +26,11 @@
 					- <xsl:value-of select="calendar_text" disable-output-escaping="yes"/>
 					</xsl:if>
 				</div>
+				<xsl:if test="extra_kalendar=1">
+				<div>
+			     	<button onclick="window.location.href='{extra_link}'"><xsl:value-of select="php:function('lang', 'Public schedule')" /></button>
+				</div>
+				</xsl:if>
 				<xsl:if test="normalize-space(description)">
 					<dl class="proplist description">
 						<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>

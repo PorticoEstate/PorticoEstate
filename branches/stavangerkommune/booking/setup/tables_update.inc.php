@@ -2721,7 +2721,7 @@
 
 	$test[] = '0.2.13';
 	/**
-	* Update booking version from 0.2.12 to 0.2.13
+	* Update booking version from 0.2.13 to 0.2.14
 	* add another tilsynsvakt to buidling
 	* 
 	*/
@@ -2736,6 +2736,26 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.14';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.14';
+	/**
+	* Update booking version from 0.2.14 to 0.2.15
+	* add another tilsynsvakt to buidling
+	* 
+	*/
+	function booking_upgrade0_2_14()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN  extra_kalendar int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_building SET extra_kalendar = 0");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.15';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

@@ -22,6 +22,7 @@
 				'deactivate_calendar' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_application' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_sendmessage' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
+				'extra_kalendar' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'text', 'nullable' => False),
 				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => True),

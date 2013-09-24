@@ -360,3 +360,4 @@ You cant edit a booking that is older than 2 weeks	bookingfrontend	no	Du kan ikk
 Tilsynsvakt name	bookingfrontend	no	Tilsynsvakt navn
 Tilsynsvakt email	bookingfrontend	no	Tilsynsvakt epost
 Tilsynsvakt telephone	bookingfrontend	no	Tilsynsvakt telefon
+Public schedule	bookingfrontend	no	Publikumsbading

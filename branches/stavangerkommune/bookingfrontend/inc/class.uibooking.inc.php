@@ -6,6 +6,7 @@
 		public $public_functions = array
 		(
 			'building_schedule' =>  true,
+			'building_extraschedule' =>  true,
 			'resource_schedule' =>  true,
 			'info'				=>	true,
 			'add' =>				true,
@@ -37,6 +38,25 @@
 		{
 		    $date = new DateTime(phpgw::get_var('date'));
 			$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $date);
+			foreach($bookings['results'] as &$row)
+			{
+				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $row['resource_id']));
+				array_walk($row, array($this, 'item_link'));
+			}
+			$data = array
+			(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $bookings['total_records'], 
+					"Result" => $bookings['results']
+				)
+			);
+			return $data;
+		}
+
+		public function building_extraschedule()
+		{
+		    $date = new DateTime(phpgw::get_var('date'));
+			$bookings = $this->bo->building_extraschedule(phpgw::get_var('building_id', 'int'), $date);
 			foreach($bookings['results'] as &$row)
 			{
 				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $row['resource_id']));

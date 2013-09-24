@@ -214,6 +214,26 @@
 			return $data;
 		}
 
+		public function building_extraschedule()
+		{
+		    $date = new DateTime(phpgw::get_var('date'));
+			$bookings = $this->bo->building_extraschedule(phpgw::get_var('building_id', 'int'), $date);
+			foreach($bookings['results'] as &$booking)
+			{
+				$booking['resource_link'] = $this->link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $booking['resource_id']));
+				$booking['link'] = $this->link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+				array_walk($booking, array($this, 'item_link'));
+			}
+			$data = array
+			(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $bookings['total_records'], 
+					"Result" => $bookings['results']
+				)
+			);
+			return $data;
+		}
+
 		public function resource_schedule()
 		{
 		    $date = new DateTime(phpgw::get_var('date'));

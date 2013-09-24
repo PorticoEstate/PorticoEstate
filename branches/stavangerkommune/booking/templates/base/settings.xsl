@@ -28,6 +28,29 @@
 		           </option>
 		        </select>
 			</dd>
+            <dt><label for="field_extra_schedule"><xsl:value-of select="php:function('lang', 'Activate extra kalendar field on building')"/></label></dt>
+			<dd>
+				<select id="field_extra_schedule" name="config_data[extra_schedule]">
+                    <option value="no">
+                        <xsl:if test="config_data/extra_schedule='no'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="php:function('lang', 'No')" />
+                    </option>
+                    <option value="yes">
+                        <xsl:if test="config_data/extra_schedule='yes'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Yes')" />
+		           </option>
+		        </select>
+			</dd>
+            <dt><label for="field_extra_schedule_ids"><xsl:value-of select="php:function('lang', 'Ids that should be included in the calendar')"/></label></dt>
+			<dd>
+				<input id="field_extra_schedule_ids" type="text" name="config_data[extra_schedule_ids]">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/extra_schedule_ids"/></xsl:attribute>
+				</input>
+			</dd>
    		<dt class="heading"><xsl:value-of select="php:function('lang', 'Billing sequence numbers')"/></dt>
 			<dd>
 				<xsl:value-of select="php:function('lang', 'Do not change these values unless you know what they are.')"/>
