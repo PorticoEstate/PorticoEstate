@@ -35,6 +35,7 @@
 	class controller_socase extends controller_socommon
 	{
 		protected static $so;
+		protected $global_lock = false;
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -250,7 +251,14 @@
 		*/
 		function update($case)
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$id = (int) $case->get_id();
 			
@@ -270,9 +278,14 @@
 
 			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			$this->update_cases_on_check_list($case->get_check_item_id());
+			$ok = $this->update_cases_on_check_list($case->get_check_item_id());
 
-			if($this->db->transaction_commit())
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
+
+			if($ok)
 			{
 				return $id;
 			}
