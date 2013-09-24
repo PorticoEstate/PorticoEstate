@@ -58,7 +58,7 @@
 						$_current[$app_name] = True;
 						if($app_name == 'phpgwapi')
 						{
-							$api_str = lang('The API is current');
+							$api_str = lang('The API is current') . '::OK';
 						}
 					}
 					else
