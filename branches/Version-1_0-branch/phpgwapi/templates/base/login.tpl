@@ -36,6 +36,25 @@
 		 	}
 		 	document.login.submit();
 		}
+
+
+		function new_user()
+		{
+			var url_new_user = '{url_new_user}';
+			
+			url_new_user += '?logindomain=' + document.getElementById("logindomain").value;
+			window.open(url_new_user,'_blank');
+		}
+
+		function lost_password()
+		{
+			var url_lost_password = '{url_lost_password}';
+			
+			url_lost_password += '&logindomain=' + document.getElementById("logindomain").value;
+			window.open(url_lost_password,'_blank');
+		}
+
+
 	</script>
 
 </head>
@@ -97,7 +116,7 @@
 								</p>
 								<!-- END loging_block -->
 								<!-- BEGIN domain_from_host -->
-									@{logindomain}<input type="hidden" name="logindomain" value="{logindomain}">
+									@{logindomain}<input type="hidden" id="logindomain" name="logindomain" value="{logindomain}">
 								<!-- END domain_from_host -->
 								<br>
 								<!-- BEGIN login_additional_info -->
@@ -164,10 +183,10 @@
 
 					<p>{instruction}</p>
 					<p >
-						<a href="{url_new_user}" target="_blank">{lang_new_user}</a>
+						<a href="javascript:new_user();">{lang_new_user}</a>
 					</p>
 					</p>
-						<a href="{url_forgotten_password}" target="_blank">{lang_forgotten_password}</a>.
+						<a href="javascript:lost_password();">{lang_forgotten_password}</a>.
 					 </p>
 
 					<div id="lock"></div>

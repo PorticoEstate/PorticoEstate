@@ -309,7 +309,9 @@
 	create_select_box('remove navbar','nonavbar',array('no' => 'No','yes' => 'Yes'),'Navigation bar is removed');
 	create_select_box('Tabel export format','export_format',array('excel' => 'Excel','csv' => 'CSV', 'ods' => 'ODS'),'Choose which format to export from the system for tables');
 
-	$default = 'Fra: __organisation__';
+	$default = 'Til: __vendor_name__';
+	$default .= "\n";
+	$default .= "\n" . 'Fra: __organisation__';
 	$default .= "\n" . 'Saksbehandler: __user_name__, ressursnr: __ressursnr__';
 	$default .= "\n";
 	$default .= "\n" . '__location__';

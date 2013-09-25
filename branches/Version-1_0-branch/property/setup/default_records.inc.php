@@ -398,25 +398,28 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecomva (id, descr) VALUES 
 # Dumping data for table fm_entity
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (id, name, descr, location_form, documentation) VALUES (1, 'Equipment', 'equipment', 1, 1)");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (location_id, id, name, descr, location_form, documentation) VALUES ({$location_id}, 1, 'Equipment', 'equipment', 1, 1)");
 //$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (id, name, descr, location_form, documentation, lookup_entity) VALUES (2, 'Report', 'report', 1, NULL, 'a:1:{i:0;s:1:"1";}')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (id, name, descr, location_form, documentation, lookup_entity) VALUES (2, 'Report', 'report', 1, NULL, '')");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (location_id, id, name, descr, location_form, documentation, lookup_entity) VALUES ({$location_id}, 2, 'Report', 'report', 1, NULL, '')");
 
 #
 # Dumping data for table fm_entity_category
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (1, 1, 'Meter', 'Meter', NULL, NULL, NULL, 3)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (1, 2, 'Elevator', 'Elevator', 'E', NULL, NULL, 3)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (1, 3, 'Fire alarm central', 'Fire alarm central', 'F', NULL, NULL, 3)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (2, 1, 'Report type 1', 'Report type 1', 'RA', 1, 1, 4)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (2, 2, 'Report type 2', 'Report type 2', 'RB', 1, 1, 4)");
+
+
+
+
 
 
 #
 # Dumping data for table fm_entity_attribute
 #
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 1, 1, 'Meter', 'Meter', NULL, NULL, NULL, 3)");
+
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'category', 'Category', 'Category statustext', 'LB', NULL, 2, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'ext_system_id', 'Ext system id', 'External system id', 'V', NULL, 3, NULL, 12, NULL, NULL, 'False')");
@@ -428,6 +431,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 2, 2, 'Joint power meter')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 1, 2, 'Elevator', 'Elevator', 'E', NULL, NULL, 3)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
@@ -442,6 +446,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.3');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 1, 3, 'Fire alarm central', 'Fire alarm central', 'F', NULL, NULL, 3)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
@@ -456,6 +461,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 2, 1, 'Report type 1', 'Report type 1', 'RA', 1, 1, 4)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
@@ -470,6 +476,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 2, 2, 'Report type 2', 'Report type 2', 'RB', 1, 1, 4)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
