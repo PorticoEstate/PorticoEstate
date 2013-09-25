@@ -2727,7 +2727,8 @@
 			}
 			unset($_temp);
 
-			if($vendor_email)
+			$preview_html = phpgw::get_var('preview_html', 'bool');
+			if($vendor_email || $preview_html)
 			{
 				$subject = lang('workorder').": {$ticket['order_id']}";
 
@@ -2741,14 +2742,18 @@
 					$organisation = $this->bo->config->config_data['org_name'];
 				}
 
-				if(isset($values['on_behalf_of_assigned']) && $values['on_behalf_of_assigned'] && isset($ticket['assignedto_name']))
+				$on_behalf_of_assigned = phpgw::get_var('on_behalf_of_assigned', 'bool');
+				if($on_behalf_of_assigned && isset($ticket['assignedto_name']))
 				{
 					$user_name = $ticket['assignedto_name'];
 					$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
 					$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
-					$_behalf_alert = lang('this order is sent by %1 on behalf of %2',$GLOBALS['phpgw_info']['user']['fullname'], $user_name);
-					$historylog->add('C',$id,$_behalf_alert);
-					unset($_behalf_alert);
+					if(!$preview_html)
+					{
+						$_behalf_alert = lang('this order is sent by %1 on behalf of %2',$GLOBALS['phpgw_info']['user']['fullname'], $user_name);
+						$historylog->add('C',$id,$_behalf_alert);
+						unset($_behalf_alert);
+					}
 				}
 				else
 				{
@@ -2789,6 +2794,7 @@
 
 				$body = nl2br(str_replace(array
 					(
+						'__vendor_name__',
 						'__organisation__',
 						'__user_name__',
 						'__user_phone__',
@@ -2804,6 +2810,7 @@
 						'[/b]'
 					),array
 					(
+						$vendor_data['value_vendor_name'],
 						$organisation,
 						$user_name,
 						$user_phone,
@@ -2818,6 +2825,20 @@
 						'<b>',
 						'</b>'
 					),$order_email_template));
+
+					$html = "<html><head><title>{$subject}</title></head>";
+					$html .= "<body>{$body}</body></html>";
+
+
+				if($preview_html)
+				{
+				
+					$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+					$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+					$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+					echo $html;
+					$GLOBALS['phpgw']->common->phpgw_exit();
+				}
 
 				if(isset($values['file_attach']) && is_array($values['file_attach']))
 				{
@@ -3244,6 +3265,8 @@
 					'building_part_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
 					'order_dim1_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
 					'branch_list'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1 ? array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) :'',
+					'preview_html'					=> "javascript:preview_html($id)",
+
 				);
 
 			//---datatable settings--------------------
