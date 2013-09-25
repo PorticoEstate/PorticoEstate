@@ -129,6 +129,7 @@
 					$valid_type = false;
 					switch ($file['type'])
 					{
+						case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 						case 'application/vnd.ms-excel':
 							$this->csvdata = $this->getexceldata($file['name']);
 							$valid_type = true;

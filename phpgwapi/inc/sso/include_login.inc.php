@@ -478,16 +478,15 @@ JS;
 			$this->tmpl->set_var('lang_new_user', lang('new user'));
 			$this->tmpl->set_var('lang_forgotten_password', lang('forgotten password'));
 
-			$url_new_user = "{$webserver_url}/registration/main.php?logindomain={$_COOKIE['last_domain']}";
+			$url_new_user = "{$webserver_url}/registration/main.php";
 
 			$this->tmpl->set_var('url_new_user', $url_new_user);
 
-			$url_forgotten_password = "{$webserver_url}/registration/main.php?" . http_build_query(array(
-						'menuaction'	=>'registration.uireg.lostpw1',
-						'logindomain'	=>$_COOKIE['last_domain'])
+			$url_lost_password = "{$webserver_url}/registration/main.php?" . http_build_query(array(
+						'menuaction'	=>'registration.uireg.lostpw1')
 						);
 			
-			$this->tmpl->set_var('url_forgotten_password', $url_forgotten_password);
+			$this->tmpl->set_var('url_lost_password', $url_lost_password);
 
 			$this->tmpl->set_var('website_title', isset($GLOBALS['phpgw_info']['server']['site_title'])
 								? $GLOBALS['phpgw_info']['server']['site_title'] 

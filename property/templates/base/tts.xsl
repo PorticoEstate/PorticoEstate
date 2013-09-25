@@ -395,6 +395,17 @@
 				var strURL = phpGWLink('index.php', oArgs);
 				Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
+			
+			function preview_html(id)
+			{
+
+				var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
+
+				var oArgs = {menuaction:'property.uitts.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
+				var strURL = phpGWLink('index.php', oArgs);
+				Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+
+			}
 		</script>
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
 			<xsl:choose>
@@ -808,7 +819,17 @@
 												</td>
 												<td>
 													<xsl:value-of select="value_order_id"/>
+													<xsl:text> </xsl:text>
 													<input type="hidden" name="values[order_id]" value="{value_order_id}"/>
+													<xsl:variable name="lang_preview_html">
+														<xsl:value-of select="php:function('lang', 'preview html')"/>
+													</xsl:variable>
+													<a href="{preview_html}">
+														<xsl:attribute name="title">
+														<xsl:value-of select="$lang_preview_html"/>
+														</xsl:attribute>
+														<xsl:value-of select="$lang_preview_html"/>
+													</a>
 												</td>
 											</tr>
 											<tr>
@@ -818,13 +839,14 @@
 													</label>
 												</td>
 												<td>
-													<input type="checkbox" name="values[on_behalf_of_assigned]" value="True">
+													<input type="checkbox" id = "on_behalf_of_assigned" name="on_behalf_of_assigned" value="True">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'on behalf of assigned - vacation mode')"/>
 														</xsl:attribute>
 													</input>
 												</td>
 											</tr>
+
 											<xsl:call-template name="vendor_form"/>
 											<xsl:call-template name="ecodimb_form"/>
 											<xsl:call-template name="b_account_form"/>
