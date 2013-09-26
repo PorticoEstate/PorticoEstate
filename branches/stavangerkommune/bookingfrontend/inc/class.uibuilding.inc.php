@@ -24,6 +24,11 @@
 			} else {
 				$building['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
 			}
+            
+            $building['endOfSeason'] = $this->bo->so->get_endOfSeason($building['id'])." 23:59:59";
+            if (strlen($building['endOfSeason']) < 18) {
+                $building['endOfSeason'] = false;
+            }
 			$building['datasource_url'] = self::link(array(
 				'menuaction' => 'bookingfrontend.uibooking.building_schedule', 
 				'building_id' => $building['id'], 
@@ -36,7 +41,7 @@
 			{
 				$building['date'] = phpgw::get_var('date', 'GET');
 			}
-
+            
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('building_schedule', array('building' => $building, 'backend' => $backend));
 		}
@@ -45,15 +50,7 @@
 		{
 			$backend = phpgw::get_var('backend', 'GET');
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding');
-			if ($building['deactivate_application'] == 0) { 
-				$building['application_link'] = self::link(array(
-					'menuaction' => 'bookingfrontend.uiapplication.add', 
-					'building_id' => $building['id'], 
-					'building_name' => $building['name'],
-				));
-			} else {
-				$building['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.extraschedule', 'id' => $building['id']));
-			}
+			$building['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.extraschedule', 'id' => $building['id']));
 			$building['datasource_url'] = self::link(array(
 				'menuaction' => 'bookingfrontend.uibooking.building_extraschedule', 
 				'building_id' => $building['id'], 

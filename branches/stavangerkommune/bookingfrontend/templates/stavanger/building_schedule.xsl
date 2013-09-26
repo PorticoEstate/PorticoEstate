@@ -38,11 +38,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.setupWeekPicker('cal_container');
 	YAHOO.booking.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
 	YAHOO.booking.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';
-	
+	YAHOO.booking.endOfSeason = parseISO8601('<xsl:value-of select="building/endOfSeason"/>');
+
     var handleHistoryNavigation = function (state) {
 		YAHOO.booking.date = parseISO8601(state);
 		YAHOO.booking.renderSchedule('schedule_container', YAHOO.booking.datasourceUrl, YAHOO.booking.date, YAHOO.booking.frontendScheduleColorFormatter, true);
     };
+    
     var initialRequest = YAHOO.util.History.getBookmarkedState("date") || '<xsl:value-of select="building/date"/>';
     YAHOO.util.History.register("date", initialRequest, handleHistoryNavigation);
     YAHOO.util.History.onReady(function() {

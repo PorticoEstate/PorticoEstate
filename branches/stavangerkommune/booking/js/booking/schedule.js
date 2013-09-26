@@ -35,7 +35,7 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 	if(booking) {
 		if(!colorMap[booking.name]) {
 			colorMap[booking.name] = colors.length ? colors.shift() : 'color60';
-		}
+		}1
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, 'info');
 		YAHOO.util.Dom.addClass(elCell, color);
@@ -215,7 +215,10 @@ YAHOO.booking.newApplicationForm = function(date, _from, _to, elCell) {
     weekday[5]="friday";
     weekday[6]="saturday";
 	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource + '&weekday=' + weekday[day];
-	window.location.href = url;
+    if (YAHOO.booking.endOfSeason > date) {
+    	window.location.href = url;
+    }
+    
 }
 
 YAHOO.booking.setupWeekPicker = function(container) {
