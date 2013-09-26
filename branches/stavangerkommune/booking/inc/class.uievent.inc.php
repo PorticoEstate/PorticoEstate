@@ -622,9 +622,9 @@
 							if(phpgw::get_var('sendtorbuilding', 'POST'))
 							{
 								
-                                $subject = $config->config_data['event_conflict_mail_subject'];
+                                $subject = $config->config_data['event_mail_building_subject'];
 
-                                $body = "<p>".$config->config_data['event_mail_building_active_collision']."<br />\n".phpgw::get_var('mail', 'POST')."</p>";
+                                $body = "<p>".$config->config_data['event_mail_building']."<br />\n".phpgw::get_var('mail', 'POST')."</p>";
 
 								if ($event['customer_organization_name']) {
 									$username = $event['customer_organization_name'];

@@ -40,9 +40,15 @@
 			<dd class="yui-skin-sam">
 				<textarea id="field_event_mail_conflict_contact_active_collision" class="full-width settings" name="event_mail_conflict_contact_active_collision" type="text"><xsl:value-of select="config_data/event_mail_conflict_contact_active_collision"/></textarea>
 			</dd>
-            <dt><label for="field_event_mail_building_active_collision"><xsl:value-of select="php:function('lang', 'Mail text to building contact when conflicting event')"/></label></dt>
+            <dt><label for="field_event_mail_building_active_collision_subject"><xsl:value-of select="php:function('lang', 'Event message to building Subject')"/></label></dt>
+            <dd>
+				<input id="field_event_mail_building_subject" name="event_mail_building_subject" type="text" size="50">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/event_mail_building_subject"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_event_mail_building"><xsl:value-of select="php:function('lang', 'Mail text to building contact')"/></label></dt>
 			<dd class="yui-skin-sam">
-				<textarea id="field_event_mail_building_active_collision" class="full-width settings" name="event_mail_building_active_collision" type="text"><xsl:value-of select="config_data/event_mail_building_active_collision"/></textarea>
+				<textarea id="field_event_mail_building" class="full-width settings" name="event_mail_building" type="text"><xsl:value-of select="config_data/event_mail_building"/></textarea>
 			</dd>
 
             <dt><label for="field_event_canceled_mail_subject"><xsl:value-of select="php:function('lang', 'Event Canceled Subject')"/></label></dt>
