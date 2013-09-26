@@ -99,7 +99,7 @@
 		* @param string $User name of database user (optional)
 		* @param string $Password password for database user (optional)
 		*/
-		public function connect($Database = null, $Host = null, $User = null, $Password = null)
+		public function connect($Database = null, $Host = null, $User = null, $Password = null, $Port = null)
 		{
 			if ( !is_null($Database) )
 			{
