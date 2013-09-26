@@ -627,7 +627,8 @@ Mail for event change	booking	no	E-post tekst for endring
 Event Conflict Subject	booking	no	E-post emne for konflikt
 Mail text to event contact when collision	booking	no	E-post tekst til arrangement kontakt person når konflikt 
 Mail text to conflicting event contact when collision	booking	no	E-post tekst til kontaktpersoner når konflikt 
-Mail text to building contact when conflicting event	booking	no	E-post tekst til tilsynsfører/bygg kontakt når konflikt
+Event message to building Subject	booking	no	E-post emne for melding til tilsynsfører/bygg kontakt
+Mail text to building contact	booking	no	E-post tekst til tilsynsfører/bygg kontakt
 Event Canceled Subject	booking	no	E-post emne når arrangement avlyses
 Mail for event canceled	booking	no	E-post tekst når arrangement avlyses
 Extra kalendar for public opening times	booking	no	Aktiver ekstra kalender for publikumsbading
