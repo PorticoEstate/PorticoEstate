@@ -110,7 +110,14 @@
 		 */
 		function in_docroot($path)
 		{
-			$docroots = array(PHPGW_SERVER_ROOT, $_SERVER['DOCUMENT_ROOT']);
+			//$docroots = array(PHPGW_SERVER_ROOT, $_SERVER['DOCUMENT_ROOT']);
+			$docroots = array(PHPGW_SERVER_ROOT);
+			//in case vfs is called from cli (cron-job)
+
+			if($_SERVER['DOCUMENT_ROOT'])
+			{
+				$docroots[] = $_SERVER['DOCUMENT_ROOT'];
+			}
 
 			foreach ($docroots as $docroot)
 			{
