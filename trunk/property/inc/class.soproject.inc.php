@@ -2208,14 +2208,20 @@ if(!$order_budget[0]['closed_order'])
 //_debug_array($_values);die();
 
 			$values = array();
-
+//_debug_array($active_period);die();
+			$total_sum = 0;
 			foreach ($_values as $period => $_budget)
 			{
 				$values[] = $_budget;
+				if($active_period[$period])
+				{
+					$total_sum  +=$_budget['budget'];
+				}
 			}
 
 //_debug_array($values);die();
-
+//_debug_array($total_sum);
+			$corretion = $total_sum >= 0 ? 1 : -1; 
 			$deviation_acc = 0;
 			$budget_acc = 0;
 			foreach ($values as &$entry)
@@ -2233,8 +2239,6 @@ if(!$order_budget[0]['closed_order'])
 					$_deviation = $entry['budget'] - $entry['actual_cost'];
 	//				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 					$deviation = $_deviation;
-
-
 				}
 				else
 				{
@@ -2245,23 +2249,22 @@ if(!$order_budget[0]['closed_order'])
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
 
-	//			if($active_period[$entry['period']])
 				if($closed_period[$entry['period']])
 				{
 					$deviation_acc += $deviation;
 				}
 
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
-
-				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
-				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
+				
+				$entry['deviation_percent_period'] = $corretion * $deviation/$entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $corretion * $entry['deviation_acc']/$total_sum * 100;
 				$entry['closed'] = $closed_period[$entry['period']];
 				$entry['active'] = $active_period[$entry['period']];
 			}
+
 //_debug_array($values);die();
 
 			return $values;
-
 		}
 
 
