@@ -7,6 +7,8 @@
 		public $errors = array();
 		public $debug = true;
 		protected $period;
+		protected $year;
+		protected $month;
 		protected $date;
 
 		public function __construct()
@@ -18,6 +20,7 @@
 			$this->boinvoice	= CreateObject('property.boinvoice');
 			$this->soinvoice	= CreateObject('property.soinvoice');
 			$this->boworkorder	= CreateObject('property.boworkorder');
+			$this->soproject	= CreateObject('property.soproject');
 
 			$this->config		= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
@@ -30,9 +33,9 @@
 				throw new Exception("Ikke en periode: {$this->period}" );
 			}
 
-			$_year = substr($this->period,0,4);
-			$_month = substr($this->period,-2);
-			$_date = mktime(0, 0, 0, $_month, 15, $_year);
+			$this->year = substr($this->period,0,4);
+			$this->month = substr($this->period,-2);
+			$_date = mktime(0, 0, 0, $this->month, 15, $this->year);
 
 			$this->date = $GLOBALS['phpgw']->common->show_date($_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 		}
@@ -113,7 +116,7 @@
 				$i++;
 			}
 
-			$values['spbudact_code']	= $workorder['b_account_id'];
+			$values['b_account_id']		= $workorder['b_account_id'];
 			$values['invoice_date']		= $this->date;
 			$values['payment_date']		= $this->date;
 			$values['paid_date']		= $this->date;
@@ -129,16 +132,23 @@
 
 			if(!isset($receipt['error']) || !$receipt['error'])
 			{
-
 				$this->messages[] = "Importerer faktura med beløp {$amount} til bestilling {$order_id}";
+				$data_close = array
+				(
+					'closed_b_period'	=> array("{$this->year}_{$this->month}")
+				);
+
+				$this->soproject->close_period_from_budget($workorder['project_id'], $data_close);
+
+				execMethod('property.soXport.update_actual_cost_from_archive',array($order_id => true));
+
 				$ok	= true;
+
 			}
 			else
 			{
 				$this->errors[] = "Noe feilet med bestilling {$order_id}";
 			}
-
-			execMethod('property.soXport.update_actual_cost_from_archive',array($order_id => true));
 
 			return $ok;
 

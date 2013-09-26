@@ -1750,7 +1750,7 @@
 					'amount_out'		=> $this->db->f('amount_out'),
 					'from_project'		=> $this->db->f('from_project'),
 					'to_project'		=> $this->db->f('to_project'),
-					'user_id'			=> $this->db->f('this->account'),
+					'user_id'			=> $this->db->f('user_id'),
 					'entry_date'		=> $this->db->f('entry_date'),
 					'active'			=> !!$this->db->f('active'),
 					'remark'			=> $this->db->f('remark',true)
@@ -2279,20 +2279,23 @@ if(!$order_budget[0]['closed_order'])
 		function close_period_from_budget($project_id, $data)
 		{
 			$project_id = (int) $project_id;
+			$closed_orig_b_period = isset($data['closed_orig_b_period']) && $data['closed_orig_b_period'] ? $data['closed_orig_b_period'] : array();
+			$closed_b_period = isset($data['closed_b_period']) && $data['closed_b_period'] ? $data['closed_b_period'] : array();
+			
 			$close_period = array();
 			$open_period = array();
 
-			foreach($data['closed_orig_b_period'] as $period)
+			foreach($closed_orig_b_period as $period)
 			{
-				if(!in_array($period, $data['closed_b_period']))
+				if(!in_array($period, $closed_b_period))
 				{
 					$open_period[] = $period;
 				}
 			}
 
-			foreach($data['closed_b_period'] as $period)
+			foreach($closed_b_period as $period)
 			{
-				if(!in_array($period, $data['closed_orig_b_period']))
+				if(!in_array($period, $closed_orig_b_period))
 				{
 					$close_period[] = $period;
 				}
