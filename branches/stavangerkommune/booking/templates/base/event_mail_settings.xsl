@@ -31,11 +31,6 @@
 					<xsl:attribute name="value"><xsl:value-of select="config_data/event_conflict_mail_subject"/></xsl:attribute>
 				</input>
             </dd>
-
-            <dt><label for="field_event_mail_contact_active_collision"><xsl:value-of select="php:function('lang', 'Mail text to event contact when collision')"/></label></dt>
-			<dd class="yui-skin-sam">
-				<textarea id="field_event_mail_contact_active_collision" class="full-width settings" name="event_mail_contact_active_collision" type="text"><xsl:value-of select="config_data/event_mail_contact_active_collision"/></textarea>
-			</dd>
             <dt><label for="field_event_mail_conflict_contact_active_collision"><xsl:value-of select="php:function('lang', 'Mail text to conflicting event contact when collision')"/></label></dt>
 			<dd class="yui-skin-sam">
 				<textarea id="field_event_mail_conflict_contact_active_collision" class="full-width settings" name="event_mail_conflict_contact_active_collision" type="text"><xsl:value-of select="config_data/event_mail_conflict_contact_active_collision"/></textarea>

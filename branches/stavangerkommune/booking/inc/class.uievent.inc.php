@@ -610,11 +610,9 @@
 							}
 							if(phpgw::get_var('sendtocontact', 'POST'))
 							{
-                                $subject = $config->config_data['event_conflict_mail_subject'];
-                                $body = '<p>'.$config->config_data['event_mail_contact_active_collision']."<br />\n".phpgw::get_var('mail', 'POST');
+                                $subject = $config->config_data['event_change_mail_subject'];
+                                $body = "<p>".$config->config_data['event_change_mail']."\n".phpgw::get_var('mail', 'POST');
                                 $body .= '<br /><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].'</a></p>';
-                                $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
-								$comment_text_log = phpgw::get_var('mail', 'POST');
 								$this->send_mailnotification($event['contact_email'], $subject, $body);
 								$comment = $comment_text_log.'<br />Denne er sendt til '.$event['contact_email'];
 								$this->add_comment($event,$comment);			
@@ -680,13 +678,9 @@
 									$this->add_comment($event,$comment);			
 								}
 							}
-						} else {
-                            $subject = $config->config_data['event_change_mail_subject'];
-                            $body = $config->config_data['event_change_mail']."\n".phpgw::get_var('mail', 'POST');
-							$this->add_comment($event, phpgw::get_var('mail', 'POST'));
-							$this->send_mailnotification($event['contact_email'], $subject, $body);
-						}
+						} 
 					} elseif (!phpgw::get_var('active', 'POST')) {
+
                         $subject = $config->config_data['event_canceled_mail_subject'];
                         $body = $config->config_data['event_canceled_mail']."\n".phpgw::get_var('mail', 'POST');
 						
