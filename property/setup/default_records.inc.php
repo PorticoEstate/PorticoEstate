@@ -906,17 +906,24 @@ $solocation->update_location();
 
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
-		$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS
-		 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode, orders_paid_or_pending.amount
- 			FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount
-                   FROM fm_ecobilagoverf
-                 GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode
-        		UNION ALL 
-                 	SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount
-                   FROM fm_ecobilag
-                 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode) orders_paid_or_pending';
+		switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
+		{
+			case 'postgres':
+				$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS
+				 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode, orders_paid_or_pending.amount
+		 			FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount
+				           FROM fm_ecobilagoverf
+				         GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode
+						UNION ALL 
+				         	SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount
+				           FROM fm_ecobilag
+				         GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode) orders_paid_or_pending';
 
-		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+				break;
+			default:
+				//do nothing for now
+		}
 
 		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
  			. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
