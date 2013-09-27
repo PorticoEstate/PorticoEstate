@@ -124,9 +124,10 @@
 			$type = $this->Type;
 			if ( $type == 'mysql' )
 			{
-				$type = 'mysqlt';
+			//	$type = 'mysqlt';
+				$type = 'mysqli';
 			}
-			$this->adodb = newADOConnection($this->Type);
+			$this->adodb = newADOConnection($type);
 
 			if($this->fetchmode == 'ASSOC')
 			{
