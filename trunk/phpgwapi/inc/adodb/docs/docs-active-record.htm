@@ -637,7 +637,7 @@ example, we load a window of 100 records at a time:
 	$acc = new Account();
 	$acc->Load('id=23');
 	
-		$start = 0;
+	$start = 0;
 	while(true) {
 		$acc->LoadRelations('transactions',"tx_done=0 order by trxdate", $start, $start+100);
 		if (!$acc->transactions) break;
