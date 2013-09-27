@@ -193,6 +193,11 @@
 				return '';
 			}
 
+			if ( !$this->adodb || $this->adodb->IsConnected() )
+			{
+				$this->connect();
+			}
+
 			if ( !is_object($this->adodb) )  //workaround
 			{
 				return addslashes($str);
