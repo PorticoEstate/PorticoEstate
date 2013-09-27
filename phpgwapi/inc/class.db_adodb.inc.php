@@ -284,7 +284,10 @@
 		*/
 		public function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0)
 		{
-			if ( (int) $num_rows <= 0 )
+			$offset		= (int)$offset;
+			$num_rows	= (int)$num_rows;
+
+			if ( $num_rows <= 0 )
 			{
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
