@@ -2602,7 +2602,7 @@ JS;
 			{
 				$link_delete_history_data = array
 					(
-						'menuaction'	=> 'property.uientity.attrib_history',
+						'menuaction'	=> 'property.uigeneric.attrib_history',
 						'acl_location'	=> $acl_location,
 						'id'			=> $data_lookup['id'],
 						'attrib_id'		=> $data_lookup['attrib_id'],
