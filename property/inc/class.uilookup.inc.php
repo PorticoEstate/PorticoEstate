@@ -757,7 +757,7 @@
 								array
 								( //boton 	CATEGORY
 									'id' => 'btn_cat_id',
-									'name' => 'cat_id',
+									'name' => 'category',
 									'value'	=> lang('Category'),
 									'type' => 'button',
 									'style' => 'filter',
@@ -796,10 +796,10 @@
 			}
 
 			$uicols = array (
-				'input_type'	=>	array('text','text'),
-				'name'			=>	array('id','org_name'),
-				'formatter'		=>	array('',''),
-				'descr'			=>	array(lang('ID'),lang('Name'))
+				'input_type'	=>	array('text','text','text'),
+				'name'			=>	array('id','org_name','status'),
+				'formatter'		=>	array('','',''),
+				'descr'			=>	array(lang('ID'),lang('Name'), lang('status'))
 			);
 
 			$vendor_list = array();
