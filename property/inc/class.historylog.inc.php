@@ -102,6 +102,8 @@
 				case 'tenant_claim':
 					$this->table='fm_tenant_claim_history';
 					break;
+				default:
+					throw new Exception(lang('Unknown history register for acl_location: %1', $selector));
 				
 			}
 

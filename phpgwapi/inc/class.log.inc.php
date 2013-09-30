@@ -69,7 +69,7 @@
 		/**
 		 * Constructor
 		 */
-		
+
 		public function __construct()
 		{
 		}
@@ -286,12 +286,22 @@
 					. lang('line') . ': ' . $err->line . "</p>\n"
 					. $trace;
 
-				echo $message;
+
+				if(phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					echo json_encode($message);
+					$call_footer = false;
+				}
+				else
+				{
+					echo $message;
+					$call_footer = true;
+				}
 		//		phpgwapi_cache::message_set($message, 'error');
 
 				if ( isset($GLOBALS['phpgw']->common) && is_object($GLOBALS['phpgw']->common) )
 				{
-					$GLOBALS['phpgw']->common->phpgw_exit(true);
+					$GLOBALS['phpgw']->common->phpgw_exit($call_footer);
 				}
 			}
 		}

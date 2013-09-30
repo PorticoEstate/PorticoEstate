@@ -124,9 +124,10 @@
 			$type = $this->Type;
 			if ( $type == 'mysql' )
 			{
-				$type = 'mysqlt';
+			//	$type = 'mysqlt';
+				$type = 'mysqli';
 			}
-			$this->adodb = newADOConnection($this->Type);
+			$this->adodb = newADOConnection($type);
 
 			if($this->fetchmode == 'ASSOC')
 			{
@@ -190,6 +191,11 @@
 			if ( is_null($str) )
 			{
 				return '';
+			}
+
+			if ( !$this->adodb || $this->adodb->IsConnected() )
+			{
+				$this->connect();
 			}
 
 			if ( !is_object($this->adodb) )  //workaround
@@ -278,7 +284,10 @@
 		*/
 		public function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0)
 		{
-			if ( (int) $num_rows <= 0 )
+			$offset		= (int)$offset;
+			$num_rows	= (int)$num_rows;
+
+			if ( $num_rows <= 0 )
 			{
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
