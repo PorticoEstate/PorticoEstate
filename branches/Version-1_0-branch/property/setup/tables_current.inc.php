@@ -486,7 +486,7 @@
 		),
 		'fm_workorder' => array(
 			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'id' => array('type' => 'int','precision' => '8','nullable' => False),
 				'num' => array('type' => 'varchar','precision' => '20','nullable' => False),
 				'project_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -668,7 +668,7 @@
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'record' => array('type' => 'int','precision' => '4','nullable' => True),
 				'owner' => array('type' => 'int','precision' => '4','nullable' => False),
-				'workorder_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'workorder_id' => array('type' => 'int','precision' => '8','nullable' => False),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'activity_num' => array('type' => 'varchar','precision' => '15','nullable' => True),
 				'grouping_id' => array('type' => 'int','precision' => '4','nullable' => True),
@@ -705,7 +705,7 @@
 		),
 		'fm_wo_h_deviation' => array(
 			'fd' => array(
-				'workorder_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'workorder_id' => array('type' => 'int','precision' => '8','nullable' => False),
 				'hour_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'amount' => array('type' => 'int','precision' => '4','nullable' => False),

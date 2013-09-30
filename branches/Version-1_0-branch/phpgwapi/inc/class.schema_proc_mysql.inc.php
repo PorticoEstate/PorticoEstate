@@ -151,7 +151,7 @@
 			}
 			else if ($sDefault == 'current_date' || $sDefault == 'current_timestamp')
 			{
-				$ret= 'now()';
+				$ret= 'CURRENT_TIMESTAMP';
 			}
 			else
 			{

@@ -2979,7 +2979,7 @@ die();
 		{
 			$sql = 'SELECT min(start_date) AS start_date FROM fm_project WHERE start_date <> 0';
 			$this->db->query($sql,__LINE__,__FILE__);
-			if($this->db->next_record())
+			if($this->db->next_record() && $this->db->f('start_date'))
 			{
 				$start_year = date('Y',$this->db->f('start_date'));
 			}
@@ -2987,6 +2987,7 @@ die();
 			{
 				$start_year = date('Y');
 			}
+
 			$end_year = date('Y') + 1;
 			$year_list = array();
 			for ($i=$start_year;$i< $end_year ;$i++)
