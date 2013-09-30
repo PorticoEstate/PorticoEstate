@@ -41,16 +41,28 @@
 		function new_user()
 		{
 			var url_new_user = '{url_new_user}';
+			var logindomain = '';
 			
-			url_new_user += '?logindomain=' + document.getElementById("logindomain").value;
+			if(document.getElementById("logindomain") != null)
+			{
+				var logindomain = document.getElementById("logindomain").value;			
+			}
+			
+			url_new_user += '?logindomain=' +logindomain;
 			window.open(url_new_user,'_blank');
 		}
 
 		function lost_password()
 		{
 			var url_lost_password = '{url_lost_password}';
+			var logindomain = '';
 			
-			url_lost_password += '&logindomain=' + document.getElementById("logindomain").value;
+			if(document.getElementById("logindomain") != null)
+			{
+				var logindomain = document.getElementById("logindomain").value;			
+			}
+			
+			url_lost_password += '&logindomain=' + logindomain;
 			window.open(url_lost_password,'_blank');
 		}
 
