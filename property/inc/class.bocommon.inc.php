@@ -1704,10 +1704,11 @@
 			{
 				if ( !isset($input_type[$i]) || $input_type[$i] != 'hidden' )
 				{
-					$header[] = $this->utf2ascii($descr[$i]);
+				//	$header[] = $this->utf2ascii($descr[$i]);
+					$header[] = $descr[$i];
 				}
 			}
-			fputcsv($fp, $header);
+			fputcsv($fp, $header, ';');
 			unset($header);
 
 			if ( is_array($list) )
@@ -1722,7 +1723,7 @@
 							$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 						}
 					}
-					fputcsv($fp, $row);
+					fputcsv($fp, $row, ';');
 				}
 			}
 			fclose($fp);
