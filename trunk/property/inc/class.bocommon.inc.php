@@ -1548,7 +1548,7 @@
 //			$browser->content_header($filename,'application/vnd.ms-excel');
 			$browser->content_header($filename,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-			$cacheMethod = PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
+			$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
 			$cacheSettings = array( 'memoryCacheSize' => '32MB');
 			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
