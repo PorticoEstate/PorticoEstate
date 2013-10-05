@@ -207,6 +207,7 @@
 			$submit_search 	= phpgw::get_var('submit_search', 'bool');
 			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
 			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$project_id 	= phpgw::get_var('project_id', 'int');
 			$loc1 			= phpgw::get_var('loc1');
 			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
 			$invoice_id		= phpgw::get_var('invoice_id');
@@ -285,6 +286,7 @@
 						'ecodimb'			=> $ecodimb,
 						'vendor_id'			=> $vendor_id,
 						'workorder_id'		=> $workorder_id,
+						'project_id'		=> $project_id,
 						'start_date'		=> $start_date,
 						'end_date'			=> $end_date,
 						'filter'			=> $this->filter,
@@ -303,6 +305,7 @@
 					."ecodimb:'{$ecodimb}',"
 					."vendor_id:'{$vendor_id}',"
 					."workorder_id:'{$workorder_id}',"
+					."project_id:'{$project_id}',"
 					."voucher_id:'{$voucher_id}',"
 					."start_date:'{$start_date}',"
 					."end_date:'{$end_date}',"
@@ -549,6 +552,11 @@
 				}
 				else
 				{
+
+					$values_combo_box[3]  = $this->bocommon->select_category_list(array('type'=>'dimb', 'selected' => $ecodimb));
+					$default_value = array ('id'=>'','name'=>lang('no dimb'));
+					array_unshift ($values_combo_box[3],$default_value);
+
 					$field_invoice = array
 						(
 							array
@@ -587,6 +595,26 @@
 								'name'     => 'workorder_id',
 								'id'     => 'txt_workorder',
 								'value'    => $workorder_id,
+								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
+								'size'    => 10,
+								'tab_index' => 6,
+								'style' => 'filter'
+							),
+							array
+							( // project
+								'type' => 'link',
+								'id' => 'lnk_project',
+								'url' => "",
+								'value' => lang('project id'),
+								'tab_index' => 5,
+								'style' => 'filter'
+							),
+							array
+							( // project box
+								'name'     => 'project_id',
+								'id'     => 'txt_project',
+								'value'    => $project_id,
 								'type' => 'text',
 								'onkeypress' => 'return pulsar(event)',
 								'size'    => 10,
@@ -752,7 +780,18 @@
 								'name'	=> 'paid',
 								'value'	=> $paid,
 								'style' => 'filter'
-							)
+							),
+							array
+							( 
+								'id' => 'sel_ecodimb',
+								'name' => 'ecodimb',
+								'value'	=> lang('dimb'),
+								'type' => 'select',
+								'style' => 'filter',
+								'values' => $values_combo_box[3],
+								'onchange'=> 'onChangeSelect("ecodimb");',
+								'tab_index' => 5
+							),
 						);
 				}
 
@@ -774,6 +813,7 @@
 								'paid'				=> $paid,
 								'vendor_id'			=> $vendor_id,
 								'workorder_id'		=> $workorder_id,
+								'project_id'		=> $project_id,
 								'start_date'		=> $start_date,
 								'end_date'			=> $end_date,
 								'filter'			=> $this->filter,
@@ -852,7 +892,7 @@ JS;
 
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
-			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id,$invoice_id,$ecodimb);
+			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id,$invoice_id,$ecodimb,$project_id);
 
 
 			$uicols = array (
