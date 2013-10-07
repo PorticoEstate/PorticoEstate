@@ -56,7 +56,7 @@
 		</tr>
 
 		<tr class="row_on">
-			<td>{lang_SMS_client_order_notice}:</td>
+			<td>{lang_SMS_client_order_notice}:'ref: __order_id__. Message'</td>
 			<td>
 				<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual">{value_sms_client_order_notice}</textarea>
 			</td>
@@ -101,6 +101,15 @@
 			<td>
 				<select name="newsettings[project_approval_status]">
 					{hook_project_approval_status}
+				</select>
+			</td>
+		</tr>
+
+		<tr class="row_off">
+			<td>{lang_project_status_on_last_order_closed}:</td>
+			<td>
+				<select name="newsettings[project_status_on_last_order_closed]">
+					{hook_project_status_on_last_order_closed}
 				</select>
 			</td>
 		</tr>
