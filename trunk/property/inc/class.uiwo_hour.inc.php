@@ -1231,6 +1231,14 @@
 				$this->bo->update_email($to_email,$workorder_id);
 			}
 */
+
+			$sms_client_order_notice =  isset($this->config->config_data['sms_client_order_notice']) ? $this->config->config_data['sms_client_order_notice'] : '';
+
+			if($sms_client_order_notice)
+			{
+				$sms_client_order_notice = str_replace(array('__order_id__'), array($workorder_id), $sms_client_order_notice);
+			}
+
 			$workorder = $this->boworkorder->read_single($workorder_id);
 			$workorder_history = $this->boworkorder->read_record_history($workorder_id);
 
@@ -1624,6 +1632,7 @@ HTML;
 					$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 				}
 
+				
 				if ($rcpt)
 				{
 					$_attachment_log = $attachment_log ? "::$attachment_log" : '';
@@ -1636,8 +1645,7 @@ HTML;
 					}
 
 					if( phpgw::get_var('notify_client_by_sms', 'bool') 
-						&& isset($this->config->config_data['sms_client_order_notice']) 
-						&& $this->config->config_data['sms_client_order_notice']
+						&& $sms_client_order_notice
 						&& (isset($project['contact_phone'])
 						&& $project['contact_phone']
 						|| phpgw::get_var('to_sms_phone')))
@@ -1775,7 +1783,7 @@ HTML;
 					'lang_mail'							=> lang('E-Mail'),
 					'lang_update_email'					=> lang('Update email'),
 					'lang_update_email_statustext'		=> lang('Check to update the email-address for this vendor'),
-					'value_sms_client_order_notice'		=> isset($this->config->config_data['sms_client_order_notice']) ? $this->config->config_data['sms_client_order_notice'] : '',
+					'value_sms_client_order_notice'		=> $sms_client_order_notice,
 					'value_sms_phone'					=> $project['contact_phone'],
 					'lang_to_email_address_statustext'	=> lang('The address to which this order will be sendt'),
 					'to_email'							=> $to_email,
