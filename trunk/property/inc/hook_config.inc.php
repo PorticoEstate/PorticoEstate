@@ -168,6 +168,32 @@ HTML;
 		return $out;
 	}
 
+
+	/**
+	* Get HTML listbox with project status that are to be set when asking for approval
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function project_status_on_last_order_closed($config)
+	{
+		$status_assigned = isset($config['project_status_on_last_order_closed']) ? $config['project_status_on_last_order_closed'] : array();
+
+		$status_entries = execMethod('property.bogeneric.get_list',array('type' => 'project_status', 'selected' => $status_assigned));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected =  $status['selected'] ? 'selected =  "selected"' : '';
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+		return $out;
+	}
+
+
 	/**
 	* Get HTML listbox with workorder status that are to be set when asking for approval
 	*

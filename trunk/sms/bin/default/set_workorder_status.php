@@ -56,6 +56,8 @@
 						$historylog_project->add('RM',$project_id,"Bestilling {$workorder_id} endret av: {$sms_sender}");
 					}
 				}
+
+				execMethod('property.soworkorder.check_project_status',$workorder_id);
 				$command_output = 'success';
 			}
 		}
