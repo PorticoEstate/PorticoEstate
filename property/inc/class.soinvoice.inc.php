@@ -77,6 +77,7 @@
 			$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
 			$loc1 			= isset($data['loc1'])?$data['loc1']:'';
 			$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
+			$project_id 	= isset($data['project_id'])?$data['project_id']:'';
 			$allrows 		= isset($data['allrows'])?$data['allrows']:'';
 			$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
 			$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
@@ -189,6 +190,19 @@
 			{
 				$filtermethod = " WHERE pmwrkord_code ='$workorder_id' ";
 				$no_q = true;
+			}
+			else if ($project_id)
+			{
+				$this->db->query("SELECT id FROM fm_workorder WHERE project_id='{$project_id}'",__LINE__,__FILE__);
+				$_workorders = array(-1);
+				while($this->db->next_record())
+				{
+					$_workorders[] = $this->db->f('id');
+				}
+
+				$filtermethod = ' WHERE pmwrkord_code IN (' . implode(',', $_workorders) . ')';
+				$filtermethod .= " AND (periode >='$start_periode' AND periode <= '$end_periode')";
+				$no_q = true;			
 			}
 
 			if($query && !$no_q)

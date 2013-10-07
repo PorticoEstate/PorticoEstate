@@ -1328,11 +1328,18 @@
 				'mail_recipients'	=> isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 			);
 
-			if($workorder['status'] == 'closed')
+
+			$this->db->query("SELECT closed AS is_closed FROM fm_workorder_status WHERE id = '{$workorder['status']}'");
+			$this->db->next_record();
+			$is_closed = !!$this->db->f('is_closed');
+
+
+			if($is_closed)
 			{
 				$value_set['paid'] = $paid = (isset($paid)?$paid:0);
 				$value_set['paid_percent'] = 100;
 			}
+
 
 			if (isset($workorder['extra']) && is_array($workorder['extra']))
 			{
@@ -1513,7 +1520,6 @@
 				}
 			}
 
-
 			if (isset($workorder['new_project_id']) && $workorder['new_project_id'] && ($workorder['new_project_id'] != $workorder['project_id']))
 			{
 				$new_project_id = (int) $workorder['new_project_id'];
@@ -1525,6 +1531,9 @@
 			{
 				$historylog->add('RM', $workorder['id'], $workorder['remark']);
 			}
+
+			$this->check_project_status($workorder['id']);
+			
 			if($this->db->transaction_commit())
 			{
 
@@ -1537,6 +1546,45 @@
 
 			$receipt['id'] = $workorder['id'];
 			return $receipt;
+		}
+
+
+		public function check_project_status($order_id)
+		{
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read_repository();
+
+			$project_status_on_last_order_closed =isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
+			
+			if($project_status_on_last_order_closed)
+			{
+				$this->db->query("SELECT project_id FROM fm_workorder WHERE id= '{$order_id}'" ,__LINE__,__FILE__);
+				$this->db->next_record();
+				$project_id = (int)$this->db->f('project_id');
+
+				$this->db->query("SELECT count(id) AS orders_at_project FROM fm_workorder WHERE project_id= {$project_id}" ,__LINE__,__FILE__);
+				$this->db->next_record();
+				$orders_at_project = (int)$this->db->f('orders_at_project');
+
+				$this->db->query("SELECT count(fm_workorder.id) AS closed_orders_at_project FROM fm_workorder {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id) WHERE project_id= {$project_id} AND fm_workorder_status.closed = 1" ,__LINE__,__FILE__);
+				$this->db->next_record();
+				$closed_orders_at_project = (int)$this->db->f('closed_orders_at_project');
+
+				$this->db->query("SELECT fm_project_status.closed AS closed_project, fm_project.status as old_status FROM fm_project {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id) WHERE fm_project.id= {$project_id}" ,__LINE__,__FILE__);
+				$this->db->next_record();
+				$closed_project = !!$this->db->f('closed_project');
+				$old_status = $this->db->f('old_status');
+			
+				if ($orders_at_project == $closed_orders_at_project && !$closed_project)
+				{
+					$this->db->query("UPDATE fm_project SET status = '{$project_status_on_last_order_closed}' WHERE id= {$project_id}" ,__LINE__,__FILE__);
+
+					$historylog_project	= CreateObject('property.historylog','project');
+
+					$historylog_project->add('S', $project_id, $project_status_on_last_order_closed, $old_status);
+					$historylog_project->add('RM', $project_id,'Status endret ved at siste bestilling er avsluttet');
+				}
+			}
 		}
 
 		function delete($workorder_id )

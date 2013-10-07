@@ -21,6 +21,7 @@
 		var linktoolTips =
 		 [
 		  {name:'lnk_workorder', title:'Workorder ID', description:'enter the Workorder ID to search by workorder - at any Date'},
+		  {name:'lnk_project', title:'Project ID', description:'enter the project ID to search by project - at any Date'},
 		  {name:'lnk_vendor', title:'Vendor', description:'Select the vendor by clicking this link'},
 		  {name:'lnk_invoice', title:'Invoice', description:'Enter the invoice id - any Date'},
 		  {name:'lnk_property', title:'Facilities Managements', description:'Select the property by clicking this link'},
@@ -29,10 +30,11 @@
 
 		var textImput = [
 			{order:0, name:'workorder_id',	id:'txt_workorder'},
-			{order:1, name:'vendor_id',		id:'txt_vendor'},
-			{order:2, name:'invoice_id',	id:'txt_invoice'},
-			{order:3, name:'loc1',			id:'txt_loc1'},
-			{order:4, name:'voucher_id',	id:'txt_voucher'}
+			{order:1, name:'project_id',	id:'txt_project'},
+			{order:2, name:'vendor_id',		id:'txt_vendor'},
+			{order:3, name:'invoice_id',	id:'txt_invoice'},
+			{order:4, name:'loc1',			id:'txt_loc1'},
+			{order:5, name:'voucher_id',	id:'txt_voucher'}
 		]
 
 		var toolTips = [
@@ -53,6 +55,22 @@
 	    }
 
 		var tableYUI;
+
+		this.onChangeSelect = function(type)
+		{
+			var myselect=document.getElementById("sel_"+ type);
+			for (var i=0; i<myselect.options.length; i++)
+			{
+				if (myselect.options[i].selected==true)
+				{
+					break;
+				}
+			}
+			eval("path_values." +type +"='"+myselect.options[i].value+"'");
+			execute_ds();
+		}
+
+
 	/********************************************************************************
 	* Delete all message un DIV 'message'
 	*/
@@ -70,7 +88,7 @@
 				path_values.user_lid='all';
 
 				//oMenuButton_0.focus();
-				YAHOO.util.Dom.get("start_date-trigger").focus();
+				//YAHOO.util.Dom.get("start_date-trigger").focus();
 
 			}
 			else if(flag_particular_setting=='update')
