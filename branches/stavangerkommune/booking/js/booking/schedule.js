@@ -215,7 +215,7 @@ YAHOO.booking.newApplicationForm = function(date, _from, _to, elCell) {
     weekday[5]="friday";
     weekday[6]="saturday";
 	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource + '&weekday=' + weekday[day];
-    if (YAHOO.booking.endOfSeason > date) {
+    if (YAHOO.booking.endOfSeason === undefined || YAHOO.booking.endOfSeason > date) {
     	window.location.href = url;
     }
     
