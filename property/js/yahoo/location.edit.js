@@ -1,3 +1,19 @@
+
+var  myPaginator_0, myDataTable_0;
+
+YAHOO.util.Event.addListener(window, "load", function()
+		{
+			var loader = new YAHOO.util.YUILoader();
+			loader.addModule({
+				name: "anyone",
+				type: "js",
+			    fullpath: property_js
+			    });
+
+			loader.require("anyone");
+		    loader.insert();
+		});
+
 //an anonymous function wraps our code to keep our variables
 //in function scope rather than in the global namespace:
 (function() {

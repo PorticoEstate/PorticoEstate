@@ -1,5 +1,5 @@
 var  myDataSource, myDataTable, myContextMenu;
-var  myPaginator_0, myDataTable_0
+var  myPaginator_0, myDataTable_0;
 var  myPaginator_1, myDataTable_1;
 var  myPaginator_2, myDataTable_2;
 var  myPaginator_3, myDataTable_3;

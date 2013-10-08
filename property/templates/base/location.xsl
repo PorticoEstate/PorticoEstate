@@ -272,6 +272,35 @@ onMouseOut="nd()">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
+
+		<script type="text/javascript">
+			function set_tab(active_tab)
+			{
+				document.form.active_tab.value = active_tab;			
+			}
+
+			var property_js = <xsl:value-of select="property_js"/>;
+		//	var base_java_url = <xsl:value-of select="base_java_url"/>;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						edit_action:  <xsl:value-of select="edit_action"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
+				]
+			</xsl:for-each>
+
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
+
 		<div class="yui-navset" id="location_edit_tabview">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
@@ -565,10 +594,17 @@ onMouseOut="nd()">
 											</table>
 										</td>
 									</tr>
+									<tr>
+										<td>
+											<div id="datatable-container_0"/>
+										</td>
+									</tr>
 								</table>
+
 							</div>
 						</xsl:when>
 					</xsl:choose>
+
 					<xsl:for-each select="integration">
 						<div id="{section}">
 							<iframe id="{section}_content" width="100%" height="{height}">
