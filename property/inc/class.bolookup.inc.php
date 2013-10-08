@@ -281,15 +281,14 @@
 				{
 					if (isset($field['filter']) && $field['filter'])
 					{
-						if($field['name'] == 'category')
+						if($field['name'] == 'member_of')
 						{
-							$field_name = 'cat_id';
+							$filter[$field['name']] = phpgw::get_var('cat_id');
 						}
 						else
 						{
-							$field_name = $field['name'];
+							$filter[$field['name']] = phpgw::get_var($field_name);
 						}
-						$filter[$field['name']] = phpgw::get_var($field_name);
 					}
 				}
 			}
