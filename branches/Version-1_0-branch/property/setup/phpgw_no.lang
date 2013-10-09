@@ -2012,3 +2012,4 @@ request condition description	property	no	Tilstandsbeskrivelse
 cost operation	property	no	Andel driftskonstnad i kr.
 cost investment	property	no	Andel investering i kr.
 grant category	property	no	Tilskuddskategori
+what	property	no	Hva

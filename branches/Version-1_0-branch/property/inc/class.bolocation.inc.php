@@ -201,9 +201,9 @@
 			return $this->bocommon->select_list($selected,$list);
 		}
 
-		function read_entity_to_link($location_code)
+		function read_entity_to_link($location_code, $exact = false)
 		{
-			return $this->so->read_entity_to_link($location_code);
+			return $this->so->read_entity_to_link($location_code, $exact);
 		}
 
 		function get_owner_list($format='',$selected='')

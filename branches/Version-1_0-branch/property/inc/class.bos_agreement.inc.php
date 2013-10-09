@@ -43,6 +43,7 @@
 		var $role;
 		var $member_id;
 		var $uicols = array();
+		var $location_code;
 
 		/**
 		 * @var object $custom reference to custom fields object
@@ -82,7 +83,8 @@
 			$allrows			= phpgw::get_var('allrows', 'bool');
 			$role				= phpgw::get_var('role');
 			$member_id			= phpgw::get_var('member_id', 'int');
-			$status_id	= phpgw::get_var('status_id', 'int');
+			$status_id			= phpgw::get_var('status_id', 'int');
+			$this->location_code= phpgw::get_var('location_code');
 
 			$this->p_num		= phpgw::get_var('p_num');
 
@@ -176,7 +178,7 @@
 		{
 			$s_agreements = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-				'vendor_id'=>$this->vendor_id, 'p_num' => $this->p_num, 'status_id'=>$this->status_id));
+				'vendor_id'=>$this->vendor_id, 'p_num' => $this->p_num, 'status_id'=>$this->status_id, 'location_code' => $this->location_code));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
