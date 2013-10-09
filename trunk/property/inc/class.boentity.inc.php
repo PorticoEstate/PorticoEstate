@@ -64,7 +64,7 @@
 		var $type_app = array();
 		var $type;
 
-		function property_boentity($session=false, $type = '', $entity_id = 0, $cat_id = 0)
+		function __construct($session=false, $type = '', $entity_id = 0, $cat_id = 0)
 		{
 			$this->solocation 				= CreateObject('property.solocation');
 			$this->bocommon 				= CreateObject('property.bocommon');

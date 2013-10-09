@@ -589,13 +589,6 @@ onMouseOut="nd()">
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
 										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<xsl:apply-templates select="related_link"/>
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td>
 											<div id="datatable-container_0"/>
 										</td>
 									</tr>
@@ -798,22 +791,6 @@ onMouseOut="nd()">
 		</tr>
 	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="related_link">
-		<xsl:variable name="lang_entity_statustext">
-			<xsl:value-of select="lang_entity_statustext"/>
-		</xsl:variable>
-		<xsl:variable name="entity_link">
-			<xsl:value-of select="entity_link"/>
-		</xsl:variable>
-		<tr>
-			<td class="small_text" align="left">
-				<a href="{$entity_link}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;">
-					<xsl:value-of select="text_entity"/>
-				</a>
-			</td>
-		</tr>
-	</xsl:template>
 
 	<!-- New template-->
 	<xsl:template match="summary">

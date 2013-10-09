@@ -2227,10 +2227,19 @@ JS;
 				}
 
 //_debug_array($roles);die();
+				$location_arr = explode('-', $location_code);
+//_debug_array($location_arr);die();
 
-				$related = $this->bo->read_entity_to_link($location_code);
+				$related = array();
+				$_location_level_arr = array();
+				foreach($location_arr as $_location_level)
+				{
+					$_exact = $location_code == $_location_level ? false : true;
+					$_location_level_arr[] = $_location_level;
+					$location_level = implode('-', $_location_level_arr);
+					$related[$location_level] = $this->bo->read_entity_to_link($location_level, $_exact);
+				}
 //_debug_array($related);die();
-				$related_link = array();
 
 				$location_type_info =  $this->soadmin_location->read_single($type_id);
 				$documents = array();
@@ -2273,56 +2282,45 @@ JS;
 					$file_tree = json_encode($file_tree);				
 				}
 
-				if(isset($related['related']))
+				$_related = array();
+				foreach($related as $_location_level => $related_info)
+				{
+					if(isset($related_info['related']))
+					{
+						foreach($related_info as $related_key => $related_data)
+						{
+							if( $related_key == 'gab')
+							{
+								foreach($related_data as $entry)
+								{
+									$entities_link[] = array
+										(
+											'entity_link'				=> $entry['entity_link'],
+											'lang_entity_statustext'	=> $entry['descr'],
+											'text_entity'				=> $entry['name'],
+										);
+								}
+							}
+							else
+							{
+								foreach($related_data as $entry)
+								{
+									$_related[] = array
+									(
+										'where'		=> $_location_level,
+										'url'		=> "<a href=\"{$entry['entity_link']}\" > {$entry['name']}</a>",
+									);
+								}
+							}
+						}
+					}
+				}
+				
+				$related_link = $_related ? true : false;
+
+				if($_related)
 				{
 					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
-				}
-
-
-// old
-				foreach($related as $related_key => $related_data)
-				{
-					if( $related_key == 'gab')
-					{
-						foreach($related_data as $entry)
-						{
-							$entities_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
-						}
-					}
-
-					if( $related_key == 'related')
-					{
-						foreach($related_data as $entry)
-						{
-							$related_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
-
-						}
-					}
-				}
-//end old
-				$_related = array();
-				if(isset($related['related']))
-				{
-					foreach($related as $related_key => $related_data)
-					{
-						foreach($related_data as $entry)
-						{
-							$_related[] = array
-							(
-								'url'		=> "<a href=\"{$entry['entity_link']}\" > {$entry['name']}</a>",
-							);
-						}
-					}
 				}
 
 
@@ -2342,7 +2340,8 @@ JS;
 				(
 					'name'		=> "0",
 					'values'	=>	json_encode(array(	
-						array('key' => 'url','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'url','label'=>lang('what'),'sortable'=>false,'resizeable'=>true),
 						)
 					)
 				);
