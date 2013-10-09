@@ -83,6 +83,7 @@
 				$detail			= isset($data['detail'])?$data['detail']:'';
 				$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 				$status_id		= isset($data['status_id']) && $data['status_id'] ? (int)$data['status_id']:0;
+				$location_code	= isset($data['location_code'])?$data['location_code']:'';
 			}
 
 			$choice_table = 'phpgw_cust_choice';
@@ -157,7 +158,7 @@
 				$attribute_filter = " location_id = {$location_id}";
 
 				$paranthesis .='(';
-				$joinmethod .= " $this->join  fm_s_agreement_pricing ON ( $entity_table.agreement_id =fm_s_agreement_pricing.agreement_id AND $entity_table.id =fm_s_agreement_pricing.item_id))";
+				$joinmethod .= " {$this->join}  fm_s_agreement_pricing ON ( $entity_table.agreement_id =fm_s_agreement_pricing.agreement_id AND {$entity_table}.id =fm_s_agreement_pricing.item_id))";
 
 				$cols = "$entity_table.*, fm_s_agreement_pricing.cost,fm_s_agreement_pricing.id as index_count,fm_s_agreement_pricing.index_date,fm_s_agreement_pricing.item_id,fm_s_agreement_pricing.this_index";
 
@@ -344,6 +345,12 @@
 			if ($s_agreement_id)
 			{
 				$filtermethod .= " $where $entity_table.agreement_id=$s_agreement_id AND current_index = 1";
+				$where= 'AND';
+			}
+
+			if ($location_code)
+			{
+				$filtermethod .= " $where location_code {$this->like} '{$location_code}%'";
 				$where= 'AND';
 			}
 

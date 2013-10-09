@@ -61,8 +61,10 @@
 			$this->like			= & $this->db->like;
 		}
 
-		function read_entity_to_link($location_code)
+		function read_entity_to_link($location_code, $exact = false)
 		{
+			$condition = $exact ? "= '{$location_code}'" : "{$this->like} '{$location_code}%'";
+			
 			$entity = array();
 
 			$type_app = execMethod('property.soentity.get_type_app');
@@ -99,11 +101,11 @@
 						$this->db->query("SELECT id as bim_type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
 						$this->db->next_record();
 						$bim_type = (int)$this->db->f('bim_type');
-						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_code {$this->like} '$location_code%' AND type = {$bim_type}";					
+						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_code {$condition} AND type = {$bim_type}";					
 					}
 					else
 					{
-						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code {$this->like} '$location_code%'";
+						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code {$condition}";
 					}
 
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -128,7 +130,7 @@
 				}
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE location_code $this->like '$location_code%'";
+			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE location_code {$condition}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
@@ -142,7 +144,7 @@
 					);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_request WHERE location_code $this->like '$location_code%'";
+			$sql = "SELECT count(*) as hits FROM fm_request WHERE location_code {$condition}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
@@ -156,7 +158,7 @@
 					);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_project WHERE location_code $this->like '$location_code%'";
+			$sql = "SELECT count(*) as hits FROM fm_project WHERE location_code {$condition}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
@@ -170,7 +172,7 @@
 					);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_gab_location WHERE location_code $this->like '$location_code%'";
+			$sql = "SELECT count(*) as hits FROM fm_gab_location WHERE location_code {$condition}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('hits'))
@@ -185,16 +187,19 @@
 			}
 
 
-			$sql = "SELECT count(*) as hits FROM fm_s_agreement {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id WHERE location_code {$this->like} '$location_code%'";
+			$sql = "SELECT DISTINCT fm_s_agreement.id FROM fm_s_agreement"
+			. " {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id"
+			. " WHERE location_code {$condition}"
+			. " GROUP BY fm_s_agreement.id";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			if($this->db->f('hits'))
+			$hits = $this->db->num_rows();
+
+			if( $hits )
 			{
-				$hits = $this->db->f('hits');
 				$entity['related'][] = array
 					(
 						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.index',
-																'query'=> $location_code)),
+																'location_code'=> $location_code)),
 						'name'			=> lang('service agreement') . " [{$hits}]",
 						'descr'			=> lang('service agreement')
 					);
