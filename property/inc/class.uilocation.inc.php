@@ -2227,9 +2227,19 @@ JS;
 				}
 
 //_debug_array($roles);die();
+				$location_arr = explode('-', $location_code);
+//_debug_array($location_arr);die();
 
-				$related = $this->bo->read_entity_to_link($location_code);
-				$related_link = array();
+				$related = array();
+				$_location_level_arr = array();
+				foreach($location_arr as $_location_level)
+				{
+					$_exact = $location_code == $_location_level ? false : true;
+					$_location_level_arr[] = $_location_level;
+					$location_level = implode('-', $_location_level_arr);
+					$related[$location_level] = $this->bo->read_entity_to_link($location_level, $_exact);
+				}
+//_debug_array($related);die();
 
 				$location_type_info =  $this->soadmin_location->read_single($type_id);
 				$documents = array();
@@ -2272,40 +2282,70 @@ JS;
 					$file_tree = json_encode($file_tree);				
 				}
 
-				if(isset($related['related']))
+				$_related = array();
+				foreach($related as $_location_level => $related_info)
+				{
+					if(isset($related_info['related']))
+					{
+						foreach($related_info as $related_key => $related_data)
+						{
+							if( $related_key == 'gab')
+							{
+								foreach($related_data as $entry)
+								{
+									$entities_link[] = array
+										(
+											'entity_link'				=> $entry['entity_link'],
+											'lang_entity_statustext'	=> $entry['descr'],
+											'text_entity'				=> $entry['name'],
+										);
+								}
+							}
+							else
+							{
+								foreach($related_data as $entry)
+								{
+									$_related[] = array
+									(
+										'where'		=> $_location_level,
+										'url'		=> "<a href=\"{$entry['entity_link']}\" > {$entry['name']}</a>",
+									);
+								}
+							}
+						}
+					}
+				}
+				
+				$related_link = $_related ? true : false;
+
+				if($_related)
 				{
 					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
 				}
 
-				foreach($related as $related_key => $related_data)
-				{
-					if( $related_key == 'gab')
-					{
-						foreach($related_data as $entry)
-						{
-							$entities_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
-						}
-					}
 
-					if( $related_key == 'related')
-					{
-						foreach($related_data as $entry)
-						{
-							$related_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
+				$datavalues = array();
+				$myColumnDefs = array();
+				$datavalues[0] = array
+				(
+					'name'					=> "0",
+					'values' 				=> json_encode($_related),
+					'total_records'			=> count($_related),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+	
+				$myColumnDefs[0] = array
+				(
+					'name'		=> "0",
+					'values'	=>	json_encode(array(	
+						array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'url','label'=>lang('what'),'sortable'=>false,'resizeable'=>true),
+						)
+					)
+				);
 
-						}
-					}
-				}
 
 
 // ---- START INTEGRATION -------------------------
@@ -2486,8 +2526,20 @@ JS;
 
 			unset($values['attributes']);
 
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+
 			$data = array
 			(
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,	
 				'integration'					=> $integration,
 				'roles'							=> $roles,
 				'edit'							=> $view ? '' : true,
@@ -2562,7 +2614,23 @@ JS;
 			);
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+
 			phpgwapi_yui::load_widget('treeview');
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.edit', 'property' );
 			$appname	= lang('location');
 
