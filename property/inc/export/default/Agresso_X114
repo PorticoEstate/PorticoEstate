@@ -636,7 +636,7 @@
 			}
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$Filnavn = $fil_katalog . "/x114_14_{$external_voucher_id}.xml";
+			$Filnavn = $fil_katalog . "/x114_{$this->client_code}_{$external_voucher_id}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($Filnavn))
@@ -659,14 +659,19 @@
 			}
 
 			//Bestem filnavn
-			$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_voucher_id']);
-
-			//FIXME
-			if (!$Filnavn)
+			
+			try
 			{
-				$message='LagFilnavn: Filnavn er i bruk';
-				$this->errorhandler($batchid,$message);
-				return $message;
+				$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_voucher_id']);
+			}
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					$message = $e->getMessage();
+					$this->errorhandler($batchid,$message);
+					return $message;
+				}
 			}
 
 			//Test om filen kan opprettes og skrives til
@@ -719,6 +724,13 @@
 				}
 			}
 
+			$purchaseorderstatus = 'OK';
+			if(!$bilagsnr_ut)
+			{
+				$Filnavn = str_replace('_OK_', '_E_', $Filnavn);
+				$purchaseorderstatus = 'Feil';
+			}
+			
 			$tranfser_bilag = $bilagsnr_ut ? array($bilagsnr_ut) : array($voucher_id);
 
 			$localtime = phpgwapi_datetime::user_localtime();
@@ -744,7 +756,7 @@
 				0 => array
 				(
 					'TRANSACTIONTYPE'			=> 'X114',
-					'KEY'						=> '', //dummy
+					'KEY'						=> $oRsBilag[0]['external_voucher_id'], //dummy
 					'VOUCHERID'					=> $bilagsnr_ut,
 					'SCANNINGNO'				=> $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
 					'PROFILE'					=> 'TRAINVPOMA',
@@ -755,7 +767,7 @@
 					'PREVOUCHERID'				=> '', //dummy
 					'PURCHASEORDERNO'			=> $oRsBilag[0]['order_id'], // 1409220008
 					'PURCHASEORDEROWNER.CODE'	=> $oRsBilag[0]['spvend_code'], // 100644
-					'PURCHASEORDERSTATUS.CODE'	=> 'OK',
+					'PURCHASEORDERSTATUS.CODE'	=> $purchaseorderstatus,
 					'GENERALCOMMENT'			=> $comment, // Denne er fakturert i 3 deler OBS OBS!
 				)
 			);
@@ -989,7 +1001,7 @@
 					{
 						$this->db->transaction_commit();
 					}
-					$message = "Antall bilag/underbilag overført til historikk (ikke til Basware): {$antall}";
+					$message = "Antall bilag/underbilag overført til historikk (ikke til Agresso): {$antall}";
 					return $message;
 				}
 
@@ -1098,14 +1110,14 @@
 				{
 				 	for ($i=0;$i<count($tranfser_bilag);$i++)
 					{
-						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Invoice transferred %1 to Basware',basename($Filnavn)));
+						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Invoice transferred %1 to Agresso',basename($Filnavn)));
 					}
 				}
 				else
 				{
 				 	for ($i=0;$i<count($tranfser_bilag);$i++)
 					{
-						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Failed to transfere %1 to Basware',basename($Filnavn)));
+						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Failed to transfere %1 to Agresso',basename($Filnavn)));
 					}
 				}
 				if(!$transfer_ok)
