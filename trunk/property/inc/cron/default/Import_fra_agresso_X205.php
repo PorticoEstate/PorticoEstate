@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id: Import_fra_basware_X205.php 10573 2012-12-06 09:10:29Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**
