@@ -7728,8 +7728,8 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag', 'external_voucher_id', array('type' => 'int','precision' => '4','nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf',  'external_voucher_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag', 'external_voucher_id', array('type' => 'int','precision' => '8','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf',  'external_voucher_id', array('type' => 'int','precision' => '8','nullable' => True));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

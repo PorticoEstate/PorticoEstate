@@ -1194,7 +1194,7 @@
 				'periodization' => array('type' => 'int','precision' => '4','nullable' => True),
 				'periodization_start' => array('type' => 'int','precision' => '4','nullable' => True),
 				'line_text' => array('type' => 'varchar','precision' => '255','nullable' => True),
-				'external_voucher_id' => array('type' => 'int','precision' => '4','nullable' => True)
+				'external_voucher_id' => array('type' => 'int','precision' => '8','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1252,7 +1252,7 @@
 				'periodization_start' => array('type' => 'int','precision' => '4','nullable' => True),
 				'manual_record' => array('type' => 'int','precision' => '2','nullable' => True),
 				'line_text' => array('type' => 'varchar','precision' => '255','nullable' => True),
-				'external_voucher_id' => array('type' => 'int','precision' => '4','nullable' => True)
+				'external_voucher_id' => array('type' => 'int','precision' => '8','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
