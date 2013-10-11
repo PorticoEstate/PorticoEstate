@@ -643,6 +643,11 @@
 
 								$sendt = 0;
 								$mail_sendt_to = '';
+								if($event['contact_email']) {
+									$sendt++;
+									$mail_sendt_to = $mail_sendt_to.' '.$event['contact_email'];
+                                    $this->send_mailnotification($event['contact_email'], $subject, $body);
+								} 
 								if($building_info['email']) {
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to.' '.$building_info['email'];

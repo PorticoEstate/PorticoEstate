@@ -36,7 +36,7 @@
 
 		function get_endofseason($id)
 		{
-			$this->db->limit_query("SELECT to_ FROM bb_season WHERE status = 'PUBLISHED' AND active=1 AND building_id =" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT to_ FROM bb_season WHERE status = 'PUBLISHED' AND active=1 AND building_id =" . intval($id) . "ORDER BY to_ DESC", 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
                 return false;        
