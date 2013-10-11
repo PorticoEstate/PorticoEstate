@@ -178,17 +178,18 @@
 			foreach($file_list as $file)
 			{
 				$file_parts = explode('_', basename($file, '.xml'));
-				$external_ref = $file_parts[2];
+			//	$external_ref = $file_parts[2];
+				$external_voucher_id = $file_parts[2];
 
 				$duplicate = false;
-				$sql = "SELECT bilagsnr, external_ref FROM fm_ecobilag WHERE external_ref = '{$external_ref}'";
+				$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE external_voucher_id = '{$external_voucher_id}'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
 					$duplicate = true;
 				}
 
-				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_ref = '{$external_ref}'";
+				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$external_voucher_id}'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
@@ -198,7 +199,7 @@
 				if( !$duplicate )
 				{
 					rename("{$archive}/{$file}", "{$dirname}/{$file}");
-					$this->receipt['message'][] = array('msg' => "fil tilbakeført fra arkiv til importkø: {$external_ref}");
+					$this->receipt['message'][] = array('msg' => "fil tilbakeført fra arkiv til importkø: {$external_voucher_id}");
 				}
 			}
 		}
@@ -826,7 +827,7 @@
 			$num = $this->soXport->add($buffer);
 			if($num > 0)
 			{
-				$this->receipt['message'][]= array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, ref: {$buffer[0]['external_ref']}, key: {$buffer[0]['external_voucher_id']}");
+				$this->receipt['message'][]= array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, SCANNINGNO: {$buffer[0]['external_ref']}, KEY: {$buffer[0]['external_voucher_id']}");
 				return $buffer[0]['bilagsnr'];
 			}
 			return false;

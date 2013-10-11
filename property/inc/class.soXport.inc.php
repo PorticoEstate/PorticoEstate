@@ -268,6 +268,7 @@
 						$fields['item_type'],
 						$fields['item_id'],
 						$fields['external_ref'],
+						$fields['external_voucher_id'],
 						isset($fields['currency']) && $fields['currency'] ? $fields['currency'] : 'NOK'
 					);
 
@@ -278,7 +279,7 @@
 					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,fakturadato,"
 						. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " fakturanr,spbudact_code,loc1,dima,dimd,dime,mvakode,periode,merknad,line_text,oppsynsigndato,saksigndato,"
-						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
+						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,external_voucher_id,currency,belop,godkjentbelop)"
 						. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
 
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -348,6 +349,7 @@
 				$data['item_type'],
 				$data['item_id'],
 				$data['external_ref'],
+				$data['external_voucher_id'],
 				$data['currency'],
 				$data['manual_record'],
 				$data['process_code'],
@@ -360,7 +362,7 @@
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,dime,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,line_text,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
-				. " currency,manual_record,process_code,process_log,belop,godkjentbelop,ordrebelop)"
+				. " external_voucher_id,currency,manual_record,process_code,process_log,belop,godkjentbelop,ordrebelop)"
 				. "VALUES ($values, "
 				. $this->db->money_format($data['belop']) . ","
 				. $this->db->money_format($data['godkjentbelop']) . ","
@@ -439,6 +441,7 @@
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
 					'external_ref'			=> $this->db->f('external_ref'),
+					'external_voucher_id'	=> $this->db->f('external_voucher_id'),
 					'kostra_id'				=> $this->db->f('kostra_id'),
 					'currency'				=> $this->db->f('currency'),
 	 	  			'process_log'			=> $this->db->f('process_log',true),
