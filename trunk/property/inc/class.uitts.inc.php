@@ -1810,6 +1810,29 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a location - or an entity!'));
 				}
 
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as &$attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'V' && strlen($attribute['value']) > $attribute['precision'])
+						{
+							$receipt['error'][]=array('msg'=>lang('Max length for attribute %1 is: %2', "\"{$attribute['input_text']}\"",$attribute['precision']));
+							$attribute['value'] = substr($attribute['value'],0,$attribute['precision']);
+						}
+					}
+				}
+
+
 				if(!$values['assignedto'] && !$values['group_id'])
 				{
 					$_responsible = execMethod('property.boresponsible.get_responsible', $values);
@@ -2345,6 +2368,29 @@
 					$values['budget'] = (int)$values['budget'];
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 				}
+
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as &$attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'V' && strlen($attribute['value']) > $attribute['precision'])
+						{
+							$receipt['error'][]=array('msg'=>lang('Max length for attribute %1 is: %2', $attribute['input_text'],$attribute['precision']));
+							$attribute['value'] = substr($attribute['value'],0,$attribute['precision']);
+						}
+					}
+				}
+
 
 				if($access_order)
 				{
