@@ -80,6 +80,7 @@
 					<xsl:when test="name!=''">
 						<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"/>
 						<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"/>
+						<input type="hidden" name="values_attribute[{counter}][precision]" value="{precision}"/>
 						<input type="hidden" name="values_attribute[{counter}][history]" value="{history}"/>
 						<input type="hidden" name="values_attribute[{counter}][attrib_id]" value="{id}"/>
 						<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"/>
