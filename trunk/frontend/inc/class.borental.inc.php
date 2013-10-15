@@ -81,6 +81,9 @@
         public static function get_property_locations($array)
         {
 
+// _debug_array($array);die();
+ //			return self::get_property_locations_lean($array);
+ 
         	$property_locations = array();
         	$property_locations_active = array();
 
@@ -92,7 +95,8 @@
         	$location_id_in = array_search('contract_type_innleie', $types);
         	$location_id_ex = array_search('contract_type_eksternleie', $types);
 
-        	foreach($array as $row){
+        	foreach($array as $row)
+        	{
         		/*
              * 1. hent alle kontraktsparter som har org unit id (foreløpig bruker vi result_unit_number i rentalparty)
              * 2. hent alle kontrakter på kontraktspartene
@@ -207,7 +211,6 @@
         	phpgwapi_cache::session_set('frontend', 'rented_area_per_location', $rented_area_per_location);
         	phpgwapi_cache::session_set('frontend', 'total_price_per_location', $rented_price_per_location);
 
-
         	//Serialize the properties
         	$serialized_properties = array();
         	foreach($property_locations as $key => $property_location)
@@ -217,7 +220,100 @@
         			$serialized_properties[] = $property_location->serialize();
         		}
         	}
+
         	return $serialized_properties;
+        }
+
+
+        /**
+         *
+         * @param integer $org_unit_ids
+         */
+        public static function get_property_locations_lean($array)
+        {
+
+        	$property_locations = array();
+        	$property_locations_active = array();
+
+        	$total_price_all_buildings = 0;
+        	$total_rented_area_all_builings = 0;
+
+        	$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$location_id_internal = array_search('contract_type_internleie', $types);
+        	$location_id_in = array_search('contract_type_innleie', $types);
+        	$location_id_ex = array_search('contract_type_eksternleie', $types);
+
+        	foreach($array as $row)
+        	{
+        		/*
+             * 1. hent alle kontraktsparter som har org unit id (foreløpig bruker vi result_unit_number i rentalparty)
+             * 2. hent alle kontrakter på kontraktspartene
+             * 3. hent alle leieobjekt på kontraktene
+             * 4. hent ut bygg-ider, location_code, fra leieobjektet
+             */
+        		if(is_array($row))
+        		{
+	        		if(!isset($row['ORG_UNIT_ID']) || $row['ORG_UNIT_ID'] == '')
+	        		{
+	        			continue;
+	        		}
+	        		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $row['ORG_UNIT_ID']));
+        		}
+        		else
+        		{
+        			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('email' => $row));
+        		}
+
+	        	$contracts = array();
+	        	$composites = array();
+
+	    		$soparty	= CreateObject('frontend.sorental');
+
+
+	        	//For all parties connected to the internal organization unit
+	        	foreach($parties as $party_id => $party)
+	        	{
+					$locations = $soparty->get_location($party_id);
+
+
+	        	}
+        	}
+
+	// contracts ->  composite -> units -> location_code
+
+
+
+_debug_array(count($parties));die();
+
+ /*
+ Array
+(
+    [0] => Array
+        (
+            [loc1_name] => DIVERSE SKOLER
+            [loc2_name] => DIVERSE SKOLE
+            [location_code] => 2000-01
+            [address] => 
+            [area_net] => 0
+            [area_gros] => 0
+        )
+
+    [1] => Array
+        (
+            [loc1_name] => BERGEN RÅDHUS
+            [loc2_name] => BERGEN RÅDHUS NYE
+            [location_code] => 1102-01
+            [address] => Rådhusgaten 10
+            [area_net] => 0
+            [area_gros] => 11277
+        )
+
+)
+
+ */
+ 
+ 
+ 
         }
 
     }

@@ -45,14 +45,16 @@
 			    					<select size="3" onchange="this.form.submit()" name="org_unit_id">
 			    						<xsl:choose>
 			    							<xsl:when test="selected_org_unit = 'all'">
-			    								<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
+			    							<!--	<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option> -->
+			    								<option value="" selected="selected"><xsl:value-of select="php:function('lang', 'select')"/></option>
 			    								<xsl:for-each select="org_unit">
 			    									<xsl:sort select="ORG_NAME"/>
 					    							<option value="{ORG_UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
 					    						</xsl:for-each>
 			    							</xsl:when>
 			    							<xsl:otherwise>
-			    								<option value="all"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
+			    						<!--		<option value="all"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option> -->
+			    								<option value=""><xsl:value-of select="php:function('lang', 'select')"/></option>
 			    								<xsl:for-each select="org_unit">
 			    									<xsl:sort select="ORG_NAME"/>
 			    									<xsl:choose>
