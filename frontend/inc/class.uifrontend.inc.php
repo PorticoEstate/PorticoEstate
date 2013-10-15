@@ -88,7 +88,7 @@
 			$property_locations_update = false;
 
 			/* If the user has selected an organisational unit or all units */
-			if(isset($param_selected_org_unit))
+			if(isset($param_selected_org_unit) && $param_selected_org_unit)
 			{
 				//Specify which unit(s)
 				if($param_selected_org_unit == 'all')
@@ -123,7 +123,7 @@
 
 			}
 			/* If the user selects a organisational unit in rental module */
-			else if(isset($param_only_org_unit))
+			else if(isset($param_only_org_unit) && $param_only_org_unit)
 			{
 				//TODO: check permissions
 				if($use_fellesdata){
@@ -176,7 +176,8 @@
 					$this->header_state['selected_org_unit'] = 'all';
 
 					//Update locations
-					$property_locations = frontend_borental::get_property_locations($org_units);
+					//FIXME Sigurd 15. okt 2013: deselect 'all' on initial view
+					//$property_locations = frontend_borental::get_property_locations($org_units);
 				}
 				else
 				{
