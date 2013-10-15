@@ -155,9 +155,12 @@
 		}
 
 		// array $filter_out
-		function return_array($filter_out,$only_show,$_orderby = '',$sort = '', $record_id,$attrib_id='',$detail_id='')
+		function return_array($filter_out, $only_show, $_orderby = '', $sort = '', $record_id, $attrib_id=0, $detail_id=0)
 		{
-
+			$record_id = (int) $record_id;
+			$attrib_id = (int) $attrib_id;
+			$detail_id = (int) $detail_id;
+			
 			if (! $sort || ! $_orderby)
 			{
 				$orderby = 'order by history_timestamp,history_id';
@@ -175,17 +178,17 @@
 			$filter = '';
 			if (isset($filtered))
 			{
-				$filter = ' and ' . implode(' and ',$filtered);
+				$filter = ' AND ' . implode(' AND ',$filtered);
 			}
 
 			if($attrib_id)
 			{
-				$filter .= " and history_attrib_id = $attrib_id";
+				$filter .= " AND history_attrib_id = $attrib_id";
 			}
 
 			if($detail_id)
 			{
-				$filter .= " and history_detail_id = $detail_id";
+				$filter .= " AND history_detail_id = $detail_id";
 			}
 
 			while (is_array($only_show) && list(,$_filter) = each($only_show))
@@ -196,28 +199,28 @@
 			$only_show_filter = '';
 			if (isset($_only_show))
 			{
-				$only_show_filter = ' and (' . implode(' or ',$_only_show) . ')';
+				$only_show_filter = ' AND (' . implode(' OR ',$_only_show) . ')';
 			}
 
-			$this->db->query("select * from $this->table where history_appname='"
-				. $this->appname . "' and history_record_id='$record_id' $filter $only_show_filter "
+			$this->db->query("SELECT * FROM {$this->table} WHERE history_appname='"
+				. $this->appname . "' AND history_record_id=$record_id $filter $only_show_filter "
 				. "$orderby",__LINE__,__FILE__);
 
 			$return_values = array();
 			while ($this->db->next_record())
 			{
 				$return_values[] = array
-					(
-						'id'			=> $this->db->f('history_id'),
-						'record_id'		=> $this->db->f('history_record_id'),
-						'owner'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
-	//					'status'		=> lang($this->types[$this->db->f('history_status')]),
-						'status'		=> preg_replace('/ /','',$this->db->f('history_status')),
-						'new_value'		=> $this->db->f('history_new_value',true),
-						'old_value'		=> $this->db->f('history_old_value',true),
-						'datetime'		=> strtotime($this->db->f('history_timestamp')),
-						'publish'		=> $this->db->f('publish')
-					);
+				(
+					'id'			=> $this->db->f('history_id'),
+					'record_id'		=> $this->db->f('history_record_id'),
+					'owner'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
+	//				'status'		=> lang($this->types[$this->db->f('history_status')]),
+					'status'		=> preg_replace('/ /','',$this->db->f('history_status')),
+					'new_value'		=> $this->db->f('history_new_value',true),
+					'old_value'		=> $this->db->f('history_old_value',true),
+					'datetime'		=> strtotime($this->db->f('history_timestamp')),
+					'publish'		=> $this->db->f('publish')
+				);
 			}
 			return $return_values;
 		}
