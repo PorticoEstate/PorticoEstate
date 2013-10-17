@@ -56,19 +56,19 @@
 
 			$this->config	= CreateObject('phpgwapi.config','frontend');
 			$this->config->read();
-			$use_fellesdata = $this->config->config_data['use_fellesdata'];
-			$logo_path = $this->config->config_data['logo_path'];
+			$use_fellesdata	= $this->config->config_data['use_fellesdata'];
+			$logo_path		= $this->config->config_data['logo_path'];
 
 			// Get the mode: in frame or full screen
-			$mode = phpgwapi_cache::session_get('frontend', 'noframework');
-			$noframework = isset($mode) ? $mode : true;
+			$mode			= phpgwapi_cache::session_get('frontend', 'noframework');
+			$noframework	= isset($mode) ? $mode : true;
 
 			/* Get the tabs and check to see whether the user has specified a tab or has a selected tab on session */
-			$tabs = $this->get_tabs();
-			$location_id = phpgw::get_var('location_id', 'int', 'REQUEST');
-			$tab = isset($location_id) ? $location_id : phpgwapi_cache::session_get('frontend','tab');
-			$selected = isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));
-			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
+			$tabs			= $this->get_tabs();
+			$location_id	= phpgw::get_var('location_id', 'int', 'REQUEST');
+			$tab			= isset($location_id) ? $location_id : phpgwapi_cache::session_get('frontend','tab');
+			$selected		= isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));
+			$this->tabs		= $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			phpgwapi_cache::session_set('frontend','tab',$selected);
 
 			// Get header state
@@ -79,8 +79,8 @@
 
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
-			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
-			$param_only_org_unit = phpgw::get_var('org_enhet_id'); 	// Frontend access from rental module regarding specific organisational unit
+			$param_selected_org_unit = phpgw::get_var('org_unit_id');		// New organisational unit selected from organisational units list
+			$param_only_org_unit = phpgw::get_var('org_enhet_id');			// Frontend access from rental module regarding specific organisational unit
 
 			//Refresh organisation list
 			$refresh = phpgw::get_var('refresh','bool');
@@ -118,7 +118,7 @@
 				$this->header_state['selected_org_unit'] = $param_selected_org_unit;
 
 				//Update locations according to organisational unit specification
-				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
+				$property_locations = frontend_borental::get_property_locations($org_unit_ids, $this->header_state['org_unit']);
 				$property_locations_update = true;
 
 			}
@@ -126,7 +126,8 @@
 			else if(isset($param_only_org_unit) && $param_only_org_unit)
 			{
 				//TODO: check permissions
-				if($use_fellesdata){
+				if($use_fellesdata)
+				{
 					$name_and_result_number = frontend_bofellesdata::get_instance()->get_organisational_unit_info($param_only_org_unit);
 
 					//Specify unit
@@ -145,7 +146,7 @@
 					$this->header_state['selected_org_unit'] = $param_only_org_unit;
 
 					//Update locations
-					$property_locations = frontend_borental::get_property_locations($org_unit_ids);
+					$property_locations = frontend_borental::get_property_locations($org_unit_ids, $this->header_state['org_unit']);
 					$property_locations_update = true;
 
 					$noframework = false; // In regular frames
@@ -177,13 +178,13 @@
 
 					//Update locations
 					//FIXME Sigurd 15. okt 2013: deselect 'all' on initial view
-					//$property_locations = frontend_borental::get_property_locations($org_units);
+					//$property_locations = frontend_borental::get_property_locations($org_units, $this->header_state['org_unit']);
 				}
 				else
 				{
 					//If no organisational database is in use: get rented properties based on username
 					$usernames[] = $GLOBALS['phpgw_info']['user']['account_lid'];
-					$property_locations = frontend_borental::get_property_locations($usernames);
+					$property_locations = frontend_borental::get_property_locations($usernames, $this->header_state['org_unit']);
 				}
 
 				$property_locations_update = true;
@@ -207,6 +208,7 @@
 
 				$this->header_state['locations'] = $property_locations;
 				$this->header_state['number_of_locations'] = count($property_locations);
+				//FIXME
 				$this->calculate_totals($property_locations);
 			}
 
@@ -392,34 +394,18 @@
 			$this->header_state['name_of_user'] = $name_of_user;
 		}
 
+
+
 		function calculate_totals($property_locations)
 		{
-
 			// Calculate
-			$total_area = 0;
-		//	$rented_area_per_location = phpgwapi_cache::user_get('frontend','rented_area_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
-			$rented_area_per_location = phpgwapi_cache::session_get('frontend','rented_area_per_location');
-			foreach($rented_area_per_location as $location_code => $area_per_location)
-			{
+			$parties = frontend_borental::get_all_parties();
+	
+			$totals = frontend_borental::get_total_cost_and_area($parties);
+			$this->header_state['total_price'] = number_format($totals['sum_total_price'], 0, ","," ")." kr";
+			$this->header_state['total_area'] = number_format($totals['sum_total_area'], 0, ",", " ")." kvm";
+			
 
-				if($this->location_in_selection($location_code,$property_locations))
-				{
-					$total_area += $area_per_location;
-				}
-			}
-
-			$total_price = 0;
-		//	$total_price_per_location = phpgwapi_cache::user_get('frontend','total_price_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
-			$total_price_per_location = phpgwapi_cache::session_get('frontend','total_price_per_location');
-			foreach($total_price_per_location as $location_code => $price_per_location)
-			{
-				if($this->location_in_selection($location_code,$property_locations))
-				{
-					$total_price += $price_per_location;
-				}
-			}
-			$this->header_state['total_price'] = number_format($total_price, 0, ","," ")." kr";
-			$this->header_state['total_area'] = number_format($total_area, 0, ",", " ")." kvm";
 		}
 
 		function location_in_selection($location_code, $property_locations)
