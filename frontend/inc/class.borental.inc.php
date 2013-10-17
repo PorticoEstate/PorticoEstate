@@ -5,7 +5,8 @@
 	phpgw::import_class('rental.socontract_price_item');
 	include_class('rental', 'contract', 'inc/model/');
 
-    class frontend_borental {
+    class frontend_borental
+    {
 
     	public static function contract_exist_per_location($contract_id, $location_code, $contract_state_identifier)
     	{
@@ -62,12 +63,14 @@
 			return false;
     	}
 
+    	//FIXME : Sigurd 16 okt 2013: not used?
     	public static function get_first_contract_per_location($location_code)
     	{
     		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
     		return $contracts_per_location[$location_code][0];
     	}
 
+    	//FIXME : Sigurd 16 okt 2013: not used?
    		public static function get_first_contract_in_per_location($location_code)
     	{
     		$contracts_in_per_location = phpgwapi_cache::session_get('frontend', 'contracts_in_per_location');
@@ -78,11 +81,11 @@
          *
          * @param integer $org_unit_ids
          */
-        public static function get_property_locations($array)
+        public static function get_property_locations($array,$top_org_units)
         {
 
 // _debug_array($array);die();
- //			return self::get_property_locations_lean($array);
+ 			return self::get_property_locations_lean($array,$top_org_units);
  
         	$property_locations = array();
         	$property_locations_active = array();
@@ -205,8 +208,11 @@
 	        	}
         	}
 
+        	//Not used ?
         	phpgwapi_cache::session_set('frontend', 'contracts_per_location', $contracts_per_location);
+        	//Not used ?
         	phpgwapi_cache::session_set('frontend', 'contracts_in_per_location', $contracts_in_per_location);
+        	//Not used ?
         	phpgwapi_cache::session_set('frontend', 'contracts_ex_per_location', $contracts_ex_per_location);
         	phpgwapi_cache::session_set('frontend', 'rented_area_per_location', $rented_area_per_location);
         	phpgwapi_cache::session_set('frontend', 'total_price_per_location', $rented_price_per_location);
@@ -227,9 +233,9 @@
 
         /**
          *
-         * @param integer $org_unit_ids
+         * @param array $org_unit_ids
          */
-        public static function get_property_locations_lean($array)
+        public static function get_property_locations_lean($array,$top_org_units)
         {
 
         	$property_locations = array();
@@ -257,63 +263,83 @@
 	        		{
 	        			continue;
 	        		}
-	        		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $row['ORG_UNIT_ID']));
+	        //		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $row['ORG_UNIT_ID']));
+			//      $parties = array_keys($parties);
+	        		$parties = self::get_all_parties($top_org_units);
         		}
         		else
         		{
         			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('email' => $row));
+        			$parties = array_keys($parties);
         		}
 
 	        	$contracts = array();
 	        	$composites = array();
 
-	    		$soparty	= CreateObject('frontend.sorental');
-
+	    		$sorental	= CreateObject('frontend.sorental');
 
 	        	//For all parties connected to the internal organization unit
-	        	foreach($parties as $party_id => $party)
-	        	{
-					$locations = $soparty->get_location($party_id);
+				$locations = $sorental->get_location($parties);
 
-
-	        	}
         	}
 
-	// contracts ->  composite -> units -> location_code
+			return $locations;
+		}
+		
 
+		/**
+		* Get the org_units by hierarchical inheritance
+		*/
+		function get_all_parties($top_org_units)
+		{
+			static $parties =array(); // cache result
+			
+			//already calculated
+			if($parties)
+			{
+				return $parties;
+			}
+/*
+			$bt = debug_backtrace();
+			echo "<b>frontend_borental::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
+			unset($bt);
+*/
 
+			$org_units = array();
+			$selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
+			if($selected_org_unit == 'all')
+			{
+				foreach($top_org_units as $entry)
+				{
+					$org_units[] = $entry['ORG_UNIT_ID'];
+				}
+			}
+			else
+			{
+				$org_units[] = $selected_org_unit;
+			}
+			
 
-_debug_array(count($parties));die();
+			$bofellesdata = CreateObject('rental.bofellesdata');
 
- /*
- Array
-(
-    [0] => Array
-        (
-            [loc1_name] => DIVERSE SKOLER
-            [loc2_name] => DIVERSE SKOLE
-            [location_code] => 2000-01
-            [address] => 
-            [area_net] => 0
-            [area_gros] => 0
-        )
+			foreach ($org_units as $org_unit)
+			{
+				$bofellesdata->get_org_unit_ids_from_top($org_unit); 
+			}
 
-    [1] => Array
-        (
-            [loc1_name] => BERGEN RÅDHUS
-            [loc2_name] => BERGEN RÅDHUS NYE
-            [location_code] => 1102-01
-            [address] => Rådhusgaten 10
-            [area_net] => 0
-            [area_gros] => 11277
-        )
-
-)
-
- */
+			$all_unit_ids = array_unique($bofellesdata->unit_ids);
  
- 
- 
-        }
+ 	  		$parties	= execMethod('frontend.sorental.get_parties', $all_unit_ids);
+
+
+			return $parties;
+		}
+
+
+		public static function get_total_cost_and_area($org_units = array())
+		{
+    		$sorental	= CreateObject('frontend.sorental');
+    		return $sorental->get_total_cost_and_area($org_units);
+		}
 
     }

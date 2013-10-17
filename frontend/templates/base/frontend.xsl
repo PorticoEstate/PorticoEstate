@@ -1,10 +1,11 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="messages_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uimessages.index')" /></xsl:variable>
 	<div id="wrapper">
     	<div id="header">
     		<div id="login-bar">
     			<ul class="user_menu">
     				<li><em><img src="frontend/templates/base/images/16x16/user_red.png"  class="list_image" /></em><xsl:value-of select="name_of_user"/> | <a href="http://portico/pe/preferences/changepassword.php">Bytt passord</a></li>
-    				<li><a href="index.php?menuaction=frontend.uimessages.index" class="list_image"><em><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/></em><xsl:value-of select="new_messages"/></a></li>
+	  				<li><a href="{$messages_url}" class="list_image"><em><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/></em><xsl:value-of select="new_messages"/></a></li>
     				<li>
     					<a href="logout.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_out.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'logout')"/></a> 
     					|
@@ -41,7 +42,7 @@
 		    					</a>
 		    				</li>
 		    				<li>
-		    					<form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
+		    					<form action="{form_action}" method="post">
 			    					<select size="3" onchange="this.form.submit()" name="org_unit_id">
 			    						<xsl:choose>
 			    							<xsl:when test="selected_org_unit = 'all'">
@@ -158,7 +159,6 @@
 						</div>
 					</td>
 					<td>
-						
 						<div id="area_and_price" style="margin-top: 2em;">
 						<ul>
 							<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; "><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'chosen_unit')"/>:</li>
@@ -170,7 +170,13 @@
 					<td>
 						<br/>
 						<div id="unit_image">
-							<img src="index.php?menuaction=frontend.uifrontend.objectimg&amp;loc_code={//header/selected_location}" alt="" />
+							<img alt="">
+								<xsl:attribute name="src">
+									<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uifrontend.objectimg')" />
+									<xsl:text>&amp;loc_code=</xsl:text>
+									<xsl:value-of select="//header/selected_location"/>
+								</xsl:attribute>
+							</img>
 						</div>
 					</td>
 				</tr>

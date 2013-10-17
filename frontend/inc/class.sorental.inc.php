@@ -100,40 +100,145 @@
 			}
 		}
 
-		public function get_location($party_id)
+		public function get_location($parties)
 		{
-			$party_id = (int) $party_id;
+			$parties = (array) $parties;
+			if(!$parties)
+			{
+				return array();
+			}
 
-		_debug_array($party_id);
+			$ts = time();
+			
+			$filtermethod = 'WHERE rental_party.id IN (' . implode(',', $parties) . ')'; 
+			//active contract
+			$filtermethod .= " AND ({$ts} >= date_start AND (date_end IS NULL OR {$ts} <= date_end))";
+			
+			$sql = "SELECT DISTINCT location_code FROM"
+			. " rental_contract {$this->_db->join} rental_contract_party ON (rental_contract.id = rental_contract_party.contract_id)"
+			. " {$this->_db->join} rental_party ON (rental_party.id = rental_contract_party.party_id)"
+			. " {$this->_db->join} rental_contract_composite ON (rental_contract.id = rental_contract_composite.contract_id)"
+			. " {$this->_db->join} rental_composite ON (rental_contract_composite.composite_id = rental_composite.id)"
+			. " {$this->_db->join} rental_unit ON (rental_composite.id = rental_unit.composite_id)"
+			. " {$filtermethod}";
 
-			//FIXME something clever
-			$sql = "SELECT * FROM somewhere WHERE id={$party_id}";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$values = array();
 			while ($this->_db->next_record())
 			{
-				$values = array
+				$values[] = array
 				(
 					'location_code'		=> $this->_db->f('location_code', true),
 				);
 			}
+			
+			foreach ($values as &$entry)
+			{
 
-/*
-            [loc1_name] => BERGEN RÅDHUS
-            [loc2_name] => BERGEN RÅDHUS NYE
-            [location_code] => 1102-01
-            [address] => Rådhusgaten 10
-            [area_net] => 0
-            [area_gros] => 11277
-*/
+				$location_code = $entry['location_code'];
+				// We get the data from the property module
+				$data = execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
 
+				$stop_search = false;
+				for($i = 1; !$stop_search; $i++)
+				{
+					$loc_name = "loc{$i}_name";
+					if(array_key_exists($loc_name, $data))
+					{
+						$entry[$loc_name] =  $data[$loc_name];
+					}
+					else
+					{
+						$stop_search = true;
+					}
+				}
+
+				$entry['address'] = $data['street_name'].' '.$data['street_number'];
+				foreach($data['attributes'] as $attributes)
+				{
+					switch($attributes['column_name'])
+					{
+						case 'area_gross':
+							$entry['area_gros'] = $attributes['value'];
+							break;
+						case 'area_net':
+							$entry['area_net'] = $attributes['value'];
+							break;
+						case 'bruttoareal':
+							$entry['area_gros'] = $attributes['value'];
+							break;
+						case 'nettoareal':
+							$entry['area_net'] = $attributes['value'];
+							break;
+					}
+				}
+			} 
 
 			return $values;
-
 		}
 
 
+		/**
+		* translate from org_unit to party.id
+		**/
+		function get_parties($org_units)
+		{
+			if(!$org_units)
+			{
+				return array();
+			}
+			
+			$sql = 'SELECT id FROM rental_party WHERE org_enhet_id IN (' . implode(',', $org_units) . ')'; 
+_debug_array($sql);
+			$this->_db->query($sql,__LINE__,__FILE__);
 
+			$values = array();
+
+			while ($this->_db->next_record())
+			{
+				$values[] = $this->_db->f('id');
+			}
+
+			return $values;
+		}
+
+		public function get_total_cost_and_area($org_units = array())
+		{
+			if(!$org_units)
+			{
+				return array();
+			}
+
+			$ts = time();
+			$filtermethod = 'WHERE rental_party.id IN (' . implode(',', $org_units) . ')'; 
+			//active contract
+			$filtermethod .= " AND ({$ts} >= rental_contract.date_start AND (rental_contract.date_end IS NULL OR {$ts} <= rental_contract.date_end))";
+			
+			$sql = "SELECT sum(total_price::numeric) AS sum_total_price FROM"
+			. " rental_contract {$this->_db->join} rental_contract_party ON (rental_contract.id = rental_contract_party.contract_id)"
+			. " {$this->_db->join} rental_party ON (rental_party.id = rental_contract_party.party_id)"
+			. " {$this->_db->join} rental_contract_price_item ON (rental_contract.id  = rental_contract_price_item.contract_id)"
+			. " {$filtermethod} AND NOT is_one_time";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+			$this->_db->next_record();
+			$values['sum_total_price'] = $this->_db->f('sum_total_price');
+
+			$sql = "SELECT sum(rental_contract.rented_area::numeric) AS sum_total_area FROM"
+			. " rental_contract {$this->_db->join} rental_contract_party ON (rental_contract.id = rental_contract_party.contract_id)"
+			. " {$this->_db->join} rental_party ON (rental_party.id = rental_contract_party.party_id)"
+			. " {$filtermethod}";
+
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$this->_db->next_record();
+			$values['sum_total_area'] = $this->_db->f('sum_total_area');
+
+			return $values;
+		}
 	}
