@@ -88,7 +88,7 @@
 			$property_locations_update = false;
 
 			/* If the user has selected an organisational unit or all units */
-			if(isset($param_selected_org_unit) && $param_selected_org_unit)
+			if(isset($param_selected_org_unit) && $param_selected_org_unit && $param_selected_org_unit != 'none')
 			{
 				//Specify which unit(s)
 				if($param_selected_org_unit == 'all')
@@ -112,7 +112,7 @@
 					{
 						//If the organisational unit selected is not in list; do default 'all'
 						$org_unit_ids = $this->header_state['org_unit'];
-						$param_selected_org_unit = 'all';
+						$param_selected_org_unit = 'none';
 					}
 				}
 				$this->header_state['selected_org_unit'] = $param_selected_org_unit;
@@ -123,8 +123,16 @@
 				$property_locations_update = true;
 
 			}
+			else if($param_selected_org_unit == 'none')
+			{
+				$this->header_state['selected_org_unit'] = $param_selected_org_unit;
+				$property_locations = array();
+				$this->header_state['locations'] = $property_locations;
+				$this->header_state['number_of_locations'] = count($property_locations);
+			}
+
 			/* If the user selects a organisational unit in rental module */
-			else if(isset($param_only_org_unit) && $param_only_org_unit)
+			else if(isset($param_only_org_unit) && $param_only_org_unit && $param_selected_org_unit != 'none')
 			{
 				//TODO: check permissions
 				if($use_fellesdata)
@@ -175,13 +183,13 @@
 					//Update org units on header state
 					$this->header_state['org_unit'] = $org_units;
 					$this->header_state['number_of_org_units'] = count($org_units);
-					$this->header_state['selected_org_unit'] = 'all';
+					$this->header_state['selected_org_unit'] = 'none';
 
 					//Update locations
 					//FIXME Sigurd 15. okt 2013: deselect 'all' on initial view
 					//$property_locations = frontend_borental::get_property_locations($org_units, $this->header_state['org_unit']);
 				}
-				else
+				else if ( $param_selected_org_unit != 'none')
 				{
 					//If no organisational database is in use: get rented properties based on username
 					$usernames[] = $GLOBALS['phpgw_info']['user']['account_lid'];
@@ -215,7 +223,7 @@
 
 
 			/* If the user has selected a location or as a side-effect from selecting organisational unit */
-			if(isset($param_selected_location))
+			if($param_selected_location)
 			{
 				$locs = $this->header_state['locations'];
 				$exist = false;
@@ -229,11 +237,14 @@
 
 				if($exist)
 				{
-					$tppl = phpgwapi_cache::session_get('frontend','total_price_per_location');
-					$tapl = phpgwapi_cache::session_get('frontend','rented_area_per_location');
 					$this->header_state['selected_location'] = $param_selected_location;
-					$this->header_state['selected_total_price'] = number_format($tppl[$param_selected_location],2,","," ")." ".lang('currency');
-					$this->header_state['selected_total_area'] = number_format($tapl[$param_selected_location],2,","," ")." ".lang('square_meters');
+
+					$parties = frontend_borental::get_all_parties(array(), $this->header_state['selected_org_unit']);
+					$totals = frontend_borental::get_total_cost_and_area($parties, $param_selected_location);
+
+					$this->header_state['selected_total_price'] = number_format($totals['sum_total_price'],2,","," ")." ".lang('currency');
+					$this->header_state['selected_total_area'] = number_format($totals['sum_total_area'],2,","," ")." ".lang('square_meters');
+
 					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 				}
 				else
