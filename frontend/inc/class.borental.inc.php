@@ -263,18 +263,7 @@
         public static function get_property_locations_lean($array,$top_org_units)
         {
 
-        	$property_locations = array();
-        	$property_locations_active = array();
-
-        	$total_price_all_buildings = 0;
-        	$total_rented_area_all_builings = 0;
-
-        	$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-			$location_id_internal = array_search('contract_type_internleie', $types);
-        	$location_id_in = array_search('contract_type_innleie', $types);
-        	$location_id_ex = array_search('contract_type_eksternleie', $types);
-
-        	foreach($array as $row)
+	       	foreach($array as $row)
         	{
         		/*
              * 1. hent alle kontraktsparter som har org unit id (foreløpig bruker vi result_unit_number i rentalparty)
@@ -288,9 +277,7 @@
 	        		{
 	        			continue;
 	        		}
-	        //		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $row['ORG_UNIT_ID']));
-			//      $parties = array_keys($parties);
-	        		$parties = self::get_all_parties($top_org_units);
+	        		$parties = self::get_all_parties($top_org_units, $row['ORG_UNIT_ID']);
         		}
         		else
         		{
@@ -305,7 +292,6 @@
 
 	        	//For all parties connected to the internal organization unit
 				$locations = $sorental->get_location($parties);
-
         	}
 
 			return $locations;
@@ -315,7 +301,7 @@
 		/**
 		* Get the org_units by hierarchical inheritance
 		*/
-		function get_all_parties($top_org_units)
+		function get_all_parties($top_org_units = array(),$selected_org_unit = 0)
 		{
 			static $parties =array(); // cache result
 			
@@ -331,7 +317,7 @@
 */
 
 			$org_units = array();
-			$selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
+
 			if($selected_org_unit == 'all')
 			{
 				foreach($top_org_units as $entry)
@@ -339,7 +325,7 @@
 					$org_units[] = $entry['ORG_UNIT_ID'];
 				}
 			}
-			else
+			else if ($selected_org_unit != 'none')
 			{
 				$org_units[] = $selected_org_unit;
 			}
@@ -361,10 +347,10 @@
 		}
 
 
-		public static function get_total_cost_and_area($org_units = array())
+		public static function get_total_cost_and_area($org_units = array(),$selected_location ='')
 		{
     		$sorental	= CreateObject('frontend.sorental');
-    		return $sorental->get_total_cost_and_area($org_units);
+    		return $sorental->get_total_cost_and_area($org_units, $selected_location);
 		}
 
     }

@@ -1,6 +1,6 @@
 <?php
 	/**
-	* Common so-functions, database related helpers 
+	* Frontend : a simplified tool for end users.
 	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License v2 or later
@@ -182,7 +182,7 @@
 			return $values;
 		}
 
-		public function get_total_cost_and_area($org_units = array())
+		public function get_total_cost_and_area($org_units = array(), $selected_location = '')
 		{
 			if(!$org_units)
 			{
@@ -194,11 +194,23 @@
 			//active contract
 			$filtermethod .= " AND ({$ts} >= rental_contract.date_start AND (rental_contract.date_end IS NULL OR {$ts} <= rental_contract.date_end))";
 			
+			
+			$join_method = '';
+			if($selected_location)
+			{
+				$filtermethod .= " AND location_code {$this->_db->like} '{$selected_location}%'";
+				$join_method =  " {$this->_db->join} rental_contract_composite ON (rental_contract.id = rental_contract_composite.contract_id)"
+					. " {$this->_db->join} rental_composite ON (rental_contract_composite.composite_id = rental_composite.id)"
+					. " {$this->_db->join} rental_unit ON (rental_composite.id = rental_unit.composite_id) ";
+
+			}
+			
 			$sql = "SELECT sum(total_price::numeric) AS sum_total_price FROM"
 			. " rental_contract {$this->_db->join} rental_contract_party ON (rental_contract.id = rental_contract_party.contract_id)"
 			. " {$this->_db->join} rental_party ON (rental_party.id = rental_contract_party.party_id)"
 			. " {$this->_db->join} rental_contract_price_item ON (rental_contract.id  = rental_contract_price_item.contract_id)"
-			. " {$filtermethod} AND NOT is_one_time";
+			. " {$join_method}{$filtermethod} AND NOT is_one_time";
+
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -206,10 +218,11 @@
 			$this->_db->next_record();
 			$values['sum_total_price'] = $this->_db->f('sum_total_price');
 
+
 			$sql = "SELECT sum(rental_contract.rented_area::numeric) AS sum_total_area FROM"
 			. " rental_contract {$this->_db->join} rental_contract_party ON (rental_contract.id = rental_contract_party.contract_id)"
 			. " {$this->_db->join} rental_party ON (rental_party.id = rental_contract_party.party_id)"
-			. " {$filtermethod}";
+			. " {$join_method}{$filtermethod}";
 
 
 			$this->_db->query($sql,__LINE__,__FILE__);
