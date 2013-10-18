@@ -119,6 +119,7 @@
 
 				//Update locations according to organisational unit specification
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids, $this->header_state['org_unit']);
+
 				$property_locations_update = true;
 
 			}

@@ -122,59 +122,37 @@
 			. " {$this->_db->join} rental_unit ON (rental_composite.id = rental_unit.composite_id)"
 			. " {$filtermethod}";
 
-
+//_debug_array($sql);
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$values = array();
+			$level = 0;
+			$map_level = array();
 			while ($this->_db->next_record())
 			{
-				$values[] = array
-				(
-					'location_code'		=> $this->_db->f('location_code', true),
-				);
+				$location_code	= $this->_db->f('location_code', true);
+				
+				$_level = substr_count($location_code, '-') + 1;
+				
+				$level = $_level > $level ? $_level : $level;
+				
+				$map_level[$level][] = $location_code;
 			}
 			
-			foreach ($values as &$entry)
+			foreach ($map_level as $level => $locations)
 			{
-
-				$location_code = $entry['location_code'];
-				// We get the data from the property module
-				$data = execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
-
-				$stop_search = false;
-				for($i = 1; !$stop_search; $i++)
+			
+				$sql = "SELECT loc{$level}_name as name, location_code FROM fm_location{$level} WHERE location_code IN ('" . implode("','", $locations) . "')";
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while ($this->_db->next_record())
 				{
-					$loc_name = "loc{$i}_name";
-					if(array_key_exists($loc_name, $data))
-					{
-						$entry[$loc_name] =  $data[$loc_name];
-					}
-					else
-					{
-						$stop_search = true;
-					}
+					$values[] = array
+					(
+						'location_code'	=> $this->_db->f('location_code', true),
+						'name'			=> $this->_db->f('name', true),
+					);
 				}
-
-				$entry['address'] = $data['street_name'].' '.$data['street_number'];
-				foreach($data['attributes'] as $attributes)
-				{
-					switch($attributes['column_name'])
-					{
-						case 'area_gross':
-							$entry['area_gros'] = $attributes['value'];
-							break;
-						case 'area_net':
-							$entry['area_net'] = $attributes['value'];
-							break;
-						case 'bruttoareal':
-							$entry['area_gros'] = $attributes['value'];
-							break;
-						case 'nettoareal':
-							$entry['area_net'] = $attributes['value'];
-							break;
-					}
-				}
-			} 
+			}
 
 			return $values;
 		}
@@ -191,7 +169,7 @@
 			}
 			
 			$sql = 'SELECT id FROM rental_party WHERE org_enhet_id IN (' . implode(',', $org_units) . ')'; 
-_debug_array($sql);
+//_debug_array($sql);
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$values = array();
