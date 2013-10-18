@@ -118,6 +118,7 @@
 									<em class="select_header"><xsl:value-of select="php:function('lang', 'select_unit')"/></em>
 								</label>
 								<br/>
+								<xsl:variable name="lang_no_name_unit"><xsl:value-of select="php:function('lang', 'no_name_unit')"/></xsl:variable>								
 								<select name="location" size="7" onchange="this.form.submit();" style="margin:5px;">
 									<xsl:for-each select="locations">
 										<xsl:sort select="loc1_name"/>
@@ -125,14 +126,11 @@
 											<xsl:when test="location_code = //header/selected_location">
 												<option value="{location_code}" selected="selected">
 													<xsl:choose>
-														<xsl:when test="loc2_name != ''">
-															<xsl:value-of select="loc2_name"/>
-														</xsl:when>
-														<xsl:when test="loc1_name != ''">
-															<xsl:value-of select="loc1_name"/>
+														<xsl:when test="name != ''">
+															<xsl:value-of select="name"/>
 														</xsl:when>
 														<xsl:otherwise>
-															<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_code"/>)
+															<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
 														</xsl:otherwise>
 													</xsl:choose>
 												</option>
@@ -140,14 +138,11 @@
 											<xsl:otherwise>
 												<option value="{location_code}">
 												<xsl:choose>
-													<xsl:when test="loc2_name != ''">
-														<xsl:value-of select="loc2_name"/>
-													</xsl:when>
-													<xsl:when test="loc1_name != ''">
-														<xsl:value-of select="loc1_name"/>
+													<xsl:when test="name != ''">
+														<xsl:value-of select="name"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_code"/>)
+															<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
 													</xsl:otherwise>
 												</xsl:choose>
 												</option>
