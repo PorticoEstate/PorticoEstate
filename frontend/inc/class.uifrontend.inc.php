@@ -6,7 +6,7 @@
 	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @package Frontend
-	 * @version $Id: class.uifrontend.inc.php 4859 2010-02-18 23:09:16Z sigurd $
+	 * @version $Id$
 	 */
 
 	/*
