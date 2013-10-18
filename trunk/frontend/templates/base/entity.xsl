@@ -1,4 +1,4 @@
-<!-- $Id: helpdesk.xsl 6663 2010-12-09 10:45:28Z sigurdne $ -->
+<!-- $Id$ -->
 <xsl:template match="entity" xmlns:php="http://php.net/xsl">
     <xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
     <div class="yui-navset" id="entity_tabview">
