@@ -803,7 +803,8 @@
 				$this->flash_form_errors($errors);
 				self::add_javascript('booking', 'booking', 'booking.js');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
+#				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
+                $booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $booking['building_id'], 'date' => $booking['from_']));
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
 	
 				if ($step < 2) 

@@ -351,7 +351,7 @@ Layout	bookingfrontend	no	Frontend design
 Delete information	bookingfrontend	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
 Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Booking Delete information	bookingfrontend	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
-Booking  Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
+Booking Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Cancel information	bookingfrontend	no	Hvis du kun skal avbestille tildeling på valgt dato, velg Avbestill-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org. 
 Cancel information2	bookingfrontend	no	Skal du Avbestille flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Booking Cancel information	bookingfrontend	no	Hvis du skal avbestille booking på valgt dato, velg Avbestill-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
