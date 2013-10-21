@@ -491,14 +491,20 @@ function array_minus($a, $b)
 
 						$e['conflicts'][] = $b;
 
-                        if ($b['from_'] < $e['from_'] && $b['to_'] < $e['to_'])
+                        $bf = $b['from_'];
+                        $bt = $b['to_'];            
+
+                        if ($bf < $e['from_'])
                         {
                             $b['to_'] = $e['from_'];                       
+                            $b['from_'] = $bf;                       
                             $new_bookings[] = $b;        
                         }
-                        if ($e['to_'] < $b['to_'])
+
+                        if ($e['to_'] < $bt)
                         {
                             $b['from_'] = $e['to_'];                       
+                            $b['to_'] = $bt;                       
                             $new_bookings[] = $b;        
                         }
 
