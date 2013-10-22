@@ -67,6 +67,7 @@
 
 			$location_array = array();
 			$component_short_desc = array();
+			$component_short_desc[0][0] = '';
 
 			$so_check_list = CreateObject('controller.socheck_list');
 			$so_control = CreateObject('controller.socontrol');
@@ -195,7 +196,6 @@ HTML;
 			} 
 
 			$my_planned_controls = array();
-
 			// Generates an array with planned controls
 			foreach($my_controls as $container_arr)
 			{
@@ -268,8 +268,12 @@ HTML;
 			{
 				foreach($planned_controls_on_date as $my_planned_control)
 				{
+
 					$deadline_ts = $my_planned_control[0];
 					$my_control = $my_planned_control[1];
+					
+					$location_id = isset($my_control['location_id']) && $my_control['location_id'] ? $my_control['location_id'] : 0;
+					$component_id = isset($my_control['component_id']) && $my_control['component_id'] ? $my_control['component_id'] : 0;
 
 					$control_area_name = $this->get_control_area_name( $my_control["control_area_id"] );
 
@@ -279,11 +283,13 @@ HTML;
 					$check_list_id = $my_planned_control[2];
 					$location_code = $my_planned_control[4];
 
-					if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+					$location_name = $this->get_location_name($location_code);
+					
+					if($component_id)
 					{
-						$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+						$short_descr = $this->get_short_description($location_id, $component_id);
+						$location_name .= "::{$short_descr}";
 					}
-					$location_name = $location_array[$location_code]["loc1_name"];
 
 					$link = "";
 				//	$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
@@ -388,16 +394,18 @@ HTML;
 			//Add assigned
 			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type, true);
 
+/*??
 			$_assigned_list = array();
 			foreach ($my_check_lists as $_key => $my_check_list)
 			{
 				$_assigned_list[$my_check_list['location_code']][$_key] = $my_check_list;
 			}
-
+*/
 			foreach ($my_check_lists as $_key => $my_check_list)
 			{
 				$my_undone_controls[$my_check_list['deadline']][] = array("edit", $my_check_list['deadline'], $my_check_list, $_key, $my_check_list['location_code'] );
 			}
+//_debug_array($my_undone_controls);
 	
 			ksort($my_undone_controls);
 
@@ -440,11 +448,8 @@ HTML;
 						if($check_list_type == "location")
 						{
 							$location_code = $my_undone_control[4];
-							if(!isset($location_array[$location_code]) || !$location_array[$location_code])
-							{
-								$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-							}
-							$location_name = $location_array[$location_code]["loc1_name"];
+
+							$location_name = $this->get_location_name($location_code);
 
 							if(count( $controls_on_date) > 1 )
 							{
@@ -467,42 +472,41 @@ HTML;
 							$location_id = $my_undone_control[4];
 							$component_id = $my_undone_control[5];
 
-							if(!isset($component_short_desc[$location_id][$component_id]))
-							{
-								$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
-							}
-
-							if($component_short_desc[$location_id][$component_id])
-							{
-								$short_desc_arr = $component_short_desc[$location_id][$component_id];
-							}
-
+							$short_descr = $this->get_short_description($location_id, $component_id);
 							if(count( $controls_on_date) > 1 )
 							{
 								$link = "";
 								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 
-								$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+								$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_descr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 							}
 							else
 							{
 								$link = "";
 								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 
-								$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a>";
+								$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_descr}</div><div class='control-area'>{$control_area_name}</div></a>";
 							}
 						}
 					}
 					else if($check_list_status == "edit")
 					{
+
+						$location_id = isset($my_control['location_id']) && $my_control['location_id'] ? $my_control['location_id'] : 0;
+						$component_id = isset($my_control['component_id']) && $my_control['component_id'] ? $my_control['component_id'] : 0;
+
+
 						$check_list_id = $my_undone_control[3];
 						$location_code = $my_undone_control[4];
 
-						if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+						$location_name = $this->get_location_name($location_code);
+
+						if($component_id)
 						{
-							$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+							$short_descr = $this->get_short_description($location_id, $component_id);
+
+							$location_name .= "::{$short_descr}";
 						}
-						$location_name = $location_array[$location_code]["loc1_name"];
 
 						if(count( $controls_on_date) > 1 )
 						{
@@ -668,11 +672,7 @@ HTML;
 						{
 							$location_code = $my_assigned_control[4];
 
-							if(!isset($location_array[$location_code]) || !$location_array[$location_code])
-							{
-								$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-							}
-							$location_name = $location_array[$location_code]["loc1_name"];
+							$location_name = $this->get_location_name($location_code);
 
 							$link = "";
 							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
@@ -683,21 +683,13 @@ HTML;
 						{
 							$location_id = $my_assigned_control[4];
 							$component_id = $my_assigned_control[5];
-
-							if(!isset($component_short_desc[$location_id][$component_id]))
-							{
-								$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
-							}
-
-							if($component_short_desc[$location_id][$component_id])
-							{
-								$short_desc_arr = $component_short_desc[$location_id][$component_id];
-							}
+							
+							$short_descr = $this->get_short_description($location_id, $component_id);
 
 							$link = "";
 							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 
-							$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+							$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_descr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 						}
 					}
 					else if($check_list_status == "edit")
@@ -705,11 +697,7 @@ HTML;
 						$check_list_id = $my_assigned_control[3];
 						$location_code = $my_assigned_control[4];
 
-						if(!isset($location_array[$location_code]) || !$location_array[$location_code])
-						{
-							$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-						}
-						$location_name = $location_array[$location_code]["loc1_name"];
+						$location_name = $this->get_location_name($location_code);
 
 						$link = "";
 						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
@@ -825,5 +813,41 @@ HTML;
 			}
 
 			return $control_area_name;
+		}
+		
+		function get_location_name($location_code)
+		{
+			static $location_array = array();
+			if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+			{
+				$_location_info = execMethod('property.bolocation.read_single', array
+					(
+						'location_code' => $location_code,
+						'extra'			=> array('noattrib' => true)
+					)
+				);
+
+				$_loc_name_arr = array();
+				for ($i=1; $i < count(explode('-', $location_code)) +1;$i++)
+				{
+					$_loc_name_arr[] = $_location_info["loc{$i}_name"];
+				}
+
+				$location_array[$location_code] = implode(' | ',$_loc_name_arr);
+			}
+
+			return $location_array[$location_code];
+		}
+		
+		function get_short_description($location_id, $component_id)
+		{
+			static $component_short_desc = array();
+
+			if(!isset($component_short_desc[$location_id][$component_id]))
+			{
+				$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+			}
+
+			return	$component_short_desc[$location_id][$component_id];
 		}
 	}

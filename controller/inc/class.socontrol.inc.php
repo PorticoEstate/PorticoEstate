@@ -206,15 +206,14 @@
 
 		
 			$sql  = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
-				. " procedure_id,requirement_id,costresponsibility_id, controller_control.description, start_date, end_date, deadline,planned_date, completed_date,"
-				. " control_area_id, repeat_type,repeat_interval, title,"
-				. " bim_item.guid,bim_item.type as component_type, bim_item.id as component_id, bim_item.address,"
-				. " bim_item.loc1"
+				. " controller_control.description, start_date, end_date, deadline,planned_date, completed_date,"
+				. " control_area_id,controller_check_list.location_id,title,controller_check_list.component_id"
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
-				. " {$this->join} controller_control_component_list ON controller_control_component_list.control_id = controller_control.id"
-				. " {$this->join} fm_bim_item bim_item ON controller_control_component_list.component_id = bim_item.id"
-				. " {$this->join} fm_bim_type bim_type ON controller_control_component_list.location_id = bim_type.location_id"
+				. " {$this->join} controller_control_component_list "
+					. " ON (controller_control_component_list.control_id = controller_check_list.control_id"
+					. " AND controller_control_component_list.location_id = controller_check_list.location_id"
+					. " AND controller_control_component_list.component_id = controller_check_list.component_id)"
 				. " WHERE assigned_to = {$user_id}";
 
 			if( $repeat_type )
@@ -227,10 +226,9 @@
 				$sql .= " AND controller_check_list.completed_date IS NULL ";			
 			}
 
-			$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
-			$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
-			$sql .= " ORDER BY bim_item.id ";
-			 
+			$sql .= " AND ((deadline <= $to_date AND controller_control.end_date IS NULL) ";
+			$sql .= " OR (deadline <= $to_date AND deadline > $from_date ))";
+
 			$this->db->query($sql);
 			
 			$check_list_array = array();
@@ -239,6 +237,8 @@
 			{
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('check_list_id'), 'int'));
 				$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
+				$check_list->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
 				$check_list->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$check_list->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$check_list->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
