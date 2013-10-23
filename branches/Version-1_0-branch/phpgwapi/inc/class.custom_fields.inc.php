@@ -1127,6 +1127,7 @@
 					'column_name'			=> $this->_db->f('column_name'),
 					'name'					=> $this->_db->f('column_name'),
 					'size'					=> $this->_db->f('size'),
+					'precision'				=> $this->_db->f('precision_'),
 					'statustext'			=> $this->_db->f('statustext', true),
 					'input_text'			=> $this->_db->f('input_text', true),
 					'type_name'				=> $this->_db->f('type'),

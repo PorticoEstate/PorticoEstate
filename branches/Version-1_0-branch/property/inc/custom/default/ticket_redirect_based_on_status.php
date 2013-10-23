@@ -4,8 +4,6 @@
 	* This class will enable status conditional redirect on tickets.
 	* A config section will be defined where conditions on status and target can be configured.
 	*/
-	$ticket_redirect = new ticket_redirect_based_on_status();
-	$ticket_redirect->check_status($data);
 
 	class ticket_redirect_based_on_status extends property_botts
 	{
@@ -87,3 +85,6 @@
 			}
 		}
 	}
+
+	$ticket_redirect = new ticket_redirect_based_on_status();
+	$ticket_redirect->check_status($data);

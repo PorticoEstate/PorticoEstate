@@ -1,4 +1,27 @@
 <?php
+	/**
+	 * Frontend : a simplified tool for end users.
+	 *
+	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @package Frontend
+	 * @version $Id$
+	 */
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 2 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	*/
 
 phpgw::import_class('rental.socommon');
 phpgw::import_class('rental.bofellesdata');
@@ -16,7 +39,6 @@ class rental_soparty extends rental_socommon
 	const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
 
 	protected static $so;
-	protected $external_db = null;
 
 	/**
 	 * Get a static reference to the storage object associated with this model object
@@ -30,54 +52,6 @@ class rental_soparty extends rental_socommon
 		}
 		return self::$so;
 	}
-
-	/* our simple php ping function */
-	function ping($host)
-	{
-				exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
-				return $rval === 0;
-	}
-
-	public function get_external_db()
-		{
-			if($this->external_db && is_object($this->external_db))
-			{
-				return $this->external_db;
-			}
-
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
-
-			if(! $config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
-			{
-				$message ="Database server {$config->config_data['external_db_host']} is not accessible";
-				phpgwapi_cache::message_set($message, 'error');
-				return false;
-			}
-
-			$db = createObject('phpgwapi.db', null, null, true);
-
-			$db->debug = !!$config->config_data['external_db_debug'];
-			$db->Host = $config->config_data['external_db_host'];
-			$db->Port = $config->config_data['external_db_port'];
-			$db->Type = $config->config_data['external_db_type'];
-			$db->Database = $config->config_data['external_db_name'];
-			$db->User = $config->config_data['external_db_user'];
-			$db->Password = $config->config_data['external_db_password'];
-
-			try
-			{
-				$db->connect();
-				$connected = true;
-			}
-			catch(Exception $e)
-			{
-				$status = lang('unable_to_connect_to_database');
-			}
-
-			$this->external_db = $db;
-			return $db;
-		}
 
 	/**
 	 * Generate SQL query
@@ -191,7 +165,8 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
-		if(isset($filters['contract_id'])){
+		if(isset($filters['contract_id']))
+		{
 			$contract_id = $this->marshal($filters['contract_id'],'int');
 			if(isset($contract_id) && $contract_id > 0)
 			{
@@ -199,7 +174,8 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
-		if(isset($filters['not_contract_id'])){
+		if(isset($filters['not_contract_id']))
+		{
 			$contract_id = $this->marshal($filters['not_contract_id'],'int');
 			if(isset($contract_id) && $contract_id > 0)
 			{
@@ -207,18 +183,22 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
-		if(isset($filters['org_unit_id'])){
+		if(isset($filters['org_unit_id']))
+		{
+			$bofelles = rental_bofellesdata::get_instance();
 			$org_unit_id = $this->marshal($filters['org_unit_id'],'string');
 			if(isset($org_unit_id))
 			{
 				//check if org_unit is on top level
-				if($this->org_unit_is_top_level($org_unit_id)){
+				if($bofelles->org_unit_is_top_level($org_unit_id))
+				{
 					//get connected units on level 4
-					$org_unit_ids_tmp = $this->get_org_unit_ids_from_top($org_unit_id);
+					$org_unit_ids_tmp = $bofelles->get_org_unit_ids_from_top($org_unit_id);
 					$org_unit_ids = implode(',',$org_unit_ids_tmp);
 					$filter_clauses[] = "party.org_enhet_id IN ({$org_unit_ids})";
 				}
-				else{
+				else
+				{
 					$filter_clauses[] = "party.org_enhet_id = {$org_unit_id}";
 				}
 			}
@@ -316,55 +296,11 @@ class rental_soparty extends rental_socommon
 		{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 
 		$joins = $join_contracts;
+
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 
-	function org_unit_is_top_level($org_unit_id)
-	{
-		$q = "select * from V_ORG_ENHET where org_enhet_id=$org_unit_id and org_nivaa < 4";
 
-		if(!$external_db = $this->get_external_db())
-		{
-			return;
-		}
-		$result = $this->external_db->query($q);
-
-		if($this->external_db->next_record()) {
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	function get_org_unit_ids_from_top($org_unit_id){
-		$unit_ids = array();
-		$q="SELECT * FROM V_ORG_KNYTNING WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
-
-		if(!$external_db = $this->get_external_db())
-		{
-			return;
-		}
-		if($external_db->Type == "postgres")
-		{
-			$q = strtolower($q);
-		}
-		$result = $this->external_db->query($q);
-
-		while($this->external_db->next_record()){
-			if($external_db->Type == "postgres")
-			{
-				$unit_id = $this->external_db->f('org_enhet_id');
-			}
-			else
-			{
-				$unit_id = $this->external_db->f('ORG_ENHET_ID');
-			}
-			$unit_ids[] = $unit_id;
-		}
-		return $unit_ids;
-	}
 
 	/**
 	 * Function for adding a new party to the database. Updates the party object.

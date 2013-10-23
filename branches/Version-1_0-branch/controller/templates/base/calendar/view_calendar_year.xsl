@@ -289,9 +289,7 @@ function chooseLocation( label, value ){
 													<xsl:value-of select="$session_url"/>
 												</xsl:attribute>
 
-												<xsl:variable name="month_str">short_month
-													<xsl:number/> capitalized
-												</xsl:variable>
+												<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
 												<xsl:value-of select="php:function('lang', $month_str)" />
 											</a>
 										</th>

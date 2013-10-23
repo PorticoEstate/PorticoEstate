@@ -1,10 +1,11 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="messages_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uimessages.index')" /></xsl:variable>
 	<div id="wrapper">
     	<div id="header">
     		<div id="login-bar">
     			<ul class="user_menu">
     				<li><em><img src="frontend/templates/base/images/16x16/user_red.png"  class="list_image" /></em><xsl:value-of select="name_of_user"/> | <a href="http://portico/pe/preferences/changepassword.php">Bytt passord</a></li>
-    				<li><a href="index.php?menuaction=frontend.uimessages.index" class="list_image"><em><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/></em><xsl:value-of select="new_messages"/></a></li>
+	  				<li><a href="{$messages_url}" class="list_image"><em><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/></em><xsl:value-of select="new_messages"/></a></li>
     				<li>
     					<a href="logout.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_out.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'logout')"/></a> 
     					|
@@ -41,32 +42,29 @@
 		    					</a>
 		    				</li>
 		    				<li>
-		    					<form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
+		    					<form action="{form_action}" method="post">
 			    					<select size="3" onchange="this.form.submit()" name="org_unit_id">
-			    						<xsl:choose>
-			    							<xsl:when test="selected_org_unit = 'all'">
-			    								<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
-			    								<xsl:for-each select="org_unit">
-			    									<xsl:sort select="ORG_NAME"/>
-					    							<option value="{ORG_UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
-					    						</xsl:for-each>
-			    							</xsl:when>
-			    							<xsl:otherwise>
-			    								<option value="all"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
-			    								<xsl:for-each select="org_unit">
-			    									<xsl:sort select="ORG_NAME"/>
-			    									<xsl:choose>
-														<xsl:when test="ORG_UNIT_ID = //header/selected_org_unit">
-															<option value="{ORG_UNIT_ID}" selected="selected"><xsl:value-of select="ORG_NAME"/></option>
-														</xsl:when>
-														<xsl:otherwise>
-															<option value="{ORG_UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
-														</xsl:otherwise>
-													</xsl:choose>
-					    						</xsl:for-each>
-			    							</xsl:otherwise>
-				    						
-			    						</xsl:choose> 
+			    						<option value="none">
+											<xsl:if test="'none' = //header/selected_org_unit">
+												<xsl:attribute name="selected" value="selected"/>
+											</xsl:if>
+				    						<xsl:value-of select="php:function('lang', 'none')"/>
+			    						</option>
+			    						<option value="all">
+											<xsl:if test="'all' = //header/selected_org_unit">
+												<xsl:attribute name="selected" value="selected"/>
+											</xsl:if>
+			    							<xsl:value-of select="php:function('lang', 'all_organisational_units')"/>
+			    						</option>
+			    						<xsl:for-each select="org_unit">
+			    							<xsl:sort select="ORG_NAME"/>
+											<option value="{ORG_UNIT_ID}" >
+												<xsl:if test="ORG_UNIT_ID = //header/selected_org_unit">
+													<xsl:attribute name="selected" value="selected"/>
+												</xsl:if>
+												<xsl:value-of disable-output-escaping="yes" select="ORG_NAME"/>
+											</option>
+					    				</xsl:for-each>
 			    					</select>
 		    					</form>
 		    				</li>
@@ -115,6 +113,7 @@
 									<em class="select_header"><xsl:value-of select="php:function('lang', 'select_unit')"/></em>
 								</label>
 								<br/>
+								<xsl:variable name="lang_no_name_unit"><xsl:value-of select="php:function('lang', 'no_name_unit')"/></xsl:variable>								
 								<select name="location" size="7" onchange="this.form.submit();" style="margin:5px;">
 									<xsl:for-each select="locations">
 										<xsl:sort select="loc1_name"/>
@@ -122,14 +121,11 @@
 											<xsl:when test="location_code = //header/selected_location">
 												<option value="{location_code}" selected="selected">
 													<xsl:choose>
-														<xsl:when test="loc2_name != ''">
-															<xsl:value-of select="loc2_name"/>
-														</xsl:when>
-														<xsl:when test="loc1_name != ''">
-															<xsl:value-of select="loc1_name"/>
+														<xsl:when test="name != ''">
+															<xsl:value-of select="name"/>
 														</xsl:when>
 														<xsl:otherwise>
-															<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_code"/>)
+															<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
 														</xsl:otherwise>
 													</xsl:choose>
 												</option>
@@ -137,14 +133,11 @@
 											<xsl:otherwise>
 												<option value="{location_code}">
 												<xsl:choose>
-													<xsl:when test="loc2_name != ''">
-														<xsl:value-of select="loc2_name"/>
-													</xsl:when>
-													<xsl:when test="loc1_name != ''">
-														<xsl:value-of select="loc1_name"/>
+													<xsl:when test="name != ''">
+														<xsl:value-of select="name"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_code"/>)
+															<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
 													</xsl:otherwise>
 												</xsl:choose>
 												</option>
@@ -156,7 +149,6 @@
 						</div>
 					</td>
 					<td>
-						
 						<div id="area_and_price" style="margin-top: 2em;">
 						<ul>
 							<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; "><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'chosen_unit')"/>:</li>
@@ -168,7 +160,13 @@
 					<td>
 						<br/>
 						<div id="unit_image">
-							<img src="index.php?menuaction=frontend.uifrontend.objectimg&amp;loc_code={//header/selected_location}" alt="" />
+							<img alt="">
+								<xsl:attribute name="src">
+									<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uifrontend.objectimg')" />
+									<xsl:text>&amp;loc_code=</xsl:text>
+									<xsl:value-of select="//header/selected_location"/>
+								</xsl:attribute>
+							</img>
 						</div>
 					</td>
 				</tr>

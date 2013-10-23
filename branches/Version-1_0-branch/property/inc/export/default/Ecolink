@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage export
- 	* @version $Id: Ecolink,v 1.10 2007/01/26 14:58:55 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**
