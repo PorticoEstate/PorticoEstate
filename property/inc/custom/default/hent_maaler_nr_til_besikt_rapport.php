@@ -5,10 +5,6 @@
 	* 
 	*/
 
-
-	$data_sync = new entity_data_sync();
-	$data_sync->update_data($values, $values_attribute, $action);
-
 	class entity_data_sync extends property_boentity
 	{
 		protected $db;
@@ -180,4 +176,7 @@
 			$historylog->add('SO', $value_set['id'], $beskrivelse, false, $attrib_id = 1, time());
 		}
 	}
+
+	$data_sync = new entity_data_sync();
+	$data_sync->update_data($values, $values_attribute, $action);
 

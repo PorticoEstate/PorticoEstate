@@ -3,8 +3,6 @@
 	/*
 	* This class will update classification records baed on input.
 	*/
-	$systemoversikt = new ikt_systemoversikt();
-	$systemoversikt->set_classification($values,$values_attribute,$entity_id,$cat_id,$receipt);
 
 	class ikt_systemoversikt extends property_boentity
 	{
@@ -121,3 +119,7 @@
 			$this->so->edit($_values,$values_attribute,$entity_id,$cat_id);
 		}
 	}
+
+	$systemoversikt = new ikt_systemoversikt();
+	$systemoversikt->set_classification($values,$values_attribute,$entity_id,$cat_id,$receipt);
+

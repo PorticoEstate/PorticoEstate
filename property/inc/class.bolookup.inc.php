@@ -273,7 +273,9 @@
 			$sogeneric 	= CreateObject('property.sogeneric');
 
 			$location_info = $sogeneric->get_location_info('vendor');
-
+			
+			$this->order = $this->order ? $this->order : 'org_name';
+			$this->sort = $this->sort ? $this->sort : 'ASC';
 
 			if (! $filter )
 			{

@@ -261,7 +261,7 @@
 		/**
 		* Discard the current query result
 		*/
-		public function free()
+		final public function free()
 		{
 			//unset($this->resultSet);
 			$this->resultSet = array();
@@ -364,7 +364,7 @@
 		 * @param array $value_set array of values to insert into the database
 		 * @return string the prepared sql, empty string for invalid input
 		 */
-		public function validate_insert($values)
+		final public function validate_insert($values)
 		{
 			if ( !is_array($values) || !count($values) )
 			{
@@ -399,7 +399,7 @@
 		 * @param array $value_set associative array of values to update the database with
 		 * @return string the prepared sql, empty string for invalid input
 		 */
-		public function validate_update($value_set)
+		final public function validate_update($value_set)
 		{
 			if ( !is_array($value_set) || !count($value_set) )
 			{
@@ -567,7 +567,7 @@
 		* @internal the string is compatiable with PHP's date()
 		* @return string the date format string
 		*/
-		public static function date_format()
+		final public static function date_format()
 		{
 			static $date_format = null;
 			if ( is_null($date_format) )
@@ -593,7 +593,7 @@
 		* @internal the string is compatiable with PHP's date()
 		* @return string the date format string
 		*/
-		public static function datetime_format()
+		final public static function datetime_format()
 		{
 			static $datetime_format = null;
 			if ( is_null($datetime_format) )
@@ -618,7 +618,7 @@
 		*
 		* @return string the formatted string
 		*/
-		public static function money_format($amount)
+		final public static function money_format($amount)
 		{
 			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
 			{
@@ -659,7 +659,7 @@
 		* @return int the next id
 		*/
 
-		public function next_id($table='',$key='')
+		final public function next_id($table='',$key='')
 		{
 			$where = '';
 			$condition = array();
@@ -685,7 +685,7 @@
 			return $next_id;
 		}
 
-		public function get_transaction()
+		final public function get_transaction()
 		{
 			return $this->Transaction;
 		}

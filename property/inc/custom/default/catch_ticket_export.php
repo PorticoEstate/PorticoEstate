@@ -5,9 +5,6 @@
 		// out: 'deliver'
 		// in: 'pickup'
 
-	$export = new catch_ticket_export();
-	$export->export_ticket($ticket);
-	
 	class catch_ticket_export extends property_botts
 	{
 		protected $db;
@@ -283,3 +280,7 @@
 			return $connection;
 		}
 	}
+
+	$export = new catch_ticket_export();
+	$export->export_ticket($ticket);
+

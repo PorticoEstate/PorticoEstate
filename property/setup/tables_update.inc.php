@@ -7718,3 +7718,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.671 to 0.9.17.672
+	* Add external voucher_id for integration with external accounting_system
+	*/
+
+	$test[] = '0.9.17.671';
+	function property_upgrade0_9_17_671()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag', 'external_voucher_id', array('type' => 'int','precision' => '8','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf',  'external_voucher_id', array('type' => 'int','precision' => '8','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.672';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

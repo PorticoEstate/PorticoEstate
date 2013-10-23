@@ -1,11 +1,36 @@
 <?php
-    class rental_bofellesdata {
+	/**
+	 * Frontend : a simplified tool for end users.
+	 *
+	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @package Frontend
+	 * @version $Id$
+	 */
 
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 2 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	*/
+
+	class rental_bofellesdata
+	{
     	// Instance variable
-	    protected static $bo;
-	    protected $connected = false;
-	    protected $status;
-	    protected $db = null;
+		protected static $bo;
+		protected $connected = false;
+		protected $status;
+		protected $db = null;
+		protected $unit_ids = array();
 
 		var $public_functions = array
 			(
@@ -19,10 +44,32 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$bo == null) {
+			if (self::$bo == null)
+			{
 				self::$bo = CreateObject('rental.bofellesdata');
 			}
 			return self::$bo;
+		}
+
+
+
+		/**
+		 * Magic get method
+		 *
+		 * @param string $varname the variable to fetch
+		 *
+		 * @return mixed the value of the variable sought - null if not found
+		 */
+		public function __get($varname)
+		{
+			switch ($varname)
+			{
+				case 'unit_ids':
+					return $this->unit_ids;
+					break;
+				default:
+					return null;
+			}
 		}
 
 
@@ -277,11 +324,11 @@
 				else
 				{
 					$result[] = array
-				(
+					(
 						'id' => (int)$db->f('ORG_ENHET_ID'),
 						'name' => $db->f('ORG_NAVN',true),
 						'unit_id' => $db->f('RESULTATENHET')
-				);
+					);
 				}
 			}
 
@@ -729,6 +776,99 @@
 			}
 			return 0;
 		}
+
+
+
+		function org_unit_is_top_level($org_unit_id)
+		{
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
+			$q = "SELECT * FROM V_ORG_ENHET WHERE org_enhet_id=$org_unit_id AND org_nivaa < 4";
+
+			$result = $this->db->query($q);
+
+			if($this->db->next_record())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		function get_org_unit_ids_from_top($org_unit_id)
+		{
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
+			if(!$org_unit_id)
+			{
+				return array();
+			}
+
+			$this->unit_ids[] = $org_unit_id;
+
+			$q = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER FROM V_ORG_KNYTNING"
+			. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
+
+			if($db->Type == "postgres")
+			{
+				$q = strtolower($q);
+			}
+			$result = $db->query($q);
+
+			$org_enhet_field = $db->Type == 'postgres' ? 'org_enhet_id' : 'ORG_ENHET_ID';
+			$check_subs = $db->Type == 'postgres' ? 'ant_enheter_under' : 'ANT_ENHETER_UNDER';
+		
+			while($db->next_record())
+			{
+				$child_org_unit_id = $db->f($org_enhet_field);
+				$this->unit_ids[] = $child_org_unit_id;
+
+				if($db->f($check_subs))
+				{
+					$this->get_org_unit_ids_children($child_org_unit_id);
+				}
+			}
+
+			return $this->unit_ids;
+		}
+
+
+		function get_org_unit_ids_children($org_unit_id)
+		{
+			$org_unit_id = (int)$org_unit_id;
+			$db = clone($this->db);
+		
+			$q = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER FROM V_ORG_KNYTNING"
+			. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
+
+			if($db->Type == "postgres")
+			{
+				$q = strtolower($q);
+			}
+			$db->query($q);
+
+			$org_enhet_field = $db->Type == 'postgres' ? 'org_enhet_id' : 'ORG_ENHET_ID';
+			$check_subs = $db->Type == 'postgres' ? 'ant_enheter_under' : 'ANT_ENHETER_UNDER';
+
+			while($db->next_record())
+			{
+				$child_org_unit_id = $db->f($org_enhet_field);
+				$this->unit_ids[] = $child_org_unit_id;
+				if($db->f($check_subs))
+				{
+					$this->get_org_unit_ids_children($child_org_unit_id);
+				}
+			}
+		}
+
 
 		protected function log($class, $function)
 		{
