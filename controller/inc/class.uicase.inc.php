@@ -122,7 +122,10 @@
 				$component_id = $check_list->get_component_id();
 				
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
-				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
@@ -433,7 +436,12 @@
 				$component_id = $check_list->get_component_id();
 						
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
-				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+		//		$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     					
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
@@ -616,7 +624,12 @@
 				$component_id = $check_list->get_component_id();
 						
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
-				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+//				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     					
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
@@ -784,7 +797,12 @@
 				$component_id = $check_list->get_component_id();
 				
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
-				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+//				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
@@ -886,7 +904,11 @@
 				$component_id = $check_list->get_component_id();
 				
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
-				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+
+//				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );

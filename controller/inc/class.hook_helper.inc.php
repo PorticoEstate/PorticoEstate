@@ -99,6 +99,7 @@
 			$styling .= " .property_tickets .home_portal_title h2 { font-size: 20px; padding: 5px 10px;}";
 
 			$styling .= " h2.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
+			$styling .= " th.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
 
 			$styling .= " h4.expand_trigger { clear:both;overflow:hidden;font-size: 12px;color:#031647;background: #DEEAF8;padding:2px 4px;margin:0; }";
 			$styling .= " h4.expand_trigger img { float:left;vertical-align:middle;margin-right:3px; }";
@@ -162,13 +163,14 @@
 
 			$my_planned_controls_HTML = <<<HTML
 				<div class='home_portal'>
-					<h2>
-						<div class='date heading'>Planlagt dato</div>
-						<div class='date heading'>Fristdato</div>
-						<div class='control heading'>Tittel på kontroll</div>
-						<div class='title heading'>Lokasjonsnavn</div>
-						<div class='control-area heading'>Kontrollområde</div>
-					</h2>
+					<table>
+					<tr>
+						<th class='date heading'>Planlagt dato</th>
+						<th class='date heading'>Fristdato</th>
+						<th class='control heading'>Tittel på kontroll</th>
+						<th class='title heading'>Lokasjonsnavn</th>
+						<th class='control-area heading'>Kontrollområde</th>
+					</tr>
 HTML;
 			// Todays date
 			$from_date_ts =  mktime(0, 0, 0, date("n"), date("j"), date("Y") );
@@ -262,13 +264,15 @@ HTML;
 				}
 			}
 
-			$my_planned_controls_HTML .= "<ul style='overflow:hidden;'>";
+//			$my_planned_controls_HTML .= "<ul style='overflow:hidden;'>";
+
 
 			foreach($my_planned_controls as $planned_date_ts => $planned_controls_on_date)
 			{
 				foreach($planned_controls_on_date as $my_planned_control)
 				{
 
+					$my_planned_controls_HTML .= "<tr>";
 					$deadline_ts = $my_planned_control[0];
 					$my_control = $my_planned_control[1];
 					
@@ -294,16 +298,23 @@ HTML;
 					$link = "";
 				//	$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicase.add_case', 'check_list_id' => $check_list_id));
-					$my_planned_controls_HTML .= "<li><a href='$link'><div class='date'>{$planned_formatted}</div><div class='date'>{$deadline_formatted}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+//					$my_planned_controls_HTML .= "<li><a href='$link'><div class='date'>{$planned_formatted}</div><div class='date'>{$deadline_formatted}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+					$my_planned_controls_HTML .= "<td><a href='$link'><div class='date'>{$planned_formatted}</div></a></td>";
+					$my_planned_controls_HTML .= "<td><a href='$link'><div class='date'>{$deadline_formatted}</div></a></td>";
+					$my_planned_controls_HTML .= "<td><a href='$link'><div class='control'>{$my_control['title']}</div></a></td>";
+					$my_planned_controls_HTML .= "<td><a href='$link'><div class='title'>{$location_name}</div></a></td>";
+					$my_planned_controls_HTML .= "<td><a href='$link'><div class='control-area'>{$control_area_name}</div></a></td>";
+					$my_planned_controls_HTML .= "</tr>";
 				}
 			}
 
 			if(count( $planned_controls_on_date ) > 1 )
 			{
-				$my_planned_controls_HTML .= "</li></ul>";
+//				$my_planned_controls_HTML .= "</li></ul>";
+//				$my_planned_controls_HTML .= "</tr>";
 			}
 
-			$my_planned_controls_HTML .= "</div>"; // home_portal
+			$my_planned_controls_HTML .= "</table></div>"; // home_portal
 
 			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div>\n".'<!-- END checklist info -->'."\n";
 
