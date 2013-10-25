@@ -256,7 +256,7 @@
 				$subject = 'Du har faktura til behandling';
 
 
-				$from = "Ikke svar<nlsh.no>";
+				$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
 				foreach ($toarray as $lid => $dummy)
 				{
@@ -661,7 +661,7 @@
 
 					if($to && !$this->skip_email)
 					{
-						$from = "Ikke svar<nlsh.no>";
+						$from = "Ikke svar<IkkeSvar@nlsh.no>";
 						$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
 						$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit', 'appname' => 'property', 'type' => 'vendor'),false,true).'">Link til å legge inn ny leverandør</a>';
 
@@ -738,7 +738,7 @@
 				if($order_info['toarray'] && !$this->skip_email)
 				{
 
-					$from = "Ikke svar<nlsh.no>";
+					$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
 					$to = implode(';',$order_info['toarray']);
 
