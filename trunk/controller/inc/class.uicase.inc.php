@@ -420,6 +420,21 @@
 						
 			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", "no_message_registered");
 
+			foreach ($check_items_and_cases as $check_item)
+			{
+				$component_location_id = $check_item->get_control_item()->get_component_location_id();
+
+				foreach($check_item->get_cases_array() as $case)
+				{
+					$component_id = $case->get_component_id();
+					if($component_id)
+					{
+						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
+						$case->set_component_descr($short_desc);
+					}
+				}
+			}
+
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 
