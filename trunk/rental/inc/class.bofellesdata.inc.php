@@ -293,9 +293,9 @@
 
 		public function get_all_org_units_autocomplete()
 		{
-			$query = strtoupper(phpgw::get_var('query'));
+			$query = mb_strtoupper(phpgw::get_var('query'), 'UTF-8');
 
-			$columns = "V_ORG_ENHET.ORG_ENHET_ID , V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID , V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET,  V_ORG_ENHET.ORG_NIVAA";
 			$tables = "V_ORG_ENHET";
 			$sql = "SELECT $columns FROM $tables WHERE upper(ORG_NAVN) LIKE '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
 			if(!$db = $this->get_db())
@@ -309,27 +309,20 @@
 			}
 			$db->query($sql,__LINE__,__FILE__);
 
+			$org_enhet_field	= $db->Type == 'postgres' ? 'org_enhet_id' : 'ORG_ENHET_ID';
+			$name_field			= $db->Type == 'postgres' ? 'org_navn' : 'ORG_NAVN';
+			$unit_id_field		= $db->Type == 'postgres' ? 'resultatenhet' : 'RESULTATENHET';
+			$level_field 		= $db->Type == 'postgres' ? 'org_nivaa' : 'ORG_NIVAA';
+
 			$result_units = array();
 			while($db->next_record())
 			{
-				if($db->Type == "postgres")
-				{
-					$result[] = array
-					(
-							'id' => (int)$db->f('org_enhet_id'),
-							'name' => $db->f('org_navn',true),
-							'unit_id' => $db->f('resultatenhet')
-					);
-				}
-				else
-				{
-					$result[] = array
-					(
-						'id' => (int)$db->f('ORG_ENHET_ID'),
-						'name' => $db->f('ORG_NAVN',true),
-						'unit_id' => $db->f('RESULTATENHET')
-					);
-				}
+				$result[] = array
+				(
+					'id' => (int)$db->f($org_enhet_field),
+					'name' => $db->f($name_field,true) . ' ('  . (int)$db->f($level_field ) . ')',
+					'unit_id' => $db->f($unit_id_field)
+				);
 			}
 
 			return array('ResultSet'=> array('Result'=>$result));
