@@ -1014,4 +1014,38 @@ JS;
 
 			return $this->so->get_locations_by_name($data);
 		}
+
+
+
+		/**
+		 * Get location name
+		 *
+		 * @return string location name
+		 */
+		public function get_location_name($location_code)
+		{
+			static $locations = array();
+			
+			if(!isset($locations[$location_code]))
+			{
+				$_location_info = $this->read_single( array
+					(
+						'location_code' => $location_code,
+						'extra'			=> array('noattrib' => true)
+					)
+				);
+
+				$_loc_name_arr = array();
+				$_level = count(explode('-', $location_code)) +1;
+				for ($i=1; $i < $_level ;$i++)
+				{
+					$_loc_name_arr[] = $_location_info["loc{$i}_name"];
+				}
+
+				$locations[$location_code] = implode(' | ',$_loc_name_arr);
+			}
+			return $locations[$location_code];
+		}
+
+
 	}
