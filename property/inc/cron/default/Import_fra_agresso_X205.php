@@ -46,6 +46,7 @@
 		var $default_kostra_id = 9999; //dummy
 		var $debug = false;
 		var $skip_import = false;
+		var $skip_email = false;
 		protected $export;
 		protected $receipt = array();
 
@@ -65,8 +66,20 @@
 			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$this->send				= CreateObject('phpgwapi.send');
 
-			include (PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/Basware_X114");
+			include (PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/Agresso_X114");
 			$this->export		= new export_conv;
+
+			$now = time() + (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * 3600;
+
+			$now_hour = date('G',$now );
+			$now_day = date('N',$now );		
+
+			if(($now_hour < 6 || $now_hour > 17) || $now_day > 5)
+			{
+
+				$this->skip_email = true;
+			}
+
 		}
 
 		function pre_run($data = array())
@@ -211,6 +224,11 @@
 				return;
 			}
 
+			if($this->skip_email)
+			{
+				return;
+			}
+
 			// max. one mail each day
 			if ( (int) $GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)) )
 			{
@@ -237,6 +255,9 @@
 
 				$subject = 'Du har faktura til behandling';
 
+
+				$from = "Ikke svar<nlsh.no>";
+
 				foreach ($toarray as $lid => $dummy)
 				{
 					$prefs = $this->bocommon->create_preferences('property', $GLOBALS['phpgw']->accounts->name2id($lid));
@@ -245,7 +266,7 @@
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $bilagsnr, 'user_lid' => $lid ),false,true).'">Link til fakturabehandling</a>';
 						try
 						{
-							$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '','','','html');
+							$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '',$from,'','html');
 						}
 						catch (phpmailerException $e)
 						{
@@ -638,14 +659,15 @@
 
 					$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
 
-					if($to)
+					if($to && !$this->skip_email)
 					{
+						$from = "Ikke svar<nlsh.no>";
 						$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
 						$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit', 'appname' => 'property', 'type' => 'vendor'),false,true).'">Link til å legge inn ny leverandør</a>';
 
 						try
 						{
-							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
+							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '',$from,'','html');
 							if($rc)
 							{
 								$this->receipt['message'][] = array('msg'=> "epost sendt til {$to}");
@@ -713,8 +735,11 @@
 					}
 				}
 
-				if($order_info['toarray'])
+				if($order_info['toarray'] && !$this->skip_email)
 				{
+
+					$from = "Ikke svar<nlsh.no>";
+
 					$to = implode(';',$order_info['toarray']);
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -724,7 +749,7 @@
 
 						try
 						{
-							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,'','','html');
+							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$from,'','html');
 						}
 						catch (phpmailerException $e)
 						{
