@@ -253,7 +253,7 @@
 				}
 
 				//$from = "Ikke svar <{$GLOBALS['phpgw_info']['user']['preferences']['email']['address']}>";
-				$from = "Ikke svar<nlsh.no>";
+				$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
 				$subject = 'Du har faktura til behandling';
 
@@ -660,7 +660,7 @@
 
 					if($to && !$this->skip_email)
 					{
-						$from = "Ikke svar<nlsh.no>";
+						$from = "Ikke svar<IkkeSvar@nlsh.no>";
 						$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
 						$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit', 'appname' => 'property', 'type' => 'vendor'),false,true).'">Link til å legge inn ny leverandør</a>';
 
@@ -736,7 +736,7 @@
 
 				if($order_info['toarray'] && !$this->skip_email)
 				{
-					$from = "Ikke svar<nlsh.no>";
+					$from = "Ikke svar<IkkeSvar@nlsh.no>";
 					$to = implode(';',$order_info['toarray']);
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
