@@ -137,7 +137,27 @@
 								 		<ul>		
 											<xsl:for-each select="cases_array">
 												<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-												<li><input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
+												<li>
+													<input type="checkbox"  name="case_ids[]" value="{$cases_id}" />
+													 <xsl:choose>
+														  <xsl:when test="component_descr != ''">
+															  <div class="row">
+																<label>
+																	<xsl:value-of select="php:function('lang','component')" />
+																</label> 
+															  </div>
+															   <div class="component_descr">
+																<xsl:value-of select="component_descr"/>
+															  </div>
+														 </xsl:when>
+													</xsl:choose>
+													<div class="row">
+														<label>Beskrivelse:</label> 
+													</div>
+													<div class="case_descr">
+														<xsl:value-of select="descr"/>
+													</div>
+												</li>
 											</xsl:for-each>
 										</ul>
 							 		</li>
