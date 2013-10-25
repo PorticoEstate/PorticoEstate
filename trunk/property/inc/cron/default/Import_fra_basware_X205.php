@@ -46,6 +46,7 @@
 		var $default_kostra_id = 9999; //dummy
 		var $debug = false;
 		var $skip_import = false;
+		var $skip_email = false;
 		protected $export;
 		protected $receipt = array();
 
@@ -67,6 +68,18 @@
 
 			include (PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/Basware_X114");
 			$this->export		= new export_conv;
+
+			$now = time() + (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * 3600;
+
+			$now_hour = date('G',$now );
+			$now_day = date('N',$now );		
+
+			if(($now_hour < 6 || $now_hour > 17) || $now_day > 5)
+			{
+
+				$this->skip_email = true;
+			}
+
 		}
 
 		function pre_run($data = array())
@@ -210,14 +223,8 @@
 				return;
 			}
 
-			$now = time() + (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * 3600;
-
-			$now_hour = date('G',$now );
-			$now_day = date('N',$now );		
-
-			if(($now_hour < 6 || $now_hour > 17) || $now_day > 5)
+			if($this->skip_email)
 			{
-
 				return;
 			}
 
@@ -651,14 +658,15 @@
 
 					$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
 
-					if($to)
+					if($to && !$this->skip_email)
 					{
+						$from = "Ikke svar<nlsh.no>";
 						$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
 						$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit', 'appname' => 'property', 'type' => 'vendor'),false,true).'">Link til å legge inn ny leverandør</a>';
 
 						try
 						{
-							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
+							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '',$from,'','html');
 							if($rc)
 							{
 								$this->receipt['message'][] = array('msg'=> "epost sendt til {$to}");
@@ -726,8 +734,9 @@
 					}
 				}
 
-				if($order_info['toarray'])
+				if($order_info['toarray'] && !$this->skip_email)
 				{
+					$from = "Ikke svar<nlsh.no>";
 					$to = implode(';',$order_info['toarray']);
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -737,7 +746,7 @@
 
 						try
 						{
-							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,'','','html');
+							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$from,'','html');
 						}
 						catch (phpmailerException $e)
 						{
