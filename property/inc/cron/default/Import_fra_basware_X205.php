@@ -210,6 +210,17 @@
 				return;
 			}
 
+			$now = time() + (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * 3600;
+
+			$now_hour = date('G',$now );
+			$now_day = date('N',$now );		
+
+			if(($now_hour < 6 || $now_hour > 17) || $now_day > 5)
+			{
+
+				return;
+			}
+
 			// max. one mail each day
 			if ( (int) $GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)) )
 			{
@@ -234,6 +245,9 @@
 					$toarray[$this->db->f('responsible')] = true;
 				}
 
+				//$from = "Ikke svar <{$GLOBALS['phpgw_info']['user']['preferences']['email']['address']}>";
+				$from = "Ikke svar<nlsh.no>";
+
 				$subject = 'Du har faktura til behandling';
 
 				foreach ($toarray as $lid => $dummy)
@@ -244,7 +258,7 @@
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $bilagsnr, 'user_lid' => $lid ),false,true).'">Link til fakturabehandling</a>';
 						try
 						{
-							$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '','','','html');
+							$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '',$from,'','html');
 						}
 						catch (phpmailerException $e)
 						{
