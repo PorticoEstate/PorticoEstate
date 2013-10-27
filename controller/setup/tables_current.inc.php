@@ -205,7 +205,8 @@
 				'modified_date'	 		=> array('type' => 'int', 'precision' => 8,'nullable' => True),
 				'modified_by' 			=> array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'location_code' 		=> array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
-				'component_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'component_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),// register type
+				'component_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => true), // forekomst av type
       ),
       'pk' => array('id'),
       'fk' => array('controller_check_item' => array('check_item_id' => 'id')),

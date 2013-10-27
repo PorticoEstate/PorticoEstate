@@ -13,7 +13,13 @@ $(document).ready(function(){
     $(thisForm).find("input[name=location_code]").val(location_code);    
 
     var control_group_id = $(thisForm).find("input[name=control_group_id]").val();
-    var component_id = $("#component_at_control_group_" + control_group_id).val();
+    var component = $("#component_at_control_group_" + control_group_id).val();
+	var component_arr = component.split("_");
+	
+	var component_location_id = component_arr[0];
+	var component_id = component_arr[1];
+
+	$(thisForm).find("input[name=component_location_id]").val(component_location_id);
 	$(thisForm).find("input[name=component_id]").val(component_id);
     
     var validate_status = validate_form( thisForm );
