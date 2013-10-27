@@ -100,6 +100,7 @@
 
 			$styling .= " h2.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
 			$styling .= " th.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
+			$styling .= " tr.off {background: #DEEAF8 }";
 
 			$styling .= " h4.expand_trigger { clear:both;overflow:hidden;font-size: 12px;color:#031647;background: #DEEAF8;padding:2px 4px;margin:0; }";
 			$styling .= " h4.expand_trigger img { float:left;vertical-align:middle;margin-right:3px; }";
@@ -267,12 +268,14 @@ HTML;
 //			$my_planned_controls_HTML .= "<ul style='overflow:hidden;'>";
 
 
+			$_row_class = '"on"';
 			foreach($my_planned_controls as $planned_date_ts => $planned_controls_on_date)
 			{
 				foreach($planned_controls_on_date as $my_planned_control)
 				{
+					$my_planned_controls_HTML .= "<tr class = {$_row_class}>";
+					$_row_class = $_row_class = '"on"' ? '"off"' : '"on"';
 
-					$my_planned_controls_HTML .= "<tr>";
 					$deadline_ts = $my_planned_control[0];
 					$my_control = $my_planned_control[1];
 					
@@ -311,7 +314,6 @@ HTML;
 			if(count( $planned_controls_on_date ) > 1 )
 			{
 //				$my_planned_controls_HTML .= "</li></ul>";
-//				$my_planned_controls_HTML .= "</tr>";
 			}
 
 			$my_planned_controls_HTML .= "</table></div>"; // home_portal
