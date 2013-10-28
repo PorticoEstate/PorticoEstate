@@ -199,7 +199,15 @@ JS;
 	$bouser = CreateObject('bookingfrontend.bouser');
 	if($bouser->is_logged_in())
 	{
-		$tpl_vars['login_text'] = $bouser->orgname . ' :: ' . lang('Logout');
+                if ( $bouser->orgname == '000000002') {
+                    $tpl_vars['login_text'] = lang('Organization not in the database'). ' :: ' . lang('Logout');
+                } elseif ( $bouser->orgname == '000000001') {
+                    $tpl_vars['login_text'] = lang('No organization data'). ' :: ' . lang('Logout');
+                } elseif ( $bouser->orgname == '000000000') { 
+                    $tpl_vars['login_text'] = lang('SSN not registred'). ' :: ' . lang('Logout');
+                } else {
+            		$tpl_vars['login_text'] = $bouser->orgname . ' :: ' . lang('Logout');
+                }
 		$tpl_vars['login_url'] = 'logout.php';
 	}
 	else

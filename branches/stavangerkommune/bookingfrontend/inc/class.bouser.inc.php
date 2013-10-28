@@ -29,9 +29,21 @@
 			$this->db->limit_query("select name from bb_organization where organization_number ='" .$orgnr."'", 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
-				return $orgnr;
+                return $orgnr;
 			}
 			return $this->db->f('name', false);
+
+		}
+		protected function get_organizations()
+		{
+            $results = array();
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->db->query("select organization_number,name from bb_organization ORDER by organization_number ASC", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->f('organization_number', false);
+			}
+			return $results;
 
 		}
 		protected function set_module($module = null)
@@ -44,7 +56,7 @@
 			return $this->module;
 		}
 
-		public function log_in()
+		public function log_in() 
 		{
 			$this->log_off();
 			$this->orgnr = $this->get_user_orgnr_from_auth_header();
@@ -174,17 +186,39 @@
             if ($config->config_data['authentication_method'] === 'MinId.php') {
 
                 header('Content-type: text/xml');
-#               $ipdp = $_COOKIE['iPlanetDirectoryPro'];
-#               $xmldata = simplexml_load_file('http://aktivby.stavanger.kommune.no:8080/spclient/auth.jsp?ipdp='.$ipdp);
+                $ipdp = $_COOKIE['iPlanetDirectoryPro'];
+                $xmldata = simplexml_load_file('http://aktivby.stavanger.kommune.no:8080/spclient/auth.jsp?ipdp='.$ipdp);
 
-    			$xmldata = simplexml_load_file('/srv/portico/svg/stavangerkommune_xml/test.xml');
 
-    			$myorgnr = null;
-    			foreach ($xmldata->melding->roller->enhet->orgnr as $key => $value) {
-    				$myorgnr = $value;
-    			}
+#   			$xmldata = simplexml_load_file('/srv/portico/svg/stavangerkommune_xml/test.xml');
 
-    			$external_user = (object) 'ciao'; $external_user->login = $myorgnr;
+    			$myorgnr = array();
+    			
+                $orgnummbers = $this->get_organizations();                
+                
+                if(in_array((string)$xmldata->responseHeader->underStatus->underStatusMelding['kode'],array('180','181','182'))) {
+
+        			$external_user = (object) 'ciao'; $external_user->login = '000000000';
+
+                } elseif ($xmldata->responseHeader->underStatus->underStatusMelding[1]['kode'] == "1500") {
+        			$external_user = (object) 'ciao'; $external_user->login = '000000001';
+                } else {
+                    foreach ($xmldata->melding->roller as $value) {
+                        if (in_array((string)$value->enhet->orgnr,$orgnummbers)) {
+              				$myorgnr[] = (string)$value->enhet->orgnr;
+                        } 
+       			    }
+                    if (count($myorgnr) > 1) {
+
+            			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[1];
+                    }
+                    elseif (count($myorgnr) > 0) {
+            			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[0];
+                        
+                    } else {
+            			$external_user = (object) 'ciao'; $external_user->login = '000000002';
+                    }
+                }                
 
             } else {
 

@@ -54,6 +54,8 @@
 		 */
 		public $debug = false;
 
+		public $orgs = array();
+
 		public function __construct($wsdl, $options, $userid, $debug = false)
 		{
 			if($debug)
