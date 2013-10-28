@@ -53,6 +53,15 @@ class MBInfo
     private $_mbVolt = array();
     
     /**
+     * array with SensorDevices for power
+     *
+     * @see SensorDevice
+     *
+     * @var Array
+     */
+    private $_mbPower = array();
+
+    /**
      * Returns $_mbFan.
      *
      * @see System::$_mbFan
@@ -129,5 +138,30 @@ class MBInfo
     {
         array_push($this->_mbVolt, $mbVolt);
     }
+
+    /**
+     * Returns $_mbPower.
+     *
+     * @see System::$_mbPower
+     *
+     * @return Array
+     */
+    public function getMbPower()
+    {
+        return $this->_mbPower;
+    }
+
+    /**
+     * Sets $_mbPower.
+     *
+     * @param Sensor $mbPower power device
+     *
+     * @see System::$_mbPower
+     *
+     * @return Void
+     */
+    public function setMbPower($mbPower)
+    {
+        array_push($this->_mbPower, $mbPower);
+    }
 }
-?>

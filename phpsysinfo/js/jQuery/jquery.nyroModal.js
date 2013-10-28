@@ -5,8 +5,8 @@
  * Copyright (c) 2010 Cedric Nirousset (nyrodev.com)
  * Licensed under the MIT license
  *
- * $Date: 2010-02-15 (Mon, 15 Feb 2010) $
- * $version: 1.6.1
+ * $Date: 2010-02-23 (Tue, 23 Feb 2010) $
+ * $version: 1.6.2+jquery1.8fix
  */
 jQuery(function($) {
 
@@ -674,12 +674,16 @@ jQuery(function($) {
 					height: h
 				};
 			} else if (isIE6) {
+				body.css({
+					marginLeft: 0,
+					marginRight: 0
+				});
 				var w = body.width();
-				var h = $(window).outerHeight()+'px';
-				if ($(window).outerHeight() >= body.outerHeight()) {
+				var h = $(window).height()+'px';
+				if ($(window).height() >= body.outerHeight()) {
 					h = body.outerHeight()+'px';
-					w+= 40;
-				}
+				} else
+					w+= 20;
 				w += 'px';
 				body.css({
 					width: w,
@@ -1432,7 +1436,7 @@ jQuery(function($) {
 		modal.full.remove();
 		modal.full = null;
 		if (isIE6) {
-			body.css({height: '', width: '', position: '', overflow: ''});
+			body.css({height: '', width: '', position: '', overflow: '', marginLeft: '', marginRight: ''});
 			$('html').css({overflow: ''});
 		}
 		if ($.isFunction(currentSettings.endRemove))
@@ -1539,7 +1543,7 @@ jQuery(function($) {
 	}
 
 	function getCurCSS(elm, name) {
-		var ret = parseInt($.curCSS(elm, name, true));
+		var ret = parseInt($.css(elm, name, true));
 		if (isNaN(ret))
 			ret = 0;
 		return ret;

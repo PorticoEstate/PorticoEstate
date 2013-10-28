@@ -5,7 +5,7 @@
  * PHP version 5
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI OpenBSD OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
@@ -17,7 +17,7 @@
  * get all the required information from OpenBSD systems
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI OpenBSD OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
@@ -78,7 +78,6 @@ class OpenBSD extends BSDCommon
         }
     }
 
-    
     /**
      * IDE information
      *
@@ -111,7 +110,12 @@ class OpenBSD extends BSDCommon
         $dev = new CpuDevice();
         $dev->setModel($this->grabkey('hw.model'));
         $dev->setCpuSpeed($this->grabkey('hw.cpuspeed'));
+        $ncpu = $this->grabkey('hw.ncpu');
+        if ( is_null($ncpu) || (trim($ncpu) == "") || (!($ncpu >= 1)) )
+            $ncpu = 1;
+        for ($ncpu ; $ncpu > 0 ; $ncpu--) {
         $this->sys->setCpus($dev);
+    }
     }
     
     /**
@@ -131,12 +135,11 @@ class OpenBSD extends BSDCommon
      *
      * @return Void
      */
-    function build()
+    public function build()
     {
-        parent::buil();
+        parent::build();
         $this->_distroicon();
         $this->_network();
         $this->_uptime();
     }
 }
-?>
