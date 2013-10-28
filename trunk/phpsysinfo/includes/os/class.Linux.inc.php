@@ -5,7 +5,7 @@
  * PHP version 5
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI Linux OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
@@ -17,7 +17,7 @@
  * get all the required information from Linux system
  *
  * @category  PHP
- * @package   PSI_OS
+ * @package   PSI Linux OS class
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
@@ -33,12 +33,13 @@ class Linux extends OS
     {
         parent::__construct();
     }
+
     /**
      * Hostname
      *
      * @return void
      */
-    private function _hostname()
+    protected function _hostname()
     {
         if (PSI_USE_VHOST === true) {
             $this->sys->setHostname(getenv('SERVER_NAME'));
@@ -52,23 +53,25 @@ class Linux extends OS
             }
         }
     }
+
     /**
      * IP
      *
      * @return void
      */
-    private function _ip()
+    protected function _ip()
     {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setIp(gethostbyname($this->_hostname()));
+            $this->sys->setIp(gethostbyname($this->sys->getHostname()));
         } else {
-            if (!($result = $_SERVER['SERVER_ADDR'])) {
-                $this->sys->setIp(gethostbyname($this->_hostname()));
+            if (!isset($_SERVER['SERVER_ADDR']) || !($result = $_SERVER['SERVER_ADDR'])) {
+                $this->sys->setIp(gethostbyname($this->sys->getHostname()));
             } else {
                 $this->sys->setIp($result);
             }
         }
     }
+
     /**
      * Kernel Version
      *
@@ -76,14 +79,15 @@ class Linux extends OS
      */
     private function _kernel()
     {
-        if (CommonFunctions::executeProgram('uname', '-r', $strBuf, PSI_DEBUG)) {
+        if (CommonFunctions::executeProgram($uname="uptrack-uname", '-r', $strBuf, false) || // show effective kernel if ksplice uptrack is installed
+            CommonFunctions::executeProgram($uname="uname", '-r', $strBuf, PSI_DEBUG)) {
             $result = trim($strBuf);
-            if (CommonFunctions::executeProgram('uname', '-v', $strBuf, PSI_DEBUG)) {
+            if (CommonFunctions::executeProgram($uname, '-v', $strBuf, PSI_DEBUG)) {
                 if (preg_match('/SMP/', $strBuf)) {
                     $result .= ' (SMP)';
                 }
             }
-            if (CommonFunctions::executeProgram('uname', '-m', $strBuf, PSI_DEBUG)) {
+            if (CommonFunctions::executeProgram($uname, '-m', $strBuf, PSI_DEBUG)) {
                 $result .= ' '.trim($strBuf);
             }
             $this->sys->setKernel($result);
@@ -99,18 +103,20 @@ class Linux extends OS
             }
         }
     }
+
     /**
      * UpTime
      * time the system is running
      *
      * @return void
      */
-    private function _uptime()
+    protected function _uptime()
     {
         CommonFunctions::rfts('/proc/uptime', $buf, 1);
         $ar_buf = preg_split('/ /', $buf);
         $this->sys->setUptime(trim($ar_buf[0]));
     }
+
     /**
      * Number of Users
      *
@@ -118,18 +124,21 @@ class Linux extends OS
      */
     private function _users()
     {
-        if (CommonFunctions::executeProgram('who', '-q', $strBuf, PSI_DEBUG)) {
-            $arrWho = preg_split('/=/', $strBuf);
-            $this->sys->setUsers($arrWho[1]);
+        if (CommonFunctions::executeProgram('who', '', $strBuf, PSI_DEBUG)) {
+            if (strlen(trim($strBuf)) > 0) {
+                $lines = preg_split('/\n/', $strBuf);
+                $this->sys->setUsers(count($lines));
         }
     }
+    }
+
     /**
      * Processor Load
      * optionally create a loadbar
      *
      * @return void
      */
-    private function _loadavg()
+    protected function _loadavg()
     {
         if (CommonFunctions::rfts('/proc/loadavg', $buf)) {
             $result = preg_split("/\s/", $buf, 4);
@@ -141,6 +150,7 @@ class Linux extends OS
             $this->sys->setLoadPercent($this->_parseProcStat('cpu'));
         }
     }
+
     /**
      * fill the load for a individual cpu, through parsing /proc/stat for the specified cpu
      *
@@ -148,7 +158,7 @@ class Linux extends OS
      *
      * @return Integer
      */
-    private function _parseProcStat($cpuline)
+    protected function _parseProcStat($cpuline)
     {
         $load = 0;
         $load2 = 0;
@@ -170,7 +180,9 @@ class Linux extends OS
             }
         }
         // we need a second value, wait 1 second befor getting (< 1 second no good value will occour)
+        if (PSI_LOAD_BAR) {
         sleep(1);
+        }
         if (CommonFunctions::rfts('/proc/stat', $buf)) {
             $lines = preg_split("/\n/", $buf, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($lines as $line) {
@@ -189,35 +201,51 @@ class Linux extends OS
         if ($total > 0 && $total2 > 0 && $load > 0 && $load2 > 0 && $total2 != $total && $load2 != $load) {
             return (100 * ($load2 - $load)) / ($total2 - $total);
         }
+
         return 0;
     }
+
     /**
      * CPU information
      * All of the tags here are highly architecture dependant.
      *
      * @return void
      */
-    private function _cpuinfo()
+    protected function _cpuinfo()
     {
         if (CommonFunctions::rfts('/proc/cpuinfo', $bufr)) {
             $processors = preg_split('/\s?\n\s?\n/', trim($bufr));
+            $procname = null;
             foreach ($processors as $processor) {
+                $proc = null;
+                $arch = null;
                 $dev = new CpuDevice();
                 $details = preg_split("/\n/", $processor, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($details as $detail) {
-                    $arrBuff = preg_split('/\s+:\s+/', trim($detail));
+                    $arrBuff = preg_split('/\s*:\s*/', trim($detail));
                     if (count($arrBuff) == 2) {
                         switch (strtolower($arrBuff[0])) {
                         case 'processor':
-                            $dev->setLoad($this->_parseProcStat('cpu'.trim($arrBuff[1])));
+                            $proc = trim($arrBuff[1]);
+                            if (is_numeric($proc)) {
+                                if (strlen($procname)>0) {
+                                    $dev->setModel($procname);
+                                }
+                            } else {
+                                $procname = $proc;
+                                $dev->setModel($procname);
+                            }
                             break;
                         case 'model name':
+                        case 'cpu model':
                         case 'cpu':
                             $dev->setModel($arrBuff[1]);
                             break;
                         case 'cpu mhz':
                         case 'clock':
+                            if ($arrBuff[1] > 0) { //openSUSE fix
                             $dev->setCpuSpeed($arrBuff[1]);
+                            }
                             break;
                         case 'cycle frequency [hz]':
                             $dev->setCpuSpeed($arrBuff[1] / 1000000);
@@ -232,6 +260,26 @@ class Linux extends OS
                         case 'bogomips':
                         case 'cpu0bogo':
                             $dev->setBogomips($arrBuff[1]);
+                            break;
+                        case 'flags':
+                            if (preg_match("/ vmx/",$arrBuff[1])) {
+                                $dev->setVirt("vmx");
+                            } elseif (preg_match("/ svm/",$arrBuff[1])) {
+                                $dev->setVirt("svm");
+                            } elseif (preg_match("/ hypervisor/",$arrBuff[1])) {
+                                $dev->setVirt("hypervisor");
+                            }
+                            break;
+                        case 'i size':
+                        case 'd size':
+                            if ($dev->getCache() === null) {
+                                $dev->setCache($arrBuff[1] * 1024);
+                            } else {
+                                $dev->setCache($dev->getCache() + ($arrBuff[1] * 1024));
+                            }
+                            break;
+                        case 'cpu architecture':
+                            $arch = trim($arrBuff[1]);
                             break;
                         }
                     }
@@ -249,36 +297,44 @@ class Linux extends OS
                 // sparc64 specific code ends
                 
                 // XScale detection code
-                if ($dev->getModel() === "") {
-                    foreach ($details as $detail) {
-                        $arrBuff = preg_split('/\s*:\s*/', trim($buf), 2);
-                        if (count($arrBuff) == 2) {
-                            switch (strtolower($arrBuff[0])) {
-                            case 'Processor':
-                                $dev->setModel($arrBuff[1]);
-                                break;
-                            case 'BogoMIPS':
-                                $dev->setCpuSpeed($arrBuff[1]); //BogoMIPS are not BogoMIPS on this CPU, it's the speed, no BogoMIPS available
-                                break;
-                            case 'I size':
-                            case 'D size':
-                                if ($dev->getCache() === null) {
-                                    $dev->setCache($arrBuff[1] * 1024);
-                                } else {
-                                    $dev->setCache($dev->getCache() + ($arrBuff[1] * 1024));
+                if (($arch === "5TE") && ($dev->getBogomips() != null)) {
+                    $dev->setCpuSpeed($dev->getBogomips()); //BogoMIPS are not BogoMIPS on this CPU, it's the speed
+                    $dev->setBogomips(null); // no BogoMIPS available, unset previously set BogoMIPS
                                 }
-                                break;
-                            }
-                        }
+
+                if ($proc != null) {
+                    if (!is_numeric($proc)) {
+                        $proc = 0;
                     }
+                    // variable speed processors specific code follows
+                    if (CommonFunctions::rfts('/sys/devices/system/cpu/cpu'.$proc.'/cpufreq/cpuinfo_cur_freq', $buf, 1, 4096, false)) {
+                        $dev->setCpuSpeed($buf / 1000);
+                    } elseif (CommonFunctions::rfts('/sys/devices/system/cpu/cpu'.$proc.'/cpufreq/scaling_cur_freq', $buf, 1, 4096, false)) {
+                        $dev->setCpuSpeed($buf / 1000);
+                            }
+                    if (CommonFunctions::rfts('/sys/devices/system/cpu/cpu'.$proc.'/cpufreq/cpuinfo_max_freq', $buf, 1, 4096, false)) {
+                        $dev->setCpuSpeedMax($buf / 1000);
+                        }
+                    if (CommonFunctions::rfts('/sys/devices/system/cpu/cpu'.$proc.'/cpufreq/cpuinfo_min_freq', $buf, 1, 4096, false)) {
+                        $dev->setCpuSpeedMin($buf / 1000);
+                    }
+                    // variable speed processors specific code ends
+                    if (PSI_LOAD_BAR) {
+                            $dev->setLoad($this->_parseProcStat('cpu'.$proc));
                 }
+
                 if (CommonFunctions::rfts('/proc/acpi/thermal_zone/THRM/temperature', $buf, 1, 4096, false)) {
                     $dev->setTemp(substr($buf, 25, 2));
                 }
+                    if ($dev->getModel() === "") {
+                        $dev->setModel("unknown");
+                    }
                 $this->sys->setCpus($dev);
             }
         }
     }
+    }
+
     /**
      * PCI devices
      *
@@ -312,6 +368,7 @@ class Linux extends OS
             }
         }
     }
+
     /**
      * IDE devices
      *
@@ -338,6 +395,7 @@ class Linux extends OS
             }
         }
     }
+
     /**
      * SCSI devices
      *
@@ -365,6 +423,7 @@ class Linux extends OS
             }
         }
     }
+
     /**
      * USB devices
      *
@@ -406,15 +465,16 @@ class Linux extends OS
             }
         }
     }
+
     /**
      * Network devices
      * includes also rx/tx bytes
      *
      * @return void
      */
-    private function _network()
+    protected function _network()
     {
-        if (CommonFunctions::rfts('/proc/net/dev', $bufr)) {
+        if (CommonFunctions::rfts('/proc/net/dev', $bufr, 0, 4096, PSI_DEBUG)) {
             $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($bufe as $buf) {
                 if (preg_match('/:/', $buf)) {
@@ -426,20 +486,107 @@ class Linux extends OS
                     $dev->setTxBytes($stats[8]);
                     $dev->setErrors($stats[2] + $stats[10]);
                     $dev->setDrops($stats[3] + $stats[11]);
+                    if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS) && (CommonFunctions::executeProgram('ifconfig', trim($dev_name).' 2>/dev/null', $bufr2, PSI_DEBUG))) {
+                        $bufe2 = preg_split("/\n/", $bufr2, -1, PREG_SPLIT_NO_EMPTY);
+                        foreach ($bufe2 as $buf2) {
+//                            if (preg_match('/^'.trim($dev_name).'\s+Link\sencap:Ethernet\s+HWaddr\s(\S+)/i', $buf2, $ar_buf2)
+                            if (preg_match('/\s+encap:Ethernet\s+HWaddr\s(\S+)/i', $buf2, $ar_buf2)
+                             || preg_match('/^\s+ether\s+(\S+)\s+txqueuelen/i', $buf2, $ar_buf2))
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').preg_replace('/:/', '-', $ar_buf2[1]));
+                            elseif (preg_match('/^\s+inet\saddr:(\S+)\s+P-t-P:(\S+)/i', $buf2, $ar_buf2)
+                                  || preg_match('/^\s+inet\s+(\S+)\s+netmask.+destination\s+(\S+)/i', $buf2, $ar_buf2)) {
+                                    if ($ar_buf2[1] != $ar_buf2[2]) {
+                                         $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1].";:".$ar_buf2[2]);
+                                    } else {
+                                         $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                                    }
+                                 } elseif (preg_match('/^\s+inet\saddr:(\S+)/i', $buf2, $ar_buf2)
+                                  || preg_match('/^\s+inet\s+(\S+)\s+netmask/i', $buf2, $ar_buf2)
+                                  || preg_match('/^'.trim($dev_name).':\s+ip\s+(\S+)\s+mask/i', $buf2, $ar_buf2)
+                                  || preg_match('/^\s+inet6\saddr:\s([^\/]+)(.+)\s+Scope:[GH]/i', $buf2, $ar_buf2)
+                                  || preg_match('/^\s+inet6\s+(\S+)\s+prefixlen(.+)((<global>)|(<host>))/i', $buf2, $ar_buf2))
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                        }
+                    }
                     $this->sys->setNetDevices($dev);
                 }
             }
+        } elseif (CommonFunctions::executeProgram('ifconfig', '', $bufr, PSI_DEBUG)) {
+            $lines = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            $notwas = true;
+            foreach ($lines as $line) {
+                if (preg_match("/^([^\s:]+)/", $line, $ar_buf)) {
+                    if (!$notwas) {
+                        $dev->setErrors($errors);
+                        $dev->setDrops($drops);
+                        $this->sys->setNetDevices($dev);
+                    }
+                    $errors = 0;
+                    $drops = 0;
+                    $dev = new NetDevice();
+                    $dev->setName($ar_buf[1]);
+                    $notwas = false;
+                    if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS)) {
+                        if (preg_match('/^'.$ar_buf[1].'\s+Link\sencap:Ethernet\s+HWaddr\s(\S+)/i', $line, $ar_buf2))
+                            $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').preg_replace('/:/', '-', $ar_buf2[1]));
+                        elseif (preg_match('/^'.$ar_buf[1].':\s+ip\s+(\S+)\s+mask/i', $line, $ar_buf2))
+                            $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                    }
+                } else {
+                    if (!$notwas) {
+                        if (preg_match('/\sRX bytes:(\d+)\s/i', $line, $ar_buf2)) {
+                            $dev->setRxBytes($ar_buf2[1]);
+        }
+                        if (preg_match('/\sTX bytes:(\d+)\s/i', $line, $ar_buf2)) {
+                            $dev->setTxBytes($ar_buf2[1]);
+    }
+
+                        if (preg_match('/\sRX packets:\d+\serrors:(\d+)\sdropped:(\d+)/i', $line, $ar_buf2)) {
+                            $errors +=$ar_buf2[1];
+                            $drops +=$ar_buf2[2];
+                        } elseif (preg_match('/\sTX packets:\d+\serrors:(\d+)\sdropped:(\d+)/i', $line, $ar_buf2)) {
+                            $errors +=$ar_buf2[1];
+                            $drops +=$ar_buf2[2];
+                        }
+
+                        if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS)) {
+                            if (preg_match('/\s+encap:Ethernet\s+HWaddr\s(\S+)/i', $line, $ar_buf2)
+                             || preg_match('/^\s+ether\s+(\S+)\s+txqueuelen/i', $line, $ar_buf2))
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').preg_replace('/:/', '-', $ar_buf2[1]));
+                            elseif (preg_match('/^\s+inet\saddr:(\S+)\s+P-t-P:(\S+)/i', $line, $ar_buf2)
+                                  || preg_match('/^\s+inet\s+(\S+)\s+netmask.+destination\s+(\S+)/i', $line, $ar_buf2)) {
+                                    if ($ar_buf2[1] != $ar_buf2[2]) {
+                                         $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1].";:".$ar_buf2[2]);
+                                    } else {
+                                         $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+                                    }
+                                 } elseif (preg_match('/^\s+inet\saddr:(\S+)/i', $line, $ar_buf2)
+                                  || preg_match('/^\s+inet\s+(\S+)\s+netmask/i', $line, $ar_buf2)
+                                  || preg_match('/^\s+inet6\saddr:\s([^\/]+)(.+)\s+Scope:[GH]/i', $line, $ar_buf2)
+                                  || preg_match('/^\s+inet6\s+(\S+)\s+prefixlen(.+)((<global>)|(<host>))/i', $line, $ar_buf2))
+                                $dev->setInfo(($dev->getInfo()?$dev->getInfo().';':'').$ar_buf2[1]);
+
+                        }
+                    }
+                }
+            }
+            if (!$notwas) {
+                $dev->setErrors($errors);
+                $dev->setDrops($drops);
+                $this->sys->setNetDevices($dev);
+            }
         }
     }
+
     /**
      * Physical memory information and Swap Space information
      *
      * @return void
      */
-    private function _memory()
+    protected function _memory()
     {
-        if (CommonFunctions::rfts('/proc/meminfo', $bufr)) {
-            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+        if (CommonFunctions::rfts('/proc/meminfo', $mbuf)) {
+            $bufe = preg_split("/\n/", $mbuf, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($bufe as $buf) {
                 if (preg_match('/^MemTotal:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
                     $this->sys->setMemTotal($ar_buf[1] * 1024);
@@ -456,8 +603,8 @@ class Linux extends OS
             if ($this->sys->getMemCache() !== null && $this->sys->getMemBuffer() !== null) {
                 $this->sys->setMemApplication($this->sys->getMemUsed() - $this->sys->getMemCache() - $this->sys->getMemBuffer());
             }
-            if (CommonFunctions::rfts('/proc/swaps', $bufr)) {
-                $swaps = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            if (CommonFunctions::rfts('/proc/swaps', $sbuf, 0, 4096, false)) {
+                $swaps = preg_split("/\n/", $sbuf, -1, PREG_SPLIT_NO_EMPTY);
                 unset($swaps[0]);
                 foreach ($swaps as $swap) {
                     $ar_buf = preg_split('/\s+/', $swap, 5);
@@ -472,6 +619,7 @@ class Linux extends OS
             }
         }
     }
+
     /**
      * filesystem information
      *
@@ -479,11 +627,12 @@ class Linux extends OS
      */
     private function _filesystems()
     {
-        $arrResult = Parser::df("-P");
+        $arrResult = Parser::df("-P 2>/dev/null");
         foreach ($arrResult as $dev) {
             $this->sys->setDiskDevices($dev);
         }
     }
+
     /**
      * Distribution
      *
@@ -491,51 +640,243 @@ class Linux extends OS
      */
     private function _distro()
     {
+        $this->sys->setDistribution("Linux");
         $list = @parse_ini_file(APP_ROOT."/data/distros.ini", true);
         if (!$list) {
             return;
         }
-        // We have the '2> /dev/null' because Ubuntu gives an error on this command which causes the distro to be unknown
-        if (CommonFunctions::executeProgram('lsb_release', '-a 2> /dev/null', $distro_info, PSI_DEBUG)) {
+        // We have the '2>/dev/null' because Ubuntu gives an error on this command which causes the distro to be unknown
+        if (CommonFunctions::executeProgram('lsb_release', '-a 2>/dev/null', $distro_info, PSI_DEBUG) && (strlen(trim($distro_info)) > 0)) {
             $distro_tmp = preg_split("/\n/", $distro_info, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($distro_tmp as $info) {
                 $info_tmp = preg_split('/:/', $info, 2);
-                $distro[$info_tmp[0]] = trim($info_tmp[1]);
-                if (isset($distro['Distributor ID']) && isset($list[$distro['Distributor ID']]['Image'])) {
-                    $this->sys->setDistributionIcon($list[$distro['Distributor ID']]['Image']);
+                if ( isset($distro_tmp[0]) && !is_null($distro_tmp[0]) && (trim($distro_tmp[0]) != "") &&
+                     isset($distro_tmp[1]) && !is_null($distro_tmp[1]) && (trim($distro_tmp[1]) != "") ) {
+                    $distro[trim($info_tmp[0])] = trim($info_tmp[1]);
                 }
-                if (isset($distro['Description'])) {
+                }
+            if (!isset($distro['Distributor ID']) && !isset($distro['Description'])) { // Systems like StartOS
+                if ( isset($distro_tmp[0]) && !is_null($distro_tmp[0]) && (trim($distro_tmp[0]) != "") ) {
+                    $this->sys->setDistribution(trim($distro_tmp[0]));
+                    if ( preg_match('/^(\S+)\s*/', $distro_tmp[0], $id_buf)
+                        && isset($list[trim($id_buf[1])]['Image'])) {
+                            $this->sys->setDistributionIcon($list[trim($id_buf[1])]['Image']);
+                    }
+                }
+            } else {
+                if (isset($distro['Description']) && ($distro['Description'] != "n/a")) {
                     $this->sys->setDistribution($distro['Description']);
+                } elseif (isset($distro['Distributor ID']) && ($distro['Distributor ID'] != "n/a")) {
+                    $this->sys->setDistribution($distro['Distributor ID']);
+                    if (isset($distro['Release']) && ($distro['Release'] != "n/a")) {
+                        $this->sys->setDistribution($this->sys->getDistribution()." ".$distro['Release']);
+                    }
+                    if (isset($distro['Codename']) && ($distro['Codename'] != "n/a")) {
+                        $this->sys->setDistribution($this->sys->getDistribution()." (".$distro['Codename'].")");
+                    }
+                }
+                if (isset($distro['Distributor ID']) && ($distro['Distributor ID'] != "n/a") && isset($list[$distro['Distributor ID']]['Image'])) {
+                    $this->sys->setDistributionIcon($list[$distro['Distributor ID']]['Image']);
                 }
             }
         } else {
-            // Fall back in case 'lsb_release' does not exist ;)
+            /* default error handler */
+            if (function_exists('errorHandlerPsi')) {
+                restore_error_handler();
+            }
+            /* fatal errors only */
+            $old_err_rep = error_reporting();
+            error_reporting(E_ERROR);
+
+            // Fall back in case 'lsb_release' does not exist but exist /etc/lsb-release
+            if (file_exists($filename="/etc/lsb-release")
+               && CommonFunctions::rfts($filename, $buf, 0, 4096, false)
+               && preg_match('/^DISTRIB_ID="?([^"\n]+)"?/m', $buf, $id_buf) ) {
+                if (preg_match('/^DISTRIB_DESCRIPTION="?([^"\n]+)"?/m', $buf, $desc_buf)) {
+                    $this->sys->setDistribution(trim($desc_buf[1]));
+                } else {
+                    if (isset($list[trim($id_buf[1])]['Name'])) {
+                        $this->sys->setDistribution(trim($list[trim($id_buf[1])]['Name']));
+                    } else {
+                        $this->sys->setDistribution(trim($id_buf[1]));
+                    }
+                    if (preg_match('/^DISTRIB_RELEASE="?([^"\n]+)"?/m', $buf, $vers_buf)) {
+                        $this->sys->setDistribution($this->sys->getDistribution()." ".trim($vers_buf[1]));
+                    }
+                    if (preg_match('/^DISTRIB_CODENAME="?([^"\n]+)"?/m', $buf, $vers_buf)) {
+                        $this->sys->setDistribution($this->sys->getDistribution()." (".trim($vers_buf[1]).")");
+                    }
+                }
+                if (isset($list[trim($id_buf[1])]['Image'])) {
+                    $this->sys->setDistributionIcon($list[trim($id_buf[1])]['Image']);
+                }
+            } else { // otherwise find files specific for distribution
             foreach ($list as $section=>$distribution) {
-                if (!isset($distribution["Files"])) {
+                    if (!isset($distribution['Files'])) {
                     continue;
                 } else {
-                    foreach (preg_split("/;/", $distribution["Files"], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
+                        foreach (preg_split("/;/", $distribution['Files'], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
                         if (file_exists($filename)) {
-                            CommonFunctions::rfts($filename, $buf);
-                            if (isset($distribution["Image"])) {
-                                $this->sys->setDistributionIcon($distribution["Image"]);
-                            }
-                            if (isset($distribution["Name"])) {
-                                if ($distribution["Name"] == 'Synology') {
-                                    $this->sys->setDistribution($distribution["Name"]);
+                                if (isset($distribution['Mode'])&&(strtolower($distribution['Mode'])=="detection")) {
+                                    $buf = "";
+                                } elseif (isset($distribution['Mode'])&&(strtolower($distribution['Mode'])=="execute")) {
+                                    if (!CommonFunctions::executeProgram($filename, '2>/dev/null', $buf, PSI_DEBUG)) {
+                                        $buf = "";
+                                    }                                
                                 } else {
-                                    $this->sys->setDistribution($distribution["Name"]." ".trim($buf));
+                                    if (!CommonFunctions::rfts($filename, $buf, 1, 4096, false)) {
+                                        $buf = "";
+                                    }
                                 }
+                                if (isset($distribution['Image'])) {
+                                    $this->sys->setDistributionIcon($distribution['Image']);
+                                }
+                                if (isset($distribution['Name'])) {
+                                    if ( is_null($buf) || (trim($buf) == "") ) {
+                                        $this->sys->setDistribution($distribution['Name']);
+                                    } else {
+                                        $this->sys->setDistribution($distribution['Name']." ".trim($buf));
+                                    }
+                                } else {
+                                    if ( is_null($buf) || (trim($buf) == "") ) {
+                                        $this->sys->setDistribution($section);
                             } else {
                                 $this->sys->setDistribution(trim($buf));
                             }
-                            return;
+                                }
+                                if (isset($distribution['Files2'])) {
+                                    foreach (preg_split("/;/", $distribution['Files2'], -1, PREG_SPLIT_NO_EMPTY) as $filename2) {
+                                        if (file_exists($filename2) && CommonFunctions::rfts($filename2, $buf, 1, 4096, false)) {
+                                            $this->sys->setDistribution($this->sys->getDistribution()." ".trim($buf));
+                                            break;
+                                        }
+                                    }
+                                }
+                                break 2;
+                            }
                         }
                     }
                 }
             }
+            // if the distribution is still unknown
+            if ($this->sys->getDistribution() == "Linux") {
+                if ( file_exists($filename="/etc/DISTRO_SPECS")
+                   && CommonFunctions::rfts($filename, $buf, 0, 4096, false)
+                   && preg_match('/^DISTRO_NAME=\'(.+)\'/m', $buf, $id_buf) ) {
+                    if (isset($list[trim($id_buf[1])]['Name'])) {
+                        $dist = trim($list[trim($id_buf[1])]['Name']);
+                    } else {
+                        $dist = trim($id_buf[1]);
+                    }
+                    if (preg_match('/^DISTRO_VERSION=(.+)/m', $buf, $vers_buf)) {
+                        $this->sys->setDistribution(trim($dist." ".trim($vers_buf[1])));
+                    } else {
+                        $this->sys->setDistribution($dist);
+                    }
+                    if (isset($list[trim($id_buf[1])]['Image'])) {
+                        $this->sys->setDistributionIcon($list[trim($id_buf[1])]['Image']);
+                    } else {
+                        if (isset($list['Puppy']['Image'])) {
+                            $this->sys->setDistributionIcon($list['Puppy']['Image']);
+                        }
+                    }
+                } elseif (file_exists($filename="/etc/redhat-release")) {
+                    if (!CommonFunctions::rfts($filename, $buf, 1, 4096, false)) {
+                        $buf = "";
+                }
+                    if ( is_null($buf) || (trim($buf) == "") ) {
+                        if (isset($list['RedHat']['Name'])) {
+                            $this->sys->setDistribution(trim($list['RedHat']['Name']));
+                        } else {
+                            $this->sys->setDistribution('RedHat');
+                        }
+                        if (isset($list['RedHat']['Image'])) {
+                            $this->sys->setDistributionIcon($list['RedHat']['Image']);
+                        }
+                    } else {
+                        $this->sys->setDistribution(trim($buf));
+                        if ( preg_match('/^(\S+)\s*/', $buf, $id_buf)
+                           && isset($list[trim($id_buf[1])]['Image'])) {
+                            $this->sys->setDistributionIcon($list[trim($id_buf[1])]['Image']);
+                        } else {
+                            if (isset($list['RedHat']['Image'])) {
+                                $this->sys->setDistributionIcon($list['RedHat']['Image']);
+                            }
+                        }
+                    }
+                } elseif (file_exists($filename="/etc/debian_version")) {
+                    if (!CommonFunctions::rfts($filename, $buf, 1, 4096, false)) {
+                        $buf = "";
+                    }
+                    if (isset($list['Debian']['Image'])) {
+                        $this->sys->setDistributionIcon($list['Debian']['Image']);
+            }
+                    if (isset($list['Debian']['Name'])) {
+                        if ( is_null($buf) || (trim($buf) == "")) {
+                            $this->sys->setDistribution($list['Debian']['Name']);
+                        } else {
+                            $this->sys->setDistribution($list['Debian']['Name']." ".trim($buf));
+                        }
+                    } else {
+                        if ( is_null($buf) || (trim($buf) == "") ) {
+                            $this->sys->setDistribution('Debian');
+                        } else {
+                            $this->sys->setDistribution(trim($buf));
+                        }
+                    }
+                } elseif (file_exists($filename="/etc/distro-release")) {
+                    if (!CommonFunctions::rfts($filename, $buf, 1, 4096, false)) {
+                        $buf = "";
+                    }
+                    if ( !is_null($buf) && (trim($buf) != "")) {
+                        $this->sys->setDistribution(trim($buf));
+                        if ( preg_match('/^(\S+)\s*/', $buf, $id_buf)
+                            && isset($list[trim($id_buf[1])]['Image'])) {
+                                $this->sys->setDistributionIcon($list[trim($id_buf[1])]['Image']);
         }
     }
+                } elseif (file_exists($filename="/etc/system-release")) {
+                    if (!CommonFunctions::rfts($filename, $buf, 1, 4096, false)) {
+                        $buf = "";
+                    }
+                    if ( !is_null($buf) && (trim($buf) != "")) {
+                        $this->sys->setDistribution(trim($buf));
+                        if ( preg_match('/^(\S+)\s*/', $buf, $id_buf)
+                            && isset($list[trim($id_buf[1])]['Image'])) {
+                                $this->sys->setDistributionIcon($list[trim($id_buf[1])]['Image']);
+                        }
+                   }
+                } elseif ( file_exists($filename="/etc/os-release")
+                   && CommonFunctions::rfts($filename, $buf, 0, 4096, false)
+                   && preg_match('/^NAME="?([^"\n]+)"?/m', $buf, $id_buf) ) {  // last chance
+                    if (preg_match('/^PRETTY_NAME="?([^"\n]+)"?/m', $buf, $desc_buf)) {
+                        $this->sys->setDistribution(trim($desc_buf[1]));
+                    } else {
+                        if (isset($list[trim($id_buf[1])]['Name'])) {
+                            $this->sys->setDistribution(trim($list[trim($id_buf[1])]['Name']));
+                        } else {
+                            $this->sys->setDistribution(trim($id_buf[1]));
+                        }
+                        if (preg_match('/^VERSION="?([^"\n]+)"?/m', $buf, $vers_buf)) {
+                            $this->sys->setDistribution($this->sys->getDistribution()." ".trim($vers_buf[1]));
+                        } elseif (preg_match('/^VERSION_ID="?([^"\n]+)"?/m', $buf, $vers_buf)) {
+                            $this->sys->setDistribution($this->sys->getDistribution()." ".trim($vers_buf[1]));
+                        }
+                    }
+                    if (isset($list[trim($id_buf[1])]['Image'])) {
+                        $this->sys->setDistributionIcon($list[trim($id_buf[1])]['Image']);
+                    }
+                }
+            }
+            /* restore error level */
+            error_reporting($old_err_rep);
+            /* restore error handler */
+            if (function_exists('errorHandlerPsi')) {
+                set_error_handler('errorHandlerPsi');
+            }
+        }
+    }
+
     /**
      * get the information
      *
@@ -543,11 +884,11 @@ class Linux extends OS
      *
      * @return Void
      */
-    function build()
+    public function build()
     {
         $this->_distro();
-        $this->_ip();
         $this->_hostname();
+        $this->_ip();
         $this->_kernel();
         $this->_uptime();
         $this->_users();
@@ -562,4 +903,3 @@ class Linux extends OS
         $this->_loadavg();
     }
 }
-?>

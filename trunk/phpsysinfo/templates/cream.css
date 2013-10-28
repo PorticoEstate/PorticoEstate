@@ -21,6 +21,7 @@ body {
     padding: 20px 20px 0 20px;
     overflow: auto;
     width: 940px;
+    _width: 945px; /* ie6 */
 }
 
 p {
@@ -36,6 +37,7 @@ h1 {
     font-weight: normal;
     line-height: 1.5em;
     margin: 0 10px;
+    _margin: 0 15px 0 10px; /* ie6 */
     padding: 10px 10px;
     text-align: center;
 }
@@ -52,7 +54,17 @@ h2 {
 
 table {
     width: 100%;
+    background-color: #fff;
 }
+
+.plugin {
+    float: left;
+    margin: 10px 0 0 10px;
+    _margin: 10px 5px 0 5px; /* ie6 */
+    padding: 1px;
+    background: #fff;
+}
+
 
 th, td, h3 {
     font-size: 100%;
@@ -78,10 +90,11 @@ a:hover {
     width: 100px;
 }
 
-#vitals, #network, #memory, #filesystem, #hardware, #temp, #voltage, #fan, #ups {
+#vitals, #network, #memory, #filesystem, #hardware, #temp, #voltage, #fan, #power, #ups {
     background-color: #fff;
     float: left;
     margin: 10px 0 0 10px;
+    _margin: 10px 5px 0 5px; /* ie6 */
     padding: 1px;
     width: 451px;
 }
@@ -94,9 +107,6 @@ a:hover {
     width: 915px;
 }
 
-#filesystemTable .odd {
-    background: #FFF;
-}
 
 #filesystemTable thead tr .header {
     background-image: url("../gfx/bg.gif");
@@ -125,9 +135,6 @@ a:hover {
     text-align: center;
 }
 
-.odd {
-    background-color: #FBFBF9;
-}
 
 .even {
     background-color: #FBFBF9;
@@ -135,6 +142,10 @@ a:hover {
 
 .bar {
     background-color: #58626D;
+}
+
+.barwarn {
+    background-color: #9B2F65;
 }
 
 .right {

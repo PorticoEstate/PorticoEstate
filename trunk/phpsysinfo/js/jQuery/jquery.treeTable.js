@@ -64,8 +64,14 @@ with it, as long as you keep this copyright notice on the page
 	    return v||[];
   	},
     cset = function (n,v) {
-  		jq.unique(v);
+  		v = arrUniq(v);
 	  	document.cookie = n+"="+v.join("|")+";";
+	},
+    arrUniq = function(a) {/* http://www.shamasis.net/2009/09/fast-algorithm-to-find-unique-items-in-javascript-array/ */
+      var o = {}, i, l = a.length, r = [];
+      for(i=0; i<l;i++) o[a[i]] = a[i];
+        for(i in o) r.push(o[i]);
+          return r;
 	  };
     for (var x=0,xl=map.length; x<xl;x++){//From map of parents, get map of kids
       num = map[x];
