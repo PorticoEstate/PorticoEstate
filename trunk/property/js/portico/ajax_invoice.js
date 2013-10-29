@@ -39,7 +39,7 @@ $(document).ready(function(){
 		$("#saksbehandlerid").html( '' );
 		$("#budsjettansvarligid").html( '' );
 //		$("#remark").html( '' );
-		$("#process_log").html( '' );
+		$("#process_log").val( '' );
 		$("#dim_a").val('' );
 		$("#dim_b").html( "<option>Velg</option>" );
 		$("#dim_e").html( "<option>Velg</option>" );
@@ -551,7 +551,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#saksbehandlerid").html( '' );
 				$("#budsjettansvarligid").html( '' );
 			//	$("#remark").html( '' );
-				$("#process_log").html( '' );
+				$("#process_log").val( '' );
 				$("#dim_a").val('' );
 				$("#dim_b").html( "<option>Velg</option>" );
 				$("#dim_e").html( "<option>Velg</option>" );
