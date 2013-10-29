@@ -111,7 +111,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%' OR project_id=" . (int)$query .')';
+				$querymethod = " $where (address {$this->like} '%{$query}%' OR first_name {$this->like} '%{$query}%' OR last_name {$this->like} '%{$query}%' OR project_id=" . (int)$query .')';
 			}
 
 			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
@@ -162,7 +162,7 @@
 		function check_claim_project($project_id)
 		{
 			$sql = "SELECT fm_tenant_claim.*, descr as category FROM fm_tenant_claim"
-				. " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
+				. " {$this->join} fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
 				. " WHERE project_id = $project_id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
