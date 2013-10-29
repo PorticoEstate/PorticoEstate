@@ -24,12 +24,26 @@ error_reporting(E_ALL | E_STRICT);
  */
 function __autoload($class_name)
 {
-    $class_name = str_replace('-', '', $class_name);
-    $dirs = array('/plugins/'.$class_name.'/', '/includes/', '/includes/interface/', '/includes/to/', '/includes/to/device/', '/includes/os/', '/includes/mb/', '/includes/plugin/', '/includes/xml/', '/includes/web/', '/includes/error/', '/includes/js/', '/includes/output/', '/includes/ups/');
+    //$class_name = str_replace('-', '', $class_name);
+
+    /* case-insensitive folders */
+    $dirs = array('/plugins/'.strtolower($class_name).'/', '/includes/mb/', '/includes/ups/');
+
+    foreach ($dirs as $dir) {
+        if (file_exists(APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php')) {
+            include_once APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php';
+
+            return;
+        }
+    }
+
+    /* case-sensitive folders */
+    $dirs = array('/includes/', '/includes/interface/', '/includes/to/', '/includes/to/device/', '/includes/os/', '/includes/plugin/', '/includes/xml/', '/includes/web/', '/includes/error/', '/includes/js/', '/includes/output/');
     
     foreach ($dirs as $dir) {
         if (file_exists(APP_ROOT.$dir.'class.'.$class_name.'.inc.php')) {
             include_once APP_ROOT.$dir.'class.'.$class_name.'.inc.php';
+
             return;
         }
     }
@@ -57,4 +71,3 @@ function errorHandlerPsi($level, $message, $file, $line)
 }
 
 set_error_handler('errorHandlerPsi');
-?>

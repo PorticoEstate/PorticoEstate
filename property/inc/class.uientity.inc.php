@@ -246,6 +246,15 @@
 				}
 			}
 
+/*
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+			{
+				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+				$socase 			= CreateObject('controller.socase');
+				$controller_cases	= $socase->get_cases_by_message($location_id, $id);
+			}
+*/
+
 //------ Start pagination
 
 			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
@@ -2209,6 +2218,54 @@ JS;
 							);
 						}
 					}
+				}
+
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+				{
+
+					$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
+					$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+					$socase 			= CreateObject('controller.socase');
+					$controller_cases	= $socase->get_cases_by_component($location_id, $id);
+					
+					$_statustext = array();
+					$_statustext[0] = lang('open');
+					$_statustext[1] = lang('closed');
+					$_statustext[2] = lang('pending');
+				}
+				
+				foreach ($controller_cases as $case)
+				{
+					switch ($case['status'])
+					{
+						case 0:
+						case 2:
+							$_method = 'view_open_cases';
+							break;
+						case 1:
+							$_method = 'view_closed_cases';
+							break;
+						default:
+							$_method = 'view_open_cases';						
+					}
+
+					$_link = $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction' => "controller.uicase.{$_method}",
+						 	'check_list_id' => $case['check_list_id']
+						)
+					);
+					
+					$_target[] = array
+					(
+						'url'		=> "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
+						'type'		=> $lang_controller,
+						'title'		=> $case['descr'],
+						'status'	=> $_statustext[$case['status']],
+						'user'		=> $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
+						'entry_date'=> $GLOBALS['phpgw']->common->show_date($case['modified_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					);
+					unset($_link);
 				}
 
 				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));

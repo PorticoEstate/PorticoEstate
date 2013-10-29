@@ -50,6 +50,7 @@
 		protected $modified_by;
 		protected $measurement;
 		protected $location_code;
+		protected $component_location_id; // komponent type
 		protected $component_id;
 		protected $component_descr;
     
@@ -147,6 +148,16 @@
 		public function set_location_code($location_code)
 		{
 			$this->location_code = $location_code;
+		}
+
+    	public function get_component_location_id()
+    	{
+    		return $this->component_location_id;
+    	}
+		
+		public function set_component_location_id($component_location_id)
+		{
+			$this->component_location_id = $component_location_id;
 		}
 
     	public function get_component_id()

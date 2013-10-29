@@ -40,12 +40,33 @@ class CpuDevice
     private $_cpuSpeed = 0;
     
     /**
+     * max speed of the cpu in hertz
+     *
+     * @var Integer
+     */
+    private $_cpuSpeedMax = 0;
+
+    /**
+     * min speed of the cpu in hertz
+     *
+     * @var Integer
+     */
+    private $_cpuSpeedMin = 0;
+
+    /**
      * cache size in bytes, if available
      *
      * @var Integer
      */
     private $_cache = null;
     
+    /**
+     * virtualization, if available
+     *
+     * @var String
+     */
+    private $_virt = null;
+
     /**
      * busspeed in hertz, if available
      *
@@ -153,6 +174,32 @@ class CpuDevice
     }
     
     /**
+     * Returns $_virt.
+     *
+     * @see Cpu::$_virt
+     *
+     * @return String
+     */
+    public function getVirt()
+    {
+        return $this->_virt;
+    }
+
+    /**
+     * Sets $_virt.
+     *
+     * @param String $_virt
+     *
+     * @see Cpu::$_virt
+     *
+     * @return Void
+     */
+    public function setVirt($virt)
+    {
+        $this->_virt = $virt;
+    }
+
+    /**
      * Returns $_cpuSpeed.
      *
      * @see Cpu::$_cpuSpeed
@@ -164,6 +211,30 @@ class CpuDevice
         return $this->_cpuSpeed;
     }
     
+    /**
+     * Returns $_cpuSpeedMax.
+     *
+     * @see Cpu::$_cpuSpeedMAx
+     *
+     * @return Integer
+     */
+    public function getCpuSpeedMax()
+    {
+        return $this->_cpuSpeedMax;
+    }
+
+    /**
+     * Returns $_cpuSpeedMin.
+     *
+     * @see Cpu::$_cpuSpeedMin
+     *
+     * @return Integer
+     */
+    public function getCpuSpeedMin()
+    {
+        return $this->_cpuSpeedMin;
+    }
+
     /**
      * Sets $_cpuSpeed.
      *
@@ -178,6 +249,34 @@ class CpuDevice
         $this->_cpuSpeed = $cpuSpeed;
     }
     
+    /**
+     * Sets $_cpuSpeedMax.
+     *
+     * @param Integer $cpuSpeedMax cpuspeedmax
+     *
+     * @see Cpu::$_cpuSpeedMax
+     *
+     * @return Void
+     */
+    public function setCpuSpeedMax($cpuSpeedMax)
+    {
+        $this->_cpuSpeedMax = $cpuSpeedMax;
+    }
+
+    /**
+     * Sets $_cpuSpeedMin.
+     *
+     * @param Integer $cpuSpeedMin cpuspeedmin
+     *
+     * @see Cpu::$_cpuSpeedMin
+     *
+     * @return Void
+     */
+    public function setCpuSpeedMin($cpuSpeedMin)
+    {
+        $this->_cpuSpeedMin = $cpuSpeedMin;
+    }
+
     /**
      * Returns $_model.
      *
@@ -256,4 +355,3 @@ class CpuDevice
         $this->_load = $load;
     }
 }
-?>
