@@ -44,15 +44,14 @@ class SensorDevice
      *
      * @var Integer
      */
-    private $_max = 0;
+    private $_max = null;
     
     /**
      * minimum value of the sensor
      *
      * @var Integer
      */
-    private $_min = 0;
-
+    private $_min = null;
     
     /**
      * Returns $_max.
@@ -158,4 +157,3 @@ class SensorDevice
         $this->_value = $value;
     }
 }
-?>

@@ -103,6 +103,13 @@ class UPSDevice
     private $_load = null;
     
     /**
+     * battery installation date
+     *
+     * @var String
+     */
+    private $_batteryDate = null;
+
+    /**
      * current battery volt
      *
      * @var Integer
@@ -149,6 +156,32 @@ class UPSDevice
         $this->_batterCharge = $batterCharge;
     }
     
+    /**
+     * Returns $_batteryDate.
+     *
+     * @see UPSDevice::$_batteryDate
+     *
+     * @return String
+     */
+    public function getBatteryDate()
+    {
+        return $this->_batteryDate;
+    }
+
+    /**
+     * Sets $_batteryDate.
+     *
+     * @param object $batteryDate battery date
+     *
+     * @see UPSDevice::$_batteryDate
+     *
+     * @return Void
+     */
+    public function setBatteryDate($batteryDate)
+    {
+        $this->_batteryDate = $batteryDate;
+    }
+
     /**
      * Returns $_batteryVoltage.
      *
@@ -487,4 +520,3 @@ class UPSDevice
         $this->_timeLeft = $timeLeft;
     }
 }
-?>

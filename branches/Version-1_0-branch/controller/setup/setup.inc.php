@@ -1,6 +1,6 @@
 <?php
 	$setup_info['controller']['name'] = 'controller';
-	$setup_info['controller']['version'] = '0.1.47';
+	$setup_info['controller']['version'] = '0.1.48';
 	$setup_info['controller']['app_order'] = 100;
 	$setup_info['controller']['enable'] = 1;
 	$setup_info['controller']['app_group']	= 'office';
@@ -29,12 +29,12 @@
 	(
 		'menu'					=> 'controller.menu.get_menu',
 		'config',
-		'home'                => 'controller.hook_helper.home_backend',
+		'home'              	=> 'controller.hook_helper.home_backend',
 		'home_mobilefrontend'	=> 'controller.hook_helper.home_mobilefrontend',
 		'settings',
 		'cat_add'				=> 'controller.cat_hooks.cat_add',
-		'cat_delete'		=> 'controller.cat_hooks.cat_delete',
-		'cat_edit'			=> 'controller.cat_hooks.cat_edit'
+		'cat_delete'			=> 'controller.cat_hooks.cat_delete',
+		'cat_edit'				=> 'controller.cat_hooks.cat_edit'
 	);
 	
 	$setup_info['controller']['tables'] = array 

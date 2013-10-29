@@ -155,15 +155,19 @@
 
 			$cases_at_component_group = array();
 			$existing_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'all', null, null);//$location_code_search_components);
+
 			foreach($existing_check_items_and_cases as $check_item)
 			{
 				foreach($check_item->get_cases_array() as $case)
 				{
-					$component_id = $case->get_component_id();
-					if($component_id)
+					$_component_location_id = $case->get_component_location_id();
+					$_component_id = $case->get_component_id();
+					if($_component_id)
 					{
-						$cases_at_component_group[$check_item->get_control_item()->get_control_group_id()][$component_id] ++;
+						$cases_at_component_group[$check_item->get_control_item()->get_control_group_id()][$_component_location_id][$_component_id] ++;
 					}
+					unset ($_component_location_id );
+					unset ($_ocation_id );
 				}
 			}
 
@@ -221,9 +225,9 @@
 						{
 							foreach($_components_at_location as &$_component_at_location)
 							{
-								if(isset($cases_at_component_group[$control_group->get_id()][$_component_at_location['id']]))
+								if(isset($cases_at_component_group[$control_group->get_id()][$_component_at_location['location_id']][$_component_at_location['id']]))
 								{
-									$_component_at_location['short_description'] .= ' (' . $cases_at_component_group[$control_group->get_id()][$_component_at_location['id']] . ')';
+									$_component_at_location['short_description'] .= ' (' . $cases_at_component_group[$control_group->get_id()][$_component_at_location['location_id']][$_component_at_location['id']] . ')';
 								}
 							}
 							
@@ -299,8 +303,8 @@
 			$type = phpgw::get_var('type');
 			$status = phpgw::get_var('status');
 			$location_code = phpgw::get_var('location_code');
+			$component_location_id = phpgw::get_var('component_location_id', 'int');
 			$component_id = phpgw::get_var('component_id', 'int');
-
 			 
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
@@ -336,6 +340,7 @@
 			$case->set_modified_by($user_id);
 			$case->set_status($status);
 			$case->set_location_code( $location_code );
+			$case->set_component_location_id($component_location_id);
 			$case->set_component_id($component_id);
 
 			// Saves selected value from  or measurement
@@ -419,6 +424,20 @@
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", "no_message_registered");
+
+			foreach ($check_items_and_cases as $check_item)
+			{
+				foreach($check_item->get_cases_array() as $case)
+				{
+					$component_location_id	= $case->get_component_location_id();
+					$component_id			= $case->get_component_id();
+					if($component_id)
+					{
+						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
+						$case->set_component_descr($short_desc);
+					}
+				}
+			}
 
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
@@ -529,12 +548,22 @@
 			$message_details .= "Kontrollområde: " .  $control_area_name . "\n\n";
 			
 			// Generates message details from comment field in check item 
+
 			$counter = 1;
 			foreach($case_ids as $case_id)
 			{
 				$case = $this->so->get_single($case_id);
-				$message_details .= "Gjøremål $counter: ";
-				$message_details .=  $case->get_descr() . "<br>";
+				$component_location_id	= $case->get_component_location_id();
+
+				$message_details .= "Gjøremål {$counter}: \n";
+
+				if($component_id = $case->get_component_id())
+				{
+					$short_desc =  execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));				
+					$message_details .= "Hvor: {$short_desc}\n";
+				}
+
+				$message_details .=  'Hva: ' . $case->get_descr() . "\n";
 				$counter++;
 			}
 			
@@ -844,11 +873,10 @@
 			{
 				$control_item_with_options = $this->so_control_item->get_single_with_options( $check_item->get_control_item_id() );
 				
-				$component_location_id = $check_item->get_control_item()->get_component_location_id();
-
 				foreach($check_item->get_cases_array() as $case)
 				{
-					$component_id = $case->get_component_id();
+					$component_location_id	= $case->get_component_location_id();
+					$component_id			= $case->get_component_id();
 					if($component_id)
 					{
 						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
@@ -947,27 +975,18 @@
 //---------
 				foreach($closed_check_items_and_cases as $key => $check_item)
 				{
-	//				$control_item_with_options = $this->so_control_item->get_single_with_options( $check_item->get_control_item_id() );
-				
-					$component_location_id = $check_item->get_control_item()->get_component_location_id();
-
 					foreach($check_item->get_cases_array() as $case)
 					{
-						$component_id = $case->get_component_id();
+						$component_location_id	= $case->get_component_location_id();
+						$component_id			= $case->get_component_id();
 						if($component_id)
 						{
 							$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
 							$case->set_component_descr($short_desc);
 						}
 					}
-
-	//				$check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
-	//				$closed_check_items_and_cases[$key] = $check_item;
 				}
-
-
 //-------
-
 
 			}
 

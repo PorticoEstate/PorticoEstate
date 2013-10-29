@@ -35,13 +35,23 @@ if (isset($_GET['plugin'])) {
     $plugin = basename(htmlspecialchars($_GET['plugin']));
     if ($plugin == "complete") {
         $output = new WebpageXML(true, null);
-        $output->run();
     } elseif ($plugin != "") {
         $output = new WebpageXML(false, $plugin);
-        $output->run();
+    } else {
+        unset($output);
     }
 } else {
     $output = new WebpageXML(false, null);
-    $output->run();
 }
-?>
+// if $output is correct generate output in proper type
+if (isset($output) && is_object($output)) {
+    if (isset($_GET['json']) || isset($_GET['jsonp'])) {
+        $json = json_encode(
+            simplexml_load_string($output->getXMLString())
+        );
+        // check for jsonp with callback name restriction
+        echo (isset($_GET['jsonp'])) ? (!preg_match('/[^A-Za-z0-9_]/', $_GET['callback'])?$_GET['callback']:'') . '('.$json.')' : $json;
+    } else {
+    $output->run();
+    }
+}

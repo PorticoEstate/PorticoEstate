@@ -12,7 +12,7 @@
  * @version   SVN: $Id$
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
+/**
  * application root path
  *
  * @var string
@@ -33,10 +33,10 @@ if ($file != null && $plugin == null) {
     }
 }
 if ($file == null && $plugin != null) {
-    $script = APP_ROOT.'/plugins/'.$plugin.'/js/'.$plugin.'.js';
+    $script = APP_ROOT.'/plugins/'.strtolower($plugin).'/js/'.strtolower($plugin).'.js';
 }
 if ($file != null && $plugin != null) {
-    $script = APP_ROOT.'/plugins/'.$plugin.'/js/'.$file.'.js';
+    $script = APP_ROOT.'/plugins/'.strtolower($plugin).'/js/'.strtolower($file).'.js';
 }
 
 if ($script != null && file_exists($script) && is_readable($script)) {
@@ -45,8 +45,22 @@ if ($script != null && file_exists($script) && is_readable($script)) {
     if (defined("PSI_DEBUG") && PSI_DEBUG === true) {
         echo $filecontent;
     } else {
+        if (defined("PSI_JS_COMPRESSION")) {
+            switch (strtolower(PSI_JS_COMPRESSION)) {
+                case "normal":
         $packer = new JavaScriptPacker($filecontent);
         echo $packer->pack();
+                    break;
+                case "none":
+                    $packer = new JavaScriptPacker($filecontent,0);
+                    echo $packer->pack();
+                    break;
+                default:
+                    echo $filecontent;
+                    break;
+            }
+        } else {
+            echo $filecontent;
+        }
     }
 }
-?>

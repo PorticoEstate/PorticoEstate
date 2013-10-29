@@ -50,6 +50,7 @@
 											</xsl:if>
 						            	</input>
 						            	<input type="hidden" name="control_group_id"  value="{$control_group_id}" />
+						            	<input type="hidden" name="component_location_id"  value="" />
 						            	<input type="hidden" name="component_id"  value="" />
 										<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 										<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
@@ -237,7 +238,7 @@
 </xsl:template>
 
 <xsl:template match="component_options">
-	<option value="{id}">
+	<option value="{location_id}_{id}">
 		<xsl:if test="selected != 0">
 			<xsl:attribute name="selected" value="selected" />
 		</xsl:if>

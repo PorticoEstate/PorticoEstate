@@ -85,6 +85,7 @@
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
+				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
 					
 				return $case;
@@ -112,6 +113,8 @@
 
 			$this->db->query($sql);
 
+			$cases_array = array();
+
 			while ($this->db->next_record())
 			{
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
@@ -126,6 +129,7 @@
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
+				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));				
 
 				$cases_array[] = $case;
@@ -133,6 +137,44 @@
 
 			return $cases_array;
 		}
+
+
+		/**
+		 * Get cases for component  
+		 * 
+		 * @param	$location_id location id
+		 * @param	$location_item_id location item id
+		 * @return array of case object represented as objects or arrays
+		*/
+		public function get_cases_by_component($component_location_id, $component_id)
+		{
+			$component_location_id	= (int) $component_location_id;
+			$component_id			= (int) $component_id;
+
+			$sql = "SELECT controller_check_item_case.*, check_list_id FROM controller_check_item_case " 
+			. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
+			. " WHERE controller_check_item_case.component_location_id = {$component_location_id} AND controller_check_item_case.component_id = {$component_id}";
+
+			$this->db->query($sql);
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'			=> $this->db->f('id'),
+					'check_list_id'	=> $this->db->f('check_list_id'),
+					'descr'			=> $this->db->f('descr', true),
+					'user_id'		=> $this->db->f('user_id'),
+					'status'		=> $this->db->f('status'),
+					'modified_date'	=> $this->db->f('modified_date')
+				);
+			}
+
+			return $values;
+		}
+
+
 		
 		/**
 		 * Inserts a new case in database  
@@ -156,6 +198,7 @@
 					'modified_by',
 					'measurement',
 					'location_code',
+					'component_location_id',
 					'component_id'
 			);
 
@@ -171,6 +214,7 @@
 				$this->marshal($case->get_modified_by(), 'int'),
 				$this->marshal($case->get_measurement(), 'string'),
 				$this->marshal($case->get_location_code(), 'string'),
+				$this->marshal($case->get_component_location_id(), 'int'),				
 				$this->marshal($case->get_component_id(), 'int'),
 			);
 
@@ -240,7 +284,7 @@
 			}
 
 			$value_set	= $this->db->validate_update($values);
-			$this->db->query("UPDATE controller_check_list SET {$value_set} WHERE id = '{$check_list_id}'",__LINE__,__FILE__);
+			return $this->db->query("UPDATE controller_check_list SET {$value_set} WHERE id = '{$check_list_id}'",__LINE__,__FILE__);
 		}
 
 		/**

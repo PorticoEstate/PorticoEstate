@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //
-// $Id: phpsysinfo.js 340 2009-10-13 11:42:09Z bigmichi1 $
+// $Id: phpsysinfo.js 699 2012-09-15 11:57:13Z namiltd $
 //
 
 /*global $, jQuery */
@@ -76,9 +76,12 @@ function readCookie(name) {
  */
 function round(x, n) {
     var e = 0, k = "";
-    if (n < 1 || n > 14) {
+    if (n < 0 || n > 14) {
         return 0;
     }
+    if (n === 0) {
+        return Math.round(x);
+    } else {
     e = Math.pow(10, n);
     k = (Math.round(x * e) / e).toString();
     if (k.indexOf('.') === -1) {
@@ -86,6 +89,7 @@ function round(x, n) {
     }
     k += e.toString().substring(1);
     return k.substring(0, k.indexOf('.') + n + 1);
+    }
 }
 
 /**
@@ -237,8 +241,8 @@ function changeLanguage(plugin) {
  */
 function filesystemtable() {
     var html = "";
-    html += "        <h2>" + genlang(30, false) + "</h2>\n";
-    html += "        <table id=\"filesystemTable\" cellspacing=\"0\">\n";
+    html += "<h2>" + genlang(30, false) + "</h2>\n";
+    html += "        <table id=\"filesystemTable\" style=\"border-spacing:0;\">\n";
     html += "          <thead>\n";
     html += "            <tr>\n";
     html += "              <th>" + genlang(31, false) + "</th>\n";
@@ -405,46 +409,50 @@ function formatBytes(bytes, xml) {
         byteFormat = $(this).attr("byteFormat");
     });
     
-    switch (byteFormat) {
-    case "PiB":
+    switch (byteFormat.toLowerCase()) {
+    case "pib":
         show += round(bytes / Math.pow(1024, 5), 2);
         show += "&nbsp;" + genlang(90, true);
         break;
-    case "TiB":
+    case "tib":
         show += round(bytes / Math.pow(1024, 4), 2);
         show += "&nbsp;" + genlang(86, true);
         break;
-    case "GiB":
+    case "gib":
         show += round(bytes / Math.pow(1024, 3), 2);
         show += "&nbsp;" + genlang(87, true);
         break;
-    case "MiB":
+    case "mib":
         show += round(bytes / Math.pow(1024, 2), 2);
         show += "&nbsp;" + genlang(88, true);
         break;
-    case "KiB":
+    case "kib":
         show += round(bytes / Math.pow(1024, 1), 2);
         show += "&nbsp;" + genlang(89, true);
         break;
-    case "PB":
+    case "pb":
         show += round(bytes / Math.pow(1000, 5), 2);
         show += "&nbsp;" + genlang(91, true);
         break;
-    case "TB":
+    case "tb":
         show += round(bytes / Math.pow(1000, 4), 2);
         show += "&nbsp;" + genlang(85, true);
         break;
-    case "GB":
+    case "gb":
         show += round(bytes / Math.pow(1000, 3), 2);
         show += "&nbsp;" + genlang(41, true);
         break;
-    case "MB":
+    case "mb":
         show += round(bytes / Math.pow(1000, 2), 2);
         show += "&nbsp;" + genlang(40, true);
         break;
-    case "KB":
+    case "kb":
         show += round(bytes / Math.pow(1000, 1), 2);
         show += "&nbsp;" + genlang(39, true);
+        break;
+    case "b":
+        show += bytes;
+        show += "&nbsp;" + genlang(96, true);
         break;
     case "auto_decimal":
         if (bytes > Math.pow(1000, 5)) {
@@ -467,8 +475,14 @@ function formatBytes(bytes, xml) {
                         show += "&nbsp;" + genlang(40, true);
                     }
                     else {
+                        if (bytes > Math.pow(1000, 1)) {
                         show += round(bytes / Math.pow(1000, 1), 2);
                         show += "&nbsp;" + genlang(39, true);
+                    }
+                        else {
+                                show += bytes;
+                                show += "&nbsp;" + genlang(96, true);
+                        }
                     }
                 }
             }
@@ -495,8 +509,14 @@ function formatBytes(bytes, xml) {
                         show += "&nbsp;" + genlang(88, true);
                     }
                     else {
+                        if (bytes > Math.pow(1024, 1)) {
                         show += round(bytes / Math.pow(1024, 1), 2);
                         show += "&nbsp;" + genlang(89, true);
+                    }
+                        else {
+                            show += bytes;
+                            show += "&nbsp;" + genlang(96, true);
+                        }
                     }
                 }
             }
@@ -538,11 +558,14 @@ function formatTemp(degreeC, xml) {
 
 /**
  * create a visual HTML bar from a given size, the layout of that bar can be costumized through the bar css-class
- * @param {Number} size
+ * @param {Number} size barclass
  * @return {String} HTML string which contains the full layout of the bar
  */
-function createBar(size) {
-    return "<div class=\"bar\" style=\"float:left; width: " + size + "px;\">&nbsp;</div>&nbsp;" + size + "%";
+function createBar(size, barclass) {
+    if (barclass === undefined) {
+        barclass = "bar";
+    }
+    return "<div class=\"" + barclass + "\" style=\"float:left; width: " + size + "px;\">&nbsp;</div>&nbsp;" + size + "%";
 }
 
 /**
@@ -551,6 +574,9 @@ function createBar(size) {
  */
 function refreshVitals(xml) {
     var hostname = "", ip = "", kernel = "", distro = "", icon = "", uptime = "", users = 0, loadavg = "";
+    var syslang = "", codepage = "";
+    var lastboot = 0, timestamp = Number(new Date());
+
     $("Vitals", xml).each(function getVitals(id) {
         hostname = $(this).attr("Hostname");
         ip = $(this).attr("IPAddr");
@@ -558,10 +584,23 @@ function refreshVitals(xml) {
         distro = $(this).attr("Distro");
         icon = $(this).attr("Distroicon");
         uptime = formatUptime(parseInt($(this).attr("Uptime"), 10));
+        lastboot = new Date(timestamp - (parseInt($(this).attr("Uptime"), 10)*1000));
         users = parseInt($(this).attr("Users"), 10);
         loadavg = $(this).attr("LoadAvg");
         if ($(this).attr("CPULoad") !== undefined) {
             loadavg = loadavg + "<br/>" + createBar(parseInt($(this).attr("CPULoad"), 10));
+        }
+        if ($(this).attr("SysLang") !== undefined) {
+            syslang = $(this).attr("SysLang");
+            document.getElementById("s_syslang_tr").style.display='';
+        }
+        if ($(this).attr("CodePage") !== undefined) {
+            codepage = $(this).attr("CodePage");
+            if ($(this).attr("SysLang") !== undefined) {
+                document.getElementById("s_codepage_tr1").style.display='';
+            } else {
+                document.getElementById("s_codepage_tr2").style.display='';
+            }
         }
         document.title = "System information: " + hostname + " (" + ip + ")";
         $("#s_hostname_title").html(hostname);
@@ -571,8 +610,12 @@ function refreshVitals(xml) {
         $("#s_kernel").html(kernel);
         $("#s_distro").html("<img src='./gfx/images/" + icon + "' alt='Icon' height='16' width='16' style='vertical-align:middle;' />&nbsp;" + distro);
         $("#s_uptime").html(uptime);
+        $("#s_lastboot").html(lastboot.toGMTString()); //toGMTString() or toLocaleString()
         $("#s_users").html(users);
         $("#s_loadavg").html(loadavg);
+        $("#s_syslang").html(syslang);
+        $("#s_codepage_1").html(codepage);
+        $("#s_codepage_2").html(codepage);
     });
 }
 
@@ -586,11 +629,14 @@ function refreshVitals(xml) {
 function fillCpu(xml, tree, rootposition, collapsed) {
     var cpucount = 0, html = "";
     $("Hardware CPU CpuCore", xml).each(function getCpuCore(cpuCoreId) {
-        var model = "", speed = 0, bus = 0, cache = 0, bogo = 0, temp = 0, load = 0, cpucoreposition = 0;
+        var model = "", speed = 0, bus = 0, cache = 0, bogo = 0, temp = 0, load = 0, speedmax = 0, speedmin = 0, cpucoreposition = 0, virt = "";
         cpucount += 1;
         model = $(this).attr("Model");
         speed = parseInt($(this).attr("CpuSpeed"), 10);
+        speedmax = parseInt($(this).attr("CpuSpeedMax"), 10);
+        speedmin = parseInt($(this).attr("CpuSpeedMin"), 10);
         cache = parseInt($(this).attr("Cache"), 10);
+        virt = $(this).attr("Virt");
         bus = parseInt($(this).attr("BusSpeed"), 10);
         temp = parseInt($(this).attr("Cputemp"), 10);
         bogo = parseInt($(this).attr("Bogomips"), 10);
@@ -598,11 +644,26 @@ function fillCpu(xml, tree, rootposition, collapsed) {
         
         html += "<tr><td colspan=\"2\">" + model + "</td></tr>\n";
         cpucoreposition = tree.push(rootposition);
+        collapsed.push(cpucoreposition);
+        if (!isNaN(speed)) {
         html += "<tr><td style=\"width:50%\">" + genlang(13, true) + ":</td><td>" + formatHertz(speed) + "</td></tr>\n";
         tree.push(cpucoreposition);
-        collapsed.push(cpucoreposition);
+        }
+        if (!isNaN(speedmax)) {
+            html += "<tr><td style=\"width:50%\">" + genlang(100, true) + ":</td><td>" + formatHertz(speedmax) + "</td></tr>\n";
+            tree.push(cpucoreposition);
+        }
+        if (!isNaN(speedmin)) {
+            html += "<tr><td style=\"width:50%\">" + genlang(101, true) + ":</td><td>" + formatHertz(speedmin) + "</td></tr>\n";
+            tree.push(cpucoreposition);
+        }
+//        collapsed.push(cpucoreposition);
         if (!isNaN(cache)) {
             html += "<tr><td style=\"width:50%\">" + genlang(15, true) + ":</td><td>" + formatBytes(cache) + "</td></tr>\n";
+            tree.push(cpucoreposition);
+        }
+        if (virt != undefined) {
+            html += "<tr><td style=\"width:50%\">" + genlang(94, true) + ":</td><td>" + virt + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
         if (!isNaN(bus)) {
@@ -663,7 +724,7 @@ function fillHWDevice(xml, type, tree, rootposition) {
 function refreshHardware(xml) {
     var html = "", tree = [], closed = [], index = 0;
     $("#hardware").empty();
-    html += "  <h2>" + genlang(10, false) + "</h2>\n";
+    html += "<h2>" + genlang(10, false) + "</h2>\n";
     html += "  <table id=\"HardwareTree\" class=\"tablemain\" style=\"width:100%;\">\n";
     html += "   <tbody class=\"tree\">\n";
     
@@ -707,7 +768,7 @@ function refreshHardware(xml) {
         column: 0,
         striped: true,
         highlight: false,
-        state: true
+        state: false
     });
 }
 
@@ -716,15 +777,67 @@ function refreshHardware(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshNetwork(xml) {
-    var name = "", rx = 0, tx = 0, er = 0, dr = 0;
-    $("#tbody_network").empty();
+    var tree = [], closed = [], html0= "", html1= "" ,html = "", isinfo = false;
+    $("#network").empty();
+
+    html0 += "<h2>" + genlang(21, false) + "</h2>\n";
+
+    html1 += "   <thead>\n";
+    html1 += "    <tr>\n";
+    html1 += "     <th>" + genlang(22, true) + "</th>\n";
+    html1 += "     <th class=\"right\" style=\"width:50px;\">" + genlang(23, true) + "</th>\n";
+    html1 += "     <th class=\"right\" style=\"width:50px;\">" + genlang(24, true) + "</th>\n";
+    html1 += "     <th class=\"right\" style=\"width:50px;\">" + genlang(25, true) + "</th>\n";
+    html1 += "    </tr>\n";
+    html1 += "   </thead>\n";
+
     $("Network NetDevice", xml).each(function getDevice(id) {
+        var name = "", rx = 0, tx = 0, er = 0, dr = 0, info = "", networkindex = 0;
         name = $(this).attr("Name");
         rx = parseInt($(this).attr("RxBytes"), 10);
         tx = parseInt($(this).attr("TxBytes"), 10);
         er = parseInt($(this).attr("Err"), 10);
         dr = parseInt($(this).attr("Drops"), 10);
-        $("#tbody_network").append("<tr><td>" + name + "</td><td class=\"right\">" + formatBytes(rx, xml) + "</td><td class=\"right\">" + formatBytes(tx, xml) + "</td><td class=\"right\">" + er.toString() + "/" + dr.toString() + "</td></tr>");
+        html +="<tr><td>" + name + "</td><td class=\"right\">" + formatBytes(rx, xml) + "</td><td class=\"right\">" + formatBytes(tx, xml) + "</td><td class=\"right\">" + er.toString() + "/" + dr.toString() + "</td></tr>";
+
+        networkindex = tree.push(0);
+
+        info = $(this).attr("Info");
+        if ( (info !== undefined) && (info != "") ) {
+           var i =0, infos = info.split(";");
+           isinfo = true;
+           for(i = 0; i < infos.length; i++){
+              html +="<tr><td>" + infos[i] + "</td><td></td><td></td><td></td></tr>";
+              tree.push(networkindex);
+              closed.push(networkindex);
+            }
+        }
+    });
+    html += "</tbody>\n";
+    html += "</table>\n";
+    if (isinfo) {
+       html0 += "<table id=\"NetworkTree\" class=\"tablemain\" style=\"border-spacing:0;\">\n";
+       html1 += "   <tbody class=\"tree\">\n";
+    } else {
+       html0 += "<table id=\"NetworkTree\" class=\"stripeMe\" style=\"border-spacing:0;\">\n";
+       html1 += "   <tbody class=\"tbody_network\">\n";
+    }
+    $("#network").append(html0+html1+html);
+
+    if (isinfo) $("#NetworkTree").jqTreeTable(tree, {
+        openImg: "./gfx/treeTable/tv-collapsable.gif",
+        shutImg: "./gfx/treeTable/tv-expandable.gif",
+        leafImg: "./gfx/treeTable/tv-item.gif",
+        lastOpenImg: "./gfx/treeTable/tv-collapsable-last.gif",
+        lastShutImg: "./gfx/treeTable/tv-expandable-last.gif",
+        lastLeafImg: "./gfx/treeTable/tv-item-last.gif",
+        vertLineImg: "./gfx/treeTable/vertline.gif",
+        blankImg: "./gfx/treeTable/blank.gif",
+        collapse: closed,
+        column: 0,
+        striped: true,
+        highlight: false,
+        state: false
     });
 }
 
@@ -736,7 +849,7 @@ function refreshMemory(xml) {
     var html = "", tree = [], closed = [];
     
     $("#memory").empty();
-    html += "  <h2>" + genlang(27, false) + "</h2>\n";
+    html += "<h2>" + genlang(27, false) + "</h2>\n";
     html += "  <table id=\"MemoryTree\" class=\"tablemain\" style=\"width:100%;\">\n";
     html += "   <thead>\n";
     html += "    <tr>\n";
@@ -828,7 +941,7 @@ function refreshMemory(xml) {
         column: 0,
         striped: true,
         highlight: false,
-        state: true
+        state: false
     });
     
 }
@@ -840,10 +953,14 @@ function refreshMemory(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshFilesystems(xml) {
-    var total_usage = 0, total_used = 0, total_free = 0, total_size = 0;
+    var total_usage = 0, total_used = 0, total_free = 0, total_size = 0, threshold = 0;
     
     filesystemTable.fnClearTable();
     
+    $("Options", xml).each(function getThreshold(id) {
+        threshold = parseInt($(this).attr("threshold"), 10);
+    });
+
     $("FileSystem Mount", xml).each(function getMount(mid) {
         var mpoint = "", mpid = 0, type = "", name = "", free = 0, used = 0, size = 0, percent = 0, options = "", inodes = 0, inodes_text = "", options_text = "";
         mpid = parseInt($(this).attr("MountPointID"), 10);
@@ -867,8 +984,11 @@ function refreshFilesystems(xml) {
             inodes_text = "<span style=\"font-style:italic\">&nbsp;(" + inodes.toString() + "%)</span>";
         }
         
+        if (!isNaN(threshold) && (percent >= threshold)) {
+            filesystemTable.fnAddData(["<span style=\"display:none;\">" + mpoint + "</span>" + mpoint, "<span style=\"display:none;\">" + type + "</span>" + type, "<span style=\"display:none;\">" + name + "</span>" + name + options_text, "<span style=\"display:none;\">" + percent.toString() + "</span>" + createBar(percent, "barwarn") + inodes_text, "<span style=\"display:none;\">" + free.toString() + "</span>" + formatBytes(free, xml), "<span style=\"display:none;\">" + used.toString() + "</span>" + formatBytes(used, xml), "<span style=\"display:none;\">" + size.toString() + "</span>" + formatBytes(size, xml)]);
+        } else {
         filesystemTable.fnAddData(["<span style=\"display:none;\">" + mpoint + "</span>" + mpoint, "<span style=\"display:none;\">" + type + "</span>" + type, "<span style=\"display:none;\">" + name + "</span>" + name + options_text, "<span style=\"display:none;\">" + percent.toString() + "</span>" + createBar(percent) + inodes_text, "<span style=\"display:none;\">" + free.toString() + "</span>" + formatBytes(free, xml), "<span style=\"display:none;\">" + used.toString() + "</span>" + formatBytes(used, xml), "<span style=\"display:none;\">" + size.toString() + "</span>" + formatBytes(size, xml)]);
-        
+        }
         total_used += used;
         total_free += free;
         total_size += size;
@@ -892,11 +1012,13 @@ function refreshTemp(xml) {
     var values = false;
     $("#tempTable tbody").empty();
     $("MBInfo Temperature Item", xml).each(function getTemperatures(id) {
-        var label = "", value = "", limit = "";
+        var label = "", value = "", limit = 0, _limit = "";
         label = $(this).attr("Label");
         value = $(this).attr("Value").replace(/\+/g, "");
-        limit = $(this).attr("Max").replace(/\+/g, "");
-        $("#tempTable").append("<tr><td>" + label + "</td><td class=\"right\">" + formatTemp(value, xml) + "</td><td class=\"right\">" + formatTemp(limit, xml) + "</td></tr>");
+        limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
+        if (isFinite(limit))
+            _limit = formatTemp(limit, xml);
+        $("#tempTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + formatTemp(value, xml) + "</td><td class=\"right\">" + _limit + "</td></tr>");
         values = true;
     });
     if (values) {
@@ -917,12 +1039,16 @@ function refreshVoltage(xml) {
     var values = false;
     $("#voltageTable tbody").empty();
     $("MBInfo Voltage Item", xml).each(function getVoltages(id) {
-        var label = "", value = 0, max = 0, min = 0;
+        var label = "", value = 0, max = 0, min = 0, _min = "", _max = "";
         label = $(this).attr("Label");
-        value = parseFloat($(this).attr("Value"), 10);
-        max = parseFloat($(this).attr("Max"), 10);
-        min = parseFloat($(this).attr("Min"), 10);
-        $("#voltageTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + round(min, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + round(max, 2) + "&nbsp;" + genlang(62, true) + "</td></tr>");
+        value = parseFloat($(this).attr("Value"));
+        max = parseFloat($(this).attr("Max"));
+        if (isFinite(max))
+            _max = round(max, 2) + "&nbsp;" + genlang(62, true);
+        min = parseFloat($(this).attr("Min"));
+        if (isFinite(min))
+            _min = round(min, 2) + "&nbsp;" + genlang(62, true);
+        $("#voltageTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + _min + "</td><td class=\"right\">" + _max + "</td></tr>");
         values = true;
     });
     if (values) {
@@ -943,11 +1069,13 @@ function refreshFan(xml) {
     var values = false;
     $("#fanTable tbody").empty();
     $("MBInfo Fans Item", xml).each(function getFans(id) {
-        var label = "", value = "", min = "";
+        var label = "", value = 0, min = 0, _min = "";
         label = $(this).attr("Label");
-        value = $(this).attr("Value");
-        min = $(this).attr("Min");
-        $("#fanTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + value + "&nbsp;" + genlang(63, true) + "</td><td class=\"right\">" + min + "&nbsp;" + genlang(63, true) + "</td></tr>");
+        value = parseFloat($(this).attr("Value"));
+        min = parseFloat($(this).attr("Min"));
+        if (isFinite(min))
+            _min = round(min,0) + "&nbsp;" + genlang(63, true);
+        $("#fanTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value,0) + "&nbsp;" + genlang(63, true) + "</td><td class=\"right\">" + _min + "</td></tr>");
         values = true;
     });
     if (values) {
@@ -959,20 +1087,47 @@ function refreshFan(xml) {
 }
 
 /**
+ * (re)fill the power block with the values from the given xml<br><br>
+ * build the power information into a separate block, if there is no power information available the
+ * entire table will be removed to avoid HTML warnings
+ * @param {jQuery} xml phpSysInfo-XML
+ */
+function refreshPower(xml) {
+    var values = false;
+    $("#powerTable tbody").empty();
+    $("MBInfo Power Item", xml).each(function getPowers(id) {
+        var label = "", value = "", limit = 0, _limit = "";
+        label = $(this).attr("Label");
+        value = $(this).attr("Value").replace(/\+/g, "");
+        limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
+        if (isFinite(limit))
+            _limit = round(limit, 2) + "&nbsp;" + genlang(103, true);
+        $("#powerTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(103, true) + "</td><td class=\"right\">" + _limit + "</td></tr>");
+        values = true;
+    });
+    if (values) {
+        $("#power").show();
+    }
+    else {
+        $("#power").remove();
+    }
+}
+/**
  * (re)fill the ups block with the values from the given xml<br><br>
  * build the ups information into a separate block, if there is no ups information available the
  * entire table will be removed to avoid HTML warnings
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshUps(xml) {
+    var add_apcupsd_cgi_links = ($("[ApcupsdCgiLinks='1']", xml).length > 0);
     var html = "", tree = [], closed = [], index = 0, values = false;
-    html += "        <h2><span id=\"lang_068\">UPS information</span></h2>\n";
+    html += "<h2>" + genlang(68, false) + "</h2>\n";
     html += "        <table class=\"tablemain\" id=\"UPSTree\">\n";
     html += "          <tbody class=\"tree\">\n";
     
     $("#ups").empty();
     $("UPSInfo UPS", xml).each(function getUps(id) {
-        var name = "", model = "", mode = "", start_time = "", upsstatus = "", temperature = "", outages_count = "", last_outage = "", last_outage_finish = "", line_voltage = "", load_percent = "", battery_voltage = "", battery_charge_percent = "", time_left_minutes = "";
+        var name = "", model = "", mode = "", start_time = "", upsstatus = "", temperature = "", outages_count = "", last_outage = "", last_outage_finish = "", line_voltage = "", load_percent = "", battery_date = "", battery_voltage = "", battery_charge_percent = "", time_left_minutes = "";
         name = $(this).attr("Name");
         model = $(this).attr("Model");
         mode = $(this).attr("Mode");
@@ -985,6 +1140,7 @@ function refreshUps(xml) {
         last_outage_finish = $(this).attr("LastOutageFinish");
         line_voltage = $(this).attr("LineVoltage");
         load_percent = parseInt($(this).attr("LoadPercent"), 10);
+        battery_date = $(this).attr("BatteryDate");
         battery_voltage = $(this).attr("BatteryVoltage");
         battery_charge_percent = parseInt($(this).attr("BatteryChargePercent"), 10);
         time_left_minutes = $(this).attr("TimeLeftMinutes");
@@ -1021,6 +1177,10 @@ function refreshUps(xml) {
             html += "<tr><td style=\"width:160px\">" + genlang(78, false) + "</td><td>" + createBar(load_percent) + "</td></tr>\n";
             tree.push(index);
         }
+        if (battery_date !== undefined) {
+            html += "<tr><td style=\"width:160px\">" + genlang(104, false) + "</td><td>" + battery_date + "</td></tr>\n";
+            tree.push(index);
+        }
         if (battery_voltage !== undefined) {
             html += "<tr><td style=\"width:160px\">" + genlang(79, false) + "</td><td>" + battery_voltage + "&nbsp;" + genlang(82, true) + "</td></tr>\n";
             tree.push(index);
@@ -1037,6 +1197,9 @@ function refreshUps(xml) {
     });
     html += "          </tbody>\n";
     html += "        </table>\n";
+    if (add_apcupsd_cgi_links){
+        html += " (<a href='/cgi-bin/apcupsd/multimon.cgi' target='apcupsdcgi'>" + genlang(99, false) + "</a>)\n";
+    }
     
     $("#ups").append(html);
     
@@ -1054,7 +1217,7 @@ function refreshUps(xml) {
             column: 0,
             striped: true,
             highlight: false,
-            state: true
+            state: false
         });
         $("#ups").show();
     }
@@ -1082,6 +1245,7 @@ function reload() {
             refreshVoltage(xml);
             refreshFan(xml);
             refreshTemp(xml);
+            refreshPower(xml);
             refreshUps(xml);
             
             $('.stripeMe tr:nth-child(even)').addClass('even');
@@ -1134,6 +1298,7 @@ $(document).ready(function buildpage() {
             refreshTemp(xml);
             refreshVoltage(xml);
             refreshFan(xml);
+            refreshPower(xml);
             refreshUps(xml);
             
             changeLanguage();
@@ -1203,10 +1368,10 @@ jQuery.fn.dataTableExt.oSort['span-number-desc'] = function sortNumberDesc(a, b)
 function buildBlock(plugin, translationid, reload) {
     var block = "", reloadpic = "";
     if (reload) {
-        reloadpic = "<img id=\"Reload_" + plugin + "Table\" src=\"./gfx/reload.png\" alt=\"reload\" style=\"vertical-align:middle;border=0px;\" />&nbsp;";
+        reloadpic = "<img id=\"Reload_" + plugin + "Table\" src=\"./gfx/reload.png\" alt=\"reload\" title=\"reload\" style=\"vertical-align:middle;float:right;cursor:pointer;border:0px;\" />&nbsp;";
     }
-    block += "      <div id=\"Plugin_" + plugin + "\" style=\"display:none;float:left;margin:10px 0pt 0pt 10px;padding: 1px;\">\n";
-    block += "        <h2>" + reloadpic + genlang(translationid, false, plugin) + "</h2>\n<span id=\"DateTime_" + plugin + "\" style=\"margin-left:10px;\"></span>";
+    block += "      <div id=\"Plugin_" + plugin + "\" class=\"plugin\" style=\"display:none;\">\n";
+    block += "<h2>" + reloadpic + genlang(translationid, false, plugin) + "</h2>\n";
     block += "      </div>\n";
     return block;
 }
@@ -1240,13 +1405,14 @@ function datetime() {
     minutes = (minute < 10) ? "0" + minute.toString() : minute.toString();
     hours = (hour < 10) ? "0" + hour.toString() : hour.toString();
     
-    return days + "." + months + "." + years + "&nbsp;" + hours + ":" + minutes;
+    return days + "." + months + "." + years + " - " + hours + ":" + minutes;
 }
 
 /**
  * insert dynamically a js script file into the website
  * @param {String} name name of the script that should be included
  */
+/*
 function appendjs(name) {
     var scrptE, hdEl;
     scrptE = document.createElement("script");
@@ -1255,11 +1421,12 @@ function appendjs(name) {
     scrptE.setAttribute("type", "text/javascript");
     hdEl.appendChild(scrptE);
 }
-
+*/
 /**
  * insert dynamically a css file into the website
  * @param {String} name name of the css file that should be included
  */
+/*
 function appendcss(name) {
     var scrptE, hdEl;
     scrptE = document.createElement("link");
@@ -1269,3 +1436,4 @@ function appendcss(name) {
     scrptE.setAttribute("href", name);
     hdEl.appendChild(scrptE);
 }
+*/
