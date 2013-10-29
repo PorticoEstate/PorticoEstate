@@ -522,7 +522,7 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="php:function('lang', 'voucher process log')"/>
 					</xsl:attribute>
-					<xsl:value-of select="voucher_info/generic/process_log"/>
+					<!--xsl:value-of select="voucher_info/generic/process_log"/-->
 				</textarea>
 			</td>
 		</tr>
