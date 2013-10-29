@@ -38,7 +38,7 @@ $(document).ready(function(){
 		$("#oppsynsmannid").html( '' );
 		$("#saksbehandlerid").html( '' );
 		$("#budsjettansvarligid").html( '' );
-		$("#remark").html( '' );
+//		$("#remark").html( '' );
 		$("#process_log").html( '' );
 		$("#dim_a").val('' );
 		$("#dim_b").html( "<option>Velg</option>" );
@@ -302,18 +302,14 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#dim_a").val( voucher[0].dim_a );
 				$("#currency").html( voucher[0].currency );
 				
-				$("#process_log").html( data['generic'].process_log );
 
-/*
-				if(data['generic'].process_log != null)
+				$("#process_log").val( '' );
+
+				if(data['generic'].process_log)
 				{
-					$("#process_log").html( data['generic'].process_log );
+					$("#process_log").val( data['generic'].process_log );
 				}
-				else
-				{
-					$("#process_log").html( '' );
-				}
-*/
+
 				$("#my_initials").val( data['generic'].my_initials );
 				$("#sign_orig").val( data['generic'].sign_orig );
 				$("#line_text").val( voucher[0].line_text );
@@ -554,7 +550,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#oppsynsmannid").html( '' );
 				$("#saksbehandlerid").html( '' );
 				$("#budsjettansvarligid").html( '' );
-				$("#remark").html( '' );
+			//	$("#remark").html( '' );
 				$("#process_log").html( '' );
 				$("#dim_a").val('' );
 				$("#dim_b").html( "<option>Velg</option>" );
