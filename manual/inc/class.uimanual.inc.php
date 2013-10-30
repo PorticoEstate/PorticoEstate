@@ -110,13 +110,40 @@
 			}
 */
 
+
             if(is_file($pdffile)) 
             { 
 				$browser = CreateObject('phpgwapi.browser'); 
-				$browser->content_header("{$section}.pdf", '', filesize($pdffile)); 
-				ob_clean(); 
-				flush(); 
-				readfile($pdffile); 
+				if($browser->BROWSER_AGENT = 'IE')
+				{
+					$fname = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/help/{$lang}/{$section}.pdf";
+	 				echo <<<HTML
+		<html>
+			<head>
+				<script language="javascript">
+				<!--
+					function go_now()
+					{
+						window.location.href = "{$fname}";
+					}
+				//-->
+				</script>
+			</head>
+			<body onload="go_now()";>
+				<a href="$fname">click here</a> if you are not re-directed.
+			</body>
+		</html>
+
+HTML;
+				
+				}
+				else
+				{
+					$browser->content_header("{$section}.pdf", '', filesize($pdffile)); 
+					ob_clean(); 
+					flush(); 
+					readfile($pdffile);
+				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			} 
 
