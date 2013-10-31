@@ -16,7 +16,43 @@
 			$this->resource_bo = CreateObject('booking.boresource');
 			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->system_message_bo = CreateObject('booking.bosystem_message');
+			$this->organization_bo = CreateObject('booking.boorganization');
+			$this->booking_bo = CreateObject('booking.bobooking');
+	}
+
+		public function building_users($building_id, $organization_id) {
+
+            $contacts = array();
+#            $building = $this->building_bo->so->read_single($building_id);
+            
+			$organizations = $this->organization_bo->find_building_users($building_id);
+            foreach($organizations['results'] as $org)
+            {
+                if ($org['email'] != '' && strstr($org['email'], '@')) {
+                    if (!in_array($org['email'], $contacts)) {
+                        $contacts[] = $org['email'];
+                    }
+                }
+                if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@')) {
+                    if (!in_array($org['contacts'][0]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][0]['email']; 
+                    }
+                }
+                if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@')) {
+                    if (!in_array($org['contacts'][1]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][1]['email']; 
+                    }
+                }
+                $grp_con = $this->booking_bo->so->get_group_contacts_of_organization($org['id']);
+                foreach ($grp_con as $grp) {
+                    if (!in_array($grp['email'], $contacts) && strstr($grp['email'], '@')) {
+                        $contacts[] = $grp['email'];
+                    }
+                }
+            } 
+			return $contacts;
 		}
+
 		public function cancel()
 		{
 			$config	= CreateObject('phpgwapi.config','booking');
@@ -81,6 +117,14 @@
 				$invalid_dates = array();
 				$valid_dates = array();
 	
+                $mailadresses = $this->building_users($allocation['building_id'],$allocation['organization_id']); 
+
+                $maildata = array();
+                $maildata['outseason'] = $outseason;		
+                $maildata['recurring'] = $recurring;		
+                $maildata['repeat_until'] = $field_until;		
+                $maildata['field_interval'] = $field_interval;		
+
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
 					$from_date = $_POST['from_'];
@@ -116,6 +160,7 @@
 			                $system_message['message'] = $system_message['message']."<br />".$info_deleted;
 							$receipt = $this->system_message_bo->add($system_message);
 
+                            $this->bo->send_notification($allocation, $maildata, $mailadresses);
 	                        $err = $this->bo->so->delete_allocation($id);
 	                        $this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
 	                    }
@@ -174,6 +219,12 @@
 	                    }
 						if ($step == 3) 
 						{
+                            $maildata = array();
+                            $maildata['outseason'] = phpgw::get_var('outseason','GET');
+                            $maildata['recurring'] = phpgw::get_var('recurring', 'GET');		
+                            $maildata['repeat_until'] = phpgw::get_var('repeat_until', 'GET');	
+							$maildata['delete'] = $valid_dates;
+
 							$res_names = '';
 							date_default_timezone_set("Europe/Oslo");
 							$date = new DateTime(phpgw::get_var('date'));
@@ -196,6 +247,7 @@
 								$info_deleted = $info_deleted."<br />".$res_names." - ".pretty_timestamp($valid_date['from_'])." - ".pretty_timestamp($valid_date['to_']);
 							}
 			                $system_message['message'] = $system_message['message']."<br />".$info_deleted;
+                            $this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$receipt = $this->system_message_bo->add($system_message);
 
 							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));

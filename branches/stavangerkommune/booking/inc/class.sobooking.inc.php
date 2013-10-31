@@ -444,6 +444,16 @@
 			return $this->db->f('name', false);
 		}
 
+		function get_groups_of_organization($grp_id)
+		{
+			$this->db->limit_query("select organization_id from bb_group where id=($grp_id)", 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('organization_id', false);
+		}
+
 		function get_resource($id)
 		{
 			$this->db->limit_query("SELECT name FROM bb_resource where id=" . intval($id), 0, __LINE__, __FILE__, 1);
@@ -474,13 +484,29 @@
 			return $this->db->f('id', false);
 		}
 
-		function get_group_of_organization($id)
+		public function get_group_contacts_of_organization($id)
 		{
             $results = array();
-			$this->db->query("SELECT id FROM bb_group WHERE active = 1 and organization_id=". intval($id), __LINE__, __FILE__);
+            $sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(".intval($id).")";
+			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->db->f('id', false);
+				$results[] = array('id' => $this->db->f('id', false),
+                                   'group_id' => $this->db->f('group_id', false),
+                                   'email' => $this->db->f('email', false));
+			}
+			return $results;
+		}
+		public function get_all_group_of_organization_from_groupid($id)
+		{
+            $results = array();
+            $sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(select organization_id from bb_group where id=(".intval($id)."))";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+                                   'group_id' => $this->db->f('group_id', false),
+                                   'email' => $this->db->f('email', false));
 			}
 			return $results;
 		}

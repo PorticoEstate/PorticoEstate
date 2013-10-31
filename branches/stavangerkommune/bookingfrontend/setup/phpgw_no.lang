@@ -366,3 +366,4 @@ Tilsynsvakt name	bookingfrontend	no	Tilsynsvakt navn
 Tilsynsvakt email	bookingfrontend	no	Tilsynsvakt epost
 Tilsynsvakt telephone	bookingfrontend	no	Tilsynsvakt telefon
 Public schedule	bookingfrontend	no	Publikumsbading
+Apply for time	bookingfrontend	no	Søk om tid

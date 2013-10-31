@@ -632,4 +632,4 @@ Mail text to building contact	booking	no	E-post tekst til tilsynsfører/bygg kon
 Event Canceled Subject	booking	no	E-post emne når arrangement avlyses
 Mail for event canceled	booking	no	E-post tekst når arrangement avlyses
 Extra kalendar for public opening times	booking	no	Aktiver ekstra kalender for publikumsbading
-
+Apply for time	booking	no	Søk om tid

@@ -29,7 +29,130 @@ function array_minus($a, $b)
 			$this->event_so = CreateObject('booking.soevent');
 			$this->season_bo = CreateObject('booking.boseason');
 		}
-		
+
+		/**
+		 * @ Send message about cancelation to users of building. 
+		 */
+		function send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates=null)
+		{
+			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+				return;
+			$send = CreateObject('phpgwapi.send');
+
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+
+            if(($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') || 
+                ($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] == 'on' && 
+                 $maildata['allocation'] == 0))
+            {
+			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                $link .= urlencode($booking['from_']).'&to_[]='.urlencode($booking['to_']).'&resource='.$booking['resources'][0];
+
+    			$subject = $config->config_data['booking_canceled_mail_subject'];
+
+                $body = "<p>".$config->config_data['booking_canceled_mail'];
+                $body .= '</p><p>'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'].':<br />';
+                $body .= $this->so->get_resource($booking['resources'][0]).' den '.pretty_timestamp($booking['from_']);
+                $body .=' til '.pretty_timestamp($booking['to_']); 
+    			$body .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a></p>';
+
+            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on') {
+                $res_names = '';
+				foreach ($booking['resources'] as $res) {
+					$res_names = $res_names.$this->so->get_resource($res)." ";
+				}
+				$info_deleted = ':<p>';
+				foreach ($valid_dates as $valid_date) {
+    				$info_deleted = $info_deleted."".$res_names." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['to_']);
+    			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+				}
+
+    			$subject = $config->config_data['booking_canceled_mail_subject'];
+
+                $body = "<p>".$config->config_data['booking_canceled_mail'];
+                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
+                $body .= $info_deleted.'</p>';
+
+            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on') {
+                $res_names = '';
+				foreach ($booking['resources'] as $res) {
+					$res_names = $res_names.$this->so->get_resource($res)." ";
+				}
+				$info_deleted = ':<p>';
+				foreach ($valid_dates as $valid_date) {
+                    if (!in_array($valid_date,$maildata['delete'])) {
+        				$info_deleted = $info_deleted."".$res_names." - ";
+                        $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+                        $info_deleted .= pretty_timestamp($valid_date['to_']);
+        			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                        $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                        $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                        $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+                    }
+				}
+				foreach ($maildata['delete'] as $valid_date) {
+       				$info_deleted = $info_deleted."".$res_names." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['to_']);
+      			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];                    
+                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+				}
+                
+
+    			$subject = $config->config_data['allocation_canceled_mail_subject'];
+                $body = "<p>".$config->config_data['allocation_canceled_mail'];
+                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
+    			$body .= $info_deleted.'</p>';
+
+            } else {
+                $res_names = '';
+				foreach ($booking['resources'] as $res) {
+					$res_names = $res_names.$this->so->get_resource($res)." ";
+				}
+				$info_deleted = ':<p>';
+   				$info_deleted = $info_deleted."".$res_names." - ";
+                $info_deleted .= pretty_timestamp($allocation['from_'])." - ";
+                $info_deleted .= pretty_timestamp($allocation['to_']);
+   			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];                    
+                $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+
+    			$subject = $config->config_data['allocation_canceled_mail_subject'];
+                $body = "<p>".$config->config_data['allocation_canceled_mail'];
+                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
+    			$body .= $info_deleted.'</p>';
+            }
+
+			$body .= "<p>".$config->config_data['application_mail_signature']."</p>";
+            
+            foreach ($mailadresses as $adr)
+            {
+    			try
+    			{
+				    $send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
+    			}
+    			catch (phpmailerException $e)
+    			{
+    				// TODO: Inform user if something goes wrong
+    			}
+            }
+		}
+
 		/**
 		 * @see bocommon_authorized
 		 */

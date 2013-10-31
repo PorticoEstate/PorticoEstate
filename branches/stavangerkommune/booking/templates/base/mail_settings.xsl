@@ -47,6 +47,7 @@
             </dd>
 
         </dl>
+
 		<div class="form-buttons">
 			<input type="submit">
 			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')"/></xsl:attribute>

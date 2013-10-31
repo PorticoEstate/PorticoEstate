@@ -26,6 +26,7 @@
 			$this->season_bo = CreateObject('booking.boseason');
 			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->system_message_bo = CreateObject('booking.bosystem_message');
+			$this->organization_bo = CreateObject('booking.boorganization');
 		}
 
 		private function item_link(&$item, $key)
@@ -582,15 +583,62 @@
 					);
 		}
 
+		public function building_users($building_id, $group_id, $delete_allocation) {
+
+            $contacts = array();
+#            $building = $this->building_bo->so->read_single($building_id);
+            
+			$organizations = $this->organization_bo->find_building_users($building_id);
+            foreach($organizations['results'] as $org)
+            {
+                if ($org['email'] != '' && strstr($org['email'], '@')) {
+                    if (!in_array($org['email'], $contacts)) {
+                        $contacts[] = $org['email'];
+                    }
+                }
+                if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@')) {
+                    if (!in_array($org['contacts'][0]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][0]['email']; 
+                    }
+                }
+                if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@')) {
+                    if (!in_array($org['contacts'][1]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][1]['email']; 
+                    }
+                }
+                $grp_con = $this->bo->so->get_group_contacts_of_organization($org['id']);
+                foreach ($grp_con as $grp) {
+                    if ($grp['email'] != '' && strstr($grp['email'], '@') && $grp['group_id'] != $group_id ) {
+                        if (!in_array($grp['email'], $contacts)) {
+                            $contacts[] = $grp['email'];
+                        }
+                    }
+                }
+            } 
+			return $contacts;
+		}
+
+		public function organization_users($group_id) {
+
+            $contacts = array();
+            $groups = $this->bo->so->get_all_group_of_organization_from_groupid($group_id);
+            foreach($groups as $grp) {
+                if ($grp['email'] != '' && strstr($grp['email'], '@') && $grp['group_id'] != $group_id ) {
+                    if (!in_array($grp['email'], $contacts)) {
+                        $contacts[] = $grp['email'];
+                    }
+                }
+            }
+			return $contacts;
+        }
 		public function cancel()
 		{
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
-
+            
 			if ($config->config_data['user_can_delete'] != 'yes') {
 
 	        	$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
-	
 	   			$errors = array();
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 	            {
@@ -636,7 +684,7 @@
 				$id = intval(phpgw::get_var('id', 'GET'));
 				$outseason = phpgw::get_var('outseason', 'GET');
 				$recurring = phpgw::get_var('recurring', 'GET');
-				$repeat_untild = phpgw::get_var('repeat_until', 'GET');
+				$repeat_until = phpgw::get_var('repeat_until', 'GET');
 				$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
 				$delete_allocation = phpgw::get_var('delete_allocation', 'GET');
 				$booking = $this->bo->read_single($id);
@@ -649,7 +697,16 @@
 				$valid_dates = array();
 	            $allocation_delete = array();
 	            $allocation_keep = array();
-		
+
+                $mailadresses = $this->building_users($booking['building_id'],$booking['group_id'], $delete_allocation); 
+#               $grp = $this->organization_users($booking['group_id']); 
+
+                $maildata = array();
+                $maildata['outseason'] = $outseason;		
+                $maildata['recurring'] = $recurring;		
+                $maildata['repeat_until'] = $field_until;		
+                $maildata['delete_allocation'] = $delete_allocation;
+
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
 					$from_date = $_POST['from_'];
@@ -663,24 +720,27 @@
         	            if ($_POST['delete_allocation'] != 'on') {
 
 		            	    $inf_del = "Booking";
+                            $maildata['allocation'] = 0;                            
 						    $this->bo->so->delete_booking($id);
 	                    }
 	                    else
 	                    {
 	                        $allocation_id = $booking['allocation_id'];
-
 	                        $this->bo->so->delete_booking($id);
 	                        $err  = $this->allocation_bo->so->check_for_booking($allocation_id);
 	                        if ($err)
 	                        {
 			            	    $inf_del = "Booking";
+                                $maildata['allocation'] = 0;                            
 	                    	    $errors['booking'] = lang('Could not delete allocation due to a booking still use it');
 	                        }
 	                        else
 							{
 		            	    	$inf_del = "Booking and allocation";
+                                $maildata['allocation'] = 1;                            
 	                            $err = $this->allocation_bo->so->delete_allocation($allocation_id);
 	                        }
+
 	                    }
 
 						$res_names = '';
@@ -701,6 +761,8 @@
 							$res_names = $res_names.$this->bo->so->get_resource($res)." ";
 						}
 						$info_deleted = lang($inf_del." deleted on")." ".$system_message['building_name'].":<br />".$res_names." - ".pretty_timestamp($booking['from_'])." - ".pretty_timestamp($booking['to_']);
+
+                        $this->bo->send_notification($booking, $allocation, $maildata, $mailadresses);
 
 			            $system_message['message'] = $system_message['message']."<br />".$info_deleted;
 						$receipt = $this->system_message_bo->add($system_message);
@@ -772,7 +834,15 @@
 	                    }
 						if ($step == 3) 
 						{
-							$res_names = '';
+                            $maildata = array();
+                            $maildata['outseason'] = phpgw::get_var('outseason','GET');
+                            $maildata['recurring'] = phpgw::get_var('recurring', 'GET');		
+                            $maildata['repeat_until'] = phpgw::get_var('repeat_until', 'GET');	
+                            $maildata['delete_allocation'] = phpgw::get_var('delete_allocation', 'GET');
+							$maildata['keep'] = $allocation_keep;
+							$maildata['delete'] = $allocation_delete;
+
+                            $res_names = '';
 							date_default_timezone_set("Europe/Oslo");
 							$date = new DateTime(phpgw::get_var('date'));
 							$system_message = array();
@@ -794,6 +864,9 @@
 								$info_deleted = $info_deleted."<br />".$res_names." - ".pretty_timestamp($valid_date['from_'])." - ".pretty_timestamp($valid_date['to_']);
 							}
 				            $system_message['message'] = $system_message['message']."<br />".$info_deleted;
+
+                            $this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
+
 							$receipt = $this->system_message_bo->add($system_message);
 							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
 						}
@@ -814,7 +887,7 @@
 						'outseason' => $outseason,
 						'interval' => $field_interval,
 						'repeat_until' => $repeat_until,
-	                    'delete_allocation' => $delete_allocation,
+	                    'delete_allocation' => $delete_allocation
 	                ));
 	            }
 				elseif ($step == 2) 

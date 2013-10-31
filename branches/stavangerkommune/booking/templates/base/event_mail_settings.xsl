@@ -57,6 +57,36 @@
 			<dd class="yui-skin-sam">
 				<textarea id="field_event_canceled_mail" class="full-width settings" name="event_canceled_mail" type="text"><xsl:value-of select="config_data/event_canceled_mail"/></textarea>
 			</dd>
+            </dl>
+    		<div class="clr"/>
+            <dl class="form">
+   		        <dt class="heading"><xsl:value-of select="php:function('lang', 'Cancel booking/allocation email settings')"/></dt>
+            </dl>
+
+            <dl class="form-col">
+            <dt><label for="field_booking_canceled_mail_subject"><xsl:value-of select="php:function('lang', 'Booking Canceled Subject')"/></label></dt>
+            <dd>
+				<input id="field_booking_canceled_mail_subject" name="booking_canceled_mail_subject" type="text" size="50">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/booking_canceled_mail_subject"/></xsl:attribute>
+				</input>
+            </dd>
+
+            <dt><label for="field_booking_canceled_mail"><xsl:value-of select="php:function('lang', 'Mail for booking canceled')"/></label></dt>
+			<dd class="yui-skin-sam">
+				<textarea id="field_booking_canceled_mail" class="full-width settings" name="booking_canceled_mail" type="text"><xsl:value-of select="config_data/booking_canceled_mail"/></textarea>
+			</dd>
+
+            <dt><label for="field_allocation_canceled_mail_subject"><xsl:value-of select="php:function('lang', 'Allocation Canceled Subject')"/></label></dt>
+            <dd>
+				<input id="field_allocation_canceled_mail_subject" name="allocation_canceled_mail_subject" type="text" size="50">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/allocation_canceled_mail_subject"/></xsl:attribute>
+				</input>
+            </dd>
+
+            <dt><label for="field_allocation_canceled_mail"><xsl:value-of select="php:function('lang', 'Mail for allocation canceled')"/></label></dt>
+			<dd class="yui-skin-sam">
+				<textarea id="field_allocation_canceled_mail" class="full-width settings" name="allocation_canceled_mail" type="text"><xsl:value-of select="config_data/allocation_canceled_mail"/></textarea>
+			</dd>
 
         </dl>
 		<div class="form-buttons">
