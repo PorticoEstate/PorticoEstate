@@ -297,7 +297,6 @@
 				'amount'			=> $claim['amount'],
 				'category'			=> $claim['cat_id'],
 				'status'			=> $claim['status'],
-				'user_id'			=> $this->account,
 				'remark'			=> $this->db->db_addslashes($claim['remark'])
 			);
 
