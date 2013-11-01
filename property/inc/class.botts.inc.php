@@ -1176,7 +1176,8 @@
 
 			$members = array();
 
-			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
+			if( (isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
+					|| ($force_send && $ticket['group_id']))
 			{
 				$log_recipients[] = $group_name;
 				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
