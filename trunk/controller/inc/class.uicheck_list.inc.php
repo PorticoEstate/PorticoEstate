@@ -785,7 +785,8 @@
 						$error_message .=  "{$required_control_item['title']}</br>";
 						$error_message .= execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 						$error_message .=  "</br>";
-						echo $error_message;
+						phpgwapi_cache::message_set($error_message, 'error');
+//						echo $error_message;
 						$ok = false;
 					}
 				}
