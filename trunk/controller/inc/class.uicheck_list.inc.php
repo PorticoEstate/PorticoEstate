@@ -91,7 +91,7 @@
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
-
+			$this->so_case	= CreateObject('controller.socase');
 			$this->location_finder = new location_finder();
 
 			$this->acl_location = '.control';
@@ -309,7 +309,7 @@
 					'selected'	=> $responsible_user_id == $user['account_id'] ? 1 : 0
 				);
 			}
-			
+
 			$data = array
 			(
 				'user_list' => array('options' => $user_list_options),
@@ -405,7 +405,7 @@
 					'selected'	=> $responsible_user_id == $user['account_id'] ? 1 : 0
 				);
 			}
-			
+
 			$data = array
 			(
 				'user_list' => array('options' => $user_list_options),
@@ -484,6 +484,10 @@
 			if($check_list_id > 0)
 			{
 				$check_list = $this->so->get_single($check_list_id);
+				if(! $this->_check_for_required($check_list) )
+				{
+					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+				}
 			}
 			else
 			{
@@ -508,6 +512,7 @@
 			$check_list->set_completed_date($completed_date_ts);
 			$check_list->set_assigned_to($assigned_to);
 			$check_list->set_billable_hours($billable_hours);
+
 
 			if($check_list->validate())
 			{
@@ -709,7 +714,11 @@
 			$check_list_status = phpgw::get_var('status');
 
 			$check_list = $this->so->get_single($check_list_id);
-			
+			if ( !$this->_check_for_required($check_list) )
+			{
+				return json_encode( array( "status" => 'not_saved') );			
+			}
+
 			$check_list->set_status( $check_list_status );
 
 			if($this->so->store($check_list))
@@ -724,7 +733,122 @@
 
 		public function query()
 		{
-			
+
 		}
 
+		/**
+		* Check for required items on all groups and for all components registered to the location.
+		* @param object $check_list
+		* @return bool
+		**/
+		private function _check_for_required($check_list)
+		{
+			$ok = true;
+			$control = $this->so_control->get_single($check_list->get_control_id());
+
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
+
+			$required_control_items = array();
+			foreach ($saved_control_groups as $control_group)
+			{	
+				$control_items = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
+				$component_location_id = $control_group->get_component_location_id();
+				$component_criteria = $control_group->get_component_criteria();
+
+				foreach ($control_items as $control_item)
+				{
+					if($control_item['required'])
+					{
+						$control_item['component_location_id'] = $component_location_id;
+						$control_item['component_criteria'] = $component_criteria;
+						$required_control_items[] = $control_item;
+					}
+				}
+			}
+
+			$components_at_location = array();
+			$control_groups_with_items_array = array();
+			
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				foreach ($required_control_items as $required_control_item)
+				{
+					$_ok = $this->so_case->get_cases_by_component($location_id, $component_id, $required_control_item['id']);
+					if(!$_ok)
+					{
+						$error_message =  "mangler registrering for required</br>";
+						$error_message .=  "{$required_control_item['title']}</br>";
+						$error_message .= execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+						$error_message .=  "</br>";
+						echo $error_message;
+						$ok = false;
+					}
+				}
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_code_search_components = $location_code;
+				$type = 'location';
+
+				foreach ($required_control_items as $required_control_item)
+				{
+					$criterias_array = array();
+
+					$component_location_id = $required_control_item['component_location_id'];
+					$criterias_array['location_id'] = $component_location_id;
+					$criterias_array['location_code'] = $location_code_search_components;
+					$criterias_array['allrows'] = true;
+
+					$component_criteria = $required_control_item['component_criteria'];
+
+					$conditions = array();
+					foreach ($component_criteria as $attribute_id => $condition)
+					{
+						if($condition['value'])
+						{
+							eval('$condition_value = ' . "{$condition['value']};");
+							$conditions[] = array
+							(
+								'attribute_id'	=> $attribute_id,
+								'operator'		=> $condition['operator'],
+								'value'			=> $condition_value
+							);
+						}
+					}
+
+					$criterias_array['conditions'] = $conditions;
+
+					if( !isset($components_at_location[$component_location_id][$location_code_search_components])  || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
+					{
+						$_components_at_location = execMethod('property.soentity.get_eav_list', $criterias_array);
+						$components_at_location[$component_location_id][$location_code_search_components] = $_components_at_location;
+					}
+						
+					if($_components_at_location)
+					{
+						foreach($_components_at_location as &$_component_at_location)
+						{
+							$_ok = $this->so_case->get_cases_by_component($_component_at_location['location_id'], $_component_at_location['id'], $required_control_item['id']);
+							if(!$_ok)
+							{
+								$error_message =  "mangler registrering for required</br>";
+								$error_message .=  "{$required_control_item['title']}</br>";
+								$error_message .= execMethod('property.soentity.get_short_description', array('location_id' => $_component_at_location['location_id'], 'id' => $_component_at_location['id']));
+								$error_message .=  "</br>";
+								phpgwapi_cache::message_set($error_message, 'error');
+//								echo $error_message;
+								$ok = false;
+							}
+						}
+					}
+				}
+			}
+			return $ok;
+		}
 	}
