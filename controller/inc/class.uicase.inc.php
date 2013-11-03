@@ -190,7 +190,7 @@
 					{
 						//--- start components -------------//
 						$criterias_array = array();
-						$loc_arr = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+					//	$loc_arr = $GLOBALS['phpgw']->locations->get_name($component_location_id);
 						$criterias_array['location_id'] = $component_location_id;
 						$criterias_array['location_code'] = $location_code_search_components;
 						$criterias_array['allrows'] = true;
