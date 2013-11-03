@@ -758,6 +758,9 @@
 					'TRANSACTIONTYPE'			=> 'X114',
 					'KEY'						=> $oRsBilag[0]['external_voucher_id'], //dummy
 					'VOUCHERID'					=> $bilagsnr_ut,
+					'INVNUM'					=> $oRsBilag[0]['fakturanr'],
+					'INVDAT'					=> date('Ymd', strtotime($oRsBilag[0]['fakturadato'])), //YYYYMMDD
+					'DUEDAT'					=> date('Ymd', strtotime($oRsBilag[0]['forfallsdato'])),//YYYYMMDD
 					'SCANNINGNO'				=> $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
 					'PROFILE'					=> 'TRAINVPOMA',
 					'CLIENT.CODE'				=> $this->client_code, //14,
@@ -808,6 +811,7 @@
 				$periode = date('Ym',$time);
 			}
 
+			$sum_amount = 0;
 			$comment = array();
 			foreach ($oRsBilag as $line)
 			{
@@ -920,11 +924,14 @@
 					$descr = substr($order_info['title'],0,60);
 				}
 
+				$sum_amount += $amount;
 				$accountline[] = array
 				(
 					'TRANSACTIONTYPE'		=> 'R114',
 					'ACCOUNTLINK.CODE'		=> $line['spbudact_code'], // 4180
+					'CURRENCY'				=> $line['currency']
 					'AMOUNT'				=> $amount, // 312500
+					'TAXCODE'				=> $line['mvakode'],
 					'APPROVER.FULLNAME'		=> $line['budsjettansvarligid'], //Batch 04 - 14
 					'DIMENSION.D1.CODE'		=> $line['dimb'], // 1111
 					'DIMENSION.D2.CODE'		=> '',//$line['dima'], // 62000
@@ -945,6 +952,36 @@
 					'ALLOCATION.PERIOD'		=> $line['periodization_start'] //dummy
 				);
 
+			}
+
+			if($accountline)
+			{
+				$accountline[] = array
+				(
+					'TRANSACTIONTYPE'		=> 'R114',
+					'ACCOUNTLINK.CODE'		=> 2400,
+					'CURRENCY'				=> $oRsBilag[0]['currency']
+					'AMOUNT'				=> (-1 * $sum_amount),
+					'TAXCODE'				=> $oRsBilag[0]['mvakode'],
+					'APPROVER.FULLNAME'		=> '',
+					'DIMENSION.D1.CODE'		=> '',
+					'DIMENSION.D2.CODE'		=> '',
+					'DIMENSION.D3.CODE'		=> '',
+					'DIMENSION.D4.CODE'		=> '',
+					'DIMENSION.D5.CODE'		=> '',
+					'DIMENSION.D6.CODE'		=> '',
+					'DIMENSION.D7.CODE'		=> '',
+					'DIMENSION.D8.CODE'		=> '',
+					'POITEMDESCRIPTION'		=> '',
+					'POITEMNUMBER'			=> '',
+					'POITEMTYPE'			=> 'C',
+					'POLINENUMBER'			=> '',
+					'RECEIVER.FULLNAME'		=> '',
+					'STATUS'				=> 5,
+					'SUBACCOUNT'			=> '',
+					'ALLOCATION.KEY'		=> '',
+					'ALLOCATION.PERIOD'		=> '',
+				);
 			}
 
 			$invoiceheader[0]['GENERALCOMMENT'] = implode("\n",$comment);
