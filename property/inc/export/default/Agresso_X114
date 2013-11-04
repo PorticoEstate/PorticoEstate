@@ -929,7 +929,7 @@
 				(
 					'TRANSACTIONTYPE'		=> 'R114',
 					'ACCOUNTLINK.CODE'		=> $line['spbudact_code'], // 4180
-					'CURRENCY'				=> $line['currency']
+					'CURRENCY'				=> $line['currency'],
 					'AMOUNT'				=> $amount, // 312500
 					'TAXCODE'				=> $line['mvakode'],
 					'APPROVER.FULLNAME'		=> $line['budsjettansvarligid'], //Batch 04 - 14
@@ -960,7 +960,7 @@
 				(
 					'TRANSACTIONTYPE'		=> 'R114',
 					'ACCOUNTLINK.CODE'		=> 2400,
-					'CURRENCY'				=> $oRsBilag[0]['currency']
+					'CURRENCY'				=> $oRsBilag[0]['currency'],
 					'AMOUNT'				=> (-1 * $sum_amount),
 					'TAXCODE'				=> $oRsBilag[0]['mvakode'],
 					'APPROVER.FULLNAME'		=> '',
