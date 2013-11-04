@@ -574,6 +574,23 @@ $(document).ready(function(){
 			 
 			 window.location.href = requestUrl;
 		 }
+		 else if(location_code != "" & period_type == 'view_year_for_locations')
+		 {
+			var control_id = $(thisForm).find("input[name='control_id']").val();
+			var oArgs = {menuaction:'controller.uicalendar.view_calendar_year_for_locations'};
+			var baseUrl = phpGWLink('index.php', oArgs, false);
+			var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year + "&control_id=" + control_id;
+			 window.location.href = requestUrl;
+		 }
+ 		 else if(location_code != "" & period_type == 'view_month_for_locations')
+		 {
+			var control_id = $(thisForm).find("input[name='control_id']").val();
+			var oArgs = {menuaction:'controller.uicalendar.view_calendar_month_for_locations'};
+			var baseUrl = phpGWLink('index.php', oArgs, false);
+			var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year + "&control_id=" + control_id;
+			 window.location.href = requestUrl;
+		 }
+ 
     });
 	
 	// CALENDAR FILTERS  

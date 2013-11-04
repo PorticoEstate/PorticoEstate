@@ -451,11 +451,27 @@
 			$control_id = phpgw::get_var('control_id', 'int');
 			$control = $this->so_control->get_single($control_id);
 			$year = phpgw::get_var('year', 'int');
+			$location_code = phpgw::get_var('location_code');
+
+			$locations_list = array();
 
 			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
 				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
+				foreach ($locations_for_control_array as $location)
+				{
+					$locations_list[] = array
+					(
+						'id'		=> $location['location_code'],
+						'name'		=> $location['loc_name'],
+						'selected'	=> $location_code == $location['location_code'] ? 1 : 0
+					);
+				}
+
+				reset($locations_for_control_array);
+				unset($location);
+
 			}
 
 			// Validates year. If year is not set, current year is chosen
@@ -469,12 +485,18 @@
 
 			$locations_with_calendar_array = array();
 
+
 			// LOCATIONS: Process aggregated values for controls with repeat type day or week
 			if ($control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK)
 			{
 				foreach ($locations_for_control_array as $location)
 				{
 					$curr_location_code = $location['location_code'];
+					
+					if(!$location_code || $curr_location_code != $location_code)
+					{
+						continue;
+					}
 
 					$cl_criteria = new controller_check_list();
 					$cl_criteria->set_control_id($control->get_id());
@@ -522,6 +544,11 @@
 				foreach ($locations_for_control_array as $location)
 				{
 					$curr_location_code = $location['location_code'];
+
+					if(!$location_code || $curr_location_code != $location_code)
+					{
+						continue;
+					}
 
 					$repeat_type = $control->get_repeat_type();
 					$check_lists_array = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $repeat_type);
@@ -578,12 +605,14 @@
 
 			$data = array
 			(
+				'locations_list'					=> $locations_list,
 				'my_locations'						=> $my_locations,
 				'control'							=> $control->toArray(),
 				'heading_array'						=> $heading_array,
 				'locations_with_calendar_array'		=> $locations_with_calendar_array,
 				'components_with_calendar_array'	=> $components_with_calendar_array,
 				'current_year'						=> $year,
+				'location_code'						=> $location_code
 			);
 
 			self::render_template_xsl(array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager',
@@ -599,11 +628,25 @@
 			$control = $this->so_control->get_single($control_id);
 			$year = intval(phpgw::get_var('year'));
 			$month = intval(phpgw::get_var('month'));
+			$location_code = phpgw::get_var('location_code');
 
 			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
 				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
+				foreach ($locations_for_control_array as $location)
+				{
+					$locations_list[] = array
+					(
+						'id'		=> $location['location_code'],
+						'name'		=> $location['loc_name'],
+						'selected'	=> $location_code == $location['location_code'] ? 1 : 0
+					);
+				}
+
+				reset($locations_for_control_array);
+				unset($location);
+
 			}
 
 			// Validates year. If year is not set, current year is chosen
@@ -623,6 +666,11 @@
 			foreach ($locations_for_control_array as $location)
 			{
 				$curr_location_code = $location['location_code'];
+
+				if(!$location_code || $curr_location_code != $location_code)
+				{
+					continue;
+				}
 
 				$repeat_type = $control->get_repeat_type();
 				$check_lists_array = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $control->get_repeat_type());
@@ -655,16 +703,18 @@
 			$heading_array = month_calendar::get_heading_array($year, $month);
 
 			$data = array
-				(
-				'control' => $control->toArray(),
-				'my_locations' => $my_locations,
-				'property_array' => $property_array,
-				'location_array' => $location_array,
-				'heading_array' => $heading_array,
-				'locations_with_calendar_array' => $locations_with_calendar_array,
-				'components_with_calendar_array' => $components_with_calendar_array,
-				'current_year' => $year,
-				'current_month_nr' => $month,
+			(
+				'control'							=> $control->toArray(),
+				'my_locations'						=> $my_locations,
+				'property_array'					=> $property_array,
+				'location_array'					=> $location_array,
+				'heading_array'						=> $heading_array,
+				'locations_with_calendar_array'		=> $locations_with_calendar_array,
+				'components_with_calendar_array'	=> $components_with_calendar_array,
+				'current_year'						=> $year,
+				'current_month_nr'					=> $month,
+				'locations_list'					=> $locations_list,
+				'location_code'						=> $location_code
 			);
 
 			self::render_template_xsl(array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_manager',
