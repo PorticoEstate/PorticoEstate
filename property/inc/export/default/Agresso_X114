@@ -632,7 +632,7 @@
 		{
 			if(!$external_voucher_id)
 			{
-				throw new Exception('Agresso_X114::LagFilnavn() Mangler SCANNINGNO' );
+				throw new Exception('Agresso_X114::LagFilnavn() Mangler KEY' );
 			}
 			$fil_katalog = $this->config->config_data['export']['path'];
 
@@ -815,45 +815,13 @@
 			$comment = array();
 			foreach ($oRsBilag as $line)
 			{
-				$comment[] = "{$line['belop']}::{$line['process_log']}";
+				if($line['process_log'])
+				{
+					$comment[] = "{$line['belop']}::{$line['process_log']}";
+				}
 
 				$BelopFelt = 'godkjentbelop';
 
-/*
-				//Bestem belops felt
-				if ($line['splitt'] == 0)
-				{
-					//Bilaget er ikke splittet
-					if ($line['godkjentbelop'] <> $line['belop'])
-					{
-						$BelopFelt = 'godkjentbelop';
-						//Logg til avviks tabell
-						if ($download=='on')
-						{
-//							$this->soXport->log_to_deviation_table($line);
-						}
-					}
-					else
-					{
-						$BelopFelt = 'belop';
-					}
-				}
-
-*/
-				//Bilaget er splittet
-/*
-				if ($line['godkjentbelop'] == $line['belop'])
-				{
-					$BelopFelt = 'godkjentbelop';
-				}
-				else
-				{
-					 //Ikke lovlig
-					$message = lang('Avvik mellom fakturabelop og godkjent belop pa splittet faktura!');
-					$this->errorhandler($batchid,$message);
-					return $message;
-				}
-*/
 				$amount =  $line[$BelopFelt] * 100;
 				$amount =  number_format($amount,0,'','');
 
