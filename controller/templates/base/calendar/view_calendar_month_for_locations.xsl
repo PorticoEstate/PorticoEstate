@@ -57,6 +57,8 @@
 						<xsl:value-of select="current_year"/>
 						<xsl:text>&amp;control_id=</xsl:text>
 						<xsl:value-of select="control/id"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="$location_code"/>
 						<xsl:value-of select="$session_url"/>
 					</xsl:attribute>
 					Årsoversikt
@@ -66,6 +68,7 @@
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
 			<xsl:call-template name="nav_calendar_month">
     		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
+    		<xsl:with-param name="location_code"><xsl:value-of select="$location_code"/></xsl:with-param>
   		</xsl:call-template>
 		</div>
 		
