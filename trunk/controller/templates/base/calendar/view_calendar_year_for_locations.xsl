@@ -54,6 +54,7 @@
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->			
 			<xsl:call-template name="nav_calendar_year">
     		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
+    		<xsl:with-param name="location_code"><xsl:value-of select="$location_code"/></xsl:with-param>
   		</xsl:call-template>
 		</div>
 		<div id="cal_wrp">

@@ -1,6 +1,8 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="nav_calendar_year" xmlns:php="http://php.net/xsl">
 <xsl:param name="view" />
+<xsl:param name="location_code" />
+
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <div id="calNav">
 	<a class="showPrev">
@@ -10,6 +12,8 @@
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
 						<xsl:text>&amp;control_id=</xsl:text>
 						<xsl:value-of select="control/id" />
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="$location_code"/>
 				</xsl:when>
 				<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
@@ -34,6 +38,8 @@
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
 						<xsl:text>&amp;control_id=</xsl:text>
 						<xsl:value-of select="control/id" />
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="$location_code"/>
 				</xsl:when>
 				<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
