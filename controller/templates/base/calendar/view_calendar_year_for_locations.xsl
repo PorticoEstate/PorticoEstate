@@ -2,6 +2,8 @@
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="location_code"><xsl:value-of select="location_code" /></xsl:variable>
+
 
 <div id="main_content">
 
@@ -10,6 +12,39 @@
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
 			<h3>Periode: <xsl:value-of select="current_year"/></h3>
 			
+				<div id="choose-my-location" class="select-box">
+					<label>Velg en lokasjon</label>
+					  <form action="#">
+						<input type="hidden" name="period_type" value="view_year_for_locations" />
+						<input type="hidden" name="year">
+						  <xsl:attribute name="value">
+							<xsl:value-of select="current_year"/>
+						  </xsl:attribute>
+						</input>
+						<input type="hidden" name="control_id">
+						  <xsl:attribute name="value">
+							<xsl:value-of select="//control/id"/>
+						  </xsl:attribute>
+						</input>
+						<select id="choose-my-location" class="select-location">
+						  <option>Velg bygg</option>
+						  <xsl:for-each select="locations_list">
+							<option>
+							  <xsl:if test="selected = 1">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							  </xsl:if>
+							  <xsl:attribute name="value">
+								<xsl:value-of select="id"/>
+							  </xsl:attribute>
+								<xsl:value-of select="id"/>
+								<xsl:text> - </xsl:text>
+								<xsl:value-of disable-output-escaping="yes" select="name"/>
+							</option>
+						  </xsl:for-each>
+						</select>					
+					  </form>
+				</div>
+
 		</div>
 		<div class="middle">
 		
@@ -42,6 +77,8 @@
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="//control/id"/>
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
 									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
@@ -108,6 +145,8 @@
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="//control/id"/>
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
 									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								

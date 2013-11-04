@@ -608,7 +608,7 @@
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
 				$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code,'extra' => array('noattrib' => true)));
 
 				$location_arr = explode('-', $location_code);
 				$loc_name_arr = array();
