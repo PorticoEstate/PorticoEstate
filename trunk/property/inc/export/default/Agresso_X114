@@ -636,7 +636,7 @@
 			}
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$Filnavn = $fil_katalog . "/x114_{$this->client_code}_{$external_voucher_id}.xml";
+			$Filnavn = $fil_katalog . "/x114_{$this->client_code}_OK_{$external_voucher_id}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($Filnavn))
