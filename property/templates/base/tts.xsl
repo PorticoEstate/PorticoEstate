@@ -406,6 +406,16 @@
 				Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 
 			}
+
+			function preview_pdf(id)
+			{
+				var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
+
+				var oArgs = {menuaction:'property.uitts.view',id:id, preview_pdf:true, on_behalf_of_assigned: on_behalf_of_assigned};
+				var strURL = phpGWLink('index.php', oArgs);
+				Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			}
+
 		</script>
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
 			<xsl:choose>
@@ -819,8 +829,8 @@
 												</td>
 												<td>
 													<xsl:value-of select="value_order_id"/>
-													<xsl:text> </xsl:text>
 													<input type="hidden" name="values[order_id]" value="{value_order_id}"/>
+													<xsl:text> | </xsl:text>
 													<xsl:variable name="lang_preview_html">
 														<xsl:value-of select="php:function('lang', 'preview html')"/>
 													</xsl:variable>
@@ -829,6 +839,16 @@
 														<xsl:value-of select="$lang_preview_html"/>
 														</xsl:attribute>
 														<xsl:value-of select="$lang_preview_html"/>
+													</a>
+													<xsl:text> | </xsl:text>
+													<xsl:variable name="lang_preview_pdf">
+														<xsl:value-of select="php:function('lang', 'preview pdf')"/>
+													</xsl:variable>
+													<a href="{preview_pdf}">
+														<xsl:attribute name="title">
+														<xsl:value-of select="$lang_preview_pdf"/>
+														</xsl:attribute>
+														<xsl:value-of select="$lang_preview_pdf"/>
 													</a>
 												</td>
 											</tr>
