@@ -14,13 +14,13 @@ Stavanger kommune | Olav Kyrres gate 19 | Postboks 8001 | 4068 Stavanger
 		div.id = 'test';
 		div.innerHTML = '<div style="float: right;" id="changeClose"><i class="fa fa-times-circle"></i></div>';
 		div.innerHTML += '<div id="changeHeader">{change_org_header}</div>';
-		div.innerHTML += '<ul>';
-		var lines = 1;
+		div.innerHTML += '<div id="orglist"></div>';
+		var oList = document.getElementById("orglist");
 		for(var i=0,len=orgarray.length; i < len; i++) {
-			div.innerHTML += '<li><a href="change.php?orgnumber='+orgarray[i]['orgnumber']+'">'+orgarray[i]['orgname']+'</a></li>';
-			lines += 1;
+			oList.innerHTML += '<div style="padding-bottom: 5px;"><a href="change.php?orgnumber='+orgarray[i]['orgnumber']+'">'+orgarray[i]['orgname']+'</a></div>';
 		}	
-		div.innerHTML += '</ul>';
+		div.style.backgroundColor= 'white';
+		div.style.border = '1px solid black';
 		div.style.height = 'auto';
 		div.style.padding = '5px 10px 5px 10px';
 		var oHeader = document.getElementById("changeHeader");

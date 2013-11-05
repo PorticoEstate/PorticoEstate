@@ -224,8 +224,6 @@
 				$ipdp = $_COOKIE['iPlanetDirectoryPro'];
 				$xmldata = simplexml_load_file('http://aktivby.stavanger.kommune.no:8080/spclient/auth.jsp?ipdp='.$ipdp);
 
-#				$xmldata = simplexml_load_file('/srv/portico/svg/stavangerkommune_xml/test.xml');
-
     			$myorgnr = array();
     			
                 $orgnummbers = $this->get_organizations();                
@@ -237,9 +235,9 @@
                 } elseif ($xmldata->responseHeader->underStatus->underStatusMelding[1]['kode'] == "1500") {
         			$external_user = (object) 'ciao'; $external_user->login = '000000001';
                 } else {
-                    foreach ($xmldata->melding->roller as $value) {
-                        if (in_array((string)$value->enhet->orgnr,$orgnummbers)) {
-              				$myorgnr[] = (string)$value->enhet->orgnr;
+                    foreach ($xmldata->melding->roller->enhet as $value) {
+                        if (in_array((string)$value->orgnr,$orgnummbers)) {
+              				$myorgnr[] = (string)$value->orgnr;
                         } 
        			    }
                     if (count($myorgnr) > 1) {
