@@ -34,9 +34,9 @@
 	 */
 
 
-	class  Import_fra_basware_X205
+	class  Import_fra_agresso_X205
 	{
-		var	$function_name = 'Import_fra_basware_X205';
+		var	$function_name = 'Import_fra_agresso_X205';
 		var $auto_tax = true;
 		var $mvakode=0;
 		var $kildeid=1;
@@ -144,7 +144,7 @@
 				'message'				=> $this->receipt['message'],
 				'lang_confirm_msg'		=> $lang_confirm_msg,
 				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> 'Importer faktura fra Basware',
+				'lang_yes_statustext'	=> 'Importer faktura fra Agresso',
 				'lang_no_statustext'	=> 'tilbake',
 				'lang_no'				=> lang('no'),
 				'lang_done'				=> 'Avbryt',
@@ -152,7 +152,7 @@
 			);
 
 			$appname		= lang('location');
-			$function_msg	= 'Importer faktura fra Basware';
+			$function_msg	= 'Importer faktura fra Agresso';
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
@@ -774,7 +774,7 @@
 						if($e)
 						{
 							$GLOBALS['phpgw']->log->error(array(
-								'text'	=> 'import_fra_basware_X205::import() : error when trying to execute import_end_file(): %1',
+								'text'	=> 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
 								'p1'	=> $e->getMessage(),
 								'p2'	=> '',
 								'line'	=> __LINE__,

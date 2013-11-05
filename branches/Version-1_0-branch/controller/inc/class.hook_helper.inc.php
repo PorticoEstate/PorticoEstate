@@ -268,13 +268,24 @@ HTML;
 //			$my_planned_controls_HTML .= "<ul style='overflow:hidden;'>";
 
 
-			$_row_class = '"on"';
 			foreach($my_planned_controls as $planned_date_ts => $planned_controls_on_date)
 			{
 				foreach($planned_controls_on_date as $my_planned_control)
 				{
-					$my_planned_controls_HTML .= "<tr class = {$_row_class}>";
-					$_row_class = $_row_class = '"on"' ? '"off"' : '"on"';
+
+					switch ($_row_class)
+					{
+						case 'on':
+							$_row_class = 'off';
+							break;
+						case 'off':
+							$_row_class = 'on';
+							break;
+						default:
+							$_row_class = 'on';						
+					}
+
+					$my_planned_controls_HTML .= "<tr class = '{$_row_class}'>";
 
 					$deadline_ts = $my_planned_control[0];
 					$my_control = $my_planned_control[1];
