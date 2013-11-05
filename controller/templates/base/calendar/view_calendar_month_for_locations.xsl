@@ -3,12 +3,46 @@
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 <xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="location_code"><xsl:value-of select="location_code" /></xsl:variable>
 
 <div id="main_content">
 	<div id="control_plan">
 		<div class="top">
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
 			<h3>Oversikt for <span class="month"><xsl:value-of select="php:function('lang', $month_str)" /></span><span class="year"><xsl:value-of select="current_year"/></span></h3>
+				<div id="choose-my-location" class="select-box">
+					<label>Velg en lokasjon</label>
+					  <form action="#">
+						<input type="hidden" name="period_type" value="view_month_for_locations" />
+						<input type="hidden" name="year">
+						  <xsl:attribute name="value">
+							<xsl:value-of select="current_year"/>
+						  </xsl:attribute>
+						</input>
+						<input type="hidden" name="control_id">
+						  <xsl:attribute name="value">
+							<xsl:value-of select="//control/id"/>
+						  </xsl:attribute>
+						</input>
+						<select id="choose-my-location" class="select-location">
+						  <option>Velg bygg</option>
+						  <xsl:for-each select="locations_list">
+							<option>
+							  <xsl:if test="selected = 1">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							  </xsl:if>
+							  <xsl:attribute name="value">
+								<xsl:value-of select="id"/>
+							  </xsl:attribute>
+								<xsl:value-of select="id"/>
+								<xsl:text> - </xsl:text>
+								<xsl:value-of disable-output-escaping="yes" select="name"/>
+							</option>
+						  </xsl:for-each>
+						</select>					
+					  </form>
+				</div>
+
 		</div>
 		<div class="middle">
 			<!-- =====================  ICON COLOR MAP  ================= -->
@@ -23,6 +57,8 @@
 						<xsl:value-of select="current_year"/>
 						<xsl:text>&amp;control_id=</xsl:text>
 						<xsl:value-of select="control/id"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="$location_code"/>
 						<xsl:value-of select="$session_url"/>
 					</xsl:attribute>
 					Årsoversikt
@@ -32,6 +68,7 @@
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
 			<xsl:call-template name="nav_calendar_month">
     		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
+    		<xsl:with-param name="location_code"><xsl:value-of select="$location_code"/></xsl:with-param>
   		</xsl:call-template>
 		</div>
 		

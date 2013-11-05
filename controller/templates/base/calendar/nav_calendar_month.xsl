@@ -1,6 +1,7 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="nav_calendar_month" xmlns:php="http://php.net/xsl">
 <xsl:param name="view" />
+<xsl:param name="location_code" />
 
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <div id="calNav">
@@ -13,6 +14,8 @@
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
 							</xsl:when>
 							<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
@@ -39,6 +42,8 @@
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
 							</xsl:when>
 							<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
@@ -71,6 +76,8 @@
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
 							</xsl:when>
 							<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
@@ -97,6 +104,8 @@
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
 							</xsl:when>
 							<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
