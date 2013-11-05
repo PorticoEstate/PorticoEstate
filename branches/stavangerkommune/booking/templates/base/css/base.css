@@ -336,4 +336,9 @@ div.info:hover {
 #overlay-info .close { float: right; }
 #overlay-info .actions { margin-top: 1em;}
 
-
+dl.extrawidth {
+    width: 30em;
+}
+dl.extrawidth select {
+    width: 98%;
+}

@@ -371,3 +371,15 @@ text-align: center;
 .frontpagetext {
 	white-space: pre;
 }
+.changeorg {  
+position:absolute;  
+top:100px;  
+left:50%;  
+margin:-100px 0 0 -100px;  
+width:300px;  
+height:0px;  
+border:2px solid #000; 
+background-color: white;
+z-index: 10;
+}
+

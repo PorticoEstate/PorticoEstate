@@ -67,6 +67,7 @@ JS;
 	$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/phpgwapi/templates/stavanger/css/frontend.css";
+	$stylesheets[] = "/phpgwapi/templates/stavanger/css/font-awesome.min.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -199,6 +200,10 @@ JS;
 	$bouser = CreateObject('bookingfrontend.bouser');
 	if($bouser->is_logged_in())
 	{
+				$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
+
+				$tpl_vars['change_org_header'] = lang('Change organization');
+
                 if ( $bouser->orgname == '000000002') {
                     $tpl_vars['login_text'] = lang('Organization not in the database'). ' :: ' . lang('Logout');
                 } elseif ( $bouser->orgname == '000000001') {

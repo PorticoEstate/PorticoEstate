@@ -621,7 +621,7 @@ Frontpage text	booking	no	Forside tekst
 Calendar text	booking	no	Tekst bak kalender knapp.
 Reference	booking	no	Referanse
 Event Mail Settings	booking	no	Arrangement E-post oppsett 
-Booking event email settings	booking	no	Booking arrangement epost oppsett
+Booking event email settings	booking	no	Arrangement epost oppsett
 Event Change Subject	booking	no	E-post emne for endring
 Mail for event change	booking	no	E-post tekst for endring
 Event Conflict Subject	booking	no	E-post emne for konflikt
@@ -633,3 +633,8 @@ Event Canceled Subject	booking	no	E-post emne når arrangement avlyses
 Mail for event canceled	booking	no	E-post tekst når arrangement avlyses
 Extra kalendar for public opening times	booking	no	Aktiver ekstra kalender for publikumsbading
 Apply for time	booking	no	Søk om tid
+Cancel booking/allocation email settings	booking	no	Avbestill booking/tildeling e-post oppsett
+Booking Canceled Subject	booking	no	Booking avbestilt e-post emne
+Mail for booking canceled	booking	no	Booking avbestilt e-post tekst
+Allocation Canceled Subject	booking	no	Tildeling avbestilt e-post emne
+Mail for allocation canceled	booking	no	Tildeling avbestilt e-post tekst

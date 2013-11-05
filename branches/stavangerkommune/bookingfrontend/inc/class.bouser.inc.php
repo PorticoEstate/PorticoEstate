@@ -2,6 +2,7 @@
 	class bookingfrontend_bouser
 	{
 		const ORGNR_SESSION_KEY = 'orgnr';
+		const ORGARRAY_SESSION_KEY = 'orgarray';
 		
 		public $orgnr = null;
 		public $orgname = null;
@@ -38,7 +39,7 @@
 		{
             $results = array();
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->db->query("select organization_number,name from bb_organization ORDER by organization_number ASC", __LINE__, __FILE__);
+			$this->db->query("select organization_number from bb_organization ORDER by organization_number ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->db->f('organization_number', false);
@@ -60,7 +61,7 @@
 		{
 			$this->log_off();
 			$this->orgnr = $this->get_user_orgnr_from_auth_header();
-			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_auth_header());
+			$this->orgname = $this->get_orgname_from_db($this->orgnr);
 
 /*
 			try 
@@ -88,11 +89,41 @@
 
 			return $this->is_logged_in();
 		}
+
+		public function change_org($orgnumber) 
+		{
+			$orgs = phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
+			$orglist = array();
+			foreach ($orgs as $org) {
+				$orglist[] = $org['orgnumber'];
+			}
+			if (in_array($orgnumber,$orglist)) {
+
+				$this->orgnr = $orgnumber;
+				$this->orgname = $this->get_orgname_from_db($this->orgnr);
+
+				if ($this->is_logged_in())
+				{
+					$this->write_user_orgnr_to_session();
+				}
+
+				return $this->is_logged_in();
+			} else {
+
+				if ($this->is_logged_in())
+				{
+					$this->write_user_orgnr_to_session();
+				}
+
+				return $this->is_logged_in();
+			}
+		}
 		
 		public function log_off()
 		{
 			$this->clear_user_orgnr();
 			$this->clear_user_orgnr_from_session();
+			$this->clear_user_orglist_from_session();
 		}
 		
 		protected function clear_user_orgnr()
@@ -167,6 +198,10 @@
 		{
 			phpgwapi_cache::session_clear($this->get_module(), self::ORGNR_SESSION_KEY);
 		}
+		protected function clear_user_orglist_from_session()
+		{
+#			phpgwapi_cache::session_clear($this->get_module(), self::ORGARRAY_SESSION_KEY);
+		}
 		
 		protected function get_user_orgnr_from_session()
 		{
@@ -185,12 +220,11 @@
         
             if ($config->config_data['authentication_method'] === 'MinId.php') {
 
-                header('Content-type: text/xml');
-                $ipdp = $_COOKIE['iPlanetDirectoryPro'];
-                $xmldata = simplexml_load_file('http://aktivby.stavanger.kommune.no:8080/spclient/auth.jsp?ipdp='.$ipdp);
+				header('Content-type: text/xml');
+				$ipdp = $_COOKIE['iPlanetDirectoryPro'];
+				$xmldata = simplexml_load_file('http://aktivby.stavanger.kommune.no:8080/spclient/auth.jsp?ipdp='.$ipdp);
 
-
-#   			$xmldata = simplexml_load_file('/srv/portico/svg/stavangerkommune_xml/test.xml');
+#				$xmldata = simplexml_load_file('/srv/portico/svg/stavangerkommune_xml/test.xml');
 
     			$myorgnr = array();
     			
@@ -209,13 +243,20 @@
                         } 
        			    }
                     if (count($myorgnr) > 1) {
-
-            			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[1];
+						$xmldata->asXml('/tmp/loggeddata.xml');
+            			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[0];
+						$orgs = array();
+						foreach ($myorgnr as $org) {
+							$orgs[] = array('orgnumber' => $org, 'orgname' => $this->get_orgname_from_db($org));
+						}												
+						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, $orgs);
                     }
                     elseif (count($myorgnr) > 0) {
+						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
             			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[0];
                         
                     } else {
+						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
             			$external_user = (object) 'ciao'; $external_user->login = '000000002';
                     }
                 }                

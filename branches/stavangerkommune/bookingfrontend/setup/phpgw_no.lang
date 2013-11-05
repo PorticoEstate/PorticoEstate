@@ -341,6 +341,7 @@ Cancelation of booking from	bookingfrontend	no	Avbestilling av booking fra
 To cancel booking use this link	bookingfrontend	no	For å slette bookingen bruk lenken
 To cancel allocation use this link	bookingfrontend	no	For å slette tildelingen bruk lenken
 manual	common	no	Veiledning lag og organisasjoner
+Change organization	common	no	Bytt organisasjon
 Cancel allocation	bookingfrontend	no	Avbestill tildelinger
 Allocations deleted on	bookingfrontend	no	Tildelinger slette på
 Allocation deleted on	bookingfrontend	no	Tildeling slette på
@@ -367,3 +368,4 @@ Tilsynsvakt email	bookingfrontend	no	Tilsynsvakt epost
 Tilsynsvakt telephone	bookingfrontend	no	Tilsynsvakt telefon
 Public schedule	bookingfrontend	no	Publikumsbading
 Apply for time	bookingfrontend	no	Søk om tid
+Could not delete allocation due to a booking still use it	bookingfrontend	no	Kunne ikke slette tildeling på grunn av at en booking forsatt bruker den
