@@ -206,7 +206,9 @@ JS;
 
 				$tpl_vars['change_org_header'] = lang('Change organization');
 
-                if ( $bouser->orgname == '000000002') {
+                if ( $bouser->orgname == '000000003') {
+                    $tpl_vars['login_text'] = lang('Error input is not a ssn or orgnr'). ' :: ' . lang('Logout');
+                } elseif ( $bouser->orgname == '000000002') {
                     $tpl_vars['login_text'] = lang('Organization not in the database'). ' :: ' . lang('Logout');
                 } elseif ( $bouser->orgname == '000000001') {
                     $tpl_vars['login_text'] = lang('No organization data'). ' :: ' . lang('Logout');

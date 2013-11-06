@@ -227,10 +227,11 @@
     			
                 $orgnummbers = $this->get_organizations();                
                 
-                if(in_array((string)$xmldata->responseHeader->underStatus->underStatusMelding['kode'],array('180','181','182'))) {
-
+                if(in_array((string)$xmldata->responseHeader->underStatus->underStatusMelding['kode'],array('180'))) {
+        			$external_user = (object) 'ciao'; $external_user->login = '000000003';
+				}
+                elseif(in_array((string)$xmldata->responseHeader->underStatus->underStatusMelding['kode'],array('180','181','182'))) {
         			$external_user = (object) 'ciao'; $external_user->login = '000000000';
-
                 } elseif ($xmldata->responseHeader->underStatus->underStatusMelding[1]['kode'] == "1500") {
         			$external_user = (object) 'ciao'; $external_user->login = '000000001';
                 } else {
