@@ -3826,12 +3826,10 @@
 
 			));
 
-//			$pdf->ezText(lang('title').':',20);
-//			$pdf->ezText(lang('order') . " #{$ticket['order_id']}",14);
-//			$pdf->ezSetDy(-20);
-
+			$pdf->ezSetDy(-10);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
 			$pdf->ezText(lang('descr').':',20);
-
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 
 			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
@@ -3842,11 +3840,11 @@
 
 				if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
 				{
-					$contact_name = $contact_data['value_contact_name'];
+					$contact_name = ltrim($contact_data['value_contact_name']);
 				}
 				if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
 				{
-					$contact_email = "<a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
+					$contact_email =$contact_data['value_contact_email'];
 				}
 				if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
 				{
@@ -3855,15 +3853,16 @@
 
 				$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 
+/*
 				$descr = str_replace(array
 					(
-			//			'__vendor_name__',
-			//			'__organisation__',
-			//			'__user_name__',
-			//			'__user_phone__',
-			//			'__user_email__',
+						'__vendor_name__',
+						'__organisation__',
+						'__user_name__',
+						'__user_phone__',
+						'__user_email__',
 						'__ressursnr__',
-			//			'__location__',
+						'__location__',
 						'__order_description__',
 						'__contact_name__',
 						'__contact_email__',
@@ -3873,13 +3872,13 @@
 						'[/b]'
 					),array
 					(
-		//				$vendor_data['value_vendor_name'],
-		//				$organisation,
-		//				$user_name,
-		//				$user_phone,
-		//				$user_email,
+						$vendor_data['value_vendor_name'],
+						$organisation,
+						$user_name,
+						$user_phone,
+						$user_email,
 						$ressursnr,
-		//				$location,
+						$location,
 						$order_description,
 						$contact_name,
 						$contact_email,
@@ -3888,10 +3887,21 @@
 						'<b>',
 						'</b>'
 					),$order_email_template);
+*/
 
+			$pdf->ezText($ticket['order_descr'],14);
+			$pdf->ezSetDy(-20);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+			$pdf->ezText('Kontakt på bygget:',14);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->ezText($contact_name,14);
+			$pdf->ezText($contact_email,14);
+			$pdf->ezText($contact_phone,14);
+			$pdf->ezSetDy(-20);
 
-			$pdf->ezText($descr,14);
-
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}",14);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 			if($content)
 			{
 				$pdf->ezSetDy(-20);
@@ -3920,7 +3930,7 @@
 $preview = true;
 			if($preview)
 			{
-				$pdf->print_pdf($document,'order');
+				$pdf->print_pdf($document,"order_{$ticket['order_id']}");
 			}
 			else
 			{
