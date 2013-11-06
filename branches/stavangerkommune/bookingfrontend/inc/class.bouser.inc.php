@@ -223,7 +223,6 @@
 				header('Content-type: text/xml');
 				$ipdp = $_COOKIE['iPlanetDirectoryPro'];
 				$xmldata = simplexml_load_file('http://aktivby.stavanger.kommune.no:8080/spclient/auth.jsp?ipdp='.$ipdp);
-
     			$myorgnr = array();
     			
                 $orgnummbers = $this->get_organizations();                
@@ -241,7 +240,6 @@
                         } 
        			    }
                     if (count($myorgnr) > 1) {
-						$xmldata->asXml('/tmp/loggeddata.xml');
             			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[0];
 						$orgs = array();
 						foreach ($myorgnr as $org) {

@@ -78,6 +78,8 @@ JS;
 		}
 	}
 
+	$javascripts[] = "/phpgwapi/templates/stavanger/js/minid.js";
+
 	foreach ( $javascripts as $javascript )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
@@ -213,12 +215,12 @@ JS;
                 } else {
             		$tpl_vars['login_text'] = $bouser->orgname . ' :: ' . lang('Logout');
                 }
-		$tpl_vars['login_url'] = 'logout.php';
+		$tpl_vars['login_url'] = '/logout.php';
 	}
 	else
 	{
 		$tpl_vars['login_text'] = lang('Login');
-		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
+		$tpl_vars['login_url'] = '/login.php?after='.urlencode($_SERVER['QUERY_STRING']);
 		$config		= CreateObject('phpgwapi.config','bookingfrontend');
 		$config->read();
 		$login_parameter = isset($config->config_data['login_parameter']) && $config->config_data['login_parameter'] ? $config->config_data['login_parameter'] : '';
