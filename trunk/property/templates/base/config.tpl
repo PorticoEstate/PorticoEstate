@@ -339,16 +339,6 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
-			<td>{lang_priority_levels_TTS}.</td>
-			<td>
-				<select name="newsettings[prioritylevels]">
-					<option value="" {selected_prioritylevels_}>3</option>
-					<option value="4" {selected_prioritylevels_4}>4</option>
-					<option value="5" {selected_prioritylevels_5}>5</option>
-				</select>
-			</td>
-		</tr>
 		<tr class="row_off">
 			<td>{lang_mandatory_title_TTS}.</td>
 			<td>
