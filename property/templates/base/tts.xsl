@@ -1011,8 +1011,27 @@
 													</label>
 												</td>
 												<td>
-													<div id="paging_3"/>
-													<div id="datatable-container_3"/>
+													<table>
+														<tr>
+															<td valign = 'top'>
+																<select name="values[send_order_format]" class="forms">
+																	<xsl:attribute name="title">
+																		<xsl:value-of select="php:function('lang', 'format')"/>
+																	</xsl:attribute>
+																	<option value="html">
+																		<xsl:text>HTML</xsl:text>
+																	</option>
+																	<option value="pdf">
+																		<xsl:text>PDF</xsl:text>
+																	</option>
+																</select>
+															</td>
+															<td>
+																<div id="paging_3"/>
+																<div id="datatable-container_3"/>
+															</td>
+														</tr>
+													</table>
 												</td>
 												<tr>
 													<td valign="top">
