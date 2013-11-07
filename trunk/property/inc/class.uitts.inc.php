@@ -2778,7 +2778,7 @@
 
 			if($preview_pdf)
 			{
-				$this->_pdf_order($id, $preview_pdf);
+				$this->_pdf_order($id, true);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
@@ -3628,7 +3628,7 @@
 		}
 
 
-		private function _pdf_order($id = 0, $preview_pdf = false , $show_cost = false)
+		private function _pdf_order($id = 0, $preview = false , $show_cost = false)
 		{
 			if(!$this->acl_read)
 			{
@@ -3638,10 +3638,6 @@
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-
-			$pdf= CreateObject('phpgwapi.pdf');
-
-			$preview = phpgw::get_var('preview', 'bool');
 
 			if(!$id)
 			{
@@ -3656,7 +3652,7 @@
 
 			$ticket = $this->bo->read_single($id, $values);
 
-			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			if(isset($this->bo->config->config_data['invoice_acl']) && $this->bo->config->config_data['invoice_acl'] == 'dimb')
 			{
 				$approve_role = execMethod('property.boinvoice.check_role', $ticket['ecodimb']);
 
@@ -3669,15 +3665,18 @@
 				{
 					$_ok = true;					
 				}
+
+				//FIXME
+			/*
 				else if( $common_data['workorder']['approved'] )
 				{
 					$_ok = true;					
 				}
-
+			*/
 				if(!$_ok)
 				{
 					phpgwapi_cache::message_set( lang('order is not approved'), 'error' );
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $id, 'from' => phpgw::get_var('from')));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $id));
 				}
 				unset($_ok);
 			}
@@ -3689,6 +3688,8 @@
 			$date = $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
 
 			set_time_limit(1800);
+			$pdf= CreateObject('phpgwapi.pdf');
+
 			$pdf ->ezSetMargins(50,70,50,50);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 
@@ -3696,21 +3697,28 @@
 			$all = $pdf->openObject();
 			$pdf->saveState();
 
-			if(isset($this->config->config_data['order_logo']) && $this->config->config_data['order_logo'])
+			if(isset($this->bo->config->config_data['order_logo']) && $this->bo->config->config_data['order_logo'])
 			{
-				$pdf->addJpegFromFile($this->config->config_data['order_logo'],
+				$pdf->addJpegFromFile($this->bo->config->config_data['order_logo'],
 					40,
 					800,
-					isset($this->config->config_data['order_logo_width']) && $this->config->config_data['order_logo_width'] ? $this->config->config_data['order_logo_width'] : 80
+					isset($this->bo->config->config_data['order_logo_width']) && $this->bo->config->config_data['order_logo_width'] ? $this->bo->config->config_data['order_logo_width'] : 80
 				);
 			}
 			$pdf->setStrokeColor(0,0,0,1);
 			$pdf->line(20,40,578,40);
-			//	$pdf->line(20,820,578,820);
-			//	$pdf->addText(50,823,6,lang('order'));
-			$pdf->addText(50,28,6,$this->config->config_data['org_name']);
+		//	$pdf->line(20,820,578,820);
+		//	$pdf->addText(50,823,6,lang('order'));
+			$pdf->addText(50,28,6,$this->bo->config->config_data['org_name']);
 			$pdf->addText(300,28,6,$date);
 
+	//		if($preview)
+			{
+				$pdf->setColor(1,0,0);
+		//		$pdf->setColor(66,66,99);
+				$pdf->addText(200,400,40,lang('DRAFT'),-10);
+				$pdf->setColor(1,0,0);
+			}
 
 			$pdf->restoreState();
 			$pdf->closeObject();
@@ -3718,13 +3726,13 @@
 			// or 'even'.
 			$pdf->addObject($all,'all');
 
-			//			$pdf->ezSetDy(-100);
+//			$pdf->ezSetDy(-100);
 
 			$pdf->ezStartPageNumbers(500,28,6,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
 
 			$data = array
 			(
-				array('col1'=>"{$this->config->config_data['org_name']}\n\nOrg.nr: {$this->config->config_data['org_unit_id']}",'col2'=>lang('Order'),'col3'=>lang('order id') . "\n\n{$ticket['order_id']}")
+				array('col1'=>"{$this->bo->config->config_data['org_name']}\n\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",'col2'=>lang('Order'),'col3'=>lang('order id') . "\n\n{$ticket['order_id']}")
 			);		
 
 			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),''
@@ -3739,10 +3747,11 @@
 
 			));
 
+
 			$delivery_address = lang('delivery address'). ':';
-			if(isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			if(isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
 			{
-				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
+				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
 			}
 			else
 			{
@@ -3754,7 +3763,7 @@
 				}
 			}
 
-			$invoice_address = lang('invoice address') . ":\n{$this->config->config_data['invoice_address']}";
+			$invoice_address = lang('invoice address') . ":\n{$this->bo->config->config_data['invoice_address']}";
 
 			$GLOBALS['phpgw']->preferences->set_account_id($common_data['workorder']['user_id'], true);
 
@@ -3916,18 +3925,18 @@
 					));
 			}
 
-			if(isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
+			if(isset($this->bo->config->config_data['order_footer_header']) && $this->bo->config->config_data['order_footer_header'])
 			{
 				if(!$content)
 				{
 					$pdf->ezSetDy(-100);
 				}
-				$pdf->ezText($this->config->config_data['order_footer_header'],12);
-				$pdf->ezText($this->config->config_data['order_footer'],10);
+				$pdf->ezText($this->bo->config->config_data['order_footer_header'],12);
+				$pdf->ezText($this->bo->config->config_data['order_footer'],10);
 			}
 
 			$document= $pdf->ezOutput();
-$preview = true;
+
 			if($preview)
 			{
 				$pdf->print_pdf($document,"order_{$ticket['order_id']}");
