@@ -946,3 +946,7 @@ $solocation->update_location();
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')",__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (3, 'Anviser')",__LINE__,__FILE__);
 
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (1, '1 - Highest')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (2, '2')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (3, '3 - Lowest')");
+

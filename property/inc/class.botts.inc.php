@@ -451,29 +451,13 @@
 			return $status_text;
 		}
 
-
-		function get_priority_list($selected='')
+		function get_priority_list($selected = 0)
 		{
-
-			$prioritylevels = isset($this->config->config_data['prioritylevels']) && $this->config->config_data['prioritylevels'] ? $this->config->config_data['prioritylevels'] : 3;
-
 			if(!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : $prioritylevels;
 			}
-
-			$priority_comment[$prioritylevels]=' - '.lang('Lowest');
-			//			$priority_comment[2]=' - '.lang('Medium');
-			$priority_comment[1]=' - '.lang('Highest');
-
-			$priorities = array();
-			for ($i=1; $i<= $prioritylevels; $i++)
-			{
-				$priorities[$i]['id'] =$i;
-				$priorities[$i]['name'] =$i . (isset($priority_comment[$i])?$priority_comment[$i]:'');
-			}
-
-			return $this->bocommon->select_list($selected,$priorities);
+			return execMethod('property.bogeneric.get_list', array('type' => 'ticket_priority', 'selected' => $selected) );
 		}
 
 		function get_category_name($cat_id)
@@ -901,7 +885,9 @@
 				$default_group = 0;
 			}
 
-			$default_priority = isset($this->config->config_data['prioritylevels']) && $this->config->config_data['prioritylevels'] ? $this->config->config_data['prioritylevels'] : 3;
+			$priority_list = $this->get_priority_list();
+
+			$default_priority = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : count($priority_list);
 
 			$ticket = array
 			(
