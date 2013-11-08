@@ -2802,7 +2802,7 @@
 					$user_name = $ticket['assignedto_name'];
 					$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
 					$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
-					if(!$preview_html)
+					if(!$preview_html && !$preview_pdf)
 					{
 						$_behalf_alert = lang('this order is sent by %1 on behalf of %2',$GLOBALS['phpgw_info']['user']['fullname'], $user_name);
 						$historylog->add('C',$id,$_behalf_alert);
@@ -2901,6 +2901,34 @@
 					$attachments = $bofiles->get_attachments("/fmticket/{$id}/", $values['file_attach']);
 					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ',$values['file_attach']);
 				}
+
+				if(isset($values['send_order_format']) && $values['send_order_format'] == 'pdf')
+				{
+					$pdfcode = $this->_pdf_order($id);
+					if($pdfcode)
+					{							
+						$dir =  "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+
+						//save the file
+						if (!file_exists($dir))
+						{
+							mkdir ($dir,0777);
+						}
+						$fname = tempnam($dir.'/','PDF_').'.pdf';
+						$fp = fopen($fname,'w');
+						fwrite($fp,$pdfcode);
+						fclose($fp);
+
+						$attachments[] = array
+						(
+								'file' => $fname,
+								'name' => "order_{$id}.pdf",
+								'type' => 'application/pdf'
+						);						
+					}
+					$body = lang('order') . '.</br></br>' . lang('see attachment');
+				}
+
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
 					if (!is_object($GLOBALS['phpgw']->send))
@@ -3712,10 +3740,9 @@
 			$pdf->addText(50,28,6,$this->bo->config->config_data['org_name']);
 			$pdf->addText(300,28,6,$date);
 
-	//		if($preview)
+			if($preview)
 			{
 				$pdf->setColor(1,0,0);
-		//		$pdf->setColor(66,66,99);
 				$pdf->addText(200,400,40,lang('DRAFT'),-10);
 				$pdf->setColor(1,0,0);
 			}
@@ -3774,13 +3801,6 @@
 				$from_name = $ticket['assignedto_name'];
 				$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
 				$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
-				if(!$preview_pdf)
-				{
-					$_behalf_alert = lang('this order is sent by %1 on behalf of %2',$GLOBALS['phpgw_info']['user']['fullname'], $from_name);
-					$historylog	= CreateObject('property.historylog','tts');
-					$historylog->add('C',$id,$_behalf_alert);
-					unset($_behalf_alert);
-				}
 			}
 			else
 			{
@@ -3847,56 +3867,18 @@
 				'type'				=> 'form'));
 
 
-				if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
-				{
-					$contact_name = ltrim($contact_data['value_contact_name']);
-				}
-				if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
-				{
-					$contact_email =$contact_data['value_contact_email'];
-				}
-				if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
-				{
-					$contact_phone = $contact_data['value_contact_tel'];
-				}
-
-				$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
-
-/*
-				$descr = str_replace(array
-					(
-						'__vendor_name__',
-						'__organisation__',
-						'__user_name__',
-						'__user_phone__',
-						'__user_email__',
-						'__ressursnr__',
-						'__location__',
-						'__order_description__',
-						'__contact_name__',
-						'__contact_email__',
-						'__contact_phone__',
-						'__order_id__',
-						'[b]',
-						'[/b]'
-					),array
-					(
-						$vendor_data['value_vendor_name'],
-						$organisation,
-						$user_name,
-						$user_phone,
-						$user_email,
-						$ressursnr,
-						$location,
-						$order_description,
-						$contact_name,
-						$contact_email,
-						$contact_phone,
-						$order_id,
-						'<b>',
-						'</b>'
-					),$order_email_template);
-*/
+			if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
+			{
+				$contact_name = ltrim($contact_data['value_contact_name']);
+			}
+			if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+			{
+				$contact_email =$contact_data['value_contact_email'];
+			}
+			if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
+			{
+				$contact_phone = $contact_data['value_contact_tel'];
+			}
 
 			$pdf->ezText($ticket['order_descr'],14);
 			$pdf->ezSetDy(-20);
