@@ -258,8 +258,9 @@
 			{
 				$this->category_tree[$category['id']] = array
 				(
-					'id'	=> $category['id'],
-					'name'	=> $category['name']
+					'id'			=> $category['id'],
+					'name'			=> $category['name'],
+					'location_id'	=> $category['location_id']
 				);
 				$this->get_children2($entity_id, $category['id'], 1);
 			}
@@ -487,6 +488,7 @@
 				$category = array
 				(
 					'id'						=> $this->db->f('id'),
+					'entity_id'					=> $this->db->f('entity_id'),
 					'name'						=> $this->db->f('name',true),
 					'descr'						=> $this->db->f('descr',true),
 					'prefix'					=> $this->db->f('prefix',true),
