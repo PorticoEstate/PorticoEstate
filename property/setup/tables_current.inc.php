@@ -1009,6 +1009,16 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_tts_priority' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '100','nullable' => true),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_tts_tickets' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),

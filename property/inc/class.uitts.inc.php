@@ -2774,6 +2774,14 @@
 			unset($_temp);
 
 			$preview_html = phpgw::get_var('preview_html', 'bool');
+			$preview_pdf = phpgw::get_var('preview_pdf', 'bool');
+
+			if($preview_pdf)
+			{
+				$this->_pdf_order($id, true);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			if($vendor_email || $preview_html)
 			{
 				$subject = lang('workorder').": {$ticket['order_id']}";
@@ -2794,7 +2802,7 @@
 					$user_name = $ticket['assignedto_name'];
 					$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
 					$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
-					if(!$preview_html)
+					if(!$preview_html && !$preview_pdf)
 					{
 						$_behalf_alert = lang('this order is sent by %1 on behalf of %2',$GLOBALS['phpgw_info']['user']['fullname'], $user_name);
 						$historylog->add('C',$id,$_behalf_alert);
@@ -2886,12 +2894,41 @@
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 
+
 				if(isset($values['file_attach']) && is_array($values['file_attach']))
 				{
 					$bofiles	= CreateObject('property.bofiles');
 					$attachments = $bofiles->get_attachments("/fmticket/{$id}/", $values['file_attach']);
 					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ',$values['file_attach']);
 				}
+
+				if(isset($values['send_order_format']) && $values['send_order_format'] == 'pdf')
+				{
+					$pdfcode = $this->_pdf_order($id);
+					if($pdfcode)
+					{							
+						$dir =  "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+
+						//save the file
+						if (!file_exists($dir))
+						{
+							mkdir ($dir,0777);
+						}
+						$fname = tempnam($dir.'/','PDF_').'.pdf';
+						$fp = fopen($fname,'w');
+						fwrite($fp,$pdfcode);
+						fclose($fp);
+
+						$attachments[] = array
+						(
+								'file' => $fname,
+								'name' => "order_{$id}.pdf",
+								'type' => 'application/pdf'
+						);						
+					}
+					$body = lang('order') . '.</br></br>' . lang('see attachment');
+				}
+
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
 					if (!is_object($GLOBALS['phpgw']->send))
@@ -3312,6 +3349,7 @@
 					'order_dim1_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
 					'branch_list'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1 ? array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) :'',
 					'preview_html'					=> "javascript:preview_html($id)",
+					'preview_pdf'					=> "javascript:preview_pdf($id)",
 
 				);
 
@@ -3615,6 +3653,280 @@
 			phpgwapi_yui::tabview_setup('ticket_tabview');
 
 			return  phpgwapi_yui::tabview_generate($tabs, $tab);
+		}
+
+
+		private function _pdf_order($id = 0, $preview = false , $show_cost = false)
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if(!$id)
+			{
+				$id = phpgw::get_var('id'); // in case of bigint
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+			}
+
+			if(!$show_cost)
+			{
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+			}
+
+			$ticket = $this->bo->read_single($id, $values);
+
+			if(isset($this->bo->config->config_data['invoice_acl']) && $this->bo->config->config_data['invoice_acl'] == 'dimb')
+			{
+				$approve_role = execMethod('property.boinvoice.check_role', $ticket['ecodimb']);
+
+				$_ok = false;
+				if($approve_role['is_supervisor'])
+				{
+					$_ok = true;
+				}
+				else if( $approve_role['is_budget_responsible'] )
+				{
+					$_ok = true;					
+				}
+
+				//FIXME
+			/*
+				else if( $common_data['workorder']['approved'] )
+				{
+					$_ok = true;					
+				}
+			*/
+				if(!$_ok)
+				{
+					phpgwapi_cache::message_set( lang('order is not approved'), 'error' );
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $id));
+				}
+				unset($_ok);
+			}
+
+			//FIXME
+			$content = array(); //$this->_get_order_details($common_data['content'],	$show_cost);
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date = $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
+
+			set_time_limit(1800);
+			$pdf= CreateObject('phpgwapi.pdf');
+
+			$pdf ->ezSetMargins(50,70,50,50);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+
+			// put a line top and bottom on all the pages
+			$all = $pdf->openObject();
+			$pdf->saveState();
+
+			if(isset($this->bo->config->config_data['order_logo']) && $this->bo->config->config_data['order_logo'])
+			{
+				$pdf->addJpegFromFile($this->bo->config->config_data['order_logo'],
+					40,
+					800,
+					isset($this->bo->config->config_data['order_logo_width']) && $this->bo->config->config_data['order_logo_width'] ? $this->bo->config->config_data['order_logo_width'] : 80
+				);
+			}
+			$pdf->setStrokeColor(0,0,0,1);
+			$pdf->line(20,40,578,40);
+		//	$pdf->line(20,820,578,820);
+		//	$pdf->addText(50,823,6,lang('order'));
+			$pdf->addText(50,28,6,$this->bo->config->config_data['org_name']);
+			$pdf->addText(300,28,6,$date);
+
+			if($preview)
+			{
+				$pdf->setColor(1,0,0);
+				$pdf->addText(200,400,40,lang('DRAFT'),-10);
+				$pdf->setColor(1,0,0);
+			}
+
+			$pdf->restoreState();
+			$pdf->closeObject();
+			// note that object can be told to appear on just odd or even pages by changing 'all' to 'odd'
+			// or 'even'.
+			$pdf->addObject($all,'all');
+
+//			$pdf->ezSetDy(-100);
+
+			$pdf->ezStartPageNumbers(500,28,6,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
+
+			$data = array
+			(
+				array('col1'=>"{$this->bo->config->config_data['org_name']}\n\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",'col2'=>lang('Order'),'col3'=>lang('order id') . "\n\n{$ticket['order_id']}")
+			);		
+
+			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),''
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
+				,'xOrientation'=>'right','width'=>500
+				,'cols'=>array
+				(
+					'col1'=>array('justification'=>'right','width'=>200, 'justification'=>'left'),
+					'col2'=>array('justification'=>'right','width'=>100, 'justification'=>'center'),
+					'col3'=>array('justification'=>'right','width'=>200),
+				)
+
+			));
+
+
+			$delivery_address = lang('delivery address'). ':';
+			if(isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
+			{
+				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
+			}
+			else
+			{
+				$location_code = $ticket['location_data']['location_code'];
+				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				foreach($address_element as $entry)
+				{
+					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
+				}
+			}
+
+			$invoice_address = lang('invoice address') . ":\n{$this->bo->config->config_data['invoice_address']}";
+
+			$GLOBALS['phpgw']->preferences->set_account_id($common_data['workorder']['user_id'], true);
+
+
+			$on_behalf_of_assigned = phpgw::get_var('on_behalf_of_assigned', 'bool');
+			if($on_behalf_of_assigned && isset($ticket['assignedto_name']))
+			{
+				$from_name = $ticket['assignedto_name'];
+				$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+				$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
+			}
+			else
+			{
+				$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
+			}
+
+			$from = lang('date') . ": {$date}\n";
+			$from .= lang('dimb') .": {$ticket['ecodimb']}\n";
+			$from .= lang('from') . ":\n   {$from_name}";
+			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['email']}";
+			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['cellphone']}";
+
+
+
+			if(isset($ticket['vendor_id']) && $ticket['vendor_id'])
+			{
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
+				$custom 		= createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+				$vendor_data	= $contacts->read_single(array('id' => $ticket['vendor_id']),$vendor_data);
+				if(is_array($vendor_data))
+				{
+					foreach($vendor_data['attributes'] as $attribute)
+					{
+						if($attribute['name']=='org_name')
+						{
+							$ticket['vendor_name']=$attribute['value'];
+							break;
+						}
+					}
+				}
+				unset($contacts);
+			}
+
+			$data = array
+			(
+				array('col1'=>lang('vendor') . ":\n{$ticket['vendor_name']}",'col2' => $delivery_address),
+				array('col1'=>$from,'col2'=>$invoice_address)
+			);		
+
+			$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
+				,'xOrientation'=>'right','width'=>500,'showLines'=> 2
+				,'cols'=>array
+				(
+					'col1'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+					'col2'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+				)
+
+			));
+
+			$pdf->ezSetDy(-10);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+			$pdf->ezText(lang('descr').':',20);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+
+			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
+				'contact_id'		=> $ticket['contact_id'],
+				'field'				=> 'contact',
+				'type'				=> 'form'));
+
+
+			if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
+			{
+				$contact_name = ltrim($contact_data['value_contact_name']);
+			}
+			if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+			{
+				$contact_email =$contact_data['value_contact_email'];
+			}
+			if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
+			{
+				$contact_phone = $contact_data['value_contact_tel'];
+			}
+
+			$pdf->ezText($ticket['order_descr'],14);
+			$pdf->ezSetDy(-20);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+			$pdf->ezText('Kontakt på bygget:',14);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->ezText($contact_name,14);
+			$pdf->ezText($contact_email,14);
+			$pdf->ezText($contact_phone,14);
+			$pdf->ezSetDy(-20);
+
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}",14);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			if($content)
+			{
+				$pdf->ezSetDy(-20);
+				$pdf->ezTable($content,'',lang('details'),
+					array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
+					,'cols'=>array(
+						lang('bill per unit')=>array('justification'=>'right','width'=>50)
+						,lang('quantity')=>array('justification'=>'right','width'=>50)
+						,lang('cost')=>array('justification'=>'right','width'=>50)
+						,lang('unit')=>array('width'=>40)
+						,lang('descr')=>array('width'=>120))
+					));
+			}
+
+			if(isset($this->bo->config->config_data['order_footer_header']) && $this->bo->config->config_data['order_footer_header'])
+			{
+				if(!$content)
+				{
+					$pdf->ezSetDy(-100);
+				}
+				$pdf->ezText($this->bo->config->config_data['order_footer_header'],12);
+				$pdf->ezText($this->bo->config->config_data['order_footer'],10);
+			}
+
+			$document= $pdf->ezOutput();
+
+			if($preview)
+			{
+				$pdf->print_pdf($document,"order_{$ticket['order_id']}");
+			}
+			else
+			{
+				return $document;
+			}
 		}
 
 	}

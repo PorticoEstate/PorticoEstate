@@ -162,6 +162,11 @@
 							'text'	=> lang('Ticket status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ticket_status') )
 						),
+						'ticket_priority'	=> array
+						(
+							'text'	=> lang('Ticket priority'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ticket_priority') )
+						),
 						'ticket_config'	=> array
 						(
 							'text'	=> lang('ticket config'),
