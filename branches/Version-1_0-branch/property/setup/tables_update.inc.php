@@ -7738,3 +7738,49 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.672 to 0.9.17.673
+	* Add configurable prioriy keys for tickets
+	*/
+
+	$test[] = '0.9.17.672';
+	function property_upgrade0_9_17_672()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_priority', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 100,'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'property' AND config_name = 'prioritylevels'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$prioritylevels = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+
+		$prioritylevels = $prioritylevels ? $prioritylevels : 3;
+
+		$priority_comment = array();
+		$priority_comment[$prioritylevels]	= " - Lowest";
+		$priority_comment[1]				= " - Highest";
+
+		for ($i=1; $i<= $prioritylevels; $i++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES ({$i}, '{$i}{$priority_comment[$i]}')");
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_config WHERE config_app = 'property' AND config_name = 'prioritylevels'");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.673';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

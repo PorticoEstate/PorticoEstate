@@ -55,7 +55,7 @@
 			if(true)
 			{
 				$size = strlen($document);
-				$browser->content_header($document_name .'.pdf','application/pdf', $size);
+				$browser->content_header($document_name .'.pdf','application/x-pdf', $size);
 				echo $document;
 			}
 			else

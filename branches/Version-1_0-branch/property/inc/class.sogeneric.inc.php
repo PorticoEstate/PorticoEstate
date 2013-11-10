@@ -1223,6 +1223,30 @@
 					);
 				break;
 
+			case 'ticket_priority':
+				$_lang_priority = lang('priority');
+				$info = array
+					(
+						'table' 			=> 'fm_tts_priority',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+						),
+						'edit_msg'			=> lang('edit') . ' ' . $_lang_priority,
+						'add_msg'			=> lang('add') . ' ' . $_lang_priority,
+						'name'				=> $_lang_priority,
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::ticket::ticket_priority'
+					);
+				break;
+
 				//-------- ID type varchar
 			case 'project_status':
 				$info = array
@@ -1965,7 +1989,7 @@
 						),
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
-						'name'				=> lang('event action'),
+						'name'				=> lang('ticket status'),
 						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::ticket::ticket_status'
