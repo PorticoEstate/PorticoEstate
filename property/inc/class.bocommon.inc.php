@@ -1132,7 +1132,7 @@
 			$joinmethod 		= isset($data['joinmethod'])?$data['joinmethod']:'';
 			$paranthesis 		= isset($data['paranthesis'])?$data['paranthesis']:'';
 			$lookup 			= isset($data['lookup'])?$data['lookup']:'';
-			$location_level 	= isset($data['location_level'])?$data['location_level']:'';
+			$location_level 	= isset($data['location_level']) && $data['location_level'] ? (int)$data['location_level'] : 0;
 			$no_address 		= isset($data['no_address'])?$data['no_address']:'';
 			$uicol_address		= isset($data['uicol_address'])?$data['uicol_address']:'';
 			$force_location		= isset($data['force_location'])?$data['force_location']:'';
@@ -1140,7 +1140,12 @@
 			$cols_return_lookup	= array();
 
 			$GLOBALS['phpgw']->config->read();
-			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level']) && $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+
+			if($list_location_level > $location_level)
+			{
+				$list_location_level = $location_level;
+			}
 
 			$soadmin_location	= CreateObject('property.soadmin_location');
 			$location_types	= $soadmin_location->select_location_type();
