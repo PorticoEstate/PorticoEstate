@@ -421,7 +421,7 @@
 					$handle = opendir($dir);
 					while (false !== ($file = readdir($handle)))
 					{
-						if (is_dir($file)) virker bare lokalt
+						if (is_dir($file))
 						{
 							echo "Directory: $file<br/>";
 							continue;
