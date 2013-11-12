@@ -421,9 +421,10 @@
 					$handle = opendir($dir);
 					while (false !== ($file = readdir($handle)))
 					{
-						if (is_dir($file))
+					//	if (is_dir($file)) virker bare lokalt
+						if(! stripos( $file_name, 'x205' ) === 0)
 						{
-//							echo "Directory: $file<br/>";
+							echo "Directory: $file<br/>\n";
 							continue;
 						}
 
