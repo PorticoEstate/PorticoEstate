@@ -427,15 +427,17 @@
 							continue;
 						}
 
-/*						$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
-						echo "File $file Size: $size<br/>";
+						if ($this->debug)
+						{
+							$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
+							echo "File $file Size: $size<br/>";
 
-						$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
-						$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
-						@fclose($stream);
-						echo "CONTENTS: $contents<br/><br/>";
-*/
-						$files[] = $file;
+							$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
+							$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
+							@fclose($stream);
+							echo "CONTENTS: $contents<br/><br/>";
+						}
+							$files[] = $file;
 					}
 
 					if ($this->debug)
