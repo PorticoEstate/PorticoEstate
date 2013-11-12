@@ -421,14 +421,13 @@
 					$handle = opendir($dir);
 					while (false !== ($file = readdir($handle)))
 					{
-					//	if (is_dir($file)) virker bare lokalt
-						if(! stripos( $file_name, 'x205' ) === 0)
+						if (is_dir($file)) virker bare lokalt
 						{
-							echo "Directory: $file<br/>\n";
+							echo "Directory: $file<br/>";
 							continue;
 						}
 
-						if ($this->debug)
+/*						if ($this->debug)
 						{
 							$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
 							echo "File $file Size: $size<br/>";
@@ -438,6 +437,7 @@
 							@fclose($stream);
 							echo "CONTENTS: $contents<br/><br/>";
 						}
+*/
 							$files[] = $file;
 					}
 
