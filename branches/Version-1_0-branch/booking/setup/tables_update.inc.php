@@ -2710,3 +2710,134 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.2.11';
+	/**
+	* Update booking version from 0.2.11 to 0.2.12
+	* alter lenght of name fields
+	* 
+	*/
+	function booking_upgrade0_2_11()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_activity', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_building', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_contact_person', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_organization', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_group', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_season', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_organization_contact', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_group_contact', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_application', 'building_name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation', 'building_name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_booking', 'building_name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_event', 'building_name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_event', 'contact_name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => false
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_event', 'customer_organization_name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_system_message', 'building_name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => false
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_system_message', 'name',array(
+			'type' => 'varchar',
+			'precision' => 150,
+			'nullable' => false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.12';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

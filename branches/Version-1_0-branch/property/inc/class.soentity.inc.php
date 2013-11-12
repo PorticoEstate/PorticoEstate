@@ -786,6 +786,7 @@
 					case 'loc1_name':
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";
 						break;
+					case 'num':
 					case 'id':
 						$ordermethod = " ORDER BY {$entity_table}.id {$sort}";
 						break;
