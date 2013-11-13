@@ -505,9 +505,7 @@
 
 			if (isset($var_result['INVOICES']) && is_array($var_result['INVOICES']))
 			{
-				$transferdate =  str_replace('.', '-', $var_result['TRANSACTIONINFORMATION'][0]['TRANSFERDATE']);// 2009.05.28
-				$transfertime =  $var_result['TRANSACTIONINFORMATION'][0]['TRANSFERTIME'];// 13:10:28
-				$regtid		= date($this->datetimeformat,strtotime("{$transferdate} {$transfertime}"));
+				$regtid		= date($this->datetimeformat);
 
 				$i = 0;
 				$_data = $var_result['INVOICES'][0]['INVOICE'][0]['INVOICEHEADER'][0];
