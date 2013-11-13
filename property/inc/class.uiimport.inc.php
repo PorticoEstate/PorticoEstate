@@ -70,7 +70,26 @@
 
 				phpgwapi_cache::session_set('property', 'import_settings', $_POST);
 
-				$this->conv_type 	= phpgw::get_var('conv_type');
+				$check_method = 0;
+				if($this->conv_type = phpgw::get_var('conv_type'))
+				{
+					$check_method ++;
+				}
+				if ($location_id = phpgw::get_var('location_id', 'int'))
+				{
+					$check_method ++;
+				}
+				
+				if($table = phpgw::get_var('table'))
+				{
+					$check_method ++;
+				}
+
+				if($check_method > 1)
+				{
+					phpgwapi_cache::session_set('property', 'import_message', 'choose only one target!');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
+				}
 
 				$start_time = time(); // Start time of import
 				$start = date("G:i:s",$start_time);
@@ -96,7 +115,7 @@
 					require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_generic.php";
 				}
 
-				$location_id = phpgw::get_var('location_id', 'int');
+
 				$this->import_conversion = new import_conversion($location_id);
 				$this->debug = phpgw::get_var('debug', 'bool');
 				$this->import_conversion->debug	= $this->debug;
@@ -220,7 +239,8 @@ HTML;
 		//		$tables = $this->db->table_names();
 				$tables = array
 				(
-					'fm_vendor'
+					'fm_vendor',
+					'fm_condition_survey'
 				);
 				sort($tables);
 
@@ -242,7 +262,7 @@ HTML;
 
 					foreach($category_list as $category)
 					{
-						$selected = $import_settings['category'] == $category ? 'selected =  "selected"' : '';
+						$selected = $import_settings['location_id'] == $category['location_id'] ? 'selected =  "selected"' : '';
 						$category_option .=  <<<HTML
 						<option value="{$category['location_id']}"{$selected}>{$category['name']}</option>
 HTML;
