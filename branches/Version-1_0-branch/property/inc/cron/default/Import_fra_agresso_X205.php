@@ -423,19 +423,22 @@
 					{
 						if (is_dir($file))
 						{
-//							echo "Directory: $file<br/>";
+							echo "Directory: $file<br/>";
 							continue;
 						}
 
-/*						$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
-						echo "File $file Size: $size<br/>";
+/*						if ($this->debug)
+						{
+							$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
+							echo "File $file Size: $size<br/>";
 
-						$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
-						$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
-						@fclose($stream);
-						echo "CONTENTS: $contents<br/><br/>";
+							$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
+							$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
+							@fclose($stream);
+							echo "CONTENTS: $contents<br/><br/>";
+						}
 */
-						$files[] = $file;
+							$files[] = $file;
 					}
 
 					if ($this->debug)
@@ -502,9 +505,7 @@
 
 			if (isset($var_result['INVOICES']) && is_array($var_result['INVOICES']))
 			{
-				$transferdate =  str_replace('.', '-', $var_result['TRANSACTIONINFORMATION'][0]['TRANSFERDATE']);// 2009.05.28
-				$transfertime =  $var_result['TRANSACTIONINFORMATION'][0]['TRANSFERTIME'];// 13:10:28
-				$regtid		= date($this->datetimeformat,strtotime("{$transferdate} {$transfertime}"));
+				$regtid		= date($this->datetimeformat);
 
 				$i = 0;
 				$_data = $var_result['INVOICES'][0]['INVOICE'][0]['INVOICEHEADER'][0];

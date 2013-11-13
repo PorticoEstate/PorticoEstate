@@ -37,8 +37,9 @@
 
 		var $public_functions = array
 		(
-			'import' => true,
-			'export' => true
+			'import'		=> true,
+			'export'		=> true,
+			'export_cron'	=> true
 		);
 		var $start;
 		var $query;
@@ -307,14 +308,12 @@
 
 		function export_cron( $data )
 		{
-			if ( $data['enabled'] == 1 )
+			$data = unserialize(urldecode(phpgw::get_var('data')));
+			$data = phpgw::clean_value($data);
+_debug_array($data);
+			$receipt = $this->export( $data );
 			{
-				$receipt = $this->export( $data );
-				//			if(isset($data['manual']))
-				{
-					_debug_array( $receipt );
-				}
+				_debug_array( $receipt );
 			}
 		}
-
 	}

@@ -438,6 +438,9 @@ datatype type not chosen!	property	no	datatype er ikke valgt
 date closed	property	no	dato avsluttet
 date opened	property	no	Startet
 date search	property	no	Dato søk
+date from	property	no	Fra Dato
+date to	property	no	Til Dato
+alter date	property	no	Endre Dato
 datetime	property	no	dato-tid
 day	property	no	dag
 day of week (0-6, 0=sun)	property	no	Ukedag (0-6, 0=søndag)
