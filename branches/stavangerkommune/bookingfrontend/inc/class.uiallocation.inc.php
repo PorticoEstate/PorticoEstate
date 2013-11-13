@@ -20,7 +20,7 @@
 			$this->booking_bo = CreateObject('booking.bobooking');
 	}
 
-		public function building_users($building_id, $organization_id) {
+		public function building_users($building_id) {
 
             $contacts = array();
 #            $building = $this->building_bo->so->read_single($building_id);
@@ -58,17 +58,13 @@
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 
-			if ($config->config_data['user_can_delete'] != 'yes') {
+			if ($config->config_data['user_can_delete_allocations'] != 'yes') {
 		
 	        	$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'GET')));
-
 	   			$errors = array();
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 	            {
-            
-	                $from = $_POST['from_'];
-	                $to =  $_POST['to_'];
-	                $organization_id = $_POST['organization_id'];
+	            
 	                $outseason = $_POST['outseason'];
 	                $recurring = $_POST['recurring'];
 	                $repeat_until = $_POST['repeat_until'];
@@ -91,7 +87,7 @@
 	                $link = mb_strcut($link,16,strlen($link));
 	                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel allocation use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
 
-					$receipt = $this->system_message_bo->add($system_message);
+					$this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
 
 	            }
@@ -103,8 +99,10 @@
 				self::render_template('allocation_cancel', array('allocation'=>$allocation));
 
 			} else {
-	
+
 				$id = intval(phpgw::get_var('allocation_id', 'GET'));
+                $from_date = phpgw::get_var('from_', 'GET');
+                $to_date = phpgw::get_var('to_', 'GET');
 				$outseason = phpgw::get_var('outseason', 'GET');
 				$recurring = phpgw::get_var('recurring', 'GET');
 				$repeat_until = phpgw::get_var('repeat_until', 'GET');
@@ -122,7 +120,7 @@
                 $maildata = array();
                 $maildata['outseason'] = $outseason;		
                 $maildata['recurring'] = $recurring;		
-                $maildata['repeat_until'] = $field_until;		
+                $maildata['repeat_until'] = $repeat_until;
                 $maildata['field_interval'] = $field_interval;		
 
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -158,10 +156,10 @@
 							}
 							$info_deleted = lang("Allocation deleted on")." ".$system_message['building_name'].":<br />".$res_names." - ".pretty_timestamp($allocation['from_'])." - ".pretty_timestamp($allocation['to_']);
 			                $system_message['message'] = $system_message['message']."<br />".$info_deleted;
-							$receipt = $this->system_message_bo->add($system_message);
+							$this->system_message_bo->add($system_message);
 
                             $this->bo->send_notification($allocation, $maildata, $mailadresses);
-	                        $err = $this->bo->so->delete_allocation($id);
+	                        $this->bo->so->delete_allocation($id);
 	                        $this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
 	                    }
 	                } 
@@ -212,7 +210,7 @@
 								if ($step == 3)
 								{
 									
-	                                $stat = $this->bo->so->delete_allocation($id);
+	                                $this->bo->so->delete_allocation($id);
 	                            }                            
 	                        }
 							$i++;
@@ -248,7 +246,7 @@
 							}
 			                $system_message['message'] = $system_message['message']."<br />".$info_deleted;
                             $this->bo->send_notification($allocation, $maildata, $mailadresses);
-							$receipt = $this->system_message_bo->add($system_message);
+							$this->system_message_bo->add($system_message);
 
 							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
 						}
@@ -291,6 +289,17 @@
 
 		public function info()
 		{
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			if ($config->config_data['user_can_delete_allocations'] != 'yes')
+			{
+				$user_can_delete_allocations = 0;
+			
+			} else {
+				$user_can_delete_allocations = 1;
+			}
+			
+
 			$allocation = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$allocation['resources']), 'sort'=>'name'));
 			$allocation['resources'] = $resources['results'];
@@ -309,7 +318,7 @@
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.cancel', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
             }
 			$allocation['when'] = pretty_timestamp($allocation['from_']).' - '.pretty_timestamp($allocation['to_']);
-			self::render_template('allocation_info', array('allocation'=>$allocation));
+			self::render_template('allocation_info', array('allocation'=>$allocation, 'user_can_delete_allocations' => $user_can_delete_allocations));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 	}

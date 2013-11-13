@@ -11,17 +11,34 @@
     <form action="" method="POST">
 
        <dl class="form">
-            <dt><label for="field_user_can_delete"><xsl:value-of select="php:function('lang', 'Frontend users can delete bookings and allocations')"/></label></dt>
+            <dt><label for="field_user_can_delete_bookings"><xsl:value-of select="php:function('lang', 'Frontend users can delete bookings')"/></label></dt>
 			<dd>
-				<select id="field_user_can_delete" name="config_data[user_can_delete]">
+				<select id="field_user_can_delete_bookings" name="config_data[user_can_delete_bookings]">
                     <option value="no">
-                        <xsl:if test="config_data/user_can_delete='no'">
+                        <xsl:if test="config_data/user_can_delete_bookings='no'">
                             <xsl:attribute name="selected">checked</xsl:attribute>
                         </xsl:if>
                         <xsl:value-of select="php:function('lang', 'No')" />
                     </option>
                     <option value="yes">
-                        <xsl:if test="config_data/user_can_delete='yes'">
+                        <xsl:if test="config_data/user_can_delete_bookings='yes'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Yes')" />
+		           </option>
+		        </select>
+			</dd>
+            <dt><label for="field_user_can_delete_allocations"><xsl:value-of select="php:function('lang', 'Frontend users can delete allocations')"/></label></dt>
+			<dd>
+				<select id="field_user_can_delete_allocations" name="config_data[user_can_delete_allocations]">
+                    <option value="no">
+                        <xsl:if test="config_data/user_can_delete_allocations='no'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="php:function('lang', 'No')" />
+                    </option>
+                    <option value="yes">
+                        <xsl:if test="config_data/user_can_delete_allocations='yes'">
                             <xsl:attribute name="selected">checked</xsl:attribute>
                         </xsl:if>
                         <xsl:value-of select="php:function('lang', 'Yes')" />

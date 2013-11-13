@@ -104,6 +104,7 @@
             <dd>
                         <xsl:value-of select="booking/season_name"/>
             </dd>
+			<xsl:if test="user_can_delete_allocations != 0">						
 			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Delete allocation also')" /></label></dt>
 			<dd>
 				<label>
@@ -115,7 +116,9 @@
 					<xsl:value-of select="php:function('lang', 'Delete allocations')" />
 				</label>
 			</dd>
+			</xsl:if>
         </dl>
+	
 		<div style='clear:left; padding:0; margin:0'/>
 
         <dl class="form-col">

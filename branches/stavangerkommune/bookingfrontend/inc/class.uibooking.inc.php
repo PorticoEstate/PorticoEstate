@@ -636,7 +636,7 @@
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
             
-			if ($config->config_data['user_can_delete'] != 'yes') {
+			if ($config->config_data['user_can_delete_bookings'] != 'yes') {
 
 	        	$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
 	   			$errors = array();
@@ -874,12 +874,18 @@
 				}
 	
 				$this->flash_form_errors($errors);
+				if ($config->config_data['user_can_delete_allocations'] != 'yes')
+				{
+					$user_can_delete_allocations = 0;
+				
+				} else {
+					$user_can_delete_allocations = 1;
+				}
 				self::add_javascript('booking', 'booking', 'booking.js');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 #				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
                 $booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $booking['building_id'], 'date' => $booking['from_']));
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
-	
 				if ($step < 2) 
 	            {
 	    			self::render_template('booking_delete', array('booking' => $booking,
@@ -887,7 +893,8 @@
 						'outseason' => $outseason,
 						'interval' => $field_interval,
 						'repeat_until' => $repeat_until,
-	                    'delete_allocation' => $delete_allocation
+	                    'delete_allocation' => $delete_allocation,
+						'user_can_delete_allocations' => $user_can_delete_allocations
 	                ));
 	            }
 				elseif ($step == 2) 
@@ -901,6 +908,7 @@
 						'from_date' => $from_date,
 						'to_date' => $to_date,
 	                    'delete_allocation' => $_POST['delete_allocation'],
+						'user_can_delete_allocations' => $user_can_delete_allocations,
 						'allocation_keep' => $allocation_keep,
 						'allocation_delete' => $allocation_delete,
 						'message' => $_POST['message'],
@@ -915,6 +923,15 @@
 
 		public function info()
 		{
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			if ($config->config_data['user_can_delete_bookings'] != 'yes')
+			{
+				$user_can_delete_bookings = 0;
+			
+			} else {
+				$user_can_delete_bookings = 1;
+			}
 			$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
 			$booking['group'] = $this->group_bo->read_single($booking['group_id']);
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
@@ -936,7 +953,7 @@
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel', 'id' => $booking['id']));
             }
 			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);
-			self::render_template('booking_info', array('booking'=>$booking));
+			self::render_template('booking_info', array('booking'=>$booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 	}

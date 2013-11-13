@@ -37,7 +37,7 @@
 			<dd>
                 <div> </div>
 			</dd>
-			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label></dt>
+			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring allocation cancelation')" /></label></dt>
 			<dd>
 				<label>
 					<input type="checkbox" name="outseason" id="outseason">
@@ -55,7 +55,7 @@
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>
-					<xsl:value-of select="php:function('lang', 'Delete until')" />
+					<xsl:value-of select="php:function('lang', 'Cancel until')" />
 				</label>
 			</dd>
 			<dd class="date-picker">
