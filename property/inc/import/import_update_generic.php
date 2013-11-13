@@ -22,7 +22,7 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= $this->db->join;
 
-			if(! $category = execMethod('property.soadmin_entity.get_single_category', $location_id ))
+			if($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id ))
 			{
 				throw new Exception("Not a valid location for {$location_id}");
 			}
@@ -33,7 +33,7 @@
 			$this->entity_id = $category['entity_id'];
 			$this->cat_id = $category['id'];
 
-			
+
 			if ($this->is_eav)
 			{
 				$this->table = 'fm_bim_item';
@@ -90,7 +90,7 @@
 			}
 			return $ok;
 		}
-		
+
 		private function _add_eav($data)
 		{
 			static $count_records = 0;
@@ -171,14 +171,14 @@
 			$type = (int)$this->bim_type_id;
 
 			$location_name = "_entity_{$this->entity_id}_{$this->cat_id}";
-		
+
 			if($this->db->next_record())
 			{
 				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
 
 				foreach ($remove_keys as $remove_key)
 				{
-					unset($value_set[$remove_key]);			
+					unset($value_set[$remove_key]);
 				}
 
 				phpgw::import_class('phpgwapi.xmlhelper');
@@ -233,7 +233,7 @@
 				// Append it to the document itself
 				$doc->appendChild($domElement);
 				$doc->formatOutput = true;
-			
+
 				$xml = $doc->saveXML();
 
 				if (function_exists('com_create_guid') === true)
@@ -339,7 +339,7 @@
 			{
 				foreach ($remove_keys as $remove_key)
 				{
-					unset($value_set[$remove_key]);			
+					unset($value_set[$remove_key]);
 				}
 
 				$this->warnings[] = "ID finnes fra før: {$filtermethod}, oppdaterer";
@@ -361,29 +361,37 @@
 			}
 			else
 			{
-				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+				$ok = $this->db->query($sql,__LINE__,__FILE__);
 			}
 
-			if(!$request_ok)
+			if($ok)
 			{
 				$this->messages[] = "Successfully imported record: id ({$id})";
-				$ok = true;
 			}
 			else
 			{
 				$this->errors[] = "Error importing record: id ({$id})";
-				$ok = false;
 			}
 			return $ok;
 		}
 
 		protected function validate_value($value,$field)
 		{
+			$value = trim($value);
+
 			if($value == '#N/A')
 			{
 				return '';
 			}
-			$datatype = $this->metadata[$field]['type'];
+
+			if(is_object($this->metadata[$field]))
+			{
+				$datatype = $this->metadata[$field]->type;
+			}
+			else
+			{
+				$datatype = $this->metadata[$field]['type'];
+			}
 			switch ($datatype)
 			{
 				case 'char':
