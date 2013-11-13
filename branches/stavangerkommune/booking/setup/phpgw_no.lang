@@ -640,5 +640,5 @@ Allocation Canceled Subject	booking	no	Tildeling avbestilt e-post emne
 Mail for allocation canceled	booking	no	Tildeling avbestilt e-post tekst
 Frontend users can delete bookings	booking	no	Frontend bruker kan slette bookinger
 Frontend users can delete allocations	booking	no	Frontend bruker kan slette tildelinger
-Activate extra kalendar field on building	booking	no	Aktiver ekstra kalender på bygg
+Activate extra kalendar field on building	booking	no	Aktiver ekstra kalender felt på bygg
 Ids that should be included in the calendar	booking	no	Id som skal brukes i ekstra kalender
