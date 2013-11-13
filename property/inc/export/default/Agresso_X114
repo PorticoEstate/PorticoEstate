@@ -522,6 +522,10 @@
 				$this->log_end($batchid); //Lagre melding
 			}
 
+			if(!$vouchers)
+			{
+				$receipt['message'][]= array('msg' => 'Ingen bilag funnet for overføring');				
+			}
 			return $receipt;
 		}
 
