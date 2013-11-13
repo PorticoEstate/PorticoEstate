@@ -484,13 +484,25 @@
 			if($check_list_id > 0)
 			{
 				$check_list = $this->so->get_single($check_list_id);
-				if(! $this->_check_for_required($check_list) )
+				
+				if($status == controller_check_list::STATUS_DONE)
 				{
-					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+					if(! $this->_check_for_required($check_list) )
+					{
+						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+					}
 				}
 			}
 			else
 			{
+				if($status == controller_check_list::STATUS_DONE)
+				{
+					$status = controller_check_list::STATUS_NOT_DONE;
+					$completed_date_ts = 0;
+					$error_message =  "Status kunne ikke settes til utført - prøv igjen";
+					phpgwapi_cache::message_set($error_message, 'error');
+				}
+
 				$check_list = new controller_check_list();
 				$check_list->set_control_id($control_id);
 				$location_code = phpgw::get_var('location_code');
