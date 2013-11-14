@@ -204,7 +204,43 @@
 
 		function read_single_line($line_id)
 		{
-			return $this->so->read_single_voucher(0, $line_id);
+
+			$invoice = $this->so->read_single_voucher(0, $line_id);
+			
+			$soXport    = CreateObject('property.soXport');
+			$soworkorder = CreateObject('property.soworkorder');
+			$sos_agreement = CreateObject('property.sos_agreement');
+			foreach ( $invoice as & $entry )
+			{
+				if( $entry['order_id'] )
+				{
+					if($order_type = $soXport->check_order($entry['order_id']))
+					{
+						if($order_type == 'workorder')
+						{
+							$workorder	= $soworkorder->read_single($entry['order_id']);
+
+							if($workorder['vendor_id'] && ($workorder['vendor_id'] != $entry['vendor_id']))
+							{
+						//		$entry['vendor']	=  $this->get_vendor_name($workorder['vendor_id']) . ' => ' . $entry['vendor'];
+								$entry['vendor']	= $workorder['vendor_id'] . ' [' .$this->get_vendor_name($workorder['vendor_id']) . "] =>  {$entry['vendor_id']} [{$entry['vendor']}]";
+							}
+						}
+
+						if($order_type == 's_agreement')
+						{
+							$s_agreement = $sos_agreement->read_single($entry['order_id']);
+
+							if($s_agreement['vendor_id'] && ($s_agreement['vendor_id'] != $entry['vendor_id']))
+							{
+								$entry['vendor']	= $s_agreement['vendor_id'] . ' [' .$this->get_vendor_name($s_agreement['vendor_id']) . "] =>  {$entry['vendor_id']} [{$entry['vendor']}]";
+							}
+						}
+					}
+				}
+			}
+
+			return $invoice;
 		}
 
 		function read_consume($start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$b_account_class='',$district_id='',$ecodimb = '')
