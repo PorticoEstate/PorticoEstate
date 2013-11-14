@@ -184,7 +184,7 @@
 								</label>
 							</td>
 							<td>
-								<input type="text" name="values[subject]" value="{value_subject}" onMouseout="window.status='';return true;">
+								<input type="text" name="values[subject]" value="{value_subject}" size="60" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
 									</xsl:attribute>
@@ -198,7 +198,7 @@
 								</label>
 							</td>
 							<td>
-								<textarea cols="60" rows="10" name="values[details]" onMouseout="window.status='';return true;">
+								<textarea cols="60" rows="10" name="values[details]" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 									</xsl:attribute>
