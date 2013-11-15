@@ -406,21 +406,21 @@
 				$entry['amount_operation']			= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_operation']);
 				$entry['amount_potential_grants']	= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
 				$entry['import_type']				= (int) $entry['import_type'];
+				$entry['condition_degree']			= (int) $entry['condition_degree'];
 			}
+
 
 			unset($entry);
 
 			$custom	= createObject('phpgwapi.custom_fields');
 			$attributes = $custom->find('property','.project.request', 0, '','','',true, true);
 
-
-
 			$origin_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
 			foreach ($import_data as $entry)
 			{
-
-				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0 && $entry['building_part'] && (int)$entry['import_type'] > 0)
+				if( $entry['condition_degree'] > 0 && $entry['building_part'] && $entry['import_type'] > 0)
 				{
+
 					$request = array();
 
 					if( $entry['amount_investment'] && !$entry['amount_operation'] )
