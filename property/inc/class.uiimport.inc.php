@@ -33,6 +33,13 @@
 
 		protected $defalt_values;
 
+
+		private $valid_tables = array
+				(
+					'fm_vendor',
+					'fm_condition_survey'
+				);
+
 		public function __construct()
 		{
 			if ( !$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
@@ -47,6 +54,11 @@
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->table 		= phpgw::get_var('table');
+			
+			if($this->table && !in_array($this->table, $this->valid_tables))
+			{
+				throw new Exception("Not a valid table: {$this->table}");			
+			}
 		}
 
 
@@ -247,12 +259,8 @@
 HTML;
 				}
 
-		//		$tables = $this->db->table_names();
-				$tables = array
-				(
-					'fm_vendor',
-					'fm_condition_survey'
-				);
+				$tables = $this->valid_tables;
+
 				sort($tables);
 
 				$table_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
@@ -363,6 +371,7 @@ HTML;
 
 		protected function get_template($location_id = 0)
 		{
+			$data = array();
 			$_fields = array();
 			if(!$location_id && $this->table)
 			{
@@ -371,6 +380,14 @@ HTML;
 				foreach ($metadata as $field => $info)
 				{
 					$_fields[$field] = true;
+				}
+
+				$sql = "SELECT * FROM {$this->table}";
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				while ($this->db->next_record())
+				{
+					$data[] = $this->db->Record;
 				}
 
 			}
@@ -401,6 +418,30 @@ HTML;
 					$custom 		= createObject('property.custom_fields');
 					$attributes 	= $custom->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
 
+
+					$sql = "SELECT * FROM {$this->table} WHERE location_id = $location_id";
+					$this->db->query($sql,__LINE__,__FILE__);
+
+					while ($this->db->next_record())
+					{
+						$_row_data = array();
+						foreach ($_fields as $_field => $dummy)
+						{
+							$_row_data[$_field] = $this->db->f($_field,true);
+						}
+
+						$xmldata = $this->db->f('xml_representation',true);
+						$xml = new DOMDocument('1.0', 'utf-8');
+						$xml->loadXML($xmldata);
+
+						foreach($attributes as $attribute)
+						{
+							$_row_data[$attribute['column_name']]	= $xml->getElementsByTagName($attribute['column_name'])->item(0)->nodeValue;
+						}
+
+						$data[] = $_row_data;
+					}
+
 					foreach($attributes as $attribute)
 					{
 						$_fields[$attribute['column_name']] = true;
@@ -414,6 +455,14 @@ HTML;
 					{
 						$_fields[$field] = true;
 					}
+
+					$sql = "SELECT * FROM {$this->table}";
+					$this->db->query($sql,__LINE__,__FILE__);
+
+					while ($this->db->next_record())
+					{
+						$data[] = $this->db->Record;
+					}
 				}
 			}
 
@@ -426,7 +475,7 @@ HTML;
 			else
 			{
 				$bocommon = CreateObject('property.bocommon');
-				$bocommon->download(array(),$fields,$fields);
+				$bocommon->download($data, $fields, $fields);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 		}
