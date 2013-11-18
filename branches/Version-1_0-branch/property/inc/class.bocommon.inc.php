@@ -1572,11 +1572,18 @@
 
 			$count_uicols_name=count($name);
 
+			$text_format = array();
 			$m=0;
 			for ($k=0;$k<$count_uicols_name;$k++)
 			{
 				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 				{
+					if(preg_match('/^loc/i', $name[$k]))
+					{
+						$text_format[$m] = true;
+						//$objPHPExcel->getActiveSheet()->getStyle('B3:B7')->applyFromArray($styleArray);
+
+					}
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($m, 1, $descr[$k]);
 					$m++;
 				}
@@ -1608,8 +1615,14 @@
 					$rows = count($row);
 					for ($i=0; $i < $rows; $i++)
 					{
-						$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, $line, $row[$i]);
-					//	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($col . $i,  $row[$i] );
+						if(isset($text_format[$i]))
+						{
+							$objPHPExcel->setActiveSheetIndex(0)->setCellValueExplicitByColumnAndRow($i, $line, $row[$i], PHPExcel_Cell_DataType::TYPE_STRING);
+						}
+						else
+						{
+							$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, $line, $row[$i]);
+						}
 					}
 					$col++;
 				}

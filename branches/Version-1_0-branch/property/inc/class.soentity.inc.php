@@ -1645,7 +1645,7 @@
 				$values['user_id']			= $this->db->f('user_id');
 				$values['entry_date']		= $this->db->f('entry_date');
 
-				$xmldata = $this->db->f('xml_representation');
+				$xmldata = $this->db->f('xml_representation',true);
 				$xml = new DOMDocument('1.0', 'utf-8');
 				$xml->loadXML($xmldata);
 

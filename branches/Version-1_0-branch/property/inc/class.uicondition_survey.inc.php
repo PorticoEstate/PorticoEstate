@@ -992,6 +992,10 @@
 
 					$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
 					$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+
+	//				$format = $objPHPExcel->getActiveSheet()->getStyle('R13')->getNumberFormat()->getFormatCode();
+	//				$value = $objPHPExcel->getActiveSheet()->getCell('R13')->getCalculatedValue();
+
 				}
 				catch(Exception $e)
 				{
@@ -1069,7 +1073,6 @@
 			}
 			else if($data && $step == 4)
 			{
-//				_debug_array($columns);
 
 				$rows = count($data)+1;
 
@@ -1083,7 +1086,7 @@
 					{
 						if($_value_key != '_skip_import_')
 						{
-							$_result[$_value_key] =trim($data[$i][$_row_key]);
+							$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
 						}
 
 					}
@@ -1107,7 +1110,6 @@
 //				$msg = "'{$cached_file}' contained " . count($import_data) . " lines";
 //				phpgwapi_cache::message_set($msg, 'message'); 
 
-//	_debug_array($import_data);die();
 			}
 
 
@@ -1149,7 +1151,6 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey import');
 
 			self::render_template_xsl(array('condition_survey_import'), $data);
-
 
 		}
 

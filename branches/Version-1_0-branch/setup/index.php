@@ -147,7 +147,7 @@
 	$setup_tpl->set_var('subaction', $subaction);
 
 	// Old PHP
-	if ( version_compare('5.2.0', phpversion()) === 1 )
+	if (version_compare(phpversion(), '5.2.0', '<'))
 	{
 		$GLOBALS['phpgw_setup']->html->show_header($GLOBALS['phpgw_info']['setup']['header_msg'],True);
 		$GLOBALS['phpgw_setup']->html->show_alert_msg('Error',

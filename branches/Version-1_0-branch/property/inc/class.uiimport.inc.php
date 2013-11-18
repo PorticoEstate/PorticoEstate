@@ -29,8 +29,16 @@
 
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
+		protected $download_template_button_label;
 
 		protected $defalt_values;
+
+
+		private $valid_tables = array
+				(
+					'fm_vendor',
+					'fm_condition_survey'
+				);
 
 		public function __construct()
 		{
@@ -46,6 +54,11 @@
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->table 		= phpgw::get_var('table');
+			
+			if($this->table && !in_array($this->table, $this->valid_tables))
+			{
+				throw new Exception("Not a valid table: {$this->table}");			
+			}
 		}
 
 
@@ -58,7 +71,39 @@
 		{
 			// Set the submit button label to its initial state
 			$this->import_button_label = "Start import";
+			$this->download_template_button_label = 'Download template';
 
+			$check_method = 0;
+			if($this->conv_type = phpgw::get_var('conv_type'))
+			{
+				$check_method ++;
+			}
+			if ($location_id = phpgw::get_var('location_id', 'int'))
+			{
+				$check_method ++;
+			}
+				
+			if($table = phpgw::get_var('table'))
+			{
+				$check_method ++;
+			}
+
+			if($check_method > 1)
+			{
+				phpgwapi_cache::session_set('property', 'import_message', 'choose only one target!');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
+			}
+
+
+			phpgwapi_cache::session_set('property', 'import_settings', $_POST);			
+
+			$download_template = phpgw::get_var('download_template');
+			
+			if($download_template)
+			{
+				$this->get_template($location_id);
+			}
+			
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
 			if (phpgw::get_var("importsubmit")) 
 			{
@@ -68,28 +113,6 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
 				}
 
-				phpgwapi_cache::session_set('property', 'import_settings', $_POST);
-
-				$check_method = 0;
-				if($this->conv_type = phpgw::get_var('conv_type'))
-				{
-					$check_method ++;
-				}
-				if ($location_id = phpgw::get_var('location_id', 'int'))
-				{
-					$check_method ++;
-				}
-				
-				if($table = phpgw::get_var('table'))
-				{
-					$check_method ++;
-				}
-
-				if($check_method > 1)
-				{
-					phpgwapi_cache::session_set('property', 'import_message', 'choose only one target!');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
-				}
 
 				$start_time = time(); // Start time of import
 				$start = date("G:i:s",$start_time);
@@ -236,12 +259,8 @@
 HTML;
 				}
 
-		//		$tables = $this->db->table_names();
-				$tables = array
-				(
-					'fm_vendor',
-					'fm_condition_survey'
-				);
+				$tables = $this->valid_tables;
+
 				sort($tables);
 
 				$table_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
@@ -310,6 +329,9 @@ HTML;
 							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
 						</p>
 						<p>
+							<input type="submit" name="download_template" value="{$this->download_template_button_label}"  />
+						</p>
+						<p>
 							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
 						</p>
 		 			</fieldset>
@@ -345,6 +367,117 @@ HTML;
 			$this->import_data();
 			$this->log_messages($this->steps);
 			return $this->steps;
+		}
+
+		protected function get_template($location_id = 0)
+		{
+			$data = array();
+			$_fields = array();
+			if(!$location_id && $this->table)
+			{
+				$metadata = $this->db->metadata($this->table);
+
+				foreach ($metadata as $field => $info)
+				{
+					$_fields[$field] = true;
+				}
+
+				$sql = "SELECT * FROM {$this->table}";
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				while ($this->db->next_record())
+				{
+					$data[] = $this->db->Record;
+				}
+
+			}
+			else if($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id ))
+			{
+				throw new Exception("Not a valid location for {$location_id}");
+			}
+			else if($location_id)
+			{
+				$entity_id = $category['entity_id'];
+				$cat_id = $category['id'];
+
+				if ($category['is_eav'])
+				{
+					$this->table = 'fm_bim_item';
+
+					$metadata = $this->db->metadata($this->table);
+				
+					foreach ($metadata as $field  => $info)
+					{
+						if ($field == 'xml_representation' || $field == 'guid')
+						{
+							continue;
+						}
+						$_fields[$field] = true;
+					}
+
+					$custom 		= createObject('property.custom_fields');
+					$attributes 	= $custom->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
+
+
+					$sql = "SELECT * FROM {$this->table} WHERE location_id = $location_id ORDER BY id ASC";
+					$this->db->query($sql,__LINE__,__FILE__);
+
+					while ($this->db->next_record())
+					{
+						$_row_data = array();
+						foreach ($_fields as $_field => $dummy)
+						{
+							$_row_data[$_field] = $this->db->f($_field,true);
+						}
+
+						$xmldata = $this->db->f('xml_representation',true);
+						$xml = new DOMDocument('1.0', 'utf-8');
+						$xml->loadXML($xmldata);
+
+						foreach($attributes as $attribute)
+						{
+							$_row_data[$attribute['column_name']]	= $xml->getElementsByTagName($attribute['column_name'])->item(0)->nodeValue;
+						}
+
+						$data[] = $_row_data;
+					}
+
+					foreach($attributes as $attribute)
+					{
+						$_fields[$attribute['column_name']] = true;
+					}
+				}
+				else
+				{
+					$this->table = "fm_entity_{$category['entity_id']}_{$category['id']}";
+					$metadata = $this->db->metadata($this->table);
+					foreach ($metadata as $field  => $info)
+					{
+						$_fields[$field] = true;
+					}
+
+					$sql = "SELECT * FROM {$this->table}";
+					$this->db->query($sql,__LINE__,__FILE__);
+
+					while ($this->db->next_record())
+					{
+						$data[] = $this->db->Record;
+					}
+				}
+			}
+
+			$fields = array_keys($_fields);
+
+			if(phpgw::get_var('debug', 'bool'))
+			{
+				_debug_array($fields);
+			}
+			else
+			{
+				$bocommon = CreateObject('property.bocommon');
+				$bocommon->download($data, $fields, $fields);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 		}
 
 		protected function import_data()
@@ -479,13 +612,13 @@ HTML;
 
 			$rows = count($data)+1;
 
-			for ($i=$start; $i<$rows; $i++ )
+			for ($row=$start; $row<$rows; $row++ )
 			{
 				$_result = array();
 				$j=0;
-				foreach($data[$i] as $key => $value)
+				foreach($data[$row] as $key => $value)
 				{
-					$_result[$j] = trim($value);
+					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,$row)->getCalculatedValue();
 					$j++;
 				}
 				$result[] = $_result;
