@@ -272,6 +272,14 @@ HTML;
 				
 			}
 
+			if ( !function_exists('json_encode') ) // Some distributions have removed the standard JSON extension as of PHP 5.5rc2 due to a license conflict
+			{
+				$detected .= '<b><p align="center" class="msg">'
+					. "You have to install php5-json\n"
+					. '</p></b><td></tr></table></body></html>';
+				die($detected);
+			}
+
 			$get_max_value_length = '';
 			if(ini_get('suhosin.get.max_value_length'))
 			{
