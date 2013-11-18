@@ -419,7 +419,7 @@ HTML;
 					$attributes 	= $custom->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
 
 
-					$sql = "SELECT * FROM {$this->table} WHERE location_id = $location_id";
+					$sql = "SELECT * FROM {$this->table} WHERE location_id = $location_id ORDER BY id ASC";
 					$this->db->query($sql,__LINE__,__FILE__);
 
 					while ($this->db->next_record())
