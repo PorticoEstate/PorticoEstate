@@ -468,7 +468,7 @@
 			}
 			else
 			{
-				$planned_date_ts = 0;
+				$planned_date_ts = $deadline_date_ts;
 			}
 
 			if($completed_date != '')
