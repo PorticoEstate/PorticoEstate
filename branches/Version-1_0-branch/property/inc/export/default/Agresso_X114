@@ -765,8 +765,8 @@
 					'KEY'						=> $oRsBilag[0]['external_voucher_id'], //dummy
 					'VOUCHERID'					=> $bilagsnr_ut,
 					'INVNUM'					=> $oRsBilag[0]['fakturanr'],
-					'INVDAT'					=> date('Ymd', strtotime($oRsBilag[0]['fakturadato'])), //YYYYMMDD
-					'DUEDAT'					=> date('Ymd', strtotime($oRsBilag[0]['forfallsdato'])),//YYYYMMDD
+					'INVDAT'					=> date('d.m.Y', strtotime($oRsBilag[0]['fakturadato'])), //DD.MM.YYYY
+					'DUEDAT'					=> date('d.m.Y', strtotime($oRsBilag[0]['forfallsdato'])),//DD.MM.YYYY
 					'SCANNINGNO'				=> $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
 					'PROFILE'					=> 'TRAINVPOMA',
 					'CLIENT.CODE'				=> $this->client_code, //14,

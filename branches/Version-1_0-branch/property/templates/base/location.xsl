@@ -583,21 +583,15 @@ onMouseOut="nd()">
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="related_link != ''">
-							<div id="related">
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<tr>
-										<td>
-											<div id="datatable-container_0"/>
-										</td>
-									</tr>
-								</table>
-
-							</div>
-						</xsl:when>
-					</xsl:choose>
-
+						<div id="related">
+							<table cellpadding="2" cellspacing="2" width="80%" align="center">
+								<tr>
+									<td>
+										<div id="datatable-container_0"/>
+									</td>
+								</tr>
+							</table>
+						</div>
 					<xsl:for-each select="integration">
 						<div id="{section}">
 							<iframe id="{section}_content" width="100%" height="{height}">
