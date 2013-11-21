@@ -354,10 +354,16 @@
 							$errors['resource_number'] = lang('The resource number is wrong or not present');
 						}
 					}
-					$_POST['contact_name'] = $organization['contacts'][0]['name'];
-					$_POST['contact_email'] = $organization['contacts'][0]['email'];
-					$_POST['contact_phone'] = $organization['contacts'][0]['phone'];
-				} 
+                    if ($organization['contacts'][0]['name'] != '') {
+                        $_POST['contact_name'] = $organization['contacts'][0]['name'];
+                        $_POST['contact_email'] = $organization['contacts'][0]['email'];
+                        $_POST['contact_phone'] = $organization['contacts'][0]['phone'];
+                    } else {
+                        $_POST['contact_name'] = $organization['contacts'][1]['name'];
+                        $_POST['contact_email'] = $organization['contacts'][1]['email'];
+                        $_POST['contact_phone'] = $organization['contacts'][1]['phone'];
+                    }
+				}
 				if (!$_POST['application_id'])
 				{
                    $temp_errors = array();

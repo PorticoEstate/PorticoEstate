@@ -61,6 +61,7 @@
 			if ($config->config_data['user_can_delete_allocations'] != 'yes') {
 		
 	        	$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'GET')));
+                $organization = $this->organization_bo->read_single($allocation['organization_id']);
 	   			$errors = array();
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 	            {
@@ -79,14 +80,13 @@
 					$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 	                $system_message['type'] = 'cancelation';
 					$system_message['status'] = 'NEW';
-					$system_message['name'] = ' ';
-					$system_message['phone'] = ' ';
-					$system_message['email'] = ' ';
+					$system_message['name'] = $allocation['organization_name'].' - '.$organization['contacts'][0]['name'];
+					$system_message['phone'] = $organization['contacts'][0]['phone'];
+					$system_message['email'] = $organization['contacts'][0]['email'];
 					$system_message['title'] = lang('Cancelation of allocation from')." ".$allocation['organization_name'];
 	                $link = self::link(array('menuaction' => 'booking.uiallocation.delete','allocation_id' => $allocation['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval));
 	                $link = mb_strcut($link,16,strlen($link));
 	                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel allocation use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
-
 					$this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
 
@@ -108,6 +108,7 @@
 				$repeat_until = phpgw::get_var('repeat_until', 'GET');
 				$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
 				$allocation = $this->bo->read_single($id);
+                $organization = $this->organization_bo->read_single($allocation['organization_id']);
 	    		$season = $this->season_bo->read_single($allocation['season_id']);
 				$step = phpgw::get_var('step', 'str', 'POST');
 	        	if (! isset($step)) $step = 1;
@@ -147,9 +148,9 @@
 							$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 			                $system_message['type'] = 'cancelation';
 							$system_message['status'] = 'NEW';
-							$system_message['name'] = ' ';
-							$system_message['phone'] = ' ';
-							$system_message['email'] = ' ';
+                            $system_message['name'] = $allocation['organization_name'].' - '.$organization['contacts'][0]['name'];
+                            $system_message['phone'] = $organization['contacts'][0]['phone'];
+                            $system_message['email'] = $organization['contacts'][0]['email'];
 							$system_message['title'] = lang('Cancelation of allocation from')." ".$allocation['organization_name'];
 							foreach ($allocation['resources'] as $res) {
 								$res_names = $res_names.$this->bo->so->get_resource($res)." ";
