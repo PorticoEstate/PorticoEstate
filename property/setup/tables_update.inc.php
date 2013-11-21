@@ -7784,3 +7784,30 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	
+	/**
+	* Update property version from 0.9.17.673 to 0.9.17.674
+	* Add configurable prioriy keys for tickets
+	*/
+
+	$test[] = '0.9.17.673';
+	function property_upgrade0_9_17_673()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_condition_survey', 'multiplier', array
+				(
+					'type'		=> 'decimal',
+					'precision' => '20',
+					'scale'		=> '2',
+					'default'	=> '1.00',
+					'nullable'	=> True
+				)
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.674';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
