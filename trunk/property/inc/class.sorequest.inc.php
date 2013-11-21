@@ -236,8 +236,10 @@
 			. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
 			. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
 	//		. " sum(fm_request_planning.amount) as planned_budget,"
-			. " fm_request.amount_investment,"
-			. " fm_request.amount_operation,fm_request.amount_potential_grants,fm_request.score,"
+			. " (fm_request.amount_investment * fm_request.multiplier) as amount_investment,"
+			. " (fm_request.amount_operation * fm_request.multiplier) as amount_operation,"
+			. " (fm_request.amount_potential_grants * fm_request.multiplier) as amount_potential_grants,"
+			. " fm_request.score,"
 			. " fm_request.recommended_year,"
 			. " fm_request.start_date"
 			. " FROM (( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
@@ -441,7 +443,7 @@
 			$uicols['sortable'][]		= true;
 
 
-			$cols.= ",$entity_table.amount_investment as amount_investment";
+			$cols.= ",($entity_table.amount_investment * multiplier) as amount_investment";
 			$cols_return[] 				= 'amount_investment';
 			$cols_group[] 				= 'amount_investment';
 			$uicols['input_type'][]		= 'text';
@@ -455,7 +457,7 @@
 			$uicols['classname'][]		= 'rightClasss';
 			$uicols['sortable'][]		= true;
 
-			$cols.= ",$entity_table.amount_operation as amount_operation";
+			$cols.= ",($entity_table.amount_operation * multiplier) as amount_operation";
 			$cols_return[] 				= 'amount_operation';
 			$cols_group[] 				= 'amount_operation';
 			$uicols['input_type'][]		= 'text';
@@ -469,7 +471,7 @@
 			$uicols['classname'][]		= 'rightClasss';
 			$uicols['sortable'][]		= true;
 
-			$cols.= ",$entity_table.amount_potential_grants as amount_potential_grants";
+			$cols.= ",($entity_table.amount_potential_grants * multiplier) as amount_potential_grants";
 			$cols_return[] 				= 'amount_potential_grants';
 			$cols_group[] 				= 'amount_potential_grants';
 			$uicols['input_type'][]		= 'text';
@@ -784,7 +786,7 @@
 			$this->_db->fetchmode = 'ASSOC';
 
 //			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
-			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM {$sql_arr[1]}";
+			$sql2 = "SELECT count(*) as cnt, (sum(amount_investment * multiplier)) as sum_investment, (sum(amount_operation * multiplier)) as sum_operation, (sum(amount_potential_grants * multiplier)) as sum_potential_grants FROM {$sql_arr[1]}";
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
 			$this->_db->next_record();
@@ -906,7 +908,8 @@
 					'closed_date'				=> $this->_db->f('closed_date'),
 					'in_progress_date'			=> $this->_db->f('in_progress_date'),
 					'delivered_date'			=> $this->_db->f('delivered_date'),
-					'regulations' 				=> explode(',', $this->_db->f('regulations'))
+					'regulations' 				=> explode(',', $this->_db->f('regulations')),
+					'multiplier'				=> (float) $this->_db->f('multiplier'),
 				);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )

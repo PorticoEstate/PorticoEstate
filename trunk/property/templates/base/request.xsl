@@ -540,7 +540,23 @@
 										</input>
 										<xsl:text> </xsl:text>
 									</div>
-									<div><label class="requirement-action-label"><xsl:value-of select="php:function('lang', 'total cost estimate')"/></label><xsl:value-of select="value_budget"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+									<div>
+										<label class="requirement-action-label">
+											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
+										</label>
+										<xsl:value-of select="value_budget"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+									</div>
+									<div>
+										<label class="requirement-action-label">
+											<xsl:value-of select="php:function('lang', 'multiplier')"/>
+										</label>
+										<xsl:value-of select="value_multiplier"/>
+									</div>
+									<div>
+										<label class="requirement-action-label">
+											<xsl:value-of select="php:function('lang', 'total cost estimate')"/>
+										</label>
+										<xsl:value-of select="value_total_cost_estimate"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 									</div>
 								</div>
 								<div class="requirement-action-sub-right">

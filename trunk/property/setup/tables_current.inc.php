@@ -895,6 +895,7 @@
 				'in_progress_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'delivered_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'regulations' => array('type' => 'varchar','precision' => 100,'nullable' => True),
+				'multiplier' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '1','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

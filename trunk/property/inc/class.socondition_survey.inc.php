@@ -89,8 +89,8 @@
 				$querymethod	= " {$where} {$table}.title {$this->_like} '%{$query}%'";
 			}
 
-			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id, org_name,multiplier";
-			$sql = "SELECT DISTINCT $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id,multiplier,"
+			$groupmethod = "GROUP BY $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier";
+			$sql = "SELECT DISTINCT $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, $table.multiplier,"
 			. " count(condition_survey_id) AS cnt, org_name as vendor FROM {$table} "
 			. " {$this->_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
 			. " {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
@@ -259,6 +259,7 @@
 				}
 
 				$this->_edit($id, $value_set, 'fm_condition_survey');
+				$this->_db->query("UPDATE fm_request SET multiplier = '{$data['multiplier']}' WHERE condition_survey_id = {$id}",__LINE__,__FILE__);				
 				$this->_db->Exception_On_Error = false;
 			}
 
