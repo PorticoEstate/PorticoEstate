@@ -456,7 +456,7 @@ HTML;
 						$_fields[$field] = true;
 					}
 
-					$sql = "SELECT * FROM {$this->table}";
+					$sql = "SELECT * FROM {$this->table} ORDER BY id ASC";
 					$this->db->query($sql,__LINE__,__FILE__);
 
 					while ($this->db->next_record())

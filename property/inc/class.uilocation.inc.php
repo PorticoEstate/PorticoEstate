@@ -2318,7 +2318,7 @@ JS;
 				
 				$related_link = $_related ? true : false;
 
-				if($_related)
+	//			if($_related)
 				{
 					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
 				}
