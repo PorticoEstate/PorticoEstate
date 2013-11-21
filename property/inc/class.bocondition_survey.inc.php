@@ -311,6 +311,8 @@
 
 		public function get_summation($id)
 		{
+			$survey = $this->so->read_single(array('id' => $id));
+
 			$data = $this->so->get_summation($id);
 //$total = 0;
 //_debug_array($data);
@@ -318,6 +320,7 @@
 			$i=0;
 			foreach ($data as $entry)
 			{
+				$entry['amount'] = $entry['amount'] * $survey['multiplier'];
 				$i = $entry['building_part'] . '_' . $entry['category'];
 				
 				$values[$i]['building_part'] = $entry['building_part'];

@@ -1384,6 +1384,12 @@
 					'type'	=> 'string',
 					'required'	=> false
 				),
+				array
+				(
+					'name' => 'multiplier',
+					'type'	=> 'float',
+					'required'	=> false
+				),
 			);
 
 
