@@ -200,6 +200,11 @@
 							'sortable' => true,
 						),
 						array(
+							'key' => 'multiplier',
+							'label' => lang('multiplier'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'cnt',
 							'label' => lang('count'),
 							'sortable' => false,

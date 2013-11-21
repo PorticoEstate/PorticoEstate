@@ -831,6 +831,7 @@
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'multiplier' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '1','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
