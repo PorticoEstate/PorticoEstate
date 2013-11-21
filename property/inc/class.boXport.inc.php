@@ -306,11 +306,14 @@
 			return $buffer;
 		}
 
-		function export_cron( $data )
+		function export_cron( $data = array())
 		{
-			$data = unserialize(urldecode(phpgw::get_var('data')));
-			$data = phpgw::clean_value($data);
-_debug_array($data);
+			if(!$data)
+			{
+				$data = unserialize(urldecode(phpgw::get_var('data')));
+				$data = phpgw::clean_value($data);
+			}
+			_debug_array($data);
 			$receipt = $this->export( $data );
 			{
 				_debug_array( $receipt );
