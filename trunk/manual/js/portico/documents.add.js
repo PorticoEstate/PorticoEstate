@@ -63,6 +63,11 @@ YUI({
 			};
 		}
 
+		if(!cat_id)
+		{
+			alert('velg kategori først');
+			return;
+		}
 		var requestUrl = phpGWLink('index.php', fileuploader_action);
 		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){refresh_files()}});
 	}
