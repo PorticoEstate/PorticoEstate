@@ -260,9 +260,9 @@ HTML;
 
 
 
-		public function check($save_path = '')
+		public function check($save_path = '', $fakebase = '/property')
 		{
-			$bofiles	= CreateObject('property.bofiles');
+			$bofiles	= CreateObject('property.bofiles', $fakebase);
 
 			$to_file	= "{$bofiles->fakebase}/{$save_path}/{$_POST['filename']}";
 			//Return true if the file exists
@@ -318,9 +318,9 @@ Notes:
 
  */
 
-		function upload($save_path = '')
+		function upload($save_path = '', $fakebase = '/property')
 		{
-			$bofiles	= CreateObject('property.bofiles');
+			$bofiles	= CreateObject('property.bofiles', $fakebase);
 			$use_vfs = true;
 			// Check post_max_size (http://us3.php.net/manual/en/features.file-upload.php#73762)
 			$POST_MAX_SIZE = ini_get('post_max_size');
