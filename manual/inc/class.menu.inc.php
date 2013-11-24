@@ -45,7 +45,7 @@
 			(
 				'manual'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('documents', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('manual', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', 
 								array
 								(
