@@ -8,4 +8,3 @@
 			display_sidebox($appname,$values['title'],$values['listbox'],$use_lang = false);
 		}
 	}
-?>

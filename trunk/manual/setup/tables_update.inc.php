@@ -19,3 +19,12 @@
 		return $GLOBALS['setup_info']['manual']['currentver'] = '0.9.17.500';
 	}
 
+	$test[] = '0.9.17.500';
+	function manual_upgrade0_9_17_500()
+	{
+
+		$GLOBALS['phpgw']->locations->add('.documents', 'Documents', 'manual');
+
+		return $GLOBALS['setup_info']['manual']['currentver'] = '0.9.17.501';
+	}
+
