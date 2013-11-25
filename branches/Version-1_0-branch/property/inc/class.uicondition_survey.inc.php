@@ -200,6 +200,11 @@
 							'sortable' => true,
 						),
 						array(
+							'key' => 'multiplier',
+							'label' => lang('multiplier'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'cnt',
 							'label' => lang('count'),
 							'sortable' => false,
@@ -1377,6 +1382,12 @@
 				(
 					'name' => 'coordinator_name',
 					'type'	=> 'string',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'multiplier',
+					'type'	=> 'float',
 					'required'	=> false
 				),
 			);

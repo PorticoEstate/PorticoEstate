@@ -89,8 +89,8 @@
 				$querymethod	= " {$where} {$table}.title {$this->_like} '%{$query}%'";
 			}
 
-			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id, org_name";
-			$sql = "SELECT DISTINCT $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id,"
+			$groupmethod = "GROUP BY $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier";
+			$sql = "SELECT DISTINCT $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, $table.multiplier,"
 			. " count(condition_survey_id) AS cnt, org_name as vendor FROM {$table} "
 			. " {$this->_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
 			. " {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
@@ -120,6 +120,7 @@
 					'vendor'		=> $this->_db->f('vendor',true),
 					'entry_date'	=> $this->_db->f('entry_date'),
 					'user'			=> $this->_db->f('user_id'),
+					'multiplier'	=> $this->_db->f('multiplier'),
 					'cnt'			=> $this->_db->f('cnt'),
 				);
 			}
@@ -151,6 +152,7 @@
 					'user_id'			=> (int)$this->_db->f('user_id'),
 					'entry_date'		=> (int)$this->_db->f('entry_date'),
 					'modified_date'		=> (int)$this->_db->f('modified_date'),
+					'multiplier'		=> (float)$this->_db->f('multiplier'),
 				);
 
 				if ( isset($data['attributes']) && is_array($data['attributes']) )
@@ -188,7 +190,7 @@
 			$value_set['report_date']		= phpgwapi_datetime::date_to_timestamp($data['report_date']);
 			$value_set['user_id']			= $this->account;
 			$value_set['modified_date']		= time();
-
+			$value_set['multiplier']		= (float)$data['multiplier'];
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -236,7 +238,7 @@
 			$value_set['report_date']		= phpgwapi_datetime::date_to_timestamp($data['report_date']);
 			$value_set['user_id']			= $this->account;
 			$value_set['modified_date']		= time();
-
+			$value_set['multiplier']		= (float)$data['multiplier'];
 
 
 			$this->_db->query("SELECT coordinator_id FROM fm_condition_survey WHERE id = {$id}",__LINE__,__FILE__);
@@ -257,6 +259,7 @@
 				}
 
 				$this->_edit($id, $value_set, 'fm_condition_survey');
+				$this->_db->query("UPDATE fm_request SET multiplier = '{$data['multiplier']}' WHERE condition_survey_id = {$id}",__LINE__,__FILE__);				
 				$this->_db->Exception_On_Error = false;
 			}
 

@@ -1774,7 +1774,9 @@
 
 					'condition_list'					=> $this->bo->select_conditions($id),
 					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
-					'value_consume'						=> isset($receipt['error']) ? $values['consume_value'] : ''
+					'value_consume'						=> isset($receipt['error']) ? $values['consume_value'] : '',
+					'value_multiplier'					=> $values['multiplier'],
+					'value_total_cost_estimate'			=> $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']) , 0, ',', ' ') : ''
 				);
 //_debug_array($data);die();
 			phpgwapi_yui::load_widget('dragdrop');

@@ -7637,9 +7637,9 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
-		
+
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_category");
-		
+
 		$categories = array();
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
@@ -7655,7 +7655,7 @@
 		}
 
 		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
-		
+
 		foreach ($tables as $table)
 		{
 			if(preg_match('/^fm_/', $table))
@@ -7676,7 +7676,7 @@
 
 					foreach ($categories as $category)
 					{
-					
+
 						$cols = array_merge($primary_keys, array('p_num'));
 						$records = array();
 						$i = 0;
@@ -7690,7 +7690,7 @@
 							}
 							$i++;
 						}
-						
+
 						foreach ($records as $record)
 						{
 							$p_num = (int) ltrim($record['p_num'], $category['prefix']);
@@ -7784,3 +7784,60 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.673 to 0.9.17.674
+	* Add multiplier to condition survey
+	*/
+
+	$test[] = '0.9.17.673';
+	function property_upgrade0_9_17_673()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_condition_survey', 'multiplier', array
+				(
+					'type'		=> 'decimal',
+					'precision' => '20',
+					'scale'		=> '2',
+					'default'	=> '1.00',
+					'nullable'	=> True
+				)
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.674';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.674 to 0.9.17.675
+	* Add multiplier to condition survey
+	*/
+
+	$test[] = '0.9.17.674';
+	function property_upgrade0_9_17_674()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request', 'multiplier', array
+				(
+					'type'		=> 'decimal',
+					'precision' => '20',
+					'scale'		=> '2',
+					'default'	=> '1.00',
+					'nullable'	=> True
+				)
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.675';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
