@@ -346,7 +346,8 @@
 			$vfs->override_acl = 1;
 
 			$file = array('string' => $fileName, RELATIVE_NONE);
-			if($vfs->file_exists($file)){
+			if($vfs->file_exists($file))
+			{
 				$help_in_vfs = true;
 			}
 
@@ -358,7 +359,9 @@
 						 	'menuaction'=> 'frontend.uidocumentupload.read_helpfile_from_vfs',
 						 	'app' => 'frontend'
 						 )) . "','700','600')";
-			}else{
+			}
+			else
+			{
 				$help_url = "javascript:openwindow('"
 						 . $GLOBALS['phpgw']->link('/index.php', array
 						 (
