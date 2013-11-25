@@ -33,6 +33,7 @@
     class frontend_borental
     {
 
+/*		//FIXME Sigurd 22. nov 2013: - not used?
     	public static function contract_exist_per_location($contract_id, $location_code, $contract_state_identifier)
     	{
     		$contracts_per_location = phpgwapi_cache::session_get('frontend', $contract_state_identifier);
@@ -46,7 +47,7 @@
     		}
     		return $exist;
     	}
-
+*/
     	public static function send_contract_message(int $contract_id, string $contract_message, string $from_address)
     	{
     		$contract = rental_socontract::get_instance()->get_single($contract_id);

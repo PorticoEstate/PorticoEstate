@@ -34,11 +34,7 @@
 		protected $defalt_values;
 
 
-		private $valid_tables = array
-				(
-					'fm_vendor',
-					'fm_condition_survey'
-				);
+		private $valid_tables = array();
 
 		public function __construct()
 		{
@@ -55,7 +51,20 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->table 		= phpgw::get_var('table');
 			
-			if($this->table && !in_array($this->table, $this->valid_tables))
+			$this->valid_tables = array
+			(
+				'fm_vendor'				=> 'fm_vendor (' . lang('vendor') . ')',
+				'fm_condition_survey'	=> 'fm_condition_survey (' . lang('condition survey') . ')'
+			);
+
+			$location_types = execMethod('property.soadmin_location.select_location_type');
+			
+			foreach ($location_types as $location_type)
+			{
+				$this->valid_tables["fm_location{$location_type['id']}"] = "fm_location{$location_type['id']} ({$location_type['name']})";
+			}
+
+			if($this->table && !in_array($this->table, array_keys($this->valid_tables)))
 			{
 				throw new Exception("Not a valid table: {$this->table}");			
 			}
@@ -261,14 +270,14 @@ HTML;
 
 				$tables = $this->valid_tables;
 
-				sort($tables);
+				ksort($tables);
 
 				$table_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
-				foreach ( $tables as $table)
+				foreach ( $tables as $table => $table_info)
 				{
 					$selected = $import_settings['table'] == $table ? 'selected =  "selected"' : '';
 					$table_option .=  <<<HTML
-					<option value='{$table}'{$selected}>{$table}</option>
+					<option value='{$table}'{$selected}>{$table_info}</option>
 HTML;
 				}
 

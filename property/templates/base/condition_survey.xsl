@@ -108,7 +108,6 @@
 						</xsl:choose>
 					</dd>
 
-
 					<dt>
 						<label for="category"><xsl:value-of select="php:function('lang', 'category')" /></label>
 					</dt>
@@ -130,6 +129,26 @@
  							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
+					<dt>
+						<label for="multiplier"><xsl:value-of select="php:function('lang', 'multiplier')" /></label>
+					</dt>
+					<dd>
+						<xsl:choose>
+							<xsl:when test="editable = 1">
+	 							<input id="multiplier" name='values[multiplier]' type="text" value="{survey/multiplier}"
+									formvalidator:FormField="yes" 
+									formvalidator:Type="DoubleField" 
+									formvalidator:min="1" 
+									formvalidator:maxDecimalPlaces="2" 
+									formvalidator:minInclusive="true" 
+									formvalidator:maxInclusive="true" /> 
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="survey/multiplier"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</dd>
+
 					<dt>
 							<label for="date"><xsl:value-of select="php:function('lang', 'date')" /></label>
 					</dt>

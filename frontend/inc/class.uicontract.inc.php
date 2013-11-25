@@ -14,15 +14,18 @@ class frontend_uicontract extends frontend_uifrontend
 	protected $form_url;
 	
 	
-	public $public_functions = array(
-            'index'     => true
+	public $public_functions = array
+	(
+		'index'	 => true
 	);
 
 	public function __construct()
 	{
 		parent::__construct();
+//		$this->get_contracts_per_location();
 	}
 	
+
 	/**
 	 * Show single contract details
 	 */
@@ -36,19 +39,19 @@ class frontend_uicontract extends frontend_uifrontend
 		// The user wants to change the contract status filter
 		if(isset($filter)) 
 		{
-				$this->contract_filter = $filter;
-				phpgwapi_cache::session_set('frontend', 'contract_filter', $filter);				
+			$this->contract_filter = $filter;
+			phpgwapi_cache::session_set('frontend', 'contract_filter', $filter);				
 
-				// ... if the user changes filter that may cause the
-				if($filter == 'active' || $filter == 'not_active')
-				{
-					$change_contract = true;
-				}	
+			// ... if the user changes filter that may cause the
+			if($filter == 'active' || $filter == 'not_active')
+			{
+				$change_contract = true;
+			}	
 		}
 		else
 		{
 			$filter = phpgwapi_cache::session_get('frontend', 'contract_filter');
-			$this->contract_filter = isset($filter) ? $filter : 'active';
+			$this->contract_filter = isset($filter) && $filter ? $filter : 'active';
 		}
 		
 		if(isset($_POST['send']))
@@ -99,9 +102,12 @@ class frontend_uicontract extends frontend_uifrontend
 		// The current state of the contract view of this user's session
 		$this->contract_state = phpgwapi_cache::session_get('frontend', $this->contract_state_identifier);
 		$new_contract = phpgw::get_var('contract_id');
-		$contracts_per_location = phpgwapi_cache::session_get('frontend', $this->contracts_per_location_identifier);
+
+		$contracts_per_location = $this->get_contracts_per_location();
+
 		$contracts_for_selection = array();
 		$number_of_valid_contracts = 0;
+
 		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
 		{
 			if(	($this->contract_filter == 'active' && $contract->is_active()) ||
@@ -186,9 +192,105 @@ class frontend_uicontract extends frontend_uifrontend
 				'form_url' => $this->form_url
 			)
 		);
-                	
+					
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
 		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
+	}
+
+
+	private function get_contracts_per_location()
+	{
+		$org_unit = $this->header_state['selected_org_unit'];
+		if($org_unit == 'all' || $org_unit == 'none')
+		{
+			phpgwapi_cache::message_set('Velg organisasjon', 'error');
+			return array();
+		}
+
+		$values = phpgwapi_cache::session_get('frontend', $this->contracts_per_location_identifier);
 		
+		if(isset($values[$org_unit]))
+		{
+			return $values[$org_unit];
+		}
+
+		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit));
+
+       	$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+		$location_id_internal = array_search('contract_type_internleie', $types);
+       	$location_id_in = array_search('contract_type_innleie', $types);
+       	$location_id_ex = array_search('contract_type_eksternleie', $types);
+
+		$contracts_per_location		= array();
+		$contracts_in_per_location	= array();
+		$contracts_ex_per_location	= array();
+		
+		//For all parties connected to the internal organization unit
+		foreach($parties as $party)
+		{
+			//... get the contracts
+			$contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array('party_id' => $party->get_id()));
+			//... and for each contract connected to this contract part
+			foreach($contracts as $id => $contract)
+			{
+				//... get the composites
+				$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contracts[$id]->get_id()));
+
+				//...and for each composite in the contract in which this contract part is connected
+				foreach($composites as $composite)
+				{
+					//... get the units
+					$units = $composite->get_units();
+
+					//... and for each unit retrieve the property locations we are after
+					foreach($units as $unit)
+					{
+						$property_location = $unit->get_location();
+						$property_locations[$property_location->get_location_code()] = $property_location;
+
+						// Contract holders: contracts_per_location (internal) and contracts_in_per_location (in)
+
+						// Internal contract should have impact on total price
+						if($contract->get_location_id() == $location_id_internal)
+						{
+							$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+							$contract->set_total_price($total_price);
+
+							if(!is_array($contracts_per_location[$org_unit][$property_location->get_location_code()]))
+							{
+								$contracts_per_location[$org_unit][$property_location->get_location_code()] = array();
+							}
+							array_push($contracts_per_location[$org_unit][$property_location->get_location_code()], $contract);
+						}
+						else if($contract->get_location_id() == $location_id_in)
+						{
+							$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+							$contract->set_total_price($total_price);
+
+							if(!is_array($contracts_in_per_location[$org_unit][$property_location->get_location_code()]))
+							{
+								$contracts_in_per_location[$org_unit][$property_location->get_location_code()] = array();
+							}
+							array_push($contracts_in_per_location[$org_unit][$property_location->get_location_code()], $contract);
+						}
+						else if($contract->get_location_id() == $location_id_ex)
+						{
+							$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+							$contract->set_total_price($total_price);
+
+							if(!is_array($contracts_ex_per_location[$org_unit][$property_location->get_location_code()]))
+							{
+								$contracts_ex_per_location[$org_unit][$property_location->get_location_code()] = array();
+							}
+							array_push($contracts_ex_per_location[$org_unit][$property_location->get_location_code()], $contract);
+						}
+					}
+				}
+			}
+		}
+       	phpgwapi_cache::session_set('frontend', 'contracts_per_location', $contracts_per_location);
+       	phpgwapi_cache::session_set('frontend', 'contracts_in_per_location', $contracts_in_per_location);
+       	phpgwapi_cache::session_set('frontend', 'contracts_ex_per_location', $contracts_ex_per_location);
+       	return $$this->contracts_per_location_identifier[$org_unit];
 	}
 }
