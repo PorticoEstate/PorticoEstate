@@ -357,7 +357,7 @@
 			}
 			else
 			{
-				throw new Exception('property_socondition_survey::import - condition survey obsolete status not configured');
+//				throw new Exception('property_socondition_survey::import - condition survey obsolete status not configured');
 			}
 
 			$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');
@@ -410,6 +410,7 @@
 				$entry['amount_potential_grants']	= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
 				$entry['import_type']				= (int) $entry['import_type'];
 				$entry['condition_degree']			= (int) $entry['condition_degree'];
+				$entry['amount']					= $entry['amount_investment'] + $entry['amount_operation'] + $entry['amount_potential_grants'];
 			}
 
 
@@ -421,7 +422,8 @@
 			$origin_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
 			foreach ($import_data as $entry)
 			{
-				if( $entry['condition_degree'] > 0 && $entry['building_part'] && $entry['import_type'] > 0)
+				//if( $entry['condition_degree'] > 0 && $entry['building_part'] && $entry['import_type'] > 0)
+				if( $entry['amount'] && $entry['building_part'] && $entry['import_type'] > 0)
 				{
 
 					$request = array();
@@ -457,6 +459,7 @@
 
 
 					$request['condition_survey_id'] 	= $survey['id'];
+					$request['multiplier']				= $survey['multiplier'];
 					$request['street_name']				= $location_data['street_name'];
 					$request['street_number']			= $location_data['street_number'];
 					$request['location']				= $location;
