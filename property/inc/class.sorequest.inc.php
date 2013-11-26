@@ -1041,6 +1041,8 @@
 			$value_set['condition_survey_id'] 		= $request['condition_survey_id'];
 			$value_set['responsible_unit']			= $request['responsible_unit'];
 			$value_set['recommended_year']			= (int) $request['recommended_year'];
+			$value_set['multiplier']				= $request['multiplier'] ? (float)$request['multiplier'] : 1;
+			
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));

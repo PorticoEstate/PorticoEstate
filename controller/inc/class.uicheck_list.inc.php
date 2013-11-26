@@ -94,7 +94,7 @@
 			$this->so_case	= CreateObject('controller.socase');
 			$this->location_finder = new location_finder();
 
-			$this->acl_location = '.control';
+			$this->acl_location = '.checklist';
 
 			$this->read	= $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_READ, 'controller');//1 
 			$this->add	 = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_ADD, 'controller');//2 
