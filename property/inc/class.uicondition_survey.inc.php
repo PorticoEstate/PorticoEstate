@@ -919,6 +919,28 @@
 				file_put_contents($cached_file, file_get_contents($file));
 				phpgwapi_cache::session_set('property', 'condition_survey_import_file',$cached_file);
 				$step = 1;
+
+				// Add the file to documents
+				$bofiles	= CreateObject('property.bofiles');
+				$to_file = "{$bofiles->fakebase}/condition_survey/{$id}/" . str_replace(' ','_',$_FILES['import_file']['name']);
+
+				$bofiles->vfs->rm(array(
+						'string' => $to_file,
+						'relatives' => array(
+							RELATIVE_NONE
+						)
+					)
+				);
+
+				$bofiles->create_document_dir("condition_survey/{$id}");
+				$bofiles->vfs->override_acl = 1;
+
+				$bofiles->vfs->cp (array (
+					'from'	=> $_FILES['import_file']['tmp_name'],
+					'to'	=> $to_file,
+					'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL)));
+				$bofiles->vfs->override_acl = 0;
+				unset($bofiles);
 			}
 
 			$tabs = array();
