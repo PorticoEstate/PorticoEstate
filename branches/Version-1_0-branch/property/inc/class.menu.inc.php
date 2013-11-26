@@ -833,7 +833,16 @@
 							(
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicondition_survey.index')),
 								'text'	=> lang('condition survey'),
-								'image'		=> array('property', 'condition_survey')
+								'image'		=> array('property', 'condition_survey'),
+								'children'	=> array
+								(
+									'summation'	=> array
+									(
+										'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicondition_survey.summation')),
+										'text'	=> lang('summation'),
+										'image'		=> array('property', 'invoice')
+									)
+								)
 							),
 							'request'	=> array
 							(

@@ -357,7 +357,7 @@
 			}
 			else
 			{
-				throw new Exception('property_socondition_survey::import - condition survey obsolete status not configured');
+//				throw new Exception('property_socondition_survey::import - condition survey obsolete status not configured');
 			}
 
 			$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');
@@ -410,6 +410,7 @@
 				$entry['amount_potential_grants']	= (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
 				$entry['import_type']				= (int) $entry['import_type'];
 				$entry['condition_degree']			= (int) $entry['condition_degree'];
+				$entry['amount']					= $entry['amount_investment'] + $entry['amount_operation'] + $entry['amount_potential_grants'];
 			}
 
 
@@ -421,7 +422,8 @@
 			$origin_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
 			foreach ($import_data as $entry)
 			{
-				if( $entry['condition_degree'] > 0 && $entry['building_part'] && $entry['import_type'] > 0)
+				//if( $entry['condition_degree'] > 0 && $entry['building_part'] && $entry['import_type'] > 0)
+				if( $entry['amount'] && $entry['building_part'] && $entry['import_type'] > 0)
 				{
 
 					$request = array();
@@ -457,6 +459,7 @@
 
 
 					$request['condition_survey_id'] 	= $survey['id'];
+					$request['multiplier']				= $survey['multiplier'];
 					$request['street_name']				= $location_data['street_name'];
 					$request['street_number']			= $location_data['street_number'];
 					$request['location']				= $location;
@@ -540,13 +543,25 @@
 
 		public function get_summation($id)
 		{
+			$id_filter = '';
+
 			$condition_survey_id		= (int)$id;
-			$sql = "SELECT left(building_part,1) as building_part_,"
+			
+			if($condition_survey_id == -1) // all
+			{
+				$id_filter =  "condition_survey_id > 0";
+			}
+			else
+			{
+				$id_filter = "condition_survey_id = {$condition_survey_id}";
+			}
+
+			$sql = "SELECT condition_survey_id, left(building_part,1) as building_part_,"
 			. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
 			. " recommended_year as year"
 			." FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
-			." WHERE condition_survey_id={$condition_survey_id} AND fm_request_status.closed IS NULL"
-			." GROUP BY building_part_ , year ORDER BY building_part_";
+			." WHERE {$id_filter} AND fm_request_status.closed IS NULL"
+			." GROUP BY condition_survey_id, building_part_ , year ORDER BY building_part_";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -557,10 +572,11 @@
 				
 				$values[] = array
 				(
-					'building_part'		=> $this->_db->f('building_part_'),
-					'amount_investment'	=> $this->_db->f('investment'),
-					'amount_operation'	=> $this->_db->f('operation'),
-					'year'				=> $this->_db->f('year'),
+					'condition_survey_id'	=> $this->_db->f('condition_survey_id'),
+					'building_part'			=> $this->_db->f('building_part_'),
+					'amount_investment'		=> $this->_db->f('investment'),
+					'amount_operation'		=> $this->_db->f('operation'),
+					'year'					=> $this->_db->f('year'),
 				);
 			}
 
@@ -574,20 +590,22 @@
 				{
 					$return[] = array
 					(
-						'building_part'	=> $entry['building_part'],
-						'amount'		=> $entry['amount_investment'],
-						'year'			=> $entry['year'],
-						'category'		=> $lang_investment,
+						'condition_survey_id'	=> $entry['condition_survey_id'],
+						'building_part'			=> $entry['building_part'],
+						'amount'				=> $entry['amount_investment'],
+						'year'					=> $entry['year'],
+						'category'				=> $lang_investment,
 					);
 				}
 				if ($entry['amount_operation'])
 				{
 					$return[] = array
 					(
-						'building_part'	=> $entry['building_part'],
-						'amount'		=> $entry['amount_operation'],
-						'year'			=> $entry['year'],
-						'category'		=> $lang_operation,
+						'condition_survey_id'	=> $entry['condition_survey_id'],
+						'building_part'			=> $entry['building_part'],
+						'amount'				=> $entry['amount_operation'],
+						'year'					=> $entry['year'],
+						'category'				=> $lang_operation,
 					);
 				}
 			}
