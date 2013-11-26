@@ -53,7 +53,8 @@
 			'get_summation'				=> true,
 			'view_file'					=> true,
 			'import'					=> true,
-			'download'					=> true
+			'download'					=> true,
+			'summation'					=> true
 		);
 
 		public function __construct()
@@ -713,7 +714,7 @@
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $total_records,
 					'startIndex' => $start,
-					'sortKey' => 'type', 
+					'sortKey' => 'building_part', 
 					'sortDir' => "ASC", 
 					'Result' => $out,
 					'pageSize' => $num_rows,
@@ -1340,6 +1341,89 @@
 			}
 			return 'Deleted';
 		}
+
+
+		/**
+		* Prepare data for summation - single survey or all
+		*
+		* @return void
+		*/
+
+		public function summation()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::project::condition_survey::summation";
+
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uicondition_survey.index'));
+			}
+
+			$params = array
+			(
+				'start'		=> 0,
+				'sort'		=> 'id',
+				'dir'		=> 'asc',
+				'cat_id'	=> 0,
+				'allrows'	=> true
+			);
+
+			$survey_list = $this->bo->read($params);
+			
+			$surveys = array();
+			$surveys[] = array
+			(
+				'id' => 0, 
+				'name' => lang('select'), 
+			);
+			$surveys[] = array
+			(
+				'id' => -1, 
+				'name' => lang('all'), 
+			);
+
+			foreach($survey_list as $survey)
+			{
+				$surveys[] = array
+				(
+					'id'			=> $survey['id'], 
+					'name'			=> $survey['title'], 
+					'description'	=> $survey['address'], 
+				);
+			
+			}
+
+			$summation_def = array
+			(
+				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+			);
+
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> $summation_def
+			);
+
+			$data = array
+			(
+				'datatable_def'					=> $datatable_def,
+				'surveys'					=> array('options' => $surveys),
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
+
+			self::render_template_xsl(array('condition_survey_summation'), $data);
+		}
+
 
 		/*
 		* Overrides with incoming data from POST

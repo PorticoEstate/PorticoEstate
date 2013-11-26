@@ -311,20 +311,34 @@
 
 		public function get_summation($id)
 		{
-			$survey = $this->so->read_single(array('id' => $id));
+			$surveys = array();
+			
+			if($id == -1)
+			{
+				$values = $this->so->read(array('allrows' => true ));
+				foreach ($values as $survey)
+				{
+					$surveys[$survey['id']]['multiplier'] = $survey['multiplier'];
+				}
+			}
+			else
+			{
+				$surveys[$id] = $this->so->read_single(array('id' => $id));
+			}
 
 			$data = $this->so->get_summation($id);
-//$total = 0;
+
+//_debug_array($surveys);
 //_debug_array($data);
 			$values	=array();
 			$i=0;
 			foreach ($data as $entry)
 			{
-				$entry['amount'] = $entry['amount'] * $survey['multiplier'];
-				$i = $entry['building_part'] . '_' . $entry['category'];
+				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
+				$i = "{$entry['building_part']}_{$entry['category']}";
 				
-				$values[$i]['building_part'] = $entry['building_part'];
-				$values[$i]['category'] = $entry['category'];
+				$values[$entry['condition_survey_id']][$i]['building_part'] = $entry['building_part'];
+				$values[$entry['condition_survey_id']][$i]['category'] = $entry['category'];
 				
 				$diff = $entry['year'] - date('Y');
 				if($diff < 0)
@@ -339,25 +353,56 @@
 	
 				for ($j = 1; $j < 7 ; $j++ )
 				{
-					$values[$i]["period_{$j}"] += 0;
-					$values[$i]['sum'] += 0;
+					$values[$entry['condition_survey_id']][$i]["period_{$j}"] += 0;
+					$values[$entry['condition_survey_id']][$i]['sum'] += 0;
 					if($j == $period)
 					{
-						$values[$i]["period_{$j}"] += $entry['amount'];
-						$values[$i]['sum'] += $entry['amount'];
+						$values[$entry['condition_survey_id']][$i]["period_{$j}"] += $entry['amount'];
+						$values[$entry['condition_survey_id']][$i]['sum'] += $entry['amount'];
 					}
 				}
 			}
 			unset($entry);
 
-			$ret	=array();
-			foreach ($values as $entry)
+			$ret = array();
+
+			$_values = array();
+			foreach ($values as $condition_survey_id => $entry)
+			{
+				foreach($entry as $type => $_entry)
+				{
+					$_values[$type]['building_part']	= $_entry['building_part'];
+					$_values[$type]['category']			= $_entry['category'];
+					$_values[$type]['period_1']			+= $_entry['period_1'];
+					$_values[$type]['period_2']			+= $_entry['period_2'];
+					$_values[$type]['period_3']			+= $_entry['period_3'];
+					$_values[$type]['period_4']			+= $_entry['period_4'];
+					$_values[$type]['period_5']			+= $_entry['period_5'];
+					$_values[$type]['period_6']			+= $_entry['period_6'];
+					$_values[$type]['sum']				+= $_entry['sum'];
+				}
+			}
+			unset($_entry);
+			unset($entry);
+
+			foreach($_values as $entry)
 			{
 				$ret[] = $entry;
 			}
 
-//_debug_array($total);
-//_debug_array($ret);
+			foreach ($ret as $key => $row) 
+			{
+				$building_part[$key]  = $row['building_part'];
+				$category[$key] = $row['category'];
+			}
+
+			// Sort the data with account_lastname ascending, account_firstname ascending
+			// Add $data as the last parameter, to sort by the common key
+			if($ret)
+			{
+				array_multisort($building_part, SORT_ASC, $category, SORT_ASC, $ret);
+			}
+
 			return $ret;
 		}
 
