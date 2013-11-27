@@ -682,13 +682,14 @@
 		function get_summation()
 		{
 			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+			$year 	= phpgw::get_var('year', 'int', 'REQUEST');
 
 			if( !$this->acl_read)
 			{
 				return;
 			}
 
-			$values = $this->bo->get_summation($id);
+			$values = $this->bo->get_summation($id, $year);
 
 			$total_records = count($values);
 
@@ -1389,7 +1390,22 @@
 					'name'			=> $survey['title'], 
 					'description'	=> $survey['address'], 
 				);
-			
+			}
+
+
+
+			$current_year = date('Y');
+
+			$years = array();
+
+			for ($i=0; $i < 6; $i++ )
+			{
+				$years[] = array
+				(
+					'id'	=> $current_year,
+					'name'	=> $current_year
+				);
+				$current_year++;
 			}
 
 			$summation_def = array
@@ -1415,8 +1431,9 @@
 
 			$data = array
 			(
-				'datatable_def'					=> $datatable_def,
-				'surveys'					=> array('options' => $surveys),
+				'datatable_def'			=> $datatable_def,
+				'surveys'				=> array('options' => $surveys),
+				'years'					=> array('options' => $years),
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
