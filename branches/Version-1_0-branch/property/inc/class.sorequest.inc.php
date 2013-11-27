@@ -602,7 +602,7 @@
 				$cols_group[] = "fm_location{$i}.loc{$i}_name";
 			}
 
-
+			$cols_group[] = "{$entity_table}.multiplier";
 			$cols_group[] = "{$entity_table}.id";
 			$cols_group[] = 'fm_request_status.descr';
 			$cols_group[] = "{$entity_table}.address";
