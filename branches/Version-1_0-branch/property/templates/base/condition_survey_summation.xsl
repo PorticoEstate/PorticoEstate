@@ -29,11 +29,20 @@
 				<dl class="proplist-col">
 
 					<dt>
-						<label for="category"><xsl:value-of select="php:function('lang', 'category')" /></label>
+						<label for="category"><xsl:value-of select="php:function('lang', 'condition survey')" /></label>
 					</dt>
 					<dd>
 						<select id="survey_id" name="survey_id" onChange="update_summation();" >
 							<xsl:apply-templates select="surveys/options"/>
+						</select>
+					</dd>
+
+					<dt>
+						<label for="category"><xsl:value-of select="php:function('lang', 'year')" /> 0</label>
+					</dt>
+					<dd>
+						<select id="year" name="year" onChange="update_summation();" >
+							<xsl:apply-templates select="years/options"/>
 						</select>
 					</dd>
 
@@ -55,7 +64,8 @@
 	function update_summation()
 	{
 	   	var survey_id = document.getElementById("survey_id").value;
-		var oArgs = {menuaction:'property.uicondition_survey.get_summation', id:survey_id};
+	   	var year = document.getElementById("year").value;
+		var oArgs = {menuaction:'property.uicondition_survey.get_summation', id:survey_id, year: year};
 		var strURL = phpGWLink('index.php', oArgs, true);
 		YAHOO.portico.updateinlineTableHelper('datatable-container_0', strURL);
 	}
