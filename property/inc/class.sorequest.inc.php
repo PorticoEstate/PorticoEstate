@@ -247,7 +247,7 @@
 	//		. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
 			. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 			. " {$filtermethod}"
-			. " GROUP BY fm_request_status.descr,"
+			. " GROUP BY fm_request.category, fm_request.multiplier,fm_request.recommended_year, fm_request_status.descr,"
 			. " building_part,fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
 			. " fm_request.in_progress_date,fm_request.delivered_date,title,amount_investment,amount_operation,amount_potential_grants,score,fm_request.id,fm_request_status.descr";
 //_debug_array($sql);
