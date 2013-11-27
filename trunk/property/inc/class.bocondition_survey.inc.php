@@ -309,8 +309,10 @@
 			}
 		}
 
-		public function get_summation($id)
+		public function get_summation($id,$year = 0)
 		{
+			$year = $year ? (int)$year : date('Y');
+
 			$surveys = array();
 			
 			if($id == -1)
@@ -340,7 +342,7 @@
 				$values[$entry['condition_survey_id']][$i]['building_part'] = $entry['building_part'];
 				$values[$entry['condition_survey_id']][$i]['category'] = $entry['category'];
 				
-				$diff = $entry['year'] - date('Y');
+				$diff = $entry['year'] - $year;
 				if($diff < 0)
 				{
 					$period = 1;
