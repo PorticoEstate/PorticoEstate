@@ -556,7 +556,7 @@
 				$id_filter = "condition_survey_id = {$condition_survey_id}";
 			}
 
-			$sql = "SELECT condition_survey_id, left(building_part,1) as building_part_,"
+			$sql = "SELECT condition_survey_id, substr(building_part, 1,1) as building_part_,"
 			. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
 			. " recommended_year as year"
 			." FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
