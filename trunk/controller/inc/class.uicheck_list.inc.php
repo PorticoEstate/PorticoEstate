@@ -731,6 +731,15 @@
 				return json_encode( array( "status" => 'not_saved') );			
 			}
 
+			if($check_list_status == controller_check_list::STATUS_DONE)
+			{
+				$check_list->set_completed_date(time());
+			}
+			else
+			{
+				$check_list->set_completed_date(0);
+			}
+
 			$check_list->set_status( $check_list_status );
 
 			if($this->so->store($check_list))
@@ -847,7 +856,8 @@
 					{
 						foreach($_components_at_location as &$_component_at_location)
 						{
-							$_ok = $this->so_case->get_cases_by_component($_component_at_location['location_id'], $_component_at_location['id'], $required_control_item['id']);
+							$_ok = $this->so_case->get_cases_by_component($_component_at_location['location_id'], $_component_at_location['id'], $required_control_item['id'], $check_list->get_id());
+
 							if(!$_ok)
 							{
 								$error_message =  "mangler registrering for required</br>";
