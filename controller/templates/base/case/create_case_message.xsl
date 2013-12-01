@@ -133,7 +133,12 @@
 							<xsl:choose>
 							 	<xsl:when test="cases_array/child::node()">
 							 		<li class="check_item">
-								 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
+								 		<h4><span>
+								 		<xsl:value-of select="control_item/control_group_name"/>
+								 		<xsl:text>::</xsl:text>
+								 		<xsl:value-of select="control_item/title"/>
+								 		
+								 		</span></h4>
 								 		<ul>		
 											<xsl:for-each select="cases_array">
 												<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
