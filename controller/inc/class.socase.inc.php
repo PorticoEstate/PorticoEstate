@@ -146,11 +146,12 @@
 		 * @param	$location_item_id location item id
 		 * @return array of case object represented as objects or arrays
 		*/
-		public function get_cases_by_component($component_location_id, $component_id, $control_item_id = 0)
+		public function get_cases_by_component($component_location_id, $component_id, $control_item_id = 0, $check_list_id = 0)
 		{
 			$component_location_id	= (int) $component_location_id;
 			$component_id			= (int) $component_id;
 			$control_item_id		= (int) $control_item_id;
+			$check_list_id			= (int) $check_list_id;
 
 			$sql = "SELECT controller_check_item_case.*, check_list_id FROM controller_check_item_case " 
 			. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
@@ -159,6 +160,11 @@
 			if($control_item_id)
 			{
 				$sql .= " AND controller_check_item.control_item_id = {$control_item_id}";
+			}
+
+			if($check_list_id)
+			{
+				$sql .= " AND check_list_id = {$check_list_id}";
 			}
 
 			$this->db->query($sql);
