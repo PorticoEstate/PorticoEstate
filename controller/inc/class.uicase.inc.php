@@ -427,8 +427,13 @@
 
 			foreach ($check_items_and_cases as $check_item)
 			{
+				$control_group = $this->so_control_group->get_single($check_item->get_control_item()->get_control_group_id());
+				$check_item->get_control_item()->set_control_group_name($control_group->get_group_name());
+				$check_item->get_control_item()->set_control_area_name($control_group->get_control_area_name());
+
 				foreach($check_item->get_cases_array() as $case)
 				{
+
 					$component_location_id	= $case->get_component_location_id();
 					$component_id			= $case->get_component_id();
 					if($component_id)
@@ -553,9 +558,14 @@
 			foreach($case_ids as $case_id)
 			{
 				$case = $this->so->get_single($case_id);
+				
+				$check_item = $this->so_check_item->get_single($case->get_check_item_id());
+				$control_item = $check_item->get_control_item();
+				$control_group = $this->so_control_group->get_single($control_item['control_group_id']);
+				$group_name = $control_group->get_group_name();
 				$component_location_id	= $case->get_component_location_id();
 
-				$message_details .= "Gjøremål {$counter}: \n";
+				$message_details .= "{$group_name}::Gjøremål {$counter}: \n";
 
 				if($component_id = $case->get_component_id())
 				{

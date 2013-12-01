@@ -134,30 +134,17 @@
 	}
 	create_select_box('Default assign to TTS','assigntodefault',$_accounts,'The default user to assign a ticket in Helpdesk-submodule');
 
-	// Choose the correct priority to display
-	$config	= CreateObject('phpgwapi.config','property');
-	$config->read();
-	$priority = array();
-	$prioritylevels = isset($config->config_data['prioritylevels']) && $config->config_data['prioritylevels'] ? $config->config_data['prioritylevels'] : 3;
-	$priority_comment[1]  = ' - ' . lang('Highest');
-	$priority_comment[$prioritylevels] = ' - ' . lang('Lowest');
-	for ($i=1; $i<=$prioritylevels; $i++)
+	$priority_list_tts = execMethod('property.botts.get_priority_list');
+
+	if ($priority_list_tts)
 	{
-		$priority[$i] = $i . isset($priority_comment[$i]) ? $priority_comment[$i] : '';
+		foreach ( $priority_list_tts as $entry )
+		{
+			$_priority_tts[$entry['id']] = $entry['name'];
+		}
 	}
 
-
-	$degree = array();
-	// Choose the correct degree to display
-	$degree_comment[0]=' - '.lang('None');
-	$degree_comment[1]=' - '.lang('Minor');
-	$degree_comment[2]=' - '.lang('Medium');
-	$degree_comment[3]=' - '.lang('Serious');
-	for ($i=0; $i<=3; $i++)
-	{
-		$degree[$i] = $i . $degree_comment[$i];
-	}
-	create_select_box('Default Priority TTS','prioritydefault',$priority,'The default priority for tickets in the Helpdesk-submodule');
+	create_select_box('Default Priority TTS','prioritydefault',$_priority_tts,'The default priority for tickets in the Helpdesk-submodule');
 
 	$cats		= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 
@@ -180,6 +167,20 @@
 		'1' => 'Yes',
 		'2' => 'No'
 	);
+
+
+	$degree = array();
+	// Choose the correct degree to display
+	$degree_comment[0]=' - '.lang('None');
+	$degree_comment[1]=' - '.lang('Minor');
+	$degree_comment[2]=' - '.lang('Medium');
+	$degree_comment[3]=' - '.lang('Serious');
+	for ($i=0; $i<=3; $i++)
+	{
+		$degree[$i] = $i . $degree_comment[$i];
+	}
+
+
 
 	create_select_box('Notify me by mail when ticket is assigned or altered','tts_notify_me',$yes_and_no,'');
 	create_select_box('Send e-mail from TTS','tts_user_mailnotification',$yes_and_no,'Send e-mail from TTS as default');
