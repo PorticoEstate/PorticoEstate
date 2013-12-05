@@ -306,7 +306,7 @@
 		public function add()
 		{
 			$errors = array();
-			$event = array('customer_internal' => 0); 
+			$event = array('customer_internal' => 0);
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 
@@ -566,13 +566,12 @@
 				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				} 
-
 				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data']  && !$errors['contact_name'] && !$errors['cost'])
-				{ 
-
+				{
 					if (( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST')) && phpgw::get_var('active', 'POST'))
 					{
-						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
+
+                        if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event,$errors);
                             
@@ -689,64 +688,67 @@
 									$this->add_comment($event,$comment);			
 								}
 							}
-						} 
-					} elseif (!phpgw::get_var('active', 'POST')) {
-
-                        $subject = $config->config_data['event_canceled_mail_subject'];
-                        $body = $config->config_data['event_canceled_mail']."\n".phpgw::get_var('mail', 'POST');
-						
-						if ($event['customer_organization_name']) {
-							$comment_text_log = $event['customer_organization_name'];
-						} else {
-							$comment_text_log = $event['contact_name'];
 						}
-						$comment_text_log = $comment_text_log.' sitt arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_']))." har blitt kansellert.";
-
-						$body .= "<br />\n".$comment_text_log;
-						$body = html_entity_decode($body);			
-
-                        
-						$sendt = 0;
-						$mail_sendt_to = '';
-						if($building_info['email']) {
-    						$sendt++;
-							$mail_sendt_to = $mail_sendt_to.' '.$building_info['email'];
-							$this->send_mailnotification($building_info['email'], $subject, $body);
-						} 
-						if ($building_info['tilsyn_email']) {
-							$sendt++;
-							$mail_sendt_to = $mail_sendt_to.' '.$building_info['tilsyn_email'];
-							$this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
-
-						} 
-						if ($building_info['tilsyn_email2']) {
-							$sendt++;
-							$mail_sendt_to = $mail_sendt_to.' '.$building_info['tilsyn_email2'];
-							$this->send_mailnotification($building_info['tilsyn_email2'], $subject, $body);
-						}
-						if ($_POST['sendtorbuilding_email1']) {
-							$sendt++;
-							$mail_sendt_to = $mail_sendt_to.' '.$_POST['sendtorbuilding_email1'];
-							$this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
-	
-						} 
-						if ($_POST['sendtorbuilding_email2']) {
-							$sendt++;
-							$mail_sendt_to = $mail_sendt_to.' '.$_POST['sendtorbuilding_email2'];
-							$this->send_mailnotification($_POST['sendtorbuilding_email2'], $subject, $body);
-						}
-						if ($sendt <= 0) {
-							$errors['mailtobuilding'] = lang('Unable to send warning, No mailadresses found');
-						} 
-						else 
-						{
-							$comment = '<span style="color:red;">Dette arrangemenet er kanselert</span>. Denne er sendt til '.$mail_sendt_to.'<br />'.phpgw::get_var('mail', 'POST');
-							$this->add_comment($event,$comment);			
-						}
-					}
+                    }
 					$receipt = $this->bo->update($event);
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 				}
+                if (!phpgw::get_var('active', 'POST')) {
+
+                    $subject = $config->config_data['event_canceled_mail_subject'];
+                    $body = $config->config_data['event_canceled_mail']."\n".phpgw::get_var('mail', 'POST');
+
+                    if ($event['customer_organization_name']) {
+                        $comment_text_log = $event['customer_organization_name'];
+                    } else {
+                        $comment_text_log = $event['contact_name'];
+                    }
+                    $comment_text_log = $comment_text_log.' sitt arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_']))." har blitt kansellert.";
+
+                    $body .= "<br />\n".$comment_text_log;
+                    $body = html_entity_decode($body);
+
+                    $sendt = 0;
+                    $mail_sendt_to = '';
+                    if($building_info['email']) {
+                        $sendt++;
+                        $mail_sendt_to = $mail_sendt_to.' '.$building_info['email'];
+                        $this->send_mailnotification($building_info['email'], $subject, $body);
+                    }
+                    if ($building_info['tilsyn_email']) {
+                        $sendt++;
+                        $mail_sendt_to = $mail_sendt_to.' '.$building_info['tilsyn_email'];
+                        $this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
+
+                    }
+                    if ($building_info['tilsyn_email2']) {
+                        $sendt++;
+                        $mail_sendt_to = $mail_sendt_to.' '.$building_info['tilsyn_email2'];
+                        $this->send_mailnotification($building_info['tilsyn_email2'], $subject, $body);
+                    }
+                    if ($_POST['sendtorbuilding_email1']) {
+                        $sendt++;
+                        $mail_sendt_to = $mail_sendt_to.' '.$_POST['sendtorbuilding_email1'];
+                        $this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
+
+                    }
+                    if ($_POST['sendtorbuilding_email2']) {
+                        $sendt++;
+                        $mail_sendt_to = $mail_sendt_to.' '.$_POST['sendtorbuilding_email2'];
+                        $this->send_mailnotification($_POST['sendtorbuilding_email2'], $subject, $body);
+                    }
+                    if ($sendt <= 0) {
+                        $errors['mailtobuilding'] = lang('Unable to send warning, No mailadresses found');
+                    }
+                    else
+                    {
+                        $comment = '<span style="color:red;">Dette arrangemenet er kanselert</span>. Denne er sendt til '.$mail_sendt_to.'<br />'.phpgw::get_var('mail', 'POST');
+                        $this->add_comment($event,$comment);
+                    }
+                    $receipt = $this->bo->update($event);
+                    $this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
+
+                }
 			}
 
 			if($errors['allocation'])

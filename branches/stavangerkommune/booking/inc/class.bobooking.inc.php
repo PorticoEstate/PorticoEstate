@@ -299,20 +299,83 @@ function array_minus($a, $b)
 		 *
 		 * @return array containing values from $array for the keys in $keys.
 		 */
-		function building_schedule($building_id, $date)
+
+        function building_schedule($building_id, $date)
+        {
+
+            $from = clone $date;
+            $from->setTime(0, 0, 0);
+            // Make sure $from is a monday
+            if($from->format('w') != 1)
+            {
+                $from->modify('last monday');
+            }
+            $to = clone $from;
+            $to->modify('+7 days');
+            $to->setTime(23,59,59);
+            $allocation_ids = $this->so->allocation_ids_for_building($building_id, $from, $to);
+            $allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids), 'sort'=>'from_'));
+            $allocations = $allocations['results'];
+            foreach($allocations as &$allocation)
+            {
+                $allocation['name'] = $allocation['organization_name'];
+                $allocation['shortname'] = $allocation['organization_shortname'];
+                $allocation['type'] = 'allocation';
+            }
+            $booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
+            $bookings = $this->so->read(array('filters'=> array('id' => $booking_ids), 'sort'=>'from_'));
+            $bookings = $bookings['results'];
+            foreach($bookings as &$booking)
+            {
+                $booking['name'] = $booking['group_name'];
+                $booking['shortname'] = $booking['group_shortname'];
+                $booking['type'] = 'booking';
+            }
+            $allocations = $this->split_allocations($allocations, $bookings);
+
+            $event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
+            $events = $this->event_so->read(array('filters'=> array('id' => $event_ids), 'sort'=>'from_'));
+            $events = $events['results'];
+            foreach($events as &$event)
+            {
+                $event['name'] = $event['description'];
+                $event['type'] = 'event';
+            }
+            $bookings = array_merge($allocations, $bookings);
+            $bookings = $this->_remove_event_conflicts($bookings, $events);
+            $bookings = array_merge($events, $bookings);
+
+            $resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
+            $resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
+            $resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
+            $resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
+            $resources = $resources['results'];
+            foreach ($resources as $key => $row) {
+                $sort[$key] = $row['sort'];
+            }
+
+            // Sort the resources with sortkey ascending
+            // Add $resources as the last parameter, to sort by the common key
+            array_multisort($sort, SORT_ASC, $resources);
+            $bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
+            $results = build_schedule_table($bookings, $resources);
+            return array('total_records'=>count($results), 'results'=>$results);
+        }
+
+		function building_infoscreen_schedule($building_id, $date)
 		{
 
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
-			if($from->format('w') != 1)
-			{
-				$from->modify('last monday');
-			}
+//			if($from->format('w') != 1)
+//			{
+//				$from->modify('last monday');
+//			}
 			$to = clone $from;
 			$to->modify('+7 days');
 			$allocation_ids = $this->so->allocation_ids_for_building($building_id, $from, $to);
-			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids)));
+			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids), 'sort'=>'from_'));
 			$allocations = $allocations['results'];
 			foreach($allocations as &$allocation)
 			{
@@ -321,7 +384,7 @@ function array_minus($a, $b)
 				$allocation['type'] = 'allocation';
 			}
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
-			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
+			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids), 'sort'=>'from_'));
 			$bookings = $bookings['results'];
 			foreach($bookings as &$booking)
 			{
@@ -332,7 +395,7 @@ function array_minus($a, $b)
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids), 'sort'=>'from_'));
 			$events = $events['results'];
 			foreach($events as &$event)
 			{
@@ -356,7 +419,7 @@ function array_minus($a, $b)
 			// Add $resources as the last parameter, to sort by the common key
 			array_multisort($sort, SORT_ASC, $resources);
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
-			$results = build_schedule_table($bookings, $resources);
+			$results = build_schedule_screen_table($bookings, $resources);
 			return array('total_records'=>count($results), 'results'=>$results);
 		}
 
@@ -378,7 +441,7 @@ function array_minus($a, $b)
             
             $orgids = explode(",", $config->config_data['extra_schedule_ids']);
             
-			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids, 'organization_id' => $orgids)));
+			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids, 'organization_id' => $orgids), 'sort'=>'from_'));
 			$allocations = $allocations['results'];
 			foreach($allocations as &$allocation)
 			{
@@ -387,7 +450,7 @@ function array_minus($a, $b)
 				$allocation['type'] = 'allocation';
 			}
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
-			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
+			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids), 'sort'=>'from_'));
 			$bookings = $bookings['results'];
 			foreach($bookings as &$booking)
 			{
@@ -398,7 +461,7 @@ function array_minus($a, $b)
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids), 'sort'=>'from_'));
 			$events = $events['results'];
 			foreach($events as &$event)
 			{
@@ -447,7 +510,7 @@ function array_minus($a, $b)
 			$to->modify('+7 days');
 			$resource = $this->resource_so->read_single($resource_id);
 			$allocation_ids = $this->so->allocation_ids_for_resource($resource_id, $from, $to);
-			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids)));
+			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids), 'sort'=>'from_'));
 			$allocations = $allocations['results'];
 			foreach($allocations as &$allocation)
 			{
@@ -456,7 +519,7 @@ function array_minus($a, $b)
 				$allocation['type'] = 'allocation';
 			}
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
-			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
+			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids), 'sort'=>'from_'));
 			$bookings = $bookings['results'];
 			foreach($bookings as &$booking)
 			{
@@ -469,7 +532,7 @@ function array_minus($a, $b)
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_resource($resource_id, $from, $to);
-			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids), 'sort'=>'from_'));
 			$events = $events['results'];
 			foreach($events as &$event)
 			{
@@ -599,14 +662,16 @@ function array_minus($a, $b)
 			{
 				$e['conflicts'] = array();
 			}
-			$new_bookings = array();
+
+            $new_bookings = array();
 			foreach($bookings as $b)
 			{
-                
+                file_put_contents("/tmp/test.log", "\n", FILE_APPEND);
 				$keep = true;
 				foreach($events as &$e)
 				{
-					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
+
+					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
 					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
 					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
 					{
@@ -615,28 +680,54 @@ function array_minus($a, $b)
 						$e['conflicts'][] = $b;
 
                         $bf = $b['from_'];
-                        $bt = $b['to_'];            
+                        $bt = $b['to_'];
+                        $ef = $e['from_'];
+                        $et = $e['to_'];
 
-                        if ($bf < $e['from_'])
-                        {
-                            $b['to_'] = $e['from_'];                       
-                            $b['from_'] = $bf;                       
-                            $new_bookings[] = $b;        
+                        if ($ef >= $bf && $et <= $bt) {
+                            break;
                         }
-
-                        if ($e['to_'] < $bt)
+                        elseif (($ef >= $bf) && ($et > $bt))
                         {
-                            $b['from_'] = $e['to_'];                       
-                            $b['to_'] = $bt;                       
-                            $new_bookings[] = $b;        
+                            $nbrem = false;
+                            foreach ($new_bookings as $key => &$nb)
+                            {
+                                $bid = $b['id'];
+                                if ($nb['id'] == $bid && $nb['from_'] == $ef) {
+                                    unset($new_bookings[$key]);
+                                    $nbrem = true;
+                                }
+                            }
+                            if (!$nbrem) {
+                                $b['from_'] = $bf;
+                                $b['to_'] = $ef;
+                                $new_bookings[] = $b;
+                            }
                         }
-
-						break;
+                        elseif (($ef <= $bf) && ($et < $bt))
+                        {
+                            $b['from_'] = $et;
+                            $b['to_'] = $bt;
+                            $new_bookings[] = $b;
+                        }
+                        elseif (($ef > $bf) && ($et < $bt))
+                        {
+                            $b['from_'] = $bf;
+                            $b['to_'] = $ef;
+                            $new_bookings[] = $b;
+                            $b['from_'] = $et;
+                            $b['to_'] = $bt;
+                            $new_bookings[] = $b;
+                        }
+                        else
+                        {
+                            break;
+                        }
 					}
 				}
 				if($keep)
 				{
-					$new_bookings[] = $b;
+                   $new_bookings[] = $b;
 				}
 			}
 			return $new_bookings;
