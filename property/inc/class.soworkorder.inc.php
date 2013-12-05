@@ -1516,7 +1516,21 @@
 				}
 				if ($this->db->f('delivered') || $this->db->f('closed'))
 				{
-					//close
+					$action_params = array
+						(
+							'appname'			=> 'property',
+							'location'			=> '.project.workorder',
+							'id'				=> $workorder['id'],
+							'responsible'		=> $this->account,
+							'responsible_type'  => 'user',
+							'action'			=> 'approval',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
+
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					unset($action_params);
+
 				}
 			}
 
