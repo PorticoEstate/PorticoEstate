@@ -82,7 +82,7 @@
 			}
 			else
 			{
-				$PeriodTo = 000000;			
+				$PeriodTo = '000000';			
 			}
 
 			$memory = xmlwriter_open_memory();

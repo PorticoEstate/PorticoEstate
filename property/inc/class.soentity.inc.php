@@ -2161,8 +2161,9 @@
 						{
 							$history_set[$entry['attrib_id']] = array
 							(
-								'value' => $entry['value'],
-								'date'  => $this->bocommon->date_to_timestamp($entry['date'])
+								'value'		=> $entry['value'],
+								'old_value'	=> $old_value,
+								'date'		=> $this->bocommon->date_to_timestamp($entry['date'])
 							);
 						}
 					}
@@ -2207,7 +2208,7 @@
 				$historylog	= CreateObject('property.historylog',"{$this->type}_{$entity_id}_{$cat_id}");
 				foreach ($history_set as $attrib_id => $history)
 				{
-					$historylog->add('SO',$values['id'],$history['value'],false, $attrib_id,$history['date']);
+					$historylog->add('SO',$values['id'],$history['value'],$history['old_value'], $attrib_id,$history['date']);
 				}
 			}
 
