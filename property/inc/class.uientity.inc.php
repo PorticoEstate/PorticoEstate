@@ -2680,7 +2680,7 @@ JS;
 						'id'				=> $entry['id'],
 						'value'				=> $entry['new_value'],
 						'user'				=> $entry['owner'],
-						'time_created'			=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],$dateformat),
+						'time_created'			=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],"{$dateformat} G:i:s"),
 						'link_delete'			=> $link_delete,
 						'lang_delete_statustext'	=> lang('delete the item'),
 						'text_delete'			=> $text_delete,

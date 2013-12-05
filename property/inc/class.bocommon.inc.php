@@ -1142,9 +1142,12 @@
 			$GLOBALS['phpgw']->config->read();
 			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level']) && $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
 
-			if($list_location_level > $location_level)
+			if(!$list_location_level)
 			{
-				$list_location_level = $location_level;
+				for ($i=0; $i<$location_level; $i++)
+				{
+					$list_location_level[] =  $i + 1;
+				}
 			}
 
 			$soadmin_location	= CreateObject('property.soadmin_location');
