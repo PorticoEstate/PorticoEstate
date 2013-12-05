@@ -137,7 +137,7 @@
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
 				. " {$this->join} controller_control_location_list ON controller_control_location_list.control_id = controller_control.id"
-				. " WHERE assigned_to = {$user_id}";
+				. " WHERE assigned_to = {$user_id} AND status = 0";
 
 //_debug_array($sql);
 			if( $repeat_type )
@@ -149,6 +149,7 @@
 			$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
 			$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
 
+			//FIXME
 			if($completed)
 			{
 				$sql .= " AND controller_check_list.completed_date IS NULL ";			
@@ -214,13 +215,14 @@
 					. " ON (controller_control_component_list.control_id = controller_check_list.control_id"
 					. " AND controller_control_component_list.location_id = controller_check_list.location_id"
 					. " AND controller_control_component_list.component_id = controller_check_list.component_id)"
-				. " WHERE assigned_to = {$user_id}";
+				. " WHERE assigned_to = {$user_id} AND status = 0";
 
 			if( $repeat_type )
 			{
 //				$sql .= "AND controller_control.repeat_type = $repeat_type ";
 			}
 
+			//FIXME
 			if($completed)
 			{
 				$sql .= " AND controller_check_list.completed_date IS NULL ";			
