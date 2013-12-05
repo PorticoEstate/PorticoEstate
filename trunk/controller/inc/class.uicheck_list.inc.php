@@ -737,6 +737,7 @@
 			}
 			else
 			{
+				$check_list_status = controller_check_list::STATUS_NOT_DONE;
 				$check_list->set_completed_date(0);
 			}
 

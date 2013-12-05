@@ -116,7 +116,6 @@
 			echo $styling;
 
 			//Loaded from home.php
-			//echo "<script src='phpgwapi/js/jquery/js/jquery-1.7.2.min.js'></script>";
 
 			$script = "<script>";
 			$script .= "$(document).ready(function(){";
@@ -183,7 +182,7 @@ HTML;
 
 		// Fetches controls current user is responsible for 1 month ahead
 			$my_controls = array();
-			$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
+//			$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
 
 			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type);
 
