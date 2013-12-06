@@ -52,6 +52,7 @@
 		public $total_records	= 0;
 		public $sum_budget		= 0;
 		public $sum_actual_cost	= 0;
+		public $sum_difference	= 0;
 		public $show_finnish_date = false;
 		public $simple = false;
 
@@ -257,6 +258,12 @@
 					(
 						'id' => 'actual_cost',
 						'name'=> lang('actual cost')
+					);
+
+				$columns['difference'] = array
+					(
+						'id' => 'difference',
+						'name'=> lang('difference')
 					);
 			}
 
@@ -492,9 +499,10 @@
 				'ecodimb' => $this->ecodimb, 'b_account' => $this->b_account, 'building_part' => $this->building_part,
 				'branch_id' => $this->branch_id ,'order_dim1' => $this->order_dim1));
 
-			$this->total_records = $this->so->total_records;
-			$this->sum_budget = $this->so->sum_budget;
-			$this->sum_actual_cost = $this->so->sum_actual_cost;
+			$this->total_records		= $this->so->total_records;
+			$this->sum_budget			= $this->so->sum_budget;
+			$this->sum_actual_cost		= $this->so->sum_actual_cost;
+			$this->sum_difference		= $this->so->sum_difference;
 
 			if(!$external)
 			{
@@ -509,6 +517,17 @@
 			{
 				$entity[0]['type']='.project';
 				$this->uicols_related	= array('project');
+			}
+
+
+			$custom_status	= $this->so->get_custom_status();
+			$closed_status = array('X');
+			foreach($custom_status as $custom)
+			{
+				if($custom['closed'])
+				{
+					$closed_status[] =  "C{$custom['id']}";
+				}
 			}
 
 			foreach ($tickets as & $ticket)
@@ -533,6 +552,19 @@
 				else
 				{
 					$ticket['user'] = $account[$ticket['user_id']];
+				}
+
+
+				$ticket['difference'] = 0;
+
+
+				if($ticket['estimate'] && !in_array( $ticket['status'], $closed_status) )
+				{
+					$ticket['difference'] =  $ticket['estimate'] - (float)$ticket['actual_cost'];
+					if($ticket['difference'] < 0)
+					{
+						$ticket['difference'] = 0;
+					}
 				}
 
 				if($ticket['assignedto'])

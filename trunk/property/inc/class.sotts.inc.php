@@ -36,11 +36,12 @@
 
 	class property_sotts
 	{
-		var $uicols_related = array();
-		var $acl_location = '.ticket';
-		public $total_records	= 0;
-		public $sum_budget		= 0;
-		public $sum_actual_cost	= 0;
+		var $uicols_related			= array();
+		var $acl_location 			= '.ticket';
+		public $total_records		= 0;
+		public $sum_budget			= 0;
+		public $sum_actual_cost		= 0;
+		public $sum_difference		= 0;
 
 		public $soap_functions = array
 			(
@@ -492,12 +493,33 @@
 					'sum_actual_cost'	=> $this->db->f('sum_actual_cost'),
 					'sql_hash'			=> md5($sql_cnt)
 				);
+
+
+				$custom_status	= $this->get_custom_status();
+				$closed_status = array('X');
+				foreach($custom_status as $custom)
+				{
+					if($custom['closed'])
+					{
+						$closed_status[] =  "C{$custom['id']}";
+					}
+				}
+
+				$filter_closed = "{$where} fm_tts_tickets.status NOT IN ('" . implode("','", $closed_status) . "')";
+				$sql2 = "SELECT (sum(budget) - sum(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed}) as t";
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->next_record();
+				unset($sql2);
+
+				$cache_info['sum_difference']	= (int)$this->db->f('sum_difference');
+
 				phpgwapi_cache::session_set('property','tts_listing_metadata',$cache_info);
 			}
 
 			$this->total_records	= $cache_info['total_records'];
 			$this->sum_budget		= $cache_info['sum_budget'];
 			$this->sum_actual_cost	= $cache_info['sum_actual_cost'];
+			$this->sum_difference	= $cache_info['sum_difference'];
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
@@ -863,11 +885,12 @@
 			while ($this->db->next_record())
 			{
 				$status[] = array
-					(
-						'id'	=> $this->db->f('id'),
-						'name'	=> $this->db->f('name', true),
-						'color'	=> $this->db->f('color')
-					);
+				(
+					'id'		=> $this->db->f('id'),
+					'name'		=> $this->db->f('name', true),
+					'color'		=> $this->db->f('color'),
+					'closed'	=> $this->db->f('closed')
+				);
 			}
 			return $status;
 		}
