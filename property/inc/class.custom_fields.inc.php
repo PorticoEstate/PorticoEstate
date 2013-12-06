@@ -495,6 +495,11 @@ JS;
 			{
 				foreach($values_attribute as $entry)
 				{
+					if($entry['disabled'])
+					{
+						continue;
+					}
+
 					switch ($entry['datatype'])
 					{
 						case 'C':
