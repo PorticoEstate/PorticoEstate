@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id: class.bocommon.inc.php 10997 2013-03-18 11:56:29Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**

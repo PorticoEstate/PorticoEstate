@@ -26,7 +26,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package property
 	 * @subpackage controller
-	 * @version $Id: class.uicalendar.inc.php 10753 2013-02-06 06:52:12Z vator $
+	 * @version $Id$
 	 */
 
   	phpgw::import_class('controller.uicalendar');

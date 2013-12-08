@@ -6,7 +6,7 @@
 	 * @copyright Copyright (C) 2013 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @package controller
-	 * @version $Id: class.hook_helper.inc.php 10919 2013-02-18 14:47:02Z sigurdne $
+	 * @version $Id$
 	 */
 
 	/*

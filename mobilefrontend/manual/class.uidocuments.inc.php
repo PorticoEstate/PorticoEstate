@@ -28,9 +28,9 @@
 	 * @version $Id$
 	 */
 
-  	phpgw::import_class('property.uilookup');
+  	phpgw::import_class('manual.uidocuments');
 
-	class mobilefrontend_uilookup extends property_uilookup
+	class mobilefrontend_uidocuments extends manual_uidocuments
 	{
 		public function __construct()
 		{
