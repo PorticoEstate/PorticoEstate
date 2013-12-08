@@ -74,6 +74,8 @@
 		'current_user'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString()
 	);
 
+	$tpl_vars['manual_text'] = lang('manual');
+	$tpl_vars['manual_url'] = $GLOBALS['phpgw']->link('/index.php', array( 'menuaction' => 'manual.uidocuments.view' ));
 	$tpl_vars['home_text'] = lang('home');
 	$tpl_vars['home_url'] = $GLOBALS['phpgw']->link('/home.php');
 	$tpl_vars['logout_text'] = lang('logout');
