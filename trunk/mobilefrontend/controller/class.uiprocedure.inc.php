@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uiprocedure.inc.php 10789 2013-02-11 13:01:07Z vator $
+ 	* @version $Id$
 	*/	
 
 

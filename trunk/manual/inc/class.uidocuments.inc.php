@@ -43,17 +43,8 @@
 			'add'						=> true,
 			'edit'						=> true,
 			'save'						=> true,
-			'delete'					=> true,
-			'delete_imported_records'	=> true,
-			'get_vendors'				=> true,
-			'get_users'					=> true,
-			'edit_survey_title'			=> true,
 			'get_files'					=> true,
-			'get_request'				=> true,
-			'get_summation'				=> true,
 			'view_file'					=> true,
-			'import'					=> true,
-			'download'					=> true
 		);
 
 		public function __construct()
@@ -369,6 +360,7 @@
 
 			if($mode == 'view')
 			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "manual::view";
 				if( !$this->acl_read)
 				{
 					$this->bocommon->no_access();
@@ -384,7 +376,6 @@
 				}
 			}
 
-
 			$categories = $this->_get_categories($cat_id);
 
 
@@ -393,9 +384,11 @@
 			$file_def = array
 			(
 				array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true),
 			);
-
+			if($mode == 'edit')
+			{
+				$file_def[1]= array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true);
+			}
 
 			$datatable_def = array();
 			$datatable_def[] = array
@@ -423,12 +416,12 @@
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 				self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');	
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+				self::add_javascript('manual', 'portico', 'documents.add.js');
 			}
 
-			self::add_javascript('manual', 'portico', 'documents.add.js');
-
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+			self::add_javascript('manual', 'portico', 'documents.view.js');
 
 //			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 
@@ -491,21 +484,38 @@
 				return;
 			}
 
+			$cat_filter = array();
+			if($cat_id)
+			{
+				$cats	= CreateObject('phpgwapi.categories', -1, 'manual', $this->acl_location);
+				$cats->supress_info	= true;
+				$cat_list_files	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter[] = $cat_id;
+				foreach ($cat_list_files as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+			}
+
 			$link_file_data = array
 			(
 				'menuaction'	=> 'manual.uidocuments.view_file',
 				'cat_id'		=> $cat_id
 			);
 
+			$files = array();
 
 			$link_view_file = self::link($link_file_data);
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
-			$files = $vfs->ls(array(
-				'string' => "/manual/{$cat_id}",
-				'relatives' => array(RELATIVE_NONE)));
+			foreach ($cat_filter as $_cat_id)
+			{
+				$files = array_merge($files, $vfs->ls(array(
+					'string' => "/manual/{$_cat_id}",
+					'relatives' => array(RELATIVE_NONE))));
+			}
 
 			$vfs->override_acl = 0;
 
@@ -549,7 +559,7 @@
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $total_records,
 					'startIndex' => $start,
-					'sortKey' => 'type', 
+					'sortKey' => 'file_name', 
 					'sortDir' => "ASC", 
 					'Result' => $values,
 					'pageSize' => $num_rows,
@@ -582,7 +592,6 @@
 			$cat_id 	= phpgw::get_var('cat_id', 'int', 'REQUEST');
 			$file_name	= html_entity_decode(urldecode(phpgw::get_var('file_name')));
 			$file		= "{$bofiles->fakebase}/{$cat_id}/{$file_name}";
-
 			$bofiles->view_file('',$file);
 		}
 

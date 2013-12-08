@@ -25,7 +25,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package property
 	 * @subpackage tts
-	 * @version $Id: class.uitts.inc.php 10753 2013-02-06 06:52:12Z vator $
+	 * @version $Id$
 	 */
 
   	phpgw::import_class('property.uilocation');
