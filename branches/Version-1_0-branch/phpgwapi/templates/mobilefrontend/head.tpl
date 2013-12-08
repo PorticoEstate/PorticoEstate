@@ -33,6 +33,7 @@
 		<div id="wrapper">
 			<div id="header">
 				<div id="login-bar">
+					<a href="{manual_url}">{manual_text}</a>
 					<a href="{home_url}">{home_text}</a>
 					<a href="{logout_url}">{logout_text}</a>
 				</div>

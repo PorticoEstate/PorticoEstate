@@ -85,6 +85,7 @@
 						<input type="hidden" name="values_attribute[{counter}][attrib_id]" value="{id}"/>
 						<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"/>
 						<input type="hidden" name="values_attribute[{counter}][input_text]" value="{input_text}"/>
+						<input type="hidden" name="values_attribute[{counter}][disabled]" value="{disabled}"/>
 						<xsl:choose>
 							<xsl:when test="datatype='R'">
 								<xsl:call-template name="choice"/>

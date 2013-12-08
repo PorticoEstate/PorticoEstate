@@ -227,6 +227,7 @@
 			{
 				$name[] = 'estimate';
 				$name[] = 'actual_cost';
+				$name[] = 'difference';
 			}
 
 			$uicols_related = $this->bo->uicols_related;
@@ -1184,7 +1185,8 @@
 			$uicols_formatter = array
 			(
 				'estimate'		=> 'FormatterRight',
-				'actual_cost'	=> 'FormatterRight'
+				'actual_cost'	=> 'FormatterRight',
+				'difference'	=> 'FormatterRight',
 			);
 			
 			unset($parameters);
@@ -1264,10 +1266,12 @@
 					'sort'					=> $datatable['sorting']['order'],
 					'dir'					=> $datatable['sorting']['sort'],
 					'records'				=> array(),
-					'show_sum_estimate'		=> in_array('estimate', $custom_cols),//$this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property'),
+					'show_sum_estimate'		=> in_array('estimate', $custom_cols),
 					'show_sum_actual_cost'	=> in_array('actual_cost', $custom_cols),
+					'show_sum_difference'	=> in_array('difference', $custom_cols),
 					'sum_budget'			=> $this->bo->sum_budget,
-					'sum_actual_cost'		=> $this->bo->sum_actual_cost
+					'sum_actual_cost'		=> $this->bo->sum_actual_cost,
+					'sum_difference'		=> $this->bo->sum_difference,
 				);
 
 			// values for datatable

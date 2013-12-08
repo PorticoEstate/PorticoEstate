@@ -61,11 +61,9 @@
 								</select>
 							</xsl:when>
 							<xsl:otherwise>
- 								<xsl:for-each select="categories/options">
-									<xsl:if test="selected = 'selected' or selected = 1">
-										<xsl:value-of disable-output-escaping="yes" select="name"/>
-									</xsl:if>
-								</xsl:for-each>
+								<select id="cat_id" name="cat_id" onChange="refresh_files();"> 
+									<xsl:apply-templates select="categories/options"/>
+								</select>
  							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
@@ -93,25 +91,30 @@
 				</dl>
 			</div>
 			</div>
-				<dl class="proplist-col">
-						<div class="form-buttons">
-							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
-							<xsl:choose>
-								<xsl:when test="editable = 1">
-									<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-									<input type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
-									<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-									<xsl:variable name="lang_new_survey"><xsl:value-of select="php:function('lang', 'new')" /></xsl:variable>
-									<input type="button" name="edit_survey" value="{$lang_edit}" title = "{$lang_edit}"  onClick="document.load_edit_form.submit();"/>
-									<input type="button" name="new_survey" value="{$lang_new_survey}" title = "{$lang_new_survey}" onClick="document.new_form.submit();"/>
-									<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</div>
-				</dl>
+			<xsl:choose>
+				<xsl:when test="editable = 1">
+					<dl class="proplist-col">
+							<div class="form-buttons">
+								<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
+								<xsl:choose>
+									<xsl:when test="editable = 1">
+										<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+										<input type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
+										<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
+										<xsl:variable name="lang_new_survey"><xsl:value-of select="php:function('lang', 'new')" /></xsl:variable>
+										<input type="button" name="edit_survey" value="{$lang_edit}" title = "{$lang_edit}"  onClick="document.load_edit_form.submit();"/>
+										<input type="button" name="new_survey" value="{$lang_new_survey}" title = "{$lang_new_survey}" onClick="document.new_form.submit();"/>
+										<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+						</dl>
+					</xsl:when>
+				</xsl:choose>
+
 			</form>
 		</div>
 

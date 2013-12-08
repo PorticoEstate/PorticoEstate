@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicontrol_group_component.inc.php 10810 2013-02-13 19:49:14Z sigurdne $
+ 	* @version $Id$
 	*/	
 
 

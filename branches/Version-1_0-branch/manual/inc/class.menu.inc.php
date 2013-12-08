@@ -95,6 +95,12 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array( 'menuaction' => 'manual.uidocuments.add' )),
 					'image'	=> array('property', 'location_1'),
 				),
+				'view' => array
+				(
+					'text'	=> lang('view'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array( 'menuaction' => 'manual.uidocuments.view' )),
+					'image'	=> array('property', 'location_1'),
+				),
 			);
 
 			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )

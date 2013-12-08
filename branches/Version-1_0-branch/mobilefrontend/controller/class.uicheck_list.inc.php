@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicheck_list.inc.php 10834 2013-02-14 12:57:59Z vator $
+ 	* @version $Id$
 	*/
 	
 	phpgw::import_class('controller.uicheck_list');

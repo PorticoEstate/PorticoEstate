@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicheck_list_for_component.inc.php 10631 2013-01-02 09:15:56Z vator $
+ 	* @version $Id$
 	*/	
 
 
