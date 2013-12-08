@@ -408,7 +408,7 @@
 				'multiple_uploader'				=> $mode == 'edit' ? true : '',
 			);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('manual') . '::' . lang('documents');
 
 			if($mode == 'edit')
 			{
