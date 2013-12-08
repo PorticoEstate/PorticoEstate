@@ -499,8 +499,7 @@
 
 			$link_file_data = array
 			(
-				'menuaction'	=> 'manual.uidocuments.view_file',
-				'cat_id'		=> $cat_id
+				'menuaction'	=> 'manual.uidocuments.view_file'
 			);
 
 			$files = array();
@@ -512,9 +511,16 @@
 
 			foreach ($cat_filter as $_cat_id)
 			{
-				$files = array_merge($files, $vfs->ls(array(
+				$_files = $vfs->ls(array(
 					'string' => "/manual/{$_cat_id}",
-					'relatives' => array(RELATIVE_NONE))));
+					'relatives' => array(RELATIVE_NONE)));
+					
+				foreach ($_files as &$_file)
+				{
+					$_file['path'] = "{$_cat_id}/{$_file['name']}";
+				}
+					
+				$files = array_merge($files,$_files);
 			}
 
 			$vfs->override_acl = 0;
@@ -550,7 +556,7 @@
 			{
 				$values[] = array
 				(
-					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['path']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
 					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}
@@ -589,9 +595,8 @@
 
 			$bofiles	= CreateObject('property.bofiles', '/manual');
 
-			$cat_id 	= phpgw::get_var('cat_id', 'int', 'REQUEST');
 			$file_name	= html_entity_decode(urldecode(phpgw::get_var('file_name')));
-			$file		= "{$bofiles->fakebase}/{$cat_id}/{$file_name}";
+			$file		= "{$bofiles->fakebase}/{$file_name}";
 			$bofiles->view_file('',$file);
 		}
 
