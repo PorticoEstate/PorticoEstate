@@ -42,6 +42,7 @@
 		public $sum_budget			= 0;
 		public $sum_actual_cost		= 0;
 		public $sum_difference		= 0;
+		protected $global_lock = false;
 
 		public $soap_functions = array
 			(
@@ -904,7 +905,15 @@
 			$this->db->next_record();
 			$old_status  		= $this->db->f('status');
 
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			/*
 			 ** phpgw_fm_tts_append.append_type - Defs
@@ -976,7 +985,10 @@
 				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
 			}
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			return $receipt;
 
