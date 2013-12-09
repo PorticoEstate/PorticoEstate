@@ -182,6 +182,7 @@
 					switch ($file['type'])
 					{
 						case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+						case 'application/vnd.oasis.opendocument.spreadsheet':
 						case 'application/vnd.ms-excel':
 							$this->csvdata = $this->getexceldata($file['name']);
 							$valid_type = true;
@@ -191,6 +192,8 @@
 							$this->csvdata = $this->getcsvdata($file['name']);
 							$valid_type = true;
 							break;
+						default:
+							throw new Exception("Not a valid filetype: {$file['type']}");
 					}
 
 					if($valid_type)
