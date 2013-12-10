@@ -666,11 +666,11 @@ function array_minus($a, $b)
             $new_bookings = array();
 			foreach($bookings as $b)
 			{
-                file_put_contents("/tmp/test.log", "\n", FILE_APPEND);
 				$keep = true;
 				foreach($events as &$e)
 				{
 
+                    file_put_contents("/tmp/test.log", $b['id']." 2. eid:".$e['id']." date:".substr($e['from_'],0,10)." etime:".substr($e['from_'],11,19)."-".substr($e['to_'],11,19)." btime:".substr($b['from_'],11,19)."-".substr($b['to_'],11,19)."\n", FILE_APPEND);
 					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
 					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
 					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
@@ -689,19 +689,17 @@ function array_minus($a, $b)
                         }
                         elseif (($ef >= $bf) && ($et > $bt))
                         {
-                            $nbrem = false;
-                            foreach ($new_bookings as $key => &$nb)
+
+                            foreach ($new_bookings as $key => $nb)
                             {
                                 $bid = $b['id'];
                                 if ($nb['id'] == $bid && $nb['from_'] == $ef) {
                                     unset($new_bookings[$key]);
-                                    $nbrem = true;
+                                    $b['from_'] = $bf;
+                                    $b['to_'] = $ef;
+                                    $new_bookings[] = $b;
                                 }
-                            }
-                            if (!$nbrem) {
-                                $b['from_'] = $bf;
-                                $b['to_'] = $ef;
-                                $new_bookings[] = $b;
+
                             }
                         }
                         elseif (($ef <= $bf) && ($et < $bt))
