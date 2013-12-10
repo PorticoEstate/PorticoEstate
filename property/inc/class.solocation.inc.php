@@ -1180,12 +1180,20 @@
 
 		function read_single($location_code='',$values = array())
 		{
+			//cache result
+			static $location = array();
+
 			$location_array = explode('-',$location_code);
 			$type_id= count($location_array);
 
 			if (!$type_id)
 			{
 				return;
+			}
+
+			if(isset($location[$location_code]))
+			{
+				return $location[$location_code];
 			}
 
 			$cols = "fm_location{$type_id}.category as cat_id";
@@ -1255,6 +1263,8 @@
 
 			//_debug_array($cols_return);
 			//_debug_array($values);
+
+			$location[$location_code] = $values;
 			return $values;
 		}
 
