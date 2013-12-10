@@ -1064,10 +1064,10 @@
 				$user_column_filter = '';
 				if ($_user_columns)
 				{
-					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$_user_columns) .'))';
+					$user_column_filter = " OR ({$attribute_filter} AND id IN (" . implode(',',$_user_columns) .'))';
 				}
 
-				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY group_id, attrib_sort ASC");
+				$this->db->query("SELECT * FROM {$attribute_table} WHERE list=1 AND {$attribute_filter} {$user_column_filter} ORDER BY group_id, attrib_sort ASC");
 
 				$i	= count($uicols['name']);
 				while ($this->db->next_record())
