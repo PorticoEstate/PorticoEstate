@@ -36,6 +36,7 @@
 
 	class property_sotts
 	{
+		var $fields_updated			= false;
 		var $uicols_related			= array();
 		var $acl_location 			= '.ticket';
 		public $total_records		= 0;
@@ -899,7 +900,6 @@
 		function update_status($ticket,$id = 0)
 		{
 			$id = (int) $id;
-			$receipt = array();
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -982,7 +982,6 @@
 			if ($this->fields_updated)
 			{
 				$this->db->query('UPDATE fm_tts_tickets SET modified_date= ' . time() . " WHERE id={$id}",__LINE__,__FILE__);
-				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
 			}
 
 			if ( !$this->global_lock )
@@ -990,7 +989,7 @@
 				$this->db->transaction_commit();
 			}
 
-			return $receipt;
+			return $this->fields_updated;
 
 		}
 

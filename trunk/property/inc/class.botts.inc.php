@@ -1368,7 +1368,11 @@
 
 		public function update_status($data, $id = 0)
 		{
-			$receipt 	= $this->so->update_status($data, $id);
+			$receipt = array();
+			if ($this->so->update_status($data, $id))
+			{
+				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
+			}
 			$this->fields_updated = $this->so->fields_updated;
 			return $receipt;
 		}
