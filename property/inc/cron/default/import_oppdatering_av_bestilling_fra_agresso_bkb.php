@@ -36,7 +36,7 @@
 	class  import_oppdatering_av_bestilling_fra_agresso_bkb
 	{
 		var	$function_name = 'import_oppdatering_av_bestilling_fra_agresso_bkb';
-		var $debug = false;
+		var $debug = true;
 		protected $updated_tickects = array();
 		protected $receipt = array();
 
@@ -308,6 +308,7 @@
 				{
 					_debug_array($files);
 				}
+die();
 
 				foreach($files as $file_name)
 				{
@@ -428,7 +429,7 @@
 			{
 				$ticket = array
 				(
-					'status' => 'C8'; //Avsluttet og fakturert (C)
+					'status' => 'C8' //Avsluttet og fakturert (C)
 				);
 
 				if( $this->sotts->update_status($ticket,$id))
