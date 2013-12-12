@@ -449,7 +449,7 @@
 					{
 						foreach($files as $file_name)
 						{
-							if( stripos( $file_name, 'x205' ) === 0)
+							if( stripos( $file_name, 'Px205' ) === 0)
 							{
 						//		_debug_array($file_name);
 								$file_remote = "{$directory_remote}/{$file_name}";	   
