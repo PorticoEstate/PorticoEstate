@@ -296,7 +296,7 @@
 				}
 			}
 
-			$receipt 	= $this->bo->update_status(array('status'=>$new_status),$id);
+			$this->bo->update_status(array('status'=>$new_status),$id);
 			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
 				|| (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'])
 						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']==1
@@ -304,9 +304,17 @@
 					)
 			)
 			{
-				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
+				$this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 			}
-			return "id {$id} " . lang('Status has been changed');
+			
+			if($this->bo->fields_updated)
+			{
+				return "id {$id} " . lang('Status has been changed');
+			}
+			else
+			{
+				return "id {$id} " . lang('Status has not been changed');
+			}
 		}
 
 		function edit_priority()
