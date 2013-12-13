@@ -54,7 +54,8 @@
 			$this->valid_tables = array
 			(
 				'fm_vendor'				=> 'fm_vendor (' . lang('vendor') . ')',
-				'fm_condition_survey'	=> 'fm_condition_survey (' . lang('condition survey') . ')'
+				'fm_condition_survey'	=> 'fm_condition_survey (' . lang('condition survey') . ')',
+				'fm_ecodimb'			=> 'fm_ecodimb (' . lang('dimb') . ')',
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');

@@ -92,7 +92,7 @@
 			}
 			else
 			{
-				$_lag			= date('n') == 1 ? 17 : 7;//6 days into next month, 16 days into next year
+				$_lag			= date('n') == 1 ? 11 : 7;//6 days into next month, 10 days into next year
 				$_lag_seconds	= $_lag * 24 * 3600;
 			}
 			
