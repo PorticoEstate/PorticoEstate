@@ -374,13 +374,15 @@ die();
     		$agresso_prosjekt	= (int)$data[0];
 			$prosjektstatus		= trim($data[1]);
 			$order_id			= trim($data[2]);
-			$actual_cost		= (float)trim($data[3]);
+			$diff_actual_cost	= (float)trim($data[3]);
 
 			$this->db->query("SELECT id, status, actual_cost FROM fm_tts_tickets WHERE order_id= '{$order_id}'",__LINE__,__FILE__);
 			$this->db->next_record();
-			$id					= $this->db->f('id');
-			$old_status			= $this->db->f('status');
-			$old_actual_cost	= $this->db->f('actual_cost');
+			$id							= $this->db->f('id');
+			$old_status					= $this->db->f('status');
+			(float) $old_actual_cost	= $this->db->f('actual_cost');
+			
+			$new_actual_cost = $diff_actual_cost + $old_actual_cost;
 
 			if(!$id)
 			{
@@ -388,12 +390,12 @@ die();
 				return false;
 			}
 
-			$this->receipt['message'][] = array('msg' =>"Oppdaterer melding #{$id}, gammelt beløp: {$old_actual_cost}, nytt beløp: {$actual_cost}");
+			$this->receipt['message'][] = array('msg' =>"Oppdaterer melding #{$id}, gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
 
 			$value_set = array
 			(
-	    		'agresso_prosjekt' => $agresso_prosjekt,
-				'actual_cost' => $actual_cost
+	    		'agresso_prosjekt'	=> $agresso_prosjekt,
+				'actual_cost'		=> $new_actual_cost
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
@@ -420,7 +422,7 @@ die();
 
 			if(!$id)
 			{
-				$this->receipt['error'][] = array('msg' =>"Oppdatere status: fant ikke bestillingen, hopper over: {$order_id}");
+				$this->receipt['error'][] = array('msg' =>"Oppdatere status: fant ikke bestillingen, hopper over: {$agresso_prosjekt}");
 				return false;
 			}
 
