@@ -61,7 +61,7 @@
 				'get_locations_by_name'	=> true
 			);
 
-		function property_bolocation($session=false)
+		function __construct($session=false)
 		{
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 			$this->bocommon 			= CreateObject('property.bocommon');

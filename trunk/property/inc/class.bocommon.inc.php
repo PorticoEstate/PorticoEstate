@@ -1233,6 +1233,8 @@
 				$cols_return[] = 'loc' . $location_types[$i]['id'];
 			}
 
+			$location_relation_data = array();
+			$custom 		= createObject('property.custom_fields');
 			for ($i=1;$i<($type_id+1);$i++)
 			{
 				$cols.= ",loc{$i}_name";
@@ -1249,7 +1251,25 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= $i == 1;
+
+				$fm_location_cols_temp = $custom->find('property', '.location.' . $i, 0, '', '', '', true);
+				foreach ($fm_location_cols_temp as $entry)
+				{
+					if($entry['lookup_form'])
+					{
+						$location_relation_data[] = array
+						(
+							'level'				=> $i,
+							'name'				=> $entry['name'],
+							'descr'				=> $entry['input_text'],
+							'status_text'		=> $entry['status_text'],
+							'datatype'			=> $entry['datatype'],
+						);
+					}
+				}
 			}
+
+			phpgwapi_cache::system_set('property', 'location_relation_data', $location_relation_data);
 
 			if(!$no_address)
 			{
