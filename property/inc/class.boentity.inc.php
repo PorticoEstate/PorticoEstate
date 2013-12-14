@@ -63,6 +63,7 @@
 
 		var $type_app = array();
 		var $type;
+		private $location_relation_data = array();
 
 		function __construct($session=false, $type = '', $entity_id = 0, $cat_id = 0)
 		{
@@ -224,6 +225,10 @@
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '','','',true, false, $filter);
 			$columns = array_merge( $columns, $this->get_column_list() );
+			foreach ($columns as &$column)
+			{
+				$column['name'] = $column['descr'] ? $column['descr'] : $column['input_text'];
+			}
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -231,6 +236,32 @@
 		function get_column_list()
 		{
 			$columns = array();
+
+			// defined i property_bocommon::generate_sql()
+			$this->location_relation_data = 	phpgwapi_cache::system_get('property', 'location_relation_data');
+			
+			if( $this->location_relation_data && is_array($this->location_relation_data))
+			{
+				foreach ($this->location_relation_data as $entry)
+				{
+					$columns[$entry['name']] = array
+					(
+						'id'			=> $entry['name'],
+						'input_type'	=> 'text',
+						'name'			=> $entry['name'],
+						'descr'			=> $entry['descr'],
+						'statustext'	=> $entry['descr'],
+						'align' 		=> '',
+						'datatype'		=> $entry['datatype'],
+						'sortable'		=> false,
+						'exchange'		=> false,
+						'formatter'		=> '',
+						'classname'		=> ''
+					);
+				
+				}
+			}
+/*
 			$columns['user_id'] = array
 			(
 				'id'			=> 'user_id',
@@ -245,7 +276,7 @@
 				'formatter'		=> '',
 				'classname'		=> ''
 			);
-
+*/
 			return $columns;
 		}
 
@@ -370,23 +401,59 @@
 
 			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"]:array();
 			$custom_cols = $this->get_column_list();
+
 //_debug_array($user_columns);
 //_debug_array($column_list);
+
+			$cols_extra		= $this->so->cols_extra;
+			$cols_return_lookup		= $this->so->cols_return_lookup;
+
 /*
 			foreach ($custom_cols as $col_id => $col_info)
 			{
 				if( in_array( $col_id, $user_columns ) )
 				{
-					$cols_extra[] = array
-					(
-						'name'		=> $col_id,
-						'datatype'	=> $column_list[$col_id]['datatype']
-					);
+					$this->uicols['input_type'][]	= 'text';
+					$this->uicols['name'][]			= $col_id;
+					$this->uicols['descr'][]		= $custom_cols[$col_id]['descr'];
+					$this->uicols['statustext'][]	= $custom_cols[$col_id]['descr'];
+					$this->uicols['exchange'][]		= false;
+					$this->uicols['align'][] 		= '';
+					$this->uicols['datatype'][]		= $custom_cols[$col_id]['datatype'];
+					$this->uicols['formatter'][]	= '';
+					$this->uicols['classname'][]	= '';
+					$this->uicols['sortable'][]		= false;
+					$cols_extra[] 					= $col_id;
 				}
 			}
 */
-			$cols_extra		= $this->so->cols_extra;
-			$cols_return_lookup		= $this->so->cols_return_lookup;
+//_debug_array($cols_extra);
+//_debug_array($this->uicols);die();
+			$location_relation_data = 	$this->location_relation_data;
+			
+			if ($location_relation_data && is_array($location_relation_data))
+			{
+				foreach ($location_relation_data as $entry)
+				{
+					$this->uicols['input_type'][]	= 'text';
+					$this->uicols['name'][]			= $entry['name'];
+					$this->uicols['descr'][]		= $entry['descr'];
+					$this->uicols['statustext'][]	= $entry['descr'];
+					$this->uicols['exchange'][]		= false;
+					$this->uicols['align'][] 		= '';
+					$this->uicols['datatype'][]		= '';
+					$this->uicols['formatter'][]	= '';
+					$this->uicols['classname'][]	= '';
+					$this->uicols['sortable'][]		= false;
+
+					$cols_extra[] 				= $entry['name'];
+
+				}
+			}
+			
+			unset($entry);
+
+
 			//_debug_array($entity);
 //			_debug_array($cols_extra);
 			//_debug_array($cols_return_lookup);
