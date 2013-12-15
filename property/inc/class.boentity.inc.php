@@ -238,7 +238,9 @@
 			$columns = array();
 
 			// defined i property_bocommon::generate_sql()
-			$this->location_relation_data = 	phpgwapi_cache::system_get('property', 'location_relation_data');
+			$location_relation_data = phpgwapi_cache::system_get('property', 'location_relation_data');
+			
+			$this->location_relation_data = $location_relation_data && is_array($location_relation_data) ? $location_relation_data : array();
 			
 			if( $this->location_relation_data && is_array($this->location_relation_data))
 			{
@@ -408,7 +410,7 @@
 			$cols_extra		= $this->so->cols_extra;
 			$cols_return_lookup		= $this->so->cols_return_lookup;
 
-/*
+
 			foreach ($custom_cols as $col_id => $col_info)
 			{
 				if( in_array( $col_id, $user_columns ) )
@@ -426,9 +428,10 @@
 					$cols_extra[] 					= $col_id;
 				}
 			}
-*/
+
 //_debug_array($cols_extra);
 //_debug_array($this->uicols);die();
+/*
 			$location_relation_data = 	$this->location_relation_data;
 			
 			if ($location_relation_data && is_array($location_relation_data))
@@ -452,7 +455,7 @@
 			}
 			
 			unset($entry);
-
+*/
 
 			//_debug_array($entity);
 //			_debug_array($cols_extra);
