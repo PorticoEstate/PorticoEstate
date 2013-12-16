@@ -578,11 +578,17 @@
 					{
 						$s .= ' selected="selected"';
 					}
+
+/*
 					$s .= '>';
 					for ($j=0;$j<$cat['level'];++$j)
 					{
 						$s .= '&nbsp;';
 					}
+*/
+
+					$s .= '>' . str_repeat('&nbsp;' , (int)$cat['level'] ) . $GLOBALS['phpgw']->strip_html($cat['name']);
+
 					$s .= $GLOBALS['phpgw']->strip_html($cat['name']);
 					if ($cat['app_name'] == 'phpgw')
 					{
@@ -690,12 +696,7 @@
 					$sel_cat = 'selected';
 				}
 
-				$name = '';
-				for ($i=0;$i<$cat['level'];$i++)
-				{
-					$name .= ' . ';
-				}
-				$name .= $GLOBALS['phpgw']->strip_html($cat['name']);
+				$name = str_repeat(' . ' , (int)$cat['level'] ) . $GLOBALS['phpgw']->strip_html($cat['name']);
 
 				if ($cat['app_name'] == 'phpgw')
 				{

@@ -1949,6 +1949,12 @@
 */
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
 
+
+			foreach ($cat_sub as &$entry)
+			{
+				$entry['name'] = str_repeat (' . ' , (int)$entry['level'] ) . $entry['name'];
+			}
+
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$user_list = $this->bocommon->get_user_list('select', isset($values['user_id']) && $values['user_id'] ? $values['user_id'] : $this->account ,false,false,-1,false,false,'',-1);
 			foreach ($user_list as &$user)
