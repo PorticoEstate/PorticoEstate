@@ -15,7 +15,7 @@ to project	property	no	Til prosjekt
 access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
 accounting categories	property	no	Kategorier regnskap
-accounting dim b	property	no	Kostnadssted
+accounting dim b	property	no	Ansvarssted
 accounting dim d	property	no	Regnskap dim d
 accounting tax	property	no	Regnskap mva-kode
 accounting voucher category	property	no	Regnskap kategorier faktura
@@ -549,13 +549,13 @@ difference	property	no	Rest
 dim a	property	no	Dim A
 dim a is missing	property	no	Dim A mangler
 dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i :
-dim b	property	no	Kostnadssted
-dimb	property	no	Kostnadssted
-dimb roles	property	no	Roller kostnadssted
-dimb role user	property	no	Bruker/Rolle/Kostnadssted
+dim b	property	no	Ansvarssted
+dimb	property	no	Ansvarssted
+dimb roles	property	no	Roller Ansvarssted
+dimb role user	property	no	Bruker/Rolle/Ansvarssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	K Ikke valgt
-Please select dimb!	property	no	Angi kostnadssted
+Please select dimb!	property	no	Angi Ansvarssted
 dim d	property	no	Dim D
 dime	property	no	Kategori
 directory created	property	no	katalog er opprettet
@@ -1133,7 +1133,7 @@ no conversion type could be located.	property	no	Format filter ble ikke funnet
 no custom function	property	no	Ingen egendfinert funksjon
 no criteria	property	no	kriterie ikke valgt
 no datatype	property	no	Datatype ikke valgt
-no dim b	property	no	Kostnadssted ikke valgt
+no dim b	property	no	Ansvarssted ikke valgt
 no dim d	property	no	Dim D ikke valgt
 no district	property	no	Distrikt ikke valgt
 no document type	property	no	Ingen dokument-type
@@ -1574,7 +1574,7 @@ select the coordinator the request belongs to. to do not use a category select n
 select the customer by clicking this link	property	no	Velg kunde
 select the date for the first value	property	no	angi dato for første verdi
 select the date for the update	property	no	angi dato for oppdatering
-select the dim b for this invoice. to do not use dim b -  select no dim b	property	no	velg Kostnadssted for bilag. For ikke å bruke Kostnadssted - velg Kostnadssted IKKE VALGT
+select the dim b for this invoice. to do not use dim b -  select no dim b	property	no	velg Ansvarssted for bilag. For ikke å bruke Ansvarssted - velg Ansvarssted IKKE VALGT
 select the dim d for this activity. to do not use dim d -  select no dim d	property	no	velg DIM D for bilag. For ikke å bruke DIM D - velg DIMD IKKE VALGT
 select the district the part of town belongs to.	property	no	Velg hvilke distrikt denne bydelen tilhører
 select the district the selection belongs to. to do not use a district select no district	property	no	velg distrikt utvalget tilhører. For ikke å bruke distrikt velg DISTRIKT IKKE VALGT
@@ -1965,7 +1965,7 @@ write off period	property	no	avskrivningsperiode
 year	property	no	År
 yearly	property	no	Årlig
 you are not approved for this task	property	no	Du mangler rettigheter for denne oppgaven
-you are not approved for this dimb: %1	property	no	Du mangler rettigheter for dette kostnadsstedet: %1
+you are not approved for this dimb: %1	property	no	Du mangler rettigheter for dette Ansvarsstedet: %1
 you have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 you have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
 you have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette prosjektet

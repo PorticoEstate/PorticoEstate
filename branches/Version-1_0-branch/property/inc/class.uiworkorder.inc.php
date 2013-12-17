@@ -276,10 +276,25 @@
 				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
 				$default_value = array ('id'=>'','name'=>lang('no district'));
 				array_unshift ($values_combo_box[0],$default_value);
-
+/*
 				$values_combo_box[1] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
 				array_unshift ($values_combo_box[1]['cat_list'],$default_value);
+*/
+
+				$_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
+				
+				$values_combo_box[1] = array();
+				foreach($_cats as $_cat)
+				{
+					if($_cat['level'] == 0 )
+					{
+						$values_combo_box[1][] = $_cat;
+					}
+				}
+				
+				$default_value = array ('id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[1],$default_value);
 
 				$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
 				array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
@@ -477,7 +492,8 @@
 								array
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+									'value'	=> $this->bocommon->select2String($values_combo_box[1])
+									//'value'	=> $this->bocommon->select2String($values_combo_box[1]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 								),
 								array
 								( //div values  combo_box_2
@@ -1948,6 +1964,12 @@
 			}
 */
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
+
+
+			foreach ($cat_sub as &$entry)
+			{
+				$entry['name'] = str_repeat (' . ' , (int)$entry['level'] ) . $entry['name'];
+			}
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$user_list = $this->bocommon->get_user_list('select', isset($values['user_id']) && $values['user_id'] ? $values['user_id'] : $this->account ,false,false,-1,false,false,'',-1);
