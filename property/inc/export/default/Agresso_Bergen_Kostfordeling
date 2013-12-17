@@ -765,7 +765,7 @@
 				{
 					$_periode	= $periode;
 
-					$Bilagsart	= sprintf("%2s",'FD');// verdi: , type: c2, plass: 15 - 16
+					$Bilagsart	= sprintf("%2s",'HK');// verdi: , type: c2, plass: 15 - 16
 					$Forfall	= date(Ymd,strtotime($invoice['forfallsdato']));// verdi: Forfallsdato , type: date, plass: 298 - 305
 				}
 
