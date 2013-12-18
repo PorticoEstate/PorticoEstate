@@ -884,7 +884,7 @@
 					}
 
 					$Konto		= sprintf("%08s",$invoice_line['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
-					$Dim_1		= sprintf("%08s",$invoice_line['dimb']);// verdi: Ansvarssted, type: c8, plass: 29 - 36
+					$Dim_1		= sprintf("%08s",$invoice_line['dimb']);// 64040 verdi: Ansvarssted, type: c8, plass: 29 - 36
 					$Dim_2		= sprintf("%-8s",$invoice_line['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
 
 					if($pre_transfer)
