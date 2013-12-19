@@ -604,24 +604,32 @@
 					}
 				}
 
-				$duplicate = false;
-				$sql = "SELECT bilagsnr, external_ref FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
+				$update_voucher = false;
+				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
-					$duplicate = true;
+					$update_voucher = true;
+					$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 					$bilagsnr = $this->db->f('bilagsnr');
-					$this->receipt['message'][] = array('msg' => "Ikke importert duplikat til arbeidsregister: {$_data['SCANNINGNO']}");
+
+					$buffer[$i]['bilagsnr'] 		= $bilagsnr;
+					$buffer[$i]['bilagsnr_ut']		= $_bilagsnr_ut;
+
+					$this->receipt['message'][] = array('msg' => "Oppdatert med nye data i arbeidsregister: {$_data['SCANNINGNO']}");
 				}
 
 				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
-					$duplicate = true;
+					$update_voucher = true;
 					$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 					$bilagsnr = $this->db->f('bilagsnr');
 					$__bilagsnr = $_bilagsnr_ut ? $_bilagsnr_ut : $bilagsnr;
+
+					$buffer[$i]['bilagsnr'] 		= $bilagsnr;
+					$buffer[$i]['bilagsnr_ut']		= $_bilagsnr_ut;
 
 					if($_bilagsnr_ut)
 					{
@@ -726,6 +734,11 @@
 //_debug_array($order_info['toarray']);
 			if(!$this->skip_import)
 			{
+				if($update_voucher && $bilagsnr)
+				{
+					$this->db->query("DELETE FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'",__LINE__,__FILE__);
+				}
+
 				if(!$bilagsnr)
 				{
 					$bilagsnr = $this->invoice->next_bilagsnr();
@@ -763,38 +776,30 @@
 					}
 				}
 
-				if(!$duplicate)
-				{
-					$GLOBALS['phpgw']->db->Exception_On_Error = true;
-					try
-					{
-						$bilagsnr = $this->import_end_file($buffer);
-					}
-					catch (Exception $e)
-					{
-						if($e)
-						{
-							$GLOBALS['phpgw']->log->error(array(
-								'text'	=> 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
-								'p1'	=> $e->getMessage(),
-								'p2'	=> '',
-								'line'	=> __LINE__,
-								'file'	=> __FILE__
-							));
+				$GLOBALS['phpgw']->db->Exception_On_Error = true;
 
-							$this->receipt['error'][] = array('msg'=> $e->getMessage());
-						}
-						return false;
-					}
-
-					$GLOBALS['phpgw']->db->Exception_On_Error = false;
-					return $bilagsnr;
-				}
-				else
+				try
 				{
-					$duplicate  = false;
-					return $bilagsnr;
+					$bilagsnr = $this->import_end_file($buffer);
 				}
+				catch (Exception $e)
+				{
+					if($e)
+					{
+						$GLOBALS['phpgw']->log->error(array(
+							'text'	=> 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
+							'p1'	=> $e->getMessage(),
+							'p2'	=> '',
+							'line'	=> __LINE__,
+							'file'	=> __FILE__
+						));
+						$this->receipt['error'][] = array('msg'=> $e->getMessage());
+					}
+					return false;
+				}
+
+				$GLOBALS['phpgw']->db->Exception_On_Error = false;
+				return $bilagsnr;
 			}
 			$this->skip_import = false;
 			return false;
