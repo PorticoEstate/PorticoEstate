@@ -401,8 +401,17 @@ function array_minus($a, $b)
 						// We need to use 24:00 instead of 00:00 to sort correctly
 						$new_booking['to_'] = $new_booking['to_'] == '00:00' ? '24:00' : $new_booking['to_'];
 						$new_bookings[] = $new_booking;
+
 						if($date->format('Y-m-d') == $end->format('Y-m-d'))
+						{
 							break;
+						}
+
+						if($date->getTimestamp() > $end->getTimestamp())
+						{
+							throw new InvalidArgumentException('start time( ' . $date->format('Y-m-d') . ' ) later than end time( ' . $end->format('Y-m-d') . " ) for {$booking['type']}#{$booking['id']}::{$booking['name']}");
+						}
+
 						$date->modify('+1 day');
 					}
 					while(true);

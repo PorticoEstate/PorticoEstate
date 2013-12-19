@@ -86,6 +86,25 @@ $(document).ready(function(){
 		update_form_values(line_id, voucher_id_orig);
     });
 
+	$("#dim_e").change(function(){
+		var oArgs = {menuaction:'property.boworkorder.get_category', cat_id:$(this).val()};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					if(data.active !=1)
+					{
+						alert('Denne kan ikke velges');
+					}
+				}
+			}
+		});
+	});
 
 	$("#voucher_form").live("submit", function(e){
 		e.preventDefault();
@@ -97,9 +116,33 @@ $(document).ready(function(){
 			return;
 		}
 
-		if($("#periodization").val() && ! $("#periodization_start").val())
+		var periodization = document.getElementById("periodization").value;
+		var periodization_start = document.getElementById("periodization_start").value;
+		var dim_e = document.getElementById("dim_e").value;
+		var dim_b = document.getElementById("dim_b").value;
+		var dim_a = document.getElementById("dim_a").value;
+
+		if(periodization && ! periodization_start)
 		{
 			alert('Du må velge startperiode');
+			return;
+		}
+
+		if(!dim_e)
+		{
+			alert('Du må velge Kategori');
+			return;
+		}
+
+		if(!dim_b)
+		{
+			alert('Du må velge Ansvarssted');
+			return;
+		}
+
+		if(!dim_a)
+		{
+			alert('Du må angi Dim A');
 			return;
 		}
 

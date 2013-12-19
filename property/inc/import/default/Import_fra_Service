@@ -167,7 +167,9 @@
 					}
 					else
 					{
-						$buffer[$this->id]['project_id'] = $this->soXport->get_project(intval($value));	
+						$workorder = execMethod('property.soworkorder.read_single', (int)$value);
+						$buffer[$this->id]['project_id'] = $workorder['project_id'];
+						$buffer[$this->id]['dime']	= $workorder['cat_id'];
 					}
 				}
 				if($name=='spbudact_code')
