@@ -117,7 +117,7 @@
 
 			$revision_list	= $this->bo->get_revision_filter_list($this->revision); // reset year
 			$this->year		= $this->bo->year;
-			$this->revision = $this->bo->revision; 
+			$this->revision = $this->bo->revision;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::budget';
 
 			$datatable = array();
@@ -159,7 +159,7 @@
 				array_unshift ($values_combo_box[0],$default_value);
 
 				$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision);
-				$default_value = array ('id'=>'','name'=>lang('no revision')); 
+				$default_value = array ('id'=>'','name'=>lang('no revision'));
 				if (count($values_combo_box[1]))
 				{
 					array_unshift ($values_combo_box[1],$default_value);
@@ -198,7 +198,7 @@
 						'selected' => $_cat['selected'] ? 1 : 0
 					);
 				}
-				
+
 				array_unshift ($values_combo_box[4],array ('id'=>'', 'name'=>lang('no category')));
 
 				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
@@ -273,7 +273,7 @@
 									'tab_index' => 5
 								),
 								array
-								( 
+								(
 									'id' => 'sel_dimb_id',
 									'name' => 'dimb_id',
 									'value'	=> lang('dimb'),
@@ -381,7 +381,7 @@
 					'visible'=>true,	'name'=>'category',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'','formatter'=>''),
 				array(
 					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>'myFormatDate'),
-			);			
+			);
 
 			$content = array();
 			$j = 0;
@@ -501,7 +501,7 @@
 			}
 			//Depended select: REVISION
 			$opt_cb_depend  = $this->bo->get_revision_filter_list($this->revision);
-			$default_value = array ('id'=>'','name'=>lang('no revision')); 
+			$default_value = array ('id'=>'','name'=>lang('no revision'));
 			if (count($opt_cb_depend))
 			{
 				array_unshift ($opt_cb_depend,$default_value);
@@ -527,7 +527,7 @@
 			}
 			$json['hidden']['dependent'][] = array ('id' 	=> $this->grouping,
 				'value' => $this->bocommon->select2String($opt_cb_depend)
-			);										
+			);
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -586,7 +586,7 @@
 
 			$revision_list	= $this->bo->get_revision_filter_list($this->revision,$basis=true); // reset year
 			$this->year		= $this->bo->year;
-			$this->revision = $this->bo->revision; 
+			$this->revision = $this->bo->revision;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::basis';
 
 			$datatable = array();
@@ -628,7 +628,7 @@
 				array_unshift ($values_combo_box[0],$default_value);
 
 				$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision,$basis=true);
-				$default_value = array ('id'=>'','name'=>lang('no revision')); 
+				$default_value = array ('id'=>'','name'=>lang('no revision'));
 				if (count($values_combo_box[1]))
 				{
 					array_unshift ($values_combo_box[1],$default_value);
@@ -809,7 +809,7 @@
 					'visible'=>true,	'name'=>'category',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'','formatter'=>''),
 				array(
 					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate),
-			);			
+			);
 
 			$content = array();
 			$j = 0;
@@ -928,7 +928,7 @@
 			}
 			//Depended select: REVISION
 			$opt_cb_depend  = $this->bo->get_revision_filter_list($this->revision,$basis=true);
-			$default_value = array ('id'=>'','name'=>lang('no revision')); 
+			$default_value = array ('id'=>'','name'=>lang('no revision'));
 			if (count($opt_cb_depend))
 			{
 				array_unshift ($opt_cb_depend,$default_value);
@@ -954,7 +954,7 @@
 			}
 			$json['hidden']['dependent'][] = array ('id' 	=> $this->grouping,
 				'value' => $this->bocommon->select2String($opt_cb_depend)
-			);										
+			);
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -1067,7 +1067,7 @@
 						'selected' => $_cat['selected'] ? 1 : 0
 					);
 				}
-				
+
 				array_unshift ($values_combo_box[2],array ('id'=>'', 'name'=>lang('no category')));
 
 //_debug_array($values_combo_box[2]);
@@ -1144,7 +1144,7 @@
 									'type' 		=> 'button',
 									'style' 	=> 'filter',
 									'tab_index' => 3
-								),			                                        
+								),*/
 								array
 								( //boton 	GROUPING
 									'id' 		=> 'btn_grouping',
@@ -1154,15 +1154,6 @@
 									'style' 	=> 'filter',
 									'tab_index' => 4
 								),
-								array
-								( //boton 	GROUPING
-									'id' 		=> 'btn_dimb_id',
-									'name' 		=> 'dimb_id',
-									'value'		=> lang('dimb'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
-									'tab_index' => 5
-								),*/
 								array
 								( //boton 	USER
 									//	'id' => 'btn_user_id',
@@ -1175,6 +1166,7 @@
 									'onchange'=> 'onChangeSelect("cat_id");',
 									'tab_index' => 3
 								),
+/*
 								array
 								( //boton 	USER
 									//	'id' => 'btn_user_id',
@@ -1187,6 +1179,7 @@
 									'onchange'=> 'onChangeSelect("grouping");',
 									'tab_index' => 4
 								),
+*/
 								array
 								( //boton 	USER
 									//	'id' => 'btn_user_id',
@@ -1261,17 +1254,12 @@
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
 									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								)/*,
-								array
-								( //div values  combo_box_2
-									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2],'cat_id','name')
 								),
 								array
 								( //div values  combo_box_3
-									'id' => 'values_combo_box_3',
+									'id' => 'values_combo_box_2',
 									'value'	=> $this->bocommon->select2String($values_combo_box[3])
-								),
+								),/*
 								array
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
@@ -1291,8 +1279,8 @@
 					'col_name'=>'grouping',		'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
 					'col_name'=>'b_account',		'visible'=>true,	'label'=>lang('grouping'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'b_account',	'formatter'=>'myformatLinkPGW'),
-				array(
-					'col_name'=>'district_id',	'visible'=>true,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>'district_id',	'visible'=>true,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
 					'col_name'=>'ecodimb',		'visible'=>true,	'label'=>lang('dimb'),	'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
@@ -1319,7 +1307,7 @@
 					'col_name'=>'diff_ex',		'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
 					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
-				);	
+				);
 
 
 			//FIXME
@@ -1334,7 +1322,7 @@
 			}
 
 			//_debug_array($location_list);
-	
+
 			$entry = $content = array();
 			$j = 0;
 			//cramirez: add this code because  "mktime" functions fire an error
@@ -1349,16 +1337,15 @@
 				$details = $this->details ? false : true;
 
 				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,1,1,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$end_date	= $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']); 
+				$end_date	= $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
-				$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
+				$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
 				foreach($location_list as $entry)
 				{
-					//_debug_array($entry);
 					$content[] = array
 						(
 							'grouping'			=> $entry['grouping'],
-							'b_account'			=> $entry['b_account'],	
+							'b_account'			=> $entry['b_account'],
 							'district_id'		=> $entry['district_id'],
 							'ecodimb'			=> $entry['ecodimb'],
 							'hits_ex'			=> $entry['hits'],
@@ -1373,15 +1360,9 @@
 							'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$entry['b_account'],  'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'submit_search'=>true)),
 							'diff_ex'			=> $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
 							'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' ')
-						);	
-
-					//					$sum_obligation += $entry['obligation'];
-					//					$sum_hits += $entry['hits'];
-					//					$sum_budget_cost += $entry['budget_cost'];
-					//					$sum_actual_cost += $entry['actual_cost'];					
+						);
 				}
 
-				//				$sum_diff = $sum_budget_cost - $sum_actual_cost - $sum_obligation;
 			}
 
 			$j=0;
@@ -2017,7 +1998,7 @@
 						lang('grouping'),
 						lang('district_id'),
 						lang('dimb'),
-						lang('category'), 
+						lang('category'),
 						lang('budget')
 					);
 					break;
@@ -2032,7 +2013,7 @@
 						'grouping',
 						'district_id',
 						'ecodimb',
-						'category', 
+						'category',
 						'budget_cost'
 						);
 					$descr = array
@@ -2044,20 +2025,20 @@
 						lang('grouping'),
 						lang('district_id'),
 						lang('dimb'),
-						lang('category'), 
+						lang('category'),
 						lang('budget')
 					);
 					break;
 				case 'obligations':
 					$gross_list= $this->bo->read_obligations();
-					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
+					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
 					$list = array();
 					foreach($gross_list as $entry)
 					{
 						$list[] = array
 						(
 							'grouping'			=> $entry['grouping'],
-							'b_account'			=> $entry['b_account'],	
+							'b_account'			=> $entry['b_account'],
 							'district_id'		=> $entry['district_id'],
 							'ecodimb'			=> $entry['ecodimb'],
 							'hits'				=> $entry['hits'],
@@ -2065,7 +2046,7 @@
 							'obligation'		=> $entry['obligation'],
 							'actual_cost'		=> $entry['actual_cost'],
 							'diff'				=> ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
-						);	
+						);
 					}
 					$names = array
 					(
