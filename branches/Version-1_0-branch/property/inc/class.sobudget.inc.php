@@ -525,7 +525,7 @@
 			$sort			= isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order			= isset($data['order']) ? $data['order'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-			$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
+			$filter_district_id	= isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0;
 			$year			= isset($data['year']) ? (int)$data['year'] : '';
 			$grouping		= isset($data['grouping']) ? $data['grouping'] : '';
 			$revision		= isset($data['revision']) ? $data['revision'] : 1;
@@ -580,9 +580,9 @@
 				$where = 'AND';
 			}
 
-			if ($district_id > 0)
+			if ($filter_district_id > 0)
 			{
-				$filtermethod .= " {$where} district_id=" . (int)$district_id;
+				$filtermethod .= " {$where} district_id=" . (int)$filter_district_id;
 				$where = 'AND';
 			}
 
@@ -673,6 +673,7 @@ $projects = array();
 			{
 
 				$_id = $this->db->f('id');
+				$district_id = $filter_district_id ? (int)$this->db->f('district_id') : 0;
 
 
 $projects[$this->db->f('project_id')] = 0;
@@ -682,7 +683,7 @@ $projects2[$_id] = $this->db->f('project_id');
 				(
 					'actual_cost'			=> 0,
 					'mva'					=> (int)$this->db->f('mva'),
-					'district_id'			=> (int)$this->db->f('district_id'),
+					'district_id'			=> $district_id,
 					'ecodimb'				=> (int)$this->db->f('ecodimb'),
 					'b_account'				=> $this->db->f('b_account'),
 				);
@@ -764,9 +765,9 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 				$where = 'AND';
 			}
 
-			if ($district_id > 0)
+			if ($filter_district_id > 0)
 			{
-				$filtermethod .= " $where district_id=" . (int)$district_id;
+				$filtermethod .= " $where district_id=" . (int)$filter_district_id;
 				$where = 'AND';
 			}
 
@@ -805,10 +806,11 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 				$_hits = $this->db->f('hits');
 				$sum_hits += $_hits;
 
-				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget;
-				$hits[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
+				$district_id = $filter_district_id ? (int)$this->db->f('district_id') : 0;
+				$obligations[$this->db->f($b_account_field)][$district_id][(int)$this->db->f('ecodimb')] += $_budget;
+				$hits[$this->db->f($b_account_field)][$district_id][(int)$this->db->f('ecodimb')] += $_hits;
 				$accout_info[$this->db->f($b_account_field)] = true;
-				$district[$this->db->f('district_id')] = true;
+				$district[$district_id] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
 
@@ -829,9 +831,11 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 				$_actual_cost = round($this->db->f('actual_cost'));
 				$sum_actual_cost += round($this->db->f('actual_cost'));
 
-				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_actual_cost;
+				$district_id = $filter_district_id ? (int)$this->db->f('district_id') : 0;
+
+				$actual_cost[$this->db->f($b_account_field)][$district_id][(int)$this->db->f('ecodimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
-				$district[$this->db->f('district_id')] = true;
+				$district[$district_id] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
 			//_debug_array($actual_cost);die();
@@ -866,9 +870,9 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 				$where = 'AND';
 			}
 
-			if ($district_id > 0)
+			if ($filter_district_id > 0)
 			{
-				$filtermethod .= " $where district_id='$district_id' ";
+				$filtermethod .= " $where district_id='$filter_district_id' ";
 				$where = 'AND';
 			}
 
@@ -905,16 +909,15 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 			while ($this->db->next_record())
 			{
 				$_budget_cost = round($this->db->f('budget_cost'));
+				$district_id = $filter_district_id ? (int)$this->db->f('district_id') : 0;
 				$sum_budget_cost += $_budget_cost;
-				$budget_cost[$this->db->f('b_account_field')][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget_cost;
+				$budget_cost[$this->db->f('b_account_field')][$district_id][(int)$this->db->f('ecodimb')] += $_budget_cost;
 				$accout_info[$this->db->f('b_account_field')] = true;
-				$district[$this->db->f('district_id')] = true;
+				$district[$district_id] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
 
 			//_debug_array($budget_cost);die();
-
-
 
 // start service agreements
 
@@ -954,7 +957,7 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
-			$_dummy_district = 1;
+			$_dummy_district = $filter_district_id ? $filter_district_id : 0;
 			while ($this->db->next_record())
 			{
 				$_budget = round($this->db->f('budget'));
