@@ -224,7 +224,7 @@
 				return;
 			}
 
-			if($this->skip_email)
+			if($this->skip_email || $this->debug)
 			{
 				return;
 			}
@@ -320,6 +320,10 @@
 			{
 				foreach($file_list as $file)
 				{
+					if($this->debug)
+					{
+						_debug_array("Behandler fil: {$file}");
+					}
 					$this->db->transaction_begin();
 					$bilagsnr = $this->import($file);
 					if ($bilagsnr)
@@ -337,7 +341,6 @@
 						$ok = @rename($movefrom, $moveto);
 						if(!$ok) // Should never happen.
 						{
-						//	$this->invoice->delete($bilagsnr);
 							$this->db->transaction_abort();
 							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
 						}
@@ -646,7 +649,7 @@
 					}
 					else
 					{
-						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$__bilagsnr}, extern ref: {$_data['SCANNINGNO']}");
+						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$__bilagsnr}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}");
 					}
 					unset($_bilagsnr_ut);
 				}
@@ -663,7 +666,7 @@
 				}
 				else if(!$this->db->next_record())
 				{
-					$this->receipt['error'][] = array('msg' => "Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Faktura: {$_data['SCANNINGNO']}");
+					$this->receipt['error'][] = array('msg' => "Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}");
 					$this->skip_import = true;
 
 					$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
