@@ -566,7 +566,7 @@
 				else if (!$order_info['order_exist'])
 				{
 					$merknad = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
-					$this->receipt['error'][] = array('msg' => $merknad);
+					$this->receipt['error'][] = array('msg' => "{$merknad}, fil: {$file}");
 				}
 				else
 				{
@@ -735,6 +735,11 @@
 //_debug_array($buffer);
 //_debug_array($this->receipt);
 //_debug_array($order_info['toarray']);
+			if($this->debug && $this->skip_import)
+			{
+				_debug_array("Skip import - file: {$file}");
+			}
+			
 			if(!$this->skip_import)
 			{
 				if($update_voucher && $bilagsnr)
@@ -752,7 +757,7 @@
 					}
 				}
 
-				if($order_info['toarray'] && !$this->skip_email)
+				if($order_info['toarray'] && (!$this->skip_email || !$this->debug))
 				{
 
 					$from = "Ikke svar<IkkeSvar@nlsh.no>";
