@@ -660,7 +660,12 @@
 				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
 				$this->db->query($sql,__LINE__,__FILE__);
 
-				if(!$_data['SUPPLIER.CODE'])
+				if(!abs($belop) > 0)
+				{
+					$this->receipt['error'][] = array('msg' => "Importeres ikke: Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+					$this->skip_import = true;				
+				}
+				else if(!$_data['SUPPLIER.CODE'])
 				{
 					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
 					$this->skip_import = true;
