@@ -191,7 +191,6 @@
 			foreach($file_list as $file)
 			{
 				$file_parts = explode('_', basename($file, '.xml'));
-			//	$external_ref = $file_parts[2];
 				$external_voucher_id = $file_parts[2];
 
 				$duplicate = false;
@@ -320,12 +319,14 @@
 			{
 				foreach($file_list as $file)
 				{
+					$this->db->transaction_begin();
+					$bilagsnr = $this->import($file);
 					if($this->debug)
 					{
 						_debug_array("Behandler fil: {$file}");
+						_debug_array("Bilagsnr: {$bilagsnr}");
 					}
-					$this->db->transaction_begin();
-					$bilagsnr = $this->import($file);
+
 					if ($bilagsnr)
 					{
 						// move file
