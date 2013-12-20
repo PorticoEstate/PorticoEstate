@@ -724,7 +724,7 @@
 
 				if(isset($order_info['supervisor']) && $order_info['supervisor'])
 				{
-				$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
+					$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
 				}
 
 				if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
@@ -741,7 +741,12 @@
 				_debug_array("Skip import - file: {$file}");
 			}
 			
-			if(!$this->skip_import)
+			if($this->skip_import)
+			{
+				$this->skip_import = false;
+				return false;
+			}
+			else
 			{
 				if($update_voucher && $bilagsnr)
 				{
@@ -810,8 +815,6 @@
 				$GLOBALS['phpgw']->db->Exception_On_Error = false;
 				return $bilagsnr;
 			}
-			$this->skip_import = false;
-			return false;
 		}
 
 		function get_order_info($order_id = '')
@@ -865,6 +868,14 @@
 		function import_end_file($buffer)
 		{
 			$num = $this->soXport->add($buffer);
+			if($this->debug)
+			{
+				_debug_array("import_end_file() ");
+				echo 'buffer: ';
+				_debug_array($buffer);
+				_debug_array("num: {$num}");
+			}
+
 			if($num > 0)
 			{
 				$this->receipt['message'][]= array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, SCANNINGNO: {$buffer[0]['external_ref']}, KEY: {$buffer[0]['external_voucher_id']}");
