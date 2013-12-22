@@ -157,7 +157,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -184,7 +184,7 @@ HTML;
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		foreach ( $status_entries as $status)
 		{
-			$selected =  $status['selected'] ? 'selected =  "selected"' : '';
+			$selected =  $status['selected'] ? ' selected = "selected"' : '';
 
 			$out .=  <<<HTML
 			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
@@ -212,7 +212,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -238,7 +238,7 @@ HTML;
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		foreach ( $status_entries as $status)
 		{
-			$selected =  $status['selected'] ? 'selected =  "selected"' : '';
+			$selected =  $status['selected'] ? ' selected = "selected"' : '';
 
 			$out .=  <<<HTML
 			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
@@ -266,7 +266,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -295,7 +295,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -353,7 +353,7 @@ HTML;
 			$selected = '';
 			if ( ($level['id'] == $level_assigned))
 			{
-				$selected = ' selected';
+				$selected = ' selected = "selected"';
 			}
 			$out .=  <<<HTML
 			<option value="{$level['id']}" {$selected}><label>{$level['name']}</label></option>
@@ -399,7 +399,7 @@ HTML;
 				$selected = '';
 				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $key)
 				{
-					$selected = 'selected =  "selected"';
+					$selected = ' selected = "selected"';
 				}
 
 				$out .=  <<<HTML
@@ -452,7 +452,7 @@ HTML;
 				$selected = '';
 				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $category['id'])
 				{
-					$selected = 'selected =  "selected"';
+					$selected = ' selected = "selected"';
 				}
 
 				$out .=  <<<HTML
@@ -485,7 +485,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -514,7 +514,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -543,7 +543,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
