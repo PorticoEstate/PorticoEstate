@@ -1376,7 +1376,7 @@ rental agreement attributes	property	no	Leieavtale attributter
 rental agreement categories	property	no	Leieavtale kategorier
 rental agreement item attributes	property	no	Attributter for utleie - detaljer
 rental type	property	no	Utleietype
-re-opened	property	no	gjenåpnet
+re-opened	property	no	Gjenåpnet
 repeat	property	no	serie
 repeat type	property	no	type serie
 repeat day	property	no	gjenta dag

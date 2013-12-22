@@ -131,11 +131,6 @@
 
 		function add($status,$record_id,$new_value,$old_value ='',$attrib_id='', $date=0,$detail_id='')
 		{
-			$attrib_id_field = $this->attrib_id_field;
-			$attrib_id_value = (isset($attrib_id) && $attrib_id ? ",$attrib_id" : '');
-			$detail_id_field = $this->detail_id_field;
-			$detail_id_value = (isset($detail_id) && $detail_id ? ",$detail_id" : '');
-
 			if($date)
 			{
 				$timestamp = date($this->db->date_format(),$date);
@@ -145,13 +140,30 @@
 				$timestamp = date($this->db->datetime_format());
 			}
 
-			$this->db->query("INSERT INTO {$this->table} (history_record_id,"
-				. "history_appname,history_owner,history_status,history_new_value, history_old_value, history_timestamp $attrib_id_field $detail_id_field) "
-				. "values ('{$record_id}','{$this->appname}','"
-				. $this->account . "','$status','"
-				. $this->db->db_addslashes($new_value) . "','"
-				. $this->db->db_addslashes($old_value) . "','" . $timestamp
-				. "' $attrib_id_value $detail_id_value)",__LINE__,__FILE__);
+			$value_set = array
+			(
+				'history_record_id'		=> $record_id,
+				'history_appname'		=> $this->appname,
+				'history_owner'			=> $this->account,
+				'history_status'		=> $status,
+				'history_new_value'		=> $this->db->db_addslashes($new_value),
+				'history_old_value'		=> $this->db->db_addslashes($old_value),
+				'history_timestamp'		=> $timestamp
+			);
+
+			if($this->attrib_id_field && $attrib_id)
+			{
+				$value_set[$this->attrib_id_field]	= $attrib_id;
+			}
+			if($this->detail_id_field && $detail_id)
+			{
+				$value_set[$this->detail_id_field]	= $detail_id;
+			}
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO {$this->table} ({$cols}) VALUES ({$values})";
+			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
 		// array $filter_out
