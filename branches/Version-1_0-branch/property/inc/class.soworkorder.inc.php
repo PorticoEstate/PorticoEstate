@@ -1648,7 +1648,12 @@
 		{
 			$config		= CreateObject('phpgwapi.config','property');
 			$config->read();
-			$closed = isset($config->config_data['workorder_closed_status']) && $config->config_data['workorder_closed_status'] ? $config->config_data['workorder_closed_status'] : 'closed';
+			$closed = isset($config->config_data['workorder_closed_status']) && $config->config_data['workorder_closed_status'] ? $config->config_data['workorder_closed_status'] : '';
+
+			if(!$closed)
+			{
+				throw new Exception('property_soworkorder::close_orders() - "workorder_closed_status" not configured');
+			}
 
 			if ( $this->db->get_transaction() )
 			{
@@ -1662,6 +1667,7 @@
 
 			if ($orders && is_array($orders))
 			{
+				$lang_closed = lang('closed');
 				$historylog_workorder	= CreateObject('property.historylog','workorder');
 
 				foreach ($orders as $id)
@@ -1671,14 +1677,10 @@
 					switch ( $this->db->f('type') )
 					{
 						case 'workorder':
-							$historylog_workorder->add($entry,$id,$closed);
+							$historylog_workorder->add('X',$id,$closed);
 							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET status='{$closed}' WHERE id = '{$id}'");
 							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET paid_percent=100 WHERE id= '{$id}'");
-							$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $closed));
-							$this->db->query("SELECT project_id FROM fm_workorder WHERE id='{$id}'",__LINE__,__FILE__);
-							$this->db->next_record();
-							$project_id = $this->db->f('project_id');
-				//			$this->update_planned_cost($project_id);
+							$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $lang_closed));
 							break;
 					}
 				}
@@ -1705,22 +1707,27 @@
 
 			$config		= CreateObject('phpgwapi.config','property');
 			$config->read();
-			$reopen = isset($config->config_data['workorder_reopen_status']) && $config->config_data['workorder_reopen_status'] ? $config->config_data['workorder_reopen_status'] : 're_opened';
-			$status_code=array('X' => $closed,'R' => $reopen);
+			$reopen = isset($config->config_data['workorder_reopen_status']) && $config->config_data['workorder_reopen_status'] ? $config->config_data['workorder_reopen_status'] : '';
+
+			if(!$reopen)
+			{
+					throw new Exception('property_soworkorder::close_orders() - "workorder_reopen_status" not configured');
+			}
+
+			$lang_reopen = lang('Re-opened');
 
 			$historylog_workorder	= CreateObject('property.historylog','workorder');
 
 			foreach ($orders as $id)
 			{
-				$id = (int) $id;
-				$this->db->query("SELECT type FROM fm_orders WHERE id={$id}",__LINE__,__FILE__);
+				$this->db->query("SELECT type FROM fm_orders WHERE id='{$id}'",__LINE__,__FILE__);
 				$this->db->next_record();
 				switch ( $this->db->f('type') )
 				{
 					case 'workorder':
 						$historylog_workorder->add('R', $id, $reopen);
-						$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status='{$reopen}' WHERE id = {$id}");
-						$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+						$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status='{$reopen}' WHERE id = '{$id}'");
+						$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $lang_reopen));
 				}
 			}
 
@@ -1826,7 +1833,6 @@
 						if(isset($order_budget[$_period]))
 						{
 							$order_budget[$_period]['actual_cost'] += $this->db->f('actual_cost');
-//_debug_array($test+=$this->db->f('actual_cost'));
 							$_found = true;
 							break;
 						}
@@ -1844,8 +1850,6 @@
 
 			$sort_period = array();
 			$values = array();
-//_debug_array($order_budget);die();
-//$test = 0;
 			$_current_period = date('Ym');
 			$_delay_period_sum = 0;
 			$_delay_period = false;
@@ -1857,42 +1861,32 @@
 				$_actual_cost = 0;
 
 				$_actual_cost += $_budget['actual_cost'];
-//_debug_array( $test+= $_budget['actual_cost']);
 				$_sum_orders += $_budget['combined_cost'];
 
-				if(!$_budget['closed_order'])// && $active_period[$period])
+				if(!$_budget['closed_order'])
 				{
 					if($active_period[$period])
 					{
-					$_sum_oblications += $_budget['combined_cost'];
-					$_sum_oblications -= $_budget['actual_cost'];
+						$_sum_oblications += $_budget['combined_cost'];
+						$_sum_oblications -= $_budget['actual_cost'];
 
-			//		if($project_total_budget >= 0)
-					if($_budget['budget'] >= 0)
-					{
-						if($_sum_oblications < 0)
+						if($_budget['budget'] >= 0)
 						{
-							$_sum_oblications = 0;
+							if($_sum_oblications < 0)
+							{
+								$_sum_oblications = 0;
+							}
 						}
-					}
-					else // income
-					{
-						if($_sum_oblications > 0)
+						else // income
 						{
-							$_sum_oblications = 0;
+							if($_sum_oblications > 0)
+							{
+								$_sum_oblications = 0;
+							}
 						}
-					}
 					}
 				}
 
-/*
-				if(($period < $_current_period) && $active_period[$period] && !$closed_period[$period])
-				{
-					$_delay_period = true;
-					$_delay_period_sum += $_sum_oblications;
-					$_sum_oblications = 0;
-				}
-*/
 				//override if periode is closed
 				if(!isset($active_period[$period]) || !$active_period[$period])
 				{
@@ -1911,7 +1905,7 @@
 					$_delay_period_sum =0;
 				}
 				$_delay_period = false;
-//die();
+
 				$values[] = array
 				(
 					'year'					=> $_budget['year'],
@@ -1938,16 +1932,13 @@
 			$budget_acc = 0;
 			foreach ($values as &$entry)
 			{
-			//	if($active_period[$entry['period']])
 				if($closed_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
 
 					$_deviation = $entry['budget'] - $entry['actual_cost'];
-	//				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 					$deviation = $_deviation;
-
 				}
 				else
 				{
@@ -1958,7 +1949,6 @@
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
 
-	//			if($active_period[$entry['period']])
 				if($closed_period[$entry['period']])
 				{
 					$deviation_acc += $deviation;

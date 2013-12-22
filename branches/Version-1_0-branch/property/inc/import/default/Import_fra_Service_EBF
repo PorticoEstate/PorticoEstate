@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id: import_fra_Service_xls 18358 2007-11-27 04:43:37Z skwashd $
+ 	* @version $Id: Import_fra_Service,v 1.19 2007/03/18 16:33:16 sigurdne Exp $
 	*/
 
 	/**
@@ -48,13 +48,13 @@
 			'Fakt. Nr' => 'fakturanr',
 			'Konto' => 'spbudact_code',
 			'Objekt' => 'dima',
-			'Fag/Timer/Matr' => 'dimd',
+			'DIM 6' => 'dimd',//utgår fra import - kopieres fra kategori
 			'MVA' => 'mvakode',
 			'Tjeneste'=> 'kostra_id',
 			'Belop [kr]' => 'belop'
 			);
 
-		var $header = array('Bestilling','Fakt. Nr','Konto','Objekt','Fag/Timer/Matr','MVA','Belop [kr]');
+		var $header = array('Bestilling','Fakt. Nr','Konto','Objekt','DIM 6','MVA','Belop [kr]');
 
 		function import_conv()
 		{
@@ -70,111 +70,97 @@
 		function import($invoice_common,$download)
 		{
 			$tsvfile	= $invoice_common['tsvfile'];
-			$conv_type	= $invoice_common['conv_type'];
-			$valid_data= False;
-			$buffer = array();
-			$data = CreateObject('phpgwapi.excelreader');
-			
-			$data->setOutputEncoding('CP1251');
-			$data->read($tsvfile);
 
-			$this->id = 0;
-			$num = count($this->header)+1;
-			$rows = $data->sheets[0]['numRows']+1;
-			for ($i=18; $i<$rows; $i++ ) //First data entry on row 18
+			$conv_type	= $invoice_common['conv_type'];
+			$buffer = array();
+
+//-----------
+
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$objPHPExcel = PHPExcel_IOFactory::load($tsvfile);
+
+			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+
+			$result = array();
+
+			$rows = count($data)+1;
+
+			for ($row = $this->header_count; $row < $rows; $row++ )
 			{
 				$this->currentrecord = array();
-				
-				$valid_data=0;
-				for ($c=1; $c<$num; $c++ )
+
+				$j=0;
+				foreach($data[$row] as $key => $_dummy)
 				{
-					//Send name/value pairs along with the buffer
-					if ($data->sheets[0]['cells'][$i][$c] != '')
+					$value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,$row)->getCalculatedValue();
+
+					if ($name = $this->import[$this->header[$j]])
 					{
-						$this->import_new_attrib($this->import[$this->header[$c-1]],$data->sheets[0]['cells'][$i][$c],$invoice_common);
-						if($data->sheets[0]['cells'][$i][$c])
-						{
-							$valid_data++;
-						}
+						
+						$value = str_replace(array('\n','\r'),array('<BR>',''),$value);
+						$this->currentrecord += array($name => $value);
 					}
+					$j++;
 				}
-				if ($valid_data > 0)
+
+				if($this->currentrecord['fakturanr'] && $this->currentrecord['belop']) // fakturanr og beløp
 				{
+					++$this->id;
 					$buffer = $this->import_end_record($buffer,$invoice_common);
-					$valid_data= False;
-					$this->id++;
 				}
 			}
+
+//----------
 
 			if(!$download)
 			{
 				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
 			}
 
-			$this->header = array('Bestilling','Fakt. Nr','Konto','Objekt','Fag/Timer/Matr','MVA','Tjeneste','Belop [kr]');
 			return $buffer;
 		}
-
-		function import_new_attrib($name,$value,$invoice_common)
-		{
-			$value = $this->bocommon->ascii2utf(trim($value));
-			$value = str_replace('\n','<BR>',$value);
-			$value = str_replace('\r','',$value);
-
-			$this->currentrecord += array($name => $value);
-		}
+		
 
 		function import_end_record($buffer,$invoice_common)
 		{
-			$buffer[$this->id]=array();
-			while ( list($name, $value) = each($this->currentrecord))
+			$buffer[$this->id] = array();
+
+			foreach ($this->currentrecord as $name => $value)
 			{
-				$invoice_date = date($this->dateformat,mktime(2,0,0,$invoice_common['smonth'],$invoice_common['sday'],$invoice_common['syear']));
-
-				if($invoice_common['num_days'])
-				{
-					$payment_date = date($this->dateformat,mktime(2,0,0,$invoice_common['smonth'],$invoice_common['sday'],$invoice_common['syear'])+(86400*$invoice_common['num_days']));
-				}
-				else
-				{
-					$payment_date = date($this->dateformat,mktime(2,0,0,$invoice_common['emonth'],$invoice_common['eday'],$invoice_common['eyear']));			
-				}
-
 				if($name=='belop')
 				{
 					$value = str_replace('kr','',$value);
 					$value = str_replace(' ','',$value);
 					$value = str_replace(',','.',$value);
-
+					
 					if( $invoice_common['art'] == 2 ) // kreditnota
 					{
 						$value = -1 * abs($value);
 					}
-
-					$godkjentbelop=$value;
+					
+					$buffer[$this->id]['godkjentbelop'] = $value;
 				}
 				if($name=='pmwrkord_code')
 				{
-					if(!$this->soXport->check_order(intval($value)))
+					if(!$this->soXport->check_order((int)$value))
 					{
 						$value='';
 					}
 					else
 					{
-						$buffer[$this->id]['project_id'] = $this->soXport->get_project(intval($value));	
+						$workorder = execMethod('property.soworkorder.read_single', (int)$value);
+						$buffer[$this->id]['project_id'] = $this->soXport->get_project((int)$value);//Agresso prosjekt
+						$buffer[$this->id]['dime']	= $workorder['cat_id']; // Dim 6
+						$buffer[$this->id]['dimb']	= $workorder['ecodimb']; // Ansvarssted
 					}
-				}
-				if($name=='spbudact_code')
-				{
-					$value = $this->check_spbudact_code($value);
 				}
 
-				if($name=='fakturanr')
+				if($name=='spbudact_code')
 				{
-					if($invoice_common['invoice_num'])
-					{
-						$value=$invoice_common['invoice_num'];
-					}
+					continue;
+				//	$value = $this->check_spbudact_code($value);
+
 				}
 
 				if($name=='dima')
@@ -194,32 +180,68 @@
 						$value = (int) $value;
 					}
 				}
-
+				
 				$buffer[$this->id][$name] = $value;
-				$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr;
-				$buffer[$this->id]['splitt'] = $this->splitt;
-				$buffer[$this->id]['kildeid'] = $this->kildeid;
-				$buffer[$this->id]['kidnr'] = $invoice_common['kid_nr'];
-				$buffer[$this->id]['typeid'] = $invoice_common['type'];
-				$buffer[$this->id]['fakturadato'] = $invoice_date;
-				$buffer[$this->id]['forfallsdato'] = $payment_date;
-				$buffer[$this->id]['periode'] = $invoice_common['syear'] . sprintf("%02d",$invoice_common['smonth']);
-				$buffer[$this->id]['regtid'] = date($this->datetimeformat);
-				$buffer[$this->id]['artid'] = $invoice_common['art'];
-				$buffer[$this->id]['godkjentbelop'] = $godkjentbelop;
-				$buffer[$this->id]['spvend_code'] = $invoice_common['vendor_id'];
-				$buffer[$this->id]['dimb'] = $invoice_common['dim_b'];
-				$buffer[$this->id]['oppsynsmannid'] = $invoice_common['janitor'];
-				$buffer[$this->id]['saksbehandlerid'] = $invoice_common['supervisor'];
-				$buffer[$this->id]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
-
-				if($invoice_common['auto_tax'])
-				{
-					$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spbudact_code']);
-					$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spvend_code']);
-				}
-				$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
 			}
+
+			$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr;
+			$buffer[$this->id]['splitt'] = $this->splitt;
+			$buffer[$this->id]['kildeid'] = $this->kildeid;
+			$buffer[$this->id]['kidnr'] = $invoice_common['kid_nr'];
+			$buffer[$this->id]['typeid'] = $invoice_common['type'];
+			$buffer[$this->id]['periode'] = $invoice_common['syear'] . sprintf("%02d",$invoice_common['smonth']);
+			$buffer[$this->id]['regtid'] = date($this->datetimeformat);
+			$buffer[$this->id]['artid'] = $invoice_common['art'];
+			$buffer[$this->id]['spvend_code'] = $invoice_common['vendor_id'];
+			$buffer[$this->id]['oppsynsmannid'] = $invoice_common['janitor'];
+			$buffer[$this->id]['saksbehandlerid'] = $invoice_common['supervisor'];
+			$buffer[$this->id]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
+			
+			$buffer[$this->id]['dimd'] = $buffer[$this->id]['dime'];
+
+			$invoice_date = date($this->dateformat,mktime(2,0,0,$invoice_common['smonth'],$invoice_common['sday'],$invoice_common['syear']));
+
+			if($invoice_common['num_days'])
+			{
+				$payment_date = date($this->dateformat,mktime(2,0,0,$invoice_common['smonth'],$invoice_common['sday'],$invoice_common['syear'])+(86400*$invoice_common['num_days']));
+			}
+			else
+			{
+				$payment_date = date($this->dateformat,mktime(2,0,0,$invoice_common['emonth'],$invoice_common['eday'],$invoice_common['eyear']));			
+			}
+
+			$buffer[$this->id]['fakturadato'] = $invoice_date;
+			$buffer[$this->id]['forfallsdato'] = $payment_date;
+
+
+			if($workorder)
+			{
+				$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
+			}
+			else
+			{
+				$buffer[$this->id]['spbudact_code'] = '123014';			
+			}
+
+			if($invoice_common['auto_tax'])
+			{
+				$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spbudact_code']);
+				$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spvend_code']);
+			}
+
+			$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
+
+			if(!isset($buffer[$this->id]['fakturanr']) || !$buffer[$this->id]['fakturanr']) // fakturanr
+			{
+				$buffer[$this->id]['dimb'] = $invoice_common['invoice_num'];
+			}
+
+			if(!isset($buffer[$this->id]['dimb']) || !$buffer[$this->id]['dimb']) // Ansvarssted
+			{
+				$buffer[$this->id]['dimb'] = $invoice_common['dim_b'];
+			}
+			
+
 			return $buffer;
 		}
 		
@@ -267,6 +289,7 @@
 					}
 				}
 			}
+			
 			return $dima;
 		}
 
@@ -277,4 +300,3 @@
 			return $receipt;
 		}
 	}
-?>

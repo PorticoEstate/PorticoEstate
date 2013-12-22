@@ -191,7 +191,6 @@
 			foreach($file_list as $file)
 			{
 				$file_parts = explode('_', basename($file, '.xml'));
-			//	$external_ref = $file_parts[2];
 				$external_voucher_id = $file_parts[2];
 
 				$duplicate = false;
@@ -224,7 +223,7 @@
 				return;
 			}
 
-			if($this->skip_email)
+			if($this->skip_email || $this->debug)
 			{
 				return;
 			}
@@ -322,6 +321,12 @@
 				{
 					$this->db->transaction_begin();
 					$bilagsnr = $this->import($file);
+					if($this->debug)
+					{
+						_debug_array("Behandler fil: {$file}");
+						_debug_array("Bilagsnr: {$bilagsnr}");
+					}
+
 					if ($bilagsnr)
 					{
 						// move file
@@ -337,7 +342,6 @@
 						$ok = @rename($movefrom, $moveto);
 						if(!$ok) // Should never happen.
 						{
-						//	$this->invoice->delete($bilagsnr);
 							$this->db->transaction_abort();
 							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
 						}
@@ -563,7 +567,7 @@
 				else if (!$order_info['order_exist'])
 				{
 					$merknad = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
-					$this->receipt['error'][] = array('msg' => $merknad);
+					$this->receipt['error'][] = array('msg' => "{$merknad}, fil: {$file}");
 				}
 				else
 				{
@@ -646,7 +650,7 @@
 					}
 					else
 					{
-						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$__bilagsnr}, extern ref: {$_data['SCANNINGNO']}");
+						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$__bilagsnr}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}");
 					}
 					unset($_bilagsnr_ut);
 				}
@@ -656,14 +660,19 @@
 				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
 				$this->db->query($sql,__LINE__,__FILE__);
 
-				if(!$_data['SUPPLIER.CODE'])
+				if(!abs($belop) > 0)
+				{
+					$this->receipt['error'][] = array('msg' => "Importeres ikke: Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+					$this->skip_import = true;				
+				}
+				else if(!$_data['SUPPLIER.CODE'])
 				{
 					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
 					$this->skip_import = true;
 				}
 				else if(!$this->db->next_record())
 				{
-					$this->receipt['error'][] = array('msg' => "Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Faktura: {$_data['SCANNINGNO']}");
+					$this->receipt['error'][] = array('msg' => "Importeres ikke: Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
 					$this->skip_import = true;
 
 					$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
@@ -720,7 +729,7 @@
 
 				if(isset($order_info['supervisor']) && $order_info['supervisor'])
 				{
-				$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
+					$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
 				}
 
 				if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
@@ -732,7 +741,17 @@
 //_debug_array($buffer);
 //_debug_array($this->receipt);
 //_debug_array($order_info['toarray']);
-			if(!$this->skip_import)
+			if($this->debug && $this->skip_import)
+			{
+				_debug_array("Skip import - file: {$file}");
+			}
+			
+			if($this->skip_import)
+			{
+				$this->skip_import = false;
+				return false;
+			}
+			else
 			{
 				if($update_voucher && $bilagsnr)
 				{
@@ -749,7 +768,7 @@
 					}
 				}
 
-				if($order_info['toarray'] && !$this->skip_email)
+				if($order_info['toarray'] && (!$this->skip_email || !$this->debug))
 				{
 
 					$from = "Ikke svar<IkkeSvar@nlsh.no>";
@@ -801,8 +820,6 @@
 				$GLOBALS['phpgw']->db->Exception_On_Error = false;
 				return $bilagsnr;
 			}
-			$this->skip_import = false;
-			return false;
 		}
 
 		function get_order_info($order_id = '')
@@ -856,6 +873,14 @@
 		function import_end_file($buffer)
 		{
 			$num = $this->soXport->add($buffer);
+			if($this->debug)
+			{
+				_debug_array("import_end_file() ");
+				echo 'buffer: ';
+				_debug_array($buffer);
+				_debug_array("num: {$num}");
+			}
+
 			if($num > 0)
 			{
 				$this->receipt['message'][]= array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, SCANNINGNO: {$buffer[0]['external_ref']}, KEY: {$buffer[0]['external_voucher_id']}");

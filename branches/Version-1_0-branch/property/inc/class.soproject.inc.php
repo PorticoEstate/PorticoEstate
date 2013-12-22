@@ -2054,7 +2054,6 @@
 
 		}
 
-
 		function get_budget($project_id)
 		{
 			$project_id = (int) $project_id;
@@ -2068,7 +2067,7 @@
 			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active"
 			. " ORDER BY fm_project_budget.year, fm_project_budget.month";
 			$this->db->query($sql,__LINE__,__FILE__);
-//	_debug_array($sql);
+
 			while ($this->db->next_record())
 			{
 				$period = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
@@ -2084,7 +2083,6 @@
 				. " FROM fm_workorder"
 			 	. " WHERE project_id = {$project_id}";
 
-//	_debug_array($sql);die();
 			$this->db->query($sql,__LINE__,__FILE__);
 			$_order_list = array();
 			while ($this->db->next_record())
@@ -2103,13 +2101,6 @@
 			foreach ($order_budgets  as $_order_id => $order_budget )
 			{
 
-/*
-if(!$order_budget[0]['closed_order'])
-{
-//	_debug_array($order_budget);
-}
-*/
-
 				foreach ($order_budget as $budget_entry)
 				{
 					$period = $budget_entry['period'];
@@ -2125,8 +2116,6 @@ if(!$order_budget[0]['closed_order'])
 					$_found = false;
 					if(isset($project_budget[$period]) && !$budget_entry['closed_order'])
 					{
-//_debug_array($_order_id);
-//_debug_array($budget_entry);
 						$_orders[$period]['sum_oblications'] += $budget_entry['sum_oblications'];
 						$_orders[$period]['sum_orders'] += $budget_entry['sum_orders'];
 						$_found = true;
@@ -2164,8 +2153,6 @@ if(!$order_budget[0]['closed_order'])
 				}
 			}
 			$sort_period = array();
-//_debug_array($_orders);
-//die();
 
 			$_values = array();
 			foreach ($project_budget as $period => $_budget)
@@ -2205,10 +2192,9 @@ if(!$order_budget[0]['closed_order'])
 			}
 
 			ksort($_values);
-//_debug_array($_values);die();
 
 			$values = array();
-//_debug_array($active_period);die();
+
 			$total_sum = 0;
 			foreach ($_values as $period => $_budget)
 			{
@@ -2219,8 +2205,6 @@ if(!$order_budget[0]['closed_order'])
 				}
 			}
 
-//_debug_array($values);die();
-//_debug_array($total_sum);
 			$corretion = $total_sum >= 0 ? 1 : -1; 
 			$deviation_acc = 0;
 			$budget_acc = 0;
@@ -2230,14 +2214,12 @@ if(!$order_budget[0]['closed_order'])
 				$month = substr( $entry['period'], 4, 2 );
 				$entry['month'] = $month == '00' ? '' : $month;
 
-	//			if($active_period[$entry['period']])
 				if($closed_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
 
 					$_deviation = $entry['budget'] - $entry['actual_cost'];
-	//				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 					$deviation = $_deviation;
 				}
 				else
@@ -2261,8 +2243,6 @@ if(!$order_budget[0]['closed_order'])
 				$entry['closed'] = $closed_period[$entry['period']];
 				$entry['active'] = $active_period[$entry['period']];
 			}
-
-//_debug_array($values);die();
 
 			return $values;
 		}
