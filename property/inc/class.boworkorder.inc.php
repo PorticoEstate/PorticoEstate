@@ -713,7 +713,7 @@
 						$record_history[$i]['value_old_value']	= $category[0]['name'];
 					}
 				}
-				else if ($value['status'] == 'S' || $value['status'] == 'SO')
+				else if ($value['status'] == 'S' || $value['status'] == 'SO'  || $value['status'] == 'R' || $value['status'] == 'X')
 				{
 					$record_history[$i]['value_new_value']	= $status_text[$value['new_value']];
 					$record_history[$i]['value_old_value']	= $status_text[$value['old_value']];

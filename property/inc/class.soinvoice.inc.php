@@ -784,6 +784,7 @@
 
 		function update_invoice_sub($values)
 		{
+			$update_status = array();
 			$receipt = array();
 			$GLOBALS['phpgw']->db->transaction_begin();
 
@@ -897,10 +898,19 @@
 
 			}
 
-			if (isset($update_status) AND is_array($update_status))
+			if ($update_status)
 			{
-				$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
-				$reopen = isset($this->config->config_data['workorder_reopen_status']) && $this->config->config_data['workorder_reopen_status'] ? $this->config->config_data['workorder_reopen_status'] : 're_opened';
+				$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : '';
+				$reopen = isset($this->config->config_data['workorder_reopen_status']) && $this->config->config_data['workorder_reopen_status'] ? $this->config->config_data['workorder_reopen_status'] : '';
+
+				if(!$closed)
+				{
+					throw new Exception('property_soinvoice::update_invoice_sub() - "workorder_closed_status" not configured');
+				}
+				if(!$reopen)
+				{
+					throw new Exception('property_soinvoice::update_invoice_sub() - "workorder_reopen_status" not configured');
+				}
 
 				$status_code=array('X' => $closed,'R' => $reopen);
 
@@ -2341,7 +2351,7 @@
 */
 			if( isset($data['order_id']) && $data['order_id'])
 			{
-				if(isset($data['close_order']) && $data['close_order'])
+				if(isset($data['close_order']) && $data['close_order'] && !$data['close_order_orig'])
 				{
 					execMethod('property.soworkorder.close_orders',array($data['order_id']));
 				}
