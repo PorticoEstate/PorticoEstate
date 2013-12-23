@@ -198,6 +198,12 @@
 		function get_column_list()
 		{
 			$columns = array();
+			$columns['continuous'] = array
+				(
+					'id'		=> 'continuous',
+					'name'		=> lang('continuous'),
+					'sortable'	=> true
+				);
 			$columns['ecodimb'] = array
 				(
 					'id'		=> 'ecodimb',
@@ -546,7 +552,6 @@
 			$config->read();
 			$tax = 1+($config->config_data['fm_tax'])/100;
 			$workorder['calculation']	= $workorder['calculation'] * $tax;
-	//		$workorder['actual_cost']	= $workorder['act_mtrl_cost'] + $workorder['act_vendor_cost'];
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
