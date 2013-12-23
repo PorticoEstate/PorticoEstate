@@ -530,11 +530,17 @@
 
 				$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
-				$fakturanr		= $_data['SUPPLIERREF'];//$_data['KEY'];
+				$fakturanr		= $_data['SUPPLIERREF'];
 				$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 				$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
-				$periode 		= '';//date('Ym',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+				$periode 		= '';
 				$belop 			= $_data['AMOUNT']/100;
+
+				if(!abs($belop) > 0)
+				{
+					$this->receipt['message'][] = array('msg' => "Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+					$belop = (float) 0.0001; // imported as 0.00
+				}
 
 				if( $belop < 0 )
 				{
@@ -697,12 +703,9 @@
 						}
 					}
 				}
-				else
+				else if ($order_info['vendor_id'] != $vendor_id)
 				{
-					if ($order_info['vendor_id'] != $vendor_id)
-					{
-						$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
-					}
+					$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
 				}
 
 				if($this->auto_tax)
