@@ -530,11 +530,17 @@
 
 				$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
-				$fakturanr		= $_data['SUPPLIERREF'];//$_data['KEY'];
+				$fakturanr		= $_data['SUPPLIERREF'];
 				$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 				$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
-				$periode 		= '';//date('Ym',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+				$periode 		= '';
 				$belop 			= $_data['AMOUNT']/100;
+
+				if(!abs($belop) > 0)
+				{
+					$this->receipt['message'][] = array('msg' => "Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+					$belop = (float) 0.0001; // imported as 0.00
+				}
 
 				if( $belop < 0 )
 				{
@@ -660,12 +666,7 @@
 				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
 				$this->db->query($sql,__LINE__,__FILE__);
 
-				if(!abs($belop) > 0)
-				{
-					$this->receipt['error'][] = array('msg' => "Importeres ikke: Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
-					$this->skip_import = true;				
-				}
-				else if(!$_data['SUPPLIER.CODE'])
+				if(!$_data['SUPPLIER.CODE'])
 				{
 					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
 					$this->skip_import = true;
@@ -697,12 +698,9 @@
 						}
 					}
 				}
-				else
+				else if ($order_info['vendor_id'] != $vendor_id)
 				{
-					if ($order_info['vendor_id'] != $vendor_id)
-					{
-						$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
-					}
+					$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
 				}
 
 				if($this->auto_tax)
