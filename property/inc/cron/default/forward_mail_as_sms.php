@@ -17,116 +17,24 @@
 	 * @package property
 	 */
 
-	class forward_mail_as_sms
+	include_class('property', 'cron_parent', 'inc/cron/');
+
+	class forward_mail_as_sms extends property_cron_parent
 	{
-		var	$function_name = 'forward_mail_as_sms';
-
-		function forward_mail_as_sms()
+		function __construct()
 		{
+			parent::__construct();
+
+			$this->function_name = 'forward_mail_as_sms';
+			$this->sub_location = lang('Async service');
+			$this->function_msg	= 'Forward email as SMS';
+
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db     			= & $GLOBALS['phpgw']->db;
 		}
 
-		function pre_run($data = array())
+		function execute()
 		{
-			if(isset($data['enabled']) && $data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-				$data['account_id'] = $GLOBALS['phpgw']->accounts->name2id($data['user']);
-				$GLOBALS['phpgw_info']['user']['account_id'] = $data['account_id'];
-				$GLOBALS['phpgw']->session->account_id = $data['account_id'];
-				$GLOBALS['phpgw']->session->appsession('session_data','mail2sms',$data);
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-				$cron = false;
-			}
-
-			if (isset($confirm) && $confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-				$data['account_id'] = $GLOBALS['phpgw']->accounts->name2id($data['user']);
-				$GLOBALS['phpgw']->session->appsession('session_data','mail2sms',$data);
-			}
-		}
-
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=> $this->function_name,
-				'execute'	=> $execute,
-			);
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('Do you want to execute this action?');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-			$msgbox_data = isset($this->receipt)?$this->bocommon->msgbox_data($this->receipt):'';
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Check for new mail - and forward as sms'),
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> lang('cancel'),
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('Async service');
-			$function_msg	= 'Forward email as SMS';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function execute($cron='')
-		{
-			$receipt = $this->check_for_new_mail();
-			if($receipt)
-			{
-				$this->cron_log($receipt,$cron);
-			}
-
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-		function cron_log($receipt='',$cron='')
-		{
-			$insert_values= array(
-				$cron,
-				date($this->db->datetime_format()),
-				$this->function_name,
-				$receipt
-				);
-
-			$insert_values	= $this->db->validate_insert($insert_values);
-
-			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->check_for_new_mail();
 		}
 
 		function check_for_new_mail()
@@ -186,9 +94,10 @@
 				$bosms->send_sms(array('p_num_text'=>$data['cellphone'], 'message' =>$entry['message']));
 			}
 
-			$msg = $j . ' meldinger er sendt';
-			$this->receipt['message'][]=array('msg'=> $msg);
-
-			return $j ? $msg : false;
+			if($j)
+			{
+				$msg = $j . ' meldinger er sendt';
+				$this->receipt['message'][]=array('msg'=> $msg);
+			}
 		}
 	}

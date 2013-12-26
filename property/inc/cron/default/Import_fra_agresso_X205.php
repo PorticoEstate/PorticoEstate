@@ -33,34 +33,35 @@
 	 * @package property
 	 */
 
+	include_class('property', 'cron_parent', 'inc/cron/');
 
-	class  Import_fra_agresso_X205
+	class  Import_fra_agresso_X205 extends property_cron_parent
 	{
-		var	$function_name = 'Import_fra_agresso_X205';
-		var $auto_tax = true;
-		var $mvakode=0;
-		var $kildeid=1;
-		var $splitt=0;
-		var $soXport;
-		var $invoice;
-		var $default_kostra_id = 9999; //dummy
-		var $debug = false;
-		var $skip_import = false;
-		var $skip_email = false;
+		protected $auto_tax = true;
+		protected $mvakode=0;
+		protected $kildeid=1;
+		protected $splitt=0;
+		protected $soXport;
+		protected $invoice;
+		protected $default_kostra_id = 9999; //dummy
+		protected $debug = false;
+		protected $skip_import = false;
+		protected $skip_email = false;
 		protected $export;
-		protected $receipt = array();
-
 
 		function __construct()
 		{
+			parent::__construct();
+
+			$this->function_name = 'Import_fra_agresso_X205';
+			$this->sub_location = lang('invoice');
+			$this->function_msg	= 'Importer faktura fra Agresso';
+
 			$this->soXport			= CreateObject('property.soXport');
 			$this->invoice			= CreateObject('property.soinvoice');
 			$this->responsible		= CreateObject('property.soresponsible');
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db				= & $GLOBALS['phpgw']->db;
-			$this->join				= & $this->db->join;
-			$this->left_join		= & $this->db->left_join;
-			$this->like				= & $this->db->like;
+
 			$this->dateformat		= $this->db->date_format();
 			$this->datetimeformat	= $this->db->datetime_format();
 			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
@@ -82,80 +83,87 @@
 
 		}
 
-		function pre_run($data = array())
+		public function execute()
 		{
-			if(isset($data['enabled']) && $data['enabled']==1)
+			if(isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
 			{
-				$confirm	= true;
-				$cron		= true;
+				$this->check_archive();
+			}
+
+			$this->get_files();
+			$dirname = $this->config->config_data['import']['local_path'];
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xml' ) != 0 )
+ 					{
+						continue;
+					}
+
+					$file_list[] = (string) "{$dirname}/{$file}";
+				}
+			}
+
+			if(is_writable("{$dirname}/archive"))
+			{
+				foreach($file_list as $file)
+				{
+					$this->db->transaction_begin();
+					$bilagsnr = $this->import($file);
+					if($this->debug)
+					{
+						_debug_array("Behandler fil: {$file}");
+						_debug_array("Bilagsnr: {$bilagsnr}");
+					}
+
+					if ($bilagsnr)
+					{
+						// move file
+						$_file = basename($file);
+						$movefrom = "{$dirname}/{$_file}";
+						$moveto = "{$dirname}/archive/{$_file}";
+
+						if( is_file($moveto) )
+						{
+							@unlink($moveto);//in case of duplicates
+						}
+
+						$ok = @rename($movefrom, $moveto);
+						if(!$ok) // Should never happen.
+						{
+							$this->db->transaction_abort();
+							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
+						}
+						else
+						{
+							$this->db->transaction_commit();
+						}
+					}
+					else
+					{
+						$this->db->transaction_abort();
+					}
+				}
 			}
 			else
 			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
+				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
 
-			if( isset($data['debug']) && $data['debug'] )
-			{
-				$this->debug = true;
-			}
-			else
-			{
-				$this->debug	= phpgw::get_var('debug', 'bool');
-			}
-
-			if ($confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction'	=> 'property.custom_functions.index',
-				'function'		=> $this->function_name,
-				'execute'		=> $execute,
-				'debug'			=> $this->debug
-			);
-
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('do you want to perform this action');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiasync.index')),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> 'Importer faktura fra Agresso',
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('location');
-			$function_msg	= 'Importer faktura fra Agresso';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
+			$this->remind();
 		}
 
 
@@ -281,110 +289,6 @@
 			}
 		}
 
-		public function execute($cron='')
-		{
-			if(isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
-			{
-				$this->check_archive();
-			}
-
-			$this->get_files();
-			$dirname = $this->config->config_data['import']['local_path'];
-			// prevent path traversal
-			if ( preg_match('/\./', $dirname) 
-			 || !is_dir($dirname) )
-			{
-				return array();
-			}
-
-			$file_list = array();
-			$dir = new DirectoryIterator($dirname); 
-			if ( is_object($dir) )
-			{
-				foreach ( $dir as $file )
-				{
-					if ( $file->isDot()
-						|| !$file->isFile()
-						|| !$file->isReadable()
-						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xml' ) != 0 )
- 					{
-						continue;
-					}
-
-					$file_list[] = (string) "{$dirname}/{$file}";
-				}
-			}
-
-			if(is_writable("{$dirname}/archive"))
-			{
-				foreach($file_list as $file)
-				{
-					$this->db->transaction_begin();
-					$bilagsnr = $this->import($file);
-					if($this->debug)
-					{
-						_debug_array("Behandler fil: {$file}");
-						_debug_array("Bilagsnr: {$bilagsnr}");
-					}
-
-					if ($bilagsnr)
-					{
-						// move file
-						$_file = basename($file);
-						$movefrom = "{$dirname}/{$_file}";
-						$moveto = "{$dirname}/archive/{$_file}";
-
-						if( is_file($moveto) )
-						{
-							@unlink($moveto);//in case of duplicates
-						}
-
-						$ok = @rename($movefrom, $moveto);
-						if(!$ok) // Should never happen.
-						{
-							$this->db->transaction_abort();
-							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
-						}
-						else
-						{
-							$this->db->transaction_commit();
-						}
-					}
-					else
-					{
-						$this->db->transaction_abort();
-					}
-				}
-			}
-			else
-			{
-				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
-			}
-
-			$this->remind();
-
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$insert_values= array
-			(
-				$cron,
-				date($this->db->datetime_format()),
-				$this->function_name,
-				$this->db->db_addslashes(implode(',',(array_keys($msgbox_data))))
-			);
-
-			$insert_values	= $this->db->validate_insert($insert_values);
-
-			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
-
-		}
 
 		protected function get_files()
 		{

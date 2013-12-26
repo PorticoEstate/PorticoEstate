@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2013,2014 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 	*/
 
 	/**
-	 * Filteret importerer rapporter fra Agresso som grunnlag for oppdatering av øknomi og status på meldings_bestilling.
+	 * Generic parent class for cron-jobs, with and without UI
 	 * @package property
 	 */
 
@@ -40,10 +40,14 @@
 		protected $receipt = array();
 		protected $sub_location = 'sub_location';
 		protected $function_msg	= 'function_msg';
+		protected $cron = false
 
 		function __construct()
 		{
-			$this->db	= & $GLOBALS['phpgw']->db;
+			$this->db			= & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 		}
 
 		function pre_run($data = array())
@@ -52,6 +56,7 @@
 			{
 				$confirm	= true;
 				$cron		= true;
+				$this->cron	= true;
 			}
 			else
 			{
