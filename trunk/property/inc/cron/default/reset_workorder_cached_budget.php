@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2013,2014 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -28,7 +28,6 @@
 	*/
 
 	/**
-	 * Filteret importerer rapporter fra Agresso som grunnlag for oppdatering av øknomi og status på meldings_bestilling.
 	 * @package property
 	 */
 
@@ -44,12 +43,7 @@
 			$this->function_name = 'reset_workorder_cached_budget';
 			$this->sub_location = lang('workorder');
 			$this->function_msg	= 'reset workorder cached budget';
-
-			$this->join				= & $this->db->join;
-			$this->left_join		= & $this->db->left_join;
-			$this->like				= & $this->db->like;
 		}
-
 
 		public function execute()
 		{
@@ -76,6 +70,5 @@
 			$count_orders = count($orders);
 
 			$this->receipt['message'][] = array('msg' => "Rekalkulert budsjett for {$count_orders} løpende bestillinger");
-
 		}
 	}

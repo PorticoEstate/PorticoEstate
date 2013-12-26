@@ -32,142 +32,29 @@
 	 * @package property
 	 */
 
+	include_class('property', 'cron_parent', 'inc/cron/');
 
-	class  import_oppdatering_av_bestilling_fra_agresso_bkb
+	class  import_oppdatering_av_bestilling_fra_agresso_bkb extends property_cron_parent
 	{
 		var	$function_name = 'import_oppdatering_av_bestilling_fra_agresso_bkb';
 		var $debug = true;
 		protected $updated_tickects = array();
 		protected $receipt = array();
 
-
 		function __construct()
 		{
-			$this->sotts			= CreateObject('property.sotts');
-			$this->db				= & $GLOBALS['phpgw']->db;
-			$this->join				= & $this->db->join;
-			$this->left_join		= & $this->db->left_join;
-			$this->like				= & $this->db->like;
+			parent::__construct();
 
+			$this->function_name = 'import_oppdatering_av_bestilling_fra_agresso_bkb';
+			$this->sub_location = lang('ticket');
+			$this->function_msg	= 'Importer rapport fra Agresso for oppdatering av meldinger';
+
+			$this->sotts			= CreateObject('property.sotts');
 			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$this->send				= CreateObject('phpgwapi.send');
 		}
 
-		function pre_run($data = array())
-		{
-			if(isset($data['enabled']) && $data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-			}
-
-			if( isset($data['debug']) && $data['debug'] )
-			{
-				$this->debug = true;
-			}
-			else
-			{
-				$this->debug	= phpgw::get_var('debug', 'bool');
-			}
-
-			if ($confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction'	=> 'property.custom_functions.index',
-				'function'		=> $this->function_name,
-				'execute'		=> $execute,
-				'debug'			=> $this->debug
-			);
-
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('do you want to perform this action');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiasync.index')),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> 'Importer rapport fra Agresso for oppdatering av meldinger',
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('location');
-			$function_msg	= 'Importer rapport fra Agresso for oppdatering av meldinger';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		private function alert_assigned()
-		{
-
-			$updated_tickects = array_keys($this->updated_tickects);
-			
-			foreach ($updated_tickects as $id)
-			{
-				$this->db->query("SELECT assignedto FROM fm_tts_tickets WHERE id= '{$id}'",__LINE__,__FILE__);
-				$this->db->next_record();
-				$assignedto	= $this->db->f('assignedto');
-				$this->send_notification($assignedto, $id);
-			}
-		}
-
-		private function send_notification($assignedto = 0, $id = 0)
-		{
-			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
-			{
-				return;
-			}
-
-			$subject = 'Melding er oppdatert fra Agresso';
-			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
-			$prefs = $this->bocommon->create_preferences('property', $assignedto);
-			if(isset($prefs['email']) && $prefs['email'])
-			{
-				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id),false,true).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
-				try
-				{
-					$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '',$from,'','html');
-				}
-				catch (phpmailerException $e)
-				{
-					$this->receipt['error'][] = array('msg' => $e->getMessage());
-				}
-			}
-		}
-
-		public function execute($cron='')
+		public function execute()
 		{
 			$this->get_files();
 
@@ -241,28 +128,6 @@
 			{
 				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
-
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$insert_values= array
-			(
-				$cron,
-				date($this->db->datetime_format()),
-				$this->function_name,
-				$this->db->db_addslashes(implode(',',(array_keys($msgbox_data))))
-			);
-
-			$insert_values	= $this->db->validate_insert($insert_values);
-
-			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
-
 		}
 
 		protected function get_files()
@@ -443,4 +308,41 @@ die();
 			return $ok;
 		}
 
+		private function alert_assigned()
+		{
+
+			$updated_tickects = array_keys($this->updated_tickects);
+			
+			foreach ($updated_tickects as $id)
+			{
+				$this->db->query("SELECT assignedto FROM fm_tts_tickets WHERE id= '{$id}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$assignedto	= $this->db->f('assignedto');
+				$this->send_notification($assignedto, $id);
+			}
+		}
+
+		private function send_notification($assignedto = 0, $id = 0)
+		{
+			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
+			{
+				return;
+			}
+
+			$subject = 'Melding er oppdatert fra Agresso';
+			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
+			$prefs = $this->bocommon->create_preferences('property', $assignedto);
+			if(isset($prefs['email']) && $prefs['email'])
+			{
+				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id),false,true).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
+				try
+				{
+					$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '',$from,'','html');
+				}
+				catch (phpmailerException $e)
+				{
+					$this->receipt['error'][] = array('msg' => $e->getMessage());
+				}
+			}
+		}
 	}
