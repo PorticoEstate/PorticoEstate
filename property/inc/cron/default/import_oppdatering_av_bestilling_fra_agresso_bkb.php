@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id: import_oppdatering_av_bestilling_fra_agresso_bkb.php 11456 2013-11-13 17:34:50Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**
