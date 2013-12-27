@@ -45,7 +45,7 @@
 		{
 			parent::__construct();
 
-			$this->function_name = 'import_oppdatering_av_bestilling_fra_agresso_bkb';
+			$this->function_name = get_class($this);
 			$this->sub_location = lang('ticket');
 			$this->function_msg	= 'Importer rapport fra Agresso for oppdatering av meldinger';
 
@@ -213,15 +213,14 @@ die();
 			$file_name = basename($file);
 
 			$fp = fopen($file,'rb');
-			$row = 1;
 
 			while (($data = fgetcsv($handle, 1000, ";")) !== false && $ok == true )
 			{
-				if($row > 1 && stripos( $file_name, 'penger' ) === 0)
+				if( preg_match('/^penger/i', $file_name) )
 				{
 					$ok = $this->update_amount($data);
 				}
-				else if($row > 1 && stripos( $file_name, 'status' ) === 0)
+				else if( preg_match('/^status/i', $file_name) )
 				{
 					$ok = $this->update_status($data);
 				}
@@ -231,7 +230,6 @@ die();
 			fclose($fp);
 
 			return $ok;
-
 		}
 
 		private function update_amount($data)

@@ -53,7 +53,7 @@
 		{
 			parent::__construct();
 
-			$this->function_name = 'Import_fra_agresso_X205';
+			$this->function_name = get_class($this);
 			$this->sub_location = lang('invoice');
 			$this->function_msg	= 'Importer faktura fra Agresso';
 

@@ -21,11 +21,11 @@
 
 	class update_phpgw extends property_cron_parent
 	{
-		function update_phpgw()
+		function __construct()
 		{
 			parent::__construct();
 
-			$this->function_name = 'update_phpgw';
+			$this->function_name = get_class($this);
 			$this->sub_location = lang('Async service');
 			$this->function_msg	= 'Update all installed apps of phpgw';
 

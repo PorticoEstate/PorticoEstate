@@ -41,7 +41,7 @@
 		{
 			parent::__construct();
 
-			$this->function_name = 'synkroniser_med_boei';
+			$this->function_name = get_class($this);
 			$this->sub_location = lang('location');
 			$this->function_msg	= 'Synkroniser_med_boei';
 

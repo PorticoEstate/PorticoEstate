@@ -40,7 +40,7 @@
 		{
 			parent::__construct();
 
-			$this->function_name = 'reset_workorder_cached_budget';
+			$this->function_name = get_class($this);
 			$this->sub_location = lang('workorder');
 			$this->function_msg	= 'reset workorder cached budget';
 		}

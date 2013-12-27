@@ -32,93 +32,25 @@
 	 * @package property
 	 */
 
-	class oppdater_utgaatt_objekt
-	{
-		var	$function_name = 'oppdater_utgaatt_objekt';
+	include_class('property', 'cron_parent', 'inc/cron/');
 
-		function __construct()
+	class oppdater_utgaatt_objekt extends property_cron_parent
+	{
+		public function __construct()
 		{
-			$this->db 				= & $GLOBALS['phpgw']->db;
-			$this->like 			= & $this->db->like;
-			$this->join 			= & $this->db->join;
-			$this->left_join 		= & $this->db->left_join;
+			parent::__construct();
+
+			$this->function_name = get_class($this);
+			$this->sub_location = lang('location');
+			$this->function_msg	= lang('Update the not active category for locations');
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
 		}
 
-		function pre_run($data = array())
-		{
-			if($data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-			}
-
-			if ($confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
-				'execute'	=> $execute,
-			);
-
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('do you want to perform this action');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Update the category to not active based on if there is only nonactive apartments'),
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('location');
-			$function_msg	= lang('Update the not active category for locations');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function execute($cron='')
+		function execute()
 		{
 			$location_types	= $this->soadmin_location->select_location_type();
 
 			$m= count($location_types);
-
 
 			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category='99'",__LINE__,__FILE__);
 
@@ -213,26 +145,5 @@
 				unset($metadata);
 				$this->db->transaction_commit();
 			}
-
-
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$insert_values= array(
-				$cron,
-				date($this->db->datetime_format()),
-				$this->function_name,
-				implode(',',(array_keys($msgbox_data)))
-				);
-
-			$insert_values	= $this->db->validate_insert($insert_values);
-
-			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
 		}
 	}
