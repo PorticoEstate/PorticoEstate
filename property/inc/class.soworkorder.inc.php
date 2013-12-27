@@ -1748,7 +1748,7 @@
 		* @return array Array with budget information.
 		*/
 
-		function get_budget($order_id, $fictive_periods = true)
+		function get_budget($order_id, $calculate_fictive_periods = true)
 		{
 			// Som før: Periodisering der det er definert
 			// Som før: Enkelt posteringer for gjeldende periode der periodisering ikke er definert
@@ -1805,7 +1805,7 @@
 					'active_period'		=> (int)$this->db->f('active'),
 				);
 
-				$active_period[$period] = $this->db->f('active');
+				$active_period[$period] = (int)$this->db->f('active');
 
   				if($continuous)
   				{
@@ -1822,8 +1822,9 @@
 			* ellers: Dersom start-dato for bestilling er passert - blir start-periode inneværende måned.
 			**/
 
+			$fictive_period = array();
 			$order_budget = array();
-			if($continuous && $fictive_periods)
+			if($continuous && $calculate_fictive_periods)
 			{
 				$sql = "SELECT periode"
 				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
@@ -1838,7 +1839,10 @@
 				{
 					if($_period == "{$_budget['year']}00" && $_budget['year'] == date('Y'))
 					{
-						$active_period[$_period] = false;
+
+						$order_budget[$_period] = $_budget;
+
+						$active_period[$_period] = $active_period[$_period] ? 2 : 0;
 
 						if($current_paid_period && $current_paid_period < (int)date('Ym'))
 						{
@@ -1853,7 +1857,6 @@
 							$_current_month = date('n'); // Numeric representation of a month, without leading zeros 1 through 12
 						}
 
-
 						$distribution_key = 1/(13 - $_current_month);
 
 						for ($i = $_current_month; $i<13; $i++)
@@ -1863,7 +1866,8 @@
 								$i
 							);
 
-	  						$active_period[$period]					= true;
+	  						$fictive_period[$period]				= true;
+	  						$active_period[$period]					= $active_period[$_period] ? 1 : 0;
 							$order_budget[$period]					= $_budget;
 							$order_budget[$period]['budget']		= $sum_year_budget[$_budget['year']] * $distribution_key;
 							$order_budget[$period]['combined_cost']	= $sum_year_combined_cost[$_budget['year']] * $distribution_key;
@@ -1959,7 +1963,7 @@
 
 				if(!$_budget['closed_order'])
 				{
-					if($active_period[$period])
+					if($active_period[$period] == 1)
 					{
 						$_sum_oblications += $_budget['combined_cost'];
 						$_sum_oblications -= $_budget['actual_cost'];
@@ -1982,7 +1986,7 @@
 				}
 
 				//override if periode is closed
-				if(!isset($active_period[$period]) || !$active_period[$period])
+				if(!isset($active_period[$period]) || !$active_period[$period] == 1)
 				{
 					$_sum_oblications = 0;
 				}
@@ -1993,7 +1997,7 @@
 					$_sum_oblications = 0;
 				}
 
-				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period_sum && !$_delay_period)
+				if(isset($active_period[$period]) && $active_period[$period] == 1 && $_delay_period_sum && !$_delay_period)
 				{
 					$_sum_oblications += $_delay_period_sum;
 					$_delay_period_sum =0;
@@ -2054,8 +2058,9 @@
 				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
 				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
 
-				$entry['closed'] = $closed_period[$entry['period']];
-				$entry['active'] = $active_period[$entry['period']];
+				$entry['closed'] = isset($closed_period[$entry['period']]) && $closed_period[$entry['period']];
+				$entry['active'] = isset($active_period[$entry['period']]) && $active_period[$entry['period']] ? $active_period[$entry['period']] : 0;
+				$entry['fictive'] = isset($fictive_period[$entry['period']]) && $fictive_period[$entry['period']];
 			}
 
 			phpgwapi_cache::system_set('property', "budget_order_{$order_id}", $values);
