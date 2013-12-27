@@ -1551,7 +1551,7 @@
 			}
 
 			$this->check_project_status($workorder['id']);
-			
+
 			if($this->db->transaction_commit())
 			{
 
@@ -1573,7 +1573,7 @@
 			$config->read_repository();
 
 			$project_status_on_last_order_closed =isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
-			
+
 			if($project_status_on_last_order_closed)
 			{
 				$this->db->query("SELECT project_id FROM fm_workorder WHERE id= '{$order_id}'" ,__LINE__,__FILE__);
@@ -1592,7 +1592,7 @@
 				$this->db->next_record();
 				$closed_project = !!$this->db->f('closed_project');
 				$old_status = $this->db->f('old_status');
-			
+
 				if ($orders_at_project == $closed_orders_at_project && !$closed_project)
 				{
 					$this->db->query("UPDATE fm_project SET status = '{$project_status_on_last_order_closed}' WHERE id= {$project_id}" ,__LINE__,__FILE__);
@@ -1821,7 +1821,7 @@
 			* ellers: Start-periode blir måned for start-dato for bestilling dersom den ligger frem i tid 
 			* ellers: Dersom start-dato for bestilling er passert - blir start-periode inneværende måned.
 			**/
-			
+
 			$order_budget = array();
 			if($continuous && $fictive_periods)
 			{
@@ -1839,10 +1839,10 @@
 					if($_period == "{$_budget['year']}00" && $_budget['year'] == date('Y'))
 					{
 						$active_period[$_period] = false;
-						
-						if($current_paid_period < (int)date('Ym'))
+
+						if($current_paid_period && $current_paid_period < (int)date('Ym'))
 						{
-							$_current_month = (int)substr( $current_paid_period, -2 );						
+							$_current_month = (int)substr( $current_paid_period, -2 );
 						}
 						else if((int)$_budget['start_period'] > (int)date('Ym'))
 						{
@@ -1853,8 +1853,9 @@
 							$_current_month = date('n'); // Numeric representation of a month, without leading zeros 1 through 12
 						}
 
+
 						$distribution_key = 1/(13 - $_current_month);
-						
+
 						for ($i = $_current_month; $i<13; $i++)
 						{
 							$period = sprintf("%s%02d",
