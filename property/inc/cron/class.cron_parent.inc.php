@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2013,2014 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -23,44 +23,40 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
-	* @subpackage custom
+	* @subpackage import
  	* @version $Id$
 	*/
 
 	/**
-	 * Description
+	 * Generic parent class for cron-jobs, with and without UI
 	 * @package property
 	 */
 
-	class import_files
+
+	abstract class  property_cron_parent
 	{
-		var	$function_name = 'import_files';
+		protected $function_name;
+		protected $debug = true;
+		protected $receipt = array();
+		protected $sub_location = 'sub_location';
+		protected $function_msg	= 'function_msg';
+		protected $cron = false;
 
-		function import_files()
+		function __construct()
 		{
-			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db 				= & $GLOBALS['phpgw']->db;
-			$this->db2				= clone($this->db);
-			$this->soadmin_location	= CreateObject('property.soadmin_location');
-
-			$this->join				= $this->db->join;
-			$this->like				= $this->db->like;
-			$this->left_join 		= " LEFT JOIN ";
-			$this->saveto			= '/mnt/filer2/VaktPC_filer';
-		//	$this->saveto			= '/tmp';
-			$this->export_method = 'csv';
-		//	$this->export_method = 'excel';
- 		//	$this->export_method = 'xml';
- 			$this->dateformat = 'd/m/Y';
-
+			$this->db			= & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 		}
 
-		function pre_run($data='')
+		function pre_run($data = array())
 		{
-			if($data['enabled']==1)
+			if(isset($data['enabled']) && $data['enabled']==1)
 			{
 				$confirm	= true;
 				$cron		= true;
+				$this->cron	= true;
 			}
 			else
 			{
@@ -68,9 +64,24 @@
 				$execute	= phpgw::get_var('execute', 'bool', 'GET');
 			}
 
+			if( isset($data['debug']) && $data['debug'] )
+			{
+				$this->debug = true;
+			}
+			else
+			{
+				$this->debug	= phpgw::get_var('debug', 'bool');
+			}
+
 			if ($confirm)
 			{
-				$this->execute($cron);
+				$this->execute();
+				$this->cron_log($cron);
+				// initiated from ui
+				if(!$cron)
+				{
+					$this->confirm($execute=false);
+				}
 			}
 			else
 			{
@@ -78,14 +89,14 @@
 			}
 		}
 
-
 		function confirm($execute='')
 		{
 			$link_data = array
 			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
-				'execute'	=> $execute,
+				'menuaction'	=> 'property.custom_functions.index',
+				'function'		=> $this->function_name,
+				'execute'		=> $execute,
+				'debug'			=> $this->debug
 			);
 
 
@@ -98,70 +109,54 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
 
-
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$data = array
 			(
 				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiasync.index')),
 				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'message'				=> $this->receipt['message'],
 				'lang_confirm_msg'		=> $lang_confirm_msg,
 				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Export info as files'),
+				'lang_yes_statustext'	=> $this->function_msg,
 				'lang_no_statustext'	=> 'tilbake',
 				'lang_no'				=> lang('no'),
 				'lang_done'				=> 'Avbryt',
 				'lang_done_statustext'	=> 'tilbake'
 			);
 
-			$appname		= lang('location');
-			$function_msg	= lang('Export info as files');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $this->sub_location . ': ' . $this->function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		function execute($cron='')
+
+		abstract public function execute();
+
+
+		private function cron_log($cron)
 		{
 
-			$this->import_vaktprotokoll();
-
-			if(!$cron)
+			if(!$this->receipt)
 			{
-				$this->confirm($execute=false);
+				return;
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
-			$insert_values= array(
+			$insert_values= array
+			(
 				$cron,
 				date($this->db->datetime_format()),
 				$this->function_name,
-				implode(',',(array_keys($msgbox_data)))
-				);
+				$this->db->db_addslashes(implode(',',(array_keys($msgbox_data))))
+			);
 
 			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
 			$this->db->query($sql,__LINE__,__FILE__);
-		}
-
-		function import_vaktprotokoll()
-		{
-			$filename = 'Vakthendelser.xls';
-
-			phpgw::import_class('phpgwapi.phpexcel');
-
-			$path = PHPGW_SERVER_ROOT . "/property/inc/excelreader/test/{$filename}";
-			$objPHPExcel = PHPExcel_IOFactory::load($path);
-			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-
-			for ($i = 1; $i <= count($data); $i++)
-			{
-				echo "\"".print_r($data[$i]);
-			}
 		}
 	}

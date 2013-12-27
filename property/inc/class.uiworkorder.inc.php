@@ -1582,7 +1582,6 @@
 
 			$sum_estimated_cost		= number_format($sum_estimated_cost, 2, ',', '');
 			$values['calculation']	= number_format($values['calculation'], 2, ',', '');
-			$values['actual_cost']	= number_format($values['actual_cost'], 2, ',', '');
 
 			$link_data = array
 			(
@@ -1935,8 +1934,6 @@
 
 //---------
 
-
-
 			$link_claim = '';
 			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
 			{
@@ -1951,18 +1948,6 @@
 				}
 			}
 
-/*
-			if(isset($project['cat_id']) && $project['cat_id'])
-			{
-				$catetory = $this->cats->return_single($project['cat_id']);
-				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
-				$cat_sub = array_merge($catetory,$cat_sub);
-			}
-			else
-			{
-				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
-			}
-*/
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
 
 
@@ -2082,8 +2067,6 @@
 
 				'value_contract_sum'					=> isset($receipt['error']) && $receipt['error'] ? $_POST['values']['contract_sum'] : '',
 
-				'actual_cost'							=> (isset($values['actual_cost'])?$values['actual_cost']:''),
-				'lang_actual_cost'						=> lang('Actual cost'),
 				'ecodimb_data'							=> $ecodimb_data,
 				'vendor_data'							=> $vendor_data,
 				'location_data'							=> $location_data,
@@ -2120,11 +2103,6 @@
 
 				'lang_done_statustext'					=> lang('Back to the list'),
 				'lang_save_statustext'					=> lang('Save the workorder'),
-				//	'lang_no_cat'							=> lang('Select category'),
-				//	'lang_cat_statustext'					=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
-				//	'select_name'							=> 'values[cat_id]',
-				//	'value_cat_id'							=> (isset($values['cat_id'])?$values['cat_id']:''),
-				//	'cat_list'								=> $categories['cat_list'],
 
 				'lang_cat_sub'							=> lang('category'),
 				'cat_sub_list'							=> $this->bocommon->select_list($values['cat_id'] ? $values['cat_id']: $project['cat_id'], $cat_sub),

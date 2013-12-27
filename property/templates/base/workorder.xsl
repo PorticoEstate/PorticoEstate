@@ -715,14 +715,6 @@
 								</td>
 							</tr>
 							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_actual_cost"/>
-								</td>
-								<td>
-									<xsl:value-of select="actual_cost"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'billable hours')"/>
 								</td>

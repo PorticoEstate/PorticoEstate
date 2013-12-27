@@ -33,90 +33,23 @@
 	 * @package property
 	 */
 
-	class catch_ppc
-	{
-		var	$function_name = 'catch_ppc';
+	include_class('property', 'cron_parent', 'inc/cron/');
 
+	class catch_ppc extends property_cron_parent
+	{
 		public function __construct()
 		{
-			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->join			= & $this->db->join;
-			$this->like			= & $this->db->like;
+			parent::__construct();
+
+			$this->function_name = get_class($this);
+			$this->sub_location = lang('catch');
+			$this->function_msg	= 'Import info from files';
+
 			set_time_limit(1000);
 		}
 
-		function pre_run($data = array())
-		{
-			phpgwapi_cache::session_set('catch', 'data', $data);
 
-			if(isset($data['enabled']) && $data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-				$cron = false;
-			}
-
-			if ($confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-
-		function confirm($execute='')
-		{
-			$data = phpgwapi_cache::session_get('catch', 'data');
-			$link_data = array
-			(
-				'menuaction' => 'property.custom_functions.index',
-				'data'		=> urlencode(serialize($data)),
-				'execute'	=> $execute,
-			);
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('do you want to perform this action');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Export info as files'),
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('location');
-			$function_msg	= lang('Export info as files');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function execute($cron='')
+		function execute()
 		{
 			try
 			{
@@ -126,26 +59,6 @@
 			{
 				$this->receipt['error'][]=array('msg'=>$e->getMessage());
 			}
-
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
-
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-
-			$insert_values= array(
-				$cron,
-				date($this->db->datetime_format()),
-				$this->function_name,
-				implode(',',(array_keys($msgbox_data)))
-				);
-
-			$insert_values	= $this->db->validate_insert($insert_values);
-
-			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
 		function import_ppc()
