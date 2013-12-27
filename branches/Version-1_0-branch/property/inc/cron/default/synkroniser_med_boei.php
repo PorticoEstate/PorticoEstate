@@ -32,13 +32,19 @@
 	 * @package property
 	 */
 
-	class synkroniser_med_boei
-	{
-		var	$function_name = 'synkroniser_med_boei';
+	include_class('property', 'cron_parent', 'inc/cron/');
 
-		function synkroniser_med_boei()
+	class synkroniser_med_boei extends property_cron_parent
+	{
+
+		function __construct()
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			parent::__construct();
+
+			$this->function_name = get_class($this);
+			$this->sub_location = lang('location');
+			$this->function_msg	= 'Synkroniser_med_boei';
+
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->join				= $this->db->join;
@@ -70,75 +76,8 @@
 			$this->db_boei2 = clone($this->db_boei);
 		}
 
-		function pre_run($data='')
-		{
-			if($data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-			}
 
-			if ($confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
-				'execute'	=> $execute,
-			);
-
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('do you want to perform this action');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Update the category to not active based on if there is only nonactive apartments'),
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('location');
-			$function_msg	= 'synkroniser med BOEI';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function execute($cron='')
+		function execute()
 		{
 			set_time_limit(500);
 			$receipt = $this->legg_til_eier_phpgw();
@@ -170,17 +109,13 @@
 			$receipt = $this->update_tenant_name();
 			$this->cron_log($receipt,$cron);
 
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
 		}
 
-		function cron_log($receipt='',$cron='')
+		function cron_log($receipt='')
 		{
 
 			$insert_values= array(
-				$cron,
+				$this->cron,
 				date($this->db->datetime_format()),
 				$this->function_name,
 				$receipt
@@ -989,4 +924,3 @@
 			return $msg;
 		}
 	}
-
