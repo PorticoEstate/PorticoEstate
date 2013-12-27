@@ -1866,6 +1866,7 @@
 			$lang_delete = lang('Check to delete period');
 			$lang_close = lang('Check to close period');
 			$lang_active = lang('Check to activate period');
+			$lang_fictive = lang('fictive');
 
 			$rows_per_page = 10;
 			$initial_page = 1;
@@ -1884,12 +1885,29 @@
 			foreach($content_budget as & $b_entry)
 			{
 				$checked = $b_entry['active'] ? 'checked="checked"' : '';
-				$b_entry['flag_active'] = $b_entry['active'];
-				$b_entry['delete_period'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
-				$b_entry['closed'] = $b_entry['closed'] ? 'X' : '';
-				$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
-				$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked>";
-				$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
+				$b_entry['flag_active'] = $b_entry['active'] == 1;
+				if($b_entry['fictive'])
+				{
+					$b_entry['delete_period'] = $lang_fictive;
+					$disabled = 'disabled="disabled"';
+				}
+				else
+				{
+					$b_entry['delete_period'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
+				}
+
+				if($b_entry['active'] == 2)
+				{
+					$b_entry['month'] = 'Split';
+					$b_entry['closed'] = 'Split';
+				}
+				else
+				{
+					$b_entry['closed'] = $b_entry['closed'] ? 'X' : '';
+				}
+
+				$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' {$checked} {$disabled}>";
+				$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' {$checked} {$disabled}>";
 
 			}
 			unset($b_entry);
