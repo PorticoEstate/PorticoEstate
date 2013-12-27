@@ -40,7 +40,7 @@
 		protected $receipt = array();
 		protected $sub_location = 'sub_location';
 		protected $function_msg	= 'function_msg';
-		protected $cron = false
+		protected $cron = false;
 
 		function __construct()
 		{

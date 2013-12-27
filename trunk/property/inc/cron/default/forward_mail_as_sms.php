@@ -25,7 +25,7 @@
 		{
 			parent::__construct();
 
-			$this->function_name = 'forward_mail_as_sms';
+			$this->function_name = get_class($this);
 			$this->sub_location = lang('Async service');
 			$this->function_msg	= 'Forward email as SMS';
 
