@@ -2001,6 +2001,7 @@ risk	property	no	Risiko
 elements_pr_page	property	no	Poster pr side
 shows_from	property	no	Viser
 of_total	property	no	av
+fictive	property	no	Fiktiv
 first	property	no	Første
 previous	property	no	Forrige
 next	property	no	Neste
