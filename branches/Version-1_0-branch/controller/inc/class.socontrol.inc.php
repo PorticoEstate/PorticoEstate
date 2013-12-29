@@ -964,6 +964,43 @@
 				$filter_clauses[] = "controller_control.responsibility_id = {$this->marshal($filters['responsibilities'],'int')}";
 			}
 
+			if($filters['district_id'])
+			{
+				$sql  = "SELECT DISTINCT control_id"
+				. " FROM controller_control_location_list {$this->join} fm_locations ON controller_control_location_list.location_code = fm_locations.location_code"
+				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " WHERE district_id =" . (int)$filters['district_id'];
+			
+				$db	= & $GLOBALS['phpgw']->db;
+				$db->query($sql, __LINE__, __FILE__);
+				
+				$control_at_district = array();
+				while ($db->next_record())
+				{
+					$control_at_district[] = $db->f('control_id');
+				}
+
+				$sql  = "SELECT DISTINCT control_id"
+				. " FROM controller_control_component_list {$this->join} fm_bim_item ON controller_control_component_list.location_id = fm_bim_item.location_id AND controller_control_component_list.component_id = fm_bim_item.id"
+				. " {$this->join} fm_location1 ON fm_bim_item.loc1 = fm_location1.loc1"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " WHERE district_id =" . (int)$filters['district_id'];
+
+				$db->query($sql, __LINE__, __FILE__);
+				
+				while ($db->next_record())
+				{
+					$control_at_district[] = $db->f('control_id');
+				}
+				
+				if($control_at_district)
+				{
+					$filter_clauses[] = "controller_control.id IN (" .  implode(',', array_unique($control_at_district)) .')';
+				}
+
+			}
+
 			if(count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
