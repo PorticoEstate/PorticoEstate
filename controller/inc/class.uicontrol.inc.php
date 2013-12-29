@@ -67,18 +67,18 @@
 
     public $public_functions = array
     (
-			'index'													=>	true,
-			'control_list'									=>	true,
-			'view'													=>	true,
-			'view_control_details'					=>	true,
-			'save_control_details'					=>	true,
-			'view_control_groups'						=>	true,
-			'save_control_groups'						=>	true,
-			'view_control_items'						=>	true,
-			'save_control_items'						=>	true,
-			'view_check_list'								=>	true,
+			'index'							=>	true,
+			'control_list'					=>	true,
+			'view'							=>	true,
+			'view_control_details'			=>	true,
+			'save_control_details'			=>	true,
+			'view_control_groups'			=>	true,
+			'save_control_groups'			=>	true,
+			'view_control_items'			=>	true,
+			'save_control_items'			=>	true,
+			'view_check_list'				=>	true,
 			'get_controls_by_control_area'	=>	true,
-    	'get_control_details'						=>	true
+	    	'get_control_details'			=>	true
 		);
 
 		public function __construct()
@@ -144,16 +144,23 @@
 
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
 			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-			$control_areas_array2 = array();
+			$control_areas_array = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
-				$control_areas_array2[] = array
+				$control_areas_array[] = array
 				(
 					'id' 	=> $cat_list['cat_id'],
 					'name'	=> $cat_list['name'],
 				);		
 			}
 			// END categories
+
+			// start district
+			$property_bocommon		= CreateObject('property.bocommon');
+			$district_list  = $property_bocommon->select_district_list('dummy',$this->district_id);
+			array_unshift ($district_list,array ('id'=>'','name'=>lang('no district')));
+			// end district
+
 
 			$data = array(
 				'datatable_name'	=> 'Kontroller',//lang('controls'),
@@ -190,12 +197,17 @@
 							array('type' => 'filter',
 								'name' => 'control_areas',
 								'text' => lang('Control_area'),
-								'list' => $control_areas_array2,
+								'list' => $control_areas_array,
 							),
 							array('type' => 'filter',
 								'name' => 'responsibilities',
                                 'text' => lang('Responsibility'),
                                 'list' => $this->so->get_roles(),
+							),
+							array('type' => 'filter',
+								'name' => 'district_id',
+                                'text' => lang('district'),
+                                'list' => $district_list,
 							),
 							array('type' => 'text', 
                                 'text' => lang('searchfield'),
@@ -227,7 +239,7 @@
 						array(
 							'key'	=>	'title',
 							'label'	=>	lang('Control title'),
-							'sortable'	=>	false,
+							'sortable'	=>	true,
               'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
@@ -855,6 +867,8 @@
 			{
 				$filters['responsibilities'] = $responsibility; 
 			}
+
+			$filters['district_id'] = phpgw::get_var('district_id', 'int', 'REQUEST', null);
 										
 			$search_for = phpgw::get_var('query');
 
@@ -862,7 +876,8 @@
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
-			else {
+			else
+			{
 				$user_rows_per_page = 10;
 			}
 			
