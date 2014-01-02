@@ -92,12 +92,12 @@
 				case 'entity':
 				case 'catch':
 					$this->table ="fm_{$selector}_history";
-					$this->attrib_id_field = ',history_attrib_id';
+					$this->attrib_id_field = 'history_attrib_id';
 					break;
 				case 's_agreement':
 					$this->table='fm_s_agreement_history';
-					$this->attrib_id_field = ',history_attrib_id';
-					$this->detail_id_field = ',history_detail_id';
+					$this->attrib_id_field = 'history_attrib_id';
+					$this->detail_id_field = 'history_detail_id';
 				break;
 				case 'tenant_claim':
 					$this->table='fm_tenant_claim_history';
@@ -153,11 +153,11 @@
 
 			if($this->attrib_id_field && $attrib_id)
 			{
-				$value_set[$this->attrib_id_field]	= $attrib_id;
+				$value_set[$this->attrib_id_field]	= (int)$attrib_id;
 			}
 			if($this->detail_id_field && $detail_id)
 			{
-				$value_set[$this->detail_id_field]	= $detail_id;
+				$value_set[$this->detail_id_field]	= (int)$detail_id;
 			}
 
 			$cols = implode(',', array_keys($value_set));

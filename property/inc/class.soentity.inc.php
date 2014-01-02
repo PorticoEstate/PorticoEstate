@@ -2006,6 +2006,19 @@
 
 			phpgw::import_class('phpgwapi.xmlhelper');
 
+/*
+			// FIXME: not working
+			if($data)
+			{
+				foreach ($data as $key => &$value)
+				{
+					if(preg_match('/[<>&]/', $value)) // or use CDATA..
+					{
+						$value =  str_ireplace ( array('&lt;','&gt;','<','>') , array('[',']', '[', ']') , $value);
+					}
+				}
+			}
+*/
 			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
 			$doc = new DOMDocument;
 			$doc->preserveWhiteSpace = true;
@@ -2100,7 +2113,7 @@
 			$category = $admin_entity->read_single_category($entity_id, $cat_id);
 			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
-			if (isset($values_attribute) AND is_array($values_attribute))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
@@ -2154,7 +2167,7 @@
 
 						if($entry['datatype'] == 'D')
 						{
-							$old_value = date(phpgwapi_db::date_format(), strtotime($old_value));
+							$old_value = $old_value ? date(phpgwapi_db::date_format(), strtotime($old_value)) : '';
 						}
 
 						if($entry['value'] != $old_value)
