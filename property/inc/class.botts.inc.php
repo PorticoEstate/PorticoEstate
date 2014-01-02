@@ -843,13 +843,21 @@
 					if ((int)$value['new_value']>0)
 					{
 						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
-						$record_history[$i]['value_old_value'] = $value['old_value'] ? $GLOBALS['phpgw']->accounts->id2name($value['old_value']) : '';
 					}
 					else
 					{
 						$record_history[$i]['value_new_value']	= lang('None');
+					}
+
+					if ((int)$value['old_value']>0)
+					{
+						$record_history[$i]['value_old_value'] = $value['old_value'] ? $GLOBALS['phpgw']->accounts->id2name($value['old_value']) : '';
+					}
+					else
+					{
 						$record_history[$i]['value_old_value']	= lang('None');
 					}
+
 				}
 				else if ($value['status'] == 'T')
 				{
