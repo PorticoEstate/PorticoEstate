@@ -51,7 +51,7 @@
 			$sql = "SELECT DISTINCT fm_workorder.id as order_id"
 			. " FROM fm_workorder "
 			. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
-			. " WHERE continuous = 1 AND fm_workorder_budget.year > " . (date('Y') -1)
+			. " WHERE continuous = 1"// AND fm_workorder_budget.year > " . (date('Y') -1)
 			. " ORDER BY fm_workorder.id";
 
 			$this->db->query($sql,__LINE__,__FILE__);

@@ -143,12 +143,12 @@
 			$value_set = array
 			(
 				'history_record_id'		=> $record_id,
-				'history_appname'		=> $this->appname,
-				'history_owner'			=> $this->account,
-				'history_status'		=> $status,
-				'history_new_value'		=> $this->db->db_addslashes($new_value),
-				'history_old_value'		=> $this->db->db_addslashes($old_value),
-				'history_timestamp'		=> $timestamp
+				'history_appname'		=> "'{$this->appname}'",
+				'history_owner'			=> (int)$this->account,
+				'history_status'		=> "'{$status}'",
+				'history_new_value'		=> "'" . $this->db->db_addslashes($new_value) . "'",
+				'history_old_value'		=> "'" . $this->db->db_addslashes($old_value) . "'",
+				'history_timestamp'		=> "'" . $timestamp."'",
 			);
 
 			if($this->attrib_id_field && $attrib_id)
@@ -161,7 +161,7 @@
 			}
 
 			$cols = implode(',', array_keys($value_set));
-			$values	= $this->db->validate_insert(array_values($value_set));
+			$values = implode(',', array_values($value_set));
 			$sql = "INSERT INTO {$this->table} ({$cols}) VALUES ({$values})";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
