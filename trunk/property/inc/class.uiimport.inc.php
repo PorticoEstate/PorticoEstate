@@ -56,7 +56,7 @@
 				'fm_vendor'				=> 'fm_vendor (' . lang('vendor') . ')',
 				'fm_condition_survey'	=> 'fm_condition_survey (' . lang('condition survey') . ')',
 				'fm_ecodimb'			=> 'fm_ecodimb (' . lang('dimb') . ')',
-				'phpgw_categories'		=> 'phpgw_categories'
+				'fm_budget'				=> 'fm_budget (' . lang('budget') . ')',
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
