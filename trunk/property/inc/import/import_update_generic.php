@@ -345,6 +345,7 @@
 				$this->warnings[] = "ID finnes fra før: {$filtermethod}, oppdaterer";
 				$value_set	= $this->db->validate_update($value_set);
 				$sql = "UPDATE {$table} SET {$value_set} WHERE {$filtermethod}";
+				$action = 'updated';
 			}
 			else
 			{
@@ -353,6 +354,8 @@
 				$cols = implode(',', array_keys($value_set));
 				$values	= $this->db->validate_insert(array_values($value_set));
 				$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+
+				$action = 'inserted';
 			}
 
 			if($this->debug)
@@ -366,11 +369,11 @@
 
 			if($ok)
 			{
-				$this->messages[] = "Successfully imported record: id ({$id})";
+				$this->messages[] = "Successfully {$action} record: " . implode(', ', $primary_key);
 			}
 			else
 			{
-				$this->errors[] = "Error importing record: id ({$id})";
+				$this->errors[] = "Error importing record: " . implode(', ', $primary_key);
 			}
 			return $ok;
 		}
