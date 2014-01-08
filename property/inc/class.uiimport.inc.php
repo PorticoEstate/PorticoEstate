@@ -613,28 +613,36 @@ HTML;
 			phpgw::import_class('phpgwapi.phpexcel');
 
 			$objPHPExcel = PHPExcel_IOFactory::load($path);
-			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+			$objPHPExcel->setActiveSheetIndex(0);
 
 			$result = array();
+
+			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+
+        	$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+
+			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 
 			$start = $skipfirstline ? 2 : 1; // Read the first line to get the headers out of the way
 
 			if ($skipfirstline)
 			{
-				$this->fields = array_values($data[1]);
+				for ($j=0; $j < $highestColumnIndex; $j++ )
+				{
+					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,1)->getCalculatedValue();
+				}
 			}
 
-			$rows = count($data)+1;
-
-			for ($row=$start; $row<$rows; $row++ )
+			$rows = $rows ? $rows +1 : 0;
+			for ($row=$start; $row < $rows; $row++ )
 			{
 				$_result = array();
-				$j=0;
-				foreach($data[$row] as $key => $value)
+
+				for ($j=0; $j < $highestColumnIndex; $j++ )
 				{
 					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,$row)->getCalculatedValue();
-					$j++;
 				}
+
 				$result[] = $_result;
 			}
 
