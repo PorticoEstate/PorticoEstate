@@ -7841,3 +7841,23 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.675 to 0.9.17.676
+	* Add multiplier to condition survey
+	*/
+
+	$test[] = '0.9.17.675';
+	function property_upgrade0_9_17_675()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget DROP CONSTRAINT fm_budget_year_key");
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget ADD CONSTRAINT fm_budget_year_key UNIQUE(year , b_account_id , district_id , revision, ecodimb ,category)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.676';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
