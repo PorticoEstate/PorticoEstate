@@ -992,7 +992,6 @@
 
 //-----------
 
-			$data = array();
 			if(!$step )
 			{
 				phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
@@ -1020,11 +1019,6 @@
 					}
 
 					$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
-					$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-
-	//				$format = $objPHPExcel->getActiveSheet()->getStyle('R13')->getNumberFormat()->getFormatCode();
-	//				$value = $objPHPExcel->getActiveSheet()->getCell('R13')->getCalculatedValue();
-
 				}
 				catch(Exception $e)
 				{
@@ -1039,18 +1033,31 @@
 
 			$survey = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
 
+			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+	       	$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+
+			$i = 0;
 			$html_table = '<table border="1">';
-			if($data && $step == 2)
+			if($rows > 1 && $step == 2)
 			{
-				$i = 0;
-				$html_table .= "<tr><th align = 'center'>". lang('start'). "</th><th align='center'>" . implode("</th><th align='center'>", array_keys($data[1])) . '</th></tr>';
-				foreach($data as $row_key => $row)
+
+				$cols = array();
+				for ($j=0; $j < $highestColumnIndex; $j++ )
+				{
+					$cols[] = $this->getexcelcolumnname($j);
+				}
+
+				$html_table .= "<tr><th align = 'center'>". lang('start'). "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr>';
+				foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row)
 				{
 					if($i>20)
 					{
 						break;
 					}
+					$i++;
 
+					$row_key = $i;
 					$_checked = '';
 					if($start_line == $row_key)
 					{
@@ -1059,11 +1066,22 @@
 
 					$_radio = "[{$row_key}]<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
 
-					$html_table .= "<tr><td><pre>{$_radio}</pre></td><td>" . implode('</td><td>', array_values($row)) . '</td></tr>';
-					$i++;
+					$cellIterator = $row->getCellIterator();
+					$cellIterator->setIterateOnlyExistingCells(false);
+
+					$row_values = array();
+					foreach ($cellIterator as $cell)
+					{
+						if (!is_null($cell))
+						{
+							$row_values[] = $cell->getCalculatedValue();
+						}
+					}
+					$html_table .= "<tr><td><pre>{$_radio}</pre></td><td>" . implode('</td><td>',$row_values) . '</td></tr>';
 				}
+				echo '</table>';
 			}
-			else if($data && $step == 3)
+			else if($rows > 1 && $step == 3)
 			{
 				$_options = array
 				(
@@ -1092,18 +1110,21 @@
 
 				phpgw::import_class('phpgwapi.sbox');
 
-				foreach($data[$start_line] as $_column => $_value)
+				for ($j=0; $j < $highestColumnIndex; $j++ )
 				{
+					$_column = $this->getexcelcolumnname($j);
+					$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,$start_line)->getCalculatedValue();
 					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
 
 					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true );
 					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
 				}
 			}
-			else if($data && $step == 4)
+			else if($rows > 1 && $step == 4)
 			{
 
-				$rows = count($data)+1;
+				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+				$rows = $rows ? $rows +1 : 0;
 
 				$import_data = array();
 
@@ -1183,6 +1204,27 @@
 
 		}
 
+
+		/**
+		 * Get excel column name
+		 * @param index : a column index we want to get the value in excel column format
+		 * @return (string) : excel column format
+		 */
+		private function getexcelcolumnname($index)
+		{
+			//Get the quotient : if the index superior to base 26 max ?
+			$quotient = $index / 26;
+			if ($quotient >= 1)
+			{
+				//If yes, get top level column + the current column code
+				return getexcelcolumnname($quotient-1). chr(($index % 26)+65);
+			}
+			else
+			{
+				//If no just return the current column code
+				return chr(65 + $index);
+			}
+		}
 
 		/**
 		* Gets user candidates to be used as coordinator - called as ajax from edit form
