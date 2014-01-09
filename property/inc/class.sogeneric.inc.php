@@ -3295,6 +3295,7 @@
 
 		public function get_children2($data, $parent, $level, $reset = false)
 		{
+			$parent = (int)$parent;
 			$mapping = array();
 			if(isset($data['mapping']) && $data['mapping'])
 			{
@@ -3315,6 +3316,7 @@
 				return $this->tree;
 			}
 			$sql = "SELECT * FROM {$table} WHERE parent_id = {$parent}";
+
 			$db->query($sql,__LINE__,__FILE__);
 
 			while ($db->next_record())
@@ -3324,9 +3326,9 @@
 				(
 					'id'		=> $id,
 					'name'		=> str_repeat('..',$level) . $db->f($mapping['name'],true),
-					'parent_id'	=> $db->f('parent_id')
+					'parent_id'	=> $parent
 				);
-				$this->get_children2($id, $level+1);
+				$this->get_children2($data, $id, $level+1);
 			}
 			return $this->tree;
 		} 
