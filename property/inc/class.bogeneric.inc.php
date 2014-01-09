@@ -148,6 +148,23 @@
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'allrows'=>$this->allrows),$filter);
 
+
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['role']) && $field['role'] == 'parent')
+				{
+					foreach($values as &$entry)
+					{
+						if(isset($entry[$field['name']]) && $entry[$field['name']])
+						{
+							$path = $this->so->get_path(array('type' => $this->type, 'id' => $entry[$field['name']]));
+							$entry[$field['name']]	= implode(' > ', $path);
+						}
+					}
+				}
+
+			}
+
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
 
@@ -222,7 +239,7 @@
 			{
 				array_unshift($values,array('id'=> '', 'name'=> lang('select')));
 			}
-			
+
 			if(isset($data['selected']) && is_array($data['selected']))
 			{
 				foreach ($values as &$entry)
