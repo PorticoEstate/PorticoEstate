@@ -1363,7 +1363,9 @@
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
 				$sql = "SELECT DISTINCT fm_ecodimb.* FROM fm_ecodimb {$this->db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"
-				. ' WHERE fm_ecodimb_role_user.user_id = ' . (int) $this->account_id . ' ORDER BY descr ASC';
+				. ' WHERE fm_ecodimb_role_user.user_id = ' . (int) $this->account_id
+				. ' AND expired_on IS NULL'
+				. ' ORDER BY descr ASC';
 				$include_selected = true;
 			}
 			else
