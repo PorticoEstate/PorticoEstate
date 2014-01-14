@@ -9,13 +9,12 @@ var tableYUI;
 	};
 
 
-
-
-/********************************************************************************/	
+	/********************************************************************************/
 	var FormatterRight = function(elCell, oRecord, oColumn, oData)
 	{
-		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
+		elCell.innerHTML = "<div align=\"right\">"+YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:"", thousandsSeparator:" "})+"</div>";
 	}	
+
 	
 /********************************************************************************/	
 	this.myParticularRenderEvent = function(num)

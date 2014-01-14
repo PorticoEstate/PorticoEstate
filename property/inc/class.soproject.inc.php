@@ -2673,14 +2673,23 @@ die();
 					{
 						$join_method .=  " {$this->join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id";
 						$actual_cost = ',fm_orders_actual_cost_view.actual_cost';
+						$group_method ='';
+					}
+					else
+					{
+						$start_period = (date('Y')-1) . '00';
+						$end_period = (date('Y')-1) . 13;
+						$join_method .=  " {$this->left_join} fm_ecobilagoverf ON ( fm_workorder.id = fm_ecobilagoverf.pmwrkord_code AND fm_ecobilagoverf.periode > $start_period AND fm_ecobilagoverf.periode < $end_period)";
+						$actual_cost = ',sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost';
+						$group_method = "GROUP BY fm_workorder.id,fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id";
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
-					$sql = "SELECT {$table}.id, project_id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date {$actual_cost},"
+					$sql = "SELECT {$table}.id, {$table}.project_id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date {$actual_cost},"
 					. " project_type_id, continuous"
 					. " FROM {$table} {$join_method}"
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR {$table}.start_date is NULL"
-					. " ORDER BY {$table}.id DESC";
+					. " {$group_method} ORDER BY {$table}.id DESC";
 					break;
 				default:
 					return array();

@@ -2668,13 +2668,15 @@
 														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
 					);
 					break;
 				case 'workorder':
+					$lang_actual_cost = $paid ? lang('actual cost') . ' ' . lang('total') : lang('actual cost') . ' ' . (date('Y')-1);
+					
 					$myColumnDefs[0] = array
 					(
 						'name'		=> "0",
@@ -2686,10 +2688,10 @@
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'actual_cost','label'=>$lang_actual_cost,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
 					);
