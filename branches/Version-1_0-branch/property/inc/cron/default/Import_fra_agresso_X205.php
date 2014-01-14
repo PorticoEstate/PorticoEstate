@@ -48,6 +48,7 @@
 		protected $skip_import = false;
 		protected $skip_email = false;
 		protected $export;
+		protected $skip_update_voucher_id = false;
 
 		function __construct()
 		{
@@ -121,6 +122,7 @@
 			{
 				foreach($file_list as $file)
 				{
+					$this->skip_update_voucher_id = false;
 					$this->db->transaction_begin();
 					$bilagsnr = $this->import($file);
 					if($this->debug)
@@ -523,6 +525,7 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
+					$this->skip_update_voucher_id = true;
 					$update_voucher = true;
 					$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 					$bilagsnr = $this->db->f('bilagsnr');
@@ -537,6 +540,7 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
+					$this->skip_update_voucher_id = true;
 					$update_voucher = true;
 					$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 					$bilagsnr = $this->db->f('bilagsnr');
@@ -774,7 +778,7 @@
 
 		function import_end_file($buffer)
 		{
-			$num = $this->soXport->add($buffer);
+			$num = $this->soXport->add($buffer,$this->skip_update_voucher_id);
 			if($this->debug)
 			{
 				_debug_array("import_end_file() ");
