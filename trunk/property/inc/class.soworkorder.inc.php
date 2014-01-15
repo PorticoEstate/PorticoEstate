@@ -1541,7 +1541,16 @@
 			if (isset($workorder['new_project_id']) && $workorder['new_project_id'] && ($workorder['new_project_id'] != $workorder['project_id']))
 			{
 				$new_project_id = (int) $workorder['new_project_id'];
+
+				$this->db->query("SELECT ecodimb FROM fm_project WHERE id= $new_project_id" ,__LINE__,__FILE__);
+				$this->db->next_record();
+				$project_ecodimb = (int)$this->db->f('ecodimb');
+
 				$this->db->query("UPDATE fm_workorder SET project_id = {$new_project_id} WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
+				if($project_ecodimb)
+				{
+					$this->db->query("UPDATE fm_workorder SET ecodimb = {$project_ecodimb} WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
+				}
 				$historylog->add('NP',$workorder['id'],$new_project_id, $workorder['project_id']);
 			}
 
@@ -2324,6 +2333,12 @@
 				$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], (int)$budget['budget_amount'], (int)$budget['budget_amount'], $action = 'update', true);
 
 				$this->db->query("UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+
+				$last_day_of_year =  mktime (13 , 0, 0 ,12, 31, date("Y"));
+				$now = time();
+
+				$this->db->query("UPDATE fm_workorder SET start_date = {$now}, end_date = {$last_day_of_year} WHERE id = {$id}",__LINE__,__FILE__);
+
 			}
 			else if($project_type_id == 2)//investment
 			{
