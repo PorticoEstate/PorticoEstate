@@ -1411,16 +1411,40 @@
  */
 				if( $project['start_date'] && !$values['start_date'])
 				{
-					$values['start_date']=$project['start_date'];
+					if($project['project_type_id']==1)//operation
+					{
+						$values['start_date'] = $GLOBALS['phpgw']->common->show_date(time(),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					}
+					else
+					{
+						$values['start_date']=$project['start_date'];
+					}
 				}
+
+				$last_day_of_year =  mktime (13 , 0, 0 ,12, 31, date("Y"));
+
 				if( $project['end_date'] && !$values['end_date'])
 				{
-					$values['end_date']=$project['end_date'];
+					if($project['project_type_id']==1)//operation
+					{
+						$values['end_date'] = $GLOBALS['phpgw']->common->show_date($last_day_of_year, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					}
+					else
+					{
+						$values['end_date']=$project['end_date'];
+					}
 				}
 				else if( !$project['end_date'] && !$values['end_date'])
 				{
-					$values['end_date']=$project['end_date'];
-					$values['end_date'] = $GLOBALS['phpgw']->common->show_date(time(),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+
+					if($project['project_type_id']==1)//operation
+					{
+						$values['end_date'] = $GLOBALS['phpgw']->common->show_date($last_day_of_year, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					}
+					else
+					{
+						$values['end_date'] = $GLOBALS['phpgw']->common->show_date(time(),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					}
 				}
 
 				if( $project['name'] && !isset($values['title']))
@@ -2036,6 +2060,7 @@
 
 				'lang_calculate'						=> lang('Calculate Workorder'),
 				'lang_calculate_statustext'				=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
+
 
 				'lang_send'								=> $this->bo->order_sent_adress ? lang('ReSend Workorder') :lang('Send Workorder'),
 				'lang_send_statustext'					=> lang('send this workorder to vendor'),
