@@ -149,8 +149,7 @@
 					'paranthesis'	=> $paranthesis,
 					'query'			=> $query,
 					'force_location'=> true,
-					'no_address'	=> true,
-					'uicol_address'=> true
+					'no_address'	=> false,
 				));
 
 
