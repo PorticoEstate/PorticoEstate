@@ -411,8 +411,8 @@
 				$entity_table = 'fm_project';
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'location_table'=>$location_table,'cols'=>$cols,'cols_return'=>$cols_return,
-					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,
-					'force_location'=>true, 'no_address' => $no_address,'location_level' => 2));
+					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
+					'force_location'=>true, 'no_address' => $no_address,'location_level' => 0));
 
 				$this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group,$sql);
 
