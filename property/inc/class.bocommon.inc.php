@@ -1287,20 +1287,6 @@
 				$uicols['sortable'][]		= true;
 			}
 
-			if($uicol_address)
-			{
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'address';
-				$uicols['descr'][]			= lang('address');
-				$uicols['statustext'][]		= lang('address');
-				$uicols['exchange'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-				$uicols['sortable'][]		= true;
-			}
-
 			$config_count	= count($config);
 			for ($i=0;$i<$config_count;$i++)
 			{

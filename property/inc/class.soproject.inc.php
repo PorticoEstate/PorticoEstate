@@ -336,16 +336,16 @@
 				//----- wo_hour_status
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
-					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'force_location'=>true,'location_level' => 2));
+					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'force_location'=>true,'location_level' => 0));
 
 				$this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id,$sql);
 
-				$this->uicols		= $this->bocommon->uicols;
+				$uicols		= $this->bocommon->uicols;
 				$cols_return		= $this->bocommon->cols_return;
 				$type_id		= $this->bocommon->type_id;
 				$this->cols_extra	= $this->bocommon->cols_extra;
 
-				$this->bocommon->fm_cache('uicols_project_' . !!$wo_hour_cat_id,$this->uicols);
+				$this->bocommon->fm_cache('uicols_project_' . !!$wo_hour_cat_id,$uicols);
 				$this->bocommon->fm_cache('cols_return_project_' . !!$wo_hour_cat_id,$cols_return);
 				$this->bocommon->fm_cache('type_id_project_' . !!$wo_hour_cat_id,$type_id);
 				$this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id,$this->cols_extra);
@@ -471,7 +471,7 @@
 			{
 				$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 				$cats->supress_info	= true;
-				$cat_list_project	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);//(0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $cat_id, $use_acl = false);
+				$cat_list_project	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter = array($cat_id);
 				foreach ($cat_list_project as $_category)
 				{
@@ -561,21 +561,20 @@
 				$where= 'AND';
 			}
 
-			//_debug_array($criteria);
 			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
-				if(stristr($query, '.') && !isset($criteria[0]['field']))
-				{
-					$query=explode(".",$query);
-					$querymethod = " $where (fm_project.loc1='" . $query[0] . "' AND fm_project.loc".$type_id."='" . $query[1] . "')";
-				}
-				else if(isset($criteria[0]['field']) && $criteria[0]['field'] == 'fm_project.p_num')
+				if(isset($criteria[0]['field']) && $criteria[0]['field'] == 'fm_project.p_num')
 				{
 					$query=explode(".",$query);
 					$querymethod = " $where (fm_project.p_entity_id='" . (int)$query[1] . "' AND fm_project.p_cat_id='" . (int)$query[2] . "' AND fm_project.p_num='" . (int)$query[3] . "')";
+				}
+				else if(stristr($query, '.'))
+				{
+					$query=explode(".",$query);
+					$querymethod = " $where (fm_project.loc1='" . $query[0] . "' AND fm_project.loc".$type_id."='" . $query[1] . "')";
 				}
 				else
 				{
