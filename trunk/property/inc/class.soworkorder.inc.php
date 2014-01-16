@@ -1788,6 +1788,7 @@
 			. " ORDER BY year, month";
 
 			$this->db->query($sql,__LINE__,__FILE__);
+			$_check_periodization = array();
 			$_order_budget = array();
 			while ($this->db->next_record())
 			{
@@ -1816,6 +1817,14 @@
 
 				$active_period[$period] = (int)$this->db->f('active');
 
+				/**
+				* If the order is periodized - do not calculate fictitious periods
+				**/
+				$_check_periodization[$year] += 1;
+				if($calculate_fictive_periods)
+				{
+					$calculate_fictive_periods = $_check_periodization[$year] > 1 ? false : true;
+				}
   				if($continuous)
   				{
   					$sum_year_budget[$year]			+= $budget;
@@ -1830,7 +1839,6 @@
 			* ellers: Start-periode blir måned for start-dato for bestilling dersom den ligger frem i tid 
 			* ellers: Dersom start-dato for bestilling er passert - blir start-periode inneværende måned.
 			**/
-
 			$fictive_period = array();
 			$order_budget = array();
 			if($continuous && $calculate_fictive_periods)
