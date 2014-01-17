@@ -54,7 +54,10 @@
 			$fellesdata = new property_fellesdata();
 			$fellesdata->get_org_unit_ids_from_top();
 
-	//		_debug_array($fellesdata->unit_ids);
+			if($this->debug)
+			{
+				_debug_array($fellesdata->unit_ids);
+			}
 
 			try
 			{
@@ -65,14 +68,54 @@
 				$this->receipt['error'][]=array('msg'=>$e->getMessage());
 			}
 
+
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['rental']))
+			{
+				$this->update_rental_party();
+			}
+
 			$messages = $fellesdata->messages;
 			foreach ($messages as $message)
 			{
 				$this->receipt['message'][] = $message;			
 			}
 		}
-	}
 
+		private function update_rental_party()
+		{
+			$sogeneric	= CreateObject('property.sogeneric');
+			$sql = "SELECT DISTINCT org_enhet_id FROM rental_party WHERE org_enhet_id IS NOT NULL";		
+			$this->db->query($sql,__LINE__,__FILE__);
+			$parties = array();
+			while($this->db->next_record())
+			{
+				$parties[] = $this->db->f('org_enhet_id');		
+			}
+			
+			foreach ($parties as $party)
+			{
+				$sql = "SELECT name, parent_id FROM fm_department WHERE id  = {$party}";		
+				$this->db->query($sql,__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$name			= $this->db->f('name');
+					$parent_id		= $this->db->f('parent_id');
+					$path			= $sogeneric->get_path(array('type' => 'department', 'id' => $parent_id));
+					$parent_name	= implode(' > ', $path);
+
+					$value_set = array
+					(
+						'company_name'	=> $name,
+						'department'	=> $parent_name
+					);
+
+					$value_set	= $this->db->validate_update($value_set);
+					$sql = "UPDATE {$table} SET {$value_set} WHERE org_enhet_id ={$parent_id}";
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
+		}
+	}
 
 	class property_fellesdata
 	{
@@ -84,6 +127,69 @@
 		protected $unit_ids = array();
 		protected $names = array();
 		protected $messages =  array();
+
+		function __construct()
+		{
+			$this->config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+
+			if(!isset($this->config->config_data['fellesdata']) || !$this->config->config_data['fellesdata'])
+			{
+				$this->initiate_config();
+			}
+		}
+		
+		private function initiate_config()
+		{
+			$receipt_section = $this->config->add_section(array
+				(
+					'name' => 'fellesdata',
+					'descr' => 'Fellesdata'
+				)
+			);
+
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'host',
+					'descr'			=> 'Host'
+				)
+			);
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'port',
+					'descr'			=> 'Port'
+				)
+			);
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'db_name',
+					'descr'			=> 'Database'
+				)
+			);
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'user',
+					'descr'			=> 'User'
+				)
+			);
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'password',
+					'name'			=> 'password',
+					'descr'			=> 'Password'
+				)
+			);
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib', 'section_id' => $receipt_section['section_id'] , 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.admin')) );
+		}
+
 
 		/**
 		 * Magic get method
@@ -137,13 +243,13 @@
 
 			$db = createObject('phpgwapi.db', null, null, true);
 
-			$db->debug = !!$config->config_data['external_db_debug'];
-			$db->Host = $config->config_data['external_db_host'];
-			$db->Port = $config->config_data['external_db_port'];
-			$db->Type = $config->config_data['external_db_type'];
-			$db->Database = $config->config_data['external_db_name'];
-			$db->User = $config->config_data['external_db_user'];
-			$db->Password = $config->config_data['external_db_password'];
+			$db->debug 		= false;
+			$db->Host		= $config->config_data['fellesdata']['host'];
+			$db->Port		= $config->config_data['fellesdata']['port'];
+			$db->Type		= 'oracle';
+			$db->Database	= $config->config_data['fellesdata']['db_name'];
+			$db->User		= $config->config_data['fellesdata']['user'];
+			$db->Password	= $config->config_data['fellesdata']['password'];
 
 			try
 			{
@@ -223,7 +329,7 @@
 
 			$sql = "SELECT ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET";
 //			$sql = "SELECT * FROM V_ORG_ENHET";
-			$db->query($sql);
+			$db->query($sql,__LINE__,__FILE__);
 			while($db->next_record())
 			{
 				$org_unit_id = $db->f('ORG_ENHET_ID');
