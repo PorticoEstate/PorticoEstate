@@ -407,7 +407,8 @@ function array_minus($a, $b)
 							break;
 						}
 
-						if($date->getTimestamp() > $end->getTimestamp())
+				//		if($date->getTimestamp() > $end->getTimestamp()) // > php 5.3.0
+						if($date->format("U") > $end->format("U"))
 						{
 							throw new InvalidArgumentException('start time( ' . $date->format('Y-m-d') . ' ) later than end time( ' . $end->format('Y-m-d') . " ) for {$booking['type']}#{$booking['id']}::{$booking['name']}");
 						}
