@@ -36,7 +36,7 @@
 	abstract class  property_cron_parent
 	{
 		protected $function_name;
-		protected $debug = true;
+		protected $debug = false;
 		protected $receipt = array();
 		protected $sub_location = 'sub_location';
 		protected $function_msg	= 'function_msg';
@@ -95,8 +95,7 @@
 			(
 				'menuaction'	=> 'property.custom_functions.index',
 				'function'		=> $this->function_name,
-				'execute'		=> $execute,
-				'debug'			=> $this->debug
+				'execute'		=> $execute
 			);
 
 
@@ -123,7 +122,8 @@
 				'lang_no_statustext'	=> 'tilbake',
 				'lang_no'				=> lang('no'),
 				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
+				'lang_done_statustext'	=> 'tilbake',
+				'debug'					=> $this->debug
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $this->sub_location . ': ' . $this->function_msg;
@@ -137,8 +137,12 @@
 
 		private function cron_log($cron)
 		{
-
 			if(!$this->receipt)
+			{
+				return;
+			}
+
+			if($this->debug)
 			{
 				return;
 			}

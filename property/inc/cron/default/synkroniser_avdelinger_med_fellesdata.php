@@ -44,57 +44,57 @@
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('catch');
 			$this->function_msg	= 'Import info from files';
-
-			set_time_limit(1000);
 		}
-
 
 		function execute()
 		{
 			$fellesdata = new property_fellesdata();
+
+			$fellesdata->set_debug($this->debug);
+
+
 			$fellesdata->get_org_unit_ids_from_top();
 
 			if($this->debug)
 			{
-				_debug_array($fellesdata->unit_ids);
+//				_debug_array($fellesdata->unit_ids);
 			}
 
 			try
 			{
 				$fellesdata->insert_values();
+
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['rental']))
+				{
+					$this->update_rental_party();
+				}
 			}
 			catch(Exception $e)
 			{
 				$this->receipt['error'][]=array('msg'=>$e->getMessage());
 			}
 
-
-			if(isset($GLOBALS['phpgw_info']['user']['apps']['rental']))
-			{
-				$this->update_rental_party();
-			}
-
 			$messages = $fellesdata->messages;
 			foreach ($messages as $message)
 			{
-				$this->receipt['message'][] = $message;			
+				$this->receipt['message'][] = array('msg'=> $message);
 			}
 		}
 
 		private function update_rental_party()
 		{
 			$sogeneric	= CreateObject('property.sogeneric');
-			$sql = "SELECT DISTINCT org_enhet_id FROM rental_party WHERE org_enhet_id IS NOT NULL";		
+			$sql = "SELECT DISTINCT org_enhet_id FROM rental_party WHERE org_enhet_id IS NOT NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$parties = array();
 			while($this->db->next_record())
 			{
-				$parties[] = $this->db->f('org_enhet_id');		
+				$parties[] = $this->db->f('org_enhet_id');
 			}
-			
+
 			foreach ($parties as $party)
 			{
-				$sql = "SELECT name, parent_id FROM fm_department WHERE id  = {$party}";		
+				$sql = "SELECT name, parent_id FROM fm_department WHERE id  = {$party}";
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
@@ -106,12 +106,17 @@
 					$value_set = array
 					(
 						'company_name'	=> $name,
-						'department'	=> $parent_name
+						'department'	=> $this->db->db_addslashes($parent_name)
 					);
 
 					$value_set	= $this->db->validate_update($value_set);
-					$sql = "UPDATE {$table} SET {$value_set} WHERE org_enhet_id ={$parent_id}";
+					$sql = "UPDATE rental_party SET {$value_set} WHERE org_enhet_id ={$party}";
+
 					$this->db->query($sql,__LINE__,__FILE__);
+					if($this->debug)
+					{
+						$this->receipt['message'][] = array('msg' => $sql);
+					}
 				}
 			}
 		}
@@ -127,6 +132,7 @@
 		protected $unit_ids = array();
 		protected $names = array();
 		protected $messages =  array();
+		protected $debug = false;
 
 		function __construct()
 		{
@@ -137,7 +143,12 @@
 				$this->initiate_config();
 			}
 		}
-		
+
+		public function set_debug($debug)
+		{
+			$this->debug = $debug;
+		}
+
 		private function initiate_config()
 		{
 			$receipt_section = $this->config->add_section(array
@@ -231,12 +242,9 @@
 				return $this->db;
 			}
 
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
-
-			if(! $config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
+			if(! $this->config->config_data['fellesdata']['host'] || !$this->ping($this->config->config_data['fellesdata']['host']))
 			{
-				$message ="Database server {$config->config_data['external_db_host']} is not accessible";
+				$message ="Database server {$this->config->config_data['fellesdata']['host']} is not accessible";
 				phpgwapi_cache::message_set($message, 'error');
 				return false;
 			}
@@ -244,12 +252,12 @@
 			$db = createObject('phpgwapi.db', null, null, true);
 
 			$db->debug 		= false;
-			$db->Host		= $config->config_data['fellesdata']['host'];
-			$db->Port		= $config->config_data['fellesdata']['port'];
+			$db->Host		= $this->config->config_data['fellesdata']['host'];
+			$db->Port		= $this->config->config_data['fellesdata']['port'];
 			$db->Type		= 'oracle';
-			$db->Database	= $config->config_data['fellesdata']['db_name'];
-			$db->User		= $config->config_data['fellesdata']['user'];
-			$db->Password	= $config->config_data['fellesdata']['password'];
+			$db->Database	= $this->config->config_data['fellesdata']['db_name'];
+			$db->User		= $this->config->config_data['fellesdata']['user'];
+			$db->Password	= $this->config->config_data['fellesdata']['password'];
 
 			try
 			{
@@ -273,14 +281,14 @@
 			$db->transaction_begin();
 
 			$units = $this->unit_ids;
-	
+
 			foreach ($units as $unit)
 			{
 				$value_set = array
 				(
 					'id'			=> $unit['id'],
 					'parent_id'		=> $unit['parent'],
-					'name'			=> $unit['name'],
+					'name'			=> $db->db_addslashes($unit['name']),
 					'created_on'	=> time(),
 					'created_by'	=> $GLOBALS['phpgw_info']['user']['account_id'],
 					'modified_by'	=>	$GLOBALS['phpgw_info']['user']['account_id'],
@@ -333,8 +341,8 @@
 			while($db->next_record())
 			{
 				$org_unit_id = $db->f('ORG_ENHET_ID');
-				$name	= $db->f('ORG_NAVN');
-				
+				$name	= $db->f('ORG_NAVN', true);
+
 				$this->names[$org_unit_id] = $name;
 			}
 
@@ -364,7 +372,7 @@
 		{
 			$org_unit_id = (int)$org_unit_id;
 			$db = clone($this->db);
-		
+
 			$q = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER,V_ORG_ENHET.ORG_NAVN,ORG_NIVAA FROM V_ORG_KNYTNING"
 			. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
 
