@@ -8,7 +8,7 @@
 	</xsl:template>
 
 	<!-- update_cat -->
-	<xsl:template match="confirm">
+	<xsl:template match="confirm" xmlns:php="http://php.net/xsl">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -39,6 +39,16 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_yes_statustext"/>
 									</xsl:attribute>
+								</input>
+								<input type="checkbox" name="debug" value="1">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'debug')"/>
+									</xsl:attribute>
+									<xsl:if test="debug = '1'">
+										<xsl:attribute name="checked">
+											<xsl:text>checked</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
 								</input>
 							</form>
 						</td>
