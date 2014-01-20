@@ -390,7 +390,15 @@
 						'index'	=> array
 						(
 							'text'	=> lang('Configuration'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'property') )
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'property') ),
+							'children'	=> array
+							(
+								'custom config'	=> array
+								(
+									'text'	=> lang('custom config'),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.admin')) )
+								)
+							)
 						),
 						'import'	=> array
 						(
