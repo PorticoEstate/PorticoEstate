@@ -1013,7 +1013,7 @@
 		),
 		'fm_tts_priority' => array(
 			'fd' => array(
-				'id' => array('type' => 'int','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '100','nullable' => true),
 			),
 			'pk' => array('id'),

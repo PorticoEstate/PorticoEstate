@@ -380,7 +380,7 @@
 				$this->connect();
 			}
 
-			$this->Transaction =  $this->adodb->StartTrans();
+			$this->Transaction =  $this->adodb->BeginTrans();
 			return $this->Transaction;
 		}
 		
@@ -391,8 +391,8 @@
 		*/ 
 		public function transaction_commit()
 		{
-			$this->Transaction = false;
-			return $this->adodb->CompleteTrans();
+			$this->Transaction =  $this->adodb->CommitTrans();
+			return $this->Transaction;
 		}
 		
 		/**
@@ -406,7 +406,7 @@
 			$this->Transaction = false;
 			try
 			{
-				$this->adodb->FailTrans();
+				$this->adodb->RollbackTrans();
 				$ret = $this->adodb->HasFailedTrans();
 			}
 			catch(Exception $e)
