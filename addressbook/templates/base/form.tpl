@@ -11,13 +11,13 @@
 			<!--
 				function changetab(selectedtype)
 				{
-					document.body_form.bname.value = selectedtype ;
+					document.body_form.bname.value = selectedtype;
 					document.body_form.submit();
 				}
 				function submit_form(selectedtype)
 				{
 					process_list('{onsubjs1}', '{onsubjs2}');
-					document.body_form._submit.value = selectedtype ;
+					document.body_form._submit.value = selectedtype;
 					document.body_form.submit();
 				}
 			-->
