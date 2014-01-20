@@ -117,6 +117,7 @@
 		'fm_condition_survey_history',
 		'fm_condition_survey',
 		'fm_request',
+		'fm_request_responsible_unit',
 		'fm_request_condition_type',
 		'fm_request_condition',
 		'fm_request_status',
