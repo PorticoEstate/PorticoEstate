@@ -38,6 +38,7 @@
 	class phpgwapi_vfs extends phpgwapi_vfs_shared
 	{
 		var $file_actions;
+		var $acl_default;
 
 		/**
 		 * constructor, sets up variables
@@ -73,6 +74,8 @@
 				$this->file_actions = 0;
 			}
 	
+			$this->acl_default = $conf->config_data['acl_default'];
+	
 			// test if the files-dir is inside the document-root, and refuse working if so
 			//
 			if ($this->file_actions && $this->in_docroot($this->basedir))
@@ -102,6 +105,9 @@
 			{
 				$this->linked_dirs[] = $this->Record();
 			}
+
+			$this->fileoperation = CreateObject('phpgwapi.vfs_fileoperation_braArkiv');
+
 		}
 
 		/**
@@ -756,9 +762,7 @@
 			}
 			elseif (!$rights && $group_ok)
 			{
-				$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-				$conf->read();
-				if ($conf->config_data['acl_default'] == 'grant')
+				if ($this->acl_default == 'grant')
 				{
 					return True;
 				}
@@ -806,22 +810,10 @@
 				return False;
 			}
 
-			$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-			$conf->read();
 			if ($this->file_actions || $p->outside)
 			{
 
-throw new Exception('implement READ from braArkiv');
-
-				if (filesize ($p->real_full_path) > 0 && $fp = fopen ($p->real_full_path, 'rb'))
-				{
-					$contents = fread ($fp, filesize ($p->real_full_path));
-					fclose ($fp);
-				}
-				else
-				{
-					$contents = False;
-				}
+				$contents = $this->fileoperation->fread($p);
 			}
 			else
 			{
@@ -897,8 +889,6 @@ throw new Exception('implement READ from braArkiv');
 				)
 			);
 
-			$conf = CreateObject('phpgwapi.config', 'phpgwapi');
-			$conf->read();
 			if ($this->file_actions)
 			{
 
@@ -1176,15 +1166,12 @@ throw new Exception('implement touch to braArkiv');
 			{
 				if ($this->file_actions)
 				{
-//not relevant to braArkiv
-/*
-					if (!copy ($f->real_full_path, $t->real_full_path))
+					if (!$this->fileoperation->copy($f, $t))
 					{
 						return False;
 					}
-*/
-throw new Exception('implement filesize to braArkiv');
-					$size = filesize ($t->real_full_path);
+
+					$size = $this->fileoperation->filesize($t);
 				}
 				else
 				{
@@ -1218,16 +1205,21 @@ throw new Exception('implement filesize to braArkiv');
 					))
 				)
 				{
-					$query = $GLOBALS['phpgw']->db->query ("UPDATE phpgw_vfs SET owner_id='$this->working_id', directory='$t->fake_leading_dirs_clean', name='$t->fake_name_clean' WHERE owner_id='$this->working_id' AND directory='$t->fake_leading_dirs_clean' AND name='$t->fake_name_clean'" . $this->extra_sql (VFS_SQL_UPDATE), __LINE__, __FILE__);
+					$query = $GLOBALS['phpgw']->db->query ("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
+					. " directory='{$t->fake_leading_dirs_clean}',"
+					. " name='{$t->fake_name_clean}'"
+					. " WHERE owner_id='{$this->working_id}' AND directory='{$t->fake_leading_dirs_clean}'"
+					. " AND name='{$t->fake_name_clean}'" . $this->extra_sql (VFS_SQL_UPDATE), __LINE__, __FILE__);
 
-					$set_attributes_array = array (
-						'createdby_id' => $account_id,
-						'created' => $this->now,
-						'size' => $size,
-						'mime_type' => $record['mime_type'],
-						'deleteable' => $record['deleteable'],
-						'comment' => $record['comment'],
-						'app' => $record['app']
+					$set_attributes_array = array
+					(
+						'createdby_id'	=> $account_id,
+						'created'		=> $this->now,
+						'size'			=> $size,
+						'mime_type'		=> $record['mime_type'],
+						'deleteable'	=> $record['deleteable'],
+						'comment'		=> $record['comment'],
+						'app'			=> $record['app']
 					);
 
 					if (!$this->file_actions)
@@ -1257,14 +1249,15 @@ throw new Exception('implement filesize to braArkiv');
 						)
 					);
 
-					$set_attributes_array = array (
-						'createdby_id' => $account_id,
-						'created' => $this->now,
-						'size' => $size,
-						'mime_type' => $record['mime_type'],
-						'deleteable' => $record['deleteable'],
-						'comment' => $record['comment'],
-						'app' => $record['app']
+					$set_attributes_array = array
+					(
+						'createdby_id'	=> $account_id,
+						'created'		=> $this->now,
+						'size'			=> $size,
+						'mime_type'		=> $record['mime_type'],
+						'deleteable'	=> $record['deleteable'],
+						'comment'		=> $record['comment'],
+						'app'			=> $record['app']
 					);
 
 					if (!$this->file_actions)
@@ -1308,7 +1301,7 @@ throw new Exception('implement filesize to braArkiv');
 
 				while (list ($num, $entry) = each ($ls))
 				{
-					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					$newdir = preg_replace ("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
 					if ($this->mkdir (array(
 							'string'	=> $newdir.'/'.$entry['name'],
 							'relatives'	=> array ($t->mask)
@@ -1333,10 +1326,10 @@ throw new Exception('implement filesize to braArkiv');
 						continue;
 					}
 
-					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					$newdir = preg_replace ("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
 					$this->cp (array(
-							'from'	=> "$entry[directory]/$entry[name]",
-							'to'	=> "$newdir/$entry[name]",
+							'from'	=> "{$entry[directory]}/{$entry[name]}",
+							'to'	=> "{$newdir}/{$entry[name]}",
 							'relatives'	=> array ($f->mask, $t->mask)
 						)
 					);
@@ -1412,7 +1405,7 @@ throw new Exception('implement filesize to braArkiv');
 					))
 				)
 				{
-					throw new Exception('ACL (EDII) check failed!');
+					throw new Exception('ACL (EDIT) check failed!');
 				}
 			}
 			else
@@ -1439,18 +1432,14 @@ throw new Exception('implement filesize to braArkiv');
 			{
 				if ($this->file_actions)
 				{
-//Not relavant to braArkiv
-/*
-					if (!copy ($f->real_full_path, $t->real_full_path))
+					if (!$this->fileoperation->copy ($f, $t))
 					{
 						$error = "Copy failed!\n";
 						$error = $error. "f->real_full_path: $f->real_full_path \n";
 						$error = $error. "t->real_full_path: $t->real_full_path \n";
 						throw new Exception($error);
 					}
-*/
-throw new Exception('implement filesize to braArkiv');
-					$size = filesize ($t->real_full_path);
+					$size = $this->fileoperation->filesize($t);
 				}
 				else
 				{
@@ -1484,16 +1473,21 @@ throw new Exception('implement filesize to braArkiv');
 					))
 				)
 				{
-					$query = $GLOBALS['phpgw']->db->query ("UPDATE phpgw_vfs SET owner_id='$this->working_id', directory='$t->fake_leading_dirs_clean', name='$t->fake_name_clean' WHERE owner_id='$this->working_id' AND directory='$t->fake_leading_dirs_clean' AND name='$t->fake_name_clean'" . $this->extra_sql (VFS_SQL_UPDATE), __LINE__, __FILE__);
+					$query = $GLOBALS['phpgw']->db->query ("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
+					. " directory='{$t->fake_leading_dirs_clean}',"
+					. " name='{$t->fake_name_clean}'"
+					. " WHERE owner_id='{$this->working_id}' AND directory='{$t->fake_leading_dirs_clean}'"
+					. " AND name='$t->fake_name_clean'" . $this->extra_sql (VFS_SQL_UPDATE), __LINE__, __FILE__);
 
-					$set_attributes_array = array (
-						'createdby_id' => $account_id,
-						'created' => $this->now,
-						'size' => $size,
-						'mime_type' => $record['mime_type'],
-						'deleteable' => $record['deleteable'],
-						'comment' => $record['comment'],
-						'app' => $record['app']
+					$set_attributes_array = array
+					(
+						'createdby_id'		=> $account_id,
+						'created'			=> $this->now,
+						'size'				=> $size,
+						'mime_type'			=> $record['mime_type'],
+						'deleteable'		=> $record['deleteable'],
+						'comment'			=> $record['comment'],
+						'app'				=> $record['app']
 					);
 
 					if (!$this->file_actions)
@@ -1502,8 +1496,8 @@ throw new Exception('implement filesize to braArkiv');
 					}
 
 					$this->set_attributes(array(
-						'string'	=> $t->fake_full_path,
-						'relatives'	=> array ($t->mask),
+						'string'		=> $t->fake_full_path,
+						'relatives'		=> array ($t->mask),
 						'attributes'	=> $set_attributes_array
 						)
 					);
@@ -1523,14 +1517,15 @@ throw new Exception('implement filesize to braArkiv');
 						)
 					);
 
-					$set_attributes_array = array (
-						'createdby_id' => $account_id,
-						'created' => $this->now,
-						'size' => $size,
-						'mime_type' => $record['mime_type'],
-						'deleteable' => $record['deleteable'],
-						'comment' => $record['comment'],
-						'app' => $record['app']
+					$set_attributes_array = array
+					(
+						'createdby_id'		=> $account_id,
+						'created'			=> $this->now,
+						'size'				=> $size,
+						'mime_type'			=> $record['mime_type'],
+						'deleteable'		=> $record['deleteable'],
+						'comment'			=> $record['comment'],
+						'app'				=> $record['app']
 					);
 
 					if (!$this->file_actions)
@@ -1539,8 +1534,8 @@ throw new Exception('implement filesize to braArkiv');
 					}
 
 					$this->set_attributes(array(
-							'string'	=> $t->fake_full_path,
-							'relatives'	=> array ($t->mask),
+							'string'		=> $t->fake_full_path,
+							'relatives'		=> array ($t->mask),
 							'attributes'	=> $set_attributes_array
 						)
 					);
@@ -1574,7 +1569,7 @@ throw new Exception('implement filesize to braArkiv');
 
 				while (list ($num, $entry) = each ($ls))
 				{
-					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					$newdir = preg_replace ("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
 					if ($this->mkdir (array(
 							'string'	=> $newdir.'/'.$entry['name'],
 							'relatives'	=> array ($t->mask)
@@ -1599,10 +1594,10 @@ throw new Exception('implement filesize to braArkiv');
 						continue;
 					}
 
-					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					$newdir = preg_replace ("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
 					$this->cp (array(
-							'from'	=> "$entry[directory]/$entry[name]",
-							'to'	=> "$newdir/$entry[name]",
+							'from'	=> "{$entry[directory]}/{$entry[name]}",
+							'to'	=> "{$newdir}/{$entry[name]}",
 							'relatives'	=> array ($f->mask, $t->mask)
 						)
 					);
@@ -1824,7 +1819,7 @@ throw new Exception('implement RENAME to braArkiv');
 				/* We got $ls from above, before we renamed the directory */
 				while (list ($num, $entry) = each ($ls))
 				{
-					$newdir = ereg_replace ("^$f->fake_full_path", $t->fake_full_path, $entry['directory']);
+					$newdir = preg_replace ("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
 					$newdir_clean = $this->clean_string (array ('string' => $newdir));
 
 					$query = $GLOBALS['phpgw']->db->query ("UPDATE phpgw_vfs SET directory='$newdir_clean' WHERE file_id='$entry[file_id]'" . $this->extra_sql (array ('query_type' => VFS_SQL_UPDATE)), __LINE__, __FILE__);
