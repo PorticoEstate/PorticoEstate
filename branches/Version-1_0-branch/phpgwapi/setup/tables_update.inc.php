@@ -3155,28 +3155,21 @@
 		}
 	}
 
-/*
+
 	$test[] = '0.9.17.542';
+	/**
+	* Enable external integration with vfs
+	*
+	* @return string the new version number
+	*/
 	function phpgwapi_upgrade0_9_17_542()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cust_attribute','location_id',array(
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_vfs','external_id', array(
 			'type' => 'int',
-			'precision' => 4,
-			'nullable' => false,
-		));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cust_attribute','id',array(
-			'type' => 'int',
-			'precision' => 4,
-			'nullable' => false,
-		));
-
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cust_attribute','group_id',array(
-			'type' => 'int',
-			'precision' => 4,
-			'nullable' => true,
-			'default' => 0
+			'precision' => 8,
+			'nullable' => true
 		));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
@@ -3185,6 +3178,3 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
-
-*/
-
