@@ -518,7 +518,7 @@
 
 		function read_obligations($data)
 		{
-			//_debug_array($data);
+//			_debug_array($data);
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter			= isset($data['filter']) ? $data['filter'] : 'none';
 			$query			= isset($data['query']) ? $data['query'] : '';
@@ -526,10 +526,10 @@
 			$order			= isset($data['order']) ? $data['order'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$filter_district_id	= isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0;
-			$year			= isset($data['year']) ? (int)$data['year'] : '';
 			$grouping		= isset($data['grouping']) ? $data['grouping'] : '';
 			$revision		= isset($data['revision']) ? $data['revision'] : 1;
 			$year			= isset($data['year']) &&  $data['year'] ? (int)$data['year'] : 0;
+			$month			= isset($data['month']) &&  $data['month'] ? (int)$data['month'] : 0;
 			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$details		= isset($data['details']) ? $data['details'] : '';
 			$dimb_id		= isset($data['dimb_id'])  && $data['dimb_id'] ? (int)$data['dimb_id'] : 0;
@@ -540,6 +540,8 @@
 			{
 				return array();
 			}
+
+			$filter_period = $month ? sprintf("%s%02d",$year,$month) : '';
 
 			$filtermethod_direction = '';
 
@@ -564,7 +566,7 @@
 
 
 			$filtermethod = '';
-			$filtermethod_order = " WHERE (fm_workorder_budget.year = $year OR fm_workorder_status.closed IS NULL)";
+			$filtermethod_order = " WHERE (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NULL)";
 
 			$where = 'AND';
 
@@ -711,6 +713,11 @@ ksort($projects);
 				{
 					if($budget['year'] == $year)
 					{
+
+						if($budget['period'] != "{$year}00" && $filter_period && ((int)$filter_period+1) > $budget['period'])
+						{
+							continue;
+						}
 /*
 $projects3[$projects2[$order_id]]['actual_cost']+= $budget['actual_cost'];
 $projects3[$projects2[$order_id]]['combined_cost']+= $budget['sum_orders'];
