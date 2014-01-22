@@ -930,10 +930,14 @@
 
 			if($accountline)
 			{
+				$this->db->query('SELECT category FROM fm_vendor WHERE id=' . (int) $oRsBilag[0]['spvend_code']);
+				$this->db->next_record();
+				$_vendor_category = $this->db->f('category');
+
 				$accountline[] = array
 				(
 					'TRANSACTIONTYPE'		=> 'R114',
-					'ACCOUNTLINK.CODE'		=> 2400,
+					'ACCOUNTLINK.CODE'		=> $_vendor_category == 1 ? 2400 : 2460,
 					'CURRENCY'				=> $oRsBilag[0]['currency'],
 					'AMOUNT'				=> (-1 * $sum_amount),
 					'TAXCODE'				=> $oRsBilag[0]['mvakode'],
