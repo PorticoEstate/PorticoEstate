@@ -289,7 +289,8 @@
 				'link_directory' => array('type' => 'text','nullable' => True),
 				'link_name' => array('type' => 'text','nullable' => True),
 				'version' => array('type' => 'varchar','precision' => 30,'nullable' => False,'default' => '0.0.0.0'),
-				'content' => array('type' => 'text','nullable' => True)
+				'content' => array('type' => 'text','nullable' => True),
+				'external_id' => array('type' => 'int','precision' => 8,'nullable' => True),
 			),
 			'pk' => array('file_id'),
 			'fk' => array(),
