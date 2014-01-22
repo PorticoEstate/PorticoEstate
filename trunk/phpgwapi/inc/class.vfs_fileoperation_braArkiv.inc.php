@@ -37,7 +37,7 @@
 			return filesize($path);
 		}
 
-		public function fread($path_parts)
+		public function read($path_parts)
 		{
 			$path = $path_parts->real_full_path;
 			$contents = null;
@@ -54,5 +54,75 @@
 		{
 			return copy($from->real_full_path, $to->real_full_path);
 		}
+
+
+		public function write($path_parts, $content)
+		{
+			$write_ok = false;
+			if($fp = fopen($path_parts->real_full_path, 'wb'))
+			{
+				fwrite($fp, $content, strlen($content));
+				fclose($fp);
+				$write_ok = true;
+			}
+			return $write_ok;
+		}
+
+
+		public function touch($path_parts)
+		{
+			return @touch($path_parts->real_full_path);
+		}
+
+		public function rename($from, $to)
+		{
+			return rename($from->real_full_path, $to->real_full_path);
+		}
+
+		/*
+		*Deletes a file
+		*/
+		public function unlink($path_parts)
+		{
+			return unlink($path_parts->real_full_path);
+		}
+
+		/*
+		*Removes directory
+		*/
+		public function rmdir($path_parts)
+		{
+			return rmdir($path_parts->real_full_path);
+		}
+
+		public function check_target_directory($path_parts)
+		{
+			return file_exists($path_parts->real_leading_dirs);
+		}
+
+		public function auto_create_home($basedir)
+		{
+			if(!file_exists($basedir.'/home'))
+ 			{
+  				@mkdir($basedir.'/home', 0770);
+ 			}
+		}
+
+		public function file_exists($path_parts)
+		{
+			return file_exists($path_parts->real_full_path);
+		}
+
+		public function is_dir($path_parts)
+		{
+			return is_dir($path_parts->real_full_path);
+		}
+
+		public function mkdir($path_parts)
+		{
+			return mkdir($path_parts->real_full_path, 0770);
+		}
+
+
 
 	}
