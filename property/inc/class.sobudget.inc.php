@@ -714,7 +714,7 @@ ksort($projects);
 					if($budget['year'] == $year)
 					{
 
-						if($budget['period'] != "{$year}00" && $filter_period && ((int)$filter_period+1) > $budget['period'])
+						if($budget['period'] != "{$year}00" && $filter_period && ((int)$filter_period) < (int)$budget['period'])
 						{
 							continue;
 						}
