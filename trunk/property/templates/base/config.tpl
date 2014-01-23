@@ -157,6 +157,17 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_delay_operation_workorder_end_date}, {lang_last_day_in_year}:</td>
+			<td>
+				<select name="newsettings[delay_operation_workorder_end_date]">
+					<option value="" {selected_delay_operation_workorder_end_date_}>NO</option>
+					<option value="1" {selected_delay_operation_workorder_end_date_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+
+
 		<tr class="row_off">
 			<td>{lang_Default_municipal_number}:</td>
 			<td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
