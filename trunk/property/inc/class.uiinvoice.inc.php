@@ -2547,6 +2547,10 @@ JS;
 			$loc1 			= phpgw::get_var('loc1');
 			$district_id 	= phpgw::get_var('district_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
+			$b_account= phpgw::get_var('b_account', 'int');
+
+			$b_account_class = $b_account_class ? $b_account_class : substr($b_account,0,2);
+
 			$ecodimb 		= phpgw::get_var('ecodimb');
 
 			//-- ubica focus del menu derecho
@@ -2909,13 +2913,13 @@ JS;
 
 			$uicols = array
 				(
-					'input_type'	=>	array('varchar','varchar','varchar','link'),
-					'type'			=>	array('text'	 ,'text'	 ,'text'	 ,'url' ),
-					'col_name'		=>	array('district_id','period','account_class','consume'),
-					'name'			=>	array('district_id','period','account_class','consume'),
-					'formatter'		=>	array('','','',''),
-					'descr'			=>	array(lang('District'),lang('Period'),lang('Budget account'),lang('Consume')),
-					'className'		=> 	array('centerClasss','centerClasss','centerClasss','rightClasss')
+					'input_type'	=>	array('varchar','varchar','varchar','link', 'varchar'),
+					'type'			=>	array('text'	 ,'text'	 ,'text'	 ,'url', 'text' ),
+					'col_name'		=>	array('district_id','period','account_class','consume', 'paid'),
+					'name'			=>	array('district_id','period','account_class','consume', 'paid'),
+					'formatter'		=>	array('','','','',''),
+					'descr'			=>	array(lang('District'),lang('Period'),lang('Budget account'),lang('Consume'),lang('paid')),
+					'className'		=> 	array('centerClasss','centerClasss','centerClasss','rightClasss','centerClasss')
 				);
 
 			$j=0;
