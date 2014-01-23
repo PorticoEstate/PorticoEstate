@@ -1423,9 +1423,10 @@
 
 				$last_day_of_year =  mktime (13 , 0, 0 ,12, 31, date("Y"));
 
+
 				if( $project['end_date'] && !$values['end_date'])
 				{
-					if($project['project_type_id']==1)//operation
+					if($project['project_type_id']==1 && isset($config->config_data['delay_operation_workorder_end_date']) && $config->config_data['delay_operation_workorder_end_date']==1)//operation
 					{
 						$values['end_date'] = $GLOBALS['phpgw']->common->show_date($last_day_of_year, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					}
@@ -1436,8 +1437,7 @@
 				}
 				else if( !$project['end_date'] && !$values['end_date'])
 				{
-
-					if($project['project_type_id']==1)//operation
+					if($project['project_type_id']==1 && isset($config->config_data['delay_operation_workorder_end_date']) && $config->config_data['delay_operation_workorder_end_date']==1)//operation
 					{
 						$values['end_date'] = $GLOBALS['phpgw']->common->show_date($last_day_of_year, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					}
