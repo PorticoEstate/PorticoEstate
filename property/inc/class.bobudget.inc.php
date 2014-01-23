@@ -84,6 +84,7 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$year					= phpgw::get_var('year', 'int');
+			$month					= phpgw::get_var('month', 'int');
 			$grouping				= phpgw::get_var('grouping', 'int');
 			$revision				= phpgw::get_var('revision', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
@@ -102,8 +103,8 @@
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
-			$this->department			= isset($department) && $department ? $department : $GLOBALS['phpgw_info']['user']['preferences']['property']['department'];
+			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
+			$this->department		= isset($department) && $department ? $department : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['department'];
 
 			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
@@ -111,6 +112,7 @@
 			$this->revision			= isset($revision) && $revision ? $revision : 1;
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 			$this->year				= isset($year) && $year ? $year : date('Y');
+			$this->month			= isset($month) && $month ? $month : 0;
 			$this->details			= $details;
 
 			if(isset($year) && !$this->year == $year && !$GLOBALS['phpgw_info']['menuaction']=='property.uibudget.obligations')
@@ -190,7 +192,7 @@
 			$obligations = $this->so->read_obligations(array('start' => $this->start, 'query' => $this->query,
 				'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
 				'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
-				'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
+				'year' => $this->year,'month' => $this->month, 'grouping' => $this->grouping, 'revision' => $this->revision,
 				'details' => $this->details,'dimb_id' => $this->dimb_id, 'department' => $this->department,
 				'direction'	=> $this->direction));
 

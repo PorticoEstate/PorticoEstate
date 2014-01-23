@@ -75,6 +75,7 @@
 			$this->allrows		= $this->bo->allrows;
 			$this->district_id	= $this->bo->district_id;
 			$this->year			= $this->bo->year;
+			$this->month		= $this->bo->month;
 			$this->grouping		= $this->bo->grouping;
 			$this->revision		= $this->bo->revision;
 			$this->details		= $this->bo->details;
@@ -96,7 +97,8 @@
 					'cat_id'		=> $this->cat_id,
 					'dimb_id'		=> $this->dimb_id,
 					'allrows'		=> $this->allrows,
-					'direction'		=> $this->direction
+					'direction'		=> $this->direction,
+					'month'			=> $this->month
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -1029,6 +1031,7 @@
 						'district_id'	=> $this->district_id,
 						'grouping'		=> $this->grouping,
 						'year'			=> $this->year,
+						'month'			=> $this->month,
 						'details'		=> $this->details,
 						'allrows'		=> $this->allrows,
 						'dimb_id'		=> $this->dimb_id,
@@ -1043,6 +1046,7 @@
 					."district_id:'{$this->district_id}',"
 					."grouping:'{$this->grouping}',"
 					."year:'{$this->year}',"
+					."month:'{$this->month}',"
 					."details:'{$this->details}',"
 					."dimb_id:'{$this->dimb_id}',"
 					."direction:'{$this->direction}',"
@@ -1053,14 +1057,23 @@
 				$default_value = array ('id'=>'','name'=>lang('no year'));
 				array_unshift ($values_combo_box[0],$default_value);
 
-				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+
+
+				for ($i=1;$i< 13 ;$i++)
+				{
+					$values_combo_box[1][] = array ('id'=> $i,'name'=> sprintf("%02s",$i));
+				}
+
+				array_unshift ($values_combo_box[1], array ('id'=>'','name'=>lang('month')));
+
+				$values_combo_box[2]  = $this->bocommon->select_district_list('filter',$this->district_id);
 				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[1],$default_value);
+				array_unshift ($values_combo_box[2],$default_value);
 
 				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
 				foreach($cat_filter['cat_list'] as $_cat)
 				{
-					$values_combo_box[2][] = array
+					$values_combo_box[3][] = array
 					(
 						'id' => $_cat['cat_id'],
 						'name' => $_cat['name'],
@@ -1068,27 +1081,27 @@
 					);
 				}
 
-				array_unshift ($values_combo_box[2],array ('id'=>'', 'name'=>lang('no category')));
+				array_unshift ($values_combo_box[3],array ('id'=>'', 'name'=>lang('no category')));
 
 //_debug_array($values_combo_box[2]);
 
-				$values_combo_box[3] =  $this->bo->get_b_group_list($this->grouping);
+				$values_combo_box[4] =  $this->bo->get_b_group_list($this->grouping);
 				$default_value = array ('id'=>'','name'=>lang('no grouping'));
-				array_unshift ($values_combo_box[3],$default_value);
+				array_unshift ($values_combo_box[4],$default_value);
 
-				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'department'));
-				array_unshift ($values_combo_box[4], array ('id'=>'','name'=>lang('department')));
+				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'department'));
+				array_unshift ($values_combo_box[5], array ('id'=>'','name'=>lang('department')));
 
-				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
-				foreach($values_combo_box[5] as & $_dimb)
+				$values_combo_box[6]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[6] as & $_dimb)
 				{
 					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
 				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
-				array_unshift ($values_combo_box[5],$default_value);
+				array_unshift ($values_combo_box[6],$default_value);
 
 
-				$values_combo_box[6]  = array
+				$values_combo_box[7]  = array
 				(
 					array
 					(
@@ -1128,13 +1141,22 @@
 									'tab_index' => 1
 								),
 								array
+								( //boton 	YEAR
+									'id'		=> 'btn_month',
+									'name'		=> 'month',
+									'value'		=> lang('month'),
+									'type'		=> 'button',
+									'style' 	=> 'filter',
+									'tab_index' => 2
+								),
+								array
 								( //boton 	DISTRICT
 									'id' 		=> 'btn_district_id',
 									'name' 		=> 'district_id',
 									'value'		=> lang('district_id'),
 									'type' 		=> 'button',
 									'style' 	=> 'filter',
-									'tab_index' => 2
+									'tab_index' => 3
 								),
 /*								array
 								( //boton 	CATEGORY
@@ -1164,7 +1186,7 @@
 									'style' => 'filter',
 									'values' => $values_combo_box[2],
 									'onchange'=> 'onChangeSelect("cat_id");',
-									'tab_index' => 3
+									'tab_index' => 5
 								),
 /*
 								array
@@ -1188,9 +1210,9 @@
 									'value'	=> lang('department'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[4],
+									'values' => $values_combo_box[5],
 									'onchange'=> 'onChangeSelect("department");',
-									'tab_index' => 5
+									'tab_index' => 6
 								),
 								array
 								( //boton 	USER
@@ -1200,9 +1222,9 @@
 									'value'	=> lang('dimb'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[5],
+									'values' => $values_combo_box[6],
 									'onchange'=> 'onChangeSelect("dimb_id");',
-									'tab_index' => 6
+									'tab_index' => 7
 								),
 								array
 								( //boton 	USER
@@ -1212,17 +1234,16 @@
 									'value'	=> lang('direction'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[6],
+									'values' => $values_combo_box[7],
 									'onchange'=> 'onChangeSelect("direction");',
-									'tab_index' => 7
+									'tab_index' => 8
 								),
-
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 10
+									'tab_index' => 11
 								),
 								array
 								( //boton     SEARCH
@@ -1230,7 +1251,7 @@
 									'name' 		=> 'search',
 									'value'    	=> lang('search'),
 									'type' 		=> 'button',
-									'tab_index' => 9
+									'tab_index' => 10
 								),
 								array
 								( // TEXT IMPUT
@@ -1240,7 +1261,7 @@
 									'type' 		=> 'text',
 									'size'    	=> 28,
 									'onkeypress'=> 'return pulsar(event)',
-									'tab_index' => 8
+									'tab_index' => 9
 								)
 							),
 							'hidden_value' => array
@@ -1256,16 +1277,14 @@
 									'value'	=> $this->bocommon->select2String($values_combo_box[1])
 								),
 								array
-								( //div values  combo_box_3
+								( //div values  combo_box_2
 									'id' => 'values_combo_box_2',
+									'value'	=> $this->bocommon->select2String($values_combo_box[2])
+								),								array
+								( //div values  combo_box_3
+									'id' => 'values_combo_box_3',
 									'value'	=> $this->bocommon->select2String($values_combo_box[3])
-								),/*
-								array
-								( //div values  combo_box_4
-									'id' => 'values_combo_box_4',
-									'value'	=> $this->bocommon->select2String($values_combo_box[4])
-								)*/
-
+								)
 							)
 						)
 					)
