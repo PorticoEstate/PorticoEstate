@@ -821,6 +821,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				return false;
 			}
 
+			//FIXME in case $p->outside: read fom local disk
 			if($this->file_actions || $p->outside)
 			{
 				$contents = $this->fileoperation->read($p);
@@ -982,6 +983,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				   create the file or set the modification time
 				*/
 
+				//FIXME in case of $p->outside: touch on local disk
 				$rr = $this->fileoperation->touch($p);
 
 				if($p->outside)
@@ -1301,7 +1303,8 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 				while(list($num, $entry) = each($ls))
 				{
-					$newdir = preg_replace("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
+					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
+
 					if($this->mkdir(array(
 							'string'	=> "{$newdir}/{$entry['name']}",
 							'relatives'	=> array($t->mask)
@@ -1326,7 +1329,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 						continue;
 					}
 
-					$newdir = preg_replace("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
+					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 					$this->cp(array(
 							'from'	=> "{$entry[directory]}/{$entry[name]}",
 							'to'	=> "{$newdir}/{$entry[name]}",
@@ -1569,7 +1572,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 				while(list($num, $entry) = each($ls))
 				{
-					$newdir = preg_replace("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
+					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 					if($this->mkdir(array(
 							'string'	=> "{$newdir}/{$entry['name']}",
 							'relatives'	=> array($t->mask)
@@ -1594,7 +1597,8 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 						continue;
 					}
 
-					$newdir = preg_replace("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
+					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
+
 					$this->cp(array(
 							'from'		=> "{$entry[directory]}/{$entry[name]}",
 							'to'		=> "{$newdir}/{$entry[name]}",
@@ -1696,7 +1700,8 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 					'string'	=> $f->fake_full_path,
 					'relatives'	=> array($f->mask)
 				) == 'Directory'))
-				&& preg_match("/^{$f->fake_full_path}/", $t->fake_full_path)
+//				&& preg_match("/^{$f->fake_full_path}/", $t->fake_full_path)
+				&& preg_match("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path)
 			)
 			{
 				if(($t->fake_full_path == $f->fake_full_path) || substr($t->fake_full_path, strlen($f->fake_full_path), 1) == '/')
@@ -1750,6 +1755,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				   If the from file is outside, it won't have a database entry,
 				   so we have to touch it and find the size
 				*/
+				//FIXME
 				if($f->outside)
 				{
 					$size = $this->fileoperation->filesize($f);
@@ -1822,7 +1828,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				/* We got $ls from above, before we renamed the directory */
 				while(list($num, $entry) = each($ls))
 				{
-					$newdir = preg_replace("/^{$f->fake_full_path}/", $t->fake_full_path, $entry['directory']);
+					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 					$newdir_clean = $this->clean_string(array('string' => $newdir));
 
 					$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET directory='{$newdir_clean}'"
@@ -2222,7 +2228,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				return false;
 			}
 
-			//FIXME
+			//FIXME real_full_path...
 			$size = $this->get_size(array(
 					'string'	=> $rp->real_full_path,
 					'relatives'	=> array($rp->mask)
@@ -2317,7 +2323,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 			reset($this->attributes);
 			$value_set = array();
-//			while(list($num, $attribute) = each($this->attributes))
+
 			foreach($this->attributes as $num => $attribute)
 			{
 				if(isset($data['attributes'][$attribute]))
@@ -2340,14 +2346,6 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 					$$attribute = $this->clean_string(array('string' => $$attribute));
 
-/*
-					if($change_attributes > 0)
-					{
-						$sql .= ', ';
-					}
-
-					$sql .= "$attribute='" . $$attribute . "'";
-*/
 					$value_set[$attribute] = $$attribute;
 
 					$change_attributes++;
@@ -2403,9 +2401,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 			}
 
 			$default_values = array
-				(
-					'relatives'	=> array(RELATIVE_CURRENT)
-				);
+			(
+				'relatives'	=> array(RELATIVE_CURRENT)
+			);
 
 			$data = array_merge($this->default_values($data, $default_values), $data);
 
@@ -2426,6 +2424,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				return false;
 			}
 
+			/*
+			* The file is outside the virtual root
+			*/
 			if($p->outside)
 			{
 				if(is_dir($p->real_full_path))
@@ -2444,14 +2445,20 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 			   passed a directory
 			*/
 			$db2 = clone($GLOBALS['phpgw']->db);
-			$db2->query("SELECT mime_type FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'" . $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
+			$db2->query("SELECT mime_type FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}'"
+			. " AND name='{$p->fake_name_clean}'"
+			. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
+
 			$db2->next_record();
 			$mime_type = $db2->f('mime_type');
+
 			if(!$mime_type)
 			{
 				$mime_type = $this->get_ext_mime_type(array('string' => $data['string']));
 				{
-					$db2->query("UPDATE phpgw_vfs SET mime_type='{$mime_type}' WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'" . $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
+					$db2->query("UPDATE phpgw_vfs SET mime_type='{$mime_type}'"
+					. " WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
+					. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
 				}
 			}
 
@@ -2469,9 +2476,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 			}
 
 			$default_values = array
-				(
-					'relatives'	=> array(RELATIVE_CURRENT)
-				);
+			(
+				'relatives'	=> array(RELATIVE_CURRENT)
+			);
 
 			$data = array_merge($this->default_values($data, $default_values), $data);
 
@@ -2489,7 +2496,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 			}
 
 			$db2 = clone($GLOBALS['phpgw']->db);
-			$db2->query("SELECT name FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'" . $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
+			$db2->query("SELECT name FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}'"
+			. " AND name='{$p->fake_name_clean}'"
+			. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
 
 			if($db2->next_record())
 			{
@@ -2581,11 +2590,11 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				/* We return an array of one array to maintain the standard */
 				$rarray = array();
 				reset($this->attributes);
+						$db2 = clone($GLOBALS['phpgw']->db);
 				while(list($num, $attribute) = each($this->attributes))
 				{
 					if($attribute == 'mime_type' && !$record[$attribute])
 					{
-						$db2 = clone($GLOBALS['phpgw']->db);
 						$record[$attribute] = $this->get_ext_mime_type(array(
 								'string' => $p->fake_name_clean
 							)
@@ -2593,7 +2602,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 						if($record[$attribute])
 						{
-							$db2->query("UPDATE phpgw_vfs SET mime_type='{$record[$attribute]}' WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'" . $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
+							$db2->query("UPDATE phpgw_vfs SET mime_type='{$record[$attribute]}'"
+							. " WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
+							. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
 						}
 					}
 
@@ -2645,15 +2656,15 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 			$sql = 'SELECT ' . implode(',', $this->attributes);
 
 			$dir_clean = $this->clean_string(array('string' => $p->fake_full_path));
-			$sql .= " FROM phpgw_vfs WHERE directory LIKE '$dir_clean%'";
+			$sql .= " FROM phpgw_vfs WHERE directory LIKE '{$dir_clean}%'";
 			$sql .= $this->extra_sql(array('query_type' => VFS_SQL_SELECT));
 
 			if($data['mime_type'])
 			{
-				$sql .= " AND mime_type='".$data['mime_type']."'";
+				$sql .= " AND mime_type='{$data['mime_type']}'";
 			}
 
-			$sql .= ' ORDER BY '.$data['orderby'];
+			$sql .= " ORDER BY {$data['orderby']}";
 
 			$query = $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 
@@ -2664,13 +2675,15 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 				//_debug_array($record);
 				/* Further checking on the directory.  This makes sure /home/user/test won't match /home/user/test22 */
-				if(!@ereg("^{$p->fake_full_path}(/|$)", $record['directory']))
+			//	if(!@ereg("^{$p->fake_full_path}(/|$)", $record['directory']))
+				if(!preg_match("/^" . str_replace('/', '\/', $p->fake_full_path). "(\/|$)/", $record['directory']))
 				{
 					continue;
 				}
 
 				/* If they want only this directory, then $dir should end without a trailing / */
-				if(!$data['checksubdirs'] && ereg("^{$p->fake_full_path}/", $record['directory']))
+//				if(!$data['checksubdirs'] && preg_match("/^{$p->fake_full_path}\//", $record['directory']))
+				if(!$data['checksubdirs'] && preg_match("/^" . str_replace('/', '\/', $p->fake_full_path). "\//", $record['directory']))
 				{
 					continue;
 				}
@@ -2682,7 +2695,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 					if( $record['mime_type'] )
 					{
-						$db2->query("UPDATE phpgw_vfs SET mime_type='{$record[$attribute]}' WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'" . $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
+						$db2->query("UPDATE phpgw_vfs SET mime_type='{$record[$attribute]}'"
+						. " WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
+						. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
 
 					}
 				}
@@ -2702,9 +2717,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 			}
 
 			$default_values = array
-				(
-					'relatives'	=> array(RELATIVE_CURRENT)
-				);
+			(
+				'relatives'	=> array(RELATIVE_CURRENT)
+			);
 
 			$data = array_merge($this->default_values($data, $default_values), $data);
 
@@ -2756,7 +2771,7 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 					);
 
 					/* Note the mime_type.  This can be "Directory", which is how we create directories */
-					$set_attributes_array = Array(
+					$set_attributes_array = array(
 						'size' => $file_array['size'],
 						'mime_type' => $file_array['mime_type']
 					);
@@ -2804,9 +2819,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 			}
 
 			$default_values = array
-				(
-					'relatives'	=> array(RELATIVE_CURRENT)
-				);
+			(
+				'relatives'	=> array(RELATIVE_CURRENT)
+			);
 
 			$data = array_merge($this->default_values($data, $default_values), $data);
 
@@ -2829,7 +2844,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 
 				if($mime_type)
 				{
-					$GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET mime_type='".$mime_type."' WHERE directory='".$p->fake_leading_dirs_clean."' AND name='".$p->fake_name_clean."'" . $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
+					$GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET mime_type='{$mime_type}'"
+					. " WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
+					. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
 				}
 			}
 
