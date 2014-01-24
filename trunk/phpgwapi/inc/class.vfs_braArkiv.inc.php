@@ -65,14 +65,27 @@
 			*/
 			$conf = CreateObject('phpgwapi.config', 'phpgwapi');
 			$conf->read();
-			if($conf->config_data['file_store_contents'] == 'filesystem' || !$conf->config_data['file_store_contents'])
+
+			if(isset($conf->config_data['file_store_contents']) && $conf->config_data['file_store_contents'])
 			{
-				$this->file_actions = 1;
+				$file_store_contents = $conf->config_data['file_store_contents'];
 			}
 			else
 			{
-				$this->file_actions = 0;
+				$file_store_contents = 'filesystem';
 			}
+			
+			switch ($file_store_contents)
+			{
+				case 'filesystem':
+					$this->file_actions = 1;
+					break;
+				default:
+					$this->file_actions = 0;
+					break;
+			}
+
+			$this->fileoperation = CreateObject("phpgwapi.vfs_fileoperation_{$file_store_contents}");
 
 			$this->acl_default = $conf->config_data['acl_default'];
 
@@ -109,9 +122,6 @@
 			{
 				$this->linked_dirs[] = $this->Record();
 			}
-
-			$this->fileoperation = CreateObject('phpgwapi.vfs_fileoperation_braArkiv');
-
 		}
 
 		/**
@@ -735,57 +745,8 @@
 				return true;
 			}
 
-			/* Check if they're in the group */
-			$memberships = $GLOBALS['phpgw']->accounts->membership($user_id);
-
-			if(is_array($memberships))
-			{
-				reset($memberships);
-				while(list($num, $group_array) = each($memberships))
-				{
-					if($owner_id == $group_array->id)
-					{
-						$group_ok = 1;
-						break;
-					}
-				}
-			}
-
-throw new Exception('vfs::acl_check() - not implemented correctly');
-			$acl = CreateObject('phpgwapi.acl', $owner_id);
-			$acl->set_account_id($owner_id, true);
-
-			$rights = $acl->get_rights($user_id);
-
-			/* Add privileges from the groups this user belongs to */
-			if(is_array($memberships))
-			{
-				reset($memberships);
-				while(list($num, $group_array) = each($memberships))
-				{
-					$rights |= $acl->get_rights($group_array->id);
-				}
-			}
-
-			if($rights & $data['operation'])
-			{
-				return true;
-			}
-			elseif(!$rights && $group_ok)
-			{
-				if($this->acl_default == 'grant')
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			return $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $currentapp);
 		}
 
 		/*
@@ -821,10 +782,21 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				return false;
 			}
 
-			//FIXME in case $p->outside: read fom local disk
 			if($this->file_actions || $p->outside)
 			{
-				$contents = $this->fileoperation->read($p);
+				if($p->outside)
+				{
+					$contents = null;
+					if( $filesize = filesize($p->real_full_path) > 0 && $fp = fopen($p->real_full_path, 'rb'))
+					{
+						$contents = fread($fp, $filesize);
+						fclose ($fp);
+					}
+				}
+				else
+				{
+					$contents = $this->fileoperation->read($p);
+				}
 			}
 			else
 			{
@@ -910,7 +882,6 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				if($this->file_actions)
 				{
 					$set_attributes_array = array(
-					//	'size'	=> $this->fileoperation->filesize($p)
 						'size'	=> strlen($data['content']),
 					);
 				}
@@ -983,12 +954,14 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				   create the file or set the modification time
 				*/
 
-				//FIXME in case of $p->outside: touch on local disk
-				$rr = $this->fileoperation->touch($p);
-
+				/* In case of $p->outside: touch on local disk */
 				if($p->outside)
 				{
-					return $rr;
+					return @touch($p->real_full_path);
+				}
+				else
+				{
+					$rr = $this->fileoperation->touch($p);
 				}
 			}
 
@@ -1755,10 +1728,9 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 				   If the from file is outside, it won't have a database entry,
 				   so we have to touch it and find the size
 				*/
-				//FIXME
 				if($f->outside)
 				{
-					$size = $this->fileoperation->filesize($f);
+					$size = filesize($f->real_full_path);
 					if( $size === false )
 					{
 						_debug_array($f);
@@ -2166,15 +2138,18 @@ throw new Exception('vfs::acl_check() - not implemented correctly');
 		 */
 		function make_link($data)
 		{
+			/* Does not seem to be used */
+			return false;
+
 			if(!is_array($data))
 			{
 				$data = array();
 			}
 
 			$default_values = array
-				(
-					'relatives'	=> array(RELATIVE_CURRENT, RELATIVE_CURRENT)
-				);
+			(
+				'relatives'	=> array(RELATIVE_CURRENT, RELATIVE_CURRENT)
+			);
 
 			$data = array_merge($this->default_values($data, $default_values), $data);
 
