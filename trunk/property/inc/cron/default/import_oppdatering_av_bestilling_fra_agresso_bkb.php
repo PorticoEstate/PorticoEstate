@@ -107,7 +107,6 @@
 						$ok = @rename($movefrom, $moveto);
 						if(!$ok) // Should never happen.
 						{
-						//	$this->invoice->delete($bilagsnr);
 							$this->db->transaction_abort();
 							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, oppdatering avbrutt");
 						}
@@ -173,7 +172,6 @@
 				{
 					_debug_array($files);
 				}
-die();
 
 				foreach($files as $file_name)
 				{
@@ -198,7 +196,6 @@ die();
 									echo "Lokal file was deleted: {$file_local}<br/>";
 								}
 							}
-							
 						}
 						fclose($fp);
 					}
@@ -214,13 +211,13 @@ die();
 
 			$fp = fopen($file,'rb');
 
-			while (($data = fgetcsv($handle, 1000, ";")) !== false && $ok == true )
+			while (($data = fgetcsv($fp, 1000, ";")) !== false && $ok == true )
 			{
-				if( preg_match('/^penger/i', $file_name) )
+				if( preg_match('/^PENGER/i', $file_name) )
 				{
 					$ok = $this->update_amount($data);
 				}
-				else if( preg_match('/^status/i', $file_name) )
+				else if( preg_match('/^STATUS/i', $file_name) )
 				{
 					$ok = $this->update_status($data);
 				}
@@ -234,6 +231,7 @@ die();
 
 		private function update_amount($data)
 		{
+			//prosjektnummer;prosjektstatus;bestillingsnummer;beløp
     		$agresso_prosjekt	= (int)$data[0];
 			$prosjektstatus		= trim($data[1]);
 			$order_id			= trim($data[2]);
@@ -329,7 +327,8 @@ die();
 
 			$subject = 'Melding er oppdatert fra Agresso';
 			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
-			$prefs = $this->bocommon->create_preferences('property', $assignedto);
+			$bocommon = CreateObject('property.bocommon');
+			$prefs = $bocommon->create_preferences('property', $assignedto);
 			if(isset($prefs['email']) && $prefs['email'])
 			{
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id),false,true).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
