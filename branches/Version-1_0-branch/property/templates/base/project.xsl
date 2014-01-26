@@ -1025,6 +1025,11 @@ Returns mixed
 							</select>
 						</td>
 					</tr>
+					<xsl:choose>
+						<xsl:when test="type='workorder'">
+							<xsl:call-template name="b_account_form"/>
+						</xsl:when>
+					</xsl:choose>
 					<tr>
 						<td>
 							<xsl:value-of select="php:function('lang', 'status filter')"/>
@@ -1147,7 +1152,7 @@ Returns mixed
 			//var base_java_url = <xsl:value-of select="base_java_url"/>;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
-			var td_count = 5;
+			var td_count = <xsl:value-of select="td_count"/>;
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
 					{

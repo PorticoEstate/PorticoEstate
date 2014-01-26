@@ -1250,36 +1250,6 @@
 			$file = $path_parts['basename'];
 
 			return $this->mime_magic->filename2mime($file);
-/*
-			$file = basename($data['string']);
-			$mimefile=PHPGW_API_INC.'/phpgw_mime.types';
-			$fp=fopen($mimefile,'r');
-			$contents = explode("\n",fread($fp,filesize($mimefile)));
-			fclose($fp);
-
-			$parts=explode('.',strtolower($file));
-			$ext=$parts[(sizeof($parts)-1)];
-
-			for($i=0;$i<sizeof($contents);$i++)
-			{
-				if (!ereg("^#",$contents[$i]))
-				{
-					$line=split("[[:space:]]+", $contents[$i]);
-					if (sizeof($line) >= 2)
-					{
-						for($j=1;$j<sizeof($line);$j++)
-						{
-							if($line[$j] == $ext)
-							{
-								return $line[0];
-							}
-						}
-					}
-				}
-			}
-
-			return '';
-*/
  		}
 
 		/* PUBLIC functions (mandatory) they don't need to be implemented
@@ -1432,7 +1402,8 @@
 			else
 			{
 				$base_sep = $sep;
-				if (ereg ("^$this->basedir" . $sep, $string))
+//				if (ereg ("^$this->basedir" . $sep, $string))
+				if (preg_match ("/^" . str_replace('/', '\/', "{$this->basedir}{$sep}"). "/", $string))
 				{
 					$base = $this->basedir . $sep;
 				}
@@ -1510,7 +1481,9 @@
 				reset ($this->linked_dirs);
 				while (list ($num, $link_info) = each ($this->linked_dirs))
 				{
-					if (ereg ("^$link_info[directory]/$link_info[name](/|$)", $rarray['fake_full_path']))
+//					if (ereg ("^$link_info[directory]/$link_info[name](/|$)", $rarray['fake_full_path']))
+					if(preg_match("/^" . str_replace('/', '\/', "{$link_info['directory']}/{$link_info['name']}"). "(\/|$)/", $rarray['fake_full_path']))
+
 					{
 						$rarray['real_full_path'] = ereg_replace ("^$this->basedir", '', $rarray['real_full_path']);
 						$rarray['real_full_path'] = ereg_replace ("^{$link_info['directory']}/{$link_info['name']}", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);

@@ -1070,10 +1070,16 @@
 				$default_value = array ('id'=>'','name'=>lang('no district'));
 				array_unshift ($values_combo_box[2],$default_value);
 
+//_debug_array($values_combo_box[2]);
+
+				$values_combo_box[3] =  $this->bo->get_b_group_list($this->grouping);
+				$default_value = array ('id'=>'','name'=>lang('no grouping'));
+				array_unshift ($values_combo_box[3],$default_value);
+
 				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
 				foreach($cat_filter['cat_list'] as $_cat)
 				{
-					$values_combo_box[3][] = array
+					$values_combo_box[4][] = array
 					(
 						'id' => $_cat['cat_id'],
 						'name' => $_cat['name'],
@@ -1081,13 +1087,8 @@
 					);
 				}
 
-				array_unshift ($values_combo_box[3],array ('id'=>'', 'name'=>lang('no category')));
+				array_unshift ($values_combo_box[4],array ('id'=>'', 'name'=>lang('no category')));
 
-//_debug_array($values_combo_box[2]);
-
-				$values_combo_box[4] =  $this->bo->get_b_group_list($this->grouping);
-				$default_value = array ('id'=>'','name'=>lang('no grouping'));
-				array_unshift ($values_combo_box[4],$default_value);
 
 				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'department'));
 				array_unshift ($values_combo_box[5], array ('id'=>'','name'=>lang('department')));
@@ -1158,15 +1159,6 @@
 									'style' 	=> 'filter',
 									'tab_index' => 3
 								),
-/*								array
-								( //boton 	CATEGORY
-									'id' 		=> 'btn_cat_id',
-									'name' 		=> 'cat_id',
-									'value'		=> lang('Category'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
-									'tab_index' => 3
-								),*/
 								array
 								( //boton 	GROUPING
 									'id' 		=> 'btn_grouping',
@@ -1177,34 +1169,18 @@
 									'tab_index' => 4
 								),
 								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
+								(
 									'id' => 'sel_cat_id',
 									'name' => 'cat_id',
 									'value'	=> lang('Category'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[2],
+									'values' => $values_combo_box[4],
 									'onchange'=> 'onChangeSelect("cat_id");',
 									'tab_index' => 5
 								),
-/*
 								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
-									'id' => 'sel_grouping',
-									'name' => 'grouping',
-									'value'	=> lang('grouping'),
-									'type' => 'select',
-									'style' => 'filter',
-									'values' => $values_combo_box[3],
-									'onchange'=> 'onChangeSelect("grouping");',
-									'tab_index' => 4
-								),
-*/
-								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
+								( 
 									'id' => 'sel_department',
 									'name' => 'department',
 									'value'	=> lang('department'),
@@ -1215,8 +1191,7 @@
 									'tab_index' => 6
 								),
 								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
+								( 
 									'id' => 'sel_dimb_id',
 									'name' => 'dimb_id',
 									'value'	=> lang('dimb'),
@@ -1227,8 +1202,7 @@
 									'tab_index' => 7
 								),
 								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
+								(
 									'id' => 'sel_direction',
 									'name' => 'direction',
 									'value'	=> lang('direction'),
@@ -1289,6 +1263,7 @@
 						)
 					)
 				);
+
 				$dry_run = true;
 			}
 
