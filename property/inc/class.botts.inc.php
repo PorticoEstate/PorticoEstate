@@ -1199,7 +1199,11 @@
 
 			$members = array();
 
-			if( (isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
+			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] == 2)
+			{
+				// Never send to groups
+			}
+			else if( (isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] == 1 && $ticket['group_id'] )
 					|| ($force_send && $ticket['group_id']))
 			{
 				$log_recipients[] = $group_name;
