@@ -24,7 +24,7 @@
 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	class phpgwapi_vfs_fileoperation_braArkiv
+	class phpgwapi_vfs_fileoperation_filesystem
 	{
 		public function __construct()
 		{

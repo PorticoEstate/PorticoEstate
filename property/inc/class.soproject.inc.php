@@ -2236,7 +2236,7 @@
 				}
 
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
-				
+
 				$entry['deviation_percent_period'] = $corretion * $deviation/$entry['budget'] * 100;
 				$entry['deviation_percent_acc'] = $corretion * $entry['deviation_acc']/$total_sum * 100;
 				$entry['closed'] = $closed_period[$entry['period']];
@@ -2263,7 +2263,7 @@
 			$project_id = (int) $project_id;
 			$closed_orig_b_period = isset($data['closed_orig_b_period']) && $data['closed_orig_b_period'] ? $data['closed_orig_b_period'] : array();
 			$closed_b_period = isset($data['closed_b_period']) && $data['closed_b_period'] ? $data['closed_b_period'] : array();
-			
+
 			$close_period = array();
 			$open_period = array();
 
@@ -2412,7 +2412,7 @@
 
 					if($request_project_hookup_status)
 					{
-						$this->db->query("UPDATE fm_request SET status='{$request_project_hookup_status}' WHERE id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);					
+						$this->db->query("UPDATE fm_request SET status='{$request_project_hookup_status}' WHERE id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
 					}
 
 					$receipt['message'][] = array('msg'=>lang('request %1 has been added',$add_request['request_id'][$i]));
@@ -2551,7 +2551,7 @@ die();
 		}
 
 
-		public function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget_year=0,$new_budget = array())
+		public function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget_year=0,$new_budget = array(),$b_account_id = 0)
 		{
 			if($transfer_budget_year && $execute && $new_budget)
 			{
@@ -2660,6 +2660,11 @@ die();
 					$sql_budget = "SELECT DISTINCT year, month, active, sum(combined_cost) as amount FROM fm_workorder_budget WHERE ";
 					$sql_budget .= 'order_id = %d GROUP BY year, month, active ORDER BY year';
 
+					if($b_account_id)
+					{
+						$filter .=  " AND fm_workorder.account_id = '{$b_account_id}'";
+					}
+
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
 					$title_field = 'fm_workorder.title';
@@ -2680,11 +2685,11 @@ die();
 						$end_period = (date('Y')-1) . 13;
 						$join_method .=  " {$this->left_join} fm_ecobilagoverf ON ( fm_workorder.id = fm_ecobilagoverf.pmwrkord_code AND fm_ecobilagoverf.periode > $start_period AND fm_ecobilagoverf.periode < $end_period)";
 						$actual_cost = ',sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost';
-						$group_method = "GROUP BY fm_workorder.id,fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id";
+						$group_method = "GROUP BY fm_workorder.id, fm_workorder.account_id, fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id";
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
-					$sql = "SELECT {$table}.id, {$table}.project_id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date {$actual_cost},"
+					$sql = "SELECT {$table}.id, {$table}.project_id,{$status_table}.closed, {$table}.account_id, {$status_table}.descr as status ,{$title_field},{$table}.start_date {$actual_cost},"
 					. " project_type_id, continuous"
 					. " FROM {$table} {$join_method}"
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR {$table}.start_date is NULL"
@@ -2720,6 +2725,7 @@ die();
 					'project_type_id'	=> $this->db->f('project_type_id'),
 					'continuous'		=> $this->db->f('continuous') ? X : '',
 					'project_type'		=> $project_types[$this->db->f('project_type_id')],
+					'b_account_id'		=> $this->db->f('account_id')// only applies to workorders
 				);
 			}
 

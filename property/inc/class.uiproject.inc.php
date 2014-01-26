@@ -2545,6 +2545,8 @@
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
 			$transfer_budget= phpgw::get_var('transfer_budget', 'integer');
 			$__new_budget 	= phpgw::get_var('new_budget');
+			$b_account_id	= phpgw::get_var('b_account_id', 'integer');
+			$b_account_name = phpgw::get_var('b_account_name');
 
 			$_new_budget = explode(',', trim($__new_budget, ','));
 
@@ -2587,7 +2589,7 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget,$b_account_id);
 			}
 
 			foreach ($list as &$entry)
@@ -2673,6 +2675,8 @@
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
 					);
+					$b_account_data = array();
+					$td_count = 9;
 					break;
 				case 'workorder':
 					$lang_actual_cost = $paid ? lang('actual cost') . ' ' . lang('total') : lang('actual cost') . ' ' . (date('Y')-1);
@@ -2687,6 +2691,7 @@
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'b_account_id','label'=>lang('budget account'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>true,'resizeable'=>true),
@@ -2696,6 +2701,16 @@
 														))
 					);
 
+
+					$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> $b_account_id,
+				//		'b_account_name'	=> $b_account_name,
+						'disabled'			=> '',
+						'parent'			=> $project['b_account_id'],
+						'type'				=> 'form'
+						)
+					);
+					$td_count = 12;
 					break;
 			}
 
@@ -2792,7 +2807,10 @@
 				'paid'					=> $paid,
 				'closed_orders'			=> $closed_orders,
 				'check_paid'			=> $type == 'workorder' ? 1 : 0,
-				'check_closed_orders'	=> $type == 'project' ? 1 : 0
+				'check_closed_orders'	=> $type == 'project' ? 1 : 0,
+				'type'					=> $type,
+				'b_account_data'		=> $b_account_data,
+				'td_count'				=> $td_count
 			);
 
 

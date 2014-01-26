@@ -717,11 +717,11 @@
 			$start_periode = date('Ym',$start_date);
 			$end_periode = date('Ym',$end_date);
 
-			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume $select_account_class "
-				. " FROM  fm_ecobilagoverf $this->join fm_location1 ON (fm_ecobilagoverf.loc1 = fm_location1.loc1) "
-				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
-				. " $this->join fm_b_account ON (fm_ecobilagoverf.spbudact_code = fm_b_account.id) "
-				. " WHERE (periode >='$start_periode' AND periode <= '$end_periode' $filtermethod )"
+			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume {$select_account_class}"
+				. " FROM  fm_ecobilagoverf {$this->join} fm_location1 ON (fm_ecobilagoverf.loc1 = fm_location1.loc1) "
+				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
+				. " {$this->join} fm_b_account ON (fm_ecobilagoverf.spbudact_code = fm_b_account.id) "
+				. " WHERE (periode >='{$start_periode}' AND periode <= '{$end_periode}' {$filtermethod})"
 				. " GROUP BY district_id,periode $group_account_class"
 				. " ORDER BY periode";
 			//echo $sql;
@@ -734,12 +734,38 @@
 			while ($this->db->next_record())
 			{
 				$consume[] = array
-					(
-						'consume'		=> round($this->db->f('consume')),
-						'period'		=> $this->db->f('periode'),
-						'district_id'	=> $this->db->f('district_id'),
-						'account_class'	=> $b_account_class ? $b_account_class : $this->db->f('b_account_class')
-					);
+				(
+					'consume'		=> round($this->db->f('consume')),
+					'period'		=> $this->db->f('periode'),
+					'district_id'	=> $this->db->f('district_id'),
+					'account_class'	=> $b_account_class ? $b_account_class : $this->db->f('b_account_class'),
+					'paid'			=> 'x'
+				);
+			}
+
+			$filtermethod = ltrim($filtermethod, ' AND ');
+
+			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume {$select_account_class}"
+				. " FROM  fm_ecobilag {$this->join} fm_location1 ON (fm_ecobilag.loc1 = fm_location1.loc1) "
+				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
+				. " {$this->join} fm_b_account ON (fm_ecobilag.spbudact_code = fm_b_account.id) "
+				. " WHERE ({$filtermethod})"
+				. " GROUP BY district_id,periode $group_account_class"
+				. " ORDER BY periode";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records += $this->db->num_rows();
+
+			while ($this->db->next_record())
+			{
+				$consume[] = array
+				(
+					'consume'		=> round($this->db->f('consume')),
+					'period'		=> $this->db->f('periode'),
+					'district_id'	=> $this->db->f('district_id'),
+					'account_class'	=> $b_account_class ? $b_account_class : $this->db->f('b_account_class'),
+					'paid'			=> ''
+				);
 			}
 
 			return $consume;
