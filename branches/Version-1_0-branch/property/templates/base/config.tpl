@@ -338,6 +338,7 @@
 				<select name="newsettings[groupnotification]">
 					<option value="" {selected_groupnotification_}>NO</option>
 					<option value="1" {selected_groupnotification_1}>YES</option>
+					<option value="2" {selected_groupnotification_2}>Never</option>
 				</select>
 			</td>
 		</tr>
