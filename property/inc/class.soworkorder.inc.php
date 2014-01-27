@@ -1938,6 +1938,7 @@
 				if(isset($order_budget[$periode]))
 				{
 					$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
+					$order_budget[$periode]['actual_period'] = $periode;
 					$_found = true;
 				}
 				else
@@ -1948,6 +1949,7 @@
 						if(isset($order_budget[$_period]))
 						{
 							$order_budget[$_period]['actual_cost'] += $this->db->f('actual_cost');
+							$order_budget[$_period]['actual_period'] = $periode;
 							$_found = true;
 							break;
 						}
@@ -1959,9 +1961,9 @@
 					$order_budget[$_dummy_period]['year'] = substr( $_dummy_period, 0, 4 );
 					$order_budget[$_dummy_period]['month'] = substr( $_dummy_period, -2);
 					$order_budget[$_dummy_period]['actual_cost'] += $this->db->f('actual_cost');
+					$order_budget[$_dummy_period]['actual_period'] = $periode;
 				}
 			}
-
 
 			$sort_period = array();
 			$values = array();
@@ -2031,7 +2033,8 @@
 					'sum_orders'			=> $_sum_orders,
 					'sum_oblications'		=> $_sum_oblications,
 					'actual_cost'			=> $_actual_cost,
-					'closed_order'			=> $_budget['closed_order']
+					'closed_order'			=> $_budget['closed_order'],
+					'actual_period'			=> $_budget['actual_period']			
 				);
 
 				$sort_period[] = $period;

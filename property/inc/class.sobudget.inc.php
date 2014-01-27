@@ -34,10 +34,11 @@
 
 	class property_sobudget
 	{
-		var	$sum_budget_cost		= 0;
-		var	$sum_obligation_cost	= 0;
-		var	$sum_actual_cost		= 0;
-		var $sum_hits				= 0;
+		var	$sum_budget_cost			= 0;
+		var	$sum_obligation_cost		= 0;
+		var	$sum_actual_cost_period		= 0;
+		var	$sum_actual_cost			= 0;
+		var $sum_hits					= 0;
 
 		function __construct()
 		{
@@ -696,48 +697,45 @@ ksort($projects);
 
 			$soworkorder = CreateObject('property.soworkorder');
 
+			$sum_actual_cost_period = 0;
 			$sum_actual_cost = 0;
 			$actual_cost = array();
+			$actual_cost_period = array();
 			$sum_obligation_cost = 0;
 			$obligations = array();
 			$sum_hits = 0;
 
 			$sum_hits = count($_temp_paid_info);
-
+$_periods=array();
 			foreach ($_temp_paid_info as $order_id => &$order_info)
 			{
 				$order_budget = $soworkorder->get_budget($order_id);
-//_debug_array($order_budget);
+
 				$_count = false;
 				foreach($order_budget as $budget)
 				{
 					if($budget['year'] == $year)
 					{
 
+						$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
+						$_actual_cost	= round($budget['actual_cost']/$_taxfactor);
+
+						$sum_actual_cost += $_actual_cost;
+						if($budget['actual_period']==$filter_period)
+						{
+							$actual_cost_period[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
+							$sum_actual_cost_period += $_actual_cost;
+						}
+
 						if($budget['period'] != "{$year}00" && $filter_period && ((int)$filter_period) < (int)$budget['period'])
 						{
 							continue;
 						}
-/*
-$projects3[$projects2[$order_id]]['actual_cost']+= $budget['actual_cost'];
-$projects3[$projects2[$order_id]]['combined_cost']+= $budget['sum_orders'];
-$projects3[$projects2[$order_id]]['budget']+= $budget['budget'];
-$projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
-*/
-					//	$order_info['actual_cost']		= $budget['actual_cost'];
-					//	$order_info['combined_cost']	= $budget['sum_orders'];
-					//	$order_info['budget']			= $budget['budget'];
-					//	$order_info['obligation']		= $budget['sum_oblications'];
 
+//$_periods[] = $budget['period'];
 						$sum_obligation_cost += $budget['sum_oblications'];
 						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
 
-						$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
-						$_actual_cost	= round($budget['actual_cost']/$_taxfactor);
-
-//_debug_array($_test);
-
-						$sum_actual_cost += $_actual_cost;
 						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
 					}
 
@@ -751,7 +749,6 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 					}
 				}
 			}
-//_debug_array($projects3);
 
 
 //			_debug_array($obligations);
@@ -799,9 +796,9 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
 			$sql = "SELECT sum(budget) as budget, count(fm_tts_tickets.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_tts_tickets.ecodimb"
 				. " FROM fm_tts_tickets"
-				. " $this->join fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
-				. " $this->join fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $filtermethod2 $querymethod  {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+				. " {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
+				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $filtermethod2 $querymethod  {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
@@ -825,9 +822,9 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
 			$sql = "SELECT sum(budget) as budget, count(fm_tts_tickets.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_tts_tickets.ecodimb"
 				. " FROM fm_tts_tickets"
-				. " $this->join fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
-				. " $this->join fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod  {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+				. " {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
+				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id {$filtermethod} {$querymethod} {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 
 			$sql = str_replace('budget', 'actual_cost', $sql);
@@ -982,13 +979,13 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
 //-------start check paid service agreement-----------
 
-			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilagoverf.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
-				. " FROM fm_ecobilagoverf"
+			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilagoverf.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb,"
+				. " periode FROM fm_ecobilagoverf"
 				. " {$this->join} fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
 				. " {$this->join} fm_s_agreement ON fm_ecobilagoverf.pmwrkord_code = fm_s_agreement.id"
 				. " {$this->join} fm_s_agreement_budget ON fm_s_agreement.id = fm_s_agreement_budget.agreement_id"
 				. " WHERE periode >= $start_periode AND periode <= $end_periode AND {$filtermethod} {$where} {$filtermethod_direction}"
-				. " GROUP BY fm_b_account.{$b_account_field}, ecodimb";
+				. " GROUP BY fm_b_account.{$b_account_field}, ecodimb, periode";
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -1000,6 +997,11 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
 				$sum_actual_cost += $_actual_cost;
 				$actual_cost[$_account_value][$_dummy_district][$_dimb] += $_actual_cost;
+				if((int)$this->db->f('periode')==(int)$filter_period)
+				{
+					$actual_cost_period[$_account_value][$_dummy_district][$_dimb] += $_actual_cost;
+					$sum_actual_cost_period += $_actual_cost;
+				}
 				$obligations[$_account_value][$_dummy_district][$_dimb] -= $_actual_cost;
 				$accout_info[$_account_value] = true;
 				$district[$_dummy_district] = true;
@@ -1037,13 +1039,13 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 				$where = 'AND';
 			}
 
-			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilag.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
-				. " FROM fm_ecobilag"
+			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilag.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb,"
+				. " periode FROM fm_ecobilag"
 				. " {$this->join} fm_b_account ON fm_ecobilag.spbudact_code =fm_b_account.id"
 				. " {$this->join} fm_s_agreement ON fm_ecobilag.pmwrkord_code = fm_s_agreement.id"
 				. " {$this->join} fm_s_agreement_budget ON fm_s_agreement.id = fm_s_agreement_budget.agreement_id"
 				. " {$filtermethod} {$where} {$filtermethod_direction}"
-				. " GROUP BY fm_b_account.{$b_account_field}, ecodimb";
+				. " GROUP BY fm_b_account.{$b_account_field}, ecodimb, periode";
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -1054,6 +1056,11 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 				$_dimb = (int)$this->db->f('ecodimb');
 
 				$sum_actual_cost += $_actual_cost;
+				if((int)$this->db->f('periode')==(int)$filter_period)
+				{
+					$actual_cost_period[$_account_value][$_dummy_district][$_dimb] += $_actual_cost;
+					$sum_actual_cost_period += $_actual_cost;
+				}
 				$actual_cost[$_account_value][$_dummy_district][$_dimb] += $_actual_cost;
 				$obligations[$_account_value][$_dummy_district][$_dimb] -= $_actual_cost;
 				$accout_info[$_account_value] = true;
@@ -1064,10 +1071,11 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
 //-------end check active invoices-----------
 // end service agreements
-			$this->sum_budget_cost		= $sum_budget_cost;
-			$this->sum_obligation_cost	= $sum_obligation_cost;
-			$this->sum_actual_cost		= $sum_actual_cost;
-			$this->sum_hits 			= $sum_hits;
+			$this->sum_budget_cost			= $sum_budget_cost;
+			$this->sum_obligation_cost		= $sum_obligation_cost;
+			$this->sum_actual_cost			= $sum_actual_cost;
+			$this->sum_actual_cost_period	= $sum_actual_cost_period;
+			$this->sum_hits 				= $sum_hits;
 
 			//_debug_array($actual_cost);die();
 			$result = array();
@@ -1110,14 +1118,15 @@ $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 								|| (isset($obligations[$b_account][$district_id][$dimb]) && $obligations[$b_account][$district_id][$dimb]))
 							{
 								$result[] = array(
-									'grouping'		=> $details ? '' : $b_account, 
-									'b_account'		=> $details ? $b_account : '',
-									'district_id'	=> $district_id,
-									'ecodimb'		=> $dimb,
-									'actual_cost'	=> isset($actual_cost[$b_account][$district_id][$dimb]) && $actual_cost[$b_account][$district_id][$dimb] ? round($actual_cost[$b_account][$district_id][$dimb]) : 0,
-									'budget_cost'	=> isset($budget_cost[$b_account][$district_id][$dimb]) && $budget_cost[$b_account][$district_id][$dimb] ? round($budget_cost[$b_account][$district_id][$dimb]) : 0,
-									'obligation'	=> isset($obligations[$b_account][$district_id][$dimb]) && $obligations[$b_account][$district_id][$dimb] ? round($obligations[$b_account][$district_id][$dimb]) : 0,
-									'hits'			=> isset($hits[$b_account][$district_id][$dimb])?$hits[$b_account][$district_id][$dimb]:0,
+									'grouping'				=> $details ? '' : $b_account, 
+									'b_account'				=> $details ? $b_account : '',
+									'district_id'			=> $district_id,
+									'ecodimb'				=> $dimb,
+									'actual_cost'			=> isset($actual_cost[$b_account][$district_id][$dimb]) && $actual_cost[$b_account][$district_id][$dimb] ? round($actual_cost[$b_account][$district_id][$dimb]) : 0,
+									'actual_cost_period'	=> isset($actual_cost_period[$b_account][$district_id][$dimb]) && $actual_cost_period[$b_account][$district_id][$dimb] ? round($actual_cost_period[$b_account][$district_id][$dimb]) : 0,
+									'budget_cost'			=> isset($budget_cost[$b_account][$district_id][$dimb]) && $budget_cost[$b_account][$district_id][$dimb] ? round($budget_cost[$b_account][$district_id][$dimb]) : 0,
+									'obligation'			=> isset($obligations[$b_account][$district_id][$dimb]) && $obligations[$b_account][$district_id][$dimb] ? round($obligations[$b_account][$district_id][$dimb]) : 0,
+									'hits'					=> isset($hits[$b_account][$district_id][$dimb])?$hits[$b_account][$district_id][$dimb]:0,
 								);
 							}
 						}
