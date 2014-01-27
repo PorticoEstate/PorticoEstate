@@ -49,6 +49,7 @@
 		var	$sum_budget_cost		= 0;
 		var	$sum_obligation_cost	= 0;
 		var	$sum_actual_cost		= 0;
+		var	$sum_actual_cost_period		= 0;
 		var $sum_hits				= 0;
 		var	$total_records			= 0;
 
@@ -196,11 +197,12 @@
 				'details' => $this->details,'dimb_id' => $this->dimb_id, 'department' => $this->department,
 				'direction'	=> $this->direction));
 
-			$this->total_records		= $this->so->total_records;
-			$this->sum_budget_cost		= $this->so->sum_budget_cost;
-			$this->sum_obligation_cost	= $this->so->sum_obligation_cost;
-			$this->sum_actual_cost		= $this->so->sum_actual_cost;
-			$this->sum_hits				= $this->so->sum_hits;
+			$this->total_records			= $this->so->total_records;
+			$this->sum_budget_cost			= $this->so->sum_budget_cost;
+			$this->sum_obligation_cost		= $this->so->sum_obligation_cost;
+			$this->sum_actual_cost			= $this->so->sum_actual_cost;
+			$this->sum_actual_cost_period	= $this->so->sum_actual_cost_period;
+			$this->sum_hits					= $this->so->sum_hits;
 
 			return $obligations;
 		}

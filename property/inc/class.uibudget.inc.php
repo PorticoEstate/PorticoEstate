@@ -1294,6 +1294,8 @@
 				array(
 					'col_name'=>'actual_cost_ex',	'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
+					'col_name'=>'actual_cost_period',	'visible'=>true,	'label'=>lang('paid') . ' ' . lang('period'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
 					'col_name'=>'actual_cost',	'visible'=>true,	'label'=>lang('paid'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'myFormatLink_Count'),
 				array(
 					'col_name'=>'link_actual_cost','visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
@@ -1350,6 +1352,7 @@
 							'obligation'		=> number_format($entry['obligation'], 0, ',', ' '),
 							'link_obligation'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$entry['b_account'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'status_id' => 'all', 'obligation' => true)),
 							'actual_cost_ex'	=> $entry['actual_cost'],
+							'actual_cost_period'=> number_format($entry['actual_cost_period'], 0, ',', ' '),
 							'actual_cost'		=> number_format($entry['actual_cost'], 0, ',', ' '),
 							'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$entry['b_account'],  'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'submit_search'=>true)),
 							'diff_ex'			=> $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
@@ -1429,6 +1432,7 @@
 					'sum_budget'		=> $this->bo->sum_budget_cost,
 					'sum_obligation'	=> $this->bo->sum_obligation_cost,
 					'sum_actual'		=> $this->bo->sum_actual_cost,
+					'sum_actual_period'	=> $this->bo->sum_actual_cost_period,
 					'sum_diff'			=> $this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost,
 					'sum_hits'			=> $this->bo->sum_hits
 				);

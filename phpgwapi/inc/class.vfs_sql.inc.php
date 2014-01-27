@@ -2718,7 +2718,7 @@
 						}
 
 						$rarray[] = $this->get_real_info(array(
-								'string'	=> $p->fake_full_path . '/' . $filename,
+								'string'	=> "{$p->fake_full_path}/{$filename}",
 								'relatives'	=> array(RELATIVE_NONE)
 							)
 						);
@@ -2741,7 +2741,7 @@
 				while(list($num, $file_array) = each($rarray))
 				{
 					$p2 = $this->path_parts(array(
-							'string'	=> $file_array['directory'] . '/' . $file_array['name'],
+							'string'	=> "{$file_array['directory']}/{$file_array['name']}",
 							'relatives'	=> array(RELATIVE_NONE)
 						)
 					);
