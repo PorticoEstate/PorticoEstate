@@ -729,7 +729,7 @@ $_periods=array();
 
 						if($budget['period'] != "{$year}00" && $filter_period && ((int)$filter_period) < (int)$budget['period'])
 						{
-							continue;
+							break;
 						}
 
 //$_periods[] = $budget['period'];
