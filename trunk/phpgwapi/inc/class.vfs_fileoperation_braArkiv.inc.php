@@ -66,15 +66,25 @@
 			$this->secKey = $secKey;
 		}
 
+		/**
+		* Get file id corresponding to braArkiv
+		* @param object $p path_parts
+		* @return integer file id
+		*/
 		private function get_file_id($p)
 		{
 			$sql = "SELECT external_id FROM phpgw_vfs WHERE  directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
-				. " AND ((mime_type != 'journal' AND mime_type != 'journal-deleted') OR mime_type IS NULL)";  
+				. " AND ((mime_type != 'journal' AND mime_type != 'journal-deleted') OR mime_type IS NULL)";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('external_id');
 		}
 
+		/**
+		* Get filesize
+		* @param object $p path_parts
+		* @return integer filesize
+		*/
 		public function filesize($p)
 		{
 			$sql = "SELECT size FROM phpgw_vfs WHERE  directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
@@ -86,27 +96,32 @@
 			return $this->db->f('size');
 		}
 
+		/**
+		* Retreive file contents
+		* @param object $p path_parts
+		* @return String.  Contents of 'string', or False on error.
+		*/
 		public function read($p)
 		{
 			$fileid = $this->get_file_id($p);
-			$file = null;
+			$file = false;
 
 			if($fileid)
 			{
 				$getAvailableFileVariants = new getAvailableFileVariants();
 				$getAvailableFileVariants->secKey = $this->secKey;
 				$getAvailableFileVariants->documentId = $fileid;
-		
+
 				$getAvailableFileVariantsResponse = $this->Services->getAvailableFileVariants($getAvailableFileVariants);
 
 				$getFileAsByteArray = new getFileAsByteArray();
-				$getFileAsByteArray->secKey = $secKey;
+				$getFileAsByteArray->secKey = $this->secKey;
 				$getFileAsByteArray->documentId = $fileid;
-				$getFileAsByteArray->variant = 'Org';//'PDFJPG80';
+				$getFileAsByteArray->variant = $getAvailableFileVariantsResponse->getAvailableFileVariantsResult->string[0];
 				$getFileAsByteArray->versjon = 1;
-		
+
 				$getFileAsByteArrayResponse = $this->Services->getFileAsByteArray($getFileAsByteArray);
-		
+
 				$getFileAsByteArrayResult = $getFileAsByteArrayResponse->getFileAsByteArrayResult;
 
 				if($getFileAsByteArrayResult)
@@ -118,53 +133,82 @@
 			return $file;
 		}
 
-		//not relevant to braArkiv
+		/**
+		* Copy file from local dist to braArkiv
+		* @param object $p path_parts
+		* @return boolean.  True if copy is ok, False otherwise.
+		*/
 		public function copy($from, $to)
 		{
-			return copy($from->real_full_path, $to->real_full_path);
+			$this->touch($to);//creates the document
 
-/*
-// Initierer en ny overføring.
-string fileid = srv.fileTransferSendChunkedInit(secKey, "20000001",
-"testfil.pdf");
-System.IO.FileStream inFile;
-inFile = new FileStream(@"C:\testfil.pdf", FileMode.Open,
-FileAccess.Read);
-// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
-Byte[] buffer = new Byte[1048576];
-int length;
-// Løkke som sender filen i pakker.
-while(((length = inFile.Read(buffer, 0, buffer.Length)) > 0))
-{
-string base64str = System.Convert.ToBase64String(buffer, 0, length);
-srv.fileTransferSendChunk(secKey, fileid, base64str);
-}
-// Avslutter overføringen.
-srv.fileTransferSendChunkedEnd(secKey, fileid);
-
-*/
-
-
-
-
-		}
-
-
-		public function write($path_parts, $content)
-		{
-			$write_ok = false;
-			if($fp = fopen($path_parts->real_full_path, 'wb'))
+			$filesize = filesize($from->real_full_path);
+			$content = false;
+			if( $filesize  > 0 && $fp = fopen($from->real_full_path, 'rb'))
 			{
-				fwrite($fp, $content, strlen($content));
-				fclose($fp);
-				$write_ok = true;
+				$content = fread($fp, $filesize);
+				fclose ($fp);
 			}
-			return $write_ok;
+
+			return $this->write($to, $content);
+
+		}
+
+		/**
+		* Write content to braArkiv
+		* @param object $p path_parts
+		* @return boolean.  True if copy is ok, False otherwise.
+		*/
+		public function write($to, $content)
+		{
+			$fileid = $this->get_file_id($to); //this represent the document
+
+			$fileTransferSendChunkedInit = new fileTransferSendChunkedInit();
+			$fileTransferSendChunkedInit->secKey = $this->secKey;
+			$fileTransferSendChunkedInit->docid = $fileid;
+			$fileTransferSendChunkedInit->filename = $to->fake_name_clean;
+
+			$fileTransferSendChunkedInitResponse = $this->Services->fileTransferSendChunkedInit($fileTransferSendChunkedInit);
+			$transaction_id = $fileTransferSendChunkedInitResponse->fileTransferSendChunkedInitResult;
+
+			$new_string = chunk_split(base64_encode($content),1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
+
+			$content_arr = explode('\r\n', $new_string);
+
+			foreach($content_arr as $content_part)
+			{
+				$fileTransferSendChunk = new fileTransferSendChunk();
+				$fileTransferSendChunk->secKey = $this->secKey;
+				$fileTransferSendChunk->fileid = $transaction_id; //internal transcation id - not the file/document id
+				$fileTransferSendChunk->chunk = $content_part;
+				
+				$this->Services->fileTransferSendChunk($fileTransferSendChunk);
+			}
+			
+			$fileTransferSendChunkedEnd = new fileTransferSendChunkedEnd()
+			$fileTransferSendChunkedEnd->secKey = $this->secKey;
+			$fileTransferSendChunkedEnd->fileid = $transaction_id;
+
+			try
+			{
+				$fileTransferSendChunkedEndResponse = $this->Services->fileTransferSendChunkedEnd($fileTransferSendChunkedEnd);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+
+			return true;
 		}
 
 
-		/*
+		/**
 		* Create a document
+		* @param object $p path_parts
 		* @return integer.  The document_id
 		*/
 		public function touch($p)
@@ -175,19 +219,22 @@ srv.fileTransferSendChunkedEnd(secKey, fileid);
 
 			$attributter = array();
 			$att1 = new Attribute();
-			$att1->AttribType = new braArkivAttributeType('braArkivString'); ∕∕FIXME
+			$att1->AttribType = 'braArkivString';
 			$att1->Name = "Tittel";
 			$att1->Value = array("Testtittel");
 			$attributter[] = $att1;
 
 			$att2 = new Attribute();
-			$att2->AttribType = new braArkivAttributeType('braArkivDate'); ∕∕FIXME
+
+		//	$braArkivAttributeType = new braArkivAttributeType();
+		//	$att2->AttribType = $braArkivAttributeType->braArkivDate;
+			$att2->AttribType = 'braArkivDate';
 			$att2->Name = "CreatedDate";
 			$att2->Value = array(date('Y-m-d'));
 			$attributter[] = $att2;
-			
+
 			$document->Attributes = $attributter;
-			
+
 			$createDocument = new createDocument();
 			$createDocument->secKey = $this->secKey;
 			$createDocument->secKey = false;
@@ -204,55 +251,107 @@ srv.fileTransferSendChunkedEnd(secKey, fileid);
 			return rename($from->real_full_path, $to->real_full_path);
 		}
 
-		/*
-		*Deletes a file
+		/**
+		* Deletes a file
+		* @param object $p path_parts
+		* @return boolean.  True if copy is ok, False otherwise.
 		*/
-		public function unlink($path_parts)
+		public function unlink($p)
 		{
-			return unlink($path_parts->real_full_path);
+			$fileid = $this->get_file_id($p);
+			$deleteDocument = new deleteDocument();
+			$deleteDocument->secKey = $this->secKey;
+			$deleteDocument->documentId = $fileid;
+
+			try
+			{
+				$deleteDocumentResponse = $this->Services->deleteDocument($deleteDocument);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+
+			return true;
 		}
 
-		/*
-		*Removes directory
+
+		/**
+		* check for existing file
+		* @param object $p path_parts
+		* @return boolean.  True if copy is ok, False otherwise.
 		*/
-		public function rmdir($path_parts)
+		public function file_exists($p)
 		{
-			return rmdir($path_parts->real_full_path);
+			$fileid = $this->get_file_id($p);
+			if($fileid)
+			{
+				$getAvailableFileVariants = new getAvailableFileVariants();
+				$getAvailableFileVariants->secKey = $this->secKey;
+				$getAvailableFileVariants->documentId = $fileid;
+
+				$getAvailableFileVariantsResponse = $this->Services->getAvailableFileVariants($getAvailableFileVariants);
+			}
+
+			return !!$getAvailableFileVariantsResponse->getAvailableFileVariantsResult->string[0];
 		}
 
-		public function check_target_directory($path_parts)
+
+		/**
+		* Removes directory
+		* Does not apply to braArkiv
+		* @return boolean.  True.
+		*/
+		public function rmdir($p)
 		{
-			return file_exists($path_parts->real_leading_dirs);
+			return true;
 		}
 
+		/**
+		* Does not apply to braArkiv
+		* @return boolean.  True.
+		*/
+		public function check_target_directory($p)
+		{
+			return true;
+		}
+
+		/**
+		* Does not apply to braArkiv
+		* @return boolean.  True.
+		*/
 		public function auto_create_home($basedir)
 		{
-			if(!file_exists($basedir.'/home'))
- 			{
-  				@mkdir($basedir.'/home', 0770);
- 			}
+			return true;
 		}
 
-		public function file_exists($path_parts)
+		/**
+		* Does not apply to braArkiv
+		* @return boolean.  True.
+		*/
+		public function is_dir($p)
 		{
-			return file_exists($path_parts->real_full_path);
+			return true;
 		}
 
-		public function is_dir($path_parts)
+		/**
+		* Does not apply to braArkiv
+		* @return boolean.  True.
+		*/
+		public function mkdir($p)
 		{
-			return is_dir($path_parts->real_full_path);
-		}
-
-		public function mkdir($path_parts)
-		{
-			return mkdir($path_parts->real_full_path, 0770);
+			return true;
 		}
 
 	}
 
 	/**
 	 * soap client for http://geomatikk.no/ braArkiv
-	 * this code is generated by the http://code.google.com/p/wsdl2php-interpreter/ 
+	 * this code is generated by the http://code.google.com/p/wsdl2php-interpreter/
 	 *
 	 * @package phpgwapi
 	 * @subpackage vfs
