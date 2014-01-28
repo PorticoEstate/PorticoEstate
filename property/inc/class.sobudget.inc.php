@@ -727,16 +727,17 @@ $_periods=array();
 							$sum_actual_cost_period += $_actual_cost;
 						}
 
+						$sum_obligation_cost += $budget['sum_oblications'];
+						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
+
+						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
+
 						if($budget['period'] != "{$year}00" && $filter_period && ((int)$filter_period) < (int)$budget['period'])
 						{
 							break;
 						}
 
 //$_periods[] = $budget['period'];
-						$sum_obligation_cost += $budget['sum_oblications'];
-						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
-
-						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
 					}
 
 					if(!$_count)
