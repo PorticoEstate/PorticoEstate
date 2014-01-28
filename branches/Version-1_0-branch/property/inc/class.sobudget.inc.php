@@ -717,27 +717,26 @@ $_periods=array();
 					if($budget['year'] == $year)
 					{
 
-						$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
-						$_actual_cost	= round($budget['actual_cost']/$_taxfactor);
-
-						$sum_actual_cost += $_actual_cost;
-						if($budget['actual_period']==$filter_period)
-						{
-							$actual_cost_period[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
-							$sum_actual_cost_period += $_actual_cost;
-						}
-
-						$sum_obligation_cost += $budget['sum_oblications'];
-						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
-
-						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
-
 						if($budget['period'] != "{$year}00" && $filter_period && ((int)$filter_period) < (int)$budget['period'])
 						{
 							break;
 						}
 
-//$_periods[] = $budget['period'];
+						$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
+						$_actual_cost	= round($budget['actual_cost']/$_taxfactor);
+
+						$sum_actual_cost += $_actual_cost;
+						if((int)$budget['actual_period']==(int)$filter_period)
+						{
+							$actual_cost_period[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
+							$sum_actual_cost_period += $_actual_cost;
+						}
+//$_periods[] = $budget['actual_period'];
+
+						$sum_obligation_cost += $budget['sum_oblications'];
+						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
+
+						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
 					}
 
 					if(!$_count)
@@ -751,7 +750,7 @@ $_periods=array();
 				}
 			}
 
-
+//_debug_array($_periods);
 //			_debug_array($obligations);
 
 			//----------- ad hoc order
