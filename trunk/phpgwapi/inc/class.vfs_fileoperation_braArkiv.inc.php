@@ -43,6 +43,12 @@
 			$braarkiv_user =  $c->config_data[$section]['braarkiv_user'];
 			$braarkiv_pass =  $c->config_data[$section]['braarkiv_pass'];
 
+			if(!isset($c->config_data) || !$c->config_data)
+			{
+				$this->config = $c;
+				$this->init_config();
+			}
+
 			if(!$location_url || !$braarkiv_pass || !$braarkiv_pass)
 			{
 				throw new Exception('braArkiv is not configured');
@@ -64,6 +70,50 @@
 			$secKey = $LoginResponse->LoginResult;
 			$this->Services = $Services;
 			$this->secKey = $secKey;
+		}
+
+
+		private function init_config()
+		{
+			$receipt_section = $this->config->add_section(array
+				(
+					'name' => 'webservice',
+					'descr' => 'Webservice'
+				)
+			);
+
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'location_url',
+					'descr'			=> 'Location url'
+				)
+			);
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'braarkiv_user',
+					'descr'			=> 'braArkiv user'
+				)
+			);
+
+			$receipt = $this->config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'password',
+					'name'			=> 'braarkiv_pass',
+					'descr'			=> 'braArkiv password'
+				)
+			);
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array(
+					'menuaction'	=> 'admin.uiconfig2.list_attrib',
+					'section_id'	=> $receipt_section['section_id'],
+					'location_id'	=> $GLOBALS['phpgw']->locations->get_id('phpgwapi', 'vfs_braArkiv')
+				)
+			);
 		}
 
 		/**
@@ -157,6 +207,7 @@
 		/**
 		* Write content to braArkiv
 		* @param object $p path_parts
+		* @param string $content filecontent
 		* @return boolean.  True if copy is ok, False otherwise.
 		*/
 		public function write($to, $content)
@@ -237,8 +288,8 @@
 
 			$createDocument = new createDocument();
 			$createDocument->secKey = $this->secKey;
-			$createDocument->secKey = false;
-			$createDocument->secKey = $document;
+			$createDocument->assignDocKey = false;
+			$createDocument->doc = $document;
 
 			$createDocumentResponse = $this->Services->createDocument($createDocument);
 			$document_id =  $createDocumentResponse->createDocumentResult;
@@ -246,9 +297,49 @@
 
 		}
 
+		/**
+		* Rename a file
+		* @param object $from path_parts
+		* @param object $to path_parts
+		* @return boolean.  True if copy is ok, False otherwise.
+		*/
+
 		public function rename($from, $to)
 		{
-			return rename($from->real_full_path, $to->real_full_path);
+			$fileid = $this->get_file_id($from);
+			
+			$getDocument = new getDocument();
+			$getDocument->secKey = $this->secKey;
+			$getDocument->documentId = $fileid;
+			$getDocumentResponse = $this->Services->getDocument($getDocument);
+			
+			$document = $getDocumentResponse->getDocumentResult;
+			
+			foreach($document->Attributes as & $Attribute)
+			{
+				if($Attribute->Name == 'Tittel')
+				{
+					$Attribute->Value = $to->fake_name_clean;
+				}
+			}
+			$updateDocument = new $updateDocument();
+			$updateDocument->secKey = $this->secKey;
+			$updateDocument->document = $document;
+
+			try
+			{
+				$updateDocumentResponse = $this->Services->updateDocument($getDocument);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+
+			return true;
 		}
 
 		/**
