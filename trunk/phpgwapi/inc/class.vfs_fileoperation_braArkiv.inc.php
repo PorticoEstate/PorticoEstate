@@ -34,7 +34,7 @@
 		public function __construct()
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
-			$location_id		= $GLOBALS['phpgw']->locations->get_id('phpgwapi', 'vfs_filedata');
+			$location_id		= $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata');
 
 			$c	= CreateObject('admin.soconfig',$location_id);
 
@@ -111,7 +111,7 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array(
 					'menuaction'	=> 'admin.uiconfig2.list_attrib',
 					'section_id'	=> $receipt_section['section_id'],
-					'location_id'	=> $GLOBALS['phpgw']->locations->get_id('phpgwapi', 'vfs_braArkiv')
+					'location_id'	=> $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata')
 				)
 			);
 		}
@@ -236,7 +236,7 @@
 				$this->Services->fileTransferSendChunk($fileTransferSendChunk);
 			}
 			
-			$fileTransferSendChunkedEnd = new fileTransferSendChunkedEnd()
+			$fileTransferSendChunkedEnd = new fileTransferSendChunkedEnd();
 			$fileTransferSendChunkedEnd->secKey = $this->secKey;
 			$fileTransferSendChunkedEnd->fileid = $transaction_id;
 
