@@ -195,12 +195,16 @@
 			{
 				if ( is_array($actions) && count($actions) )
 				{
-					$ret_str .= "window.on{$win_event} = function()\n{\n";
+                    if ( $win_event == 'load') {
+                        $ret_str .= "$(document).ready(function()\n{\n";
+                    } else {
+                        $ret_str .= "window.on{$win_event} = function()\n{\n";
+                    }
 					foreach ( $actions as $action )
 					{
 						$ret_str .= "\t$action\n";
 					}
-					$ret_str .= "}\n";
+					$ret_str .= "});\n";
 				}
 			}
 			$ret_str .= "\n// end phpGW javascript class imported window.on* event handlers\n\n";

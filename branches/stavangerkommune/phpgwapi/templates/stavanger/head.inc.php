@@ -78,6 +78,7 @@ JS;
 		}
 	}
 
+    $javascripts[] = "/phpgwapi/js/jquery/js/jquery-1.7.2.min.js";
 	$javascripts[] = "/phpgwapi/templates/stavanger/js/minid.js";
 
 	foreach ( $javascripts as $javascript )
@@ -202,27 +203,27 @@ JS;
 	$bouser = CreateObject('bookingfrontend.bouser');
 	if($bouser->is_logged_in())
 	{
-				$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
+		$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
 
-				$tpl_vars['change_org_header'] = lang('Change organization');
+		$tpl_vars['change_org_header'] = lang('Change organization');
 
-                if ( $bouser->orgname == '000000003') {
-                    $tpl_vars['login_text'] = lang('Error input is not a ssn or orgnr'). ' :: ' . lang('Logout');
-                } elseif ( $bouser->orgname == '000000002') {
-                    $tpl_vars['login_text'] = lang('Organization not in the database'). ' :: ' . lang('Logout');
-                } elseif ( $bouser->orgname == '000000001') {
-                    $tpl_vars['login_text'] = lang('No organization data'). ' :: ' . lang('Logout');
-                } elseif ( $bouser->orgname == '000000000') { 
-                    $tpl_vars['login_text'] = lang('SSN not registred'). ' :: ' . lang('Logout');
-                } else {
-            		$tpl_vars['login_text'] = $bouser->orgname . ' :: ' . lang('Logout');
-                }
-		$tpl_vars['login_url'] = '/logout.php';
+        if ( $bouser->orgname == '000000003') {
+        	$tpl_vars['login_text'] = lang('Error input is not a ssn or orgnr'). ' :: ' . lang('Logout');
+        } elseif ( $bouser->orgname == '000000002') {
+            $tpl_vars['login_text'] = lang('Organization not in the database'). ' :: ' . lang('Logout');
+        } elseif ( $bouser->orgname == '000000001') {
+            $tpl_vars['login_text'] = lang('No organization data'). ' :: ' . lang('Logout');
+        } elseif ( $bouser->orgname == '000000000') { 
+            $tpl_vars['login_text'] = lang('SSN not registred'). ' :: ' . lang('Logout');
+        } else {
+        	$tpl_vars['login_text'] = $bouser->orgname . ' :: ' . lang('Logout');
+        }
+		$tpl_vars['login_url'] = 'logout.php';
 	}
 	else
 	{
 		$tpl_vars['login_text'] = lang('Login');
-		$tpl_vars['login_url'] = '/login.php?after='.urlencode($_SERVER['QUERY_STRING']);
+		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
 		$config		= CreateObject('phpgwapi.config','bookingfrontend');
 		$config->read();
 		$login_parameter = isset($config->config_data['login_parameter']) && $config->config_data['login_parameter'] ? $config->config_data['login_parameter'] : '';
