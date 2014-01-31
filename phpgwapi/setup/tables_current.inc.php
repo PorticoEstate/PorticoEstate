@@ -305,7 +305,7 @@
 				'metadata' => array('type' => 'xml','nullable' => False),
 			),
 			'pk' => array('file_id'),
-			'fk' => array(array('phpgw_vfs' => array('file_id' => 'file_id')),
+			'fk' => array('phpgw_vfs' => array('file_id' => 'file_id')),
 			'ix' => array(),
 			'uc' => array()
 		),

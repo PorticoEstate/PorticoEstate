@@ -50,7 +50,7 @@
 				$location = $location_info['location'];
 				if($location == 'vfs_filedata')
 				{
-					$GLOBALS['phpgw']->locations->add("vfs_filedata.{$data['cat_id']}", $data['cat_name'], 'phpgwapi', false, false, false, true);				
+					$GLOBALS['phpgw']->locations->add("vfs_filedata.{$data['cat_id']}", $data['cat_name'], 'admin', false, false, false, true);				
 				}
 			}
 		}
@@ -70,7 +70,7 @@
 				if($location_info['location'] == 'vfs_filedata')
 				{
 					$location = "{$location_info['location']}.{$data['cat_id']}";
-					$GLOBALS['phpgw']->locations->delete('phpgwapi', $location, false);
+					$GLOBALS['phpgw']->locations->delete('admin', $location, false);
 				}
 			}
 		}
@@ -91,7 +91,7 @@
 				if($location_info['location'] == 'vfs_filedata')
 				{
 					$location = "{$location_info['location']}.{$data['cat_id']}";
-					$GLOBALS['phpgw']->locations->update_description($location, $data['cat_name'], 'phpgwapi');
+					$GLOBALS['phpgw']->locations->update_description($location, $data['cat_name'], 'admin');
 				}
 			}
 		}
