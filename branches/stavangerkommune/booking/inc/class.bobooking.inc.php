@@ -646,8 +646,16 @@ function array_minus($a, $b)
 						// We need to use 24:00 instead of 00:00 to sort correctly
 						$new_booking['to_'] = $new_booking['to_'] == '00:00' ? '24:00' : $new_booking['to_'];
 						$new_bookings[] = $new_booking;
-						if($date->format('Y-m-d') == $end->format('Y-m-d'))
-							break;
+
+ 						if($date->format('Y-m-d') == $end->format('Y-m-d'))
+                        {
+                            break;
+                        }
+
+						if($date->getTimestamp() > $end->getTimestamp())
+						{
+							throw new InvalidArgumentException('start time( ' . $date->format('Y-m-d') . ' ) later than end time( ' . $end->format('Y-m-d') . " ) for {$booking['type']}#{$booking['id']}::{$booking['name']}");
+						}
 						$date->modify('+1 day');
 					}
 					while(true);
@@ -656,81 +664,35 @@ function array_minus($a, $b)
 			return $new_bookings;
 		}
 
-		function _remove_event_conflicts($bookings, &$events)
-		{
-			foreach($events as &$e)
-			{
-				$e['conflicts'] = array();
-			}
-
+        function _remove_event_conflicts($bookings, &$events)
+        {
+            foreach($events as &$e)
+            {
+                $e['conflicts'] = array();
+            }
             $new_bookings = array();
-			foreach($bookings as $b)
-			{
-				$keep = true;
-				foreach($events as &$e)
-				{
+            foreach($bookings as $b)
+            {
+                $keep = true;
+                foreach($events as &$e)
+                {
+                    if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
+                            ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
+                            ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
+                    {
+                        $keep = false;
+                        $e['conflicts'][] = $b;
+                        break;
+                    }
+                }
+                if($keep)
+                {
+                    $new_bookings[] = $b;
+                }
+            }
+            return $new_bookings;
+        }
 
-                    file_put_contents("/tmp/test.log", $b['id']." 2. eid:".$e['id']." date:".substr($e['from_'],0,10)." etime:".substr($e['from_'],11,19)."-".substr($e['to_'],11,19)." btime:".substr($b['from_'],11,19)."-".substr($b['to_'],11,19)."\n", FILE_APPEND);
-					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
-					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
-					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
-					{
-						$keep = false;
-
-						$e['conflicts'][] = $b;
-
-                        $bf = $b['from_'];
-                        $bt = $b['to_'];
-                        $ef = $e['from_'];
-                        $et = $e['to_'];
-
-                        if ($ef >= $bf && $et <= $bt) {
-                            break;
-                        }
-                        elseif (($ef >= $bf) && ($et > $bt))
-                        {
-
-                            foreach ($new_bookings as $key => $nb)
-                            {
-                                $bid = $b['id'];
-                                if ($nb['id'] == $bid && $nb['from_'] == $ef) {
-                                    unset($new_bookings[$key]);
-                                    $b['from_'] = $bf;
-                                    $b['to_'] = $ef;
-                                    $new_bookings[] = $b;
-                                }
-
-                            }
-                        }
-                        elseif (($ef <= $bf) && ($et < $bt))
-                        {
-                            $b['from_'] = $et;
-                            $b['to_'] = $bt;
-                            $new_bookings[] = $b;
-                        }
-                        elseif (($ef > $bf) && ($et < $bt))
-                        {
-                            $b['from_'] = $bf;
-                            $b['to_'] = $ef;
-                            $new_bookings[] = $b;
-                            $b['from_'] = $et;
-                            $b['to_'] = $bt;
-                            $new_bookings[] = $b;
-                        }
-                        else
-                        {
-                            break;
-                        }
-					}
-				}
-				if($keep)
-				{
-                   $new_bookings[] = $b;
-				}
-			}
-			return $new_bookings;
-		}
-		
 		public function complete_expired(&$bookings) {
 			$this->so->complete_expired($bookings);
 		}
