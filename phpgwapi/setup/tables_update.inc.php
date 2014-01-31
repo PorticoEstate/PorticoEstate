@@ -3178,3 +3178,35 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.543';
+	/**
+	* Enable external integration with vfs
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_543()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('vfs_filedata', 'config section for VFS filedata - file backend', 'phpgwapi', false);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_vfs_filedata',array(
+			'fd' => array(
+				'file_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'metadata' => array('type' => 'xml','nullable' => False),
+			),
+			'pk' => array('file_id'),
+			'fk' => array(array('phpgw_vfs' => array('file_id' => 'file_id'))),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.544';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+

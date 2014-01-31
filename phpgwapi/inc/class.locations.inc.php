@@ -82,10 +82,12 @@
 		 * @param string  $appname     the name of the application for the location
 		 * @param boolean $allow_grant allow grants on the location
 		 * @param string  $custom_tbl  table associated with location
+		 * @param boolean $c_function allow custom funtion on the location
+		 * @param boolean $c_attrib allow custom attrib on the location
 		 *
 		 * @return int the new location id
 		 */
-		public function add($location, $descr, $appname, $allow_grant = true, $custom_tbl = null, $c_function = false)
+		public function add($location, $descr, $appname, $allow_grant = true, $custom_tbl = null, $c_function = false, $c_attrib = false)
 		{
 			$app = $GLOBALS['phpgw']->applications->name2id($appname);
 
@@ -102,18 +104,27 @@
 				return $this->_db->f('location_id'); // already exists so just return the id
 		 	}
 
-		 	if ( is_null($custom_tbl) )
-		 	{
-		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant,allow_c_function)'
-		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant}, {$c_function})";
-		 	}
-		 	else
-		 	{
+			if($custom_tbl)
+			{
 		 		$custom_tbl = $this->_db->db_addslashes($custom_tbl);
-		 		$sql = 'INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib, c_attrib_table, allow_c_function)'
-		 			. " VALUES ({$app}, '{$location}', '{$descr}', {$allow_grant}, 1, '{$custom_tbl}', $c_function)";
+				$c_attrib = 1;
 			}
-			$this->_db->query($sql, __LINE__, __FILE__);
+
+			$value_set = array
+			(
+				'app_id'			=> $app,
+				'name'				=> $location,
+				'descr'				=> $descr,
+				'allow_grant'		=> $allow_grant,
+				'allow_c_attrib'	=> $c_attrib ? 1 : false,
+				'c_attrib_table'	=> $custom_tbl,
+				'allow_c_function'	=> $c_function
+			);
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->_db->validate_insert(array_values($value_set));
+
+			$this->_db->query("INSERT INTO phpgw_locations ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 
 			return $this->_db->get_last_insert_id('phpgw_locations', 'location_id');
 		}

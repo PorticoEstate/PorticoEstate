@@ -44,14 +44,16 @@
 		'config',
 		'deleteaccount',
 		'manual',
-		'view_user'
+		'view_user',
+		'menu'					=> 'admin.menu.get_menu',
+		'cat_add'				=> 'admin.cat_hooks.cat_add',
+		'cat_delete'			=> 'admin.cat_hooks.cat_delete',
+		'cat_edit'				=> 'admin.cat_hooks.cat_edit'
 	);
-	$setup_info['admin']['hooks']['menu'] = 'admin.menu.get_menu';
 
 	/* Dependencies for this app to work */
 	$setup_info['admin']['depends'][] = array
 	(
 		'appname' => 'phpgwapi',
-		'versions' => Array('0.9.17', '0.9.18')
+		'versions' => array('0.9.17', '0.9.18')
 	);
-?>

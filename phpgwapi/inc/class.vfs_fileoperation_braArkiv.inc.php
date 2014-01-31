@@ -34,11 +34,11 @@
 		public function __construct()
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
-			$location_id		= $GLOBALS['phpgw']->locations->get_id('phpgwapi', 'vfs_braArkiv');
+			$location_id		= $GLOBALS['phpgw']->locations->get_id('phpgwapi', 'vfs_filedata');
 
 			$c	= CreateObject('admin.soconfig',$location_id);
 
-			$section = 'webservice';
+			$section = 'braArkiv';
 			$location_url = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
 			$braarkiv_user =  $c->config_data[$section]['braarkiv_user'];
 			$braarkiv_pass =  $c->config_data[$section]['braarkiv_pass'];
@@ -77,8 +77,8 @@
 		{
 			$receipt_section = $this->config->add_section(array
 				(
-					'name' => 'webservice',
-					'descr' => 'Webservice'
+					'name' => 'braArkiv',
+					'descr' => 'braArkiv'
 				)
 			);
 
