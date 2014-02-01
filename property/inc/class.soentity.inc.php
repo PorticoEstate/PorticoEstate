@@ -858,6 +858,7 @@
 						'datatype'	=> false,
 						'attrib_id'	=> false
 					);
+
 				$dataset[$j]['_type'] = array
 					(
 						'value'		=> $this->type,
@@ -865,9 +866,15 @@
 						'attrib_id'	=> false
 					);
 
-
 				if($lookup)
 				{
+					$dataset[$j]["entity_num_{$entity_id}"] = array
+						(
+							'value'		=> $this->db->f('id'),
+							'datatype'	=> false,
+							'attrib_id'	=> false,
+						);
+
 					$dataset[$j]["entity_cat_name_{$entity_id}"] = array
 						(
 							'value'		=> $category['name'],
