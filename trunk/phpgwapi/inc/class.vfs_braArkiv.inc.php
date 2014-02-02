@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage vfs
-	* @version $Id: class.vfs_sql.inc.php 11334 2013-09-26 18:13:25Z sigurdne $
+	* @version $Id$
 	*/
 
 	/**

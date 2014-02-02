@@ -6,7 +6,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
 	* @package phpgwapi
 	* @subpackage vfs
-	* @version $Id: class.acl.inc.php 11567 2013-12-23 12:49:00Z sigurdne $
+	* @version $Id$
 	*/
 
 	/*
