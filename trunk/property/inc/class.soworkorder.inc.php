@@ -1917,14 +1917,27 @@
 				}
 			}
 
-			$sql = "SELECT order_id, periode, amount AS actual_cost"
+			$sql = "SELECT order_id, periode, amount AS actual_cost, periodization, periodization_start"
 			. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 			. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
+			$orders_paid_or_pending = array();
+
 			while ($this->db->next_record())
 			{
-				$periode = $this->db->f('periode');
+				$orders_paid_or_pending[] = array
+				(
+					'periode'				=> $this->db->f('periode'),
+					'actual_cost'			=> $this->db->f('actual_cost'),
+					'periodization'			=> $this->db->f('periodization'),
+					'periodization_start'	=> $this->db->f('periodization_start'),
+				);
+			}
+
+			foreach ( $orders_paid_or_pending as $_orders_paid_or_pending)
+			{
+				$periode = $_orders_paid_or_pending['periode'];
 				$_dummy_period = $periode ? $periode : date('Y') . '00';
 
 				if(!$periode)
@@ -1937,7 +1950,7 @@
 				$_found = false;
 				if(isset($order_budget[$periode]))
 				{
-					$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
+					$order_budget[$periode]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
 					$order_budget[$periode]['actual_period'] = $periode;
 					$_found = true;
 				}
@@ -1948,7 +1961,7 @@
 						$_period = $year . sprintf("%02s", $i);
 						if(isset($order_budget[$_period]))
 						{
-							$order_budget[$_period]['actual_cost'] += $this->db->f('actual_cost');
+							$order_budget[$_period]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
 							$order_budget[$_period]['actual_period'] = $periode;
 							$_found = true;
 							break;
@@ -1960,7 +1973,7 @@
 				{
 					$order_budget[$_dummy_period]['year'] = substr( $_dummy_period, 0, 4 );
 					$order_budget[$_dummy_period]['month'] = substr( $_dummy_period, -2);
-					$order_budget[$_dummy_period]['actual_cost'] += $this->db->f('actual_cost');
+					$order_budget[$_dummy_period]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
 					$order_budget[$_dummy_period]['actual_period'] = $periode;
 				}
 			}
