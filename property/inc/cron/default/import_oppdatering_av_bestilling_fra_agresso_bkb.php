@@ -90,6 +90,11 @@
 				{
 					$this->db->transaction_begin();
 
+					if ($this->debug)
+					{
+						_debug_array("Start import file: $file");
+					}
+
 					$ok = $this->import($file);
 
 					if ($ok)
@@ -117,11 +122,16 @@
 					}
 					else
 					{
+						$this->receipt['error'][] = array('msg' => "fil som feiler: $file");
 						$this->db->transaction_abort();
 					}
 				}
 				
-				$this->alert_assigned();
+				if (!$this->debug)
+				{
+					$this->alert_assigned();
+				}
+
 			}
 			else
 			{
@@ -175,7 +185,7 @@
 
 				foreach($files as $file_name)
 				{
-					if( stripos( $file_name, '.csv' ))
+					if( preg_match('/csv$/i', $file_name) )
 					{
 						$file_remote = $file_name;	   
 						$file_local = "{$directory_local}/{$file_name}";
@@ -190,7 +200,7 @@
 							}
 							else
 							{
-								echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
+								echo "ERROR! File remote: {$file_remote} failed to move from remote: {$directory_remote}/{$file_name}<br/>";
 								if(unlink($file_local))
 								{
 									echo "Lokal file was deleted: {$file_local}<br/>";
@@ -221,7 +231,6 @@
 				{
 					$ok = $this->update_status($data);
 				}
-				$row ++;
 			}
 
 			fclose($fp);
@@ -231,27 +240,31 @@
 
 		private function update_amount($data)
 		{
+			if($this->debug)
+			{
+				_debug_array($data);
+			}
+
 			//prosjektnummer;prosjektstatus;bestillingsnummer;beløp
     		$agresso_prosjekt	= (int)$data[0];
 			$prosjektstatus		= trim($data[1]);
 			$order_id			= trim($data[2]);
 			$diff_actual_cost	= (float)trim($data[3]);
 
-			$this->db->query("SELECT id, status, actual_cost FROM fm_tts_tickets WHERE order_id= '{$order_id}'",__LINE__,__FILE__);
+			$this->db->query("SELECT id, actual_cost FROM fm_tts_tickets WHERE order_id= '{$order_id}'",__LINE__,__FILE__);
 			$this->db->next_record();
 			$id							= $this->db->f('id');
-			$old_status					= $this->db->f('status');
 			(float) $old_actual_cost	= $this->db->f('actual_cost');
 			
 			$new_actual_cost = $diff_actual_cost + $old_actual_cost;
 
 			if(!$id)
 			{
-				$this->receipt['error'][] = array('msg' =>"Oppdatere beløp: fant ikke bestillingen, hopper over: {$order_id}");
+				$this->receipt['error'][] = array('msg' =>"Oppdatere beløp for agresso prosjekt {$agresso_prosjekt}: fant ikke bestillingen, hopper over: {$order_id}");
 				return false;
 			}
 
-			$this->receipt['message'][] = array('msg' =>"Oppdaterer melding #{$id}, gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
+			$this->receipt['message'][] = array('msg' =>"Oppdaterer melding #{$id} for agresso prosjekt {$agresso_prosjekt}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
 
 			$value_set = array
 			(
@@ -275,17 +288,24 @@
 		{
     		$agresso_prosjekt	= (int)$data[0];
 			$prosjektstatus		= trim($data[1]);
+			$order_id			= trim($data[2]);
 
-			$this->db->query("SELECT id, status FROM fm_tts_tickets WHERE agresso_prosjekt= '{$agresso_prosjekt}'",__LINE__,__FILE__);
-			$this->db->next_record();
-			$id			= $this->db->f('id');
-			$old_status = $this->db->f('status');
+			$id = false;
+
+			if($order_id)
+			{
+				$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id= '{$order_id}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$id			= $this->db->f('id');
+			}
 
 			if(!$id)
 			{
-				$this->receipt['error'][] = array('msg' =>"Oppdatere status: fant ikke bestillingen, hopper over: {$agresso_prosjekt}");
+				$this->receipt['error'][] = array('msg' =>"Oppdatere status: fant ikke bestillingen for agresso prosjekt {$agresso_prosjekt}");
 				return false;
 			}
+
+			$this->db->query("UPDATE fm_tts_tickets SET agresso_prosjekt = $agresso_prosjekt WHERE id={$id}",__LINE__,__FILE__);
 
 			$ok = true;
 			if(preg_match('/(^C|^P)/i', $prosjektstatus))

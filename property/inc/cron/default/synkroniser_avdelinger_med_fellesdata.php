@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage cron
- 	* @version $Id: synkroniser_avdelinger_med_fellesdata.php 11571 2013-12-27 08:26:40Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**

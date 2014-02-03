@@ -367,3 +367,4 @@
 
 	$GLOBALS['phpgw']->locations->add('changepassword', 'allow user to change password', 'preferences', false);
 	$GLOBALS['phpgw']->locations->add('anonymous', 'allow anonymous sessions for public modules', 'phpgwapi', false);
+	$GLOBALS['phpgw']->locations->add('vfs_filedata', 'config section for VFS filedata - file backend', 'admin', false);

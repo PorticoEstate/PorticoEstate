@@ -542,9 +542,10 @@
 					$p_cat_id = isset($data['entity_data'][$entity['id']]['p_cat_id']) ? $data['entity_data'][$entity['id']]['p_cat_id'] : '';
 					$lookup_functions[] = array
 						(
-							'name'		=> 'lookup_entity_' . $entity['id'] .'()',
-							'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},cat_id:'{$p_cat_id}',location_code:'{$filter_location}',block_query:'{$block_query}'",
-							'action'	=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+							'filter_level'		=> count($location_types),
+							'name'				=> 'lookup_entity_' . $entity['id'] .'()',
+							'link'				=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},cat_id:'{$p_cat_id}',location_code:'{$filter_location}',block_query:'{$block_query}'",
+							'action'			=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 						);
 
 					$location['location'][$i]['input_type']						= 'text';
@@ -665,17 +666,24 @@ JS;
 							{
 								for(i=1;i<=filter_level;i++)
 								{
-									if(eval('document.form.loc'+i+'.value'))
+									if (typeof eval('document.form.loc'+i) != 'undefined')
 									{
-										block = true;
-										if(!filter)
+										if( eval('document.form.loc'+i+'.value'))
 										{
-											filter = eval('document.form.loc'+i+'.value');
+											block = true;
+											if(!filter)
+											{
+												filter = eval('document.form.loc'+i+'.value');
+											}
+											else
+											{
+												filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
+											}
 										}
-										else
-										{
-											filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
-										}
+									}
+									else
+									{
+										break;
 									}
 								}
 							}
