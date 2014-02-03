@@ -18,9 +18,15 @@
 		<xsl:if test="event/is_public=1">
 			<dd>
 			<xsl:if test="orginfo">
-				<a href="{orginfo/link}"><xsl:value-of select="orginfo/name"/></a>:
+				<a href="{orginfo/link}"><xsl:value-of select="orginfo/name"/></a><br />
 			</xsl:if>
-				<xsl:value-of select="event/contact_name"/>
+				<xsl:value-of select="event/contact_name"/><br />
+                <xsl:if test="event/contact_email != ''">
+                    E-post: <xsl:value-of select="event/contact_email"/><br />
+                </xsl:if>
+                <xsl:if test="event/contact_phone != ''">
+                    Telefon: <xsl:value-of select="event/contact_phone"/>
+                </xsl:if>
 			</dd>
 		</xsl:if>
 		<xsl:if test="event/is_public=0">
