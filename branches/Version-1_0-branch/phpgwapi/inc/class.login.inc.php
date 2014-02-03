@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
 	* @package phpgwapi
 	* @subpackage login
-	* @version $Id: class.acl.inc.php 10127 2012-10-07 17:06:01Z sigurdne $
+	* @version $Id$
 	*/
 
 	/*

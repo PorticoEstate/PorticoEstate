@@ -297,6 +297,19 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+
+		'phpgw_vfs_filedata' => array(
+			'fd' => array(
+				'file_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'metadata' => array('type' => 'xml','nullable' => False),
+			),
+			'pk' => array('file_id'),
+			'fk' => array('phpgw_vfs' => array('file_id' => 'file_id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 		'phpgw_history_log' => array(
 			'fd' => array(
 				'history_id' => array('type' => 'auto','precision' => 4,'nullable' => False),
