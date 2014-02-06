@@ -185,12 +185,22 @@
 
 				foreach($files as $file_name)
 				{
+					if ($this->debug)
+					{
+						_debug_array('preg_match("/csv$/i",'. $file_name . ': ' . preg_match('/csv$/i', $file_name));
+					}
+
 					if( preg_match('/csv$/i', $file_name) )
 					{
 						$file_remote = $file_name;	   
 						$file_local = "{$directory_local}/{$file_name}";
 
 						$fp = fopen($file_local, "wb");
+
+						if ($this->debug)
+						{
+							_debug_array('debug fopen(): ' . $fp);
+						}
 
 						if(ftp_fget($connection,$fp,$file_remote,FTP_ASCII))
 						{
@@ -206,6 +216,10 @@
 									echo "Lokal file was deleted: {$file_local}<br/>";
 								}
 							}
+						}
+						else
+						{
+							echo "Feiler på ftp_fget()<br/>";						
 						}
 						fclose($fp);
 					}
