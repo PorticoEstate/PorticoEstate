@@ -32,15 +32,14 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 		}
 
-		function execute()
+		function execute($data = array())
 		{
-			$this->check_for_new_mail();
+			$data['account_id'] = $GLOBALS['phpgw']->accounts->name2id($data['user']);
+			$this->check_for_new_mail($data);
 		}
 
-		function check_for_new_mail()
+		function check_for_new_mail($data)
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','mail2sms');
-
 			$GLOBALS['phpgw_info']['user']['account_id'] = $data['account_id'];
 			$GLOBALS['phpgw']->preferences->set_account_id($data['data_id'], true);
 

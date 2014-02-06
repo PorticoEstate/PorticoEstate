@@ -75,7 +75,7 @@
 
 			if ($confirm)
 			{
-				$this->execute();
+				$this->execute($data);
 				$this->cron_log($cron);
 				// initiated from ui
 				if(!$cron)
