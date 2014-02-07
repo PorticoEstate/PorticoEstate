@@ -529,6 +529,9 @@ JS;
 			$this->tmpl->set_var('flag_no', $flag_no);
 			$this->tmpl->set_var('flag_en', $flag_en);
 
+			$this->tmpl->set_var('login_left_message', $GLOBALS['phpgw_info']['login_left_message']);
+			$this->tmpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
+
 			$autocomplete = '';
 			if ( isset($GLOBALS['phpgw_info']['server']['autocomplete_login'])
 				&& $GLOBALS['phpgw_info']['server']['autocomplete_login'] )
