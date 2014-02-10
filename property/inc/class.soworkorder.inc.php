@@ -2021,7 +2021,7 @@
 
 				$_found = false;
 				
-				if(isset($_orders_paid_or_pending['periodization']))
+				if(isset($_orders_paid_or_pending['periodization']) && $_orders_paid_or_pending['periodization'])
 				{
 					$order_budget[$periode]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
 					$order_budget[$periode]['actual_period'] = $periode;
