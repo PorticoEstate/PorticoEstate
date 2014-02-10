@@ -1944,6 +1944,7 @@
 					$periodization_start = $entry['periodization_start'] ? $entry['periodization_start'] : $entry['periodization'];
 					
 					$periodization_start_year = (int)substr($periodization_start, 0, 4 );
+					$periodization_start_month = (int)substr($periodization_start, -2);
 
 					$sql = "SELECT month, value, dividend, divisor"
 					. " FROM fm_eco_periodization_outline  WHERE periodization_id = {$entry['periodization']} ORDER BY month ASC";
@@ -1981,11 +1982,13 @@
 							$partial_actual_cost = $entry['actual_cost'] * $outline['value'] / 100;
 						}
 
-						$_future_year_count = floor(($outline['month']-1) / 12);
+						$_period_month = (int)$periodization_start_month + (int)$outline['month'] -1;
+						
+						$_future_year_count = floor(($_period_month-1) / 12);
 
 						$_periodization_start_year =  $periodization_start_year + $_future_year_count;
 
-						$_month = $outline['month'] - ($_future_year_count * 12);
+						$_month = $_period_month - ($_future_year_count * 12);
 
 						$orders_paid_or_pending[] = array
 						(
