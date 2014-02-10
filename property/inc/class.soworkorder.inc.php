@@ -1918,10 +1918,10 @@
 				}
 			}
 
-			$sql = "SELECT order_id, periode, amount AS actual_cost, periodization, periodization_start"
+			$sql = "SELECT periode, amount AS actual_cost, periodization, periodization_start"
 			. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 			. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
-//_debug_array($sql);
+//_debug_array($sql);die();
 			$this->db->query($sql,__LINE__,__FILE__);
 			$orders_paid_or_pending = array();
 			$orders_paid_or_pending_temp = array();
@@ -1974,11 +1974,11 @@
 					{
 						if ($outline['dividend'] && $outline['divisor'])
 						{
-							$partial_actual_cost = $budget * $outline['dividend'] / $outline['divisor'];
+							$partial_actual_cost = $entry['actual_cost'] * $outline['dividend'] / $outline['divisor'];
 						}
 						else
 						{
-							$partial_actual_cost = $budget * $outline['value'] / 100;
+							$partial_actual_cost = $entry['actual_cost'] * $outline['value'] / 100;
 						}
 
 						$_future_year_count = floor(($outline['month']-1) / 12);
