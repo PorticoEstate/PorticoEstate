@@ -11,12 +11,14 @@ function build_schedule_table($bookings, $resources)
 	function get_to($a) {return $a['to_'];};
 	function cmp_from($a, $b) {return strcmp($a['from_'], $b['from_']);};
 	function cmp_to($a, $b) {return strcmp($a['to_'], $b['to_']);};
-	while(true) {
+	while(true)
+	{
 		usort($bookings, 'cmp_from');
 		// No bookings left
 		if (count($bookings) == 0)
 		{
-			if($t != '24:00') {
+			if($t != '24:00')
+			{
 				$data[] = array(
 					'time' => $t.'-00:00',
 					'_from' => $t,
@@ -38,19 +40,27 @@ function build_schedule_table($bookings, $resources)
 			continue;
 		}
 		// Bookings found
-		else {
+		else
+		{
 			$next = array_filter(array_merge(array_map('get_from', $bookings), 
 											 array_map('get_to', $bookings)),
 								 create_function('$a', "return \$a > '$t';"));
+			if(!$next)
+			{
+				break;
+			}
 			$next_t = min($next);
+
 			$first_row = true;
-			foreach($resources as $res) {
+			foreach($resources as $res)
+			{
 				$row = array('resource'=> $res['name'], 'resource_id' => $res['id']);
 				if($first_row)
 				{
 					$tmp_t = $next_t == '24:00' ? '00:00' : $next_t;
 					$row['time'] = $t.'-'.$tmp_t;
 				}
+
 				$row['_from'] = $t;
 				$row['_to'] = $tmp_t;
 				$empty = true;
@@ -63,16 +73,19 @@ function build_schedule_table($bookings, $resources)
 					}
 					if(in_array($res['id'], $booking['resources']))
 					{
-                        if(!(($tempbooking[$booking['wday']]['from_'] <= $booking['from_']) and ($tempbooking[$booking['wday']]['to_'] == $booking['to_']) and ($tempbooking[$booking['wday']]['allocation_id'] == $booking['id']) and ($booking['type'] == 'allocation'))){
+                        if(!(($tempbooking[$booking['wday']]['from_'] <= $booking['from_']) and ($tempbooking[$booking['wday']]['to_'] == $booking['to_']) and ($tempbooking[$booking['wday']]['allocation_id'] == $booking['id']) and ($booking['type'] == 'allocation')))
+                        {
 						    $empty = false;
 						    $row[$booking['wday']] = $booking;
                         }
-                        if($booking['type'] == 'booking'){
+                        if($booking['type'] == 'booking')
+                        {
     						$tempbooking[$booking['wday']] = $booking;
                         } 
 					}
 				}
-				if(!$empty) {
+				if(!$empty)
+				{
 					$data[] = $row;
 					$first_row = false;
 				}
@@ -84,7 +97,6 @@ function build_schedule_table($bookings, $resources)
 				array_shift($bookings);
 			}
 		}
-
 	}
 	return $data;
 }
