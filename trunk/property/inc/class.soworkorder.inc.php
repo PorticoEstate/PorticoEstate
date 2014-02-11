@@ -1885,6 +1885,9 @@
 							$_current_month = date('n'); // Numeric representation of a month, without leading zeros 1 through 12
 						}
 
+						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']];
+
+/*
 						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']] - $_actual_cost;
 
 						if($sum_year_combined_cost[$_budget['year']] > 0 )
@@ -1895,7 +1898,7 @@
 						{
 							$_sum_year_combined_cost = $_sum_year_combined_cost > 0 ? 0 : $_sum_year_combined_cost;
 						}
-
+*/
 						$distribution_key = 1/(13 - $_current_month);
 
 						for ($i = $_current_month; $i<13; $i++)
