@@ -124,6 +124,8 @@
 
 		function import_end_record($buffer,$invoice_common)
 		{
+			static $workorders = array();
+
 			$buffer[$this->id] = array();
 
 			foreach ($this->currentrecord as $name => $value)
@@ -141,26 +143,33 @@
 					
 					$buffer[$this->id]['godkjentbelop'] = $value;
 				}
+
 				if($name=='pmwrkord_code')
 				{
-					if(!$this->soXport->check_order((int)$value))
+					if(!$workorder = $workorders[(int)$value]['order'])
 					{
-						$value='';
+						if(!$this->soXport->check_order((int)$value))
+						{
+							$workorders[(int)$value]['order']['cat_id'] = '';
+							$workorders[(int)$value]['order']['ecodimb'] = '';
+							$workorders[(int)$value]['project_id'] = '';
+						}
+						else
+						{
+							$workorders[(int)$value]['order'] = execMethod('property.soworkorder.read_single', (int)$value);
+							$workorders[(int)$value]['project_id'] = $this->soXport->get_project((int)$value);//Agresso prosjekt
+						}
 					}
-					else
-					{
-						$workorder = execMethod('property.soworkorder.read_single', (int)$value);
-						$buffer[$this->id]['project_id'] = $this->soXport->get_project((int)$value);//Agresso prosjekt
-						$buffer[$this->id]['dime']	= $workorder['cat_id']; // Dim 6
-						$buffer[$this->id]['dimb']	= $workorder['ecodimb']; // Ansvarssted
-					}
+
+					$buffer[$this->id]['project_id'] = $workorders[(int)$value]['project_id'];//Agresso prosjekt
+					$buffer[$this->id]['dime']	= $workorders[(int)$value]['order']['cat_id']; // Dim 6
+					$buffer[$this->id]['dimb']	= $workorders[(int)$value]['order']['ecodimb']; // Ansvarssted
+
 				}
 
 				if($name=='spbudact_code')
 				{
 					continue;
-				//	$value = $this->check_spbudact_code($value);
-
 				}
 
 				if($name=='dima')
@@ -213,10 +222,17 @@
 			$buffer[$this->id]['fakturadato'] = $invoice_date;
 			$buffer[$this->id]['forfallsdato'] = $payment_date;
 
-
 			if($workorder)
 			{
-				$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
+				if($this->check_old_spbudact_code($workorder['b_account_id'])
+				{
+					$buffer[$this->id]['spbudact_code'] = '123014';
+					$buffer[$this->id]['dime']	= (int)substr($workorder['b_account_id'],-4); // Dim 6
+				}
+				else
+				{
+					$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
+				}
 			}
 			else
 			{
@@ -233,7 +249,7 @@
 
 			if(!isset($buffer[$this->id]['fakturanr']) || !$buffer[$this->id]['fakturanr']) // fakturanr
 			{
-				$buffer[$this->id]['dimb'] = $invoice_common['invoice_num'];
+				$buffer[$this->id]['fakturanr'] = $invoice_common['invoice_num'];
 			}
 
 			if(!isset($buffer[$this->id]['dimb']) || !$buffer[$this->id]['dimb']) // Ansvarssted
@@ -245,7 +261,7 @@
 			return $buffer;
 		}
 		
-		function check_spbudact_code($id)
+		function check_old_spbudact_code($id)
 		{
 			$b_account='';
 			$this->db->query("select id from fm_b_account where id='$id'");

@@ -53,11 +53,13 @@
 			
 			$this->valid_tables = array
 			(
-				'fm_vendor'				=> 'fm_vendor (' . lang('vendor') . ')',
-				'fm_condition_survey'	=> 'fm_condition_survey (' . lang('condition survey') . ')',
-				'fm_ecodimb'			=> 'fm_ecodimb (' . lang('dimb') . ')',
-				'fm_budget'				=> 'fm_budget (' . lang('budget') . ')',
-				'fm_department'			=> 'fm_department (' . lang('department') . ')',
+				'fm_vendor'						=> 'fm_vendor (' . lang('vendor') . ')',
+				'fm_condition_survey'			=> 'fm_condition_survey (' . lang('condition survey') . ')',
+				'fm_ecodimb'					=> 'fm_ecodimb (' . lang('dimb') . ')',
+				'fm_budget'						=> 'fm_budget (' . lang('budget') . ')',
+				'fm_department'					=> 'fm_department (' . lang('department') . ')',
+				'fm_eco_periodization_outline'	=> 'fm_eco_periodization_outline (' . lang('periodization outline') . ')',
+				'fm_eco_periodization'			=> 'fm_eco_periodization (' . lang('periodization') . ')',
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');

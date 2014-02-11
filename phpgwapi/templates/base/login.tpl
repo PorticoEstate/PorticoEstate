@@ -87,6 +87,13 @@
 		</div>
 
 		<div class="padding">
+			<div id="left-box">
+				{login_left_message}
+			</div>
+			<div id="right-box">
+				{login_right_message}
+			</div>
+			
 			<div id="element-box" class="login">
 				<div class="t">
 					<div class="t">
@@ -214,6 +221,7 @@
 			</div>
 			<noscript>Warning! JavaScript must be enabled for proper operation of the Administrator back-end.</noscript>
 			<div class="clr"></div>
+
 		</div>
 	</div>
 	<div id="border-bottom">
