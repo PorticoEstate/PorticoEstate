@@ -1769,7 +1769,7 @@
 			}
 			$continuous = false;
 
-//			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
+			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
 
 			if($cached_info)
 			{
