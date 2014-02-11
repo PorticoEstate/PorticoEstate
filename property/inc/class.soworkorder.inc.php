@@ -1854,6 +1854,7 @@
 				$this->db->next_record();
 				$current_paid_period = (int)$this->db->f('periode');
 
+/*
 				//total payment;
 				$sql = "SELECT sum(actual_cost) AS actual_cost"
 				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
@@ -1862,7 +1863,7 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				$_actual_cost = $this->db->f('actual_cost');
-
+*/
 				foreach ($_order_budget as $_period => $_budget)
 				{
 					if($_period == "{$_budget['year']}00" && $_budget['year'] == date('Y'))
