@@ -78,6 +78,7 @@
 			
 			switch ($file_store_contents)
 			{
+				case 'braArkiv':
 				case 'filesystem':
 					$this->file_actions = 1;
 					break;
@@ -86,7 +87,10 @@
 					break;
 			}
 
-			$this->fileoperation = CreateObject("phpgwapi.vfs_fileoperation_{$file_store_contents}");
+			if($this->file_actions)
+			{
+				$this->fileoperation = CreateObject("phpgwapi.vfs_fileoperation_{$file_store_contents}");
+			}
 
 			$this->acl_default = $conf->config_data['acl_default'];
 

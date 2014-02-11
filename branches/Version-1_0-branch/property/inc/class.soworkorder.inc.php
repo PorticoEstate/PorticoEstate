@@ -1802,6 +1802,7 @@
 
 				$budget			= (int)$this->db->f('budget');
 				$combined_cost	= (int)$this->db->f('combined_cost');
+				$closed_order	= (int)$this->db->f('closed');
 				$_order_budget[$period] = array
 				(
 					'order_id' 			=> $order_id,
@@ -1811,7 +1812,7 @@
 					'year'				=> $year,
 					'month'				=> $month,
 					'actual_cost'		=> 0, //for now..
-					'closed_order'		=> (int)$this->db->f('closed'),
+					'closed_order'		=> $closed_order,
 					'active_period'		=> (int)$this->db->f('active'),
 				);
 
@@ -1843,15 +1844,26 @@
 			$order_budget = array();
 			if($continuous && $calculate_fictive_periods)
 			{
+				//First payment;
 				$sql = "SELECT periode"
 				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
-				. " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00' 
+				. " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00'
 				. " ORDER BY periode ASC";
 
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				$current_paid_period = (int)$this->db->f('periode');
 
+/*
+				//total payment;
+				$sql = "SELECT sum(actual_cost) AS actual_cost"
+				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00';
+
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$_actual_cost = $this->db->f('actual_cost');
+*/
 				foreach ($_order_budget as $_period => $_budget)
 				{
 					if($_period == "{$_budget['year']}00" && $_budget['year'] == date('Y'))
@@ -1874,6 +1886,20 @@
 							$_current_month = date('n'); // Numeric representation of a month, without leading zeros 1 through 12
 						}
 
+						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']];
+
+/*
+						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']] - $_actual_cost;
+
+						if($sum_year_combined_cost[$_budget['year']] > 0 )
+						{
+							$_sum_year_combined_cost = $_sum_year_combined_cost < 0 ? 0 : $_sum_year_combined_cost;
+						}
+						else
+						{
+							$_sum_year_combined_cost = $_sum_year_combined_cost > 0 ? 0 : $_sum_year_combined_cost;
+						}
+*/
 						$distribution_key = 1/(13 - $_current_month);
 
 						for ($i = $_current_month; $i<13; $i++)
@@ -1887,7 +1913,7 @@
 	  						$active_period[$period]					= $active_period[$_period] ? 1 : 0;
 							$order_budget[$period]					= $_budget;
 							$order_budget[$period]['budget']		= $sum_year_budget[$_budget['year']] * $distribution_key;
-							$order_budget[$period]['combined_cost']	= $sum_year_combined_cost[$_budget['year']] * $distribution_key;
+							$order_budget[$period]['combined_cost']	= $_sum_year_combined_cost * $distribution_key;
 							$order_budget[$period]['active_period'] = $_budget['active_period'];
 							$order_budget[$period]['month']			= $i;
 			 				$closed_period[$period] = (int)$period < date('Ym');
@@ -1917,26 +1943,97 @@
 				}
 			}
 
-			$sql = "SELECT order_id, periode, amount AS actual_cost, periodization, periodization_start"
+			$sql = "SELECT periode, amount AS actual_cost, periodization, periodization_start"
 			. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 			. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
-//_debug_array($sql);
+//_debug_array($sql);die();
 			$this->db->query($sql,__LINE__,__FILE__);
 			$orders_paid_or_pending = array();
+			$orders_paid_or_pending_temp = array();
 
 			while ($this->db->next_record())
 			{
-				$orders_paid_or_pending[] = array
+				$orders_paid_or_pending_temp[] = array
 				(
 					'periode'				=> $this->db->f('periode'),
 					'actual_cost'			=> $this->db->f('actual_cost'),
-					'periodization'			=> $this->db->f('periodization'),
+					'periodization'			=> (int)$this->db->f('periodization'),
 					'periodization_start'	=> $this->db->f('periodization_start'),
 				);
 			}
 
+			foreach ( $orders_paid_or_pending_temp as $entry)
+			{
+				if($entry['periodization'])
+				{
+					$periodization_start = $entry['periodization_start'] ? $entry['periodization_start'] : $entry['periodization'];
+
+					$periodization_start_year = (int)substr($periodization_start, 0, 4 );
+					$periodization_start_month = (int)substr($periodization_start, -2);
+
+					$sql = "SELECT month, value, dividend, divisor"
+					. " FROM fm_eco_periodization_outline  WHERE periodization_id = {$entry['periodization']} ORDER BY month ASC";
+					$this->db->query($sql,__LINE__,__FILE__);
+
+					$periodization_outline = array();
+
+					while ($this->db->next_record())
+					{
+						$periodization_outline[] = array
+						(
+							'month' => $this->db->f('month'),
+							'value' => $this->db->f('value'),
+							'dividend' => $this->db->f('dividend'),
+							'divisor' => $this->db->f('divisor')
+						);
+					}
+					if (!$periodization_outline)
+					{
+						$periodization_outline[] = array
+						(
+							'month' => 1,
+							'value' => 100,
+						);
+					}
+
+					foreach ($periodization_outline as $outline)
+					{
+						if ($outline['dividend'] && $outline['divisor'])
+						{
+							$partial_actual_cost = $entry['actual_cost'] * $outline['dividend'] / $outline['divisor'];
+						}
+						else
+						{
+							$partial_actual_cost = $entry['actual_cost'] * $outline['value'] / 100;
+						}
+
+						$_period_month = (int)$periodization_start_month + (int)$outline['month'] -1;
+
+						$_future_year_count = floor(($_period_month-1) / 12);
+
+						$_periodization_start_year =  $periodization_start_year + $_future_year_count;
+
+						$_month = $_period_month - ($_future_year_count * 12);
+
+						$orders_paid_or_pending[] = array
+						(
+							'periode'				=> sprintf("%s%02d",$_periodization_start_year, $_month),
+							'actual_cost'			=> $partial_actual_cost,
+							'periodization'			=> $entry['periodization'],
+						);
+					}
+
+				}
+				else
+				{
+					$orders_paid_or_pending[] = $entry;
+				}
+
+			}
+
 			foreach ( $orders_paid_or_pending as $_orders_paid_or_pending)
 			{
+
 				$periode = $_orders_paid_or_pending['periode'];
 				$_dummy_period = $periode ? $periode : date('Y') . '00';
 
@@ -1948,7 +2045,18 @@
 				$year = substr( $periode, 0, 4 );
 
 				$_found = false;
-				if(isset($order_budget[$periode]))
+
+				if(isset($_orders_paid_or_pending['periodization']) && $_orders_paid_or_pending['periodization'])
+				{
+					$order_budget[$periode]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
+					$order_budget[$periode]['actual_period'] = $periode;
+					$order_budget[$periode]['year'] = $year;
+					$order_budget[$periode]['month'] = substr( $periode, -2 );
+					$order_budget[$periode]['closed_order'] = $closed_order;
+
+					$_found = true;
+				}
+				else if(isset($order_budget[$periode]))
 				{
 					$order_budget[$periode]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
 					$order_budget[$periode]['actual_period'] = $periode;
@@ -1977,7 +2085,7 @@
 					$order_budget[$_dummy_period]['actual_period'] = $periode;
 				}
 			}
-
+//_debug_array($order_budget);die();
 			$sort_period = array();
 			$values = array();
 			$_current_period = date('Ym');
@@ -2047,7 +2155,7 @@
 					'sum_oblications'		=> $_sum_oblications,
 					'actual_cost'			=> $_actual_cost,
 					'closed_order'			=> $_budget['closed_order'],
-					'actual_period'			=> $_budget['actual_period']			
+					'actual_period'			=> $_budget['actual_period']
 				);
 
 				$sort_period[] = $period;

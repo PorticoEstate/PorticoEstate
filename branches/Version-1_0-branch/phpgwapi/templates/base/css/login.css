@@ -55,6 +55,9 @@ p {
 
 #section-box  { float: right; width: 320px; margin-left: 10px;}
 
+#left-box  { float: left;  margin-left:10px; margin-right:10px; margin-top: 50px;}
+#right-box  { float: right;  margin-left:10px; margin-right:10px; margin-top: 50px;}
+
 #section-box .m {
   padding: 5px;
 }
