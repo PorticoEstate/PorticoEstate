@@ -224,7 +224,7 @@
 
 			if($workorder)
 			{
-				if($this->check_old_spbudact_code($workorder['b_account_id'])
+				if($this->check_old_spbudact_code($workorder['b_account_id']))
 				{
 					$buffer[$this->id]['spbudact_code'] = '123014';
 					$buffer[$this->id]['dime']	= (int)substr($workorder['b_account_id'],-4); // Dim 6
