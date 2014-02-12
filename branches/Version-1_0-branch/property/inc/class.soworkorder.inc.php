@@ -808,7 +808,7 @@
 							$workorder['obligation']  += $entry['sum_oblications'];
 						}
 					}
-					else 
+					else
 					{
 						$workorder['actual_cost'] += $entry['actual_cost'];
 
@@ -1836,17 +1836,18 @@
 			/**
 			* Fiktiv periodisering over 12 mnd med startperiode for inneværende mnd for løpende som ikke er periodisert
 			* Hopper over historiske år.
-			* Start-periode blir måned for første betaling dersom den er før inneværende måned 
-			* ellers: Start-periode blir måned for start-dato for bestilling dersom den ligger frem i tid 
+			* Start-periode blir måned for første betaling dersom den er før inneværende måned
+			* ellers: Start-periode blir måned for start-dato for bestilling dersom den ligger frem i tid
 			* ellers: Dersom start-dato for bestilling er passert - blir start-periode inneværende måned.
 			**/
 			$fictive_period = array();
+			$exclude_from_fictive_period = array();
+			$exclude_year_from_fictive_period = array();
 			$order_budget = array();
 			if($continuous && $calculate_fictive_periods)
 			{
 				//First payment;
-				$sql = "SELECT periode"
-				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				$sql = "SELECT periode FROM fm_orders_paid_or_pending_view"
 				. " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00'
 				. " ORDER BY periode ASC";
 
@@ -1855,9 +1856,8 @@
 				$current_paid_period = (int)$this->db->f('periode');
 
 /*
-				//total payment;
-				$sql = "SELECT sum(actual_cost) AS actual_cost"
-				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				//FIXME total payment - if needed;
+				$sql = "SELECT sum(amount) AS actual_cost FROM  fm_orders_paid_or_pending_view"
 				. " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00';
 
 				$this->db->query($sql,__LINE__,__FILE__);
@@ -1888,18 +1888,6 @@
 
 						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']];
 
-/*
-						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']] - $_actual_cost;
-
-						if($sum_year_combined_cost[$_budget['year']] > 0 )
-						{
-							$_sum_year_combined_cost = $_sum_year_combined_cost < 0 ? 0 : $_sum_year_combined_cost;
-						}
-						else
-						{
-							$_sum_year_combined_cost = $_sum_year_combined_cost > 0 ? 0 : $_sum_year_combined_cost;
-						}
-*/
 						$distribution_key = 1/(13 - $_current_month);
 
 						for ($i = $_current_month; $i<13; $i++)
@@ -1921,6 +1909,10 @@
 					}
 					else
 					{
+						//FIXME
+						$exclude_from_fictive_period[$_period] 		= true;
+						$exclude_year_from_fictive_period[$_budget['year']] 		= true;
+						
 						$order_budget[$_period] = $_budget;
 					}
 					unset($_budget);
@@ -2024,12 +2016,69 @@
 					}
 
 				}
+				//FIXME
+				//else if (!isset($exclude_from_fictive_period[$entry['periode']]))
 				else
 				{
 					$orders_paid_or_pending[] = $entry;
 				}
 
 			}
+
+			//FIXME - probably not usable
+/*
+			if($continuous && $calculate_fictive_periods)
+			{
+				$_remaining_actual_cost = $_actual_cost;
+
+				foreach ($order_budget as $period => $_budget)
+				{
+
+					if((int)$period >= (int)$current_paid_period)
+					{
+
+						if($_actual_cost > 0)
+						{
+							if($_budget['combined_cost'] > $_remaining_actual_cost)
+							{
+								$partial_actual_cost = $_remaining_actual_cost;
+								$_remaining_actual_cost = 0;
+							}
+							else
+							{
+								$partial_actual_cost = $_budget['combined_cost'];							
+								$_remaining_actual_cost -= $_budget['combined_cost'];
+							}
+						}
+						else
+						{
+							if($_budget['combined_cost'] < $_remaining_actual_cost)
+							{
+								$partial_actual_cost = $_remaining_actual_cost;
+								$_remaining_actual_cost = 0;
+							}
+							else
+							{
+								$partial_actual_cost = $_budget['combined_cost'];							
+								$_remaining_actual_cost -= $_budget['combined_cost'];
+							}
+						}
+
+						$orders_paid_or_pending[] = array
+						(
+							'periode'				=> $period,
+							'actual_cost'			=> $partial_actual_cost,
+							'periodization'			=> false,
+						);
+					}
+
+				}
+
+				unset($period);
+				unset($_budget);
+			}
+*/
+
 
 			foreach ( $orders_paid_or_pending as $_orders_paid_or_pending)
 			{
@@ -2046,7 +2095,7 @@
 
 				$_found = false;
 
-				if(isset($_orders_paid_or_pending['periodization']) && $_orders_paid_or_pending['periodization'])
+				if(isset($_orders_paid_or_pending['periodization']) && $_orders_paid_or_pending['periodization'] && !isset($exclude_year_from_fictive_period[$year]))
 				{
 					$order_budget[$periode]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
 					$order_budget[$periode]['actual_period'] = $periode;
@@ -2147,7 +2196,7 @@
 				$values[] = array
 				(
 					'year'					=> $_budget['year'],
-					'month'					=> $_budget['month'] > 0 ? sprintf("%02s", $_budget['month']) : '',
+					'month'					=> $_budget['month'] > 0 ? sprintf("%02s", $_budget['month']) : '00',
 					'period'				=> $period,
 					'budget'				=> $_budget['budget'],
 					'combined_cost'			=> $_budget['combined_cost'],
