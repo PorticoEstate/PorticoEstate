@@ -1904,7 +1904,7 @@
 							$order_budget[$period]['combined_cost']	= $_sum_year_combined_cost * $distribution_key;
 							$order_budget[$period]['active_period'] = $_budget['active_period'];
 							$order_budget[$period]['month']			= $i;
-			 				$closed_period[$period] = (int)$period < date('Ym');
+			 				$closed_period[$period] 				= 0;//(int)$period < date('Ym');
 						}
 					}
 					else
