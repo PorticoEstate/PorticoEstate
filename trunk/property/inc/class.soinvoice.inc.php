@@ -818,7 +818,7 @@
 
 			while($entry=each($values['counter']))
 			{
-				$local_error='';
+				$local_error = false;
 
 				$n=$entry[0];
 
@@ -853,13 +853,15 @@
 				if(!$values['dimd'][$n])
 				{
 					$dimd_field="dimd=NULL";
+					$local_error= true;
+					$receipt['error'][] = array('msg'=>lang('Dim D is mandatory'));
 				}
 				else
 				{
 					$dimd=$values['dimd'][$n];
 					$GLOBALS['phpgw']->db->query("select count(*) as cnt from fm_ecodimd where id ='$dimd'");
 					$GLOBALS['phpgw']->db->next_record();
-					if ($GLOBALS['phpgw']->db->f('cnt') == 0)
+					if ($GLOBALS['phpgw']->db->f('cnt') == 0 )
 					{
 						$receipt['error'][] = array('msg'=>lang('This Dim D is not valid:'). " ".$dimd);
 						$local_error= true;
@@ -919,7 +921,16 @@
 						$update_paid_percent[$workorder_id] = $values['paid_percent'][$n];
 					}
 */
-					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,{$dimd_field}, mvakode = {$tax_code},spbudact_code = '{$budget_account}',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='$id'");
+					if($values['workorder_id'][$n])
+					{
+						$GLOBALS['phpgw']->db->query("SELECT id FROM fm_workorder WHERE id = '{$values['workorder_id'][$n]}'",__LINE__,__FILE__);
+						if($this->db->next_record())
+						{
+							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET category = '{$values['dimd'][$n]}' WHERE id='{$values['workorder_id'][$n]}'",__LINE__,__FILE__);
+						}
+					}
+					
+					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,{$dimd_field}, mvakode = {$tax_code},spbudact_code = '{$budget_account}',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='{$id}'",__LINE__,__FILE__);
 
 					$receipt['message'][] = array('msg'=>lang('Voucher is updated '));
 				}
@@ -951,9 +962,13 @@
 					switch ( $this->db->f('type') )
 					{
 						case 'workorder':
-							$historylog_workorder->add($entry,$id,$status_code[$entry]);
-							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status=" . "'{$status_code[$entry]}'" . "where id=$id");
-							$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+							$GLOBALS['phpgw']->db->query("SELECT id FROM fm_workorder WHERE status='{$status_code[$entry]}' AND id = {$id}");
+							if(!$this->db->next_record())
+							{
+								$historylog_workorder->add($entry,$id,$status_code[$entry]);
+								$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status='{$status_code[$entry]}' WHERE id = {$id}");
+								$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+							}
 							break;
 					}
 				}
