@@ -115,6 +115,25 @@
 	$GLOBALS['phpgw_info']['login_template_set'] = 'simple';
 
 	/**
+	* @global string $phpgw_info['login_left_message']
+	* An optional text to be displayed to the left on the login form.
+	* FORMATTING HAS TO BE EDITED MANUALLY (links and linebreak)
+	*/ 
+	$GLOBALS['phpgw_info']['login_left_message'] = <<<HTML
+{LOGIN_LEFT_MESSAGE}
+HTML;
+
+	/**
+	* @global string $phpgw_info['login_right_message']
+	* An optional text to be displayed to the right on the login form.
+	* FORMATTING HAS TO BE EDITED MANUALLY (links and linebreak)
+	*/
+	$GLOBALS['phpgw_info']['login_right_message'] = <<<HTML
+{LOGIN_RIGHT_MESSAGE}
+HTML;
+
+
+	/**
 	* @global boolean $phpgw_info['server']['mcrypt_enabled']
 	* This is used to control mcrypt's use
 	*/
@@ -215,7 +234,7 @@
 	* @global string $phpgw_info['server']['versions']['header']
 	* Version of this header file
 	*/
-	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.31';
+	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.32';
 
 
 	if ( !isset($GLOBALS['phpgw_info']['flags']['noapi'])
