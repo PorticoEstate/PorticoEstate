@@ -53,20 +53,22 @@
 			
 			$this->valid_tables = array
 			(
-				'fm_vendor'						=> 'fm_vendor (' . lang('vendor') . ')',
-				'fm_condition_survey'			=> 'fm_condition_survey (' . lang('condition survey') . ')',
-				'fm_ecodimb'					=> 'fm_ecodimb (' . lang('dimb') . ')',
-				'fm_budget'						=> 'fm_budget (' . lang('budget') . ')',
-				'fm_department'					=> 'fm_department (' . lang('department') . ')',
-				'fm_eco_periodization_outline'	=> 'fm_eco_periodization_outline (' . lang('periodization outline') . ')',
-				'fm_eco_periodization'			=> 'fm_eco_periodization (' . lang('periodization') . ')',
+				'fm_vendor'						=> array('name' => 'fm_vendor (' . lang('vendor') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_condition_survey'			=> array('name' => 'fm_condition_survey (' . lang('condition survey') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_ecodimb'					=> array('name' => 'fm_ecodimb (' . lang('dimb') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_budget'						=> array('name' => 'fm_budget (' . lang('budget') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_department'					=> array('name' => 'fm_department (' . lang('department') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_eco_periodization_outline'	=> array('name' => 'fm_eco_periodization_outline (' . lang('periodization outline') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_eco_periodization'			=> array('name' => 'fm_eco_periodization (' . lang('periodization') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_ecodimd'					=> array('name' => 'fm_ecodimd', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'phpgw_categories'				=> array('name' => 'phpgw_categories (' . lang('categories') . ')', 'permission' => PHPGW_ACL_READ),
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
 			
 			foreach ($location_types as $location_type)
 			{
-				$this->valid_tables["fm_location{$location_type['id']}"] = "fm_location{$location_type['id']} ({$location_type['name']})";
+				$this->valid_tables["fm_location{$location_type['id']}"] = array('name' => "fm_location{$location_type['id']} ({$location_type['name']})", 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
 			}
 
 			if($this->table && !in_array($this->table, array_keys($this->valid_tables)))
@@ -285,7 +287,7 @@ HTML;
 				{
 					$selected = $import_settings['table'] == $table ? 'selected =  "selected"' : '';
 					$table_option .=  <<<HTML
-					<option value='{$table}'{$selected}>{$table_info}</option>
+					<option value='{$table}'{$selected}>{$table_info['name']}::{$table_info['permission']}</option>
 HTML;
 				}
 
@@ -392,6 +394,13 @@ HTML;
 			$_fields = array();
 			if(!$location_id && $this->table)
 			{
+				$_permission = $this->valid_tables[$this->table]['permission'];
+
+				if(! ($_permission & PHPGW_ACL_READ) )
+				{
+					throw new Exception("No READ-right for {$this->table}");
+				}
+
 				$metadata = $this->db->metadata($this->table);
 
 				foreach ($metadata as $field => $info)
@@ -502,13 +511,19 @@ HTML;
 			$metadata = array();
 			if($this->table && $this->fields)
 			{
+				$_permission = $this->valid_tables[$this->table]['permission'];
+
+				if(! ($_permission & PHPGW_ACL_ADD) )
+				{
+					throw new Exception("No ADD-right for {$this->table}");
+				}
+
 				$metadata = $this->db->metadata($this->table);
 
 				if(phpgw::get_var('debug', 'bool'))
 				{
 					_debug_array($metadata);
 				}
-
 
 				foreach($this->fields as $field)
 				{
