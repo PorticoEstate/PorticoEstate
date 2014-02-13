@@ -257,7 +257,7 @@
 				}
 				else
 				{
-					$buffer[$this->id]['dime'] = $workorder['cat_id']; // Dim 6
+					$buffer[$this->id]['dime'] = strlen($workorder['cat_id']) == 4 ? $workorder['cat_id'] : ''; // Dim 6
 					$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
 				}
 			}
