@@ -256,7 +256,7 @@
 				$BilagOverf['splitt'],
 				$BilagOverf['kildeid'],
 				$BilagOverf['kidnr'],
-				$BilagOverf[typeid],
+				$BilagOverf['typeid'],
 				$BilagOverf['fakturadato'],
 				$BilagOverf['forfallsdato'],
 				$BilagOverf['regtid'],
@@ -301,7 +301,7 @@
 
 //			$download = 'on';
 //			$download = False;
-			$pre_transfer=True;
+			$pre_transfer=false;
 //			$this->debug=True;
 
 			//Generer batch ID
