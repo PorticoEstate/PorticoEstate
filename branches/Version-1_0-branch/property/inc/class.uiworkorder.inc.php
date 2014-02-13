@@ -1634,7 +1634,6 @@
 						'id'	  => $supervisor2_id,
 						'address' => $prefs2['email'],
 					);
-					$supervisor_email = array_reverse($supervisor_email);
 					unset($prefs);
 					unset($prefs2);
 					unset($invoice);
