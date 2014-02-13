@@ -16,7 +16,7 @@ access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
 accounting categories	property	no	Kategorier regnskap
 accounting dim b	property	no	Ansvarssted
-accounting dim d	property	no	Regnskap dim d
+accounting dim d	property	no	Regnskap dim 6
 accounting tax	property	no	Regnskap mva-kode
 accounting voucher category	property	no	Regnskap kategorier faktura
 accounting voucher type	property	no	Regnskap type faktura
@@ -556,7 +556,7 @@ dimb role user	property	no	Bruker/Rolle/Ansvarssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	K Ikke valgt
 Please select dimb!	property	no	Angi Ansvarssted
-dim d	property	no	Dim D
+dim d	property	no	Dim 6
 dime	property	no	Kategori
 directory created	property	no	katalog er opprettet
 disable	property	no	Deaktiver
@@ -1134,7 +1134,7 @@ no custom function	property	no	Ingen egendfinert funksjon
 no criteria	property	no	kriterie ikke valgt
 no datatype	property	no	Datatype ikke valgt
 no dim b	property	no	Ansvarssted ikke valgt
-no dim d	property	no	Dim D ikke valgt
+no dim d	property	no	Dim 6 ikke valgt
 no district	property	no	Distrikt ikke valgt
 no document type	property	no	Ingen dokument-type
 no entity type	property	no	Entitet type ikke valgt
@@ -1575,7 +1575,7 @@ select the customer by clicking this link	property	no	Velg kunde
 select the date for the first value	property	no	angi dato for første verdi
 select the date for the update	property	no	angi dato for oppdatering
 select the dim b for this invoice. to do not use dim b -  select no dim b	property	no	velg Ansvarssted for bilag. For ikke å bruke Ansvarssted - velg Ansvarssted IKKE VALGT
-select the dim d for this activity. to do not use dim d -  select no dim d	property	no	velg DIM D for bilag. For ikke å bruke DIM D - velg DIMD IKKE VALGT
+select the dim d for this activity. to do not use dim d -  select no dim d	property	no	velg DIM 6 for bilag. For ikke å bruke DIM 6 - velg DIMD IKKE VALGT
 select the district the part of town belongs to.	property	no	Velg hvilke distrikt denne bydelen tilhører
 select the district the selection belongs to. to do not use a district select no district	property	no	velg distrikt utvalget tilhører. For ikke å bruke distrikt velg DISTRIKT IKKE VALGT
 select the document type the document belongs to.	property	no	Velg dokumenttype for dette dokumentet
@@ -1788,7 +1788,8 @@ this building id does not exist!	property	no	Denne bygnings ID eksisterer ikke
 this building_id id does not exist!	property	no	Denne bygnings ID eksisterer ikke
 this building is already registered!	property	no	denne bygningen er allrerede registert
 this dim a is not valid:	property	no	DIMA er ikke gyldig:
-this dim d is not valid:	property	no	Denne Dim D er ikke gyldig:
+this dim d is not valid:	property	no	Denne Dim 6 er ikke gyldig:
+dim d is mandatory	property	no	Dim 6 er obligatorisk
 this entrance id does not exist!	property	no	Denne inngang ID eksisterer ikke
 this entrance_id id does not exist!	property	no	Denne bygnings ID eksisterer ikke
 this entrance is already registered!	property	no	denne inngangen er allrerede registert
