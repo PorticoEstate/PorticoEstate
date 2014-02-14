@@ -154,7 +154,7 @@
 				$cron,
 				date($this->db->datetime_format()),
 				$this->function_name,
-				$this->db->db_addslashes(implode(',',(array_keys($msgbox_data))))
+				$this->db->db_addslashes(implode('::',(array_keys($msgbox_data))))
 			);
 
 			$insert_values	= $this->db->validate_insert($insert_values);
