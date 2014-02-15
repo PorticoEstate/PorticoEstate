@@ -96,8 +96,8 @@
 			if($_duplicate)
 			{
 				$pdf->setColor(1,0,0);
-				$pdf->addText(50,400,40,"Dette er en duplikat av {$_duplicate}",-10);
-				$pdf->addText(50,350,40," - og er slettet!",-10);
+				$pdf->addText(50,400,30,"Dette er en duplikat av {$_duplicate}",-10);
+				$pdf->addText(50,350,30," - og er slettet!",-10);
 			}
 
 			$pdf->restoreState();
