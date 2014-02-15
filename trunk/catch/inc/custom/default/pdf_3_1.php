@@ -34,6 +34,9 @@
 	class pdf_3_1
 	{
 		
+		var $preview = false;
+
+
 		public function __construct()
 		{
 
@@ -52,8 +55,6 @@
 			{
 				return false;
 			}
-
-			$preview = false;
 
 			$sql = "SELECT * FROM fm_catch_3_1 WHERE id ='{$id}'";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
@@ -95,8 +96,8 @@
 			if($_duplicate)
 			{
 				$pdf->setColor(1,0,0);
-				$pdf->addText(200,400,40,"Dette er en duplikat av {$_duplicate} - og er slettet",-10);
-				$pdf->setColor(1,0,0);
+				$pdf->addText(50,400,40,"Dette er en duplikat av {$_duplicate}",-10);
+				$pdf->addText(50,350,40," - og er slettet!",-10);
 			}
 
 			$pdf->restoreState();
@@ -169,7 +170,8 @@ Boligtype: {$values['boligtype']}
 Boligareal (m2): {$values['boligareal']}
 
 4. Langtidsleie:
-Husleien er ved kontraktsinngåelsen fastsatt til kr {$values['husleie_pr_mnd']} pr mnd og kan endres iht ????
+Husleien er ved kontraktsinngåelsen fastsatt til kr {$values['husleie_pr_mnd']} pr mnd og kan endres iht konsumprisindeksen tidligst et år etter at sist leiefastsetting ble satt i verk.
+
 Det innbetales forskuddsvis leie (kr): {$values['innbetaling_forskudd']}
 
 5. Kortidsleie:
@@ -222,7 +224,7 @@ TXT;
 
 			$document= $pdf->ezOutput();
 
-			if($preview)
+			if($this->preview)
 			{
 				$pdf->print_pdf($document,"NLSH_melding_om_innflytting_{$id}");
 			}
