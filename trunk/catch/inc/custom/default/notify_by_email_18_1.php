@@ -144,7 +144,7 @@
 
 			if($attachments)
 			{
-				$body .= "</br>Rappoer vedlagt";
+				$body .= "</br>Rapport vedlagt";
 			}
 		}
 
