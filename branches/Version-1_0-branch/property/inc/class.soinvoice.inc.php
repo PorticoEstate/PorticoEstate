@@ -956,7 +956,7 @@
 					{
 						case 'workorder':
 							$GLOBALS['phpgw']->db->query("SELECT id FROM fm_workorder WHERE status='{$status_code[$entry]}' AND id = {$id}");
-							if(!$this->db->next_record())
+							if(!$GLOBALS['phpgw']->db->next_record())
 							{
 								$historylog_workorder->add($entry, $id, $status_code[$entry]);
 								$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status='{$status_code[$entry]}' WHERE id = {$id}");
