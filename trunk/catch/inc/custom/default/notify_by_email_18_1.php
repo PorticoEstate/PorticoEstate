@@ -144,7 +144,7 @@
 
 			if($attachments)
 			{
-				$body .= "</br>Se vedlegg";
+				$body .= "</br>Rappoer vedlagt";
 			}
 		}
 
@@ -163,12 +163,12 @@
 
 				$this->db->query("UPDATE fm_catch_3_1 SET utflyttingsdato = '{$_utflyttingsdato}' WHERE id = '{$_id_3_1}'", __LINE__, __FILE__);
 
-				$body .= "</br>Utflyttingsdato oppdatert fra {$_old_utflyttingsdato} til {$_utflyttingsdato} for inneflyttemelding {$_num_3_1}";
+				$body .= "</br></br>Utflyttingsdato oppdatert fra {$_old_utflyttingsdato} til {$_utflyttingsdato} for inneflyttemelding {$_num_3_1}";
 			
 			}
 			else
 			{
-				$body .= "</br>Fant ikke inneflyttemelding for kontraktsnummer {$_kontraktsnummer}";
+				$body .= "</br></br>Fant ikke inneflyttemelding for kontraktsnummer {$_kontraktsnummer}";
 
 			}
 		}
