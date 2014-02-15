@@ -106,6 +106,7 @@
 		{
 			$_kontraktsnummer	 = $this->db->f('kontraktsnummer');
 			$this->db->query("SELECT num FROM $target_table WHERE id != {$id} AND kontraktsnummer = '{$_kontraktsnummer}'", __LINE__, __FILE__);
+			$this->db->next_record();
 			$_duplicate_num		 = $this->db->f('num');
 		}
 
@@ -136,7 +137,7 @@
 		$attachments[] = array
 		(
 			'file' => $report_fname,
-			'name' => "NLSH_melding_om_innflytting_{$id}",
+			'name' => "NLSH_melding_om_innflytting_{$id}.pdf",
 			'type' => 'application/pdf'
 		);
 
