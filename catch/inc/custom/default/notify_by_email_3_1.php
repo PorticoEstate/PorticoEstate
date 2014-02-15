@@ -105,7 +105,7 @@
 		if($this->db->next_record())
 		{
 			$_kontraktsnummer	 = $this->db->f('kontraktsnummer');
-			$this->db->query("SELECT num FROM $target_table WHERE id != {$id} AND kontraktsnummer = {$_kontraktsnummer}", __LINE__, __FILE__);
+			$this->db->query("SELECT num FROM $target_table WHERE id != {$id} AND kontraktsnummer = '{$_kontraktsnummer}'", __LINE__, __FILE__);
 			$_duplicate_num		 = $this->db->f('num');
 		}
 
