@@ -111,7 +111,7 @@
 
 		$attachments = array();
 
-		require_once PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/pdf_3_1";
+		require_once PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/pdf_3_1.php";
 
 		$pdf = new pdf_3_1();
 
