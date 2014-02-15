@@ -111,7 +111,7 @@
 
 		$attachments = array();
 
-		require PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/pdf_3_1";
+		require_once PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/pdf_3_1";
 
 		$pdf = new pdf_3_1();
 
@@ -134,7 +134,7 @@
 		file_put_contents($report_fname, $report, LOCK_EX);
 
 		$attachments[] = array
-			(
+		(
 			'file' => $report_fname,
 			'name' => "NLSH_melding_om_innflytting_{$id}",
 			'type' => 'application/pdf'
