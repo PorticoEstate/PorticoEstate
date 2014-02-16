@@ -1752,11 +1752,11 @@
 
 
 		/**
-		* Get periodized budget for an order
-		*
+ 		* Get periodized budget for an order
+		* @param integer $order_id
+		* @param bool $calculate_fictive_periods
 		* @return array Array with budget information.
 		*/
-
 		function get_budget($order_id, $calculate_fictive_periods = true)
 		{
 			// Som før: Periodisering der det er definert
@@ -1769,7 +1769,7 @@
 			}
 			$continuous = false;
 
-			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
+//			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
 
 			if($cached_info)
 			{
@@ -1863,6 +1863,7 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				$_actual_cost = $this->db->f('actual_cost');
+//_debug_array($_actual_cost);die();
 */
 				foreach ($_order_budget as $_period => $_budget)
 				{
@@ -1888,6 +1889,7 @@
 
 						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']];
 
+
 						$distribution_key = 1/(13 - $_current_month);
 
 						for ($i = $_current_month; $i<13; $i++)
@@ -1906,6 +1908,26 @@
 							$order_budget[$period]['month']			= $i;
 			 				$closed_period[$period] 				= 0;//(int)$period < date('Ym');
 						}
+						
+						$_start_month_remainig = $_current_month < 12 ? $_current_month + 1 : 0;
+						$_start_year_remainig = $_budget['year'];
+						$_start_period_remainig =  array();
+
+						$distribution_key_remaining = 1/(13 - $_start_month_remainig);
+
+						if($_start_month_remainig)
+						{
+							for ($i = $_start_month_remainig; $i<13; $i++)
+							{
+								$period = sprintf("%s%02d",
+									$_budget['year'],
+									$i
+								);
+
+								$_start_period_remainig[] = $period;
+							}
+						}
+
 					}
 					else
 					{
@@ -2016,69 +2038,12 @@
 					}
 
 				}
-				//FIXME
-				//else if (!isset($exclude_from_fictive_period[$entry['periode']]))
 				else
 				{
 					$orders_paid_or_pending[] = $entry;
 				}
 
 			}
-
-			//FIXME - probably not usable
-/*
-			if($continuous && $calculate_fictive_periods)
-			{
-				$_remaining_actual_cost = $_actual_cost;
-
-				foreach ($order_budget as $period => $_budget)
-				{
-
-					if((int)$period >= (int)$current_paid_period)
-					{
-
-						if($_actual_cost > 0)
-						{
-							if($_budget['combined_cost'] > $_remaining_actual_cost)
-							{
-								$partial_actual_cost = $_remaining_actual_cost;
-								$_remaining_actual_cost = 0;
-							}
-							else
-							{
-								$partial_actual_cost = $_budget['combined_cost'];							
-								$_remaining_actual_cost -= $_budget['combined_cost'];
-							}
-						}
-						else
-						{
-							if($_budget['combined_cost'] < $_remaining_actual_cost)
-							{
-								$partial_actual_cost = $_remaining_actual_cost;
-								$_remaining_actual_cost = 0;
-							}
-							else
-							{
-								$partial_actual_cost = $_budget['combined_cost'];							
-								$_remaining_actual_cost -= $_budget['combined_cost'];
-							}
-						}
-
-						$orders_paid_or_pending[] = array
-						(
-							'periode'				=> $period,
-							'actual_cost'			=> $partial_actual_cost,
-							'periodization'			=> false,
-						);
-					}
-
-				}
-
-				unset($period);
-				unset($_budget);
-			}
-*/
-
 
 			foreach ( $orders_paid_or_pending as $_orders_paid_or_pending)
 			{
@@ -2095,8 +2060,19 @@
 
 				$_found = false;
 
+				if($_start_month_remainig && $year == $_start_year_remainig)
+				{
+					if(!in_array($periode, $_start_period_remainig))
+					{
+						$_temp_obligation = $order_budget[$periode]['combined_cost'] - $_orders_paid_or_pending['actual_cost'];
+						$_sum_year_remaining_cost += $_temp_obligation;
+						$order_budget[$periode]['combined_cost'] -= $_temp_obligation;
+					}
+				}
+
 				if(isset($_orders_paid_or_pending['periodization']) && $_orders_paid_or_pending['periodization'] && !isset($exclude_year_from_fictive_period[$year]))
 				{
+
 					$order_budget[$periode]['actual_cost'] += $_orders_paid_or_pending['actual_cost'];
 					$order_budget[$periode]['actual_period'] = $periode;
 					$order_budget[$periode]['year'] = $year;
@@ -2143,6 +2119,12 @@
 
 			foreach ($order_budget as $period => $_budget)
 			{
+
+				if(in_array($period, $_start_period_remainig))
+				{
+					$_budget['combined_cost'] += $_sum_year_remaining_cost * $distribution_key_remaining;
+				}
+
 				$_sum_orders = 0;
 				$_sum_oblications = 0;
 				$_actual_cost = 0;
