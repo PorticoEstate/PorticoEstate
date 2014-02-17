@@ -2120,7 +2120,7 @@
 			foreach ($order_budget as $period => $_budget)
 			{
 
-				if(in_array($period, $_start_period_remainig))
+				if(isset($_start_period_remainig) && in_array($period, $_start_period_remainig))
 				{
 					$_budget['combined_cost'] += $_sum_year_remaining_cost * $distribution_key_remaining;
 				}
