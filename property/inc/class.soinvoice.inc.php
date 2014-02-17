@@ -920,7 +920,7 @@
 						$GLOBALS['phpgw']->db->query("SELECT id FROM fm_workorder WHERE id = '{$values['workorder_id'][$n]}'", __LINE__, __FILE__);
 						if($this->db->next_record())
 						{
-							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET category = '{$values['dimd'][$n]}' WHERE id='{$values['workorder_id'][$n]}'", __LINE__, __FILE__);
+							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET category = '{$values['dimd'][$n]}' ,account_id = '{$values['budget_account'][$n]}' WHERE id='{$values['workorder_id'][$n]}'", __LINE__, __FILE__);
 						}
 					}
 
