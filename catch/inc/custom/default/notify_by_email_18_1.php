@@ -99,53 +99,36 @@
 			$body = "<H2>Det er registrert ny post i {$schema_text}</H2>";
 		}
 
-		$jasper_id = isset($config_data['jasper_id']) && $config_data['jasper_id'] ? $config_data['jasper_id'] : 0;
-
 		$attachments = array();
 
-		if(!$jasper_id)
+		require_once PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/pdf_18_1.php";
+
+		$pdf = new pdf_18_1();
+
+		try
 		{
-			$this->receipt['error'][] = array('msg' => lang('notify_by_email: missing "jasper_id" in config for catch %1 schema', $schema_text));
+			$report = $pdf->get_document($id);
 		}
-		else
+		catch(Exception $e)
 		{
-			$jasper_parameters	 = '';
-			$_parameters		 = array();
+			$error = $e->getMessage();
+			echo "<H1>{$error}</H1>";
+		}
 
-			$_parameters[]		 = "ID|{$id}";
-			$jasper_parameters	 = '"' . implode(';', $_parameters) . '"';
 
-			unset($_parameters);
+		$report_fname = tempnam($GLOBALS['phpgw_info']['server']['temp_dir'], 'PDF_') . '.pdf';
+		file_put_contents($report_fname, $report, LOCK_EX);
 
-			$output_type	 = 'PDF';
-			$values_jasper	 = execMethod('property.bojasper.read_single', $jasper_id);
-			$report_source	 = "{$GLOBALS['phpgw_info']['server']['files_dir']}/property/jasper/{$jasper_id}/{$values_jasper['file_name']}";
-			$jasper_wrapper	 = CreateObject('phpgwapi.jasper_wrapper');
+		$attachments[] = array
+		(
+			'file' => $report_fname,
+			'name' => "NLSH_melding_om_utflytting_{$id}.pdf",
+			'type' => 'application/pdf'
+		);
 
-			try
-			{
-				$report = $jasper_wrapper->execute($jasper_parameters, $output_type, $report_source, true);
-			}
-			catch(Exception $e)
-			{
-				$error = $e->getMessage();
-				echo "<H1>{$error}</H1>";
-			}
-
-			$jasper_fname = tempnam($GLOBALS['phpgw_info']['server']['temp_dir'], 'PDF_') . '.pdf';
-			file_put_contents($jasper_fname, $report['content'], LOCK_EX);
-
-			$attachments[] = array
-				(
-				'file' => $jasper_fname,
-				'name' => $report['filename'],
-				'type' => $report['mime']
-			);
-
-			if($attachments)
-			{
-				$body .= "</br>Rapport vedlagt";
-			}
+		if($attachments)
+		{
+			$body .= "</br>Rapport vedlagt";
 		}
 
 		$this->db->query("SELECT kontraktsnummer, leie_opphore_fra_dato FROM $target_table WHERE id = {$id}", __LINE__, __FILE__);
@@ -157,19 +140,17 @@
 			$this->db->query("SELECT id, num, utflyttingsdato FROM fm_catch_3_1 WHERE kontraktsnummer = '{$_kontraktsnummer}'", __LINE__, __FILE__);
 			if($this->db->next_record())
 			{
-				$_num_3_1	 = $this->db->f('num');
-				$_id_3_1	 = $this->db->f('id');
-				$_old_utflyttingsdato = $this->db->f('utflyttingsdato');
+				$_num_3_1				 = $this->db->f('num');
+				$_id_3_1				 = $this->db->f('id');
+				$_old_utflyttingsdato	 = $this->db->f('utflyttingsdato');
 
 				$this->db->query("UPDATE fm_catch_3_1 SET utflyttingsdato = '{$_utflyttingsdato}' WHERE id = '{$_id_3_1}'", __LINE__, __FILE__);
 
 				$body .= "</br></br>Utflyttingsdato oppdatert fra {$_old_utflyttingsdato} til {$_utflyttingsdato} for inneflyttemelding {$_num_3_1}";
-			
 			}
 			else
 			{
 				$body .= "</br></br>Fant ikke inneflyttemelding for kontraktsnummer {$_kontraktsnummer}";
-
 			}
 		}
 		else
@@ -181,8 +162,8 @@
 		{
 			$this->receipt['message'][] = array('msg' => "email notification sent to: {$_to}");
 		}
-		if(isset($jasper_fname) && is_file($jasper_fname))
+		if(isset($report_fname) && is_file($report_fname))
 		{
-			unlink($jasper_fname);
+			unlink($report_fname);
 		}
 	}
