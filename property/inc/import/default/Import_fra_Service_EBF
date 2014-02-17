@@ -258,7 +258,15 @@
 				else
 				{
 					$buffer[$this->id]['dime'] = strlen($workorder['cat_id']) == 4 ? $workorder['cat_id'] : ''; // Dim 6
-					$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
+					if ( strlen($workorder['b_account_id']) == 6 && $this->check_spbudact_code($workorder['b_account_id']))
+					{
+						$buffer[$this->id]['spbudact_code'] = $workorder['b_account_id'];
+					}
+					else
+					{
+						$buffer[$this->id]['spbudact_code'] = '';
+					}
+					
 				}
 			}
 			else
@@ -345,6 +353,17 @@
 			}
 
 			return false;
+		}
+
+		/**
+		 * Check for valid budget account
+		 * @param integer $id
+		 * @return bool true on exist, false on not exist
+		 */
+		function check_spbudact_code($id)
+		{
+			$this->db->query("SELECT id FROM fm_b_account WHERE id='{$id}'");
+			return !!$this->db->next_record();
 		}
 
 		function check_dima($id)
