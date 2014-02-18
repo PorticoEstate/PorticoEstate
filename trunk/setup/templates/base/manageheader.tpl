@@ -34,6 +34,13 @@
       <textarea cols="80" rows="4" name="setting[login_right_message]" wrap="virtual">{login_right_message}</textarea>
     </td>
   </tr>
+  <tr>
+    <td colspan="2"><b>{lang_new_user}</b><br><input type="text" name="setting[new_user_url]" size="80" value="{new_user_url}"></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>{lang_forgotten_password}</b><br><input type="text" name="setting[lost_password_url]" size="80" value="{lost_password_url}"></td>
+  </tr>
+
   <br><br>
   <tr>
     <td><b>{lang_persist}</b><br>

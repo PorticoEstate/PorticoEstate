@@ -649,6 +649,8 @@ HTML;
 			$setup_tpl->set_var('default_lang', isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : phpgw::get_var('ConfigLang', 'string', 'POST'));
 			$setup_tpl->set_var('login_left_message', $GLOBALS['phpgw_info']['login_left_message']);
 			$setup_tpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
+			$setup_tpl->set_var('new_user_url', $GLOBALS['phpgw_info']['server']['new_user_url']);
+			$setup_tpl->set_var('lost_password_url', $GLOBALS['phpgw_info']['server']['lost_password_url']);
 
 
 
@@ -751,6 +753,8 @@ HTML;
 			$setup_tpl->set_var('lang_system_name',lang('System name'));
 			$setup_tpl->set_var('lang_login_left_message',lang('login left message'));
 			$setup_tpl->set_var('lang_login_right_message',lang('login right message'));
+			$setup_tpl->set_var('lang_new_user',lang('url new user'));
+			$setup_tpl->set_var('lang_forgotten_password',lang('url forgotten password'));
 			$setup_tpl->set_var('lang_dbhost',lang('DB Host'));
 			$setup_tpl->set_var('lang_dbhostdescr',lang('Hostname/IP of database server'));
 			$setup_tpl->set_var('lang_dbname',lang('DB Name'));
