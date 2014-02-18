@@ -132,6 +132,17 @@ HTML;
 {LOGIN_RIGHT_MESSAGE}
 HTML;
 
+	/**
+	* @global string $phpgw_info['new_user_url']
+	 * An otpional url to new user registration
+	 */
+	$GLOBALS['phpgw_info']['server']['new_user_url'] = '{NEW_USER_URL}';
+
+	/**
+	* @global string $phpgw_info['lost_password_url']
+	* An otpional url to remedy lost passwords
+	 */
+	$GLOBALS['phpgw_info']['server']['lost_password_url'] = '{LOST_PASSWORD_URL}';
 
 	/**
 	* @global boolean $phpgw_info['server']['mcrypt_enabled']
