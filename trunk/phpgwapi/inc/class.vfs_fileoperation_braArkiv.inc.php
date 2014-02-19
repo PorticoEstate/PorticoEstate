@@ -42,7 +42,6 @@
 			$location_url = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
 			$braarkiv_user =  $c->config_data[$section]['braarkiv_user'];
 			$braarkiv_pass =  $c->config_data[$section]['braarkiv_pass'];
-//$location_url = 'http://braarkiv.adm.bgo/service/services.asmx';
 
 			if(!isset($c->config_data) || !$c->config_data)
 			{
@@ -266,31 +265,63 @@
 		public function touch($p)
 		{
 			$document = new Document();
-			$document->BaseClassName = "Library";
-			$document->ClassName = "Ebook";
+			$document->BBRegTime = date('Y-m-d');
+			$document->BaseClassName = "Eiendomsarkiver";
+			$document->ClassName = "Byggesak";
 
 			$attributter = array();
+
 			$att1 = new Attribute();
-			$att1->AttribType = 'braArkivString';
-			$att1->Name = "Tittel";
-			$att1->Value = array("Testtittel");
+			$att1->AttribType = 'braArkivDate';
+			$att1->Name = "Saksdato";
+			$att1->Value = array(date('Y-m-d'));
 			$attributter[] = $att1;
 
 			$att2 = new Attribute();
-
-		//	$braArkivAttributeType = new braArkivAttributeType();
-		//	$att2->AttribType = $braArkivAttributeType->braArkivDate;
-			$att2->AttribType = 'braArkivDate';
-			$att2->Name = "CreatedDate";
-			$att2->Value = array(date('Y-m-d'));
+			$att2->AttribType = 'braArkivString';
+			$att2->Name = "Tiltakstype";
+			$att2->Value = array("Testtittel");
 			$attributter[] = $att2;
+
+			$att3 = new Attribute();
+			$att3->AttribType = 'braArkivString';
+			$att3->Name = "Tiltaksart";
+			$att3->Value = array("Testtittel");
+			$attributter[] = $att3;
+
+			$att4 = new Attribute();
+			$att4->AttribType = 'braArkivString';
+			$att4->Name = "ASTA_Signatur";
+			$att4->Value = array("Testtittel");
+			$attributter[] = $att4;
+
+			$att5 = new Attribute();
+			$att5->AttribType = 'braArkivDate';
+			$att5->Name = "Dokumentdato";
+			$att5->Value = array(date('Y-m-d'));
+			$attributter[] = $att5;
+
+			$att5 = new Attribute();
+			$att5->AttribType = 'braArkivString';
+			$att5->Name = "BrukerID";
+			$att5->Value = array("1");
+			$attributter[] = $att5;
+
+			$att6 = new Attribute();
+			$att6->AttribType = 'braArkivString';
+			$att6->Name = "Team";
+			$att6->Value = array("Testtittel");
+			$attributter[] = $att6;
+
 
 			$document->Attributes = $attributter;
 
 			$createDocument = new createDocument();
 			$createDocument->secKey = $this->secKey;
-			$createDocument->assignDocKey = false;
+			$createDocument->assignDocKey = 0;
 			$createDocument->doc = $document;
+
+	//		_debug_array($createDocument);die();
 
 			$createDocumentResponse = $this->Services->createDocument($createDocument);
 			$document_id =  $createDocumentResponse->createDocumentResult;
@@ -986,7 +1017,7 @@
 			 * @access public
 			 * @var sboolean
 			 */
-			public $UsesLookupValues;
+			public $UsesLookupValues = false;
 
 			/**
 			 * @access public
@@ -1303,31 +1334,31 @@
 			 * @access public
 			 * @var sstring
 			 */
-			public $ID;
+			public $ID = '';
 
 			/**
 			 * @access public
 			 * @var sstring
 			 */
-			public $BFDocKey;
+			public $BFDocKey = '';
 
 			/**
 			 * @access public
 			 * @var sstring
 			 */
-			public $BFNoSheets;
+			public $BFNoSheets = '';
 
 			/**
 			 * @access public
 			 * @var sboolean
 			 */
-			public $BFDoubleSided;
+			public $BFDoubleSided = false;
 
 			/**
 			 * @access public
 			 * @var sboolean
 			 */
-			public $BFSeparateKeySheet;
+			public $BFSeparateKeySheet = false;
 
 			/**
 			 * @access public
@@ -1345,13 +1376,13 @@
 			 * @access public
 			 * @var sboolean
 			 */
-			public $Classified;
+			public $Classified = false;
 
 			/**
 			 * @access public
 			 * @var sint
 			 */
-			public $Priority;
+			public $Priority = 0;
 
 			/**
 			 * @access public
