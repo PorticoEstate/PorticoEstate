@@ -119,18 +119,22 @@
 	* An optional text to be displayed to the left on the login form.
 	* FORMATTING HAS TO BE EDITED MANUALLY (links and linebreak)
 	*/ 
-	$GLOBALS['phpgw_info']['login_left_message'] = <<<HTML
+	$login_left_message = <<<HTML
 {LOGIN_LEFT_MESSAGE}
 HTML;
+
+	$GLOBALS['phpgw_info']['login_left_message'] = nl2br(str_replace(array('[',']'), array('<','>'), $login_left_message));
 
 	/**
 	* @global string $phpgw_info['login_right_message']
 	* An optional text to be displayed to the right on the login form.
 	* FORMATTING HAS TO BE EDITED MANUALLY (links and linebreak)
 	*/
-	$GLOBALS['phpgw_info']['login_right_message'] = <<<HTML
+	$login_right_message = <<<HTML
 {LOGIN_RIGHT_MESSAGE}
 HTML;
+
+	$GLOBALS['phpgw_info']['login_right_message'] = nl2br(str_replace(array('[',']'), array('<','>'), $login_right_message));
 
 	/**
 	* @global string $phpgw_info['new_user_url']
