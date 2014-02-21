@@ -43,6 +43,7 @@
 		protected $db2;
 		protected $soXport;
 		protected $config;
+		protected $invoice_approval	 = 2;
 
 		function __construct()
 		{
@@ -51,11 +52,20 @@
 			$this->db2		 = clone($this->db);
 			$this->soXport	 = CreateObject('property.soXport');
 			$this->config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->invoice_approval	 = isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] ? $this->config->config_data['common']['invoice_approval'] : 2;
 		}
 
 		function select_periods_with_invoice_to_transfer()
 		{
-			$sql = "SELECT DISTINCT periode from fm_ecobilag WHERE budsjettsigndato is not null and (saksigndato is not null or oppsynsigndato is not null) and utbetalingsigndato is not null";
+			if($this->invoice_approval == 2)
+			{
+				$sql = "SELECT DISTINCT periode FROM fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL or oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL";
+			}
+			else
+			{
+				$sql = "SELECT DISTINCT periode FROM fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL";
+			}
+
 
 			$periode = array();
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -449,7 +459,14 @@
 
 		private function get_vouchers_to_transfer($periode)
 		{
-			$sql = "SELECT sum(belop) as belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL AND ( saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL ) AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";
+			if($this->invoice_approval == 2)
+			{
+				$sql = "SELECT sum(belop) AS belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL AND ( saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL ) AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";
+			}
+			else
+			{
+				$sql = "SELECT sum(belop) AS belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL  AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";				
+			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -659,7 +676,7 @@
 
 				$Valuteringsdato = date(Ymd, strtotime($invoice['fakturadato']));// verdi: Dato, type: date, plass: 251 - 258
 				$Bilagsdato		 = date(Ymd, strtotime($invoice['fakturadato']));// verdi: Dato, type: date, plass: 259 - 266
-				$Bilagsnr		 = sprintf("%-9s", substr($invoice['bilagsnr'], -8));// verdi: Bilagsnummer, type: i4, plass: 267 - 275
+				$Bilagsnr		 = sprintf("%-9s", '');// verdi: Bilagsnummer, type: i4, plass: 267 - 275
 				//		$_periode	= sprintf("%06s",date(Y,strtotime($invoice['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 				$ESL			 = sprintf("%1s", '');// verdi: Blank, type: i+C481, plass: 282 - 282
 
@@ -675,8 +692,12 @@
 				$Kid			 = sprintf("%-27s", $invoice['kidnr']);// verdi: Kid, type: c27, plass: 351 - 377
 				$Bet_overforing	 = sprintf("%-2s", '');// verdi: Blank, type: c2, plass: 378 - 379
 				$Status			 = 'N';// verdi: N, type: c1, plass: 380 - 380
-				$Resk_type		 = 'P';// verdi: Blank, type: c1, plass: 381 - 381
-				$Resk_nr		 = sprintf("%-9s", $invoice['spvend_code']);// verdi: Blank., type: i4, plass: 382 - 390
+//				$Resk_type		 = 'P';// verdi: Blank, type: c1, plass: 381 - 381
+				$Resk_type		 = ' ';// verdi: Blank, type: c1, plass: 381 - 381
+
+//				$Resk_nr		 = sprintf("%-9s", $invoice['spvend_code']);// verdi: Blank., type: i4, plass: 382 - 390
+				$Resk_nr		 = sprintf("%-9s", '');// verdi: Blank., type: i4, plass: 382 - 390
+
 				$Forskudd		 = '0';// verdi: 0, type: i1, plass: 391 - 391
 				$Fakturaref		 = '000000000';// verdi: 0, type: i4, plass: 392 - 400
 				$Fakturaref		 = '000000000';// verdi: 0, type: i4, plass: 401 - 409
@@ -762,8 +783,8 @@
 					$invoice_line['filnavn']	 = basename($Filnavn);
 					$invoice_line['ordrebelop']	 = $invoice_line[$BelopFelt];
 
-					$Konto	 = sprintf("%08s", $invoice_line['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
-					$Dim_1	 = sprintf("%08s", $invoice_line['dimb']);// 64040 verdi: Ansvarssted, type: c8, plass: 29 - 36
+					$Konto	 = sprintf("%-8s", $invoice_line['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
+					$Dim_1	 = sprintf("%-8s", "0{$invoice_line['dimb']}");// 64040 verdi: Ansvarssted, type: c8, plass: 29 - 36
 					$Dim_2	 = sprintf("%-8s", $invoice_line['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
 					$Dim_3	 = sprintf("%-8s", substr($invoice_line['dima'], 0, 6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
 
@@ -785,21 +806,12 @@
 					$Belop2				 = sprintf("%20s", '');// verdi: Blank, type: f8, plass: 141 - 160
 					$Belop3				 = sprintf("%20s", '');// verdi: Blank, type: money, plass: 161 - 180
 					//	$Belop4 (også kalt "money3" )blir brukt for identifisere overføring på tvers av filer.
-					$Belop4				 = sprintf("%20s", $batchid);// verdi: Blank, type: money, plass: 181 - 200 - batch_id høyre justert
+					$Belop4				 = sprintf("%20s", '');// verdi: Blank, type: money, plass: 181 - 200 - batch_id høyre justert
 
-					/*
-					  if($invoice_line['pmwrkord_code'])
-					  {
-					  $Tekst	= sprintf("%-50s",substr(utf8_decode($this->get_order_title($invoice_line['pmwrkord_code'])),0,50));//sprintf("%-50s",substr($invoice_line['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
-					  }
-					  else
-					  {
-					  $Tekst	= sprintf("%-50s",'');//sprintf("%-50s",substr($invoice_line['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
-					  }
-					 */
-					$Tekst = sprintf("%-50s", substr($invoice_line['fakturanr'], 0, 50));
+					$Tekst = sprintf("%-50s", substr("{$invoice['spvend_code']}::{$invoice_line['fakturanr']}", 0, 50));
 
-					$Fakturanr = sprintf("%-15s", substr(utf8_decode($invoice_line['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
+	//				$Fakturanr = sprintf("%-15s", substr(utf8_decode($invoice_line['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
+					$Fakturanr = sprintf("%-15s", '');// verdi: Fakturanr, type: c15, plass: 283 - 297
 
 					$Ordrenummer = sprintf("%-9s", $invoice_line['pmwrkord_code']);// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
 					//Kopier verdier
@@ -821,7 +833,7 @@
 					if($_key == $last_record)
 					{
 						$Konto		 = sprintf("%-8s", '2139915');// verdi: Art, type: c8, plass: 21 - 28
-						$Dim_1		 = sprintf("%08s", $invoice_line['dimb']);//sprintf("%-8s",'');// verdi: Ansvarssted, type: c8, plass: 29 - 36
+			//			$Dim_1		 = sprintf("%-8s", $invoice_line['dimb']);//sprintf("%-8s",'');// verdi: Ansvarssted, type: c8, plass: 29 - 36
 						$Dim_2		 = sprintf("%-8s", '');// verdi: Tjeneste, type: c8, plass: 37 - 44
 						$Dim_3		 = sprintf("%-8s", '');// verdi: Objekt, type: c8, plass: 45 - 52
 						$Dim_4		 = sprintf("%-8s", '');// verdi: Ressurs, type: c8, plass: 53 - 60
@@ -831,17 +843,17 @@
 						$Fakturanr	 = sprintf("%-15s", '');// verdi: Fakturanr, type: c15, plass: 283 - 297
 						$Ordrenummer = sprintf("%-9s", '');// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
 						//	$Tekst		= sprintf("%-50s",'');//sprintf("%-50s",substr($invoice_line['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
-						$Tekst		 = sprintf("%-50s", substr($invoice_line['fakturanr'], 0, 50));// verdi: Tekst, type: text (50), plass: 201 - 250
+			//			$Tekst		 = sprintf("%-50s", '');// verdi: Tekst, type: text (50), plass: 201 - 250
 						//Ikke fortegnskifte for kostfordeling (GL)
 						if($Belop_motpost < 0)
 						{
 							$Belop_motpost	 = sprintf("%019s", abs($Belop_motpost));
-							$Belop_motpost	 = '-' . $Belop_motpost;
+							$Belop_motpost	 = "+{$Belop_motpost}";
 						}
 						else
 						{
 							$Belop_motpost	 = sprintf("%019s", $Belop_motpost);
-							$Belop_motpost	 = '+' . $Belop_motpost;
+							$Belop_motpost	 = "-{$Belop_motpost}";
 						}
 
 						$Transtype			 = 'GL';// verdi: GL, type: c2, plass: 17 - 18

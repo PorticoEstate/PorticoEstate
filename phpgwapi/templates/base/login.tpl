@@ -202,10 +202,10 @@
 
 					<p>{instruction}</p>
 					<p >
-						<a href="javascript:new_user();">{lang_new_user}</a>
+						<a href="{action_new_user}">{lang_new_user}</a>
 					</p>
 					</p>
-						<a href="javascript:lost_password();">{lang_forgotten_password}</a>.
+						<a href="{action_lost_password}">{lang_forgotten_password}</a>.
 					 </p>
 
 					<div id="lock"></div>

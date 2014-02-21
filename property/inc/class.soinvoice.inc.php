@@ -49,7 +49,9 @@
 			$this->like				 = & $this->db->like;
 			$this->config			 = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
-			$this->invoice_approval	 = isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval'] ? $this->config->config_data['invoice_approval'] : 2;
+			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
+			$this->invoice_approval	 = isset($custom_config->config_data['common']['invoice_approval']) && $custom_config->config_data['common']['invoice_approval'] ? $custom_config->config_data['common']['invoice_approval'] : 2;
 		}
 
 		function read_invoice($data)
