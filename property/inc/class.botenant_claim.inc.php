@@ -320,5 +320,25 @@
 			return $record_history;
 		}
 
+		public function get_files($id = 0)
+		{
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'string' => "/property/tenant_claim/{$id}",
+				'relatives' => array(RELATIVE_NONE)
+			));
+
+			$vfs->override_acl = 0;
+
+			foreach($files as & $file)
+			{
+				$file['file_name']=urlencode($file['name']);
+				
+			} 
+
+			return $files;
+		}
 
 	}
