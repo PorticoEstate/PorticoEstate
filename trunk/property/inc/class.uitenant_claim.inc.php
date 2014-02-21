@@ -98,6 +98,16 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_READ, 'acl_location'=> $this->acl_location));
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('tenant_claim');
+		}
+
 		function index($project_id='')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim',
@@ -107,7 +117,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_READ, 'acl_location'=> $this->acl_location));
 			}
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt');
@@ -622,7 +632,7 @@
 
 			$this->boproject= CreateObject('property.boproject');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim','files'));
 
 			if ($values['save'] || $values['apply'])
 			{
@@ -647,6 +657,43 @@
 					$receipt = $this->bo->save($values);
 					$claim_id = $receipt['claim_id'];
 					$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
+
+				//----------files
+					$bofiles	= CreateObject('property.bofiles');
+					if(isset($values['file_action']) && is_array($values['file_action']))
+					{
+						$bofiles->delete_file("/tenant_claim/{$claim_id}/", $values);
+					}
+
+					$file_name = @str_replace(' ','_',$_FILES['file']['name']);
+
+					if($file_name)
+					{
+						$to_file = "{$bofiles->fakebase}/tenant_claim/{$claim_id}/{$file_name}";
+
+						if($bofiles->vfs->file_exists(array(
+							'string' => $to_file,
+							'relatives' => Array(RELATIVE_NONE)
+						)))
+						{
+							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						}
+						else
+						{
+							$bofiles->create_document_dir("tenant_claim/$claim_id");
+							$bofiles->vfs->override_acl = 1;
+
+							if(!$bofiles->vfs->cp (array (
+								'from'	=> $_FILES['file']['tmp_name'],
+								'to'	=> $to_file,
+								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+							{
+								$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+							}
+							$bofiles->vfs->override_acl = 0;
+						}
+					}
+				//-----------
 
 					if ($values['save'])
 					{
@@ -854,7 +901,61 @@
 				$record_history = array();
 			}
 
+
+//--------------files
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uitenant_claim.view_file',
+				'id'		=> $claim_id
+			);
+
+			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+
+			$_files = $this->bo->get_files($claim_id);
+
+			$lang_view_file = lang('click to view file');
+			$lang_delete_file = lang('Check to delete file');
+			$z=0;
+			$content_files = array();
+			foreach( $_files as $_file )
+			{
+				if ($link_to_files)
+				{
+					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$_file['directory']}/{$_file['file_name']}' target=\"_blank\" title='{$lang_view_file}'>{$_file['name']}</a>";
+				}
+				else
+				{
+					$content_files[$z]['file_name'] = "<a href=\"{$link_view_file}&amp;file_name={$_file['file_name']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
+				}
+				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['name']}\" title=\"{$lang_delete_file}\">";
+				$z++;
+			}
+
 			$datavalues[1] = array
+			(
+				'name'					=> "1",
+				'values' 				=> json_encode($content_files),
+				'total_records'			=> count($content_files),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 1,
+				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'footer'				=> 0
+			);
+
+			$myColumnDefs[1] = array
+				(
+					'name'		=> "1",
+					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
+				);
+
+//--------------files
+
+			
+			
+			$datavalues[2] = array
 				(
 					'name'					=> "1",
 					'values' 				=> json_encode($record_history),
@@ -864,9 +965,9 @@
 					'footer'				=> 0
 				);
 
-			$myColumnDefs[1] = array
+			$myColumnDefs[2] = array
 				(
-					'name'		=> "1",
+					'name'		=> "2",
 					'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
 														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
