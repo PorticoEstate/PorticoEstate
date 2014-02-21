@@ -46,11 +46,12 @@
 
 		var $public_functions = array
 			(
-				'index'  => true,
-				'check'  => true,
-				'view'   => true,
-				'edit'   => true,
-				'delete' => true
+				'index'		=> true,
+				'check'		=> true,
+				'view'		=> true,
+				'edit'		=> true,
+				'delete'	=> true,
+				'view_file'	=> true
 			);
 
 		function property_uitenant_claim()
@@ -957,7 +958,7 @@
 			
 			$datavalues[2] = array
 				(
-					'name'					=> "1",
+					'name'					=> "2",
 					'values' 				=> json_encode($record_history),
 					'total_records'			=> count($record_history),
 					'edit_action'			=> "''",
