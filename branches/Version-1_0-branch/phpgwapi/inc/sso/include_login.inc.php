@@ -478,15 +478,35 @@ JS;
 			$this->tmpl->set_var('lang_new_user', lang('new user'));
 			$this->tmpl->set_var('lang_forgotten_password', lang('forgotten password'));
 
-			$url_new_user = "{$webserver_url}/registration/main.php";
+			if(isset($GLOBALS['phpgw_info']['server']['new_user_url']) && $GLOBALS['phpgw_info']['server']['new_user_url'])
+			{
+				$url_new_user = $GLOBALS['phpgw_info']['server']['new_user_url'];
+				$action_new_user = $url_new_user;
 
+			}
+			else
+			{
+				$url_new_user = "{$webserver_url}/registration/main.php";
+				$action_new_user = 'javascript:new_user();';
+			}
 			$this->tmpl->set_var('url_new_user', $url_new_user);
 
-			$url_lost_password = "{$webserver_url}/registration/main.php?" . http_build_query(array(
+			if(isset($GLOBALS['phpgw_info']['server']['lost_password_url']) && $GLOBALS['phpgw_info']['server']['lost_password_url'])
+			{
+				$url_lost_password = $GLOBALS['phpgw_info']['server']['lost_password_url'];
+				$action_lost_password = $url_lost_password;
+			}
+			else
+			{
+				$url_lost_password = "{$webserver_url}/registration/main.php?" . http_build_query(array(
 						'menuaction'	=>'registration.uireg.lostpw1')
 						);
+				$action_lost_password = 'javascript:lost_password();';
+			}
 			
 			$this->tmpl->set_var('url_lost_password', $url_lost_password);
+			$this->tmpl->set_var('action_new_user', $action_new_user);
+			$this->tmpl->set_var('action_lost_password', $action_lost_password);
 
 			$this->tmpl->set_var('website_title', isset($GLOBALS['phpgw_info']['server']['site_title'])
 								? $GLOBALS['phpgw_info']['server']['site_title'] 
