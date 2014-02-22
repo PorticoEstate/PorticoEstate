@@ -652,7 +652,7 @@
 								<td>
 									<input type="checkbox" name="values[tracking]" value="1">
 										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'acivate tracking of dates in helpdesk main list')"/>
+											<xsl:value-of select="php:function('lang', 'activate tracking of dates in helpdesk main list')"/>
 										</xsl:attribute>
 										<xsl:if test="value_tracking = '1'">
 											<xsl:attribute name="checked">

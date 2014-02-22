@@ -5,7 +5,7 @@
 %1 group	property	no	%1 gruppe
 %1 is notified	property	no	Melding sendt til %1
 %1 properties has been updated to not active of %2 already not active	property	no	%1 Eiendommer er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
-expences	property	no	Utgifter
+expenses	property	no	Utgifter
 income	property	no	Inntekter
 about	common	no	Om
 amount in	property	no	Inn
@@ -21,10 +21,10 @@ accounting tax	property	no	Regnskap mva-kode
 accounting voucher category	property	no	Regnskap kategorier faktura
 accounting voucher type	property	no	Regnskap type faktura
 accumulated	property	no	Akkumulert
-acl_locastion is missing	property	no	ACL-lokalisering mangler
+acl_location is missing	property	no	ACL-lokalisering mangler
 acquisition date	property	no	Anskaffelses dato
 action	property	no	Handling
-acivate tracking of dates in helpdesk main list	property	no	Aktiver visning av datoer for denne entiteten i hovedliste for helpdesk
+activate tracking of dates in helpdesk main list	property	no	Aktiver visning av datoer for denne entiteten i hovedliste for helpdesk
 active	property	no	Aktiv
 activities	property	no	Aktiviteter
 activity	property	no	Aktivitet
