@@ -535,7 +535,7 @@
 			$details		= isset($data['details']) ? $data['details'] : '';
 			$dimb_id		= isset($data['dimb_id'])  && $data['dimb_id'] ? (int)$data['dimb_id'] : 0;
 			$department		= isset($data['department'])  && $data['department'] ? (int)$data['department'] : 0;
-			$direction		= isset($data['direction'])  && $data['direction'] ? $data['direction'] : 'expences';
+			$direction		= isset($data['direction'])  && $data['direction'] ? $data['direction'] : 'expenses';
 
 			if(!$year)
 			{
@@ -1134,6 +1134,10 @@ $_periods=array();
 				}
 			}
 
+			foreach ($result as &$entry )
+			{
+				$entry['percent'] = round((($entry['actual_cost'] + $entry['obligation'])/$entry['budget_cost'])*100, 1);
+			}
 			$this->total_records = count($result);
 
 			//cramirez
