@@ -1755,6 +1755,33 @@
 			}
 		}
 
+		/**
+		 * Get the percent of used funding
+		 * @param integer $order_id
+ 		 * @return float percent
+		*/
+		function get_order_budget_percent($order_id)
+		{
+			$_sub_budget = 0;
+			$_sub_actual_cost = 0;
+			$_sub_oblications = 0;
+			$percent = 0;
+
+			$budget = $this->get_budget($order_id);
+			foreach($budget as $entry)
+			{
+				if ($entry['active'] == 1)
+				{
+					$_sub_budget += $entry['budget'];
+					$_sub_actual_cost += $entry['actual_cost'];
+					$_sub_oblications += $entry['sum_oblications'];
+				}
+				$percent = round((($_sub_actual_cost + $_sub_oblications)/$_sub_budget)*100, 1);
+
+			}
+
+			return $percent;
+		}
 
 		/**
  		* Get periodized budget for an order
