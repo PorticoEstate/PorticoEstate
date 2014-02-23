@@ -1106,9 +1106,9 @@
 				(
 					array
 					(
-						'id' => 'expences',
-						'name'	=> lang('expences'),
-						'selected'	=> $this->direction == 'expences' ? 1 : 0
+						'id' => 'expenses',
+						'name'	=> lang('expenses'),
+						'selected'	=> $this->direction == 'expenses' ? 1 : 0
 					),
 					array
 					(
@@ -1302,7 +1302,9 @@
 				array(
 					'col_name'=>'diff_ex',		'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
+					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
+					'col_name'=>'percent',			'visible'=>true,	'label'=>lang('percent'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
 				);
 
 
@@ -1356,7 +1358,8 @@
 							'actual_cost'		=> number_format($entry['actual_cost'], 0, ',', ' '),
 							'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$entry['b_account'],  'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'submit_search'=>true)),
 							'diff_ex'			=> $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
-							'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' ')
+							'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
+							'percent'			=> $entry['percent']
 						);
 				}
 

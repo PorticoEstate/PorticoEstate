@@ -647,8 +647,8 @@ HTML;
 //			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
 			$setup_tpl->set_var('system_name', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate');
 			$setup_tpl->set_var('default_lang', isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : phpgw::get_var('ConfigLang', 'string', 'POST'));
-			$setup_tpl->set_var('login_left_message', $GLOBALS['phpgw_info']['login_left_message']);
-			$setup_tpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
+			$setup_tpl->set_var('login_left_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_left_message']));
+			$setup_tpl->set_var('login_right_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_right_message']));
 			$setup_tpl->set_var('new_user_url', $GLOBALS['phpgw_info']['server']['new_user_url']);
 			$setup_tpl->set_var('lost_password_url', $GLOBALS['phpgw_info']['server']['lost_password_url']);
 

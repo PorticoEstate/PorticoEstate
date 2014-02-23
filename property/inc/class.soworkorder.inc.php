@@ -798,6 +798,11 @@
 				$order_budget = $this->get_budget($workorder['workorder_id']);
 				foreach($order_budget as $entry)
 				{
+					if($entry['active'] == 2)
+					{
+						continue;
+					}
+
 					if ($filter_year && $filter_year != 'all')
 					{
 						if($entry['year'] == $filter_year)

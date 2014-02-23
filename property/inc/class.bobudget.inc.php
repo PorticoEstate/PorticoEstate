@@ -97,7 +97,7 @@
 			$this->direction		= $direction ? $direction : $this->direction;
 			if( !$this->direction )
 			{
-				$this->direction = 'expences';
+				$this->direction = 'expenses';
 			}
 			
 			$this->filter			= isset($filter) && $filter ? $filter : '';

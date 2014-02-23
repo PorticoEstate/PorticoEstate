@@ -18,7 +18,7 @@ file.
 require_once(dirname(__FILE__).'/class_http.php');
 
 $h = new http();
-$h->fetch($_GET['url'], $_GET['ttl'];);
+$h->fetch($_GET['url'], $_GET['ttl']);
 header("Content-Type: image/jpeg");
 echo $h->body;
 ?>
