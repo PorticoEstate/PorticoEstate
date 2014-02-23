@@ -953,7 +953,7 @@
 					'combined_cost' 		=> 0,
 					'budget'				=> 0,
 					'obligation'			=> 0,
-					'actual_cost'			=> 0
+					'actual_cost'			=> 0,
 				);
 				$_orders[] = $this->db->f('workorder_id');
 			}
@@ -972,6 +972,11 @@
 			{
 				foreach($order_budgets[$entry['workorder_id']] as $budget)
 				{
+					if($budget['active'] == 2)
+					{
+						continue;
+					}
+
 					if($year)
 					{
 						if($budget['year'] == $year)
