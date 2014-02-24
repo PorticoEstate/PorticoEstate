@@ -769,6 +769,9 @@
 					if(!$this->debug)
 					{
 						$this->correct_actual_cost($line['order_id'],$amount, $actual_cost_field, $operator);
+
+						execMethod('property.boworkorder.notify_coordinator_on_consumption', $line['order_id']);
+
 					}
 				}
 			}
@@ -916,6 +919,8 @@
 			{
 				$sql="UPDATE {$table} SET {$actual_cost_field}={$actual_cost_field} {$operator} {$amount} {$update_paid} WHERE id='{$order_id}'";
 				$this->db->query($sql,__LINE__,__FILE__);
+
+				execMethod('property.boworkorder.notify_coordinator_on_consumption', $order_id);
 			}
 		}
 

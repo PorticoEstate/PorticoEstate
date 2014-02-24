@@ -855,4 +855,72 @@
 		{
 			$this->so->recalculate();
 		}
+
+		/**
+		 * Check the consumption  on an order - and notify the coordinator
+		 * @param integer $order_id
+		 */
+		function notify_coordinator_on_consumption($order_id)
+		{
+			$notify_coordinator = true;
+			if(!$notify_coordinator)
+			{
+				return false;
+			}
+			$toarray = array();
+			$workorder	= $this->so->read_single($order_id);
+			$project	= ExecMethod('property.boproject.read_single_mini',$workorder['project_id']);
+			$coordinator = $project['coordinator'];
+			$prefs_coordinator = $this->bocommon->create_preferences('property',$coordinator);
+			if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
+			{
+				$toarray[] = $prefs_coordinator['email'];
+			}
+
+			if ($toarray)
+			{
+				$percent = $this->so->get_order_budget_percent($order_id);
+				if($percent < 90)
+				{
+					return false;
+				}
+
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['email']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['email'])
+				{
+					$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+					$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+				}
+				else
+				{
+					$from_name	 = 'noreply';
+					$from_email	 = "{$from_name}<noreply@bergen.kommune.no>";
+				}
+
+				$subject	 = "Bestilling # {$order_id} har disponert {$percent} prosent av budsjsett";
+
+				$to = implode(';',$toarray);
+				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
+
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+
+				try
+				{
+					$ok = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+				}
+				catch (phpmailerException $e)
+				{
+					phpgwapi_cache::message_set( $e->getMessage(), 'error' );
+				}
+
+				if($ok)
+				{
+					$historylog	= CreateObject('property.historylog','workorder');
+					$historylog->add('ON', $order_id, lang('%1 is notified',$to));
+					return true;
+				}
+			}
+		}
 	}
