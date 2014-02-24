@@ -822,7 +822,12 @@
 					$receipt['message'] = array_merge($receipt['message'] , $receipt_claim['message']);
 				}
 			}
-
+			if ($workorder['id'])
+			{
+				//temporary
+				execMethod('property.soXport.update_actual_cost_from_archive',array($workorder['id'] => true));
+				$this->notify_coordinator_on_consumption($workorder['id']);
+			}
 			return $receipt;
 		}
 
@@ -874,7 +879,8 @@
 			$prefs_coordinator = $this->bocommon->create_preferences('property',$coordinator);
 			if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
 			{
-				$toarray[] = $prefs_coordinator['email'];
+//				$toarray[] = $prefs_coordinator['email'];
+				$toarray[] = 'Lars.Eirik.Hansen@nordlandssykehuset.no';
 			}
 
 			if ($toarray)
@@ -896,8 +902,8 @@
 					$from_email	 = "{$from_name}<noreply@bergen.kommune.no>";
 				}
 
-				$subject	 = "Bestilling # {$order_id} har disponert {$percent} prosent av budsjsett";
-
+				$subject	 = "Bestilling # {$order_id} har disponert {$percent} prosent av budsjsettet";
+	_debug_array($subject);die();
 				$to = implode(';',$toarray);
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
 
