@@ -903,7 +903,7 @@
 				}
 
 				$subject	 = "Bestilling # {$order_id} har disponert {$percent} prosent av budsjsettet";
-	_debug_array($subject);die();
+
 				$to = implode(';',$toarray);
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
 
