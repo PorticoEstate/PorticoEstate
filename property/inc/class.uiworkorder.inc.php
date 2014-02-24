@@ -1136,12 +1136,6 @@
 					}
 					$receipt = $this->bo->save($values,$action);
 					$historylog	= CreateObject('property.historylog','workorder');
-					if (! $receipt['error'])
-					{
-						$id = $receipt['id'];
-						//temporary
-						execMethod('property.soXport.update_actual_cost_from_archive',array($id => true));
-					}
 					$function_msg = lang('Edit Workorder');
 					//----------files
 					$bofiles	= CreateObject('property.bofiles');
