@@ -1777,7 +1777,8 @@
 					$_sub_oblications += $entry['sum_oblications'];
 				}
 				$budget = $_sub_budget == 0 ? 1 : $_sub_budget; // avoid zero-division
-				$percent = round((($_sub_actual_cost + $_sub_oblications)/$budget)*100, 1);
+//				$percent = round((($_sub_actual_cost + $_sub_oblications)/$budget)*100, 1);
+				$percent = round(($_sub_actual_cost/$budget)*100, 1);
 			}
 
 			return $percent;
