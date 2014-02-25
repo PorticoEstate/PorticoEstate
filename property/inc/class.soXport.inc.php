@@ -42,6 +42,7 @@
 		var $bilagsnr;
 		var $voucher_id;
 		protected $global_lock = false;
+		var $debug = false;
 
 		function __construct()
 		{
@@ -238,7 +239,7 @@
 						$fields['pmwrkord_code'],
 						$fields['bilagsnr'],
 						$fields['bilagsnr_ut'],
-						$fields['splitt'],
+						isset($fields['splitt']) && $fields['splitt'] ? $fields['splitt'] : false,
 						$fields['kildeid'],
 						$fields['kidnr'],
 						$fields['typeid'],
@@ -255,20 +256,20 @@
 						$fields['spbudact_code'],
 						$fields['loc1'],
 						$fields['dima'],
-						$fields['dimd'],
-						$fields['dime'],
+						isset($fields['dimd']) && $fields['dimd'] ? $fields['dimd'] : false,
+						isset($fields['dime']) && $fields['dime'] ? $fields['dime'] : false,
 						$fields['mvakode'],
 						$fields['periode'],
 						$this->db->db_addslashes($fields['merknad']),
-						$this->db->db_addslashes($fields['line_text']),
+						isset($fields['line_text']) && $fields['line_text'] ? $this->db->db_addslashes($fields['line_text']) : false,
 						false,
 						false,
 						false,
 						false,
-						$fields['item_type'],
-						$fields['item_id'],
-						$fields['external_ref'],
-						$fields['external_voucher_id'],
+						isset($fields['item_type']) && $fields['item_type'] ? $fields['item_type'] : false,
+						isset($fields['item_id']) && $fields['item_id'] ? $fields['item_id'] : false,
+						isset($fields['external_ref']) && $fields['external_ref'] ? $fields['external_ref'] : false,
+						isset($fields['external_voucher_id']) && $fields['external_voucher_id'] ? $fields['external_voucher_id'] : false,
 						isset($fields['currency']) && $fields['currency'] ? $fields['currency'] : 'NOK'
 					);
 
@@ -281,7 +282,7 @@
 						. " fakturanr,spbudact_code,loc1,dima,dimd,dime,mvakode,periode,merknad,line_text,oppsynsigndato,saksigndato,"
 						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,external_voucher_id,currency,belop,godkjentbelop)"
 						. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
-
+//						_debug_array($sql);die();
 					$this->db->query($sql,__LINE__,__FILE__);
 
 					$num++;
@@ -346,13 +347,13 @@
 				$data['utbetalingsigndato'],
 				$data['filnavn'],
 				isset($data['overftid']) && $data['overftid'] ? $data['overftid'] : date($this->db->datetime_format()),
-				$data['item_type'],
-				$data['item_id'],
-				$data['external_ref'],
-				$data['external_voucher_id'],
+				isset($data['item_type']) && $data['item_type'] ? $data['item_type'] : false,
+				isset($data['item_id']) && $data['item_id'] ? $data['item_id'] : false,
+				isset($data['external_ref']) && $data['external_ref'] ? $data['external_ref'] : false,
+				isset($data['external_voucher_id']) && $data['external_voucher_id'] ? $data['external_voucher_id'] : false,
 				$data['currency'],
-				$data['manual_record'],
-				$data['process_code'],
+				isset($data['manual_record']) && $data['manual_record'] ? $data['manual_record'] : false,
+				isset($data['process_code']) && $data['process_code'] ? $data['process_code'] : false,
 				$this->db->db_addslashes($data['process_log']),
 			);
 
@@ -723,7 +724,7 @@
 		{
 			$orders_affected = array();
 			$_dateformat = $this->db->date_format();
-
+/*
 			if ( $this->db->get_transaction() )
 			{
 				$this->global_lock = true;
@@ -732,9 +733,11 @@
 			{
 				$this->db->transaction_begin();
 			}
-
+*/
+			$this->db->transaction_begin();
 
 			$this->add($values, $skip_update_voucher_id);
+			$this->voucher_id = $values[0]['bilagsnr'];
 
 			$voucher = $this->get_voucher($values[0]['bilagsnr']);
 			foreach ($voucher as &$line)
@@ -769,9 +772,6 @@
 					if(!$this->debug)
 					{
 						$this->correct_actual_cost($line['order_id'],$amount, $actual_cost_field, $operator);
-
-						execMethod('property.boworkorder.notify_coordinator_on_consumption', $line['order_id']);
-
 					}
 				}
 			}
@@ -779,12 +779,11 @@
 			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
  			$this->update_actual_cost_from_archive($orders_affected);
 
-			if ( !$this->global_lock )
-			{
-				$this->db->transaction_commit();
-			}
-
-			return true;
+//			if ( !$this->global_lock )
+//			{
+//				$this->db->transaction_commit();
+//			}
+			return $this->db->transaction_commit();
 		}
 
 

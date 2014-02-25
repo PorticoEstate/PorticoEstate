@@ -1764,8 +1764,6 @@
 		{
 			$_sub_budget = 0;
 			$_sub_actual_cost = 0;
-			$_sub_oblications = 0;
-			$percent = 0;
 
 			$budget = $this->get_budget($order_id);
 			foreach($budget as $entry)
@@ -1774,12 +1772,10 @@
 				{
 					$_sub_budget += $entry['budget'];
 					$_sub_actual_cost += $entry['actual_cost'];
-					$_sub_oblications += $entry['sum_oblications'];
 				}
-				$budget = $_sub_budget == 0 ? 1 : $_sub_budget; // avoid zero-division
-//				$percent = round((($_sub_actual_cost + $_sub_oblications)/$budget)*100, 1);
-				$percent = round(($_sub_actual_cost/$budget)*100, 1);
 			}
+			$sum_budget = $_sub_budget == 0 ? 1 : $_sub_budget; // avoid zero-division
+			$percent = round(($_sub_actual_cost/$sum_budget)*100, 1);
 
 			return $percent;
 		}
