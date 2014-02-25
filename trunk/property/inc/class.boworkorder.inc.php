@@ -886,6 +886,7 @@
 			if ($toarray)
 			{
 				$percent = $this->so->get_order_budget_percent($order_id);
+
 				if($percent < 90)
 				{
 					return false;
@@ -902,7 +903,7 @@
 					$from_email	 = "{$from_name}<noreply@bergen.kommune.no>";
 				}
 
-				$subject	 = "Bestilling # {$order_id} har disponert {$percent} prosent av budsjsettet";
+				$subject	 = "Bestilling # {$order_id} har disponert {$percent} prosent av budsjettet";
 
 				$to = implode(';',$toarray);
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
