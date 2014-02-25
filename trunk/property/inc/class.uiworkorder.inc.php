@@ -1135,6 +1135,12 @@
 						$action='add';
 					}
 					$receipt = $this->bo->save($values,$action);
+
+					if (! $receipt['error'])
+					{
+						$id = $receipt['id'];
+					}
+
 					$historylog	= CreateObject('property.historylog','workorder');
 					$function_msg = lang('Edit Workorder');
 					//----------files
