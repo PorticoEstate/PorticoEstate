@@ -2453,7 +2453,7 @@
 					$_receipt = array();//local errors
 					$receipt = $boinvoice->add_manual_invoice($values);
 
-					if(!$receipt['error']) // all ok
+					if(!isset($receipt['error'])) // all ok
 					{
 						execMethod('property.soXport.update_actual_cost_from_archive',array($values['order_id'] => true));
 						$redirect = true;
