@@ -909,6 +909,12 @@
 				$lang_actual_cost = lang('actual cost');
 				$lang_percent = lang('percent');
 				$lang_obligation = lang('obligation');
+
+				$_budget = number_format($budget_info['budget'], 0, ',', ' ');
+				$_actual_cost = number_format($budget_info['actual_cost'], 0, ',', ' ');
+				$_budget = number_format($budget_info['budget'], 0, ',', ' ');
+				$_obligation = number_format($budget_info['obligation'], 0, ',', ' ');
+
 				$to = implode(';',$toarray);
 				$cc = 'sigurd.nes@bergen.kommune.no';
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
@@ -923,7 +929,7 @@
 							{$lang_budget}
 						</td>
 						<td align = 'right'>
-							{$budget_info['budget']}
+							{$_budget}
 						</td>
 					</tr>
 					<tr>
@@ -931,7 +937,7 @@
 							{$lang_actual_cost}
 						</td>
 						<td align = 'right'>
-							{$budget_info['actual_cost']}
+							{$_actual_cost}
 						</td>
 					</tr>
 					<tr>
@@ -947,7 +953,7 @@
 							{$lang_obligation}
 						</td>
 						<td align = 'right'>
-							{$budget_info['obligation']}
+							{$_obligation}
 						</td>
 					</tr>
 				</table>
