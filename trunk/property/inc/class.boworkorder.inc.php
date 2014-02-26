@@ -885,9 +885,9 @@
 
 			if ($toarray)
 			{
-				$percent = $this->so->get_order_budget_percent($order_id);
+				$budget_info = $this->so->get_order_budget_percent($order_id);
 
-				if($percent < 90)
+				if($budget_info['percent'] < 90)
 				{
 					return false;
 				}
@@ -903,10 +903,55 @@
 					$from_email	 = "{$from_name}<noreply@bergen.kommune.no>";
 				}
 
-				$subject	 = "Bestilling # {$order_id} har disponert {$percent} prosent av budsjettet";
+				$subject	 = "Bestilling # {$order_id} har disponert {$budget_info['percent']} prosent av budsjettet";
 
+				$lang_budget = lang('budget');
+				$lang_actual_cost = lang('actual cost');
+				$lang_percent = lang('percent');
+				$lang_obligation = lang('obligation');
 				$to = implode(';',$toarray);
+				$cc = 'sigurd.nes@bergen.kommune.no';
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
+				$body .= <<<HTML
+				</br>
+				<h2>{$workorder['title']}</h2>
+				</br>
+				</br>
+				<table>
+					<tr>
+						<td>
+							{$lang_budget}
+						</td>
+						<td align = 'right'>
+							{$budget_info['budget']}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_actual_cost}
+						</td>
+						<td align = 'right'>
+							{$budget_info['actual_cost']}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_percent}
+						</td>
+						<td align = 'right'>
+							{$budget_info['percent']}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_obligation}
+						</td>
+						<td align = 'right'>
+							{$budget_info['obligation']}
+						</td>
+					</tr>
+				</table>
+HTML;
 
 				if (!is_object($GLOBALS['phpgw']->send))
 				{
@@ -915,7 +960,7 @@
 
 				try
 				{
-					$ok = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+					$ok = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,$cc,false, $from_email, $from_name, 'html');
 				}
 				catch (phpmailerException $e)
 				{

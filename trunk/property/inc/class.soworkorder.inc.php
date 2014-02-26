@@ -1763,7 +1763,8 @@
 		function get_order_budget_percent($order_id)
 		{
 			$_sub_budget = 0;
-			$_sub_actual_cost = 0;
+			$sum_actual_cost = 0;
+			$sum_oblications = 0;
 
 			$budget = $this->get_budget($order_id);
 			foreach($budget as $entry)
@@ -1771,13 +1772,22 @@
 				if ($entry['active'] == 1)
 				{
 					$_sub_budget += $entry['budget'];
-					$_sub_actual_cost += $entry['actual_cost'];
+					$sum_actual_cost += $entry['actual_cost'];
+					$sum_oblications += $entry['sum_oblications'];
 				}
 			}
 			$sum_budget = $_sub_budget == 0 ? 1 : $_sub_budget; // avoid zero-division
-			$percent = round(($_sub_actual_cost/$sum_budget)*100, 1);
+			$percent = round(($sum_actual_cost/$sum_budget)*100, 1);
 
-			return $percent;
+			$budget_info = array
+			(
+				'percent'		=> $percent,
+				'budget'		=> $sum_budget,
+				'actual_cost'	=> $sum_actual_cost,
+				'obligation'	=> $sum_oblications
+
+			);
+			return $budget_info;
 		}
 
 		/**
