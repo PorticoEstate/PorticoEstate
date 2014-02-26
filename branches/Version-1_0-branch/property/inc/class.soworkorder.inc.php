@@ -1195,21 +1195,13 @@
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
 
-
-/*
-			$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$workorder['project_id']}",__LINE__,__FILE__);
-			$this->db->next_record();
-			$periodization_id = $this->db->f('periodization_id');
-*/
 			$periodization_id = isset($workorder['budget_periodization']) && $workorder['budget_periodization'] ? (int) $workorder['budget_periodization'] : 0;
-//			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']), $periodization_id, $combined_cost);
 			if($combined_cost)
 			{
 				$this->_update_order_budget($id, $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
 			}
 
-
-
+			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']));
 
 /*
 			if($workorder['charge_tenant'])
@@ -1419,13 +1411,7 @@
 
 			}
 
-/*
-			$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$workorder['project_id']}",__LINE__,__FILE__);
-			$this->db->next_record();
-			$periodization_id = $this->db->f('periodization_id');
-*/
 			$periodization_id = isset($workorder['budget_periodization']) && $workorder['budget_periodization'] ? (int) $workorder['budget_periodization'] : 0;
-//			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']), $periodization_id, $combined_cost,$old_combined_cost);
 			if($combined_cost)
 			{
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'",__LINE__,__FILE__);
@@ -1441,6 +1427,7 @@
 				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
 			}
 
+			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']));
 
 /*			if($workorder['charge_tenant'])
 			{
@@ -1755,6 +1742,40 @@
 			}
 		}
 
+		/**
+		 * Get the percent of used funding
+		 * @param integer $order_id
+ 		 * @return float percent
+		*/
+		function get_order_budget_percent($order_id)
+		{
+			$_sub_budget = 0;
+			$sum_actual_cost = 0;
+			$sum_oblications = 0;
+
+			$budget = $this->get_budget($order_id);
+			foreach($budget as $entry)
+			{
+				if ($entry['active'] == 1)
+				{
+					$_sub_budget += $entry['budget'];
+					$sum_actual_cost += $entry['actual_cost'];
+					$sum_oblications += $entry['sum_oblications'];
+				}
+			}
+			$sum_budget = $_sub_budget == 0 ? 1 : $_sub_budget; // avoid zero-division
+			$percent = round(($sum_actual_cost/$sum_budget)*100, 1);
+
+			$budget_info = array
+			(
+				'percent'		=> $percent,
+				'budget'		=> $sum_budget,
+				'actual_cost'	=> $sum_actual_cost,
+				'obligation'	=> $sum_oblications
+
+			);
+			return $budget_info;
+		}
 
 		/**
  		* Get periodized budget for an order
@@ -2392,49 +2413,52 @@
 			$this->db->transaction_commit();
 		}
 
-		protected function _update_project_budget($project_id, $year, $periodization_id, $combined_cost, $old_combined_cost = 0)
+		/**
+		 * Add budget to project if missing.
+		 * @param integer $project_id
+		 * @param integer $year
+		 */
+		protected function _update_project_budget($project_id, $year)
 		{
 			$project_id = (int) $project_id;
 			$year = $year ? (int) $year : date('Y');
 
-			$periodization_id = (int) $periodization_id;
-			$periodization_outline = array();
-
-			if($periodization_id)
+			$ids = array();
+			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}",__LINE__,__FILE__);
+			while ($this->db->next_record())
 			{
-				$this->db->query("SELECT month, value FROM fm_eco_periodization_outline WHERE periodization_id = {$periodization_id} ORDER BY month ASC",__LINE__,__FILE__);
-				while ($this->db->next_record())
-				{
-					$periodization_outline[] = array
-					(
-						'month' => $this->db->f('month'),
-						'value' => $this->db->f('value'),
-					);
-				}
+				$ids[] = $this->db->f('id');
 			}
-			else
-			{
-				$periodization_outline[] = array
-				(
-					'month' => 0,
-					'value' => 100,
-				);
+			$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE year = {$year} AND order_id IN (" . implode(',', $ids) . ')',__LINE__,__FILE__);
+			$this->db->next_record();
+			$workorder_budget	= $this->db->f('budget');
+			
+			$this->db->query("SELECT sum(budget) AS budget FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$project_budget	= $this->db->f('budget');
+			
+			$update = false;
 
+			if($project_budget < 0 && $workorder_budget < $project_budget)
+			{
+				$update = true;
+			}
+			else if ($workorder_budget > $project_budget)
+			{
+				$update = true;
 			}
 
-//FIXME : condsider removed
-/*
-			foreach ($periodization_outline as $outline)
+			if ($update)
 			{
-				$partial_amount = $combined_cost * $outline['value'] / 100;
-				$old_partial_amount = $old_combined_cost * $outline['value'] / 100;
-				$sql = "UPDATE fm_project_budget SET order_amount = order_amount + {$partial_amount} - {$old_combined_cost} WHERE project_id = {$project_id} AND year = {$year} AND month =" . (int)$outline['month'];
-				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$project_id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$periodization_id	= (int)$this->db->f('periodization_id');
+
+				$soproject 	= CreateObject('property.soproject');
+
+				$soproject->update_budget($project_id, $year, $periodization_id, (int)$workorder_budget, true, 'update', true);
 			}
-*/
 		}
-
-
 
 		/**
 		* Transfer budget and cost from one year to the next

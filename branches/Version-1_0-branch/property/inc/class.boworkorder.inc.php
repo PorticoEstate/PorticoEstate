@@ -822,7 +822,12 @@
 					$receipt['message'] = array_merge($receipt['message'] , $receipt_claim['message']);
 				}
 			}
-
+			if ($workorder['id'])
+			{
+				//temporary
+				execMethod('property.soXport.update_actual_cost_from_archive',array($workorder['id'] => true));
+				$this->notify_coordinator_on_consumption($workorder['id']);
+			}
 			return $receipt;
 		}
 
@@ -854,5 +859,133 @@
 		function recalculate()
 		{
 			$this->so->recalculate();
+		}
+
+		/**
+		 * Check the consumption  on an order - and notify the coordinator
+		 * @param integer $order_id
+		 */
+		function notify_coordinator_on_consumption($order_id)
+		{
+			$notify_coordinator = true;
+			if(!$notify_coordinator)
+			{
+				return false;
+			}
+			$toarray = array();
+			$workorder	= $this->so->read_single($order_id);
+
+			if(!$workorder['continuous'])
+			{
+				return false;
+			}
+
+			$project	= ExecMethod('property.boproject.read_single_mini',$workorder['project_id']);
+			$coordinator = $project['coordinator'];
+			$prefs_coordinator = $this->bocommon->create_preferences('property',$coordinator);
+			if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
+			{
+				$toarray[] = $prefs_coordinator['email'];
+			}
+
+			if ($toarray)
+			{
+				$budget_info = $this->so->get_order_budget_percent($order_id);
+
+				if($budget_info['percent'] < 90)
+				{
+					return false;
+				}
+
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['email']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['email'])
+				{
+					$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+					$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+				}
+				else
+				{
+					$from_name	 = 'noreply';
+					$from_email	 = "{$from_name}<noreply@bergen.kommune.no>";
+				}
+
+				$subject	 = "Bestilling # {$order_id} har disponert {$budget_info['percent']} prosent av budsjettet";
+
+				$lang_budget = lang('budget');
+				$lang_actual_cost = lang('actual cost');
+				$lang_percent = lang('percent');
+				$lang_obligation = lang('obligation');
+
+				$_budget = number_format($budget_info['budget'], 0, ',', ' ');
+				$_actual_cost = number_format($budget_info['actual_cost'], 0, ',', ' ');
+				$_budget = number_format($budget_info['budget'], 0, ',', ' ');
+				$_obligation = number_format($budget_info['obligation'], 0, ',', ' ');
+
+				$to = implode(';',$toarray);
+				$cc = false;
+				$bcc = 'sigurd.nes@bergen.kommune.no';//test phase
+				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
+				$body .= <<<HTML
+				</br>
+				<h2>{$workorder['title']}</h2>
+				</br>
+				</br>
+				<table>
+					<tr>
+						<td>
+							{$lang_budget}
+						</td>
+						<td align = 'right'>
+							{$_budget}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_actual_cost}
+						</td>
+						<td align = 'right'>
+							{$_actual_cost}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_percent}
+						</td>
+						<td align = 'right'>
+							{$budget_info['percent']}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_obligation}
+						</td>
+						<td align = 'right'>
+							{$_obligation}
+						</td>
+					</tr>
+				</table>
+HTML;
+
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+
+				try
+				{
+					$ok = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,$cc,$bcc, $from_email, $from_name, 'html');
+				}
+				catch (phpmailerException $e)
+				{
+					phpgwapi_cache::message_set( $e->getMessage(), 'error' );
+				}
+
+				if($ok)
+				{
+					$historylog	= CreateObject('property.historylog','workorder');
+					$historylog->add('ON', $order_id, lang('%1 is notified',$to));
+					$historylog->add('RM', $order_id, $subject);
+					return true;
+				}
+			}
 		}
 	}
