@@ -724,16 +724,7 @@
 		{
 			$orders_affected = array();
 			$_dateformat = $this->db->date_format();
-/*
-			if ( $this->db->get_transaction() )
-			{
-				$this->global_lock = true;
-			}
-			else
-			{
-				$this->db->transaction_begin();
-			}
-*/
+
 			$this->db->transaction_begin();
 
 			$this->add($values, $skip_update_voucher_id);
@@ -753,12 +744,16 @@
 				$line['manual_record']			= 1;
 
 				$this->add_OverfBilag($line);
+			}
+			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
 
-				$amount =  $line['godkjentbelop'] * 100; 
+			reset($voucher);
 
+			foreach ($voucher as &$line)
+			{
 				if($line['order_id'])
 				{
-					$orders_affected[$line['order_id']] = true;
+					$amount =  $line['godkjentbelop'] * 100; 
 					//Oppdater beløp på bestilling
 					if ($line['dimd'] % 2 == 0)
 					{
@@ -776,14 +771,12 @@
 				}
 			}
 
-			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
+
  			$this->update_actual_cost_from_archive($orders_affected);
 
-//			if ( !$this->global_lock )
-//			{
-//				$this->db->transaction_commit();
-//			}
 			return $this->db->transaction_commit();
+
+
 		}
 
 
