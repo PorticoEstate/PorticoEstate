@@ -2892,7 +2892,11 @@
 						'</b>'
 					),$order_email_template));
 
-					$html = "<html><head><title>{$subject}</title></head>";
+					$html = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>{$subject}</title></head>";
+
+					$body .='</br>';
+					$body .='</br>';
+					$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id),false,true).'">' . lang('Ticket').' #' .$id .'</a>';
 					$html .= "<body>{$body}</body></html>";
 
 

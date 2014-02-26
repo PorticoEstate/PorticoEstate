@@ -2547,9 +2547,9 @@ die();
 			{
 		//		if($budget['budget_amount'])
 				{
+					$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__); // previous
 					$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
 				}
-				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
 			}
 
 			$this->db->transaction_commit();
