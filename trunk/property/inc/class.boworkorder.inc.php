@@ -874,13 +874,18 @@
 			}
 			$toarray = array();
 			$workorder	= $this->so->read_single($order_id);
+
+			if(!$workorder['continuous'])
+			{
+				return false;
+			}
+
 			$project	= ExecMethod('property.boproject.read_single_mini',$workorder['project_id']);
 			$coordinator = $project['coordinator'];
 			$prefs_coordinator = $this->bocommon->create_preferences('property',$coordinator);
 			if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
 			{
-//				$toarray[] = $prefs_coordinator['email'];
-				$toarray[] = 'Lars.Eirik.Hansen@nordlandssykehuset.no';
+				$toarray[] = $prefs_coordinator['email'];
 			}
 
 			if ($toarray)
@@ -916,7 +921,8 @@
 				$_obligation = number_format($budget_info['obligation'], 0, ',', ' ');
 
 				$to = implode(';',$toarray);
-				$cc = 'sigurd.nes@bergen.kommune.no';
+				$cc = false;
+				$bcc = 'sigurd.nes@bergen.kommune.no';//test phase
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
 				$body .= <<<HTML
 				</br>
@@ -966,7 +972,7 @@ HTML;
 
 				try
 				{
-					$ok = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,$cc,false, $from_email, $from_name, 'html');
+					$ok = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,$cc,$bcc, $from_email, $from_name, 'html');
 				}
 				catch (phpmailerException $e)
 				{
@@ -977,6 +983,7 @@ HTML;
 				{
 					$historylog	= CreateObject('property.historylog','workorder');
 					$historylog->add('ON', $order_id, lang('%1 is notified',$to));
+					$historylog->add('RM', $order_id, $subject);
 					return true;
 				}
 			}
