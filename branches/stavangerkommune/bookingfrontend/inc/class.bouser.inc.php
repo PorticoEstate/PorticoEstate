@@ -211,53 +211,42 @@
 				return null;
 			}
 		}
-
-		
+        protected function get_breg_orgs($fodselsnr) {
+            $breg_conn = pg_connect("host=localhost port=5432 dbname=breg user=portico password=portico") or die('connection failed');
+            $sql = "SELECT orgnr FROM breg.personcurrent WHERE fodselsnr ='".$fodselsnr."'";
+            $results = pg_query($breg_conn, $sql);
+            $orgs = pg_fetch_all($results);
+            pg_close($breg_conn);
+            return $orgs;
+        }
 		protected function get_user_orgnr_from_auth_header()
 		{
 			$config		= CreateObject('phpgwapi.config','bookingfrontend');
 			$config->read();
         
             if ($config->config_data['authentication_method'] === 'MinId.php') {
-
-				header('Content-type: text/xml');
-				$ipdp = $_COOKIE['iPlanetDirectoryPro'];
-				$xmldata = simplexml_load_file('http://aktivby.stavanger.kommune.no:8080/spclient/auth.jsp?ipdp='.$ipdp);
+                $ipdp = sha1($_SERVER['HTTP_UID']);
+                $bregorgs = $this->get_breg_orgs($ipdp);
     			$myorgnr = array();
-    			
-                $orgnummbers = $this->get_organizations();                
-                
-                if(in_array((string)$xmldata->responseHeader->underStatus->underStatusMelding['kode'],array('180'))) {
-        			$external_user = (object) 'ciao'; $external_user->login = '000000003';
-				}
-                elseif(in_array((string)$xmldata->responseHeader->underStatus->underStatusMelding['kode'],array('180','181','182'))) {
+                if ($bregorgs == array()) {
         			$external_user = (object) 'ciao'; $external_user->login = '000000000';
-                } elseif ($xmldata->responseHeader->underStatus->underStatusMelding[1]['kode'] == "1500") {
-        			$external_user = (object) 'ciao'; $external_user->login = '000000001';
                 } else {
-                    foreach ($xmldata->melding->roller->enhet as $value) {
-                        if (in_array((string)$value->orgnr,$orgnummbers)) {
-              				$myorgnr[] = (string)$value->orgnr;
-                        } 
-       			    }
+                    foreach ($bregorgs as $org) {
+                        $myorgnr[] = $org['orgnr'];
+                    }
                     if (count($myorgnr) > 1) {
-            			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[0];
+                        $external_user = (object) 'ciao'; $external_user->login = $myorgnr[0];
 						$orgs = array();
 						foreach ($myorgnr as $org) {
 							$orgs[] = array('orgnumber' => $org, 'orgname' => $this->get_orgname_from_db($org));
-						}												
+						}
 						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, $orgs);
                     }
                     elseif (count($myorgnr) > 0) {
-						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
+    					phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
             			$external_user = (object) 'ciao'; $external_user->login = $myorgnr[0];
-                        
-                    } else {
-						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
-            			$external_user = (object) 'ciao'; $external_user->login = '000000002';
                     }
-                }                
-
+                }
             } else {
 
     			$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'Osso-User-Dn';
