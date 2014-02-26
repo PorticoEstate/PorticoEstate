@@ -112,9 +112,7 @@ log on	bookingfrontend	no	Logg inn
 log off	bookingfrontend	no	Logg ut
 login	common	no	Logg inn
 logout	common	no	Logg ut
-Organization not in the database	common	no	Du er ikke registert på noen organisasjon som er i databasen
-No organization data	common	no	Du er ikke registert på noen organisasjon i Brønnøysundregisteret 
-SSN not registred	common	no	Personnummert ditt er ikke registert i Brønnøysundregisteret
+SSN not registred	common	no	Organisasjonen er ikke registrert eller mangler organisasjonesnummer i AktivBy
 male	bookingfrontend	no	Mann
 mar	bookingfrontend	no	mars
 may	bookingfrontend	no	mai

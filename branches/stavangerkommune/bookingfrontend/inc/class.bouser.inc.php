@@ -212,10 +212,12 @@
 			}
 		}
         protected function get_breg_orgs($fodselsnr) {
-            $breg_conn = pg_connect("host=localhost port=5432 dbname=breg user=portico password=portico") or die('connection failed');
+            $breg_conn = pg_connect("host=".$GLOBALS['phpgw_domain']['default']['db_host']." port=5432 dbname=breg user=".$GLOBALS['phpgw_domain']['default']['db_user']." password=".$GLOBALS['phpgw_domain']['default']['db_pass']) or die('connection failed');
             $sql = "SELECT orgnr FROM breg.personcurrent WHERE fodselsnr ='".$fodselsnr."'";
             $results = pg_query($breg_conn, $sql);
             $orgs = pg_fetch_all($results);
+            print_r($sql);
+            print_r($orgs);
             pg_close($breg_conn);
             return $orgs;
         }
@@ -223,11 +225,10 @@
 		{
 			$config		= CreateObject('phpgwapi.config','bookingfrontend');
 			$config->read();
-        
             if ($config->config_data['authentication_method'] === 'MinId.php') {
                 $ipdp = sha1($_SERVER['HTTP_UID']);
                 $bregorgs = $this->get_breg_orgs($ipdp);
-    			$myorgnr = array();
+                $myorgnr = array();
                 if ($bregorgs == array()) {
         			$external_user = (object) 'ciao'; $external_user->login = '000000000';
                 } else {
