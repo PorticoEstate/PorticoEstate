@@ -833,7 +833,7 @@
 			$project_id = (int) $project_id;
 			$project = array();
 			$sql = "SELECT fm_project.*, fm_project_status.closed FROM fm_project"
-			. " {$this->join} fm_project_status ON fm_project.status = fm_project_status.id" 
+			. " {$this->join} fm_project_status ON fm_project.status = fm_project_status.id"
 			. " WHERE fm_project.id={$project_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -2209,7 +2209,7 @@
 				}
 			}
 
-			$corretion = $total_sum >= 0 ? 1 : -1; 
+			$corretion = $total_sum >= 0 ? 1 : -1;
 			$deviation_acc = 0;
 			$budget_acc = 0;
 			foreach ($values as &$entry)
@@ -2580,7 +2580,7 @@ die();
 							{
 								if ( $e )
 								{
-									phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+									phpgwapi_cache::message_set($e->getMessage(), 'error');
 								}
 							}
 							break;
@@ -2593,7 +2593,7 @@ die();
 							{
 								if ( $e )
 								{
-									phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+									phpgwapi_cache::message_set($e->getMessage(), 'error');
 								}
 							}
 
@@ -3073,6 +3073,69 @@ die();
 					'year'			=> $this->db->f('year'),
 				);
 			}
+			foreach($values as $key => $value)
+			{
+				$this->db->transaction_begin();
+
+				$this->check_and_update_project_budget($value['project_id'], $value['year']);
+
+				$this->db->transaction_commit();
+			}
 			return $values;
 		}
+
+		/**
+		 * Add budget to project if missing.
+		 * @param integer $project_id
+		 * @param integer $year
+		 */
+		public function check_and_update_project_budget($project_id, $year)
+		{
+			$project_id = (int) $project_id;
+			$year = $year ? (int) $year : date('Y');
+			$current_year = date('Y');
+			$activate = true;
+
+			if($year < $current_year)
+			{
+				$activate = false;
+			}
+
+			$ids = array();
+			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}",__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$ids[] = $this->db->f('id');
+			}
+			$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE year = {$year} AND order_id IN (" . implode(',', $ids) . ')',__LINE__,__FILE__);
+			$this->db->next_record();
+			$workorder_budget	= $this->db->f('budget');
+
+			$this->db->query("SELECT sum(budget) AS budget FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$project_budget	= $this->db->f('budget');
+
+			$update = false;
+
+			if($project_budget < 0 && $workorder_budget < $project_budget)
+			{
+				$update = true;
+			}
+			else if ($workorder_budget > $project_budget)
+			{
+				$update = true;
+			}
+
+			if ($update)
+			{
+				$this->db->query("SELECT id, periodization_id FROM fm_project WHERE id = {$project_id}",__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$periodization_id	= (int)$this->db->f('periodization_id');
+
+					$this->update_budget($project_id, $year, $periodization_id, (int)$workorder_budget, true, 'update', $activate);
+				}
+			}
+		}
+
 	}

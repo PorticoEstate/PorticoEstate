@@ -2420,44 +2420,8 @@
 		 */
 		protected function _update_project_budget($project_id, $year)
 		{
-			$project_id = (int) $project_id;
-			$year = $year ? (int) $year : date('Y');
-
-			$ids = array();
-			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}",__LINE__,__FILE__);
-			while ($this->db->next_record())
-			{
-				$ids[] = $this->db->f('id');
-			}
-			$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE year = {$year} AND order_id IN (" . implode(',', $ids) . ')',__LINE__,__FILE__);
-			$this->db->next_record();
-			$workorder_budget	= $this->db->f('budget');
-			
-			$this->db->query("SELECT sum(budget) AS budget FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year}",__LINE__,__FILE__);
-			$this->db->next_record();
-			$project_budget	= $this->db->f('budget');
-			
-			$update = false;
-
-			if($project_budget < 0 && $workorder_budget < $project_budget)
-			{
-				$update = true;
-			}
-			else if ($workorder_budget > $project_budget)
-			{
-				$update = true;
-			}
-
-			if ($update)
-			{
-				$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$project_id}",__LINE__,__FILE__);
-				$this->db->next_record();
-				$periodization_id	= (int)$this->db->f('periodization_id');
-
 				$soproject 	= CreateObject('property.soproject');
-
-				$soproject->update_budget($project_id, $year, $periodization_id, (int)$workorder_budget, true, 'update', true);
-			}
+				$soproject->check_and_update_project_budget($project_id, $year);
 		}
 
 		/**
