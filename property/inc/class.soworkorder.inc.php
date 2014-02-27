@@ -1191,7 +1191,7 @@
 				$this->_update_order_budget($id, $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
 			}
 
-			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']));
+			$this->_update_project_budget($workorder['project_id']);
 
 			/*
 			  if($workorder['charge_tenant'])
@@ -1416,7 +1416,7 @@
 				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
 			}
 
-			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']));
+			$this->_update_project_budget($workorder['project_id']);
 
 			/* 			if($workorder['charge_tenant'])
 			  {
@@ -2386,9 +2386,8 @@
 		/**
 		 * Add budget to project if missing.
 		 * @param integer $project_id
-		 * @param integer $year
 		 */
-		protected function _update_project_budget($project_id, $year)
+		protected function _update_project_budget($project_id)
 		{
 			$soproject = CreateObject('property.soproject');
 
