@@ -3070,11 +3070,11 @@
 			$project_id		 = (int) $project_id;
 			$year			 = $year ? (int) $year : date('Y');
 			$current_year	 = date('Y');
-			$activate		 = true;
+			$activate		 = false;
 
-			if($year < $current_year)
+			if($year == $current_year)
 			{
-				$activate = false;
+				$activate = true;
 			}
 
 			$ids = array();
