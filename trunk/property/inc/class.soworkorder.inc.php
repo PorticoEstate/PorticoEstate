@@ -2391,7 +2391,23 @@
 		protected function _update_project_budget($project_id, $year)
 		{
 			$soproject = CreateObject('property.soproject');
-			$soproject->check_and_update_project_budget($project_id, $year);
+
+			$years	= array();
+			$ids	= array();
+			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$ids[] = $this->db->f('id');
+			}
+			$this->db->query("SELECT DISTINCT year FROM fm_workorder_budget WHERE order_id IN (" . implode(',', $ids) . ')', __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$years[] = $this->db->f('year');
+			}
+			foreach($years as $_year)
+			{
+				$soproject->check_and_update_project_budget($project_id, $_year);
+			}
 		}
 
 		/**
