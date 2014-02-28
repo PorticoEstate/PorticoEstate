@@ -3084,7 +3084,9 @@
 			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
-				$ids[] = $this->db->f('id');
+				$id = $this->db->f('id');
+				$ids[] = $id;
+				phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 			}
 			$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE year = {$year} AND order_id IN (" . implode(',', $ids) . ')', __LINE__, __FILE__);
 			$this->db->next_record();
