@@ -185,62 +185,50 @@
 			$sql = "SELECT * FROM fm_ecobilagoverf WHERE filnavn='$Filnavn' and $datepart_year=$year and $datepart_month=$month and $datepart_day= $day";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$i = 0;
+			$invoice_roleback = array();
+
 			while($this->db->next_record())
 			{
-				$invoice_roleback[$i]['id']				 = $this->db->f('id');
-				$invoice_roleback[$i]['bilagsnr']		 = $this->db->f('bilagsnr');
-				$invoice_roleback[$i]['kidnr']			 = $this->db->f('kidnr');
-				$invoice_roleback[$i]['typeid']			 = $this->db->f('typeid');
-				$invoice_roleback[$i]['kildeid']		 = $this->db->f('kildeid');
-				$invoice_roleback[$i]['pmwrkord_code']	 = $this->db->f('pmwrkord_code');
-				$invoice_roleback[$i]['belop']			 = $this->db->f('belop');
-				$invoice_roleback[$i]['fakturadato']	 = $this->db->f('fakturadato');
-				$invoice_roleback[$i]['periode']		 = $this->db->f('periode');
-				$invoice_roleback[$i]['forfallsdato']	 = $this->db->f('forfallsdato');
-				$invoice_roleback[$i]['fakturanr']		 = $this->db->f('fakturanr');
-				$invoice_roleback[$i]['spbudact_code']	 = $this->db->f('spbudact_code');
-				$invoice_roleback[$i]['regtid']			 = $this->db->f('regtid');
-				$invoice_roleback[$i]['artid']			 = $this->db->f('artid');
-				$invoice_roleback[$i]['godkjentbelop']	 = $this->db->f('godkjentbelop');
-				$invoice_roleback[$i]['spvend_code']	 = $this->db->f('spvend_code');
-				$invoice_roleback[$i]['dima']			 = $this->db->f('dima');
-				$invoice_roleback[$i]['loc1']			 = $this->db->f('loc1');
-				$invoice_roleback[$i]['dimb']			 = $this->db->f('dimb');
-				$invoice_roleback[$i]['mvakode']		 = $this->db->f('mvakode');
-				$invoice_roleback[$i]['dimd']			 = $this->db->f('dimd');
-				$invoice_roleback[$i]['project_id']		 = $this->db->f('project_id');
-				$invoice_roleback[$i]['kostra_id']		 = $this->db->f('kostra_id');
-				$invoice_roleback[$i]['item_type']		 = $this->db->f('item_type');
-				$invoice_roleback[$i]['item_id']		 = $this->db->f('item_id');
-
-				if($this->db->f('oppsynsmannid'))
-				{
-					$invoice_roleback[$i]['oppsynsmannid'] = $this->db->f('oppsynsmannid');
-				}
-				if($this->db->f('saksbehandlerid'))
-				{
-					$invoice_roleback[$i]['saksbehandlerid'] = $this->db->f('saksbehandlerid');
-				}
-
-				$invoice_roleback[$i]['budsjettansvarligid'] = $this->db->f('budsjettansvarligid');
-
-				if($this->db->f('oppsynsigndato'))
-				{
-					$invoice_roleback[$i]['oppsynsigndato'] = $this->db->f('oppsynsigndato');
-				}
-				if($this->db->f('saksigndato'))
-				{
-					$invoice_roleback[$i]['saksigndato'] = $this->db->f('saksigndato');
-				}
-
-				$invoice_roleback[$i]['budsjettsigndato']	 = $this->db->f('budsjettsigndato');
-				$invoice_roleback[$i]['merknad']			 = $this->db->f('merknad');
-				$invoice_roleback[$i]['splitt']				 = $this->db->f('splitt');
-				$invoice_roleback[$i]['ordrebelop']			 = $this->db->f('ordrebelop');
-				$invoice_roleback[$i]['utbetalingid']		 = $this->db->f('utbetalingid');
-				$invoice_roleback[$i]['utbetalingsigndato']	 = $this->db->f('utbetalingsigndato');
-				$i++;
+				$invoice_roleback[] = array
+				(
+					'id'						=> $this->db->f('id'),
+					'bilagsnr'					=> $this->db->f('bilagsnr'),
+					'kidnr'						=> $this->db->f('kidnr'),
+					'typeid'					=> $this->db->f('typeid'),
+					'kildeid'					=> $this->db->f('kildeid'),
+					'pmwrkord_code'				=> $this->db->f('pmwrkord_code'),
+					'belop'						=> $this->db->f('belop'),
+					'fakturadato'				=> $this->db->f('fakturadato'),
+					'periode'					=> $this->db->f('periode'),
+					'forfallsdato'				=> $this->db->f('forfallsdato'),
+					'fakturanr'					=> $this->db->f('fakturanr'),
+					'spbudact_code'				=> $this->db->f('spbudact_code'),
+					'regtid'					=> $this->db->f('regtid'),
+					'artid'						=> $this->db->f('artid'),
+					'godkjentbelop'				=> $this->db->f('godkjentbelop'),
+					'spvend_code'				=> $this->db->f('spvend_code'),
+					'dima'						=> $this->db->f('dima'),
+					'loc1'						=> $this->db->f('loc1'),
+					'dimb'						=> $this->db->f('dimb'),
+					'dime'						=> $this->db->f('dime'),
+					'mvakode'					=> $this->db->f('mvakode'),
+					'dimd'						=> $this->db->f('dimd'),
+					'project_id'				=> $this->db->f('project_id'),
+					'kostra_id'					=> $this->db->f('kostra_id'),
+					'item_type'					=> $this->db->f('item_type'),
+					'item_id'					=> $this->db->f('item_id'),
+					'oppsynsmannid'				=> $this->db->f('oppsynsmannid'),
+					'saksbehandlerid'			=> $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid'		=> $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato'			=> $this->db->f('oppsynsigndato'),
+					'saksigndato'				=> $this->db->f('saksigndato'),
+					'budsjettsigndato'			=> $this->db->f('budsjettsigndato'),
+					'merknad'					=> $this->db->f('merknad'),
+					'splitt'					=> $this->db->f('splitt'),
+					'ordrebelop'				=> $this->db->f('ordrebelop'),
+					'utbetalingid'				=> $this->db->f('utbetalingid'),
+					'utbetalingsigndato'		=> $this->db->f('utbetalingsigndato'),
+				);
 			}
 			return $invoice_roleback;
 		}
@@ -249,7 +237,7 @@
 		function bilag_update_overf($BilagOverf)
 		{
 			$values = array
-				(
+			(
 				$BilagOverf['project_id'],
 				$BilagOverf['kostra_id'],
 				$BilagOverf['pmwrkord_code'],
@@ -272,6 +260,7 @@
 				$BilagOverf['dima'],
 				$BilagOverf['loc1'],
 				$BilagOverf['dimd'],
+				$BilagOverf['dime'],
 				$BilagOverf['mvakode'],
 				$BilagOverf['periode'],
 				$this->db->db_addslashes($BilagOverf['merknad']),
@@ -288,7 +277,7 @@
 
 			$sql = "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,"
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
-			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,mvakode,"
+			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,dime,mvakode,"
 			. " periode,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,item_type,item_id,belop,godkjentbelop)"
 			. " values ($values,"
 			. $this->db->money_format($BilagOverf['belop']) . ","
@@ -366,14 +355,6 @@
 			$day		 = $dateparts[$d];
 			$month		 = $dateparts[$m];
 			$year		 = $dateparts[$y];
-			/* 		$date1 = mktime (2,0,0,$month,$day,$year);
-			  if ($date1)
-			  {
-			  $Dato=$date1;
-			  }
-
-			  $Dato= date("M d Y",$Dato);
-			 */
 
 			$BilagOverf = $this->select_invoice_rollback($day, $month, $year, $Filnavn);
 			$this->db->transaction_begin();
@@ -389,15 +370,7 @@
 
 					$Belop = sprintf("%01.2f", $BilagOverf[$i]['ordrebelop']) * 100;
 
-					if($BilagOverf[$i]['dimd'] % 2 == 0)
-					{
-						$actual_cost_field = 'act_mtrl_cost';
-					}
-					else
-					{
-						$actual_cost_field = 'act_vendor_cost';
-					}
-
+					$actual_cost_field = 'act_vendor_cost';
 					$operator = '-';
 
 					$this->soXport->correct_actual_cost($BilagOverf[$i]['pmwrkord_code'], $Belop, $actual_cost_field, $operator);
@@ -762,14 +735,8 @@
 						//Oppdater beløp på arbeidsordre
 						if($download == 'on')
 						{
-							if($invoice_line['dimd'] % 2 == 0)
-							{
-								$actual_cost_field = 'act_mtrl_cost';
-							}
-							else
-							{
-								$actual_cost_field = 'act_vendor_cost';
-							}
+							$actual_cost_field = 'act_vendor_cost';
+
 							$operator = '+';
 
 							if(!$this->debug)
@@ -790,8 +757,8 @@
 
 					$Dim_4	 = sprintf("%-8s", '');// verdi: Ressurs, type: c8, plass: 53 - 60
 					$Dim_5	 = sprintf("%-12s", $invoice_line['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
-//FIXME 'dime' må legges inn...
-					$Dim_6	 = sprintf("%-4s", $invoice_line['dime']);// Kategori, type: c4, plass: 73 - 76
+
+					$Dim_6	 = sprintf("%-4s", $invoice_line['dimd']);// Kategori, type: c4, plass: 73 - 76
 
 					$Dim_7 = sprintf("%-4s", '');// verdi: Blank, type: c4, plass: 77 - 80
 
