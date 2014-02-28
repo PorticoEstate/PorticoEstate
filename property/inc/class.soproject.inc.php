@@ -1710,7 +1710,10 @@
 				$historylog->add('RM', $project['id'], $project['remark']);
 			}
 
-
+			/**
+			 * Add budget to project if missing.
+			 */
+			$this->_update_project_budget($project['id']);
 
 			$receipt['id']			 = $project['id'];
 			$receipt['message'][]	 = array('msg' => lang('project %1 has been edited', $project['id']));
@@ -3070,18 +3073,20 @@
 			$project_id		 = (int) $project_id;
 			$year			 = $year ? (int) $year : date('Y');
 			$current_year	 = date('Y');
-			$activate		 = true;
+			$activate		 = false;
 
-			if($year < $current_year)
+			if($year == $current_year)
 			{
-				$activate = false;
+				$activate = true;
 			}
 
 			$ids = array();
 			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
 			while($this->db->next_record())
 			{
-				$ids[] = $this->db->f('id');
+				$id = $this->db->f('id');
+				$ids[] = $id;
+				phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 			}
 			$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE year = {$year} AND order_id IN (" . implode(',', $ids) . ')', __LINE__, __FILE__);
 			$this->db->next_record();
@@ -3104,6 +3109,8 @@
 
 			if($update)
 			{
+				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$project_id} AND year != {$current_year}", __LINE__, __FILE__);
+
 				$this->db->query("SELECT id, periodization_id FROM fm_project WHERE id = {$project_id}", __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
@@ -3111,6 +3118,30 @@
 
 					$this->update_budget($project_id, $year, $periodization_id, (int) $workorder_budget, true, 'update', $activate);
 				}
+			}
+		}
+
+		/**
+		 * Add budget to project if missing.
+		 * @param integer $project_id
+		 */
+		protected function _update_project_budget($project_id)
+		{
+			$years	= array();
+			$ids	= array();
+			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$ids[] = $this->db->f('id');
+			}
+			$this->db->query("SELECT DISTINCT year FROM fm_workorder_budget WHERE order_id IN (" . implode(',', $ids) . ')', __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$years[] = $this->db->f('year');
+			}
+			foreach($years as $_year)
+			{
+				$this->check_and_update_project_budget($project_id, $_year);
 			}
 		}
 
