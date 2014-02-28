@@ -3088,6 +3088,10 @@
 				$ids[] = $id;
 				phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 			}
+			if(!$ids)
+			{
+				return false;
+			}
 			$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE year = {$year} AND order_id IN (" . implode(',', $ids) . ')', __LINE__, __FILE__);
 			$this->db->next_record();
 			$workorder_budget = $this->db->f('budget');
@@ -3134,14 +3138,17 @@
 			{
 				$ids[] = $this->db->f('id');
 			}
-			$this->db->query("SELECT DISTINCT year FROM fm_workorder_budget WHERE order_id IN (" . implode(',', $ids) . ')', __LINE__, __FILE__);
-			while ($this->db->next_record())
+			if($ids)
 			{
-				$years[] = $this->db->f('year');
-			}
-			foreach($years as $_year)
-			{
-				$this->check_and_update_project_budget($project_id, $_year);
+				$this->db->query("SELECT DISTINCT year FROM fm_workorder_budget WHERE order_id IN (" . implode(',', $ids) . ')', __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$years[] = $this->db->f('year');
+				}
+				foreach($years as $_year)
+				{
+					$this->check_and_update_project_budget($project_id, $_year);
+				}
 			}
 		}
 
