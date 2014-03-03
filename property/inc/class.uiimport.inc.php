@@ -139,7 +139,7 @@
 				{
 					if ( preg_match('/\.\./', $this->conv_type) )
 					{
-						break;
+							throw new Exception("Not a valid file: {$this->conv_type}");
 					}
 
 					$file = PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$this->conv_type}";
