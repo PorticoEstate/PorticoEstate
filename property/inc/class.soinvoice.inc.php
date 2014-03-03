@@ -2583,4 +2583,58 @@
 			return $invoice_num;
 		}
 
+		public function reassign_order($line_id, $order_id)
+		{
+			$line_id = (int) $line_id;
+			$order_info = $this->get_order_info($order_id); // henter default verdier selv om  $order_id ikke er gyldig.
+			$value_set = array();
+
+			if(!$order_id)
+			{
+				$merknad = 'Mangler bestillingsnummer';
+				phpgwapi_cache::message_set(lang('Project is closed'), 'error');
+				return false;
+			}
+			else if (!ctype_digit($order_id))
+			{
+				$remark = "bestillingsnummeret er på feil format: {$order_id}";
+				phpgwapi_cache::message_set($remark, 'error');
+				return false;
+			}
+			else if (!$order_info['order_exist'])
+			{
+				$remark = 'bestillingsnummeret ikke gyldig: ' . $order_id;
+				phpgwapi_cache::message_set($remark, 'error');
+				return false;
+			}
+			else
+			{
+				$value_set['project_id']			 = execMethod('property.soXport.get_project', $order_id);
+			}
+
+			$value_set['pmwrkord_code']		= $order_id;
+			$value_set['dima'] 				= $order_info['dima'];
+			$value_set['dimb'] 				= $order_info['dimb'];
+			$value_set['dime'] 				= $order_info['dime'];
+			$value_set['loc1'] 				= $order_info['loc1'];
+			$value_set['line_text']			= $order_info['title'];
+			$value_set['spbudact_code'] = $order_info['spbudact_code'];
+			if(isset($order_info['janitor']) && $order_info['janitor'])
+			{
+				$value_set['oppsynsmannid'] = $order_info['janitor'];
+			}
+
+			if(isset($order_info['supervisor']) && $order_info['supervisor'])
+			{
+				$value_set['saksbehandlerid']		= $order_info['supervisor'];
+			}
+
+			if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
+			{
+				$value_set['budsjettansvarligid']	= $order_info['budget_responsible'];
+			}
+			$value_set	= $this->db->validate_update($value_set);
+			return $this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id = $line_id",__LINE__,__FILE__);
+
+		}
 	}	

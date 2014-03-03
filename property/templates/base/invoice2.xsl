@@ -392,6 +392,7 @@
 			</td>
 			<td>
 			  	<input type="text" name="values[order_id]" id="order_id" value="{voucher_info/voucher/order_id}"/>
+			  	<input type="hidden" name="values[order_id_orig]" id="order_id_orig" value="{voucher_info/voucher/order_id}"/>
 			</td>
 		</tr>
 		<tr class ='row_off'>
