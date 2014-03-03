@@ -1930,7 +1930,7 @@ JS;
 					{
 						if($invoices['charge_tenant'] == 1)
 						{
-							if($invoices['claim_issued'] == '')
+							if(!$invoices['claim_issued'])
 							{
 								$_workorder = execMethod('property.soworkorder.read_single', $invoices['workorder_id']);
 								$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_claim'].'&project_id='.$_workorder['project_id']."'>".lang('Claim')."</a>";
