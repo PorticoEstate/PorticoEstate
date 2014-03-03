@@ -215,11 +215,18 @@
 
 			}
 
-			$target = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $id, 'origin');
+			$targets = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $id, 'origin');
 
-			if ( $target)
+			$claim['workorders'] = $targets;
+			$claim['claim_issued'] = array();
+			
+			foreach($targets as $workorder_id)
 			{
-				$claim['workorder'] = $target;
+				$this->db->query("SELECT claim_issued FROM fm_workorder WHERE id='{$workorder_id}' AND claim_issued = 1",__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$claim['claim_issued'][] = $workorder_id;
+				}
 			}
 
 			return $claim;
