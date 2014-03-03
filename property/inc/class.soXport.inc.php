@@ -43,6 +43,7 @@
 		var $voucher_id;
 		protected $global_lock = false;
 		var $debug = false;
+		public $supertransaction = false;
 
 		function __construct()
 		{
@@ -725,7 +726,10 @@
 			$orders_affected = array();
 			$_dateformat = $this->db->date_format();
 
-			$this->db->transaction_begin();
+			if(!$this->supertransaction)
+			{
+				$this->db->transaction_begin();
+			}
 
 			$this->add($values, $skip_update_voucher_id);
 			$this->voucher_id = $values[0]['bilagsnr'];
@@ -771,12 +775,12 @@
 				}
 			}
 
-
  			$this->update_actual_cost_from_archive($orders_affected);
 
-			return $this->db->transaction_commit();
-
-
+			if(!$this->supertransaction)
+			{
+				return $this->db->transaction_commit();
+			}
 		}
 
 

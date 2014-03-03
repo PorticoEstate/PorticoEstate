@@ -39,6 +39,11 @@
 		public $sum_amount = 0;
 		public $results = 0;
 		public $allrows = false;
+		/**
+		 *
+		 * @var boolean In case of mass-import of fictious invoices
+		 */
+		public $supertransaction = false;
 
 		function property_boinvoice($session=false)
 		{
@@ -508,6 +513,7 @@
 
 			$buffer = array();
 			$soXport    = CreateObject('property.soXport');
+			$soXport->supertransaction = $this->supertransaction;
 			if($values['loc1']=$values['location']['loc1'])
 			{
 				$values['dima']=implode('',$values['location']);

@@ -18,6 +18,7 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= $this->db->join;
 			$this->boinvoice	= CreateObject('property.boinvoice');
+			$this->boinvoice->supertransaction = true;
 			$this->soinvoice	= CreateObject('property.soinvoice');
 			$this->boworkorder	= CreateObject('property.boworkorder');
 			$this->soproject	= CreateObject('property.soproject');
