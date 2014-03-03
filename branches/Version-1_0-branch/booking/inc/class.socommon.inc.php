@@ -272,8 +272,14 @@
 								$column[] = is_array($paramsOrFieldName) ? $fieldOrInt : $paramsOrFieldName;
 							}
 							$column = join(',', $column);
+							$order_method = '';
+
+							if(is_array($params['manytomany']['order']))
+							{
+								$order_method = "ORDER BY {$params['manytomany']['order']['sort']} {$params['manytomany']['order']['dir']}";
+							}
 							
-							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
+							$this->db->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
 							$row[$field] = array();
 							while ($this->db->next_record())
 							{
