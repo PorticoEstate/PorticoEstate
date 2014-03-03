@@ -44,6 +44,15 @@ class rental_agresso_lg04 implements rental_exportable
 		}
 		return $contents;
 	}
+        
+        public function get_contents_excel()
+	{
+		if($this->orders == null) // Data hasn't been created yet
+		{
+			$this->run_excel_export();
+		}
+		return $this->orders;
+	}
 	
 	public function get_missing_billing_info($contract)
 	{
@@ -167,6 +176,71 @@ class rental_agresso_lg04 implements rental_exportable
 		foreach($invoices as $invoice) // Runs through all invoices
 		{
 			$so_invoice->store($invoice);
+		}
+	}
+        
+        protected function run_excel_export()
+	{
+		$this->orders = array();
+		$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
+		$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.'; 
+		// We need all invoices for this billing
+		$invoices = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array('billing_id' => $this->billing_job->get_id()));
+		
+		foreach($invoices as $invoice) // Runs through all invoices
+		{
+			// We need all price items in the invoice
+			$price_items = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array('invoice_id' => $invoice->get_id()));
+			$composite_name = '';
+			// We need to get the composites to get a composite name for the Agresso export
+			$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id()));
+			if($composites != null && count($composites) > 0)
+			{
+				$keys = array_keys($composites);
+				$composite_name = $composites[$keys[0]]->get_name();
+			}
+			// HACK to get the needed location code for the building
+			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
+			
+			$price_item_data = array();
+            $price_item_counter = 0;
+			foreach($price_items as $price_item) // Runs through all items
+			{
+				$data = array();
+				$data['amount'] = $price_item->get_total_price();
+				$description = $price_item->get_title();
+				$start = $price_item->get_timestamp_start();
+				$stop = $price_item->get_timestamp_end();
+				if(isset($start) && isset($stop))
+				{
+					$description .= ' '.date('j/n',$start).'-'.date('j/n',$stop);
+				}
+				$data['article_description'] = $description;
+				$data['article_code'] = $price_item->get_agresso_id();
+				$price_item_data[] = $data;
+                
+                $serialized_party = $invoice->get_party()->serialize();
+                $party_name = $serialized_party['name'];
+                        
+                $this->orders[] = $this->get_order_excel(
+                    $invoice->get_header(), 
+                    $invoice->get_party()->get_identifier(),
+                    $party_name,
+                    $invoice->get_id(), 
+                    $this->billing_job->get_year(), 
+                    $this->billing_job->get_month(), 
+                    $invoice->get_account_out(), 
+                    $data, 
+                    $invoice->get_responsibility_id(), 
+                    $invoice->get_service_id(), 
+                    $building_location_code, 
+                    $invoice->get_project_id(), 
+                    $composite_name,
+                    $invoice->get_reference(),
+                    $price_item_counter
+                );
+                $price_item_counter++;
+			}
 		}
 	}
 	
@@ -352,6 +426,49 @@ class rental_agresso_lg04 implements rental_exportable
 		}
 		return str_replace(array("\n", "\r"), '', $order);
 	}
+        
+        /**
+	 * Builds one single order of the excel file.
+	 * 
+	 */
+	protected function get_order_excel($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter)
+	{
+		
+		//$order_id = $order_id + 39500000;
+		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
+		//$order = array();
+		
+		$item_counter = $counter;
+        $order = array(
+            'account' => $account,
+            'client_ref' => $client_ref,
+            'header' => utf8_decode($header),
+            'bill_year' => $bill_year,
+            'bill_month' => $bill_month,
+            'Ansvar' => 'BKBPE',
+            'Ansvar2' => 'BKBPE',
+            'Party' => $party_id,
+            'name' => $party_name,
+            'amount' => $this->get_formatted_amount_excel($product_item['amount']),
+//                        'amount' => $this->get_formatted_amount($product_items[0]['amount']),
+            'article description' => utf8_decode($product_item['article_description']),
+            'article_code' => $product_item['article_code'],
+            'batch_id' => "BKBPE{$this->date_str}",
+            'client' => 'BY',
+            'responsibility' => $responsibility,
+            'service' => $service,
+            'project' => $project,
+            'counter' => ++$item_counter,
+            'bill_year' => $bill_year,
+            'bill_month' => $bill_month,
+            'batch_id' => "BKBPE{$this->date_str}",
+            'client' => 'BY',
+            'item_counter' => $item_counter,
+            'text' => utf8_decode($text)
+            );
+               
+		return str_replace(array("\n", "\r"), '', $order);
+	}
 	
 	protected function get_formatted_amount($amount)
 	{
@@ -361,6 +478,20 @@ class rental_agresso_lg04 implements rental_exportable
 			return '-' . sprintf("%016.16s", abs($amount)); // We have to have the sign at the start of the string
 		}
 		return sprintf("%017.17s", $amount);
+	} 
+        
+        protected function get_formatted_amount_excel($amount)
+	{
+//            var_dump($amount);
+            
+//            var_dump($belop);
+		$amount = round($amount, 2) * 100;
+                $belop = substr($amount, 0, strlen($amount)-2) . '.' . substr($amount, -2);
+		if($amount < 0) // Negative number
+		{
+			return '-' . sprintf("%016.16s", abs($belop)); // We have to have the sign at the start of the string
+		}
+		return sprintf("%017.17s", $belop);
 	} 
 	
 } 
