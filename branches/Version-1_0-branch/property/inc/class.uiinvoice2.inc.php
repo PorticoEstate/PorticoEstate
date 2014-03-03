@@ -123,6 +123,44 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
+		/**
+		 * Reasign an alter dimensions accordingly
+		 * @param int $line_id
+		 * @param bigint $order_id
+		 * @return boolean true on success
+		 */
+		public function reassign_order($line_id, $order_id, $voucher_id)
+		{
+			if( $this->bo->reassign_order($line_id, $order_id))
+			{
+				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
+
+				$result =  array
+				(
+					'status'	=> 'updated'
+				);
+			}
+			else
+			{
+				$result =  array
+				(
+					'status'	=> 'error'
+				);
+			}
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$result['receipt'] = $receipt;
+				}
+				return $result;
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
+			}
+		}
 
 		function update_voucher()
 		{
@@ -132,6 +170,12 @@
 
 			if($values = phpgw::get_var('values'))
 			{
+
+				if($values['order_id'] != $values['order_id_orig'])
+				{
+					return $this->reassign_order($line_id, $values['order_id'], $voucher_id);
+				}
+
 				$order = execMethod('property.soworkorder.read_single',$values['order_id']);
 				$project = execMethod('property.soproject.read_single', $order['project_id']);
 				

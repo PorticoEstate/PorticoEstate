@@ -967,4 +967,15 @@
 		{
 			return $this->so->get_auto_generated_invoice_num($vendor_id);
 		}
+
+		/**
+		 * Reasign an alter dimensions accordingly
+		 * @param int $line_id
+		 * @param bigint $order_id
+		 * @return boolean true on success
+		 */
+		public function reassign_order($line_id, $order_id)
+		{
+			return $this->so->reassign_order($line_id, $order_id);
+		}
 	}
