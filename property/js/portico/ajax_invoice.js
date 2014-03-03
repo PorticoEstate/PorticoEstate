@@ -24,6 +24,7 @@ $(document).ready(function(){
 		$("#line_id").val( '' );
 		$("#line_text").val( '' );
 		$("#order_id").val( '' );
+		$("#order_id_orig").val( '' );
 		$("#project_group").val( '' );
 		$("#invoice_id").html( '' );
 		$("#kid_nr").html( '' );
@@ -121,31 +122,36 @@ $(document).ready(function(){
 		var dim_e = document.getElementById("dim_e").value;
 		var dim_b = document.getElementById("dim_b").value;
 		var dim_a = document.getElementById("dim_a").value;
+		var order_id = document.getElementById("order_id").value;
+		var order_id_orig = document.getElementById("order_id_orig").value;
 
-		if(periodization && ! periodization_start)
+
+		if(order_id_orig == order_id)
 		{
-			alert('Du må velge startperiode');
-			return;
-		}
+			if(periodization && ! periodization_start)
+			{
+				alert('Du må velge startperiode');
+				return;
+			}
 
-		if(!dim_e)
-		{
-			alert('Du må velge Kategori');
-			return;
-		}
+			if(!dim_e)
+			{
+				alert('Du må velge Kategori');
+				return;
+			}
 
-		if(!dim_b)
-		{
-			alert('Du må velge Ansvarssted');
-			return;
-		}
+			if(!dim_b)
+			{
+				alert('Du må velge Ansvarssted');
+				return;
+			}
 
-		if(!dim_a)
-		{
-			alert('Du må angi Dim A');
-			return;
+			if(!dim_a)
+			{
+				alert('Du må angi Dim A');
+				return;
+			}
 		}
-
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
@@ -210,9 +216,9 @@ $(document).ready(function(){
 						}
 	   				
 	   				}
-	   				$("#receipt").html(htmlString);
 	   				update_form_values(line_id, voucher_id_orig);
 					update_voucher_filter();
+					$("#receipt").html(htmlString);
 				}
 			}
 		});
@@ -304,6 +310,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				}
 
 				$("#order_id").val( voucher[0].order_id );
+				$("#order_id_orig").val( voucher[0].order_id );
 
 				if(voucher[0].order_id)
 				{
@@ -579,6 +586,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#voucher_id").val( '' );
 				$("#voucher_id_text").html( '' );
 				$("#order_id").val( '' );
+				$("#order_id_orig").val( '' );
 				$("#project_group").val( '' );
 				$("#invoice_id").html( '' );
 				$("#kid_nr").html( '' );
