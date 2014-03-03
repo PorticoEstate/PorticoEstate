@@ -715,27 +715,33 @@
 				$values = $this->bo->read_single($claim_id);
 			}
 
-			//_debug_array($values);
-
 			$project_values	= $this->boproject->read_single($values['project_id'], array(), true);
-			
-			$project_values['workorder_budget'] = $this->boproject->get_orders(array('project_id'=> $values['project_id'],'year'=> 0));
 
+			$project_values['workorder_budget'] = $this->boproject->get_orders(array('project_id'=> $values['project_id'],'year'=> 0));
+			//_debug_array($project_values);die();
 			$soinvoice	= CreateObject('property.soinvoice');
 
 			foreach ($project_values['workorder_budget'] as &$workorder)
 			{
+				$_vouchers = array();
 				$vouchers = $soinvoice->read_invoice(array('paid'=>'1','workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
-				if(isset($vouchers[0]['voucher_id']))
+				foreach($vouchers as $entry)
 				{
-					$workorder['voucher_id'] = $vouchers[0]['voucher_id'];
+					$_vouchers[] = $entry['voucher_id'];
 				}
-				else
+				$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
+				unset($entry);
+				foreach($vouchers as $entry)
 				{
-					$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
-					$workorder['voucher_id'] = isset($vouchers[0]['voucher_id']) ? $vouchers[0]['voucher_id'] : '';
+					$_vouchers[] = $entry['voucher_id'];
 				}
-			}
+
+				$workorder['voucher_id'] = implode(', ', $_vouchers);
+
+				$workorder['selected'] = in_array($workorder['workorder_id'],$values['workorders']);
+				$workorder['claim_issued'] = in_array($workorder['workorder_id'],$values['claim_issued']);
+
+				}
 
 
 			//_debug_array($project_values);die();
@@ -787,34 +793,6 @@
 				$values['first_name']		= $tenant['first_name'];
 			}
 
-
-			if($values['workorder'] && $project_values['workorder_budget'])
-			{
-				foreach ($values['workorder'] as $workorder_id)
-				{
-					for ($i=0;$i<count($project_values['workorder_budget']);$i++)
-					{
-						if($project_values['workorder_budget'][$i]['workorder_id'] == $workorder_id)
-						{
-							$project_values['workorder_budget'][$i]['selected'] = true;
-						}
-					}
-				}
-			}
-
-/*
-			for ($i=0;$i<count($project_values['workorder_budget']);$i++)
-			{
-				$claimed= $this->bo->check_claim_workorder($project_values['workorder_budget'][$i]['workorder_id']);
-
-				if($claimed)
-				{
-					$project_values['workorder_budget'][$i]['claimed'] = $claimed;
-				}
-			}
-
- */
-
 			$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 				'b_account_id'		=> $values['b_account_id'],
@@ -858,6 +836,7 @@
 					$project_values['workorder_budget'][$d]['actual_cost_hidden'] = 0;
 					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
 				}
+				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
 			}
 
 			//---datatable0 settings---------------------------------------------------
@@ -877,18 +856,18 @@
 			$myColumnDefs[0] = array
 				(
 					'name'			=> "0",
-					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>'Workorder',	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-															array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+															array('key' => 'budget',	'label'=>lang('Budget'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 															array('key' => 'budget_hidden','hidden'=>true),
-															array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+															array('key' => 'calculation',	'label'=>lang('Calculation'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 															array('key' => 'calculation_hidden','hidden'=>true),
 															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 															array('key' => 'actual_cost_hidden','hidden'=>true),
-															array('key' => 'vendor_name','label'=>'Vendor','sortable'=>true,'resizeable'=>true),
-															array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+															array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+															array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter'),
 															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
 															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
-															array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
+															array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)))
 				);
 
 
