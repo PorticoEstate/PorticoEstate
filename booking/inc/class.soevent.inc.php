@@ -55,7 +55,8 @@
 						  'manytomany' => array(
 							'table' => 'bb_event_comment',
 							'key' => 'event_id',
-							'column' => array('time', 'author', 'comment', 'type')
+							'column' => array('time', 'author', 'comment', 'type'),
+							'order'=> array('sort' =>'time', 'dir' => 'ASC' )
 					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
