@@ -723,7 +723,7 @@
 
 			$this->set_case_officer($application);
 
-			$comments = array_reverse($application['comments']);
+		//	$comments = array_reverse($application['comments']); //fixed in db
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
@@ -735,6 +735,6 @@
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations,'comments' => $comments));
+								  'num_associations'=>$num_associations,'comments' => $application['comments']));
 		}
 	}

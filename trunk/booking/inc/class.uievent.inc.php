@@ -708,14 +708,14 @@
 			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$comments = array_reverse($event['comments']);
+	//		$comments = array_reverse($event['comments']); // fixed in db
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($event);
 			$this->add_template_helpers();
-			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
+			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $event['comments']));
 		}
 
 		public function info()
