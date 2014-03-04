@@ -211,6 +211,12 @@
 			return $this->db->f('cnt');
 		}
 
+		/**
+		 * Add voucher to work-katalog
+		 * @param array $buffer holds the dataset
+		 * @param bool $skip_update_voucher_id do not increment voucher_id
+		 * @return int number of records inserted
+		 */
 		function add($buffer, $skip_update_voucher_id = false)
 		{
 			if ( $this->db->get_transaction() )
@@ -753,6 +759,11 @@
 
 			reset($voucher);
 
+			if($this->debug)
+			{
+				return true;
+			}
+
 			foreach ($voucher as &$line)
 			{
 				if($line['order_id'])
@@ -770,6 +781,7 @@
 					$operator = '+';
 					if(!$this->debug)
 					{
+						//notify_coordinator_on_consumption is performed here..
 						$this->correct_actual_cost($line['order_id'],$amount, $actual_cost_field, $operator);
 					}
 				}
