@@ -733,7 +733,7 @@
 			while($this->db->next_record())
 			{
 				$consume[] = array
-					(
+				(
 					'consume'		 => round($this->db->f('consume')),
 					'period'		 => $this->db->f('periode'),
 					'district_id'	 => $this->db->f('district_id'),
@@ -742,13 +742,11 @@
 				);
 			}
 
-			$filtermethod = ltrim($filtermethod, ' AND ');
-
 			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume {$select_account_class}"
 			. " FROM  fm_ecobilag {$this->join} fm_location1 ON (fm_ecobilag.loc1 = fm_location1.loc1) "
 			. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
 			. " {$this->join} fm_b_account ON (fm_ecobilag.spbudact_code = fm_b_account.id) "
-			. " WHERE ({$filtermethod})"
+			. " WHERE (1=1 {$filtermethod})"
 			. " GROUP BY district_id,periode $group_account_class"
 			. " ORDER BY periode";
 
@@ -758,7 +756,7 @@
 			while($this->db->next_record())
 			{
 				$consume[] = array
-					(
+				(
 					'consume'		 => round($this->db->f('consume')),
 					'period'		 => $this->db->f('periode'),
 					'district_id'	 => $this->db->f('district_id'),
