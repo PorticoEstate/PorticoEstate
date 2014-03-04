@@ -2637,4 +2637,16 @@
 			return $this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id = $line_id",__LINE__,__FILE__);
 
 		}
+
+		/**
+		 * Check if provided budget account is valid
+		 * @param string $b_account_id
+		 * @return boolean true on valid budget account
+		 */
+		function check_valid_b_account($b_account_id)
+		{
+			$this->db->query("SELECT active FROM fm_b_account WHERE id = '{$b_account_id}'",__LINE__,__FILE__);
+			$this->db->next_record();
+			return !!$this->db->f('active');
+		}
 	}	

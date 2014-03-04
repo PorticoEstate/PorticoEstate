@@ -969,7 +969,7 @@
 		}
 
 		/**
-		 * Reasign an alter dimensions accordingly
+		 * Reassign and alter dimensions accordingly
 		 * @param int $line_id
 		 * @param bigint $order_id
 		 * @return boolean true on success
@@ -977,5 +977,15 @@
 		public function reassign_order($line_id, $order_id)
 		{
 			return $this->so->reassign_order($line_id, $order_id);
+		}
+
+		/**
+		 * Check if provided budget account is valid
+		 * @param string $b_account_id
+		 * @return boolean true on valid budget account
+		 */
+		function check_valid_b_account($b_account_id)
+		{
+			return $this->so->check_valid_b_account($b_account_id);
 		}
 	}
