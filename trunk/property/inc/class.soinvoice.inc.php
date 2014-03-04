@@ -829,11 +829,9 @@
 
 				if($values['budget_account'][$n])
 				{
-					$budget_account = $values['budget_account'][$n];
 
-					$GLOBALS['phpgw']->db->query("select count(*) as cnt from fm_b_account  where id ='{$budget_account}'");
-					$GLOBALS['phpgw']->db->next_record();
-					if($GLOBALS['phpgw']->db->f('cnt') == 0)
+					$budget_account = $values['budget_account'][$n];
+					if (!$this->check_valid_b_account($budget_account))
 					{
 						$receipt['error'][]	 = array('msg' => lang('This account is not valid:') . " " . $budget_account);
 						$local_error		 = true;
@@ -845,6 +843,28 @@
 					$local_error		 = true;
 				}
 
+
+				if(!$values['dimb'][$n])
+				{
+					$dimb_field			 = "dimb=NULL";
+					$local_error		 = true;
+					$receipt['error'][]	 = array('msg' => lang('Please select dimb!'));
+				}
+				else
+				{
+					$dimb = $values['dimb'][$n];
+					$GLOBALS['phpgw']->db->query("select count(*) as cnt from fm_ecodimb where id ='$dimb'");
+					$GLOBALS['phpgw']->db->next_record();
+					if($GLOBALS['phpgw']->db->f('cnt') == 0)
+					{
+						$receipt['error'][]	 = array('msg' => lang('This Dim B is not valid:') . " " . $dimd);
+						$local_error		 = true;
+					}
+
+					$dimb_field = "dimb='{$dimb}'";
+				}
+
+					
 				if(!$values['dimd'][$n])
 				{
 					$dimd_field			 = "dimd=NULL";
@@ -897,7 +917,6 @@
 				if(!$local_error)
 				{
 					$tax_code		 = (int) $values['tax_code'][$n];
-					$dimb			 = isset($values['dimb'][$n]) && $values['dimb'][$n] ? (int) $values['dimb'][$n] : 'NULL';
 					$workorder_id	 = $values['workorder_id'][$n];
 					if(isset($values['close_order'][$n]) && $values['close_order'][$n] && !$values['close_order_orig'][$n])
 					{
@@ -924,7 +943,7 @@
 						}
 					}
 
-					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,{$dimd_field}, mvakode = {$tax_code},spbudact_code = '{$budget_account}',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='{$id}'", __LINE__, __FILE__);
+					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,{$dimd_field},{$dimb_field}, mvakode = {$tax_code},spbudact_code = '{$budget_account}',godkjentbelop = $approved_amount WHERE id='{$id}'", __LINE__, __FILE__);
 
 					$receipt['message'][] = array('msg' => lang('Voucher is updated '));
 				}
@@ -1627,6 +1646,23 @@
 						{
 							$receipt['error'][]	 = array('msg' => lang('Budget code is missing from sub invoice in :') . " " . $values['voucher_id'][$n]);
 							$local_error		 = true;
+						}
+						else
+						{
+							$this->db->query("SELECT DISTINCT spbudact_code FROM fm_ecobilag WHERE bilagsnr = '{$values['voucher_id'][$n]}' AND spbudact_code IS NOT NULL",__LINE__,__FILE__);
+							$_check_b_accounts = array();
+							while ($this->db->next_record())
+							{
+								$_check_b_accounts[] = $this->db->f('spbudact_code');
+							}
+							foreach($_check_b_accounts as $_check_b_account)
+							{
+								if (!$this->check_valid_b_account($_check_b_account))
+								{
+									$receipt['error'][]	 = array('msg' => lang('this account is not valid:') . " " . $_check_b_account);
+									$local_error		 = true;
+								}
+							}
 						}
 
 						if($check_count['dimd_count'] != $check_count['invoice_count'])
