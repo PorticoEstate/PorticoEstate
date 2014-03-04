@@ -39,6 +39,7 @@
 		public $sum_amount = 0;
 		public $results = 0;
 		public $allrows = false;
+		public $debug = false;
 		/**
 		 *
 		 * @var boolean In case of mass-import of fictious invoices
@@ -514,6 +515,7 @@
 			$buffer = array();
 			$soXport    = CreateObject('property.soXport');
 			$soXport->supertransaction = $this->supertransaction;
+			$soXport->debug = $this->debug;
 			if($values['loc1']=$values['location']['loc1'])
 			{
 				$values['dima']=implode('',$values['location']);
@@ -608,7 +610,8 @@
 
 				if($soXport->add_manual_invoice($buffer,$skip_update_voucher_id))
 				{
-					$receipt['message'][] = array('msg'=>lang('Invoice %1 is added',$soXport->voucher_id));
+					$_msg = $this->debug ? 'DEBUG: ': '';
+					$receipt['message'][] = array('msg'=> $_msg. lang('Invoice %1 is added',$soXport->voucher_id));
 					$receipt['voucher_id'] = $soXport->voucher_id;
 				}
 				else
@@ -969,7 +972,7 @@
 		}
 
 		/**
-		 * Reasign an alter dimensions accordingly
+		 * Reassign and alter dimensions accordingly
 		 * @param int $line_id
 		 * @param bigint $order_id
 		 * @return boolean true on success
@@ -977,5 +980,15 @@
 		public function reassign_order($line_id, $order_id)
 		{
 			return $this->so->reassign_order($line_id, $order_id);
+		}
+
+		/**
+		 * Check if provided budget account is valid
+		 * @param string $b_account_id
+		 * @return boolean true on valid budget account
+		 */
+		function check_valid_b_account($b_account_id)
+		{
+			return $this->so->check_valid_b_account($b_account_id);
 		}
 	}

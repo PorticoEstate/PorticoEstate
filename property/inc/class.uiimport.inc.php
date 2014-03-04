@@ -155,9 +155,8 @@
 				}
 
 
-				$this->import_conversion = new import_conversion($location_id);
 				$this->debug = phpgw::get_var('debug', 'bool');
-				$this->import_conversion->debug	= $this->debug;
+				$this->import_conversion = new import_conversion($location_id,$this->debug);
 
 				// Get the path for user input or use a default path
 

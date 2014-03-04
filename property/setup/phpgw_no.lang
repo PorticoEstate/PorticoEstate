@@ -1989,6 +1989,8 @@ closed date	property	no	Avsluttet dato
 cost categories	property	no	Kostnadskategori
 negative value for budget	property	no	Negativ verdi for kostnadsestimat
 no symptoms	property	no	Ingen avvik
+not a valid category	property	no	Ugyldig Kategori
+not a valid budget account	property	no	Ugyldig Kostnadsart
 minor symptoms	property	no	Ikke vesentlig avvik
 medium symptoms	property	no	Vesentlig avvik
 serious symptoms	property	no	Stort eller vesentlig avvik

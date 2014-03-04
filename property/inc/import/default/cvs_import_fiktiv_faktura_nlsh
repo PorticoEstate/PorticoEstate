@@ -11,7 +11,7 @@
 		protected $month;
 		protected $date;
 
-		public function __construct()
+		public function __construct($location_id,$debug = false)
 		{
 			set_time_limit(10000); //Set the time limit for this request
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
@@ -25,7 +25,12 @@
 
 			$this->config		= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
-
+			if($debug)
+			{
+				$this->debug = true;
+				$this->boinvoice->debug = true;
+			}
+			
 			$file_info = pathinfo($_FILES['file']['name']);
 			$this->period = substr($file_info['filename'],-6);
 			
@@ -128,7 +133,7 @@
 			$values['regtid'] 			= date($GLOBALS['phpgw']->db->datetime_format());
 
 			$receipt					= $this->boinvoice->add_manual_invoice($values);
-
+			
 			$ok	= false;
 
 			if(!isset($receipt['error']) || !$receipt['error'])
@@ -141,7 +146,7 @@
 
 				$this->soproject->close_period_from_budget($workorder['project_id'], $data_close);
 
-				execMethod('property.soXport.update_actual_cost_from_archive',array($order_id => true));
+//				execMethod('property.soXport.update_actual_cost_from_archive',array($order_id => true));
 
 				$ok	= true;
 
