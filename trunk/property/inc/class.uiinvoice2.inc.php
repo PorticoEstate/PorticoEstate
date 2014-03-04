@@ -124,7 +124,7 @@
 		}
 
 		/**
-		 * Reasign an alter dimensions accordingly
+		 * Reassign and alter dimensions accordingly
 		 * @param int $line_id
 		 * @param bigint $order_id
 		 * @return boolean true on success
@@ -176,6 +176,20 @@
 					return $this->reassign_order($line_id, $values['order_id'], $voucher_id);
 				}
 
+				$cats			= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+				$cats->supress_info	= true;
+				$category	= $cats->return_single((int)$values['dim_e']);
+				if(!isset($category[0]) || $category[0]['active'] != 1)
+				{
+					$receipt['error'][]=true;				
+					phpgwapi_cache::message_set(lang('not a valid category'), 'error');
+				}
+				if(!$this->bo->check_valid_b_account($values['b_account_id']))
+				{
+					$receipt['error'][]=true;				
+					phpgwapi_cache::message_set(lang('not a valid budget account'), 'error');
+				}
+				
 				$order = execMethod('property.soworkorder.read_single',$values['order_id']);
 				$project = execMethod('property.soproject.read_single', $order['project_id']);
 				
