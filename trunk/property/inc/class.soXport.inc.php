@@ -737,7 +737,7 @@
 				$this->db->transaction_begin();
 			}
 
-			$this->add($values, $skip_update_voucher_id);
+			$num = $this->add($values, $skip_update_voucher_id);
 			$this->voucher_id = $values[0]['bilagsnr'];
 
 			$voucher = $this->get_voucher($values[0]['bilagsnr']);
@@ -792,6 +792,10 @@
 			if(!$this->supertransaction)
 			{
 				return $this->db->transaction_commit();
+			}
+			else
+			{
+				return $num;
 			}
 		}
 
