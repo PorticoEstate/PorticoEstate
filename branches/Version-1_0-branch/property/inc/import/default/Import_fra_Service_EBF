@@ -64,6 +64,8 @@
 			$this->dateformat = $GLOBALS['phpgw']->db->date_format();
 			$this->datetimeformat = $GLOBALS['phpgw']->db->datetime_format();
 			$this->next_bilagsnr = $this->invoice->next_bilagsnr();
+			$this->cats			= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+			$this->cats->supress_info	= true;
 		}
 
 		function import($invoice_common, $download)
@@ -146,13 +148,7 @@
 				{
 					if(!$workorder = $workorders[(int) $value]['order'])
 					{
-						if(!$this->soXport->check_order((int) $value))
-						{
-							$workorders[(int) $value]['order']['cat_id'] = '';
-							$workorders[(int) $value]['order']['ecodimb'] = '';
-							$workorders[(int) $value]['project_id'] = '';
-						}
-						else
+						if($this->soXport->check_order((int) $value))
 						{
 							$workorder = execMethod('property.soworkorder.read_single', (int) $value);
 							$workorders[(int) $value]['order'] = $workorder;
@@ -310,8 +306,19 @@
 				}
 				else
 				{
-					$buffer[$this->id]['spbudact_code'] = $_spbudact_code ? $_spbudact_code : '123014';
+					$category	= $this->cats->return_single((int)$this->currentrecord['dimd']);
+					if(isset($category[0]) && $category[0]['active'] == 1)
+					{
+						$buffer[$this->id]['dime'] = $this->currentrecord['dimd']; // Dim 6
+					}
+					
+					$buffer[$this->id]['spbudact_code'] = $_spbudact_code ? $_spbudact_code : '';
 				}
+			}
+
+			if(!$this->invoice->check_valid_b_account($buffer[$this->id]['spbudact_code']))
+			{
+				$buffer[$this->id]['spbudact_code'] = '';
 			}
 
 			$buffer[$this->id]['dimd'] = $buffer[$this->id]['dime'];
