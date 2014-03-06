@@ -273,7 +273,7 @@ class controller_socheck_list extends controller_socommon
 			$sql .= "AND status = {$status} ";
 		}  
 	
-		$sql .= "AND assigned_to IS NULL";
+		$sql .= "AND assigned_to IS NOT NULL";
 
 		$this->db->query($sql);
 		
