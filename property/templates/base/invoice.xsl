@@ -1387,21 +1387,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<tr>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'order id')"/>
-					</td>
-					<td align="left" class="th_text" valign="top">
-						<input type="text" name="values[order_id]" value="{order_id}">
-							<xsl:attribute name="size">
-								<xsl:text>20</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'order id')"/>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
 
 				<xsl:for-each select="approved_list">
 					<tr>
@@ -1418,7 +1403,22 @@
 					</tr>
 				</xsl:for-each>				
 				<xsl:choose>
-					<xsl:when test="paid = ''">
+					<xsl:when test="paid != 1">
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+								<xsl:value-of select="php:function('lang', 'order id')"/>
+							</td>
+							<td align="left" class="th_text" valign="top">
+								<input type="text" name="values[order_id]" value="{order_id}">
+									<xsl:attribute name="size">
+										<xsl:text>20</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'order id')"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
 						<tr>
 							<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
 							<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
