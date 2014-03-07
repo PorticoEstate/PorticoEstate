@@ -66,20 +66,22 @@
 	    private $edit;
 	    private $delete;
    
-		var $public_functions = array(
-			'add_case' 				=> true,
-			'save_case' 			=> true,
-			'save_case_ajax'		=> true,
-			'create_case_message' 	=> true,
-			'view_case_message' 	=> true,
-			'send_case_message' 	=> true,
-			'updateStatusForCases' 	=> true,
-			'delete_case' 			=> true,
-			'close_case' 			=> true,
-			'open_case' 			=> true,
-			'view_open_cases' 		=> true,
-			'view_closed_cases' 	=> true
-		);
+		var $public_functions = array
+			(
+				'add_case' 				=> true,
+				'save_case' 			=> true,
+				'save_case_ajax'		=> true,
+				'create_case_message' 	=> true,
+				'view_case_message' 	=> true,
+				'send_case_message' 	=> true,
+				'updateStatusForCases' 	=> true,
+				'delete_case' 			=> true,
+				'close_case' 			=> true,
+				'open_case' 			=> true,
+				'view_open_cases' 		=> true,
+				'view_closed_cases' 	=> true,
+				'get_case_data_ajax'	=> true
+			);
 
 		function __construct()
 		{
@@ -103,7 +105,7 @@
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_DELETE, 'controller');//8 
  		}	
 		
-        function add_case()
+		private function _get_case_data()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$case_location_code = phpgw::get_var('location_code');
@@ -252,13 +254,6 @@
 				}
 
 			}
-			
-
-			$level = $this->location_finder->get_location_level($location_code);
-			$year = date("Y", $check_list->get_deadline());
-			$month = date("n", $check_list->get_deadline());
-							
-			$user_role = true;
 
 			$data = array
 			(
@@ -269,12 +264,36 @@
 				'component_array'					=> $component_array,
 				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
 				'type' 								=> $type,
+				'location_code'						=> $location_code
+			);
+
+			return $data;
+		}
+
+		function add_case()
+		{
+			$case_data = $this->_get_case_data();
+			$check_list = $case_data['check_list'];
+
+			$level = $this->location_finder->get_location_level($case_data['location_code']);
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+							
+			$user_role = true;
+
+			$data = array
+			(
+				'control' 							=> $case_data['control'],
+				'check_list' 						=> $check_list,
+				'buildings_on_property'				=> $case_data['buildings_on_property'],
+			    'location_array'					=> $case_data['location_array'],
+				'component_array'					=> $case_data['component_array'],
+				'control_groups_with_items_array' 	=> $case_data['control_groups_with_items_array'],
+				'type' 								=> $case_data['type'],
 				'location_level' 					=> $level,
-	//			'building_location_code' 			=> $building_location_code,
 				'current_year' 						=> $year,
 				'current_month_nr' 					=> $month,
 			    'cases_view'						=> 'add_case',
-		//	    'location_required'					=> true
 			);
 			
 			phpgwapi_jquery::load_widget('core');
@@ -290,6 +309,16 @@
 									  'check_list/fragments/select_buildings_on_property'), $data);
 		}
     
+		public function get_case_data_ajax()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$case_location_code = phpgw::get_var('location_code');
+			$case_data = $this->_get_case_data();
+			
+			$control_groups_with_items_array;
+			return json_encode( array( "control_groups_with_items_array" => $case_data['control_groups_with_items_array'] ) );
+			
+		}
 		function save_case_ajax()
 		{
 			if(!$this->add && !$this->edit)
