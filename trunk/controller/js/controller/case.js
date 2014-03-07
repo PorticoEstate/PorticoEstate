@@ -64,6 +64,58 @@ $(document).ready(function() {
 					}
 				}
 			});
+
+			var check_list_id = $(thisForm).find("input[name=check_list_id]").val();
+			var oArgs = {menuaction: 'controller.uicase.get_case_data_ajax', check_list_id: check_list_id, location_code: location_code};
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			var htmlString = "";
+
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: requestUrl,
+				success: function(data) {
+					if (data != null) {
+						var obj = jQuery.parseJSON(data);
+
+						$.each(obj, function(i, control_group) {
+
+							$.each(control_group, function(j, control_item)
+							{
+								if (typeof (control_item.components_at_location) != 'undefined')
+								{
+									if (control_group_id != control_item.control_group.id)
+									{
+										return;
+									}
+
+									htmlString = "";
+
+									var component_options = control_item.components_at_location;
+									$.each(component_options, function(k, options) {
+
+										$.each(options, function(k, option) {
+
+											var selected = '';
+
+											if (option.id == component_id)
+											{
+												selected = ' selected';
+											}
+
+											htmlString += "<option value='" + component_location_id + '_' + option.id + "'" + selected + ">" + option.id + ' - ' + option['short_description'] + "</option>";
+
+										});
+									});
+
+									$("#component_at_control_group_" + control_group_id).html(htmlString);
+								}
+							});
+						});
+					}
+				}
+			});
 		}
 	});
 

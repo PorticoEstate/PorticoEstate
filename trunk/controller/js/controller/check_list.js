@@ -29,7 +29,8 @@ $(document).ready(function(){
 	// Display submit button on click
 	$("#frm_add_check_list").live("click", function(e){
 		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");		$(submitBnt).removeClass("not_active");
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
 	});
 
 	
