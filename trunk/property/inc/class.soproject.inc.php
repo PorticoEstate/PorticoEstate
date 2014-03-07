@@ -2939,15 +2939,18 @@
 		{
 			$values	 = array();
 			$sql	 = 'SELECT DISTINCT fm_eco_periodization.id, fm_eco_periodization.descr FROM fm_eco_periodization'
-			. " {$this->join} fm_eco_periodization_outline ON fm_eco_periodization.id = fm_eco_periodization_outline.periodization_id";
+			. " {$this->join} fm_eco_periodization_outline ON fm_eco_periodization.id = fm_eco_periodization_outline.periodization_id"
+			. " ORDER BY id ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			while($this->db->next_record())
 			{
+				$id	 = $this->db->f('id');
+
 				$values[] = array
 				(
-					'id'	 => $this->db->f('id'),
-					'name'	 => $this->db->f('descr'),
+					'id'	 => $id,
+					'name'	 => $id . ' - ' . $this->db->f('descr'),
 				);
 			}
 
