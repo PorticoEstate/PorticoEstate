@@ -2209,7 +2209,8 @@
 				$month			 = substr($entry['period'], 4, 2);
 				$entry['month']	 = $month == '00' ? '' : $month;
 
-				if($closed_period[$entry['period']])
+				//if($closed_period[$entry['period']])
+				if(abs($entry['actual_cost']) > 0 )
 				{
 					$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff']	 = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
