@@ -1780,7 +1780,7 @@
 			}
 			$continuous = false;
 
-			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
+//			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
 
 			if($cached_info)
 			{
@@ -2204,7 +2204,8 @@
 			$budget_acc		 = 0;
 			foreach($values as &$entry)
 			{
-				if($closed_period[$entry['period']])
+//				if($closed_period[$entry['period']])
+				if( abs($entry['actual_cost']) > 0 )
 				{
 					$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff']	 = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
