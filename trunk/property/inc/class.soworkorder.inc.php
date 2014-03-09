@@ -2072,8 +2072,12 @@
 					if(!in_array($periode, $_start_period_remainig))
 					{
 						$_temp_obligation = $order_budget[$periode]['combined_cost'] - $_orders_paid_or_pending['actual_cost'];
-						$_sum_year_remaining_cost += $_temp_obligation;
-						$order_budget[$periode]['combined_cost'] -= $_temp_obligation;
+						//FIXME
+						if(((int)$order_budget[$periode]['combined_cost'] * (int)$_orders_paid_or_pending['actual_cost']) > 0)
+						{
+							$_sum_year_remaining_cost += $_temp_obligation;
+							$order_budget[$periode]['combined_cost'] -= $_temp_obligation;
+						}
 					}
 				}
 
@@ -2144,7 +2148,10 @@
 					if($active_period[$period] == 1)
 					{
 						$_sum_oblications += $_budget['combined_cost'];
-						$_sum_oblications -= $_budget['actual_cost'];
+						if(((int)$_budget['budget'] * (int)$_budget['actual_cost']) > 0)
+						{
+							$_sum_oblications -= $_budget['actual_cost'];
+						}
 
 						if($_budget['budget'] >= 0)
 						{
