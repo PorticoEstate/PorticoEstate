@@ -2057,15 +2057,21 @@
 			$project_budget			 = array();
 			$project_total_budget	 = 0;
 
-			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount"
-			. " FROM fm_project_budget {$this->left_join} fm_workorder ON fm_project_budget.project_id = fm_workorder.project_id WHERE fm_project_budget.project_id = {$project_id}"
-			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active"
+			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget,"
+			. " fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, project_type_id"
+			. " FROM fm_project"
+			. " {$this->left_join} fm_project_budget ON fm_project_budget.project_id = fm_project.id"
+			. " {$this->left_join} fm_workorder ON fm_project.id = fm_workorder.project_id"
+			. " WHERE fm_project_budget.project_id = {$project_id}"
+			. " GROUP BY project_type_id, fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget,"
+			. " fm_project_budget.closed, fm_project_budget.active"
 			. " ORDER BY fm_project_budget.year, fm_project_budget.month";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			while($this->db->next_record())
 			{
-				$period = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
+				$project_type_id		= (int) $this->db->f('project_type_id');
+				$period					= $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
 
 				$project_budget[$period] = (int) $this->db->f('budget');
 				$closed_period[$period]	 = !!$this->db->f('closed');
@@ -2203,13 +2209,23 @@
 			$corretion		 = $total_sum >= 0 ? 1 : -1;
 			$deviation_acc	 = 0;
 			$budget_acc		 = 0;
+			$_year = 0;
 			foreach($values as &$entry)
 			{
 				$entry['year']	 = substr($entry['period'], 0, 4);
 				$month			 = substr($entry['period'], 4, 2);
 				$entry['month']	 = $month == '00' ? '' : $month;
 
-				//if($closed_period[$entry['period']])
+				/**
+				 * operation: start over each year
+				 */
+				if($project_type_id == 1 && $_year != $entry['year'])
+				{
+					$_year = $entry['year'];
+					$deviation_acc	 = 0;
+					$budget_acc		 = 0;
+				}
+
 				if(abs($entry['actual_cost']) > 0 )
 				{
 					$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
@@ -2217,6 +2233,8 @@
 
 					$_deviation	 = $entry['budget'] - $entry['actual_cost'];
 					$deviation	 = $_deviation;
+					$deviation_acc += $deviation;
+
 				}
 				else
 				{
@@ -2226,11 +2244,6 @@
 
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
-
-				if($closed_period[$entry['period']])
-				{
-					$deviation_acc += $deviation;
-				}
 
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
 
