@@ -544,4 +544,137 @@
 			$sql = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
 			$db->query($sql, __LINE__, __FILE__);
 		}
+
+        function get_screen_allocation($building_id, $start, $end)
+        {
+            $start = $start->format('Y-m-d H:i');
+            $end = $end->format('Y-m-d H:i');
+            $building_id = intval($building_id);
+            $results = array();
+            $sql = "SELECT
+                    bb_allocation.id AS id,
+                    bb_allocation.building_name AS building_name,
+                    bb_allocation.from_ AS from_,
+                    bb_allocation.to_ AS to_,
+                    bb_allocation.organization_id AS organization_id,
+                    bb_resource.id AS resource_id,
+                    bb_resource.name AS resource_name,
+                    bb_resource.sort AS sort,
+                    bb_resource.building_id AS building_id,
+                    bb_organization.name AS organization_name,
+                    bb_organization.shortname AS organization_shortname
+                    FROM bb_allocation
+                    INNER JOIN bb_allocation_resource ON (bb_allocation.id = bb_allocation_resource.allocation_id)
+                    INNER JOIN bb_resource ON  (bb_allocation_resource.resource_id  = bb_resource.id)
+                    INNER JOIN bb_organization ON  (bb_organization.id  = bb_allocation.organization_id)
+                    WHERE bb_allocation.from_ > '".$start."' AND bb_allocation.to_ < '".$end."'
+                    AND bb_resource.building_id = (".$building_id.")
+                    AND bb_allocation.active = 1
+                    ORDER BY building_name,sort, from_;";
+            $this->db->query($sql, __LINE__, __FILE__);
+            while ($this->db->next_record())
+            {
+                $results[] = array(
+                                    'id' => $this->db->f('id', false),
+                                    'building_id' => $this->db->f('building_id', false),
+                                    'resource_id' => $this->db->f('resource_id', false),
+                                    'organization_id' => $this->db->f('organization_id', false),
+                                    'building_name' => $this->db->f('building_name', false),
+                                    'resource_name' => $this->db->f('resource_name', false),
+                                    'organization_name' => $this->db->f('organization_name', false),
+                                    'organization_shortname' => $this->db->f('organization_shortname', false),
+                                    'from_' => $this->db->f('from_', false),
+                                    'to_' => $this->db->f('to_', false),
+                                  );
+            }
+            return $results;
+        }
+        function get_screen_booking($building_id, $start, $end)
+        {
+            $start = $start->format('Y-m-d H:i');
+            $end = $end->format('Y-m-d H:i');
+            $building_id = intval($building_id);
+            $results = array();
+            $sql = "SELECT
+                    bb_booking.id AS id,
+                    bb_booking.allocation_id AS allocation_id,
+                    bb_booking.building_name as buidling_name,
+                    bb_booking.from_ AS from_,
+                    bb_booking.to_ AS to_,
+                    bb_booking.group_id AS group_id,
+                    bb_resource.id AS resource_id,
+                    bb_resource.name AS resource_name,
+                    bb_resource.sort AS sort,
+                    bb_resource.building_id AS building_id,
+                    bb_group.name AS group_name,
+                    bb_group.shortname AS group_shortname
+                    FROM bb_booking
+                    INNER JOIN bb_booking_resource ON (bb_booking_resource.booking_id = bb_booking.id)
+                    INNER JOIN bb_resource ON  (bb_booking_resource.resource_id  = bb_resource.id)
+                    INNER JOIN bb_group ON (bb_group.id = bb_booking.group_id)
+                    WHERE bb_booking.from_ > '".$start."' AND bb_booking.to_ < '".$end."'
+                    AND bb_resource.building_id = (".$building_id.")
+                    AND bb_booking.active = 1
+                    ORDER BY building_name,sort, from_;";
+            $this->db->query($sql, __LINE__, __FILE__);
+            while ($this->db->next_record())
+            {
+                $results[] = array(
+                    'id' => $this->db->f('id', false),
+                    'building_id' => $this->db->f('building_id', false),
+                    'resource_id' => $this->db->f('resource_id', false),
+                    'group_id' => $this->db->f('group_id', false),
+                    'allocation_id' => $this->db->f('allocation_id', false),
+                    'building_name' => $this->db->f('building_name', false),
+                    'resource_name' => $this->db->f('resource_name', false),
+                    'group_name' => $this->db->f('group_name', false),
+                    'group_shortname' => $this->db->f('group_shortname', false),
+                    'from_' => $this->db->f('from_', false),
+                    'to_' => $this->db->f('to_', false),
+                );
+            }
+            return $results;
+        }
+
+        function get_screen_event($building_id, $start, $end)
+        {
+            $start = $start->format('Y-m-d H:i');
+            $end = $end->format('Y-m-d H:i');
+            $building_id = intval($building_id);
+            $results = array();
+            $sql = "SELECT
+                    bb_event.id AS id,
+                    bb_event.building_name as building_name,
+                    bb_event.description as description,
+                    bb_event.from_ AS from_,
+                    bb_event.to_ AS to_,
+                    bb_resource.sort AS sort,
+                    bb_resource.id AS resource_id,
+                    bb_resource.name AS resource_name,
+                    bb_resource.building_id AS building_id
+                    FROM bb_event
+                    INNER JOIN bb_event_resource ON (bb_event_resource.event_id = bb_event.id)
+                    INNER JOIN bb_resource ON (bb_resource.id = bb_event_resource.resource_id)
+                    WHERE bb_event.from_ > '".$start."' AND bb_event.to_ < '".$end."'
+                    AND bb_resource.building_id = (".$building_id.")
+                    AND bb_event.active = 1
+                    ORDER BY building_name,sort,from_;";
+            $this->db->query($sql, __LINE__, __FILE__);
+            while ($this->db->next_record())
+            {
+                $results[] = array(
+                    'id' => $this->db->f('id', false),
+                    'building_id' => $this->db->f('building_id', false),
+                    'resource_id' => $this->db->f('resource_id', false),
+                    'building_name' => $this->db->f('building_name', false),
+                    'resource_id' => $this->db->f('resource_id', false),
+                    'resource_name' => $this->db->f('resource_name', false),
+                    'description' => $this->db->f('description', false),
+                    'from_' => $this->db->f('from_', false),
+                    'to_' => $this->db->f('to_', false),
+                );
+            }
+            return $results;
+        }
+
 	}

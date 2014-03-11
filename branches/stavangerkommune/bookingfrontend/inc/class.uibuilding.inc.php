@@ -6,10 +6,160 @@
 		public $public_functions = array(
 			 'index'		=> true,
 			 'schedule'		=> true,
+             'information_screen' => true,
 			 'extraschedule'		=> true,
 			 'show'         => true,
 			'find_buildings_used_by' => true,
 		);
+        protected $module;
+
+        public function __construct()
+        {
+            parent::__construct();
+            $this->booking_bo = CreateObject('booking.bobooking');
+            $this->resource_bo = CreateObject('booking.boresource');
+        }
+
+		public function information_screen()
+		{
+            $today = new DateTime(phpgw::get_var('date', 'GET'), new DateTimeZone('Europe/Oslo'));
+            $date = $today;
+            $from = $date->format('d-m-Y');
+
+            $building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+            $start = phpgw::get_var('start', 'GET');
+
+            if ($start == 0) {
+                $timestart = 0.0;
+                $timeend = 8.0;
+            } elseif ($start == 1) {
+                $timestart = 8.0;
+                $timeend = 16.0;
+            } elseif ($start == 2) {
+                $timestart = 16.0;
+                $timeend = 24.0;
+            }
+
+            $days = array(
+                "Mon" => "Mandag",
+                "Tue" => "Tirsdag",
+                "Wed" => "Onsdag",
+                "Thu" => "Torsdag",
+                "Fri" => "Fredag",
+                "Sat" => "Lørdag",
+                "Sun" => "Søndag"
+            );
+
+            $bookings = $this->booking_bo->building_infoscreen_schedule(phpgw::get_var('id', 'GET'),$date);
+
+            $time = $timestart;
+            $html = '<html><head><title>Kalender for '.$building['name'].'</title>';
+            $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+            $html .= '<meta name="author" content="Stavanger Kommune">';
+            $html .= '<style>body { font-size: 12px; padding: 0px; border-spacing: 0px;} table { width: 100%; margin: 0px; font-size: 14px; border-collapse: collapse;} tr {  } th { text-align: left; padding: 2px 16px; border: 1px solid black;} td { text-align: left; padding: 3px 8px; border: 1px solid black;}</style>';
+            $html .= '</head><body style="color: black; margin: 20px; background-color: #ffffff;">';
+//            $html .= '<div style="font-size: 30px;">Vi tester '.$building['name'].' '.$from.'</div>';
+            $html .= '<pre style="color: black; font-weight: bold;">';
+            $html .= '<table class="calender">';
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th style="text-align: left; width: 10%;">Bane</th>';
+            while ($time < $timeend) {
+                $html .= '<th colspan="2" style="width: 11%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':00</th>';
+                $time += 1;
+            }
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+            $first = '';
+            $len =  (($timeend-$timestart)*2)+1;
+            foreach ($bookings['results'] as $day => $resources) {
+                if ($first != $day) {
+                    $first = $day;
+                    $html .= '<tr style="background-color: #999; color: white;">';
+                    $html .= '<td colspan="'.$len.'" width="10%">';
+                    $html .= $days[$day];
+                    $html .= '</td>';
+                    $html .= '</tr>';
+                }
+                foreach ($resources as $res => $booking) {
+                    $html .= '<tr>';
+                    $html .= '<td>';
+                    $html .= $res;
+                    $html .= '</td>';
+                    $last = -1;
+                    foreach ($booking as $date =>  $value){
+                        $time2 = $timestart;
+
+                        $bftime = explode(':',substr($value['from_'],-8));
+                        $bttime = explode(':',substr($value['to_'],-8));
+
+                        if($bftime[1] == 30)
+                            $bftime = $bftime[0] + 0.5;
+                        else
+                            $bftime = intval($bftime[0]);
+
+                        if($bttime[1] == 30)
+                            $bttime = $bttime[0] + 0.5;
+                        else
+                            $bttime = intval($bttime[0]);
+
+                        while ($time2 < $timeend) {
+
+                            if( $bftime == $time2 && $time2 < $timeend) {
+                                $last = $bttime;
+                                $colspan = $value['colspan'];
+                                if ($bttime > $timeend) {
+                                    $colspan = $value['colspan'] - ($bttime - $timeend);
+                                }
+                                $html .= '<td colspan="'.$colspan.'" style="background-color: cyan;">';
+                                $html .= $value['name']." ";
+//                                $html .= substr($value['from_'],-8)." - ";
+//                                $html .= substr($value['to_'],-8);
+                                $html .= '</td>';
+                            } elseif ($last === -1 && $bftime < $timestart && $bttime > $timestart) {
+                                $last = $bttime;
+                                $colspan = ($bttime - $timestart)*2;
+                                $html .= '<td colspan="'.$colspan.'" style="background-color: cyan;">';
+                                $html .= $value['name']." ";
+//                                $html .= substr($value['from_'],-8)." - ";
+//                                $html .= substr($value['to_'],-8);
+                                $html .= '</td>';
+                            } elseif ($last === -1 && $bftime != $timestart && $bftime < $timeend && $bftime > $timestart) {
+                                $colspan = ($bftime - $timestart)*2;
+
+                                $html .= '<td colspan="'.$colspan.'">';
+                                $html .= " ";
+                                $html .= '</td>';
+                                $last = $bttime;
+
+                            } elseif ($last != -1 && $bftime != $last && $time2 > $last && $last < $bftime && $bftime < $timeend) {
+                                $colspan = ($bftime - $last)*2;
+                                $html .= '<td colspan="'.$colspan.'">';
+                                $html .= " ";
+                                $html .= '</td>';
+                                $last = $bttime;
+                            }
+
+                            if ($time2 >= $timeend) {
+                                $last = $timestart-1;
+                            }
+                            $time2 += 0.5;
+                        }
+                    }
+                    $html .= '</tr>';
+                }
+
+            }
+            $html .= '</tbody>';
+            $html .= '</table>';
+            $html .= '</pre>';
+            $html .= '</body></html>';
+
+            header('Content-type: text/html');
+            echo $html;
+            exit;
+		}
 
 		public function schedule()
 		{
@@ -71,7 +221,7 @@
 		public function show()
 		{
 			$this->check_active('booking.uibuilding.show');
-			$building                  = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
 			$building['extra_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.extraschedule', 'id' => $building['id']));
 			$building['message_link']  = self::link(array('menuaction' => 'bookingfrontend.uisystem_message.edit', 'building_id' => $building['id'],'building_name' => $building['name']));

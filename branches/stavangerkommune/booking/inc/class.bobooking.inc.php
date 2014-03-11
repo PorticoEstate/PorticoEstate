@@ -348,6 +348,8 @@ function array_minus($a, $b)
                 unset($event['comments']);
                 unset($event['audience']);
                 unset($event['agegroups']);
+                unset($event['dates']);
+
             }
 
             $bookings = array_merge($allocations, $bookings);
@@ -374,72 +376,219 @@ function array_minus($a, $b)
 
 		function building_infoscreen_schedule($building_id, $date)
 		{
-
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
-//			if($from->format('w') != 1)
-//			{
-//				$from->modify('last monday');
-//			}
+			if($from->format('w') != 1)
+			{
+				$from->modify('last monday');
+			}
 			$to = clone $from;
 			$to->modify('+7 days');
-			$allocation_ids = $this->so->allocation_ids_for_building($building_id, $from, $to);
-			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids), 'sort'=>'from_'));
-			$allocations = $allocations['results'];
-			foreach($allocations as &$allocation)
+
+            $allocations = $this->so->get_screen_allocation($building_id, $from, $to);
+            $bookings = $this->so->get_screen_booking($building_id, $from, $to);
+            $events = $this->so->get_screen_event($building_id, $from, $to);
+
+            $results = array();
+
+            foreach($allocations as &$allocation)
 			{
 				$allocation['name'] = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
-				$allocation['type'] = 'allocation';
+                $allocation['type'] = 'allocation';
+
+                $datef = strtotime($allocation['from_']);
+                $allocation['weekday'] = date('D',$datef);
 			}
-			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
-			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids), 'sort'=>'from_'));
-			$bookings = $bookings['results'];
+
 			foreach($bookings as &$booking)
 			{
 				$booking['name'] = $booking['group_name'];
 				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
-                unset($booking['audience']);
-                unset($booking['agegroups']);
 
+                $datef = strtotime($booking['from_']);
+                $booking['weekday'] = date('D',$datef);
             }
-			$allocations = $this->split_allocations($allocations, $bookings);
 
-			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids), 'sort'=>'from_'));
-			$events = $events['results'];
-			foreach($events as &$event)
-			{
+            foreach($events as &$event)
+            {
                 $event['description'] = substr($event['description'], 0, 22);
-				$event['name'] = substr($event['description'], 0, 22);
-				$event['type'] = 'event';
-                unset($event['comments']);
-                unset($event['audience']);
-                unset($event['agegroups']);
-                unset($event['dates']);
-			}
-			$bookings = array_merge($allocations, $bookings);
-			$bookings = $this->_remove_event_conflicts($bookings, $events);
-			$bookings = array_merge($events, $bookings);
+                $event['name'] = substr($event['description'], 0, 22);
+                $event['type'] = 'event';
+                $datef = strtotime($event['from_']);
+                $event['weekday'] = date('D',$datef);
+            }
 
-			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
-			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
-			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
-			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
-			$resources = $resources['results'];
-			foreach ($resources as $key => $row) {
-    			$sort[$key] = $row['sort'];
-			}
+            $allocations = $this->split_allocations2($allocations, $bookings);
+            $bookings = array_merge($allocations, $bookings);
+            $bookings = $this->_remove_event_conflicts2($bookings, $events);
+            $bookings = array_merge($bookings, $events);
+            $bookings = $this->_split_multi_day_bookings2($bookings, $from, $to);
 
-			// Sort the resources with sortkey ascending
-			// Add $resources as the last parameter, to sort by the common key
-			array_multisort($sort, SORT_ASC, $resources);
-			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
-			$results = build_schedule_screen_table($bookings, $resources);
+            foreach($bookings as &$allocation)
+            {
+                $datef = strtotime($allocation['from_']);
+                $datet = strtotime($allocation['to_']);
+                $timef = date('H:i:s',$datef);
+                $timet = date('H:i:s',$datet);
+                $weekday = $allocation['weekday'];
+                $resname = $allocation['resource_name'];
+                $ft = $timef;
+                $from = explode(':',$timef);
+                $to = explode(':',$timet);
+                $from  = $from[0]*60+$from[1];
+                $to  = $to[0]*60+$to[1];
+                if ($to == 0)
+                    $to = 24*60;
+                $colspan = ($to-$from)/30;
+
+                $allocation['colspan'] = $colspan;
+                $results[$weekday][$resname][$ft] = $allocation;
+            }
+
+            foreach ($results as &$day) {
+                foreach ($day as &$res) {
+                    ksort($res);
+                }
+            }
+
 			return array('total_records'=>count($results), 'results'=>$results);
 		}
+
+        function split_allocations2($allocations, $all_bookings)
+        {
+            function get_from2($a) {return $a['from_'];};
+            function get_to2($a) {return $a['to_'];};
+            $new_allocations = array();
+            foreach($allocations as $allocation)
+            {
+                // $ Find all associated bookings
+                $bookings = array();
+
+                foreach($all_bookings as $b)
+                {
+                    if($b['allocation_id'] == $allocation['id'])
+                        $bookings[] = $b;
+                }
+                $times = array($allocation['from_'], $allocation['to_']);
+
+                $times = array_merge(array_map("get_from2", $bookings), $times);
+                $times = array_merge(array_map("get_to2", $bookings), $times);
+                $times = array_unique($times);
+                sort($times);
+                while(count($times) >= 2)
+                {
+                    $from_ = $times[0];
+                    $to_ = $times[1];
+                    $resources = array($allocation['resource_id']);
+                    foreach($all_bookings as $b)
+                    {
+
+                        if(($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+                            $resources = array_minus($resources, array($b['resource_id']));
+                    }
+                    if($resources)
+                    {
+                        $a = $allocation;
+                        $a['from_'] = $times[0];
+                        $a['to_'] = $times[1];
+                        $new_allocations[] = $a;
+                    }
+                    array_shift($times);
+                }
+            }
+            return $new_allocations;
+        }
+
+        function _remove_event_conflicts2($bookings, &$events)
+        {
+            $new_bookings = array();
+            foreach($bookings as $b)
+            {
+                $keep = true;
+                foreach($events as &$e)
+                {
+                    if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
+                            ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
+                            ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && ( $b['resource_id'] == $e['resource_id']))
+                    {
+                        $keep = false;
+                        break;
+                    }
+                }
+                if($keep)
+                {
+                    $new_bookings[] = $b;
+                }
+            }
+            return $new_bookings;
+        }
+
+        function _split_multi_day_bookings2($bookings, $t0, $t1)
+        {
+            if($t1->format('H:i') == '00:00')
+                $t1->modify('-1 day');
+            $new_bookings = array();
+            foreach($bookings as $booking)
+            {
+                $from = new DateTime($booking['from_']);
+                $to = new DateTime($booking['to_']);
+                // Basic one-day booking
+                if($from->format('Y-m-d') == $to->format('Y-m-d'))
+                {
+                    $booking['date'] = $from->format('Y-m-d');
+                    $booking['weekday']  = date_format(date_create($booking['date']), 'D');
+                    $booking['from_'] = $from->format('H:i');
+                    $booking['to_'] = $to->format('H:i');
+                    // We need to use 24:00 instead of 00:00 to sort correctly
+                    $booking['to_'] = $booking['to_'] == '00:00' ? '24:00' : $booking['to_'];
+                    $new_bookings[] = $booking;
+                }
+                // Multi-day booking
+                else
+                {
+                    $start = clone max($from, $t0);
+                    $end = clone min($to, $t1);
+                    $date = clone $start;
+                    do
+                    {
+                        $new_booking = $booking;
+                        $new_booking['date'] = $date->format('Y-m-d');
+                        $new_booking['weekday']  = date_format($date, 'D');
+                        $new_booking['from_'] = '00:00';
+                        $new_booking['to_'] = '00:00';
+                        if($new_booking['date'] == $from->format('Y-m-d'))
+                        {
+                            $new_booking['from_'] = $from->format('H:i');
+                        }
+                        else if($new_booking['date'] == $to->format('Y-m-d'))
+                        {
+                            $new_booking['to_'] = $to->format('H:i');
+                        }
+                        // We need to use 24:00 instead of 00:00 to sort correctly
+                        $new_booking['to_'] = $new_booking['to_'] == '00:00' ? '24:00' : $new_booking['to_'];
+                        $new_bookings[] = $new_booking;
+
+                        if($date->format('Y-m-d') == $end->format('Y-m-d'))
+                        {
+                            break;
+                        }
+
+                        //		if($date->getTimestamp() > $end->getTimestamp()) // > php 5.3.0
+                        if($date->format("U") > $end->format("U"))
+                        {
+                            throw new InvalidArgumentException('start time( ' . $date->format('Y-m-d') . ' ) later than end time( ' . $end->format('Y-m-d') . " ) for {$booking['type']}#{$booking['id']}::{$booking['name']}");
+                        }
+
+                        $date->modify('+1 day');
+                    }
+                    while(true);
+                }
+            }
+            return $new_bookings;
+        }
 
 		function building_extraschedule($building_id, $date)
 		{
