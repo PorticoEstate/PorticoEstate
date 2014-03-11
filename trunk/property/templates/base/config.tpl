@@ -510,7 +510,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Use_location_at_workorder}.</td>
 			<td>
 				<select name="newsettings[location_at_workorder]">
@@ -519,12 +519,21 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_budget_at_project_level}.</td>
 			<td>
 				<select name="newsettings[budget_at_project]">
 					<option value="" {selected_budget_at_project_}>NO</option>
 					<option value="1" {selected_budget_at_project_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_update_project_budget_from_order}.</td>
+			<td>
+				<select name="newsettings[update_project_budget_from_order]">
+					<option value="" {selected_update_project_budget_from_order_}>NO</option>
+					<option value="1" {selected_update_project_budget_from_order_1}>YES</option>
 				</select>
 			</td>
 		</tr>
