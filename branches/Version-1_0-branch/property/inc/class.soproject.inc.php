@@ -3073,7 +3073,7 @@
 			{
 				$this->db->transaction_begin();
 
-				$this->check_and_update_project_budget($value['project_id'], $value['year']);
+				$this->check_and_update_project_budget($value['project_id'], $value['year'], true);
 
 				$this->db->transaction_commit();
 			}
@@ -3084,9 +3084,17 @@
 		 * Add budget to project if missing.
 		 * @param integer $project_id
 		 * @param integer $year
+		 * @param boolean $force
 		 */
-		public function check_and_update_project_budget($project_id, $year)
+		public function check_and_update_project_budget($project_id, $year, $force = false)
 		{
+			$update_project_budget_from_order = isset($this->config->config_data['update_project_budget_from_order']) && $this->config->config_data['update_project_budget_from_order'] ? $this->config->config_data['update_project_budget_from_order'] : false;
+
+			if(!$force && !$update_project_budget_from_order)
+			{
+				return;
+			}
+
 			$project_id		 = (int) $project_id;
 			$year			 = $year ? (int) $year : date('Y');
 			$current_year	 = date('Y');
