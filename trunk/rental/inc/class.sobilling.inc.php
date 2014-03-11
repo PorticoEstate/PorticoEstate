@@ -334,7 +334,7 @@ class rental_sobilling extends rental_socommon
 	 */
 	public function generate_export(&$billing_job, $excel_export=false)
 	{
-      set_time_limit(500);
+      set_time_limit(1000);
 		$exportable = null;
 		switch($billing_job->get_export_format())
 		{

@@ -292,7 +292,7 @@
 			$att4 = new Attribute();
 			$att4->AttribType = 'braArkivString';
 			$att4->Name = "ASTA_Signatur";
-			$att4->Value = array("Testtittel");
+			$att4->Value = array("1");
 			$attributter[] = $att4;
 
 			$att5 = new Attribute();
@@ -301,19 +301,36 @@
 			$att5->Value = array(date('Y-m-d'));
 			$attributter[] = $att5;
 
-			$att5 = new Attribute();
-			$att5->AttribType = 'braArkivString';
-			$att5->Name = "BrukerID";
-			$att5->Value = array("1");
-			$attributter[] = $att5;
-
 			$att6 = new Attribute();
 			$att6->AttribType = 'braArkivString';
-			$att6->Name = "Team";
-			$att6->Value = array("Testtittel");
+			$att6->Name = "BrukerID";
+			$att6->Value = array("1");
 			$attributter[] = $att6;
 
+			$att7 = new Attribute();
+			$att7->AttribType = 'braArkivString';
+			$att7->Name = "Team";
+			$att7->Value = array("Testtittel");
+			$attributter[] = $att7;
 
+			$att8 = new Attribute();
+			$att8->AttribType = 'braArkivString';
+			$att8->Name = "Sakstype";
+			$att8->Value = array("Testtittel");
+			$attributter[] = $att8;
+
+			$att9 = new Attribute();
+			$att9->AttribType = 'braArkivString';
+			$att9->Name = "Dokumentkategori";
+			$att9->Value = array("Testtittel");
+			$attributter[] = $att9;
+
+			$att10 = new Attribute();
+			$att10->AttribType = 'braArkivString';
+			$att10->Name = "Dokumentstatus";
+			$att10->Value = array("Testtittel");
+			$attributter[] = $att10;
+	
 			$document->Attributes = $attributter;
 
 			$createDocument = new createDocument();
