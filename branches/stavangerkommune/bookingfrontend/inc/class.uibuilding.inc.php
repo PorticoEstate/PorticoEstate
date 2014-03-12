@@ -24,7 +24,6 @@
 		{
             $today = new DateTime(phpgw::get_var('date', 'GET'), new DateTimeZone('Europe/Oslo'));
             $date = $today;
-            $from = $date->format('d-m-Y');
 
             $building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
             $start = phpgw::get_var('start', 'GET');
@@ -52,39 +51,55 @@
 
             $bookings = $this->booking_bo->building_infoscreen_schedule(phpgw::get_var('id', 'GET'),$date);
 
+            $from = clone $date;
+            $from->setTime(0, 0, 0);
+            // Make sure $from is a monday
+            if($from->format('w') != 1)
+            {
+                $from->modify('last monday');
+
+            }
+            $from = $from->format('d.m.Y');
+
+
             $time = $timestart;
             $html = '<html><head><title>Kalender for '.$building['name'].'</title>';
             $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
             $html .= '<meta name="author" content="Stavanger Kommune">';
-            $html .= '<style>body { font-size: 12px; padding: 0px; border-spacing: 0px;} table { width: 100%; margin: 0px; font-size: 14px; border-collapse: collapse;} tr {  } th { text-align: left; padding: 2px 16px; border: 1px solid black;} td { text-align: left; padding: 3px 8px; border: 1px solid black;}</style>';
-            $html .= '</head><body style="color: black; margin: 20px; background-color: #ffffff;">';
-//            $html .= '<div style="font-size: 30px;">Vi tester '.$building['name'].' '.$from.'</div>';
+            $html .= '<style>body { font-size: 12px; padding: 0px; border-spacing: 0px;} table { width: 100%; margin: 0px; font-size: 14px; border-collapse: collapse;} th { text-align: left; padding: 2px 8px; border: 1px solid black;} td { text-align: left; padding: 3px 8px; border: 1px solid black;}</style>';
+            $html .= '</head><body style="color: black; margin: 8px; font-weight: bold;">';
+//            $html .= '<div style="font-size: 15px;">'.$building['name'].'</div>';
             $html .= '<pre style="color: black; font-weight: bold;">';
             $html .= '<table class="calender">';
             $html .= '<thead>';
             $html .= '<tr>';
-            $html .= '<th style="text-align: left; width: 10%;">Bane</th>';
+            $html .= '<th colspan="2" style="text-align: left; width: 12%;">Bane</th>';
             while ($time < $timeend) {
-                $html .= '<th colspan="2" style="width: 11%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':00</th>';
+                $html .= '<th colspan="1" style="width: 5.5%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':00</th>';
+                $html .= '<th colspan="1" style="width: 5.5%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':30</th>';
                 $time += 1;
             }
             $html .= '</tr>';
             $html .= '</thead>';
             $html .= '<tbody>';
             $first = '';
-            $len =  (($timeend-$timestart)*2)+1;
+            $len =  (($timeend-$timestart)*2)+2;
             foreach ($bookings['results'] as $day => $resources) {
                 if ($first != $day) {
                     $first = $day;
                     $html .= '<tr style="background-color: #999; color: white;">';
-                    $html .= '<td colspan="'.$len.'" width="10%">';
+                    $html .= '<td colspan="'.$len.'" width="12%">';
                     $html .= $days[$day];
+                    $html .= " ";
+                    $html .= $from;
                     $html .= '</td>';
                     $html .= '</tr>';
+
+                    $from = date('d.m.Y', strtotime( $from.' 00:00:01 +1 day'));
                 }
                 foreach ($resources as $res => $booking) {
                     $html .= '<tr>';
-                    $html .= '<td>';
+                    $html .= '<td colspan="2">';
                     $html .= $res;
                     $html .= '</td>';
                     $last = -1;
@@ -112,8 +127,13 @@
                                 if ($bttime > $timeend) {
                                     $colspan = $value['colspan'] - ($bttime - $timeend);
                                 }
+                                $testlen = 12*$colspan;
+
                                 $html .= '<td colspan="'.$colspan.'" style="background-color: cyan;">';
-                                $html .= $value['name']." ";
+                                if (strlen($value['name']) > $testlen)
+                                    $html .= $value['shortname']." ";
+                                else
+                                    $html .= $value['name']." ";
 //                                $html .= substr($value['from_'],-8)." - ";
 //                                $html .= substr($value['to_'],-8);
                                 $html .= '</td>';
@@ -121,7 +141,11 @@
                                 $last = $bttime;
                                 $colspan = ($bttime - $timestart)*2;
                                 $html .= '<td colspan="'.$colspan.'" style="background-color: cyan;">';
-                                $html .= $value['name']." ";
+                                $testlen = 12*$colspan;
+                                if (strlen($value['name']) > $testlen)
+                                    $html .= $value['shortname']." ";
+                                else
+                                    $html .= $value['name']." ";
 //                                $html .= substr($value['from_'],-8)." - ";
 //                                $html .= substr($value['to_'],-8);
                                 $html .= '</td>';

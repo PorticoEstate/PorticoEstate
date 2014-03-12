@@ -414,8 +414,8 @@ function array_minus($a, $b)
 
             foreach($events as &$event)
             {
-                $event['description'] = substr($event['description'], 0, 22);
-                $event['name'] = substr($event['description'], 0, 22);
+                $event['name'] = substr($event['description'], 0, 34);
+                $event['shortname'] = substr($event['description'], 0, 12);
                 $event['type'] = 'event';
                 $datef = strtotime($event['from_']);
                 $event['weekday'] = date('D',$datef);
