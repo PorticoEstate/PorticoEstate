@@ -1655,7 +1655,7 @@ HTML;
 						$project['contact_phone'] = $to_sms_phone;
 						
 						$sms	= CreateObject('sms.sms');
-						$sms->websend2pv($this->account,$to_sms_phone,$this->config->config_data['sms_client_order_notice']);
+						$sms->websend2pv($this->account,$to_sms_phone,str_replace(array('__order_id__'), array($workorder_id), $this->config->config_data['sms_client_order_notice']));
 						$historylog->add('MS',$workorder_id,$to_sms_phone);
 					}
 					
