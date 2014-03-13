@@ -886,7 +886,9 @@
 					'approved'				 => $this->db->f('approved'),
 					'mail_recipients'		 => explode(',', trim($this->db->f('mail_recipients'), ',')),
 					'actual_cost'			 => $this->db->f('actual_cost'),
-					'continuous'			 => $this->db->f('continuous')
+					'continuous'			 => $this->db->f('continuous'),
+					'fictive_periodization'	 => $this->db->f('fictive_periodization'),
+
 				);
 
 				$sql = "SELECT periodization_id,"
@@ -1173,6 +1175,7 @@
 				$workorder['contract_sum'],
 				$workorder['approved'],
 				$workorder['continuous'],
+				$workorder['fictive_periodization'],
 				isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : ''
 			);
 
@@ -1180,7 +1183,7 @@
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
 			. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,"
-			. "user_id,ecodimb,category,billable_hours,contract_sum,approved,continuous,mail_recipients  $cols) "
+			. "user_id,ecodimb,category,billable_hours,contract_sum,approved,continuous,fictive_periodization,mail_recipients  $cols) "
 			. "VALUES ( {$values} {$vals})", __LINE__, __FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -1295,28 +1298,29 @@
 
 			$value_set = array
 			(
-				'title'				 => $workorder['title'],
-				'status'			 => $workorder['status'],
-				'start_date'		 => $workorder['start_date'],
-				'end_date'			 => $workorder['end_date'],
-				'descr'				 => $workorder['descr'],
-				'budget'			 => (int) $workorder['budget'],
-//				'combined_cost'		=> $combined_cost,
-				'key_deliver'		 => $workorder['key_deliver'],
-				'key_fetch'			 => $workorder['key_fetch'],
-				'account_id'		 => $workorder['b_account_id'],
-				'rig_addition'		 => $workorder['addition_rs'],
-				'addition'			 => $workorder['addition_percentage'],
-				'charge_tenant'		 => $workorder['charge_tenant'],
-				'vendor_id'			 => $workorder['vendor_id'],
-				'user_id'			 => $workorder['user_id'],
-				'ecodimb'			 => $workorder['ecodimb'],
-				'category'			 => $workorder['cat_id'],
-				'billable_hours'	 => $workorder['billable_hours'],
-//				'contract_sum'		=> $workorder['contract_sum'],
-				'approved'			 => $workorder['approved'],
-				'continuous'		 => $workorder['continuous'],
-				'mail_recipients'	 => isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
+				'title'					 => $workorder['title'],
+				'status'				 => $workorder['status'],
+				'start_date'			 => $workorder['start_date'],
+				'end_date'				 => $workorder['end_date'],
+				'descr'					 => $workorder['descr'],
+				'budget'				 => (int) $workorder['budget'],
+//				'combined_cost'			=> $combined_cost,
+				'key_deliver'			 => $workorder['key_deliver'],
+				'key_fetch'				 => $workorder['key_fetch'],
+				'account_id'			 => $workorder['b_account_id'],
+				'rig_addition'			 => $workorder['addition_rs'],
+				'addition'				 => $workorder['addition_percentage'],
+				'charge_tenant'			 => $workorder['charge_tenant'],
+				'vendor_id'				 => $workorder['vendor_id'],
+				'user_id'				 => $workorder['user_id'],
+				'ecodimb'				 => $workorder['ecodimb'],
+				'category'				 => $workorder['cat_id'],
+				'billable_hours'		 => $workorder['billable_hours'],
+//				'contract_sum'			=> $workorder['contract_sum'],
+				'approved'				 => $workorder['approved'],
+				'continuous'			 => $workorder['continuous'],
+				'fictive_periodization'	 => $workorder['fictive_periodization'],
+				'mail_recipients'		 => isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 			);
 
 
@@ -1794,7 +1798,7 @@
 			$sum_year_combined_cost	 = array();
 
 			$sql = "SELECT continuous, fm_workorder.start_date , fm_workorder_budget.budget, fm_workorder_budget.combined_cost,"
-			. " project_type_id, year, month, active, closed"
+			. " project_type_id, year, month, active, closed, fictive_periodization"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -1807,11 +1811,12 @@
 			$_order_budget			 = array();
 			while($this->db->next_record())
 			{
-				$project_type_id	= (int) $this->db->f('project_type_id');
-				$year				= (int) $this->db->f('year');
-				$month				= (int) $this->db->f('month');
-				$continuous			= !!$this->db->f('continuous');
-				$period				= sprintf("%s%02d", $year, $month
+				$fictive_periodization	= !!$this->db->f('fictive_periodization');
+				$project_type_id		= (int) $this->db->f('project_type_id');
+				$year					= (int) $this->db->f('year');
+				$month					= (int) $this->db->f('month');
+				$continuous				= !!$this->db->f('continuous');
+				$period					= sprintf("%s%02d", $year, $month
 				);
 
 				$budget					 = (int) $this->db->f('budget');
@@ -1854,6 +1859,7 @@
 			 * ellers: Start-periode blir måned for start-dato for bestilling dersom den ligger frem i tid
 			 * ellers: Dersom start-dato for bestilling er passert - blir start-periode inneværende måned.
 			 * */
+			$calculate_fictive_periods = $fictive_periodization ? $calculate_fictive_periods : false;
 			$fictive_period						 = array();
 			$exclude_from_fictive_period		 = array();
 			$exclude_year_from_fictive_period	 = array();
