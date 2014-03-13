@@ -1105,6 +1105,7 @@ muliple checkbox	property	no	Flervalgs avkrysningsknapp
 muliple radio	property	no	Flervalgs radioknapp
 multiple checkbox	property	no	Flervalgs avkrysningsknapp
 multiple radio	property	no	Flervalgs radioknapp
+multiplier	property	no	Skaleringsfaktor
 my preferences	property	no	Mine innstillinger
 my assigned tickets	property	no	Mine tildelte meldinger
 my submitted tickets	property	no	Mine innmeldte meldinger
@@ -2021,3 +2022,4 @@ cost operation	property	no	Andel driftskonstnad i kr.
 cost investment	property	no	Andel investering i kr.
 grant category	property	no	Tilskuddskategori
 what	property	no	Hva
+fictive periodization	property	no	Periodiser løpende ut året

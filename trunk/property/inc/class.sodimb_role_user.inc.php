@@ -48,6 +48,8 @@
 		{
 			$query_start =  phpgwapi_datetime::date_to_timestamp($data['query_start']);
 			$query_end =  phpgwapi_datetime::date_to_timestamp($data['query_end']);
+			$get_netto_list = isset($data['get_netto_list']) && $data['get_netto_list'] ? true : false;
+
 
 			$dimb_id = (int) $data['dimb_id'];			
 			if(isset($data['user_id']) && $data['user_id'])
@@ -119,6 +121,10 @@
 				);
 			}
 
+			if($get_netto_list)
+			{
+				return $user_data;
+			}
 
 			$sql = "SELECT id, name FROM fm_ecodimb_role {$filterrole} ORDER BY id ASC ";
 			$this->db->query($sql,__LINE__,__FILE__);
