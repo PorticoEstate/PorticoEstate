@@ -532,6 +532,7 @@
 				'approved'	=> array('type' => 'int','precision' => 2, 'nullable' => True),
 				'mail_recipients' => array('type' => 'varchar','precision' => 255, 'nullable' => True),
 				'continuous'	=> array('type' => 'int','precision' => 2, 'nullable' => True),
+				'fictive_periodization'	=> array('type' => 'int','precision' => 2, 'nullable' => True),
  			),
 			'pk' => array('id'),
 			'fk' => array(),
