@@ -61,6 +61,13 @@ class NetDevice
     private $_drops = 0;
     
     /**
+     * string with info
+     *
+     * @var String
+     */
+    private $_info = null;
+
+    /**
      * Returns $_drops.
      *
      * @see NetDevice::$_drops
@@ -189,5 +196,30 @@ class NetDevice
     {
         $this->_txBytes = $txBytes;
     }
+
+    /**
+     * Returns $_info.
+     *
+     * @see NetDevice::$_info
+     *
+     * @return String
+     */
+    public function getInfo()
+    {
+        return $this->_info;
+    }
+
+    /**
+     * Sets $_info.
+     *
+     * @param String $info info string
+     *
+     * @see NetDevice::$_info
+     *
+     * @return Void
+     */
+    public function setInfo($info)
+    {
+        $this->_info = $info;
+    }
 }
-?>

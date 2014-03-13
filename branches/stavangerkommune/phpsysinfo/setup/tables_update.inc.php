@@ -36,4 +36,15 @@
 		return $GLOBALS['setup_info']['phpsysinfo']['currentver'];
 	}
 
+	/**
+	* Update from 3.0.4 to 3.1.7
+	*
+	* @return string New version number
+	*/
 
+	$test[] = '3.0.4';
+	function phpsysinfo_upgrade3_0_4()
+	{
+		$GLOBALS['setup_info']['phpsysinfo']['currentver'] = '3.1.7';
+		return $GLOBALS['setup_info']['phpsysinfo']['currentver'];
+	}

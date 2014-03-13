@@ -21,6 +21,7 @@ html {
 body {
     position: relative;
     width: 940px;
+    _width: 945px; /* ie6 */
     min-height: 100%;
     overflow: auto;
     margin: 0 auto;
@@ -31,6 +32,7 @@ body {
 
 h1 {
     margin: 0 10px;
+    _margin: 0 15px 0 10px; /* ie6 */
     padding: 10px 10px;
     border-top: 1px solid #2971a7;
     border-bottom: 1px solid #2971a7;
@@ -52,10 +54,11 @@ h1 {
     width: 100px;
 }
 
-#vitals, #network, #memory, #filesystem, #hardware, #temp, #voltage, #fan, #ups {
+#vitals, #network, #memory, #filesystem, #hardware, #temp, #voltage, #fan, #power, #ups {
     float: left;
     width: 451px;
     margin: 10px 0 0 8px;
+    _margin: 10px 4px 0 4px; /* ie6 */
     padding: 1px;
     border: 2px solid #2971a7;
     background: #fff;
@@ -74,6 +77,21 @@ h2 {
 table {
     width: 100%;
     font-size: 1.2em;
+    background-color: #fff;
+}
+
+.plugin {
+    float: left;
+    margin: 10px 0 0 8px;
+    _margin: 10px 4px 0 4px; /* ie6 */
+    padding: 1px;
+    border: 2px solid #2971a7;
+    background: #fff;
+}
+
+.dataTables_wrapper{
+    margin: 0 0 0 0 !important;
+    border: 0px !important;
 }
 
 th, td, h3 {
@@ -86,17 +104,11 @@ h3 {
     font-size: 120%;
 }
 
-.odd {
-    background: #E4EBF3;
-}
 
 .even {
     background: #E4EBF3;
 }
 
-#filesystemTable .odd {
-    background: #fff;
-}
 
 #footer {
     clear: both;
@@ -121,6 +133,10 @@ h2 {
 
 .bar {
     background: #2971a7;
+}
+
+.barwarn {
+    background: #a72971;
 }
 
 p {

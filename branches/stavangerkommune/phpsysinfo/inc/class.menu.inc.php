@@ -29,7 +29,7 @@
 	/**
 	 * Menus
 	 *
-	 * @package property
+	 * @package phpsysinfo
 	 */
 	class phpsysinfo_menu
 	{
@@ -43,42 +43,22 @@
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'phpsysinfo';
 
-/*
-			$menus['navbar'] = array
-			(
-				'phpsysinfo' => array
-				(
-					'text'	=> lang('phpsysinfo'),
-					'url'	=> $GLOBALS['phpgw']->link('/phpsysinfo/index.php'),
-					'image'	=> array('phpsysinfo', 'navbar'),
-					'order'	=> 35,
-					'group'	=> 'system tools'
-				),
-			);
-*/
 			$menus['toolbar'] = array();
 
 			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 			{
-				$menus['admin'] = array
-				(
-					'phpsysinfo'	=> array
+				$menus['admin'][] = array
 					(
 						'text'	=> lang('phpsysinfo'),
 						'url'	=> $GLOBALS['phpgw']->link('/phpsysinfo/index.php')
-					),
+								. '" onclick="window.open(\''
+								. $GLOBALS['phpgw']->link('/phpsysinfo/index.php')
+								. '\'); return false;"',
+					'image'	=> array('admin', 'php')
 				);
+
 			}
-/*
-			$menus['navigation'] = array
-			(
-				'user'	=> array
-				(
-					'text'	=> lang('phpsysinfo'),
-						'url'	=> $GLOBALS['phpgw']->link('phpsysinfo/index.php')
-				)
-			);
-*/
+
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}

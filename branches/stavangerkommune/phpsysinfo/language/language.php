@@ -62,10 +62,9 @@ if ($plugin == null) {
         echo file_get_contents(APP_ROOT.'/language/en.xml');
     }
 } else {
-    if (file_exists(APP_ROOT.'/plugins/'.$plugin.'/lang/'.$lang.'.xml')) {
-        echo file_get_contents(APP_ROOT.'/plugins/'.$plugin.'/lang/'.$lang.'.xml');
+    if (file_exists(APP_ROOT.'/plugins/'.strtolower($plugin).'/lang/'.$lang.'.xml')) {
+        echo file_get_contents(APP_ROOT.'/plugins/'.strtolower($plugin).'/lang/'.$lang.'.xml');
     } else {
-        echo file_get_contents(APP_ROOT.'/plugins/'.$plugin.'/lang/en.xml');
+        echo file_get_contents(APP_ROOT.'/plugins/'.strtolower($plugin).'/lang/en.xml');
     }
 }
-?>
