@@ -115,6 +115,40 @@
 	$GLOBALS['phpgw_info']['login_template_set'] = 'simple';
 
 	/**
+	* @global string $phpgw_info['login_left_message']
+	* An optional text to be displayed to the left on the login form.
+	* FORMATTING HAS TO BE EDITED MANUALLY (links and linebreak)
+	*/ 
+	$login_left_message = <<<HTML
+{LOGIN_LEFT_MESSAGE}
+HTML;
+
+	$GLOBALS['phpgw_info']['login_left_message'] = nl2br(str_replace(array('[',']'), array('<','>'), $login_left_message));
+
+	/**
+	* @global string $phpgw_info['login_right_message']
+	* An optional text to be displayed to the right on the login form.
+	* FORMATTING HAS TO BE EDITED MANUALLY (links and linebreak)
+	*/
+	$login_right_message = <<<HTML
+{LOGIN_RIGHT_MESSAGE}
+HTML;
+
+	$GLOBALS['phpgw_info']['login_right_message'] = nl2br(str_replace(array('[',']'), array('<','>'), $login_right_message));
+
+	/**
+	* @global string $phpgw_info['new_user_url']
+	 * An otpional url to new user registration
+	 */
+	$GLOBALS['phpgw_info']['server']['new_user_url'] = '{NEW_USER_URL}';
+
+	/**
+	* @global string $phpgw_info['lost_password_url']
+	* An otpional url to remedy lost passwords
+	 */
+	$GLOBALS['phpgw_info']['server']['lost_password_url'] = '{LOST_PASSWORD_URL}';
+
+	/**
 	* @global boolean $phpgw_info['server']['mcrypt_enabled']
 	* This is used to control mcrypt's use
 	*/
@@ -215,7 +249,7 @@
 	* @global string $phpgw_info['server']['versions']['header']
 	* Version of this header file
 	*/
-	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.31';
+	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.32';
 
 
 	if ( !isset($GLOBALS['phpgw_info']['flags']['noapi'])
