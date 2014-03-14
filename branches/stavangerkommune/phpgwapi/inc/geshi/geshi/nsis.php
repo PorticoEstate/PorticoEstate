@@ -5,7 +5,7 @@
  * Author: deguix (cevo_deguix@yahoo.com.br), Tux (http://tux.a4.cz/)
  * Copyright: (c) 2005 deguix, 2004 Tux (http://tux.a4.cz/), Nigel McNie (http://qbnz.com/highlighter)
  * Release Version: 1.0.7.14
- * CVS Revision Version: $Revision: 17224 $
+ * CVS Revision Version: $Revision: 10127 $
  * Date Started: 2005/12/03
  * Last Modified: $Date: 2006-09-25 18:46:28 +1000 (Mon, 25 Sep 2006) $
  *

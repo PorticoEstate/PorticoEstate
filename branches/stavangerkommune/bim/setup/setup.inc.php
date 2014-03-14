@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['bim']['name']			= 'bim';
-	$setup_info['bim']['version']		= '0.9.17.504';
+	$setup_info['bim']['version']		= '0.9.17.506';
 	$setup_info['bim']['app_order']		= 8;
 	$setup_info['bim']['enable']		= 1;
 	$setup_info['bim']['app_group']		= 'office';
@@ -34,7 +34,8 @@
 	(
 		'fm_bim_type',
 		'fm_bim_model',
-		'fm_bim_item'
+		'fm_bim_item',
+		'fm_bim_item_inventory'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

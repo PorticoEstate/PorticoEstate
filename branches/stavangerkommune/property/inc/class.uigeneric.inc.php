@@ -47,11 +47,12 @@
 
 		var $public_functions = array
 			(
-				'index'  => true,
-				'edit'   => true,
-				'delete' => true,
-				'download'	=> true,
-				'columns'	=> true,
+				'index'  			=> true,
+				'edit'   			=> true,
+				'delete'			=> true,
+				'download'			=> true,
+				'columns'			=> true,
+				'attrib_history'	=> true
 			);
 
 		function __construct()
@@ -480,7 +481,15 @@
 			}
 
 			//path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -773,6 +782,7 @@
 								'attrib_id'	=> $attribute['id'],
 								'actor_id'	=> $actor_id,
 								'role'		=> $this->role,
+								'acl_location'	=> $this->acl_location,
 								'edit'		=> true
 							);
 
@@ -889,6 +899,242 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+		}
+
+		function attrib_history()
+		{
+			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+			$acl_location 	= phpgw::get_var('acl_location', 'string');
+			$id				= phpgw::get_var('id', 'int');
+			$attrib_id 		= phpgw::get_var('attrib_id', 'int');
+			$detail_id 		= phpgw::get_var('detail_id', 'int');
+
+			$data_lookup= array
+			(
+				'app'			=> 'property',
+				'acl_location'	=> $acl_location,
+				'id'			=> $id,
+				'attrib_id' 	=> $attrib_id,
+				'detail_id' 	=> $detail_id,
+			);
+
+			$delete = phpgw::get_var('delete', 'bool');
+			$edit = phpgw::get_var('edit', 'bool');
+
+			if ($delete)
+			{
+				$data_lookup['history_id'] = phpgw::get_var('history_id', 'int');
+		//		$this->bo->delete_history_item($data_lookup);
+			}
+
+			$values = $this->bo->read_attrib_history($data_lookup);
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			while (is_array($values) && list(,$entry) = each($values))
+			{
+				$link_delete_history_data = array
+					(
+						'menuaction'	=> 'property.uientity.attrib_history',
+						'acl_location'	=> $acl_location,
+						'id'			=> $data_lookup['id'],
+						'attrib_id'		=> $data_lookup['attrib_id'],
+						'detail_id' 	=> $data_lookup['detail_id'],
+						'history_id'	=> $entry['id'],
+						'delete'		=> true,
+						'edit'			=> true,
+						'type'			=> $this->type
+					);
+				if($edit)
+				{
+					$text_delete	= lang('delete');
+					$link_delete	= $GLOBALS['phpgw']->link('/index.php',$link_delete_history_data);
+				}
+
+				$content[] = array
+					(
+						'id'				=> $entry['id'],
+						'value'				=> $entry['new_value'],
+						'user'				=> $entry['owner'],
+						'time_created'			=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],$dateformat),
+						'link_delete'			=> $link_delete,
+						'lang_delete_statustext'	=> lang('delete the item'),
+						'text_delete'			=> $text_delete,
+					);
+			}
+
+
+			$table_header = array
+				(
+					'lang_value'		=> lang('value'),
+					'lang_user'			=> lang('user'),
+					'lang_time_created'	=> lang('time created'),
+					'lang_delete'		=> lang('delete')
+				);
+
+			$link_data = array
+				(
+					'menuaction'	=> 'property.uientity.attrib_history',
+					'acl_location'	=> $acl_location,
+					'id'			=> $id,
+					'detail_id' 	=> $data_lookup['detail_id'],
+					'edit'			=> $edit,
+					'type'			=> $this->type
+				);
+
+
+			//--- asynchronous response --------------------------------------------				
+
+			if( phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}		
+			//---datatable settings---------------------------------------------------				
+			$parameters['delete'] = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'  => 'acl_location',
+							'source' => $data_lookup['acl_location'],
+							'ready'  => 1
+						),
+						array
+						(
+							'name'  => 'id',
+							'source' => $data_lookup['id'],
+							'ready'  => 1
+						),
+						array
+						(
+							'name'  => 'attrib_id',
+							'source' => $data_lookup['attrib_id'],
+							'ready'  => 1
+						),
+						array
+						(
+							'name'  => 'detail_id',
+							'source' => $data_lookup['detail_id'],
+							'ready'  => 1
+						),
+						array
+						(
+							'name'  => 'history_id',
+							'source' => 'id',
+						),
+						array
+						(
+							'name'  => 'delete',
+							'source' => true,
+							'ready'  => 1
+						),
+						array
+						(
+							'name'  => 'edit',
+							'source' => true,
+							'ready'  => 1
+						),
+						array
+						(
+							'name'  => 'type',
+							'source' => $this->type,
+							'ready'  => 1
+						)				
+					)
+				);
+
+			if($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
+			{
+				$permissions['rowactions'][] = array
+					(
+						'text'    	=> lang('delete'),
+						'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uigeneric.attrib_history' )),
+						'confirm_msg'=> lang('do you really want to delete this entry'),
+						'parameters'=> $parameters['delete']
+					);
+			}
+
+			$datavalues[0] = array
+				(
+					'name'			=> "0",
+					'values' 		=> json_encode($content),
+					'total_records'	=> count($content),
+					'permission'   	=> json_encode($permissions['rowactions']),
+					'is_paginator'	=> 1,
+					'footer'		=> 0
+				);			   
+
+			$myColumnDefs[0] = array
+				(
+					'name'			=> "0",
+					'values'		=>	json_encode(array(	array('key' => 'id',			'hidden'=>true),
+													array('key' => 'value',			'label'=>lang('value'),		'sortable'=>true,'resizeable'=>true),
+													array('key' => 'time_created',	'label'=>lang('time created'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'user',			'label'=>lang('user'),		'sortable'=>true,'resizeable'=>true)
+				))
+			);				
+
+			//----------------------------------------------datatable settings--------			
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$data = array
+			(
+				'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'base_java_url'		=> json_encode(array(menuaction => "property.uigeneric.attrib_history")),
+				'datatable'			=> $datavalues,
+				'myColumnDefs'		=> $myColumnDefs,
+				'allow_allrows'		=> false,
+				'start_record'		=> $this->start,
+				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'num_records'		=> count($values),
+				'all_records'		=> $this->bo->total_records,
+				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'values' 			=> $content,
+				'table_header'		=> $table_header,
+			);
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.attrib_history', 'property' );
+			//-----------------------datatable settings---	
+
+			//_debug_array($data);die();
+			$custom			= createObject('phpgwapi.custom_fields');
+			$attrib_data 	= $custom->get('property', $acl_location, $attrib_id);
+			$appname		= $attrib_data['input_text'];
+			$function_msg	= lang('history');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
 		}
 
 		function delete()

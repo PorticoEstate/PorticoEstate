@@ -67,15 +67,34 @@
 
 	<!-- add / edit -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+
+		<xsl:variable name="done_action">
+			<xsl:value-of select="done_action"/>
+		</xsl:variable>
+		<xsl:variable name="lang_done">
+			<xsl:value-of select="lang_done"/>
+		</xsl:variable>
+		<xsl:variable name="lang_save">
+			<xsl:value-of select="lang_save"/>
+		</xsl:variable>
+
+
 		<script type="text/javascript">
 			function calculate_workorder()
 			{
-				document.calculate_workorder_form.submit();
+				document.getElementsByName("calculate_workorder")[0].value = 1;
+				document.form.submit();
 			}
 			function send_workorder()
 			{
-				document.send_workorder_form.submit();
+				document.getElementsByName("send_workorder")[0].value = 1;
+				document.form.submit();
 			}
+			function set_tab(tab)
+			{
+				document.form.tab.value = tab;			
+			}
+
 		</script>
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
@@ -90,6 +109,30 @@
 
 			<div id="receipt"></div>
 			<input type="hidden" id = "lean" name="lean" value="{lean}"/>
+			<xsl:choose>
+				<xsl:when test="mode='edit' and lean = 0">
+					<td>
+						<table>
+							<tr height="50">
+								<td>
+									<input type="button" name="save" value="{$lang_save}" onClick="document.form.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_save_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<input type="button" name="done" value="{$lang_done}" onClick="document.workorder_cancel.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_done_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
 					<td>
@@ -125,6 +168,10 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 		<form ENCTYPE="multipart/form-data" method="post" id='workorder_edit' name="form" action="{$form_action}">
+			<input type="hidden" name="send_workorder" value=""/>
+			<input type="hidden" name='calculate_workorder'  value=""/>
+
+			<input type="hidden" name="tab" value=""/>
 			<div class="yui-navset" id="workorder_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
@@ -474,14 +521,6 @@
 												</input>
 											</td>
 										</tr>
-										<tr>
-											<td valign="top">
-												<xsl:value-of select="php:function('lang', 'selected mail addresses')"/>
-											</td>
-											<td>
-												<xsl:value-of select="mail_recipients"/>
-											</td>
-										</tr>
 									</tr>
 								</xsl:when>
 								<xsl:otherwise>
@@ -523,6 +562,33 @@
 									<xsl:call-template name="cat_sub_select"/>
 								</td>
 							</tr>
+							
+							<tr>
+								<xsl:variable name="lang_continuous">
+									<xsl:value-of select="php:function('lang', 'continuous')"/>
+								</xsl:variable>
+								<td valign="top">
+									<xsl:value-of select="$lang_continuous"/>
+								</td>
+								<td>
+									<input type="checkbox" name="values[continuous]" value="1">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_continuous"/>
+										</xsl:attribute>
+										<xsl:if test="value_continuous = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+										<xsl:if test="mode != 'edit'">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
+								</td>
+							</tr>
+
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="php:function('lang', 'contract sum')"/>
@@ -560,6 +626,49 @@
 								</td>
 								<td>
 									<input type="text" name="values[addition_rs]" value="{value_addition_rs}" onMouseout="window.status='';return true;"><xsl:attribute name="title"><xsl:value-of select="lang_addition_rs_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'when')"/>
+								</td>
+								<td>
+									<table>
+										<tr>
+											<td>
+												<select name="values[budget_year]">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'year')"/>
+													</xsl:attribute>
+													<option value="0">
+														<xsl:value-of select="php:function('lang', 'year')"/>
+													</option>
+													<xsl:apply-templates select="year_list/options"/>
+												</select>
+											</td>
+											<xsl:choose>
+												<xsl:when test="periodization_data/id !=''">
+													<td>
+														<input type="checkbox" name="values[budget_periodization]" value="{periodization_data/id}" checked='checked'>
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'periodization')"/>
+																<xsl:text>::</xsl:text>
+																<xsl:value-of select="periodization_data/descr"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</xsl:when>
+											</xsl:choose>
+										</tr>
+									</table>
+								</td>
+
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'budget')"/>
+								</td>
+								<td>
+									<div id="paging_5"/>
+									<div id="datatable-container_5"/>
 								</td>
 							</tr>
 							<tr>
@@ -606,14 +715,6 @@
 								</td>
 							</tr>
 							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_actual_cost"/>
-								</td>
-								<td>
-									<xsl:value-of select="actual_cost"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'billable hours')"/>
 								</td>
@@ -625,30 +726,26 @@
 									</input>
 								</td>
 							</tr>
-							<xsl:choose>
-								<xsl:when test="mode='edit'">
-									<xsl:variable name="lang_add_invoice_statustext">
-										<xsl:value-of select="php:function('lang', 'add invoice')"/>
-									</xsl:variable>
-									<tr>
-										<td valign="top">
+							<tr>
+								<td >
+									<xsl:choose>
+										<xsl:when test="value_workorder_id!='' and mode='edit'">
+											<xsl:variable name="lang_add_invoice_statustext">
+												<xsl:value-of select="php:function('lang', 'add invoice')"/>
+											</xsl:variable>
 											<a href="javascript:showlightbox_manual_invoide({value_workorder_id})" title="{$lang_add_invoice_statustext}">
 												<xsl:value-of select="php:function('lang', 'add invoice')"/>
 											</a>
-										</td>
-										<td>
-											<div id="manual_invoice_lightbox" style="background-color:#000000;color:#FFFFFF;display:none">
+											<!--<div id="manual_invoice_lightbox" style="background-color:#000000;color:#FFFFFF;display:none">
 												<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center">
 													<xsl:value-of select="php:function('lang', 'add invoice')"/>
 												</div>
 												<div class="bd" style="text-align:center;"> </div>
-											</div>
-										</td>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
-							<tr>
-								<td colspan="2">
+											</div>-->
+										</xsl:when>
+									</xsl:choose>
+								</td>
+								<td>
 									<div id="paging_2"> </div>
 									<div id="datatable-container_2"/>
 								</td>
@@ -779,6 +876,12 @@
 									total_records: <xsl:value-of select="total_records"/>,
 									edit_action:  <xsl:value-of select="edit_action"/>,
 									is_paginator:  <xsl:value-of select="is_paginator"/>,
+									<xsl:if test="rows_per_page">
+										rows_per_page: "<xsl:value-of select="rows_per_page"/>",
+									</xsl:if>
+									<xsl:if test="initial_page">
+										initial_page: "<xsl:value-of select="initial_page"/>",
+									</xsl:if>
 									footer:<xsl:value-of select="footer"/>
 								}
 							]
@@ -798,11 +901,8 @@
 					<table>
 						<tr height="50">
 							<td>
-								<xsl:variable name="lang_save">
-									<xsl:value-of select="lang_save"/>
-								</xsl:variable>
 								<input type="hidden" name="values[save]" value="1"/>
-								<input type="submit" name="save" value="{$lang_save}" onMouseout="window.status='';return true;">
+								<input type="submit" name="save" value="{$lang_save}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_save_statustext"/>
 									</xsl:attribute>
@@ -816,14 +916,8 @@
 		<table>
 			<tr>
 				<td>
-					<xsl:variable name="done_action">
-						<xsl:value-of select="done_action"/>
-					</xsl:variable>
-					<xsl:variable name="lang_done">
-						<xsl:value-of select="lang_done"/>
-					</xsl:variable>
-					<form id="workorder_cancel" method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+					<form id="workorder_cancel" name="workorder_cancel" method="post" action="{$done_action}">
+						<input type="submit" name="done" value="{$lang_done}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_done_statustext"/>
 							</xsl:attribute>
@@ -852,16 +946,6 @@
 			</tr>
 		</table>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<xsl:choose>
-			<xsl:when test="mode='edit'">
-				<xsl:variable name="calculate_action"><xsl:value-of select="calculate_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
-				<form method="post" name="calculate_workorder_form" action="{$calculate_action}">
-				</form>
-				<xsl:variable name="send_action"><xsl:value-of select="send_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
-				<form method="post" name="send_workorder_form" action="{$send_action}">
-				</form>
-			</xsl:when>
-		</xsl:choose>
 	</xsl:template>
 
 	<!-- New template-->

@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2010,2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -44,6 +44,9 @@
 		var $cat_id;
 		var $district_id;
 		var	$xsl_rootdir;
+		protected $join;
+		protected $left_join;
+		protected $like;
 
 		var $public_functions = array
 			(
@@ -63,31 +66,10 @@
 			}
 			$this->async = &$GLOBALS['phpgw']->asyncservice;
 
-			$this->join		= $this->socommon->join;
+			$this->join			= $this->socommon->join;
 			$this->left_join	= $this->socommon->left_join;
-			$this->like		= $this->socommon->like;
+			$this->like			= $this->socommon->like;
 
-			switch($GLOBALS['phpgw_info']['server']['db_type'])
-			{
-			case 'mssql':
-				$this->dateformat 		= "M d Y";
-				$this->datetimeformat 	= "M d Y g:iA";
-				break;
-			case 'mysql':
-				$this->dateformat 		= "Y-m-d";
-				$this->datetimeformat 	= "Y-m-d G:i:s";
-				break;
-			case 'pgsql':
-				$this->dateformat 		= "Y-m-d";
-				$this->datetimeformat 	= "Y-m-d G:i:s";
-				//					$this->dateformat 		= "F j, Y";
-				//					$this->datetimeformat 	= "F j, Y g:iA";
-				break;
-			case 'postgres':
-				$this->dateformat 		= "Y-m-d";
-				$this->datetimeformat 	= "Y-m-d G:i:s";
-				break;
-			}
 			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
 		}
 
@@ -136,19 +118,6 @@
 			return $msgbox_data;
 		}
 
-		function moneyformat($amount)
-		{
-			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
-			{
-				$moneyformat	= "CONVERT(MONEY,"."'$amount'".",0)";
-			}
-			else
-			{
-				$moneyformat	= "'" . $amount . "'";
-			}
-
-			return $moneyformat;
-		}
 
 		function confirm_session()
 		{
@@ -207,8 +176,10 @@
 		}
 
 
-		function get_user_list($format='',$selected='',$extra='',$default='',$start='', $sort='', $order='', $query='',$offset='', $enabled = false)
+		function get_user_list($format='',$selected='',$extra='',$default='',$start='', $sort='ASC', $order='account_lastname', $query='',$offset='', $enabled = false)
 		{
+			$order= $order ? $order : 'account_lastname';
+
 			switch($format)
 			{
 				case 'select':
@@ -239,6 +210,7 @@
 			}
 
 			$accounts = & $GLOBALS['phpgw']->accounts;
+
 			$users = $accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
 
 			unset($accounts);
@@ -1076,7 +1048,7 @@
 		{
 			$datatype_text = array(
 				'V' => 'varchar',
-				'I' => 'number',
+				'I' => 'integer',
 				'C' => 'char',
 				'N' => 'float',
 				'D' => 'date',
@@ -1160,12 +1132,23 @@
 			$joinmethod 		= isset($data['joinmethod'])?$data['joinmethod']:'';
 			$paranthesis 		= isset($data['paranthesis'])?$data['paranthesis']:'';
 			$lookup 			= isset($data['lookup'])?$data['lookup']:'';
-			$location_level 	= isset($data['location_level'])?$data['location_level']:'';
+			$location_level 	= isset($data['location_level']) && $data['location_level'] ? (int)$data['location_level'] : 0;
 			$no_address 		= isset($data['no_address'])?$data['no_address']:'';
 			$uicol_address		= isset($data['uicol_address'])?$data['uicol_address']:'';
 			$force_location		= isset($data['force_location'])?$data['force_location']:'';
 			$cols_extra 		= array();
 			$cols_return_lookup	= array();
+
+			$GLOBALS['phpgw']->config->read();
+			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level']) && $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+
+			if(!$list_location_level)
+			{
+				for ($i=0; $i<$location_level; $i++)
+				{
+					$list_location_level[] =  $i + 1;
+				}
+			}
 
 			$soadmin_location	= CreateObject('property.soadmin_location');
 			$location_types	= $soadmin_location->select_location_type();
@@ -1196,23 +1179,20 @@
 				$no_address	= true;
 			}
 
-			$GLOBALS['phpgw']->config->read();
-			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
-
 
 			$this->type_id	= $type_id;
 			$_level = 1;
 			for ($i=0; $i<$type_id; $i++)
 			{
-		//		if($_level > 1) // very expensive 
-				if($_level == 2 && in_array(2, $list_location_level))
+				if($_level > 1) // very expensive 
+		//		if($_level == 2 && in_array(2, $list_location_level))
 				{
 					$joinmethod .= " {$this->left_join} fm_location{$_level}";
 					$paranthesis .='(';
 					$on = 'ON';
 					for ($k=($_level-1); $k>0; $k--)
 					{
-						$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k})";
+						$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k} AND  fm_location{$_level}.loc{$_level} = $entity_table.loc{$_level})";
 						$on = 'AND';
 						if($k==1)
 						{
@@ -1221,18 +1201,30 @@
 					}
 				}
 				$_level ++;
-
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
-				$uicols['descr'][]			= $location_types[$i]['name'];
-				$uicols['statustext'][]		= $location_types[$i]['descr'];
-				$uicols['exchange'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-				$uicols['sortable'][]		= $i === 0;
 			}
+
+			unset($_level);
+
+			foreach ($list_location_level as $_key => $_level)
+			{
+				if($_level)
+				{
+					$i = $_level -1;
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
+					$uicols['descr'][]			= $location_types[$i]['name'];
+					$uicols['statustext'][]		= $location_types[$i]['descr'];
+					$uicols['exchange'][]		= false;
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
+					$uicols['sortable'][]		= $_level === 1;
+				}
+			}
+
+
+//_debug_array($uicols);die();
 //_debug_array($joinmethod);die();
 			unset($soadmin_location);
 
@@ -1241,8 +1233,11 @@
 				$cols_return[] = 'loc' . $location_types[$i]['id'];
 			}
 
+			$location_relation_data = array();
+			$custom 		= createObject('property.custom_fields');
 			for ($i=1;$i<($type_id+1);$i++)
 			{
+				$cols.= ",loc{$i}_name";
 				$cols_return[] 				= "loc{$i}_name";
 				$cols_extra[] 				= "loc{$i}_name";
 				$cols_return_lookup[] 		= "loc{$i}_name";
@@ -1256,26 +1251,30 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= $i == 1;
+
+				$fm_location_cols_temp = $custom->find('property', '.location.' . $i, 0, '', '', '', true);
+				foreach ($fm_location_cols_temp as $entry)
+				{
+					if($entry['lookup_form'])
+					{
+						$location_relation_data[] = array
+						(
+							'level'				=> $i,
+							'name'				=> $entry['name'],
+							'descr'				=> $entry['input_text'],
+							'status_text'		=> $entry['status_text'],
+							'datatype'			=> $entry['datatype'],
+						);
+					}
+				}
 			}
+
+			phpgwapi_cache::system_set('property', 'location_relation_data', $location_relation_data);
 
 			if(!$no_address)
 			{
 				$cols.= ",$entity_table.address";
 				$cols_return[] 				= 'address';
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'address';
-				$uicols['descr'][]			= lang('address');
-				$uicols['statustext'][]		= lang('address');
-				$uicols['exchange'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-				$uicols['sortable'][]		= true;
-			}
-
-			if($uicol_address)
-			{
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'address';
 				$uicols['descr'][]			= lang('address');
@@ -1450,49 +1449,11 @@
 					break;
 			}
 
-			$sogeneric = CreateObject('property.sogeneric');
-
-			$categories= $sogeneric->get_list($data);
-
+			$categories = execMethod('property.sogeneric.get_list',$data);
 			return $this->select_list($data['selected'],$categories);
 		}
 
 
-		function validate_db_insert($values)
-		{
-			foreach($values as $value)
-			{
-				if($value || $value === 0)
-				{
-					$insert_value[]	= "'".$value."'";
-				}
-				else
-				{
-					$insert_value[]	= 'NULL';
-				}
-			}
-
-			$values	= implode(",", $insert_value);
-			return $values;
-		}
-
-		function validate_db_update($value_set)
-		{
-			while (is_array($value_set) && list($field,$value) = each($value_set))
-			{
-				if($value || $value === 0)
-				{
-					$value_entry[]= "$field='$value'";
-				}
-				else
-				{
-					$value_entry[]= "$field=NULL";
-				}
-			}
-
-			$value_set	= implode(",", $value_entry);
-			return $value_set;
-		}
 
 		function fm_cache($name='',$value='')
 		{
@@ -1593,6 +1554,102 @@
 		 */
 		function excel_out($list,$name,$descr,$input_type=array())
 		{
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xlsx';
+
+			$browser = CreateObject('phpgwapi.browser');
+//			$browser->content_header($filename,'application/vnd.ms-excel');
+			$browser->content_header($filename,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+			$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+			$cacheSettings = array( 'memoryCacheSize' => '32MB');
+			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+
+			$objPHPExcel = new PHPExcel();
+
+			$objPHPExcel->getProperties()->setCreator($GLOBALS['phpgw_info']['user']['fullname'])
+							 ->setLastModifiedBy($GLOBALS['phpgw_info']['user']['fullname'])
+							 ->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}")
+							 ->setSubject("Office 2007 XLSX Document")
+							 ->setDescription("document for Office 2007 XLSX, generated using PHP classes.")
+							 ->setKeywords("office 2007 openxml php")
+							 ->setCategory("downloaded file");
+
+			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+			$objPHPExcel->setActiveSheetIndex(0);
+
+			$count_uicols_name=count($name);
+
+			$text_format = array();
+			$m=0;
+			for ($k=0;$k<$count_uicols_name;$k++)
+			{
+				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
+				{
+					if(preg_match('/^loc/i', $name[$k]))
+					{
+						$text_format[$m] = true;
+						//$objPHPExcel->getActiveSheet()->getStyle('B3:B7')->applyFromArray($styleArray);
+
+					}
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($m, 1, $descr[$k]);
+					$m++;
+				}
+			}
+
+			$j=0;
+			if (isset($list) && is_array($list))
+			{
+				foreach($list as $entry)
+				{
+					$m=0;
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
+						{
+							$content[$j][$m]	= str_replace("\r\n"," ",$entry[$name[$k]]);
+							$m++;
+						}
+					}
+					$j++;
+				}
+
+				$line = 1;
+				$col = 'A';
+
+				foreach($content as $row)
+				{
+					$line++;
+					$rows = count($row);
+					for ($i=0; $i < $rows; $i++)
+					{
+						if(isset($text_format[$i]))
+						{
+							$objPHPExcel->setActiveSheetIndex(0)->setCellValueExplicitByColumnAndRow($i, $line, $row[$i], PHPExcel_Cell_DataType::TYPE_STRING);
+						}
+						else
+						{
+							$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, $line, $row[$i]);
+						}
+					}
+					$col++;
+				}
+			}
+
+			// Save Excel 2007 file
+//			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter->setUseDiskCaching(true, $GLOBALS['phpgw_info']['server']['temp_dir']);
+			$objWriter->setOffice2003Compatibility(true);
+//			echo "Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB";
+//			die();
+
+			$objWriter->save('php://output');
+		}
+
+		function excel_out_old($list,$name,$descr,$input_type=array())
+		{
 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
 
 			$workbook	= CreateObject('phpgwapi.excel',"-");
@@ -1642,6 +1699,9 @@
 					}
 				}
 			}
+//			echo "Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB";
+//			die();
+
 			$workbook->close();
 		}
 
@@ -1671,10 +1731,11 @@
 			{
 				if ( !isset($input_type[$i]) || $input_type[$i] != 'hidden' )
 				{
-					$header[] = $this->utf2ascii($descr[$i]);
+				//	$header[] = $this->utf2ascii($descr[$i]);
+					$header[] = $descr[$i];
 				}
 			}
-			fputcsv($fp, $header);
+			fputcsv($fp, $header, ';');
 			unset($header);
 
 			if ( is_array($list) )
@@ -1689,7 +1750,7 @@
 							$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 						}
 					}
-					fputcsv($fp, $row);
+					fputcsv($fp, $row, ';');
 				}
 			}
 			fclose($fp);
@@ -1921,16 +1982,19 @@
 		 * @param array $insert_record array containing fields to collect from post
 		 * @return updated values
 		 */
-		function collect_locationdata($values = '',$insert_record = array())
+		function collect_locationdata($values = array(),$insert_record = array())
 		{
 //_debug_array($insert_record);die();
 			if($insert_record)
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
+				if( isset($insert_record['location']) && is_array($insert_record['location']) )
 				{
-					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
+					for ($i=0; $i<count($insert_record['location']); $i++)
 					{
-						$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
+						if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
+						{
+							$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
+						}
 					}
 				}
 
@@ -1938,17 +2002,42 @@
 				{
 					foreach ($insert_record['extra'] as $key => $column)
 					{
-						if(isset($_POST[$key]))
+						if(isset($_POST[$key]) && $_POST[$key])
 						{
 							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}
+					}
+					
+					if(isset($values['extra']['p_entity_id']) && $values['extra']['p_entity_id'] && isset($values['extra']['p_cat_id']) && $values['extra']['p_cat_id'] && isset($values['extra']['p_num']) && $values['extra']['p_num'] )
+					{
+						//strip prefix and leading zeros
+						$values['extra']['p_num'] = execMethod('property.soentity.convert_num_to_id', array
+							(
+								'type'		=> $values['extra']['type'],
+								'entity_id'	=> $values['extra']['p_entity_id'],
+								'cat_id'	=> $values['extra']['p_cat_id'],
+								'num'		=> $values['extra']['p_num']
+							)
+						);
+
+						$p_entity_id	= $values['extra']['p_entity_id'];
+						$p_cat_id		= $values['extra']['p_cat_id'];
+						$p_num			= $values['extra']['p_num'];
+						$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+						$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+						$values['p'][$p_entity_id]['p_num']			= $p_num;
+						$values['p'][$p_entity_id]['p_cat_name']	= phpgw::get_var("entity_cat_name_{$p_entity_id}");
+						
 					}
 				}
 				if(isset($insert_record['additional_info']) && is_array($insert_record['additional_info']))
 				{
 					foreach ($insert_record['additional_info'] as $additional_info)
 					{
-						$values['additional_info'][$additional_info['input_text']]	= phpgw::get_var($additional_info['input_name'], 'string', 'POST');
+						if($additional_info_value = phpgw::get_var($additional_info['input_name'], 'string', 'POST'))
+						{
+							$values['additional_info'][$additional_info['input_text']]	= $additional_info_value;
+						}
 					}
 				}
 			}
@@ -1958,6 +2047,7 @@
 			if(isset($values['location']) && is_array($values['location']))
 			{
 				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name', 'string', 'POST'); // if not address - get the parent name as address
+				$values['location_code']	= implode('-', $values['location']);
 			}
 
 			return $values;
@@ -2014,6 +2104,7 @@
 
 		function no_access()
 		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'), $this->xsl_rootdir);
 
 			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));

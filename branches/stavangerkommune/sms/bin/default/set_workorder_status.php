@@ -23,21 +23,42 @@
 		3 => 'i_arbeid',
 	);
 
-	$param 		= explode(' ' , $command_param);
+	$param 		= explode(' ', $command_param);
 
 	if (ctype_digit($param[0]) && ctype_digit($param[1]))
 	{
 		$workorder_id 	= $param[0];
-		$status 	= $status_code[$param[1]];
-
-		$this->db->query("SELECT status FROM fm_workorder where id='{$workorder_id}'",__LINE__,__FILE__);
-		if($this->db->next_record())
+		if(	$status	= $status_code[$param[1]])
 		{
-			$this->db->query("UPDATE fm_workorder set status = '{$status}' WHERE id='{$workorder_id}'" ,__LINE__,__FILE__);
-			$historylog	= CreateObject('property.historylog','workorder');
+			$this->db->query("SELECT project_id, status FROM fm_workorder WHERE id='{$workorder_id}'",__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$project_id = (int)$this->db->f('project_id');
+				$status_old = $this->db->f('status');
+				$this->db->query("UPDATE fm_workorder SET status = '{$status}' WHERE id='{$workorder_id}'" ,__LINE__,__FILE__);
+				$historylog	= CreateObject('property.historylog','workorder');
 	// temporary - fix this
-			$historylog->account = 6;
-			$historylog->add('S',$workorder_id,$status . ': endret av: ' . $sms_sender);
-			$command_output = 'success';
+				$historylog->account = 6;
+				$historylog->add('S',$workorder_id,$status, $status_old);
+				$historylog->add('RM',$workorder_id,'Status endret av: ' . $sms_sender);
+				
+				if(in_array($param[1],array(1,3)))
+				{
+					$this->db->query("SELECT status FROM fm_project WHERE id='{$project_id}'",__LINE__,__FILE__);
+					$this->db->next_record();
+					$status_old = $this->db->f('status');
+					if($status_old != 'i_arbeid')
+					{
+						$this->db->query("UPDATE fm_project SET status = 'i_arbeid' WHERE id='{$project_id}'" ,__LINE__,__FILE__);
+						$historylog_project	= CreateObject('property.historylog','project');
+						$historylog_project->account = 6;
+						$historylog_project->add('S',$project_id,'i_arbeid', $status_old);
+						$historylog_project->add('RM',$project_id,"Bestilling {$workorder_id} endret av: {$sms_sender}");
+					}
+				}
+
+				execMethod('property.soworkorder.check_project_status',$workorder_id);
+				$command_output = 'success';
+			}
 		}
 	}

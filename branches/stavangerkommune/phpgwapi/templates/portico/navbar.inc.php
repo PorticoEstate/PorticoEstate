@@ -97,13 +97,10 @@
 		phpgwapi_cache::session_set('phpgwapi','breadcrumbs', $breadcrumbs);
 		$breadcrumbs = array_reverse($breadcrumbs);
 		
-//		$var['breadcrumbs'] = implode(' >> ', $history_url);
-
 		$navigation = array();
 		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
 		{
 			prepare_navbar($navbar);
-			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 		}
 		else
 		{
@@ -113,21 +110,76 @@
 			}
 		}
 
-		$treemenu = '';
-		foreach($navbar as $app => $app_data)
+		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
-			if(!in_array($app, array('logout', 'about', 'preferences')))
+			$exclude = array('logout', 'about', 'preferences');
+			$i = 1;
+			foreach ( $navbar as $app => $app_data )
 			{
-				$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app]) : '';
-				$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
+				if ( in_array($app, $exclude) )
+				{
+					continue;
+				}
+
+				$applications[] = array
+				(
+					'value'=> array
+					(
+						'id'	=> $i,
+						'app'	=> $app,
+						'label' => $app_data['text'],
+						'href'	=> str_replace('&amp;','&', $app_data['url']),
+					),
+					'children'	=> array()
+				);
+
+				$mapping[$i] = array
+				(
+					'id'		=> $i,
+					'name'		=> $app,
+					'expanded'	=> false,
+					'highlight'	=> $app == $currentapp ? true : false,
+					'is_leaf'	=> false
+				);
+				
+				$i ++;
 			}
+			$applications = json_encode($applications);
+			$mapping = json_encode($mapping);
+			$_menu_selection = str_replace('::', '|', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+
+			$var['treemenu'] = <<<HTML
+				<div id="MenutreeDiv1"></div>
+				<script type="text/javascript">
+		 			var apps = {$applications};
+					var mapping = {$mapping};
+					var proxy_data = ['first_element_is_dummy'];
+					var menu_selection = '{$_menu_selection}';
+				</script>
+HTML;
 		}
-		$var['treemenu'] = <<<HTML
+		else
+		{		
+//			prepare_navbar($navbar);
+			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+			$treemenu = '';
+			foreach($navbar as $app => $app_data)
+			{
+				if(!in_array($app, array('logout', 'about', 'preferences')))
+				{
+					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app]) : '';
+					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
+				}
+			}
+			$var['treemenu'] = <<<HTML
 			<ul id="navbar">
 {$treemenu}
 			</ul>
 
 HTML;
+		}
+
+
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
@@ -149,6 +201,19 @@ HTML;
 			echo $breadcrumbs;
 		}
 
+
+		if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+		{
+			phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+			foreach($msgbox_data as & $message)
+			{
+				echo "<div class='{$message['msgbox_class']}'>";
+				echo $message['msgbox_text'];
+				echo '</div>';
+			}
+		}
 
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
 		register_shutdown_function('parse_footer_end');

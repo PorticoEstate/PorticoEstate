@@ -53,18 +53,24 @@
 		var $currentapp;
 		var $district_id;
 		var $criteria_id;
+		var $project_type_id;
+		var $ecodimb;
 
 		var $public_functions = array
 			(
-				'download'				=> true,
-				'index'					=> true,
-				'view'					=> true,
-				'edit'					=> true,
-				'delete'				=> true,
-				'date_search'			=> true,
-				'columns'				=> true,
-				'bulk_update_status'	=> true,
-				'project_group'			=> true,
+				'download'						=> true,
+				'index'							=> true,
+				'view'							=> true,
+				'edit'							=> true,
+				'delete'						=> true,
+				'date_search'					=> true,
+				'columns'						=> true,
+				'bulk_update_status'			=> true,
+				'project_group'					=> true,
+				'view_file'						=> true,
+				'get_orders'					=> true,
+				'get_vouchers'					=> true,
+				'check_missing_project_budget'	=> true
 			);
 
 		function property_uiproject()
@@ -97,23 +103,26 @@
 			$this->district_id		= $this->bo->district_id;
 			$this->user_id			= $this->bo->user_id;
 			$this->criteria_id		= $this->bo->criteria_id;
+			$this->project_type_id	= $this->bo->project_type_id;
+			$this->filter_year		= $this->bo->filter_year;
 		}
 
 		function save_sessiondata()
 		{
 			$data = array
 				(
-					'start'			=> $this->start,
-					'query'			=> $this->query,
-					'sort'			=> $this->sort,
-					'order'			=> $this->order,
-					'filter'		=> $this->filter,
-					'cat_id'		=> $this->cat_id,
-					'status_id'		=> $this->status_id,
-					'wo_hour_cat_id'=> $this->wo_hour_cat_id,
-					'district_id'	=> $this->district_id,
-					'user_id'		=> $this->user_id,
-					'criteria_id'	=> $this->criteria_id
+					'start'				=> $this->start,
+					'query'				=> $this->query,
+					'sort'				=> $this->sort,
+					'order'				=> $this->order,
+					'filter'			=> $this->filter,
+					'cat_id'			=> $this->cat_id,
+					'status_id'			=> $this->status_id,
+					'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
+					'district_id'		=> $this->district_id,
+					'user_id'			=> $this->user_id,
+					'criteria_id'		=> $this->criteria_id,
+					'project_type_id'	=> $this->project_type_id
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -122,9 +131,25 @@
 		{
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date 	= urldecode(phpgw::get_var('end_date'));
-			$list 		= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
+			$values 	= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
 			$uicols		= $this->bo->uicols;
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($values,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
+		function check_missing_project_budget()
+		{
+			$values 	= $this->bo->get_missing_project_budget();
+			$this->bocommon->download( $values, array('project_id', 'year'), array(lang('project'), lang('year')) );
+		}
+
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('project');
 		}
 
 		function columns()
@@ -176,7 +201,7 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
 			if($this->cat_id)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";			
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";
 			}
 
 			if(!$this->acl_read)
@@ -227,9 +252,11 @@
 					."cat_id:'{$this->cat_id}',"
 					."user_id:'{$this->user_id}',"
 					."criteria_id:'{$this->criteria_id}',"
+					."project_type_id:'{$this->project_type_id}',"
 					."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
 					."second_display:1,"
-					."status_id:'{$this->status_id}'";
+					."status_id:'{$this->status_id}',"
+					."filter_year:'{$this->filter_year}'";
 
 				$datatable['config']['allow_allrows'] = false;
 
@@ -252,30 +279,47 @@
 							'second_display'=>true
 				);
  */
-				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$values_combo_box[0]  = $this->bo->get_project_types($this->project_type_id);
+				array_unshift ($values_combo_box[0],array ('id'=>'','name'=> lang('project type')));
+
+				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
 				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[0],$default_value);
+				array_unshift ($values_combo_box[1],$default_value);
 
-				$values_combo_box[1] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
-				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[1]['cat_list'],$default_value);
+				$_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
+				//$this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
+				
+				$values_combo_box[2] = array();
+				foreach($_cats as $_cat)
+				{
+					if($_cat['level'] == 0 )
+					{
+						$values_combo_box[2][] = $_cat;
+					}
+				}
+				
+				$default_value = array ('id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[2],$default_value);
 
-				$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
-				array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
-				array_unshift ($values_combo_box[2],array ('id'=>'open','name'=> lang('open')));
+				$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
+				array_unshift ($values_combo_box[3],array ('id'=>'all','name'=> lang('all')));
+				array_unshift ($values_combo_box[3],array ('id'=>'open','name'=> lang('open')));
 
-				$values_combo_box[3]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+				$values_combo_box[4]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
 				$default_value = array ('id'=>'','name'=>lang('no hour category'));
-				array_unshift ($values_combo_box[3],$default_value);
-
-				$values_combo_box[4]  = $this->bo->get_criteria_list($this->criteria_id);
-				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[4],$default_value);
 
-				$values_combo_box[5]  = $this->bo->get_user_list($this->filter);
-				array_unshift ($values_combo_box[5],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
-				$default_value = array ('id'=>'','name'=>lang('no user'));
+				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[5],$default_value);
+
+				$values_combo_box[6]  = $this->bo->get_filter_year_list($this->filter_year);
+				array_unshift ($values_combo_box[6],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
+
+				$values_combo_box[7]  = $this->bo->get_user_list($this->filter);
+				array_unshift ($values_combo_box[7],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
+				$default_value = array ('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[7],$default_value);
 
 
 				$datatable['actions']['form'] = array
@@ -289,7 +333,8 @@
 								'district_id'       => $this->district_id,
 								'part_of_town_id'   => $this->part_of_town_id,
 								'lookup'        	=> $lookup,
-								'cat_id'        	=> $this->cat_id
+								'cat_id'        	=> $this->cat_id,
+								'filter_year'		=> $this->filter_year
 							)
 						),
 						'fields'	=> array
@@ -298,12 +343,21 @@
 							(
 								array
 								( //boton 	DISTRICT
+									'id' => 'btn_project_type',
+									'name' => 'project_type_id',
+									'value'	=> lang('project type'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
+								array
+								( //boton 	DISTRICT
 									'id' => 'btn_district_id',
 									'name' => 'district_id',
 									'value'	=> lang('district'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 1
+									'tab_index' => 2
 								),
 								array
 								( //boton 	CATEGORY
@@ -312,7 +366,7 @@
 									'value'	=> lang('Category'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 2
+									'tab_index' => 3
 								),
 								array
 								( //boton 	STATUS
@@ -321,7 +375,7 @@
 									'value'	=> lang('Status'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 3
+									'tab_index' => 4
 								),
 								array
 								( //boton 	HOUR CATEGORY
@@ -330,7 +384,7 @@
 									'value'	=> lang('Hour category'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 4
+									'tab_index' => 5
 								),
 								array
 								( //boton 	search criteria
@@ -339,29 +393,28 @@
 									'value'	=> lang('search criteria'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 5
-								),/*
+									'tab_index' => 6
+								),
 								array
-								( //boton 	USER
-									'id' => 'btn_user_id',
-									'name' => 'user_id',
-									'value'	=> lang('User'),
+								( //boton 	filter_year
+									'id' => 'btn_filter_year',
+									'name' => 'filter_year',
+									'value'	=> lang('year'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 5
-								),*/
-									array
-									( //boton 	USER
-										//	'id' => 'btn_user_id',
-										'id' => 'sel_filter', // testing traditional listbox for long list
-										'name' => 'filter',
-										'value'	=> lang('User'),
-										'type' => 'select',
-										'style' => 'filter',
-										'values' => $values_combo_box[5],
-										'onchange'=> 'onChangeSelect("filter");',
-										'tab_index' => 6
-									),
+									'tab_index' => 7
+								),
+								array
+								(
+									'id' => 'sel_filter',
+									'name' => 'filter',
+									'value'	=> lang('User'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[7],
+									'onchange'=> 'onChangeSelect("filter");',
+									'tab_index' => 8
+								),
 								//for link "columns", next to Export button
 								array
 								(
@@ -373,21 +426,21 @@
 										'menuaction' => 'property.uiproject.columns'
 									))."','','width=300,height=600,scrollbars=1')",
 									'value' => lang('columns'),
-									'tab_index' => 12
+									'tab_index' => 14
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 11
+									'tab_index' => 13
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 10
+									'tab_index' => 12
 								),
 								array
 								( //hidden start_date
@@ -415,7 +468,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 9
+									'tab_index' => 11
 								),
 								// FIXME test on lightbox for date search
 			/*
@@ -434,7 +487,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 8
+									'tab_index' => 10
 								),
 								array
 								( // TEXT INPUT
@@ -444,7 +497,7 @@
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 28,
-									'tab_index' => 7
+									'tab_index' => 9
 								),
 							),
 							'hidden_value' => array
@@ -457,12 +510,13 @@
 								array
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+									'value'	=> $this->bocommon->select2String($values_combo_box[1])
 								),
 								array
 								( //div values  combo_box_2
 									'id' => 'values_combo_box_2',
 									'value'	=> $this->bocommon->select2String($values_combo_box[2])
+									//'value'	=> $this->bocommon->select2String($values_combo_box[2]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 								),
 								array
 								( //div values  combo_box_3
@@ -473,12 +527,17 @@
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
 									'value'	=> $this->bocommon->select2String($values_combo_box[4])
-								)/*,
+								),
 								array
 								( //div values  combo_box_5
 									'id' => 'values_combo_box_5',
 									'value'	=> $this->bocommon->select2String($values_combo_box[5])
-								)*/
+								),
+								array
+								( //div values  combo_box_6
+									'id' => 'values_combo_box_6',
+									'value'	=> $this->bocommon->select2String($values_combo_box[6])
+								)
 							)
 						)
 					)
@@ -782,7 +841,15 @@
 				);
 
 			//path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -790,7 +857,7 @@
 
 			if($dry_run)
 			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
@@ -964,7 +1031,7 @@
 
 				if(!$id)
 				{
-					phpgwapi_cache::message_set('ID is required for the function uiproject::view()', 'error'); 
+					phpgwapi_cache::message_set('ID is required for the function uiproject::view()', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.index'));
 				}
 			}
@@ -977,7 +1044,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project','files','attributes_form'));
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
@@ -1010,9 +1077,13 @@
 					}
 				}
 
-
-
 				$bypass = phpgw::get_var('bypass', 'bool');
+//_debug_array($_REQUEST);
+				if ( phpgw::get_var('origin') == '.project.request' &&  phpgw::get_var('origin_id', 'int') && !$bypass)
+				{
+					$id = phpgw::get_var('project_id', 'int');
+					$add_request = array('request_id'=> array(phpgw::get_var('origin_id', 'int')));
+				}
 
 				if($add_request)
 				{
@@ -1037,7 +1108,6 @@
 					$origin				= phpgw::get_var('origin');
 					$origin_id			= phpgw::get_var('origin_id', 'int');
 
-					//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...
 					if($origin == '.ticket' && $origin_id && !$values['descr'])
 					{
 						$boticket= CreateObject('property.botts');
@@ -1102,13 +1172,13 @@
 					);
 				}
 
-	
+
 				$save='';
 				if (isset($values['save']))
 				{
 					if($GLOBALS['phpgw']->session->is_repost())
 					{
-						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+//						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 					}
 
 					$save=true;
@@ -1128,7 +1198,7 @@
 							$error_id=true;
 						}
 					}
-	
+
 					if(!isset($values['location']))
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a location !'));
@@ -1164,6 +1234,12 @@
 					if(!isset($values['end_date']) || !$values['end_date'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
+						$error_id=true;
+					}
+
+					if(!isset($values['project_type_id']) || !$values['project_type_id'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a project type!'));
 						$error_id=true;
 					}
 
@@ -1226,6 +1302,14 @@
 						}
 					}
 
+					if ($values['approval'] && $values['mail_address'] && $config->config_data['project_approval'])
+					{
+						if(isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
+						{
+							$values['status'] = $config->config_data['project_approval_status'];
+						}
+					}
+
 					if($id)
 					{
 						$values['id'] = $id;
@@ -1245,6 +1329,44 @@
 						{
 							$id = $receipt['id'];
 						}
+
+					//----------files
+						$bofiles	= CreateObject('property.bofiles');
+						if(isset($values['file_action']) && is_array($values['file_action']))
+						{
+							$bofiles->delete_file("/project/{$id}/", $values);
+						}
+
+						$file_name = @str_replace(' ','_',$_FILES['file']['name']);
+
+						if($file_name)
+						{
+							$to_file = "{$bofiles->fakebase}/project/{$id}/{$file_name}";
+
+							if($bofiles->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+							{
+								$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+							}
+							else
+							{
+								$bofiles->create_document_dir("project/$id");
+								$bofiles->vfs->override_acl = 1;
+
+								if(!$bofiles->vfs->cp (array (
+									'from'	=> $_FILES['file']['tmp_name'],
+									'to'	=> $to_file,
+									'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+								{
+									$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+								}
+								$bofiles->vfs->override_acl = 0;
+							}
+						}
+					//-----------
+
 
 						if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
 							&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
@@ -1317,14 +1439,14 @@
 									}
 								}
 							}
-						
+
 							$notify_list = execMethod('property.notify.read', array
 								(
 									'location_id'		=> $location_id,
 									'location_item_id'	=> $id
 								)
 							);
-						
+
 							$subject=lang('project %1 has been edited',$id);
 
 							if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
@@ -1342,13 +1464,13 @@
 									}
 								}
 								unset($entry);
-	
+
 								if($toarray_sms)
 								{
-									$historylog->add('MS',$id,implode(',',$toarray_sms));						
+									$historylog->add('MS',$id,implode(',',$toarray_sms));
 								}
 							}
-						
+
 							reset($notify_list);
 							foreach($notify_list as $entry)
 							{
@@ -1419,7 +1541,7 @@
 			if(isset($bypass_error) || ((!isset($receipt['error']) || $add_request) && !$bypass) && $id)
 			{
 				$_transfer_new_project = isset($values['new_project_id']) && $values['new_project_id'] ? true : false;
-				
+
 				$values	= $this->bo->read_single($id);
 
 				if(!isset($values['origin']))
@@ -1427,7 +1549,7 @@
 					$values['origin'] = '';
 				}
 
-				if(!isset($values['workorder_budget']) && $save && !$_transfer_new_project)
+				if(!isset($values['workorder_budget']) && $save && !$_transfer_new_project && !$values['project_type_id']==3)
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
 				}
@@ -1564,7 +1686,7 @@
 				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 				{
 					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
-					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);				
+					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
 					$supervisor_email[] = array
 					(
 						'id'	  => $supervisor_id,
@@ -1606,6 +1728,8 @@
 						if ( isset($prefs['approval_from']) )
 						{
 							$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+
 
 							if(isset($prefs2['email']))
 							{
@@ -1674,58 +1798,160 @@
 				'project_group_descr'	=> $values['project_group_descr']));
 
 
-			//---datatable settings---------------------------------------------------	
+			//---datatable settings---------------------------------------------------
 
+			$sum_actual_cost = 0;
+			$sum_oblications = 0;
+			$rows_per_page = 10;
+			$initial_page = 1;
 
 			if($id)
 			{
 				$content_budget = $this->bo->get_budget($id);
-				$lang_delete = lang('Check to delete year');
+				$lang_delete = lang('Check to delete period');
+				$lang_close = lang('Check to close period');
+				$lang_active = lang('Check to activate period');
+				$values['sum'] = 0;
+
+				if($content_budget && $values['periodization_id'])
+				{
+					$_year_count = array();
+					foreach ($content_budget as $key => $row)
+					{
+						$_year_count[$row['year']]  +=1;
+						$rows_per_page = $_year_count[$row['year']];
+					}
+					$initial_page = floor(count($content_budget)/$rows_per_page);
+				}
+
+/*
+				if($content_budget)
+				{
+					foreach ($content_budget as $key => $row)
+					{
+						$_year_arg[$key]  = $row['year'];
+						$_month_arg[$key] = $row['month'];
+					}
+
+					array_multisort($_year_arg, SORT_DESC, $_month_arg, SORT_ASC, $content_budget);
+
+					reset($content_budget);
+				}
+*/
 				foreach($content_budget as & $b_entry)
 				{
-					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
-					$value_remainder -= $b_entry['sum_orders'];
-					$value_remainder -= $b_entry['actual_cost'];
+					if($b_entry['active'])
+					{
+						$sum_actual_cost	+= $b_entry['actual_cost'];
+						$sum_oblications	+= $b_entry['sum_oblications'];
+						$values['sum']		+= $b_entry['budget'];
+					}
+
+					$checked = $b_entry['closed'] ? 'checked="checked"' : '';
+					$checked2 = $b_entry['active'] ? 'checked="checked"' : '';
+
+					$b_entry['flag_active'] = $b_entry['active'];
+					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
+					$b_entry['closed'] = "<input type='checkbox' name='values[closed_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_close}' $checked>";
+					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
+					$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
+					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
+
 				}
+				unset($b_entry);
 			}
 
+			if(isset($values['reserve']) && $values['reserve']!=0)
+			{
+				$reserve_remainder=$values['reserve']-$values['deviation'];
+				$remainder_percent= number_format(($reserve_remainder/$values['reserve'])*100, 2, ',', '');
+				$values['sum'] = $values['sum'] + $values['reserve'];
+			}
+
+			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
 
+			if( isset($values['project_type_id']) && $values['project_type_id']==3)
+			{
 
-//_debug_array($content_budget);die();
-			$datavalues[0] = array
+				$rows_per_page = 10;
+				$initial_page = 1;
+
+				$myColumnDefs[0] = array
 				(
+					'name'		=> "0",
+					'values'	=>	json_encode(array
+											(
+												array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+												array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+												array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'resizeable'=>true,'formatter'=>'project_link'),
+												array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+												array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'resizeable'=>true,'formatter'=>'project_link'),
+												array('key' => 'remark','label'=>lang('remark'),'sortable'=>true,'resizeable'=>true)
+											)
+										)
+				);
+
+				$content_budget = $this->bo->get_buffer_budget($id);
+				foreach($content_budget as & $b_entry)
+				{
+					$b_entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($b_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				}
+				unset($b_entry);
+			}
+			else
+			{
+				$myColumnDefs[0] = array
+				(
+					'name'		=> "0",
+					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+											//			array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+														array('key' => 'closed_orig','hidden' => true),
+														array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+														array('key' => 'active_orig','hidden' => true),
+														array('key' => 'flag_active','hidden' => true),
+														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+				);
+			}
+
+			$datavalues[0] = array
+			(
 					'name'					=> "0",
 					'values' 				=> json_encode($content_budget),
 					'total_records'			=> count($content_budget),
 					'edit_action'			=> "''",
 					'permission'   			=> "''",
 					'is_paginator'			=> 1,
+					'rows_per_page'			=> $rows_per_page,
+					'initial_page'			=> $initial_page,
 					'footer'				=> 0
-				);
+			);
 
-
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'sum_orders','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-														array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-				);
 
 //_debug_array($values['workorder_budget']);die();
+			$content_orders = $this->get_orders($id, date('Y'));
+			//FIXME: deviation from this one
 			$datavalues[1] = array
 				(
 					'name'					=> "1",
-					'values' 				=> json_encode($values['workorder_budget']),
-					'total_records'			=> count($values['workorder_budget']),
+					'values' 				=> json_encode($content_orders),
+					'total_records'			=> count($content_orders),
 					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
 					'is_paginator'			=> 1,
+					'rows_per_page'			=> 10,
+					'initial_page'			=> 1,
 					'footer'				=> 0
 				);
 
@@ -1735,50 +1961,23 @@
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-												//		array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-												//		array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-												//		array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('sum orders'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
 				);
 
-		
+
 			$invoices = array();
+			$content_invoice = array();
+
 			if ($id)
 			{
-				$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $id));
-				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $id, 'paid' => true));
-				$invoices = array_merge($active_invoices,$historical_invoices);
-			}
-
-			$content_invoice = array();
-			foreach($invoices as $entry)
-			{
-				$content_invoice[] = array
-				(
-					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
-					'voucher_out_id'		=> $entry['voucher_out_id'],
-					'workorder_id'			=> $entry['workorder_id'],
-					'status'				=> $entry['status'],
-					'invoice_id'			=> $entry['invoice_id'],					
-					'budget_account'		=> $entry['budget_account'],
-					'dima'					=> $entry['dima'],
-					'dimb'					=> $entry['dimb'],
-					'dimd'					=> $entry['dimd'],
-					'type'					=> $entry['type'],
-					'amount'				=> $entry['amount'],
-					'approved_amount'		=> $entry['approved_amount'],
-					'vendor'				=> $entry['vendor'],
-					'project_group'			=> $entry['project_id'],
-					'currency'				=> $entry['currency'],
-					'budget_responsible'	=> $entry['budget_responsible'],
-					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				);	
+				$content_invoice = $this->get_vouchers($id, date('Y'));
 			}
 
 			$datavalues[2] = array
@@ -1788,6 +1987,8 @@
 					'total_records'			=> count($content_invoice),
 					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'))),
 					'is_paginator'			=> 1,
+					'rows_per_page'			=> 10,
+					'initial_page'			=> 1,
 					'footer'				=> 0
 				);
 
@@ -1797,18 +1998,21 @@
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>$_formatter_voucher_link),
+					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>true,'resizeable'=>true,'formatter'=>$_formatter_voucher_link),
 														array('key' => 'voucher_out_id','hidden'=>true),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'periodization','label'=>lang('periodization'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'periodization_start','label'=>lang('periodization start'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'type','label'=>lang('type'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>true,'resizeable'=>true),
 														))
 
 				);
@@ -1820,7 +2024,7 @@
 									'count'				=> count($myColumnDefs)
 								)
 							);
-			
+
 			$datavalues[] = $notify_info['datavalues'];
 
 			$myColumnDefs[3] = $notify_info['column_defs'];
@@ -1854,6 +2058,114 @@
 
 
 
+//--------------files
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uiproject.view_file',
+				'id'		=> $id
+			);
+
+			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+
+			$_files = $this->bo->get_files($id);
+
+			$lang_view_file = lang('click to view file');
+			$lang_delete_file = lang('Check to delete file');
+			$z=0;
+			$content_files = array();
+			foreach( $_files as $_file )
+			{
+				if ($link_to_files)
+				{
+					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$_file['directory']}/{$_file['file_name']}' target=\"_blank\" title='{$lang_view_file}'>{$_file['name']}</a>";
+				}
+				else
+				{
+					$content_files[$z]['file_name'] = "<a href=\"{$link_view_file}&amp;file_name={$_file['file_name']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
+				}
+				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['name']}\" title=\"{$lang_delete_file}\">";
+				$z++;
+			}
+
+			$datavalues[5] = array
+			(
+				'name'					=> "5",
+				'values' 				=> json_encode($content_files),
+				'total_records'			=> count($content_files),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 1,
+				'rows_per_page'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'footer'				=> 0
+			);
+
+			$myColumnDefs[5] = array
+				(
+					'name'		=> "5",
+					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
+				);
+
+//--------------files
+
+			$lang_delete_request_statustext	= lang('Check to delete this request from this project');
+			$_origin = array();
+			if(isset($values['origin']) && $values['origin'] )
+			{
+				foreach($values['origin'] as $__origin)
+				{
+					foreach ($__origin['data'] as $_origin_data)
+					{
+						$_select = '';
+						if($__origin['location'] == '.project.request')
+						{
+							$_select = "<input type=\"checkbox\" name=\"values[delete_request][]\" value=\"{$_origin_data['id']}\" title=\"{$lang_delete_request_statustext}\">";
+						}
+
+						$_origin[] = array
+						(
+							'url'			=> "<a href='{$_origin_data['link']}'>{$_origin_data['id']} </a>",
+							'type'			=> $__origin['descr'],
+							'title'			=> $_origin_data['title'],
+							'status'		=> $_origin_data['statustext'],
+				//			'user'			=> $GLOBALS['phpgw']->accounts->get($_origin_data['account_id'])->__toString(),
+				//			'entry_date'	=> $GLOBALS['phpgw']->common->show_date($_origin_data['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							'select'		=> $_select
+						);
+					}
+				} 
+			}
+
+
+			$datavalues[6] = array
+			(
+				'name'					=> "6",
+				'values' 				=> json_encode($_origin),
+				'total_records'			=> count($_origin),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 1,
+				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'footer'				=> 0
+			);
+	
+			$myColumnDefs[6] = array
+			(
+				'name'		=> "6",
+				'values'	=>	json_encode(array(	
+					array('key' => 'url','label'=>lang('id'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+		//			array('key' => 'user','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
+		//			array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true),
+					)
+				)
+			);
+
+
+
 //	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------
 
@@ -1877,8 +2189,50 @@
 
 			$periodization_list = $this->bo->get_periodizations_with_outline();
 
-			$data = array
+			$sub_entry_action_data = array();
+				$sub_entry_action_data = array
 				(
+					'menuaction'	=> 'property.uiworkorder.edit',
+					'project_id'	=> $id
+				);
+
+			if($id && !$values['project_type_id']==3)
+			{
+				$sub_entry_action_data = array
+				(
+					'menuaction'	=> 'property.uiworkorder.edit',
+					'project_id'	=> $id
+				);
+			}
+			else if($id && $values['project_type_id']==3)
+			{
+				$sub_entry_action_data = array
+				(
+					'menuaction'	=> 'property.uiproject.edit',
+					'bypass'		=> 1,
+					'parent_id'		=> $id,
+					'origin'		=> '.project',
+					'origin_id'		=> $id
+				);
+			}
+
+			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
+			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
+
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+
+			$data = array
+			(
+					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+					'project_types'						=> array('options' => $this->bo->get_project_types($project_type_id)),
+					'project_type_id'					=> $values['project_type_id'],
 					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
 					'mode'								=> $mode,
 					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
@@ -1888,26 +2242,25 @@
 					'b_account_data'					=> $b_account_data,
 					'ecodimb_data'						=> $ecodimb_data,
 					'contact_data'						=> $contact_data,
-					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
 					'myButtons'							=> $myButtons,
-					'tabs'								=> self::_generate_tabs($tabs),
+					'tabs'								=> self::_generate_tabs($tabs,array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'					=> isset($origin)?$origin:'',
 					'value_origin_id'					=> isset($origin_id)?$origin_id:'',
 					'year_list'							=> array('options' => $year_list),
+					'order_time_span'					=> array('options' => $this->bo->get_order_time_span($id)),
 					'periodization_list'				=> array('options' => $periodization_list),
-					'lang_select_request'				=> lang('Select request'),
 					'lang_select_request_statustext'	=> lang('Add request for this project'),
 					'lang_request_statustext'			=> lang('Link to the request for this project'),
-					'lang_delete_request_statustext'	=> lang('Check to delete this request from this project'),
 					'link_select_request'				=> $GLOBALS['phpgw']->link('/index.php',$link_request_data),
-					'link_request'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view')),
-					'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-					'lang_add_workorder'				=> lang('Add workorder'),
-					'lang_add_workorder_statustext'		=> lang('Add a workorder to this project'),
+
+					'add_sub_entry_action'				=> $GLOBALS['phpgw']->link('/index.php', $sub_entry_action_data ),
+
+					'lang_add_sub_entry'				=> $values['project_type_id']==3 ? lang('add project') : lang('Add workorder'),
+					'lang_add_sub_entry_statustext'		=> $values['project_type_id']==3 ? lang('add a project to this buffer') : lang('Add a workorder to this project'),
 					'lang_no_workorders'				=> lang('No workorder budget'),
 					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 					'record_history'					=> $record_history,
@@ -2045,6 +2398,7 @@
 
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
+
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
@@ -2054,8 +2408,6 @@
 
 //			$template_vars = array();
 //			$template_vars['datatable'] = $datatable;
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
@@ -2071,6 +2423,93 @@
 
 			phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_project_edit', 'property' );
+		}
+
+
+		public function get_orders($project_id = 0, $year = 0)
+		{
+			if(!$project_id)
+			{
+				$project_id = phpgw::get_var('project_id', 'int');
+			}
+			if(!$year)
+			{
+				$year = phpgw::get_var('year', 'int');
+			}
+
+			$content = $this->bo->get_orders(array('project_id'=> $project_id,'year'=> $year));
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content;
+		}
+
+		public function get_vouchers($project_id = 0, $year = 0)
+		{
+			if(!$project_id)
+			{
+				$project_id = phpgw::get_var('project_id', 'int');
+			}
+			if(!$year)
+			{
+				$year = phpgw::get_var('year', 'int');
+			}
+
+			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $project_id, 'year' => $year));
+			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $project_id, 'year' => $year, 'paid' => true));
+			$invoices = array_merge($active_invoices,$historical_invoices);
+
+			foreach($invoices as $entry)
+			{
+				$content[] = array
+				(
+					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_out_id'		=> $entry['voucher_out_id'],
+					'workorder_id'			=> $entry['workorder_id'],
+					'status'				=> $entry['status'],
+					'period'				=> $entry['period'],
+					'periodization'			=> $entry['periodization'],
+					'periodization_start'	=> $entry['periodization_start'],
+					'invoice_id'			=> $entry['invoice_id'],
+					'budget_account'		=> $entry['budget_account'],
+					'dima'					=> $entry['dima'],
+					'dimb'					=> $entry['dimb'],
+					'dimd'					=> $entry['dimd'],
+					'type'					=> $entry['type'],
+					'amount'				=> $entry['amount'],
+					'approved_amount'		=> $entry['approved_amount'],
+					'vendor'				=> $entry['vendor'],
+					'project_group'			=> $entry['project_id'],
+					'currency'				=> $entry['currency'],
+					'budget_responsible'	=> $entry['budget_responsible'],
+					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+				);
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content;
 		}
 
 		function delete()
@@ -2103,11 +2542,28 @@
 			$execute		= phpgw::get_var('execute', 'bool', 'POST');
 			$status_filter 	= phpgw::get_var('status_filter');
 			$status_new 	= phpgw::get_var('status_new');
-			$type 			= phpgw::get_var('type');
+			$type 			= phpgw::get_var('type','string', 'REQUEST' , 'project');
+			$ecodimb 		= phpgw::get_var('ecodimb');
 			$id_to_update	= phpgw::get_var('id_to_update');
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
-			
+			$transfer_budget= phpgw::get_var('transfer_budget', 'integer');
+			$__new_budget 	= phpgw::get_var('new_budget');
+			$b_account_id	= phpgw::get_var('b_account_id', 'integer');
+			$b_account_name = phpgw::get_var('b_account_name');
+
+			$_new_budget = explode(',', trim($__new_budget, ','));
+
+			$new_budget = array();
+			foreach($_new_budget as $_entry)
+			{
+				$budget_arr = explode('::', $_entry);
+				$new_budget[$budget_arr[0]][$budget_arr[1]] = $budget_arr[2];
+			}
+			unset($_entry);
+			unset($budget_arr);
+
+//_debug_array($new_budget);die();
 			if(isset($_POST['user_id']))
 			{
 				$user_id 	= phpgw::get_var('user_id', 'int');
@@ -2116,11 +2572,12 @@
 			{
 				$user_id 	= $this->account;
 			}
-			
+
 			if($id_to_update)
 			{
 				$ids = array_values(explode(',',trim($id_to_update,',')));
 			}
+
 			else
 			{
 				$ids = array();
@@ -2136,7 +2593,60 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget,$b_account_id);
+			}
+
+			foreach ($list as &$entry)
+			{
+				$_obligation = '';
+				$entry['new_budget'] = '';
+
+				if($entry['project_type_id'] == 1 || $entry['continuous']) // operation or continuous
+				{
+					$_obligation = 0;
+					$_order = 0;
+
+					if(!$entry['closed'] && $type == 'project')
+					{
+						$_budget_arr = $this->bo->get_budget($entry['id']);
+					}
+
+					if(!$entry['closed'] && $type == 'workorder')
+					{
+						$_budget_arr = execMethod('property.soworkorder.get_budget', $entry['id']);
+					}
+
+					if($_budget_arr)
+					{
+						foreach($_budget_arr as $_budget_entry)
+						{
+							if($_budget_entry['active'])
+							{
+								$_obligation += $_budget_entry['sum_oblications'];
+								$_order += $_budget_entry['sum_orders'];
+							}
+						}
+
+						$_obligation = round($_obligation);
+
+						$entry['new_budget'] = "<input type='text' class='myValuesForPHP' id='{$entry['id']}::budget_amount' name='{$entry['id']}::budget_amount' value='{$_obligation}' title=''></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::obligation' name='{$entry['id']}::obligation' value='{$_obligation}' ></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::order_amount' name='{$entry['id']}::order_amount' value='{$_order}'></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::latest_year' name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
+
+					}
+				}
+				else if ($entry['project_type_id'] == 2)
+				{
+					$entry['new_budget'] = 'auto';
+					$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::latest_year' name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
+				}
+				else if ($entry['project_type_id'] == 3)
+				{
+					$entry['budget'] = '';
+				}
+
+				$entry['obligation'] = $_obligation;
 			}
 
 			$total_records	= count($list);
@@ -2154,29 +2664,60 @@
 			switch($type)
 			{
 				case 'project':
-					$_key = 'num_open';
-					$_label = lang('open');
-					break;
-				case 'workorder':
-					$_key = 'actual_cost';
-					$_label = lang('actual cost');
-					break;
-				default:
-					$_key = 'num_open';
-					$_label = lang('open');
-			}
-
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+					$myColumnDefs[0] = array
+					(
+						'name'		=> "0",
+						'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
-														array('key' => $_key,'label'=>$_label,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
-				);
+					);
+					$b_account_data = array();
+					$td_count = 9;
+					break;
+				case 'workorder':
+					$lang_actual_cost = $paid ? lang('actual cost') . ' ' . lang('total') : lang('actual cost') . ' ' . (date('Y')-1);
+					
+					$myColumnDefs[0] = array
+					(
+						'name'		=> "0",
+						'values'	=>	json_encode(array(
+														array('key' => 'project_id','label'=>lang('project'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'b_account_id','label'=>lang('budget account'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'actual_cost','label'=>$lang_actual_cost,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
+														))
+					);
+
+
+					$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> $b_account_id,
+				//		'b_account_name'	=> $b_account_name,
+						'disabled'			=> '',
+						'parent'			=> $project['b_account_id'],
+						'type'				=> 'form'
+						)
+					);
+					$td_count = 12;
+					break;
+			}
+
 
 			$user_list	= $this->bocommon->get_user_list('select', $user_id, $extra=false, $default = $user_id, $start=-1, $sort='ASC', $order='account_lastname',$query='',$offset=-1);
 			foreach ($user_list as &$entry)
@@ -2188,16 +2729,23 @@
 			switch($type)
 			{
 				case 'project':
-					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_filter));
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status'));
 					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_new));
 					break;
 				case 'workorder':
-					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_filter));
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status'));
 					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_new));
 					break;
 				default:
 					$status_list_filter = array();
 			}
+
+			if($status_list_filter)
+			{
+				array_unshift ($status_list_filter,array ('id'=>'open','name'=> lang('open')));
+			}
+
+			$status_list_filter = $this->bocommon->select_list($status_filter,$status_list_filter);
 
 			$type_array = array
 			(
@@ -2223,9 +2771,31 @@
 				$entry['selected'] = $entry['id'] == $type ? 1 : 0;
 			}
 
+			$year	= date('Y') - 2;
+			$limit	= $year + 4;
+
+			while ($year < $limit)
+			{
+				$year_list[] = array
+				(
+					'id'	=>  $year,
+					'name'	=>  $year
+				);
+				$year++;
+			}
+
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
 			(
-				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'year_list'				=> array('options' => $year_list),
 				'datatable'				=> $datavalues,
 				'myColumnDefs'			=> $myColumnDefs,
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -2234,13 +2804,17 @@
 				'status_list_new'		=> array('options' => $status_list_new),
 				'type_list'				=> array('options' => $type_array),
 				'user_list'				=> array('options' => $user_list),
+				'ecodimb_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=>'dimb','selected' => $ecodimb))),
 				'start_date'			=> $start_date,
 				'end_date'				=> $end_date,
 				'total_records'			=> $total_records,
 				'paid'					=> $paid,
 				'closed_orders'			=> $closed_orders,
 				'check_paid'			=> $type == 'workorder' ? 1 : 0,
-				'check_closed_orders'	=> $type == 'project' ? 1 : 0
+				'check_closed_orders'	=> $type == 'project' ? 1 : 0,
+				'type'					=> $type,
+				'b_account_data'		=> $b_account_data,
+				'td_count'				=> $td_count
 			);
 
 
@@ -2274,6 +2848,8 @@
 
 		function view()
 		{
+
+
 			if(!$this->acl_read)
 			{
 				$this->bocommon->no_access();
@@ -2292,7 +2868,7 @@
 				'project_group'			=> $values['project_group'],
 				'project_group_descr'	=> $values['project_group_descr']));
 
-			//---datatable settings---------------------------------------------------	
+			//---datatable settings---------------------------------------------------
 
 			$datavalues[0] = array
 				(
@@ -2340,7 +2916,7 @@
 														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
 				);
 
-	
+
 			$invoices = array();
 			if ($id)
 			{
@@ -2358,7 +2934,7 @@
 					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'workorder_id'			=> $entry['workorder_id'],
 					'status'				=> $entry['status'],
-					'invoice_id'			=> $entry['invoice_id'],					
+					'invoice_id'			=> $entry['invoice_id'],
 					'budget_account'		=> $entry['budget_account'],
 					'dima'					=> $entry['dima'],
 					'dimb'					=> $entry['dimb'],
@@ -2371,10 +2947,11 @@
 					'budget_responsible'	=> $entry['budget_responsible'],
 					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				);	
+				);
 			}
 
 			$datavalues[2] = array
+
 				(
 					'name'					=> "2",
 					'values' 				=> json_encode($content_invoice),
@@ -2404,18 +2981,26 @@
 
 			//----------------------------------------------datatable settings--------
 
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
 			(
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'b_account_data'					=> $b_account_data,
 				'ecodimb_data'						=> $ecodimb_data,
 				'contact_data'						=> $contact_data,
-				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
 				'myButtons'							=> $myButtons,
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'add_sub_entry_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
 				'lang_start_date'					=> lang('Project start date'),
 				'value_start_date'					=> $values['start_date'],
@@ -2445,15 +3030,16 @@
 			);
 		}
 
-		protected function _generate_tabs($tabs_ = array(), $suppress = array())
+		protected function _generate_tabs($tabs_ = array(), $suppress = array(), $selected = 'general')
 		{
 			$tabs = array
 				(
-					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'location'		=> array('label' => lang('location'), 'link' => '#location'),
-					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
-					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-					'history'		=> array('label' => lang('history'), 'link' => '#history')
+					'general'		=> array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
+					'location'		=> array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
+					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
+					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
+					'documents'		=> array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
+					'history'		=> array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')")
 				);
 			$tabs = array_merge($tabs, $tabs_);
 			foreach($suppress as $tab => $remove)
@@ -2465,6 +3051,6 @@
 			}
 			phpgwapi_yui::tabview_setup('project_tabview');
 
-			return  phpgwapi_yui::tabview_generate($tabs, 'general');
+			return  phpgwapi_yui::tabview_generate($tabs, $selected);
 		}
 	}

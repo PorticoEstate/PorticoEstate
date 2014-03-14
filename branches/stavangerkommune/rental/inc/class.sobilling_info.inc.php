@@ -64,7 +64,7 @@ class rental_sobilling_info extends rental_socommon
 		
 		$tables = "rental_billing_info";
 		$joins = '';
-		var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+//		var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	

@@ -38,12 +38,12 @@ class year_calendar_agg {
      	else if( ($month_nr < date("m"))  && (date("Y", $this->control->get_start_date()) == $this->year) )
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_NOT_DONE";
-    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
+    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "location_code" =>  $this->location_code, "year" => $this->year, "month" => $month_nr);
     	}
     	else
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_REGISTERED";
-    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
+    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "location_code" =>  $this->location_code, "year" => $this->year, "month" => $month_nr);
     	}
     }
 	}

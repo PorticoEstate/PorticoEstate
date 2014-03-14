@@ -47,7 +47,7 @@ $(document).ready(function()
 
 
 	$("#entity_id").change(function () {
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_category_by_entity', entity_id: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_component.get_category_by_entity', entity_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString = "";
@@ -88,10 +88,10 @@ $(document).ready(function()
 
 
 	$("#location_type").change(function () {
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_type_category', location_type: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_location_type_category', location_type: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         var htmlString = "";
+         var htmlString  = "<option value=''>Velg</option>";
 
          $.ajax({
 			type: 'POST',
@@ -129,6 +129,7 @@ $(document).ready(function()
 
 	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, true);
+	var location_type = 1;
 
 	$("#search-location-name").autocomplete({
 		source: function( request, response ) {
@@ -167,7 +168,7 @@ $(document).ready(function()
 	//update part of town category based on district
 	$("#district_id").change(function () {
 		var district_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_district_part_of_town'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString = "";
@@ -207,7 +208,7 @@ $(document).ready(function()
 
 	$("#part_of_town_id").change(function ()
 	{
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_locations', child_level:1, part_of_town_id: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_locations', child_level:1, part_of_town_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString  = "<option value=''>Velg</option>";
@@ -244,7 +245,7 @@ $(document).ready(function()
 
 	$("#loc1").change(function ()
 	{
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_locations', child_level:2, location_code: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_locations', child_level:2, location_code: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString  = "<option value=''>Velg</option>";
@@ -343,7 +344,7 @@ $(document).ready(function()
 	  			{
 		  			$(submitBnt).val("Lagret");
 
-						YAHOO.portico.update_datatable();
+					    YAHOO.portico.updateinlineTableHelper('datatable-container');
 				}
 				else
 				{
@@ -440,7 +441,7 @@ function update_loc(level)
 function get_table_def()
 {
 	var oArgs = {
-		menuaction:'controller.uicontrol_location.get_entity_table_def',
+		menuaction:'controller.uicontrol_register_to_component.get_entity_table_def',
 		entity_id:$("#entity_id").val(),
 		cat_id:$("#cat_id").val()
 	};
@@ -498,7 +499,7 @@ function init_component_table()
 	}
 
 	var oArgs = {
-		menuaction:'controller.uicontrol_location.query2',
+		menuaction:'controller.uicontrol_register_to_component.query',
 		entity_id:$("#entity_id").val(),
 		cat_id:cat_id,
 		district_id:$("#district_id").val(),
@@ -509,51 +510,12 @@ function init_component_table()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	YAHOO.portico.init_datatable(myColumnDefs,requestUrl);
+    YAHOO.portico.inlineTableHelper('datatable-container', requestUrl, myColumnDefs);
 }
 
 
 function update_component_table()
 {
-
-	var control_registered = 0;
-	if (typeof($($("#control_registered")).attr("checked")) != 'undefined' && $($("#control_registered")).attr("checked") == 'checked')
-	{
-		control_registered = 1;
-	}
-
-	if($("#cat_id").val() != null)
-	{
-		var location_code = '';
-
-		if( $("#search-location_code").val() != null && $("#search-location_code").val())
-		{
-			location_code = $("#search-location_code").val();
-		}
-		else if( $("#loc2").val() != null && $("#loc2").val())
-		{
-			location_code = $("#loc2").val();
-		}
-		else if ( $("#loc1").val() != null && $("#loc1").val())
-		{
-			location_code = $("#loc1").val();
-		}
-
-		var oArgs = {
-			menuaction:'controller.uicontrol_location.query2',
-			entity_id:$("#entity_id").val(),
-			cat_id:$("#cat_id").val(),
-			district_id:$("#district_id").val(),
-			part_of_town_id:$("#part_of_town_id").val(),
-			location_code:location_code,
-			control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():'',
-			control_registered:control_registered
-		};
-
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-
-		YAHOO.portico.update_datatable(requestUrl);
-	}
-//	$("#receipt").html('');
+	init_component_table();
 }
 

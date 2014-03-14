@@ -8,7 +8,7 @@
 	* @package phpgroupware
 	* @subpackage Frontend
 	* @category hooks
-	* @version $Id: hook_config.inc.php 4237 2009-11-27 23:17:21Z sigurd $
+	* @version $Id: hook_config.inc.php 11376 2013-10-18 08:13:39Z sigurdne $
 	*/
 
 	/*

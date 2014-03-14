@@ -1,0 +1,963 @@
+<?php
+	/**
+	 * phpGroupWare - property: a Facilities Management System.
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2010,2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package property
+	 * @subpackage export
+	 * @version $Id: Agresso 11369 2013-10-11 15:29:13Z sigurdne $
+	 */
+
+	/**
+	 * Description
+	 * @package property
+	 */
+	class export_conv
+	{
+
+		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
+
+		protected $old_files_deleted;
+		protected $debug;
+		protected $orders_affected = array();
+		protected $db;
+		protected $db2;
+		protected $soXport;
+		protected $config;
+		protected $invoice_approval	 = 2;
+
+		function __construct()
+		{
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
+			$this->db2		 = clone($this->db);
+			$this->soXport	 = CreateObject('property.soXport');
+			$this->config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->invoice_approval	 = isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] ? $this->config->config_data['common']['invoice_approval'] : 2;
+		}
+
+		function select_periods_with_invoice_to_transfer()
+		{
+			if($this->invoice_approval == 2)
+			{
+				$sql = "SELECT DISTINCT periode FROM fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL or oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL";
+			}
+			else
+			{
+				$sql = "SELECT DISTINCT periode FROM fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL";
+			}
+
+
+			$periode = array();
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$periode[] = $this->db->f('periode');
+			}
+
+			return $periode;
+		}
+
+		function log_end($batchid)
+		{
+			$tid = date($this->soXport->datetimeformat);
+			$sql = "insert into fm_ecologg (batchid,melding,tid) values ('$batchid','End transfer','$tid')";
+			$this->db->query($sql, __LINE__, __FILE__);
+		}
+
+		function log_error($batchid, $error_desr)
+		{
+			$tid = date($this->soXport->datetimeformat);
+			$sql = "insert into fm_ecologg (batchid,ecobilagid,status,melding,tid) values ('$batchid',NULL,0,'$error_desr','$tid')";
+			$this->db->query($sql, __LINE__, __FILE__);
+		}
+
+		function increment_batchid()
+		{
+
+			$this->db->query("update fm_idgenerator  set value = value + 1 where name = 'Ecobatchid'", __LINE__, __FILE__);
+			$this->db->query("select value from fm_idgenerator  where name = 'Ecobatchid'", __LINE__, __FILE__);
+			$this->db->next_record();
+			$bilagsnr = $this->db->f('value');
+			return $bilagsnr;
+		}
+
+		function next_batchid()
+		{
+
+			$this->db->query("select value from fm_idgenerator  where name = 'Ecobatchid'", __LINE__, __FILE__);
+			$this->db->next_record();
+			$batchid = $this->db->f('value') + 1;
+
+			return $batchid;
+		}
+
+		//Lagre start melding
+		function log_start($batchid)
+		{
+			$tid = date($this->soXport->datetimeformat);
+			$sql = "insert into fm_ecologg (batchid,melding,tid) values ('$batchid','Start transfer','$tid')";
+			$this->db->query($sql, __LINE__, __FILE__);
+		}
+
+		function get_vendor_info($vendor_id = '')
+		{
+			$sql = "select org_nr,konto_nr from fm_vendor where id='$vendor_id'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+
+			$vendor_info = array(
+				'org_nr'	 => $this->db->f('org_nr'),
+				'konto_nr'	 => $this->db->f('konto_nr')
+			);
+
+			return $vendor_info;
+		}
+
+		function get_order_title($order_id = '')
+		{
+			$sql = "select type from fm_orders where id='$order_id'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+
+			switch($this->db->f('type'))
+			{
+				case 'workorder':
+					$sql2		 = "select title from fm_workorder where id='$order_id'";
+					$this->db->query($sql2, __LINE__, __FILE__);
+					$this->db->next_record();
+					$order_title = $this->db->f('title');
+					break;
+				case 's_agreement':
+					$sql2		 = "select descr as title from fm_s_agreement where id='$order_id'";
+					$this->db->query($sql2, __LINE__, __FILE__);
+					$this->db->next_record();
+					$order_title = $this->db->f('title');
+					break;
+			}
+
+			return $order_title;
+		}
+
+		function select_invoice_rollback($day, $month, $year, $Filnavn)
+		{
+
+			switch($GLOBALS['phpgw_info']['server']['db_type'])
+			{
+				case 'mssql':
+					$datepart_year	 = "datepart(year,overftid)";
+					$datepart_month	 = "datepart(month,overftid)";
+					$datepart_day	 = "datepart(day,overftid)";
+					break;
+				case 'mysql':
+					$datepart_year	 = "YEAR(overftid)";
+					$datepart_month	 = "MONTH(overftid)";
+					$datepart_day	 = "DAYOFMONTH(overftid)";
+					break;
+				case 'pgsql':
+				case 'postgres':
+					$datepart_year	 = "date_part('year',overftid)";
+					$datepart_month	 = "date_part('month',overftid)";
+					$datepart_day	 = "date_part('day',overftid)";
+					break;
+			}
+
+
+			$sql = "SELECT * FROM fm_ecobilagoverf WHERE filnavn='$Filnavn' and $datepart_year=$year and $datepart_month=$month and $datepart_day= $day";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$invoice_roleback = array();
+
+			while($this->db->next_record())
+			{
+				$invoice_roleback[] = array
+				(
+					'id'						=> $this->db->f('id'),
+					'bilagsnr'					=> $this->db->f('bilagsnr'),
+					'kidnr'						=> $this->db->f('kidnr'),
+					'typeid'					=> $this->db->f('typeid'),
+					'kildeid'					=> $this->db->f('kildeid'),
+					'pmwrkord_code'				=> $this->db->f('pmwrkord_code'),
+					'belop'						=> $this->db->f('belop'),
+					'fakturadato'				=> $this->db->f('fakturadato'),
+					'periode'					=> $this->db->f('periode'),
+					'forfallsdato'				=> $this->db->f('forfallsdato'),
+					'fakturanr'					=> $this->db->f('fakturanr'),
+					'spbudact_code'				=> $this->db->f('spbudact_code'),
+					'regtid'					=> $this->db->f('regtid'),
+					'artid'						=> $this->db->f('artid'),
+					'godkjentbelop'				=> $this->db->f('godkjentbelop'),
+					'spvend_code'				=> $this->db->f('spvend_code'),
+					'dima'						=> $this->db->f('dima'),
+					'loc1'						=> $this->db->f('loc1'),
+					'dimb'						=> $this->db->f('dimb'),
+					'dime'						=> $this->db->f('dime'),
+					'mvakode'					=> $this->db->f('mvakode'),
+					'dimd'						=> $this->db->f('dimd'),
+					'project_id'				=> $this->db->f('project_id'),
+					'kostra_id'					=> $this->db->f('kostra_id'),
+					'item_type'					=> $this->db->f('item_type'),
+					'item_id'					=> $this->db->f('item_id'),
+					'oppsynsmannid'				=> $this->db->f('oppsynsmannid'),
+					'saksbehandlerid'			=> $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid'		=> $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato'			=> $this->db->f('oppsynsigndato'),
+					'saksigndato'				=> $this->db->f('saksigndato'),
+					'budsjettsigndato'			=> $this->db->f('budsjettsigndato'),
+					'merknad'					=> $this->db->f('merknad'),
+					'splitt'					=> $this->db->f('splitt'),
+					'ordrebelop'				=> $this->db->f('ordrebelop'),
+					'utbetalingid'				=> $this->db->f('utbetalingid'),
+					'utbetalingsigndato'		=> $this->db->f('utbetalingsigndato'),
+				);
+			}
+			return $invoice_roleback;
+		}
+
+		//rollback function
+		function bilag_update_overf($BilagOverf)
+		{
+			$values = array
+			(
+				$BilagOverf['project_id'],
+				$BilagOverf['kostra_id'],
+				$BilagOverf['pmwrkord_code'],
+				$BilagOverf['bilagsnr'],
+				$BilagOverf['splitt'],
+				$BilagOverf['kildeid'],
+				$BilagOverf['kidnr'],
+				$BilagOverf['typeid'],
+				$BilagOverf['fakturadato'],
+				$BilagOverf['forfallsdato'],
+				$BilagOverf['regtid'],
+				$BilagOverf['artid'],
+				$BilagOverf['spvend_code'],
+				$BilagOverf['dimb'],
+				$BilagOverf['oppsynsmannid'],
+				$BilagOverf['saksbehandlerid'],
+				$BilagOverf['budsjettansvarligid'],
+				$BilagOverf['fakturanr'],
+				$BilagOverf['spbudact_code'],
+				$BilagOverf['dima'],
+				$BilagOverf['loc1'],
+				$BilagOverf['dimd'],
+				$BilagOverf['dime'],
+				$BilagOverf['mvakode'],
+				$BilagOverf['periode'],
+				$this->db->db_addslashes($BilagOverf['merknad']),
+				$BilagOverf['utbetalingid'],
+				$BilagOverf['oppsynsigndato'],
+				$BilagOverf['saksigndato'],
+				$BilagOverf['budsjettsigndato'],
+				$BilagOverf['utbetalingsigndato'],
+				$BilagOverf['item_type'],
+				$BilagOverf['item_id'],
+			);
+
+			$values = $this->db->validate_insert($values);
+
+			$sql = "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,"
+			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
+			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,dime,mvakode,"
+			. " periode,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,item_type,item_id,belop,godkjentbelop)"
+			. " values ($values,"
+			. $this->db->money_format($BilagOverf['belop']) . ","
+			. $this->db->money_format($BilagOverf['godkjentbelop']) . ")";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+		}
+
+		function overfor($download, $pre_transfer = '', $force_period_year = '')
+		{
+
+//			$download = 'on';
+//			$download = False;
+//			$this->debug=True;
+			//Generer batch ID
+			$batchid = $this->soXport->next_batchid();
+			if($download == 'on')
+			{
+				$this->increment_batchid();
+				//Lagre melding
+				$this->log_start($batchid);
+			}
+
+
+			$periodes = $this->select_periods_with_invoice_to_transfer();
+
+			foreach($periodes as $periode)
+			{
+				$this->OverforPeriode($batchid, $periode, $download, $force_period_year);
+			}
+
+			//Lagre melding
+			if($download == 'on')
+			{
+				$this->log_end($batchid); //Lagre melding
+			}
+
+			if(!$download == 'on')
+			{
+				$GLOBALS['phpgw_info']['flags']['noheader']		 = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		 = true;
+				$GLOBALS['phpgw_info']['flags']['xslt_app']		 = false;
+				$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
+				echo '&nbsp<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiXport.export')) . '">' . lang('Back') . '</a></br>';
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			return $receipt;
+		}
+
+		function errorhandler($batchid, $error_desr)
+		{
+			$this->db->transaction_abort();
+
+			$meld = $error_desr;
+
+			phpgwapi_cache::message_set($error_desr, 'error');
+			//Vis feilmelding
+//			echo $meld;
+			//Lagre feilmelding
+			$this->log_error($batchid, $error_desr);
+		}
+
+		function RullTilbake($Filnavn, $Dato)
+		{
+			$dateformat	 = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$dateformat	 = str_replace(".", "", $dateformat);
+			$dateformat	 = str_replace("-", "", $dateformat);
+			$dateformat	 = str_replace("/", "", $dateformat);
+			$y			 = strpos($dateformat, 'y');
+			$d			 = strpos($dateformat, 'd');
+			$m			 = strpos($dateformat, 'm');
+
+			$dateparts	 = explode('/', $Dato);
+			$day		 = $dateparts[$d];
+			$month		 = $dateparts[$m];
+			$year		 = $dateparts[$y];
+
+			$BilagOverf = $this->select_invoice_rollback($day, $month, $year, $Filnavn);
+			$this->db->transaction_begin();
+
+			for($i = 0; $i < count($BilagOverf); $i++)
+			{
+				$this->bilag_update_overf($BilagOverf[$i]);
+
+
+				if($BilagOverf[$i]['pmwrkord_code'])
+				{
+					$orders_affected[$BilagOverf[$i]['pmwrkord_code']] = true;
+
+					$Belop = sprintf("%01.2f", $BilagOverf[$i]['ordrebelop']) * 100;
+
+					$actual_cost_field = 'act_vendor_cost';
+					$operator = '-';
+
+					$this->soXport->correct_actual_cost($BilagOverf[$i]['pmwrkord_code'], $Belop, $actual_cost_field, $operator);
+				}
+
+				//Slett fra avviks tabell
+				//	$this->soXport->delete_avvik($BilagOverf[$i]['bilagsnr']);
+				//Slett fra arkiv
+				$this->soXport->delete_invoice($BilagOverf[$i]['bilagsnr']);
+
+				$antall = $antall + 1;
+			}
+
+			if($antall > 0)
+			{
+				$fil_katalog = $this->config->config_data['export']['path'];
+
+				if(unlink($fil_katalog . '/' . $Filnavn))
+				{
+					$this->db->transaction_commit();
+					$receipt['message'][]	 = array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
+					$receipt['message'][]	 = array('msg' => lang('File %1 is deleted', $Filnavn));
+				}
+				else
+				{
+					$this->db->transaction_abort();
+					$receipt['message'][] = array('msg' => 'Noe gikk galt!');
+				}
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('Sorry - None hits'));
+			}
+			return $receipt;
+		}
+
+		function LagFilnavn($batchid)
+		{
+			$fil_katalog = $this->config->config_data['export']['path'];
+			$continue	 = True;
+			$i			 = 1;
+			do
+			{
+				$Filnavn = $fil_katalog . '/FDB' . date("dmy") . '_' . sprintf("%02s", $i) . '.TXT';
+
+				//Sjekk om filen eksisterer
+				If(!file_exists($Filnavn))
+				{
+					return $Filnavn;
+				}
+
+				$i++;
+			}
+			while($continue);
+
+			//Ingen løpenr er ledige, gi feilmelding
+			return False;
+		}
+
+		private function get_vouchers_to_transfer($periode)
+		{
+			if($this->invoice_approval == 2)
+			{
+				$sql = "SELECT sum(belop) AS belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL AND ( saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL ) AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";
+			}
+			else
+			{
+				$sql = "SELECT sum(belop) AS belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL  AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";				
+			}
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			while($this->db->next_record())
+			{
+				$values[] = array
+					(
+					'belop'		 => $this->db->f('belop'),
+					'bilagsnr'	 => $this->db->f('bilagsnr'),
+					'fakturanr'	 => $this->db->f('fakturanr'),
+				);
+			}
+
+
+			foreach($values as &$entry)
+			{
+				$sql = "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag {$this->join} fm_ecouser ON fm_ecobilag.budsjettansvarligid=fm_ecouser.lid"
+				. " WHERE bilagsnr='{$entry['bilagsnr']}' AND fakturanr = '{$entry['fakturanr']}'";
+
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+
+				$entry['id']					 = $this->db->f('id');
+				$entry['kidnr']					 = $this->db->f('kidnr');
+				$entry['typeid']				 = $this->db->f('typeid');
+				$entry['kildeid']				 = $this->db->f('kildeid');
+				$entry['pmwrkord_code']			 = $this->db->f('pmwrkord_code');
+				$entry['fakturadato']			 = $this->db->f('fakturadato');
+				$entry['periode']				 = $this->db->f('periode');
+				$entry['forfallsdato']			 = $this->db->f('forfallsdato');
+				$entry['fakturanr']				 = $this->db->f('fakturanr');
+				$entry['spbudact_code']			 = $this->db->f('spbudact_code');
+				$entry['regtid']				 = $this->db->f('regtid');
+				$entry['artid']					 = $this->db->f('artid');
+				$entry['godkjentbelop']			 = $entry['belop'];
+				$entry['spvend_code']			 = $this->db->f('spvend_code');
+				$entry['dima']					 = $this->db->f('dima');
+				$entry['dimb']					 = $this->db->f('dimb');
+				$entry['mvakode']				 = $this->db->f('mvakode');
+				$entry['dimd']					 = $this->db->f('dimd');
+				$entry['dime']					 = $this->db->f('dime');
+				$entry['oppsynsmannid']			 = $this->db->f('oppsynsmannid');
+				$entry['saksbehandlerid']		 = $this->db->f('saksbehandlerid');
+				$entry['budsjettansvarligid']	 = $this->db->f('budsjettansvarligid');
+				$entry['oppsynsigndato']		 = $this->db->f('oppsynsigndato');
+				$entry['saksigndato']			 = $this->db->f('saksigndato');
+				$entry['budsjettsigndato']		 = $this->db->f('budsjettsigndato');
+				$entry['merknad']				 = $this->db->f('merknad');
+				$entry['line_text']				 = $this->db->f('line_text');
+				$entry['splitt']				 = $this->db->f('splitt');
+				$entry['utbetalingid']			 = $this->db->f('utbetalingid');
+				$entry['utbetalingsigndato']	 = $this->db->f('utbetalingsigndato');
+				$entry['saksbehandler']			 = $this->db->f('saksbehandler');
+				$entry['invoice_line']			 = $this->get_invoice($entry['bilagsnr'], $entry['fakturanr']);
+			}
+
+			return $values;
+		}
+
+		//Velg ut alle underbilag
+
+		private function get_invoice($bilagsnr, $fakturanr)
+		{
+			if(!$fakturanr)
+			{
+				throw new Exception('Mangler fakturanr');
+			}
+
+			$sql = "SELECT fm_ecobilag.* ,fm_part_of_town.district_id"
+			. " FROM (fm_location1 {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)"
+			. " {$this->join} fm_ecobilag ON fm_location1.loc1 = fm_ecobilag.loc1"
+			. " WHERE bilagsnr='$bilagsnr' AND fakturanr = '{$fakturanr}'";
+
+			$this->db2->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			while($this->db2->next_record())
+			{
+				$values[] = array
+					(
+					'id'					 => $this->db2->f('id'),
+					'bilagsnr'				 => $this->db2->f('bilagsnr'),
+					'kidnr'					 => $this->db2->f('kidnr'),
+					'typeid'				 => $this->db2->f('typeid'),
+					'kildeid'				 => $this->db2->f('kildeid'),
+					'pmwrkord_code'			 => $this->db2->f('pmwrkord_code'),
+					'belop'					 => $this->db2->f('belop'),
+					'fakturadato'			 => $this->db2->f('fakturadato'),
+					'periode'				 => $this->db2->f('periode'),
+					'forfallsdato'			 => $this->db2->f('forfallsdato'),
+					'fakturanr'				 => $this->db2->f('fakturanr'),
+					'spbudact_code'			 => $this->db2->f('spbudact_code'),
+					'regtid'				 => $this->db2->f('regtid'),
+					'artid'					 => $this->db2->f('artid'),
+					'godkjentbelop'			 => $this->db2->f('godkjentbelop'),
+					'spvend_code'			 => $this->db2->f('spvend_code'),
+					'dima'					 => $this->db2->f('dima'),
+					'loc1'					 => $this->db2->f('loc1'),
+					'dimb'					 => $this->db2->f('dimb'),
+					'mvakode'				 => $this->db2->f('mvakode'),
+					'dimd'					 => $this->db2->f('dimd'),
+					'dime'					 => $this->db2->f('dime'),
+					'project_id'			 => $this->db2->f('project_id'),
+					'kostra_id'				 => $this->db2->f('kostra_id'),
+					'oppsynsmannid'			 => $this->db2->f('oppsynsmannid'),
+					'saksbehandlerid'		 => $this->db2->f('saksbehandlerid'),
+					'budsjettansvarligid'	 => $this->db2->f('budsjettansvarligid'),
+					'oppsynsigndato'		 => $this->db2->f('oppsynsigndato'),
+					'saksigndato'			 => $this->db2->f('saksigndato'),
+					'budsjettsigndato'		 => $this->db2->f('budsjettsigndato'),
+					'merknad'				 => $this->db2->f('merknad'),
+					'line_text'				 => $this->db2->f('line_text'),
+					'splitt'				 => $this->db2->f('splitt'),
+					'utbetalingid'			 => $this->db2->f('utbetalingid'),
+					'utbetalingsigndato'	 => $this->db2->f('utbetalingsigndato'),
+					'district_id'			 => $this->db2->f('district_id'),
+					'item_type'				 => $this->db2->f('item_type'),
+					'item_id'				 => $this->db2->f('item_id')
+				);
+			}
+
+			return $values;
+		}
+
+		function OverforPeriode($batchid, $periode, $download, $force_period_year = '')
+		{
+			$BilagId = 'NULL';
+
+			//Bestem filnavn
+
+
+			$Filnavn = $this->LagFilnavn($batchid);
+			if(!$Filnavn)
+			{
+				$message = 'LagFilnavn: Alle loepenr for filnavn er i bruk';
+				$this->errorhandler($batchid, $message);
+				phpgwapi_cache::message_set($message, 'error');
+				return false;
+			}
+
+			//Test om filen kan opprettes og skrives til
+			if(@fopen($Filnavn, "wb"))
+			{
+				unlink($Filnavn);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('kan ikke lagre til fil: ' . $Filnavn, 'error');
+				return false;
+			}
+
+			//Velg ut alle hoved bilag som skal overføres
+
+			$this->db->transaction_begin();
+
+			$oRsBilag = $this->get_vouchers_to_transfer($periode);
+
+			$buffer = '';
+
+			foreach($oRsBilag as $invoice)
+			{
+
+				$tranfser_bilag[] = $invoice['bilagsnr'];
+
+				//Bestem belops felt
+				if($invoice['splitt'] == 0)
+				{
+					//Bilaget er ikke splittet
+					if($invoice['godkjentbelop'] <> $invoice['belop'])
+					{
+						$BelopFelt = 'godkjentbelop';
+						//Logg til avviks tabell
+						if($download == 'on')
+						{
+//							$this->soXport->log_to_deviation_table($invoice);
+						}
+					}
+					else
+					{
+						$BelopFelt = 'belop';
+					}
+				}
+
+				//Bilaget er splittet
+				if($invoice['godkjentbelop'] == $invoice['belop'])
+				{
+					$BelopFelt = 'godkjentbelop';
+				}
+				else
+				{
+					//Ikke lovlig
+					$message = lang('Avvik mellom fakturabelop og godkjent belop pa splittet faktura!');
+					$this->errorhandler($batchid, $message);
+					return $message;
+				}
+
+				$Belop_motpost = $invoice[$BelopFelt] * 100;
+
+				//Skriv hovedbilag
+
+				$Buntnr		 = sprintf("%-12s", basename($Filnavn, ".TXT"));// verdi: MMDDFL, type: c12, plass: 1 - 12
+				$Forsystem	 = 'BI';// verdi: BI, type: c2, plass: 13 - 14
+
+				$Transtype	 = 'GL';// verdi: GL, type: c2, plass: 17 - 18
+				$Firmakode	 = sprintf("%-2s", 'BY');// verdi: Firmakode, type: c2, plass: 19 - 20
+
+				$Valuteringsdato = date(Ymd, strtotime($invoice['fakturadato']));// verdi: Dato, type: date, plass: 251 - 258
+				$Bilagsdato		 = date(Ymd, strtotime($invoice['fakturadato']));// verdi: Dato, type: date, plass: 259 - 266
+				$Bilagsnr		 = sprintf("%-9s", '');// verdi: Bilagsnummer, type: i4, plass: 267 - 275
+				//		$_periode	= sprintf("%06s",date(Y,strtotime($invoice['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
+				$ESL			 = sprintf("%1s", '');// verdi: Blank, type: i+C481, plass: 282 - 282
+
+				$_periode = $periode;
+
+				$Bilagsart	 = sprintf("%2s", 'HK');// verdi: , type: c2, plass: 15 - 16
+				$Forfall	 = date(Ymd, strtotime($invoice['forfallsdato']));// verdi: Forfallsdato , type: date, plass: 298 - 305
+
+				$Rab_forf	 = sprintf("%-8s", '');// verdi: Blank, type: date, plass: 306 - 313
+				$Rabatt		 = sprintf("%020s", '');// verdi: Blank, type: money, plass: 314 - 333
+				$Avt_Kon	 = sprintf("%-8s", '');// verdi: Blank, type: c8, plass: 334 - 341
+
+				$Kid			 = sprintf("%-27s", $invoice['kidnr']);// verdi: Kid, type: c27, plass: 351 - 377
+				$Bet_overforing	 = sprintf("%-2s", '');// verdi: Blank, type: c2, plass: 378 - 379
+				$Status			 = 'N';// verdi: N, type: c1, plass: 380 - 380
+//				$Resk_type		 = 'P';// verdi: Blank, type: c1, plass: 381 - 381
+				$Resk_type		 = ' ';// verdi: Blank, type: c1, plass: 381 - 381
+
+//				$Resk_nr		 = sprintf("%-9s", $invoice['spvend_code']);// verdi: Blank., type: i4, plass: 382 - 390
+				$Resk_nr		 = sprintf("%-9s", '');// verdi: Blank., type: i4, plass: 382 - 390
+
+				$Forskudd		 = '0';// verdi: 0, type: i1, plass: 391 - 391
+				$Fakturaref		 = '000000000';// verdi: 0, type: i4, plass: 392 - 400
+				$Fakturaref		 = '000000000';// verdi: 0, type: i4, plass: 401 - 409
+				$Inkassokode	 = sprintf("%-6s", '');// verdi: Blank, type: c6, plass: 410 - 415
+				$Bet_mottager	 = sprintf("%-8s", '');// verdi: Blank, type: c8, plass: 416 - 423
+				$Att_ansvarlig	 = sprintf("%-6s", utf8_decode($invoice['saksbehandler']));// verdi: Blank, type: c6, plass: 424 - 429
+
+				$vendor_info = $this->get_vendor_info($invoice['spvend_code']);
+
+				if(!$vendor_info['org_nr'])
+				{
+					$message = 'mangler org_nr for reskontronr: ' . $invoice['spvend_code'];
+					$this->errorhandler($batchid, $message);
+					return $message;
+				}
+
+				if(!$vendor_info['konto_nr'])
+				{
+					$message = 'mangler konto for reskontronr: ' . $invoice['spvend_code'];
+					$this->errorhandler($batchid, $message);
+					return $message;
+				}
+
+				$Resk_navn				 = sprintf("%-50s", $vendor_info['org_nr']);// verdi: Fødselsnr, type: c50, plass: 430 - 479
+				$Postadresse			 = sprintf("%-160s", '');// verdi: Blank, type: c160, plass: 480 - 639
+				$Stat_Provins			 = sprintf("%-50s", '');// verdi: Blank, type: c50, plass: 640 - 689
+				$Sted					 = sprintf("%-50s", '');// verdi: Blank, type: c50, plass: 690 - 739
+				$Bank_Postgiro_kontonr	 = sprintf("%-35s", str_replace(" ", "", $vendor_info['konto_nr']));// verdi: konto_nr, type: c35, plass: 740 - 774
+				$Betalingsmate			 = sprintf("%-2s", '');// verdi: Blank, type: c2, plass: 775 - 776
+				$Mva_reg_nr				 = sprintf("%-25s", '');// verdi: Blank, type: c25, plass: 777 - 801
+				$Postnummer				 = sprintf("%-15s", '');// verdi: Blank, type: c15, plass: 802 - 816
+				$Val_dok				 = sprintf("%-3s", '');// verdi: Blank, type: c3, plass: 817 - 819
+
+				$underbilag_count	 = count($invoice['invoice_line']);
+				$last_record		 = $underbilag_count - 1;
+
+				//Velg ut alle underbilag
+				foreach($invoice['invoice_line'] as $_key => $invoice_line)
+				{
+					$BilagId = $invoice_line['id'];
+
+					$Belop	 = $invoice_line[$BelopFelt] * 100;
+					$Belop_	 = $Belop;
+
+					if($Belop < 0)
+					{
+						$Belop	 = abs($Belop);
+						$Belop	 = sprintf("%019s", $Belop);
+						$Belop	 = '-' . $Belop;
+					}
+					else
+					{
+						$Belop	 = sprintf("%019s", $Belop);
+						$Belop	 = '+' . $Belop;
+					}
+
+					if($invoice_line['pmwrkord_code'])
+					{
+
+						$orders_affected[$BilagOverf[$i]['pmwrkord_code']] = true;
+
+						//Oppdater beløp på arbeidsordre
+						if($download == 'on')
+						{
+							$actual_cost_field = 'act_vendor_cost';
+
+							$operator = '+';
+
+							if(!$this->debug)
+							{
+								$this->soXport->correct_actual_cost($invoice_line['pmwrkord_code'], $Belop_, $actual_cost_field, $operator);
+							}
+						}
+					}
+
+					//Overfør til fm_ecobilagoverf
+					$invoice_line['filnavn']	 = basename($Filnavn);
+					$invoice_line['ordrebelop']	 = $invoice_line[$BelopFelt];
+
+					$Konto	 = sprintf("%-8s", $invoice_line['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
+					$Dim_1	 = sprintf("%-8s", "0{$invoice_line['dimb']}");// 64040 verdi: Ansvarssted, type: c8, plass: 29 - 36
+					$Dim_2	 = sprintf("%-8s", $invoice_line['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
+					$Dim_3	 = sprintf("%-8s", substr($invoice_line['dima'], 0, 6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
+
+					$Dim_4	 = sprintf("%-8s", '');// verdi: Ressurs, type: c8, plass: 53 - 60
+					$Dim_5	 = sprintf("%-12s", $invoice_line['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
+
+					$Dim_6	 = sprintf("%-4s", $invoice_line['dimd']);// Kategori, type: c4, plass: 73 - 76
+
+					$Dim_7 = sprintf("%-4s", '');// verdi: Blank, type: c4, plass: 77 - 80
+
+					$Avgiftskode = sprintf("%-2s", $invoice_line['mvakode']);// verdi: Avgiftskode, type: c2, plass: 81 - 82
+
+					$Avgiftssystem		 = sprintf("%2s", '');// verdi: Blank, type: c2, plass: 83 - 84
+					$Valutakode			 = 'NOK';// verdi: NOK, type: c3, plass: 85 - 87
+					$Debet_Kredit		 = sprintf("%2s", '');// verdi: Blank, type: i2, plass: 88 - 89
+					$Valutabelop		 = $Belop;// verdi: Beløp, type: money, plass: 90 - 109
+					$Belop_i_firmavaluta = $Belop;// verdi: Beløp, type: money, plass: 110 - 129
+					$Antall				 = sprintf("%11s", '');// verdi: Blank, type: i4, plass: 130 - 140
+					$Belop2				 = sprintf("%20s", '');// verdi: Blank, type: f8, plass: 141 - 160
+					$Belop3				 = sprintf("%20s", '');// verdi: Blank, type: money, plass: 161 - 180
+					//	$Belop4 (også kalt "money3" )blir brukt for identifisere overføring på tvers av filer.
+					$Belop4				 = sprintf("%20s", '');// verdi: Blank, type: money, plass: 181 - 200 - batch_id høyre justert
+
+					$Tekst = sprintf("%-50s", substr("{$invoice['spvend_code']}::{$invoice_line['fakturanr']}", 0, 50));
+
+	//				$Fakturanr = sprintf("%-15s", substr(utf8_decode($invoice_line['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
+					$Fakturanr = sprintf("%-15s", '');// verdi: Fakturanr, type: c15, plass: 283 - 297
+
+					$Ordrenummer = sprintf("%-9s", $invoice_line['pmwrkord_code']);// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
+					//Kopier verdier
+					if($download == 'on' && !$this->debug)
+					{
+						$this->soXport->add_OverfBilag($invoice_line);
+					}
+
+					//Skriv til fil
+
+					$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 .
+					$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop .
+					$Belop_i_firmavaluta . $Antall . $Belop2 . $Belop3 . $Belop4 . $Tekst . $Valuteringsdato . $Bilagsdato .
+					$Bilagsnr . $_periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer .
+					$Kid . $Bet_overforing . $Status . $Resk_type . $Resk_nr . $Forskudd . $Fakturaref . $Fakturaref .
+					$Inkassokode . $Bet_mottager . $Att_ansvarlig . $Resk_navn . $Postadresse . $Stat_Provins . $Sted .
+					$Bank_Postgiro_kontonr . $Betalingsmate . $Mva_reg_nr . $Postnummer . $Val_dok . "\r\n";
+
+					if($_key == $last_record)
+					{
+						$Konto		 = sprintf("%-8s", '2139915');// verdi: Art, type: c8, plass: 21 - 28
+			//			$Dim_1		 = sprintf("%-8s", $invoice_line['dimb']);//sprintf("%-8s",'');// verdi: Ansvarssted, type: c8, plass: 29 - 36
+						$Dim_2		 = sprintf("%-8s", '');// verdi: Tjeneste, type: c8, plass: 37 - 44
+						$Dim_3		 = sprintf("%-8s", '');// verdi: Objekt, type: c8, plass: 45 - 52
+						$Dim_4		 = sprintf("%-8s", '');// verdi: Ressurs, type: c8, plass: 53 - 60
+						$Dim_5		 = sprintf("%-12s", '');// verdi: Prosjekt, type: c12, plass: 61 - 72
+						$Dim_6		 = sprintf("%-4s", '');// verdi: Blank, type: c4, plass: 73 - 76
+						$Dim_7		 = sprintf("%-4s", '');// verdi: Blank, type: c4, plass: 77 - 80
+						$Fakturanr	 = sprintf("%-15s", '');// verdi: Fakturanr, type: c15, plass: 283 - 297
+						$Ordrenummer = sprintf("%-9s", '');// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
+						//	$Tekst		= sprintf("%-50s",'');//sprintf("%-50s",substr($invoice_line['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
+			//			$Tekst		 = sprintf("%-50s", '');// verdi: Tekst, type: text (50), plass: 201 - 250
+						//Ikke fortegnskifte for kostfordeling (GL)
+						if($Belop_motpost < 0)
+						{
+							$Belop_motpost	 = sprintf("%019s", abs($Belop_motpost));
+							$Belop_motpost	 = "+{$Belop_motpost}";
+						}
+						else
+						{
+							$Belop_motpost	 = sprintf("%019s", $Belop_motpost);
+							$Belop_motpost	 = "-{$Belop_motpost}";
+						}
+
+						$Transtype			 = 'GL';// verdi: GL, type: c2, plass: 17 - 18
+						$Valutabelop		 = $Belop_motpost;// verdi: Beløp, type: money, plass: 90 - 109
+						$Belop_i_firmavaluta = $Belop_motpost;// verdi: Beløp, type: money, plass: 110 - 129
+
+						$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 .
+						$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop .
+						$Belop_i_firmavaluta . $Antall . $Belop2 . $Belop3 . $Belop4 . $Tekst . $Valuteringsdato . $Bilagsdato .
+						$Bilagsnr . $_periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer .
+						$Kid . $Bet_overforing . $Status . $Resk_type . $Resk_nr . $Forskudd . $Fakturaref . $Fakturaref .
+						$Inkassokode . $Bet_mottager . $Att_ansvarlig . $Resk_navn . $Postadresse . $Stat_Provins . $Sted .
+						$Bank_Postgiro_kontonr . $Betalingsmate . $Mva_reg_nr . $Postnummer . $Val_dok . "\r\n";
+					}
+
+					//Slett post i fm_ecobilag
+					if($download == 'on' && !$this->debug)
+					{
+						$this->soXport->delete_from_fm_ecobilag($invoice_line['id']);
+						//Logg transaksjon
+						$this->soXport->log_transaction($batchid, $BilagId, lang('Invoice transferred'));
+					}
+
+					$BilagId = 'NULL';
+
+					$antall = $antall + 1;
+				}
+			}
+
+			//Fullfør transaksjon
+
+			if($download == 'on' && !$this->debug)
+			{
+				$fp = fopen($Filnavn, "wb");
+				fwrite($fp, $buffer);
+
+				if(fclose($fp))
+				{
+					$file_written = True;
+				}
+
+				if($file_written && $this->config->config_data['common']['method'] != 'ftp')
+				{
+					$transfer_ok = True;
+				}
+				else if($file_written)
+				{
+					$transfer_ok = $this->transfer($buffer, $Filnavn, $batchid, $tranfser_bilag);
+				}
+
+				if($transfer_ok)
+				{
+					$this->db->transaction_commit();
+					$message = 'Godkjent: periode: ' . $_periode . ' antall bilag/underbilag overfort:' . $antall . ' , fil: ' . $Filnavn;
+					phpgwapi_cache::message_set($message, 'message');
+				}
+				else
+				{
+					$this->db->transaction_abort();
+					$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';
+					phpgwapi_cache::message_set($message, 'error');
+				}
+			}
+			else
+			{
+				$this->db->transaction_abort();
+
+				_debug_array($Filnavn);
+				$fp = fopen($Filnavn, "wb");
+				fwrite($fp, $buffer);
+
+				if(fclose($fp))
+				{
+					$file_written = True;
+				}
+
+				echo "<pre>{$buffer}</pre>";
+			}
+		}
+
+		function transfer($buffer, $Filnavn, $batchid, $tranfser_bilag)
+		{
+
+			if($this->config->config_data['common']['method'] == 'ftp')
+			{
+				$ftp = $this->phpftp_connect();
+
+				$basedir = $this->config->config_data['common']['remote_basedir'];
+				if($basedir)
+				{
+					$newfile = $basedir . '/' . basename($Filnavn);
+				}
+				else
+				{
+					$newfile = basename($Filnavn);
+				}
+
+				if(ftp_put($ftp, $newfile, $Filnavn, FTP_BINARY))
+				{
+					for($i = 0; $i < count($tranfser_bilag); $i++)
+					{
+						$this->soXport->log_transaction($batchid, $tranfser_bilag[$i], lang('Invoice pre_transferred %1', basename($Filnavn)));
+					}
+					$transfer_ok = True;
+				}
+				else
+				{
+					for($i = 0; $i < count($tranfser_bilag); $i++)
+					{
+						$this->soXport->log_transaction($batchid, $tranfser_bilag[$i], lang('Failed to pre_transfere %1 to agresso', basename($Filnavn)));
+					}
+					$transfer_ok = False;
+				}
+				if(!$transfer_ok)
+				{
+					unlink($Filnavn);
+				}
+
+				ftp_quit($ftp);
+			}
+			return $transfer_ok;
+		}
+
+		function phpftp_connect()
+		{
+			$host		 = $this->config->config_data['common']['host'];
+			$user		 = $this->config->config_data['common']['user'];
+			$password	 = $this->config->config_data['common']['password'];
+
+//			echo "connecting to $host with $user and $pass\n <br>";
+			$ftp = ftp_connect($host);
+			if($ftp)
+			{
+				if(ftp_login($ftp, $user, $password))
+				{
+					return $ftp;
+				}
+			}
+		}
+	}	

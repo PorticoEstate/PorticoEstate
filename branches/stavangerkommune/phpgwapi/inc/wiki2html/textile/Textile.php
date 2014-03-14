@@ -351,7 +351,7 @@ class Textile
 	var $max_span_depth = 5;
 
 	var $ver = '2.2.0';
-	var $rev = '$Rev$';
+	var $rev = '$Rev: 10127 $';
 
 	var $doc_root;
 

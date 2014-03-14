@@ -42,9 +42,9 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = clone($GLOBALS['phpgw']->db);
 			$this->db2          = clone($this->db);
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= $this->db->join;
+			$this->left_join	= $this->db->left_join;
+			$this->like			= $this->db->like;
 			//			$this->role		= 'agreement';
 		}
 
@@ -386,26 +386,29 @@
 
 		function read_details($data)
 		{
-				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
-				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter']:'none';
-				$query 			= isset($data['query']) ? $data['query'] : '';
-				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order			= isset($data['order']) ? $data['order'] : '';
-				$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
-				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-				$agreement_id	= isset($data['agreement_id']) ? $data['agreement_id'] : '';
+			$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter']:'none';
+			$query 			= isset($data['query']) ? $data['query'] : '';
+			$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$agreement_id	= isset($data['agreement_id']) ? $data['agreement_id'] : '';
 
 			$allrows = true; // return all..
 
 			$entity_table = 'fm_activity_price_index';
 
 			$paranthesis ='(';
-			$joinmethod = " $this->join fm_activities ON ( fm_activities.id = $entity_table.activity_id))";
+			$joinmethod = " {$this->join} fm_activities ON ( fm_activities.id = $entity_table.activity_id))";
+			$paranthesis .='(';
+			$joinmethod .= " {$this->join} fm_standard_unit ON (fm_activities.unit = fm_standard_unit.id))";
 
 			$cols = "fm_activities.*, $entity_table.m_cost,$entity_table.w_cost,"
-				. " $entity_table.total_cost,$entity_table.index_count,"
-				. " $entity_table.index_date,$entity_table.activity_id,"
-				. " $entity_table.this_index,$entity_table.agreement_id";
+				. " {$entity_table}.total_cost,$entity_table.index_count,"
+				. " {$entity_table}.index_date,$entity_table.activity_id,"
+				. " {$entity_table}.this_index,$entity_table.agreement_id,"
+				. " fm_standard_unit.name AS unit_name";
 
 
 			$uicols['name'][]			= 'activity_id';
@@ -420,7 +423,7 @@
 			$uicols['descr'][]			= lang('descr');
 			$uicols['input_type'][]		= 'V';
 
-			$uicols['name'][]			= 'unit';
+			$uicols['name'][]			= 'unit_name';
 			$uicols['descr'][]			= lang('unit');
 			$uicols['input_type'][]		= 'V';
 
@@ -460,9 +463,11 @@
 					case 'm_cost':
 					case 'num':
 					case 'descr':
-					case 'unit':
 					case 'm_cost':
 						$ordermethod = "ORDER BY {$entity_table}.{$order} {$sort}";
+						break;
+					case 'unit_name':
+						$ordermethod = "ORDER BY fm_standard_unit.name {$sort}";
 						break;
 					default:
 						$ordermethod = '';
@@ -512,8 +517,9 @@
 						'activity_id'		=> $this->db->f('activity_id'),
 						'id'				=> $this->db->f('id'),
 						'num'				=> $this->db->f('num'),
-						'descr'				=> htmlspecialchars_decode($this->db->f('descr',true)),
+						'descr'				=> $this->db->f('descr',true),
 						'unit'				=> $this->db->f('unit'),
+						'unit_name'			=> $this->db->f('unit_name'),
 						'm_cost'			=> $this->db->f('m_cost'),
 						'w_cost'			=> $this->db->f('w_cost'),
 						'total_cost'		=> $this->db->f('total_cost'),
@@ -757,7 +763,7 @@
 			if($cols)
 			{
 				$cols	= "," . implode(",", $cols);
-				$vals	= $this->bocommon->validate_db_insert($vals);
+				$vals	= $this->db->validate_insert($vals);
 			}
 
 			$this->db->query("INSERT INTO $table (id,name,descr,entry_date,category,start_date,end_date,termination_date,vendor_id,user_id $cols) "
@@ -848,9 +854,11 @@
 			$value_set['descr']	= $values['descr'];
 			$value_set['group_id']	= $values['group_id'];
 			$value_set['status']	= $values['status'];
+			$value_set['vendor_id']	= $values['vendor_id'];
+
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
@@ -873,7 +881,7 @@
 
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE fm_activity_price_index set entry_date=" . time() . "$value_set WHERE agreement_id=" . intval($values['agreement_id']) . ' AND activity_id=' . intval($values['id']));

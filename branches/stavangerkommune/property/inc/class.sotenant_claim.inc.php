@@ -111,7 +111,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%' OR project_id=" . (int)$query .')';
+				$querymethod = " $where (address {$this->like} '%{$query}%' OR first_name {$this->like} '%{$query}%' OR last_name {$this->like} '%{$query}%' OR project_id=" . (int)$query .')';
 			}
 
 			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
@@ -162,7 +162,7 @@
 		function check_claim_project($project_id)
 		{
 			$sql = "SELECT fm_tenant_claim.*, descr as category FROM fm_tenant_claim"
-				. " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
+				. " {$this->join} fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
 				. " WHERE project_id = $project_id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -215,11 +215,18 @@
 
 			}
 
-			$target = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $id, 'origin');
+			$targets = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $id, 'origin');
 
-			if ( $target)
+			$claim['workorders'] = $targets;
+			$claim['claim_issued'] = array();
+			
+			foreach($targets as $workorder_id)
 			{
-				$claim['workorder'] = $target;
+				$this->db->query("SELECT claim_issued FROM fm_workorder WHERE id='{$workorder_id}' AND claim_issued = 1",__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$claim['claim_issued'][] = $workorder_id;
+				}
 			}
 
 			return $claim;
@@ -277,7 +284,16 @@
 
 		function edit($claim)
 		{
+			$historylog	= CreateObject('property.historylog','tenant_claim');
+
 			$this->db->transaction_begin();
+
+			$this->db->query("select status from fm_tenant_claim where id=" . (int)$claim['claim_id'],__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$old_status  			= $this->db->f('status');
+
+
 
 			$claim['name'] = $this->db->db_addslashes($claim['name']);
 			$claim['amount'] =  str_replace(",",".",$claim['amount']);
@@ -288,15 +304,19 @@
 				'amount'			=> $claim['amount'],
 				'category'			=> $claim['cat_id'],
 				'status'			=> $claim['status'],
-				'user_id'			=> $this->account,
 				'remark'			=> $this->db->db_addslashes($claim['remark'])
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
 
-			$this->db->query("UPDATE fm_tenant_claim set $value_set  WHERE id=" . (int)$claim['claim_id'],__LINE__,__FILE__);
+			$claim_id = (int)$claim['claim_id'];
+			$this->db->query("UPDATE fm_tenant_claim set {$value_set} WHERE id={$claim_id}",__LINE__,__FILE__);
 
-			$claim_id = $claim['claim_id'];
+			if($old_status != $claim['status'])
+			{
+
+				$historylog->add('S', $claim_id, $claim['status'], $old_status);
+			}
 
 			$this->interlink->delete_from_target('property', '.tenant_claim', $claim_id, $this->db);
 

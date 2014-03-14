@@ -541,6 +541,14 @@
 		*/
 		public function link($url, $extravars = array(), $redirect=false, $external = false)
 		{
+
+			$custom_frontend = isset($GLOBALS['phpgw_info']['flags']['custom_frontend']) && $GLOBALS['phpgw_info']['flags']['custom_frontend'] ? $GLOBALS['phpgw_info']['flags']['custom_frontend'] : '';
+
+			if($custom_frontend && substr($url, 0, 4) != 'http')
+			{
+				$url = '/' . $custom_frontend . '/' . ltrim($url, '/');
+			}
+
 			//W3C Compliant in markup	
 			$term = '&amp;'; 
 			if ( $redirect )
@@ -1123,6 +1131,10 @@
 			$this->_sessionid = $sessionid;
 
 			$session = $this->read_session($sessionid);
+			$this->_session_flags = $session['session_flags'];
+
+			$lid_data = explode('#', $session['session_lid']);
+			$this->_account_lid = $lid_data[0];
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] != 'ntlm') //Timeout make no sense for SSO
 			{
@@ -1132,16 +1144,30 @@
 				{
 					if(isset($session['session_dla']))
 					{
+						if(is_object($GLOBALS['phpgw']->log))
+						{
+							$GLOBALS['phpgw']->log->message(array(
+								'text' => 'W-VerifySession, session for %1 is expired by %2 sec, inactive for %3 sec',
+								'p1'   => $this->_account_lid,
+								'p2'   => ($timeout - $session['session_dla']),
+								'p3'   => (time() - $session['session_dla']),
+								'line' => __LINE__,
+								'file' => __FILE__
+							));
+							$GLOBALS['phpgw']->log->commit();
+						}
+						if(is_object($GLOBALS['phpgw']->crypto))
+						{
+							$GLOBALS['phpgw']->crypto->cleanup();
+							unset($GLOBALS['phpgw']->crypto);
+						}
+
 						$this->cd_reason = 10;
 					}
 					return false;
 				}
 			}
 
-			$this->_session_flags = $session['session_flags'];
-
-			$lid_data = explode('#', $session['session_lid']);
-			$this->_account_lid = $lid_data[0];
 
 			if ( isset($lid_data[1]) )
 			{

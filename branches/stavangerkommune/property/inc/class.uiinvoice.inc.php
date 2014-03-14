@@ -207,6 +207,7 @@
 			$submit_search 	= phpgw::get_var('submit_search', 'bool');
 			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
 			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$project_id 	= phpgw::get_var('project_id', 'int');
 			$loc1 			= phpgw::get_var('loc1');
 			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
 			$invoice_id		= phpgw::get_var('invoice_id');
@@ -285,6 +286,7 @@
 						'ecodimb'			=> $ecodimb,
 						'vendor_id'			=> $vendor_id,
 						'workorder_id'		=> $workorder_id,
+						'project_id'		=> $project_id,
 						'start_date'		=> $start_date,
 						'end_date'			=> $end_date,
 						'filter'			=> $this->filter,
@@ -303,6 +305,7 @@
 					."ecodimb:'{$ecodimb}',"
 					."vendor_id:'{$vendor_id}',"
 					."workorder_id:'{$workorder_id}',"
+					."project_id:'{$project_id}',"
 					."voucher_id:'{$voucher_id}',"
 					."start_date:'{$start_date}',"
 					."end_date:'{$end_date}',"
@@ -549,6 +552,11 @@
 				}
 				else
 				{
+
+					$values_combo_box[3]  = $this->bocommon->select_category_list(array('type'=>'dimb', 'selected' => $ecodimb));
+					$default_value = array ('id'=>'','name'=>lang('no dimb'));
+					array_unshift ($values_combo_box[3],$default_value);
+
 					$field_invoice = array
 						(
 							array
@@ -587,6 +595,26 @@
 								'name'     => 'workorder_id',
 								'id'     => 'txt_workorder',
 								'value'    => $workorder_id,
+								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
+								'size'    => 10,
+								'tab_index' => 6,
+								'style' => 'filter'
+							),
+							array
+							( // project
+								'type' => 'link',
+								'id' => 'lnk_project',
+								'url' => "",
+								'value' => lang('project id'),
+								'tab_index' => 5,
+								'style' => 'filter'
+							),
+							array
+							( // project box
+								'name'     => 'project_id',
+								'id'     => 'txt_project',
+								'value'    => $project_id,
 								'type' => 'text',
 								'onkeypress' => 'return pulsar(event)',
 								'size'    => 10,
@@ -752,7 +780,18 @@
 								'name'	=> 'paid',
 								'value'	=> $paid,
 								'style' => 'filter'
-							)
+							),
+							array
+							( 
+								'id' => 'sel_ecodimb',
+								'name' => 'ecodimb',
+								'value'	=> lang('dimb'),
+								'type' => 'select',
+								'style' => 'filter',
+								'values' => $values_combo_box[3],
+								'onchange'=> 'onChangeSelect("ecodimb");',
+								'tab_index' => 5
+							),
 						);
 				}
 
@@ -774,6 +813,7 @@
 								'paid'				=> $paid,
 								'vendor_id'			=> $vendor_id,
 								'workorder_id'		=> $workorder_id,
+								'project_id'		=> $project_id,
 								'start_date'		=> $start_date,
 								'end_date'			=> $end_date,
 								'filter'			=> $this->filter,
@@ -852,7 +892,7 @@ JS;
 
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
-			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id,$invoice_id,$ecodimb);
+			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id,$invoice_id,$ecodimb,$project_id);
 
 
 			$uicols = array (
@@ -1755,6 +1795,7 @@ JS;
 				}
 			}
 
+			$content = array();
 			if ($voucher_id)
 			{
 				$this->bo->allrows = true;
@@ -1762,21 +1803,28 @@ JS;
 			}
 
 			$sum=0;
-			$i	=0;
-			if(is_array($content))
+
+			$dimb_list			= $this->bo->select_dimb_list();
+			$tax_code_list		= $this->bo->tax_code_list();
+			$_link_order 		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
+			$_link_claim 		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
+			
+			foreach ($content as &$entry)
 			{
-				while(each($content))
-				{
-					$sum									= $sum + $content[$i]['amount'];
-					$content[$i]['amount'] 					= number_format($content[$i]['amount'], 2, ',', '');
-					$content[$i]['paid']					= $paid;
-					$content[$i]['dimb_list']				= $this->bo->select_dimb_list($content[$i]['dimb']);
-					$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
-					$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
-					$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
-					$i++;
-				}
+				$sum						+= $entry['amount'];
+				$entry['amount'] 			= number_format($entry['amount'], 2, ',', '');
+				$entry['paid']				= $paid;
+				$entry['dimb_list']			= $this->bocommon->select_list($entry['dimb'], $dimb_list);
+				$entry['tax_code_list']		= $this->bo->tax_code_list($entry['tax_code'], $tax_code_list);
+				$entry['link_order'] 		= $_link_order;
+				$entry['link_claim'] 		= $_link_claim;
 			}
+
+			unset($entry);
+			unset($_link_order);
+			unset($_link_claim);
+			unset($dimb_list);
+			unset($tax_code_list);
 
 			$uicols = array (
 				array(
@@ -1826,243 +1874,248 @@ JS;
 
 			$j=0;
 			//---- llena DATATABLE-ROWS con los valores del READ
-			if (isset($content) && is_array($content))
+			$workorders = array();
+			foreach($content as $invoices)
 			{
-				$workorders = array();
-				foreach($content as $invoices)
+				for ($i=0;$i<count($uicols);$i++)
 				{
-					for ($i=0;$i<count($uicols);$i++)
+					$json_row[$uicols[$i]['col_name']] = "";
+
+					if($i == 0)
 					{
-						$json_row[$uicols[$i]['col_name']] = "";
-
-						if($i == 0)
+						$json_row[$uicols[$i]['col_name']] .= " <input name='values[counter][".$j."]' id='values[counter][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['counter']."'/>";
+						$json_row[$uicols[$i]['col_name']] .= " <input name='values[id][".$j."]' id='values[id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['id']."'/>";
+						$json_row[$uicols[$i]['col_name']] .= " <input name='values[workorder_id][".$j."]' id='values[workorder_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['workorder_id']."'/>";
+						$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_order'].'&order_id='.$invoices['workorder_id']."'>".$invoices['workorder_id']."</a>";
+					}
+					else if(($i == 1))
+					{
+						$json_row[$uicols[$i]['col_name']]  .= $invoices['project_group'];
+					}
+					else if(($i == 2))
+					{
+						if(!isset($invoices['workorder_id']) || !$invoices['workorder_id'])
 						{
-							$json_row[$uicols[$i]['col_name']] .= " <input name='values[counter][".$j."]' id='values[counter][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['counter']."'/>";
-							$json_row[$uicols[$i]['col_name']] .= " <input name='values[id][".$j."]' id='values[id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['id']."'/>";
-							$json_row[$uicols[$i]['col_name']] .= " <input name='values[workorder_id][".$j."]' id='values[workorder_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['workorder_id']."'/>";
-							$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_order'].'&order_id='.$invoices['workorder_id']."'>".$invoices['workorder_id']."</a>";
+							//nothing
 						}
-						else if(($i == 1))
+						else if(!$invoices['paid'] && !array_key_exists($invoices['workorder_id'], $workorders))
 						{
-							$json_row[$uicols[$i]['col_name']]  .= $invoices['project_group'];
-						}
-						else if(($i == 2))
-						{
-							if($invoices['workorder_id'] == "")
+							$_checked = '';
+							if($invoices['closed']== 1)
 							{
-								//nothing
+								$_checked = 'checked="checked"';
 							}
-							else if($invoices['paid']== ""  && !array_key_exists($invoices['workorder_id'], $workorders))
+							else if($invoices['project_type_id']== 1 && !$invoices['periodization_id']) // operation projekts
 							{
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_orig][".$j."]' id='values[close_order_orig][".$j."]'  class='myValuesForPHP '  type='hidden' value='".$invoices['closed']."'/>";
-								if($invoices['closed']== 1)
-								{
-									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_tmp][".$j."]' id='values[close_order_tmp][".$j."]'  class='close_order_tmp transfer_idClass'  type='checkbox' value='true' checked='checked' />";
-								}
-								else
-								{
-									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_tmp][".$j."]' id='values[close_order_tmp][".$j."]'  class='close_order_tmp transfer_idClass'  type='checkbox' value='true'/>";
-								}
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][".$j."]' id='values[close_order][".$j."]'  class='myValuesForPHP close_order'  type='hidden' value=''/>";
+								$_checked = 'checked="checked"';
+							}
+							else if(!$invoices['continuous'])
+							{
+								$_checked = 'checked="checked"';
+							}
+
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_orig][{$j}]' id='values[close_order_orig][{$j}]' class='myValuesForPHP ' type='hidden' value='{$invoices['closed']}'/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_tmp][{$j}]' id='values[close_order_tmp][{$j}]' class='close_order_tmp transfer_idClass' type='checkbox' value='true' {$_checked}/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][{$j}]' id='values[close_order][{$j}]' class='myValuesForPHP close_order' type='hidden' value=''/>";
+						}
+						else
+						{
+							if($invoices['closed']== 1)
+							{
+								$json_row[$uicols[$i]['col_name']]  .= "<b>x</b>";
+							}
+						}
+					}
+					else if(($i == 3))
+					{
+						if($invoices['charge_tenant'] == 1)
+						{
+							if(!$invoices['claim_issued'])
+							{
+								$_workorder = execMethod('property.soworkorder.read_single', $invoices['workorder_id']);
+								$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_claim'].'&project_id='.$_workorder['project_id']."'>".lang('Claim')."</a>";
+								unset($_workorder);
 							}
 							else
 							{
-								if($invoices['closed']== 1)
-								{
-									$json_row[$uicols[$i]['col_name']]  .= "<b>x</b>";
-								}
+								$json_row[$uicols[$i]['col_name']]  .= "<b>x</b>";
 							}
 						}
-						else if(($i == 3))
+						else
 						{
-							if($invoices['charge_tenant'] == 1)
-							{
-								if($invoices['claim_issued'] == '')
-								{
-									$_workorder = execMethod('property.soworkorder.read_single', $invoices['workorder_id']);
-									$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_claim'].'&project_id='.$_workorder['project_id']."'>".lang('Claim')."</a>";
-									unset($_workorder);
-								}
-								else
-								{
-									$json_row[$uicols[$i]['col_name']]  .= "<b>x</b>";
-								}
-							}
-							else
-							{
-								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
-							}
-
-						}
-						else if(($i == 4))
-						{
-							$json_row[$uicols[$i]['col_name']]  .= $invoices['invoice_id'];
+							$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 						}
 
-						else if(($i == 5))
+					}
+					else if(($i == 4))
+					{
+						$json_row[$uicols[$i]['col_name']]  .= $invoices['invoice_id'];
+					}
+
+					else if(($i == 5))
+					{
+						if($invoices['paid'] == true)
 						{
-							if($invoices['paid'] == true)
-							{
-								$json_row[$uicols[$i]['col_name']] .= $invoices['budget_account'];
-							}
-							else
-							{
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[budget_account][".$j."]' id='values[budget_account][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['budget_account']."'/>";
-							}
+							$json_row[$uicols[$i]['col_name']] .= $invoices['budget_account'];
 						}
-
-						else if(($i == 6))
+						else
 						{
-							$json_row[$uicols[$i]['col_name']]  .= $invoices['amount'];
-						}
-
-						else if(($i == 7))
-						{
-
-							if($invoices['paid'] == true)
-							{
-								$json_row[$uicols[$i]['col_name']] .= $invoices['approved_amount'];
-							}
-							else
-							{
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[approved_amount][".$j."]' id='values[approved_amount][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['approved_amount']."'/>";
-							}
-
-
-						}
-
-						else if(($i == 8))
-						{
-							$json_row[$uicols[$i]['col_name']]  .= $invoices['currency'];
-						}
-
-						else if(($i == 9))
-						{
-							if($invoices['paid'] == true)
-							{
-								$json_row[$uicols[$i]['col_name']]  .= $invoices['dima'];
-							}
-							else
-							{
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['dima']."'/>";
-							}
-						}
-						else if(($i == 10))
-						{
-							if($invoices['paid'] == true)
-							{
-								$json_row[$uicols[$i]['col_name']]  .= $invoices['dimb'];
-							}
-							else
-							{
-
-								$json_row[$uicols[$i]['col_name']]  .= " <select name='values[dimb_tmp][".$j."]' id='values[dimb_tmp][".$j."]'  class='dimb_tmp'><option value=''></option>";
-
-								for($k = 0 ;$k < count($invoices['dimb_list']) ; $k++)
-								{
-									if(isset($invoices['dimb_list'][$k]['selected']) && $invoices['dimb_list'][$k]['selected']!="")
-									{
-										$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['dimb_list'][$k]['id']."' selected >".$invoices['dimb_list'][$k]['name']."</option>";
-									}
-									else
-									{
-										$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['dimb_list'][$k]['id']."'>".$invoices['dimb_list'][$k]['name']."</option>";
-									}
-								}
-								$json_row[$uicols[$i]['col_name']]  .="</select>";
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimb][".$j."]' id='values[dimb][".$j."]'  class='myValuesForPHP dimb'  type='hidden' value=''/>";
-
-							}
-						}
-						else if(($i == 11))
-						{
-							if($invoices['paid'] == true)
-							{
-								$json_row[$uicols[$i]['col_name']]  .= $invoices['dimd'];
-							}
-							else
-							{
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='myValuesForPHP'  type='text' size='4' value='".$invoices['dimd']."'/>";
-							}
-						}
-						else if(($i == 12))
-						{
-							if($invoices['paid'] == true)
-							{
-								$json_row[$uicols[$i]['col_name']]  .= $invoices['tax_code'];
-							}
-							else
-							{
-
-								$json_row[$uicols[$i]['col_name']]  .= " <select name='values[tax_code_tmp][".$j."]' id='values[tax_code_tmp][".$j."]'  class='tax_code_tmp'><option value=''></option>";
-
-								for($k = 0 ;$k < count($invoices['tax_code_list']) ; $k++)
-								{
-									if(isset($invoices['tax_code_list'][$k]['selected']) && $invoices['tax_code_list'][$k]['selected']!="")
-									{
-										$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['tax_code_list'][$k]['id']."'  selected >".$invoices['tax_code_list'][$k]['id']."</option>";
-									}
-									else
-									{
-										$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['tax_code_list'][$k]['id']."'>".$invoices['tax_code_list'][$k]['id']."</option>";
-									}
-								}
-								$json_row[$uicols[$i]['col_name']]  .="</select>";
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[tax_code][".$j."]' id='values[tax_code][".$j."]'  class='myValuesForPHP tax_code'  type='hidden' value=''/>";
-
-							}
-						}
-						else if(($i == 13))
-						{
-							if($invoices['remark'] == true)
-							{
-								$json_row[$uicols[$i]['col_name']] .= " <a href=\"javascript:openwindow('".$GLOBALS['phpgw']->link('/index.php', array
-									(
-										'menuaction'=> 'property.uiinvoice.remark',
-										'id'		=> $invoices['id'],
-										'paid'		=> $invoices['paid']
-									)). "','550','400')\" >".lang('Remark')."</a>";
-							}
-							else
-							{
-								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
-							}
-						}
-						else if(($i == 14))
-						{
-							if(isset($invoices['external_ref']) && $invoices['external_ref'])
-							{
-								//	$json_row[$uicols[$i]['col_name']] = " <a target='_blank' href='".$baseurl_invoice. $invoices['external_ref']."'>{$lang_picture}</a>";
-								$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$invoices['external_ref']}','640','800')\" >{$lang_picture}</a>";
-							}
-							else
-							{
-								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
-							}
-						}
-						else if($i == 15)
-						{
-							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
-						}
-						else if($i == 16)
-						{
-							$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
-						}
-						else if($i == 17)
-						{
-							$json_row[$uicols[$i]['col_name']]  = $invoices['external_ref'];
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[budget_account][".$j."]' id='values[budget_account][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['budget_account']."'/>";
 						}
 					}
 
-					if($invoices['workorder_id'])
+					else if(($i == 6))
 					{
-						$workorders[$invoices['workorder_id']] = true;
+						$json_row[$uicols[$i]['col_name']]  .= $invoices['amount'];
 					}
 
-					$datatable['rows']['row'][] = $json_row;
-					$j++;
+					else if(($i == 7))
+					{
+
+						if($invoices['paid'] == true)
+						{
+							$json_row[$uicols[$i]['col_name']] .= $invoices['approved_amount'];
+						}
+						else
+						{
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[approved_amount][".$j."]' id='values[approved_amount][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['approved_amount']."'/>";
+						}
+
+
+					}
+
+					else if(($i == 8))
+					{
+						$json_row[$uicols[$i]['col_name']]  .= $invoices['currency'];
+					}
+
+					else if(($i == 9))
+					{
+						if($invoices['paid'] == true)
+						{
+							$json_row[$uicols[$i]['col_name']]  .= $invoices['dima'];
+						}
+						else
+						{
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['dima']."'/>";
+						}
+					}
+					else if(($i == 10))
+					{
+						if($invoices['paid'] == true)
+						{
+							$json_row[$uicols[$i]['col_name']]  .= $invoices['dimb'];
+						}
+						else
+						{
+
+							$json_row[$uicols[$i]['col_name']]  .= " <select name='values[dimb_tmp][".$j."]' id='values[dimb_tmp][".$j."]'  class='dimb_tmp'><option value=''></option>";
+
+							for($k = 0 ;$k < count($invoices['dimb_list']) ; $k++)
+							{
+								if(isset($invoices['dimb_list'][$k]['selected']) && $invoices['dimb_list'][$k]['selected']!="")
+								{
+									$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['dimb_list'][$k]['id']."' selected >".$invoices['dimb_list'][$k]['name']."</option>";
+								}
+								else
+								{
+									$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['dimb_list'][$k]['id']."'>".$invoices['dimb_list'][$k]['name']."</option>";
+								}
+							}
+							$json_row[$uicols[$i]['col_name']]  .="</select>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimb][".$j."]' id='values[dimb][".$j."]'  class='myValuesForPHP dimb'  type='hidden' value=''/>";
+
+						}
+					}
+					else if(($i == 11))
+					{
+						if($invoices['paid'] == true)
+						{
+							$json_row[$uicols[$i]['col_name']]  .= $invoices['dimd'];
+						}
+						else
+						{
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='myValuesForPHP'  type='text' size='4' value='".$invoices['dimd']."'/>";
+						}
+					}
+					else if(($i == 12))
+					{
+						if($invoices['paid'] == true)
+						{
+							$json_row[$uicols[$i]['col_name']]  .= $invoices['tax_code'];
+						}
+						else
+						{
+
+							$json_row[$uicols[$i]['col_name']]  .= " <select name='values[tax_code_tmp][".$j."]' id='values[tax_code_tmp][".$j."]'  class='tax_code_tmp'><option value=''></option>";
+
+							for($k = 0 ;$k < count($invoices['tax_code_list']) ; $k++)
+							{
+								if(isset($invoices['tax_code_list'][$k]['selected']) && $invoices['tax_code_list'][$k]['selected']!="")
+								{
+									$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['tax_code_list'][$k]['id']."'  selected >".$invoices['tax_code_list'][$k]['id']."</option>";
+								}
+								else
+								{
+									$json_row[$uicols[$i]['col_name']]  .= "<option value='".$invoices['tax_code_list'][$k]['id']."'>".$invoices['tax_code_list'][$k]['id']."</option>";
+								}
+							}
+							$json_row[$uicols[$i]['col_name']]  .="</select>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[tax_code][".$j."]' id='values[tax_code][".$j."]'  class='myValuesForPHP tax_code'  type='hidden' value=''/>";
+
+						}
+					}
+					else if(($i == 13))
+					{
+						if($invoices['remark'] == true)
+						{
+							$json_row[$uicols[$i]['col_name']] .= " <a href=\"javascript:openwindow('".$GLOBALS['phpgw']->link('/index.php', array
+								(
+									'menuaction'=> 'property.uiinvoice.remark',
+									'id'		=> $invoices['id'],
+									'paid'		=> $invoices['paid']
+								)). "','550','400')\" >".lang('Remark')."</a>";
+						}
+						else
+						{
+							$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
+						}
+					}
+					else if(($i == 14))
+					{
+						if(isset($invoices['external_ref']) && $invoices['external_ref'])
+						{
+							//	$json_row[$uicols[$i]['col_name']] = " <a target='_blank' href='".$baseurl_invoice. $invoices['external_ref']."'>{$lang_picture}</a>";
+							$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$invoices['external_ref']}','640','800')\" >{$lang_picture}</a>";
+						}
+						else
+						{
+							$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
+						}
+					}
+					else if($i == 15)
+					{
+						$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
+					}
+					else if($i == 16)
+					{
+						$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
+					}
+					else if($i == 17)
+					{
+						$json_row[$uicols[$i]['col_name']]  = $invoices['external_ref'];
+					}
 				}
+
+				if($invoices['workorder_id'])
+				{
+					$workorders[$invoices['workorder_id']] = true;
+				}
+
+				$datatable['rows']['row'][] = $json_row;
+				$j++;
 			}
+
 
 			$current_Consult = array ();
 			for($i=0;$i<2;$i++)
@@ -2197,7 +2250,8 @@ JS;
 							'menuaction'		=> 'property.uiinvoice.edit',
 							'voucher_id'		=> $voucher_id,
 							'user_lid'			=> $this->user_lid,
-							'target'			=> '_lightbox'
+							'target'			=> '_tinybox',
+							'paid'				=> $paid
 						)),
 						'parameters'	=> $parameters
 					);
@@ -2247,6 +2301,12 @@ JS;
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
+
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
+
+
 			//Title of Page
 			$appname = lang('location');
 			if ($paid)
@@ -2272,6 +2332,7 @@ JS;
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
 
+			$paid 		= phpgw::get_var('paid', 'bool');
 			$id			= phpgw::get_var('id', 'int', 'GET' , 0);
 			$user_lid	= phpgw::get_var('user_lid', 'string', 'GET');
 			$voucher_id	= phpgw::get_var('voucher_id', 'int', 'GET');
@@ -2336,11 +2397,11 @@ JS;
 				{
 					$redirect = true;
 					$values['id'] = $id;
-					$line = $this->bo->update_single_line($values);
+					$line = $this->bo->update_single_line($values,$paid);
 				}
 			}
 
-			$line = $this->bo->get_single_line($id);
+			$line = $this->bo->get_single_line($id, $paid);
 
 //			_debug_array($line);
 
@@ -2424,7 +2485,7 @@ JS;
 
 			$data = array
 			(
-					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)) : null,
+					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
 					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
 					'from_name'				=> $GLOBALS['phpgw_info']['user']['fullname'],
 					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.edit', 'id' => $id, 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
@@ -2438,7 +2499,8 @@ JS;
 					'value_amount'			=> $line['amount'],
 					'value_approved_amount'	=> $line['approved_amount'],
 					'value_currency'		=> $line['currency'],
-					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']
+					'value_process_log'		=> isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log'],
+					'paid'					=> $paid
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
@@ -2485,6 +2547,10 @@ JS;
 			$loc1 			= phpgw::get_var('loc1');
 			$district_id 	= phpgw::get_var('district_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
+			$b_account= phpgw::get_var('b_account', 'int');
+
+			$b_account_class = $b_account_class ? $b_account_class : substr($b_account,0,2);
+
 			$ecodimb 		= phpgw::get_var('ecodimb');
 
 			//-- ubica focus del menu derecho
@@ -2847,13 +2913,13 @@ JS;
 
 			$uicols = array
 				(
-					'input_type'	=>	array('varchar','varchar','varchar','link'),
-					'type'			=>	array('text'	 ,'text'	 ,'text'	 ,'url' ),
-					'col_name'		=>	array('district_id','period','account_class','consume'),
-					'name'			=>	array('district_id','period','account_class','consume'),
-					'formatter'		=>	array('','','',''),
-					'descr'			=>	array(lang('District'),lang('Period'),lang('Budget account'),lang('Consume')),
-					'className'		=> 	array('centerClasss','centerClasss','centerClasss','rightClasss')
+					'input_type'	=>	array('varchar','varchar','varchar','link', 'varchar'),
+					'type'			=>	array('text'	 ,'text'	 ,'text'	 ,'url', 'text' ),
+					'col_name'		=>	array('district_id','period','account_class','consume', 'paid'),
+					'name'			=>	array('district_id','period','account_class','consume', 'paid'),
+					'formatter'		=>	array('','','','',''),
+					'descr'			=>	array(lang('District'),lang('Period'),lang('Budget account'),lang('Consume'),lang('paid')),
+					'className'		=> 	array('centerClasss','centerClasss','centerClasss','rightClasss','centerClasss')
 				);
 
 			$j=0;
@@ -3248,7 +3314,7 @@ JS;
 						unset($edateparts);
 					}
 
-					$values['regtid'] 		= date($this->bocommon->datetimeformat);
+					$values['regtid'] 		= date($GLOBALS['phpgw']->db->datetime_format());
 
 
 					$_receipt = array();//local errors

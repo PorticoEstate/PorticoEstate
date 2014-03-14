@@ -5,7 +5,7 @@
  * Author: Carl F�rstenberg (azatoth@gmail.com) 
  * Copyright: (c) 2005 Carl F�rstenberg, Nigel McNie (http://qbnz.com/highlighter) 
  * Release Version: 1.0.7.14
- * CVS Revision Version: $Revision: 17224 $ 
+ * CVS Revision Version: $Revision: 10127 $ 
  * Date Started: 2004/06/04 
  * Last Modified: $Date: 2006-09-25 18:46:28 +1000 (Mon, 25 Sep 2006) $ 
  * 

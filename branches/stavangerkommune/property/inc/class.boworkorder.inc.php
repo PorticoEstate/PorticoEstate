@@ -39,6 +39,7 @@
 		var $filter;
 		var $sort;
 		var $order;
+		var $filter_year;
 		var $cat_id;
 		var $order_sent_adress; // in case we want to resend the order as an reminder
 		var $allrows;
@@ -60,17 +61,23 @@
 			$this->cats			= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->interlink 	= & $this->so->interlink;
-			if ($session)
+			
+			$obligation	= phpgw::get_var('obligation', 'bool');
+			
+			if ($session && !$obligation)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
 			}
+
+			$default_filter_year 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'] == 'current_year' ? date('Y') : 'all';
 
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
 			$sort				= phpgw::get_var('sort');
 			$order				= phpgw::get_var('order');
 			$filter				= phpgw::get_var('filter', 'int');
+			$filter_year		= phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
 			$cat_id				= phpgw::get_var('cat_id', 'int');
 			$status_id			= phpgw::get_var('status_id');
 			$wo_hour_cat_id		= phpgw::get_var('wo_hour_cat_id', 'int');
@@ -82,10 +89,11 @@
 			$b_account			= phpgw::get_var('b_account');
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$criteria_id		= phpgw::get_var('criteria_id', 'int');
-			$this->allrows			= phpgw::get_var('allrows', 'bool');
+			$this->allrows		= phpgw::get_var('allrows', 'bool');
+			$this->obligation	= $obligation;
 
 			$this->start		= $start ? $start : 0;
-			$this->criteria_id	= isset($criteria_id) && $criteria_id ? $criteria_id : '';
+			$this->filter_year	= $filter_year;
 
 			if(array_key_exists('district_id',$_POST) || array_key_exists('district_id',$_GET) )
 			{
@@ -117,6 +125,10 @@
 			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
 			{
 				$this->cat_id = $cat_id;
+			}
+			if(array_key_exists('criteria_id',$_POST) || array_key_exists('criteria_id',$_GET))
+			{
+				$this->criteria_id = $criteria_id;
 			}
 			if(array_key_exists('status_id',$_POST)  || array_key_exists('status_id',$_GET))
 			{
@@ -186,6 +198,12 @@
 		function get_column_list()
 		{
 			$columns = array();
+			$columns['continuous'] = array
+				(
+					'id'		=> 'continuous',
+					'name'		=> lang('continuous'),
+					'sortable'	=> true
+				);
 			$columns['ecodimb'] = array
 				(
 					'id'		=> 'ecodimb',
@@ -462,7 +480,8 @@
 				'wo_hour_cat_id' => $this->wo_hour_cat_id,
 				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
 				'b_group'=>$this->b_group,'ecodimb'=>$this->ecodimb, 'paid'=>$this->paid,'b_account' => $this->b_account,
-				'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id)));
+				'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id),
+				'obligation' => $this->obligation, 'filter_year' => $this->filter_year) );
 
 			$this->total_records = $this->so->total_records;
 
@@ -533,7 +552,6 @@
 			$config->read();
 			$tax = 1+($config->config_data['fm_tax'])/100;
 			$workorder['calculation']	= $workorder['calculation'] * $tax;
-	//		$workorder['actual_cost']	= $workorder['act_mtrl_cost'] + $workorder['act_vendor_cost'];
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
@@ -605,6 +623,13 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
 
+			$_status_list = $this->so->select_status_list();
+			$status_text = array();
+			foreach ($_status_list as $_status_entry)
+			{
+				$status_text[$_status_entry['id']] = $_status_entry['name'];
+			}
+
 			$i=0;
 			foreach ($history_array as $value) 
 			{
@@ -633,7 +658,7 @@
 					case 'CO': $type = lang('Initial Coordinator'); break;
 					case 'C': $type = lang('Coordinator changed'); break;
 					case 'TO': $type = lang('Initial Category'); break;
-						case 'T': $type = lang('Category changed'); break;
+					case 'T': $type = lang('Category changed'); break;
 					case 'SO': $type = lang('Initial Status'); break;
 					case 'S': $type = lang('Status changed'); break;
 					case 'SC': $type = lang('Status confirmed'); break;
@@ -647,10 +672,9 @@
 				}
 
 				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
-					if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
 
-
-						$record_history[$i]['value_action']	= $type?$type:'';
+				$record_history[$i]['value_action']	= $type ? $type:'';
 				unset($type);
 
 				if ($value['status'] == 'A')
@@ -694,6 +718,11 @@
 						$record_history[$i]['value_old_value']	= $category[0]['name'];
 					}
 				}
+				else if ($value['status'] == 'S' || $value['status'] == 'SO'  || $value['status'] == 'R' || $value['status'] == 'X')
+				{
+					$record_history[$i]['value_new_value']	= $status_text[$value['new_value']];
+					$record_history[$i]['value_old_value']	= $status_text[$value['old_value']];
+				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value']	= $value['new_value'];
@@ -733,17 +762,21 @@
 
 			if(isset($workorder['charge_tenant']) && $workorder['charge_tenant'] && $workorder['id'])
 			{
-				$project = execMethod('property.soproject.read_single',$workorder['project_id']);
+				if(!$_tenant_id = $workorder['extra']['tenant_id'])
+				{
+					$project = execMethod('property.soproject.read_single',$workorder['project_id']);
+					$_tenant_id = $project['tenant_id'];
+				}
 
 				$boclaim = CreateObject('property.botenant_claim');
 
 				$value_set = array
-					(
-						'workorder' 		=> $target,
-						'project_id'		=> $workorder['project_id'],
-					);
+				(
+					'workorder' 		=> $target,
+					'project_id'		=> $workorder['project_id'],
+				);
 
-				$claim = $boclaim->read(array('project_id' => $project['project_id']));
+				$claim = $boclaim->read(array('project_id' => $workorder['project_id']));
 				$target = array();
 				if($claim)
 				{
@@ -763,7 +796,7 @@
 				else
 				{
 					$value_set['amount']		= 0;
-					$value_set['tenant_id']		= $project['tenant_id'];
+					$value_set['tenant_id']		= $_tenant_id;
 					$value_set['b_account_id']	= $workorder['b_account_id'];
 					$value_set['cat_id']		= 99;
 					$value_set['status']		= 'open';
@@ -789,7 +822,12 @@
 					$receipt['message'] = array_merge($receipt['message'] , $receipt_claim['message']);
 				}
 			}
-
+			if ($workorder['id'])
+			{
+				//temporary
+				execMethod('property.soXport.update_actual_cost_from_archive',array($workorder['id'] => true));
+				$this->notify_coordinator_on_consumption($workorder['id']);
+			}
 			return $receipt;
 		}
 
@@ -808,6 +846,11 @@
 			return $ser_list;
 		}
 
+		public function get_budget($order_id)
+		{
+			return $this->so->get_budget($order_id);
+		}
+
 		/**
 		* Recalculate actual cost from payment history for all workorders
 		*
@@ -816,5 +859,133 @@
 		function recalculate()
 		{
 			$this->so->recalculate();
+		}
+
+		/**
+		 * Check the consumption  on an order - and notify the coordinator
+		 * @param integer $order_id
+		 */
+		function notify_coordinator_on_consumption($order_id)
+		{
+			$notify_coordinator = true;
+			if(!$notify_coordinator)
+			{
+				return false;
+			}
+			$toarray = array();
+			$workorder	= $this->so->read_single($order_id);
+
+			if(!$workorder['continuous'])
+			{
+				return false;
+			}
+
+			$project	= ExecMethod('property.boproject.read_single_mini',$workorder['project_id']);
+			$coordinator = $project['coordinator'];
+			$prefs_coordinator = $this->bocommon->create_preferences('property',$coordinator);
+			if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
+			{
+				$toarray[] = $prefs_coordinator['email'];
+			}
+
+			if ($toarray)
+			{
+				$budget_info = $this->so->get_order_budget_percent($order_id);
+
+				if($budget_info['percent'] < 90)
+				{
+					return false;
+				}
+
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['email']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['email'])
+				{
+					$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+					$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+				}
+				else
+				{
+					$from_name	 = 'noreply';
+					$from_email	 = "{$from_name}<noreply@bergen.kommune.no>";
+				}
+
+				$subject	 = "Bestilling # {$order_id} har disponert {$budget_info['percent']} prosent av budsjettet";
+
+				$lang_budget = lang('budget');
+				$lang_actual_cost = lang('actual cost');
+				$lang_percent = lang('percent');
+				$lang_obligation = lang('obligation');
+
+				$_budget = number_format($budget_info['budget'], 0, ',', ' ');
+				$_actual_cost = number_format($budget_info['actual_cost'], 0, ',', ' ');
+				$_budget = number_format($budget_info['budget'], 0, ',', ' ');
+				$_obligation = number_format($budget_info['obligation'], 0, ',', ' ');
+
+				$to = implode(';',$toarray);
+				$cc = false;
+				$bcc = 'sigurd.nes@bergen.kommune.no';//test phase
+				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
+				$body .= <<<HTML
+				</br>
+				<h2>{$workorder['title']}</h2>
+				</br>
+				</br>
+				<table>
+					<tr>
+						<td>
+							{$lang_budget}
+						</td>
+						<td align = 'right'>
+							{$_budget}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_actual_cost}
+						</td>
+						<td align = 'right'>
+							{$_actual_cost}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_percent}
+						</td>
+						<td align = 'right'>
+							{$budget_info['percent']}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{$lang_obligation}
+						</td>
+						<td align = 'right'>
+							{$_obligation}
+						</td>
+					</tr>
+				</table>
+HTML;
+
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+
+				try
+				{
+					$ok = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,$cc,$bcc, $from_email, $from_name, 'html');
+				}
+				catch (phpmailerException $e)
+				{
+					phpgwapi_cache::message_set( $e->getMessage(), 'error' );
+				}
+
+				if($ok)
+				{
+					$historylog	= CreateObject('property.historylog','workorder');
+					$historylog->add('ON', $order_id, lang('%1 is notified',$to));
+					$historylog->add('RM', $order_id, $subject);
+					return true;
+				}
+			}
 		}
 	}

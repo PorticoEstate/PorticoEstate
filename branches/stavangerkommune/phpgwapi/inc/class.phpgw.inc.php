@@ -408,6 +408,7 @@
 						$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
 						break;
 
+					case 'boolean':
 					case 'bool':
 						if ( preg_match('/^[false|0|no]$/', $value) )
 						{
@@ -417,6 +418,7 @@
 
 					case 'float':
 					case 'double':
+						$value = str_replace(array(' ',','),array('','.'), $value);
 						if ( (float) $value == $value )
 						{
 								return (float) $value;
@@ -424,6 +426,7 @@
 						return (float) $default;
 					
 					case 'int':
+					case 'integer':
 					case 'number':
 						if ( (int) $value == $value )
 						{

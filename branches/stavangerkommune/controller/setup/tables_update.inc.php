@@ -171,8 +171,8 @@
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
 	
-	/* Update Controller from v 0.1.9 to 0.1.10 
-	 * Add table for connecting equipment (BIM) and control 
+	/* Update Controller from v 0.1.9 to 0.1.10
+	 * Add table for connecting equipment (BIM) and control
 	*/
 	
 	$test[] = '0.1.9';
@@ -197,7 +197,7 @@
 	}
 
 	/* Update Controller from v 0.1.10 to 0.1.11
-	 * Alter from naming from equipment to more generic component 
+	 * Alter from naming from equipment to more generic component
 	*/
 	
 	$test[] = '0.1.10';
@@ -347,13 +347,13 @@
 	function controller_upgrade0_1_16()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','message_ticket_id',array(
-			'type' => 'int', 
+			'type' => 'int',
 			'precision' => '8',
 			'nullable' => true
 		));
 		
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','measurement',array(
-			'type' => 'varchar', 
+			'type' => 'varchar',
 			'precision' => '50',
 			'nullable' => true
 		));
@@ -362,7 +362,7 @@
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
 	
-	$test[] = '0.1.17'; 
+	$test[] = '0.1.17';
 	function controller_upgrade0_1_17()
 	{
 		$GLOBALS['phpgw_setup']->oProc->DropTable('controller_check_item_case');
@@ -402,13 +402,13 @@
 	function controller_upgrade0_1_18()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','entry_date',array(
-			'type' => 'int', 
+			'type' => 'int',
 			'precision' => 8,
 			'nullable' => false
 		));
 		
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','modified_date',array(
-			'type' => 'int', 
+			'type' => 'int',
 			'precision' => 8,
 			'nullable' => true
 		));
@@ -455,7 +455,7 @@
 	function controller_upgrade0_1_21()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item','comment',array(
-			'type' => 'varchar', 
+			'type' => 'varchar',
 			'precision' => '255',
 			'nullable' => true
 		));
@@ -464,7 +464,7 @@
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
 
-	/* Update Controller from v 0.1.22 to 0.1.23 
+	/* Update Controller from v 0.1.22 to 0.1.23
 	 * Add table for configurable status
 	*/
 
@@ -501,7 +501,7 @@
 	function controller_upgrade0_1_23()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_procedure','reference',array(
-			'type' => 'text', 
+			'type' => 'text',
 			'nullable' => true
 		));
 		
@@ -531,7 +531,7 @@
 	}
 	
 	/* Update Controller from v 0.1.25 to 0.1.26
-	 * Added table for connecting gontrol groups to components  
+	 * Added table for connecting gontrol groups to components
 	*/
 	
 	$test[] = '0.1.25';
@@ -611,7 +611,7 @@
 	function controller_upgrade0_1_29()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_procedure','responsibility',array(
-			'type' => 'text', 
+			'type' => 'text',
 			'nullable' => true
 		));
 		
@@ -627,7 +627,7 @@
 	function controller_upgrade0_1_30()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_control','description',array(
-			'type' => 'text', 
+			'type' => 'text',
 			'nullable' => true
 		));
 		
@@ -650,7 +650,7 @@
 	function controller_upgrade0_1_32()
 	{
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_list','comment',array(
-			'type' => 'text', 
+			'type' => 'text',
 			'nullable' => true
 		));
 		
@@ -776,7 +776,7 @@
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_list','location_code',array(
-			'type' => 'varchar', 
+			'type' => 'varchar',
 			'precision' => '30',
 			'nullable' => true
 		));
@@ -821,3 +821,147 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.41';
+	function controller_upgrade0_1_41()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','location_code',array(
+			'type' => 'varchar',
+			'precision' => '30',
+			'nullable' => true
+		));
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.42';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.42';
+	function controller_upgrade0_1_42()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_group_list','temp_order_nr',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		$sql = "UPDATE controller_control_group_list SET temp_order_nr = CAST(order_nr AS integer) ";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control_group_list', array(), 'order_nr');
+		
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('controller_control_group_list','temp_order_nr','order_nr');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.43';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.43';
+	function controller_upgrade0_1_43()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','assigned_to',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','billable_hours',array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.44';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.44';
+	function controller_upgrade0_1_44()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_group','component_location_id',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.45';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.45';
+	function controller_upgrade0_1_45()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','component_id',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.46';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.46';
+	function controller_upgrade0_1_46()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_group','component_criteria',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.47';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+
+	/**
+	* Allow controlgroup assigned to parent level of components
+	**/
+	$test[] = '0.1.47';
+	function controller_upgrade0_1_47()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','component_location_id',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.48';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+

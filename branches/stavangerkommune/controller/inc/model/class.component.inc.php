@@ -25,11 +25,10 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.control.inc.php 9548 2012-06-11 12:40:52Z vator $
+ 	* @version $Id: class.component.inc.php 10810 2013-02-13 19:49:14Z sigurdne $
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
-	include_class('controller', 'date_helper', 'inc/helper/');
 
 	class controller_component extends controller_model
 	{

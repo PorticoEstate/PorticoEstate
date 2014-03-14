@@ -32,12 +32,14 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="control_group_filters" name="control_group_filters" xmlns:php="http://php.net/xsl">
+<xsl:template match="control_group_filters" name="control_group_filters" xmlns:php="http://php.net/xsl"> 
+	
 	<div id="select-wrp">
-		
+	  <div class="error_msg">Du må velge kontrollgruppe før du kan legge til bygningsdel</div>	
+	  <h4 style="margin-bottom:5px;">Velg kontrollgruppe</h4>
 		<!-- When control area is chosen, an ajax request is executed. The operation fetches control groups from db and populates the control group list.
 			 The ajax opearation is handled in ajax.js --> 
-		 <select id="control_group_area_list" name="control_group_area_list">
+		 <select id="control_group_area_list" name="control_group_area_list" style="float:left;">
 			<xsl:for-each select="control_area_array">
 				<xsl:variable name="control_area_id"><xsl:value-of select="id"/></xsl:variable>
 				<option value="{$control_area_id}">
@@ -46,7 +48,7 @@
 			</xsl:for-each>
 		</select>
 		 
-		 <form id="loc_form" action="" method="GET">
+		 <form id="loc_form" action="" method="GET" style="margin-top:5px;">
 			<select id="control_group_id" name="control_group_id">
 				<xsl:choose>
 					<xsl:when test="control_group_array/child::node()">
@@ -69,6 +71,8 @@
 </xsl:template>
 
 <xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
+	
+	<h4 style="margin-left:20px;margin-bottom:5px;">Velg utstyr</h4>
 	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
@@ -82,7 +86,7 @@
 	
 	<form id="update_table_dummy" method='POST' action='' >
 	</form>
-
+  
 </xsl:template>
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">

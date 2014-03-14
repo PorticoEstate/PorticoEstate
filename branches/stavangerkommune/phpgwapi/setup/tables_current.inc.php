@@ -277,8 +277,8 @@
 				'owner_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'createdby_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modifiedby_id' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'created' => array('type' => 'date','nullable' => False,'default' => 'current_date'),
-				'modified' => array('type' => 'date','nullable' => True),
+				'created' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp'),
+				'modified' => array('type' => 'timestamp','nullable' => True),
 				'size' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'mime_type' => array('type' => 'varchar','precision' => '150','nullable' => True),
 				'deleteable' => array('type' => 'char','precision' => 1,'nullable' => True,'default' => 'Y'),
@@ -289,13 +289,27 @@
 				'link_directory' => array('type' => 'text','nullable' => True),
 				'link_name' => array('type' => 'text','nullable' => True),
 				'version' => array('type' => 'varchar','precision' => 30,'nullable' => False,'default' => '0.0.0.0'),
-				'content' => array('type' => 'text','nullable' => True)
+				'content' => array('type' => 'text','nullable' => True),
+				'external_id' => array('type' => 'int','precision' => 8,'nullable' => True),
 			),
 			'pk' => array('file_id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
+
+		'phpgw_vfs_filedata' => array(
+			'fd' => array(
+				'file_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'metadata' => array('type' => 'xml','nullable' => False),
+			),
+			'pk' => array('file_id'),
+			'fk' => array('phpgw_vfs' => array('file_id' => 'file_id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 		'phpgw_history_log' => array(
 			'fd' => array(
 				'history_id' => array('type' => 'auto','precision' => 4,'nullable' => False),
@@ -545,6 +559,7 @@
 			(
 				'location_id'	=> array('type' => 'int','precision' => 4,'nullable' => false),
 				'id'			=> array('type' => 'int','precision' => 4,'nullable' => false),
+				'parent_id'			=> array('type' => 'int','precision' => 4,'nullable' => true),
 				'name'			=> array('type' => 'varchar','precision' => 100,'nullable' => false),
 				'group_sort'	=> array('type' => 'int','precision' => 2,'nullable' => false),
 				'descr'			=> array('type' => 'varchar','precision' => 150,'nullable' => true),
@@ -559,12 +574,12 @@
 		(
 			'fd' => array
 			(
-				'location_id' => array('type' => 'int','precision' => 2,'nullable' => false),
-				'group_id' => array('type' => 'int','precision' => 2,'nullable' => true, 'default' => 0),
-				'id' => array('type' => 'int','precision' => 2,'nullable' => false),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'group_id' => array('type' => 'int','precision' => 4,'nullable' => true, 'default' => 0),
+				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'column_name' => array('type' => 'varchar','precision' => 50,'nullable' => false),
-				'input_text' => array('type' => 'varchar','precision' => 50,'nullable' => false),
-				'statustext' => array('type' => 'varchar','precision' => '150','nullable' => false),
+				'input_text' => array('type' => 'varchar','precision' => 255,'nullable' => false),
+				'statustext' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => false),
 				'search' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'history' => array('type' => 'int','precision' => 2,'nullable' => true),
@@ -616,6 +631,7 @@
 				'descr' => array('type' => 'text','nullable' => true),
 				'file_name' => array('type' => 'varchar','precision' => 255,'nullable' => false),
 				'active' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'client_side' => array('type' => 'int','precision' => 2,'nullable' => true),//otherwise: server-side
 				'custom_sort' => array('type' => 'int','precision' => 4,'nullable' => true)
 			),
 			'pk' => array('location_id', 'id'),

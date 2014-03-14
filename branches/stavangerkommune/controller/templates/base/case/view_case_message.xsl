@@ -1,6 +1,5 @@
 <!-- $Id: edit_check_list.xsl 8374 2011-12-20 07:45:04Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
 
 <div id="main_content" class="medium">
 	
@@ -23,10 +22,11 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
+		
 		<div class="box-2 select-box">
 			<a>
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;location_code=</xsl:text>
@@ -39,11 +39,12 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (år)
+				Vis kontrollplan (år)
 			</a>
+				
 			<a class="last">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;month=</xsl:text>
@@ -58,27 +59,27 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (måned)
+				Vis kontrollplan (måned)
 			</a>
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_tab_menu" />
+		<xsl:call-template name="check_list_menu" />
 	</div>
 	
 	<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
-	<h3 class="box_header ext">Melding registrert</h3>
+	<h3 class="box_header ext">Registrert melding</h3>
 	<div id="caseMessage" class="box ext">
 		
-			<a id="showMessage" target="_blank">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
-					<xsl:text>&amp;id=</xsl:text>
-					<xsl:value-of select="message_ticket_id"/>
-				</xsl:attribute>
-		      	Vis melding
-	   		</a>
-				
+				<xsl:variable name="show_ticket_params">
+					<xsl:text>menuaction:property.uitts.view, id:</xsl:text>
+					<xsl:value-of select="message_ticket_id" />
+				</xsl:variable>
+				<xsl:variable name="show_ticket_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $show_ticket_params )" />
+				</xsl:variable>
+				<a id="showMessage" target="_blank" href="{$show_ticket_url}"><xsl:value-of select="php:function('lang', 'Show message')" /></a>
+		
 		    <!-- === TITLE === -->
 		    <div class="row">				
 				<label>Tittel på melding:</label><span><xsl:value-of select="message_ticket/subject"/></span>
@@ -113,14 +114,15 @@
 			 	</xsl:choose>
 			</xsl:for-each>
 		</ul>
-		<a class="btn">
-			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
-				<xsl:text>&amp;check_list_id=</xsl:text>
-				<xsl:value-of select="check_list/id"/>
-			</xsl:attribute>
-	      Registrer ny melding
-	   	</a>
+		
+		<xsl:variable name="new_ticket_params">
+			<xsl:text>menuaction:controller.uicase.create_case_message, check_list_id:</xsl:text>
+			<xsl:value-of select="check_list/id" />
+		</xsl:variable>
+		<xsl:variable name="new_ticket_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $new_ticket_params)" />
+		</xsl:variable>
+		<a class="btn" href="{$new_ticket_url}"><xsl:value-of select="php:function('lang', 'Register new message')" /></a>
 	</div>
 </div>
 </xsl:template>

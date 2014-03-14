@@ -615,8 +615,11 @@ class rental_uibilling extends rental_uicommon
 		$stop = phpgw::get_var('date');
 		
 		$cs15 = phpgw::get_var('generate_cs15');
+                $toExcel = phpgw::get_var('toExcel');
 		if($cs15 == null){
-			$export_format = explode('_',phpgw::get_var('export_format'));
+                    if($toExcel == null)
+                    {
+                        $export_format = explode('_',phpgw::get_var('export_format'));
 			$file_ending = $export_format[1];
 			if($file_ending == 'gl07')
 			{
@@ -646,6 +649,82 @@ class rental_uibilling extends rental_uicommon
 			);
 			
 			//print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
+                    }
+                    else
+                    {
+			$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
+                        $billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
+
+                        if($billing_job == null) // Not found
+                        {
+                                $errorMsgs[] = lang('Could not find specified billing job.');
+                        }
+                        else
+                        {
+                            //Loop through  billing info array to find the first month
+                            $month = 12;
+                            foreach($billing_info_array as $billing_info)
+                            {
+                                    $year = $billing_info->get_year();
+                                    if($month > $billing_info->get_month())
+                                    {
+                                            $month = $billing_info->get_month();
+                                    }
+                            }
+
+                            $billing_job->set_year($year);
+                            $billing_job->set_month($month);
+                            
+                            $list = rental_sobilling::get_instance()->generate_export($billing_job, true);
+                            //_debug_array($list[0]);
+                            /*foreach ($list as $l)
+                            {
+                                _debug_array($l);
+                            }*/
+                            
+                            if(isset($list))
+                            {
+                                    $infoMsgs[] = lang('Export generated.');
+
+                                    $keys = array();
+
+                                    if(count($list[0]) > 0) {
+                                        foreach($list[0] as $key => $value) {
+                                            if(!is_array($value)) {
+                                                array_push($keys, $key);
+                                            }
+                                        }
+                                    }
+
+                                    // Remove newlines from output
+//                                    $count = count($list);
+//                                    for($i = 0; $i < $count; $i++)
+//                                    {
+//                                        foreach ($list[$i] as $key => &$data)
+//                                        {
+//                                                $data = str_replace(array("\n","\r\n", "<br>"),'',$data);
+//                                        }
+//                                    }
+
+                                     // Use keys as headings
+                                    $headings = array();
+                                    $count_keys = count($keys);
+                                    for($j=0;$j<$count_keys;$j++)
+                                    {
+                                        array_push($headings, lang($keys[$j]));
+                                    }
+                                    
+//                                    _debug_array($list);
+
+                                    $property_common = CreateObject('property.bocommon');
+                                    $property_common->download($list, $keys, $headings);
+                            }
+                            else
+                            {
+                                    $errorMsgs = lang('Export failed.');
+                            }
+                        }
+                    }
 		}
 		else{
 			$file_ending = 'cs15';

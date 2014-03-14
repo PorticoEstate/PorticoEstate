@@ -452,9 +452,14 @@
 			$_SESSION['contract_html'] = "";
 			 
 			$pdf_file_name = $tmp_dir . "/temp_contract_".strtotime(date('Y-m-d')).".pdf";
+
 			//var_dump($config->config_data['path_to_wkhtmltopdf']);
 			//var_dump($GLOBALS['phpgw_info']);
 			$wkhtmltopdf_executable = $config->config_data['path_to_wkhtmltopdf'];
+			if(!is_file($wkhtmltopdf_executable))
+			{
+				throw new Exception('wkhtmltopdf not configured correctly');			
+			}
 			$snappy = new SnappyPdf();
 			//$snappy->setExecutable('/opt/portico/pe/rental/wkhtmltopdf-i386'); // or whatever else
 			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
@@ -462,6 +467,11 @@
 			
 			$contract_id = phpgw::get_var('id');
 			
+			if(!is_file($pdf_file_name))
+			{
+				throw new Exception('pdf-file not produced');			
+			}
+
 			$this->savePDFToContract($pdf_file_name, $contract_id, 'Kontrakt');
 		}
 		

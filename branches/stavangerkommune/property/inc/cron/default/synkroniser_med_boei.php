@@ -32,13 +32,19 @@
 	 * @package property
 	 */
 
-	class synkroniser_med_boei
-	{
-		var	$function_name = 'synkroniser_med_boei';
+	include_class('property', 'cron_parent', 'inc/cron/');
 
-		function synkroniser_med_boei()
+	class synkroniser_med_boei extends property_cron_parent
+	{
+
+		function __construct()
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			parent::__construct();
+
+			$this->function_name = get_class($this);
+			$this->sub_location = lang('location');
+			$this->function_msg	= 'Synkroniser_med_boei';
+
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();
 			$this->join				= $this->db->join;
@@ -70,75 +76,8 @@
 			$this->db_boei2 = clone($this->db_boei);
 		}
 
-		function pre_run($data='')
-		{
-			if($data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-			}
 
-			if ($confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
-				'execute'	=> $execute,
-			);
-
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('do you want to perform this action');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Update the category to not active based on if there is only nonactive apartments'),
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('location');
-			$function_msg	= 'synkroniser med BOEI';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function execute($cron='')
+		function execute()
 		{
 			set_time_limit(500);
 			$receipt = $this->legg_til_eier_phpgw();
@@ -170,23 +109,19 @@
 			$receipt = $this->update_tenant_name();
 			$this->cron_log($receipt,$cron);
 
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
 		}
 
-		function cron_log($receipt='',$cron='')
+		function cron_log($receipt='')
 		{
 
 			$insert_values= array(
-				$cron,
-				date($this->bocommon->datetimeformat),
+				$this->cron,
+				date($this->db->datetime_format()),
 				$this->function_name,
 				$receipt
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
@@ -265,10 +200,10 @@
 			for ($i=0; $i<count($owner_utf); $i++)
 			{
 				$sql2_utf = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($owner_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($owner_utf[$i]) . ")";
 
 				$sql2_latin = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($owner_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($owner_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -292,11 +227,13 @@
 
 		function legg_til_gateadresse_phpgw()
 		{
-			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM  fm_streetaddress RIGHT OUTER JOIN "
+			//legg til
+			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM fm_streetaddress RIGHT OUTER JOIN "
 			        . " v_Gateadresse ON fm_streetaddress.id = v_Gateadresse.gateadresse_id"
 					. " WHERE (fm_streetaddress.id IS NULL)";
 
 			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$gate = array();
 			while ($this->db_boei->next_record())
 			{
 				$gate[]= array (
@@ -325,10 +262,36 @@
 				$gate_msg[]=utf8_encode($gate[$i]['descr']);
 			}
 
+
+			//oppdater gatenavn - om det er endret
+
+			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM v_Gateadresse";
+
+			$this->db_boei->query($sql,__LINE__,__FILE__);
+
+			$msg = count($gate) . ' gateadresser er lagt til: ' . @implode(",", $gate_msg);
+
+			$gate = array();
+			while ($this->db_boei->next_record())
+			{
+				$gate[]= array
+				(
+					'id' 		=> $this->db_boei->f('gateadresse_id'),
+					'descr' 	=> $this->db_boei->f('gatenavn')
+				);
+			}
+			
+			foreach ($gate as $gate_info)
+			{
+				$descr = utf8_encode($gate_info['descr']);
+				$sql_utf = "UPDATE fm_streetaddress SET descr = '{$descr}' WHERE id = " . (int)$gate_info['id'];
+				$this->db->query($sql_utf,__LINE__,__FILE__);
+			}
+
 			$this->db->transaction_commit();
 			$this->db_boei->transaction_commit();
 
-			$msg = count($gate) . ' gateadresser er lagt til: ' . @implode(",", $gate_msg);
+
 			$this->receipt['message'][]=array('msg'=> $msg);
 			unset ($gate);
 			unset ($gate_msg);
@@ -374,13 +337,13 @@
 			{
 
 				$sql2_utf = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($objekt_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($objekt_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($objekt_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($objekt_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (1, '{$objekt_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (1, '{$objekt_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$obj_msg[]=$objekt_utf[$i]['loc1'];
 			}
@@ -430,13 +393,13 @@
 			{
 
 				$sql2_utf = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($bygg_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($bygg_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($bygg_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($bygg_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (2, '{$bygg_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (2, '{$bygg_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$bygg_msg[]=$bygg_utf[$i]['location_code'];
 			}
@@ -494,13 +457,13 @@
 			{
 
 				$sql2_utf = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($seksjon_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($seksjon_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($seksjon_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($seksjon_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (3, '{$seksjon_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (3, '{$seksjon_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$seksjon_msg[]=$seksjon_utf[$i]['location_code'];
 			}
@@ -584,14 +547,14 @@
 
 				$sql2_utf = "INSERT INTO fm_location4 (location_code, loc1, loc4, leieobjekttype_id, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
                       tenant_id, beregnet_boa, flyttenr)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leieobjekt_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leieobjekt_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location4 (location_code, loc1, loc4, leieobjekttype_id, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
                       tenant_id, beregnet_boa, flyttenr)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leieobjekt_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leieobjekt_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (4, '{$leieobjekt_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (4, '{$leieobjekt_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$leieobjekt_msg[]=$leieobjekt_utf[$i]['location_code'];
 			}
@@ -650,9 +613,9 @@
 				$this->db_boei->query("DELETE FROM fm_tenant WHERE id=" . (int)$leietaker_latin[$i]['id'],__LINE__,__FILE__);
 
 				$sql2_utf = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leietaker_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leietaker_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leietaker_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leietaker_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -724,7 +687,7 @@
 				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
 				. " boareal = '" . $this->db_boei->f('boareal') . "',"
 				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
-				. " innflyttetdato = '" . date($this->bocommon->dateformat,strtotime($this->db_boei->f('innflyttetdato'))) . "'"
+				. " innflyttetdato = '" . date($this->db->date_format(),strtotime($this->db_boei->f('innflyttetdato'))) . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
 				$sql2_latin = " UPDATE  fm_location4 SET "
 				. " tenant_id = '" . $this->db_boei->f('leietaker_id') . "',"
@@ -961,4 +924,3 @@
 			return $msg;
 		}
 	}
-

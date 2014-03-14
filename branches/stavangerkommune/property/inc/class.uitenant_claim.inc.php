@@ -46,11 +46,12 @@
 
 		var $public_functions = array
 			(
-				'index'  => true,
-				'check'  => true,
-				'view'   => true,
-				'edit'   => true,
-				'delete' => true
+				'index'		=> true,
+				'check'		=> true,
+				'view'		=> true,
+				'edit'		=> true,
+				'delete'	=> true,
+				'view_file'	=> true
 			);
 
 		function property_uitenant_claim()
@@ -98,6 +99,16 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_READ, 'acl_location'=> $this->acl_location));
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('tenant_claim');
+		}
+
 		function index($project_id='')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim',
@@ -107,7 +118,7 @@
 
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_READ, 'acl_location'=> $this->acl_location));
 			}
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt');
@@ -307,7 +318,7 @@
 			$uicols['name'][7]['name'] = 'name';
 			$uicols['name'][7]['value'] = 'name';
 
-			$uicols['name'][8]['name'] = 'time created';
+			$uicols['name'][8]['name'] = 'entry date';
 			$uicols['name'][8]['value'] = 'entry_date';
 
 			$uicols['name'][9]['name'] = 'user';
@@ -622,7 +633,7 @@
 
 			$this->boproject= CreateObject('property.boproject');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim','files'));
 
 			if ($values['save'] || $values['apply'])
 			{
@@ -648,6 +659,43 @@
 					$claim_id = $receipt['claim_id'];
 					$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 
+				//----------files
+					$bofiles	= CreateObject('property.bofiles');
+					if(isset($values['file_action']) && is_array($values['file_action']))
+					{
+						$bofiles->delete_file("/tenant_claim/{$claim_id}/", $values);
+					}
+
+					$file_name = @str_replace(' ','_',$_FILES['file']['name']);
+
+					if($file_name)
+					{
+						$to_file = "{$bofiles->fakebase}/tenant_claim/{$claim_id}/{$file_name}";
+
+						if($bofiles->vfs->file_exists(array(
+							'string' => $to_file,
+							'relatives' => Array(RELATIVE_NONE)
+						)))
+						{
+							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						}
+						else
+						{
+							$bofiles->create_document_dir("tenant_claim/$claim_id");
+							$bofiles->vfs->override_acl = 1;
+
+							if(!$bofiles->vfs->cp (array (
+								'from'	=> $_FILES['file']['tmp_name'],
+								'to'	=> $to_file,
+								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+							{
+								$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+							}
+							$bofiles->vfs->override_acl = 0;
+						}
+					}
+				//-----------
+
 					if ($values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt',$receipt);
@@ -667,27 +715,33 @@
 				$values = $this->bo->read_single($claim_id);
 			}
 
-			//_debug_array($values);
-
 			$project_values	= $this->boproject->read_single($values['project_id'], array(), true);
 
+			$project_values['workorder_budget'] = $this->boproject->get_orders(array('project_id'=> $values['project_id'],'year'=> 0));
+			//_debug_array($project_values);die();
 			$soinvoice	= CreateObject('property.soinvoice');
 
 			foreach ($project_values['workorder_budget'] as &$workorder)
 			{
+				$_vouchers = array();
 				$vouchers = $soinvoice->read_invoice(array('paid'=>'1','workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
-				if(isset($vouchers[0]['voucher_id']))
+				foreach($vouchers as $entry)
 				{
-					$workorder['voucher_id'] = $vouchers[0]['voucher_id'];
+					$_vouchers[] = $entry['voucher_id'];
 				}
-				else
+				$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
+				unset($entry);
+				foreach($vouchers as $entry)
 				{
-					$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
+					$_vouchers[] = $entry['voucher_id'];
+				}
 
-					$workorder['voucher_id'] = isset($vouchers[0]['voucher_id']) ? $vouchers[0]['voucher_id'] : '';
-					$workorder['actual_cost'] =  isset($vouchers[0]['approved_amount']) ? $vouchers[0]['approved_amount'] : '';
+				$workorder['voucher_id'] = implode(', ', $_vouchers);
+
+				$workorder['selected'] = in_array($workorder['workorder_id'],$values['workorders']);
+				$workorder['claim_issued'] = in_array($workorder['workorder_id'],$values['claim_issued']);
+
 				}
-			}
 
 
 			//_debug_array($project_values);die();
@@ -739,34 +793,6 @@
 				$values['first_name']		= $tenant['first_name'];
 			}
 
-
-			if($values['workorder'] && $project_values['workorder_budget'])
-			{
-				foreach ($values['workorder'] as $workorder_id)
-				{
-					for ($i=0;$i<count($project_values['workorder_budget']);$i++)
-					{
-						if($project_values['workorder_budget'][$i]['workorder_id'] == $workorder_id)
-						{
-							$project_values['workorder_budget'][$i]['selected'] = true;
-						}
-					}
-				}
-			}
-
-/*
-			for ($i=0;$i<count($project_values['workorder_budget']);$i++)
-			{
-				$claimed= $this->bo->check_claim_workorder($project_values['workorder_budget'][$i]['workorder_id']);
-
-				if($claimed)
-				{
-					$project_values['workorder_budget'][$i]['claimed'] = $claimed;
-				}
-			}
-
- */
-
 			$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 				'b_account_id'		=> $values['b_account_id'],
@@ -797,12 +823,20 @@
 
 				if($project_values['workorder_budget'][$d]['selected']==1)
 				{
+					
+					$project_values['workorder_budget'][$d]['budget_hidden'] = $project_values['workorder_budget'][$d]['budget'];
+					$project_values['workorder_budget'][$d]['calculation_hidden'] = $project_values['workorder_budget'][$d]['calculation'];
+					$project_values['workorder_budget'][$d]['actual_cost_hidden'] = $project_values['workorder_budget'][$d]['actual_cost'];
 					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" checked value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
 				}
 				else
 				{
+					$project_values['workorder_budget'][$d]['budget_hidden'] = 0;
+					$project_values['workorder_budget'][$d]['calculation_hidden'] = 0;
+					$project_values['workorder_budget'][$d]['actual_cost_hidden'] = 0;
 					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
 				}
+				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
 			}
 
 			//---datatable0 settings---------------------------------------------------
@@ -822,16 +856,106 @@
 			$myColumnDefs[0] = array
 				(
 					'name'			=> "0",
-					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>'Workorder',	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-															array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true),
-															array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true),
-															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true),
-															array('key' => 'vendor_name','label'=>'Vendor','sortable'=>true,'resizeable'=>true),
-															array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true),
+					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+															array('key' => 'budget',	'label'=>lang('Budget'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+															array('key' => 'budget_hidden','hidden'=>true),
+															array('key' => 'calculation',	'label'=>lang('Calculation'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+															array('key' => 'calculation_hidden','hidden'=>true),
+															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+															array('key' => 'actual_cost_hidden','hidden'=>true),
+															array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+															array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter'),
 															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
 															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
-															array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
+															array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)))
 				);
+
+
+			if($claim_id)
+			{
+				$record_history = $this->bo->read_record_history($claim_id);
+//_debug_array($content_budget);die();
+			}
+			else
+			{
+				$record_history = array();
+			}
+
+
+//--------------files
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uitenant_claim.view_file',
+				'id'		=> $claim_id
+			);
+
+			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+
+			$_files = $this->bo->get_files($claim_id);
+
+			$lang_view_file = lang('click to view file');
+			$lang_delete_file = lang('Check to delete file');
+			$z=0;
+			$content_files = array();
+			foreach( $_files as $_file )
+			{
+				if ($link_to_files)
+				{
+					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$_file['directory']}/{$_file['file_name']}' target=\"_blank\" title='{$lang_view_file}'>{$_file['name']}</a>";
+				}
+				else
+				{
+					$content_files[$z]['file_name'] = "<a href=\"{$link_view_file}&amp;file_name={$_file['file_name']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
+				}
+				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['name']}\" title=\"{$lang_delete_file}\">";
+				$z++;
+			}
+
+			$datavalues[1] = array
+			(
+				'name'					=> "1",
+				'values' 				=> json_encode($content_files),
+				'total_records'			=> count($content_files),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 1,
+				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'footer'				=> 0
+			);
+
+			$myColumnDefs[1] = array
+				(
+					'name'		=> "1",
+					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
+				);
+
+//--------------files
+
+			
+			
+			$datavalues[2] = array
+				(
+					'name'					=> "2",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+
+			$myColumnDefs[2] = array
+				(
+					'name'		=> "2",
+					'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
+														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
+				);
+
+
 
 			$data = array
 				(
@@ -840,6 +964,7 @@
 					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
 					'lang_start_date'					=> lang('Project start date'),
 					'value_start_date'					=> $project_values['start_date'],
+					'value_entry_date'					=> $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'						=> json_encode(array(menuaction => "property.uitenant_claim.edit",claim_id=>$claim_id)),
@@ -1204,8 +1329,7 @@
 
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
 					'lang_done'							=> lang('done'),
-					'value_date'						=> $GLOBALS['phpgw']->common->show_date($tenant_claim['entry_date'])
-
+					'value_entry_date'					=> $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . '::' . lang('view claim');
 

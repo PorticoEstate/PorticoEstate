@@ -73,6 +73,7 @@
 			$app = phpgw::get_var('app', 'string', 'GET');
 			$section = phpgw::get_var('section', 'string', 'GET');
 
+
 			if(!$section)
 			{
 				$menuaction = phpgw::get_var('referer');
@@ -96,6 +97,57 @@
 			$lang 		= strtoupper(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['lang']: 'en');
 			$navbar 	= phpgw::get_var('navbar', 'string', 'GET');
 
+			$pdffile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.pdf";
+			
+/*
+			if(is_file($pdffile))
+			{
+				$content = file_get_contents($pdffile);
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header("{$section}.pdf", 'application/pdf', strlen($content));
+				echo $content;
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+*/
+
+
+            if(is_file($pdffile)) 
+            { 
+				$browser = CreateObject('phpgwapi.browser'); 
+				if($browser->BROWSER_AGENT = 'IE')
+				{
+					$fname = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/help/{$lang}/{$section}.pdf";
+	 				echo <<<HTML
+		<html>
+			<head>
+				<script language="javascript">
+				<!--
+					function go_now()
+					{
+						window.location.href = "{$fname}";
+					}
+				//-->
+				</script>
+			</head>
+			<body onload="go_now()";>
+				<a href="$fname">click here</a> if you are not re-directed.
+			</body>
+		</html>
+
+HTML;
+				
+				}
+				else
+				{
+					$browser->content_header("{$section}.pdf", '', filesize($pdffile)); 
+					ob_clean(); 
+					flush(); 
+					readfile($pdffile);
+				}
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			} 
+
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $app . '::' . lang($section);
 			$GLOBALS['phpgw']->common->phpgw_header();
 			if($navbar)
@@ -104,18 +156,6 @@
 				$GLOBALS['phpgw']->help->section = $section;
 				$GLOBALS['phpgw']->hooks->process('help',array('manual'));
 				parse_navbar();
-			}
-				
-			$pdffile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.pdf";
-			
-			if(is_file($pdffile))
-			{
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header("{$section}.pdf", '', filesize($pdffile));
-			    ob_clean();
-			    flush();
-				readfile($pdffile);
-				exit;
 			}
 
 			$odtfile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.odt";

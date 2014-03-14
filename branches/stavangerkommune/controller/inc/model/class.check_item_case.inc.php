@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.check_item.inc.php 8478 2012-01-03 12:36:37Z vator $
+ 	* @version $Id: class.check_item_case.inc.php 11398 2013-10-27 15:34:08Z sigurdne $
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
@@ -49,6 +49,11 @@
 		protected $modified_date;
 		protected $modified_by;
 		protected $measurement;
+		protected $location_code;
+		protected $component_location_id; // komponent type
+		protected $component_id;
+		protected $component_descr;
+    
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -137,4 +142,79 @@
 		{
 			$this->measurement = $measurement;
 		}
+    
+    	public function get_location_code() { return $this->location_code; }
+		
+		public function set_location_code($location_code)
+		{
+			$this->location_code = $location_code;
+		}
+
+    	public function get_component_location_id()
+    	{
+    		return $this->component_location_id;
+    	}
+		
+		public function set_component_location_id($component_location_id)
+		{
+			$this->component_location_id = $component_location_id;
+		}
+
+    	public function get_component_id()
+    	{
+    		return $this->component_id;
+    	}
+		
+		public function set_component_id($component_id)
+		{
+			$this->component_id = $component_id;
+		}
+
+
+    	public function get_component_descr()
+    	{
+    		return $this->component_descr;
+    	}
+
+		public function set_component_descr($component_descr)
+		{
+			$this->component_descr = $component_descr;
+		}
+
+	    public function validate()
+		{
+			$status = true;
+	
+			// Validate DESCRIPTION
+			if( empty( $this->descr ) )
+			{
+				$status = false;
+				$this->error_msg_array['descr'] = "error_msg_1";
+			}
+		  
+		  // Validate STATUS		  		  
+			if( empty( $this->status ) && ( (intval($this->status) == self::STATUS_OPEN) || (intval($this->status) == self::STATUS_CLOSED) || (intval($this->status) == self::STATUS_PENDING)) )
+			{
+		  		$status = false;
+		  		$this->error_msg_array['status'] = "error_msg_1";
+			}
+			
+		  // Validate LOCATION CODE
+			if( empty($this->location_code) )
+			{
+				$status = false;
+				$this->error_msg_array['location_code'] = "error_msg_1";
+			}
+		 		  
+		  // Validate CHECK ITEM ID
+			if( empty($this->check_item_id) )
+			{
+				$status = false;
+				$this->error_msg_array['check_item_id'] = "error_msg_4";
+			}
+
+		  //to do: return $status;
+      
+			return true;
+		}    
 	}

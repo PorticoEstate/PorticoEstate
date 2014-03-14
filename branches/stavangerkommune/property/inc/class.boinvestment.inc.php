@@ -221,7 +221,7 @@
 			//_debug_array($values);
 
 			$values['date']	= $this->bocommon->date_to_timestamp($values['date']);
-			$values['date']= date($this->bocommon->dateformat,$values['date']);
+			$values['date']= date($GLOBALS['phpgw']->db->date_format(),$values['date']);
 
 			$values['initial_value']	= abs($values['initial_value']);
 
@@ -263,7 +263,7 @@
 			$date_array = phpgwapi_datetime::date_array($values['date']);
 
 			$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
-			$date= date($this->bocommon->dateformat,$date);
+			$date= date($GLOBALS['phpgw']->db->date_format(),$date);
 
 			$new_index=str_replace(",",".",$values['new_index']);
 

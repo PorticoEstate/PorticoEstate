@@ -9,7 +9,8 @@
 	   <!-- ==== CHOOSE NONE/ALL ===== -->
 	 	<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
 	   	
-		<form id="frm_control_items" action="index.php?menuaction=controller.uicontrol.save_control_items" method="post">	
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol.save_control_items')" /></xsl:variable>
+		<form id="frm_control_items" action="{$action_url}" method="post">	
 			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 			<input type="hidden" name="control_id" value="{$control_id}" />
 			
@@ -39,8 +40,7 @@
 								</ul>
 							</xsl:when>
 						<xsl:otherwise>
-							<div class="empty_list"><span><xsl:value-of select="control_group/group_name"/></span></div>
-							<div>Ingen kontrollpunkt</div>
+							<div class="empty_list"><h4><xsl:value-of select="control_group/group_name"/></h4><span>(Ingen kontrollpunkt)</span></div>
 						</xsl:otherwise>
 						</xsl:choose>
 					</li>

@@ -15,26 +15,31 @@ class date_generator
 	
 	private $calendar_array = array();
 
-	public function __construct($start_date, $end_date, $period_start_date, $period_end_date, $repeat_type, $repeat_interval){
+	public function __construct($start_date, $end_date, $period_start_date, $period_end_date, $repeat_type, $repeat_interval)
+	{
 		$this->start_date = $start_date;
-    $this->end_date = $end_date;
-    $this->period_start_date = $period_start_date;
-    $this->period_end_date = $period_end_date;
-    $this->repeat_type = $repeat_type;
-    $this->repeat_interval = $repeat_interval;
+		$this->end_date = $end_date;
+		$this->period_start_date = $period_start_date;
+		$this->period_end_date = $period_end_date;
+		$this->repeat_type = $repeat_type;
+		$this->repeat_interval = $repeat_interval;
 
-    $this->generate_calendar();
-  }
+		$this->generate_calendar();
+	}
    		
-	function generate_calendar(){
+	function generate_calendar()
+	{
 		$control_start_date = $this->find_control_start_date();
 		$control_end_date = $this->end_date;
-				
+
 		if($control_end_date == null)
 		{
 			$control_end_date = $this->period_end_date;
 		}
-		
+/*		
+_debug_array($control_start_date);
+_debug_array($control_end_date);
+*/
 		$period_start_date = $this->find_start_date_for_period( $control_start_date );
 	  
 		$interval_date = $period_start_date;
@@ -55,7 +60,8 @@ class date_generator
 			{
 				$month = date("m", $interval_date)+$this->repeat_interval;
 				$year = date("Y", $interval_date);
-				if($month > 12){
+				if($month > 12)
+				{
 					$month = $month % 12;
 					$year += 1;
 				}
@@ -68,12 +74,12 @@ class date_generator
 				$interval_date = mktime(0,0,0, date("m", $interval_date), date("d", $interval_date), date("Y", $interval_date)+$this->repeat_interval);
 			}
 		}
-  }
+	}
    	
-  public function find_control_start_date(){
-   	
-   	if( $this->repeat_type == 0 )
-   	{
+	public function find_control_start_date()
+	{
+	   	if( $this->repeat_type == 0 )
+	   	{
 			$control_start_date = $this->start_date;
 		}
 		else if( $this->repeat_type == 1 )
@@ -94,27 +100,31 @@ class date_generator
 				}
 			}
 		}
-		else if( $this->repeat_type == 2 ){
+		else if( $this->repeat_type == 2 )
+		{
 			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $this->start_date), date("y", $this->start_date));
 			$control_start_date = mktime(0,0,0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
 		}
-   	else if( $this->repeat_type == 3 ){
-			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, 12, date("y", $this->start_date));
-			$control_start_date = mktime(0,0,0, 12, $num_days_in_month, date("y", $this->start_date));
+		else if( $this->repeat_type == 3 )
+		{
+//			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, 12, date("y", $this->start_date));
+			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $this->start_date), date("y", $this->start_date));
+//			$control_start_date = mktime(0,0,0, 12, $num_days_in_month, date("y", $this->start_date));
+			$control_start_date = mktime(0,0,0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
 		}
 		
 		return $control_start_date;
   }
    	
-  public function find_start_date_for_period( $trail_period_start_date )
-  {		   		
-   	while( $trail_period_start_date < $this->period_start_date )
-   	{
+	public function find_start_date_for_period( $trail_period_start_date )
+	{		   		
+		while( $trail_period_start_date < $this->period_start_date )
+		{
 			if($this->repeat_type == 0)
 			{
 				$trail_period_start_date = mktime(0,0,0, date("m", $trail_period_start_date), date("d", $trail_period_start_date) + $this->repeat_interval, date("Y", $trail_period_start_date));
 			}
-   		else if($this->repeat_type == 1)
+   			else if($this->repeat_type == 1)
 			{
 				$trail_period_start_date = mktime(0,0,0, date("m", $trail_period_start_date), date("d", $trail_period_start_date) + ($this->repeat_interval * 7), date("Y", $trail_period_start_date));
 			}
@@ -123,7 +133,8 @@ class date_generator
 				$month = date("m", $trail_period_start_date) + $this->repeat_interval;
 				$year = date("Y", $trail_period_start_date);
 				
-				if($month > 12){
+				if($month > 12)
+				{
 					$month = $month % 12;
 					$year += 1;
 				}
@@ -140,7 +151,8 @@ class date_generator
 		return $trail_period_start_date;
 	}
    		
-	public function get_dates(){
+	public function get_dates()
+	{
 		return $this->calendar_array;
 	}
 }

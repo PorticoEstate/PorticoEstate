@@ -127,6 +127,7 @@
   	{
 		tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 		tmp_sum_actual_cost = YAHOO.util.Number.format(values_ds.sum_actual_cost, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+		tmp_sum_difference = YAHOO.util.Number.format(values_ds.sum_difference, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 
 		var show_estimate = false;
 		var show_actual_cost = false;
@@ -170,6 +171,9 @@
 		{
 			td_sum(tmp_sum_actual_cost);
 		}
+
+		td_sum(tmp_sum_difference);
+
 		td_empty(count_empty_end);
 		//Add to Table
 		myfoot = tableYUI.createTFoot();

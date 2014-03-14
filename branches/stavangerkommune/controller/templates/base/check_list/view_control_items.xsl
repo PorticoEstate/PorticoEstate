@@ -1,6 +1,6 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
-
-<xsl:template match="data">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>	
 
 <div id="control-items">
 	<h2>Kontrollpunkter</h2>
@@ -56,6 +56,7 @@
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
 			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+			<xsl:value-of select="$session_url"/>
 		</xsl:attribute>
 		Skriv ut
 	</a>

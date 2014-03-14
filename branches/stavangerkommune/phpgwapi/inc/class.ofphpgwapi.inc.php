@@ -109,6 +109,7 @@
 				case 'ldap':
 				case 'mail':
 				// case 'nis': - doesn't currently work AFAIK - skwashd may08
+				case 'customsso':
 				case 'ntlm':
 				case 'remoteuser':
 				case 'sql':

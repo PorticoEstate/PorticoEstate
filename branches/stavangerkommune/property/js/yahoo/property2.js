@@ -43,7 +43,11 @@
 		tmp_sum = 0;
 		for(i = begin; i < end; i++)
 		{
-			tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
+			if(tmp_record = parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column)))
+			{
+				tmp_sum += tmp_record;
+			}
+			//tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
 		}
 
 		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
@@ -345,6 +349,7 @@
 		newTD.style.fontWeight = 'bolder';
 		newTD.style.textAlign = 'right';
 		newTD.style.paddingRight = '0.8em';
+		newTD.style.whiteSpace = 'nowrap';
 		newTD.appendChild(document.createTextNode(sum));
 		newTR.appendChild(newTD);
   	}
@@ -369,12 +374,25 @@
 
 		if(data[0]["is_paginator"]==1)
 		{
+			var rows_per_page = 10;
+			if(typeof(data[0]['rows_per_page'])!= 'undefined' && data[0]['rows_per_page'])
+			{
+				rows_per_page = data[0]['rows_per_page'];
+			}
+
+			var initial_page = 1;
+
+			if(typeof(data[0]['initial_page'])!= 'undefined' && data[0]['initial_page'])
+			{
+				initial_page = data[0]['initial_page'];
+			}
 
 			myPaginatorConfig = {
 									containers			: pager,
 									totalRecords		: data[0]["total_records"],
 									pageLinks			: 10,
-									rowsPerPage			: 10
+									rowsPerPage			: rows_per_page,
+									initialPage			: initial_page
 								}
 
 			eval("myPaginator_"+num+" = new YAHOO.widget.Paginator(myPaginatorConfig)");

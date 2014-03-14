@@ -212,6 +212,7 @@ make &&\
 make install &&\
 cd ../$APACHE &&\
 ./configure \
+ --with-included-apr\
  --with-mpm=prefork\
  --enable-so\
  --enable-deflate\
@@ -220,9 +221,9 @@ cd ../$APACHE &&\
  --enable-dav\
  --enable-dav-fs\
  --enable-dav-lock\
- --enable-auth-digest &&\
-make &&\
-make install &&\
+ --enable-auth-digest && \
+make && \
+make install && \
 cd ../$PHP &&\
 export LDFLAGS=-lstdc++ &&\
 ./configure \
@@ -257,6 +258,7 @@ export LDFLAGS=-lstdc++ &&\
  --with-gettext \
  --with-snmp \
  --with-curl \
+ --enable-zip \
  $ORACLE_PDO &&\
 make &&\
 make install &&\

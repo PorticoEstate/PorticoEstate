@@ -96,7 +96,6 @@
 					'query'		=> $this->query,
 					'sort'		=> $this->sort,
 					'order'		=> $this->order,
-					'allrows'	=> $this->allrows,
 					'entity_id'	=> $this->entity_id,
 					'cat_id'	=> $this->cat_id
 				);
@@ -548,6 +547,8 @@
 			$uicols['descr'][5]	= lang('id');
 			$uicols['name'][6]	= 'is_eav';
 			$uicols['descr'][6]	= lang('is_eav');
+			$uicols['name'][6]	= 'enable_bulk';
+			$uicols['descr'][6]	= lang('enable bulk');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -1179,6 +1180,7 @@
 					'start_ticket'						=> true,
 					'value_start_ticket'				=> $values['start_ticket'],
 					'value_is_eav'						=> $values['is_eav'],
+					'value_enable_bulk'					=> $values['enable_bulk'],
 					'jasperupload'						=> true,
 					'category_list'						=> $category_list,
 					'parent_list'						=> $parent_list
@@ -1242,7 +1244,14 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+					return "Go away!";
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				}
 			}
 
 			$entity_id		= phpgw::get_var('entity_id', 'int');
@@ -1444,19 +1453,21 @@
 				//				$dry_run = true;
 			}
 
-			$attrib_list = $this->bo->read_attrib_group($entity_id,$cat_id);
+			$attrib_list = $this->bo->read_attrib_group($entity_id,$cat_id, phpgw::get_var( 'allrows', 'bool' ));
 			$uicols['name'][0]	= 'id';
 			$uicols['descr'][0]	= lang('id');
-			$uicols['name'][1]	= 'name';
-			$uicols['descr'][1]	= lang('Name');
-			$uicols['name'][2]	= 'descr';
-			$uicols['descr'][2]	= lang('Descr');
-			$uicols['name'][3]	= 'group_sort';
-			$uicols['descr'][3]	= lang('sorting');
-			$uicols['name'][4]	= 'up';
-			$uicols['descr'][4]	= lang('up');
-			$uicols['name'][5]	= 'down';
-			$uicols['descr'][5]	= lang('down');
+			$uicols['name'][1]	= 'parent_id';
+			$uicols['descr'][1]	= lang('parent');
+			$uicols['name'][2]	= 'name';
+			$uicols['descr'][2]	= lang('Name');
+			$uicols['name'][3]	= 'descr';
+			$uicols['descr'][3]	= lang('Descr');
+			$uicols['name'][4]	= 'group_sort_text';
+			$uicols['descr'][4]	= lang('sorting');
+			$uicols['name'][5]	= 'up';
+			$uicols['descr'][5]	= lang('up');
+			$uicols['name'][6]	= 'down';
+			$uicols['descr'][6]	= lang('down');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -2192,6 +2203,34 @@
 				$action='add';
 			}
 
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
+
+			$parent_list = $GLOBALS['phpgw']->custom_fields->find_group( $this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '',	'', '', true );
+			
+			$parent_list = $this->bocommon->select_list($values['parent_id'],$parent_list);
+//_debug_array($parent_list);die();
+
+			if($id)
+			{
+				$exclude = array($id);
+				$children =  $GLOBALS['phpgw']->custom_fields->get_attribute_group_children($location_id, $id,0, 0, true);
+
+				foreach($children as $child)
+				{
+					$exclude[] = $child['id']; 
+				}
+
+				$k = count($parent_list);
+				for ($i=0; $i<$k; $i++)
+				{
+					if (in_array($parent_list[$i]['id'],$exclude))
+					{
+						unset($parent_list[$i]);
+					}
+				}
+			}
+
 			$link_data = array
 				(
 					'menuaction'	=> 'property.uiadmin_entity.edit_attrib_group',
@@ -2237,7 +2276,8 @@
 					'value_remark'						=> $values['remark'],
 
 					'lang_done_attribtext'				=> lang('Back to the list'),
-					'lang_save_attribtext'				=> lang('Save the attribute')
+					'lang_save_attribtext'				=> lang('Save the attribute'),
+					'parent_list'						=> $parent_list
 				);
 			//_debug_array($values);
 
@@ -2375,12 +2415,14 @@
 				case 'LB':
 					$multiple_choice = true;
 					break;
-				case 'custom1';
+				case 'custom1':
 					$custom_get_list = true;
 					break;
-				case 'custom2';
+				case 'custom2':
+				case 'custom3':
 					$custom_get_list = true;
 					$custom_get_single = true;
+					break;
 				default:
 			}
 
@@ -2545,16 +2587,18 @@
 			$uicols['descr'][1]	= lang('id');
 			$uicols['name'][2]	= 'descr';
 			$uicols['descr'][2]	= lang('Descr');
-			$uicols['name'][3]	= 'active';
-			$uicols['descr'][3]	= lang('Active');
-			$uicols['name'][4]	= 'sorting';
-			$uicols['descr'][4]	= lang('sorting');
-			$uicols['name'][5]	= 'up';
-			$uicols['descr'][5]	= lang('up');
-			$uicols['name'][6]	= 'down';
-			$uicols['descr'][6]	= lang('down');
-			$uicols['name'][7]	= 'file_name';
-			$uicols['descr'][7]	= lang('Name');
+			$uicols['name'][3]	= 'client_side';
+			$uicols['descr'][3]	= lang('client-side');
+			$uicols['name'][4]	= 'active';
+			$uicols['descr'][4]	= lang('Active');
+			$uicols['name'][5]	= 'sorting';
+			$uicols['descr'][5]	= lang('sorting');
+			$uicols['name'][6]	= 'up';
+			$uicols['descr'][6]	= lang('up');
+			$uicols['name'][7]	= 'down';
+			$uicols['descr'][7]	= lang('down');
+			$uicols['name'][8]	= 'file_name';
+			$uicols['descr'][8]	= lang('Name');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -2880,7 +2924,6 @@
 					'type'		=> $this->type
 				);
 
-
 			//_debug_array($values);
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -2918,6 +2961,7 @@
 					'custom_function_list'				=> $this->bo->select_custom_function($values['custom_function_file']),
 
 					'value_active'						=> $values['active'],
+					'value_client_side'					=> $values['client_side'],
 					'lang_active'						=> lang('Active'),
 					'lang_active_statustext'			=> lang('check to activate custom function'),
 				);

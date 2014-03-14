@@ -24,6 +24,7 @@ $(document).ready(function(){
 		$("#line_id").val( '' );
 		$("#line_text").val( '' );
 		$("#order_id").val( '' );
+		$("#order_id_orig").val( '' );
 		$("#project_group").val( '' );
 		$("#invoice_id").html( '' );
 		$("#kid_nr").html( '' );
@@ -38,8 +39,8 @@ $(document).ready(function(){
 		$("#oppsynsmannid").html( '' );
 		$("#saksbehandlerid").html( '' );
 		$("#budsjettansvarligid").html( '' );
-		$("#remark").html( '' );
-		$("#process_log").html( '' );
+//		$("#remark").html( '' );
+		$("#process_log").val( '' );
 		$("#dim_a").val('' );
 		$("#dim_b").html( "<option>Velg</option>" );
 		$("#dim_e").html( "<option>Velg</option>" );
@@ -86,6 +87,25 @@ $(document).ready(function(){
 		update_form_values(line_id, voucher_id_orig);
     });
 
+	$("#dim_e").change(function(){
+		var oArgs = {menuaction:'property.boworkorder.get_category', cat_id:$(this).val()};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					if(data.active !=1)
+					{
+						alert('Denne kan ikke velges');
+					}
+				}
+			}
+		});
+	});
 
 	$("#voucher_form").live("submit", function(e){
 		e.preventDefault();
@@ -97,12 +117,41 @@ $(document).ready(function(){
 			return;
 		}
 
-		if($("#periodization").val() && ! $("#periodization_start").val())
-		{
-			alert('Du må velge startperiode');
-			return;
-		}
+		var periodization = document.getElementById("periodization").value;
+		var periodization_start = document.getElementById("periodization_start").value;
+		var dim_e = document.getElementById("dim_e").value;
+		var dim_b = document.getElementById("dim_b").value;
+		var dim_a = document.getElementById("dim_a").value;
+		var order_id = document.getElementById("order_id").value;
+		var order_id_orig = document.getElementById("order_id_orig").value;
 
+
+		if(order_id_orig == order_id)
+		{
+			if(periodization && ! periodization_start)
+			{
+				alert('Du må velge startperiode');
+				return;
+			}
+
+			if(!dim_e)
+			{
+				alert('Du må velge Kategori');
+				return;
+			}
+
+			if(!dim_b)
+			{
+				alert('Du må velge Ansvarssted');
+				return;
+			}
+
+			if(!dim_a)
+			{
+				alert('Du må angi Dim A');
+				return;
+			}
+		}
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
@@ -167,9 +216,9 @@ $(document).ready(function(){
 						}
 	   				
 	   				}
-	   				$("#receipt").html(htmlString);
 	   				update_form_values(line_id, voucher_id_orig);
 					update_voucher_filter();
+					$("#receipt").html(htmlString);
 				}
 			}
 		});
@@ -261,6 +310,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				}
 
 				$("#order_id").val( voucher[0].order_id );
+				$("#order_id_orig").val( voucher[0].order_id );
 
 				if(voucher[0].order_id)
 				{
@@ -302,18 +352,14 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#dim_a").val( voucher[0].dim_a );
 				$("#currency").html( voucher[0].currency );
 				
-				$("#process_log").html( data['generic'].process_log );
 
-/*
-				if(data['generic'].process_log != null)
+				$("#process_log").val( '' );
+
+				if(data['generic'].process_log)
 				{
-					$("#process_log").html( data['generic'].process_log );
+					$("#process_log").val( data['generic'].process_log );
 				}
-				else
-				{
-					$("#process_log").html( '' );
-				}
-*/
+
 				$("#my_initials").val( data['generic'].my_initials );
 				$("#sign_orig").val( data['generic'].sign_orig );
 				$("#line_text").val( voucher[0].line_text );
@@ -343,6 +389,15 @@ function update_form_values( line_id, voucher_id_orig ){
 				{
 					checked_close_order = "checked = \"checked\"";
 				}
+				else if(voucher[0].project_type_id == 1 && voucher[0].periodization_id) // operation projekts
+				{
+					checked_close_order = "checked = \"checked\"";
+				}
+				else if(!voucher[0].continuous)
+				{
+					checked_close_order = "checked = \"checked\"";
+				}
+				
 				var htmlString_close_order = "<input type=\"checkbox\" name=\"values[close_order]\" value=\"1\" title=\"close order\"" + checked_close_order + "></input>" + close_order_status;
 				$("#close_order").html( htmlString_close_order );
 				$("#close_order_orig").val( voucher[0].closed );
@@ -531,6 +586,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#voucher_id").val( '' );
 				$("#voucher_id_text").html( '' );
 				$("#order_id").val( '' );
+				$("#order_id_orig").val( '' );
 				$("#project_group").val( '' );
 				$("#invoice_id").html( '' );
 				$("#kid_nr").html( '' );
@@ -545,8 +601,8 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#oppsynsmannid").html( '' );
 				$("#saksbehandlerid").html( '' );
 				$("#budsjettansvarligid").html( '' );
-				$("#remark").html( '' );
-				$("#process_log").html( '' );
+			//	$("#remark").html( '' );
+				$("#process_log").val( '' );
 				$("#dim_a").val('' );
 				$("#dim_b").html( "<option>Velg</option>" );
 				$("#dim_e").html( "<option>Velg</option>" );

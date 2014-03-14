@@ -110,10 +110,12 @@
 				$workorder_id = (isset($data['workorder_id'])?$data['workorder_id']:0);
 			}
 
-			$ordermethod = ' order by grouping_id, record , id asc ';
+			$ordermethod = ' ORDER BY grouping_id, record , id ASC';
 
-			$sql = "SELECT fm_wo_hours.*, fm_wo_hours_category.descr as wo_hour_category"
-				. " FROM fm_wo_hours $this->left_join fm_wo_hours_category on fm_wo_hours.category = fm_wo_hours_category.id WHERE workorder_id='$workorder_id' ";
+			$sql = "SELECT DISTINCT fm_wo_hours.*, fm_wo_hours_category.descr AS wo_hour_category, fm_standard_unit.name AS unit_name"
+				. " FROM fm_wo_hours {$this->left_join} fm_wo_hours_category on fm_wo_hours.category = fm_wo_hours_category.id"
+				. " {$this->left_join} fm_standard_unit ON fm_wo_hours.unit = fm_standard_unit.id"
+				. " WHERE workorder_id='{$workorder_id}'";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -125,7 +127,7 @@
 					(
 						'hour_id'			=> $this->db->f('id'),
 						'activity_num'		=> $this->db->f('activity_num'),
-						'hours_descr'		=> htmlspecialchars_decode($this->db->f('hours_descr',true)),
+						'hours_descr'		=> $this->db->f('hours_descr',true),
 						'owner'				=> $this->db->f('owner'),
 						'quantity'			=> $this->db->f('quantity'),
 						'grouping_id'		=> $this->db->f('grouping_id'),
@@ -134,6 +136,7 @@
 						'tolerance'			=> $this->db->f('tolerance'),
 						'activity_id'		=> $this->db->f('activity_id'),
 						'unit'				=> $this->db->f('unit'),
+						'unit_name'			=> $this->db->f('unit_name'),
 						'record'			=> $this->db->f('record'),
 						'cost'				=> $this->db->f('cost'),
 						'billperae'			=> $this->db->f('billperae'),
@@ -545,7 +548,7 @@
 				$hour['activity_id']		= $this->db->f('activity_id');
 				$hour['activity_num']		= $this->db->f('activity_num');
 				$hour['grouping_id']		= $this->db->f('grouping_id');
-				$hour['hours_descr']		= htmlspecialchars_decode($this->db->f('hours_descr',true));
+				$hour['hours_descr']		= $this->db->f('hours_descr',true);
 				$hour['remark']				= $this->db->f('remark');
 				$hour['billperae']			= $this->db->f('billperae');
 				$hour['unit']				= $this->db->f('unit');
@@ -741,16 +744,35 @@
 			}
 
 			$this->db->transaction_begin();
-			$this->db->query("UPDATE fm_workorder SET calculation = '$calculation' WHERE id=$id",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_workorder SET calculation = '{$calculation}' WHERE id = '{$id}'",__LINE__,__FILE__);
 
 			if($calculation > 0)
 			{
-				$config		= CreateObject('phpgwapi.config','property');
+				$soworkorder	= CreateObject('property.soworkorder');
+				$config			= CreateObject('phpgwapi.config','property');
 				$config->read();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
 				$calculation = $calculation * $tax;
 
-				$this->db->query("UPDATE fm_workorder SET combined_cost = '$calculation' WHERE id=$id",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_workorder SET combined_cost = '{$calculation}' WHERE id = '{$id}'",__LINE__,__FILE__);
+
+				$this->db->query("SELECT sum(budget) AS budget, sum(contract_sum) as contract_sum FROM fm_workorder_budget WHERE order_id = '{$id}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$budget			= $this->db->f('budget');
+				$contract_sum	= $this->db->f('contract_sum');
+				
+				$this->db->query("SELECT periodization_id, contract_sum"
+				. " FROM fm_workorder {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
+				. " WHERE fm_workorder.id = '{$id}'",__LINE__,__FILE__);
+
+				$this->db->next_record();
+
+				$periodization_id	= $this->db->f('periodization_id');
+				$contract_sum		= $this->db->f('contract_sum');
+				if(!abs($contract_sum) > 0)
+				{
+					$soworkorder->_update_order_budget($id, date('Y'), $periodization_id, $budget	 , $contract_sum, $calculation);
+				}
 			}
 
 			$this->db->transaction_commit();

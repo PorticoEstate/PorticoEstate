@@ -319,7 +319,15 @@
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -585,7 +593,15 @@
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -741,7 +757,7 @@
 								array
 								( //boton 	CATEGORY
 									'id' => 'btn_cat_id',
-									'name' => 'cat_id',
+									'name' => 'category',
 									'value'	=> lang('Category'),
 									'type' => 'button',
 									'style' => 'filter',
@@ -780,10 +796,10 @@
 			}
 
 			$uicols = array (
-				'input_type'	=>	array('text','text'),
-				'name'			=>	array('id','org_name'),
-				'formatter'		=>	array('',''),
-				'descr'			=>	array(lang('ID'),lang('Name'))
+				'input_type'	=>	array('text','text','text'),
+				'name'			=>	array('id','org_name','status'),
+				'formatter'		=>	array('','',''),
+				'descr'			=>	array(lang('ID'),lang('Name'), lang('status'))
 			);
 
 			$vendor_list = array();
@@ -848,7 +864,15 @@
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -858,7 +882,7 @@
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
-				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				$datatable['sorting']['order'] 			= 'org_name'; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
@@ -1152,7 +1176,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -1375,7 +1407,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -1587,7 +1627,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -1799,7 +1847,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -1977,12 +2033,24 @@ JS;
 							(
 								array
 								( //boton 	CATEGORY
+
+									'id' => 'sel_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[0],
+									'onchange'=> 'onChangeSelect("cat_id");',
+									'tab_index' => 1
+
+/*
 									'id' => 'btn_cat_id',
 									'name' => 'cat_id',
 									'value'	=> lang('Category'),
 									'type' => 'button',
 									'style' => 'filter',
 									'tab_index' => 1
+*/
 								),
 								array
 								( //boton 	CATEGORY
@@ -2023,11 +2091,12 @@ JS;
 							),
 							'hidden_value' => array
 							(
-								array
+					/*			array
 								( //div values  combo_box_0
 									'id' => 'values_combo_box_0',
 									'value'	=> $bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
 								),
+					*/
 								array
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
@@ -2045,7 +2114,14 @@ JS;
 			}
 
 			$entity_list = $boentity->read(array('lookup'=>true));
-			$input_name = $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
+
+			$input_name			= phpgwapi_cache::session_get('property', 'lookup_fields');
+			$input_name_entity	= phpgwapi_cache::session_get('property', 'lookup_fields_entity');
+			$input_name = $input_name ? $input_name : array();
+			$input_name_entity = $input_name_entity ? $input_name_entity : array();
+			
+			$input_name = array_merge($input_name,$input_name_entity);
+
 			$uicols	= $boentity->uicols;
 
 			if (count($uicols['name']) > 0)
@@ -2145,7 +2221,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -2391,7 +2475,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -2600,7 +2692,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -2810,7 +2910,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -3023,7 +3131,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -3235,7 +3351,15 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -3404,22 +3528,32 @@ JS;
 				'descr'			=>	array(lang('ID'),lang('name'))
 			);
 
-			$template_list = array();
+			$values = array();
 		//	$bo	= CreateObject('property.bogeneric',true);
 		//	$template_list = $bo->read();
 
 			$template_list = execMethod($get_list_function, unserialize(urldecode($_GET['get_list_function_input'])));
+			if(isset($template_list['ResultSet']['Result']) && is_array($template_list['ResultSet']['Result']))
+			{
+				$values = $template_list['ResultSet']['Result'];
+			}
+			else
+			{
+				$values = $template_list;
+			}
+			
+//_debug_array($values);die();
 //_debug_array(unserialize(urldecode($get_list_function_input)));
 //_debug_array(unserialize(urldecode($_GET['get_list_function_input'])));
 			$content = array();
 			$j=0;
-			if (isset($template_list) && is_array($template_list))
+			if (is_array($values))
 			{
-				foreach($template_list as $template_entry)
+				foreach($values as $entry)
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $template_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $entry[$uicols['name'][$i]];
 						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
@@ -3457,12 +3591,20 @@ JS;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($template_list);
+			$datatable['pagination']['records_returned']= count($values);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))

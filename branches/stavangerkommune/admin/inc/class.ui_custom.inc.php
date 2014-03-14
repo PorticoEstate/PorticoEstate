@@ -240,18 +240,6 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
-			if ( !isset($values['location']) )
-			{
-				if ( $location )
-				{
-					$values['location'] = $location;
-				}
-				else
-				{
-					$values['location'] = '';
-				}
-			}
-
 			if (isset($values['save']) && $values['save'])
 			{
 				if($id)
@@ -260,7 +248,8 @@
 					$action='edit';
 				}
 
-				$values['appname']=$appname;
+				$values['appname']= $appname;
+				$values['location'] = $location;
 
 				if (!$values['location'])
 				{
@@ -367,9 +356,7 @@
 
 			$data = array
 			(
-				'lang_appname'						=> lang('appname'),
 				'appname'							=> $appname,
-				'lang_location'						=> lang('location'),
 
 				'lang_choice'						=> lang('Choice'),
 				'lang_new_value'					=> lang('New value'),
@@ -383,32 +370,24 @@
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.ui_custom.list_attribute', 'appname'=> $appname, 'location'=>$location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-				'lang_id'							=> lang('Attribute ID'),
 				'lang_entity_type'					=> lang('Entity type'),
 				'lang_no_entity_type'				=> lang('No entity type'),
 				'lang_save'							=> lang('save'),
 				'lang_done'							=> lang('done'),
 				'value_id'							=> $id,
 
-				'lang_column_name'					=> lang('Column name'),
 				'value_column_name'					=> (isset($values['column_name'])?$values['column_name']:''),
-				'lang_column_name_statustext'		=> lang('enter the name for the column'),
 
-				'lang_input_text'					=> lang('input text'),
 				'value_input_text'					=> (isset($values['input_text'])?$values['input_text']:''),
-				'lang_input_name_statustext'		=> lang('enter the input text for records'),
 
 				'lang_id_attribtext'				=> lang('Enter the attribute ID'),
 				'lang_entity_statustext'			=> lang('Select a entity type'),
 
-				'lang_statustext'					=> lang('Statustext'),
-				'lang_statustext_attribtext'		=> lang('Enter a statustext for the inputfield in forms'),
 				'value_statustext'					=> (isset($values['statustext'])?$values['statustext']:''),
 
 				'lang_done_attribtext'				=> lang('Back to the list'),
 				'lang_save_attribtext'				=> lang('Save the attribute'),
 
-				'lang_datatype'						=> lang('Datatype'),
 				'lang_datatype_statustext'			=> lang('Select a datatype'),
 				'lang_no_datatype'					=> lang('No datatype'),
 				'datatype_list'						=> $this->bo->select_datatype((isset($values['column_info']['type'])?$values['column_info']['type']:'')),

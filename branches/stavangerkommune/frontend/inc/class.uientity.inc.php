@@ -7,7 +7,7 @@
 	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @package Frontend
-	 * @version $Id: class.uientity.inc.php 7224 2011-04-15 11:48:27Z sigurdne $
+	 * @version $Id: class.uientity.inc.php 11377 2013-10-18 08:25:54Z sigurdne $
 	 */
 
 	/*
@@ -347,7 +347,7 @@
 					$i = 0;
 					foreach ( $attrib_data as $attrib )
 					{
-						if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+						if(($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
 						{
 							$datatable['actions']['form'][0]['fields']['field'][] = array
 							(
@@ -427,6 +427,20 @@
 
 			$uicols = $this->bo->uicols;
 
+			$j	= count($uicols['name']);
+			for ($i=0;$i<$j;$i++)
+			{
+				switch ($uicols['name'][$i])
+				{
+					case 'entry_date':
+						$uicols['input_type'][$i] = 'hidden';
+						break;
+				
+				}
+			}
+
+
+
 			$uicols['name'][]		= 'img_id';
 			$uicols['descr'][]		= 'dummy';
 			$uicols['sortable'][]	= false;
@@ -456,11 +470,63 @@
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'show_picture';
+			/**
+			* def of next $uicols['formatter'][] is moved down
+			*
+			*/
 			$uicols['input_type'][]	= '';
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$custom_config	= CreateObject('admin.soconfig',$location_id);
+			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
+
+			$remote_image_in_table = false;
+			foreach ($_config as $_config_section => $_config_section_data)
+			{
+
+				if($_config_section_data['image_in_table'])
+				{
+			
+					$remote_image_in_table = true;
+					$js = <<<JS
+	var show_picture_remote = function(elCell, oRecord, oColumn, oData)
+	{
+		if(oRecord.getData('img_id'))
+		{
+			sUrl = '{$_config_section_data['url']}';
+			sUrl += '&{$_config_section_data['img_key_remote']}=' + oRecord.getData('img_id');
+			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('file_name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\" target=\"_blank\"><img src=\""+sUrl+"&{$_config_section_data['thumbnail_flag']}\" alt=\""+oRecord.getData('file_name')+"\" /></a>";
+		}
+	}
+JS;
+					$GLOBALS['phpgw']->js->add_code('', $js);
+
+					break;
+				}
+			}
+
+
+			if(!$remote_image_in_table)
+			{
+
+				$uicols['formatter'][]	= 'show_picture';
+
+				$vfs = CreateObject('phpgwapi.vfs');
+				$vfs->override_acl = 1;
+
+				$img_types = array
+				(
+					'image/jpeg',
+					'image/png',
+					'image/gif'
+				);
+			}
+			else
+			{
+				$uicols['formatter'][]	= 'show_picture_remote';			
+			}
+
 
 			$j	= count($ticket['files']);
 			for ($i=0;$i<$j;$i++)
@@ -468,12 +534,6 @@
 				$ticket['files'][$i]['file_name']=urlencode($ticket['files'][$i]['name']);
 			}
 
-			$img_types = array
-			(
-				'image/jpeg',
-				'image/png',
-				'image/gif'
-			);
 
 			$j=0;
 			if (isset($entity_list) && is_array($entity_list))
@@ -482,17 +542,27 @@
 				{
 					$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
 
-					$_files = $vfs->ls(array(
-						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
-						'relatives' => array(RELATIVE_NONE)));
-	
-					if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+
+					if($remote_image_in_table)
 					{
-						$entity_entry['file_name']	= urlencode($_files[0]['name']);
-						$entity_entry['directory']	= urlencode($_files[0]['directory']);
-						$entity_entry['img_id']		= $_files[0]['file_id'];
+						$entity_entry['file_name']	= $entity_entry[$_config_section_data['img_key_local']];
+					//	$entity_entry['directory']	= urlencode('external_source');
+						$entity_entry['img_id']		= $entity_entry[$_config_section_data['img_key_local']];
 					}
-				
+					else
+					{
+						$_files = $vfs->ls(array(
+							'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+							'relatives' => array(RELATIVE_NONE)));
+	
+						if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+						{
+							$entity_entry['file_name']	= urlencode($_files[0]['name']);
+							$entity_entry['directory']	= urlencode($_files[0]['directory']);
+							$entity_entry['img_id']		= $_files[0]['file_id'];
+						}
+					}
+
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
 						switch ($uicols['name'][$i])
@@ -590,13 +660,13 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'frontend.uientity.view',
-							'entity_id'		=> $this->entity_id,
-							'cat_id'		=> $this->cat_id,
-							'type'			=> $this->type
+							'location_id'	=>$location_id,
 						)),
 						'parameters'			=> $parameters
 					);
 			}
+
+/*
 			if($this->acl_edit)
 			{
 				$datatable['rowactions']['action'][] = array
@@ -613,7 +683,7 @@
 						'parameters'			=> $parameters
 					);
 			}
-
+*/
 			if(	$category['start_ticket'])
 			{
 				$datatable['rowactions']['action'][] = array
@@ -637,7 +707,7 @@
 			}
 
 			$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed' , 'property');
-			$GLOBALS['phpgw']->css->add_external_file('property/js/tinybox2/style.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location)));
 
@@ -923,6 +993,150 @@
 			}
 
 			
+// ---- START INTEGRATION -------------------------
+
+			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
+			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
+//_debug_array($custom_config->config_data);die();
+			// required settings:
+/*
+			integration_tab
+			integration_height
+			integration_url
+			integration_parametres
+			integration_action
+			integration_action_view
+			integration_action_edit
+			integration_auth_key_name
+			integration_auth_url
+			integration_auth_hash_name
+			integration_auth_hash_value
+			integration_location_data
+ */
+			$tabs = array();
+			$tabs['info']	= array('label' => 'Info', 'link' => '#info');
+			$active_tab = $active_tab ? $active_tab : 'info';
+
+			$integration = array();
+			foreach ($_config as $_config_section => $_config_section_data)
+			{
+				if(isset($_config_section_data['tab']) && $values['id'])
+				{
+					if(!isset($_config_section_data['url']))
+					{
+						phpgwapi_cache::message_set("'url' is a required setting for integrations, '{$_config_section}' is disabled", 'error');
+						break;
+					}
+
+					//get session key from remote system
+					$arguments = array($_config_section_data['auth_hash_name'] => $_config_section_data['auth_hash_value']);
+					$query = http_build_query($arguments);
+					$auth_url = $_config_section_data['auth_url'];
+					$request = "{$auth_url}?{$query}";
+
+					$aContext = array
+					(
+						'http' => array
+						(
+							'request_fulluri' => true,
+						),
+					);
+
+					if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+					{
+						$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+					}
+
+					$cxContext = stream_context_create($aContext);
+					$response = trim(file_get_contents($request, False, $cxContext));
+		
+					$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
+					$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
+
+					parse_str($_config_section_data['parametres'], $output);
+
+					foreach ($output as $_dummy => $_substitute)
+					{
+						$_keys[] = $_substitute;
+	
+						$__value = false;
+						if(!$__value = urlencode($values[str_replace(array('__','*'),array('',''), $_substitute)]))
+						{
+							foreach ($values['attributes'] as $_attribute)
+							{
+								if(str_replace(array('__','*'),array('',''), $_substitute) == $_attribute['name'])
+								{
+									$__value = urlencode($_attribute['value']);
+									break;
+								}
+							}
+						}
+
+						if($__value)
+						{
+							$_values[] = $__value;
+						}
+					}
+
+					//_debug_array($_config_section_data['parametres']);
+//					_debug_array($_values);
+//					_debug_array($output);
+					unset($output);
+					unset($__value);
+					$_sep = '?';
+					if (stripos($_config_section_data['url'],'?'))
+					{
+						$_sep = '&';
+					}
+					$_param = str_replace($_keys, $_values, $_config_section_data['parametres']);
+					unset($_keys);
+					unset($_values);
+	//				$integration_src = phpgw::safe_redirect("{$_config_section_data['url']}{$_sep}{$_param}");
+					$integration_src = "{$_config_section_data['url']}{$_sep}{$_param}";
+					if($_config_section_data['action'])
+					{
+						$_sep = '?';
+						if (stripos($integration_src,'?'))
+						{
+							$_sep = '&';
+						}
+						$integration_src .= "{$_sep}{$_config_section_data['action']}=" . $_config_section_data["action_{$mode}"];
+					}
+
+					$arguments = array($_config_section_data['auth_key_name'] => $response);
+
+					if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
+					{
+						$_config_section_data['location_data']	= htmlspecialchars_decode($_config_section_data['location_data']);
+						parse_str($_config_section_data['location_data'], $output);
+						foreach ($output as $_dummy => $_substitute)
+						{
+							$_keys[] = $_substitute;
+							$_values[] = urlencode($values['location_data'][trim($_substitute, '_')]);
+						}
+						$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
+					}
+
+					$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
+					//_debug_array($values);
+					//_debug_array($integration_src);die();
+					$tabs[$_config_section]	= array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section}", 'function' => "document.getElementById('{$_config_section}_content').src = '{$integration_src}';");
+
+					$integration[]	= array
+					(
+						'section'	=> $_config_section,
+						'height'	=> isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500,
+						'src'		=> $integration_src
+					);
+
+				}
+			}
+
+//_debug_array($integration);die();
+// ---- END INTEGRATION -------------------------
+
+
+
 			$link_file_data = array
 				(
 					'menuaction'	=> 'property.uientity.view_file',
@@ -954,6 +1168,8 @@
 					$content_files[$z]['img_id']	= $values['files'][$z]['file_id'];
 				}
 			}									
+
+
 
 			$datavalues[0] = array
 				(
@@ -1004,7 +1220,10 @@
 												"cat_id:'{$this->cat_id}',".
 												"type:'{$this->type}'}",
 						'datatable'			=> $datavalues,
-						'myColumnDefs'		=> $myColumnDefs,	
+						'myColumnDefs'		=> $myColumnDefs,
+						'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+						'active_tab'		=> $active_tab,
+						'integration'		=> $integration,
 					)
 			);
 			phpgwapi_yui::load_widget('dragdrop');

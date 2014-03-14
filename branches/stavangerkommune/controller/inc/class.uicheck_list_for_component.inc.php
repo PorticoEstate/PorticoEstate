@@ -28,6 +28,10 @@
  	* @version $Id$
 	*/	
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
 
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
@@ -62,8 +66,6 @@
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->so_control 			= CreateObject('controller.socontrol');
-			//$this->so_bim				= CreateObject('bim.sobimitem_impl');
-			//$this->so_bim				= new sobimitem_impl();
 
 			$this->type_id				= $this->bo->type_id;
 
@@ -85,126 +87,6 @@
 
 		function index()
 		{
-/*			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->query();
-			}
-			$building_types  = execMethod('property.soadmin_location.read',array());
-
-			$type_id = 1;
-
-			$category_types = $this->bocommon->select_category_list(array(
-																		'format'=>'filter',
-																		'selected' => $this->cat_id,
-																		'type' =>'location',
-																		'type_id' =>$type_id,
-																		'order'=>'descr'
-																	));
-
-			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
-			$default_value = array ('id'=>'','name'=>lang('no district'));
-			array_unshift($district_list,$default_value);
-
-			$part_of_town_list =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-			$default_value = array ('id'=>'','name'=>lang('no part of town'));
-			array_unshift($part_of_town_list,$default_value);
-
-			$_role_criteria = array
-					(
-						'type'		=> 'responsibility_role',
-						'filter'	=> array('location' => ".location.{$type_id}"),
-						'order'		=> 'name'
-					);
-
-			$responsibility_roles_list =   execMethod('property.sogeneric.get_list',$_role_criteria);
-			$default_value = array ('id'=>'','name'=>lang('no role'));
-			array_unshift ($responsibility_roles,$default_value);
-
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
-
-			// Fetches prosedures that are related to first control area in list
-			$control_area_id = $control_areas_array[0]['id'];
-
-			$lists = array
-			(
-				'building_types'			=> $building_types,
-				'category_types'			=> $category_types,
-				'district_list'				=> $district_list,
-				'part_of_town_list'			=> $part_of_town_list,
-				'responsibility_roles_list'	=> $responsibility_roles_list,
-				'control_area_list'			=> $control_areas_array,
-			);
-
-
-
-
-			$data = array(
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.index', 'phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'location_code',
-							'label' => lang('Property'),
-							'sortable'	=> true,
-							'formatter' => 'YAHOO.portico.formatLink'
-						),
-						array(
-							'key'	=>	'loc1_name',
-							'label'	=>	lang('Property name'),
-							'sotrable'	=>	false
-						),
-						array(
-							'key' => 'adresse1',
-							'label' => lang('Address'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'postnummer',
-							'label' => lang('Zip code'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'checked',
-							'label' => 'Velg',
-							'sortable' => false,
-							'formatter' => 'YAHOO.widget.DataTable.formatCheckbox',
-							'className' => 'mychecks'
-						),
-						array(
-							'key' => 'link',
-							'hidden' => true
-						),
-						array(
-							'key' => 'actions',
-							'hidden' => true
-						),
-						array(
-							'key' => 'labels',
-							'hidden' => true
-						),
-						array(
-							'key' => 'ajax',
-							'hidden' => true
-						),
-						array(
-							'key' => 'alert',
-							'hidden' => true
-						)
-					)
-				),
-				'lists' => $lists
-			);
-
-			//self::add_javascript('controller', 'yahoo', 'datatable.js');
-			self::add_javascript('controller', 'controller', 'controller_datatable_test.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-			//self::add_javascript('controller', 'yahoo', 'component_location.js');
-
-			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'equipmens_location', 'controller' );
-
-			//self::render_template_xsl('datatable', $data);
-			self::render_template_xsl('component', $data);
-*/
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
@@ -262,9 +144,9 @@
 			);
 
 			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
 			self::render_template_xsl(array('control_component_tabs', 'common', 'view_component_for_control'), $data);
@@ -369,9 +251,9 @@
 
 
 				phpgwapi_yui::load_widget('paginator');
+				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
 				self::render_template_xsl(array('control_component_tabs', 'common', 'add_component_to_control'), $data);
@@ -398,20 +280,6 @@
 
 		public function get_component()
 		{
-
-			/*$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query					= phpgw::get_var('query');
-			$sort					= phpgw::get_var('sort');
-			$order					= phpgw::get_var('order');
-			$filter					= phpgw::get_var('filter', 'int');
-			$cat_id					= phpgw::get_var('cat_id');
-			$lookup_tenant			= phpgw::get_var('lookup_tenant', 'bool');
-			$district_id			= phpgw::get_var('district_id', 'int');
-			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
-			$status					= phpgw::get_var('status');
-			$type_id				= phpgw::get_var('type_id', 'int');
-			$allrows				= phpgw::get_var('allrows', 'bool');
-			$location_code			= phpgw::get_var('location_code');*/
 
 			$type_id = phpgw::get_var('bim_type_id');
 

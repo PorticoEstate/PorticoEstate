@@ -61,7 +61,7 @@
 				'get_locations_by_name'	=> true
 			);
 
-		function property_bolocation($session=false)
+		function __construct($session=false)
 		{
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 			$this->bocommon 			= CreateObject('property.bocommon');
@@ -201,9 +201,9 @@
 			return $this->bocommon->select_list($selected,$list);
 		}
 
-		function read_entity_to_link($location_code)
+		function read_entity_to_link($location_code, $exact = false)
 		{
-			return $this->so->read_entity_to_link($location_code);
+			return $this->so->read_entity_to_link($location_code, $exact);
 		}
 
 		function get_owner_list($format='',$selected='')
@@ -257,12 +257,18 @@
 			{
 				switch($data['lookup_type'])
 				{
-				case 'form':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
-					break;
-				case 'view':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
-					break;
+					case 'form':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'view':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'form2':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form2'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'view2':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view2'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
 				}
 			}
 
@@ -308,6 +314,7 @@
 				$location['location'][$i]['name']					= $location_types[($i)]['name'];
 				$location['location'][$i]['value']					= isset($data['values']['loc' . ($i+1)]) ? $data['values']['loc' . ($i+1)] : '';
 				$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($i)]['name'];
+				$location['location'][$i]['required']				= isset($data['required_level']) && $data['required_level'] == ($i+1);
 
 				$location['location'][$i]['extra'][0]['input_name']		= 'loc' . ($i+1).'_name';
 				$input_name[]							= $location['location'][$i]['extra'][0]['input_name'];
@@ -525,6 +532,7 @@
 				}
 			}
 
+			$input_name_entity = array();
 			if (isset($data['lookup_entity']) && is_array($data['lookup_entity']))
 			{
 				foreach($data['lookup_entity'] as $entity)
@@ -534,14 +542,15 @@
 					$p_cat_id = isset($data['entity_data'][$entity['id']]['p_cat_id']) ? $data['entity_data'][$entity['id']]['p_cat_id'] : '';
 					$lookup_functions[] = array
 						(
-							'name'		=> 'lookup_entity_' . $entity['id'] .'()',
-							'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},cat_id:'{$p_cat_id}',location_code:'{$filter_location}',block_query:'{$block_query}'",
-							'action'	=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+							'filter_level'		=> count($location_types),
+							'name'				=> 'lookup_entity_' . $entity['id'] .'()',
+							'link'				=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},cat_id:'{$p_cat_id}',location_code:'{$filter_location}',block_query:'{$block_query}'",
+							'action'			=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 						);
 
 					$location['location'][$i]['input_type']						= 'text';
 					$location['location'][$i]['input_name']						= 'entity_num_' . $entity['id'];
-					$input_name[]												= 'entity_num_' . $entity['id'];
+					$input_name_entity[]										= 'entity_num_' . $entity['id'];
 					$insert_record['extra']['entity_num_' . $entity['id']]		= 'p_num';
 
 					$location['location'][$i]['size']							= 8;
@@ -556,10 +565,11 @@
 					$location['location'][$i]['statustext']						= lang('click this link to select') .' ' . $entity['name'];
 
 					$location['location'][$i]['extra'][0]['input_name']			= 'entity_cat_name_' . $entity['id'];
-					$input_name[]												= $location['location'][$i]['extra'][0]['input_name'];
+					$input_name_entity[]										= $location['location'][$i]['extra'][0]['input_name'];
 					$location['location'][$i]['extra'][0]['input_type']			= 'text';
 					$location['location'][$i]['extra'][0]['size']				= 30;
 					$location['location'][$i]['extra'][0]['lookup_function_call']	= 'lookup_entity_' . $entity['id'] .'()';
+					$location['location'][$i]['extra'][0]['is_entity']			= true;
 
 					if (is_array($data['entity_data']))
 					{
@@ -568,7 +578,7 @@
 
 					$location['location'][$i]['extra'][1]['input_type']			= 'hidden';
 					$location['location'][$i]['extra'][1]['input_name']			= 'entity_id_' . $entity['id'];
-					$input_name[]												= 'entity_id_' . $entity['id'];
+					$input_name_entity[]										= 'entity_id_' . $entity['id'];
 					$insert_record['extra']['entity_id_' . $entity['id']]		= 'p_entity_id';
 					if (is_array($data['entity_data']))
 					{
@@ -577,7 +587,7 @@
 
 					$location['location'][$i]['extra'][2]['input_type']			= 'hidden';
 					$location['location'][$i]['extra'][2]['input_name']			= 'cat_id_' . $entity['id'];
-					$input_name[]												= 'cat_id_' . $entity['id'];
+					$input_name_entity[]										= 'cat_id_' . $entity['id'];
 					$insert_record['extra']['cat_id_' . $entity['id']]			= 'p_cat_id';
 
 					if (is_array($data['entity_data']))
@@ -592,18 +602,36 @@
 			//_debug_array($location['location']);
 			if(isset($input_name))
 			{
-				$GLOBALS['phpgw']->session->appsession('lookup_fields','property',$input_name);
+				phpgwapi_cache::session_set('property', 'lookup_fields',$input_name);
 			}
+			if($input_name_entity)
+			{
+				phpgwapi_cache::session_set('property', 'lookup_fields_entity',$input_name_entity);
+			}
+
+			if($input_name_entity && is_array($input_name_entity))
+			{
+				$function_blank_entity_values = "function blank_entity_values()\n{\n";
+
+				for ($k=0;$k<count($input_name_entity);$k++)
+				{
+					$function_blank_entity_values .= "\tdocument.getElementsByName('{$input_name_entity[$k]}')[0].value = '';\n";
+				}
+				$function_blank_entity_values .= "}\n";
+
+				$GLOBALS['phpgw']->js->add_code('', $function_blank_entity_values);
+			}
+
+
 			if(isset($insert_record))
 			{
-				$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
+				phpgwapi_cache::session_set('property', 'insert_record',$insert_record);
 			}
-			//			$GLOBALS['phpgw']->session->appsession('input_name','property',$input_name);
-
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{
-				$location['lookup_functions'] = '';
+				$_lookup_functions = "self.name='first_Window'\n";
+
 				$filter_level = 0;
 				for ($j=0;$j<count($lookup_functions);$j++)
 				{
@@ -622,14 +650,14 @@
 						$lookup_functions[$j]['link'] .= ",location_code:'{$filter_location}',block_query:'{$block_query}'";
 					}
 
-					$location['lookup_functions'] .= <<<JS
+					$_lookup_functions .= <<<JS
 
 						function {$lookup_functions[$j]['name']}
 						{
 JS;
 					if($filter_level)
 					{
-						$location['lookup_functions'] .= <<<JS
+						$_lookup_functions .= <<<JS
 
 							var block = '';
 							var filter = '';
@@ -638,23 +666,30 @@ JS;
 							{
 								for(i=1;i<=filter_level;i++)
 								{
-									if(eval('document.form.loc'+i+'.value'))
+									if (typeof eval('document.form.loc'+i) != 'undefined')
 									{
-										block = true;
-										if(!filter)
+										if( eval('document.form.loc'+i+'.value'))
 										{
-											filter = eval('document.form.loc'+i+'.value');
+											block = true;
+											if(!filter)
+											{
+												filter = eval('document.form.loc'+i+'.value');
+											}
+											else
+											{
+												filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
+											}
 										}
-										else
-										{
-											filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
-										}
+									}
+									else
+									{
+										break;
 									}
 								}
 							}
 JS;
 					}
-					$location['lookup_functions'] .= <<<JS
+					$_lookup_functions .= <<<JS
 
 							var oArgs = {{$lookup_functions[$j]['link']}};
 							var strURL = phpGWLink('index.php', oArgs);
@@ -663,6 +698,8 @@ JS;
 JS;
 				}
 			}
+
+			$GLOBALS['phpgw']->js->add_code('', $_lookup_functions);
 
 			if(isset($location) && is_array($location))
 			{
@@ -689,7 +726,8 @@ JS;
 				'district_id'=>$this->district_id,'allrows'=>$allrows,
 				'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
 				'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id'],
-				'results' => $data['results']));
+				'results' => $data['results'],'control_registered' => $data['control_registered'],
+					 'control_id' => $data['control_id']));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
@@ -984,4 +1022,38 @@ JS;
 
 			return $this->so->get_locations_by_name($data);
 		}
+
+
+
+		/**
+		 * Get location name
+		 *
+		 * @return string location name
+		 */
+		public function get_location_name($location_code)
+		{
+			static $locations = array();
+			
+			if(!isset($locations[$location_code]))
+			{
+				$_location_info = $this->read_single( array
+					(
+						'location_code' => $location_code,
+						'extra'			=> array('noattrib' => true)
+					)
+				);
+
+				$_loc_name_arr = array();
+				$_level = count(explode('-', $location_code)) +1;
+				for ($i=1; $i < $_level ;$i++)
+				{
+					$_loc_name_arr[] = $_location_info["loc{$i}_name"];
+				}
+
+				$locations[$location_code] = implode(' | ',$_loc_name_arr);
+			}
+			return $locations[$location_code];
+		}
+
+
 	}

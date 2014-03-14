@@ -127,25 +127,22 @@
 
 		function read_category($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start'])&& $data['start'] ? $data['start'] : 0;
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort'])?$data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-				$entity_id	= isset($data['entity_id'])? (int)$data['entity_id']:0;
-				$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
-				$required	= isset($data['required'])?$data['required']:'';
-			}
+			$start		= isset($data['start'])&& $data['start'] ? $data['start'] : 0;
+			$query		= isset($data['query'])?$data['query']:'';
+			$sort		= isset($data['sort'])?$data['sort']:'DESC';
+			$order		= isset($data['order'])?$data['order']:'';
+			$allrows	= isset($data['allrows'])?$data['allrows']:'';
+			$entity_id	= isset($data['entity_id'])? (int)$data['entity_id']:0;
+			$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$required	= isset($data['required'])?$data['required']:'';
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY {$order} {$sort}";
 			}
 			else
 			{
-				$ordermethod = ' order by id asc';
+				$ordermethod = ' ORDER BY id ASC';
 			}
 
 			$table = "fm_{$type}_category";
@@ -154,10 +151,10 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " AND name $this->like '%$query%' or descr $this->like '%$query%'";
+				$querymethod = " AND name {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%'";
 			}
 
-			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id $querymethod";
+			$sql = "SELECT * FROM {$table} WHERE entity_id={$entity_id} {$querymethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -177,14 +174,15 @@
 				$id	= $this->db2->f('id');
 				$category = array
 				(
-					'entity_id'	=> $entity_id,
-					'id'		=> $id,
-					'name'		=> $this->db2->f('name'),
-					'prefix'	=> $this->db2->f('prefix'),
-					'descr'		=> $this->db2->f('descr'),
-					'level'		=> $this->db2->f('level'),
-					'parent_id'	=> $this->db2->f('parent_id'),
-					'is_eav'	=> $this->db2->f('is_eav'),
+					'entity_id'		=> $entity_id,
+					'id'			=> $id,
+					'name'			=> $this->db2->f('name'),
+					'prefix'		=> $this->db2->f('prefix'),
+					'descr'			=> $this->db2->f('descr'),
+					'level'			=> $this->db2->f('level'),
+					'parent_id'		=> $this->db2->f('parent_id'),
+					'is_eav'		=> $this->db2->f('is_eav'),
+					'enable_bulk'	=> $this->db2->f('enable_bulk'),
 				);
 
 				if($required)
@@ -199,6 +197,12 @@
 					$values[] = $category;
 				}
 			}
+
+			foreach ($values as &$entry)
+			{
+				$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$type], ".{$type}.{$entity_id}.{$entry['id']}");
+			}
+
 			return $values;
 		}
 
@@ -218,11 +222,12 @@
 			{
 				$id	= $db->f('id');
 				$this->category_tree[] = array
-					(
-						'id'		=> $id,
-						'name'		=> str_repeat('..',$level).$db->f('name'),
-						'parent_id'	=> $db->f('parent_id')
-					);
+				(
+					'id'			=> $id,
+					'name'			=> str_repeat('..',$level).$db->f('name'),
+					'parent_id'		=> $db->f('parent_id'),
+					'location_id'	=> $db->f('location_id')
+				);
 				$this->get_children2($entity_id, $id, $level+1);
 			}
 			return $this->category_tree;
@@ -241,20 +246,22 @@
 			{
 				$id	= $this->db->f('id');
 				$categories[$id] = array
-					(
-						'id'			=> $id,
-						'name'			=> $this->db->f('name',true),
-						'parent_id'		=> 0
-					);
+				(
+					'id'			=> $id,
+					'name'			=> $this->db->f('name',true),
+					'parent_id'		=> 0,
+					'location_id'	=> $this->db->f('location_id')
+				);
 			}
 
 			foreach($categories as $category)
 			{
-				$this->category_tree[] = array
-					(
-						'id'	=> $category['id'],
-						'name'	=> $category['name']
-					);
+				$this->category_tree[$category['id']] = array
+				(
+					'id'			=> $category['id'],
+					'name'			=> $category['name'],
+					'location_id'	=> $category['location_id']
+				);
 				$this->get_children2($entity_id, $category['id'], 1);
 			}
 			return $this->category_tree;
@@ -280,8 +287,6 @@
 			while ($this->db2->next_record())
 			{
 				$id	= $this->db2->f('id');
-		//		$location = ".entity.{$entity_id}.{$id}";
-		//		$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $location);
 
 				$children[$id] = array
 					(
@@ -292,7 +297,7 @@
 						'level'			=> (int)$this->db2->f('level'),
 						'parent_id'		=> (int)$this->db2->f('parent_id'),
 						'owner'			=> (int)$this->db2->f('owner'),
-						'location_id'	=> $location_id
+						'location_id'	=> (int)$this->db2->f('location_id')
 					);
 			}
 
@@ -324,7 +329,7 @@
 			{
 				$id	= $this->db2->f('id');
 				$location = ".entity.{$entity_id}.{$id}";
-	//			$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $location);
+
 				if ( !$required || ($required && $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->type_app[$this->type])) )
 				{
 					$categories[$id] = array
@@ -335,7 +340,7 @@
 							'descr'			=> $this->db2->f('descr',true),
 							'level'			=> 0,
 							'parent_id'		=> 0,
-							'location_id'	=> $location_id
+							'location_id'	=> $this->db2->f('location_id')
 						);
 				}
 			}
@@ -429,27 +434,85 @@
 			if ($this->db->next_record())
 			{
 				$category = array
-					(
-						'id'						=> $this->db->f('id'),
-						'name'						=> $this->db->f('name',true),
-						'descr'						=> $this->db->f('descr',true),
-						'prefix'					=> $this->db->f('prefix',true),
-						'lookup_tenant'				=> $this->db->f('lookup_tenant'),
-						'tracking'					=> $this->db->f('tracking'),
-						'location_level'			=> $this->db->f('location_level'),
-						'location_link_level'		=> $this->db->f('location_link_level'),
-						'fileupload'				=> $this->db->f('fileupload'),
-						'loc_link'					=> $this->db->f('loc_link'),
-						'start_project'				=> $this->db->f('start_project'),
-						'start_ticket'				=> $this->db->f('start_ticket'),
-						'is_eav'					=> $this->db->f('is_eav'),
-						'jasperupload'				=> $this->db->f('jasperupload'),
-						'parent_id'					=> $this->db->f('parent_id'),
-						'level'						=> $this->db->f('level')
+				(
+					'id'						=> $this->db->f('id'),
+					'name'						=> $this->db->f('name',true),
+					'descr'						=> $this->db->f('descr',true),
+					'prefix'					=> $this->db->f('prefix',true),
+					'lookup_tenant'				=> $this->db->f('lookup_tenant'),
+					'tracking'					=> $this->db->f('tracking'),
+					'location_level'			=> $this->db->f('location_level'),
+					'location_link_level'		=> $this->db->f('location_link_level'),
+					'fileupload'				=> $this->db->f('fileupload'),
+					'loc_link'					=> $this->db->f('loc_link'),
+					'start_project'				=> $this->db->f('start_project'),
+					'start_ticket'				=> $this->db->f('start_ticket'),
+					'is_eav'					=> $this->db->f('is_eav'),
+					'enable_bulk'				=> $this->db->f('enable_bulk'),
+					'jasperupload'				=> $this->db->f('jasperupload'),
+					'parent_id'					=> $this->db->f('parent_id'),
+					'level'						=> $this->db->f('level'),
+					'location_id'				=> $this->db->f('location_id')
 					);
 			}
+
+
 			return $category;
 		}
+
+		/**
+		* Get entity category based on location_id
+		* @param int $location_id the system location id
+		* @return array info about the entity category
+		*/
+		function get_single_category($location_id)
+		{
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+			
+			$type_arr = explode('.',  $loc_arr['location']);
+			
+			if(!count($type_arr) == 3)
+			{
+				return array();
+			}
+
+			$type = $type_arr[1];
+
+			$sql = "SELECT * FROM fm_{$type}_category WHERE location_id =" . (int)$location_id;
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$category = array();
+			if ($this->db->next_record())
+			{
+				$category = array
+				(
+					'id'						=> $this->db->f('id'),
+					'entity_id'					=> $this->db->f('entity_id'),
+					'name'						=> $this->db->f('name',true),
+					'descr'						=> $this->db->f('descr',true),
+					'prefix'					=> $this->db->f('prefix',true),
+					'lookup_tenant'				=> $this->db->f('lookup_tenant'),
+					'tracking'					=> $this->db->f('tracking'),
+					'location_level'			=> $this->db->f('location_level'),
+					'location_link_level'		=> $this->db->f('location_link_level'),
+					'fileupload'				=> $this->db->f('fileupload'),
+					'loc_link'					=> $this->db->f('loc_link'),
+					'start_project'				=> $this->db->f('start_project'),
+					'start_ticket'				=> $this->db->f('start_ticket'),
+					'is_eav'					=> $this->db->f('is_eav'),
+					'enable_bulk'				=> $this->db->f('enable_bulk'),
+					'jasperupload'				=> $this->db->f('jasperupload'),
+					'parent_id'					=> $this->db->f('parent_id'),
+					'level'						=> $this->db->f('level'),
+					'location_id'				=> $location_id
+					);
+
+			}
+
+			return $category;
+		}
+
 
 		function read_category_name($entity_id,$cat_id)
 		{
@@ -466,8 +529,10 @@
 			$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
 			$entity['id'] = $this->bocommon->next_id("fm_{$this->type}");
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}." . $entity['id'], $entity['name'], $this->type_app[$this->type], true);
 
 			$values= array(
+				$location_id,
 				$entity['id'],
 				$entity['name'],
 				$entity['descr'],
@@ -477,10 +542,9 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$this->db->query("INSERT INTO fm_{$this->type} (id,name, descr,location_form,documentation) "
+			$this->db->query("INSERT INTO fm_{$this->type} (location_id,id,name, descr,location_form,documentation) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
-			$GLOBALS['phpgw']->locations->add(".{$this->type}." . $entity['id'], $entity['name'], $this->type_app[$this->type], true);
 
 			$receipt['id']= $entity['id'];
 
@@ -528,6 +592,10 @@
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$values['id'] = $this->bocommon->next_id($table, array('entity_id'=>$values['entity_id']));
+			
+			$custom_tbl = !$values['is_eav'] ? "fm_{$this->type}_{$values['entity_id']}_{$values['id']}" : null;
+			
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, $custom_tbl, $c_function = true);
 
 			if($values['parent_id'])
 			{
@@ -543,6 +611,7 @@
 
 			$values_insert= array
 				(
+					$location_id,
 					$values['entity_id'],
 					$values['id'],
 					$values['name'],
@@ -557,6 +626,7 @@
 					$values['start_project'],
 					$values['start_ticket'],
 					$values['is_eav'],
+					$values['enable_bulk'],
 					$values['jasperupload'],
 					$values['parent_id'],
 					$level
@@ -564,7 +634,7 @@
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,jasperupload,parent_id,level ) "
+			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,enable_bulk,jasperupload,parent_id,level ) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 
@@ -572,7 +642,6 @@
 
 			if($values['is_eav']) // if modelles as eav - we are good
 			{
-				$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true);
 				$values_insert = array
 				(
 					'location_id'	=> $location_id,
@@ -592,7 +661,6 @@
 			
 			
 			// if not eav - we need a table to hold the attributes
-			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
 			$this->init_process();
 
 			$fd = $this->get_default_column_def();
@@ -779,6 +847,7 @@
 						'start_project'				=> $entity['start_project'],
 						'start_ticket'				=> $entity['start_ticket'],
 						'is_eav'					=> $entity['is_eav'],
+						'enable_bulk'				=> $entity['enable_bulk'],
 						'jasperupload'				=> $entity['jasperupload'],
 						'parent_id'					=> $entity['parent_id'],
 						'level'						=> $level
@@ -887,8 +956,9 @@
 
 		function delete_entity($id)
 		{
+			$this->db->transaction_begin();
 			$id = (int) $id;
-			$category_list=$this->read_category(array('entity_id'=>$id));
+			$category_list=$this->read_category(array('allrows'=>true, 'entity_id'=>$id));
 			$locations = array();
 			$locations[] = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".{$this->type}.{$id}");
 			$subs = $GLOBALS['phpgw']->locations->get_subs( $this->type_app[$this->type], ".{$this->type}.{$id}");
@@ -902,7 +972,7 @@
 			$this->db->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
 			$this->db->query('DELETE FROM phpgw_locations WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
 			$this->db->query('DELETE FROM phpgw_acl WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
-			if (isset($category_list) AND is_array($category_list))
+			if (isset($category_list) && is_array($category_list))
 			{
 				$this->init_process();
 
@@ -911,7 +981,7 @@
 					$this->oProc->DropTable("fm_{$this->type}_{$id}_{$entry['id']}");
 				}
 			}
-
+			$this->db->transaction_commit();
 		}
 
 		function delete_category($entity_id, $id)
@@ -1136,6 +1206,7 @@
 							$values_insert = array
 							(
 				  				'id'					=> $data['id'],
+				  				'location_id'			=> $location_id,
 				  				'type'					=> $type,
 				  				'guid'					=> $guid,
 								'xml_representation'	=> $this->db->db_addslashes($xml),

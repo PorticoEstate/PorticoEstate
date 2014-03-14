@@ -2,14 +2,15 @@
 // Declaration of location.index vars
 //--------------------------------------------------------
 	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
+ 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5, oMenuButton_6;
  	var selectsButtons = [
-	{order:0, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
-	{order:1, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
-	{order:2, var_URL:'status_id',name:'btn_status_id',style:'districtbutton',dependiente:''},
-	{order:3, var_URL:'wo_hour_cat_id',name:'btn_hour_category_id',style:'partOFTownbutton',dependiente:''},
-//	{order:4, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''},
-	{order:4, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''}
+	{order:0, var_URL:'project_type_id',name:'btn_project_type',style:'districtbutton',dependiente:''},
+	{order:1, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
+	{order:2, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
+	{order:3, var_URL:'status_id',name:'btn_status_id',style:'districtbutton',dependiente:''},
+	{order:4, var_URL:'wo_hour_cat_id',name:'btn_hour_category_id',style:'districtbutton',dependiente:''},
+	{order:5, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''},
+	{order:6, var_URL:'filter_year', name:'btn_filter_year',style:'districtbutton',dependiente:''}
 	];
 
 	// define buttons
@@ -81,49 +82,54 @@
 	{
 		if(flag_particular_setting=='init')
 		{
-			//district
-			index = locate_in_array_options(0,"value",path_values.district_id);
+			//project_type
+			index = locate_in_array_options(0,"value",path_values.project_type_id);
 			if(index)
 			{
 				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
 			}
 
-			//category
-			index = locate_in_array_options(1,"value",path_values.cat_id);
+			//district
+			index = locate_in_array_options(1,"value",path_values.district_id);
 			if(index)
 			{
 				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
 			}
 
-			//status
-			index = locate_in_array_options(2,"value",path_values.status_id);
+			//category
+			index = locate_in_array_options(2,"value",path_values.cat_id);
 			if(index)
 			{
 				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
 			}
 
-			//wo_hour_cat_id
-			index = locate_in_array_options(3,"value",path_values.wo_hour_cat_id);
+			//status
+			index = locate_in_array_options(3,"value",path_values.status_id);
 			if(index)
 			{
 				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
 			}
 
-			//criteria
-			index = locate_in_array_options(4,"value",path_values.criteria_id);
+			//wo_hour_cat_id
+			index = locate_in_array_options(4,"value",path_values.wo_hour_cat_id);
 			if(index)
 			{
 				oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
 			}
 
-/*
-			//user
-			index = locate_in_array_options(4,"value",path_values.user_id);
+			//criteria
+			index = locate_in_array_options(5,"value",path_values.criteria_id);
 			if(index)
 			{
-				oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
+				oMenuButton_5.set("label", ("<em>" + array_options[5][index][1] + "</em>"));
 			}
-*/
+
+			//filter_year
+			index = locate_in_array_options(6,"value",path_values.filter_year);
+			if(index)
+			{
+				oMenuButton_6.set("label", ("<em>" + array_options[6][index][1] + "</em>"));
+			}
 
 			//focus initial
 			//--focus for txt_query---

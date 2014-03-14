@@ -33,6 +33,12 @@
 	 */
 	phpgw::import_class('phpgwapi.yui');
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
+
 	class property_uientity
 	{
 		var $grants;
@@ -48,18 +54,22 @@
 
 		var $public_functions = array
 			(
-				'columns'		=> true,
-				'download'		=> true,
-				'view'	 		=> true,
-				'edit'	 		=> true,
-				'delete' 		=> true,
-				'view_file'		=> true,
-				'attrib_history'=> true,
-				'attrib_help'	=> true,
-				'print_pdf'		=> true,
-				'index'		=> true,
-				'addfiles'		=> true,
-				'get_files'		=> true
+				'columns'			=> true,
+				'download'			=> true,
+				'view'	 			=> true,
+				'edit'	 			=> true,
+				'delete' 			=> true,
+				'view_file'			=> true,
+				'attrib_history'	=> true,
+				'attrib_help'		=> true,
+				'print_pdf'			=> true,
+				'index'				=> true,
+				'addfiles'			=> true,
+				'get_files'			=> true,
+				'get_inventory'		=> true,
+				'add_inventory'		=> true,
+				'edit_inventory'	=> true,
+				'inventory_calendar'=> true
 			);
 
 		function property_uientity()
@@ -197,6 +207,89 @@
 
 			$fileuploader->upload("{$this->category_dir}/{$loc1}/{$id}");
 		}
+
+
+		/**
+		* Function to get related via Ajax-call using api-version of yui
+		*
+		*/
+		function get_related()
+		{
+			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+		
+			$interlink 	= CreateObject('property.interlink');
+			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
+
+
+			$values = array();
+			if($target)
+			{
+				foreach($target as $_target_section)
+				{
+					foreach ($_target_section['data'] as $_target_entry)
+					{
+						$values[] = array
+						(
+							'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+							'type'		=> $_target_section['descr'],
+							'title'		=> $_target_entry['title'],
+							'status'	=> $_target_entry['statustext'],
+							'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
+							'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						);
+					}
+				}
+			}
+
+/*
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+			{
+				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+				$socase 			= CreateObject('controller.socase');
+				$controller_cases	= $socase->get_cases_by_message($location_id, $id);
+			}
+*/
+
+//------ Start pagination
+
+			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			$total_records = count($values);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+
+//------ End pagination
+
+
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $total_records,
+					'startIndex' => $start,
+					'sortKey' => 'type', 
+					'sortDir' => "ASC", 
+					'Result' => $out,
+					'pageSize' => $num_rows,
+					'activePage' => floor($start / $num_rows) + 1
+				)
+			);
+			return $data;
+		}
+
 
 		function get_files()
 		{
@@ -389,6 +482,31 @@
 			// 	enters the first time
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
+
+
+///// integration
+/*
+			integration_tab
+			integration_height
+			integration_url
+			integration_parametres
+			integration_action
+			integration_action_view
+			integration_action_edit
+			integration_auth_key_name
+			integration_auth_url
+			integration_auth_hash_name
+			integration_auth_hash_value
+			integration_location_data
+ */
+
+
+
+
+			$_integration_set = array();
+
+///// integration
+
 
 				$datatable['menu']						=	$this->bocommon->get_menu($this->type_app[$this->type]);
 
@@ -642,7 +760,7 @@
 					$i = 4;
 					foreach ( $attrib_data as $attrib )
 					{
-						if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+						if(($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
 						{
 							$datatable['actions']['form'][0]['fields']['field'][] = array
 							(
@@ -683,8 +801,45 @@
 					}
 				}
 
-				$code = 'var ' . implode(',', $button_def)  . ";\n";
+
+				$NormalButton_def[] = "oNormalButton_0";
+				$NormalButton_def[] = "oNormalButton_1";
+				$NormalButton_def[] = "oNormalButton_2";
+				$NormalButton_inner[] = "{order:0, name:'btn_search',funct:'onSearchClick'}";
+				$NormalButton_inner[] = "{order:1, name:'btn_new',	funct:'onNewClick'}";
+				$NormalButton_inner[] = "{order:2, name:'btn_export',funct:'onDownloadClick'}";
+
+
+				foreach ($_integration_set as $i => $_integration)
+				{	
+
+					$NormalButton_def[] = 'oNormalButton_' . ($i + 3); 
+					$NormalButton_inner[] = "{order:" . ($i + 3)  .", name:'btn_integration_{$i}',funct:'onIntegrationClick_{$i}'}";
+
+					$datatable['actions']['form'][0]['fields']['field'][] =  array
+					(
+						'type'	=> 'button',
+						'id'	=> "btn_integration_{$i}",
+						'value'	=> $_integration['name'],
+						'tab_index' => 10 + $i
+					);
+
+					$_js_functions .= <<<JS
+						this.onIntegrationClick_{$i} = function()
+						{
+							window.open(values_ds.integrationurl_{$i},'window');
+						}
+JS;
+				}
+
+				$code = 'var ' . implode(',', $NormalButton_def)  . ";\n";
+				$code .= 'var normalButtons = [' . "\n" . implode(",\n",$NormalButton_inner) . "\n];";
+
+
+				$code .= 'var ' . implode(',', $button_def)  . ";\n";
 				$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
+				//new
+				$code .= $_js_functions;
 
 				$GLOBALS['phpgw']->js->add_code('', $code);
 
@@ -712,7 +867,7 @@
 			$entity_list = array();
 
 			$entity_list = $this->bo->read(array('start_date'=>$start_date,'end_date'=>$end_date, 'dry_run' => $dry_run));
-
+//_debug_array($entity_list);
 			$uicols = $this->bo->uicols;
 
 			$uicols['name'][]		= 'img_id';
@@ -744,19 +899,57 @@
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'show_picture';
 			$uicols['input_type'][]	= '';
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$custom_config	= CreateObject('admin.soconfig',$location_id);
+			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
+
+			$remote_image_in_table = false;
+			foreach ($_config as $_config_section => $_config_section_data)
+			{
+
+				if($_config_section_data['image_in_table'])
+				{
+			
+					$remote_image_in_table = true;
+					$js = <<<JS
+	var show_picture_remote = function(elCell, oRecord, oColumn, oData)
+	{
+		if(oRecord.getData('img_id'))
+		{
+			sUrl = '{$_config_section_data['url']}';
+			sUrl += '&{$_config_section_data['img_key_remote']}=' + oRecord.getData('img_id');
+			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('file_name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\" target=\"_blank\"><img src=\""+sUrl+"&{$_config_section_data['thumbnail_flag']}\" alt=\""+oRecord.getData('file_name')+"\" /></a>";
+		}
+	}
+JS;
+					$GLOBALS['phpgw']->js->add_code('', $js);
+
+					break;
+				}
+			}
 
 
-			$img_types = array
-			(
-				'image/jpeg',
-				'image/png',
-				'image/gif'
-			);
+			if(!$remote_image_in_table)
+			{
+
+				$uicols['formatter'][]	= 'show_picture';
+
+				$vfs = CreateObject('phpgwapi.vfs');
+				$vfs->override_acl = 1;
+
+				$img_types = array
+				(
+					'image/jpeg',
+					'image/png',
+					'image/gif'
+				);
+			}
+			else
+			{
+				$uicols['formatter'][]	= 'show_picture_remote';			
+			}
 
 			$content = array();
 			$j=0;
@@ -766,15 +959,24 @@
 				{
 					$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
 
-					$_files = $vfs->ls(array(
-						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
-						'relatives' => array(RELATIVE_NONE)));
-	
-					if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+					if($remote_image_in_table)
 					{
-						$entity_entry['file_name']	= urlencode($_files[0]['name']);
-						$entity_entry['directory']	= urlencode($_files[0]['directory']);
-						$entity_entry['img_id']		= $_files[0]['file_id'];
+						$entity_entry['file_name']	= $entity_entry[$_config_section_data['img_key_local']];
+					//	$entity_entry['directory']	= urlencode('external_source');
+						$entity_entry['img_id']		= $entity_entry[$_config_section_data['img_key_local']];
+					}
+					else
+					{
+						$_files = $vfs->ls(array(
+							'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+							'relatives' => array(RELATIVE_NONE)));
+	
+						if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+						{
+							$entity_entry['file_name']	= urlencode($_files[0]['name']);
+							$entity_entry['directory']	= urlencode($_files[0]['directory']);
+							$entity_entry['img_id']		= $_files[0]['file_id'];
+						}
 					}
 
 					for ($i=0;$i<count($uicols['name']);$i++)
@@ -1042,7 +1244,15 @@
 			}
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -1669,29 +1879,56 @@
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
 					}
+					
+					/*
+					* Hide dummy attributes that act as placeholders
+					*/
+					if($attribute['datatype'] == 'R' && isset($attribute['choice']) && !$attribute['choice'])
+					{
+						$attribute['hide_row'] = true;
+					}
 				}
 
 				phpgwapi_yui::tabview_setup('entity_edit_tabview');
+				
+								
+				$active_tab = phpgw::get_var('active_tab');
+				
 				if($category['location_level'] > 0)
 				{
-					$tabs['location']	= array('label' => lang('location'), 'link' => '#location');
-					$active_tab = 'location';
+					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')");
+					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
 				$attributes_general = array();
+				$i = -1;
 				$attributes = array();
-				foreach ($attributes_groups as $group)
+				foreach ($attributes_groups as $_key => $group)
 				{
 					if(isset($group['attributes']) && (isset($group['group_sort']) || !$location_data))
 					{
-						$_tab_name = str_replace(' ', '_', $group['name']);
-						$active_tab = $active_tab ? $active_tab : $_tab_name;
-						$tabs[$_tab_name] = array('label' => $group['name'], 'link' => '#' . $_tab_name);
-						$group['link'] = $_tab_name;
-						$attributes[] = $group;
+						if($group['level'] == 0)
+						{
+							$_tab_name = str_replace(' ', '_', $group['name']);
+							$active_tab = $active_tab ? $active_tab : $_tab_name;
+							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}", 'function' => "set_tab('{$_tab_name}')");
+							$group['link'] = $_tab_name;
+							$attributes[] = $group;
+							$i ++;
+						}
+						else
+						{
+							$attributes[$i]['attributes'][] = array
+							(
+								'datatype' => 'section',
+								'descr' => '<H' . ($group['level'] + 1) .  "> {$group['descr']} </H" . ($group['level'] + 1) . '>',
+								'level' => $group['level'],
+							);
+							$attributes[$i]['attributes'] = array_merge($attributes[$i]['attributes'], $group['attributes']);
+						}
 						unset($_tab_name);
 					}
 					else if(isset($group['attributes']) && !isset($group['group_sort']) && $location_data)
@@ -1699,11 +1936,12 @@
 						$attributes_general = array_merge($attributes_general,$group['attributes']);
 					}
 				}
+
 				unset($attributes_groups);
 
 				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
 				{
-					$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
+					$tabs['files']	= array('label' => lang('files'), 'link' => '#files', 'function' => "set_tab('files')");
 				}
 /*
 				if($category['jasperupload'])
@@ -1778,14 +2016,27 @@
 
 					foreach ($output as $_dummy => $_substitute)
 					{
+
+						/**
+						* Alternative
+						
+						$regex = "/__([\w]+)__/";
+						preg_match_all($regex, $_substitute, $matches);
+						foreach($matches[1] as $__substitute)
+						{
+							$_values[] = urlencode($values[$__substitute]);									
+						}
+						*/
+
+
 						$_keys[] = $_substitute;
 	
 						$__value = false;
-						if(!$__value = urlencode($values[trim($_substitute, '_')]))
+						if(!$__value = urlencode($values[str_replace(array('__','*'),array('',''), $_substitute)]))
 						{
 							foreach ($values['attributes'] as $_attribute)
 							{
-								if(trim($_substitute, '_') == $_attribute['name'])
+								if(str_replace(array('__','*'),array('',''), $_substitute) == $_attribute['name'])
 								{
 									$__value = urlencode($_attribute['value']);
 									break;
@@ -1883,12 +2134,16 @@
 				);
 
 			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-				);
+			(
+				'name'		=> "0",
+				'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+			);
 
+
+
+//_Debug_Array($datavalues);
+//die();
 /*
 			$link_file_data['jasper']		= true;
 			$content_jasperfiles = array();
@@ -1936,40 +2191,201 @@
 
 					if($documents)
 					{
-						$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
+						$tabs['document']	= array('label' => lang('document'), 'link' => '#document', 'function' => "set_tab('document')");
 						$documents = json_encode($documents);				
 					}
 				}
 
-				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$values['num']));
-				$related_link = array();
+				if (!$category['enable_bulk'])
+				{
+					$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
+				}
+				$_target = array();
+				if(isset($values['target']) && $values['target'])
+				{
+					foreach($values['target'] as $_target_section)
+					{
+						foreach ($_target_section['data'] as $_target_entry)
+						{
+							$_target[] = array
+							(
+								'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+								'type'		=> $_target_section['descr'],
+								'title'		=> $_target_entry['title'],
+								'status'	=> $_target_entry['statustext'],
+								'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
+								'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							);
+						}
+					}
+				}
 
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+				{
+
+					$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
+					$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+					$socase 			= CreateObject('controller.socase');
+					$controller_cases	= $socase->get_cases_by_component($location_id, $id);
+					
+					$_statustext = array();
+					$_statustext[0] = lang('open');
+					$_statustext[1] = lang('closed');
+					$_statustext[2] = lang('pending');
+				}
+				
+				foreach ($controller_cases as $case)
+				{
+					switch ($case['status'])
+					{
+						case 0:
+						case 2:
+							$_method = 'view_open_cases';
+							break;
+						case 1:
+							$_method = 'view_closed_cases';
+							break;
+						default:
+							$_method = 'view_open_cases';						
+					}
+
+					$_link = $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction' => "controller.uicase.{$_method}",
+						 	'check_list_id' => $case['check_list_id']
+						)
+					);
+					
+					$_target[] = array
+					(
+						'url'		=> "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
+						'type'		=> $lang_controller,
+						'title'		=> $case['descr'],
+						'status'	=> $_statustext[$case['status']],
+						'user'		=> $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
+						'entry_date'=> $GLOBALS['phpgw']->common->show_date($case['modified_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					);
+					unset($_link);
+				}
+
+				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+
+				$_related = array();
 				if(isset($related['related']))
 				{
-					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
-
 					foreach($related as $related_key => $related_data)
 					{
 						foreach($related_data as $entry)
 						{
-							$related_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
+							$_related[] = array
+							(
+								'url'		=> "<a href=\"{$entry['entity_link']}\" > {$entry['name']}</a>",
+							);
 						}
 					}
 				}
+				
+				$datavalues[1] = array
+				(
+					'name'					=> "1",
+					'values' 				=> json_encode($_target),
+					'total_records'			=> count($_target),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+	
+				$myColumnDefs[1] = array
+				(
+					'name'		=> "1",
+					'values'	=>	json_encode(array(	
+						array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+						array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+						array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+						)
+					)
+				);
+
+				$datavalues[2] = array
+				(
+					'name'					=> "2",
+					'values' 				=> json_encode($_related),
+					'total_records'			=> count($_related),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+	
+				$myColumnDefs[2] = array
+				(
+					'name'		=> "2",
+					'values'	=>	json_encode(array(	
+						array('key' => 'url','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+						)
+					)
+				);
+
+
+				if($category['enable_bulk'])
+				{
+					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory', 'function' => "set_tab('inventory')");
+
+					$_inventory = $this->get_inventory($id);
+
+					$datavalues[3] = array
+					(
+						'name'					=> "3",
+						'values' 				=> json_encode($_inventory),
+						'total_records'			=> count($_inventory),
+						'edit_action'			=> "''",
+						'is_paginator'			=> 1,
+						'footer'				=> 1
+					);
+
+	
+					$myColumnDefs[3] = array
+					(
+						'name'		=> "3",
+						'values'	=>	json_encode(array(	
+								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
+							//	array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
+								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+								array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
+								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCalendar'),
+								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'location_id','hidden'=>true),
+								array('key' => 'id','hidden'=>true),
+								array('key' => 'inventory_id','hidden'=>true),
+							)
+						)
+					);
+				
+				}
+
+			}
+
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
 
 
 			$data = array
-				(
-					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+			(
+					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
-					'related_link'					=> $related_link,			
+					'enable_bulk'					=> $category['enable_bulk'],
+					'value_location_id' 			=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location),
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
 					'lang_start_project'			=> lang('start project'),
@@ -1995,8 +2411,8 @@
 					'value_origin_type'				=> isset($origin)?$origin:'',
 					'value_origin_id'				=> isset($origin_id)?$origin_id:'',
 
-					'value_target'					=> isset($values['target'])?$values['target']:'',
-					'lang_target'					=> lang('target'),
+			//		'value_target'					=> isset($values['target'])?$values['target']:'',
+			//		'lang_target'					=> lang('target'),
 					'lang_no_cat'					=> lang('no category'),
 					'lang_cat_statustext'			=> lang('Select the category. To do not use a category select NO CATEGORY'),
 					'select_name'					=> 'cat_id',
@@ -2030,6 +2446,7 @@
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+					'active_tab'					=> $active_tab,
 					'integration'					=> $integration,
 				//	'value_integration_src'			=> $integration_src,
 					'base_java_url'					=>	"{menuaction:'property.uientity.get_files',".
@@ -2049,6 +2466,12 @@
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
+			phpgwapi_yui::load_widget('calendar');
+			phpgwapi_yui::load_widget('autocomplete');
+
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'common', 'phpgwapi' );
+
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
 			phpgwapi_yui::load_widget('treeview');
 			$appname	= $entity['name'];
@@ -2064,6 +2487,38 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
 
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
+			phpgw::import_class('phpgwapi.jquery');
+			phpgwapi_jquery::load_widget('core');
+
+
+			$criteria = array
+				(
+					'appname'	=> $this->type_app[$this->type],
+					'location'	=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
+					'allrows'	=> true
+				);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
+				if ( $entry['active'] && $entry['client_side'] && is_file($file))
+				{
+					$GLOBALS['phpgw']->js->add_external_file("{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
+				}
+			}
 
 		}
 
@@ -2204,7 +2659,7 @@
 			{
 				$link_delete_history_data = array
 					(
-						'menuaction'	=> 'property.uientity.attrib_history',
+						'menuaction'	=> 'property.uigeneric.attrib_history',
 						'acl_location'	=> $acl_location,
 						'id'			=> $data_lookup['id'],
 						'attrib_id'		=> $data_lookup['attrib_id'],
@@ -2225,7 +2680,7 @@
 						'id'				=> $entry['id'],
 						'value'				=> $entry['new_value'],
 						'user'				=> $entry['owner'],
-						'time_created'			=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],$dateformat),
+						'time_created'			=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],"{$dateformat} G:i:s"),
 						'link_delete'			=> $link_delete,
 						'lang_delete_statustext'	=> lang('delete the item'),
 						'text_delete'			=> $text_delete,
@@ -2368,23 +2823,30 @@
 			);				
 
 			//----------------------------------------------datatable settings--------			
-			$data = array
-				(
-					'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-					'base_java_url'		=> json_encode(array(menuaction => "property.uientity.attrib_history")),
-					'datatable'			=> $datavalues,
-					'myColumnDefs'		=> $myColumnDefs,
+			$property_js = "/property/js/yahoo/property2.js";
 
-					'allow_allrows'		=> false,
-					'start_record'		=> $this->start,
-					'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-					'num_records'		=> count($values),
-					'all_records'		=> $this->bo->total_records,
-					'link_url'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'img_path'		=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-					'values' 		=> $content,
-					'table_header'		=> $table_header,
-				);
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$data = array
+			(
+				'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'base_java_url'		=> json_encode(array(menuaction => "property.uientity.attrib_history")),
+				'datatable'			=> $datavalues,
+				'myColumnDefs'		=> $myColumnDefs,
+				'allow_allrows'		=> false,
+				'start_record'		=> $this->start,
+				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'num_records'		=> count($values),
+				'all_records'		=> $this->bo->total_records,
+				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'values' 			=> $content,
+				'table_header'		=> $table_header,
+			);
 			//---datatable settings--------------------
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
@@ -2610,5 +3072,290 @@
 
 			$document = $pdf->ezOutput();
 			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
+		}
+
+		public function get_inventory($id = 0)
+		{
+			if(!$id)
+			{
+				$location_id	= phpgw::get_var('location_id', 'int');
+				$id			= phpgw::get_var('id', 'int');
+				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$location = explode('.',$system_location['location']);
+				$this->bo->type = $location[1];
+				$this->bo->entity_id = $location[1];
+				$this->bo->cat_id = $location[3];
+			}
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+			}
+
+			$inventory =  $this->bo->get_inventory(array('id' => $id, 'location_id' => $location_id));
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($inventory))
+				{
+					return json_encode($inventory);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			
+			return $inventory;
+		}
+
+		public function edit_inventory()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$id				= phpgw::get_var('id', 'int');
+			$inventory_id	= phpgw::get_var('inventory_id', 'int');
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			$unit_id = '';
+			if( $inventory = $this->bo->get_inventory(array('id' => $id, 'location_id' => $location_id, 'inventory_id' => $inventory_id)) )
+			{
+				$unit_id	= $inventory[0]['unit_id'];			
+			}
+
+			$location_code = execMethod('property.solocation.get_location_code',$inventory[0]['p_id']);
+
+			$lock_unit = !!$unit_id;
+
+			$receipt = array();
+			$values		= phpgw::get_var('values');
+
+			$bolocation		= CreateObject('property.bolocation');
+			$values['location_data'] = $bolocation->read_single($location_code,array('view' => true));
+
+			
+			$values['unit_id'] = $values['unit_id'] ? $values['unit_id'] : $unit_id;
+			
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$values['location_id']	= $location_id;
+				$values['item_id'] 		= $id;
+				$values['inventory_id'] = $inventory_id;
+				if(!isset($receipt['error']))
+				{
+					$this->bo->edit_inventory($values);
+					$receipt['message'][]=array('msg'=> 'Ok');
+					$values = array();					
+				}
+
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+
+					if(!$receipt['error'])
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+
+					$result['receipt'] = $receipt;
+					return $result;
+				}
+
+			}
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			
+			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
+
+			$location_data = execMethod('property.bolocation.initiate_ui_location', array
+			(
+				'values'		=> $values['location_data'],
+				'type_id'		=> 5,
+				'no_link'		=> false,
+				'lookup_type'	=> 'view',
+				'tenant'		=> false,
+				'lookup_entity'	=> $lookup_entity,
+				'entity_data'	=> isset($values['p'])?$values['p']:''
+			));
+			
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'location_data'		=> $location_data,
+				'system_location'	=> $system_location,
+				'location_id' 		=> $location_id,
+				'item_id'			=> $id,
+				'inventory_id'		=> $inventory_id,
+				'unit_list'			=> array('options' => $unit_list),
+				'lock_unit'			=> $lock_unit,
+				'value_inventory'	=> $values['inventory'] ? $values['inventory'] : $inventory[0]['inventory'],
+				'value_write_off'	=> $values['write_off'],
+				'bookable'			=> $values['bookable'] ? $values['bookable'] : $inventory[0]['bookable'],
+				'value_active_from'	=> $values['active_from'] ? $values['active_from'] : $GLOBALS['phpgw']->common->show_date($inventory[0]['active_from'],$dateformat ),
+				'value_active_to'	=> $values['active_to'] ? $values['active_to'] : $GLOBALS['phpgw']->common->show_date($inventory[0]['active_to'],$dateformat ),
+				'value_remark'		=> $values['remark'] ? $values['remark'] : $inventory[0]['remark'],
+			);
+
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+			phpgwapi_jquery::load_widget('core');
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit_inventory', 'property' );
+
+			$function_msg	= lang('add inventory');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_inventory' => $data));
+		
+		}
+
+		public function add_inventory()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$id				= phpgw::get_var('id', 'int');
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$unit_id = '';
+			if( $inventory = $this->bo->get_inventory(array('id' => $id, 'location_id' => $location_id)) )
+			{
+				$unit_id	= $inventory[0]['unit_id'];			
+			}
+
+			$lock_unit = !!$unit_id;
+
+			$receipt = array();
+			$values		= phpgw::get_var('values');
+			
+			$values['unit_id'] = $values['unit_id'] ? $values['unit_id'] : $unit_id;
+			
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$values['location_id']	= $location_id;
+				$values['item_id'] 		= $id;
+				$insert_record 			= $GLOBALS['phpgw']->session->appsession('insert_record','property');
+
+				if(is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
+				if(!$values['location'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
+				}
+
+				if(!$values['unit_id'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a unit !'));
+				}
+				if(!isset($receipt['error']))
+				{
+					$this->bo->add_inventory($values);
+					$receipt['message'][]=array('msg'=> 'Ok');
+					$values = array();					
+				}
+			}
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			
+			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
+
+			$location_data = execMethod('property.bolocation.initiate_ui_location', array
+			(
+				'values'		=> $values['location_data'],
+				'type_id'		=> 5,
+				'no_link'		=> false,
+				'lookup_type'	=> 'form',
+				'tenant'		=> false,
+				'lookup_entity'	=> $lookup_entity,
+				'entity_data'	=> isset($values['p'])?$values['p']:''
+			));
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'location_data'		=> $location_data,
+				'system_location'	=> $system_location,
+				'location_id' 		=> $location_id,
+				'item_id'			=> $id,
+				'unit_list'			=> array('options' => $unit_list),
+				'lock_unit'			=> $lock_unit,
+				'value_inventory'	=> $values['inventory'],
+				'value_write_off'	=> $values['write_off'],
+				'bookable'			=> $values['bookable'],
+				'value_active_from'	=> $values['active_from'],
+				'value_active_to'	=> $values['active_to'],
+				'value_remark'		=> $values['remark'],
+			);
+
+
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.add_inventory', 'property' );
+
+			$function_msg	= lang('add inventory');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_inventory' => $data));
+
+		}
+
+		public function inventory_calendar()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$id				= phpgw::get_var('id', 'int');
+			$inventory_id	= phpgw::get_var('inventory_id', 'int');
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			echo "Planlagt: Visning av kalenderoppføringer for ressursen";
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 	}

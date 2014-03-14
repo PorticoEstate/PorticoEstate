@@ -41,9 +41,12 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		public $sum_budget = 0;
+		public $sum_investment = 0;
+		public $sum_operation = 0;
+		public $sum_potential_grants = 0;
 		public $sum_consume = 0;
 		public $acl_location = '.project.request';
+		public $responsible_unit;
 
 		var $public_functions = array
 			(
@@ -60,7 +63,7 @@
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->solocation 			= CreateObject('property.solocation');
 			$this->historylog			= CreateObject('property.historylog','request');
-			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project.request');
 			$this->cats->supress_info	= true;
 			$this->custom 				= & $this->so->custom;
 //			$this->acl_location			= '.project.request';
@@ -70,22 +73,26 @@
 				$this->use_session = true;
 			}
 
-			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			= phpgw::get_var('query');
-			$sort			= phpgw::get_var('sort');
-			$order			= phpgw::get_var('order');
-			$filter			= phpgw::get_var('filter', 'int');
-			$property_cat_id= phpgw::get_var('property_cat_id', 'int');
-			$district_id	= phpgw::get_var('district_id', 'int');
-			$cat_id			= phpgw::get_var('cat_id', 'int');
-			$status_id		= phpgw::get_var('status_id');
-			$degree_id		= phpgw::get_var('degree_id', 'int');
-			$allrows		= phpgw::get_var('allrows', 'bool');
-			$this->p_num	= phpgw::get_var('p_num');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$property_cat_id	= phpgw::get_var('property_cat_id', 'int');
+			$district_id		= phpgw::get_var('district_id', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$status_id			= phpgw::get_var('status_id');
+			$degree_id			= phpgw::get_var('degree_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
+			$this->p_num		= phpgw::get_var('p_num');
 
-			$start_date		= phpgw::get_var('start_date');
-			$end_date		= phpgw::get_var('end_date');
-			$building_part	= phpgw::get_var('building_part');
+			$start_date			= phpgw::get_var('start_date');
+			$end_date			= phpgw::get_var('end_date');
+			$building_part		= phpgw::get_var('building_part');
+			$responsible_unit	= phpgw::get_var('responsible_unit', 'int');
+			$recommended_year	= phpgw::get_var('recommended_year', 'int');
+
+			$this->condition_survey_id = phpgw::get_var('condition_survey_id', 'int', 'REQUEST', 0);
 
 			if(isset($_POST['start']) || isset($_GET['start']))
 			{
@@ -137,6 +144,17 @@
 				$this->building_part = $building_part;
 			}
 
+			if(isset($_POST['responsible_unit']) || isset($_GET['responsible_unit']))
+			{
+				$this->responsible_unit = $responsible_unit;
+			}
+
+			if(isset($_POST['recommended_year']) || isset($_GET['recommended_year']))
+			{
+				$this->recommended_year = $recommended_year;
+			}
+
+
 			if($allrows)
 			{
 				$this->allrows = $allrows;
@@ -157,13 +175,13 @@
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','request',$data);
+				phpgwapi_cache::session_set('property.request','session_data', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','request');
+			$data =	phpgwapi_cache::session_get('property.request','session_data', $data);
 
 			$this->start			= $data['start'];
 			$this->query			= $data['query'];
@@ -176,6 +194,8 @@
 			$this->status_id		= $data['status_id'];
 			$this->degree_id		= $data['degree_id'];
 			$this->building_part	= $data['building_part'];
+			$this->responsible_unit	= $data['responsible_unit'];
+			$this->recommended_year	= $data['recommended_year'];
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
 			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
 		}
@@ -240,7 +260,8 @@
 			$degree_comment[1]=' - '.lang('minor symptoms');
 			$degree_comment[2]=' - '.lang('medium symptoms');
 			$degree_comment[3]=' - '.lang('serious symptoms');
-			for ($i=0; $i<=3; $i++)
+			$degree_comment[4]=' - '.lang('condition not assessed');
+			for ($i=0; $i<=4; $i++)
 			{
 				$degree_list[$i]['id'] = $i;
 				$degree_list[$i]['name'] = $i . $degree_comment[$i];
@@ -411,6 +432,38 @@
 			return	$this->so->update_priority_key($values);
 		}
 
+		public function read_survey_data($data)
+		{
+
+			$interlink 	= CreateObject('property.interlink');
+
+
+			$values = $this->so->read_survey_data($data);
+
+			foreach($values as &$entry)
+			{
+				$target = $interlink->get_relation('property', $this->acl_location, $entry['id'], 'target');
+				$related = array();
+				if($target)
+				{
+					foreach($target as $_target_section)
+					{
+						foreach ($_target_section['data'] as $_target_entry)
+						{
+							$related[] = "<a href=\"{$_target_entry['link']}\" title=\"{$_target_entry['title']}\">{$_target_section['descr']}::{$_target_entry['id']}::{$_target_entry['statustext']}</a>";
+						}
+					}
+					$entry['related'] = implode(' /</br>',$related);
+				}
+
+				$category 			= $this->cats->return_single($entry['cat_id']);
+				$entry['category']	= $category[0]['name'];
+			}
+
+			$this->total_records	= $this->so->total_records;
+			return $values;
+		}
+
 		function read($data)
 		{
 			$custom	= createObject('phpgwapi.custom_fields');
@@ -443,13 +496,16 @@
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
-				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter));
+				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id,
+				'responsible_unit' => $this->responsible_unit, 'recommended_year' => $this->recommended_year));
 
-			$this->total_records	= $this->so->total_records;
-			$this->sum_budget		= $this->so->sum_budget;
-			$this->sum_consume		= $this->so->sum_consume;
-			$this->uicols			= $this->so->uicols;
-			$cols_extra				= $this->so->cols_extra;
+			$this->total_records			= $this->so->total_records;
+			$this->sum_investment			= $this->so->sum_investment;
+			$this->sum_operation			= $this->so->sum_operation;
+			$this->sum_potential_grants		= $this->so->sum_potential_grants;
+			$this->sum_consume				= $this->so->sum_consume;
+			$this->uicols					= $this->so->uicols;
+			$cols_extra						= $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -458,6 +514,7 @@
 				$request[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($request[$i]['coordinator']);
 				$request[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['start_date'],$dateformat);
 				$request[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['entry_date'],$dateformat);
+				$request[$i]['planned_year'] = $request[$i]['planned_year'] ? date('Y',$request[$i]['planned_year']) : '';
 				$request[$i]['closed_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['closed_date'],$dateformat);
 				$request[$i]['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['in_progress_date'],$dateformat);
 				$request[$i]['delivered_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['delivered_date'],$dateformat);
@@ -487,6 +544,7 @@
 				$this->uicols['formatter'][] 	= '';
 				$this->uicols['classname'][] 	= '';
 			}
+
 			return $request;
 		}
 
@@ -716,5 +774,10 @@
 		public function get_user_list()
 		{
 			return $this->so->get_user_list();
+		}
+		public function get_recommended_year_list($selected = 0)
+		{
+			$recommended_year_list = $this->so->get_recommended_year_list();
+			return $this->bocommon->select_list($selected,$recommended_year_list);
 		}
 	}

@@ -17,9 +17,9 @@
 
 		{css}
 
-		<!-- BEGIN javascript -->
-       		<script type="text/javascript" src="{javascript_uri}"></script>
-    	<!-- END javascript -->
+        <!-- BEGIN javascript -->
+        <script type="text/javascript" src="{javascript_uri}"></script>
+        <!-- END javascript -->
         {javascript}
         <script type="text/javascript">
             <!--

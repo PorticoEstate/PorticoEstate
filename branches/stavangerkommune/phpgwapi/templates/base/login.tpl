@@ -6,12 +6,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="author" content="{system} http://www.phpgroupware.no">
 	<meta name="description" content="{system} login screen, working environment powered by phpGroupWare">
-	<meta name="keywords" content="{{system} login screen, phpgroupware, groupware, groupware suite">
+	<meta name="keywords" content="{system} login screen, phpgroupware, groupware, groupware suite">
 	<meta name="robots" content="noindex,nofollow">
 	
 	<title>{system} - {lang_login}</title>
 
-	<link rel="stylesheet" href="phpgwapi/templates/base/css/system.css" type="text/css">
+	<link rel="stylesheet" href="{system_css}" type="text/css">
 	<link rel="stylesheet" href="{login_css}" type="text/css">
 
 	<!--[if IE 7]>
@@ -22,9 +22,53 @@
 	<link href="phpgwapi/templates/base/css/ie6.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
-	<link rel="stylesheet" type="text/css" href="phpgwapi/templates/base/css/rounded.css">
+	<link rel="stylesheet" href="{rounded_css}" type="text/css">
 
 	{onload}
+
+	<script type="text/javascript">
+		function do_login()
+		{
+			if(typeof(Storage)!=="undefined")
+			{
+				sessionStorage.cached_menu_tree_data = '';
+				sessionStorage.cached_mapping = '';
+		 	}
+		 	document.login.submit();
+		}
+
+
+		function new_user()
+		{
+			var url_new_user = '{url_new_user}';
+			var logindomain = '';
+			
+			if(document.getElementById("logindomain") != null)
+			{
+				var logindomain = document.getElementById("logindomain").value;			
+			}
+			
+			url_new_user += '?logindomain=' +logindomain;
+			window.open(url_new_user,'_blank');
+		}
+
+		function lost_password()
+		{
+			var url_lost_password = '{url_lost_password}';
+			var logindomain = '';
+			
+			if(document.getElementById("logindomain") != null)
+			{
+				var logindomain = document.getElementById("logindomain").value;			
+			}
+			
+			url_lost_password += '&logindomain=' + logindomain;
+			window.open(url_lost_password,'_blank');
+		}
+
+
+	</script>
+
 </head>
 
 <body>
@@ -38,11 +82,18 @@
 	
 	<div id="content-box">
 		<div class="rawimages">
-			<span><a href="login.php?lang=no"><img src="phpgwapi/templates/base/images/flag_no.gif" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span>
-			<span><a href="login.php?lang=en"><img src="phpgwapi/templates/base/images/flag_en.gif" alt="English (United Kingdom)" title="English (United Kingdom)" ></a></span>
+			<span><a href="login.php?lang=no"><img src="{flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span>
+			<span><a href="login.php?lang=en"><img src="{flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" ></a></span>
 		</div>
 
 		<div class="padding">
+			<div id="left-box">
+				{login_left_message}
+			</div>
+			<div id="right-box">
+				{login_right_message}
+			</div>
+			
 			<div id="element-box" class="login">
 				<div class="t">
 					<div class="t">
@@ -84,7 +135,7 @@
 								</p>
 								<!-- END loging_block -->
 								<!-- BEGIN domain_from_host -->
-									@{logindomain}<input type="hidden" name="logindomain" value="{logindomain}">
+									@{logindomain}<input type="hidden" id="logindomain" name="logindomain" value="{logindomain}">
 								<!-- END domain_from_host -->
 								<br>
 								<!-- BEGIN login_additional_info -->
@@ -124,7 +175,7 @@
 									<div class="button_holder">
 										<div class="button1">
 											<div class="next">
-												<a onclick="document.login.submit();">{lang_login}</a>
+												<a onclick="do_login();">{lang_login}</a>
 											</div>
 										</div>
 									</div>
@@ -151,10 +202,10 @@
 
 					<p>{instruction}</p>
 					<p >
-						<a href="registration/main.php" target="_blank">{lang_new_user}</a>
+						<a href="{action_new_user}">{lang_new_user}</a>
 					</p>
 					</p>
-						<a href="registration/main.php?menuaction=registration.boreg.lostpw1" target="_blank">{lang_forgotten_password}</a>.
+						<a href="{action_lost_password}">{lang_forgotten_password}</a>.
 					 </p>
 
 					<div id="lock"></div>
@@ -170,6 +221,7 @@
 			</div>
 			<noscript>Warning! JavaScript must be enabled for proper operation of the Administrator back-end.</noscript>
 			<div class="clr"></div>
+
 		</div>
 	</div>
 	<div id="border-bottom">

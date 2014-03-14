@@ -10,7 +10,7 @@
 	* @link http://www.sanisoft.com/phplib/manual/DB_sql.php
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.db.inc.php 3450 2009-08-30 16:46:12Z sigurd $
+	* @version $Id: class.db_pdo.inc.php 11046 2013-04-10 08:26:47Z sigurdne $
 	*/
 
 	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
@@ -46,6 +46,17 @@
 		public function __clone()
 		{
 
+		}
+
+
+		/**
+		* set_fetch_single:fetch single record from pdo-object
+		*
+		* @param bool    $value true/false
+		*/
+		public function set_fetch_single($value = false)
+		{
+			$this->fetch_single = $value;
 		}
 
 		/**
@@ -337,11 +348,12 @@
 		* @param bool $fetch_single true for using fetch, false for fetchAll
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false)
+		public function query($sql, $line = '', $file = '', $exec = false, $_fetch_single = false)
 		{
-//_Debug_Array($sql);
-			$this->_get_fetchmode();
-			$this->fetch_single = $fetch_single;
+			self::_get_fetchmode();
+			self::set_fetch_single($_fetch_single);
+
+			$fetch_single = $this->fetch_single;
 
 			if ( !$this->db )
 			{
@@ -374,15 +386,15 @@
 						$this->fetch_single = $fetch_single;
 					}
 */
-					if(!$fetch_single)
-					{
-						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
-					}
-					else
+					if($fetch_single)
 					{
 						$this->resultSet = $statement_object->fetch($this->pdo_fetchmode);
 						$this->statement_object = $statement_object;
 						unset($statement_object);
+					}
+					else
+					{
+						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 					}
 				}
 			}
@@ -798,7 +810,7 @@
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return stripslashes($this->Record[$name]);
+						return htmlspecialchars_decode(stripslashes($this->Record[$name]));
 					}
 					else
 					{

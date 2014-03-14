@@ -4,6 +4,7 @@ control	controller	no	Kontroll
 controller	common	no	Kontroll
 Register control item	controller	no	Legg til nytt kontrollpunkt
 Edit control item	controller	no	Endre kontrollpunkt
+Entity	controller	no	Komponentregister
 View control item	controller	no	Vis kontrollpunkt
 control_item_type_1	controller	no	Ved innskriving av kommentar
 control_item_type_2	controller	no	Ved innskriving av måling i et tekstfelt
@@ -11,6 +12,7 @@ control_item_type_3	controller	no	Ved valg av verdi fra nedtrekksliste
 control_item_type_4	controller	no	Ved valg av verdi fra radioknapper
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
 Check_list	controller	no	Sjekkliste
+chosen attributes	controller	no	Valgte datafelter
 Calendar_overview	controller	no	Kontrollplan
 Check_lists	controller	no	Sjekklister
 Choose_control_groups	controller	no	Velg kontrollgrupper
@@ -72,6 +74,7 @@ no district	controller	no	Distrikt ikke valgt
 calendar_months	controller	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 calendar_weekdays	controller	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 select_date	controller	no	Velg dato
+select	controller	no	Velg
 year controller	no	År
 location_code	controller	no	Enhetsnummer
 included_units	controller	no	Kontrollens enheter
@@ -236,6 +239,7 @@ status_before	controller	no	før
 status_date	controller	no	den
 status_unknown	controller	no	Ukjent status
 status	controller	no	Status
+status not done	controller	no	Ikke utført
 Success	controller	no	Suksess
 sum	controller	no	Sum
 System setting for responsibility id for the current user must be 6 characters.	controller	no	Systeminnstilling for ansvar må være seks tegn.
@@ -347,6 +351,7 @@ repeat_type_month	controller	no	Måned
 repeat_type_year	controller	no	År
 components for control	controller	no	Komponenter tilknyttet kontroll
 add components for control	controller	no	Legg til knytning mellom kontroll og komponent(er)
+locations for control	controller	no	Lokasjoner tilknyttet kontroll
 location category	controller	no	Lokaliseringskategori
 select add	controller	no	Velg for å legge til
 select delete	controller	no	Velg for sletting
@@ -359,3 +364,8 @@ error_msg_6	controller	no	Kontrollen må være knyttet mot en komponent/lokasjon
 error_msg_7	controller	no	Vennligst endre status for kontroll eller angi planlagtdato
 error_msg_no_controls_in_period	controller	no	Ingen kontroller for bygg i denne perioden
 error_msg_no_controls_for_component	controller	no	Ingen kontroller for komponent i denne perioden
+role at location	controller	no	Tildeling av rolle
+Register new message	controller	no	Registrer ny melding
+Show message	controller	no	Vis melding
+Status not done	controller	no	Status: Ikke utført
+Status done controller	no	Status: Utført

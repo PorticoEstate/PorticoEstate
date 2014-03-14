@@ -73,6 +73,7 @@ $GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_
 
 $GLOBALS['phpgw']->locations->add('.invoice.dimb', 'A dimension for accounting', 'property');
 $GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
+$GLOBALS['phpgw']->locations->add('.project.condition_survey', 'Condition Survey', 'property', true, 'fm_condition_survey', true);
 
 $locations = array
 (
@@ -278,16 +279,16 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_status (id, descr
 # fm_standard_unit
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('mm', 'Millimeter')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m', 'Meter')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m2', 'Square meters')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m3', 'Cubic meters')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('km', 'Kilometre')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('Stk', 'Stk')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('kg', 'Kilogram')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('tonn', 'Tonn')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('h', 'Hours')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('RS', 'Round Sum')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (1, 'mm', 'Millimeter')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (2, 'm', 'Meter')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (3, 'm2', 'Square meters')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (4, 'm3', 'Cubic meters')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (5, 'km', 'Kilometre')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (6, 'Stk', 'Stk')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (7, 'kg', 'Kilogram')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (8, 'tonn', 'Tonn')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (9, 'h', 'Hours')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (10, 'RS', 'Round Sum')");
 
 
 #
@@ -397,25 +398,28 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecomva (id, descr) VALUES 
 # Dumping data for table fm_entity
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (id, name, descr, location_form, documentation) VALUES (1, 'Equipment', 'equipment', 1, 1)");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (location_id, id, name, descr, location_form, documentation) VALUES ({$location_id}, 1, 'Equipment', 'equipment', 1, 1)");
 //$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (id, name, descr, location_form, documentation, lookup_entity) VALUES (2, 'Report', 'report', 1, NULL, 'a:1:{i:0;s:1:"1";}')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (id, name, descr, location_form, documentation, lookup_entity) VALUES (2, 'Report', 'report', 1, NULL, '')");
+$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity (location_id, id, name, descr, location_form, documentation, lookup_entity) VALUES ({$location_id}, 2, 'Report', 'report', 1, NULL, '')");
 
 #
 # Dumping data for table fm_entity_category
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (1, 1, 'Meter', 'Meter', NULL, NULL, NULL, 3)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (1, 2, 'Elevator', 'Elevator', 'E', NULL, NULL, 3)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (1, 3, 'Fire alarm central', 'Fire alarm central', 'F', NULL, NULL, 3)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (2, 1, 'Report type 1', 'Report type 1', 'RA', 1, 1, 4)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES (2, 2, 'Report type 2', 'Report type 2', 'RB', 1, 1, 4)");
+
+
+
+
 
 
 #
 # Dumping data for table fm_entity_attribute
 #
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 1, 1, 'Meter', 'Meter', NULL, NULL, NULL, 3)");
+
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'category', 'Category', 'Category statustext', 'LB', NULL, 2, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'ext_system_id', 'Ext system id', 'External system id', 'V', NULL, 3, NULL, 12, NULL, NULL, 'False')");
@@ -427,6 +431,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 2, 2, 'Joint power meter')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 1, 2, 'Elevator', 'Elevator', 'E', NULL, NULL, 3)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
@@ -441,6 +446,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.3');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 1, 3, 'Fire alarm central', 'Fire alarm central', 'F', NULL, NULL, 3)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
@@ -455,6 +461,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.1');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 2, 1, 'Report type 1', 'Report type 1', 'RA', 1, 1, 4)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
@@ -469,6 +476,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_i
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 5, 2, 'choice 2')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.2');
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level) VALUES ({$location_id}, 2, 2, 'Report type 2', 'Report type 2', 'RB', 1, 1, 4)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'attribute1', 'Attribute 1', 'Attribute 1 statustext', 'V', NULL, 2, NULL, 12, NULL, NULL, 'True')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 3, 'attribute2', 'Attribute 2', 'Attribute 2 status text', 'D', NULL, 3, NULL, NULL, NULL, NULL, 'True')");
@@ -882,15 +890,63 @@ $solocation->update_location();
 			. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
-		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
-			. ' SELECT fm_orders.id as order_id, sum(godkjentbelop) AS actual_cost FROM fm_ecobilagoverf join fm_orders ON fm_ecobilagoverf.pmwrkord_code = fm_orders.id GROUP BY fm_orders.id';
-		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
 		$sql = 'CREATE OR REPLACE VIEW fm_ecobilag_sum_view AS'
 			. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag  GROUP BY bilagsnr ORDER BY bilagsnr ASC';
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
+			. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+ 			. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
+		{
+			case 'postgres':
+				$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS 
+				 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode,orders_paid_or_pending.amount,orders_paid_or_pending.periodization, orders_paid_or_pending.periodization_start
+				   FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount, fm_ecobilagoverf.periodization, fm_ecobilagoverf.periodization_start
+						   FROM fm_ecobilagoverf
+						   GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode, fm_ecobilagoverf.periodization, fm_ecobilagoverf.periodization_start
+						UNION ALL 
+						  SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount, fm_ecobilag.periodization, fm_ecobilag.periodization_start
+						   FROM fm_ecobilag
+						   GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode, fm_ecobilag.periodization, fm_ecobilag.periodization_start) orders_paid_or_pending ORDER BY orders_paid_or_pending.periode, orders_paid_or_pending.order_id';
+
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+				break;
+			default:
+				//do nothing for now
+		}
+
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
+ 			. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
+ 			. ' FROM fm_workorder_budget'
+ 			. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id'
+ 			. ' ORDER BY fm_workorder.project_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS' 
+ 			. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
+ 			. ' FROM fm_project_budget'
+ 			. ' ORDER BY fm_project_budget.project_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (1, 'Bestiller')",__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')",__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (3, 'Anviser')",__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (1, '1 - Highest')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (2, '2')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (3, '3 - Lowest')");
 

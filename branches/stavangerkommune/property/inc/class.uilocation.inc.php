@@ -292,6 +292,9 @@
 					$integrationurl = "{$_config_section_data['url']}{$_sep}{$_param}";
 					$integrationurl .= "&{$_config_section_data['auth_key_name']}={$response}";
 
+
+					//in the form: sakstittel=__loc1__.__loc4__
+
 					$_config_section_data['location_data']= htmlspecialchars_decode($_config_section_data['location_data']);
 
 					$parameters_integration = array();
@@ -876,33 +879,23 @@ JS;
 			// for POP-UPs
 			if($lookup)
 			{
-				$input_name		= $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
-
+				$input_name		= phpgwapi_cache::session_get('property', 'lookup_fields');
 				$function_exchange_values = '';
 
 				if(is_array($input_name))
 				{
 					for ($k=0;$k<count($input_name);$k++)
 					{
-						$function_exchange_values .= "opener.document.forms[0]." . $input_name[$k] . ".value = '';" ."\r\n";
+						$function_exchange_values .= 'opener.document.getElementsByName("'.$input_name[$k].'")[0].value = "";' ."\r\n";
 					}
 				}
 
-	/*			for ($i=0;$i<count($uicols['name']);$i++)
-				{
-					if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
-					{
-						$function_exchange_values .= 'opener.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = "";' ."\r\n";
-					}
-				}
-	 */
 				for ($i=0;$i<count($uicols['name']);$i++)
 				{
 					if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
 					{
 						$function_exchange_values .= 'opener.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = "";' ."\r\n";
 						$function_exchange_values .= 'opener.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
-						//$function_exchange_values .= 'opener.document.forms[0].' . $uicols['name'][$i] .'.value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
 					}
 				}
 
@@ -910,22 +903,34 @@ JS;
 
 				$datatable['exchange_values'] = $function_exchange_values;
 
-				$function_valida  = "var pos = data.indexOf('</a>');"."\r\n";
-				$function_valida .= "if(pos==-1){"."\r\n";
-				$function_valida .= "return data;"."\r\n";
-				$function_valida .= "}else{"."\r\n";
-				$function_valida .= "pos = data.indexOf('>');"."\r\n";
-				$function_valida .= "var valor = data.slice(pos+1);"."\r\n";
-				$function_valida .= "pos = valor.indexOf('<');"."\r\n";
-				$function_valida .= "valor = valor.slice(0,pos);"."\r\n";
-				$function_valida .= "return valor;"."\r\n";
-				$function_valida .= "}"."\r\n";
-
+				$function_valida  = <<<JS
+					var pos = data.indexOf('</a>');
+						if(pos==-1)
+						{
+							return data;
+						}
+						else
+						{
+							pos = data.indexOf('>');
+							var valor = data.slice(pos+1);
+							pos = valor.indexOf('<');
+							valor = valor.slice(0,pos);
+							return valor;
+						}
+JS;
 				$datatable['valida'] = $function_valida;
 			}
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -1549,7 +1554,15 @@ JS;
 			}
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -1647,6 +1660,7 @@ JS;
 			{
 				return $json;
 			}
+
 
 
 			$datatable['json_data'] = json_encode($json);
@@ -1988,6 +2002,8 @@ JS;
 				)
 			);
 
+			unset($_values);
+
 			$location_types	= $this->bo->location_types;
 			$config			= $this->bo->config;
 
@@ -2179,7 +2195,6 @@ JS;
 
 				}
 				unset($attributes_groups);
-				unset($values['attributes']);
 			}
 
 			$documents = array();
@@ -2212,9 +2227,19 @@ JS;
 				}
 
 //_debug_array($roles);die();
+				$location_arr = explode('-', $location_code);
+//_debug_array($location_arr);die();
 
-				$related = $this->bo->read_entity_to_link($location_code);
-				$related_link = array();
+				$related = array();
+				$_location_level_arr = array();
+				foreach($location_arr as $_location_level)
+				{
+					$_exact = $location_code == $_location_level ? false : true;
+					$_location_level_arr[] = $_location_level;
+					$location_level = implode('-', $_location_level_arr);
+					$related[$location_level] = $this->bo->read_entity_to_link($location_level, $_exact);
+				}
+//_debug_array($related);die();
 
 				$location_type_info =  $this->soadmin_location->read_single($type_id);
 				$documents = array();
@@ -2257,45 +2282,76 @@ JS;
 					$file_tree = json_encode($file_tree);				
 				}
 
-				if(isset($related['related']))
+				$_related = array();
+				foreach($related as $_location_level => $related_info)
+				{
+					if(isset($related_info['related']))
+					{
+						foreach($related_info as $related_key => $related_data)
+						{
+							if( $related_key == 'gab')
+							{
+								foreach($related_data as $entry)
+								{
+									$entities_link[] = array
+										(
+											'entity_link'				=> $entry['entity_link'],
+											'lang_entity_statustext'	=> $entry['descr'],
+											'text_entity'				=> $entry['name'],
+										);
+								}
+							}
+							else
+							{
+								foreach($related_data as $entry)
+								{
+									$_related[] = array
+									(
+										'where'		=> $_location_level,
+										'url'		=> "<a href=\"{$entry['entity_link']}\" > {$entry['name']}</a>",
+									);
+								}
+							}
+						}
+					}
+				}
+				
+				$related_link = $_related ? true : false;
+
+	//			if($_related)
 				{
 					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
 				}
 
-				foreach($related as $related_key => $related_data)
-				{
-					if( $related_key == 'gab')
-					{
-						foreach($related_data as $entry)
-						{
-							$entities_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
-						}
-					}
 
-					if( $related_key == 'related')
-					{
-						foreach($related_data as $entry)
-						{
-							$related_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
+				$datavalues = array();
+				$myColumnDefs = array();
+				$datavalues[0] = array
+				(
+					'name'					=> "0",
+					'values' 				=> json_encode($_related),
+					'total_records'			=> count($_related),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+	
+				$myColumnDefs[0] = array
+				(
+					'name'		=> "0",
+					'values'	=>	json_encode(array(	
+						array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'url','label'=>lang('what'),'sortable'=>false,'resizeable'=>true),
+						)
+					)
+				);
 
-						}
-					}
-				}
 
 
 // ---- START INTEGRATION -------------------------
 
-				$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', $this->acl_location));
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+				$custom_config	= CreateObject('admin.soconfig',$location_id);
 				$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 //_debug_array($custom_config->config_data);die();
 			// required settings:
@@ -2355,8 +2411,15 @@ JS;
 						$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
 						$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
 
+						/*
+						* 'parametres' In the form:
+						* <targetparameter1>=__<attrbute_name1>__&<targetparameter2>=__<attrbute_name2>__&
+						* Example: objId=__id__&lon=__posisjon_lengde__&lat=__posisjon_bredde__
+						*/
+
 						parse_str($_config_section_data['parametres'], $output);
 
+						$_values = array();
 						foreach ($output as $_dummy => $_substitute)
 						{
 							$_keys[] = $_substitute;
@@ -2405,6 +2468,8 @@ JS;
 						}
 
 						$arguments = array($_config_section_data['auth_key_name'] => $response);
+
+						//in the form: sakstittel=__loc1__.__loc4__
 
 						if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
 						{
@@ -2459,8 +2524,22 @@ JS;
 // ---- END INTEGRATION -------------------------
 			}
 
+			unset($values['attributes']);
+
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+
 			$data = array
 			(
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,	
 				'integration'					=> $integration,
 				'roles'							=> $roles,
 				'edit'							=> $view ? '' : true,
@@ -2535,7 +2614,23 @@ JS;
 			);
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+
 			phpgwapi_yui::load_widget('treeview');
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.edit', 'property' );
 			$appname	= lang('location');
 
@@ -2938,7 +3033,15 @@ JS;
 			}
 
 			//path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;

@@ -93,6 +93,7 @@
 			$this->member_id			= $this->bo->member_id;
 			$this->p_num				= $this->bo->p_num;
 			$this->status_id			= $this->bo->status_id;
+			$this->location_code		= $this->bo->location_code;
 		}
 
 		function save_sessiondata()
@@ -189,15 +190,16 @@
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'	=> 'property.uis_agreement.index',
-						'sort'		=>$this->sort,
-						'order'		=>$this->order,
-						'cat_id'	=>$this->cat_id,
-						'filter'	=>$this->filter,
-						'query'		=>$this->query,
-						'role'		=> $this->role,
-						'member_id'	=> $this->member_id,
-						'p_num'		=> $this->p_num,
-						'status_id'		=> $this->status_id
+						'sort'			=>$this->sort,
+						'order'			=>$this->order,
+						'cat_id'		=>$this->cat_id,
+						'filter'		=>$this->filter,
+						'query'			=>$this->query,
+						'role'			=> $this->role,
+						'member_id'		=> $this->member_id,
+						'p_num'			=> $this->p_num,
+						'status_id'		=> $this->status_id,
+						'location_code'	=> $this->location_code
 					));
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uis_agreement.index',"
@@ -210,6 +212,7 @@
 					."query:'{$this->query}',"
 					."p_num: '{$this->p_num}',"
 					."role:'{$this->role}',"
+					."location_code:'{$this->location_code}',"
 					."member_id:'{$this->member_id}'";
 
 				$datatable['config']['allow_allrows'] = true;
@@ -252,14 +255,15 @@
 							array
 							(
 								'menuaction' 		=> 'property.uis_agreement.index',
-								'sort'		=>$this->sort,
-								'order'		=>$this->order,
-								'cat_id'	=>$this->cat_id,
-								'filter'	=>$this->filter,
-								'query'		=>$this->query,
-								'role'		=> $this->role,
-								'member_id'	=> $this->member_id,
-								'status_id'	=> $this->status_id
+								'sort'				=> $this->sort,
+								'order'				=> $this->order,
+								'cat_id'			=> $this->cat_id,
+								'filter'			=> $this->filter,
+								'query'				=> $this->query,
+								'role'				=> $this->role,
+								'member_id'			=> $this->member_id,
+								'status_id'			=> $this->status_id,
+								'location_code'		=> $this->location_code
 							)
 						),
 						'fields'	=> array
@@ -738,7 +742,7 @@
 			$import = CreateObject('property.import');
 
 			$importfile = $import->importfile();
-			$id		= phpgw::get_var('id', 'int');
+			$id		= phpgw::get_var('id');
 			if(isset($importfile) && is_file($importfile) && !phpgw::get_var('cancel'))
 			{
 				$list = $this->bo->read_details(0);
@@ -1643,14 +1647,14 @@ die();
 			{
 				return;
 			}
-			$id	= phpgw::get_var('id', 'int');
+			$id	= phpgw::get_var('id');
 			if($id)
 			{
 				$list = $this->bo->read_details($id);
 			}
 			else
 			{
-				$list = $this->bo->read($id);
+				$list = $this->bo->read();
 			}
 			$uicols		= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);

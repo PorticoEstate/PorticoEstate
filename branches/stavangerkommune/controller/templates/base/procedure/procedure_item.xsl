@@ -4,7 +4,7 @@
 <xsl:template name="view_procedure" xmlns:php="http://php.net/xsl">
 
 <xsl:call-template name="yui_phpgw_i18n"/>
-<xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div class="yui-content">
 		<div id="details">
@@ -52,11 +52,11 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<xsl:value-of disable-output-escaping="yes" select="start_date"/>
+							<input type="text" id="start_date" name="start_date" size="10" value="{start_date}" readonly="readonly">
+							</input>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:variable name="startdate"><xsl:value-of select="procedure/start_date" /></xsl:variable>
-							<xsl:value-of select="php:function('date', $dateformat, $startdate)" />
+							<xsl:value-of select="start_date" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -66,32 +66,28 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<xsl:value-of disable-output-escaping="yes" select="revision_date"/>
+							<input type="text" id="revision_date" name="revision_date" size="10" value="{revision_date}" readonly="readonly">
+							</input>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:if test="procedure/revision_date != 0">
-								<xsl:variable name="revisiondate"><xsl:value-of select="procedure/revision_date" /></xsl:variable>
-								<xsl:value-of select="php:function('date', $dateformat, $revisiondate)" />
-							</xsl:if>
+							<xsl:value-of select="revision_date" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
-					<xsl:if test="procedure/end_date != 0">
 					<dt>
 						<label for="end_date"><xsl:value-of select="php:function('lang','Procedure end date')" /></label>
 					</dt>
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<xsl:value-of disable-output-escaping="yes" select="end_date"/>
+							<input type="text" id="end_date" name="end_date" size="10" value="{end_date}" readonly="readonly">
+							</input>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:variable name="enddate"><xsl:value-of select="procedure/end_date" /></xsl:variable>
-							<xsl:value-of select="php:function('date', $dateformat, $enddate)" />
+							<xsl:value-of select="end_date" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
-					</xsl:if>
 					<dt>
 						<label for="purpose"><xsl:value-of select="php:function('lang','Procedure purpose')" /></label>
 					</dt>

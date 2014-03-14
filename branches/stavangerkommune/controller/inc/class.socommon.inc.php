@@ -107,7 +107,8 @@
 			}
 			else if($type == 'string')
 			{
-				return (string) $value;
+				return (string) str_replace('</ol></li>', '</ol>' ,$value);
+			//	return (string) $value;
 			}
 			else if($value === null || $value == 'NULL')
 			{
@@ -292,6 +293,8 @@
 					}
 				}
 			}
+
+			$this->db->set_fetch_single(false);
 
 			return $results;
 		}

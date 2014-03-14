@@ -1,4 +1,28 @@
 <?php
+	/**
+	 * Frontend : a simplified tool for end users.
+	 *
+	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @package Frontend
+	 * @version $Id$
+	 */
+
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 2 of the License, or
+	   (at your option) any later version.
+
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	*/
+
 phpgw::import_class('rental.socommon');
 
 include_class('rental', 'contract_date', 'inc/model/');
@@ -12,10 +36,10 @@ class rental_socontract extends rental_socommon
 {
 	protected static $so;
 	protected $fields_of_responsibility; // Used for caching the values
-	
+
 	/**
 	 * Get a static reference to the storage object associated with this model object
-	 * 
+	 *
 	 * @return rental_socontract the storage object
 	 */
 	public static function get_instance()
@@ -25,7 +49,7 @@ class rental_socontract extends rental_socommon
 		}
 		return self::$so;
 	}
-	
+
 	/**
 	 * Filters:
 	 * Contracts with party as contract party
@@ -36,16 +60,16 @@ class rental_socontract extends rental_socommon
 	 * Contracts with composite as contract composite
 	 * Contracts with contract status
 	 * Contracts for billing
-	 * 
+	 *
 	 * @see rental/inc/rental_socommon#get_query($sort_field, $ascending, $search_for, $search_type, $filters, $return_count)
 	 */
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
-	{	
+	{
 		$clauses = array('1=1');
-		
+
 		//Add columns to this array to include them in the query
 		$columns = array();
-		
+
 		$dir = $ascending ? 'ASC' : 'DESC';
 		if($sort_field == null || $sort_field == '')
 		{
@@ -63,18 +87,18 @@ class rental_socontract extends rental_socommon
 		else if($sort_field == 'term_label'){
 			$sort_field = 'contract.term_id';
 		}
-		
-		
+
+
 		//Contracts for billing should always be sorted on biling start
 		if(isset($filters['contracts_for_billing']))
 		{
-			$order = "ORDER BY contract.billing_start ASC";	
+			$order = "ORDER BY contract.billing_start ASC";
 		}
 		else
 		{
 			$order = "ORDER BY {$sort_field} {$dir}";
 		}
-		
+
 		// Search for based on search type
 		if($search_for)
 		{
@@ -101,7 +125,7 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "r_u.location_code like '{$search_for}%'";
 					break;
 				case "all":
-					
+
 					$like_clauses[] = "contract.old_contract_id $this->like $like_pattern";
 					$like_clauses[] = "contract.comment $this->like $like_pattern";
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
@@ -111,7 +135,7 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "r_u.location_code $this->like $like_pattern";
 					break;
 			}
-			
+
 			if($composite_address)
 			{
 				$sql_composite_address = "select rental_composite.id as rc_id from rental_composite,rental_unit,fm_gab_location where rental_unit.composite_id=rental_composite.id and fm_gab_location.location_code=rental_unit.location_code and fm_gab_location.address like upper({$like_pattern})";
@@ -131,24 +155,24 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "composite.id in (-1)";
 				}
 			}
-			
-			
+
+
 			if(count($like_clauses))
 			{
 				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
-			
-			
+
+
 		}
-		
+
 		$filter_clauses = array();
-		
+
 		// Contracts with party as contract party
 		if(isset($filters['party_id'])){
 			$party_id  =   $this->marshal($filters['party_id'],'int');
 			$filter_clauses[] = "party.id = $party_id";
 		}
-		
+
 		// Contracts for this executive officer
 		if(isset($filters['executive_officer'])){
 			$account_id  =   $this->marshal($filters['executive_officer'],'int');
@@ -160,60 +184,60 @@ class rental_socontract extends rental_socommon
 			$type = $this->marshal($filters['contract_type'],'field');
 			$filter_clauses[] = "contract.location_id IN ($type)";
 		}
-		
+
 		// Contracts with this id (filter for retrieveing a single contract)
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "contract.id = {$id}";
 		}
-		
+
 		// All contracts with composite as contract composite
 		if(isset($filters['composite_id']))
-		{	
+		{
 			$composite_id = $this->marshal($filters['composite_id'],'int');
 			$filter_clauses[] = "composite.id = {$composite_id}";
 		}
-		
+
 		// Affected contracts by regulation
 		if(isset($filters['adjustment_interval']) && isset($filters['adjustment_year']))
 		{
 			$adjustment_interval = $this->marshal($filters['adjustment_interval'],'int');
 			$adjustment_year = $this->marshal($filters['adjustment_year'],'int');
-			
+
 			if($filters['adjustment_is_executed']){
 				$filter_clauses[] = "contract.adjustment_year = {$adjustment_year}";
 			}
 			else{
 				$filter_clauses[] = "contract.adjustment_year + {$adjustment_interval} <= {$adjustment_year}";
 			}
-			
+
 			$firstJanAdjYear = mktime(0,0,0,1,1,$adjustment_year);
-			
+
 			//make sure the contracts are active
 			$filter_clauses[] = "(contract.date_end is null OR contract.date_end >= {$firstJanAdjYear})";
 			$filter_clauses[] = "contract.date_start is not null AND contract.date_start <= {$firstJanAdjYear}";
-			
+
 			$filter_clauses[] = "contract.adjustable IS true";
 			$filter_clauses[] = "contract.adjustment_interval = {$adjustment_interval}";
-			
+
 		}
-		
-		/* 
+
+		/*
 		 * Contract status is defined by the dates in each contract compared to the target date (default today):
-		 * - contracts under planning: 
+		 * - contracts under planning:
 		 * the start date is larger (in the future) than the target date, or start date is undefined
-		 * - active contracts: 
-		 * the start date is smaller (in the past) than the target date, and the end date is undefined (running) or 
+		 * - active contracts:
+		 * the start date is smaller (in the past) than the target date, and the end date is undefined (running) or
 		 * larger (fixed) than the target date
-		 * - under dismissal: 
-		 * the start date is smaller than the target date, 
-		 * the end date is larger than the target date, and 
+		 * - under dismissal:
+		 * the start date is smaller than the target date,
+		 * the end date is larger than the target date, and
 		 * the end date substracted the contract type notification period is smaller than the target date
 		 * - ended:
 		 * the end date is smaller than the target date
 		 */
-		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){	
-			
+		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){
+
 			if(isset($filters['status_date_hidden']) && $filters['status_date_hidden'] != "")
 			{
 				$ts_query = strtotime($filters['status_date_hidden']); // target timestamp specified by user
@@ -245,7 +269,7 @@ class rental_socontract extends rental_socommon
 					break;
 			}
 		}
-		
+
 		/*
 		 * Contracts for billing
 		 */
@@ -274,23 +298,23 @@ class rental_socontract extends rental_socommon
 			}
 			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
 			//$timestamp_start = strtotime("{$year}-{$month}-01");
-			
+
 			$filter_clauses[] = "contract.term_id = {$billing_term_id}";
 			$filter_clauses[] = "contract.date_start < $timestamp_end";
 			$filter_clauses[] = "(contract.date_end IS NULL OR contract.date_end >= {$timestamp_start})";
 			$filter_clauses[] = "(contract.billing_start IS NULL OR contract.billing_start < {$timestamp_end})";
-			
+
 			$specific_ordering = 'invoice.timestamp_end DESC, contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
 			$order = $order ? $order.', '.$specific_ordering : "ORDER BY {$specific_ordering}";
 		}
-		
+
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
 		}
-		
+
 		$condition =  join(' AND ', $clauses);
-		
+
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(contract.id)) AS count';
@@ -302,17 +326,17 @@ class rental_socontract extends rental_socommon
 			$columns[] = 'contract.id AS contract_id';
 			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,contract.publish_comment';
 			$columns[] = 'party.id AS party_id';
-			$columns[] = 'party.first_name, party.last_name, party.company_name';
-			$columns[] = 'c_t.is_payer';		
+			$columns[] = 'party.first_name, party.last_name, party.company_name, party.department, party.org_enhet_id';
+			$columns[] = 'c_t.is_payer';
 			$columns[] = 'composite.id AS composite_id';
 			$columns[] = 'composite.name AS composite_name';
 			$columns[] = 'type.title, type.notify_before, type.notify_before_due_date, type.notify_after_termination_date';
 			$columns[] = 'last_edited.edited_on';
-			$columns[] = 'invoice.timestamp_end';	
+			$columns[] = 'invoice.timestamp_end';
 			$columns[] = 'r_b_t.title AS term_title';
 			$cols = implode(',',$columns);
 		}
-		
+
 		$tables = "rental_contract contract";
 		$join_contract_type = 	$this->left_join.' rental_contract_responsibility type ON (type.location_id = contract.location_id)';
 		$join_parties = $this->left_join.' rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
@@ -324,10 +348,10 @@ class rental_socontract extends rental_socommon
 		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_units.' '.$join_last_edited.' '.$join_last_billed.' '.$join_term_title;
 
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
-		
+
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
-	
+
 	public function get_id_field_name($extended_info = false)
 	{
 		if(!$extended_info)
@@ -346,13 +370,13 @@ class rental_socontract extends rental_socommon
 		return $ret;
 	}
 
-	
+
 	function populate(int $contract_id, &$contract)
 	{
-		
+
 		if($contract == null ) // new contract
 		{
-			$contract_id = (int) $contract_id; 
+			$contract_id = (int) $contract_id;
 			$contract = new rental_contract($contract_id);
 			$contract->set_contract_date(new rental_contract_date
 				(
@@ -390,23 +414,23 @@ class rental_socontract extends rental_socommon
 			$contract->set_notify_before($this->unmarshal($this->db->f('notify_before'),'int'));
 			$contract->set_notify_before_due_date($this->unmarshal($this->db->f('notify_before_due_date'),'int'));
 			$contract->set_notify_after_termination_date($this->unmarshal($this->db->f('notify_after_termination_date'),'int'));
-			
-			
+
+
 		}
-		
+
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
 		$billing_deleted = $this->unmarshal($this->db->f('deleted'),'bool');
 		if($timestamp_end && !$billing_deleted)
 		{
 			$contract->add_bill_timestamp($timestamp_end);
 		}
-		
+
 		$total_price = $this->unmarshal($this->db->f('total_price'),'int');
 		if($total_price)
 		{
 			$contract->set_total_price($total_price);
 		}
-		
+
 		$party_id = $this->unmarshal($this->db->f('party_id', true), 'int');
 		if($party_id)
 		{
@@ -414,6 +438,8 @@ class rental_socontract extends rental_socommon
 			$party->set_first_name($this->unmarshal($this->db->f('first_name', true), 'string'));
 			$party->set_last_name($this->unmarshal($this->db->f('last_name', true), 'string'));
 			$party->set_company_name($this->unmarshal($this->db->f('company_name', true), 'string'));
+			$party->set_department($this->unmarshal($this->db->f('department', true), 'string'));
+			$party->set_org_enhet_id($this->unmarshal($this->db->f('org_enhet_id'), 'int'));
 			$is_payer = $this->unmarshal($this->db->f('is_payer', true), 'bool');
 			if($is_payer)
 			{
@@ -421,7 +447,7 @@ class rental_socontract extends rental_socommon
 			}
 			$contract->add_party($party);
 		}
-		
+
 		$composite_id = $this->unmarshal($this->db->f('composite_id', true), 'int');
 		if($composite_id)
 		{
@@ -431,10 +457,10 @@ class rental_socontract extends rental_socommon
 		}
 		return $contract;
 	}
-	
+
 	/**
 	 * Get a key/value array of contract type titles keyed by their id
-	 * 
+	 *
 	 * @return array
 	 */
 	function get_fields_of_responsibility(){
@@ -451,7 +477,7 @@ class rental_socontract extends rental_socommon
 		}
 		return $this->fields_of_responsibility;
 	}
-	
+
 	function get_default_account(int $location_id, bool $in){
 		if(isset($location_id) && $location_id > 0)
 		{
@@ -463,7 +489,7 @@ class rental_socontract extends rental_socommon
 			{
 				$col = 'account_out';
 			}
-			
+
 			$sql = "SELECT {$col} FROM rental_contract_responsibility WHERE location_id = {$location_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
@@ -471,7 +497,7 @@ class rental_socontract extends rental_socommon
 		}
 		return '';
 	}
-	
+
 	function get_default_project_number(int $location_id)
 	{
 		if(isset($location_id) && $location_id > 0)
@@ -480,9 +506,9 @@ class rental_socontract extends rental_socommon
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('project_number',true);
-		}	
+		}
 	}
-	
+
 	function get_responsibility_title(int $location_id)
 	{
 		if(isset($location_id) && $location_id > 0)
@@ -491,14 +517,14 @@ class rental_socontract extends rental_socommon
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('title',true);
-		}	
+		}
 	}
-	
+
 	/**
 	 * Returns the range of year there are contracts. That is, the array
 	 * returned contains reversed chronologically all the years from the earliest start
-	 * year of the contracts to next year. 
-	 * 
+	 * year of the contracts to next year.
+	 *
 	 * @return array of string values, never null.
 	 */
 	public function get_year_range()
@@ -523,20 +549,20 @@ class rental_socontract extends rental_socommon
 		{
 			$year_range[] = $year;
 		}
-		
+
 		return $year_range;
 	}
-	
+
 	/**
 	 * Update the database values for an existing contract object.
-	 * 
+	 *
 	 * @param $contract the contract to be updated
 	 * @return result receipt from the db operation
 	 */
 	function update($contract)
 	{
 		$id = intval($contract->get_id());
-		
+
 		$values = array();
 
 		// Set all fields in form
@@ -544,18 +570,18 @@ class rental_socontract extends rental_socommon
 		// FORM COLUMN 1
 		$values[] = "contract_type_id = ".	$this->marshal($contract->get_contract_type_id(), 'int');
 		$values[] = "executive_officer = ". $this->marshal($contract->get_executive_officer_id(), 'int');
-		
+
 		if ($contract->get_contract_date()) {
 			$values[] = "date_start = " . 	$this->marshal($contract->get_contract_date()->get_start_date(), 'int');
 			$values[] = "date_end = " .		$this->marshal($contract->get_contract_date()->get_end_date(), 'int');
 		}
-		
+
 		$values[] = "due_date = " . 		$this->marshal($contract->get_due_date(), 'int');
 		$values[] = "invoice_header = ". 	$this->marshal($contract->get_invoice_header(),'string');
 		$values[] = "term_id = " .			$this->marshal($contract->get_term_id(), 'int');
 		$values[] = "billing_start = " . 	$this->marshal($contract->get_billing_start_date(), 'int');
 		$values[] = "reference = ". 		$this->marshal($contract->get_reference(),'string');
-		
+
 		// FORM COLUMN 2
 		$values[] = "service_id = ". 		$this->marshal($contract->get_service_id(),'string');
 		$values[] = "responsibility_id = ". $this->marshal($contract->get_responsibility_id(),'string');
@@ -569,45 +595,45 @@ class rental_socontract extends rental_socommon
 		$values[] = "adjustment_interval = ".		$this->marshal($contract->get_adjustment_interval(),'int');
 		$values[] = "adjustment_share = ".		$this->marshal($contract->get_adjustment_share(),'int');
 		$values[] = "publish_comment = ".	($contract->get_publish_comment() ? "true" : "false");
-		
+
 		// FORM COLUMN 3
 		$values[] = "comment = ". 			$this->marshal($contract->get_comment(), 'string');
-		
-		
+
+
 		// Set date last updated
 		$values[] = "last_updated = ".		strtotime('now');
-		
+
 		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
-		
+
 		if(isset($result))
 		{
 			$this->last_edited_by($id);
 			return true;
 		}
-			
+
 		return false;
 	}
-	
+
 	/**
 	 * This method marks the combination contract/user account with the current timestamp. It updates the record if the user has updated
-	 * this contract before; inserts a new record if the user has never updated this contract. 
-	 * 
+	 * this contract before; inserts a new record if the user has never updated this contract.
+	 *
 	 * @param $contract_id
 	 * @return true if the contract was marker, false otherwise
 	 */
 	public function last_edited_by($contract_id){
 		$account_id = $GLOBALS['phpgw_info']['user']['account_id']; // current user
 		$ts_now = strtotime('now');
-		
+
 		$sql_has_edited_before = "SELECT account_id FROM rental_contract_last_edited WHERE contract_id = $contract_id AND account_id = $account_id";
 		$result = $this->db->query($sql_has_edited_before);
-		
+
 		if(isset($result))
 		{
 			if($this->db->next_record())
 			{
 				$sql = "UPDATE rental_contract_last_edited SET edited_on=$ts_now WHERE contract_id = $contract_id AND account_id = $account_id";
-			} 
+			}
 			else
 			{
 				$sql = "INSERT INTO rental_contract_last_edited VALUES ($contract_id,$account_id,$ts_now)";
@@ -620,13 +646,13 @@ class rental_socontract extends rental_socommon
 		}
 		return false;
 	}
-	
+
 	public function remove_Last_edited_by_information()
 	{
 		$sql = "DELETE * FROM rental_contract_last_edited";
 		$this->db->query($sql);
 	}
-	
+
 	public function get_last_edited_by($contract_id)
 	{
 		$sql = "SELECT account_id FROM rental_contract_last_edited where contract_id={$contract_id} ORDER by edited_on DESC";
@@ -641,10 +667,10 @@ class rental_socontract extends rental_socommon
 		}
 		return "";
 	}
-	
+
 	/**
 	 * This method markw the given contract with the current timestamp
-	 * 
+	 *
 	 * @param $contract_id
 	 * @return true if the contract was marked, false otherwise
 	 */
@@ -661,16 +687,16 @@ class rental_socontract extends rental_socommon
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Add a new contract to the database.  Adds the new insert id to the object reference.
-	 * 
+	 *
 	 * @param $contract the contract to be added
 	 * @return array result receipt from the db operation
 	 */
 	function add(&$contract)
 	{
-        
+
         $contract->set_id(self::get_new_id($contract->get_old_contract_id()));
 
         // Contract has no old or new ID, get next ID available from DB
@@ -681,7 +707,7 @@ class rental_socontract extends rental_socommon
 
 		// These are the columns we know we have or that are nullable
 		$cols = array('location_id', 'term_id');//
-		
+
 		// Start making a db-formatted list of values of the columns we have to have
 		$values = array(
 			$this->marshal($contract->get_location_id(), 'int'),
@@ -693,101 +719,101 @@ class rental_socontract extends rental_socommon
         $values[] = $new_id ? $new_id : $this->marshal($contract->get_id(), 'int');
 
 
-		
+
 		// Check values that can be null before trying to add them to the db-pretty list
 		if ($contract->get_billing_start_date()) {
 			$cols[] = 'billing_start';
 			$values[] = $this->marshal($contract->get_billing_start_date(), 'int');
 		}
-		
+
 		if ($contract->get_contract_date()) {
 			$cols[] = 'date_start';
 			$cols[] = 'date_end';
 			$values[] = $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
 			$values[] = $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
 		}
-		
+
 		if($contract->get_executive_officer_id()) {
 			$cols[] = 'executive_officer';
 			$values[] = $this->marshal($contract->get_executive_officer_id(), 'int');
 		}
-		
+
 		$cols[] = 'created';
 		$cols[] = 'created_by';
 		$values[] = strtotime('now');
 		$values[] = $GLOBALS['phpgw_info']['user']['account_id'];
-		
-		
+
+
 		$cols[] = 'service_id';
 		$cols[] = 'responsibility_id';
 		$values[] = $this->marshal($contract->get_service_id(),'string');
 		$values[] = $this->marshal($contract->get_responsibility_id(),'string');
-		
+
 		$cols[] = 'reference';
 		$cols[] = 'invoice_header';
 		$values[] = $this->marshal($contract->get_reference(),'string');
 		$values[] = $this->marshal($contract->get_invoice_header(),'string');
-		
+
 		$cols[] = 'account_in';
 		$cols[] = 'account_out';
 		$values[] = $this->marshal($contract->get_account_in(),'string');
 		$values[] = $this->marshal($contract->get_account_out(),'string');
-		
+
 		$cols[] = 'project_id';
 		$values[] = $this->marshal($contract->get_project_id(),'string');
-		
+
 		$cols[] = 'old_contract_id';
         $values[] = $new_id ? $this->marshal(self::get_old_id($new_id),'string') : $this->marshal($contract->get_old_contract_id(),'string');
-		
+
         $cols[] = 'rented_area';
         $values[] =  $this->marshal($contract->get_rented_area(),'float');
-        
+
 		$cols[] = 'comment';
 		$values[] = $this->marshal($contract->get_comment(),'string');
-		
+
 		$cols[] = 'adjustment_interval';
 		$values[] = $this->marshal($contract->get_adjustment_interval(),'int');
-		
+
 		$cols[] = 'adjustment_share';
 		$values[] = $this->marshal($contract->get_adjustment_share(),'int');
-		
+
 		$cols[] = 'adjustable';
 		$values[] = ($contract->get_adjustable() ? "true" : "false");
-		
+
 		$cols[] = 'adjustment_year';
 		$values[] = $this->marshal($contract->get_adjustment_year(),'int');
-		
+
 		$cols[] = 'publish_comment';
 		$values[] = ($contract->get_publish_comment() ? "true" : "false");
-		
-		
+
+
 		if ($contract->get_security_type()) {
 			$cols[] = 'security_type';
 			$values[] = $this->marshal($contract->get_security_type(),'int');
 			$cols[] = 'security_amount';
 			$values[] = $this->marshal($contract->get_security_amount(),'string');
 		}
-		
+
 		if ($contract->get_due_date()) {
 			$cols[] = 'due_date';
 			$values[] = $this->marshal($contract->get_due_date(), 'int');
 		}
-		
+
 		if($contract->get_contract_type_id()) {
 			$cols[] = 'contract_type_id';
 			$values[] = $this->marshal($contract->get_contract_type_id(), 'int');
 		}
-		
+
 		// Insert the new contract
 		$q ="INSERT INTO rental_contract (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
-		
+
 		return $contract;
 	}
-	
+
 	/**
 	 * This method adds a party to a contract. Updates last edited history.
-	 * 
+	 *
 	 * @param $contract_id	the given contract
 	 * @param $party_id	the party to add
 	 * @return true if successful, false otherwise
@@ -804,10 +830,10 @@ class rental_socontract extends rental_socommon
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method removes a party from a contract. Updates last edited history.
-	 * 
+	 *
 	 * @param $contract_id	the given contract
 	 * @param $party_id	the party to remove
 	 * @return true if successful, false otherwise
@@ -824,10 +850,10 @@ class rental_socontract extends rental_socommon
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method adds a composite to a contract. Updates last edited history.
-	 * 
+	 *
 	 * @param $contract_id	the given contract
 	 * @param $composite_id	the composite to add
 	 * @return true if successful, false otherwise
@@ -844,10 +870,10 @@ class rental_socontract extends rental_socommon
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method removes a composite from a contract. Updates last edited history.
-	 * 
+	 *
 	 * @param $contract_id	the given contract
 	 * @param $party_id	the composite to remove
 	 * @return true if successful, false otherwise
@@ -864,12 +890,12 @@ class rental_socontract extends rental_socommon
 		}
 		return false;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method sets a payer on a contract
-	 * 
+	 *
 	 * @param $contract_id	the given contract
 	 * @param $party_id	the party to be the payer
 	 * @return true if successful, false otherwise
@@ -877,7 +903,7 @@ class rental_socontract extends rental_socommon
 	function set_payer($contract_id, $party_id)
 	{
 		$pid =$this->marshal($party_id, 'int');
-		$cid = $this->marshal($contract_id, 'int'); 
+		$cid = $this->marshal($contract_id, 'int');
 		$this->db->transaction_begin();
 		$q = "UPDATE rental_contract_party SET is_payer = true WHERE party_id = ".$pid." AND contract_id = ".$cid;
 		$result = $this->db->query($q);
@@ -927,7 +953,7 @@ class rental_socontract extends rental_socommon
 
         return $prefix.$cid;
     }
-    
+
     public function get_contract_types($location_id){
     	$q1="SELECT rct.id, rct.label FROM rental_contract_types rct, rental_contract_responsibility rcr WHERE rcr.location_id={$location_id} AND rct.responsibility_id=rcr.id";
 		$this->db->query($q1, __LINE__, __FILE__);
@@ -935,10 +961,10 @@ class rental_socontract extends rental_socommon
 		while($this->db->next_record()){
 			$results[$this->db->f('id')] = $this->db->f('label');
 		}
-		
+
 		return $results;
     }
-    
+
     public function get_contract_type_label($contract_type_id){
     	$result = "Ingen";
     	if(isset($contract_type_id)){
@@ -948,10 +974,10 @@ class rental_socontract extends rental_socommon
 				$result = $this->db->f('label');
 			}
     	}
-		
+
 		return $result;
     }
-    
+
     public function get_contract_type_account($contract_type_id)
     {
     	$q1="SELECT rct.account FROM rental_contract_types rct WHERE rct.id={$contract_type_id}";
@@ -960,11 +986,11 @@ class rental_socontract extends rental_socommon
 		while($this->db->next_record()){
 			$result = $this->db->f('account');
 		}
-		
+
 		return $result;
     }
-    
-    
+
+
     public function get_term_label($billing_term_id){
     	$q1="SELECT rbt.title FROM rental_billing_term rbt WHERE rbt.id={$billing_term_id}";
 		$this->db->query($q1, __LINE__, __FILE__);
@@ -972,7 +998,7 @@ class rental_socontract extends rental_socommon
 		while($this->db->next_record()){
 			$result = $this->db->f('title');
 		}
-		
+
 		return $result;
     }
 
@@ -988,7 +1014,7 @@ class rental_socontract extends rental_socommon
     	$success_composites = true;
     	$success_parties = true;
     	$success_price_items = true;
-    	
+
     	//composites
     	$this->db->query($q_composites);
     	while($this->db->next_record()){
@@ -1003,7 +1029,7 @@ class rental_socontract extends rental_socommon
     			$success_composites = false;
     		}
     	}
-    	
+
     	//parties
         $this->db->query($q_parties);
     	while($this->db->next_record()){
@@ -1020,7 +1046,7 @@ class rental_socontract extends rental_socommon
     			$success_parties = false;
     		}
     	}
-    	
+
     	//price items
         $this->db->query($q_price_items);
     	while($this->db->next_record()){
@@ -1059,9 +1085,9 @@ class rental_socontract extends rental_socommon
     		return false;
     	}
     }
-    
+
     public function get_months_in_term($term_id)
-    { 
+    {
 		$sql = "SELECT months FROM rental_billing_term WHERE id = {$term_id}";
 		$result = $this->db->query($sql);
 		if(!$result)
@@ -1075,7 +1101,7 @@ class rental_socontract extends rental_socommon
 		$months = $this->unmarshal($this->db->f('months', true), 'int');
 		return $months;
     }
-    
+
     public function update_price_items($contract_id, $rented_area){
     	$success_price_item = true;
     	$new_area = $rented_area;
@@ -1101,14 +1127,14 @@ class rental_socontract extends rental_socommon
     		return false;
     	}
     }
-    
+
     public function import_contract_reference($contract_id, $reference)
     {
     	$reference = $this->marshal($reference,'string');
     	$sql = "UPDATE rental_contract SET reference={$reference} WHERE id = {$contract_id}";
     	$this->db->query($sql);
     }
-    
+
     public function update_adjustment_year_interval($contract_id, $adjusted_year, $adjustment_interval)
     {
     	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
@@ -1117,7 +1143,7 @@ class rental_socontract extends rental_socommon
     	$this->db->query($sql);
     	return $this->db->affected_rows() > 0 ? true : false;
     }
-    
+
     public function update_contract_end_date($contract_id, $date)
     {
     	$cid = $this->marshal($contract_id, 'int');
@@ -1125,7 +1151,7 @@ class rental_socontract extends rental_socommon
     	$sql = "UPDATE rental_contract SET date_end={$end_date} WHERE id = {$cid}";
     	$this->db->query($sql);
     }
-    
+
 	public function update_adjustment_year($contract_id, $adjusted_year)
     {
     	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
@@ -1133,20 +1159,20 @@ class rental_socontract extends rental_socommon
     	$this->db->query($sql);
     	return $this->db->affected_rows() > 0 ? true : false;
     }
-    
+
     public function update_adjustment_share($contract_id, $adjustment_share)
     {
     	$new_adjustment_share = $this->marshal($adjustment_share, 'int');
     	$sql = "UPDATE rental_contract SET adjustment_share={$new_adjustment_share} WHERE id = {$contract_id}";
     	$this->db->query($sql);
     }
-    
+
     public function get_default_price_items($location_id)
     {
     	$price_items = array();
     	$loc_id = $this->marshal($location_id, 'int');
-    	
-    	//select all standard price_items for given location_id 
+
+    	//select all standard price_items for given location_id
     	$sql = "SELECT id FROM rental_price_item WHERE responsibility_id={$loc_id} AND NOT is_inactive AND standard";
     	$this->db->query($sql);
     	while($this->db->next_record())

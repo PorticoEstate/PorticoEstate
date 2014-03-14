@@ -37,8 +37,4 @@
     	<!-- END javascript -->
 
 	</head>
-	<body class="yui-skin-sam">
-
-
-
 <!-- END head -->

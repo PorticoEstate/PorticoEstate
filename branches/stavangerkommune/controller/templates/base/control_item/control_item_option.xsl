@@ -2,9 +2,6 @@
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-
-
-
 <xsl:call-template name="yui_phpgw_i18n"/>
 
 <div id="main_wrp">
@@ -13,7 +10,8 @@
 	
 <div class="yui-content">
 	<div id="details">
-		<form id="frm_add_control_item_option" action="index.php?menuaction=controller.uicontrol_item_option.save" method="post">
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol_item_option.save')" /></xsl:variable>
+		<form id="frm_add_control_item_option" action="{$action_url}" method="post">
 			<input type="hidden" name="control_item_id">
 				<xsl:attribute name="value"><xsl:value-of select="control_item/id"/></xsl:attribute>
 			</input>

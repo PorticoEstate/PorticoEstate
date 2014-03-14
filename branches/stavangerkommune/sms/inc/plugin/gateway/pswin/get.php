@@ -15,70 +15,112 @@
 
 		function gw_set_delivery_status($gp_code="",$uid="",$smslog_id="",$p_datetime="",$p_update="")
 		{
-return;
-		    // p_status :
-		    // 0 = pending
-		    // 1 = delivered
-		    // 2 = failed
-
-			if($result['statuscode'] == 1)
-			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
-			}
-			else if($result['statuscode'] == 5)
-			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
-			}
-
-		    return;
+		    // nothing
 		}
-
 
 		function gw_set_incoming_action()
 		{
-			if(!isset($this->pswin_param['email_user']) || ! $this->pswin_param['email_user'])
+			$strip_code = isset($this->pswin_param['strip_code']) && $this->pswin_param['strip_code'] ? $this->pswin_param['strip_code'] : '';
+			
+			$test_receive = false;
+			
+			if ($test_receive)
 			{
-			    throw new Exception('Email user not defined');			
+				$this->test_receive();
 			}
 
-				require_once 'SMSReceive.php';
+			$sql = 'SELECT * FROM phpgw_sms_received_data WHERE status = 0 AND type = \'sms\'';
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 
-				$options=array();
-				$options['soap_version'] = SOAP_1_1;
-				$options['location'] = $this->pswin_param['receive_url'];
-				$options['uri']		= "http://sms.pswin.com/SOAP/SMS.asmx";
-				$options['trace']		= 1;
-				$options['proxy_host']	= $this->pswin_param['proxy_host'];
-				$options['proxy_port']	= $this->pswin_param['proxy_port'];
-				$options['encoding']	= 'iso-8859-1';//'UTF-8';
-
-				$receive = new SMSReceive('', $options);
-
-				$ReceiveSMSMessage = new ReceiveSMSMessage();
-				
-				$ReturnValue = $receive->ReceiveSMSMessage($ReceiveSMSMessage);
-
-				$result = $ReturnValue->ReceiveSMSMessageResult;
-
-
-			$sms = array();
-
-			foreach($sms as $entry)
+			$messages = array();
+			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$sms_datetime	= $entry[''];
-				$sms_sender		= $entry[''];
-				$target_code	= $entry[''];
-				$message		= $entry['message'];
-				
-				if (!parent::setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
+				$messages[] = array
+				(
+					'id'			=> $GLOBALS['phpgw']->db->f('id'),
+					'type'			=> $GLOBALS['phpgw']->db->f('type'),
+					'entry_date'	=> $GLOBALS['phpgw']->db->f('entry_date'),
+					'data'			=> unserialize($GLOBALS['phpgw']->db->f('data',true))
+				);
+			}
+
+//			_debug_array($messages);
+
+			foreach($messages as $entry)
+			{
+				$message =  $entry['data']->m->Text;
+				if($strip_code && stripos($message,"{$strip_code} ")===0 )
 				{
-					$bofelamimail->flagMessages($_flag = 'unread', array($entry['uid']));
+					$strip_code = strtolower($strip_code); 
+					$strip_code_len = strlen($strip_code);
+					$message_len = strlen($message);
+					
+					$message = trim(substr($message, $strip_code_len));
+				}
+				
+//			_debug_array($message);
+			    $array_target_code = explode(' ',$message);
+
+			    $target_code = strtoupper(trim($array_target_code[0]));
+
+			    $message = $array_target_code[1];
+
+			    for ($i=2;$i<count($array_target_code);$i++)
+			    {
+					$message .= " {$array_target_code[$i]}";
+			    }
+				
+				$sms_datetime	= date($GLOBALS['phpgw']->db->datetime_format(),$entry['entry_date']);
+				$sms_sender		= $entry['data']->m->SenderNumber;
+
+				if (parent::setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
+				{
+					$sql = 'UPDATE phpgw_sms_received_data SET status = 1 WHERE id =' . (int) $entry['id'];
+//_debug_array($sql);
+					$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				}			
 			}
+//			die();
+		}
 
-			if($connectionStatus == 'true')
-			{
-				$bofelamimail->closeConnection();
-			}
+
+		function test_receive()
+		{
+			require_once 'SMSReceive.php';
+
+			$options=array();
+			$options['soap_version']	= SOAP_1_2;
+			$options['location']		= $this->pswin_param['receive_url'];
+			$options['uri']				= "http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php";
+			$options['trace']			= 1;
+			$options['proxy_host']		= $this->pswin_param['proxy_host'];
+			$options['proxy_port']		= $this->pswin_param['proxy_port'];
+			$options['encoding']		= 'iso-8859-1';//'UTF-8';
+
+			$wdsl = PHPGW_SERVER_ROOT . '/sms/inc/plugin/gateway/pswin/Receive.wdsl';
+
+			$receive = new SMSReceive($wdsl, $options);
+
+			$Position = new GSMPosition();
+			$Position->City = 'Bergen';
+			$IncomingSMSMessage = new IncomingSMSMessage();
+			$IncomingSMSMessage->ReceiverNumber = '26112';
+			$IncomingSMSMessage->SenderNumber = '90665164';
+			$IncomingSMSMessage->Text = 'Dette er en testmelding';
+			$IncomingSMSMessage->Network = '';
+			$IncomingSMSMessage->Address = 'Firstname;middlename;lastname;address;ZipCode;City;RegionNumber;CountyNumber';
+			$IncomingSMSMessage->Position = $Position;
+		
+
+			$ReceiveSMSMessage = new ReceiveSMSMessage();
+	
+			$ReceiveSMSMessage->m = $IncomingSMSMessage;
+
+			$ReturnValue = $receive->ReceiveSMSMessage($ReceiveSMSMessage);
+
+			$result = $ReturnValue->ReceiveSMSMessageResult;
+
+			_debug_array($result);
+die();
 		}
 	}

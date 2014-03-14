@@ -75,9 +75,11 @@
 			$this->allrows		= $this->bo->allrows;
 			$this->district_id	= $this->bo->district_id;
 			$this->year			= $this->bo->year;
+			$this->month		= $this->bo->month;
 			$this->grouping		= $this->bo->grouping;
 			$this->revision		= $this->bo->revision;
 			$this->details		= $this->bo->details;
+			$this->direction	= $this->bo->direction;
 
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
 
@@ -94,7 +96,9 @@
 					'filter'		=> $this->filter,
 					'cat_id'		=> $this->cat_id,
 					'dimb_id'		=> $this->dimb_id,
-					'allrows'		=> $this->allrows
+					'allrows'		=> $this->allrows,
+					'direction'		=> $this->direction,
+					'month'			=> $this->month
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -115,7 +119,7 @@
 
 			$revision_list	= $this->bo->get_revision_filter_list($this->revision); // reset year
 			$this->year		= $this->bo->year;
-			$this->revision = $this->bo->revision; 
+			$this->revision = $this->bo->revision;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::budget';
 
 			$datatable = array();
@@ -157,7 +161,7 @@
 				array_unshift ($values_combo_box[0],$default_value);
 
 				$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision);
-				$default_value = array ('id'=>'','name'=>lang('no revision')); 
+				$default_value = array ('id'=>'','name'=>lang('no revision'));
 				if (count($values_combo_box[1]))
 				{
 					array_unshift ($values_combo_box[1],$default_value);
@@ -186,13 +190,27 @@
 					$values_combo_box[3][] = $default_value;
 				}
 
-				$values_combo_box[4] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
-				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[4]['cat_list'],$default_value);
+				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
+				foreach($cat_filter['cat_list'] as $_cat)
+				{
+					$values_combo_box[4][] = array
+					(
+						'id' => $_cat['cat_id'],
+						'name' => $_cat['name'],
+						'selected' => $_cat['selected'] ? 1 : 0
+					);
+				}
+
+				array_unshift ($values_combo_box[4],array ('id'=>'', 'name'=>lang('no category')));
 
 				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[5] as & $_dimb)
+				{
+					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
+				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
 				array_unshift ($values_combo_box[5],$default_value);
+
 
 				$datatable['actions']['form'] = array
 					(
@@ -245,21 +263,26 @@
 									'tab_index' => 4
 								),
 								array
-								( //boton 	GROUPING
-									'id' 		=> 'btn_cat_id',
-									'name' 		=> 'cat_id',
-									'value'		=> lang('category'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
+								( //boton 	USER
+									//	'id' => 'btn_user_id',
+									'id' => 'sel_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[4],
+									'onchange'=> 'onChangeSelect("cat_id");',
 									'tab_index' => 5
 								),
 								array
-								( //boton 	GROUPING
-									'id' 		=> 'btn_dimb_id',
-									'name' 		=> 'dimb_id',
-									'value'		=> lang('dimb'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
+								(
+									'id' => 'sel_dimb_id',
+									'name' => 'dimb_id',
+									'value'	=> lang('dimb'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[5],
+									'onchange'=> 'onChangeSelect("dimb_id");',
 									'tab_index' => 6
 								),
 								array
@@ -318,6 +341,7 @@
 									'id' => 'values_combo_box_3',
 									'value'	=> $this->bocommon->select2String($values_combo_box[3])
 								),
+/*
 								array
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
@@ -328,6 +352,7 @@
 									'id' => 'values_combo_box_5',
 									'value'	=> $this->bocommon->select2String($values_combo_box[5])
 								)
+*/
 							)
 						)
 					)
@@ -358,7 +383,7 @@
 					'visible'=>true,	'name'=>'category',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'','formatter'=>''),
 				array(
 					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>'myFormatDate'),
-			);			
+			);
 
 			$content = array();
 			$j = 0;
@@ -478,7 +503,7 @@
 			}
 			//Depended select: REVISION
 			$opt_cb_depend  = $this->bo->get_revision_filter_list($this->revision);
-			$default_value = array ('id'=>'','name'=>lang('no revision')); 
+			$default_value = array ('id'=>'','name'=>lang('no revision'));
 			if (count($opt_cb_depend))
 			{
 				array_unshift ($opt_cb_depend,$default_value);
@@ -504,7 +529,7 @@
 			}
 			$json['hidden']['dependent'][] = array ('id' 	=> $this->grouping,
 				'value' => $this->bocommon->select2String($opt_cb_depend)
-			);										
+			);
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -563,7 +588,7 @@
 
 			$revision_list	= $this->bo->get_revision_filter_list($this->revision,$basis=true); // reset year
 			$this->year		= $this->bo->year;
-			$this->revision = $this->bo->revision; 
+			$this->revision = $this->bo->revision;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::basis';
 
 			$datatable = array();
@@ -605,7 +630,7 @@
 				array_unshift ($values_combo_box[0],$default_value);
 
 				$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision,$basis=true);
-				$default_value = array ('id'=>'','name'=>lang('no revision')); 
+				$default_value = array ('id'=>'','name'=>lang('no revision'));
 				if (count($values_combo_box[1]))
 				{
 					array_unshift ($values_combo_box[1],$default_value);
@@ -786,7 +811,7 @@
 					'visible'=>true,	'name'=>'category',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'','formatter'=>''),
 				array(
 					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate),
-			);			
+			);
 
 			$content = array();
 			$j = 0;
@@ -905,7 +930,7 @@
 			}
 			//Depended select: REVISION
 			$opt_cb_depend  = $this->bo->get_revision_filter_list($this->revision,$basis=true);
-			$default_value = array ('id'=>'','name'=>lang('no revision')); 
+			$default_value = array ('id'=>'','name'=>lang('no revision'));
 			if (count($opt_cb_depend))
 			{
 				array_unshift ($opt_cb_depend,$default_value);
@@ -931,7 +956,7 @@
 			}
 			$json['hidden']['dependent'][] = array ('id' 	=> $this->grouping,
 				'value' => $this->bocommon->select2String($opt_cb_depend)
-			);										
+			);
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -994,21 +1019,23 @@
 			$datatable = array();
 			$values_combo_box = array();
 			$dry_run = false;
-
+			$this->save_sessiondata();
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 					(
-						'menuaction'	=>'property.uibudget.obligations',
-						'cat_id'		=>$this->cat_id,
-						'filter'		=>$this->filter,
-						'query'			=>$this->query,
-						'district_id'	=>$this->district_id,
-						'grouping'		=>$this->grouping,
-						'year'			=>$this->year,
+						'menuaction'	=> 'property.uibudget.obligations',
+						'cat_id'		=> $this->cat_id,
+						'filter'		=> $this->filter,
+						'query'			=> $this->query,
+						'district_id'	=> $this->district_id,
+						'grouping'		=> $this->grouping,
+						'year'			=> $this->year,
+						'month'			=> $this->month,
 						'details'		=> $this->details,
 						'allrows'		=> $this->allrows,
-						'dimb_id'		=>$this->dimb_id
+						'dimb_id'		=> $this->dimb_id,
+						'direction'		=> $this->direction
 					));
 				$datatable['config']['allow_allrows'] = true;
 
@@ -1019,8 +1046,10 @@
 					."district_id:'{$this->district_id}',"
 					."grouping:'{$this->grouping}',"
 					."year:'{$this->year}',"
+					."month:'{$this->month}',"
 					."details:'{$this->details}',"
 					."dimb_id:'{$this->dimb_id}',"
+					."direction:'{$this->direction}',"
 					."allrows:'{$this->allrows}',"
 					."download:'obligations'";
 
@@ -1028,22 +1057,18 @@
 				$default_value = array ('id'=>'','name'=>lang('no year'));
 				array_unshift ($values_combo_box[0],$default_value);
 
-				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[1],$default_value);
 
-				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
-				foreach($cat_filter['cat_list'] as $_cat)
+
+				for ($i=1;$i< 13 ;$i++)
 				{
-					$values_combo_box[2][] = array
-					(
-						'id' => $_cat['cat_id'],
-						'name' => $_cat['name'],
-						'selected' => $_cat['selected'] ? 1 : 0
-					);
+					$values_combo_box[1][] = array ('id'=> $i,'name'=> sprintf("%02s",$i));
 				}
-				
-				array_unshift ($values_combo_box[2],array ('id'=>'', 'name'=>lang('no category')));
+
+				array_unshift ($values_combo_box[1], array ('id'=>'','name'=>lang('month')));
+
+				$values_combo_box[2]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no district'));
+				array_unshift ($values_combo_box[2],$default_value);
 
 //_debug_array($values_combo_box[2]);
 
@@ -1051,16 +1076,47 @@
 				$default_value = array ('id'=>'','name'=>lang('no grouping'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'department'));
-				array_unshift ($values_combo_box[4], array ('id'=>'','name'=>lang('department')));
+				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
+				foreach($cat_filter['cat_list'] as $_cat)
+				{
+					$values_combo_box[4][] = array
+					(
+						'id' => $_cat['cat_id'],
+						'name' => $_cat['name'],
+						'selected' => $_cat['selected'] ? 1 : 0
+					);
+				}
 
-				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
-				foreach($values_combo_box[5] as & $_dimb)
+				array_unshift ($values_combo_box[4],array ('id'=>'', 'name'=>lang('no category')));
+
+
+				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'department'));
+				array_unshift ($values_combo_box[5], array ('id'=>'','name'=>lang('department')));
+
+				$values_combo_box[6]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[6] as & $_dimb)
 				{
 					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
 				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
-				array_unshift ($values_combo_box[5],$default_value);
+				array_unshift ($values_combo_box[6],$default_value);
+
+
+				$values_combo_box[7]  = array
+				(
+					array
+					(
+						'id' => 'expenses',
+						'name'	=> lang('expenses'),
+						'selected'	=> $this->direction == 'expenses' ? 1 : 0
+					),
+					array
+					(
+						'id' => 'income',
+						'name'	=> lang('income'),
+						'selected'	=> $this->direction == 'income' ? 1 : 0
+					)
+				);
 
 				$datatable['actions']['form'] = array
 					(
@@ -1086,23 +1142,23 @@
 									'tab_index' => 1
 								),
 								array
+								( //boton 	YEAR
+									'id'		=> 'btn_month',
+									'name'		=> 'month',
+									'value'		=> lang('month'),
+									'type'		=> 'button',
+									'style' 	=> 'filter',
+									'tab_index' => 2
+								),
+								array
 								( //boton 	DISTRICT
 									'id' 		=> 'btn_district_id',
 									'name' 		=> 'district_id',
 									'value'		=> lang('district_id'),
 									'type' 		=> 'button',
 									'style' 	=> 'filter',
-									'tab_index' => 2
-								),
-/*								array
-								( //boton 	CATEGORY
-									'id' 		=> 'btn_cat_id',
-									'name' 		=> 'cat_id',
-									'value'		=> lang('Category'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
 									'tab_index' => 3
-								),			                                        
+								),
 								array
 								( //boton 	GROUPING
 									'id' 		=> 'btn_grouping',
@@ -1113,69 +1169,55 @@
 									'tab_index' => 4
 								),
 								array
-								( //boton 	GROUPING
-									'id' 		=> 'btn_dimb_id',
-									'name' 		=> 'dimb_id',
-									'value'		=> lang('dimb'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
-									'tab_index' => 5
-								),*/
-								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
+								(
 									'id' => 'sel_cat_id',
 									'name' => 'cat_id',
 									'value'	=> lang('Category'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[2],
+									'values' => $values_combo_box[4],
 									'onchange'=> 'onChangeSelect("cat_id");',
-									'tab_index' => 3
+									'tab_index' => 5
 								),
 								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
-									'id' => 'sel_grouping',
-									'name' => 'grouping',
-									'value'	=> lang('grouping'),
-									'type' => 'select',
-									'style' => 'filter',
-									'values' => $values_combo_box[3],
-									'onchange'=> 'onChangeSelect("grouping");',
-									'tab_index' => 4
-								),
-								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
+								( 
 									'id' => 'sel_department',
 									'name' => 'department',
 									'value'	=> lang('department'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[4],
+									'values' => $values_combo_box[5],
 									'onchange'=> 'onChangeSelect("department");',
-									'tab_index' => 5
+									'tab_index' => 6
 								),
 								array
-								( //boton 	USER
-									//	'id' => 'btn_user_id',
+								( 
 									'id' => 'sel_dimb_id',
 									'name' => 'dimb_id',
 									'value'	=> lang('dimb'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[5],
+									'values' => $values_combo_box[6],
 									'onchange'=> 'onChangeSelect("dimb_id");',
-									'tab_index' => 5
+									'tab_index' => 7
 								),
-
+								array
+								(
+									'id' => 'sel_direction',
+									'name' => 'direction',
+									'value'	=> lang('direction'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[7],
+									'onchange'=> 'onChangeSelect("direction");',
+									'tab_index' => 8
+								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 8
+									'tab_index' => 11
 								),
 								array
 								( //boton     SEARCH
@@ -1183,7 +1225,7 @@
 									'name' 		=> 'search',
 									'value'    	=> lang('search'),
 									'type' 		=> 'button',
-									'tab_index' => 7
+									'tab_index' => 10
 								),
 								array
 								( // TEXT IMPUT
@@ -1193,7 +1235,7 @@
 									'type' 		=> 'text',
 									'size'    	=> 28,
 									'onkeypress'=> 'return pulsar(event)',
-									'tab_index' => 6
+									'tab_index' => 9
 								)
 							),
 							'hidden_value' => array
@@ -1207,27 +1249,21 @@
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
 									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								)/*,
+								),
 								array
 								( //div values  combo_box_2
 									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2],'cat_id','name')
-								),
-								array
+									'value'	=> $this->bocommon->select2String($values_combo_box[2])
+								),								array
 								( //div values  combo_box_3
 									'id' => 'values_combo_box_3',
 									'value'	=> $this->bocommon->select2String($values_combo_box[3])
-								),
-								array
-								( //div values  combo_box_4
-									'id' => 'values_combo_box_4',
-									'value'	=> $this->bocommon->select2String($values_combo_box[4])
-								)*/
-
+								)
 							)
 						)
 					)
 				);
+
 				$dry_run = true;
 			}
 
@@ -1237,8 +1273,8 @@
 					'col_name'=>'grouping',		'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
 					'col_name'=>'b_account',		'visible'=>true,	'label'=>lang('grouping'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'b_account',	'formatter'=>'myformatLinkPGW'),
-				array(
-					'col_name'=>'district_id',	'visible'=>true,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>'district_id',	'visible'=>true,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
 					'col_name'=>'ecodimb',		'visible'=>true,	'label'=>lang('dimb'),	'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
@@ -1258,14 +1294,18 @@
 				array(
 					'col_name'=>'actual_cost_ex',	'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
+					'col_name'=>'actual_cost_period',	'visible'=>true,	'label'=>lang('paid') . ' ' . lang('period'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
 					'col_name'=>'actual_cost',	'visible'=>true,	'label'=>lang('paid'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'myFormatLink_Count'),
 				array(
 					'col_name'=>'link_actual_cost','visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
 					'col_name'=>'diff_ex',		'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
-				);	
+					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
+					'col_name'=>'percent',			'visible'=>true,	'label'=>lang('percent'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
+				);
 
 
 			//FIXME
@@ -1280,7 +1320,7 @@
 			}
 
 			//_debug_array($location_list);
-	
+
 			$entry = $content = array();
 			$j = 0;
 			//cramirez: add this code because  "mktime" functions fire an error
@@ -1295,16 +1335,15 @@
 				$details = $this->details ? false : true;
 
 				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,1,1,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$end_date	= $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']); 
+				$end_date	= $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
-				$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
+				$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
 				foreach($location_list as $entry)
 				{
-					//_debug_array($entry);
 					$content[] = array
 						(
 							'grouping'			=> $entry['grouping'],
-							'b_account'			=> $entry['b_account'],	
+							'b_account'			=> $entry['b_account'],
 							'district_id'		=> $entry['district_id'],
 							'ecodimb'			=> $entry['ecodimb'],
 							'hits_ex'			=> $entry['hits'],
@@ -1313,21 +1352,17 @@
 							'budget_cost'		=> number_format($entry['budget_cost'], 0, ',', ' '),
 							'obligation_ex'		=> $entry['obligation'],
 							'obligation'		=> number_format($entry['obligation'], 0, ',', ' '),
-							'link_obligation'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$entry['b_account'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'status_id' => 'all')),
+							'link_obligation'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$entry['b_account'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'status_id' => 'all', 'obligation' => true)),
 							'actual_cost_ex'	=> $entry['actual_cost'],
+							'actual_cost_period'=> number_format($entry['actual_cost_period'], 0, ',', ' '),
 							'actual_cost'		=> number_format($entry['actual_cost'], 0, ',', ' '),
 							'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$entry['b_account'],  'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'submit_search'=>true)),
 							'diff_ex'			=> $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
-							'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' ')
-						);	
-
-					//					$sum_obligation += $entry['obligation'];
-					//					$sum_hits += $entry['hits'];
-					//					$sum_budget_cost += $entry['budget_cost'];
-					//					$sum_actual_cost += $entry['actual_cost'];					
+							'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
+							'percent'			=> $entry['percent']
+						);
 				}
 
-				//				$sum_diff = $sum_budget_cost - $sum_actual_cost - $sum_obligation;
 			}
 
 			$j=0;
@@ -1400,6 +1435,7 @@
 					'sum_budget'		=> $this->bo->sum_budget_cost,
 					'sum_obligation'	=> $this->bo->sum_obligation_cost,
 					'sum_actual'		=> $this->bo->sum_actual_cost,
+					'sum_actual_period'	=> $this->bo->sum_actual_cost_period,
 					'sum_diff'			=> $this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost,
 					'sum_hits'			=> $this->bo->sum_hits
 				);
@@ -1963,7 +1999,7 @@
 						lang('grouping'),
 						lang('district_id'),
 						lang('dimb'),
-						lang('category'), 
+						lang('category'),
 						lang('budget')
 					);
 					break;
@@ -1978,7 +2014,7 @@
 						'grouping',
 						'district_id',
 						'ecodimb',
-						'category', 
+						'category',
 						'budget_cost'
 						);
 					$descr = array
@@ -1990,20 +2026,20 @@
 						lang('grouping'),
 						lang('district_id'),
 						lang('dimb'),
-						lang('category'), 
+						lang('category'),
 						lang('budget')
 					);
 					break;
 				case 'obligations':
 					$gross_list= $this->bo->read_obligations();
-					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
+					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
 					$list = array();
 					foreach($gross_list as $entry)
 					{
 						$list[] = array
 						(
 							'grouping'			=> $entry['grouping'],
-							'b_account'			=> $entry['b_account'],	
+							'b_account'			=> $entry['b_account'],
 							'district_id'		=> $entry['district_id'],
 							'ecodimb'			=> $entry['ecodimb'],
 							'hits'				=> $entry['hits'],
@@ -2011,7 +2047,7 @@
 							'obligation'		=> $entry['obligation'],
 							'actual_cost'		=> $entry['actual_cost'],
 							'diff'				=> ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
-						);	
+						);
 					}
 					$names = array
 					(

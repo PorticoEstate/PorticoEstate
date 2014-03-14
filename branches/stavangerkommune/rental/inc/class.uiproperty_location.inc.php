@@ -28,8 +28,12 @@
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			
 			$property_bolocation =  new property_bolocation();
+			$property_bolocation->order = $sort_field;
+			$property_bolocation->sort = phpgw::get_var('dir');
+			$property_bolocation->start = $start_index;
 			
-			if($search_type == 'gab'){
+			if($search_type == 'gab')
+			{
 				$q = phpgw::get_var('query');
 				$query = explode('/', $q);
 				//GAB search
@@ -43,7 +47,8 @@
 				
 				//var_dump($gabinfo);
 				
-				foreach ($gabinfo as $gabelement){
+				foreach ($gabinfo as $gabelement)
+				{
 					$row = $property_bolocation->read_single($gabelement['location_code']);
 					$row['gab'] = rental_uicommon::get_nicely_formatted_gab_id($gabelement['gab_id']);  
 					$rows[] = $row;
@@ -51,15 +56,16 @@
 					//TODO: Add gabno for element 
 				}
 			}
-			else{
+			else
+			{
 				if(!isset($type_id) || $type_id < 1)
 				{
 					$type_id = 2;
 				}
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				$property_bolocation->start = $start_index;
 				$tmp_count = phpgw::get_var('results', 'int', 'GET', 0);
-				if(isset($tmp_count) && $tmp_count > 0){
+				if(isset($tmp_count) && $tmp_count > 0)
+				{
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $num_of_objects;
 				}
 				$rows_total = $property_bolocation->read(array('type_id' => $type_id, 'allrows' => true));

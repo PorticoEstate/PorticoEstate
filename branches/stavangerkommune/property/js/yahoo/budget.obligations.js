@@ -3,13 +3,12 @@
 //--------------------------------------------------------
 
 		//define SelectButton
-	 	var oMenuButton_0, oMenuButton_1;//, oMenuButton_2, oMenuButton_3, oMenuButton_4;
+	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
 	 	var selectsButtons = [
 		{order:0, var_URL:'year',		name:'btn_year',		style:'',dependiente:[]},
-		{order:1, var_URL:'district_id',name:'btn_district_id',	style:'',dependiente:[]}
-//		{order:2, var_URL:'cat_id',		name:'btn_cat_id',		style:'',dependiente:[]},
-//		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]},
-//		{order:4, var_URL:'dimb_id',	name:'btn_dimb_id',		style:'',dependiente:[]}
+		{order:1, var_URL:'month',		name:'btn_month',		style:'',dependiente:[]},
+		{order:2, var_URL:'district_id',name:'btn_district_id',	style:'',dependiente:[]},
+		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]}
 		]
 
 		// define buttons
@@ -54,30 +53,33 @@
 			execute_ds();
 		}
 
-		this.filter_grouping = function(year,district_id,param,details)
+		this.filter_grouping = function(year,month,district_id,param,details)
 		{
 			if(details)
 			{
 				//look for  "grouping" column
-		//		oMenuButton_3.set("label", ("<em>" + param + "</em>"));
-		//		oMenuButton_3.set("value", param);
+				oMenuButton_3.set("label", ("<em>" + param + "</em>"));
+				oMenuButton_3.set("value", param);
 				path_values.grouping = param;
 			}
 			else
 			{
 				//reset GROUPING filter
-		//		oMenuButton_3.set("label", ("<em>" + array_options[3][0][1] + "</em>"));
-		//		path_values.grouping =  array_options[3][0][0];
+				oMenuButton_3.set("label", ("<em>" + array_options[3][0][1] + "</em>"));
+				path_values.grouping =  array_options[3][0][0];
 				path_values.b_account = param;
 			}
 
 			oMenuButton_0.set("label", ("<em>" + year + "</em>"));
 			path_values.year= year;
+
+			oMenuButton_1.set("label", ("<em>" + month + "</em>"));
+			path_values.month= month;
 		
 			//look for REVISION filter 's text using COD
 			index = locate_in_array_options(1,"value",district_id);
-			oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
-			oMenuButton_1.set("value", array_options[1][index][0]);
+			oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+			oMenuButton_2.set("value", array_options[2][index][0]);
 			path_values.district_id = district_id;
 			
 			path_values.details = details;
@@ -88,12 +90,24 @@
 		var myformatLinkPGW = function(elCell, oRecord, oColumn, oData)
 		{
 			var details;
+			var district_id = 0;
 			if(oRecord._oData.grouping != "")
+			{
 				details = 1;
+				text = oRecord._oData.grouping;
+			}
 			else
+			{
 				details = 0;
-			
-			elCell.innerHTML = "<a onclick=\"javascript:filter_grouping("+path_values.year+","+oRecord._oData.district_id+","+ oData +","+details+");\" href=\"#\">" + oData + "</a>";
+				text = oRecord._oData.b_account;
+			}
+
+			if (typeof (oRecord._oData.district_id) != 'undefined')
+			{
+				district_id = oRecord._oData.district_id;
+			}
+
+			elCell.innerHTML = "<a onclick=\"javascript:filter_grouping("+path_values.year+","+path_values.month+","+district_id+","+ text +","+details+");\" href=\"#\">" + text + "</a>";
 		}	
 	/********************************************************************************/
 		var myFormatLink_Count = function(elCell, oRecord, oColumn, oData)
@@ -154,17 +168,19 @@
 
 			tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});			
 			tmp_sum_obligation = YAHOO.util.Number.format(values_ds.sum_obligation, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+			tmp_sum_actual_period = YAHOO.util.Number.format(values_ds.sum_actual_period, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 			tmp_sum_actual = YAHOO.util.Number.format(values_ds.sum_actual, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 			tmp_sum_diff = YAHOO.util.Number.format(values_ds.sum_diff, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 			tmp_sum_hits = YAHOO.util.Number.format(values_ds.sum_hits, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 			
-			td_empty(5);
+			td_empty(4);
 			td_sum(tmp_sum_hits);
 			td_empty(1);
 			td_sum(tmp_sum_budget);
 			td_empty(1);
 			td_sum(tmp_sum_obligation);
 			td_empty(2);
+			td_sum(tmp_sum_actual_period);
 			td_sum(tmp_sum_actual);
 			td_empty(2);			
 			td_sum(tmp_sum_diff);

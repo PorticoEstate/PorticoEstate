@@ -652,7 +652,7 @@
 								<td>
 									<input type="checkbox" name="values[tracking]" value="1">
 										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'acivate tracking of dates in helpdesk main list')"/>
+											<xsl:value-of select="php:function('lang', 'activate tracking of dates in helpdesk main list')"/>
 										</xsl:attribute>
 										<xsl:if test="value_tracking = '1'">
 											<xsl:attribute name="checked">
@@ -767,35 +767,52 @@
 									</input>
 								</td>
 							</tr>
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'is eav')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[is_eav]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'This category is modelled in the database as a xml adapted entity attribute value model')"/>
-										</xsl:attribute>
-										<xsl:if test="value_is_eav = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-										<xsl:if test="value_is_eav = '1' or value_id != ''">
-											<xsl:attribute name="disabled">
-												<xsl:text>disabled</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-									<xsl:choose>
-										<xsl:when test="value_is_eav = '1'">
-											<input type="hidden" name="values[is_eav]" value="1"/>
-										</xsl:when>
-									</xsl:choose>
-								</td>
-							</tr>
 						</xsl:when>
 					</xsl:choose>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'is eav')"/>
+						</td>
+						<td>
+							<input type="checkbox" name="values[is_eav]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'This category is modelled in the database as a xml adapted entity attribute value model')"/>
+								</xsl:attribute>
+								<xsl:if test="value_is_eav = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="value_is_eav = '1' or value_id != ''">
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+							<xsl:choose>
+								<xsl:when test="value_is_eav = '1'">
+									<input type="hidden" name="values[is_eav]" value="1"/>
+								</xsl:when>
+							</xsl:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'enable bulk')"/>
+						</td>
+						<td>
+							<input type="checkbox" name="values[enable_bulk]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'This category is allowed to reperesent bulk entities')"/>
+								</xsl:attribute>
+								<xsl:if test="value_enable_bulk = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+						</td>
+					</tr>
 					<xsl:choose>
 						<xsl:when test="lang_location_level != ''">
 							<tr>
@@ -1225,7 +1242,7 @@
 	</xsl:template>
 
 	<!-- add attribute group / edit attribute group -->
-	<xsl:template match="edit_attrib_group">
+	<xsl:template match="edit_attrib_group" xmlns:php="http://php.net/xsl">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -1269,12 +1286,30 @@
 							</tr>
 						</xsl:when>
 					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="parent_list != ''">
+							<tr>
+								<td>
+									<xsl:value-of select="php:function('lang', 'parent')"/>
+								</td>
+								<td valign="top">
+									<select id="parent_id" name="values[parent_id]">
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'select parent')"/>
+										</option>
+										<xsl:apply-templates select="parent_list"/>
+									</select>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="lang_group_name"/>
 						</td>
 						<td>
-							<input type="text" name="values[group_name]" value="{value_group_name}" maxlength="20" onMouseout="window.status='';return true;">
+							<input type="text" name="values[group_name]" value="{value_group_name}" maxlength="100" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_group_name_statustext"/>
@@ -1288,7 +1323,7 @@
 							<xsl:value-of select="lang_descr"/>
 						</td>
 						<td>
-							<input type="text" name="values[descr]" value="{value_descr}" size="60" maxlength="50" onMouseout="window.status='';return true;">
+							<input type="text" name="values[descr]" value="{value_descr}" size="60" maxlength="150" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_descr_statustext"/>
@@ -1412,7 +1447,7 @@
 							<xsl:value-of select="php:function('lang', 'input text')"/>
 						</td>
 						<td>
-							<input type="text" name="values[input_text]" value="{value_input_text}" size="60" maxlength="50">
+							<input type="text" name="values[input_text]" value="{value_input_text}" size="60" maxlength="255">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter the input text for records')"/>
 								</xsl:attribute>
@@ -1424,7 +1459,7 @@
 							<xsl:value-of select="php:function('lang', 'statustext')"/>
 						</td>
 						<td>
-							<textarea cols="60" rows="10" name="values[statustext]">
+							<textarea cols="60" rows="10" name="values[statustext]" maxlength="255">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter a statustext for the inputfield in forms')"/>
 								</xsl:attribute>
@@ -1869,7 +1904,7 @@
 	</xsl:template>
 
 	<!-- add custom_function / edit custom_function -->
-	<xsl:template match="edit_custom_function">
+	<xsl:template match="edit_custom_function" xmlns:php="http://php.net/xsl">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -1969,6 +2004,23 @@
 									</input>
 								</xsl:otherwise>
 							</xsl:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'client-side')"/>
+						</td>
+						<td>
+							<input type="checkbox" name="values[client_side]" value="1">
+								<xsl:attribute name="title">
+									<xsl:text>otherwise: server-side</xsl:text>
+								</xsl:attribute>
+								<xsl:if test="value_client_side = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+								</xsl:if>
+							</input>
 						</td>
 					</tr>
 					<tr height="50">

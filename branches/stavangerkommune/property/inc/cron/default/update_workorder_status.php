@@ -32,109 +32,28 @@
 	 * @package property
 	 */
 
-	class update_workorder_status
-	{
-		var	$function_name = 'update_workorder_status';
+	include_class('property', 'cron_parent', 'inc/cron/');
 
-		function update_workorder_status()
+	class update_workorder_status extends property_cron_parent
+	{
+		public function __construct()
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			parent::__construct();
+
+			$this->function_name = get_class($this);
+			$this->sub_location = lang('workorder');
+			$this->function_msg	= 'Manuell oppdatering av status';
+
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db				= clone($GLOBALS['phpgw']->db);
 			$this->date				=  1220245200;// unix timestamp 1. Sept 2008
+
+die('er denne konfigurert?');
+
 		}
 
-		function pre_run($data='')
-		{
-			if($data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-			}
 
-			if ($confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
-				'execute'	=> $execute,
-			);
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('do you want to perform this action');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> $this->receipt['message'],
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Export info as files'),
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> 'Avbryt',
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('location');
-			$dateformat		= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$function_msg	= lang('close workorders older than %1', $GLOBALS['phpgw']->common->show_date($this->date,$dateformat));
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function execute($cron='')
-		{
-			$this->update_status();
-
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
-
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-
-			$insert_values= array(
-				$cron,
-				date($this->bocommon->datetimeformat),
-				$this->function_name,
-				implode(',',(array_keys($msgbox_data)))
-				);
-
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
-
-			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
-		}
-
-		function update_status()
+		function execute()
 		{
 			set_time_limit(0);
 			$sql = "SELECT id,status from fm_workorder WHERE entry_date < {$this->date} AND status !='closed'";

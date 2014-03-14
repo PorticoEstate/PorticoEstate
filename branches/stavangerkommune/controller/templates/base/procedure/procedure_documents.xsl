@@ -3,11 +3,10 @@
 
 <xsl:template name="view_procedure_documents" xmlns:php="http://php.net/xsl">
 
-<xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
-
 <div class="yui-content">
 		<div id="details">
-			<form enctype="multipart/form-data" action="?menuaction=controller.uidocument.add" method="POST">
+			<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uidocument.add')" /></xsl:variable>
+			<form enctype="multipart/form-data" action="{$action_url}" method="POST">
 				<xsl:variable name="lang_upload"><xsl:value-of select="php:function('lang', 'upload')" /></xsl:variable>
 				<input type="hidden" name="procedure_id" value = "{procedure_id}" />
 				<input type="hidden" name="document_type" value="1" />

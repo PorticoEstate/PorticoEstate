@@ -8,7 +8,7 @@
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
 	 * @category utilities
- 	 * @version $Id: class.pclzip.inc.php 2588 2009-04-14 11:00:02Z sigurd $
+ 	 * @version $Id: class.odt2xhtml.inc.php 10127 2012-10-07 17:06:01Z sigurdne $
 	 */
 
 	/*

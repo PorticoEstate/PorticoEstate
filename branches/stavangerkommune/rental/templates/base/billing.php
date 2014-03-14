@@ -106,7 +106,8 @@ if($billing_job != null)
 			if($billing_job->has_generated_export())
 			{
 				?>
-				<a href="<?php echo $download_link ?>"><?php echo lang('Download export') ?></a>
+				<a href="<?php echo $download_link ?>"><?php echo lang('Download export') ?></a><br />
+                <a href="<?php echo $download_link . '&amp;toExcel=true' ?>">Last ned eksportfil i Excel-format</a>
 				<?php
 				if(!$billing_job->is_commited())
 				{

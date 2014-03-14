@@ -49,6 +49,7 @@
 		var	$sum_budget_cost		= 0;
 		var	$sum_obligation_cost	= 0;
 		var	$sum_actual_cost		= 0;
+		var	$sum_actual_cost_period		= 0;
 		var $sum_hits				= 0;
 		var	$total_records			= 0;
 
@@ -84,19 +85,27 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$year					= phpgw::get_var('year', 'int');
+			$month					= phpgw::get_var('month', 'int');
 			$grouping				= phpgw::get_var('grouping', 'int');
 			$revision				= phpgw::get_var('revision', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$details				= phpgw::get_var('details', 'bool');
+			$direction				= phpgw::get_var('direction');
 
 			$this->start			= $start;
-			$this->query			= isset($query) ? $query : $this->query;
+			$this->query			= $query ? $query : $this->query;
+			$this->direction		= $direction ? $direction : $this->direction;
+			if( !$this->direction )
+			{
+				$this->direction = 'expenses';
+			}
+			
 			$this->filter			= isset($filter) && $filter ? $filter : '';
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
-			$this->department			= isset($department) && $department ? $department : $GLOBALS['phpgw_info']['user']['preferences']['property']['department'];
+			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
+			$this->department		= isset($department) && $department ? $department : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['department'];
 
 			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
@@ -104,6 +113,7 @@
 			$this->revision			= isset($revision) && $revision ? $revision : 1;
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 			$this->year				= isset($year) && $year ? $year : date('Y');
+			$this->month			= isset($month) && $month ? $month : 0;
 			$this->details			= $details;
 
 			if(isset($year) && !$this->year == $year && !$GLOBALS['phpgw_info']['menuaction']=='property.uibudget.obligations')
@@ -133,6 +143,7 @@
 			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
 			$this->dimb_id			= isset($data['dimb_id'])?$data['dimb_id']:'';
 			$this->details			= isset($data['details'])?$data['details']:'';
+			$this->direction		= isset($data['direction'])?$data['direction']:'';
 		}
 
 		function check_perms($has, $needed)
@@ -182,14 +193,16 @@
 			$obligations = $this->so->read_obligations(array('start' => $this->start, 'query' => $this->query,
 				'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
 				'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
-				'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
-				'details' => $this->details,'dimb_id' => $this->dimb_id, 'department' => $this->department));
+				'year' => $this->year,'month' => $this->month, 'grouping' => $this->grouping, 'revision' => $this->revision,
+				'details' => $this->details,'dimb_id' => $this->dimb_id, 'department' => $this->department,
+				'direction'	=> $this->direction));
 
-			$this->total_records		= $this->so->total_records;
-			$this->sum_budget_cost		= $this->so->sum_budget_cost;
-			$this->sum_obligation_cost	= $this->so->sum_obligation_cost;
-			$this->sum_actual_cost		= $this->so->sum_actual_cost;
-			$this->sum_hits				= $this->so->sum_hits;
+			$this->total_records			= $this->so->total_records;
+			$this->sum_budget_cost			= $this->so->sum_budget_cost;
+			$this->sum_obligation_cost		= $this->so->sum_obligation_cost;
+			$this->sum_actual_cost			= $this->so->sum_actual_cost;
+			$this->sum_actual_cost_period	= $this->so->sum_actual_cost_period;
+			$this->sum_hits					= $this->so->sum_hits;
 
 			return $obligations;
 		}

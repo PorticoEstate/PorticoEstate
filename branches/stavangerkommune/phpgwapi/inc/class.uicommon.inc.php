@@ -26,7 +26,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package phpgwapi
 	* @subpackage utilities
- 	* @version $Id: class.uicommon.inc.php 9470 2012-05-31 11:10:20Z vator $
+ 	* @version $Id: class.uicommon.inc.php 11260 2013-08-11 11:36:24Z sigurdne $
 	*/	
 
 	phpgw::import_class('phpgwapi.yui');
@@ -53,8 +53,11 @@
 
 	//	public $flash_msgs;
 
-		public function __construct()
+		public function __construct($currentapp ='')
 		{
+
+			$currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 		//	self::set_active_menu('controller');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
@@ -66,8 +69,8 @@
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
-
+			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/base');
+			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
@@ -87,7 +90,7 @@
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($currentapp);
 		}
 
 		private function get_ui_session_key() {
@@ -278,6 +281,15 @@
 			$shows_from = lang('shows from');
 			$of_total = lang('of total');
 
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$rows_per_page = 10;
+			}
+
 			$data['yui_phpgw_i18n'] = array(
 				'Calendar' => array(
 					'WEEKDAYS_SHORT' => json_encode($this->lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
@@ -300,7 +312,8 @@
 					'firstPageLinkLabel' => json_encode("&lt;&lt; {$first}"),
 					'lastPageLinkLabel' => json_encode("{$last} &gt;&gt;"),
 					'template' => json_encode("{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"),
-					'pageReportTemplate' => json_encode("{$shows_from} {startRecord} {$to} {endRecord} {$of_total} {totalRecords}.")
+					'pageReportTemplate' => json_encode("{$shows_from} {startRecord} {$to} {endRecord} {$of_total} {totalRecords}."),
+					'rowsPerPage'	=> $rows_per_page
 				),
 				'common' => array(
 					'LBL_NAME' => json_encode(lang('Name')),
@@ -375,11 +388,14 @@
 				$result['results'] = array();
 			}
 
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
 			return array(   
 				'ResultSet' => array(
 					'totalResultsAvailable'	=> $results['total_records'],
 					'totalRecords' 		=> $results['total_records'],// temeporary 
 					'recordsReturned'	=> count($results['results']),
+					'pageSize' 			=> $num_rows,
 					'startIndex' 		=> $results['start'], 
 					'sortKey' 			=> $results['sort'], 
 					'sortDir' 			=> $results['dir'], 
@@ -395,6 +411,11 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 			*/
+			if(!is_array($targets))
+			{
+				$targets = array($targets);
+			}
+
 			$lang_font_style = lang('Font Style');
 			$lang_lists = lang('Lists');
 			$lang_insert_item = lang('Insert Item');

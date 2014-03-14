@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.650';
+	$setup_info['property']['version']		= '0.9.17.677';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -99,6 +99,7 @@
 		'fm_b_account',
 		'fm_b_account_category',
 		'fm_workorder',
+		'fm_workorder_budget',
 		'fm_workorder_history',
 		'fm_workorder_status',
 		'fm_activities',
@@ -112,7 +113,11 @@
 		'fm_wo_h_deviation',
 		'fm_key_loc',
 		'fm_authorities_demands',
+		'fm_condition_survey_status',
+		'fm_condition_survey_history',
+		'fm_condition_survey',
 		'fm_request',
+		'fm_request_responsible_unit',
 		'fm_request_condition_type',
 		'fm_request_condition',
 		'fm_request_status',
@@ -125,11 +130,13 @@
 		'fm_ns3420',
 		'fm_project_status',
 		'fm_project',
+		'fm_project_buffer_budget',
 		'fm_projectbranch',
 		'fm_project_group',
 		'fm_project_history',
 		'fm_project_budget',
 		'fm_tts_status',
+		'fm_tts_priority',
 		'fm_tts_tickets',
 		'fm_tts_history',
 		'fm_tts_views',
@@ -151,6 +158,7 @@
 		'fm_ecouser',
 		'fm_eco_periodization',
 		'fm_eco_periodization_outline',
+		'fm_eco_period_transition',
 		'fm_event',
 		'fm_event_action',
 		'fm_event_exception',
@@ -186,6 +194,7 @@
 		'fm_cron_log',
 		'fm_tenant_claim',
 		'fm_tenant_claim_category',
+		'fm_tenant_claim_history',
 		'fm_budget_basis',
 		'fm_budget',
 		'fm_budget_period',
@@ -210,19 +219,20 @@
 		'manual',
 		'settings',
 		'help',
-		'menu'			=> 'property.menu.get_menu',
-		'cat_add'		=> 'property.cat_hooks.cat_add',
-		'cat_delete'	=> 'property.cat_hooks.cat_delete',
-		'cat_edit'		=> 'property.cat_hooks.cat_edit',
 		'config',
-		'home',
-		'addaccount'	=> 'property.hook_helper.clear_userlist',
-		'editaccount'	=> 'property.hook_helper.clear_userlist',
-		'deleteaccount'	=> 'property.hook_helper.clear_userlist',
-		'addgroup'		=> 'property.hook_helper.clear_userlist',
-		'deletegroup'	=> 'property.hook_helper.clear_userlist',
-		'editgroup'		=> 'property.hook_helper.clear_userlist',
-		'registration'	=> 'property.hook_helper.add_location_contact'
+		'menu'					=> 'property.menu.get_menu',
+		'cat_add'				=> 'property.cat_hooks.cat_add',
+		'cat_delete'			=> 'property.cat_hooks.cat_delete',
+		'cat_edit'				=> 'property.cat_hooks.cat_edit',
+		'home'					=> 'property.hook_helper.home_backend',
+		'home_mobilefrontend'	=> 'property.hook_helper.home_mobilefrontend',
+		'addaccount'			=> 'property.hook_helper.clear_userlist',
+		'editaccount'			=> 'property.hook_helper.clear_userlist',
+		'deleteaccount'			=> 'property.hook_helper.clear_userlist',
+		'addgroup'				=> 'property.hook_helper.clear_userlist',
+		'deletegroup'			=> 'property.hook_helper.clear_userlist',
+		'editgroup'				=> 'property.hook_helper.clear_userlist',
+		'registration'			=> 'property.hook_helper.add_location_contact'
 	);
 
 	/* Dependencies for this app to work */

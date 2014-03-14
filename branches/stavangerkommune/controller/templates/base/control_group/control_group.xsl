@@ -67,8 +67,133 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
+							</dt>
+							<dd>
+								<select name="entity_id" id="entity_id">
+									<xsl:apply-templates select="entities/options"/>
+								</select>
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
+							</dt>
+							<dd>
+								<select name="category_id" id="category_id">
+									<xsl:apply-templates select="categories/options"/>
+								</select>
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Attributes')" /></label>
+							</dt>
+							<dd>
+								<div id="attributes">
+									<table>
+										<xsl:for-each select="attributes">
+											<tr>
+												<td>
+													<xsl:value-of select="input_text" /> &nbsp;( <xsl:value-of select="trans_datatype" /> )
+												</td>
+												<td>
+													<select name='attributes_operator[{id}]' id='attribute_{id}'>;
+														<xsl:apply-templates select="operator/options"/>
+													</select>
+												</td>
+												<td>
+													<xsl:choose>
+														<xsl:when test="choice!=''">
+															<select name='attributes[{id}]' id='attribute_{id}'>;
+																<option value = ''>Velg</option>";
+																<xsl:for-each select="choice">
+																	<option value="{id}">
+																		<xsl:if test="selected != 0">
+																			<xsl:attribute name="selected" value="selected" />
+																		</xsl:if>
+																		<xsl:value-of disable-output-escaping="yes" select="value"/>
+																	</option>
+																</xsl:for-each>
+															</select>
+														</xsl:when>
+														<xsl:otherwise>
+															<input type= 'text' name='attributes[{id}]' id='attribute_{id}' value = '{value}'>
+																<xsl:attribute name="title" value="selected" >
+																	<xsl:text>Verdi eller formel - f.eks: date('Y') - 20</xsl:text>
+																</xsl:attribute>
+															</input>			
+														</xsl:otherwise>
+													</xsl:choose>
+												</td>
+											</tr>
+										</xsl:for-each>
+									</table>
+								</div>
+							</dd>
+
+						</xsl:when>
+						<xsl:otherwise>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
+							</dt>
+							<dd>
+								<xsl:value-of select="entity/name" />
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
+							</dt>
+							<dd>
+								<xsl:value-of select="category/name" />
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Chosen attributes')" /></label>
+							</dt>
+							<dd>
+								<table>
+									<xsl:for-each select="attributes">
+										<xsl:choose>
+											<xsl:when test="value!=''">
+												<tr>
+													<td>
+														<xsl:value-of select="input_text" /> &nbsp;( <xsl:value-of select="trans_datatype" /> )
+													</td>
+													 <td>
+
+														<xsl:choose>
+															<xsl:when test="operator/options!=''">
+																<xsl:for-each select="operator/options">
+																	<xsl:if test="selected != 0">
+																		<xsl:value-of disable-output-escaping="yes" select="name"/>
+																	</xsl:if>
+																</xsl:for-each>
+															</xsl:when>
+														</xsl:choose>
+
+													 </td> 
+													<td>
+														<xsl:choose>
+															<xsl:when test="choice!=''">
+																<xsl:for-each select="choice">
+																	<xsl:if test="selected != 0">
+																		<xsl:value-of disable-output-escaping="yes" select="value"/>
+																	</xsl:if>
+																</xsl:for-each>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:value-of disable-output-escaping="yes" select="value"/>
+															</xsl:otherwise>
+														</xsl:choose>
+													</td>
+												</tr>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:for-each>
+								</table>
+							</dd>
+						</xsl:otherwise>
+					</xsl:choose>
 				</dl>
-				
+
 				<div class="form-buttons">
 					<xsl:choose>
 						<xsl:when test="editable">

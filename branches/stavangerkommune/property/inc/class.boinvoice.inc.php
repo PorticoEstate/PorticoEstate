@@ -39,6 +39,12 @@
 		public $sum_amount = 0;
 		public $results = 0;
 		public $allrows = false;
+		public $debug = false;
+		/**
+		 *
+		 * @var boolean In case of mass-import of fictious invoices
+		 */
+		public $supertransaction = false;
 
 		function property_boinvoice($session=false)
 		{
@@ -129,7 +135,7 @@
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 		}
 
-		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='', $invoice_id = '',$ecodimb = '')
+		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='', $invoice_id = '',$ecodimb = '',$project_id = 0)
 		{
 			if(!phpgw::get_var('paid', 'bool'))
 			{
@@ -144,7 +150,7 @@
 				'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
 				'loc1'=>$loc1,'workorder_id'=>$workorder_id,'allrows'=>$this->allrows,
 				'voucher_id'=>$voucher_id,'b_account_class' =>$this->b_account_class,
-				'district_id' => $this->district_id, 'invoice_id' => $invoice_id, 'ecodimb' => $ecodimb));
+				'district_id' => $this->district_id, 'invoice_id' => $invoice_id, 'ecodimb' => $ecodimb, 'project_id' => $project_id));
 
 			$soXport    = CreateObject('property.soXport');
 			$soworkorder = CreateObject('property.soworkorder');
@@ -183,7 +189,7 @@
 			return $invoice;
 		}
 
-		function read_invoice_sub($voucher_id='',$paid='')
+		function read_invoice_sub($voucher_id=0,$paid = false)
 		{
 			$invoice = $this->so->read_invoice_sub(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid, 'results' => $this->results,'allrows'=>$this->allrows));
@@ -204,7 +210,43 @@
 
 		function read_single_line($line_id)
 		{
-			return $this->so->read_single_voucher(0, $line_id);
+
+			$invoice = $this->so->read_single_voucher(0, $line_id);
+			
+			$soXport    = CreateObject('property.soXport');
+			$soworkorder = CreateObject('property.soworkorder');
+			$sos_agreement = CreateObject('property.sos_agreement');
+			foreach ( $invoice as & $entry )
+			{
+				if( $entry['order_id'] )
+				{
+					if($order_type = $soXport->check_order($entry['order_id']))
+					{
+						if($order_type == 'workorder')
+						{
+							$workorder	= $soworkorder->read_single($entry['order_id']);
+
+							if($workorder['vendor_id'] && ($workorder['vendor_id'] != $entry['vendor_id']))
+							{
+						//		$entry['vendor']	=  $this->get_vendor_name($workorder['vendor_id']) . ' => ' . $entry['vendor'];
+								$entry['vendor']	= $workorder['vendor_id'] . ' [' .$this->get_vendor_name($workorder['vendor_id']) . "] =>  {$entry['vendor_id']} [{$entry['vendor']}]";
+							}
+						}
+
+						if($order_type == 's_agreement')
+						{
+							$s_agreement = $sos_agreement->read_single($entry['order_id']);
+
+							if($s_agreement['vendor_id'] && ($s_agreement['vendor_id'] != $entry['vendor_id']))
+							{
+								$entry['vendor']	= $s_agreement['vendor_id'] . ' [' .$this->get_vendor_name($s_agreement['vendor_id']) . "] =>  {$entry['vendor_id']} [{$entry['vendor']}]";
+							}
+						}
+					}
+				}
+			}
+
+			return $invoice;
 		}
 
 		function read_consume($start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$b_account_class='',$district_id='',$ecodimb = '')
@@ -235,9 +277,9 @@
 			return $this->so->update_invoice_sub($values);
 		}
 
-		function update_single_line($values)
+		function update_single_line($values, $paid = false)
 		{
-			return $this->so->update_single_line($values);
+			return $this->so->update_single_line($values, $paid);
 		}
 
 		function select_account_class($selected='')
@@ -248,13 +290,48 @@
 
 		function period_list($selected='')
 		{
-			$time = time();
-
-			if ( date('j',$time) < 7 ) //Day of the month without leading zeros
+			
+			$sogeneric		= CreateObject('property.sogeneric','period_transition');
+			$config			= $sogeneric->read(array('allrows' => true));
+			
+			$period_transition = array();
+			foreach($config as $entry)
 			{
-				$time = $time - (7 * 24 * 3600);
+				$period_transition[$entry['month']] = $entry;
 			}
 			
+			$current_month = date('n');
+			
+			if(isset($period_transition[$current_month]))
+			{
+				$_lag_day = (int)$period_transition[$current_month]['day'];
+				$_lag_hour = (int)$period_transition[$current_month]['hour'];
+				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+			}
+			else if(isset($period_transition[13]))
+			{
+				$_lag_day = (int)$period_transition[13]['day'];
+				$_lag_hour = (int)$period_transition[13]['hour'];
+				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+			}
+			else
+			{
+				$_lag			= date('n') == 1 ? 11 : 7;//6 days into next month, 10 days into next year
+				$_lag_seconds	= $_lag * 24 * 3600;
+			}
+			
+			$_lag_seconds -= phpgwapi_datetime::user_timezone();
+			
+//_debug_array($period_transition);			
+			$time = time();
+			$timestamp_at_start_month =  mktime( $hour = 0, $minute = 0, $second = 0, $month = date("n"), $day = 0, $year = date("Y") );
+
+
+			if(($time - $timestamp_at_start_month) < $_lag_seconds)
+			{
+				$time = $time - $_lag_seconds;			
+			}
+
 			$month = date('n', $time);
 			$year = date('Y',$time);
 			$check_year = true;
@@ -275,14 +352,28 @@
 					$check_year = false;
 				}
 			}
+
+			if(count($period_list) == 1) //last month in year
+			{
+				$year++;
+				$period = sprintf("%s%02d",$year,1);
+				$period_list[] = array
+				(
+					'id'	=> $period,
+					'name'	=> $period
+				);
+			
+			}
+
 			foreach ($period_list as &$_period)
 			{
 				$_period['selected'] = $_period['id'] == $selected ? 1 : 0;
 			}
+
 			return $period_list;
 		}
 
-		function tax_code_list($selected='')
+		function tax_code_list($selected='', $tax_codes = array())
 		{
 			if(!$selected && $selected !== '0' )
 			{
@@ -292,7 +383,11 @@
 			{
 				$selected = (int)$selected;
 			}
-			$tax_codes = $this->so->tax_code_list();
+
+			if(! $tax_codes)
+			{
+				$tax_codes = $this->so->tax_code_list();
+			}
 			
 			foreach ($tax_codes as &$tax_code)
 			{
@@ -419,6 +514,8 @@
 
 			$buffer = array();
 			$soXport    = CreateObject('property.soXport');
+			$soXport->supertransaction = $this->supertransaction;
+			$soXport->debug = $this->debug;
 			if($values['loc1']=$values['location']['loc1'])
 			{
 				$values['dima']=implode('',$values['location']);
@@ -430,7 +527,7 @@
 			$values['belop'] 			= $values['amount'];
 			$values['godkjentbelop']	= $values['amount'];
 
-			$_dateformat = $this->bocommon->dateformat;
+			$_dateformat = $GLOBALS['phpgw']->db->date_format();
 
 			$invoice_date 	= $values['invoice_date'] ? phpgwapi_datetime::date_to_timestamp($values['invoice_date']) : time();
 			$payment_date 	= $values['payment_date'] ? phpgwapi_datetime::date_to_timestamp($values['payment_date']) : time();
@@ -513,7 +610,8 @@
 
 				if($soXport->add_manual_invoice($buffer,$skip_update_voucher_id))
 				{
-					$receipt['message'][] = array('msg'=>lang('Invoice %1 is added',$soXport->voucher_id));
+					$_msg = $this->debug ? 'DEBUG: ': '';
+					$receipt['message'][] = array('msg'=> $_msg. lang('Invoice %1 is added',$soXport->voucher_id));
 					$receipt['voucher_id'] = $soXport->voucher_id;
 				}
 				else
@@ -538,15 +636,15 @@
 			$values['belop'] 			= $values['amount'];
 			$values['godkjentbelop']	= $values['amount'];
 
-			$values['fakturadato'] = date($this->bocommon->dateformat,mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear']));
+			$values['fakturadato'] = date($GLOBALS['phpgw']->db->date_format(),mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear']));
 
 			if($values['num_days'])
 			{
-				$values['forfallsdato'] = date($this->bocommon->dateformat,mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear'])+(86400*$values['num_days']));
+				$values['forfallsdato'] = date($GLOBALS['phpgw']->db->date_format(),mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear'])+(86400*$values['num_days']));
 			}
 			else
 			{
-				$values['forfallsdato'] = date($this->bocommon->dateformat,mktime(2,0,0,$values['emonth'],$values['eday'],$values['eyear']));
+				$values['forfallsdato'] = date($GLOBALS['phpgw']->db->date_format(),mktime(2,0,0,$values['emonth'],$values['eday'],$values['eyear']));
 			}
 
 			$values['artid'] 			= $values['art'];
@@ -750,9 +848,9 @@
 			return $values;
 		}
 
-		public function get_single_line($id)
+		public function get_single_line($id, $paid = false)
 		{
-			$line = $this->so->get_single_line($id);
+			$line = $this->so->get_single_line($id, $paid);
 
 			$soXport    = CreateObject('property.soXport');
 			$soworkorder = CreateObject('property.soworkorder');
@@ -868,5 +966,29 @@
 			return $approve;
 		}
 
+		public function get_auto_generated_invoice_num($vendor_id)
+		{
+			return $this->so->get_auto_generated_invoice_num($vendor_id);
+		}
 
+		/**
+		 * Reassign and alter dimensions accordingly
+		 * @param int $line_id
+		 * @param bigint $order_id
+		 * @return boolean true on success
+		 */
+		public function reassign_order($line_id, $order_id)
+		{
+			return $this->so->reassign_order($line_id, $order_id);
+		}
+
+		/**
+		 * Check if provided budget account is valid
+		 * @param string $b_account_id
+		 * @return boolean true on valid budget account
+		 */
+		function check_valid_b_account($b_account_id)
+		{
+			return $this->so->check_valid_b_account($b_account_id);
+		}
 	}

@@ -50,6 +50,7 @@
 	var linktToRequest = function(elCell, oRecord, oColumn, oData)
 	{
 	  	elCell.innerHTML = "<a href="+sUrl_request+"&id="+oData+">" + oData + "</a>";
+//	  	elCell.innerHTML = "<a href=" + sUrl_request + "&id=" + oData + "&nonavbar=" + path_values.nonavbar + ">" + oData + "</a>";
 	};
 
 
@@ -196,13 +197,17 @@
 
   	this.addFooterDatatable = function()
   	{
-		tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		tmp_sum_investment = YAHOO.util.Number.format(values_ds.sum_investment, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		tmp_sum_operation = YAHOO.util.Number.format(values_ds.sum_operation, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		tmp_sum_potential_grants = YAHOO.util.Number.format(values_ds.sum_potential_grants, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+//		tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 		tmp_sum_consume = YAHOO.util.Number.format(values_ds.sum_consume, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+
 
 		count_empty = 0;
 		for(i=0;i<myColumnDefs.length;i++)
 		{
-			if (myColumnDefs[i].key == 'budget')
+			if (myColumnDefs[i].key == 'amount_investment')
 			{
 				count_empty = i;
 				break;
@@ -215,7 +220,9 @@
 		newTR = document.createElement('tr');
 
 		td_empty(count_empty);
-		td_sum(tmp_sum_budget);
+		td_sum(tmp_sum_investment);
+		td_sum(tmp_sum_operation);
+		td_sum(tmp_sum_potential_grants);
 		td_sum(tmp_sum_consume);
 		td_empty(count_empty_end);
 		//Add to Table

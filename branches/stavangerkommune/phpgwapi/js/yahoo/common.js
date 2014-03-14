@@ -15,6 +15,14 @@ YAHOO.portico.lang = function(section, config) {
 	return config;
 };
 
+
+YAHOO.portico.FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
+{
+	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+	elCell.innerHTML = "<div class='nowrap' align=\"right\">"+amount+"</div>";
+}	
+
+
 /** Hook widgets to translations **/
 YAHOO.portico.js_alias_method_chain(YAHOO.widget.Calendar, 'init', 'i18n', function(id, container, config) {
 	YAHOO.portico.lang('Calendar', config);
@@ -164,6 +172,7 @@ YAHOO.portico.formatGenericLink = function() {
 };
 */
 YAHOO.portico.autocompleteHelper = function(url, field, hidden, container, label_attr) {
+	url += '&';
 	label_attr = label_attr || 'name';
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -198,43 +207,226 @@ YAHOO.portico.setupInlineTablePaginator = function(container) {
 	return pag;
 };
 
+YAHOO.portico.getTotalSum = function(name_column,round,paginator,datatable)
+{
+	if(!paginator.getPageRecords())
+	{
+		return '0,00';
+	}
+	begin = end = 0;
+	end = datatable.getRecordSet().getLength();
+	tmp_sum = 0;
+	for(i = begin; i < end; i++)
+	{
+		tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
+	}
+
+	return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
+}
+
+  	YAHOO.portico.td_sum = function(sum)
+  	{
+		newTD = document.createElement('td');
+		newTD.colSpan = 1;
+		newTD.style.borderTop="1px solid #000000";
+		newTD.style.fontWeight = 'bolder';
+		newTD.style.textAlign = 'right';
+		newTD.style.paddingRight = '0.8em';
+		newTD.style.whiteSpace = 'nowrap';
+		newTD.appendChild(document.createTextNode(sum));
+		newTR.appendChild(newTD);
+  	}
+
+  	YAHOO.portico.td_empty = function(colspan)
+  	{
+		newTD = document.createElement('td');
+		newTD.colSpan = colspan;
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode(''));
+		newTR.appendChild(newTD);
+  	}
+
+
+YAHOO.portico.updateinlineTableHelper = function(container, requestUrl)
+{
+
+	var DatatableName = 'datatable_container' + container;
+	var PaginatorName = 'paginator_container' + container;
+//console.log(YAHOO.portico.Paginator);
+	requestUrl = requestUrl ? requestUrl : YAHOO.portico.requestUrl[DatatableName];
+
+	var callback =
+	{
+		success: function(o)
+		{
+			values_ds = JSON.parse(o.responseText);
+
+			if(values_ds && values_ds['sessionExpired'] == true)
+			{
+				window.alert('sessionExpired - please log in');
+				return;
+			}
+
+			var Paginator = YAHOO.portico.Paginator[PaginatorName];
+
+			//delete values of datatable
+			var DataTable = YAHOO.portico.DataTable[DatatableName];
+			DataTable.getRecordSet().reset();
+
+			//obtain records of the last DS and add to datatable
+			var record = values_ds.ResultSet.Result;
+			var newTotalRecords = values_ds.ResultSet.totalResultsAvailable;
+
+			if(record.length)
+			{
+				DataTable.addRows(record);
+			}
+			else
+			{
+				DataTable.render();
+			}
+
+			if(Paginator)
+			{
+				Paginator.setRowsPerPage(values_ds.ResultSet.Result.length,true);
+				//reset total records always to zero
+				Paginator.setTotalRecords(0,true);
+
+				//update paginator with news values
+				Paginator.setTotalRecords(newTotalRecords,true);
+				if(typeof(values_ds.ResultSet.results) == 'undefined')
+				{
+					var results = 10;
+				}
+				else
+				{
+					var results = values_ds.ResultSet.results;
+				}
+				
+				var activePage = Math.floor(values_ds.ResultSet.startIndex / results) + 1;
+				Paginator.setPage(activePage,true); //true no fuerza un recarge solo cambia el paginator
+			}
+
+			//update "sortedBy" values
+			values_ds.ResultSet.sortDir == "asc"? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
+			DataTable.set("sortedBy",{key:values_ds.ResultSet.sortKey,dir:dir_ds});
+		},
+		failure: function(o) {window.alert('Server or your connection is dead.')},
+		timeout: 10000,
+		cache: false
+	}
+
+	try
+	{
+		YAHOO.util.Connect.asyncRequest('POST',requestUrl,callback);
+	}
+	catch(e_async)
+	{
+	   alert(e_async.message);
+	}
+};
+
 YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, disablePagination) {
+
+	var DatatableName = 'datatable_container' + container;
+	var PaginatorName = 'paginator_container' + container;
 	var Dom = YAHOO.util.Dom;
-	
+
+	if(typeof(YAHOO.portico.Paginator) == 'undefined' || !YAHOO.portico.Paginator )
+	{
+		YAHOO.portico.Paginator = {};
+	}
+
+	if(typeof(YAHOO.portico.DataTable) == 'undefined' || !YAHOO.portico.DataTable )
+	{
+		YAHOO.portico.DataTable = {};
+	}
+
+	if(typeof(YAHOO.portico.requestUrl) == 'undefined' || !YAHOO.portico.requestUrl )
+	{
+		YAHOO.portico.requestUrl = {};
+	}
+
 	var container = Dom.get(container);
-	if(!disablePagination) {
+	if(!disablePagination)
+	{
+
+		if ( container.hasChildNodes() )
+		{
+			while ( container.childNodes.length >= 1 )
+		    {
+		        container.removeChild( container.firstChild );
+		    }
+		}
+
 		var paginatorContainer = container.appendChild(document.createElement('div'));
 		var dataTableContainer = container.appendChild(document.createElement('div'));
 	}
-	else {
+	else
+	{
 		dataTableContainer = container;
 	}
 	options = options || {};
 	options.dynamicData = true;
 	
-	if(!disablePagination) {
+	YAHOO.portico.Paginator[PaginatorName] = {};
+	if(!disablePagination)
+	{
 		options.paginator = YAHOO.portico.setupInlineTablePaginator(paginatorContainer);
+//		options.paginator.setRowsPerPage(20,true);
+
 		url += '&results=' + options.paginator.getRowsPerPage() + '&';
+
+		YAHOO.portico.Paginator[PaginatorName] =options.paginator;
 	}
+
+
+//    options.sortedBy = {key:"id", dir:YAHOO.widget.DataTable.CLASS_ASC}; // Sets UI initial sort arrow
+
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	myDataSource.connXhrMode = "queueRequests";
 	myDataSource.responseSchema = {
 		resultsList: "ResultSet.Result",
-		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable", actions: 'Actions' }
+		metaFields : { 
+			totalResultsAvailable: 'ResultSet.totalResultsAvailable',
+			actions: 'Actions',
+			pageSize: 'ResultSet.pageSize',
+			startIndex: 'ResultSet.startIndex',
+			sortKey: 'ResultSet.sortKey',
+			sortDir: 'ResultSet.sortDir'
+		}
 	};
 	
 	var myDataTable = new YAHOO.widget.DataTable(dataTableContainer, colDefs, myDataSource, options);
 	
+	myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+	myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+
 	myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
 	   oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
 	   return oPayload;
    }
 	
-	myDataTable.doBeforeLoadData = function(nothing, data) {
-		if (!data.meta.actions) return data;
+
+	myDataTable.doBeforeLoadData = function(nothing, oResponse, oPayload) {
+
+        oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
+//		oPayload.pagination.rowsPerPage= oResponse.meta.pageSize || 10;
+
+		oPayload.pagination = { 
+			rowsPerPage: oResponse.meta.pageSize || 10, 
+			recordOffset: oResponse.meta.startIndex || 0 
+	    }
+/*
+		oPayload.sortedBy = { 
+			key: oResponse.meta.sortKey || "id", 
+			dir: (oResponse.meta.sortDir) ? "yui-dt-" + oResponse.meta.sortDir : "yui-dt-asc" 
+		};
+*/
+		if (!oResponse.meta.actions) return oResponse;
 		
-		actions = data.meta.actions;
+		actions = oResponse.meta.actions;
 		
 		for (var key in actions) {
 			var actionLink = document.createElement('a');
@@ -243,8 +435,12 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 			YAHOO.util.Dom.insertAfter(actionLink, container);
 		};
 		
-		return data;
+		return oResponse;
 	};
+
+	YAHOO.portico.DataTable[DatatableName] = myDataTable;
+	YAHOO.portico.requestUrl[DatatableName] = url;
+
 	return {dataTable: myDataTable, dataSource: myDataSource};
 };
 

@@ -63,7 +63,7 @@ contact	activitycalendar	no	Kontakt
 contact 1	activitycalendar	no	Kontakt 1
 contact 2	activitycalendar	no	Kontakt 2
 contact person	activitycalendar	no	Kontaktperson
-contact information	activitycalendar	no	Kontaktinformasjon 
+contact information	activitycalendar	no	Kontaktinformasjon
 cost	activitycalendar	no	Pris
 create	activitycalendar	no	Lagre
 created	activitycalendar	no	Opprettet
@@ -104,7 +104,7 @@ homepage	activitycalendar	no	Hjemmeside
 id	activitycalendar	no	ID
 inactivate	activitycalendar	no	Inaktivert
 inactive	activitycalendar	no	Inaktiv
-invoice information	activitycalendar	no	Fakturainformasjon 
+invoice information	activitycalendar	no	Fakturainformasjon
 responsible applicant	activitycalendar	no	Ansvarlig søker
 jan	activitycalendar	no	januar
 jul	activitycalendar	no	juli
@@ -378,11 +378,11 @@ activity_import	activitycalendar	no	Importer aktiviteter
 office	activitycalendar	no	Hovedansvarlig kulturkontor
 activity_helptext	activitycalendar	no	Aktivitetsoversikten henter kontaktinformasjon og beskrivelse fra bookingmodulen.<br/>Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert,<br/>og at arena finnes og er oppdatert. Feltet vis i portal skal være satt til JA, i organisasjonsregisteret og evt. lag/gruppe. For nye aktiviteter vil dette bli satt automatisk.
 mail_subject_update	activitycalendar	no	Melding fra AktivBy - Aktivitetsoversikt
-mail_body_update	activitycalendar	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Ber om at du kontrollerer at data er korrekt, og eventuelt endrer.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
-mail_body_update_frontend	activitycalendar	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
-mail_body_state_3	activitycalendar	no	Informasjon om din aktivitet er registrert og vil bli publisert i kommuneportalen i løpet av dagen.<br/>De som er registrert som kontaktpersoner får endre informasjonen, dette gjøres via nettsiden: https://www.bergen.kommune.no/tjenestetilbud/aktivitetsoversikt/<br/><br/><br/> Mvh %1 kulturkontor
-mail_body_state_4	activitycalendar	no	Ditt tips er behandlet og publisert i kommuneportalen.<br/><br/>Mvh %1 kulturkontor
-mail_body_state_5	activitycalendar	no	Ditt forslag til aktivitet er behandlet, men vil ikke bli publisert i kommuneportalen.<br/><br/>Mvh %1 kulturkontor
+mail_body_update	activitycalendar	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for «%1».<br/>Ber om at du kontrollerer at data er korrekt, og eventuelt endrer.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
+mail_body_update_frontend	activitycalendar	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
+mail_body_state_3	activitycalendar	no	Informasjon om din aktivitet «%1» er registrert og vil bli publisert i kommuneportalen i løpet av dagen.<br/>De som er registrert som kontaktpersoner får endre informasjonen, dette gjøres via nettsiden: https://www.bergen.kommune.no/tjenestetilbud/aktivitetsoversikt/<br/><br/><br/> Mvh %2 kulturkontor
+mail_body_state_4	activitycalendar	no	Ditt forslag til ny aktivitet: «%1» er behandlet og vil bli  publisert i kommuneportalen.<br/><br/>Mvh %2 kulturkontor
+mail_body_state_5	activitycalendar	no	Ditt forslag til ny aktivitet: «%1» er behandlet, men vil ikke bli publisert i kommuneportalen.<br/>Dersom du har spørsmål, ta gjerne kontakt med oss.<br/><br/>Mvh %2 kulturkontor
 send_mail	activitycalendar	no	Send e-post
 marked_as	activitycalendar	no	Status
 address_number	activitycalendar	no	Husnummer
@@ -415,7 +415,7 @@ state_helptext	activitycalendar	no	Status for aktiviteten. For at den skal vises
 organization_helptext	activitycalendar	no	Velg organisasjon eller registrer inn ny.<br/>Stå i feltet og skriv inn første bokstav for å få opp oversikt.
 group_helptext	activitycalendar	no	Velg gruppe/lag, eller ingen.<br/>Feltet vis i portal må være satt til JA om lag/gruppe skal komme opp i listen.
 criteria_label	activitycalendar	no	Valgkriterier/søkeord i portalen
-criteria_helptext	activitycalendar	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking. 
+criteria_helptext	activitycalendar	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking.
 what	activitycalendar	no	HVA
 where_when	activitycalendar	no	HVOR/NÅR
 who	activitycalendar	no	HVEM
@@ -435,3 +435,10 @@ edit_contact_info_org	activitycalendar	no	Gå til organisasjonsopplysninger
 edit_contact_info_group	activitycalendar	no	Gå til gruppeopplysninger
 arena_helptext	activitycalendar	no	I feltet Navn skal det stå navn på arena, som det heter på folkemunne.<br/>Når du redigerer feltet besøksadresse, gjøres det automatisk oppslag i gatetabellen, dette for å sikre at adresser skrives riktig, og kan kobles mot kart.<br/>Når du har funnet rett gateadresse , gå til feltet Husnummer og legg inn husnummer.<br/>Trykk lagre.
 org_not_transferred	activitycalendar	no	Organisasjonen som aktiviteten er tilknyttet er ikke overført til organisasjonsregisteret.<br/>Før aktiviteten kan redigeres, må denne overføres.
+contact_person_1_name	activitycalendar	no	Kontaktperson 1
+contact_person_1_phone	activitycalendar	no	Kontaktperson 1 tlf
+contact_person_1_mail	activitycalendar	no	Kontaktperson 1 epost
+contact_person_2_name	activitycalendar	no	Kontaktperson 2
+contact_person_2_phone	activitycalendar	no	Kontaktperson 2 tlf
+contact_person_2_mail	activitycalendar	no	Kontaktperson 2 epost
+reject	activitycalendar	no	Avvis organisasjon

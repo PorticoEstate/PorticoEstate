@@ -17,113 +17,24 @@
 	 * @package property
 	 */
 
-	class update_phpgw
+	include_class('property', 'cron_parent', 'inc/cron/');
+
+	class update_phpgw extends property_cron_parent
 	{
-		var	$function_name = 'update_phpgw';
-
-		function update_phpgw()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			parent::__construct();
+
+			$this->function_name = get_class($this);
+			$this->sub_location = lang('Async service');
+			$this->function_msg	= 'Update all installed apps of phpgw';
+
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db     			= & $GLOBALS['phpgw']->db;
 		}
 
-		function pre_run($data='')
-		{
-			if(isset($data['enabled']) && $data['enabled']==1)
-			{
-				$confirm	= true;
-				$cron		= true;
-			}
-			else
-			{
-				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-				$execute	= phpgw::get_var('execute', 'bool', 'GET');
-				$cron = false;
-			}
-
-
-			if (isset($confirm) && $confirm)
-			{
-				$this->execute($cron);
-			}
-			else
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-		function confirm($execute='')
-		{
-			$link_data = array
-			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=> $this->function_name,
-				'execute'	=> $execute,
-			);
-
-			if(!$execute)
-			{
-				$lang_confirm_msg 	= lang('Do you want to execute this action?');
-			}
-
-			$lang_yes			= lang('yes');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
-
-			$msgbox_data = isset($this->receipt)?$this->bocommon->msgbox_data($this->receipt):'';
-
-			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'message'				=> isset($this->receipt['message'])?$this->receipt['message']:'',
-				'lang_confirm_msg'		=> $lang_confirm_msg,
-				'lang_yes'				=> $lang_yes,
-				'lang_yes_statustext'	=> lang('Update database for all applications'),
-				'lang_no_statustext'	=> 'tilbake',
-				'lang_no'				=> lang('no'),
-				'lang_done'				=> lang('cancel'),
-				'lang_done_statustext'	=> 'tilbake'
-			);
-
-			$appname		= lang('Async service');
-			$function_msg	= 'Forward email as SMS';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
-			$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-		function execute($cron='')
+		function execute()
 		{
 			$this->perform_update_db();
-
-			if(isset($this->receipt) && $this->receipt)
-			{
-				$this->cron_log($this->receipt,$cron);
-			}
-
-			if(!$cron)
-			{
-				$this->confirm($execute=false);
-			}
-		}
-
-		function cron_log($receipt='',$cron='')
-		{
-			$insert_values= array(
-				$cron,
-				date($this->bocommon->datetimeformat),
-				$this->function_name,
-				$receipt
-				);
-
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
-
-			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
 		function perform_update_db()
@@ -158,4 +69,3 @@
 			}
 		}
 	}
-

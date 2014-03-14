@@ -47,8 +47,9 @@
 		),
 		'fm_bim_item' => array(
 			'fd' => array(
-				'type' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'type' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'guid' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'xml_representation' => array('type' => 'xml','nullable' => False),
 				'model' => array('type' => 'int', 'precision' => 4,'nullable' => False),
@@ -61,10 +62,36 @@
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('type','id'),
-			'fk' => array('fm_bim_type' => array('type' => 'id')),
-//			'fk' => array('fm_bim_model' => array('model' => 'id'),
-//							'fm_bim_type' => array('type' => 'id')),
+			'fk' => array(
+					'fm_bim_type' => array('type' => 'id'),
+					'phpgw_locations' => array('location_id' => 'location_id')
+				),
 			'ix' => array(),
 			'uc' => array('guid')
-		)
+		),
+		'fm_bim_item_inventory' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'item_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'p_location_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'p_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'unit_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'inventory' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'write_off' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'bookable' => array('type' => 'int', 'precision' => 2,'nullable' => False),
+				'active_from' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+				'active_to' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+				'created_on' => array('type' => 'int', 'precision' => 8,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'expired_on' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+				'expired_by' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+				'remark' => array('type' => 'text','nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 	);

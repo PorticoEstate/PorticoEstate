@@ -44,6 +44,7 @@
 		var $part_of_town_id;
 		var $location_code;
 		var $results;
+		var $acl_location;
 		protected $xsl_rootdir;
 
 		/**
@@ -62,8 +63,9 @@
 
 		var $type_app = array();
 		var $type;
+		private $location_relation_data = array();
 
-		function property_boentity($session=false, $type = '', $entity_id = 0, $cat_id = 0)
+		function __construct($session=false, $type = '', $entity_id = 0, $cat_id = 0)
 		{
 			$this->solocation 				= CreateObject('property.solocation');
 			$this->bocommon 				= CreateObject('property.bocommon');
@@ -101,6 +103,9 @@
 			$this->type_app					= $this->so->get_type_app();
 
 			$this->type						= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
+
+			$this->acl_location				= ".{$type}.{$entity_id}.{$cat_id}";
+
 			$this->location_code			= isset($location_code)  && $location_code ? $location_code : '';
 
 			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
@@ -220,6 +225,10 @@
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '','','',true, false, $filter);
 			$columns = array_merge( $columns, $this->get_column_list() );
+			foreach ($columns as &$column)
+			{
+				$column['name'] = $column['descr'] ? $column['descr'] : $column['input_text'];
+			}
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -227,6 +236,34 @@
 		function get_column_list()
 		{
 			$columns = array();
+
+			// defined i property_bocommon::generate_sql()
+			$location_relation_data = phpgwapi_cache::system_get('property', 'location_relation_data');
+			
+			$this->location_relation_data = $location_relation_data && is_array($location_relation_data) ? $location_relation_data : array();
+			
+			if( $this->location_relation_data && is_array($this->location_relation_data))
+			{
+				foreach ($this->location_relation_data as $entry)
+				{
+					$columns[$entry['name']] = array
+					(
+						'id'			=> $entry['name'],
+						'input_type'	=> 'text',
+						'name'			=> $entry['name'],
+						'descr'			=> $entry['descr'],
+						'statustext'	=> $entry['descr'],
+						'align' 		=> '',
+						'datatype'		=> $entry['datatype'],
+						'sortable'		=> false,
+						'exchange'		=> false,
+						'formatter'		=> '',
+						'classname'		=> ''
+					);
+				
+				}
+			}
+/*
 			$columns['user_id'] = array
 			(
 				'id'			=> 'user_id',
@@ -241,7 +278,7 @@
 				'formatter'		=> '',
 				'classname'		=> ''
 			);
-
+*/
 			return $columns;
 		}
 
@@ -366,23 +403,60 @@
 
 			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"]:array();
 			$custom_cols = $this->get_column_list();
+
 //_debug_array($user_columns);
 //_debug_array($column_list);
-/*
+
+			$cols_extra		= $this->so->cols_extra;
+			$cols_return_lookup		= $this->so->cols_return_lookup;
+
+
 			foreach ($custom_cols as $col_id => $col_info)
 			{
 				if( in_array( $col_id, $user_columns ) )
 				{
-					$cols_extra[] = array
-					(
-						'name'		=> $col_id,
-						'datatype'	=> $column_list[$col_id]['datatype']
-					);
+					$this->uicols['input_type'][]	= 'text';
+					$this->uicols['name'][]			= $col_id;
+					$this->uicols['descr'][]		= $custom_cols[$col_id]['descr'];
+					$this->uicols['statustext'][]	= $custom_cols[$col_id]['descr'];
+					$this->uicols['exchange'][]		= false;
+					$this->uicols['align'][] 		= '';
+					$this->uicols['datatype'][]		= $custom_cols[$col_id]['datatype'];
+					$this->uicols['formatter'][]	= '';
+					$this->uicols['classname'][]	= '';
+					$this->uicols['sortable'][]		= false;
+					$cols_extra[] 					= $col_id;
 				}
 			}
+
+//_debug_array($cols_extra);
+//_debug_array($this->uicols);die();
+/*
+			$location_relation_data = 	$this->location_relation_data;
+			
+			if ($location_relation_data && is_array($location_relation_data))
+			{
+				foreach ($location_relation_data as $entry)
+				{
+					$this->uicols['input_type'][]	= 'text';
+					$this->uicols['name'][]			= $entry['name'];
+					$this->uicols['descr'][]		= $entry['descr'];
+					$this->uicols['statustext'][]	= $entry['descr'];
+					$this->uicols['exchange'][]		= false;
+					$this->uicols['align'][] 		= '';
+					$this->uicols['datatype'][]		= '';
+					$this->uicols['formatter'][]	= '';
+					$this->uicols['classname'][]	= '';
+					$this->uicols['sortable'][]		= false;
+
+					$cols_extra[] 				= $entry['name'];
+
+				}
+			}
+			
+			unset($entry);
 */
-			$cols_extra		= $this->so->cols_extra;
-			$cols_return_lookup		= $this->so->cols_return_lookup;
+
 			//_debug_array($entity);
 //			_debug_array($cols_extra);
 			//_debug_array($cols_return_lookup);
@@ -564,7 +638,7 @@
 
 				$file = PHPGW_SERVER_ROOT . "/{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
-				if ( $entry['active'] && is_file($file) )
+				if ( $entry['active'] && !$entry['client_side'] && is_file($file) )
 				{
 					require_once $file;
 				}
@@ -674,6 +748,42 @@
 		function read_entity_to_link($data)
 		{
 			return $this->so->read_entity_to_link($data);
+		}
+
+		/**
+		*  array('id' => $id, 'location_id' => $location_id, 'inventory_id' => $inventory_id)
+		*/
+
+		public function get_inventory($data)
+		{
+			$values = $this->so->get_inventory( $data );
+
+			$interlink 	= CreateObject('property.interlink');
+
+			foreach ($values as &$entry)
+			{
+				$link_info = $interlink->get_location_link($entry['p_location_id'], $entry['p_id'],'view');
+				$entry['where'] = "<a href='{$link_info['link']}'>{$link_info['name']}</a>";
+				$entry['where_name'] = $link_info['name'];
+				$entry['location_id'] = $data['location_id'];
+				$entry['id'] = $data['id'];
+			}
+
+			return $values;
+		}
+
+		public function add_inventory($values)
+		{
+			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
+			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
+			return $this->so->add_inventory($values);
+		}
+
+		public function edit_inventory($values)
+		{
+			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
+			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
+			return $this->so->edit_inventory($values);
 		}
 
 	}

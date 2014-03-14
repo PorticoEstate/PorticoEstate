@@ -162,6 +162,11 @@
 							'text'	=> lang('Ticket status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ticket_status') )
 						),
+						'ticket_priority'	=> array
+						(
+							'text'	=> lang('Ticket priority'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ticket_priority') )
+						),
 						'ticket_config'	=> array
 						(
 							'text'	=> lang('ticket config'),
@@ -251,6 +256,11 @@
 							'text'	=> lang('periodization outline'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization_outline') )
 						),
+						'period_transition'	=> array
+						(
+							'text'	=> lang('period transition'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'period_transition') )
+						),
 						'accounting_config'	=> array
 						(
 							'text'	=> lang('Configuration'),
@@ -275,7 +285,16 @@
 						(
 							'text'	=> lang('Accounting voucher type'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'voucher_type') )
+						),
+						'check_missing_project_budget'	=> array
+						(
+							'text'	=> lang('check missing project budget'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.check_missing_project_budget') )
 						)
+
+
+
+
 					);
 
 				$admin_children_agreement = array
@@ -371,7 +390,20 @@
 						'index'	=> array
 						(
 							'text'	=> lang('Configuration'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'property') )
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'property') ),
+							'children'	=> array
+							(
+								'custom config'	=> array
+								(
+									'text'	=> lang('custom config'),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.admin')) )
+								)
+							)
+						),
+						'import'	=> array
+						(
+							'text'	=> lang('Generic import'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index') )
 						),
 						'entity'	=> array
 						(
@@ -467,15 +499,35 @@
 							'text'	=> lang('User contact info'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.contact_info') )
 						),
+						'request_cats'	=> array
+						(
+							'text'	=> lang('request categories'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project.request', 'global_cats' => 'true', 'menu_selection' => 'admin::property::request_cats') )
+						),
 						'request_status'	=> array
 						(
 							'text'	=> lang('Request status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'request_status') )
 						),
+						'request_responsible_unit'	=> array
+						(
+							'text'	=> lang('responsible unit'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'request_responsible_unit') )
+						),
 						'request_condition'	=> array
 						(
 							'text'	=> lang('Request condition_type'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'r_condition_type') )
+						),
+						'condition_survey_cats'	=> array
+						(
+							'text'	=> lang('condition survey Categories'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project.condition_survey', 'global_cats' => 'true', 'menu_selection' => 'admin::property::condition_survey_cats') )
+						),
+						'condition_survey_status'	=> array
+						(
+							'text'	=> lang('condition survey status'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'condition_survey_status') )
 						),
 						'authorities_demands'	=> array
 						(
@@ -784,6 +836,21 @@
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
 								'text'	=> lang('Workorder'),
 								'image'		=> array('property', 'project_workorder')
+							),
+							'condition_survey'	=> array
+							(
+								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicondition_survey.index')),
+								'text'	=> lang('condition survey'),
+								'image'		=> array('property', 'condition_survey'),
+								'children'	=> array
+								(
+									'summation'	=> array
+									(
+										'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicondition_survey.summation')),
+										'text'	=> lang('summation'),
+										'image'		=> array('property', 'invoice')
+									)
+								)
 							),
 							'request'	=> array
 							(

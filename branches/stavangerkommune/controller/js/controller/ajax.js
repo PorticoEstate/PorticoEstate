@@ -1,60 +1,40 @@
 $(document).ready(function(){
+	
+	
+	
+	$(".show-control-details").click(function() {
+		var clickElem = $(this);
 
-	
-	function ajaxRequest(request, callback_func, elem){
+		var requestUrl = $(clickElem).attr("href");
 		
-		
-	}
-	
-	/* ================================  SEARCH LOCATION BOX  ========================== */
-	
-	// Changes location level between building and property in serch location select box
-	$("#choose-loc a").click(function(){
-		
-		$("#choose-loc a").removeClass("active");
-		$(this).addClass("active");
-		
-		var loc_type = $(this).attr("href");
-		
-		$("#loc_type").val( loc_type.substring(9, 10) );
-		$("#search-location-name").focus();
-
-		$( "#search-location-name" ).autocomplete( "search");
+		 $.ajax({
+			  type: 'POST',
+			  url: requestUrl,
+			  success: function(data) {
+				  if(data){
+	    			  	    			
+		    		  $("#popupBox").show();
+		    		  $("#popupBox").html( data );
+		    		  $("#curtain").show();
+	    		  }
+			  },
+        	  error: function(XMLHttpRequest, textStatus, errorThrown) {
+        		  if (XMLHttpRequest.status === 401) {
+        			location.href = '/';
+        		  }
+        	  }
+			});
 		
 		return false;
 	});
-
+	 
 	
-	$(".selectLocation").change(function () {
-		 var location_code = $(this).val();
-		 var thisForm = $(this).parents("form");
-
-		 var period_type = $(thisForm).find("input[name='period_type']").val();
-		 var year = $(thisForm).find("input[name='year']").val();
-		 var month = $(thisForm).find("input[name='month']").val();
-		 
-		 if(period_type == 'view_month')
-		 {
-			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
-			 var baseUrl = phpGWLink('index.php', oArgs, false);
-			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
-		 }
-		 else
-		 {
-			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
-			 var baseUrl = phpGWLink('index.php', oArgs, false);
-			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
-		 }
-		
-		 window.location.href = requestUrl;
-    });
-		
 	/* ================================  CONTROL LOCATION ================================== */
 	
 	// Update location category based on location type
 	$("#type_id").change(function () {
-		var location_type_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};
+		 var location_type_id = $(this).val();
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_location_category'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
          
          var htmlString = "";
@@ -130,7 +110,6 @@ $(document).ready(function(){
 
 	/* ================================  COMPONENT ================================== */
 	
-	// file: uicheck_list.xsl
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_group_area_list").change(function () {
 		 var control_area_id = $(this).val();
@@ -145,7 +124,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
-					  htmlString  = "<option>Velg kontroll</option>"
+					  htmlString  = "<option>Velg kontrollgruppe</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -165,7 +144,7 @@ $(document).ready(function(){
 	//update part of town category based on district
 	$("#district_id").change(function () {
 		var district_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_district_part_of_town'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
          //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
@@ -415,32 +394,6 @@ $(document).ready(function(){
 		}
 	});
 	
-	/* Virker som at denne ikke er i bruk. Torstein: 11.07.12
-	$(".frm_save_control_item").live("click", function(e){
-		e.preventDefault();
-		var thisForm = $(this);
-		var liWrp = $(this).parent();
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var requestUrl = $(thisForm).attr("action");
-		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		  
-		    		  if(obj.status == "saved"){
-		    			  $(liWrp).fadeOut('3000', function() {
-		    				  $(liWrp).addClass("hidden");
-		    			  });
-					  }
-				  }
-				}
-			});
-	});
-	*/
-	
 	
 	/* =========================  CONTROL  ===================== */
 	
@@ -521,357 +474,7 @@ $(document).ready(function(){
 		var control_id = $(this).val();
   		$("#hidden_control_id").val( control_id );
     });
-	
-	//=====================================  CHECK LIST  ================================
-	
-	// ADD CHECKLIST
-	$("#frm_add_check_list").live("submit", function(e){
-		var thisForm = $(this);
-		var statusFieldVal = $("#status").val();
-		var statusRow = $("#status").closest(".row");
-		var plannedDateVal = $("#planned_date").val();
-		var plannedDateRow = $("#planned_date").closest(".row");
-		var completedDateVal = $("#completed_date").val();
-		var completedDateRow = $("#completed_date").closest(".row");
 		
-		$(thisForm).find(".input_error_msg").remove();
-		
-		// Checks that COMPLETE DATE is set if status is set to DONE 
-		if(statusFieldVal == 1 && completedDateVal == ''){
-			e.preventDefault();
-			// Displays error message above completed date
-			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
-		}
-		else if(statusFieldVal == 0 && completedDateVal != ''){
-			e.preventDefault();
-			// Displays error message above completed date
-			$(statusRow).before("<div class='input_error_msg'>Du har angitt utførtdato, men status er Ikke utført. Vennligst endre status til utført</div>");
-		}
-		else if(statusFieldVal == 0 & plannedDateVal == ''){
-			e.preventDefault();
-			// Displays error message above planned date
-			if( !$(plannedDateRow).prev().hasClass("input_error_msg") )
-			{
-			  $(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");	
-			}
-		}		
-	});	
-	
-	// Display submit button on click
-	$("#frm_add_check_list").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-
-	
-	
-	// UPDATE CHECKLIST DETAILS	
-	$("#frm_update_check_list").live("submit", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var requestUrl = $(thisForm).attr("action");
-		
-		var check_list_id = $("#check_list_id").val();
-			
-			var statusFieldVal = $("#status").val();
-			var statusRow = $("#status").closest(".row");
-			var plannedDateVal = $("#planned_date").val();
-			var plannedDateRow = $("#planned_date").closest(".row");
-			var completedDateVal = $("#completed_date").val();
-			var completedDateRow = $("#completed_date").closest(".row");
-			
-			// Checks that COMPLETE DATE is set if status is set to DONE 
-			if(statusFieldVal == 1 & completedDateVal == ''){
-				e.preventDefault();
-				// Displays error message above completed date
-				$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
-	    	}
-			else if(statusFieldVal == 0 && completedDateVal != ''){
-				e.preventDefault();
-				// Displays error message above completed date
-				$(statusRow).before("<div class='input_error_msg'>Vennligst endre status til utført</div>");
-			}
-			else if(statusFieldVal == 0 & plannedDateVal == ''){
-				e.preventDefault();
-				// Displays error message above planned date
-				if( !$(plannedDateRow).prev().hasClass("input_error_msg") )
-				{
-				  $(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");	
-				}
-			}	
-			/*
-			else{
-	    		$(".input_error_msg").hide();
-	    		
-				$.ajax({
-					  type: 'POST',
-					  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-					  success: function(data) {
-						  if(data){
-			    			  var obj = jQuery.parseJSON(data);
-				    		
-			    			  if(obj.status == "updated"){
-				    			  var submitBnt = $(thisForm).find("input[type='submit']");
-				    			  $(submitBnt).val("Lagret");	
-				    				  
-				    			  // Changes text on save button back to original
-				    			  window.setTimeout(function() {
-									$(submitBnt).val('Lagre detaljer');
-									$(submitBnt).addClass("not_active");
-				    			  }, 1000);
-							  }
-						  }
-						}
-				});
-	    	}
-	    	*/
-	});
-	
-	// Display submit button on click
-	$("#frm_update_check_list").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-	
-	
-	//=======================================  CASE  ======================================
-	
-	// REGISTER CASE
-	$(".frm_register_case").live("submit", function(e){
-		e.preventDefault();
-
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var type = $(thisForm).find("input[name='type']").val();
-		var requestUrl = $(thisForm).attr("action");
-
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var jsonObj = jQuery.parseJSON(data);
-		    		
-	    			  if(jsonObj.status == "saved"){
-		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    			  $(submitBnt).val("Lagret");	
-		    			  
-		    			  clear_form( thisForm );
-			      				  
-		    			  // Changes text on save button back to original
-		    			  window.setTimeout(function() {
-		    				  if( type == "control_item_type_2")
-		    					  $(submitBnt).val('Lagre måling');
-		    				  else
-		    					  $(submitBnt).val('Lagre sak');
-		    				  
-							$(submitBnt).addClass("not_active");
-		    			  }, 1000);
-
-		    			  $(thisForm).delay(1500).slideUp(500, function(){
-		    				  $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");  
-		    			  });
-					  }
-				  }
-				}
-		});
-	});
-
-	// UPDATE CASE
-	$(".frm_update_case").live("submit", function(e){
-		e.preventDefault();
-
-		var thisForm = $(this);
-		var clickRow = $(this).closest("li");
-		var checkItemRow = $(this).closest("li.check_item_case");
-		var requestUrl = $(thisForm).attr("action");
-				
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var jsonObj = jQuery.parseJSON(data);
-		 
-	    			  if(jsonObj.status == "saved"){
-	    				var type = $(checkItemRow).find(".control_item_type").text();
-	    				
-		    			if(type == "control_item_type_1"){
-	    					
-	    				}else if(type == "control_item_type_2"){
-	    					var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
-	    					
-	    					$(clickRow).find(".case_info .case_status").empty().text( case_status );
-	    					
-	    					var measurement_text = $(thisForm).find("input[name='measurement']").val();
-		    				$(clickRow).find(".case_info .measurement").text(measurement_text);
-	    				}
-		    			
-		    			// Text from forms textarea
-	    				var desc_text = $(thisForm).find("textarea").val();
-	    				// Puts new text into description tag in case_info	    				   				
-	    				$(clickRow).find(".case_info .case_descr").text(desc_text);
-	    					    				
-	    				$(clickRow).find(".case_info").show();
-	    				$(clickRow).find(".frm_update_case").hide();
-					  }
-				  }
-			  }
-		});
-	});
-	
-	$("a.quick_edit_case").live("click", function(e){
-		var clickElem = $(this);
-		var clickRow = $(this).closest("li");
-									
-		$(clickRow).find(".case_info").hide();
-		$(clickRow).find(".frm_update_case").show();
-		
-		return false;	
-	});
-	
-	$(".frm_update_case .cancel").live("click", function(e){
-		var clickElem = $(this);
-		var clickRow = $(this).closest("li");
-				
-		
-		$(clickRow).find(".case_info").show();
-		$(clickRow).find(".frm_update_case").hide();
-		
-		return false;	
-	});
-	
-	// DELETE CASE
-	$(".delete_case").live("click", function(){
-		var clickElem = $(this);
-		var clickRow = $(this).closest("li");
-		var clickItem = $(this).closest("ul");
-		var checkItemRow = $(this).parents("li.check_item_case");
-		
-		var url = $(clickElem).attr("href");
-	
-		// Sending request for deleting a control item list
-		$.ajax({
-			type: 'POST',
-			url: url,
-			success: function(data) {
-				var obj = jQuery.parseJSON(data);
-		    		
-   			  	if(obj.status == "deleted"){
-	   			  	if( $(clickItem).children("li").length > 1){
-	   			  		$(clickRow).fadeOut(300, function(){
-	   			  			$(clickRow).remove();
-	   			  		});
-	   			  		
-		   			  	var next_row = $(clickRow).next();
-						
-						// Updating order numbers for rows below deleted row  
-						while( $(next_row).length > 0){
-							update_order_nr_for_row(next_row, "-");
-							next_row = $(next_row).next();
-						}
-	   			  	}else{
-		   			  	$(checkItemRow).fadeOut(300, function(){
-	   			  			$(checkItemRow).remove();
-	   			  		});
-	   			  	}
-   			  	}
-			}
-		});
-
-		return false;
-	});
-	
-	// CLOSE CASE
-	$("a.close_case").live("click", function(){
-		var clickElem = $(this);
-		var clickRow = $(this).closest("li");
-		var clickItem = $(this).closest("ul");
-		var checkItemRow = $(this).parents("li.check_item_case");
-		
-		var url = $(clickElem).attr("href");
-	
-		// Sending request for deleting a control item list
-		$.ajax({
-			type: 'POST',
-			url: url,
-			success: function(data) {
-				var obj = jQuery.parseJSON(data);
-		    		
-   			  	if(obj.status == "true"){
-	   			  	if( $(clickItem).children("li").length > 1){
-	   			  		$(clickRow).fadeOut(300, function(){
-	   			  			$(clickRow).remove();
-	   			  		});
-	   			  		
-		   			  	var next_row = $(clickRow).next();
-						
-						// Updating order numbers for rows below deleted row  
-						while( $(next_row).length > 0){
-							update_order_nr_for_row(next_row, "-");
-							next_row = $(next_row).next();
-						}
-	   			  	}else{
-		   			  	$(checkItemRow).fadeOut(300, function(){
-	   			  			$(checkItemRow).remove();
-	   			  		});
-	   			  	}
-   			  	}
-			}
-		});
-
-		return false;
-	});
-	
-	// OPEN CASE
-	$("a.open_case").live("click", function(){
-		var clickElem = $(this);
-		var clickRow = $(this).closest("li");
-		var clickItem = $(this).closest("ul");
-		var checkItemRow = $(this).parents("li.check_item_case");
-		
-		var url = $(clickElem).attr("href");
-	
-		// Sending request for deleting a control item list
-		$.ajax({
-			type: 'POST',
-			url: url,
-			success: function(data) {
-				var obj = jQuery.parseJSON(data);
-		    		
-   			  	if(obj.status == "true"){
-	   			  	if( $(clickItem).children("li").length > 1){
-	   			  		$(clickRow).fadeOut(300, function(){
-	   			  			$(clickRow).remove();
-	   			  		});
-	   			  		
-		   			  	var next_row = $(clickRow).next();
-						
-						// Updating order numbers for rows below deleted row  
-						while( $(next_row).length > 0){
-							update_order_nr_for_row(next_row, "-");
-							next_row = $(next_row).next();
-						}
-	   			  	}else{
-		   			  	$(checkItemRow).fadeOut(300, function(){
-	   			  			$(checkItemRow).remove();
-	   			  		});
-	   			  	}
-   			  	}
-			}
-		});
-
-		return false;
-	});
-	
-	$(".frm_register_case").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-	
 	//=============================  MESSAGE  ===========================
 	
 	// REGISTER MESSAGE
@@ -927,6 +530,68 @@ $(document).ready(function(){
 	
 	
 	/* ==================================  CALENDAR ===================================== */ 
+	
+    // SEARCH LOCATION BOX
+	
+	// Changes location level between building and property in serch location select box
+	$("#choose-loc a").click(function(){
+		
+		$("#choose-loc a").removeClass("active");
+		$(this).addClass("active");
+		
+		var loc_type = $(this).attr("href");
+		
+		$("#loc_type").val( loc_type.substring(9, 10) );
+		$("#search-location-name").focus();
+
+		$( "#search-location-name" ).autocomplete( "search");
+		
+		return false;
+	});
+
+	
+	$(".select-location").change(function () {
+		 var location_code = $(this).val();
+		 var thisForm = $(this).parents("form");
+
+		 var period_type = $(thisForm).find("input[name='period_type']").val();
+		 var year = $(thisForm).find("input[name='year']").val();
+		 var month = $(thisForm).find("input[name='month']").val();
+		 
+		 if(location_code != "" & period_type == 'view_month')
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
+			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
+			 
+			 window.location.href = requestUrl;
+		 }
+		 else if(location_code != "" & period_type == 'view_year')
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
+			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
+			 
+			 window.location.href = requestUrl;
+		 }
+		 else if(location_code != "" & period_type == 'view_year_for_locations')
+		 {
+			var control_id = $(thisForm).find("input[name='control_id']").val();
+			var oArgs = {menuaction:'controller.uicalendar.view_calendar_year_for_locations'};
+			var baseUrl = phpGWLink('index.php', oArgs, false);
+			var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year + "&control_id=" + control_id;
+			 window.location.href = requestUrl;
+		 }
+ 		 else if(location_code != "" & period_type == 'view_month_for_locations')
+		 {
+			var control_id = $(thisForm).find("input[name='control_id']").val();
+			var oArgs = {menuaction:'controller.uicalendar.view_calendar_month_for_locations'};
+			var baseUrl = phpGWLink('index.php', oArgs, false);
+			var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year + "&control_id=" + control_id;
+			 window.location.href = requestUrl;
+		 }
+ 
+    });
 	
 	// CALENDAR FILTERS  
 	$("#filter-repeat_type").change(function () {
@@ -1016,6 +681,17 @@ function clear_form( form ){
         }
     });
 }
+
+function timestampToDate($timestamp){
+	var date = new Date($timestamp * 1000);
+	var year    = date.getFullYear();
+	var month   = date.getMonth();
+	var day     = date.getDay();
+	
+	var dateStr = day + "/" + month + "-" + year; 
+	
+	return dateStr;
+} 
 
 //Updates order number for hidden field and number in front of row
 function update_order_nr_for_row(element, sign){

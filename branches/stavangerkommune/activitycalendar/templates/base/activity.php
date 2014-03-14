@@ -104,6 +104,10 @@ function check_external()
 
 function allOK()
 {
+	if(document.getElementById('state').value == 5)
+	{
+		return true;
+	}
 	if(document.getElementById('title').value == null || document.getElementById('title').value == '')
 	{
 		alert("Tittel må fylles ut!");
@@ -132,6 +136,36 @@ function allOK()
 		alert("Kategori må fylles ut!");
 		return false;
 	}
+	var malgrupper = document.getElementsByName('target[]');
+	var malgruppe_ok = false;
+	for(i=0;i<malgrupper.length;i++)
+	{
+		if(!malgruppe_ok)
+		{
+			if(malgrupper[i].checked)
+			{malgruppe_ok = true;}
+		}
+	}
+	if(!malgruppe_ok)
+	{
+		alert("Målgruppe må fylles ut!");
+		return false;
+	}
+	var distrikter = document.getElementsByName('district[]');
+		var distrikt_ok = false;
+		for(i=0;i<distrikter.length;i++)
+		{
+			if(!distrikt_ok)
+			{
+				if(distrikter[i].checked)
+				{distrikt_ok = true;}
+			}
+		}
+		if(!distrikt_ok)
+		{
+			alert("Bydel må fylles ut!");
+			return false;
+		}
 	if(document.getElementById('office').value == null || document.getElementById('office').value == 0)
 	{
 		alert("Hovedansvarlig kulturkontor må fylles ut!");
@@ -213,7 +247,7 @@ function allOK()
 					{
 						$selected_state = $activity->get_state();
 					?>
-						<select name="state">
+						<select name="state" id="state">
 							<option value="3" <?php echo ($selected_state == 3 ? 'selected="selected"' : "")?>><?php echo lang('published') ?></option>
 							<option value="5" <?php echo ($selected_state == 5 ? 'selected="selected"' : "")?>><?php echo lang('rejected') ?></option>
 							<option value="1" <?php echo ($selected_state == 1 ? 'selected="selected"' : "")?>><?php echo lang('new') ?></option>

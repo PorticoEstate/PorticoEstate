@@ -61,13 +61,13 @@
 											'location_for_check_list' => array
 											(
 												'text'	=> lang('location_connections'),
-												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_register_to_location.index') ),
 												'image'	=> array('property', 'location_1')
 											),
 											'component_for_check_list' => array
 											(
 												'text'	=> lang('component'),
-												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.register_control_to_component') ),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_register_to_component.index') ),
 												'image'	=> array('property', 'entity_1')
 											)
 										)
@@ -83,6 +83,7 @@
 						'text'	=> lang('Control_group'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group.index') ),
 						'image'	=> array('property', 'location_1'),
+						/*
 						'children' => array(
 											'component_for_control_group' => array
 											(
@@ -91,6 +92,7 @@
 												'image'	=> array('property', 'entity_1')
 											)
 										)
+						*/
 					),
 					'procedure' => array
 					(

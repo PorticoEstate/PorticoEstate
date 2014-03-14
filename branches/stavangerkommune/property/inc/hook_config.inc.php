@@ -33,6 +33,32 @@
 	* @param $config
 	* @return string HTML checkboxes to be placed in a table
 	*/
+	function fmtts_assign_group_candidates($config)
+	{
+		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$groups_assigned = isset($config['fmtts_assign_group_candidates']) ? $config['fmtts_assign_group_candidates'] : array();
+		$out = '';
+		foreach ( $groups as $group => $label)
+		{
+			$checked = '';
+			if ( in_array($group, $groups_assigned))
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[fmtts_assign_group_candidates][]" value="{$group}" {$checked}><label>{$label}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
+
+	/**
+	* Get HTML checkbox with groups that are candidates for simplified tts interface
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
 	function fmttssimple_group($config)
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
@@ -114,6 +140,115 @@ HTML;
 	}
 
 	/**
+	* Get HTML listbox with project status that are to be set when asking for approval
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function project_approval_status($config)
+	{
+		$status_entries = execMethod('property.soproject.select_status_list');
+
+		$status_assigned = isset($config['project_approval_status']) ? $config['project_approval_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+
+	/**
+	* Get HTML listbox with project status that are to be set when asking for approval
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function project_status_on_last_order_closed($config)
+	{
+		$status_assigned = isset($config['project_status_on_last_order_closed']) ? $config['project_status_on_last_order_closed'] : array();
+
+		$status_entries = execMethod('property.bogeneric.get_list',array('type' => 'project_status', 'selected' => $status_assigned));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected =  $status['selected'] ? ' selected = "selected"' : '';
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+		return $out;
+	}
+
+
+	/**
+	* Get HTML listbox with workorder status that are to be set when asking for approval
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function workorder_approval_status($config)
+	{
+		$status_entries = execMethod('property.soworkorder.select_status_list');
+
+		$status_assigned = isset($config['workorder_approval_status']) ? $config['workorder_approval_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+
+	/**
+	* Get HTML listbox with request status that are to be set when request is added to a project
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function request_project_hookup_status($config)
+	{
+		$status_assigned = isset($config['request_project_hookup_status']) ? $config['request_project_hookup_status'] : '';
+		$status_entries = execMethod('property.bogeneric.get_list',array('type' => 'request_status', 'selected' => $status_assigned));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected =  $status['selected'] ? ' selected = "selected"' : '';
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
 	* Get HTML listbox with workorder status that are to be set when invoice is processed
 	*
 	* @param $config
@@ -131,7 +266,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -160,7 +295,7 @@ HTML;
 			$selected = '';
 			if ( $status_assigned == $status['id'])
 			{
-				$selected = 'selected =  "selected"';
+				$selected = ' selected = "selected"';
 			}
 
 			$out .=  <<<HTML
@@ -218,7 +353,7 @@ HTML;
 			$selected = '';
 			if ( ($level['id'] == $level_assigned))
 			{
-				$selected = ' selected';
+				$selected = ' selected = "selected"';
 			}
 			$out .=  <<<HTML
 			<option value="{$level['id']}" {$selected}><label>{$level['name']}</label></option>
@@ -264,7 +399,7 @@ HTML;
 				$selected = '';
 				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $key)
 				{
-					$selected = 'selected =  "selected"';
+					$selected = ' selected = "selected"';
 				}
 
 				$out .=  <<<HTML
@@ -277,4 +412,172 @@ HTML;
 HTML;
 		}
 		return $out;
+
 	}
+	/**
+	* Get HTML listboks with categories that are candidates for condition survey import categories
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function condition_survey_import_cat($config)
+	{
+		$filters = array
+		(
+			1 => 'Investment',
+			2 => 'Operation',
+			3 => 'Combined::Investment/Operation',
+		);
+
+		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project.request');
+		$cats->supress_info = true;
+		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+
+		$filter_assigned = isset($config['condition_survey_import_cat']) ? $config['condition_survey_import_cat'] : array();
+
+		$out = '';
+		foreach ( $filters as $filter_key => $filter_name)
+		{
+			$out .=  <<<HTML
+			<tr><td><label>{$filter_name}</label></td><td><select name="newsettings[condition_survey_import_cat][{$filter_key}]">
+HTML;
+			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
+			foreach ( $values as $key => $category)
+			{
+				if(! $category['active'])
+				{
+					continue;
+				}
+
+				$selected = '';
+				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $category['id'])
+				{
+					$selected = ' selected = "selected"';
+				}
+
+				$out .=  <<<HTML
+				<option value='{$category['id']}'{$selected} title = '{$category['description']}'>{$category['name']}</option>
+HTML;
+			}
+
+			$out .=  <<<HTML
+			</select></td></tr>
+HTML;
+		}
+		return $out;
+	}
+
+	/**
+	* Get HTML listbox with initial status that are to be set when condition survey are imported
+	*
+	* @param $config
+	* @return string HTML listboxes to be placed in a table
+	*/
+	function condition_survey_initial_status($config)
+	{
+		$status_entries = execMethod('property.sorequest.select_status_list');
+
+		$status_assigned = isset($config['condition_survey_initial_status']) ? $config['condition_survey_initial_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
+	* Get HTML listbox with initial status that are to be set when condition survey are imported
+	*
+	* @param $config
+	* @return string HTML listboxes to be placed in a table
+	*/
+	function condition_survey_hidden_status($config)
+	{
+		$status_entries = execMethod('property.sorequest.select_status_list');
+
+		$status_assigned = isset($config['condition_survey_hidden_status']) ? $config['condition_survey_hidden_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
+	* Get HTML listbox with obsolete status that are to be set when condition survey are imported
+	*
+	* @param $config
+	* @return string HTML listboxes to be placed in a table
+	*/
+	function condition_survey_obsolete_status($config)
+	{
+		$status_entries = execMethod('property.sorequest.select_status_list');
+
+		$status_assigned = isset($config['condition_survey_obsolete_status']) ? $config['condition_survey_obsolete_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
+	* Get HTML checkbox with entities to bypass ACL
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function bypass_acl_at_entity($config)
+	{
+		$entity_list = execMethod('property.soadmin_entity.read',array('allrows' => true));
+
+		$acl_bypass = isset($config['bypass_acl_at_entity']) ? $config['bypass_acl_at_entity'] : array();
+		$out = '';
+		foreach ( $entity_list as $dummy => $entity)
+		{
+			$checked = '';
+			if ( in_array($entity['id'], $acl_bypass))
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[bypass_acl_at_entity][]" value="{$entity['id']}" {$checked}><label>{$entity['name']}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
+

@@ -6,7 +6,7 @@
 	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @package Frontend
-	 * @version $Id:$
+	 * @version $Id: class.uicontract_documents.inc.php 11377 2013-10-18 08:25:54Z sigurdne $
 	 */
 
 	/*

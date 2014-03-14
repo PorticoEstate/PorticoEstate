@@ -1,6 +1,6 @@
 <?php
 	$setup_info['controller']['name'] = 'controller';
-	$setup_info['controller']['version'] = '0.1.41';
+	$setup_info['controller']['version'] = '0.1.48';
 	$setup_info['controller']['app_order'] = 100;
 	$setup_info['controller']['enable'] = 1;
 	$setup_info['controller']['app_group']	= 'office';
@@ -27,13 +27,14 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['controller']['hooks'] = array
 	(
-		'menu'			=> 'controller.menu.get_menu',
+		'menu'					=> 'controller.menu.get_menu',
 		'config',
-		'home',
+		'home'              	=> 'controller.hook_helper.home_backend',
+		'home_mobilefrontend'	=> 'controller.hook_helper.home_mobilefrontend',
 		'settings',
-		'cat_add'		=> 'controller.cat_hooks.cat_add',
-		'cat_delete'	=> 'controller.cat_hooks.cat_delete',
-		'cat_edit'		=> 'controller.cat_hooks.cat_edit'
+		'cat_add'				=> 'controller.cat_hooks.cat_add',
+		'cat_delete'			=> 'controller.cat_hooks.cat_delete',
+		'cat_edit'				=> 'controller.cat_hooks.cat_edit'
 	);
 	
 	$setup_info['controller']['tables'] = array 

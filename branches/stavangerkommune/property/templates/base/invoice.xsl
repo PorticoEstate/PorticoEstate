@@ -1376,6 +1376,7 @@
 			</xsl:when>
 		</xsl:choose>
 		<form name="form" method="post" action="{form_action}">
+			<input type="hidden" name="paid" value="{paid}"/>
 			<table cellpadding="0" cellspacing="0" width="100%">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -1401,121 +1402,126 @@
 						</td>
 					</tr>
 				</xsl:for-each>				
-				<tr>
-					<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
-					<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'approve')"/>
-					</td>
-					<td class="th_text" valign="top" align="left">
-						<select name="values[approve]">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'grant')"/>
-							</xsl:attribute>
-							<option value="">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</option>
-							<xsl:apply-templates select="approve_list"/>
-						</select>
-					</td>
-				</tr>
-
-				<tr>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'voucher process code')"/>
-					</td>
-					<td align="left" class="th_text" valign="top">
-						<select name="values[process_code]">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'voucher process code')"/>
-							</xsl:attribute>
-							<option value="">
-								<xsl:value-of select="php:function('lang', 'voucher process code')"/>
-							</option>
-							<xsl:apply-templates select="process_code_list"/>
-						</select>
-					</td>
-				</tr>
-				<xsl:call-template name="project_group_form"/>
-				<tr>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'order id')"/>
-					</td>
-					<td align="left" class="th_text" valign="top">
-						<input type="text" name="values[order_id]" value="{order_id}">
-							<xsl:attribute name="size">
-								<xsl:text>20</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="title">
+				<xsl:choose>
+					<xsl:when test="paid != 1">
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 								<xsl:value-of select="php:function('lang', 'order id')"/>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
-				<tr>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-					</td>
-					<td align="left">
-						<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
-							<xsl:attribute name="title">
+							</td>
+							<td align="left" class="th_text" valign="top">
+								<input type="text" name="values[order_id]" value="{order_id}">
+									<xsl:attribute name="size">
+										<xsl:text>20</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'order id')"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
+						<tr>
+							<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
+							<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+								<xsl:value-of select="php:function('lang', 'approve')"/>
+							</td>
+							<td class="th_text" valign="top" align="left">
+								<select name="values[approve]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'grant')"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</option>
+									<xsl:apply-templates select="approve_list"/>
+								</select>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+								<xsl:value-of select="php:function('lang', 'voucher process code')"/>
+							</td>
+							<td align="left" class="th_text" valign="top">
+								<select name="values[process_code]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'voucher process code')"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'voucher process code')"/>
+									</option>
+									<xsl:apply-templates select="process_code_list"/>
+								</select>
+							</td>
+						</tr>
+						<xsl:call-template name="project_group_form"/>
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 								<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-							</xsl:attribute>
-							<xsl:value-of select="value_process_log"/>
-						</textarea>
-					</td>
-				</tr>
+							</td>
+							<td align="left">
+								<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+									</xsl:attribute>
+									<xsl:value-of select="value_process_log"/>
+								</textarea>
+							</td>
+						</tr>
 
 
-				<tr>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'approved amount')"/>
-					</td>
-					<td align="left" class="th_text" valign="top">
-						<input type="text" name="values[approved_amount]" value="{value_approved_amount}">
-							<xsl:attribute name="size">
-								<xsl:text>20</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="title">
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 								<xsl:value-of select="php:function('lang', 'approved amount')"/>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
+							</td>
+							<td align="left" class="th_text" valign="top">
+								<input type="text" name="values[approved_amount]" value="{value_approved_amount}">
+									<xsl:attribute name="size">
+										<xsl:text>20</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'approved amount')"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
 
 
-				<tr>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'split line')"/>
-					</td>
-					<td align="left" valign="top">
-						<input type="checkbox" name="values[split_line]" value="1">
-							<xsl:attribute name="title">
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 								<xsl:value-of select="php:function('lang', 'split line')"/>
-							</xsl:attribute>
-						</input>
-						<xsl:text> [ </xsl:text>
-						<xsl:value-of select="value_amount"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="value_currency"/>
-						<xsl:text> ]</xsl:text>
-					</td>
-				</tr>
-				<tr>
-					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-						<xsl:value-of select="php:function('lang', 'amount')"/>
-					</td>
-					<td align="left" class="th_text" valign="top">
-						<input type="text" name="values[split_amount]">
-							<xsl:attribute name="size">
-								<xsl:text>20</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="title">
+							</td>
+							<td align="left" valign="top">
+								<input type="checkbox" name="values[split_line]" value="1">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'split line')"/>
+									</xsl:attribute>
+								</input>
+								<xsl:text> [ </xsl:text>
+								<xsl:value-of select="value_amount"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="value_currency"/>
+								<xsl:text> ]</xsl:text>
+							</td>
+						</tr>
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 								<xsl:value-of select="php:function('lang', 'amount')"/>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
+							</td>
+							<td align="left" class="th_text" valign="top">
+								<input type="text" name="values[split_amount]">
+									<xsl:attribute name="size">
+										<xsl:text>20</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'amount')"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
+
 				<tr height="50">
 					<td>
 						<xsl:variable name="lang_send">

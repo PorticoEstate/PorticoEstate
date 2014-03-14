@@ -1358,9 +1358,22 @@
 			<br/>
 			<xsl:choose>
 				<xsl:when test="values!=''">
-					<table align="center">
+					<table>
 						<tr>
 							<td align="center">
+								<xsl:variable name="link_download">
+									<xsl:value-of select="link_download"/>
+								</xsl:variable>
+								<xsl:variable name="lang_download_help">
+									<xsl:value-of select="lang_download_help"/>
+								</xsl:variable>
+								<xsl:variable name="lang_download">
+									<xsl:value-of select="lang_download"/>
+								</xsl:variable>
+								<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')">
+									<xsl:value-of select="lang_download"/>
+								</a>
+								<xsl:text> </xsl:text>
 								<xsl:value-of select="lang_total_records"/>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="num_records"/>

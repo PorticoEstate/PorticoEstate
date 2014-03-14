@@ -73,7 +73,9 @@
 				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
 				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'num_pending_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'num_pending_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'assigned_to' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -107,7 +109,9 @@
 				'group_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'building_part_id' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True)
+				'building_part_id' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
+				'component_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'component_criteria'   => array('type' => 'text', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -119,7 +123,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'control_group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'order_nr' => array('type' => 'varchar', 'precision' => '3', 'nullable' => false)
+				'order_nr' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -172,10 +176,10 @@
 		),
 		'controller_document' => array(
 			'fd' => array(
-				'id'            => array('type' => 'auto', 'nullable' => false),
-				'name'          => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'id'			=> array('type' => 'auto', 'nullable' => false),
+				'name'			=> array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'procedure_id'  => array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'title'         => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'title'			=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'description'   => array('type' => 'text', 'nullable' => true),
 				'type_id'       => array('type' => 'int', 'precision' => '4', 'nullable' => false)
 			),
@@ -189,17 +193,20 @@
 		),
 		'controller_check_item_case' => array(
 			'fd' => array(
-				'id'            		=> array('type' => 'auto', 'nullable' => false),
+				'id'				    => array('type' => 'auto', 'nullable' => false),
 				'check_item_id' 		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'status' 						=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'measurement'     	=> array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'status' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'measurement'   	  	=> array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'location_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => true), // representer meldingsfregisteret
-        'location_item_id' 	=> array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
-        'descr' 						=> array('type' => 'text','nullable' => true),
-        'user_id' 					=> array('type' => 'int','precision' => '4','nullable' => true),
-        'entry_date' 				=> array('type' => 'int', 'precision' => 8,'nullable' => false),
-        'modified_date'	 		=> array('type' => 'int', 'precision' => 8,'nullable' => True),
-        'modified_by' 			=> array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'location_item_id' 		=> array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
+				'descr' 				=> array('type' => 'text','nullable' => true),
+				'user_id' 				=> array('type' => 'int','precision' => '4','nullable' => true),
+				'entry_date' 			=> array('type' => 'int', 'precision' => 8,'nullable' => false),
+				'modified_date'	 		=> array('type' => 'int', 'precision' => 8,'nullable' => True),
+				'modified_by' 			=> array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'location_code' 		=> array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
+				'component_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),// register type
+				'component_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => true), // forekomst av type
       ),
       'pk' => array('id'),
       'fk' => array('controller_check_item' => array('check_item_id' => 'id')),
@@ -208,10 +215,10 @@
 		),
 		'controller_check_item_status' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto','nullable' => False),
-				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'open' => array('type' => 'int','precision' => '2','nullable' => True),
-				'closed' => array('type' => 'int','precision' => '2','nullable' => True),
+				'id' 			=> array('type' => 'auto','nullable' => False),
+				'name' 		=> array('type' => 'varchar','precision' => '50','nullable' => False),
+				'open' 		=> array('type' => 'int','precision' => '2','nullable' => True),
+				'closed' 	=> array('type' => 'int','precision' => '2','nullable' => True),
 				'pending' => array('type' => 'int','precision' => '2','nullable' => True),
 				'sorting' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
@@ -222,8 +229,8 @@
 		),
 		'controller_control_item_option' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
-				'option_value' =>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
+				'id' 							=> array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
+				'option_value' 		=>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
 				'control_item_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  True)
 			),
 			'pk' => array('id'),

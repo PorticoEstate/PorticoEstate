@@ -2,7 +2,7 @@
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <xsl:call-template name="yui_phpgw_i18n"/>
 
 <div id="main_content">
@@ -17,7 +17,8 @@
 </xsl:choose>
 	
 	<div id="control_item_details">
-		<form action="index.php?menuaction=controller.uicontrol_item.save" method="post">
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol_item.save')" /></xsl:variable>
+		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value="{control_item/id}" />
 			<dl class="proplist">
 				<dt>
@@ -28,7 +29,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/title" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<input type="" name="title" id="title" size="80"  class="required">
+							<input type="text" name="title" id="title" size="80"  class="required">
 								<xsl:attribute name="value"><xsl:value-of select="control_item/title"/></xsl:attribute>
 							</input>
 						</xsl:when>
@@ -70,7 +71,7 @@
 						<xsl:choose>
 							<xsl:when test="view">
 								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>
-								<xsl:value-of select="php:function('lang', $lang_type)" />
+								<h4 class="option-list-heading"><xsl:value-of select="php:function('lang', $lang_type)" /></h4>
 								
 								<xsl:if test="control_item/options_array/child::node()">								
 									<h4 class="option-list-heading">Verdier i liste</h4>
@@ -82,7 +83,6 @@
 								</xsl:if>
 							</xsl:when>
 							<xsl:when test="editable">
-							
 								<!-- ==============  RADIOBUTTONS FOR CHOOSING CONTROL ITEM TYPE  ==============  -->
 								<xsl:choose>
 								<xsl:when test="control_item/type = ''">
@@ -109,13 +109,11 @@
 														</div>
 													</xsl:otherwise>
 												</xsl:choose>
-									
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
 										<xsl:for-each select="control_item/control_item_types">
 											<xsl:variable name="current_type"><xsl:value-of select="." /></xsl:variable>
-											
 												<xsl:choose>
 													<xsl:when test="//control_item/type = $current_type">
 														<div class="control_item_type">
@@ -138,7 +136,6 @@
 														</div>
 													</xsl:otherwise>
 												</xsl:choose>
-																					
 									</xsl:for-each>
 								</xsl:otherwise>
 								</xsl:choose>
@@ -149,7 +146,6 @@
 								<xsl:when test="control_item/options_array/child::node()">
 									<div id="add_control_item_option_panel"  style="display:block;">
 										<hr />
-										
 										<xsl:choose>
 											<xsl:when test="//control_item/type = 'control_item_type_3'">
 												<h2 class="type">Nedtrekksliste</h2>	
@@ -171,7 +167,7 @@
 												<li>
 													<label>Listeverdi<span class="order_nr"><xsl:number /></span></label>
 													<xsl:variable name="option_value"><xsl:value-of select="option_value" /></xsl:variable>
-													<input type="" name="option_values[]" value="{$option_value}" />
+													<input type="text" name="option_values[]" value="{$option_value}" />
 													<span class="btn delete">Slett</span>
 												</li>
 											</xsl:for-each>
@@ -179,7 +175,7 @@
 	
 										<div id="add_control_item_list_value" class="row">
 											<label>Ny listeverdi</label>
-											<input type="" name="option_value" />
+											<input type="text" name="option_value" />
 											<input class="btn" type="button" value="Legg til" />
 										</div>
 									</div>
@@ -187,7 +183,6 @@
 								<xsl:otherwise>
 									<div id="add_control_item_option_panel">
 										<hr />
-										
 										<h2 class="type"></h2>
 										<h3>Legg til verdier som listen skal inneholde</h3>
 	
@@ -199,13 +194,12 @@
 	
 										<div id="add_control_item_list_value" class="row">
 											<label>Ny listeverdi</label>
-											<input type="" name="option_value" />
+											<input type="text" name="option_value" />
 											<input class="btn" type="button" value="Legg til" />
 										</div>
 									</div>
 								</xsl:otherwise>
 								</xsl:choose>
-									
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>
@@ -330,6 +324,7 @@
 								<xsl:>index.php?menuaction=controller.uicontrol_item.edit</xsl:>
 								<xsl:>&amp;id=</xsl:>
 								<xsl:value-of select="control_item/id"/>
+								<xsl:value-of select="$session_url"/>
 							</xsl:attribute>
 							<xsl:value-of select="php:function('lang', 'edit')" />
 						</a>

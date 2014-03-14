@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare Setup - http://phpgroupware.org
 	*
-	* @copyright Portions Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2000-2014 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$
@@ -270,6 +270,14 @@ HTML;
 					$request_order = '<li>' . lang('You appear to have set request_order = "GPCS"') . "</li>\n";
 				}
 				
+			}
+
+			if ( !function_exists('json_encode') ) // Some distributions have removed the standard JSON extension as of PHP 5.5rc2 due to a license conflict
+			{
+				$detected .= '<b><p align="center" class="msg">'
+					. "You have to install php5-json\n"
+					. '</p></b><td></tr></table></body></html>';
+				die($detected);
 			}
 
 			$get_max_value_length = '';
@@ -639,6 +647,12 @@ HTML;
 //			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
 			$setup_tpl->set_var('system_name', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate');
 			$setup_tpl->set_var('default_lang', isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : phpgw::get_var('ConfigLang', 'string', 'POST'));
+			$setup_tpl->set_var('login_left_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_left_message']));
+			$setup_tpl->set_var('login_right_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_right_message']));
+			$setup_tpl->set_var('new_user_url', $GLOBALS['phpgw_info']['server']['new_user_url']);
+			$setup_tpl->set_var('lost_password_url', $GLOBALS['phpgw_info']['server']['lost_password_url']);
+
+
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{
@@ -737,6 +751,10 @@ HTML;
 			$setup_tpl->set_var('lang_includeroot',lang('Include Root (this should be the same as Server Root unless you know what you are doing)'));
 			$setup_tpl->set_var('lang_adminpass',lang('Admin password to header manager'));
 			$setup_tpl->set_var('lang_system_name',lang('System name'));
+			$setup_tpl->set_var('lang_login_left_message',lang('login left message'));
+			$setup_tpl->set_var('lang_login_right_message',lang('login right message'));
+			$setup_tpl->set_var('lang_new_user',lang('url new user'));
+			$setup_tpl->set_var('lang_forgotten_password',lang('url forgotten password'));
 			$setup_tpl->set_var('lang_dbhost',lang('DB Host'));
 			$setup_tpl->set_var('lang_dbhostdescr',lang('Hostname/IP of database server'));
 			$setup_tpl->set_var('lang_dbname',lang('DB Name'));
@@ -773,4 +791,3 @@ HTML;
 			$setup_tpl->pfp('out','manageheader');
 			// ending the switch default
 	}
-?>

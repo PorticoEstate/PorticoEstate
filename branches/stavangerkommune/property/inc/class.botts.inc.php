@@ -52,6 +52,7 @@
 		public $total_records	= 0;
 		public $sum_budget		= 0;
 		public $sum_actual_cost	= 0;
+		public $sum_difference	= 0;
 		public $show_finnish_date = false;
 		public $simple = false;
 
@@ -132,10 +133,8 @@
 			$branch_id				= phpgw::get_var('branch_id', 'int');
 			$order_dim1				= phpgw::get_var('order_dim1', 'int');
 
+			$this->start			= $start 							? $start 			: 0;
 
-//			$this->start			= $start 							? $start 			: 0;
-
-			$this->start			= isset($_REQUEST['start']) 		? $start			: $this->start;
 			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
 			$this->sort				= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
 			$this->order			= isset($_REQUEST['order']) 		? $order			: $this->order;
@@ -260,6 +259,12 @@
 						'id' => 'actual_cost',
 						'name'=> lang('actual cost')
 					);
+
+				$columns['difference'] = array
+					(
+						'id' => 'difference',
+						'name'=> lang('difference')
+					);
 			}
 
 			$columns['vendor'] = array
@@ -318,7 +323,49 @@
 			return $columns;
 		}
 
+		function get_group_list($selected = 0)
+		{
+			$query='';
+			$group_list	= $this->bocommon->get_group_list('select', $selected, $start=-1, $sort='ASC', $order='account_firstname', $query, $offset=-1);
+			$_candidates = array();
+			if(isset($this->config->config_data['fmtts_assign_group_candidates']) && is_array($this->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach($this->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if( $group_candidate )
+					{
+						$_candidates[] = $group_candidate;
+					}
+				}
+			}
 
+			if( $_candidates )
+			{
+				if($selected)
+				{
+					if( !in_array( $selected, $_candidates) )
+					{
+						$_candidates[] = $selected;
+					}
+				}
+
+				$values = array();
+				foreach ($group_list as $group)
+				{
+					if( in_array( $group['id'], $_candidates) )
+					{
+						$values[] = $group;
+					}
+				}
+
+				return $values;
+			}
+			else
+			{
+				return $group_list;
+
+			}
+		}
 
 		function filter($data=0)
 		{
@@ -411,29 +458,13 @@
 			return $status_text;
 		}
 
-
-		function get_priority_list($selected='')
+		function get_priority_list($selected = 0)
 		{
-
-			$prioritylevels = isset($this->config->config_data['prioritylevels']) && $this->config->config_data['prioritylevels'] ? $this->config->config_data['prioritylevels'] : 3;
-
 			if(!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : $prioritylevels;
 			}
-
-			$priority_comment[$prioritylevels]=' - '.lang('Lowest');
-			//			$priority_comment[2]=' - '.lang('Medium');
-			$priority_comment[1]=' - '.lang('Highest');
-
-			$priorities = array();
-			for ($i=1; $i<= $prioritylevels; $i++)
-			{
-				$priorities[$i]['id'] =$i;
-				$priorities[$i]['name'] =$i . (isset($priority_comment[$i])?$priority_comment[$i]:'');
-			}
-
-			return $this->bocommon->select_list($selected,$priorities);
+			return execMethod('property.bogeneric.get_list', array('type' => 'ticket_priority', 'selected' => $selected) );
 		}
 
 		function get_category_name($cat_id)
@@ -468,9 +499,10 @@
 				'ecodimb' => $this->ecodimb, 'b_account' => $this->b_account, 'building_part' => $this->building_part,
 				'branch_id' => $this->branch_id ,'order_dim1' => $this->order_dim1));
 
-			$this->total_records = $this->so->total_records;
-			$this->sum_budget = $this->so->sum_budget;
-			$this->sum_actual_cost = $this->so->sum_actual_cost;
+			$this->total_records		= $this->so->total_records;
+			$this->sum_budget			= $this->so->sum_budget;
+			$this->sum_actual_cost		= $this->so->sum_actual_cost;
+			$this->sum_difference		= $this->so->sum_difference;
 
 			if(!$external)
 			{
@@ -485,6 +517,17 @@
 			{
 				$entity[0]['type']='.project';
 				$this->uicols_related	= array('project');
+			}
+
+
+			$custom_status	= $this->so->get_custom_status();
+			$closed_status = array('X');
+			foreach($custom_status as $custom)
+			{
+				if($custom['closed'])
+				{
+					$closed_status[] =  "C{$custom['id']}";
+				}
 			}
 
 			foreach ($tickets as & $ticket)
@@ -509,6 +552,19 @@
 				else
 				{
 					$ticket['user'] = $account[$ticket['user_id']];
+				}
+
+
+				$ticket['difference'] = 0;
+
+
+				if($ticket['estimate'] && !in_array( $ticket['status'], $closed_status) )
+				{
+					$ticket['difference'] =  $ticket['estimate'] - (float)$ticket['actual_cost'];
+					if($ticket['difference'] < 0)
+					{
+						$ticket['difference'] = 0;
+					}
 				}
 
 				if($ticket['assignedto'])
@@ -545,11 +601,13 @@
 				}
 				$ticket['finnish_date'] = (isset($ticket['finnish_date']) && $ticket['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'],$this->dateformat):'');
 
+/*
 				if ($ticket['status'] == 'X')
 				{
 					$history_values = $this->historylog->return_array(array(),array('X'),'history_timestamp','DESC',$ticket['id']);
 					$ticket['timestampclosed'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 				}
+*/
 				if ($ticket['new_ticket'])
 				{
 					$ticket['new_ticket'] = '*';
@@ -785,13 +843,21 @@
 					if ((int)$value['new_value']>0)
 					{
 						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
-						$record_history[$i]['value_old_value'] = $value['old_value'] ? $GLOBALS['phpgw']->accounts->id2name($value['old_value']) : '';
 					}
 					else
 					{
 						$record_history[$i]['value_new_value']	= lang('None');
+					}
+
+					if ((int)$value['old_value']>0)
+					{
+						$record_history[$i]['value_old_value'] = $value['old_value'] ? $GLOBALS['phpgw']->accounts->id2name($value['old_value']) : '';
+					}
+					else
+					{
 						$record_history[$i]['value_old_value']	= lang('None');
 					}
+
 				}
 				else if ($value['status'] == 'T')
 				{
@@ -859,7 +925,9 @@
 				$default_group = 0;
 			}
 
-			$default_priority = isset($this->config->config_data['prioritylevels']) && $this->config->config_data['prioritylevels'] ? $this->config->config_data['prioritylevels'] : 3;
+			$priority_list = $this->get_priority_list();
+
+			$default_priority = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : count($priority_list);
 
 			$ticket = array
 			(
@@ -945,12 +1013,9 @@
 			if ( (isset($ticket['send_mail']) && $ticket['send_mail']) 
 				|| (isset($this->config->config_data['mailnotification'])
 					&& $this->config->config_data['mailnotification'])
-				|| (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'])
-					&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']==1
-				)
 			)
 			{
-				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code']);
+				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code'], false, isset($ticket['send_mail']) && $ticket['send_mail'] ? true : false);
 			}
 
 			$criteria = array
@@ -1024,8 +1089,9 @@
 			return $address_element;
 		}
 
-		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false)
+		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false, $force_send = false)
 		{
+			$log_recipients = array();
 			$this->send			= CreateObject('phpgwapi.send');
 
 			$ticket	= $this->so->read_single($id);
@@ -1133,8 +1199,14 @@
 
 			$members = array();
 
-			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
+			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] == 2)
 			{
+				// Never send to groups
+			}
+			else if( (isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] == 1 && $ticket['group_id'] )
+					|| ($force_send && $ticket['group_id']))
+			{
+				$log_recipients[] = $group_name;
 				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
 				foreach($members_gross as $user)
 				{
@@ -1151,17 +1223,23 @@
 			{
 				// add owner to recipients
 				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
+				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['user_id'])->__toString();
 			}
 
-			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
-			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
-					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
-				)
-				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
-			)
+			if($ticket['assignedto'])
 			{
-				// add assigned to recipients
-				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+				$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+				if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
+						&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+					)
+					|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+					|| ($force_send && $ticket['assignedto'])
+				)
+				{
+					// add assigned to recipients
+					$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+					$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
+				}
 			}
 
 			$error = array();
@@ -1231,9 +1309,12 @@
 				{
 					$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
 				}
+
+				$log_recipients[] = "{$entry['first_name']} {$entry['last_name']}";
 			}
 			unset($entry);
 
+			$rc = false;
 			if($toarray)
 			{
 				$to = implode(';',$toarray);
@@ -1256,6 +1337,10 @@
 				}
 			}
 
+			if($rc && $log_recipients)
+			{
+				$this->historylog->add('M',$id,implode(';',array_unique($log_recipients)));				
+			}
 /*
 			if (!$rc && ($this->config->config_data['groupnotification'] || $this->config->config_data['ownernotification'] || $this->config->config_data['groupnotification']))
 			{
@@ -1295,7 +1380,11 @@
 
 		public function update_status($data, $id = 0)
 		{
-			$receipt 	= $this->so->update_status($data, $id);
+			$receipt = array();
+			if ($this->so->update_status($data, $id))
+			{
+				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
+			}
 			$this->fields_updated = $this->so->fields_updated;
 			return $receipt;
 		}

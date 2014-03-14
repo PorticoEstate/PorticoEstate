@@ -32,7 +32,7 @@
 				case 'mysql':
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_mysql');
 				break;
-				
+
 				case 'postgres':
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_pgsql');
 				break;
@@ -44,13 +44,13 @@
 				case 'sapdb':
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_sapdb');
 				break;
-				
+
 				case 'mssql':
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_mssql');
 				break;
 
 				default:
-				//what now?				
+				//what now?
 			}
 			$this->m_oDeltaProc		= createObject('phpgwapi.schema_proc_array');
 			$this->m_aTables		= array();
@@ -72,7 +72,7 @@
 				$sSequenceSQL = '';
 				$sTriggerSQL = '';
 				$this->m_oTranslator->indexes_sql = array();
-				
+
 				try
 				{
 					$this->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL);
@@ -90,7 +90,7 @@
 					echo $e->getMessage();
 					return false;
 				}
-				
+
 				$sTableSQL = "CREATE TABLE $sTableName (\n$sTableSQL\n)"
 					. $this->m_oTranslator->m_sStatementTerminator;
 				if($sSequenceSQL != '')
@@ -102,7 +102,7 @@
 				{
 					$sAllTableSQL .= $sTriggerSQL . "\n";
 				}
-					
+
 				$sAllTableSQL .= $sTableSQL . "\n\n";
 
 				// postgres and mssql
@@ -326,7 +326,7 @@
 			while(list($sFieldName, $aFieldAttr) = each($aTableDef['fd']))
 			{
 				$sFieldSQL = '';
-				
+
 				try
 				{
 					$this->_GetFieldSQL($aFieldAttr, $sFieldSQL);
@@ -338,7 +338,7 @@
 					throw new Exception($_message);
 					return False;
 				}
-				
+
 				if($sTableSQL != '')
 				{
 					$sTableSQL .= ",\n";
@@ -488,9 +488,10 @@
 			// Translate the type for the DBMS
 			$sBufNullable = '';
 			$sBufDefault = '';
+
 			if($sFieldSQL = $this->m_oTranslator->TranslateType($sType, $iPrecision, $iScale))
 			{
-				if($bNullable == False)
+				if($bNullable === false || $bNullable === 'False')
 				{
 					$sBufNullable = ' NOT NULL';
 					//$sFieldSQL .= ' NOT NULL';
@@ -500,12 +501,12 @@
 					$sBufNullable = ' NULL';
 					//$sFieldSQL .= ' NULL';
 				}
-				
+
 				if($sDefault === '0' || $sDefault === 0)
 				{
 					$sBufDefault = ' DEFAULT 0';
 					//$sFieldSQL .= ' DEFAULT 0';
-				}								
+				}
 				elseif(!is_numeric($sDefault) && $sDefault != '')
 				{
 					if($DEBUG) { echo '<br>_GetFieldSQL(): Calling TranslateDefault for "' . $sDefault . '"'; }
@@ -519,7 +520,7 @@
 					$sBufDefault .= " DEFAULT $sDefault";
 					//$sFieldSQL .= " DEFAULT $sDefault";
 				}
-				
+
 				if($this->dbms == 'oracle')
 				{
 					$sFieldSQL .= "{$sBufDefault}{$sBufNullable}";
@@ -579,7 +580,7 @@
 				{
 					$sFields .= ',';
 				}
-				
+
 				if(is_array($sField))
 				{
 					$sField = implode(',', $sField);
@@ -644,17 +645,17 @@
 			{
 				$sFKSQL = implode(",\n",$sFKSQLarr);
 			}
-			
+
 			return True;
 		}
-		
+
 		/**
 		* Create Index on tables from tables_update
 		*
 		* @param string|array $aFields fields hold by the index
 		* @param string $sTableName table affected
 		*/
-		
+
 		function CreateIndex($aFields, $sTableName)
 		{
 			if (count($aFields) < 1 || !$sTableName)
@@ -686,12 +687,12 @@
 				}
 				++$i;
 			}
-			
+
 			if($this->dbms == 'mysql' && $sIXSQL)
 			{
 				$this->query($sIXSQL, __LINE__, __FILE__);
 			}
-			
+
 			// postgres and mssql
 			if(isset($this->m_oTranslator->indexes_sql) && is_array($this->m_oTranslator->indexes_sql) && count($this->m_oTranslator->indexes_sql)>0)
 			{
@@ -701,7 +702,7 @@
 					$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
 					$this->query($IndexSQL, __LINE__, __FILE__);
 				}
-			}			
+			}
 		}
 
 		/**

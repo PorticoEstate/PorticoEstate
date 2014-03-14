@@ -272,6 +272,35 @@ onMouseOut="nd()">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
+
+		<script type="text/javascript">
+			function set_tab(active_tab)
+			{
+				document.form.active_tab.value = active_tab;			
+			}
+
+			var property_js = <xsl:value-of select="property_js"/>;
+		//	var base_java_url = <xsl:value-of select="base_java_url"/>;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						edit_action:  <xsl:value-of select="edit_action"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
+				]
+			</xsl:for-each>
+
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
+
 		<div class="yui-navset" id="location_edit_tabview">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
@@ -401,20 +430,6 @@ onMouseOut="nd()">
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
-								<xsl:when test="entities_link != ''">
-									<tr>
-										<td valign="top">
-											<xsl:value-of select="lang_related_info"/>
-										</td>
-										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<xsl:apply-templates select="entities_link"/>
-											</table>
-										</td>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:choose>
 								<xsl:when test="edit_street = 1">
 									<tr>
 										<td>
@@ -469,6 +484,20 @@ onMouseOut="nd()">
 								</xsl:when>
 							</xsl:choose>
 							<xsl:apply-templates select="attributes_general/attributes"/>
+							<xsl:choose>
+								<xsl:when test="entities_link != ''">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_related_info"/>
+										</td>
+										<td>
+											<table width="100%" cellpadding="2" cellspacing="2" align="center">
+												<xsl:apply-templates select="entities_link"/>
+											</table>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
 						</table>
 					</div>
 					<xsl:call-template name="attributes_values"/>
@@ -554,21 +583,15 @@ onMouseOut="nd()">
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="related_link != ''">
-							<div id="related">
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<tr>
-										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<xsl:apply-templates select="related_link"/>
-											</table>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</xsl:when>
-					</xsl:choose>
+						<div id="related">
+							<table cellpadding="2" cellspacing="2" width="80%" align="center">
+								<tr>
+									<td>
+										<div id="datatable-container_0"/>
+									</td>
+								</tr>
+							</table>
+						</div>
 					<xsl:for-each select="integration">
 						<div id="{section}">
 							<iframe id="{section}_content" width="100%" height="{height}">
@@ -762,22 +785,6 @@ onMouseOut="nd()">
 		</tr>
 	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="related_link">
-		<xsl:variable name="lang_entity_statustext">
-			<xsl:value-of select="lang_entity_statustext"/>
-		</xsl:variable>
-		<xsl:variable name="entity_link">
-			<xsl:value-of select="entity_link"/>
-		</xsl:variable>
-		<tr>
-			<td class="small_text" align="left">
-				<a href="{$entity_link}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;">
-					<xsl:value-of select="text_entity"/>
-				</a>
-			</td>
-		</tr>
-	</xsl:template>
 
 	<!-- New template-->
 	<xsl:template match="summary">

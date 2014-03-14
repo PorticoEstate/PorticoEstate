@@ -1,6 +1,6 @@
 <?php
 /* 
-  V5.11 5 May 2010   (c) 2000-2010 (jlim#natsoft.com). All rights reserved.
+  V5.18 3 Sep 2012  (c) 2000-2012 (jlim#natsoft.com). All rights reserved.
 
   This is a version of the ADODB driver for DB2.  It uses the 'ibm_db2' PECL extension
   for PHP (http://pecl.php.net/package/ibm_db2), which in turn requires DB2 V8.2.2 or
@@ -212,7 +212,7 @@ class ADODB_db2 extends ADOConnection {
 	{
 		$row = $this->GetRow("SELECT service_level, fixpack_num FROM TABLE(sysproc.env_get_inst_info()) 
 			as INSTANCEINFO");
-	
+
 		
 		if ($row) {		
 			$info['version'] = $row[0].':'.$row[1];
@@ -224,7 +224,7 @@ class ADODB_db2 extends ADOConnection {
 		
 		return $info;
 	}
-
+	
 	function CreateSequence($seqname='adodbseq',$start=1)
 	{
 		if (empty($this->_genSeqSQL)) return false;

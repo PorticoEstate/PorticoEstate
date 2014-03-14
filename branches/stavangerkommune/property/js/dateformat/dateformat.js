@@ -1,5 +1,7 @@
-<!-- Original: Richard Gorremans (RichardG@spiritwolfx.com) ==>
-<!-- Updates: www.spiritwolfx.com
+/**
+ * Original: Richard Gorremans (RichardG@spiritwolfx.com) ==>
+ * Updates: www.spiritwolfx.com
+ */
 
 // Check browser version
 var isNav4 = false, isNav5 = false, isIE4 = false

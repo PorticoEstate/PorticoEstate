@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.control_item.inc.php 9404 2012-05-15 11:47:15Z vator $
+ 	* @version $Id: class.control_item_option.inc.php 10810 2013-02-13 19:49:14Z sigurdne $
 	*/
 
 	include_class('controller', 'model', 'inc/model/');

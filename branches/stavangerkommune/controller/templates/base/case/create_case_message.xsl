@@ -1,6 +1,5 @@
 <!-- $Id: edit_check_list.xsl 8374 2011-12-20 07:45:04Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
 
 <div id="main_content" class="medium">
 	
@@ -26,7 +25,7 @@
 		<div class="box-2 select-box">
 			<a>
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;location_code=</xsl:text>
@@ -39,11 +38,12 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (år)
+				Kontrollplan for bygg/eiendom (år)
 			</a>
+				
 			<a class="last">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;month=</xsl:text>
@@ -63,7 +63,7 @@
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_tab_menu" />
+		<xsl:call-template name="check_list_menu" />
 	</div>
 	
 		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
@@ -72,7 +72,11 @@
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
 				
-				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="index.php?menuaction=controller.uicase.send_case_message" method="post">
+				<xsl:variable name="action_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.send_case_message')" />
+				</xsl:variable>
+		
+				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post">
 					<input>
 						<xsl:attribute name="name">check_list_id</xsl:attribute>
 					    <xsl:attribute name="type">hidden</xsl:attribute>
@@ -117,7 +121,10 @@
 					<!-- === UPLOAD FILE === -->
 					<div class="row">
 						<label>Filvedlegg:</label>
-						<input type="file" id="file" name="file" />
+						<input type="file" id="file" name="file" >
+							<xsl:attribute name="accept">image/*</xsl:attribute>
+							<xsl:attribute name="capture">camera</xsl:attribute>				    
+						</input>
 					</div>
 			
 					<h3>Velg hvilke saker meldingen gjelder</h3>					
@@ -126,11 +133,36 @@
 							<xsl:choose>
 							 	<xsl:when test="cases_array/child::node()">
 							 		<li class="check_item">
-								 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
+								 		<h4><span>
+								 		<xsl:value-of select="control_item/control_group_name"/>
+								 		<xsl:text>::</xsl:text>
+								 		<xsl:value-of select="control_item/title"/>
+								 		
+								 		</span></h4>
 								 		<ul>		
 											<xsl:for-each select="cases_array">
 												<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-												<li><input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
+												<li>
+													<input type="checkbox"  name="case_ids[]" value="{$cases_id}" />
+													 <xsl:choose>
+														  <xsl:when test="component_descr != ''">
+															  <div class="row">
+																<label>
+																	<xsl:value-of select="php:function('lang','component')" />
+																</label> 
+															  </div>
+															   <div class="component_descr">
+																<xsl:value-of select="component_descr"/>
+															  </div>
+														 </xsl:when>
+													</xsl:choose>
+													<div class="row">
+														<label>Beskrivelse:</label> 
+													</div>
+													<div class="case_descr">
+														<xsl:value-of select="descr"/>
+													</div>
+												</li>
 											</xsl:for-each>
 										</ul>
 							 		</li>

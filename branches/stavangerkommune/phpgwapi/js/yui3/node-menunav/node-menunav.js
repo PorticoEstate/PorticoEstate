@@ -1,11 +1,10 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('node-menunav', function(Y) {
+YUI.add('node-menunav', function (Y, NAME) {
 
 /**
 * <p>The MenuNav Node Plugin makes it easy to transform existing list-based 
@@ -368,7 +367,7 @@ NodeMenuNav.NS = "menuNav";
 
 
 /** 
-* @property NodeMenuNav.SHIM_TEMPLATE_TITLE
+* @property SHIM_TEMPLATE_TITLE
 * @description String representing the value for the <code>title</code> 
 * attribute for the shim used to prevent <code>&#60;select&#62;</code> elements 
 * from poking through menus in IE 6.
@@ -379,7 +378,7 @@ NodeMenuNav.SHIM_TEMPLATE_TITLE = "Menu Stacking Shim";
 
 
 /** 
-* @property NodeMenuNav.SHIM_TEMPLATE
+* @property SHIM_TEMPLATE
 * @description String representing the HTML used to create the 
 * <code>&#60;iframe&#62;</code> shim used to prevent 
 * <code>&#60;select&#62;</code> elements from poking through menus in IE 6.
@@ -1392,7 +1391,7 @@ Y.extend(NodeMenuNav, Y.Plugin.Base, {
 	            //  submenu immediately.
 	            //  http://yuilibrary.com/projects/yui3/ticket/2528316
 	            
-	            Y.message("Pause path");
+	            //Y.message("Pause path");
 	            
 	            menuNav._hoverTimer = later(submenuShowDelay, menuNav, function () {
                     showSubmenu(0);
@@ -2188,4 +2187,4 @@ Y.namespace('Plugin');
 Y.Plugin.NodeMenuNav = NodeMenuNav;
 
 
-}, '3.3.0' ,{requires:['node', 'classnamemanager', 'node-focusmanager']});
+}, '3.7.3', {"requires": ["node", "classnamemanager", "plugin", "node-focusmanager"], "skinnable": true});

@@ -50,7 +50,7 @@ div#centerimage {
 	margin: 0px auto; height: 109px; overflow: hidden; padding-top: 4px;
 }
 div#footer {
-	color: rgb(102, 102, 102); padding-top: 0.3em; font-size: 90%; border-top-color: rgb(170, 170, 170); border-top-width: 1px; border-top-style: solid;
+	color: rgb(102, 102, 102); padding-top: 0.3em; font-size: 90%;
 }
 ul.nav {
 	padding-left: 0px;

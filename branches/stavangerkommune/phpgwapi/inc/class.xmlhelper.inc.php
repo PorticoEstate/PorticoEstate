@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.xmlhelper.inc.php 4908 2010-02-24 20:49:33Z sigurd $
+	* @version $Id: class.xmlhelper.inc.php 10127 2012-10-07 17:06:01Z sigurdne $
 	*/
 
 	class phpgwapi_xmlhelper
@@ -27,7 +27,7 @@
 			if ( is_null( $xml ) )
 			{
 				$xml = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$rootNodeName />");
-				
+
 			}
 			// loop through the data passed in.
 			foreach( $data as $key => $value )
@@ -41,7 +41,15 @@
 				}
 				if(is_object($value))
 				{
-					$value = get_object_vars($value);
+					$methods = get_class_methods(get_class($value));
+					if(in_array("toArray", $methods))
+					{
+						$value = $value->toArray();
+					}
+					else
+					{
+						$value = get_object_vars($value);
+					}
 				}
 				// delete any char not allowed in XML element names
 				$key = preg_replace('/[^a-z0-9\-\_\.\:]/i', '', $key);
@@ -121,7 +129,7 @@
 			}
 
 			$children = $xml->children();
-			
+
 			if ( !$children )
 			{
 				return (string) $xml;
@@ -166,7 +174,7 @@
 		public static function is_assoc($array)
 		{
 			$candidates = array();
-			//find candidates 
+			//find candidates
 			if(is_array($array))
 			{
 				$candidates = array_diff_key($array, array_keys(array_keys($array)));
@@ -186,7 +194,7 @@
 		// This one won't work if the start key is <> 0 - and there is holes..
 		//	return (is_array($array) && (0 !== count(array_diff_key($array, array_keys(array_keys($array)))) || count($array)==0));
 		}
-		
+
 		/**
 		* Not for use with big dataset
 		*/
@@ -198,7 +206,7 @@
 			$xml->close();
 			return $assoc;
 		}
-		
+
 		protected static function _xml2assoc($xml)
 		{
 			$tree = null;

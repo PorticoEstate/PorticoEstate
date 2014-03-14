@@ -839,9 +839,9 @@
 		}
 
 		/**
-		* Convert a date araray to a unix timestamp
+		* Convert a date array to a unix timestamp
 		*
-		* @param array $date the date array to convert, must contain keys day, month & year
+		* @param string $date the date to convert, must contain keys day, month & year
 		* @return int unix timestamp
 		*/
 		public static function date_to_timestamp($datestr = '')
@@ -851,8 +851,63 @@
 				return 0;
 			}
 
+			$hour	= 13;
+			$minute	= 0;
+			$second	= 0;
+
+			if( strpos($datestr, ':') )
+			{
+				$date_part = explode(' ', $datestr);
+				$time_part = explode(':', $date_part[1]);
+
+				$hour	= (int) $time_part[0];
+				$minute	= (int) $time_part[1];
+				$second	= isset($time_part[2]) && $time_part[2] ? (int)$time_part[2] : 0;
+			}
+
+
+			if( version_compare(PHP_VERSION, '5.3.0') >= 0  && strpos($datestr, ':'))
+			{
+				return self::datetime_to_timestamp($datestr);
+			}
+
 			$date_array	= self::date_array($datestr);
-			return mktime (13, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
+			return mktime ($hour, $minute, $second, $date_array['month'], $date_array['day'], $date_array['year']);
+		}
+
+
+		/**
+		* Convert a datetime to a unix timestamp
+		*
+		* @param string $date the date convert
+		* @return int unix timestamp
+		*/
+		public static function datetime_to_timestamp($datestr = '')
+		{
+			if ( !$datestr )
+			{
+				return 0;
+			}
+
+			$format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if(substr_count($datestr, ':') == 1 )
+			{
+				$format .= ' H:i';
+			}
+			else if(substr_count($datestr, ':') == 2 )
+			{
+				$format .= ' H:i:s';
+			}
+			
+			$date = DateTime::createFromFormat("{$format}", $datestr);
+			if($date)
+			{
+				return $date->getTimestamp();
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		/**

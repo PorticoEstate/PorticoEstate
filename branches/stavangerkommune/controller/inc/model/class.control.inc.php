@@ -29,7 +29,7 @@
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
-	include_class('controller', 'date_helper', 'inc/helper/');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class controller_control extends controller_model
 	{
@@ -57,8 +57,6 @@
 		protected $responsibility_name;
 		protected $control_area_id;
 		protected $control_area_name;
-		protected $location_id;
-		protected $component_id;
 
 		// Objects
 		protected $check_lists_array = array();
@@ -234,32 +232,6 @@
 		{
 			$this->error_msg_array = $error_msg_array;
 		}
-		
-
-
-//Sigurd 3.august 2010: needed for socontrol::get_controls_for_components_by_location() 
-
-		public function set_location_id($location_id)
-		{
-			$this->location_id = $location_id;
-		}
-
-		public function get_location_id()
-		{
-			return $this->location_id;
-		}
-
-		public function set_component_id($component_id)
-		{
-			$this->component_id = $component_id;
-		}
-
-		public function get_component_id()
-		{
-			return $this->component_id;
-		}
-
-//
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -283,14 +255,14 @@
 				
 				if(phpgw::get_var('start_date','string') != '')
 				{
-					$start_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('start_date','string'), "d/m-Y" );
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
 					$this->set_start_date($start_date_ts);
 				}else
 					$this->set_start_date(0);
 								
 				if( phpgw::get_var('end_date','string') != '')
 				{
-					$end_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('end_date','string'), "d/m-Y" );
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
 					$this->set_end_date( $end_date_ts );
 				}else
 				{
@@ -316,7 +288,7 @@
 				'procedure_name' => $this->get_procedure_name(),
 				'control_area_id' => $this->get_control_area_id(),
 				'control_area_name' => $this->get_control_area_name(),
-			  'repeat_type' => $this->get_repeat_type(),
+			  	'repeat_type' => $this->get_repeat_type(),
 				'repeat_interval' => $this->get_repeat_interval(),
 				'responsibility_name' => $this->get_responsibility_name()
 			);
@@ -381,7 +353,6 @@
 		  	$status = false;
 		  	$this->error_msg_array['responsibility_id'] = "error_msg_2";
 		  }
-		  
 		  
 		  return $status;
 		}

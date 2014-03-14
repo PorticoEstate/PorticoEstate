@@ -40,6 +40,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
 		}
 
@@ -230,14 +231,16 @@
 				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 			}
 
-			$sql = "SELECT fm_activities.num, fm_activities.unit, fm_activities.dim_d, fm_activities.ns3420, fm_activities.descr AS descr,"
+			$sql = "SELECT DISTINCT fm_activities.num, fm_activities.unit, fm_activities.dim_d, fm_activities.ns3420, fm_activities.descr AS descr,"
 				. " fm_activities.base_descr, fm_activity_price_index.activity_id, fm_branch.descr AS branch,"
 				. " fm_agreement.vendor_id, fm_activity_price_index.total_cost, fm_activity_price_index.m_cost,"
-				. " fm_activity_price_index.w_cost, fm_activity_price_index.index_count, fm_activity_price_index.this_index, fm_agreement.id"
+				. " fm_activity_price_index.w_cost, fm_activity_price_index.index_count, fm_activity_price_index.this_index, fm_agreement.id,"
+				. " fm_standard_unit.name AS unit_name"
 				. " FROM  fm_activities "
 				. " $this->join fm_activity_price_index ON fm_activities.id = fm_activity_price_index.activity_id "
 				. " $this->join fm_branch ON fm_activities.branch_id = fm_branch.id "
 				. " $this->join fm_agreement ON fm_activity_price_index.agreement_id = fm_agreement.id "
+				. " {$this->join} fm_standard_unit ON fm_activities.unit = fm_standard_unit.id"
 				. " WHERE fm_agreement.status='active' AND (fm_agreement.vendor_id $vendor_condition and current_index is not null "
 				. " OR (fm_agreement.vendor_id $vendor_condition) AND (fm_activity_price_index.this_index IS NULL)) $querymethod";
 
@@ -261,21 +264,22 @@
 			{
 				$pricebook[] = array
 					(
-						'activity_id'		=> $this->db->f('activity_id'),
+						'activity_id'	=> $this->db->f('activity_id'),
 						'num'			=> $this->db->f('num'),
 						'branch'		=> $this->db->f('branch'),
 						'vendor_id'		=> $this->db->f('vendor_id'),
 						'm_cost'		=> $this->db->f('m_cost'),
 						'w_cost'		=> $this->db->f('w_cost'),
-						'total_cost'		=> $this->db->f('total_cost'),
-						'this_index'		=> $this->db->f('this_index'),
+						'total_cost'	=> $this->db->f('total_cost'),
+						'this_index'	=> $this->db->f('this_index'),
 						'unit'			=> $this->db->f('unit'),
+						'unit_name'		=> $this->db->f('unit_name'),
 						'dim_d'			=> $this->db->f('dim_d'),
 						'ns3420_id'		=> $this->db->f('ns3420'),
-						'descr'			=> htmlspecialchars_decode($this->db->f('descr',true)),
-						'base_descr'		=> htmlspecialchars_decode($this->db->f('base_descr',true)),
-						'index_count'		=> $this->db->f('index_count'),
-						'agreement_id'		=> $this->db->f('fm_agreement.id')
+						'descr'			=> $this->db->f('descr',true),
+						'base_descr'	=> $this->db->f('base_descr',true),
+						'index_count'	=> $this->db->f('index_count'),
+						'agreement_id'	=> $this->db->f('fm_agreement.id')
 					);
 			}
 			//		_debug_array($pricebook);
@@ -481,8 +485,12 @@
 				$querymethod = " and (fm_activities.descr $this->like '%$query%' or fm_activities.base_descr $this->like '%$query%' or fm_activities.num $this->like '%$query%') ";
 			}
 
-			$sql = "SELECT fm_activities.id AS activity_id, fm_activities.num, fm_activities.base_descr, fm_activities.unit, fm_activities.dim_d, fm_branch.descr as branch, fm_activities.descr, ns3420 "
-				. " FROM  fm_activities $this->join fm_branch on fm_activities.branch_id=fm_branch.id"
+			$sql = "SELECT DISTINCT fm_activities.id AS activity_id, fm_activities.num, fm_activities.base_descr,"
+				. " fm_activities.unit, fm_activities.dim_d, fm_branch.descr as branch, fm_activities.descr, ns3420,"
+				. " fm_standard_unit.name AS unit_name"
+				. " FROM  fm_activities"
+				. " {$this->join} fm_branch on fm_activities.branch_id=fm_branch.id"
+				. " {$this->left_join} fm_standard_unit ON fm_activities.unit = fm_standard_unit.id"
 				. " $filtermethod $querymethod ";
 
 
@@ -504,12 +512,13 @@
 					(
 						'activity_id'	=> $this->db->f('activity_id'),
 						'num'			=> $this->db->f('num'),
-						'base_descr'	=> htmlspecialchars_decode($this->db->f('base_descr',true)),
+						'base_descr'	=> $this->db->f('base_descr',true),
 						'branch'		=> $this->db->f('branch'),
 						'dim_d'			=> $this->db->f('dim_d'),
 						'ns3420'		=> $this->db->f('ns3420'),
 						'unit'			=> $this->db->f('unit'),
-						'descr'			=> htmlspecialchars_decode($this->db->f('descr',true))
+						'unit_name'		=> $this->db->f('unit_name'),
+						'descr'			=> $this->db->f('descr',true)
 					);
 			}
 			//		_debug_array($pricebook);
@@ -603,8 +612,8 @@
 				$activity['unit']		= $this->db->f('unit');
 				$activity['cat_id']		= $this->db->f('agreement_group_id');
 				$activity['ns3420_id']	= $this->db->f('ns3420');
-				$activity['descr']		= htmlspecialchars_decode($this->db->f('descr',true));
-				$activity['base_descr']	= htmlspecialchars_decode($this->db->f('base_descr',true));
+				$activity['descr']		= $this->db->f('descr',true);
+				$activity['base_descr']	= $this->db->f('base_descr',true);
 				$activity['dim_d']		= $this->db->f('dim_d');
 				$activity['branch_id']	= $this->db->f('branch_id');
 
@@ -623,7 +632,7 @@
 				$agreement_group['agreement_group_id']	= $id;
 				$agreement_group['num']			= $this->db->f('num');
 				$agreement_group['status']		= $this->db->f('status');
-				$agreement_group['descr']			= stripslashes($this->db->f('descr'));
+				$agreement_group['descr']		= $this->db->f('descr',true);
 
 				return $agreement_group;
 			}

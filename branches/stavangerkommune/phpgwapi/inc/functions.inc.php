@@ -89,6 +89,62 @@
 	}
 	
 
+
+	/**
+	 * Get global phpgw_info from XSLT templates
+	 * @param string $key on the format 'user|preferences|common|dateformat'
+	 * @return array or string depending on if param is representing a node
+	 */
+
+	function get_phpgw_info($key)
+	{
+		$_keys = explode('|',$key);
+		
+		$ret = $GLOBALS['phpgw_info'];
+		foreach ($_keys as $_var)
+		{
+			$ret = $ret[$_var];
+		}
+		return $ret;
+	}
+
+
+	/**
+	 * Get global phpgw_link from XSLT templates
+	 * @param string $path on the format 'index.php'
+	 * @param string $params on the format 'param1:value1,param2:value2'
+	 * @return string containing url
+	 */
+	function get_phpgw_link($path, $params)
+	{
+		$path = '/' . ltrim($path, '/');
+		$link_data = array();
+
+		$_param_sets = explode(',',$params);
+		foreach ($_param_sets as $_param_set)
+		{
+			$__param_set = explode(':',$_param_set);
+			if(isset($__param_set[1]) && $__param_set[1])
+			{
+				$link_data[trim($__param_set[0])] = trim($__param_set[1]);
+			}
+		}
+		
+		$ret = $GLOBALS['phpgw']->link($path, $link_data, true);//true: want '&';rather than '&amp;'; 
+		return $ret;
+	}
+
+	/**
+	 * Fix global phpgw_link from XSLT templates by adding session id and click_history
+	 * @return string containing parts of url
+	 */
+	function get_phpgw_session_url()
+	{
+		$base_url	= $GLOBALS['phpgw']->link('/', array(), true);
+		$url_parts = parse_url($base_url);
+		return $url_parts['query'];
+	}
+
 	/**
 	* cleans up a backtrace array and converts it to a string
 	*
@@ -515,6 +571,11 @@ HTML;
 	else
 	{
 	*/
+		if(isset($GLOBALS['phpgw_info']['flags']['template_set']) && $GLOBALS['phpgw_info']['flags']['template_set'] )
+		{
+			$GLOBALS['phpgw_info']['server']['template_set'] = $GLOBALS['phpgw_info']['flags']['template_set'];
+		}
+
 		$c = createObject('phpgwapi.config','phpgwapi');
 		$c->read();
 		foreach ($c->config_data as $k => $v)
@@ -565,7 +626,6 @@ HTML;
 	unset($cache_query);
 	unset($server_info_cache);
 */
-
 
 	// In case we use virtual hosts - some of them but not all with ntlm auth. 
 	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && !isset($_SERVER['REMOTE_USER']))

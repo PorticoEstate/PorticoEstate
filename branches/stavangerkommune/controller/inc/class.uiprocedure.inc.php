@@ -42,6 +42,11 @@
 		private $so_control_group_list;
 		private $so_control_group;
 
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+
 		public $public_functions = array
 		(
 			'index'							=>	true,
@@ -65,6 +70,11 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			
+			$this->read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+
 			$config	= CreateObject('phpgwapi.config','controller');
 			$config->read();
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
@@ -76,7 +86,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			
@@ -98,6 +108,7 @@
 			// END as categories
 
 			$data = array(
+				'datatable_name'		=> 'Prosedyrer', //lang('procedures'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -161,7 +172,7 @@
 				),
 			);
 
-			self::render_template_xsl(array( 'procedure/procedures_datatable', 'datatable' ), $data);
+			self::render_template_xsl(array( 'datatable_common' ), $data);
 		}
 
 		public function edit()
@@ -179,6 +190,12 @@
 
 			if(isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure_id));
+				}
+
 				if(isset($procedure)) // Edit procedure
 				{
 					$description_txt = phpgw::get_var('description','html');
@@ -237,6 +254,12 @@
 			}
 			else if(isset($_POST['revisit_procedure'])) // The user has pressed the revisit button
 			{
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure_id));
+				}
+
 				$old_procedure = $this->so->get_single($procedure_id);
 				if(isset($procedure)) // Edit procedure
 				{
@@ -377,15 +400,22 @@
 					'label' => lang('View_documents_for_procedure')
 				));
 
+				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('revision_date');
+
+				$end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date() ? $procedure->get_end_date():'');
+				$revision_date =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date() ? $procedure->get_revision_date():'');
+
+
 				$data = array
 				(
 					'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 					'view'					=> "view_procedure",
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
-					'start_date'			=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_start_date())?$procedure->get_start_date():time())),
-					'end_date'				=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_end_date())?$procedure->get_end_date():'')),
-					'revision_date'			=> $GLOBALS['phpgw']->yuical->add_listener('revision_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_revision_date())?$procedure->get_revision_date():'')),
-					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
+					'start_date'			=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date() ? $procedure->get_start_date():time()),
+					'end_date'				=> $end_date ? $end_date : '',
+					'revision_date'			=> $revision_date ? $revision_date : '',
 					'editable' 				=> true,
 					'procedure'				=> $procedure_array,
 					//'control_area'				=> array('options' => $control_area_options),
@@ -397,7 +427,7 @@
 
 				$this->use_yui_editor(array('responsibility','description', 'reference'));
 
-				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
+				self::render_template_xsl(array('procedure/procedure_tabs', 'procedure/procedure_item'), $data);
 			}
 		}
 
@@ -510,9 +540,7 @@
 					'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 					'view'					=> "view_procedure",
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
-					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'procedure'				=> $procedure_array,
-					'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 					'values'				=> $table_values,
 					'table_header'			=> $table_header,
 				);
@@ -523,11 +551,12 @@
 				}
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
-				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
+				self::render_template_xsl(array('procedure/procedure_tabs', 'procedure/procedure_item'), $data);
 			}
 		}
 
-		public function view_procedures_for_control(){
+		public function view_procedures_for_control()
+		{
 			$control_id = phpgw::get_var('control_id');
 			$location_code = phpgw::get_var('location_code');
 			
@@ -553,7 +582,7 @@
 			$data = array
 			(
 				'location'					=> $location_array,
-				'control'					=> $control->toArray(),
+				'control'					=> $control,
 				'control_procedure'			=> $control_procedure,
 				'group_procedures_array'	=> $group_procedures_array
 			);
@@ -561,7 +590,8 @@
 			self::render_template_xsl('procedure/view_procedures_for_control', $data);
 		}
 		
-		public function print_procedure(){
+		public function print_procedure()
+		{
 			$procedure_id = phpgw::get_var('procedure_id');
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
@@ -584,7 +614,8 @@
 				'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 			);
 			
-			if( !empty($control_group_id) ){
+			if( !empty($control_group_id) )
+			{
 				$control_group = $this->so_control_group->get_single($control_group_id);
 				$data['control_group'] = $control_group->toArray(); 
 			}
@@ -615,7 +646,8 @@
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
-			else {
+			else
+			{
 				$user_rows_per_page = 10;
 			}
 			// YUI variables for paging and sorting
@@ -635,7 +667,8 @@
 
 			$exp_param 	= phpgw::get_var('export');
 			$export = false;
-			if(isset($exp_param)){
+			if(isset($exp_param) && $exp_param)
+			{
 				$export=true;
 				$num_of_objects = null;
 			}
@@ -654,7 +687,8 @@
 
 			//Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result) {
+			foreach($result_objects as $result)
+			{
 				if(isset($result))
 				{
 					$rows[] = $result->serialize();
@@ -671,7 +705,8 @@
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
-			if(!$export){
+			if(!$export)
+			{
 				//Add action column to each row in result table
 				array_walk(
 					$result_data['results'],
@@ -683,7 +718,7 @@
 
 		}
 
-			public function add_actions(&$value, $key, $params)
+		public function add_actions(&$value, $key, $params)
 		{
 			//Defining new columns
 			$value['ajax'] = array();

@@ -39,6 +39,9 @@
         <div class="yui-content">
         	<div id="entityinfo">
         		<ul style="margin: 2em;">
+	<!--				<xsl:value-of disable-output-escaping="yes" select="tabs"/>-->
+					<div id="info">
+
         			<li style="margin-bottom: 1em;">
         				<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
         			</li>
@@ -60,6 +63,7 @@
 						<xsl:apply-templates select="custom_attributes/attributes"/>
 						<hr/>
         			</li>
+<!--
 					<xsl:choose>
 						<xsl:when test="files!=''">
 							<li>
@@ -67,7 +71,21 @@
 							</li>
 						</xsl:when>
 					</xsl:choose>
+-->
+					</div>
+
+					<xsl:for-each select="integration">
+						<div id="{section}">
+							<iframe id="{section}_content" width="100%" height="{height}" src="{src}">
+								<p>Your browser does not support iframes.</p>
+							</iframe>
+						</div>
+					</xsl:for-each>
+
+
         		</ul>
+
+
         	</div>
         </div>
     </div>

@@ -41,7 +41,7 @@
 		protected $table;
 		var $appname = 'property';
 
-		function __construct()
+		function __construct($type = '', $type_id = 0)
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->custom 	= createObject('property.custom_fields');
@@ -49,6 +49,12 @@
 			$this->_db2		= clone($this->_db);
 			$this->_like	= & $this->_db->like;
 			$this->_join	= & $this->_db->join;
+
+			if($type)
+			{
+				$this->get_location_info($type,$type_id);
+			}
+			
 		}
 
 		function read($data, $filter = array())
@@ -337,7 +343,7 @@
 				{
 					$dataset[$j][$field] = array
 						(
-							'value'		=> $this->_db->f($field),
+							'value'		=> $this->_db->f($field,true),
 							'datatype'	=> $uicols['datatype'][$key],
 							'attrib_id'	=> $uicols['attib_id'][$key]
 						);
@@ -1139,6 +1145,108 @@
 						'menu_selection' 	=> 'admin::property::accounting::dimb_role'
 					);
 				break;
+			case 'condition_survey_status':
+				$info = array
+					(
+						'table' 			=> 'fm_condition_survey_status',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit status'),
+						'add_msg'			=> lang('add status'),
+						'name'				=> lang('request status'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::condition_survey_status'
+					);
+				break;
+
+			case 'request_responsible_unit':
+				$_lang_responsible_unit = lang('responsible unit');
+				$info = array
+					(
+						'table' 			=> 'fm_request_responsible_unit',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit') . ' ' . $_lang_responsible_unit,
+						'add_msg'			=> lang('add') . ' ' . $_lang_responsible_unit,
+						'name'				=> $_lang_responsible_unit,
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::request_responsible_unit'
+					);
+				break;
+
+			case 'ticket_priority':
+				$_lang_priority = lang('priority');
+				$info = array
+					(
+						'table' 			=> 'fm_tts_priority',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+						),
+						'edit_msg'			=> lang('edit') . ' ' . $_lang_priority,
+						'add_msg'			=> lang('add') . ' ' . $_lang_priority,
+						'name'				=> $_lang_priority,
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::ticket::ticket_priority'
+					);
+				break;
+
 				//-------- ID type varchar
 			case 'project_status':
 				$info = array
@@ -1392,9 +1500,15 @@
 				$info = array
 					(
 						'table' 			=> 'fm_standard_unit',
-						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'id'				=> array('name' => 'id', 'type' => 'int'),
 						'fields'			=> array
 						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
 							array
 							(
 								'name' => 'descr',
@@ -1875,7 +1989,7 @@
 						),
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
-						'name'				=> lang('event action'),
+						'name'				=> lang('ticket status'),
 						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::ticket::ticket_status'
@@ -2358,10 +2472,29 @@
 								'name'		=> 'value',
 								'descr'		=> lang('value'),
 								'type'		=> 'numeric',
-								'nullable'	=> false,
+								'nullable'	=> true,
 								'size'		=> 4,
 								'sortable'	=> true
 							),
+							array
+							(
+								'name'		=> 'dividend',
+								'descr'		=> lang('fraction::dividend'),
+								'type'		=> 'integer',
+								'nullable'	=> true,
+								'size'		=> 4,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name'		=> 'divisor',
+								'descr'		=> lang('fraction::divisor'),
+								'type'		=> 'integer',
+								'nullable'	=> true,
+								'size'		=> 4,
+								'sortable'	=> true
+							),
+
 							array
 							(
 								'name' => 'remark',
@@ -2378,6 +2511,110 @@
 						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::periodization_outline'
+					);
+
+				break;
+
+			case 'period_transition':
+				$valueset_month = array();
+				$valueset_day = array();
+				$valueset_hour = array();
+
+				$lang_default = lang('default');
+				for ($i=1;$i<14;$i++)
+				{
+					$valueset_month[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i == 13 ?  "{$i} ({$lang_default})" : $i
+					);
+				}
+
+				for ($i=1;$i<32;$i++)
+				{
+					$valueset_day[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i
+					);
+				}
+
+				for ($i=1;$i<25;$i++)
+				{
+					$valueset_hour[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i
+					);
+				}
+
+				$info = array
+					(
+						'table' 			=> 'fm_eco_period_transition',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name'			=> 'month',
+								'descr'			=> lang('month'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'		=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> $valueset_month,
+								)
+							),
+							array
+							(
+								'name'		=> 'day',
+								'descr'		=> lang('day'),
+								'type'		=> 'select',
+								'nullable'	=> false,
+								'size'		=> 4,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> $valueset_day,
+								)
+							),
+							array
+							(
+								'name'		=> 'hour',
+								'descr'		=> lang('hour'),
+								'type'		=> 'select',
+								'nullable'	=> true,
+								'size'		=> 4,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> $valueset_hour,
+								)
+							),
+							array
+							(
+								'name'		=> 'remark',
+								'descr'		=> lang('remark'),
+								'type'		=> 'varchar',
+								'nullable'	=> true,
+								'size'		=> 60,
+								'sortable'	=> true
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('period transition'),
+						'acl_app' 			=> 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::period_transition',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						)
 					);
 
 				break;
@@ -2554,7 +2791,7 @@
 				{
 					foreach ( $values['attributes'] as &$attr )
 					{
-						$attr['value'] 	= $this->_db->f($attr['column_name']);
+						$attr['value'] 	= $this->_db->f($attr['column_name'], true);
 					}
 				}
 			}
@@ -3058,6 +3295,7 @@
 
 		public function get_children2($data, $parent, $level, $reset = false)
 		{
+			$parent = (int)$parent;
 			$mapping = array();
 			if(isset($data['mapping']) && $data['mapping'])
 			{
@@ -3078,6 +3316,7 @@
 				return $this->tree;
 			}
 			$sql = "SELECT * FROM {$table} WHERE parent_id = {$parent}";
+
 			$db->query($sql,__LINE__,__FILE__);
 
 			while ($db->next_record())
@@ -3087,9 +3326,9 @@
 				(
 					'id'		=> $id,
 					'name'		=> str_repeat('..',$level) . $db->f($mapping['name'],true),
-					'parent_id'	=> $db->f('parent_id')
+					'parent_id'	=> $parent
 				);
-				$this->get_children2($id, $level+1);
+				$this->get_children2($data, $id, $level+1);
 			}
 			return $this->tree;
 		} 

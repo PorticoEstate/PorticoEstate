@@ -208,9 +208,17 @@
 				);	
 
 			//------------------------------------datatable0 settings------------------				
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
-				(
-					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+			(
+					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'base_java_url'				=> json_encode(array(menuaction => "property.uiwo_hour.deviation")),
 					'datatable'					=> $datavalues,
 					'myColumnDefs'				=> $myColumnDefs,
@@ -223,7 +231,7 @@
 					'add_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'lang_done'					=> lang('done'),
 					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
-				);
+			);
 
 			//---datatable settings--------------------
 			phpgwapi_yui::load_widget('dragdrop');
@@ -422,6 +430,7 @@
 							'quantity'					=> $hour['quantity'],
 							'cost'						=> $hour['cost'],
 							'unit'						=> $hour['unit'],
+							'unit_name'					=> $hour['unit_name'],
 							'billperae'					=> $hour['billperae'],
 							'deviation'					=> $deviation,
 							'result'					=> ($hour['deviation']+$hour['cost']),
@@ -597,9 +606,17 @@
 				)));	
 			//----------------------------------------------datatable settings--------			
 
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
-				(
-					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+			(
+					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'base_java_url'				=> json_encode(array(menuaction => "property.uiwo_hour.index",workorder_id=>$workorder_id)),
 					'datatable'					=> $datavalues,
 					'myColumnDefs'				=> $myColumnDefs,
@@ -834,7 +851,7 @@
 			}
 
 			$uicols = array (
-				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
@@ -1045,7 +1062,15 @@
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -1206,6 +1231,14 @@
 				$this->bo->update_email($to_email,$workorder_id);
 			}
 */
+
+			$sms_client_order_notice =  isset($this->config->config_data['sms_client_order_notice']) ? $this->config->config_data['sms_client_order_notice'] : '';
+
+			if($sms_client_order_notice)
+			{
+				$sms_client_order_notice = str_replace(array('__order_id__'), array($workorder_id), $sms_client_order_notice);
+			}
+
 			$workorder = $this->boworkorder->read_single($workorder_id);
 			$workorder_history = $this->boworkorder->read_record_history($workorder_id);
 
@@ -1532,6 +1565,20 @@ HTML;
 
 				$subject  = lang('Workorder').": ".$workorder_id;
 
+				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				$_address = array();
+				foreach($address_element as $entry)
+				{
+					$_address[] = "{$entry['text']}: {$entry['value']}";
+				}
+				
+				if($_address)
+				{
+					$subject .= ', ' . implode(', ', $_address);
+				}
+				unset($_address);
+				unset($address_element);
+
 				$attachments = array();
 				$attachment_log = '';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -1585,6 +1632,7 @@ HTML;
 					$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 				}
 
+				
 				if ($rcpt)
 				{
 					$_attachment_log = $attachment_log ? "::$attachment_log" : '';
@@ -1597,8 +1645,7 @@ HTML;
 					}
 
 					if( phpgw::get_var('notify_client_by_sms', 'bool') 
-						&& isset($this->config->config_data['sms_client_order_notice']) 
-						&& $this->config->config_data['sms_client_order_notice']
+						&& $sms_client_order_notice
 						&& (isset($project['contact_phone'])
 						&& $project['contact_phone']
 						|| phpgw::get_var('to_sms_phone')))
@@ -1608,7 +1655,7 @@ HTML;
 						$project['contact_phone'] = $to_sms_phone;
 						
 						$sms	= CreateObject('sms.sms');
-						$sms->websend2pv($this->account,$to_sms_phone,$this->config->config_data['sms_client_order_notice']);
+						$sms->websend2pv($this->account,$to_sms_phone,str_replace(array('__order_id__'), array($workorder_id), $this->config->config_data['sms_client_order_notice']));
 						$historylog->add('MS',$workorder_id,$to_sms_phone);
 					}
 					
@@ -1669,6 +1716,7 @@ HTML;
 					$table_view_order[$i]['code'] 		= $email_data['values_view_order'][$i]['code'];
 					$table_view_order[$i]['descr'] 		= $email_data['values_view_order'][$i]['hours_descr']."<br>".$email_data['values_view_order']['remark'];
 					$table_view_order[$i]['unit'] 		= $email_data['values_view_order'][$i]['unit'];
+					$table_view_order[$i]['unit_name']	= $email_data['values_view_order'][$i]['unit_name'];
 					$table_view_order[$i]['quantity'] 	= $email_data['values_view_order'][$i]['quantity'];
 					$table_view_order[$i]['billperae']	= $email_data['values_view_order'][$i]['billperae'];
 					$table_view_order[$i]['cost'] 		= $email_data['values_view_order'][$i]['cost'];
@@ -1690,7 +1738,7 @@ HTML;
 					'values'	=>	json_encode(array(	array('key' => 'post',		'label' => lang('Post'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'code',		'label' => lang('Code'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'descr',		'label' => lang('descr'),		'sortable' => true,'resizeable' => true),
-														array('key' => 'unit',		'label' => lang('Unit'),		'sortable' => true,'resizeable' => true),
+														array('key' => 'unit_name',	'label' => lang('Unit'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'quantity',	'label' => lang('Quantity'),	'sortable' => true,'resizeable' => true),
 														array('key' => 'billperae',	'label' => lang('Bill per unit'),'sortable' => true,'resizeable' => true),
 														array('key' => 'cost',		'label' => lang('cost'),		'sortable' => true,'resizeable' => true)))
@@ -1717,9 +1765,17 @@ HTML;
 
 
 			//----------------------------------------------datatable settings--------	
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
-				(
-					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+			(
+					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
 
@@ -1727,7 +1783,7 @@ HTML;
 					'lang_mail'							=> lang('E-Mail'),
 					'lang_update_email'					=> lang('Update email'),
 					'lang_update_email_statustext'		=> lang('Check to update the email-address for this vendor'),
-					'value_sms_client_order_notice'		=> isset($this->config->config_data['sms_client_order_notice']) ? $this->config->config_data['sms_client_order_notice'] : '',
+					'value_sms_client_order_notice'		=> $sms_client_order_notice,
 					'value_sms_phone'					=> $project['contact_phone'],
 					'lang_to_email_address_statustext'	=> lang('The address to which this order will be sendt'),
 					'to_email'							=> $to_email,
@@ -1858,7 +1914,7 @@ HTML;
 						$translations['post']			=> $hour['post'],
 						$translations['code']			=> $hour['code'],
 						$translations['descr']			=> $descr,
-						$translations['unit']			=> $hour['unit'],
+						$translations['unit']			=> $hour['unit_name'],
 						$translations['quantity']		=> $hour['quantity'],
 						$translations['billperae']		=> $hour['billperae'],
 						$translations['cost']			=> $hour['cost']
@@ -2268,7 +2324,7 @@ HTML;
 			$uicols = array (
 				'input_type'	=>	array('hidden','text','hidden','hidden','text','text','text','text','text','text','hidden','varchar','select','varchar'),
 				'type'			=>	array('','','','','','','','','','','','text','',''),				
-				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
+				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit_name','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
 				'formatter'		=>	array('','','','','','','','','','','','','',''),
 				'descr'			=>	array('',lang('Activity Num'),lang('Branch'),lang('Vendor'),lang('Description'),lang('Base'),lang('Unit'),lang('Labour cost'),lang('Material cost'),lang('Total Cost'),'',lang('Quantity'),lang('category'),lang('percent')),
 				'className'		=> 	array('','','','','','','','rightClasss','rightClasss','rightClasss','','','','')
@@ -2370,7 +2426,7 @@ HTML;
 			//*************************************************/
 
 			$uicols_details = array (
-				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
@@ -2494,7 +2550,15 @@ HTML;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
@@ -2750,7 +2814,7 @@ HTML;
 			$uicols = array (
 				'input_type'	=>	array('text','text','text','text','text','varchar','combo','varchar','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden'),
 				'type'			=>	array('','','','','','text','','','text','','','',''),				
-				'name'			=>	array('building_part','code','hours_descr','unit','billperae','quantity','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
+				'name'			=>	array('building_part','code','hours_descr','unit_name','billperae','quantity','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
 				'formatter'		=>	array('','','','','','','','','','','','','','','','','','',''),
 				'descr'			=>	array(lang('Building part'),lang('Code'),lang('Description'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),'','','','','','','','','','','',''),
 				'className'		=> 	array('','','','','rightClasss','','','','','','','','','','','','','')
@@ -2891,7 +2955,7 @@ HTML;
 
 
 			$uicols_details = array (
-				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
@@ -3017,7 +3081,15 @@ HTML;
 			$datatable['valida'] = '';
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;

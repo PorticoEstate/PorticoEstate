@@ -383,4 +383,103 @@
 		}
 	}
 
+	/**
+	* Update catch version from 0.9.17.513 to 0.9.17.514
+	* Add location_id to entities
+	*/
+
+	$test[] = '0.9.17.513';
+	function catch_upgrade0_9_17_513()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$sql = 'SELECT id, entity_id FROM fm_catch_category';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+				'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+			);
+		}
+
+
+		$sql = 'SELECT id FROM fm_catch';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$entities = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$entities[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+			);
+		}
+
+		foreach ($categories as $category)
+		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('catch', ".catch.{$category['entity_id']}.{$category['cat_id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_catch_category SET location_id = {$location_id} WHERE entity_id = {$category['entity_id']} AND id = {$category['cat_id']}",__LINE__,__FILE__);
+		}
+
+		foreach ($entities as $entity)
+		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('catch', ".catch.{$entity['entity_id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_catch SET location_id = {$location_id} WHERE id = {$entity['entity_id']}",__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_catch','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_catch_category','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.514';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+
+	/**
+	* Update catch version from 0.9.17.514 to 0.9.17.515
+	* Add bulk-flag to entities
+	*/
+
+	$test[] = '0.9.17.514';
+	function catch_upgrade0_9_17_514()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','enable_bulk',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.515';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
 

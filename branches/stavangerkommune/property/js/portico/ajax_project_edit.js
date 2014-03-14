@@ -23,3 +23,14 @@ $(document).ready(function(){
 	});
 });
 
+$(document).ready(function(){
+
+	$("#order_time_span").change(function(){
+		var oArgs = {menuaction:'property.uiproject.get_orders', project_id:project_id, year:$(this).val()};
+//		var requestUrl = phpGWLink('index.php', oArgs, true);
+		execute_async(myDataTable_1, oArgs);
+		oArgs = {menuaction:'property.uiproject.get_vouchers', project_id:project_id, year:$(this).val()};
+		execute_async(myDataTable_2, oArgs);
+	});
+});
+

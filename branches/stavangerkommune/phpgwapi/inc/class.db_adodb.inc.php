@@ -9,7 +9,7 @@
 	* @link http://www.sanisoft.com/phplib/manual/DB_sql.php
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id$
+	* @version $Id: class.db_adodb.inc.php 11611 2014-01-20 08:42:47Z sigurdne $
 	*/
 
 	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
@@ -39,6 +39,17 @@
 		public function __construct($query = null, $db_type = null, $delay_connect = null)
 		{
 			parent::__construct($query, $db_type, $delay_connect);
+		}
+
+
+		/**
+		* set_fetch_single:fetch single record from pdo-object, no inpact on adodb
+		*
+		* @param bool    $value true/false
+		*/
+		public function set_fetch_single($value = false)
+		{
+			$this->fetch_single = $value;
 		}
 
 		/**
@@ -88,7 +99,7 @@
 		* @param string $User name of database user (optional)
 		* @param string $Password password for database user (optional)
 		*/
-		public function connect($Database = null, $Host = null, $User = null, $Password = null)
+		public function connect($Database = null, $Host = null, $User = null, $Password = null, $Port = null)
 		{
 			if ( !is_null($Database) )
 			{
@@ -113,9 +124,10 @@
 			$type = $this->Type;
 			if ( $type == 'mysql' )
 			{
-				$type = 'mysqlt';
+			//	$type = 'mysqlt';
+				$type = 'mysqli';
 			}
-			$this->adodb = newADOConnection($this->Type);
+			$this->adodb = newADOConnection($type);
 
 			if($this->fetchmode == 'ASSOC')
 			{
@@ -179,6 +191,11 @@
 			if ( is_null($str) )
 			{
 				return '';
+			}
+
+			if ( !$this->adodb || $this->adodb->IsConnected() )
+			{
+				$this->connect();
 			}
 
 			if ( !is_object($this->adodb) )  //workaround
@@ -267,7 +284,10 @@
 		*/
 		public function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0)
 		{
-			if ( (int) $num_rows <= 0 )
+			$offset		= (int)$offset;
+			$num_rows	= (int)$num_rows;
+
+			if ( $num_rows <= 0 )
 			{
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -360,7 +380,7 @@
 				$this->connect();
 			}
 
-			$this->Transaction =  $this->adodb->StartTrans();
+			$this->Transaction =  $this->adodb->BeginTrans();
 			return $this->Transaction;
 		}
 		
@@ -371,8 +391,8 @@
 		*/ 
 		public function transaction_commit()
 		{
-			$this->Transaction = false;
-			return $this->adodb->CompleteTrans();
+			$this->Transaction =  $this->adodb->CommitTrans();
+			return $this->Transaction;
 		}
 		
 		/**
@@ -386,7 +406,7 @@
 			$this->Transaction = false;
 			try
 			{
-				$this->adodb->FailTrans();
+				$this->adodb->RollbackTrans();
 				$ret = $this->adodb->HasFailedTrans();
 			}
 			catch(Exception $e)
@@ -557,7 +577,7 @@
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return stripslashes($this->resultSet->fields[$name]);
+						return htmlspecialchars_decode(stripslashes($this->resultSet->fields[$name]));
 					}
 					else
 					{

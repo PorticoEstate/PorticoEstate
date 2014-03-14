@@ -125,6 +125,7 @@
 								//		'scriptAccess'   : '{$scriptAccess}',//'sameDomain'|'always' Set to "always" to allow script access across domains
 										'multi'		     : true,
 										'auto'           : true,
+								//		'debug'			 : true,
 										'fileExt'        : '{$fileExt}',
 										'fileDesc'       : 'Files ({$fileDesc})',
 										'queueID'        : 'queue',
@@ -148,7 +149,17 @@
 											{
 												alert('Du må laste siden på nytt for å vise resultatet');
 											}
-											parent.lightbox.hide();
+											try
+											{
+												if(!parent.lightbox_hide())
+												{
+													parent.lightbox.hide();
+												}
+											}
+											catch (ex)
+											{
+											}
+
 										  }
 									});
 								});
@@ -249,9 +260,9 @@ HTML;
 
 
 
-		public function check($save_path = '')
+		public function check($save_path = '', $fakebase = '/property')
 		{
-			$bofiles	= CreateObject('property.bofiles');
+			$bofiles	= CreateObject('property.bofiles', $fakebase);
 
 			$to_file	= "{$bofiles->fakebase}/{$save_path}/{$_POST['filename']}";
 			//Return true if the file exists
@@ -307,9 +318,9 @@ Notes:
 
  */
 
-		function upload($save_path = '')
+		function upload($save_path = '', $fakebase = '/property')
 		{
-			$bofiles	= CreateObject('property.bofiles');
+			$bofiles	= CreateObject('property.bofiles', $fakebase);
 			$use_vfs = true;
 			// Check post_max_size (http://us3.php.net/manual/en/features.file-upload.php#73762)
 			$POST_MAX_SIZE = ini_get('post_max_size');

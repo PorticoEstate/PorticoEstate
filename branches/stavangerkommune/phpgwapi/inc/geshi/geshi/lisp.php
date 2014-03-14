@@ -5,7 +5,7 @@
  * Author: Roberto Rossi (rsoftware@altervista.org)
  * Copyright: (c) 2004 Roberto Rossi (http://rsoftware.altervista.org), Nigel McNie (http://qbnz.com/highlighter
  * Release Version: 1.0.7.14
- * CVS Revision Version: $Revision: 17224 $
+ * CVS Revision Version: $Revision: 10127 $
  * Date Started: 2004/08/30
  * Last Modified: $Date: 2006-09-25 18:46:28 +1000 (Mon, 25 Sep 2006) $
  *

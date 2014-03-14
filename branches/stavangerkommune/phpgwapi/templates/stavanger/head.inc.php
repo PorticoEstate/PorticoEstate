@@ -174,6 +174,9 @@ JS;
 		$robots = '<meta name="robots" content="none">';
 	}
 
+    $test = $GLOBALS['phpgw']->common->get_on_events();
+    $test = str_replace('window.onload = function()','$(document).ready(function()',$test);
+    $test = str_replace("\n}\n","\n})\n",$test);
 	$app = lang($app);
 	$tpl_vars = array
 	(
@@ -183,7 +186,8 @@ JS;
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
-		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+//		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+        'win_on_events'	=> $test,
 		'navbar_config' => $_navbar_config,
 		'metainfo_author' => $author,
 		'metainfo_keywords' => $keywords,

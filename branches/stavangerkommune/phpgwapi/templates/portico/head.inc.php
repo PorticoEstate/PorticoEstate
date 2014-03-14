@@ -34,6 +34,17 @@
 		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
 	}
 
+	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
+	{
+		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+		phpgwapi_yui::load_widget('treeview');
+		phpgwapi_yui::load_widget('datasource');
+		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
+		{
+			$javascripts[] = "/phpgwapi/templates/portico/js/menu.js";
+		}
+	}
+
 	phpgwapi_yui::load_widget('button');
 
 	$stylesheets = array();
@@ -137,6 +148,10 @@
 
 	$GLOBALS['phpgw']->template->pfp('out', 'head');
 	unset($tpl_vars);
+
+	flush();
+
+	echo '<body class="yui-skin-sam">';
 
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{

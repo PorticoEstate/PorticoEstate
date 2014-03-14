@@ -268,13 +268,39 @@
 			return $persons;
 		}
 
-		function read_vendor()
+		function read_vendor($filter = array())
 		{
-			$vendor = $this->so->read_vendor(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
-			$this->total_records = $this->so->total_records;
+			$sogeneric 	= CreateObject('property.sogeneric');
 
-			return $vendor;
+			$location_info = $sogeneric->get_location_info('vendor');
+			
+			$this->order = $this->order ? $this->order : 'org_name';
+			$this->sort = $this->sort ? $this->sort : 'ASC';
+
+			if (! $filter )
+			{
+				foreach ( $location_info['fields'] as $field )
+				{
+					if (isset($field['filter']) && $field['filter'])
+					{
+						if($field['name'] == 'member_of')
+						{
+							$filter[$field['name']] = phpgw::get_var('cat_id');
+						}
+						else
+						{
+							$filter[$field['name']] = phpgw::get_var($field_name);
+						}
+					}
+				}
+			}
+
+			$values = $sogeneric->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+				'allrows'=>$this->allrows),$filter);
+
+			$this->total_records = $sogeneric->total_records;
+
+			return $values;
 		}
 
 		function read_b_account($data)

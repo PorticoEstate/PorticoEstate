@@ -29,6 +29,7 @@
 	$phpgw_baseline = array(
 		'fm_catch' => array(
 			'fd' => array(
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '20','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True),
@@ -43,6 +44,7 @@
 		),
 		'fm_catch_category' => array(
 			'fd' => array(
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '100','nullable' => True),
@@ -57,6 +59,7 @@
 				'start_project' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_ticket' => array('type' => 'int','precision' => '2','nullable' => True),
 				'is_eav' => array('type' => 'int','precision' => '2','nullable' => True),
+				'enable_bulk' => array('type' => 'int','precision' => '2','nullable' => True),
 				'jasperupload' => array('type' => 'int','precision' => 2,'nullable' => True),
 				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'level' => array('type' => 'int','precision' => '4','nullable' => True),

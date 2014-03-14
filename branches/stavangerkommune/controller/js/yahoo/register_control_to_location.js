@@ -1,15 +1,3 @@
-
-//----------
-	var oArgs_edit = {menuaction:'registration.uipending.edit'};
-	var edit_Url = phpGWLink('index.php', oArgs_edit);
-
-	formatLinkPending = function(elCell, oRecord, oColumn, oData)
-	{
-		var id = oRecord.getData(oColumn.key);
-		elCell.innerHTML = '<a href="' + edit_Url + '&id=' + id + '">' + lang['edit'] + '</a>'; 
-	};
-
-
 	var formatterCheckLocation = function(elCell, oRecord, oColumn, oData)
 	{
 		var checked = '';

@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicontrol_group.inc.php 8267 2011-12-11 12:27:18Z sigurdne $
+ 	* @version $Id: class.location_finder.inc.php 11182 2013-06-17 09:08:17Z sigurdne $
 	*/	
 
 	phpgw::import_class('property.solocation');
@@ -48,4 +48,75 @@
 			
 			return $locations;
 		}
+    
+		function get_buildings_on_property($user_role, $parent_location_code, $level)
+		{
+
+			$children =  execMethod('property.solocation.get_children', $parent_location_code);
+			
+			foreach ($children as &$entry)
+			{
+				$entry['id'] = "{$parent_location_code}-{$entry['id']}";
+			}
+
+			return $children;
+
+/*
+			// Property level
+			if ($level == 1)
+			{
+				$property_location_code = $location_code;
+			}
+			// Building level
+			else if ($level > 1)
+			{
+				$split_loc_code_array = explode('-', $location_code);
+				$property_location_code = $split_loc_code_array[0];
+			}
+
+			if ($user_role)
+			{
+				$criteria = array();
+				$criteria['location_code'] = $property_location_code;
+				$criteria['field_name'] = 'loc2_name';
+				$criteria['child_level'] = '2';
+
+				$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
+			}
+			else
+			{
+				$buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
+			}
+
+			return $buildings_on_property;
+
+*/
+		}
+    
+		function get_building_location_code($location_code)
+		{
+			if( strlen( $location_code ) == 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 2);
+				$building_location_code = $location_code_arr[0];
+			}
+			else if( strlen( $location_code ) > 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 3);
+				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
+			}
+			else
+			{
+				$building_location_code = $location_code;
+			}
+			
+			return $building_location_code; 
+		}
+		
+		function get_location_level($location_code)
+		{
+			$level = count(explode('-', $location_code));
+
+			return $level;
+		}	
 	}

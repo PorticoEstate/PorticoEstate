@@ -12,6 +12,8 @@ array
 	'proxy_host'	=>
 	'proxy_port'	=>
 	'originator'	=>
-	'type'			=> SOAP / GET
+	'type'			=> SOAP | GET //Send type
+	'receive_url'	=> ''//local url to webservice for pswin to deliver messages and reports
 );
 
+The common-section needs the 'anonymous_user' and the 'anonymous_pass'

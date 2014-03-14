@@ -143,14 +143,7 @@
 				case 10:
 					$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
 					$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
-
-					// fix for bug php4 expired sessions bug
-					if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php')
-					{
-//						$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
-					}
-
-					return lang('Your session could not be verified.');
+					return lang('sorry, your session has expired');
 				default:
 					return '&nbsp;';
 			}
@@ -420,8 +413,17 @@
 			}
 
 			$system_name = isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate';
-			$this->tmpl->set_var('login_url', $GLOBALS['phpgw_info']['server']['webserver_url'] . '/'.$variables['partial_url'].'?' . http_build_query($extra_vars) );
-			$this->tmpl->set_var('registration_url',$GLOBALS['phpgw_info']['server']['webserver_url'] . '/registration/');
+			
+			if($variables['lang_frontend'])
+			{
+				$system_name .= "::{$variables['lang_frontend']}";
+			}
+
+			$webserver_url = rtrim($GLOBALS['phpgw_info']['server']['webserver_url'], '/');
+			$partial_url = ltrim($variables['partial_url'], '/');
+
+			$this->tmpl->set_var('login_url', $webserver_url . '/'.$partial_url.'?' . http_build_query($extra_vars) );
+			$this->tmpl->set_var('registration_url',$webserver_url . '/registration/');
 			$this->tmpl->set_var('system', $system_name);
 			$this->tmpl->set_var('version', isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
 			$this->tmpl->set_var('instruction', lang('use a valid username and password to gain access to %1', $system_name));
@@ -476,6 +478,36 @@ JS;
 			$this->tmpl->set_var('lang_new_user', lang('new user'));
 			$this->tmpl->set_var('lang_forgotten_password', lang('forgotten password'));
 
+			if(isset($GLOBALS['phpgw_info']['server']['new_user_url']) && $GLOBALS['phpgw_info']['server']['new_user_url'])
+			{
+				$url_new_user = $GLOBALS['phpgw_info']['server']['new_user_url'];
+				$action_new_user = $url_new_user;
+
+			}
+			else
+			{
+				$url_new_user = "{$webserver_url}/registration/main.php";
+				$action_new_user = 'javascript:new_user();';
+			}
+			$this->tmpl->set_var('url_new_user', $url_new_user);
+
+			if(isset($GLOBALS['phpgw_info']['server']['lost_password_url']) && $GLOBALS['phpgw_info']['server']['lost_password_url'])
+			{
+				$url_lost_password = $GLOBALS['phpgw_info']['server']['lost_password_url'];
+				$action_lost_password = $url_lost_password;
+			}
+			else
+			{
+				$url_lost_password = "{$webserver_url}/registration/main.php?" . http_build_query(array(
+						'menuaction'	=>'registration.uireg.lostpw1')
+						);
+				$action_lost_password = 'javascript:lost_password();';
+			}
+			
+			$this->tmpl->set_var('url_lost_password', $url_lost_password);
+			$this->tmpl->set_var('action_new_user', $action_new_user);
+			$this->tmpl->set_var('action_lost_password', $action_lost_password);
+
 			$this->tmpl->set_var('website_title', isset($GLOBALS['phpgw_info']['server']['site_title'])
 								? $GLOBALS['phpgw_info']['server']['site_title'] 
 								: 'phpGroupWare'
@@ -485,24 +517,40 @@ JS;
 
 			if( is_file("{$GLOBALS['phpgw_info']['server']['template_dir']}/css/base.css") )
 			{
-				$base_css = "phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/base.css";
+				$base_css = "{$webserver_url}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/base.css";
 			}
 			else
 			{
-				$base_css = 'phpgwapi/templates/base/css/base.css';
+				$base_css = "{$webserver_url}/phpgwapi/templates/base/css/base.css";
 			}
+
+			$system_css = "{$webserver_url}/phpgwapi/templates/base/css/system.css";
+
 
 			if( is_file("{$GLOBALS['phpgw_info']['server']['template_dir']}/css/login.css") )
 			{
-				$login_css = "phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/login.css";
+				$login_css = "{$webserver_url}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/login.css";
 			}
 			else
 			{
-				$login_css = 'phpgwapi/templates/base/css/login.css';
+				$login_css = "{$webserver_url}/phpgwapi/templates/base/css/login.css";
 			}
 
+			$rounded_css = "{$webserver_url}/phpgwapi/templates/base/css/rounded.css";
+			
+			$flag_no = "{$webserver_url}/phpgwapi/templates/base/images/flag_no.gif";
+			$flag_en = "{$webserver_url}/phpgwapi/templates/base/images/flag_en.gif";
+
+
+			$this->tmpl->set_var('system_css', $system_css);
 			$this->tmpl->set_var('base_css', $base_css);
 			$this->tmpl->set_var('login_css', $login_css);
+			$this->tmpl->set_var('rounded_css', $rounded_css);
+			$this->tmpl->set_var('flag_no', $flag_no);
+			$this->tmpl->set_var('flag_en', $flag_en);
+
+			$this->tmpl->set_var('login_left_message', $GLOBALS['phpgw_info']['login_left_message']);
+			$this->tmpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
 
 			$autocomplete = '';
 			if ( isset($GLOBALS['phpgw_info']['server']['autocomplete_login'])

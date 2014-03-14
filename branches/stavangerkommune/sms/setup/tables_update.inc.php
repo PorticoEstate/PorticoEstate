@@ -518,3 +518,38 @@
 		}
 	}
 
+
+	/**
+	* Update sms version from 0.9.17.511 to 0.9.17.512
+	* 
+	*/
+
+	$test[] = '0.9.17.511';
+	function sms_upgrade0_9_17_511()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_sms_received_data', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'type' => array('type' => 'varchar', 'precision' => 15, 'nullable' => False),/*sms/mms/report*/
+					'data' => array('type' => 'text', 'nullable' => False),
+					'status' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+					'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+					'modified_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.512';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}

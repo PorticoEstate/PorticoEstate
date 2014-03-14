@@ -1474,7 +1474,7 @@
 			}
 
 			$db2->query("INSERT INTO phpgw_acl (acl_appname, acl_location, acl_account, acl_rights, acl_grantor,acl_type) VALUES ("
-			. "'property','" 
+			. "'property','"
 			. $GLOBALS['phpgw_setup']->oProc->f('acl_location') . "','"
 			. $GLOBALS['phpgw_setup']->oProc->f('acl_account') . "','"
 			. $GLOBALS['phpgw_setup']->oProc->f('acl_rights') . "',"
@@ -2092,7 +2092,7 @@
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_attribute (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_agreement_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_agreement_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2103,7 +2103,7 @@
 			);
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_r_agreement_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_r_agreement_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2114,7 +2114,7 @@
 			);
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_s_agreement_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_s_agreement_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2125,7 +2125,7 @@
 			);
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_owner_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_owner_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2136,7 +2136,7 @@
 			);
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_tenant_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_tenant_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2147,7 +2147,7 @@
 			);
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_vendor_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_vendor_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2210,7 +2210,7 @@
 		}
 
 		$choice = array();
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2255,7 +2255,7 @@
 //---------------
 //--------------- custom functions
 		$custom = array();
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_custom_function"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_custom_function");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$custom[]=array(
@@ -2312,7 +2312,7 @@
 		}
 
 		$choice = array();
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_location_choice"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_location_choice");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$choice[]=array(
@@ -2397,8 +2397,8 @@
 			@rename($files_dir . $change_from, $files_dir . $change_to);
 		}
 
-		$change_from = array_keys($change); 
-        $change_to = array_values($change); 
+		$change_from = array_keys($change);
+        $change_to = array_values($change);
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_vfs WHERE app = 'property'");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
@@ -3045,7 +3045,7 @@
 
 	/**
 	* Update property version from 0.9.17.552 to 0.9.17.553
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.552';
@@ -3104,7 +3104,7 @@
 
 	/**
 	* Update property version from 0.9.17.553 to 0.9.17.554
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.553';
@@ -3136,7 +3136,7 @@
 
 	/**
 	* Update property version from 0.9.17.554 to 0.9.17.555
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.554';
@@ -3157,7 +3157,7 @@
 	/**
 	* Update property version from 0.9.17.555 to 0.9.17.556
 	* Scheduling capabilities by custom fields and asyncservice
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.555';
@@ -3240,7 +3240,7 @@
 	/**
 	* Update property version from 0.9.17.556 to 0.9.17.557
 	* Scheduling capabilities by custom fields and asyncservice
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.556';
@@ -3274,7 +3274,7 @@
 	/**
 	* Update property version from 0.9.17.557 to 0.9.17.558
 	* Rename reserved fieldname (mysql)
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.557';
@@ -3297,7 +3297,7 @@
 	/**
 	* Update property version from 0.9.17.558 to 0.9.17.559
 	* change the priority for the helpdest (from 10-1 to 1-3)
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.558';
@@ -3322,7 +3322,7 @@
 	/**
 	* Update property version from 0.9.17.559 to 0.9.17.560
 	* Add location to the budget.basis
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.559';
@@ -3341,7 +3341,7 @@
 	/**
 	* Update property version from 0.9.17.560 to 0.9.17.561
 	* Add ability to upload jasper reports
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.560';
@@ -3361,7 +3361,7 @@
 	/**
 	* Update property version from 0.9.17.561 to 0.9.17.562
 	* Add variants of closed-status for tickets
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.561';
@@ -3381,7 +3381,7 @@
 	/**
 	* Update property version from 0.9.17.562 to 0.9.17.563
 	* Separate project status from workorder status
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.562';
@@ -3428,7 +3428,7 @@
 	/**
 	* Update property version from 0.9.17.563 to 0.9.17.564
 	* Add area information as standard fields to each level in the location hierarchy
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.563';
@@ -3518,7 +3518,7 @@
 	/**
 	* Update property version from 0.9.17.564 to 0.9.17.565
 	* alter datatype for spvend_code
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.564';
@@ -3558,7 +3558,7 @@
 	/**
 	* Update property version from 0.9.17.565 to 0.9.17.566
 	* Add field to reference origin of invoices if imported from external system
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.565';
@@ -3579,7 +3579,7 @@
 	/**
 	* Update property version from 0.9.17.566 to 0.9.17.567
 	* Add a general approval scheme for items across the system
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.566';
@@ -3618,7 +3618,7 @@
 	/**
 	* Update property version from 0.9.17.567 to 0.9.17.568
 	* Extend the approval scheme to include general actions
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.567';
@@ -3683,7 +3683,7 @@
 	/**
 	* Update property version from 0.9.17.568 to 0.9.17.569
 	* Add variants of closed and approved-status for projects and workorders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.568';
@@ -3708,7 +3708,7 @@
 	/**
 	* Update property version from 0.9.17.569 to 0.9.17.570
 	* Add custom fields to projects, workorders and tickets
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.569';
@@ -3737,7 +3737,7 @@
 	/**
 	* Update property version from 0.9.17.570 to 0.9.17.571
 	* Add custom fields to projects, workorders and tickets
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.570';
@@ -3757,7 +3757,7 @@
 	/**
 	* Update property version from 0.9.17.571 to 0.9.17.572
 	* Add event workorders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.571';
@@ -3784,7 +3784,7 @@
 	/**
 	* Update property version from 0.9.17.572 to 0.9.17.573
 	* Add ticket order - an ad hock order without using the project module
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.572';
@@ -3811,7 +3811,7 @@
 	/**
 	* Update property version from 0.9.17.573 to 0.9.17.574
 	* Alter field definition
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.573';
@@ -3834,7 +3834,7 @@
 	/**
 	* Update property version from 0.9.17.574 to 0.9.17.575
 	* Add variants of closed and approved-status for tickets
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.574';
@@ -3857,7 +3857,7 @@
 	/**
 	* Update property version from 0.9.17.575 to 0.9.17.576
 	* Add contact_email to tickets
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.575';
@@ -3878,7 +3878,7 @@
 	/**
 	* Update property version from 0.9.17.576 to 0.9.17.577
 	* Add sorting to ticket status
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.576';
@@ -3899,7 +3899,7 @@
 	/**
 	* Update property version from 0.9.17.577 to 0.9.17.578
 	* Add order categories to ticket ad hoc orders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.577';
@@ -3919,7 +3919,7 @@
 	/**
 	* Update property version from 0.9.17.578 to 0.9.17.579
 	* Add custom dimension for orders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.578';
@@ -3954,7 +3954,7 @@
 	/**
 	* Update property version from 0.9.17.579 to 0.9.17.580
 	* Add optional publishing flag on ticket notes
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.579';
@@ -3976,7 +3976,7 @@
 	/**
 	* Update property version from 0.9.17.580 to 0.9.17.581
 	* Add optional hierarchy on entities
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.580';
@@ -3997,7 +3997,7 @@
 	/**
 	* Update property version from 0.9.17.581 to 0.9.17.582
 	* Add templates to Ad Hoc Orders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.581';
@@ -4034,7 +4034,7 @@
 	/**
 	* Update property version from 0.9.17.582 to 0.9.17.583
 	* Grant rights on actors
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.582';
@@ -4062,7 +4062,7 @@
 	/**
 	* Update property version from 0.9.17.583 to 0.9.17.584
 	* Add schedule to event
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.583';
@@ -4117,7 +4117,7 @@
 	/**
 	* Update property version from 0.9.17.583 to 0.9.17.584
 	* Use locations for categories
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.584';
@@ -4199,7 +4199,7 @@
 	/**
 	* Update property version from 0.9.17.585 to 0.9.17.586
 	* Use budget account groups on project level
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.585';
@@ -4238,7 +4238,7 @@
 	/**
 	* Update property version from 0.9.17.586 to 0.9.17.587
 	* restore field
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.586';
@@ -4263,7 +4263,7 @@
 	/**
 	* Update property version from 0.9.17.587 to 0.9.17.588
 	* add billable_hours to workorders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.587';
@@ -4283,7 +4283,7 @@
 	/**
 	* Update property version from 0.9.17.588 to 0.9.17.589
 	* Better precision to period (month) for payment-info
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.588';
@@ -4306,7 +4306,7 @@
 //			$sql = "UPDATE {$table} SET periode_old = periode";
 //			$db->query($sql,__LINE__,__FILE__);
 
-			$sql = 'SELECT count (*), bilagsnr, EXTRACT(YEAR from fakturadato ) as aar ,' 
+			$sql = 'SELECT count (*), bilagsnr, EXTRACT(YEAR from fakturadato ) as aar ,'
 			. ' EXTRACT(MONTH from fakturadato ) as month, periode'
 			. " FROM {$table} "
 			. ' GROUP BY bilagsnr, EXTRACT(YEAR from fakturadato ), EXTRACT(MONTH from fakturadato ), periode'
@@ -4360,7 +4360,7 @@
 	/**
 	* Update property version from 0.9.17.589 to 0.9.17.590
 	* add generic support for JasperReport
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.589';
@@ -4458,7 +4458,7 @@
 	/**
 	* Update property version from 0.9.17.590 to 0.9.17.591
 	* Add datatypes for user input at JasperReport
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.590';
@@ -4481,7 +4481,7 @@
 	/**
 	* Update property version from 0.9.17.591 to 0.9.17.592
 	* Add integration settings on entities
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.591';
@@ -4503,7 +4503,7 @@
 	/**
 	* Update property version from 0.9.17.592 to 0.9.17.593
 	* More on integration settings on entities
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.592';
@@ -4526,7 +4526,7 @@
 	/**
 	* Update property version from 0.9.17.593 to 0.9.17.594
 	* Convert integration settings to generic config on locations
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.593';
@@ -4550,7 +4550,7 @@
 	/**
 	* Update property version from 0.9.17.594 to 0.9.17.595
 	* Add custom dimension for orders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.594';
@@ -4570,7 +4570,7 @@
 	/**
 	* Update property version from 0.9.17.595 to 0.9.17.596
 	* Alter datatype
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.595';
@@ -4611,7 +4611,7 @@
 	/**
 	* Update property version from 0.9.17.596 to 0.9.17.597
 	* Add responsibility roles
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.596';
@@ -4648,7 +4648,7 @@
 	/**
 	* Update property version from 0.9.17.597 to 0.9.17.598
 	* Rename column
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.597';
@@ -4668,7 +4668,7 @@
 	/**
 	* Update property version from 0.9.17.598 to 0.9.17.599
 	* Add columns to fm_b_account
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.598';
@@ -4707,7 +4707,7 @@
 	/**
 	* Update property version from 0.9.17.599 to 0.9.17.600
 	* Add responsibility roles
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.599';
@@ -4744,7 +4744,7 @@
 	/**
 	* Update property version from 0.9.17.600 to 0.9.17.601
 	* Add custom fields to request
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.600';
@@ -4766,7 +4766,7 @@
 	/**
 	* Update property version from 0.9.17.601 to 0.9.17.602
 	* Add fields voucher handling
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.601';
@@ -4805,7 +4805,7 @@
 	/**
 	* Update property version from 0.9.17.602 to 0.9.17.603
 	* Add templates to response from helpdesk
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.602';
@@ -4840,7 +4840,7 @@
 	/**
 	* Update property version from 0.9.17.603 to 0.9.17.604
 	* convert data for datatype CH: from serialized array to comma separated list
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.603';
@@ -4925,7 +4925,7 @@
 	/**
 	* Update property version from 0.9.17.604 to 0.9.17.605
 	* Add columns to  table fm_tts_tickets and fm_tts_status
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.604';
@@ -4945,7 +4945,7 @@
 	/**
 	* Update property version from 0.9.17.605 to 0.9.17.606
 	* Add authorities demands type to request
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.605';
@@ -4980,7 +4980,7 @@
 	/**
 	* Update property version from 0.9.17.606 to 0.9.17.607
 	* Add authorities demands type to request
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.606';
@@ -5002,7 +5002,7 @@
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add location_link_level
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.607';
@@ -5025,7 +5025,7 @@
 	/**
 	* Update property version from 0.9.17.608 to 0.9.17.609
 	* Add location_link_level
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.608';
@@ -5048,7 +5048,7 @@
 	/**
 	* Update property version from 0.9.17.609 to 0.9.17.610
 	* Add location_link_level
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.609';
@@ -5070,7 +5070,7 @@
 	/**
 	* Update property version from 0.9.17.610 to 0.9.17.611
 	* Add budget to project group
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.610';
@@ -5090,7 +5090,7 @@
 	/**
 	* Update property version from 0.9.17.611 to 0.9.17.612
 	* Add contract sum to orders
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.611';
@@ -5110,7 +5110,7 @@
 	/**
 	* Update property version from 0.9.17.612 to 0.9.17.613
 	* Add regulations
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.612';
@@ -5148,7 +5148,7 @@
 	/**
 	* Update property version from 0.9.17.613 to 0.9.17.614
 	* Add parent to regulations
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.613';
@@ -5168,7 +5168,7 @@
 	/**
 	* Update property version from 0.9.17.614 to 0.9.17.615
 	* Add historical consume to request
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.614';
@@ -5204,7 +5204,7 @@
 	/**
 	* Update property version from 0.9.17.615 to 0.9.17.616
 	* Enable hierarchy to custom menu
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.615';
@@ -5224,7 +5224,7 @@
 	/**
 	* Update property version from 0.9.17.616 to 0.9.17.617
 	* rename field, add customized url-target
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.616';
@@ -5246,7 +5246,7 @@
 	/**
 	* Update property version from 0.9.17.616 to 0.9.17.617
 	* Sync fm_locations with fm_locationX
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.617';
@@ -5312,7 +5312,7 @@
 	/**
 	* Update property version from 0.9.17.619 to 0.9.17.620
 	* Add tentative planning to request
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.619';
@@ -5348,7 +5348,7 @@
 
 	/**
 	* Update property version from 0.9.17.620 to 0.9.17.621
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.620';
@@ -5372,7 +5372,7 @@
 	/**
 	* Update property version from 0.9.17.621 to 0.9.17.622
 	* Add locations missing from clean install
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.621';
@@ -5409,7 +5409,7 @@
 	/**
 	* Update property version from 0.9.17.622 to 0.9.17.623
 	* Allow filtering of buildingparts depending of type of use
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.622';
@@ -5433,7 +5433,7 @@
 	/**
 	* Update property version from 0.9.17.623 to 0.9.17.624
 	* Add column missing from fresh install.
-	* 
+	*
 	*/
 
 	$test[] = '0.9.17.623';
@@ -5765,7 +5765,7 @@
 	function property_upgrade0_9_17_630()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		$sql = 'CREATE OR REPLACE VIEW fm_open_workorder_view AS' 
+		$sql = 'CREATE OR REPLACE VIEW fm_open_workorder_view AS'
 			. ' SELECT fm_workorder.id, fm_workorder.project_id, fm_workorder_status.descr FROM fm_workorder'
 			. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
 
@@ -6006,7 +6006,7 @@
 	/**
 	* Update property version from 0.9.17.635 to 0.9.17.636
 	* Add percent value to tax-code
-	* 
+	*
 	*/
 	$test[] = '0.9.17.635';
 	function property_upgrade0_9_17_635()
@@ -6025,7 +6025,7 @@
 	/**
 	* Update property version from 0.9.17.636 to 0.9.17.637
 	* Add approve tag and mail recipients to workorders
-	* 
+	*
 	*/
 	$test[] = '0.9.17.636';
 	function property_upgrade0_9_17_636()
@@ -6045,7 +6045,7 @@
 	/**
 	* Update property version from 0.9.17.637 to 0.9.17.638
 	* Modified timestamp til tickets
-	* 
+	*
 	*/
 	$test[] = '0.9.17.637';
 	function property_upgrade0_9_17_637()
@@ -6098,7 +6098,7 @@
 	/**
 	* Update property version from 0.9.17.638 to 0.9.17.639
 	* Add relation contact-location
-	* 
+	*
 	*/
 	$test[] = '0.9.17.638';
 	function property_upgrade0_9_17_638()
@@ -6132,7 +6132,7 @@
 	/**
 	* Update property version from 0.9.17.638 to 0.9.17.639
 	* Add fm_ecobilag_process_log
-	* 
+	*
 	*/
 	$test[] = '0.9.17.639';
 	function property_upgrade0_9_17_639()
@@ -6656,4 +6656,1243 @@
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.650';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
-	}	
+	}
+
+	/**
+	* Update property version from 0.9.17.650 to 0.9.17.651
+	* Enable to close periode on budget
+	*/
+	$test[] = '0.9.17.650';
+	function property_upgrade0_9_17_650()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_budget','closed',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.651';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.651 to 0.9.17.652
+	* Enable to close periode on budget
+	*/
+	$test[] = '0.9.17.651';
+	function property_upgrade0_9_17_651()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','periodization_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.652';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.652 to 0.9.17.653
+	* Enable to close periode on budget
+	*/
+	$test[] = '0.9.17.652';
+	function property_upgrade0_9_17_652()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_budget','order_amount',array(
+			'type'		=> 'decimal',
+			'precision'	=> 20,
+			'scale' 	=> 2,
+			'nullable'	=> true,
+			'default'	=> '0.00'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_eco_periodization_outline','value',array(
+			'type'		=> 'decimal',
+			'precision'	=> '20',
+			'scale'		=> '6',
+			'nullable'	=> false,
+			'default'	=> '0.000000'
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.653';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.653 to 0.9.17.654
+	* Add location_id to entities
+	*/
+	$test[] = '0.9.17.653';
+	function property_upgrade0_9_17_653()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$sql = 'SELECT id, entity_id FROM fm_entity_category';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+				'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+			);
+		}
+
+
+		$sql = 'SELECT id FROM fm_entity';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$entities = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$entities[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+			);
+		}
+
+		foreach ($categories as $category)
+		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$category['entity_id']}.{$category['cat_id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_entity_category SET location_id = {$location_id} WHERE entity_id = {$category['entity_id']} AND id = {$category['cat_id']}",__LINE__,__FILE__);
+		}
+
+		foreach ($entities as $entity)
+		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity['entity_id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_entity SET location_id = {$location_id} WHERE id = {$entity['entity_id']}",__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.654';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.654 to 0.9.17.655
+	* Add Condition Survey as a referencing level to requests
+	*/
+	$test[] = '0.9.17.654';
+	function property_upgrade0_9_17_654()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','condition_survey_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw']->locations->add('.project.condition_survey', 'Condition Survey', 'property', true, 'fm_condition_survey', true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_condition_survey', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'title' => array('type' => 'varchar','precision' => '255','nullable' => False),
+					'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),
+					'p_entity_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'p_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'location_code' => array('type' => 'varchar','precision' => '20','nullable' => True),
+					'loc1' => array('type' => 'varchar','precision' => '6','nullable' => True),
+					'loc2' => array('type' => 'varchar','precision' => '4','nullable' => True),
+					'loc3' => array('type' => 'varchar','precision' => '4','nullable' => True),
+					'loc4' => array('type' => 'varchar','precision' => '4','nullable' => True),
+					'descr' => array('type' => 'text','nullable' => True),
+					'address' => array('type' => 'varchar','precision' => '255','nullable' => True),
+					'status_id' => array('type' => 'int','precision' => '4','nullable' => false),
+					'category' => array('type' => 'int','precision' => '4','nullable' => True),
+					'coordinator_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'vendor_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'report_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$levels = $GLOBALS['phpgw_setup']->oProc->f('cnt');
+
+		for ($level=5; $level<($levels+1); $level++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_condition_survey',"loc{$level}",array(
+				'type'		=> 'varchar',
+				'precision'	=> 4,
+				'nullable'	=> true
+				)
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_condition_survey_status', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => '255','nullable' => False),
+					'closed' => array('type' => 'int','precision' => '2','nullable' => True),
+					'in_progress' => array('type' => 'int','precision' => '2','nullable' => True),
+					'delivered' => array('type' => 'int','precision' => '2','nullable' => True),
+					'sorting' => array('type' => 'int','precision' => '4','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_condition_survey_history', array(
+				'fd' => array(
+					'history_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'history_record_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_appname' => array('type' => 'varchar','precision' => '64','nullable' => False),
+					'history_owner' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_status' => array('type' => 'char','precision' => '2','nullable' => False),
+					'history_new_value' => array('type' => 'text','nullable' => False),
+					'history_old_value' => array('type' => 'text','nullable' => true),
+					'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
+				),
+				'pk' => array('history_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.655';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.655 to 0.9.17.656
+	* Add Condition Survey as a referencing level to requests
+	*/
+	$test[] = '0.9.17.655';
+	function property_upgrade0_9_17_655()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','title',array(
+			'type'		=> 'varchar',
+			'precision'	=> 255,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.656';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.656 to 0.9.17.657
+	* Alter planing dates to hold bigint
+	*/
+	$test[] = '0.9.17.656';
+	function property_upgrade0_9_17_656()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project','start_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project','end_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder','start_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder','end_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','start_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','end_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request_consume','date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request_planning','date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.657';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.657 to 0.9.17.658
+	* Add project types
+	*/
+	$test[] = '0.9.17.657';
+	function property_upgrade0_9_17_657()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','parent_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','project_type_id',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_budget','active',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_buffer_budget', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'buffer_project_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'entry_date' => array('type' => 'int','precision' => '4','nullable' => False),
+					'amount_in' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'from_project' => array('type' => 'int','precision' => '4','nullable' => true),
+					'amount_out' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'to_project' => array('type' => 'int','precision' => '4','nullable' => true),
+					'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'remark' => array('type' => 'text','nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.658';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.658 to 0.9.17.659
+	* Add view on fm_ecobilag
+	*/
+	$test[] = '0.9.17.658';
+	function property_upgrade0_9_17_658()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$sql = 'UPDATE fm_project SET project_type_id = 1 WHERE project_type_id IS NULL';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
+			. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+ 			. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS
+		 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode, orders_paid_or_pending.amount
+ 			FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount
+                   FROM fm_ecobilagoverf
+                 GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode
+        		UNION ALL 
+                 	SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount
+                   FROM fm_ecobilag
+                 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode) orders_paid_or_pending';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.659';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.659 to 0.9.17.660
+	* Add fraction to periodization outline as an alternative
+	*/
+	$test[] = '0.9.17.659';
+	function property_upgrade0_9_17_659()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_eco_periodization_outline','dividend',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_eco_periodization_outline','divisor',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_eco_periodization_outline','value',array(
+			'type'		=> 'decimal',
+			'precision'	=> '20',
+			'scale'		=> '6',
+			'nullable'	=> true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.660';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.660 to 0.9.17.661
+	* Add year and active-flag to project_buffer_budget
+	*/
+	$test[] = '0.9.17.660';
+	function property_upgrade0_9_17_660()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_buffer_budget','year',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_buffer_budget','month',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false,
+			'default'	=> 0
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_buffer_budget','active',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_project_budget SET active = 1',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_request set budget = 0 WHERE budget IS NULL',__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_workorder_budget',  array(
+				'fd' => array(
+					'order_id' => array('type' => 'int','precision' => 8,'nullable' => False),
+					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'month' => array('type' => 'int','precision' => 2,'nullable' => False,'default' => 0),
+					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'combined_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('order_id','year','month'),
+				'fk' => array('fm_workorder' => array('order_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.661';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.661 to 0.9.17.662
+	* Add year and active-flag to project_buffer_budget
+	*/
+	$test[] = '0.9.17.661';
+	function property_upgrade0_9_17_661()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_budget','active',array(
+			'type'			=> 'int',
+			'precision'		=> 2,
+			'nullable'		=> true,
+			'default'		=> 1
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_budget','contract_sum', array(
+			'type'		=> 'decimal',
+			'precision' => '20',
+			'scale'		=> '2',
+			'nullable'	=> True,
+			'default'	=> '0.00'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_workorder_budget SET active = 1',__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.662';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.662 to 0.9.17.663
+	* Add continuous-flag to workorder
+	*/
+	$test[] = '0.9.17.662';
+	function property_upgrade0_9_17_662()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','continuous',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.663';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.663 to 0.9.17.664
+	* Alter id from varchar to ingeter
+	*/
+	$test[] = '0.9.17.663';
+	function property_upgrade0_9_17_663()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_standard_unit");
+		$units = array();
+		$i=1;
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$name = $GLOBALS['phpgw_setup']->oProc->f('id');
+
+			$units[$name] = array
+			(
+				'id'	=> $i,
+				'name'	=> $name,
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr')
+			);
+			$i++;
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_standard_unit');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_standard_unit',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 20,'nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		foreach ($units as $_name => $unit)
+		{
+			$cols = implode(',', array_keys($unit));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($unit));
+			$sql = "INSERT INTO fm_standard_unit ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		$tables = array('fm_activities','fm_wo_hours','fm_template_hours','fm_s_agreement_detail');
+		foreach ($tables as $table)
+		{
+			$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
+			if(!isset($metadata['unit']))
+			{
+				continue;
+			}
+
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn($table,'unit','_unit');
+			$GLOBALS['phpgw_setup']->oProc->AddColumn($table,'unit',array(
+					'type'			=> 'int',
+					'precision'		=> 4,
+					'nullable'		=> true,
+				)
+			);
+
+			reset($units);
+			foreach ($units as $_name => $unit)
+			{
+				$sql = "UPDATE {$table} SET unit = {$unit['id']} WHERE _unit = '{$_name}'";
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			}
+			$GLOBALS['phpgw_setup']->oProc->DropColumn($table,array(),'_unit');
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.664';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.664 to 0.9.17.665
+	* Add bulk-flag to entities
+	*/
+	$test[] = '0.9.17.664';
+	function property_upgrade0_9_17_664()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','enable_bulk',array(
+				'type' =>	'int',
+				'precision' => 2,
+				'nullable' => true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.665';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
+	* Update property version from 0.9.17.665 to 0.9.17.666
+	* Add bulk-flag to entities
+	*/
+	$test[] = '0.9.17.665';
+	function property_upgrade0_9_17_665()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_request','budget','amount_investment');
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','amount_investment',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'default' => '0',
+				'nullable' => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','amount_operation',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'default' => '0',
+				'nullable' => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','amount_potential_grants',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'default' => '0',
+				'nullable' => true
+			)
+		);
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.666';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.666 to 0.9.17.667
+	* Add recommended year
+	*/
+	$test[] = '0.9.17.666';
+	function property_upgrade0_9_17_666()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','recommended_year',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'default' => '0',
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','responsible_unit',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_request_responsible_unit',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT fm_request.category, phpgw_categories.cat_name, phpgw_categories.cat_description FROM fm_request JOIN phpgw_categories ON fm_request.category = phpgw_categories.cat_id");
+		$request_cats = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$request_cats[]= array
+			(
+				'id'				=> $GLOBALS['phpgw_setup']->oProc->f('category'),
+				'cat_name'			=> $GLOBALS['phpgw_setup']->oProc->f('cat_name'),
+				'cat_description'	=> $GLOBALS['phpgw_setup']->oProc->f('cat_description'),
+			);
+		}
+
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
+
+		$i = 1;
+		foreach($request_cats as $old_cat)
+		{
+			$value_set = array
+			(
+				'cat_main'			=> 0,
+				'cat_parent'		=> 0,
+				'cat_level'			=> 0,
+				'cat_owner'			=> -1,
+				'cat_access'		=>'public',
+				'cat_appname'		=> 'property',
+				'cat_name'			=> $old_cat['cat_name'],
+				'cat_description'	=> $old_cat['cat_description'] ? $old_cat['cat_description'] : $old_cat['cat_name'],
+				'last_mod'			=> time(),
+				'location_id'		=> $location_id
+			);
+			$i++;
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO phpgw_categories ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$cat_id = (int)$GLOBALS['phpgw_setup']->oProc->m_odb->get_last_insert_id('phpgw_categories','cat_id');
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = {$cat_id} WHERE category = {$old_cat['id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_categories SET cat_main= {$cat_id} WHERE cat_id={$cat_id}",__LINE__,__FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.667';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.667 to 0.9.17.668
+	* Add check for missing budgets
+	*/
+	$test[] = '0.9.17.667';
+	function property_upgrade0_9_17_667()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
+ 			. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
+ 			. ' FROM fm_workorder_budget'
+ 			. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id'
+ 			. ' ORDER BY fm_workorder.project_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS' 
+ 			. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
+ 			. ' FROM fm_project_budget'
+ 			. ' ORDER BY fm_project_budget.project_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.668';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
+	* Update property version from 0.9.17.668 to 0.9.17.669
+	* Add check for missing budgets
+	*/
+	$test[] = '0.9.17.668';
+	function property_upgrade0_9_17_668()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_eco_period_transition', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+					'month' => array('type' => 'int','precision' => '4','nullable' => False),
+					'day' => array('type' => 'int','precision' => '4','nullable' => true),
+					'hour' => array('type' => 'int','precision' => '4','nullable' => true),
+					'remark' => array('type' => 'varchar','precision' => '60','nullable' => true),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array('month')
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_document','descr',array(
+			'type'		=> 'text',
+			'nullable'	=> True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.669';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
+	* Update property version from 0.9.17.669 to 0.9.17.670
+	* Add history for tenant claim
+	*/
+	$test[] = '0.9.17.669';
+	function property_upgrade0_9_17_669()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tenant_claim_history', array(
+				'fd' => array(
+					'history_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'history_record_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_appname' => array('type' => 'varchar','precision' => '64','nullable' => False),
+					'history_owner' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_status' => array('type' => 'char','precision' => '2','nullable' => False),
+					'history_new_value' => array('type' => 'text','nullable' => False),
+					'history_old_value' => array('type' => 'text','nullable' => true),
+					'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
+				),
+				'pk' => array('history_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.670';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.670 to 0.9.17.671
+	* Convert p_num values to integer
+	*/
+	$test[] = '0.9.17.670';
+	function property_upgrade0_9_17_670()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_category");
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			if($prefix = $GLOBALS['phpgw_setup']->oProc->f('prefix'))
+			{
+				$categories[] = array
+				(
+					'prefix'	=> $prefix,
+					'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+					'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id')
+				);
+			}
+		}
+
+		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
+
+		foreach ($tables as $table)
+		{
+			if(preg_match('/^fm_/', $table))
+			{
+				$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
+
+				$primary_keys = array();
+				foreach($metadata as $key => $info)
+				{
+					if(isset($info->primary_key) && $info->primary_key)
+					{
+						$primary_keys[] = $key;
+					}
+				}
+
+				if(isset($metadata['p_num']))
+				{
+
+					foreach ($categories as $category)
+					{
+
+						$cols = array_merge($primary_keys, array('p_num'));
+						$records = array();
+						$i = 0;
+						$GLOBALS['phpgw_setup']->oProc->query("SELECT " . implode(',', $cols) . " FROM {$table} WHERE p_entity_id = '{$category[entity_id]}' AND p_cat_id = '{$category[cat_id]}'");
+
+						while ($GLOBALS['phpgw_setup']->oProc->next_record())
+						{
+							foreach ($cols as $col)
+							{
+								$records[$i][$col] = $GLOBALS['phpgw_setup']->oProc->f($col);
+							}
+							$i++;
+						}
+
+						foreach ($records as $record)
+						{
+							$p_num = (int) ltrim($record['p_num'], $category['prefix']);
+							$condition_arr = array();
+							foreach ($primary_keys as $primary_key)
+							{
+								$condition_arr[] = "{$primary_key} = '{$record[$primary_key]}'";
+							}
+
+							$sql = "UPDATE {$table} SET p_num = '{$p_num}' WHERE ". implode(' AND ', $condition_arr);
+
+							$GLOBALS['phpgw_setup']->oProc->query($sql);
+						}
+					}
+
+					$sql = "UPDATE {$table} SET p_num = p_num::integer WHERE p_num IS NOT NULL";
+					$GLOBALS['phpgw_setup']->oProc->query($sql);
+				}
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.671';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.671 to 0.9.17.672
+	* Add external voucher_id for integration with external accounting_system
+	*/
+
+	$test[] = '0.9.17.671';
+	function property_upgrade0_9_17_671()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag', 'external_voucher_id', array('type' => 'int','precision' => '8','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf',  'external_voucher_id', array('type' => 'int','precision' => '8','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.672';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.672 to 0.9.17.673
+	* Add configurable prioriy keys for tickets
+	*/
+
+	$test[] = '0.9.17.672';
+	function property_upgrade0_9_17_672()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_priority', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 100,'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'property' AND config_name = 'prioritylevels'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$prioritylevels = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+
+		$prioritylevels = $prioritylevels ? $prioritylevels : 3;
+
+		$priority_comment = array();
+		$priority_comment[$prioritylevels]	= " - Lowest";
+		$priority_comment[1]				= " - Highest";
+
+		for ($i=1; $i<= $prioritylevels; $i++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES ({$i}, '{$i}{$priority_comment[$i]}')");
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_config WHERE config_app = 'property' AND config_name = 'prioritylevels'");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.673';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.673 to 0.9.17.674
+	* Add multiplier to condition survey
+	*/
+
+	$test[] = '0.9.17.673';
+	function property_upgrade0_9_17_673()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_condition_survey', 'multiplier', array
+				(
+					'type'		=> 'decimal',
+					'precision' => '20',
+					'scale'		=> '2',
+					'default'	=> '1.00',
+					'nullable'	=> True
+				)
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.674';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.674 to 0.9.17.675
+	* Add multiplier to condition survey
+	*/
+
+	$test[] = '0.9.17.674';
+	function property_upgrade0_9_17_674()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request', 'multiplier', array
+				(
+					'type'		=> 'decimal',
+					'precision' => '20',
+					'scale'		=> '2',
+					'default'	=> '1.00',
+					'nullable'	=> True
+				)
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.675';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
+	* Update property version from 0.9.17.675 to 0.9.17.676
+	* Add multiplier to condition survey
+	*/
+
+	$test[] = '0.9.17.675';
+	function property_upgrade0_9_17_675()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget DROP CONSTRAINT fm_budget_year_key");
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget ADD CONSTRAINT fm_budget_year_key UNIQUE(year , b_account_id , district_id , revision, ecodimb ,category)");
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_department','name', array('type' => 'varchar','precision' => '200','nullable' => False));
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.676';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	
+	/**
+	* Update property version from 0.9.17.676 to 0.9.17.677
+	* Add fields to view
+	*/
+
+	$test[] = '0.9.17.676';
+	function property_upgrade0_9_17_676()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS 
+		 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode,orders_paid_or_pending.amount,orders_paid_or_pending.periodization, orders_paid_or_pending.periodization_start
+		   FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount, fm_ecobilagoverf.periodization, fm_ecobilagoverf.periodization_start
+			       FROM fm_ecobilagoverf
+			       GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode, fm_ecobilagoverf.periodization, fm_ecobilagoverf.periodization_start
+				UNION ALL 
+			      SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount, fm_ecobilag.periodization, fm_ecobilag.periodization_start
+			       FROM fm_ecobilag
+			       GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode, fm_ecobilag.periodization, fm_ecobilag.periodization_start) orders_paid_or_pending ORDER BY orders_paid_or_pending.periode, orders_paid_or_pending.order_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.677';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

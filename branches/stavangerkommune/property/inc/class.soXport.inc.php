@@ -42,6 +42,8 @@
 		var $bilagsnr;
 		var $voucher_id;
 		protected $global_lock = false;
+		var $debug = false;
+		public $supertransaction = false;
 
 		function __construct()
 		{
@@ -209,6 +211,12 @@
 			return $this->db->f('cnt');
 		}
 
+		/**
+		 * Add voucher to work-katalog
+		 * @param array $buffer holds the dataset
+		 * @param bool $skip_update_voucher_id do not increment voucher_id
+		 * @return int number of records inserted
+		 */
 		function add($buffer, $skip_update_voucher_id = false)
 		{
 			if ( $this->db->get_transaction() )
@@ -238,7 +246,7 @@
 						$fields['pmwrkord_code'],
 						$fields['bilagsnr'],
 						$fields['bilagsnr_ut'],
-						$fields['splitt'],
+						isset($fields['splitt']) && $fields['splitt'] ? $fields['splitt'] : false,
 						$fields['kildeid'],
 						$fields['kidnr'],
 						$fields['typeid'],
@@ -255,19 +263,20 @@
 						$fields['spbudact_code'],
 						$fields['loc1'],
 						$fields['dima'],
-						$fields['dimd'],
-						$fields['dime'],
+						isset($fields['dimd']) && $fields['dimd'] ? $fields['dimd'] : false,
+						isset($fields['dime']) && $fields['dime'] ? $fields['dime'] : false,
 						$fields['mvakode'],
 						$fields['periode'],
 						$this->db->db_addslashes($fields['merknad']),
-						$this->db->db_addslashes($fields['line_text']),
+						isset($fields['line_text']) && $fields['line_text'] ? $this->db->db_addslashes($fields['line_text']) : false,
 						false,
 						false,
 						false,
 						false,
-						$fields['item_type'],
-						$fields['item_id'],
-						$fields['external_ref'],
+						isset($fields['item_type']) && $fields['item_type'] ? $fields['item_type'] : false,
+						isset($fields['item_id']) && $fields['item_id'] ? $fields['item_id'] : false,
+						isset($fields['external_ref']) && $fields['external_ref'] ? $fields['external_ref'] : false,
+						isset($fields['external_voucher_id']) && $fields['external_voucher_id'] ? $fields['external_voucher_id'] : false,
 						isset($fields['currency']) && $fields['currency'] ? $fields['currency'] : 'NOK'
 					);
 
@@ -278,9 +287,9 @@
 					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,fakturadato,"
 						. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " fakturanr,spbudact_code,loc1,dima,dimd,dime,mvakode,periode,merknad,line_text,oppsynsigndato,saksigndato,"
-						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
+						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,external_voucher_id,currency,belop,godkjentbelop)"
 						. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
-
+//						_debug_array($sql);die();
 					$this->db->query($sql,__LINE__,__FILE__);
 
 					$num++;
@@ -345,12 +354,13 @@
 				$data['utbetalingsigndato'],
 				$data['filnavn'],
 				isset($data['overftid']) && $data['overftid'] ? $data['overftid'] : date($this->db->datetime_format()),
-				$data['item_type'],
-				$data['item_id'],
-				$data['external_ref'],
+				isset($data['item_type']) && $data['item_type'] ? $data['item_type'] : false,
+				isset($data['item_id']) && $data['item_id'] ? $data['item_id'] : false,
+				isset($data['external_ref']) && $data['external_ref'] ? $data['external_ref'] : false,
+				isset($data['external_voucher_id']) && $data['external_voucher_id'] ? $data['external_voucher_id'] : false,
 				$data['currency'],
-				$data['manual_record'],
-				$data['process_code'],
+				isset($data['manual_record']) && $data['manual_record'] ? $data['manual_record'] : false,
+				isset($data['process_code']) && $data['process_code'] ? $data['process_code'] : false,
 				$this->db->db_addslashes($data['process_log']),
 			);
 
@@ -360,7 +370,7 @@
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,dime,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,line_text,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
-				. " currency,manual_record,process_code,process_log,belop,godkjentbelop,ordrebelop)"
+				. " external_voucher_id,currency,manual_record,process_code,process_log,belop,godkjentbelop,ordrebelop)"
 				. "VALUES ($values, "
 				. $this->db->money_format($data['belop']) . ","
 				. $this->db->money_format($data['godkjentbelop']) . ","
@@ -439,6 +449,7 @@
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
 					'external_ref'			=> $this->db->f('external_ref'),
+					'external_voucher_id'	=> $this->db->f('external_voucher_id'),
 					'kostra_id'				=> $this->db->f('kostra_id'),
 					'currency'				=> $this->db->f('currency'),
 	 	  			'process_log'			=> $this->db->f('process_log',true),
@@ -720,9 +731,14 @@
 		{
 			$orders_affected = array();
 			$_dateformat = $this->db->date_format();
-			$this->db->transaction_begin();
 
-			$this->add($values, $skip_update_voucher_id);
+			if(!$this->supertransaction)
+			{
+				$this->db->transaction_begin();
+			}
+
+			$num = $this->add($values, $skip_update_voucher_id);
+			$this->voucher_id = $values[0]['bilagsnr'];
 
 			$voucher = $this->get_voucher($values[0]['bilagsnr']);
 			foreach ($voucher as &$line)
@@ -738,12 +754,21 @@
 				$line['manual_record']			= 1;
 
 				$this->add_OverfBilag($line);
+			}
+			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
 
-				$amount =  $line['godkjentbelop'] * 100; 
+			reset($voucher);
 
+			if($this->debug)
+			{
+				return true;
+			}
+
+			foreach ($voucher as &$line)
+			{
 				if($line['order_id'])
 				{
-					$orders_affected[$line['order_id']] = true;
+					$amount =  $line['godkjentbelop'] * 100; 
 					//Oppdater beløp på bestilling
 					if ($line['dimd'] % 2 == 0)
 					{
@@ -756,19 +781,29 @@
 					$operator = '+';
 					if(!$this->debug)
 					{
+						//notify_coordinator_on_consumption is performed here..
 						$this->correct_actual_cost($line['order_id'],$amount, $actual_cost_field, $operator);
 					}
 				}
 			}
 
-			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
  			$this->update_actual_cost_from_archive($orders_affected);
-			return $this->db->transaction_commit();
+
+			if(!$this->supertransaction)
+			{
+				return $this->db->transaction_commit();
+			}
+			else
+			{
+				return $num;
+			}
 		}
 
 
 		public function update_actual_cost_from_archive($orders_affected)
 		{
+			$soworkorder = CreateObject('property.soworkorder');
+
 			$orders = array();
 			if($orders_affected)
 			{
@@ -787,6 +822,62 @@
 				foreach ($orders as $order)
 				{
 					$this->db->query("UPDATE fm_workorder SET actual_cost = '{$order['actual_cost']}' WHERE id = '{$order['order_id']}'",__LINE__,__FILE__);
+
+					$this->db->query("SELECT max(periode) AS period, max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id =  {$order['order_id']} AND periode IS NOT NULL",__LINE__,__FILE__);
+					$this->db->next_record();
+					$period		=	$this->db->f('period');
+					$amount		=	$this->db->f('amount');
+					$year		= 	$period ? (int) substr($period,0,4) : date('Y');
+
+					$this->db->query("SELECT order_id FROM fm_workorder_budget WHERE order_id = {$order['order_id']} AND year = {$year}",__LINE__,__FILE__);
+
+					if (!$this->db->next_record())
+					{
+						try
+						{
+							$soworkorder->transfer_budget($order['order_id'], array('budget_amount' => $amount, 'latest_year' => ($year -1)), $year);
+						}
+						catch(Exception $e)
+						{
+							if ( $e )
+							{
+								phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+							}
+						}
+					}
+
+				}
+
+				reset($orders_affected);
+
+				foreach ($orders_affected as $order_id => $dummy)
+				{
+					phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
+
+					// Not yet processed
+					$this->db->query("SELECT max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id = {$order_id} AND periode IS NULL",__LINE__,__FILE__);
+					$this->db->next_record();
+					$amount		=	$this->db->f('amount');
+					if($amount)
+					{
+						$year		= 	date('Y');
+						$this->db->query("SELECT order_id FROM fm_workorder_budget WHERE order_id = {$order_id} AND year = {$year}",__LINE__,__FILE__);
+
+						if (!$this->db->next_record())
+						{
+							try
+							{
+								$soworkorder->transfer_budget($order_id, array('budget_amount' => $amount, 'latest_year' => ($year -1)), $year);
+							}
+							catch(Exception $e)
+							{
+								if ( $e )
+								{
+									phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -795,6 +886,8 @@
    	   	// operator="-" ved tilbakerulling
 		public function correct_actual_cost($order_id, $amount, $actual_cost_field, $operator)
 		{
+			phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
+
 			$sql = "SELECT type FROM fm_orders WHERE id='{$order_id}'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -838,6 +931,8 @@
 			{
 				$sql="UPDATE {$table} SET {$actual_cost_field}={$actual_cost_field} {$operator} {$amount} {$update_paid} WHERE id='{$order_id}'";
 				$this->db->query($sql,__LINE__,__FILE__);
+
+				execMethod('property.boworkorder.notify_coordinator_on_consumption', $order_id);
 			}
 		}
 

@@ -63,6 +63,15 @@
 		*/
 		protected $files = array();
 
+
+		/**
+		 *
+		 * @var array list of "external files to be included in the head section of a page
+		 * Some times while using libs and such its not fesable to move js files to /app/js/package/
+		 * because the js files are using relative paths
+		 */
+		protected $external_files;
+
 		/**
 		* Constructor
 		*/
@@ -119,6 +128,12 @@
 		public function get_script_links()
 		{
 			$combine = true;
+			
+			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$combine = false;			
+			}
+			
 			if(ini_get('suhosin.get.max_value_length') && ini_get('suhosin.get.max_value_length') < 2000)
 			{
 				$combine = false;
@@ -161,6 +176,25 @@
 				}
 			}
 
+			if ( !empty($this->external_files) && is_array($this->external_files) )
+			{
+				foreach($this->external_files as $file)
+				{					
+					if($combine)
+					{
+						// Add file path to array and replace path separator with "--" for URL-friendlyness
+						$jsfiles[] = str_replace('/', '--', ltrim($file,'/'));
+					}
+					else
+					{
+						$links .= <<<HTML
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" >
+						</script>
+HTML;
+					}
+				}
+			}
+
 			if($combine)
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
@@ -195,16 +229,12 @@
 			{
 				if ( is_array($actions) && count($actions) )
 				{
-                    if ( $win_event == 'load') {
-                        $ret_str .= "$(document).ready(function()\n{\n";
-                    } else {
-                        $ret_str .= "window.on{$win_event} = function()\n{\n";
-                    }
+                    $ret_str .= "window.on{$win_event} = function()\n{\n";
 					foreach ( $actions as $action )
 					{
 						$ret_str .= "\t$action\n";
 					}
-					$ret_str .= "});\n";
+					$ret_str .= "}\n";
 				}
 			}
 			$ret_str .= "\n// end phpGW javascript class imported window.on* event handlers\n\n";
@@ -280,5 +310,18 @@
 				. $code ."\n"
 				. '//]]' ."\n"
 				. "</script>\n";
+		}
+
+		/**
+		 * Adds js file to external files.
+		 *
+		 * @param string $file Full path to js file relative to root of phpgw install 
+		 */
+		function add_external_file($file)
+		{
+			if ( is_file(PHPGW_SERVER_ROOT . "/$file") )
+			{
+				$this->external_files[] = $file;
+			}
 		}
 	}

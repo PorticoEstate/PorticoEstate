@@ -112,7 +112,6 @@
 				'control_area_id = ' . $this->marshal($control_item->get_control_area_id(), 'int')
 			);
 
-			//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
 			$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 			if($result)
@@ -137,7 +136,7 @@
 			$id = (int)$id;
 			$joins = " {$this->left_join} controller_control_group ON (p.control_group_id = controller_control_group.id)";
 			$sql = "SELECT p.*, controller_control_group.group_name AS control_group_name FROM controller_control_item p {$joins} WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
@@ -162,7 +161,7 @@
 		 * @param $return_type return data as objects or as arrays
 		 * @return control item object
 		*/
-		public function get_single_with_options($id, $return_type = "return_object")
+		public function get_single_with_options($id)
 		{
 			$id = (int)$id;
 			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
@@ -172,7 +171,6 @@
 			$sql .= "WHERE ci.id = $id";
 
 			$this->db->query($sql);
-			
 			$counter = 0;
 			$control_item = null;
 			while ($this->db->next_record()) 
@@ -199,14 +197,7 @@
 					$control_item_option->set_option_value($this->unmarshal($this->db->f('option_value', true), 'string'));
 					$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
 
-					if($return_type == "return_object")
-					{
-						$options_array[] = $control_item_option;
-					}
-					else
-					{
-						$options_array[] = $control_item_option->toArray();
-					}
+					$options_array[] = $control_item_option;
 				}
 			
 				$counter++;
@@ -214,14 +205,7 @@
 			
 			$control_item->set_options_array( $options_array );
 			
-			if($return_type == "return_object")
-			{
-				return $control_item;
-			}
-			else
-			{
-				return $control_item->toArray();
-			}
+			return $control_item;
 		}
 		
 		/**
@@ -234,7 +218,8 @@
 		{
 			$control_item_id = (int)$control_item_id;
 			$sql  = "delete from controller_control_item_option where control_item_id={$control_item_id}";
-			$this->db->query($sql);
+			
+			return $this->db->query($sql);
 		}
 
 		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
@@ -276,7 +261,7 @@
 			{
 				$ret = array
 				(
-					'table'			=> 'controller', // alias
+					'table'			=> 'controller_control_item', // alias
 					'field'			=> 'id',
 					'translated'	=> 'id'
 				);
@@ -327,7 +312,19 @@
 			}
 			if(isset($filters['control_areas']))
 			{
-				$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+//				$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+
+				$cat_id = (int) $filters['control_areas'];
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				$cat_list	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+
+				$filter_clauses[] = "controller_control_item.control_area_id IN (" .  implode(',', $cat_filter) .')';
 			}
 			
 

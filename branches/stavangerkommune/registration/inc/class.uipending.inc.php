@@ -203,7 +203,7 @@
 			}
 
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-			self::add_javascript('registration', 'yahoo', 'pending.index.js');
+			self::add_javascript('registration', 'yahoo', 'pending.index2.js');
 
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -229,6 +229,7 @@
 
 
 			$data = array(
+				'datatable_name' => lang('Pending for approval'),
 				'js_lang'	=>js_lang('edit', 'add'),
 				'form' => array(
 					'toolbar' => array(
@@ -295,23 +296,66 @@
 						array(
 							'key' => 'location_code',
 							'label' => lang('location'),
-							'sortable'	=> false
+							'sortable'	=> false,
+	//						'editor' => 'new YAHOO.widget.CheckboxCellEditor({checkboxOptions:[{label:"ja", value:true},{label:"nei", value:false}],disableBtns:true})'
 						),
 						array(
 								'key' => 'checked',
 								'label' => lang('approve'),
 								'sortable' => false,
 								'formatter' => 'formatterCheckPending',
-								'className' => 'mychecks'
+								'className' => 'mychecks',
 						),
-					)
+/*
+						array(
+								'key' => 'actions',
+								'hidden' => true
+							),
+							array(
+								'key' => 'labels',
+								'hidden' => true
+							),
+							array(
+								'key' => 'ajax',
+								'hidden' => true
+							),array(
+								'key' => 'parameters',
+								'hidden' => true
+							)					
+*/
+					),
 				),
 			);
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'edit',
+						'text' 			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'registration.uipending.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+					
+	//		$data['datatable']['editor_action'] = 'rental.uiprice_item.set_value';
+
 //_debug_array($data);die();
 
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
-
 
 
 		public function edit()
@@ -546,8 +590,24 @@
 			$results['sort'] = 'reg_lid';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
-//			array_walk($results['results'], array($this, 'add_links'), array($type));
-						
+			array_walk($results['results'], array($this, 'add_actions'), array($type));
+//_debug_array($results);						
 			return $this->yui_results($results);
 		}
+
+		public function add_actions(&$value, $key, $params)
+		{
+			//Defining new columns
+			$value['ajax'] = array();
+			$value['actions'] = array();
+			$value['labels'] = array();
+	
+			$value['ajax'][] = true;
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental._uibilling.delete', 'id' => $value['id'])));
+			$value['labels'][] = lang('delete');
+			$value['ajax'][] = true;
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental._uibilling.commit', 'id' => $value['id'])));
+			$value['labels'][] = lang('commit');
+	    }
+
 	}

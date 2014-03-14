@@ -1,6 +1,9 @@
 <!-- $Id: view_calendar_year.xsl 9206 2012-04-23 06:21:38Z vator $ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="location_code"><xsl:value-of select="location_code" /></xsl:variable>
+
 
 <div id="main_content">
 
@@ -9,6 +12,39 @@
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
 			<h3>Periode: <xsl:value-of select="current_year"/></h3>
 			
+				<div id="choose-my-location" class="select-box">
+					<label>Velg en lokasjon</label>
+					  <form action="#">
+						<input type="hidden" name="period_type" value="view_year_for_locations" />
+						<input type="hidden" name="year">
+						  <xsl:attribute name="value">
+							<xsl:value-of select="current_year"/>
+						  </xsl:attribute>
+						</input>
+						<input type="hidden" name="control_id">
+						  <xsl:attribute name="value">
+							<xsl:value-of select="//control/id"/>
+						  </xsl:attribute>
+						</input>
+						<select id="choose-my-location" class="select-location">
+						  <option>Velg bygg</option>
+						  <xsl:for-each select="locations_list">
+							<option>
+							  <xsl:if test="selected = 1">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							  </xsl:if>
+							  <xsl:attribute name="value">
+								<xsl:value-of select="id"/>
+							  </xsl:attribute>
+								<xsl:value-of select="id"/>
+								<xsl:text> - </xsl:text>
+								<xsl:value-of disable-output-escaping="yes" select="name"/>
+							</option>
+						  </xsl:for-each>
+						</select>					
+					  </form>
+				</div>
+
 		</div>
 		<div class="middle">
 		
@@ -18,6 +54,7 @@
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->			
 			<xsl:call-template name="nav_calendar_year">
     		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
+    		<xsl:with-param name="location_code"><xsl:value-of select="$location_code"/></xsl:with-param>
   		</xsl:call-template>
 		</div>
 		<div id="cal_wrp">
@@ -41,6 +78,9 @@
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="//control/id"/>
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
+									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
 								<xsl:variable name="month_str">short_month <xsl:value-of select="."/> capitalized</xsl:variable>
@@ -68,7 +108,7 @@
 							<xsl:value-of select="location/location_code"/>
 						</td>
 						<td class="location-name">
-							<xsl:value-of select="location/loc1_name"/>
+							<xsl:value-of select="location/loc_name"/>
 						</td>
 							
 						<xsl:for-each select="calendar_array">
@@ -106,6 +146,9 @@
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="//control/id"/>
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="$location_code"/>
+									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
 								<xsl:variable name="month_str">short_month <xsl:value-of select="."/> capitalized</xsl:variable>

@@ -48,7 +48,7 @@
 					
 					</style>
 					<div id="choose_control">
-						<h4>Velg kontrollen du vil vise komponent for</h4>
+						<h4>Velg kontroll</h4>
 						<select id="control_area_id" name="control_area_id">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>		 

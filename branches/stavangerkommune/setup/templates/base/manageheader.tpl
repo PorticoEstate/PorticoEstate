@@ -22,6 +22,25 @@
       <b>{lang_system_name}</b><br><input type="text" name="setting[system_name]" size="80" value="{system_name}">
     </td>
   </tr>
+  <tr>
+    <td colspan="2">
+      <b>{lang_login_left_message} - FORMATTING HAS TO BE EDITED MANUALLY in the resulting header.inc.php</b><br>
+      <textarea cols="80" rows="4" name="setting[login_left_message]" wrap="virtual">{login_left_message}</textarea>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <b>{lang_login_right_message} - FORMATTING HAS TO BE EDITED MANUALLY in the resulting header.inc.php</b><br>
+      <textarea cols="80" rows="4" name="setting[login_right_message]" wrap="virtual">{login_right_message}</textarea>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>{lang_new_user}</b><br><input type="text" name="setting[new_user_url]" size="80" value="{new_user_url}"></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>{lang_forgotten_password}</b><br><input type="text" name="setting[lost_password_url]" size="80" value="{lost_password_url}"></td>
+  </tr>
+
   <br><br>
   <tr>
     <td><b>{lang_persist}</b><br>

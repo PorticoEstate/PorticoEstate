@@ -28,6 +28,11 @@
  	* @version $Id$
 	*/	
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
   phpgw::import_class('phpgwapi.uicommon');
   phpgw::import_class('property.boevent');
   phpgw::import_class('controller.socontrol');
@@ -55,31 +60,37 @@
     private $so_check_item;
     private $_category_acl;		
 
+    private $read;
+    private $add;
+    private $edit;
+    private $delete;
+
     public $public_functions = array
     (
-			'index'													=>	true,
-			'control_list'									=>	true,
-			'view'													=>	true,
-			'view_control_details'					=>	true,
-			'save_control_details'					=>	true,
-			'view_control_groups'						=>	true,
-			'save_control_groups'						=>	true,
-			'view_control_items'						=>	true,
-			'save_control_items'						=>	true,
-			'view_check_list'								=>	true,
+			'index'							=>	true,
+			'control_list'					=>	true,
+			'view'							=>	true,
+			'view_control_details'			=>	true,
+			'save_control_details'			=>	true,
+			'view_control_groups'			=>	true,
+			'save_control_groups'			=>	true,
+			'view_control_items'			=>	true,
+			'save_control_items'			=>	true,
+			'view_check_list'				=>	true,
 			'get_controls_by_control_area'	=>	true,
+	    	'get_control_details'			=>	true
 		);
 
 		public function __construct()
 		{
-			parent::__construct();
+			parent::__construct('controller');
 
-			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
-			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
-			$edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
-			$delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			$this->read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
 			
-			$manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			$this->manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
 
 			//if(!$manage)
 			
@@ -100,6 +111,18 @@
 			self::set_active_menu('controller::control');
 		}
 		
+
+		/**
+		 * Wrapper for control_list
+		 *
+		 * @return void
+		 */
+
+		public function index()
+		{
+			$this->control_list();
+		}
+
 		/**
 		 * Fetches controls and returns to datatable 
 		 *
@@ -111,7 +134,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
@@ -121,10 +144,10 @@
 
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
 			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-			$control_areas_array2 = array();
+			$control_areas_array = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
-				$control_areas_array2[] = array
+				$control_areas_array[] = array
 				(
 					'id' 	=> $cat_list['cat_id'],
 					'name'	=> $cat_list['name'],
@@ -132,7 +155,15 @@
 			}
 			// END categories
 
+			// start district
+			$property_bocommon		= CreateObject('property.bocommon');
+			$district_list  = $property_bocommon->select_district_list('dummy',$this->district_id);
+			array_unshift ($district_list,array ('id'=>'','name'=>lang('no district')));
+			// end district
+
+
 			$data = array(
+				'datatable_name'	=> 'Kontroller',//lang('controls'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -166,12 +197,17 @@
 							array('type' => 'filter',
 								'name' => 'control_areas',
 								'text' => lang('Control_area'),
-								'list' => $control_areas_array2,
+								'list' => $control_areas_array,
 							),
 							array('type' => 'filter',
 								'name' => 'responsibilities',
                                 'text' => lang('Responsibility'),
                                 'list' => $this->so->get_roles(),
+							),
+							array('type' => 'filter',
+								'name' => 'district_id',
+                                'text' => lang('district'),
+                                'list' => $district_list,
 							),
 							array('type' => 'text', 
                                 'text' => lang('searchfield'),
@@ -203,7 +239,8 @@
 						array(
 							'key'	=>	'title',
 							'label'	=>	lang('Control title'),
-							'sortable'	=>	false
+							'sortable'	=>	true,
+              'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
 							'key' => 'description',
@@ -234,7 +271,7 @@
 				),
 			);
 
-			self::render_template_xsl(array( 'control/controls_datatable', 'datatable' ), $data);
+			self::render_template_xsl(array( 'datatable_common' ), $data);
 		}
 		
 		/**
@@ -255,16 +292,16 @@
 				}
 			}
 			
-			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
-			// END as categories
 		
 			if($control != null)
+			{
 				$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
+			}
 			
 			$role_array = $this->so->get_roles();
 			
@@ -282,7 +319,7 @@
 				'tabs'									=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 				'view'									=> "control_details",
 				'editable' 							=> true,
-				'control'								=> ($control != null) ? $control->toArray() : null,
+				'control'								=> ($control != null) ? $control : null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
 				'role_array'						=> $role_array,
@@ -290,17 +327,13 @@
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			//$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			//$GLOBALS['phpgw']->jqcal->add_listener('end_date');
-			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
-			
-			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
-			
+		
 			$this->use_yui_editor(array('description'));
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+
+			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
 		}
 		
 		/**
@@ -309,7 +342,13 @@
 		 * @param HTTP:: control id, control details fields
 		 * @return redirect to function view_control_groups
 		 */
-		public function save_control_details(){
+		public function save_control_details()
+		{
+			if(!$this->add && !$this->edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'controller.uicontrol.index'));
+			}
+
 			$control_id = phpgw::get_var('control_id');
 			
 			// Update existing control details
@@ -352,7 +391,8 @@
 				
 				$control_id = $this->so->store($control);
 				$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups', 'control_id' => $control_id));	
-			}else
+			}
+			else
 			{
 					$this->view_control_details($control);
 			}
@@ -365,27 +405,32 @@
 		 * @param HTTP:: control id 
 		 * @return data array 
 		 */
-		public function view_control_groups(){
+		public function view_control_groups()
+		{
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so->get_single($control_id);	
 									
 			// Fetches saved control groups from db
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+
 			$saved_control_group_ids = array();
 			
-			foreach($saved_control_groups as $control_group){
+			foreach($saved_control_groups as $control_group)
+			{
 				$saved_control_group_ids[] = $control_group->get_id();
 			}
 			
 			// Fetches control groups based on selected control area						
-			$contro_area = execMethod('phpgwapi.categories.return_single', $control->get_control_area_id());			
+			$control_area = execMethod('phpgwapi.categories.return_single', $control->get_control_area_id());			
 			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 			
 			$control_groups = array();
-			foreach($control_groups_as_array as $control_group){
+			foreach($control_groups_as_array as $control_group)
+			{
 				$control_group_id = $control_group['id'];
 				
-				if( in_array($control_group_id, $saved_control_group_ids )){
+				if( in_array($control_group_id, $saved_control_group_ids ))
+				{
 					$control_groups[] = array("checked" => 1, "control_group" => $control_group);
 				}
 				else
@@ -398,16 +443,16 @@
 			
 			$data = array
 			(
-				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-				'view'						=> "control_groups",
-				'editable' 				=> true,
-				'control'					=> $control->toArray(),
+				'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+				'view'				=> "control_groups",
+				'editable' 			=> true,
+				'control'			=> $control,
 				'control_area'		=> $control_area,
 				'control_groups'	=> $control_groups,
 			);
 			
+			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
@@ -418,25 +463,32 @@
 		 * @param HTTP::id	the control_id, and a comma seperated list of group ids
 		 * @return redirect to function view_control_items
 		 */
-		public function save_control_groups(){
+		public function save_control_groups()
+		{
+			if(!$this->add && !$this->edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'controller.uicontrol.index'));
+			}
+
 			$control_id = phpgw::get_var('control_id');
-			$control_group_ids = phpgw::get_var('control_group_ids');		
+			$control_group_ids = phpgw::get_var('control_group_ids');
 
 			// Fetches saved control groups 
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 			
 			// Deletes groups from control that's not among the chosen groups
+
 			foreach($saved_control_groups as $group)
 			{
 				// If saved group id not among chosen control ids, delete the group for the control    
-				if( !in_array($group->get_id(), $saved_control_groups) ){
-						$this->so_control_group_list->delete($control_id, $group->get_id());
-						
-						// Deletes control items for group
-						$this->so_control_item_list->delete_control_items_for_group_list($control_id, $group->get_id());
+				if( !in_array($group->get_id(), $control_group_ids) )
+				{
+					$this->so_control_group_list->delete($control_id, $group->get_id());
+					// Deletes control items for group
+					$this->so_control_item_list->delete_control_items_for_group_list($control_id, $group->get_id());
 				}
 			}
-			
+
 			$group_order_nr = 1;
 
 			// Saving control groups 
@@ -505,7 +557,6 @@
 					if(!$status_control_item_saved){
 						$control_items_for_group_array[] = array("checked" => 0, "control_item" => $control_item->toArray());
 					}
-						
 				}
 				
 				$groups_with_control_items[] = array("control_group" => $control_group->toArray(), "group_control_items" => $control_items_for_group_array);
@@ -518,12 +569,13 @@
 				'tabs'											=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
 				'view'											=> 'control_items',
 				'control_group_ids'					=> implode($control_group_ids, ","),
-				'control'				    				=> $control->toArray(),
+				'control'				    				=> $control,
 				'groups_with_control_items'	=> $groups_with_control_items			
 			);
 			
+			phpgwapi_jquery::load_widget('core');
+
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
@@ -537,30 +589,57 @@
 		 */ 
 		public function save_control_items(){
 			$control_id = phpgw::get_var('control_id');
-			
+
 			// Fetching selected control items. Tags are on the format 1:2 (group:item). 
 			$control_tag_ids = phpgw::get_var('control_tag_ids');
 			
-			// Deleting earlier saved control items
-			$this->so_control_item_list->delete_control_items($control_id);
-	
+			$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control_id, "return_object");
+			
+			// Deleting formerly saved control items
+			foreach ($saved_control_items as $saved_control_item)
+			{
+				$exists = false;
+				$saved_control_item_id = $saved_control_item->get_id();
+				  
+				foreach ($control_tag_ids as $control_item_tag)
+				{
+					$control_item_id = substr($control_item_tag, strpos($control_item_tag, ":")+1, strlen($control_item_tag));
+					
+					if($control_item_id == $saved_control_item_id)
+					{
+						$exists = true;
+					}
+				}
+				
+				if($exists == false)
+				{
+					$exists = false;
+					$status = $this->so_control_item_list->delete($control_id, $saved_control_item_id);
+				}
+			}
+						
 			$order_nr = 1;
-			// Saving control items if submit save control items is clicked 
+			// Saving new control items 
 			foreach ($control_tag_ids as $control_item_tag)
-			{	
+			{
 				// Fetch control_item_id from tag string
 				$control_item_id = substr($control_item_tag, strpos($control_item_tag, ":")+1, strlen($control_item_tag));
-							
-				// Saves control item
-				$control_item_list = new controller_control_item_list();
-				$control_item_list->set_control_id($control_id);
-				$control_item_list->set_control_item_id($control_item_id);
-				$control_item_list->set_order_nr($order_nr);
-				$this->so_control_item_list->add($control_item_list);
 				
-				$order_nr++;
-			}	
-	
+				$saved_control_list_item = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
+				
+				if( $saved_control_list_item == null )
+				{
+					// Saves control item
+					$control_item_list = new controller_control_item_list();
+					$control_item_list->set_control_id($control_id);
+					$control_item_list->set_control_item_id($control_item_id);
+					$control_item_list->set_order_nr($order_nr);
+					$this->so_control_item_list->add($control_item_list);
+					
+					$order_nr++;
+				}
+			}
+			
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_list', 'control_id'=>$control_id ));	
 		}
 
@@ -593,19 +672,32 @@
 			
 			$data = array
 			(
-				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
-				'view'							=> "sort_check_list",
-				'control'						=> $control->toArray(),
+				'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
+				'view'													=> "sort_check_list",
+				'control'												=> $control,
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
+			phpgwapi_jquery::load_widget('core');
+
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::add_javascript('controller', 'controller', 'yui_min_3_4_3.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/sort_check_list'), $data);
+		}
+		
+		public function get_control_details()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$control = $this->so->get_single($control_id);
+
+			$data = array
+			(
+				'control'	=> $control
+			);
+		  
+			self::render_template_xsl('control/control_details', $data);
 		}
 		
 		function make_tab_menu($control_id){
@@ -775,6 +867,8 @@
 			{
 				$filters['responsibilities'] = $responsibility; 
 			}
+
+			$filters['district_id'] = phpgw::get_var('district_id', 'int', 'REQUEST', null);
 										
 			$search_for = phpgw::get_var('query');
 
@@ -782,7 +876,8 @@
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
-			else {
+			else
+			{
 				$user_rows_per_page = 10;
 			}
 			
@@ -793,7 +888,7 @@
 			
 			if($sort_field == null)
 			{
-				$sort_field = 'control_group_id';
+				$sort_field = 'controller_control.id';
 			}
 			
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;

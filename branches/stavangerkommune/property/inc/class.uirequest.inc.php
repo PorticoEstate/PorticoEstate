@@ -46,6 +46,7 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
+		var $nonavbar;
 
 		var $public_functions = array
 			(
@@ -56,7 +57,8 @@
 				'priority_key'	=> true,
 				'view_file'		=> true,
 				'download'		=> true,
-				'columns'		=> true
+				'columns'		=> true,
+				'get_related'	=> true
 			);
 
 		function property_uirequest()
@@ -94,6 +96,19 @@
 			$this->building_part		= $this->bo->building_part;
 			$this->allrows				= $this->bo->allrows;
 			$this->p_num				= $this->bo->p_num;
+			$this->condition_survey_id	= $this->bo->condition_survey_id;
+			$this->nonavbar 			= phpgw::get_var('nonavbar', 'bool');
+			$this->responsible_unit		= $this->bo->responsible_unit;
+			$this->recommended_year		= $this->bo->recommended_year;
+
+
+			if( $this->nonavbar )
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar']		= true;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
+			}
 		}
 
 		function save_sessiondata()
@@ -113,7 +128,9 @@
 				'start_date'		=> $this->start_date,
 				'end_date'			=> $this->end_date,
 				'property_cat_id'	=> $this->property_cat_id,
-				'building_part'		=> $this->building_part
+				'building_part'		=> $this->building_part,
+				'responsible_unit'	=> $this->responsible_unit,
+				'recommended_year'	=> $this->recommended_year
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -226,6 +243,8 @@
 		//				'status_id'	=> $this->status_id,
 						'project_id'	=> $project_id,
 		//				'query'		=> $this->query,
+						'condition_survey_id'=> $this->condition_survey_id,
+						'nonavbar' => $this->nonavbar,
 						'p_num'		=> $this->p_num,
 						'start_date'=> $this->start_date,
 						'end_date' 	=> $this->end_date
@@ -242,10 +261,13 @@
 					."status_id:'{$this->status_id}',"
 					."degree_id:'{$this->degree_id}',"
 					."property_cat_id:'{$this->property_cat_id}',"
+					."condition_survey_id:'{$this->condition_survey_id}',"
+					."nonavbar:'{$this->nonavbar}',"
 					."district_id: '{$this->district_id}',"
 					."start_date:'{$this->start_date}',"
 					."end_date: '{$this->end_date}',"
 					."cat_id:'{$this->cat_id}',"
+					."responsible_unit:'{$this->responsible_unit}',"
 					."building_part:'{$this->building_part}'";
 
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array
@@ -284,9 +306,16 @@
 				$default_value = array ('user_id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);
 
+
+				$responsible_unit_list	= $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
+				array_unshift ($responsible_unit_list,array ('id'=>'0','name'=> lang('responsible unit')));
+
+				$recommended_year_list	= $this->bo->get_recommended_year_list($this->recommended_year);
+				array_unshift ($recommended_year_list,array ('id'=>'0','name'=> lang('recommended year')));
+
 				$_filter_buildingpart = array();
 				$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
-			
+
 				if($filter_key = array_search('.project.request', $filter_buildingpart))
 				{
 					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
@@ -304,6 +333,8 @@
 							(
 								'menuaction' 		=> 'property.uirequest.index',
 								'lookup'        	=> $lookup,
+								'condition_survey_id'=> $this->condition_survey_id,
+								'nonavbar'			=> $this->nonavbar,
 								'property_cat_id'	=> $this->property_cat_id,
 								'cat_id'			=> $this->cat_id,
 								'filter'			=> $this->filter,
@@ -314,8 +345,9 @@
 								'query'				=> $this->query,
 								'start_date'		=> $this->start_date,
 								'end_date' 			=> $this->end_date,
-								'building_part'		=> $this->building_part
-
+								'building_part'		=> $this->building_part,
+								'responsible_unit'	=> $this->responsible_unit,
+								'recommended_year'	=> $this->recommended_year,
 							)
 						),
 						'fields'	=> array
@@ -343,7 +375,6 @@
 								array
 								( //boton 	CATEGORY
 									'id' => 'btn_cat_id',
-
 									'name' => 'cat_id',
 									'value'	=> lang('Category'),
 									'type' => 'button',
@@ -380,27 +411,49 @@
 									'tab_index' => 6
 								),
 								array
+								(
+									'id' => 'sel_responsible_unit',
+									'name' => 'responsible_unit',
+									'value'	=> lang('responsible unit'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values'	=> $responsible_unit_list,
+									'onchange'=> 'onChangeSelect("responsible_unit");',
+									'tab_index' => 7
+								),
+								array
+								(
+									'id' => 'sel_recommended_year',
+									'name' => 'recommended_year',
+									'value'	=> lang('responsible unit'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values'	=> $recommended_year_list,
+									'onchange'=> 'onChangeSelect("recommended_year");',
+									'tab_index' => 8
+								),
+								array
 								( //boton 	FILTER
 									'id' => 'btn_user_id',
 									'name' => 'filter',
 									'value'	=> lang('User'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 7
+									'tab_index' => 9
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_update',
 									'value'	=> lang('Update project'),
-									'tab_index' => 15
+									'tab_index' => 17
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 14
+									'tab_index' => 16
 								),
 
 								array
@@ -408,7 +461,7 @@
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 13
+									'tab_index' => 15
 								),
 								array
 								(
@@ -436,7 +489,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 12
+									'tab_index' => 14
 								),
 
 								array
@@ -446,7 +499,7 @@
 									'value'    => lang('search'),
 									'onkeypress' => 'return pulsar(event)',
 									'type' => 'button',
-									'tab_index' => 11
+									'tab_index' => 13
 								),
 								array
 								( //hidden request
@@ -463,7 +516,7 @@
 									'type' => 'text',
 									'size'    => 28,
 									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 10
+									'tab_index' => 12
 								),
 								array
 								(
@@ -474,7 +527,7 @@
 									(
 										'menuaction' => 'property.uirequest.priority_key'))."','','left=50,top=100,width=350,height=350,scrollbars=1')",
 										'value' => lang('Priority key'),
-										'tab_index' => 9
+										'tab_index' => 10
 								),
 								array
 								(
@@ -485,7 +538,7 @@
 									(
 										'menuaction' => 'property.uirequest.columns'))."','','width=300,height=600,scrollbars=1')",
 										'value' => lang('columns'),
-										'tab_index' => 8
+										'tab_index' => 9
 								),
 							),
 							'hidden_value' => array
@@ -527,17 +580,17 @@
 
 				if(!$this->acl_manage)//priority_key
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][17]);
+					unset($datatable['actions']['form'][0]['fields']['field'][19]);
 				}
 
 				if(!$this->acl_add) //add
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][9]);
+					unset($datatable['actions']['form'][0]['fields']['field'][11]);
 				}
 
 				if(!$project_id) // update project
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][7]);
+					unset($datatable['actions']['form'][0]['fields']['field'][9]);
 				}
 
 
@@ -788,7 +841,7 @@
 
 				//all colums should be have formatter
 				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-				$datatable['headers']['header'][$i]['className'] = $uicols['classname'][$i] ? $uicols['classname'][$i] : '';				
+				$datatable['headers']['header'][$i]['className'] = $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -838,7 +891,7 @@
 
 			if($dry_run)
 			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
@@ -866,21 +919,24 @@
 			//values for Pagination
 			$json = array
 				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'currentPage'		=> $datatable['sorting']['currentPage'],
-					'records'			=> array(),
-					'sum_budget'		=> $this->bo->sum_budget,
-					'sum_consume'		=> $this->bo->sum_consume
+					'recordsReturned' 		=> $datatable['pagination']['records_returned'],
+					'totalRecords' 			=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 			=> $datatable['pagination']['records_start'],
+					'sort'					=> $datatable['sorting']['order'],
+					'dir'					=> $datatable['sorting']['sort'],
+					'currentPage'			=> $datatable['sorting']['currentPage'],
+					'records'				=> array(),
+					'sum_investment'		=> $this->bo->sum_investment,
+					'sum_operation'			=> $this->bo->sum_operation,
+					'sum_potential_grants'	=> $this->bo->sum_potential_grants,
+					'sum_consume'			=> $this->bo->sum_consume
 
 				);
 
 			// values for datatable
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
 			{
+//_debug_array($datatable['rows']);
 				foreach( $datatable['rows']['row'] as $row )
 				{
 					$json_row = array();
@@ -1165,19 +1221,37 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
 				}
 
-				if(isset($values['budget']) && $values['budget'])
+				if(isset($values['amount_investment']) && $values['amount_investment'])
 				{
-					$values['budget'] = str_replace(' ', '', $values['budget']);
-					if( !ctype_digit($values['budget']))
+					$values['amount_investment'] = str_replace(' ', '', $values['amount_investment']);
+					if( !ctype_digit($values['amount_investment']))
 					{
-						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+						$receipt['error'][]=array('msg'=>lang('investment') . ': ' . lang('Please enter an integer !'));
+						$error_id=true;
+					}
+				}
+				if(isset($values['amount_operation']) && $values['amount_operation'])
+				{
+					$values['amount_operation'] = str_replace(' ', '', $values['amount_operation']);
+					if( !ctype_digit($values['amount_operation']))
+					{
+						$receipt['error'][]=array('msg'=>lang('operation') . ': ' . lang('Please enter an integer !'));
+						$error_id=true;
+					}
+				}
+				if(isset($values['amount_potential_grants']) && $values['amount_potential_grants'])
+				{
+					$values['amount_potential_grants'] = str_replace(' ', '', $values['amount_potential_grants']);
+					if( !ctype_digit($values['amount_potential_grants']))
+					{
+						$receipt['error'][]=array('msg'=>lang('potential grants') . ': ' . lang('Please enter an integer !'));
 						$error_id=true;
 					}
 				}
 
 				$_condition = array_keys($values['condition']);
 				$__condition = isset($_condition[0]) && $_condition[0] ? $_condition[0] : 0;
-				
+
  				if(!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a condition!'));
@@ -1329,7 +1403,7 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$lookup_type = $mode == 'edit' ? 'form' : 'view';
+			$lookup_type = $mode == 'edit' ? 'form2' : 'view2';
 
 			$location_data=$this->bolocation->initiate_ui_location(array(
 					'values'		=> $values['location_data'],
@@ -1442,9 +1516,9 @@
 				else
 				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
-				}				
+				}
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
-			}									
+			}
 
 			$datavalues[1] = array
 				(
@@ -1492,11 +1566,13 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$related = $this->get_related($id);
+
 			$datavalues[2] = array
 				(
 					'name'					=> "2",
-					'values' 				=> json_encode($values['planning']),
-					'total_records'			=> count($values['planning']),
+					'values' 				=> json_encode($related),
+					'total_records'			=> count($related),
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
@@ -1507,31 +1583,14 @@
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
-														array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
+					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>false),
+														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false, 'formatter' => 'FormatterRight')))
 				);
-
-			$datavalues[3] = array
-				(
-					'name'					=> "3",
-					'values' 				=> json_encode($values['consume']),
-					'total_records'			=> count($values['consume']),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-
-
-			$myColumnDefs[3] = array
-				(
-					'name'		=> "3",
-					'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
-														array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
-				);
-
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1554,16 +1613,30 @@
 
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->config->config_data['filter_buildingpart']) ? $this->config->config_data['filter_buildingpart'] : array();
-			
+
 			if($filter_key = array_search('.project.request', $filter_buildingpart))
 			{
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
 
+			$ticket_link_data = array
+			(
+				'menuaction'		=> 'property.uitts.add',
+				'bypass'			=> true,
+				'location_code'		=> $values['location_code'],
+			//	'p_num'				=> 0,
+			//	'p_entity_id'		=> 0,
+			///	'p_cat_id'			=> 0,
+				'origin'			=> $this->acl_location,
+				'origin_id'			=> $id
+			);
+
+
 			$data = array
 				(
 					'mode'								=> $mode,
+					'ticket_link'						=> $GLOBALS['phpgw']->link('/index.php',$ticket_link_data),
 					'value_authorities_demands' 		=> isset($this->config->config_data['authorities_demands']) &&  $this->config->config_data['authorities_demands'] ? $this->config->config_data['authorities_demands'] : 0,
 					'suppressmeter'						=> isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
 					'show_dates'						=> $show_dates,
@@ -1641,14 +1714,19 @@
 					'value_diff'						=> number_format($value_diff, 0, ',', ' '),
 					'value_diff2'						=> number_format($value_diff2, 0, ',', ' '),
 
-					'location_data'						=> $location_data,
-					'location_type'						=> 'form',
+					'value_amount_potential_grants'		=> number_format($values['amount_potential_grants'], 0, ',', ' '),
+					'value_amount_investment'			=> number_format($values['amount_investment'], 0, ',', ' '),
+					'value_amount_operation'			=> number_format($values['amount_operation'], 0, ',', ' '),
+
+					'loc1'								=> $values['location_data']['loc1'],
+					'location_data2'					=> $location_data,
+			//		'location_type'						=> 'form2',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
 					'lang_save'							=> lang('save'),
 					'lang_done'							=> lang('done'),
 
-					'lang_request_id'					=> lang('request ID'),
+					'lang_request_id'					=> lang('request ID condition'),
 					'value_request_id'					=> $id,
 
 					'value_title'						=> $values['title'],
@@ -1664,7 +1742,8 @@
 
 					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 
-					'lang_coordinator'					=> lang('Coordinator'),
+					'lang_coordinator'					=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('request coordinator'),
+
 					'lang_user_statustext'				=> lang('Select the coordinator the request belongs to. To do not use a category select NO USER'),
 					'select_user_name'					=> 'values[coordinator]',
 					'lang_no_user'						=> lang('Select coordinator'),
@@ -1674,6 +1753,9 @@
 					'lang_no_status'					=> lang('Select status'),
 					'lang_status'						=> lang('Status'),
 					'lang_status_statustext'			=> lang('What is the current status of this request ?'),
+
+					'responsible_unit_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$values['responsible_unit'], 'order' => 'id', 'fields' => array('descr')))),
+					'value_recommended_year'			=> $values['recommended_year'],
 
 					'branch_list'						=> array('options' => $this->boproject->select_branch_list($values['branch_id'])),
 					'lang_branch'						=> lang('branch'),
@@ -1692,7 +1774,9 @@
 
 					'condition_list'					=> $this->bo->select_conditions($id),
 					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
-					'value_consume'						=> isset($receipt['error']) ? $values['consume_value'] : ''
+					'value_consume'						=> isset($receipt['error']) ? $values['consume_value'] : '',
+					'value_multiplier'					=> $values['multiplier'],
+					'value_total_cost_estimate'			=> $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']) , 0, ',', ' ') : ''
 				);
 //_debug_array($data);die();
 			phpgwapi_yui::load_widget('dragdrop');
@@ -1780,12 +1864,105 @@
 			$this->edit($mode = 'view');
 		}
 
+
+		function get_related($id)
+		{
+			if( !$this->acl_read)
+			{
+				return array();
+			}
+
+			$interlink 	= CreateObject('property.interlink');
+			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
+
+			$values = array();
+			if($target)
+			{
+				foreach($target as $_target_section)
+				{
+
+					foreach ($_target_section['data'] as $_target_entry)
+					{
+						switch($_target_section['location'])
+						{
+							case '.ticket':
+								$ticket		= execMethod('property.sotts.read_single',(int)$_target_entry['id']);
+								$budget		= $ticket['budget'];
+								$start_date = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								break;
+							case '.project':
+								$project	= execMethod('property.soproject.read_single',(int)$_target_entry['id']);
+								$budget		= $project['budget'];
+								$start_date = $GLOBALS['phpgw']->common->show_date($project['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								$end_date = $GLOBALS['phpgw']->common->show_date($project['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								break;
+							case '.project.workorder':
+								$workorder	= execMethod('property.soworkorder.read_single',(int)$_target_entry['id']);
+								$budget		= $workorder['budget'];
+								$start_date = $GLOBALS['phpgw']->common->show_date($workorder['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								$end_date = $GLOBALS['phpgw']->common->show_date($workorder['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								break;
+							default:
+							// nothing
+						}
+
+						$values[] = array
+						(
+							'id'			=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+							'type'			=> ucfirst($_target_section['descr']),
+							'title'			=> $_target_entry['title'],
+							'status'		=> $_target_entry['statustext'],
+							'budget'		=> $budget,
+							'start_date'	=> $start_date,
+							'end_date'		=> $end_date,
+						);
+					}
+				}
+			}
+
+//_debug_Array($values);die();
+
+/*
+					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>false, 'formatter' => FormatterRight),
+														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false)))
+
+*/
+
+//------ Start pagination
+
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
+			$total_records = count($values);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+
+//------ End pagination
+
+			return $out;
+		}
+
+
+
 		protected function _generate_tabs()
 		{
 			$tabs = array
 				(
 					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'condition'		=> array('label' => lang('condition'), 'link' => '#condition'),
 					'budget'		=> array('label' => lang('documents'), 'link' => '#documents'),
 					'history'		=> array('label' => lang('history'), 'link' => '#history')
 				);

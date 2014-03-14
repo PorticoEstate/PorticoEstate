@@ -32,47 +32,47 @@ class year_calendar {
 	function init_calendar()
 	{
 		// Sets null values for twelve months in calendar array 
-    for($i = 1;$i <= 12;$i++)
-    {
-		  $this->calendar_array[$i] = null;
-    }
+	    for($i = 1;$i <= 12;$i++)
+	    {
+			  $this->calendar_array[$i] = null;
+	    }
 		
-    $ctr_start_date_ts = $this->control->get_start_date();
-    $ctr_end_date_ts = $this->control->get_end_date();
-    $period_start_date_ts = $this->get_start_date_year_ts($this->year);
-    $period_end_date_ts = $this->get_start_date_year_ts($this->year+1);
-    $repeat_type = $this->control->get_repeat_type();
-    $repeat_interval = $this->control->get_repeat_interval();
+	    $ctr_start_date_ts = $this->control->get_start_date();
+	    $ctr_end_date_ts = $this->control->get_end_date();
+	    $period_start_date_ts = $this->get_start_date_year_ts($this->year);
+	    $period_end_date_ts = $this->get_start_date_year_ts($this->year+1);
+	    $repeat_type = $this->control->get_repeat_type();
+	    $repeat_interval = $this->control->get_repeat_interval();
     
     // Generates dates for time period with specified interval 
-    $date_generator = new date_generator($ctr_start_date_ts, $ctr_end_date_ts, $period_start_date_ts, $period_end_date_ts, $repeat_type, $repeat_interval);
-    $dates_array = $date_generator->get_dates();
+	    $date_generator = new date_generator($ctr_start_date_ts, $ctr_end_date_ts, $period_start_date_ts, $period_end_date_ts, $repeat_type, $repeat_interval);
+	    $dates_array = $date_generator->get_dates();
 		
     // Set status for control on each date to NOT DONE or REGISTERED   
-    foreach($dates_array as $date_ts)
-    {
-    	$check_list = new controller_check_list();
-    	$check_list->set_deadline( $date_ts );
-    	$check_list->set_control_id( $this->control->get_id() );
+	    foreach($dates_array as $date_ts)
+	    {
+	    	$check_list = new controller_check_list();
+	    	$check_list->set_deadline( $date_ts );
+	    	$check_list->set_control_id( $this->control->get_id() );
     	
-    	if($this->type == "component")
-    	{
-    		$check_list->set_component_id( $this->component->get_id() );
-    		$check_list->set_location_id( $this->component->get_location_id() );
-    		$check_list_status_manager = new check_list_status_manager( $check_list, "component" );
-    	}
-    	else 
-    	{
-    		$check_list->set_location_code( $this->location_code );
-    		$check_list_status_manager = new check_list_status_manager( $check_list, "location" );
-    	} 
+	    	if($this->type == "component")
+	    	{
+	    		$check_list->set_component_id( $this->component->get_id() );
+	    		$check_list->set_location_id( $this->component->get_location_id() );
+	    		$check_list_status_manager = new check_list_status_manager( $check_list, "component" );
+	    	}
+	    	else 
+	    	{
+	    		$check_list->set_location_code( $this->location_code );
+	    		$check_list_status_manager = new check_list_status_manager( $check_list, "location" );
+	    	} 
     	
 			$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 
     	
 			$month_nr = date("n", $date_ts);
       
-      $this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
-      $this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
+	      $this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
+	      $this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
 		}
 	}
    	

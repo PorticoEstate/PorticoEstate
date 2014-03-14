@@ -2,136 +2,1491 @@
  * Conflicts with portico
 body, div, input, p, select, textarea
 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
 }
 */
 a
 {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 a:hover, a:active
 {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 img
 {
-	border: 0px;
+  border: 0px;
 }
 
-label, input[type=text], input[type=password], input[type=checkbox], input[type=radio], select, textarea
-{
-	margin-bottom: 8px;
-}
-
-label, input[type=text], input[type=password], select, textarea
-{
-	display: block;
-	float: left;
-	margin-bottom: 8px;
-}
-
-label
-{
-	text-align: right;
-	width: 150px;
-	padding-right: 10px;
-	font-weight: bold;
-}
 
 textarea
 {
-/*	white-space: normal;*/
+  /*	white-space: normal;*/
 }
 
 br
 {
-	clear: left;
+  clear: left;
 }
 
 thead
 {
-	background-color: #d3dce3;
-	font-weight: bold;
-	text-align: center;
+  background-color: #d3dce3;
+  font-weight: bold;
+  text-align: center;
 }
 
 .button_group
 {
-	text-align: center;
+  text-align: center;
 }
 
 .link_group
 {
-	text-align: center;
+  text-align: center;
 }
 .msg
 {
-	color: #f00;
-	font-weight: bold;
-	text-align: center;
+  color: #f00;
+  font-weight: bold;
+  text-align: center;
 }
 .yui-dt .yui-dt-hidden
 {
-	border-right:0px solid #ff0 !important;
+  border-right:0px solid #ff0 !important;
 }
 .yui-tt .bd
 {
-	background-color:#fffbeb !important;
-	border-color:#D4C237 #A6982B #A6982B;
-	border-width:0px !important;
-	color:#000000 !important;
-	left:0 !important;
-	padding:0 !important;
-	font-family: tahoma !important;
-	font-size: 11px !important;
+  background-color:#fffbeb !important;
+  border-color:#D4C237 #A6982B #A6982B;
+  border-width:0px !important;
+  color:#000000 !important;
+  left:0 !important;
+  padding:0 !important;
+  font-family: tahoma !important;
+  font-size: 11px !important;
 }
 .tooltip-table
 {
-	width:200px !important;
+  width:200px !important;
 }
 .tooltip
 {
-	background-color:#0066cc !important;
-	color:#FFFFFF !important;
-	font-weight: bold !important;
-	font-family: tahoma !important;
-	font-size: 11px !important;
+  background-color:#0066cc !important;
+  color:#FFFFFF !important;
+  font-weight: bold !important;
+  font-family: tahoma !important;
+  font-size: 11px !important;
 }
 .nolink a
 {
-	color:#FFFFFF !important;
-	text-decoration: none !important;
+  color:#FFFFFF !important;
+  text-decoration: none !important;
 }
 .nolink a visited
 {
-	color:#FFFFFF !important;
-	text-decoration: none !important;
+  color:#FFFFFF !important;
+  text-decoration: none !important;
 }
 
 #curtain {
-    background: none repeat scroll 0 0 #000000;
-    display: none;
-    height: 100%;
-    left: 0;
-    opacity: 0.5;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 1;
+  background: none repeat scroll 0 0 #000000;
+  display: none;
+  height: 100%;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
 }
 
 #popupBox {
-    background: none repeat scroll 0 0 #fff;
-    display: none;
-    height: 50%;
-    left: 80px;
-    position: absolute;
-    top: 80px;
-    width: 800px;
-    z-index: 2;
+  background: none repeat scroll 0 0 #fff;
+  display: none;
+  height: 50%;
+  left: 80px;
+  position: absolute;
+  top: 80px;
+  width: 800px;
+  z-index: 2;
+}
+
+/*
+from logistic
+*/
+
+#list_navigation { float: left; width: 30%; }
+#user_messages { float: right; width: 40%;}
+
+div.content {
+  margin: 2em;
+}
+.hd {
+  margin-bottom: 0;
+  text-align: center;
+}
+.hd img {
+  vertical-align: middle;
+}
+fieldset {
+  margin-top: 0.5em;
+  border:1px solid #1E90FF;
+}
+
+legend {
+  padding: 0.2em 0.5em;
+  border:1px solid #1E90FF;
+/*  color:#cccccc;*/
+  font-size:90%;
+  text-align:right;
+  font-weight: bolder;
+}
+
+label {
+  font-size: 13px;
+  font-weight: bold;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+a{
+  cursor: pointer;
+}
+
+.row{
+  padding: 0.3em 0;
+}
+h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 1em 0;
+}
+#content {
+  margin: 2em 1em;
+}
+.clr { clear: both;}
+
+#active {
+  background-color: #ffffff;
+  width: 10em;
+  padding: 1em;
+  border: 0em dotted #000000;
+  letter-spacing: 2px;
+}
+
+#inactivate-button {
+  border: 1px solid #000000;
+  margin-top: 1em;
+  padding: 0.1em;
+  background-color: #ffffff;
+}
+
+#activate-button {
+  border: 1px solid #000000;
+  margin-top: 1em;
+  padding: 0.1em;
+  background-color: #ffffff;
+}
+
+.breadcrumbs{
+  margin-left: 20px;
+}
+
+ul.pathway {
+  font-weight: bolder;
+  margin: 1em 0;
+  font-size: 110%;
+}
+ul.pathway li a { color: #000; text-decoration: none;}
+ul.pathway li a:hover { color: #008; }
+ul.pathway li {
+  display: inline;
+  background: url(../images/pathwaysep.png) no-repeat 0% 50%;
+  padding-left: 16px;
+}
+ul.pathway li:first-child { background: none; padding-left: 0;}
+
+dl.form, dl.form-col {
+  margin: 1em 1em 1em 0;
+}
+
+dl.form dt, dl.form-col dt {
+  font-style: italic;
+  font-weight: bolder;
+  margin: .5em 0 .1em 0;
+  color: #002;
+}
+dl.form dd textarea,
+dl.form-col dd textarea {
+  width: 15em;
+  height: 6em;
+}
+dl.form dd textarea.full-width,
+dl.form-col dd textarea.full-width {
+  width: 33em;
+  height: 10em;
+}
+
+dl.form dd input[type="text"],  dl.form dd .autocomplete,
+dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
+  width: 15em;
+}
+dl.form dd .autocomplete,
+dl.form-col dd .autocomplete,
+dl.form-2col dd .autocomplete {
+  padding-bottom: 2em;
+}
+
+div.autocomplete {
+  width: 15em;
+  position: relative;
+  padding-bottom: 2em;
+}
+/* ie fix. autocomplete dropdown is displayed behind some elements if the z-index is not set */
+div.autocomplete input {
+  z-index: 500;
 }
 
 
+dl.form dt.heading, dl.form-col dt.heading {
+  color: #448;
+  font-weight: normal;
+  font-size: 110%;
+  margin-top: 1.4em;
+  margin-bottom: .6em;
+  border-bottom: 1px solid #aaa;
+}
+
+dl.proplist,
+dl.proplist-col {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+dl.proplist-col,
+dl.form-col {
+  /*    width: 18em; */
+  float: left;
+}
+
+div.identifier-header {
+  padding-left: 2em;
+  margin-bottom: 1em;
+}
+
+div.identifier-header label {
+  font-weight: bold;
+}
+
+.form-buttons {
+  clear: both;
+  padding-top: 1em;
+}
+
+.form-buttons input[type=submit], input[type="button"]{
+  margin-right: 5px;
+}
+
+.form-buttons button {
+  margin-right: .5em;
+}
+
+.form-buttons .cancel {
+  margin-left: .6em;
+}
+
+.date-picker .container,
+.datetime-picker .container {
+  display:none;
+  position:absolute; z-index:1;
+}
+
+#datatableToolbar {
+  background-color: white;
+  margin-bottom: 0em;
+  padding: .3em;
+}
+
+table.datatableToolbar {
+  padding: .3em;
+}
+
+#controller_user_error {
+  width: 100%;
+  background-color: #eee;
+  border: 0px none #bbb;
+  margin-bottom: 0em;
+  padding-left: .3em;
+  color: red;
+  font-size: larger;
+}
+
+#controller_user_message {
+  width: 100%;
+  background-color: #eee;
+  border: 0px none #bbb;
+  margin-bottom: 0em;
+  padding-left: .3em;
+  color: green;
+  font-size: larger;
+}
+
+.toolbarelement {
+  vertical-align:middle;
+}
+td.toolbarlabel {
+  width: 10em;
+  font-weight: bold;
+}
+td.toolbarcol {
+  padding-left: 1em;
+}
+
+div.calendarButtons {
+  vertical-align:middle;
+  background-color: grey;
+}
+
+label.toolbar_element_label {
+  padding-left: .25em;
+  padding-right: .50em;
+  vertical-align: middle;
+}
+#toolbar input[type="text"] {
+  font-size: 120%;
+  margin: auto .25em;
+}
+
+dl.proplist dd.address,
+dl.proplist-col dd.address {
+  white-space: pre;
+}
+
+.date-container {
+  margin-bottom: .8em;
+  white-space: nowrap;
+}
+
+div.nowrap {
+  white-space: nowrap;
+}
+
+.date-container .close-btn {
+  display: block;
+  float: right;
+  border: none;
+  text-decoration: none;
+  background:transparent url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) no-repeat scroll 0 -300px;
+  width: 25px;
+  height: 15px;
+  cursor: pointer;
+  color: white;
+}
+
+div.allocation-list
+{
+  width: 30em;
+  height: 10em;
+  border: 1px solid #555;
+  padding: .4em;
+  overflow: auto;
+}
+
+.showit {
+  visibility: visible;
+}
+.hideit {
+  visibility: hidden;
+}
+.datatable{
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+/* Styles for this the column selector */
+#dt-columnselector {width:45em;margin:0 auto;}
+#dt-options {margin-left:5px;}
+#dt-dlg {visibility:hidden;border:1px solid #808080;background-color:#E3E3E3;}
+#dt-dlg .hd {font-weight:bold;padding:1em;background:none;background-color:#E3E3E3;border-bottom:0;}
+#dt-dlg .ft {text-align:right;padding:.5em;background-color:#E3E3E3;}
+#dt-dlg .bd {height:15em;margin:0 1em;overflow:auto;border:1px solid black;background-color:white;}
+#dt-dlg .dt-dlg-pickercol {clear:both;padding:.5em 1em 3em;border-bottom:1px solid gray;}
+#dt-dlg .dt-dlg-pickerkey {float:left;}
+#dt-dlg .dt-dlg-pickerbtns {float:right;}
+/* Container workarounds for Mac Gecko scrollbar issues */
+.yui-panel-container.hide-scrollbars #dt-dlg .bd {
+  /* Hide scrollbars by default for Gecko on OS X */
+  overflow: hidden;
+}
+.yui-panel-container.show-scrollbars #dt-dlg .bd {
+  /* Show scrollbars for Gecko on OS X when the Panel is visible  */
+  overflow: auto;
+}
+#dt-dlg_c .underlay {overflow:hidden;}
+.inprogress {position:absolute;} /* transitional progressive enhancement state */
+
+dl.controller-description {
+  width: 70%;
+}
+
+dl.controller-description dt, dl.controller-description-edit {
+  width: 100%;
+  float:left;
+  font-weight:bold;
+}
+
+dl.controller-description dd {
+  width: 100%;
+  border: 1px solid #ccc;
+  float: left;
+  background-color: white;
+  height: 100px;
+  overflow-y: scroll;
+}
+
+dl.controller-description-edit textarea {
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ccc;
+  float: left;
+}
+
+input#place {
+  width:60%;
+}
+
+input#address_1 {
+  width: 60%;
+  float:left;
+}
+
+input#house_number {
+  width: 20%;
+  float: left;
+}
+
+input.postcode {
+  width: 50px;
+  float: left;
+}
+
+.yui-navset {
+  clear: both;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+h1 img, li img {
+  vertical-align: middle;
+}
+/* Set up common form styles.  TODO: needs refinement. */
+
+/* ======================================================================================================================
+                                                        CONTROLLER MODULE CSS
+ ======================================================================================================================== */
+
+/* ==========================================   SELECTORS, IDS AND CLASSES    =========================================== */
+
+input[type="radio"] {
+  margin: 0 5px 0 2px;
+  padding: 3px 6px;
+}
+
+input[type="checkbox"] {
+  margin: 5px;
+}
+
+input[type="text"] {
+  padding: 5px 5px 2px;
+}
+
+select {
+  padding: 4px;
+}
+
+fieldset {
+  border-bottom:0px solid #ccc;
+}
+
+textarea{
+  padding: 4px;
+}
+
+h1 em {
+  font-style:italic;
+}
+
+a {
+  color: #0066CC;
+  text-decoration: none;
+}
+
+#innertoolbar-button, input[type="submit"], input[type="button"]{
+  background: none repeat scroll 0 0 #4F9AEA;
+  border: 1px solid #4685C8;
+  border-radius: 4px 4px 4px 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 3px 15px;
+}
+
+input[type="submit"][disabled]
+{
+  background: none repeat scroll 0 0 #A3D1FF;
+}
+
+#innertoolbar-button {
+  font-size: 1em;
+  line-height: 1.2em;
+  min-height: 1.2em;
+  padding: 2px 15px;
+}
+
+a#innertoolbar-button {
+  padding: 3px 15px;
+}
+
+.row input[type="submit"] {
+  padding: 2px 10px;
+}
+
+
+.info, .error, .warning {
+  font-weight: normal;
+  margin:20px;
+  padding:5px;
+  font-size:1.1em;
+  text-align: left;
+}
+
+.message {
+  margin: 5px;
+}
+
+.info {
+  background-color:#CCFFCC;
+  border:1px solid #00FF00;
+  color:black;
+}
+
+.warning {
+  background-color: #FEEFB3;
+  border:1px solid #9F6000;
+  color:#9F6000;
+}
+.yui-calendar td.calcell {
+  border:0px !important;
+}
+
+.yui-skin-sam .yui-dt TABLE TH{
+  border: none !important;
+}
+
+.yui-skin-sam .yui-dt TABLE TD{
+  border: none !important;
+}
+
+/*
+.yui-skin-sam .yui-button .first-child {
+  border: 0 none;
+  margin: 0 10px 0 0;
+}
+
+.yui-skin-sam .yui-button {
+  background: none;
+  border:0;
+  margin: 0;
+}
+*/
+.datatable_container {
+  margin-left: 1em;
+  margin-top: 1em;
+}
+
+.paginator {
+  margin-left: 1em !important;
+}
+
+th.yui-dt-sortable div{
+  background: url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0pt -100px rgb(216, 216, 218);
+}
+
+dd ol li {
+  list-style: decimal;
+  list-style-position: inside;
+}
+
+dd ul li {
+  list-style: disc;
+  list-style-position: inside;
+}
+
+h1 img{
+ 	margin-right:5px;
+}
+
+.yui-content h2{
+  margin:0 0 10px;
+}
+
+
+/* =======================================  EXPAND LIST  ========================================= */
+
+ul.expand_list h4 {
+  cursor: pointer;
+  font-size: 1.1em;
+  margin-bottom: 6px;
+  margin-top: 0;
+}
+ul.expand_list h4 img {
+  height: 12px;
+}
+
+ul.expand_list li ul {
+  display:none;
+  margin-left:21px;
+}
+
+ul.expand_list li ul li {
+  margin-bottom: 3px;
+  padding: 3px;
+}
+
+ul.expand_list h4 span {
+  padding-left: 5px;
+  vertical-align: middle;
+}
+ul.expand_list .expand_item {
+  display: none;
+}
+
+dl.proplist, dl.proplist-col {
+  margin: 0;
+  padding-left: 0;
+  width: 50%;
+}
+
+#details .proplist dd, #details .proplist-col dd{
+  margin-bottom: 0.5em;
+}
+
+.frm_save_order input[type='submit']{
+  margin: 10px 0 15px 0;
+  width: 120px;
+}
+.delete {
+  cursor: pointer;
+  margin-left: 5px;
+}
+.yui-navset .yui-content.tab_content {
+  padding: 20px;
+}
+
+#datatable-container {
+  margin: 20px;
+}
+
+#paginator {
+  margin: 20px;
+}
+
+#paginator.top {
+  margin: 20px 0 0 20px;
+}
+
+#toolbar {
+  display: inline-block;
+  padding: 10px 0;
+}
+
+#toolbar input[type="text"] {
+  font-size: 100%;
+  padding: 3px;
+}
+
+#toolbar input[type="submit"] {
+  padding:0 8px;
+  margin-top:0;
+}
+
+.yui-button.yui-link-button.new_button{
+  margin-left:30px;
+}
+
+#view_check_lists {
+  padding: 30px;
+  width: 600px;
+}
+
+ul.th {
+  font-weight: bold;
+  overflow:hidden;
+}
+
+ul.th li {
+  float: left;
+  margin-right: 20px;
+  padding: 3px 6px;
+  width: 100px;
+}
+
+ul.row{
+  overflow: hidden;
+}
+
+ul.row li{
+  float:left;
+  margin-right: 20px;
+  padding: 3px 6px;
+  width: 100px;
+}
+
+/* =======================================  GENERAL CLASSES  ========================================= */
+
+.box {
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #eee;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+.box.ext {
+  background: none repeat scroll 0 0 #FEFBF7;
+  border: 1px solid #FEEDEA;
+}
+
+.box_header {
+  background: none repeat scroll 0 0 #CFE6FF;
+  border-color: #C7DCF2;
+  border-style: solid;
+  border-width: 1px 1px 0;
+  color: #444444;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 0;
+  padding: 6px 0 6px 15px;
+  text-align: left;
+}
+
+.box_header.ext {
+  background: none repeat scroll 0 0 #F57056;
+  border-color: #EB9685;
+  color: #FFFFFF;
+}
+
+.btn, .btn_m, .btn-sm {
+  background: none repeat scroll 0 0 #4F9AEA;
+  border: 1px solid #428AD7;
+  border-radius: 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+.btn_m{
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.btn-sm {
+  font-size: 12px;
+  padding: 1px 4px;
+  text-align: center;
+}
+
+.btn.cancel, .btn_m.cancel, .btn-sm.cancel {
+  background: none repeat scroll 0 0 #EEEEEE;
+  border: 1px solid #CCCCCC;
+  color: #333333;
+}
+
+.btn.non-focus {
+  background: none repeat scroll 0 0 #A0C8F2;
+  border: 1px solid #74B0EF;
+  color: #0A3E74;
+}
+
+.btn.focus, .btn_m.focus {
+  background: none repeat scroll 0 0 #F57056;
+  border-color: #EE836F #CB563F #CB563F;
+  border-style: solid none;
+  border-width: 1px 0;
+  color: #FFFFFF;
+  margin-top: 1px;
+}
+
+/* =======================================  MAIN CONTENT  ========================================= */
+
+#main_content {
+  padding: 20px;
+  width: 1150px;
+}
+
+#main_content.groups{
+  cursor: default;
+}
+
+#main_content h1{
+  margin-top:0;
+}
+
+.content-wrp {
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #DEE1E4;
+  margin-top: 1em;
+  padding: 0;
+}
+
+.content-wrp .yui-skin-sam .yui-dt table {
+  border: 1px solid #CCCCCC;
+}
+
+/* =======================================  CHECK LIST DETAILS ========================================= */
+
+input.id {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #DDDDDD;
+  text-align: right;
+  width: 50px;
+}
+
+input.date {
+  text-align: right;
+  width: 80px;
+}
+
+input.datetime {
+  text-align: right;
+  width: 110px;
+}
+
+
+/* =======================================  TAB CHECK LIST DETAILS ========================================= */
+.tab_check_list_details label {
+  display: inline-block;
+  font-weight: bold;
+  width: 100px;
+}
+
+fieldset.tab_check_list_details {
+  padding: 0 0 10px 0;
+}
+
+
+
+.form-buttons-top{
+  float: right;
+  margin-bottom:5px;
+}
+
+.form-buttons-top input[type="submit"]{
+  margin:0;
+}
+
+#frm_save_check_items h1 {
+  float: left;
+  margin: 5px;
+}
+
+ul.check_list {
+  width: 925px;
+}
+
+/* =============================  SEARCH LOCATION BOX  ======================= */
+#search-location {
+  float: right;
+  margin-bottom: 10px;
+}
+
+#search-location-name {
+  margin: 2px 0 0;
+  width: 16em;
+}
+
+#choose-my-location {
+  float: right;
+  margin-right: 10px;
+}
+
+#choose-building {
+  float: left;
+}
+
+#filters {
+  clear: left;
+  float: left;
+}
+
+.select-box {
+  background: none repeat scroll 0 0 #FEFBF4;
+  border: 1px solid #DDDDDD;
+  border-radius: 4px;
+  padding: 1em;
+}
+
+.select-box label{
+  margin-bottom:5px;
+  display: block;
+}
+
+.select-box a{
+  display: block;
+  font-weight: bold;
+  padding: 0 0 10px;
+  text-align: justify;
+}
+
+.select-box a.last{
+  padding: 0;
+}
+
+#choose-loc .btn {
+  display: inline-block;
+  font-size: 0.9em;
+  padding: 2px 8px;
+}
+
+#choose-loc .btn.first {
+  margin-right: 0.3em;
+}
+
+#choose-loc .btn.active{
+  background: #3F7EC1;
+}
+#choose-loc label {
+  display: inline-block;
+}
+
+
+
+.yui-pg-first{
+  margin-left: 14px;
+  margin-top: 5px;
+}
+
+#data_paginator, #loc_paginator{
+  margin:8px;
+  clear:left;
+}
+
+ul#filters li, ul#search_list li{
+  float:left;
+}
+
+ul#filters input[type="text"], ul#filters select {
+  margin-right: 5px;
+  padding: 3px;
+}
+
+#choose_control select {
+  float: left;
+  margin-right: 5px;
+}
+
+#choose_control form {
+  float: left;
+}
+
+ul#search_list input[type="submit"] {
+  margin: 0;
+  padding: 2px 15px;
+}
+
+ul#search_list input[type="text"] {
+  margin: 0 5px 0 0;
+  padding: 3px;
+}
+
+#queryForm {
+  clear: both;
+  margin: 20px;
+  overflow: hidden;
+}
+
+fieldset.add_check_list div{
+  padding:2px;
+}
+fieldset.add_check_list label{
+  display:inline-table;
+  width:120px;
+}
+
+
+label.comment{
+  vertical-align:top;
+}
+/* ======================== TAB MENU ========================== */
+
+.tab_menu a {
+  background: none repeat scroll 0 0 #F9F5F0;
+  border: 1px solid #F0F0F0;
+  color: #444444;
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 3px;
+  padding: 6px 0;
+  text-align: center;
+  text-decoration: none;
+  width: 150px;
+}
+.tab_menu a.active {
+  background: none repeat scroll 0 0 #CAE3FB;
+  border: 1px solid #CAE3FB;
+  font-weight: bold;
+}
+.tab_menu a, .tab_menu a.active{
+  border-bottom: 0;
+}
+
+#tab_content {
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #DBE5EF;
+  padding: 0 20px 20px;
+}
+
+/* ===================================  TAB ITEM  ================================= */
+
+.tab_item {
+  background: none repeat scroll 0 0 #F7FAFF;
+  border: 1px solid #DAE2EE;
+  padding: 15px;
+}
+.tab_item.ext {
+  background: none repeat scroll 0 0 #FEFBF7;
+  border: 1px solid #FEEDEA;
+}
+.tab_item h2 {
+  background: none repeat scroll 0 0 #DAE3EB;
+  font-size: 14px;
+  margin: 0 0 10px;
+  padding: 3px 6px;
+}
+.tab_item h2.last{
+  margin:20px 0 10px;
+}
+
+#main_content fieldset.location_details{
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #CCCCCC;
+  padding: 15px;
+  float:left;
+  border: 1px solid #ddd;
+}
+fieldset.location_details div{
+  margin:10px 0;
+}
+
+#curtain {
+  background: none repeat scroll 0 0 #000000;
+  display: none;
+  height: 100%;
+  left: 0;
+  opacity: 0.6;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+#popupBox {
+  background: none repeat scroll 0 0 #FFFFFF;
+  display: none;
+  left: 50%;
+  position: absolute;
+  top: 30%;
+  width: 500px;
+  margin-left: -250px;
+  z-index: 2;
+}
+
+/* ==================================  CHECK LIST  ================================== */
+
+#main_content.medium {
+  overflow: hidden;
+  width: 900px;
+}
+
+/* ====================================  CASE DETAILS  ============================== */
+#error_message_menu {
+  float: left;
+  margin-top: 50px;
+}
+#error_message_menu a {
+  text-align: center;
+  width: 140px;
+  margin: 2px 0;
+  display:block;
+}
+#register_errors_content {
+  float: right;
+  margin-top: 20px;
+}
+
+
+/* ===============================  FORM REGISTER CASE  ============================= */
+
+.frm_register_case {
+  margin-bottom: 1em;
+}
+.frm_register_case input[type="text"]{
+ 	width: 170px;
+}
+.frm_register_case select {
+  width: 184px;
+}
+.frm_register_case textarea {
+  display: block;
+  height: 100px;
+  margin-top: 6px;
+  margin-bottom: 1em;
+  width: 63%;
+}
+.frm_register_case label {
+  display: inline-block;
+  width: 18%;
+}
+
+
+#queryForm #choose-location {
+  margin: 0;
+}
+
+#choose-location h4{
+  display: block;
+  font-size: 17px;
+  margin: 5px 0;
+}
+
+#comp-filters label {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#comp-filters .select-box {
+  background: none repeat scroll 0 0 #DEEAF8;
+  border: 1px solid #BDD3ED;
+  float: left;
+  height: 40px;
+  margin-right: 5px;
+}
+
+#comp-filters .filter {
+  float: left;
+}
+
+#choose-location #datatable-container{
+  margin: 20px 0;
+}
+
+
+#data_paginator .error_msg{
+  margin-left:20px;
+}
+
+#locations-container{
+  margin:20px;
+}
+
+#select_all {
+  float: right;
+  margin-right: 805px;
+}
+
+#save_location {
+  margin-left:20px;
+  margin-bottom:20px;
+}
+
+
+/* =============================  IMAGE LOADER  ======================= */
+
+img#loading {
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+#exec-print {
+  margin:20px 0 0 40px;
+}
+
+#yui-history-iframe {
+  position:absolute;
+  top:0;
+  left:0;
+  width:1px;
+  height:1px;
+  visibility:hidden;
+}
+
+#control_group_id {
+  width: 250px;
+}
+
+#select-wrp {
+  margin: 10px;
+  padding: 10px;
+  width: 25%;
+}
+
+#control_location #queryForm{
+  margin: 20px;
+  width: 65%;
+}
+
+table.yui-skin-sam {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+#details table{
+  padding: 10px;
+  margin: 10px;
+  text-align: left;
+  margin-left: 1em;
+}
+
+#details table td{
+  text-align: left;
+  padding-right: 10px;
+}
+
+
+.yui-skin-sam td.auto{
+  width: 160px;
+}
+
+.yui-skin-sam div.auto{
+  width: 140px;
+}
+
+.yui-skin-sam thead{
+  background: none;
+}
+
+p.no_items_msg {
+  padding: 5px;
+}
+
+.no-comp-msg {
+  font-size: 16px;
+  padding-left: 12px;
+}
+
+.option-list-heading {
+  margin: 0 0 10px;
+}
+
+.option-list{
+  margin-top: 5px;
+}
+
+.option-list{
+  padding-left:10px;
+}
+
+.option-list li{
+  margin-bottom: 5px;
+}
+
+.input_error_msg {
+  background: none repeat scroll 0 0 #FBE3E4;
+  border-bottom-right-radius: 4px;
+  color: #D12F19;
+  display: block;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 5px;
+  text-align: center;
+  width: 90%;
+}
+
+.error_msg {
+  color: red;
+  display: none;
+  font-size: 14px;
+  padding: 7px 0;
+}
+
+.help_text {
+  background: none repeat scroll 0 0 #CCDBED;
+  color: #414851;
+  display: none;
+  padding: 6px 10px 5px;
+  text-align: center;
+  vertical-align: baseline;
+}
+
+.help_text.line {
+  margin-left: 5px;
+}
+
+.help_text.below {
+  margin-left: 0;
+  width: 505px;
+}
+
+
+.yui-navset .content-wrp {
+  margin-top: 0;
+}
+
+.fields_wrp {
+  padding: 15px;
+}
+
+.fields_wrp td {
+  padding: 7px 0;
+  vertical-align: top;
+}
+
+.fields_wrp td.first {
+  padding-right: 5px;
+  text-align: left;
+  width: 250px;
+}
+
+.fields_wrp label {
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.5em;
+}
+
+.fields_wrp h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.fields_wrp textarea {
+  width: 250px;
+}
+
+.autocomplete ul{
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #AEC6E3;
+  position:absolute;
+}
+
+.autocomplete li{
+  background: none repeat scroll 0 0 #D4E1F8;
+  list-style: none outside none;
+  margin: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.yui-skin-sam .autocomplete .yui-ac-content {
+    overflow: visible;
+}
+
+.yui-skin-sam .autocomplete .yui-ac-content li {
+    white-space: wrap;
+}
+.requirement {
+	line-height:2;
+}
+.requirement hr {
+	border: 1px solid white;
+}
+.requirement-responsibility-left {
+	float: left;
+	margin-left: 1em;
+}
+.requirement-responsibility-left h2 {
+	text-transform: uppercase;
+	margin-bottom: 0em;;
+}
+.requirement-responsibility-left-sub {
+	float: left;
+}
+.requirement-responsibility-right {
+	float: right;
+	margin-left: 1em;
+}
+
+.requirement-responsibility-right .proplist-col {
+	width: auto;
+}
+.requirement-description {
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+.requirement-condition {
+	margin-left: 1em;
+	line-height: 2.2;
+}
+.requirement-related {
+	margin-left: 1em;
+}
+.requirement-action-left {
+	float:left;
+	width: 20%;
+	margin-left:1em;
+	border-right: 1px solid white;
+}
+.requirement-action-right {
+	margin-left: 1em;
+	width: 75%;
+	float:right;
+}
+.requirement-action-label {
+	width: 45%;
+}
+.requirement-action-label-wide {
+	width: 45%;
+}
+.requirement-action-sub-left {
+	float:left;
+	width:45%;
+}
+.requirement-action-sub-left div {
+	line-height: 2;
+}
+.requirement-action-sub-right {
+	float: right;
+	text-align: left;
+	width: 50%;
+}
+.requirement-action-sub-right div {
+	line-height: 2;
+}
+.clearBoth {
+	clear: both;
+}
+.messages {
+	font-size: 15px;
+}
+.messages table {
+	display: inline;
+	position: absolute;
+}
+.coordinator_select dd select{
+	width:300px;
+}
+.controlButton {
+	margin-left: 2em;
+	margin-right: 1.5em;
+	float: right;
+}
+.requirement-condition .proplist-col table tr td table {
+	border: none;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.requirement-condition .proplist-col table tr td table th {
+	border: none;
+	background: none;
+	font-weight: bold;
+	padding-right: 1em;
+}
+.requirement-condition .proplist-col table tr td table td {
+	border: none;
+	padding-right: 1em;
+	text-align: center;
+	font-weight: bold;
+}

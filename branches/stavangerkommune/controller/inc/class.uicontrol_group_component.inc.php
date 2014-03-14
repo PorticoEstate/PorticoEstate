@@ -25,9 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id$
+ 	* @version $Id: class.uicontrol_group_component.inc.php 10810 2013-02-13 19:49:14Z sigurdne $
 	*/	
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
 
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
@@ -58,24 +62,24 @@
 		{
 			parent::__construct();
 
-			$this->bo					= CreateObject('property.bolocation',true);
-			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control_group		= CreateObject('controller.socontrol_group');
-			$this->so_control			= CreateObject('controller.socontrol');
+			$this->bo								= CreateObject('property.bolocation',true);
+			$this->bocommon					= & $this->bo->bocommon;
+			$this->so_control_group	= CreateObject('controller.socontrol_group');
+			$this->so_control				= CreateObject('controller.socontrol');
 
-			$this->type_id				= $this->bo->type_id;
+			$this->type_id					= $this->bo->type_id;
 
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->filter				= $this->bo->filter;
-			$this->cat_id				= $this->bo->cat_id;
-			$this->part_of_town_id		= $this->bo->part_of_town_id;
+			$this->start						= $this->bo->start;
+			$this->query						= $this->bo->query;
+			$this->sort							= $this->bo->sort;
+			$this->order						= $this->bo->order;
+			$this->filter						= $this->bo->filter;
+			$this->cat_id						= $this->bo->cat_id;
+			$this->part_of_town_id	= $this->bo->part_of_town_id;
 			$this->district_id			= $this->bo->district_id;
-			$this->status				= $this->bo->status;
-			$this->allrows				= $this->bo->allrows;
-			$this->lookup				= $this->bo->lookup;
+			$this->status						= $this->bo->status;
+			$this->allrows					= $this->bo->allrows;
+			$this->lookup						= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
 
 			self::set_active_menu('controller::control_group::component_for_control_group');
@@ -102,11 +106,14 @@
 					//add chosen component to control
 					foreach($items_checked as $it)
 					{
-						$this->so_control_group->add_component_to_control_group($control_group_id, $it[0]);
+						if( !$this->so_control_group->exist_component_control_group($control_group_id, $it[0]) )
+						{
+						  $this->so_control_group->add_component_to_control_group($control_group_id, $it[0]);
+						}
 					}
 				}
+				
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group_component.index'));
-
 			}
 			else
 			{
@@ -163,20 +170,15 @@
 								'sortable' => false,
 								'formatter' => 'YAHOO.widget.DataTable.formatCheckbox',
 								'className' => 'mychecks'
-							),
-							array(
-								'key' => 'test',
-								'label' => lang('Zip code'),
-								'hidden' => true
-							),
+							)
 						)
 					)
 				);
 
 				phpgwapi_yui::load_widget('paginator');
+				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
 				self::render_template_xsl(array('control_group_component_tabs', 'common', 'add_component_to_control_group'), $data);
@@ -193,7 +195,7 @@
 				$results['results'][]= $control_group;
 			}
 
-			$results['total_records'] = 10;
+			$results['total_records'] = count( $results );
 			$results['start'] = 1;
 			$results['sort'] = 'id';
 			array_walk($results['results'], array($this, 'add_links'), array($type));

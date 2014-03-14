@@ -2,7 +2,7 @@
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div id="procedure">
 		<h1><xsl:value-of select="procedure/title" /></h1>
@@ -18,13 +18,13 @@
 		<div>
 			<label for="start_date"><xsl:value-of select="php:function('lang','Procedure valid from date')" /></label>
 			<xsl:variable name="startdate"><xsl:value-of select="procedure/start_date" /></xsl:variable>
-			<xsl:value-of select="php:function('date', $dateformat, $startdate)" />
+			<xsl:value-of select="php:function('date', $date_format, $startdate)" />
 		</div>
 		<div>
 			<label for="revision_date"><xsl:value-of select="php:function('lang','Procedure revision date')" /></label>
 			<xsl:if test="procedure/revision_date != 0">
 				<xsl:variable name="revisiondate"><xsl:value-of select="procedure/revision_date" /></xsl:variable>
-				<xsl:value-of select="php:function('date', $dateformat, $revisiondate)" />
+				<xsl:value-of select="php:function('date', $date_format, $revisiondate)" />
 			</xsl:if>
 		</div>
 		<div>
@@ -32,7 +32,7 @@
 				<label for="end_date"><xsl:value-of select="php:function('lang','Procedure end date')" /></label>
 			
 				<xsl:variable name="enddate"><xsl:value-of select="procedure/end_date" /></xsl:variable>
-				<xsl:value-of select="php:function('date', $dateformat, $enddate)" />
+				<xsl:value-of select="php:function('date', $date_format, $enddate)" />
 			</xsl:if>
 		</div>
 		<div>
@@ -49,7 +49,9 @@
 		</div>
 		<div>
 			<label for="reference"><xsl:value-of select="php:function('lang','Procedure Reference')" /></label>
-			<xsl:value-of select="procedure/reference" disable-output-escaping="yes"/>
+      <span style="display: inline-block;width: 600px;">
+        <xsl:value-of select="procedure/reference" disable-output-escaping="yes"/>
+      </span>
 		</div>
 		<a href="#print" class="btn" onClick="window.print()">Skriv ut</a>		
 </div>

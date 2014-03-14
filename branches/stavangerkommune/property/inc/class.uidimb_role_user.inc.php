@@ -215,7 +215,7 @@
 				array
 				(
 					'key' => 'alter_date',
-					'label' => lang('alter_date'),
+					'label' => lang('alter date'),
 					'sortable' => false,
 					'formatter' => 'FormatterCenter',
 				),

@@ -1,8 +1,6 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>	
 	<h2>Kontrolldetaljer</h2>
 	
 	<fieldset id="control_details">
@@ -71,25 +69,20 @@
 		      </xsl:otherwise>
 	      </xsl:choose>
 		</div>
-		<div class="row">
-			<label>Frekvenstype</label>
-			<xsl:choose>
-		      <xsl:when test="control/repeat_type = 0">Dag</xsl:when>
-		      <xsl:when test="control/repeat_type = 1">Uke</xsl:when>
-		      <xsl:when test="control/repeat_type = 2">Måned</xsl:when>
-		      <xsl:when test="control/repeat_type = 3">År</xsl:when>
-	      </xsl:choose>
-		</div>
-		<div class="row">
+		<div class="row frequency">
 			<label>Frekvens</label>
 			<xsl:choose>
-				<xsl:when test="editable">
-					<input size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="control/repeat_interval" />
-				</xsl:otherwise>
-			</xsl:choose>
+	 			<xsl:when test="control/repeat_interval = 1">
+	     		<span class="pre">Hver</span>
+	     	</xsl:when>
+	     	<xsl:when test="control/repeat_interval = 2">
+	     		<span class="pre">Annenhver</span>
+	     	</xsl:when>
+	     	<xsl:when test="control/repeat_interval > 2">
+	     		<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+	     	</xsl:when>
+	     </xsl:choose>
+	     <span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
 		</div>
 		<div class="row">
 			<label>Rolle</label>

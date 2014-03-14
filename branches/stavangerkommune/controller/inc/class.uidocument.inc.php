@@ -38,13 +38,19 @@
         private $so;
         private $so_procedure;
 
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+
+
         public $public_functions = array
         (
-				'query'		=> true,
-				'add'		=> true,
-				'view'		=> true,
-				'delete'	=> true,
-				'show'		=> true,
+				'query'						=> true,
+				'add'							=> true,
+				'view'						=> true,
+				'delete'					=> true,
+				'show'						=> true,
 				'document_types'	=> true
         );
 
@@ -53,6 +59,10 @@
             parent::__construct();
             $this->so = controller_sodocument::get_instance();
             $this->so_procedure = controller_soprocedure::get_instance();
+			$this->read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
         }
 
         public function query()
@@ -96,7 +106,8 @@
             
             //Serialize the documents found
             $rows = array();
-            foreach ($result_objects as $result) {
+            foreach ($result_objects as $result)
+            {
                 if(isset($result))
                 {
                     $rows[] = $result->serialize();
@@ -206,6 +217,14 @@
             
             if($_SERVER['REQUEST_METHOD'] == 'POST')
             {
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+                            $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show', 
+                            												'procedure_id' => $procedure->get_id(), 
+                            												'tab' => 'documents'));
+ 
+				}
                 //Create a document object
                 $document = new controller_document();
                 $document->set_title(phpgw::get_var('document_title'));
@@ -291,6 +310,15 @@
             $document = $this->so->get_single($document_id);
             
             $procedure_id = intval(phpgw::get_var('procedure_id'));
+ 
+  			if(!$this->delete)
+			{
+				phpgwapi_cache::message_set('No access', 'error');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show', 
+																	'procedure_id' => $procedure_id,
+																	'tab' => 'documents'));
+			}
+ 
             $procedure = $this->so_procedure->get_single($procedure_id);
 
             $document_properties = $this->get_type_and_id($document);
@@ -458,9 +486,7 @@
                 	'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
                 	'view'					=> "view_documents_for_procedure",
                 	'procedure_id'			=> !empty($procedure) ? $procedure->get_id() : 0,
-                	'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
                 	'procedure'				=> $procedure_array,
-                	'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
                 	'values'				=> $table_values,
                 	'table_header'			=> $table_header,
                 );
@@ -477,18 +503,20 @@
 		
         public function document_types()
         {
-            if(phpgw::get_var('phpgw_return_as') == 'json') {
+            if(phpgw::get_var('phpgw_return_as') == 'json')
+            {
                 return $this->get_document_types();
                 self::render_template_xsl(array('procedure/procedure_tabs', 
                 								'common', 
                 								'procedure/procedure_documents'), 
                                         $data);
     	    }
-        	self::add_javascript('controller', 'yahoo', 'datatable.js');
+        	self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
         	phpgwapi_yui::load_widget('datatable');
         	phpgwapi_yui::load_widget('paginator');
         
         	$data = array(
+        		'datatable_name'	=> 'Dokument typer',
         		'form' => array(
         	    ),
         		'datatable' => array(
@@ -514,6 +542,6 @@
         		),
         	);
     
-            self::render_template_xsl('datatable', $data);
+            self::render_template_xsl('datatable_common', $data);
         }
     }

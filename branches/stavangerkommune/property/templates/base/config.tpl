@@ -56,7 +56,7 @@
 		</tr>
 
 		<tr class="row_on">
-			<td>{lang_SMS_client_order_notice}:</td>
+			<td>{lang_SMS_client_order_notice}:'ref: __order_id__. Message'</td>
 			<td>
 				<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual">{value_sms_client_order_notice}</textarea>
 			</td>
@@ -96,6 +96,43 @@
 			</select>
 		</td>
 	</tr>
+		<tr class="row_off">
+			<td>{lang_project_status_on_approval}:</td>
+			<td>
+				<select name="newsettings[project_approval_status]">
+					{hook_project_approval_status}
+				</select>
+			</td>
+		</tr>
+
+		<tr class="row_off">
+			<td>{lang_project_status_on_last_order_closed}:</td>
+			<td>
+				<select name="newsettings[project_status_on_last_order_closed]">
+					{hook_project_status_on_last_order_closed}
+				</select>
+			</td>
+		</tr>
+
+		<tr class="row_on">
+			<td>{lang_workorder_status_on_approval}:</td>
+			<td>
+				<select name="newsettings[workorder_approval_status]">
+					{hook_workorder_approval_status}
+				</select>
+			</td>
+		</tr>
+
+		<tr class="row_on">
+			<td>{lang_request_status_on_project_hookup}:</td>
+			<td>
+				<select name="newsettings[request_project_hookup_status]">
+					{hook_request_project_hookup_status}
+				</select>
+			</td>
+		</tr>
+
+
 	<tr class="row_off">
 		<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
 		<td>
@@ -120,6 +157,17 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_delay_operation_workorder_end_date}, {lang_last_day_in_year}:</td>
+			<td>
+				<select name="newsettings[delay_operation_workorder_end_date]">
+					<option value="" {selected_delay_operation_workorder_end_date_}>NO</option>
+					<option value="1" {selected_delay_operation_workorder_end_date_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+
+
 		<tr class="row_off">
 			<td>{lang_Default_municipal_number}:</td>
 			<td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
@@ -219,7 +267,26 @@
 				{lang_default}: {lang_Open}</td>
 			<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
 		</tr>
+		<tr class="row_off">
+			<td valign = 'top'>{lang_TTS_assign_group_candidates}:</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[fmtts_assign_group_candidates][]" value="">
+				<table>
+					{hook_fmtts_assign_group_candidates}
+				</table>
+			</td>
+		</tr>
 		<tr class="row_on">
+			<td >{lang_TTS_disable_assign_to_user_on_add}:</td>
+			<td>
+				<select name="newsettings[tts_disable_userassign_on_add]">
+					<option value="" {selected_tts_disable_userassign_on_add_}>NO</option>
+					<option value="1" {selected_tts_disable_userassign_on_add_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
 			<td valign = 'top'>{lang_TTS_simplified_group}:</td>
 			<td>
 				<!--to be able to blank the setting - need an empty value-->
@@ -247,7 +314,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Owner_Notification_TTS}.</td>
 			<td>
 				<select name="newsettings[ownernotification]">
@@ -256,7 +323,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Assigned_Notification_TTS}.</td>
 			<td>
 				<select name="newsettings[assignednotification]">
@@ -265,12 +332,13 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Group_Notification_TTS}.</td>
 			<td>
 				<select name="newsettings[groupnotification]">
 					<option value="" {selected_groupnotification_}>NO</option>
 					<option value="1" {selected_groupnotification_1}>YES</option>
+					<option value="2" {selected_groupnotification_2}>Never</option>
 				</select>
 			</td>
 		</tr>
@@ -280,16 +348,6 @@
 				<select name="newsettings[fmttsfileupload]">
 					<option value="" {selected_fmttsfileupload_}>NO</option>
 					<option value="1" {selected_fmttsfileupload_1}>YES</option>
-				</select>
-			</td>
-		</tr>
-		<tr class="row_on">
-			<td>{lang_priority_levels_TTS}.</td>
-			<td>
-				<select name="newsettings[prioritylevels]">
-					<option value="" {selected_prioritylevels_}>3</option>
-					<option value="4" {selected_prioritylevels_4}>4</option>
-					<option value="5" {selected_prioritylevels_5}>5</option>
 				</select>
 			</td>
 		</tr>
@@ -391,6 +449,11 @@
 
 
 		<tr class="row_on">
+			<td>{lang_lang_request_coordinator}:</td>
+			<td><input name="newsettings[lang_request_coordinator]" value="{value_lang_request_coordinator}"></td>
+		</tr>
+
+		<tr class="row_on">
 			<td>{lang_meter_table}:</td>
 			<td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>
 		</tr>
@@ -418,7 +481,27 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_Bypass_ACL_for_accessing_tickets}.</td>
+			<td>
+				<select name="newsettings[bypass_acl_at_tickets]">
+					<option value="" {selected_bypass_acl_at_tickets_}>NO</option>
+					<option value="1" {selected_bypass_acl_at_tickets_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
+			<td>{lang_Bypass_ACL_for_accessing_entities}.</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[bypass_acl_at_entity][]" value="">
+				<table>
+					{hook_bypass_acl_at_entity}
+				</table>
+			</td>
+		</tr>
+
+		<tr class="row_on">
 			<td>{lang_Use_ACL_for_helpdesk_categories}.</td>
 			<td>
 				<select name="newsettings[acl_at_tts_category]">
@@ -427,7 +510,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Use_location_at_workorder}.</td>
 			<td>
 				<select name="newsettings[location_at_workorder]">
@@ -436,12 +519,21 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_budget_at_project_level}.</td>
 			<td>
 				<select name="newsettings[budget_at_project]">
 					<option value="" {selected_budget_at_project_}>NO</option>
 					<option value="1" {selected_budget_at_project_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_update_project_budget_from_order}.</td>
+			<td>
+				<select name="newsettings[update_project_budget_from_order]">
+					<option value="" {selected_update_project_budget_from_order_}>NO</option>
+					<option value="1" {selected_update_project_budget_from_order_1}>YES</option>
 				</select>
 			</td>
 		</tr>
@@ -479,14 +571,47 @@
 	<tr class="row_off">
 		<td>{lang_filter_buildingpart}:</td>
 		<td>
-				<!--to be able to blank the setting - need an empty value
-				<input type = 'hidden' name="newsettings[list_location_level][]" value="">-->
-				<table>
-					{hook_filter_buildingpart}
-				</table>
+			<table>
+				{hook_filter_buildingpart}
+			</table>
 		</td>
 	</tr>
 
+	<tr class="row_on">
+		<td>{lang_condition_survey_import_category}:</td>
+		<td>
+			<table>
+				{hook_condition_survey_import_cat}
+			</table>
+		</td>
+	</tr>
+
+	<tr class="row_off">
+		<td>{lang_initial_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
+		<td>
+			<select name="newsettings[condition_survey_initial_status]">
+				{hook_condition_survey_initial_status}
+			</select>
+		</td>
+	</tr>
+
+	<tr class="row_off">
+		<td>{lang_hidden_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
+		<td>
+			<select name="newsettings[condition_survey_hidden_status]">
+				{hook_condition_survey_hidden_status}
+			</select>
+		</td>
+	</tr>
+
+	<tr class="row_on">
+		<td>{lang_obsolete_status_that_are_to_be_set_for_old_records_when_condition_survey_are_imported}:</td>
+		<td>
+			<select name="newsettings[condition_survey_obsolete_status]">
+				{hook_condition_survey_obsolete_status}
+			</select>
+		</td>
+	</tr>
 
 		<!--
 		groupnotification

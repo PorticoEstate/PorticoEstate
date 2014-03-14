@@ -148,6 +148,23 @@
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'allrows'=>$this->allrows),$filter);
 
+
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['role']) && $field['role'] == 'parent')
+				{
+					foreach($values as &$entry)
+					{
+						if(isset($entry[$field['name']]) && $entry[$field['name']])
+						{
+							$path = $this->so->get_path(array('type' => $this->type, 'id' => $entry[$field['name']]));
+							$entry[$field['name']]	= implode(' > ', $path);
+						}
+					}
+				}
+
+			}
+
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
 
@@ -218,6 +235,11 @@
 				$values = $this->so->get_list($data);
 			}
 
+			if(isset($data['add_empty']) && $data['add_empty'])
+			{
+				array_unshift($values,array('id'=> '', 'name'=> lang('select')));
+			}
+
 			if(isset($data['selected']) && is_array($data['selected']))
 			{
 				foreach ($values as &$entry)
@@ -244,4 +266,57 @@
 		{
 			return $this->so->get_children2($id, $level, $reset);
 		}
+
+		public function read_attrib_history($data)
+		{
+			$attrib_data = $this->custom->get($data['app'], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
+			$history_type = $this->get_history_type_for_location($data['acl_location']);
+			$historylog = CreateObject('property.historylog',$history_type);
+			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','DESC',$data['id'],$data['attrib_id'], $data['detail_id']);
+
+			if($attrib_data['column_info']['type'] == 'LB')
+			{
+				foreach($history_values as &$value_set)
+				{
+					foreach ($attrib_data['choice'] as $choice)
+					{
+						if ($choice['id'] == $value_set['new_value'])
+						{
+							 $value_set['new_value'] = $choice['value'];
+						}
+					}
+				}
+			}
+
+
+			if($attrib_data['column_info']['type'] == 'D')
+			{
+				foreach($history_values as &$value_set)
+				{
+					 $value_set['new_value'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime( $value_set['new_value']));
+				}
+			}
+
+			reset($history_values);
+			$this->total_records = count($history_values);
+			return $history_values;
+		}
+
+		function get_history_type_for_location($acl_location)
+		{
+			switch($acl_location)
+			{
+			case '.vendor':
+				$history_type ='vendor';
+				break;
+			default:
+				$history_type = str_replace('.','_',substr($acl_location,-strlen($acl_location)+1));
+			}
+			if(!$history_type)
+			{
+				throw new Exception(lang('Unknown history type for acl_location: %1', $acl_location));
+			}
+			return $history_type;
+		}
+
 	}

@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
-
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <div id="main_content">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
@@ -53,7 +53,8 @@
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list.save_check_list</xsl:text>
 					<xsl:text>&amp;control_id=</xsl:text>
-						<xsl:value-of select="control_as_array/id"/>
+					<xsl:value-of select="control_as_array/id"/>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Lag sjekkliste for kontroll
 			</a>		

@@ -114,7 +114,7 @@
 			$id = (int)$id;
 
 			$sql = "SELECT p.* FROM controller_control_item_list p WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
@@ -138,25 +138,31 @@
 			$control_item_id = (int) $control_item_id;
 
 			$sql = "SELECT cil.* FROM controller_control_item_list cil WHERE cil.control_id = " . $control_id . " AND cil.control_item_id = " . $control_item_id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			$this->db->next_record();
+			$this->db->query($sql, __LINE__, __FILE__);
+			$result = $this->db->next_record();
 
-			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
-			$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
-			$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
-			$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
-
-			return $control_item_list;
+			if( $result )
+			{
+				$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
+				$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
+				$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
+				$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
+			
+				return $control_item_list;
+			}
+			else
+			{
+				return null;	
+			}
 		}
 		
 		/**
 		 * Get control item objects from database as objects or as arrays 
 		 * 
 		 * @param	$control_group_id	control group id
-		 * @param $return_type return data as objects or as arrays
 		 * @return  array with control items
 		*/
-		function get_control_items($control_group_id, $return_type = "return_object")
+		function get_control_items($control_group_id)
 		{
 			$control_group_id = (int) $control_group_id;
 
@@ -177,14 +183,7 @@
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 
-				if($return_type == "return_object")
-				{
-					$results[] = $control_item;
-				}
-				else
-				{
-					$results[] = $control_item->toArray();
-				}
+				$results[] = $control_item;
 			}
 
 			return $results;
@@ -256,7 +255,7 @@
 			$sql .= "AND ci.control_group_id=$control_group_id ";
 			$sql .= "ORDER BY cl.order_nr";
 			
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -305,7 +304,7 @@
 			$sql .= "AND ci.control_group_id=$control_group_id ";
 			$sql .= "ORDER BY cl.order_nr";
 			
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 			
 			$control_item_id = 0;
 			$control_item = null;

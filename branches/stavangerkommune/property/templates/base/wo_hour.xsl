@@ -1041,7 +1041,7 @@
 				<xsl:value-of select="remark"/>
 			</td>
 			<td align="left">
-				<xsl:value-of select="unit"/>
+				<xsl:value-of select="unit_name"/>
 			</td>
 			<td align="right">
 				<xsl:value-of select="quantity"/>
@@ -1394,7 +1394,7 @@
 				<xsl:value-of select="remark"/>
 			</td>
 			<td align="left">
-				<xsl:value-of select="unit"/>
+				<xsl:value-of select="unit_name"/>
 			</td>
 			<td align="right">
 				<xsl:choose>
@@ -1792,7 +1792,7 @@
 				<xsl:value-of select="base_descr"/>
 			</td>
 			<td align="left">
-				<xsl:value-of select="unit"/>
+				<xsl:value-of select="unit_name"/>
 			</td>
 			<td align="right">
 				<xsl:value-of select="w_cost"/>
@@ -1934,7 +1934,7 @@
 				<xsl:value-of select="remark"/>
 			</td>
 			<td align="left">
-				<xsl:value-of select="unit"/>
+				<xsl:value-of select="unit_name"/>
 			</td>
 			<td align="right">
 				<xsl:value-of select="quantity"/>

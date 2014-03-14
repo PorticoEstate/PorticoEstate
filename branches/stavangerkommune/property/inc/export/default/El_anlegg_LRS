@@ -24,25 +24,23 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage export
- 	* @version $Id: Basware_X114 9585 2012-06-13 18:22:44Z sigurdne $
+ 	* @version $Id: El_anlegg_LRS 11369 2013-10-11 15:29:13Z sigurdne $
 	*/
 
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	phpgw::import_class('phpgwapi.datetime');
-	phpgw::import_class('phpgwapi.xmlhelper');
 
 	class export_conv
 	{
 		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
 
-		var $debug;
-		var $client_code = 14;
+		var $debug = false;
 		protected $connection = false;
 		protected $receipt = array();
+		protected $type = '211';
 
 		function  __construct()
 		{
@@ -53,108 +51,91 @@
 			$this->config				= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
 
-		protected function get_anlegg()
+		protected function get_xmldata()
 		{
-			$sql= "SELECT * FROM fm_entity_1_11 WHERE auto_kontering = 1";
+			$sql= "SELECT * FROM fm_entity_1_11 WHERE auto_kontering = 1 AND category = 2";//kun fellesmålere som er merket med autokontering
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$anlegg = array();
 
+			$TreeID = $this->type;
 			$PeriodFrom = date('Ym');
 			$PeriodTo = 209912;
 
-			$doc = new DOMDocument('1.0', 'utf-8');
-			$domElement = $doc->createElement('AttributeValueList');
-			$domElement->setAttribute('xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance');
-			$domElement->setAttribute('xsi:noNamespaceSchemaLocation','..\XmlSchema\AttributeValueList.xsd');
+			$memory = xmlwriter_open_memory();
+			xmlwriter_set_indent ( $memory , true );
+			xmlwriter_start_document($memory,'1.0','UTF-8');
+			xmlwriter_start_element($memory,'TreeListe');
+				xmlwriter_write_attribute($memory,'TreeID',$TreeID);
+				xmlwriter_write_attribute($memory,'xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance');
+				xmlwriter_write_attribute($memory,'xsi:noNamespaceSchemaLocation','TreeListe.xsd');
 
 			while ($this->db->next_record())
 			{
-					$Attribute = array
-					(
-						'ID'			=> 'TJ',
-						'Name'			=> 'MALEPID',
-						'Value'			=> substr($this->db->f('maalepunkt_id'),-8),
-					//	'id' 			=> $this->db->f('id'),
-						'Description'	=> $this->db->f('address'),
-						'PeriodFrom'	=> $PeriodFrom,
-						'PeriodTo'		=> $PeriodTo,
-						'Status'		=> 'N',
-						'Percentage'	=> '100',
-						'RelationValueList'	=> array
-						(
-							'RelationValue'	=> array
-							(
-								array
-								(
-									'ID'			=> 'A3',
-									'Name'			=> 'FIRMA',
-									'Value'			=> 'BB',
-									'Percentage'	=> '100'
-								),
-								array
-								(
-									'ID'			=> 'A0',
-									'Name'			=> 'Art',
-									'Value'			=> '12304121',
-									'Percentage'	=> '100'
-								),
-								array
-								(
-									'ID'			=> 'C1',
-									'Name'			=> 'Ansvar',
-									'Value'			=> '45',
-									'Percentage'	=> '100'
-								),
-								array
-								(
-									'ID'			=> 'F0',
-									'Name'			=> 'Objekt',
-									'Value'			=> $this->db->f('loc1'),
-									'Percentage'	=> '100'
-								),
-								array
-								(
-									'ID'			=> 'B0',
-									'Name'			=> 'Prosjekt',
-									'Value'			=> '',
-									'Percentage'	=> '100'
-								),
-								array
-								(
-									'ID'			=> 'B1',
-									'Name'			=> 'Fagkode',
-									'Value'			=> '999',
-									'Percentage'	=> '100'
-								),
-							)
-						)
-					);
-
-				$xmldata = phpgwapi_xmlhelper::toXML($Attribute, 'AttributeValue');
-
-				$reader = new XMLReader();
-				$reader->XML($xmldata,'utf-8');
-
-				while ($reader->read())
-				{
-					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'AttributeValue')
-					{
-						$domnode = $reader->expand();
-						$domElement->appendChild($domnode);
-						break;
-					}
-				}
-				$reader->close();
+				xmlwriter_start_element($memory,'Tree');
+					xmlwriter_write_element($memory,'ID', 'TJ');
+					xmlwriter_write_element($memory,'Verdi', substr($this->db->f('maalepunkt_id'),-8));
+					xmlwriter_write_element($memory,'Beskrivelse', $this->db->f('address'));
+					xmlwriter_write_element($memory,'Firma', 'BB');
+					xmlwriter_write_element($memory,'PeriodeFra', $PeriodFrom);
+					xmlwriter_write_element($memory,'PeriodeTil', $PeriodTo);
+					xmlwriter_write_element($memory,'Status', 'N');
+				    xmlwriter_start_element($memory,'BegrepsLister');
+						xmlwriter_start_element($memory,'BegrepsListe');
+						    xmlwriter_write_attribute($memory,'Prosent', 100);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'Firma' );
+								xmlwriter_write_element($memory,'ID', 'A3');
+								xmlwriter_write_element($memory,'Verdi', 'BB');
+							xmlwriter_end_element($memory);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'Art' );
+								xmlwriter_write_element($memory,'ID', 'A0');
+								xmlwriter_write_element($memory,'Verdi', '12304121');
+							xmlwriter_end_element($memory);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'Asvar' );
+								xmlwriter_write_element($memory,'ID', 'C1');
+								xmlwriter_write_element($memory,'Verdi', 45);
+							xmlwriter_end_element($memory);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'Tjeneste' );
+								xmlwriter_write_element($memory,'ID', 'TJE');
+								xmlwriter_write_element($memory,'Verdi', '');
+							xmlwriter_end_element($memory);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'Objekt' );
+								xmlwriter_write_element($memory,'ID', 'F0');
+								xmlwriter_write_element($memory,'Verdi', $this->db->f('loc1'));
+							xmlwriter_end_element($memory);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'Prosjekt' );
+								xmlwriter_write_element($memory,'ID', 'B0');
+								xmlwriter_write_element($memory,'Verdi', '');
+							xmlwriter_end_element($memory);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'Fagkode' );
+								xmlwriter_write_element($memory,'ID', 'B1');
+								xmlwriter_write_element($memory,'Verdi', '999');
+							xmlwriter_end_element($memory);
+							xmlwriter_start_element($memory,'Begrep');
+								xmlwriter_write_comment($memory , 'AV' );
+								xmlwriter_write_element($memory,'ID', 'AV');
+								xmlwriter_write_element($memory,'Verdi', '');
+							xmlwriter_end_element($memory);
+						xmlwriter_end_element($memory);
+					xmlwriter_end_element($memory);
+				xmlwriter_end_element($memory);
 			}
-			$doc->appendChild($domElement);
+			xmlwriter_end_element($memory);
+			$xml = xmlwriter_output_memory($memory,true);
 
-			$doc->formatOutput = true;
-			$doc->preserveWhiteSpace = true;
-			$xml = $doc->saveXML();
-
-			header('Content-type: text/xml');
-			echo $xml; die();
+			if($this->debug)
+			{
+				header('Content-type: text/xml');
+				echo $xml;
+				die();
+			}
 
 			return $xml;
 		}
@@ -162,7 +143,7 @@
 		protected function log_end()
 		{
 			$msgbox_data =  $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-	
+
 			$insert_values= array
 			(
 				0,
@@ -186,15 +167,13 @@
 //			$this->debug=True;
 
 			//Bestem filnavn
-			$external_ref = '';
-			$Filnavn = $this->LagFilnavn($external_ref);
+			$Filnavn = $this->LagFilnavn();
 
 			if (!$Filnavn)
 			{
 				$message='LagFilnavn: Filnavn er i bruk';
 				$receipt['error'][]= array('msg' => $message);
 				$this->log_end();
-				echo $message;
 				return;
 			}
 
@@ -206,23 +185,19 @@
 			else
 			{
 				$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
-				if($this->debug)
+				$receipt['error'][]= array('msg' => $message);
+				if(!$this->debug)
 				{
-					echo $message;
-				}
-				else
-				{
-					$receipt['error'][]= array('msg' => $message);
 					$this->log_end();
 				}
 			}
 
 			//Velg ut alle anlegg som skal overføres
-			$anlegg = $this->get_anlegg();
+			$xmldata = $this->get_xmldata();
 
-			if ($anlegg)
+			if ($xmldata)
 			{
-				$this->receipt['message'][]= array('msg' => $this->transfer_anlegg($anlegg, $Filnavn, $download));
+				$this->transfer_anlegg($xmldata, $Filnavn, $download);
 			}
 
 			if($this->connection)
@@ -247,15 +222,12 @@
 		}
 
 
-		protected function LagFilnavn ($external_ref = '')
+		protected function LagFilnavn()
 		{
-			if(!$external_ref)
-			{
-				$external_ref = mt_rand();
-			}
+			$timestamp = date('YmdHi', phpgwapi_datetime::user_localtime());
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
+			$Filnavn = $fil_katalog . "/konteringstre_{$this->type}_{$timestamp}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($Filnavn))
@@ -291,18 +263,20 @@
 				if($transfer_ok)
 				{
 					$message = "El Anlegg er overført, fil: {$Filnavn}";
+					phpgwapi_cache::message_set($message, 'message'); 
 				}
 				else
 				{
 					$message = 'Noe gikk galt med overføring av El Anlegg';
+					phpgwapi_cache::message_set($message, 'error'); 
 				}
 			}
 			else
 			{
-				$message = $xmldata;
+				header('Content-type: text/xml');
+				echo $xmldata;
+				die();
 			}
-
-			return $message;
 		}
 
 
@@ -350,7 +324,7 @@
 			return 	$transfer_ok;
 		}
 
-		protected function phpftp_connect() 
+		protected function phpftp_connect()
 		{
 			$server				= $this->config->config_data['common']['host'];
 			$user				= $this->config->config_data['common']['user'];

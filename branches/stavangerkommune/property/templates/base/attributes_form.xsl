@@ -6,8 +6,8 @@
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
 		<xsl:for-each select="attributes_group">
-			<div id="{link}">
-				<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
+			<div id="{link}" class="fields_wrp">
+				<table style="float:left;">
 					<xsl:apply-templates select="attributes"/>
 				</table>
 			</div>
@@ -21,48 +21,71 @@
 		<xsl:variable name="statustext">
 			<xsl:value-of select="statustext"/>
 		</xsl:variable>
+
+		<xsl:variable name="textareacols"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|property|textareacols')" /></xsl:variable>
+		<xsl:variable name="textarearows"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|property|textarearows')" /></xsl:variable>
+
+		<xsl:choose>
+			<xsl:when test="datatype='section'">
+				<tr>
+					<td  colspan="2">
+						<xsl:value-of select="descr" disable-output-escaping="yes"/>				
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
+
 		<tr>
-			<td align="left" width="19%" valign="top" title="{$statustext}">
-				<xsl:choose>
-					<xsl:when test="helpmsg=1">
-						<xsl:variable name="help_url">
-							<xsl:value-of select="help_url"/>
-						</xsl:variable>
-						<a href="javascript:var w=window.open('{$help_url}','','left=50,top=100,width=550,height=400,scrollbars')">
-							<xsl:text>[</xsl:text>
-							<xsl:value-of select="input_text"/>
-							<xsl:text>]</xsl:text>
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="input_text"/>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="datatype='pwd'">
-						<br/>
-						<xsl:text>[ </xsl:text>
+			<xsl:choose>
+				<xsl:when test="not(hide_row)">
+					<td  class="first" title="{$statustext}">
+						<label>
 						<xsl:choose>
-							<xsl:when test="value!=''">
-								<xsl:value-of select="php:function('lang', 'edit')"/>
+							<xsl:when test="helpmsg=1">
+								<xsl:variable name="help_url">
+									<xsl:value-of select="help_url"/>
+								</xsl:variable>
+								<a href="javascript:var w=window.open('{$help_url}','','left=50,top=100,width=550,height=400,scrollbars')">
+									<xsl:text>[</xsl:text>
+									<xsl:value-of select="input_text"/>
+									<xsl:text>]</xsl:text>
+								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="php:function('lang', 'add')"/>
+								<xsl:value-of select="input_text"/>
 							</xsl:otherwise>
 						</xsl:choose>
-						<xsl:text> ]</xsl:text>
-					</xsl:when>
-				</xsl:choose>
-			</td>
-			<td align="left">
+						<xsl:choose>
+							<xsl:when test="datatype='pwd'">
+								<br/>
+								<xsl:text>[ </xsl:text>
+								<xsl:choose>
+									<xsl:when test="value!=''">
+										<xsl:value-of select="php:function('lang', 'edit')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="php:function('lang', 'add')"/>
+									</xsl:otherwise>
+								</xsl:choose>
+								<xsl:text> ]</xsl:text>
+							</xsl:when>
+						</xsl:choose>
+						</label>
+					</td>
+				</xsl:when>
+			</xsl:choose>
+
+			<td>
 				<xsl:choose>
 					<xsl:when test="name!=''">
 						<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"/>
 						<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"/>
+						<input type="hidden" name="values_attribute[{counter}][precision]" value="{precision}"/>
 						<input type="hidden" name="values_attribute[{counter}][history]" value="{history}"/>
 						<input type="hidden" name="values_attribute[{counter}][attrib_id]" value="{id}"/>
 						<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"/>
 						<input type="hidden" name="values_attribute[{counter}][input_text]" value="{input_text}"/>
+						<input type="hidden" name="values_attribute[{counter}][disabled]" value="{disabled}"/>
 						<xsl:choose>
 							<xsl:when test="datatype='R'">
 								<xsl:call-template name="choice"/>
@@ -71,7 +94,7 @@
 								<xsl:call-template name="choice"/>
 							</xsl:when>
 							<xsl:when test="datatype='LB'">
-								<select name="values_attribute[{counter}][value]" class="forms">
+								<select id="id_{name}" name="values_attribute[{counter}][value]" class="forms">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">
@@ -102,7 +125,7 @@
 								</select>
 							</xsl:when>
 							<xsl:when test="datatype='AB'">
-								<table>
+								<table style="float:left;">
 									<tr>
 										<td>
 											<xsl:variable name="contact_name">
@@ -313,6 +336,37 @@
 									</xsl:choose>
 								</input>
 							</xsl:when>
+							<xsl:when test="datatype='custom3'">
+								<xsl:variable name="custom_id">
+									<xsl:value-of select="name"/>
+									<xsl:text>_id</xsl:text>
+								</xsl:variable>
+
+								<xsl:variable name="custom_name">
+									<xsl:value-of select="name"/>
+									<xsl:text>_name</xsl:text>
+								</xsl:variable>
+
+								<xsl:variable name="custom_container">
+									<xsl:value-of select="name"/>
+									<xsl:text>_container</xsl:text>
+								</xsl:variable>
+
+								<div class="autocomplete">
+			                    	<input id="{$custom_id}" name="values_attribute[{counter}][value]" type="hidden" value="{value}">
+			                    	</input>
+			                    	<input id="{$custom_name}" name="{$custom_name}" type="text" value="{custom_name}">
+										<xsl:choose>
+											<xsl:when test="disabled!=''">
+												<xsl:attribute name="disabled">
+													<xsl:text> disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:when>
+										</xsl:choose>
+									</input>
+									<div id="{$custom_container}"/>
+								</div>
+							</xsl:when>
 							<xsl:when test="datatype='user'">
 								<xsl:variable name="user_name">
 									<xsl:value-of select="name"/>
@@ -357,11 +411,11 @@
 								</input>
 							</xsl:when>
 							<xsl:when test="datatype='DT'">
-											<xsl:variable name="clear_function">
-												<xsl:text>clear_</xsl:text>
-												<xsl:value-of select="name"/>
-												<xsl:text>();</xsl:text>
-											</xsl:variable>
+								<xsl:variable name="clear_function">
+									<xsl:text>clear_</xsl:text>
+									<xsl:value-of select="name"/>
+									<xsl:text>();</xsl:text>
+								</xsl:variable>
 
 								<table>
 									<tr>
@@ -419,7 +473,7 @@
 								</table>
 							</xsl:when>
 							<xsl:when test="datatype='T'">
-								<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]">
+								<textarea id="id_{name}"  name="values_attribute[{counter}][value]">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">
@@ -427,6 +481,26 @@
 											</xsl:attribute>
 										</xsl:when>
 									</xsl:choose>
+									<xsl:attribute name="cols">
+										<xsl:choose>
+											<xsl:when test="$textareacols!=''">
+												<xsl:value-of select="$textareacols"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:text>60</xsl:text>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
+									<xsl:attribute name="rows">
+										<xsl:choose>
+											<xsl:when test="$textarearows!=''">
+												<xsl:value-of select="$textarearows"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:text>6</xsl:text>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
 									<xsl:value-of select="value"/>
 								</textarea>
 							</xsl:when>
@@ -461,7 +535,7 @@
 								</table>
 							</xsl:when>
 							<xsl:when test="datatype='bolean'">
-								<input type="checkbox" name="values_attribute[{counter}][value]" value="1">
+								<input id="id_{name}" type="checkbox" name="values_attribute[{counter}][value]" value="1">
 									<xsl:choose>
 										<xsl:when test="value!=''">
 											<xsl:attribute name="checked">
@@ -543,7 +617,7 @@
 								</xsl:choose>
 							</xsl:when>
 							<xsl:otherwise>
-								<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+								<input id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">
@@ -556,7 +630,7 @@
 						</xsl:choose>
 						<xsl:choose>
 							<xsl:when test="history=1">
-								<input type="text" id="values_attribute_{counter}_date" name="values_attribute[{counter}][date]" value="" size="12" maxlength="10">
+								<input type="text" id="values_attribute_{counter}_date" name="values_attribute[{counter}][date]" value="" size="12" maxlength="10" readonly="readonly">
 								</input>
 								<xsl:variable name="link_history">
 									<xsl:value-of select="link_history"/>
@@ -565,10 +639,10 @@
 									<xsl:value-of select="//lang_history_help"/>
 								</xsl:variable>
 								<xsl:variable name="lang_history">
-									<xsl:value-of select="//lang_history"/>
+									<xsl:value-of select="php:function('lang', 'history')" />
 								</xsl:variable>
-								<a href="javascript:var w=window.open('{$link_history}','','left=50,top=100,width=550,height=400,scrollbars')" title="{$lang_history_help}">
-									<xsl:value-of select="//lang_history"/>
+								<a href="javascript:var w=window.open('{$link_history}','','left=50,top=100,width=550,height=400,scrollbars')" title="{$lang_history}">
+									<xsl:value-of select="$lang_history"/>
 								</a>
 							</xsl:when>
 						</xsl:choose>
@@ -582,6 +656,9 @@
 	<xsl:template name="choice">
 		<xsl:variable name="counter">
 			<xsl:value-of select="counter"/>
+		</xsl:variable>
+		<xsl:variable name="name">
+			<xsl:value-of select="name"/>
 		</xsl:variable>
 		<table cellpadding="2" cellspacing="2" align="left">
 			<xsl:for-each select="choice">
@@ -602,10 +679,10 @@
 					<td align="left">
 						<xsl:choose>
 							<xsl:when test="checked='checked'">
-								<input type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}" checked="checked"/>
+								<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}" checked="checked"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<input type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}"/>
+								<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}"/>
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:text> </xsl:text>

@@ -7,7 +7,7 @@
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
-	 * @version $Id: class.yui.inc.php 7951 2011-10-26 13:48:40Z sigurdne $
+	 * @version $Id: class.jquery.inc.php 10127 2012-10-07 17:06:01Z sigurdne $
 	 */
 
 	/*
@@ -78,8 +78,12 @@
 */
 					$load = array
 					(
+						"js/jquery-1.7.2{$_type}",
 						"js/jquery-ui-1.8.19.custom{$_type}"
 					);
+
+					$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/jquery/css/ui-lightness/jquery-ui-1.8.19.custom.css');
+
 					break;
 
 				default:

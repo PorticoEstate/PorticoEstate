@@ -45,6 +45,7 @@
 				'step1'				=> true,
 				'tos'				=> true,
 				'ready_to_activate'	=> true,
+				'lostpw1'			=> true,
 				'email_sent_lostpw'	=> true
 			),
 			'boreg'	=> array
@@ -104,7 +105,7 @@
 			$lang_denied = lang('Anonymous access not correctly configured');
 			if($GLOBALS['phpgw']->session->reason)
 			{
-				$lang_denied = $GLOBALS['phpgw']->session->reason;
+	//			$lang_denied = $GLOBALS['phpgw']->session->reason;
 			}
 			echo <<<HTML
 				<div class="error">$lang_denied</div>

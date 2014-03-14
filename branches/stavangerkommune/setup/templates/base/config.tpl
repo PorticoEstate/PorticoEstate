@@ -361,6 +361,7 @@
      <select name="newsettings[file_store_contents]">
       <option value="filesystem"{selected_file_store_contents_filesystem}>Filesystem</option>
       <option value="sql"{selected_file_store_contents_sql}>SQL</option>
+      <option value="braArkiv"{selected_file_store_contents_braArkiv}>braArkiv</option>
      </select>
     </td>
    </tr>

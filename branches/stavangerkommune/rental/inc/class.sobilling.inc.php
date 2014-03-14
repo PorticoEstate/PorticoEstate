@@ -332,8 +332,9 @@ class rental_sobilling extends rental_socommon
 	 * 
 	 * @param $billing_job
 	 */
-	public function generate_export(&$billing_job)
+	public function generate_export(&$billing_job, $excel_export=false)
 	{
+      set_time_limit(1000);
 		$exportable = null;
 		switch($billing_job->get_export_format())
 		{
@@ -349,6 +350,14 @@ class rental_sobilling extends rental_socommon
 		}
 		if($exportable != null)
 		{
+                    if($excel_export)
+                    {
+                        $export_data = $exportable->get_contents_excel();
+                        //_debug_array($export_data[1]);
+                        return $export_data;
+                    }
+                    else
+                    {
 			//$sql = "UPDATE rental_billing SET export_data = {$this->marshal(iconv("ISO-8859-1","UTF-8",$exportable->get_contents()),'string')} WHERE id = {$this->marshal($billing_job->get_id(),'int')}";
 			//$result = $this->db->query($sql, __LINE__, __FILE__);
 
@@ -392,6 +401,7 @@ class rental_sobilling extends rental_socommon
 					return true;
 				}
 			}
+                    }
 		}	
 		return false;
 	}

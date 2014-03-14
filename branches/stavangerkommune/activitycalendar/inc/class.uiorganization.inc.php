@@ -13,7 +13,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	protected $so_group;
 	protected $so_contact;
 	protected $so_activity;
-	
+
 	public $public_functions = array
 	(
 		'index'				=> true,
@@ -23,7 +23,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		'show'	=>	true,
 		'edit'	=>	true
 	);
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -35,22 +35,22 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
 	}
-	
+
 	public function index()
 	{
 		if(phpgw::get_var('phpgw_return_as') == 'json') {
 			return $this->index_json();
 		}
-		
+
 		$this->render('organization_list.php');
 	}
-	
+
 	public function changed_organizations()
 	{
 		self::set_active_menu('activitycalendar::organizationList::changed_organizations');
 		$this->render('organization_list_changed.php');
 	}
-	
+
 	public function index_json()
 	{
 		$organizations = activitycalendar_soorganization::get_instance()->get(); //get organizations
@@ -71,7 +71,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 
 		return $this->yui_results($organizations);
 	}
-	
+
 	public function edit()
 	{
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
@@ -91,11 +91,20 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			}
 			//var_dump($org);
 			$districts = $so_activity->get_districts();
-			
+
 			if(isset($_POST['store_organization'])) // The user has pressed the store button
 			{
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
+                                if(isset($district) && is_numeric($district))
+                                {
+                                    //get district name before storing to booking
+                                    $district_name = $so_activity->get_district_from_id($district);
+                                }
+                                else
+                                {
+                                    $district_name = "";
+                                }
 				$homepage = phpgw::get_var('homepage');
 				$email = phpgw::get_var('email');
 				$phone = phpgw::get_var('phone');
@@ -105,7 +114,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				//phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
 				//$address_array = explode(",",$address_tmp);
 				$desc = phpgw::get_var('org_description');
-				
+
 				$org_info = array();
 				$org_info['name'] = $org->get_name(); //new
 				$orgno_tmp = $orgno;
@@ -113,8 +122,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$orgno_tmp = NULL;
 				}
-				$org_info['orgnr'] = $orgno_tmp; 
-				
+				$org_info['orgnr'] = $orgno_tmp;
+
 				$org_info['homepage'] = $homepage;
 				$org_info['phone'] = $phone;
 				$org_info['email'] = $email;
@@ -123,20 +132,20 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_info['zip'] = $zip;
                                 $org_info['postaddress'] = $city;
 				$org_info['activity_id'] = '';
-				$org_info['district'] = $district;
-				
+				$org_info['district'] = $district_name;
+
 				$contact1_id = phpgw::get_var('contact1_id');
 				$contact2_id = phpgw::get_var('contact2_id');
-				
+
 				$contact1_name = phpgw::get_var('contact1_name');
 				$contact1_phone = phpgw::get_var('contact1_phone');
 				$contact1_email = phpgw::get_var('contact1_email');
-				
+
 				$contact2_name = phpgw::get_var('contact2_name');
 				$contact2_phone = phpgw::get_var('contact2_phone');
 				$contact2_email = phpgw::get_var('contact2_email');
 
-				
+
 				$new_org_id = $so_org->transfer_organization($org_info);
 				if($new_org_id)
 				{
@@ -148,9 +157,9 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$contact1['mail'] = $contact1_email;
 					$contact1['org_id'] = $new_org_id;
 					$so_activity->add_contact_person_org($contact1);
-					
-					$message = lang('messages_saved_form');	
-					
+
+					$message = lang('messages_saved_form');
+
 					//get affected activities and update with new org id
 					$update_activities = $so_activity->get_activities_for_update($id);
 					//var_dump($update_activities);
@@ -161,7 +170,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 						$act->set_new_org(false);
 						$so_activity->store($act);
 					}
-					
+
 					//set local organization as stored
 					$org->set_change_type("added");
 					$org->set_transferred(true);
@@ -171,24 +180,56 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$error = lang('messages_form_error');
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
+			}
+			if(isset($_POST['reject_organization'])) // The user has pressed the reject button
+			{
+				$reject_org_id = $id;
+				if($so_org->reject_organization($reject_org_id))
+				{
+					$update_activities = $so_activity->get_activities_for_update($reject_org_id);
+					//var_dump($update_activities);
+					foreach($update_activities as $act_id)
+					{
+						$act = $so_activity->get_single($act_id);
+						$act->set_state(5);
+						$so_activity->store($act);
+					}
+				}
+				else
+				{
+					$error = lang('messages_form_error');
+				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
+			}
+			if(isset($_POST['reject_organization_update'])) // The user has pressed the reject button
+			{
+				$reject_org_id = $id;
+				$so_org->reject_organization($reject_org_id);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
 			}
 			else if(isset($_POST['update_organization'])) // The user has pressed the store button
 			{
 				$original_org_id = phpgw::get_var('original_org_id');
-				$org_info['orgid'] = $original_org_id;
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
+                                if(isset($district) && is_numeric($district))
+                                {
+                                    //get district name before storing to booking
+                                    $district_name = $so_activity->get_district_from_id($district);
+                                }
+                                else
+                                {
+                                    $district_name = "";
+                                }
 				$homepage = phpgw::get_var('homepage');
 				$email = phpgw::get_var('email');
 				$phone = phpgw::get_var('phone');
 				$address = phpgw::get_var('address');
                                 $zip = phpgw::get_var('zip_code');
                                 $city = phpgw::get_var('city');
-				//phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
-				//$address_array = explode(",",$address_tmp);
 				$desc = phpgw::get_var('org_description');
-				
+
 				$org_info = array();
 				$org_info['name'] = $org->get_name(); //new
 				$orgno_tmp = $orgno;
@@ -196,8 +237,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$orgno_tmp = NULL;
 				}
-				$org_info['orgnr'] = $orgno_tmp; 
-				
+				$org_info['orgnr'] = $orgno_tmp;
+
 				$org_info['homepage'] = $homepage;
 				$org_info['phone'] = $phone;
 				$org_info['email'] = $email;
@@ -206,20 +247,21 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_info['zip_code'] = $zip;
                                 $org_info['city'] = $city;
 				$org_info['activity_id'] = '';
-				$org_info['district'] = $district;
-				
+				$org_info['district'] = $district_name;
+                                $org_info['orgid'] = $original_org_id;
+
 				$contact1_id = phpgw::get_var('contact1_id');
 				$contact2_id = phpgw::get_var('contact2_id');
-				
+
 				$contact1_name = phpgw::get_var('contact1_name');
 				$contact1_phone = phpgw::get_var('contact1_phone');
 				$contact1_email = phpgw::get_var('contact1_email');
-				
+
 				$contact2_name = phpgw::get_var('contact2_name');
 				$contact2_phone = phpgw::get_var('contact2_phone');
 				$contact2_email = phpgw::get_var('contact2_email');
 
-				
+
 				$so_org->update_organization($org_info);
 				$so_activity->delete_contact_persons($original_org_id);
 
@@ -230,28 +272,28 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$contact1['mail'] = $contact1_email;
 				$contact1['org_id'] = $original_org_id;
 				$so_activity->add_contact_person_org($contact1);
-				
+
 				$contact2 = array();
 				$contact2['name'] = $contact2_name;
 				$contact2['phone'] = $contact2_phone;
 				$contact2['mail'] = $contact_mail_2;
 				$contact2['org_id'] = $original_org_id;
 				$so_activity->add_contact_person_org($contact2);
-					
-				$message = lang('messages_saved_form');	
-				
+
+				$message = lang('messages_saved_form');
+
 				//set local organization as stored
 				$org->set_change_type("added");
 				$org->set_transferred(true);
 				$so_org->update_local($org);
-				
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
+
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
 			}
-			
+
 			$contact_persons = $so_contact->get_local_contact_persons($org->get_id());
 			$cp1 = $contact_persons[0];
 			$cp2 = $contact_persons[1];
-			
+
 			$data = array
 			(
 				'organization' 	=> $org,
@@ -263,10 +305,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				'errorMsgs' => $errorMsgs,
 				'infoMsgs' => $infoMsgs
 			);
-			
+
 			return $this->render('organization.php', $data);
 	}
-	
+
 	public function show()
 	{
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
@@ -297,7 +339,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			$contact_persons = $socontact->get_local_contact_persons($group->get_id(), true);
 			$cp1 = $contact_persons[0];
 			$cp2 = $contact_persons[1];
-			
+
 			$data = array
 			(
 				'group' 	=> $group,
@@ -329,11 +371,11 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$keys = array_keys($org_array);
 				$org = $org_array[$keys[0]];
 			}
-			
+
 			$contact_persons = $socontact->get_local_contact_persons($org->get_id());
 			$cp1 = $contact_persons[0];
 			$cp2 = $contact_persons[1];
-			
+
 			$data = array
 			(
 				'organization' 	=> $org,
@@ -344,12 +386,12 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				'errorMsgs' => $errorMsgs,
 				'infoMsgs' => $infoMsgs
 			);
-			
+
 			return $this->render('organization.php', $data);
 		//}
 	}
-	
-	
+
+
 
 	/**
 	 * (non-PHPdoc)
@@ -375,17 +417,17 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		// Create an empty result set
 		$result_objects = array();
 		$result_count = 0;
-		
+
 		//Create an empty result set
 		$parties = array();
-		
+
 		$exp_param 	= phpgw::get_var('export');
 		$export = false;
 		if(isset($exp_param)){
 			$export=true;
 			$num_of_objects = null;
 		}
-		
+
 		//Retrieve the type of query and perform type specific logic
 		$type = phpgw::get_var('type');
 		$changed_org = false;
@@ -399,6 +441,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			case 'new_organizations':
 				$filters = array('new_orgs' => 'true');
 				$changed_org = true;
+				$sort_field = 'identifier';
 				break;
 			case 'changed_groups':
 				$filters = array('changed_groups' => 'true');
@@ -422,7 +465,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			$result_objects = activitycalendar_soorganization::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$result_count = activitycalendar_soorganization::get_instance()->get_count($search_for, $search_type, $filters);
 		}
-				
+
 		//var_dump($result_objects);
 		// Create an empty row set
 		$rows = array();
@@ -454,24 +497,24 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 
 		if(!$export){
 			array_walk(
-				$organization_data['results'], 
-				array($this, 'add_actions'), 
+				$organization_data['results'],
+				array($this, 'add_actions'),
 				array(													// Parameters (non-object pointers)
-					$type												// [2] The type of query		
+					$type												// [2] The type of query
 				)
 			);
 		}
-		
-		
+
+
 		return $this->yui_results($organization_data, 'total_records', 'results');
 	}
-	
+
 	public function get_organization_groups()
 	{
-		$GLOBALS['phpgw_info']['flags']['noheader'] = true; 
-		$GLOBALS['phpgw_info']['flags']['nofooter'] = true; 
+		$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-		
+
 		$org_id = phpgw::get_var('orgid');
 		$group_id = phpgw::get_var('groupid');
 		$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
@@ -485,7 +528,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$selected = "";
 					if($group_id && $group_id > 0)
 					{
-						$gr_id = (int)$group_id; 
+						$gr_id = (int)$group_id;
 						if($gr_id == (int)$group->get_id())
 						{
 							$selected_group = " selected";
@@ -497,8 +540,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		    $html = implode(' ' , $group_html);
 		    $returnHTML = $returnHTML . ' ' . $html;
 		}
-		
-		
+
+
 		return $returnHTML;
 		//return "<option>Ingen gruppe valgt</option>";
 	}
@@ -514,18 +557,18 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$party_id = (int)phpgw::get_var('id');
 		if(isset($party_id) && $party_id > 0)
 		{
-			$party = rental_soparty::get_instance()->get_single($party_id); 
+			$party = rental_soparty::get_instance()->get_single($party_id);
 		}
 		else
 		{
 			$this->render('permission_denied.php',array('error' => lang('invalid_request')));
 			return;
 		}
-		
+
 		if(isset($party) && $party->has_permission(PHPGW_ACL_READ))
 		{
 			return $this->render(
-				'party.php', 
+				'party.php',
 				array (
 					'party' 	=> $party,
 					'editable' => false,
@@ -544,7 +587,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$browser->content_header('export.txt','text/plain');
 		print rental_soparty::get_instance()->get_export_data();
 	}
-	
+
 	/**
 	 * Add action links and labels for the context menu of the list items
 	 *
@@ -560,7 +603,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$value['labels'] = array();
 
 		$query_type = $params[0];
-		
+
 		switch($query_type)
 		{
 			case 'all_organizations':
@@ -574,7 +617,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				}
 				$value['labels'][] = lang('show');
 				break;
-				
+
 			case 'changed_organizations':
 				$value['ajax'][] = false;
 				if($value['organization_id'] != '' && $value['organization_id'] != null){
