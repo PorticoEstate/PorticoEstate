@@ -1596,8 +1596,6 @@
 				$i = 0;
 				foreach($identificator as $key => $value)
 				{
-					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, 1, $key);
-					$i++;
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, 1, $value);
 					$i++;
 				}
@@ -1765,7 +1763,6 @@
 				$_identificator = array();
 				foreach($identificator as $key => $value)
 				{
-					$_identificator[] =  $key;
 					$_identificator[] =  $value;
 				}
 				fputcsv($fp, $_identificator, ';');
@@ -1836,8 +1833,6 @@
 				$i = 0;
 				foreach($identificator as $key => $value)
 				{
-					$object->addCell(1, 0, $i, $key, 'string');
-					$i++;
 					$object->addCell(1, 0, $i, $value, 'string');
 					$i++;
 				}
