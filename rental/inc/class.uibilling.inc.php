@@ -25,7 +25,7 @@ class rental_uibilling extends rental_uicommon
 		self::set_active_menu('rental::contracts::invoice');
 		$config	= CreateObject('phpgwapi.config','rental');
 		$config->read();
-		$billing_time_limit = $config->config_data['billing_time_limit'];
+		$billing_time_limit = isset($config->config_data['billing_time_limit']) && $config->config_data['billing_time_limit'] ? (int)$config->config_data['billing_time_limit'] : 500;
 		set_time_limit($billing_time_limit); // Set time limit
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('invoice_menu');
 	}
