@@ -267,10 +267,37 @@
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
 			$db->query($sql, __LINE__, __FILE__);
 		}
-             
 
+        function check_collision($resources, $from_, $to_)
+        {
+            $rids = join(',', array_map("intval", $resources));
+            $sql  =  "SELECT ba.id
+                      FROM bb_allocation ba, bb_allocation_resource bar
+                      WHERE ba.id = bar.allocation_id
+                      AND bar.resource_id in ($rids)
+                      AND ((ba.from_ < '$from_' AND ba.to_ > '$from_')
+                      OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
+                      OR (ba.from_ < '$to_' AND ba.to_ > '$to_'))
+                      UNION
+                      SELECT be.id
+                      FROM bb_event be, bb_event_resource ber, bb_event_date bed
+                      WHERE be.id = ber.event_id
+                      AND be.id = bed.event_id
+                      AND ber.resource_id in ($rids)
+                      AND ((bed.from_ < '$from_' AND bed.to_ > '$from_')
+                      OR (bed.from_ >= '$from_' AND bed.to_ <= '$to_')
+                      OR (bed.from_ < '$to_' AND bed.to_ > '$to_'))";
 
-		
+            $this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+
+            if(!$this->db->next_record())
+            {
+                return False;
+            }
+            return True;
+
+        }
+
 		/**
 		 * Check if a given timespan is available for bookings or allocations
 		 *
@@ -284,7 +311,7 @@
 		{
 			$rids = join(',', array_map("intval", $resources));
 			$nrids = count($resources);
-			$this->db->query("SELECT id FROM bb_season 
+			$this->db->query("SELECT id FROM bb_season
 			                  WHERE id IN (SELECT season_id 
 							               FROM bb_season_resource 
 							               WHERE resource_id IN ($rids,-1) 

@@ -686,7 +686,7 @@
 			$application = $this->bo->read_single($id);
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				if($_POST['create'])
+                if($_POST['create'])
 				{
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 				}
@@ -754,6 +754,7 @@
 				
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
+
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
 			$application['applications_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$application['edit_link'] = self::link(array('menuaction' => 'booking.uiapplication.edit', 'id' => $application['id']));
@@ -788,7 +789,6 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			$application['status'] = $application['status'];
 			// Check if any bookings, allocations or events are associated with this application
 			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id']),'sort'=>'from_', 'dir' => 'asc'));
 			$from = array();		
@@ -802,9 +802,19 @@
 				$application['currentuser'] = true;
 			else
 				$application['currentuser'] = false;
+
+            $collision_dates = array();
+            foreach($application['dates'] as &$date)
+            {
+                $collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_']);
+                if($collision) {
+                    $collision_dates[] = $date['from_'];
+                }
+            }
+            $collision_dates = array("data" => implode(',',$collision_dates));
 			self::check_date_availability($application);
-			self::render_template('application', array('application' => $application, 
+			self::render_template('application', array('application' => $application,
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations, 'assoc' =>$from, 'comments' => $comments,'config' => $application_text));
+								  'num_associations'=>$num_associations, 'assoc' =>$from, 'collision' => $collision_dates, 'comments' => $comments,'config' => $application_text));
 		}
 	}

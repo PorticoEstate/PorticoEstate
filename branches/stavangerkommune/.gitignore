@@ -5,3 +5,7 @@
 /.project
 .svn
 .idea
+.svnignore
+SnappyPdf.php
+SnappyMedia.php
+google.pdf

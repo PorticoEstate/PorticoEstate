@@ -133,16 +133,42 @@
 				var allocationParams = {};
 				var bookingParams = {};
 				var eventParams = {};
+                var applicationDate = {};
 			</script>
 
 			<xsl:variable name='assocdata'>
 				 <xsl:value-of select="assoc/data" />
 			</xsl:variable>
+
+            <xsl:variable name='collisiondata'>
+                <xsl:value-of select="collision/data" />
+            </xsl:variable>
 			<dd></dd>
-			
+            <script type="text/javascript">
+                building_id = <xsl:value-of select="application/building_id"/>;
+            </script>
+
 			<xsl:for-each select="application/dates">
-				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/></dd>
-				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
+				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/>
+                    <xsl:if test="../case_officer/is_current_user">
+                        <xsl:if test="contains($collisiondata, from_)">
+                            <xsl:if test="not(contains($assocdata, from_))">
+                                <script type="text/javascript">
+                                    applicationDate[<xsl:value-of select="id"/>] = '<xsl:value-of select="substring(from_,0,11)"/>';
+                                </script>
+                                <a href="javascript: void(0)"
+                                   onclick="window.open('/bookingfrontend/index.php?menuaction=bookingfrontend.uibuilding.schedule&amp;id='+building_id+'&amp;backend=true&amp;date='+applicationDate[{id}],
+                                             '',
+                                             'width=1048, height=600, scrollbars=yes');
+                                             return false;">
+                                                <i class="fa fa-exclamation-circle"></i>
+                                </a>
+                            </xsl:if>
+                        </xsl:if>
+                    </xsl:if>
+                </dd>
+
+            <dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
 
 
 				<xsl:if test="../edit_link">
@@ -154,7 +180,7 @@
 				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
 
 					<xsl:if test="not(../case_officer/is_current_user)">
-						<xsl:attribute name="disabled">disabled</xsl:attribute>		
+						<xsl:attribute name="disabled">disabled</xsl:attribute>
 					</xsl:if>
 
 						<xsl:if test="not(contains($assocdata, from_))">
@@ -164,7 +190,8 @@
 							<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
 						</xsl:if>
 						<xsl:if test="contains($assocdata, from_)">
-							<option><xsl:value-of select="php:function('lang', '- Created -')" /></option>
+                            <xsl:attribute name="disabled">disabled</xsl:attribute>
+                            <option><xsl:value-of select="php:function('lang', '- Created -')" /></option>
 						</xsl:if>
 				</select>
 				</xsl:if>

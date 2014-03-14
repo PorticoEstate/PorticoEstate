@@ -25,6 +25,7 @@
 			self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.bobuilding');
+            $this->bo_booking = CreateObject('booking.bobooking');
 			self::set_active_menu('booking::buildings');
 			$this->fields = array('name', 'homepage', 'description', 'email', 'tilsyn_name', 'tilsyn_email', 'tilsyn_phone', 'tilsyn_name2', 'tilsyn_email2', 'tilsyn_phone2', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage','extra_kalendar','calendar_text');
 		}

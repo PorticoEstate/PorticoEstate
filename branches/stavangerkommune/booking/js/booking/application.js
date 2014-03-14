@@ -139,5 +139,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		}
    });
 
+
+    YAHOO.util.Event.addListener("field_customer_identifier_type", "change", function(e) {
+
+    });
+
 });
 
