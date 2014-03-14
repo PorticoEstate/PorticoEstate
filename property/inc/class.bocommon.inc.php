@@ -1520,8 +1520,10 @@
 		 * @param array $name array containing keys in $list
 		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 * @param array $identificator array containing 1.row for identification purposes in case of data import.
+ 		 * @param string $filename
 		 */
-		function download($list,$name,$descr,$input_type=array())
+		function download($list,$name,$descr,$input_type=array(),$identificator = array(),$filename = '')
 		{
 			set_time_limit(500);
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
@@ -1533,13 +1535,13 @@
 			switch ($export_format)
 			{
 				case 'csv':
-					$this->csv_out($list,$name,$descr,$input_type);
+					$this->csv_out($list,$name,$descr,$input_type,$identificator,$filename);
 					break;
 				case 'excel':
-					$this->excel_out($list,$name,$descr,$input_type);
+					$this->excel_out($list,$name,$descr,$input_type,$identificator,$filename);
 					break;
 				case 'ods':
-					$this->ods_out($list,$name,$descr,$input_type);
+					$this->ods_out($list,$name,$descr,$input_type,$identificator,$filename);
 					break;
 			}
 		}
@@ -1551,12 +1553,21 @@
 		 * @param array $name array containing keys in $list
 		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+ 		 * @param array $identificator array containing 1.row for identification purposes in case of data import.
+		 * @param string $filename
 		 */
-		function excel_out($list,$name,$descr,$input_type=array())
+		function excel_out($list,$name,$descr,$input_type=array(),$identificator=array(),$filename = '')
 		{
 			phpgw::import_class('phpgwapi.phpexcel');
-
-			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xlsx';
+			if($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ','_',basename($filename)));
+				$filename = $filename_arr[0].'.xlsx';
+			}
+			else
+			{
+				$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xlsx';				
+			}
 
 			$browser = CreateObject('phpgwapi.browser');
 //			$browser->content_header($filename,'application/vnd.ms-excel');
@@ -1579,6 +1590,22 @@
 			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 			$objPHPExcel->setActiveSheetIndex(0);
 
+			if($identificator)
+			{
+				$_first_row = 2;
+				$i = 0;
+				foreach($identificator as $key => $value)
+				{
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, 1, $key);
+					$i++;
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, 1, $value);
+					$i++;
+				}
+			}
+			else
+			{
+				$_first_row = 1;
+			}
 			$count_uicols_name=count($name);
 
 			$text_format = array();
@@ -1593,7 +1620,7 @@
 						//$objPHPExcel->getActiveSheet()->getStyle('B3:B7')->applyFromArray($styleArray);
 
 					}
-					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($m, 1, $descr[$k]);
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($m, $_first_row, $descr[$k]);
 					$m++;
 				}
 			}
@@ -1615,7 +1642,7 @@
 					$j++;
 				}
 
-				$line = 1;
+				$line = $_first_row;
 				$col = 'A';
 
 				foreach($content as $row)
@@ -1713,15 +1740,35 @@
 		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		 * @param array $input_type array containing information whether fields are to be suppressed from the output
 		 */
-		function csv_out($list, $name, $descr, $input_type = array() )
+		function csv_out($list, $name, $descr, $input_type = array(), $identificator=array(),$filename = '')
 		{
-			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv';
+			if($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ','_',basename($filename)));
+				$filename = $filename_arr[0].'.csv';
+			}
+			else
+			{
+				$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv';
+			}
+
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/csv');
 
 			if ( !$fp = fopen('php://output','w') )
 			{
 				die('Unable to write to "php://output" - pleace notify the Administrator');
+			}
+
+			if($identificator)
+			{
+				$_identificator = array();
+				foreach($identificator as $key => $value)
+				{
+					$_identificator[] =  $key;
+					$_identificator[] =  $value;
+				}
+				fputcsv($fp, $_identificator, ';');
 			}
 
 			$count_uicols_name=count($name);
@@ -1763,9 +1810,18 @@
 		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		 * @param array $input_type array containing information whether fields are to be suppressed from the output
 		 */
-		function ods_out($list, $name, $descr, $input_type = array() )
+		function ods_out($list, $name, $descr, $input_type = array(), $identificator=array(),$filename = '')
 		{
-			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.ods';
+			if($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ','_',basename($filename)));
+				$filename = $filename_arr[0].'.ods';
+			}
+			else
+			{
+				$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.ods';
+			}
+
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/ods');
 
@@ -1774,12 +1830,29 @@
 			$ods = createObject('property.ods');
 			$object = $ods->newOds(); //create a new ods file
 
+			if($identificator)
+			{
+				$_first_row = 1;
+				$i = 0;
+				foreach($identificator as $key => $value)
+				{
+					$object->addCell(1, 0, $i, $key, 'string');
+					$i++;
+					$object->addCell(1, 0, $i, $value, 'string');
+					$i++;
+				}
+			}
+			else
+			{
+				$_first_row = 0;
+			}
+
 			$m=0;
 			for ($k=0;$k<$count_uicols_name;$k++)
 			{
 				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 				{
-					$object->addCell(1, 0, $m, $descr[$k], 'string');
+					$object->addCell(1, $_first_row, $m, $descr[$k], 'string');
 					$m++;
 				}
 			}
@@ -1801,14 +1874,14 @@
 					$j++;
 				}
 
-				$line = 0;
+				$line = $_first_row +1;
 				foreach($content as $row)
 				{
-					$line++;
 					for ($i=0; $i<count($row); $i++)
 					{
 						$object->addCell(1, $line, $i, $row[$i], 'string');
 					}
+					$line++;
 				}
 			}
 

@@ -26,6 +26,7 @@
 		protected $fields = array();
 		protected $table;
 		protected $debug;
+		protected $identificator;
 
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
@@ -90,6 +91,7 @@
 			$this->download_template_button_label = 'Download template';
 
 			$check_method = 0;
+			$get_identificator = false;
 			if($this->conv_type = phpgw::get_var('conv_type'))
 			{
 				$check_method ++;
@@ -97,11 +99,13 @@
 			if ($location_id = phpgw::get_var('location_id', 'int'))
 			{
 				$check_method ++;
+				$get_identificator = true;
 			}
 				
 			if($table = phpgw::get_var('table'))
 			{
 				$check_method ++;
+				$get_identificator = true;
 			}
 
 			if($check_method > 1)
@@ -190,12 +194,12 @@
 						case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 						case 'application/vnd.oasis.opendocument.spreadsheet':
 						case 'application/vnd.ms-excel':
-							$this->csvdata = $this->getexceldata($file['name']);
+							$this->csvdata = $this->getexceldata($file['name'],$get_identificator);
 							$valid_type = true;
 							break;
 						case 'text/csv':
 						case 'text/comma-separated-values':
-							$this->csvdata = $this->getcsvdata($file['name']);
+							$this->csvdata = $this->getcsvdata($file['name'],$get_identificator);
 							$valid_type = true;
 							break;
 						default:
@@ -389,6 +393,7 @@ HTML;
 
 		protected function get_template($location_id = 0)
 		{
+			$_identificator = array();
 			$data = array();
 			$_fields = array();
 			if(!$location_id && $this->table)
@@ -422,6 +427,14 @@ HTML;
 			}
 			else if($location_id)
 			{
+				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$_identificator = array
+				(
+					'identificator' => "location::{$system_location['appname']}::{$system_location['location']}"
+				);
+				
+				$filename = "fm_entity_{$category['entity_id']}_{$category['id']}";
+
 				$entity_id = $category['entity_id'];
 				$cat_id = $category['id'];
 
@@ -490,8 +503,39 @@ HTML;
 					}
 				}
 			}
+			if(!$_identificator && $this->table)
+			{
+				$_identificator = array
+				(
+					'identificator' => "table::{$this->table}"
+				);
+				$filename = $this->table;
 
-			$fields = array_keys($_fields);
+			}
+			else if(!$_identificator && $this->conv_type)
+			{
+				$_identificator = array
+				(
+					'identificator' => "conversion::{$this->conv_type}"
+				);
+
+				if ( preg_match('/\.\./', $this->conv_type) )
+				{
+						throw new Exception("Not a valid file: {$this->conv_type}");
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$this->conv_type}";
+
+				if ( is_file($file) )
+				{
+					require_once $file;
+				}
+				$_import_conversion = new import_conversion(0,false,true);
+				$fields = $_import_conversion->fields;
+				$filename = $_import_conversion->filename_template;
+			}
+
+			$fields = $fields ? $fields : array_keys($_fields);
 
 			if(phpgw::get_var('debug', 'bool'))
 			{
@@ -500,13 +544,46 @@ HTML;
 			else
 			{
 				$bocommon = CreateObject('property.bocommon');
-				$bocommon->download($data, $fields, $fields);
+				$bocommon->download($data, $fields, $fields,array(),$_identificator,$filename);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 		}
 
 		protected function import_data()
 		{
+			if(!$this->identificator)
+			{
+				throw new Exception("Missing identificator in dataset");
+			}
+			$identificator_arr = explode("::", $this->identificator);
+			switch($identificator_arr[0])
+			{
+				case 'location':
+					if(!$GLOBALS['phpgw']->locations->get_id($identificator_arr[1], $identificator_arr[2]))
+					{
+						throw new Exception("No valid location: {$identificator_arr[2]}");
+					}
+					break;
+				case 'table':
+					if($this->table && $identificator_arr[1] != $this->table)
+					{
+						throw new Exception("Not the intended target? got: {$identificator_arr[1]} , expected: {$this->table}");
+					}
+					break;
+				case 'conversion':
+					if($this->conv_type && $identificator_arr[1] != $this->conv_type)
+					{
+						throw new Exception("Not the intended target? got: {$identificator_arr[1]} , expected: {$this->conv_type}");
+					}
+					break;
+				default:
+					throw new Exception("No valid location");
+
+			}
+			_debug_array($this->csvdata);
+_debug_array($this->fields);
+			_debug_array($this->identificator);die();
+
 			$metadata = array();
 			if($this->table && $this->fields)
 			{
@@ -598,16 +675,19 @@ HTML;
 		}
 
 
-		protected function getcsvdata($path, $skipfirstline = true)
+		protected function getcsvdata($path, $get_identificator = true)
 		{
 			// Open the csv file
 			$handle = fopen($path, "r");
 
-			if ($skipfirstline)
+			if($get_identificator)
 			{
-				// Read the first line to get the headers out of the way
-				$this->fields = $this->getcsv($handle);
+				$_identificator_arr = $this->getcsv($handle);
+				$this->identificator = $_identificator_arr[1];
 			}
+
+			// Read the first line to get the headers out of the way
+			$this->fields = $this->getcsv($handle);
 
 			$result = array();
 
@@ -625,7 +705,7 @@ HTML;
 		}
 
 
-		protected function getexceldata($path, $skipfirstline = true)
+		protected function getexceldata($path, $get_identificator = false)
 		{
 			phpgw::import_class('phpgwapi.phpexcel');
 
@@ -640,9 +720,17 @@ HTML;
 
 			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 
-			$start = $skipfirstline ? 2 : 1; // Read the first line to get the headers out of the way
+			$start = $get_identificator ? 3 : 1; // Read the first line to get the headers out of the way
 
-			if ($skipfirstline)
+			if($get_identificator)
+			{
+				$this->identificator = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow(1,1)->getCalculatedValue();
+				for ($j=0; $j < $highestColumnIndex; $j++ )
+				{
+					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,2)->getCalculatedValue();
+				}
+			}
+			else
 			{
 				for ($j=0; $j < $highestColumnIndex; $j++ )
 				{
