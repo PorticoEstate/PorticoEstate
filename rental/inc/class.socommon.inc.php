@@ -14,6 +14,37 @@ abstract class rental_socommon
 		$this->left_join	= & $this->db->left_join;
 	}
 	
+		/**
+		* Begin transaction
+		*
+		* @return integer|boolean current transaction id
+		*/
+		public function transaction_begin()
+		{
+			return $this->db->transaction_begin();
+		}
+
+		/**
+		* Complete the transaction
+		*
+		* @return boolean True if sucessful, False if fails
+		*/ 
+		public function transaction_commit()
+		{
+			return $this->db->transaction_commit();
+		}
+
+		/**
+		* Rollback the current transaction
+		*
+		* @return boolean True if sucessful, False if fails
+		*/
+		public function transaction_abort()
+		{
+			return $this->db->transaction_abort();
+		}
+
+
 	/**
 	 * Marshal values according to type
 	 * @param $value the value
