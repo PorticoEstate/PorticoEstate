@@ -21,6 +21,7 @@
 		protected $csvdata;
 		protected $account;
 		protected $conv_type;
+		protected $location_id;
 		protected $import_conversion;
 		protected $steps = 0;
 		protected $fields = array();
@@ -95,8 +96,9 @@
 			if($this->conv_type = phpgw::get_var('conv_type'))
 			{
 				$check_method ++;
+				$get_identificator = true;
 			}
-			if ($location_id = phpgw::get_var('location_id', 'int'))
+			if ($this->location_id = phpgw::get_var('location_id', 'int'))
 			{
 				$check_method ++;
 				$get_identificator = true;
@@ -121,7 +123,7 @@
 			
 			if($download_template)
 			{
-				$this->get_template($location_id);
+				$this->get_template($this->location_id);
 			}
 			
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
@@ -160,7 +162,7 @@
 
 
 				$this->debug = phpgw::get_var('debug', 'bool');
-				$this->import_conversion = new import_conversion($location_id,$this->debug);
+				$this->import_conversion = new import_conversion($this->location_id,$this->debug);
 
 				// Get the path for user input or use a default path
 
@@ -559,19 +561,31 @@ HTML;
 			switch($identificator_arr[0])
 			{
 				case 'location':
-					if(!$GLOBALS['phpgw']->locations->get_id($identificator_arr[1], $identificator_arr[2]))
+					if(!$this->location_id)
 					{
-						throw new Exception("No valid location: {$identificator_arr[2]}");
+						throw new Exception("No valid location selected for : {$identificator_arr[2]}");
+					}
+					else if($GLOBALS['phpgw']->locations->get_id($identificator_arr[1], $identificator_arr[2]) != $this->location_id)
+					{
+						throw new Exception("No valid location selected for : {$identificator_arr[2]}");
 					}
 					break;
 				case 'table':
-					if($this->table && $identificator_arr[1] != $this->table)
+					if(!$this->table)
+					{
+						throw new Exception("Table not selected");
+					}
+					else if($identificator_arr[1] != $this->table)
 					{
 						throw new Exception("Not the intended target? got: {$identificator_arr[1]} , expected: {$this->table}");
 					}
 					break;
 				case 'conversion':
-					if($this->conv_type && $identificator_arr[1] != $this->conv_type)
+					if(!$this->conv_type)
+					{
+						throw new Exception("Conversion not selected");
+					}
+					else if($identificator_arr[1] != $this->conv_type)
 					{
 						throw new Exception("Not the intended target? got: {$identificator_arr[1]} , expected: {$this->conv_type}");
 					}
@@ -580,9 +594,6 @@ HTML;
 					throw new Exception("No valid location");
 
 			}
-			_debug_array($this->csvdata);
-_debug_array($this->fields);
-			_debug_array($this->identificator);die();
 
 			$metadata = array();
 			if($this->table && $this->fields)
@@ -683,7 +694,7 @@ _debug_array($this->fields);
 			if($get_identificator)
 			{
 				$_identificator_arr = $this->getcsv($handle);
-				$this->identificator = $_identificator_arr[1];
+				$this->identificator = $_identificator_arr[0];
 			}
 
 			// Read the first line to get the headers out of the way
@@ -724,7 +735,7 @@ _debug_array($this->fields);
 
 			if($get_identificator)
 			{
-				$this->identificator = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow(1,1)->getCalculatedValue();
+				$this->identificator = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow(0,1)->getCalculatedValue();
 				for ($j=0; $j < $highestColumnIndex; $j++ )
 				{
 					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,2)->getCalculatedValue();
