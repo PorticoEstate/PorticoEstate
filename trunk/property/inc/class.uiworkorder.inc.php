@@ -88,6 +88,7 @@
 			$this->acl_add 				= $this->acl->check('.project', PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check('.project', PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete 			= $this->acl->check('.project', PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage			= $this->acl->check('.project', 16, 'property');
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -1017,20 +1018,23 @@
 
 				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 				{
-					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb']);
-					if(!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
+					if(!$this->acl_manage)
 					{
-						$receipt['error'][]=array('msg'=>lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
-						$error_id=true;
-					}
-
- 					if(isset($values['approved']) && $values['approved'] && (!isset($values['approved_orig']) || ! $values['approved_orig']))
-					{
-						if(!$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
+						$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb']);
+						if(!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
 						{
-							$receipt['error'][]=array('msg'=>lang('you do not have permission to approve this order') );
-							$values['approved'] = false;
+							$receipt['error'][]=array('msg'=>lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
 							$error_id=true;
+						}
+
+						if(isset($values['approved']) && $values['approved'] && (!isset($values['approved_orig']) || ! $values['approved_orig']))
+						{
+							if(!$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
+							{
+								$receipt['error'][]=array('msg'=>lang('you do not have permission to approve this order') );
+								$values['approved'] = false;
+								$error_id=true;
+							}
 						}
 					}
 				}
