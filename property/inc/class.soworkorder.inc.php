@@ -1875,16 +1875,15 @@
 				$this->db->next_record();
 				$current_paid_period = (int) $this->db->f('periode');
 
-				/*
+/*
 				  //FIXME total payment - if needed;
 				  $sql = "SELECT sum(amount) AS actual_cost FROM  fm_orders_paid_or_pending_view"
-				  . " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00';
+				  . " WHERE order_id = '{$order_id}'  AND (periode IS NULL OR periode > " . date('Y') . '00)';
 
 				  $this->db->query($sql,__LINE__,__FILE__);
 				  $this->db->next_record();
-				  $_actual_cost = $this->db->f('actual_cost');
-				  //_debug_array($_actual_cost);die();
-				 */
+				  $_actual_cost_current_year = $this->db->f('actual_cost');
+*/
 				foreach($_order_budget as $_period => $_budget)
 				{
 					if($_period == "{$_budget['year']}00" && $_budget['year'] == date('Y'))
@@ -1927,7 +1926,7 @@
 							$closed_period[$period]					 = 0;//(int)$period < date('Ym');
 						}
 
-						$_start_month_remainig	 = $_current_month < 12 ? $_current_month + 1 : 0;
+						$_start_month_remainig	 = $_current_month < 12 ? $_current_month : 0;
 						$_start_year_remainig	 = $_budget['year'];
 						$_start_period_remainig	 = array();
 
@@ -1971,20 +1970,21 @@
 					$closed_period[$period] = (int) $this->db->f('closed');
 				}
 			}
-
-			$sql						 = "SELECT periode, amount AS actual_cost, periodization, periodization_start"
+			//_debug_array($_start_period_remainig);
+			$sql = "SELECT periode, amount AS actual_cost, periodization, periodization_start"
 			. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 			. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
-//_debug_array($sql);die();
 			$this->db->query($sql, __LINE__, __FILE__);
 			$orders_paid_or_pending		 = array();
 			$orders_paid_or_pending_temp = array();
 
 			while($this->db->next_record())
 			{
+				$periode = $this->db->f('periode');
+
 				$orders_paid_or_pending_temp[] = array
 				(
-					'periode'				 => $this->db->f('periode'),
+					'periode'				 => $periode ? $periode : date('Ym'),
 					'actual_cost'			 => $this->db->f('actual_cost'),
 					'periodization'			 => (int) $this->db->f('periodization'),
 					'periodization_start'	 => $this->db->f('periodization_start'),
@@ -2075,7 +2075,7 @@
 
 				if($_start_month_remainig && $year == $_start_year_remainig)
 				{
-					if(!in_array($periode, $_start_period_remainig))
+					if(in_array($periode, $_start_period_remainig))
 					{
 						$_temp_obligation = $order_budget[$periode]['combined_cost'] - $_orders_paid_or_pending['actual_cost'];
 						//FIXME
@@ -2134,12 +2134,49 @@
 			$_delay_period_sum	 = 0;
 			$_delay_period		 = false;
 
+			/**
+			 * Move the distribution of ficivous calkulated cost to preserve the total obligation
+			 */
+			$distribution_key_remaining_period = array();
+			$distribution_key_delayed_period = array();
 			foreach($order_budget as $period => $_budget)
 			{
 
 				if(isset($_start_period_remainig) && in_array($period, $_start_period_remainig))
 				{
-					$_budget['combined_cost'] += $_sum_year_remaining_cost * $distribution_key_remaining;
+					if(abs($_budget['actual_cost']) > 0)
+					{
+						$distribution_key_remaining_period[$period] = 0;
+						$distribution_key_delayed_period[$period] = $distribution_key_remaining;
+
+					}
+					else
+					{
+						$distribution_key_remaining_period[$period] = $distribution_key_remaining;
+					}
+				}
+			}
+
+			$distribution_key_delayed_sum = array_sum($distribution_key_delayed_period);
+			$num_distribution_key_correction = count($distribution_key_remaining_period) - count($distribution_key_delayed_period);
+			unset($period);
+			unset($_budget);
+			foreach($distribution_key_remaining_period as $period => &$value)
+			{
+				if($value)
+				{
+					$value += $distribution_key_delayed_sum/$num_distribution_key_correction;
+				}
+			}
+			unset($period);
+			unset($value);
+
+			foreach($order_budget as $period => $_budget)
+			{
+
+				if(isset($_start_period_remainig) && in_array($period, $_start_period_remainig))
+				{
+					$_budget['combined_cost'] += $_sum_year_remaining_cost * $distribution_key_remaining_period[$period];
 				}
 
 				$_sum_orders		 = 0;

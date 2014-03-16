@@ -134,6 +134,7 @@
 			if( $this->bo->reassign_order($line_id, $order_id))
 			{
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
+				phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
 
 				$result =  array
 				(
