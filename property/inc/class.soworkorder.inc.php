@@ -1784,7 +1784,7 @@
 			}
 			$continuous = false;
 
-			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
+//			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
 
 			if($cached_info)
 			{
@@ -1977,20 +1977,33 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$orders_paid_or_pending		 = array();
 			$orders_paid_or_pending_temp = array();
-
+//	_debug_array($sql);die();
 			while($this->db->next_record())
 			{
-				$periode = $this->db->f('periode');
+				$_periode	= $this->db->f('periode');
+				$periode	= $_periode ? $_periode : 'dummy';
 
-				$orders_paid_or_pending_temp[] = array
-				(
-					'periode'				 => $periode ? $periode : date('Ym'),
-					'actual_cost'			 => $this->db->f('actual_cost'),
-					'periodization'			 => (int) $this->db->f('periodization'),
-					'periodization_start'	 => $this->db->f('periodization_start'),
-				);
+				//strange...
+				if($periode == 'dummy')
+				{
+					$orders_paid_or_pending_temp[date('Ym')]['actual_cost'] += $this->db->f('actual_cost');
+					$orders_paid_or_pending_temp[date('Ym')]['periode'] = date('Ym');
+					$orders_paid_or_pending_temp[date('Ym')]['periodization'] = $this->db->f('periodization');
+					$orders_paid_or_pending_temp[date('Ym')]['periodization_start'] = $this->db->f('periodization_start');
+				}
+				else
+				{
+					$orders_paid_or_pending_temp[$periode] = array
+					(
+						'periode'				 => $periode,
+						'periodization'			 => (int) $this->db->f('periodization'),
+						'periodization_start'	 => $this->db->f('periodization_start'),
+					);
+					$orders_paid_or_pending_temp[$periode]['actual_cost'] += $this->db->f('actual_cost');
+
+				}
 			}
-
+//	_debug_array($orders_paid_or_pending_temp);die();
 			foreach($orders_paid_or_pending_temp as $entry)
 			{
 				if($entry['periodization'])
