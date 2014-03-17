@@ -204,9 +204,11 @@
 					$purpose_txt = str_replace("&nbsp;", " ", $purpose_txt);
 					$reference_txt = phpgw::get_var('reference','html');
 					$reference_txt = str_replace("&nbsp;", " ", $reference_txt);
+                    $responsibility_txt = phpgw::get_var('responsibility','html');
+					$responsibility_txt = str_replace("&nbsp;", " ", $responsibility_txt);
 					$procedure->set_title(phpgw::get_var('title'));
 					$procedure->set_purpose($purpose_txt);
-					$procedure->set_responsibility(phpgw::get_var('responsibility'));
+					$procedure->set_responsibility($responsibility_txt);
 					$procedure->set_description($description_txt);
 					$procedure->set_reference($reference_txt);
 					$procedure->set_attachment(phpgw::get_var('attachment'));
