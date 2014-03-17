@@ -495,8 +495,7 @@
                 
                 $GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
                 
-                self::render_template_xsl(array('procedure/procedure_tabs', 
-                								'common', 
+                self::render_template_xsl(array('procedure/procedure_tabs',
                 								'procedure/procedure_documents'), $data);
             }
         }

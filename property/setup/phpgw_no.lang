@@ -1123,6 +1123,7 @@ new_ticket	common	no	Ny melding
 new value	property	no	Ny verdi
 new value for multiple choice	property	no	Ny verdi for fler-valg
 new values	property	no	Nye verdier
+new record	property	no	Ny Post
 next run	property	no	Neste kjøring
 no access	property	no	Ingen tilgang
 no account	property	no	Ingen konto
@@ -1464,6 +1465,7 @@ save the voucher	property	no	lagre bilag
 save the workorder	property	no	lagre bestilling
 save this workorder as a template for later use	property	no	lagre denne bestillingen som mal for senere bruk
 save values and exit	property	no	Lagre verdier og gå til liste
+save new	property	no	Lagre og Ny
 scale	property	no	Scale
 schedule	property	no	planlegge (tid)
 scheduled events	property	no	Planlagte oppgaver

@@ -275,11 +275,22 @@
 				<dl class="proplist-col">
 					<dt>
 						<label>
-							<a href="javascript:show_related_requests()">
+							<a href="javascript:show_related_requests();">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'details')"/>
 								</xsl:attribute>
 								<xsl:value-of select="php:function('lang', 'details')"/>
+							</a>
+						</label>
+					</dt>
+					<dt>
+						<label>
+							<xsl:variable name="lang_new_request"><xsl:value-of select="php:function('lang', 'new record')" /></xsl:variable>
+							<a href="javascript:document.load_new_request_form.submit();">
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_new_request"/>
+								</xsl:attribute>
+								<xsl:value-of select="$lang_new_request"/>
 							</a>
 						</label>
 					</dt>
@@ -359,13 +370,28 @@
 
 		<xsl:variable name="edit_params">
 			<xsl:text>menuaction:property.uicondition_survey.edit, id:</xsl:text>
-				<xsl:value-of select="survey/id" />
-			</xsl:variable>
+			<xsl:value-of select="survey/id" />
+		</xsl:variable>
 		<xsl:variable name="edit_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $edit_params )" />
 		</xsl:variable>
 
 		<form name="load_edit_form" id="load_edit_form" action="{$edit_url}" method="post">
+		</form>
+
+
+		<xsl:variable name="new_request_params">
+			<xsl:text>menuaction:property.uirequest.edit, location_code:</xsl:text>
+			<xsl:value-of select="survey/location_code" />
+			<xsl:text>,origin:.project.condition_survey, origin_id:</xsl:text>
+			<xsl:value-of select="survey/id" />
+		</xsl:variable>
+
+		<xsl:variable name="new_request_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $new_request_params )" />
+		</xsl:variable>
+
+		<form name="load_new_request_form" id="load_new_request_form" action="{$new_request_url}" method="post">
 		</form>
 
 	</xsl:template>
