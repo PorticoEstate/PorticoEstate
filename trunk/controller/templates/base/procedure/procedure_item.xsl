@@ -94,7 +94,7 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<textarea id="purpose" name="purpose" rows="5" cols="60"><xsl:value-of select="procedure/purpose" disable-output-escaping="yes"/></textarea>
+							<textarea id="purpose" name="purpose" rows="5" cols="60" style="width: 690px;"><xsl:value-of select="procedure/purpose" disable-output-escaping="yes"/></textarea>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="procedure/purpose" disable-output-escaping="yes"/>
@@ -110,7 +110,7 @@
 							<textarea id="responsibility" name="responsibility" rows="5" cols="60"><xsl:value-of select="procedure/responsibility" /></textarea>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="procedure/responsibility" />
+							<xsl:value-of select="procedure/responsibility" disable-output-escaping="yes"/>
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
