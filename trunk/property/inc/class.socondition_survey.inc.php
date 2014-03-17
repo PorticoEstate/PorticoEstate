@@ -249,8 +249,6 @@
 			$this->_db->transaction_begin();
 			try
 			{
-				$sql = "UPDATE {$table} SET $value_set WHERE id= {$id}";
-
 				$this->_db->Exception_On_Error = true;
 
 				if($old_coordinator_id != $value_set['coordinator_id'])
