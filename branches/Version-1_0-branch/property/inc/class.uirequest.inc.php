@@ -1182,7 +1182,7 @@
 
 //			_debug_array($values);die();
 
-			if ($values['save'] && $mode == 'edit')
+			if (($values['save'] || $values['save_new']) && $mode == 'edit')
 			{
 				if(!$values['location'])
 				{
@@ -1371,6 +1371,22 @@
 						$values['p'][$values['extra']['p_entity_id']]['p_cat_id']=$values['extra']['p_cat_id'];
 						$values['p'][$values['extra']['p_entity_id']]['p_cat_name']=phpgw::get_var('entity_cat_name_'.$values['extra']['p_entity_id'], 'string', 'POST');
 					}
+				}
+
+				if(isset($values['save_new']) && $values['save_new'] && !$receipt['error'])
+				{
+					$values	= $this->bo->read_single($id);
+					$GLOBALS['phpgw']->redirect_link('/index.php',array
+						(
+							'menuaction'	=> 'property.uirequest.edit',
+							'location_code' => $values['location_code'],
+							'p_entity_id'	=> $values['p_entity_id'],
+							'p_cat_id'		=> $values['p_cat_id'],
+							'p_num'			=> $values['p_num'],
+							'origin'		=> isset($values['origin'][0]) ? $values['origin'][0]['location'] : '',
+							'origin_id'		=>  isset($values['origin'][0]) ? $values['origin'][0]['data'][0]['id'] : ''
+						)
+					);
 				}
 			}
 
@@ -1723,8 +1739,6 @@
 			//		'location_type'						=> 'form2',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
-					'lang_save'							=> lang('save'),
-					'lang_done'							=> lang('done'),
 
 					'lang_request_id'					=> lang('request ID condition'),
 					'value_request_id'					=> $id,
