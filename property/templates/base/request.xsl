@@ -46,7 +46,7 @@
 					<tr height="50">
 						<td>
 							<xsl:variable name="lang_save">
-								<xsl:value-of select="lang_save"/>
+								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:variable>
 							<input type="submit" name="values[update]" value="{$lang_save}">
 							</input>
@@ -677,11 +677,21 @@
 							<xsl:when test="mode = 'edit'">
 								<td style="padding-right: 5px;">
 									<xsl:variable name="lang_save">
-										<xsl:value-of select="lang_save"/>
+										<xsl:value-of select="php:function('lang', 'save')"/>
 									</xsl:variable>
 									<input type="submit" name="values[save]" value="{$lang_save}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_save_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<xsl:variable name="lang_save_new">
+										<xsl:value-of select="php:function('lang', 'save new')"/>
+									</xsl:variable>
+									<input type="submit" name="values[save_new]" value="{$lang_save_new}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_save_new"/>
 										</xsl:attribute>
 									</input>
 								</td>
@@ -692,7 +702,7 @@
 								<xsl:value-of select="done_action"/>
 							</xsl:variable>
 							<xsl:variable name="lang_done">
-								<xsl:value-of select="lang_done"/>
+								<xsl:value-of select="php:function('lang', 'done')"/>
 							</xsl:variable>
 							<input type="button" name="done" value="{$lang_done}" onclick="location.href='{$done_action}'">
 								<xsl:attribute name="title">
