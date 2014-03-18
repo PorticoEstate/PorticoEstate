@@ -529,6 +529,11 @@
 			return $receipt;
 		}
 
+		/**
+		 * Abort transaction and log to database
+		 * @param integer $batchid
+		 * @param string $error_desr
+		 */
 		protected function errorhandler($batchid,$error_desr)
 		{
 			if($this->db->get_transaction())
@@ -536,15 +541,21 @@
 				$this->db->transaction_abort();
 			}
 
-			$meld = $error_desr;
-
 			//Vis feilmelding
-			echo $meld;
+			echo $error_desr;
 
 			//Lagre feilmelding
 			$this->log_error($batchid,$error_desr);
 		}
 
+		/**
+		 * RullTilbake er initiert fra import-filteret
+		 * @param string $Filnavn
+		 * @param string $date
+		 * @param integer $rollback_voucher
+		 * @param integer $rollback_internal_voucher
+		 * @return array Receipt
+		 */
 		public function RullTilbake($Filnavn, $date,$rollback_voucher,$rollback_internal_voucher)
 		{
 			$voucher = $this->select_invoice_rollback($date, $Filnavn,$rollback_voucher,$rollback_internal_voucher);
@@ -637,7 +648,6 @@
 			if(!$ref)
 			{
 				throw new Exception('Agresso_X114::LagFilnavn() Mangler SCANNINGNO' );
-		//		throw new Exception('Agresso_X114::LagFilnavn() Mangler KEY' );
 			}
 			$fil_katalog = $this->config->config_data['export']['path'];
 
@@ -703,11 +713,11 @@
 
 			$antall = count($oRsBilag);
 
-			if ( $this->db->get_transaction() )
-			{
-				$this->global_lock = true;
-			}
-			else
+//			if ( $this->db->get_transaction() )
+//			{
+//				$this->global_lock = true;
+//			}
+//			else
 			{
 				$this->db->transaction_begin();
 			}
@@ -1012,7 +1022,7 @@
 			 
 				if($skip_agresso)
 				{
-					if ( !$this->global_lock )
+//					if ( !$this->global_lock )
 					{
 						$this->db->transaction_commit();
 					}
@@ -1043,7 +1053,7 @@
 				{
 					$this->soXport->update_actual_cost_from_archive($this->orders_affected);
 
-					if ( !$this->global_lock )
+//					if ( !$this->global_lock )
 					{
 						$this->db->transaction_commit();
 					}
