@@ -578,14 +578,14 @@
 					$receipt['error'][] = array('msg' => lang('No conversion type could be located.') . ' - ' . lang('Please choose a conversion type from the list'));
 				}
 
-				if(!$values['file'] && !$values['voucher_id'])
+				if(!$values['file'] && !$values['voucher_id'] && !$values['voucher_id_intern'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please choose a file or a voucher'));
 				}
 
 				if(!$receipt['error'])
 				{
-					$receipt = $this->bo->rollback($values['conv_type'], $values['file'], $date, $values['voucher_id']);
+					$receipt = $this->bo->rollback($values['conv_type'], $values['file'], $date, $values['voucher_id'],$values['voucher_id_intern']);
 				}
 			}
 			else
