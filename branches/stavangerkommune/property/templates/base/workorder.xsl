@@ -420,6 +420,9 @@
 																	<xsl:value-of select="//lang_ask_approval_statustext"/>
 																</xsl:attribute>
 															</input>
+															<xsl:if test="default = '1'">
+																<xsl:text>&lt;=</xsl:text>
+															</xsl:if>
 														</td>
 													</tr>
 												</xsl:for-each>
@@ -576,6 +579,31 @@
 											<xsl:value-of select="$lang_continuous"/>
 										</xsl:attribute>
 										<xsl:if test="value_continuous = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+										<xsl:if test="mode != 'edit'">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<xsl:variable name="lang_fictive_periodization">
+									<xsl:value-of select="php:function('lang', 'fictive periodization')"/>
+								</xsl:variable>
+								<td valign="top">
+									<xsl:value-of select="$lang_fictive_periodization"/>
+								</td>
+								<td>
+									<input type="checkbox" name="values[fictive_periodization]" value="1">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_fictive_periodization"/>
+										</xsl:attribute>
+										<xsl:if test="value_fictive_periodization = '1'">
 											<xsl:attribute name="checked">
 												<xsl:text>checked</xsl:text>
 											</xsl:attribute>

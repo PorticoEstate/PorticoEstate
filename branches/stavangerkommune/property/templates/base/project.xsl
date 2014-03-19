@@ -293,7 +293,10 @@ Returns mixed
 								<xsl:value-of select="//lang_ask_approval_statustext"/>
 							    </xsl:attribute>
 							</input>
-						    </td>
+							<xsl:if test="default = '1'">
+								<xsl:text>&lt;=</xsl:text>
+							</xsl:if>
+							</td>
 						</tr>
 					    </xsl:for-each>
 					</table>

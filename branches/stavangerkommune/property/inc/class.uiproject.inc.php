@@ -1686,12 +1686,29 @@
 				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 				{
 					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
-					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
-					$supervisor_email[] = array
-					(
-						'id'	  => $supervisor_id,
-						'address' => $prefs['email'],
+
+					$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
+							(
+								'dimb_id'			=> $values['ecodimb'],
+								'role_id'			=> 2,
+								'query_start'		=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+								'get_netto_list'	=> true
+							)
 					);
+					if( isset($sodimb_role_users[$values['ecodimb']][2]) && is_array($sodimb_role_users[$values['ecodimb']][2]))
+					{
+						foreach($sodimb_role_users[$values['ecodimb']][2] as $supervisor_id => $entry)
+						{
+							$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
+							$supervisor_email[] = array
+							(
+								'id'	  => $supervisor_id,
+								'address' => $prefs['email'],
+								'default' 	=> $entry['default_user'],
+							);
+
+						}
+					}
 
 					$supervisor2_id = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
 					$prefs2 = $this->bocommon->create_preferences('property', $supervisor2_id);
@@ -1700,7 +1717,7 @@
 						'id'	  => $supervisor2_id,
 						'address' => $prefs2['email'],
 					);
-					$supervisor_email = array_reverse($supervisor_email);
+//					$supervisor_email = array_reverse($supervisor_email);
 					unset($prefs);
 					unset($prefs2);
 					unset($invoice);

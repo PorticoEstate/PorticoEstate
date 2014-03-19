@@ -62,12 +62,19 @@
 		           </option>
 		        </select>
 			</dd>
+
             <dt><label for="field_extra_schedule_ids"><xsl:value-of select="php:function('lang', 'Ids that should be included in the calendar')"/></label></dt>
 			<dd>
 				<input id="field_extra_schedule_ids" type="text" name="config_data[extra_schedule_ids]">
 					<xsl:attribute name="value"><xsl:value-of select="config_data/extra_schedule_ids"/></xsl:attribute>
 				</input>
 			</dd>
+           <dt class="heading"><xsl:value-of select="php:function('lang', 'Email warnings')"/></dt>
+           <dt><label for="field_cancelation_email_addresses"><xsl:value-of select="php:function('lang', 'Cancelation Email Addresses')" /></label></dt>
+           <dd>
+               <textarea id="field_emails" class="full-width" name="config_data[emails]"><xsl:value-of select="config_data/emails"/></textarea>
+           </dd>
+
    		<dt class="heading"><xsl:value-of select="php:function('lang', 'Billing sequence numbers')"/></dt>
 			<dd>
 				<xsl:value-of select="php:function('lang', 'Do not change these values unless you know what they are.')"/>
@@ -78,14 +85,8 @@
 					<xsl:attribute name="value"><xsl:value-of select="billing/internal"/></xsl:attribute>
 				</input>
 			</dd>
+       </dl>
 
-			<dt><label for="field_external_billing_sequence_number"><xsl:value-of select="php:function('lang', 'Current external billing sequence number')" /></label></dt>
-			<dd>
-				<input type="number" name="billing[external]">
-					<xsl:attribute name="value"><xsl:value-of select="billing/external"/></xsl:attribute>
-				</input>
-			</dd>
-		</dl>
 		<div class="form-buttons">
 			<input type="submit">
 			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')"/></xsl:attribute>
