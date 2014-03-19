@@ -294,11 +294,11 @@
 			return $buffer;
 		}
 
-		function rollback($conv_type, $role_back_date, $rollback_file, $rollback_voucher)
+		function rollback($conv_type, $role_back_date, $rollback_file, $rollback_voucher, $voucher_id_intern)
 		{
 			include (PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}");
 			$invoice = new export_conv;
-			$buffer	 = $invoice->RullTilbake($role_back_date, $rollback_file, $rollback_voucher);
+			$buffer	 = $invoice->RullTilbake($role_back_date, $rollback_file, $rollback_voucher, $voucher_id_intern);
 			return $buffer;
 		}
 

@@ -1274,7 +1274,7 @@
 							<xsl:variable name="select_conv">
 								<xsl:value-of select="select_conv"/>
 							</xsl:variable>
-							<select name="{$select_conv}" class="forms" onMouseover="window.status='{$lang_conv_statustext}'; return true;" onMouseout="window.status='';return true;">
+							<select name="{$select_conv}" title='{$lang_conv_statustext}'>
 								<option value="">
 									<xsl:value-of select="lang_select_conv"/>
 								</option>
@@ -1309,6 +1309,21 @@
 							<input type="text" id="voucher_id" name="values[voucher_id]" value="">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'voucher')"/>
+									<xsl:text> extern</xsl:text>
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'voucher')"/>
+							<xsl:text> intern</xsl:text>
+						</td>
+						<td valign="top">
+							<input type="text" id="voucher_id_intern" name="values[voucher_id_intern]" value="">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'voucher')"/>
+									<xsl:text> intern</xsl:text>
 								</xsl:attribute>
 							</input>
 						</td>
@@ -1319,10 +1334,8 @@
 						</td>
 						<td>
 							<input type="text" id="date" name="date" size="10" value="{value_date}" readonly="readonly" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_date_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</td>
