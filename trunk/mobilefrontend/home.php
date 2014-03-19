@@ -118,11 +118,14 @@
 	$controller_text = lang('controller');
 	$tts_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'property.uitts.index') );
 	$tts_text = lang('ticket');
+	$condition_survey_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'property.uicondition_survey.index') );
+	$condition_survey_text = $GLOBALS['phpgw']->translation->translate('condition survey', array(), false, 'property');
 	
 	$temp_menu = <<<HTML
 	<div id="home-menu">
 		<a href="{$controller_url}">{$controller_text}</a>
 		<a href="{$tts_url}">{$tts_text}</a>
+		<a href="{$condition_survey_url}">{$condition_survey_text}</a>
 	</div>
 HTML;
 
