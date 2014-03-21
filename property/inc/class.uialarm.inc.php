@@ -51,6 +51,7 @@
 				'list_alarm'=> true,
 				'run'		=> true
 			);
+		private $bo;
 
 		function property_uialarm()
 		{
@@ -97,9 +98,10 @@
 			{
 				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
 			}
-			else if(($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm']))
+			else if( (isset($values['enable_alarm']) && $values['enable_alarm']) || (isset($values['disable_alarm']) && $values['disable_alarm']) && count($values['alarm']))
 			{
-				$receipt = $this->bo->enable_alarm('fm_async',$values['alarm'],$values['enable_alarm']);
+				$_enable_alarm = isset($values['enable_alarm']) && $values['enable_alarm'] ? true : false;
+				$receipt = $this->bo->enable_alarm('fm_async',$values['alarm'],$_enable_alarm);
 			}
 			else if(isset($values['test_cron']) && $values['test_cron'] && isset($values['alarm']) && $values['alarm'])
 			{

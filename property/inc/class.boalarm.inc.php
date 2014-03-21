@@ -186,6 +186,7 @@
 			$alarm['id']	= $id;
 			$alarm['time']	= $jobs[$id]['next'];
 			$alarm['times']	= $jobs[$id]['times'];
+			$alarm['method']= $jobs[$id]['method'];
 
 //			echo "<p>read_alarm('$id')="; print_r($alarm); echo "</p>\n";
 			return $alarm;
@@ -225,7 +226,7 @@
  */
 				$alarm['enabled'] = intval(!$alarm['enabled']);
 
-				if ($this->save_alarm($alarm_type,$alarm['event_id'],$alarm))
+				if ($this->save_alarm($alarm_type,$alarm['event_id'],$alarm,$alarm['method']))
 				{
 					++$enabled;
 				}
@@ -234,12 +235,13 @@
 		}
 
 
-		/*!
-		@function save_alarm
-		@abstract saves a new or updated alarm
-		@syntax save_alarm($cal_id,$alarm,$id=false)
-		@param $cal_id Id of the calendar-entry
-		@param $alarm array with fields: text, owner, enabled, ..
+		/**
+		 * save_alarm
+		 * @param string $alarm_type
+		 * @param string $event_id
+		 * @param array $alarm
+		 * @param string $method
+		 * @return string|boolean
 		 */
 		function save_alarm($alarm_type,$event_id,$alarm,$method='')
 		{
@@ -360,9 +362,6 @@
 			
 			if(isset($event[$id]) && $event[$id] &&  $event[$id]['method'] && $event[$id]['data']['enabled'])
 			{
-				echo "execMethod({$event[$id]['method']},";
-				_debug_array($event[$id]['data']);
-				echo ');';
 				execMethod($event[$id]['method'],$event[$id]['data']);
 			}
 		}
