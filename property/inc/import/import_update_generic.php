@@ -5,7 +5,7 @@
 		public $messages = array();
 		public $warnings = array();
 		public $errors = array();
-		public $debug = true;
+		public $debug = false;
 		protected $is_eav;
 		protected $location_id;
 		protected $bim_type_id = 0;
@@ -14,7 +14,7 @@
 		protected $cat_id;
 		protected $metadata = array();
 
-		public function __construct($location_id)
+		public function __construct($location_id, $debug = false)
 		{
 			$location_id = (int) $location_id;
 			set_time_limit(10000); //Set the time limit for this request
@@ -25,6 +25,11 @@
 			if($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id ))
 			{
 				throw new Exception("Not a valid location for {$location_id}");
+			}
+
+			if($debug)
+			{
+				$this->debug = true;
 			}
 
 			$this->is_eav = !!$category['is_eav'];
