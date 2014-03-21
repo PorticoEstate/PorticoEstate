@@ -190,7 +190,7 @@
 		*/
 		public function copy($from, $to)
 		{
-			$this->touch($to);//creates the document
+			$document_id = $this->touch($to);//creates the document
 
 			$filesize = filesize($from->real_full_path);
 			$content = false;
@@ -200,7 +200,7 @@
 				fclose ($fp);
 			}
 
-			return $this->write($to, $content);
+			return $this->write($to, $content,$document_id);
 
 		}
 
@@ -210,9 +210,12 @@
 		* @param string $content filecontent
 		* @return boolean.  True if copy is ok, False otherwise.
 		*/
-		public function write($to, $content)
+		public function write($to, $content, $fileid = 0)
 		{
-			$fileid = $this->get_file_id($to); //this represent the document
+			if(!$fileid)
+			{
+				$fileid = $this->get_file_id($to); //this represent the document
+			}
 
 			$fileTransferSendChunkedInit = new fileTransferSendChunkedInit();
 			$fileTransferSendChunkedInit->secKey = $this->secKey;
@@ -274,61 +277,71 @@
 			$att1 = new Attribute();
 			$att1->AttribType = 'braArkivDate';
 			$att1->Name = "Saksdato";
-			$att1->Value = array(date('Y-m-d'));
+//			$att1->Value = array(date('Y-m-d'));
+			$att1->Value = date('Y-m-d');
 			$attributter[] = $att1;
 
 			$att2 = new Attribute();
 			$att2->AttribType = 'braArkivString';
 			$att2->Name = "Tiltakstype";
 			$att2->Value = array("Testtittel");
+			$att2->Value = "Tiltakstype";
 			$attributter[] = $att2;
 
 			$att3 = new Attribute();
 			$att3->AttribType = 'braArkivString';
 			$att3->Name = "Tiltaksart";
-			$att3->Value = array("Testtittel");
+//			$att3->Value = array("Testtittel");
+			$att3->Value = 'Tiltaksart';
 			$attributter[] = $att3;
 
 			$att4 = new Attribute();
 			$att4->AttribType = 'braArkivString';
 			$att4->Name = "ASTA_Signatur";
 			$att4->Value = array("1");
+			$att4->Value = "ASTA_Signatur";
 			$attributter[] = $att4;
 
 			$att5 = new Attribute();
 			$att5->AttribType = 'braArkivDate';
 			$att5->Name = "Dokumentdato";
-			$att5->Value = array(date('Y-m-d'));
+//			$att5->Value = array(date('Y-m-d'));
+			$att5->Value = date('Y-m-d');
 			$attributter[] = $att5;
 
 			$att6 = new Attribute();
 			$att6->AttribType = 'braArkivString';
 			$att6->Name = "BrukerID";
-			$att6->Value = array("1");
+//			$att6->Value = array("1");
+			$att6->Value = "BrukerID";
 			$attributter[] = $att6;
 
 			$att7 = new Attribute();
 			$att7->AttribType = 'braArkivString';
 			$att7->Name = "Team";
-			$att7->Value = array("Testtittel");
+//			$att7->Value = array("Testtittel");
+			$att7->Value = "Team";
 			$attributter[] = $att7;
 
 			$att8 = new Attribute();
 			$att8->AttribType = 'braArkivString';
 			$att8->Name = "Sakstype";
-			$att8->Value = array("Testtittel");
+//			$att8->Value = array("Testtittel");
+			$att8->Value = "Sakstype";
 			$attributter[] = $att8;
 
 			$att9 = new Attribute();
 			$att9->AttribType = 'braArkivString';
 			$att9->Name = "Dokumentkategori";
-			$att9->Value = array("Testtittel");
+//			$att9->Value = array("Testtittel");
+			$att9->Value = "Dokumentkategori";
 			$attributter[] = $att9;
 
 			$att10 = new Attribute();
 			$att10->AttribType = 'braArkivString';
 			$att10->Name = "Dokumentstatus";
 			$att10->Value = array("Testtittel");
+			$att10->Value = "Dokumentstatus";
 			$attributter[] = $att10;
 	
 			$document->Attributes = $attributter;
@@ -341,7 +354,7 @@
 	//		_debug_array($createDocument);die();
 
 			$createDocumentResponse = $this->Services->createDocument($createDocument);
-			$document_id =  $createDocumentResponse->createDocumentResult;
+			$document_id =  $createDocumentResponse->createDocumentResult->ID;
 			return $document_id;
 
 		}
