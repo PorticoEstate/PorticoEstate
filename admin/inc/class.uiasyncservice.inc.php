@@ -174,11 +174,15 @@
 			}
 			$async_use['fallback']    = lang('fallback (after each pageview)');
 			$async_use['off'] = lang('disabled (not recomended)');
+
+			$_config_asyncservice = $GLOBALS['phpgw_info']['server']['asyncservice'] == 'cron' && ! isset($async_use['cron']) ? 'off' :  $GLOBALS['phpgw_info']['server']['asyncservice'];
+
 			echo '<p><b>'.lang('Run Asynchronous services').'</b>'.
 				' <select name="asyncservice" onChange="this.form.submit();">';
+
 			foreach ($async_use as $key => $label)
 			{
-				$selected = $key == $GLOBALS['phpgw_info']['server']['asyncservice'] ? ' selected' : ''; 
+				$selected = $key == $_config_asyncservice ? ' selected' : ''; 
 				echo "<option value=\"$key\"$selected>$label</option>\n";
 			}
 			echo "</select></p>\n";
