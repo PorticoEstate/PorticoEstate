@@ -2244,7 +2244,7 @@ JS;
 				$datatable['rowactions']['action'][] = array
 					(
 						'my_name'		=> 'edit',
-						'text'			=> lang('edit'),
+						'text'			=> $paid ? lang('view') : lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'		=> 'property.uiinvoice.edit',
