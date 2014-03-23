@@ -56,7 +56,8 @@
 			'get_single_voucher'				=> true,
 			'get_single_line'					=> true,
 			'update_voucher'					=> true,
-			'get_first_line'					=> true
+			'get_first_line'					=> true,
+			'get_split_template'				=> true
 		);
 
 		function __construct()
@@ -163,6 +164,123 @@
 			}
 		}
 
+		function get_split_template()
+		{
+			$voucher_id	= phpgw::get_var('voucher_id', 'int');
+			$filename = '0000_split';
+			$data = array();
+
+			if($voucher_id)
+			{
+				$filename = "{$voucher_id}_split";
+				$voucher = $this->bo->read_invoice_sub($voucher_id);
+				foreach($voucher as $line)
+				{
+					$data[] = array
+					(
+						'voucher_id'	=> $voucher_id,
+						'order_id'		=> $line['order_id'],
+						'amount'		=> $line['amount'],
+					);
+				}
+			}
+
+			$cols = array
+			(
+				'voucher_id',
+				'order_id',
+				'amount'
+			);
+			$names = array
+			(
+				'BilagsNr',
+				'BestillingsNr',
+				'Beløp'
+			);
+			$bocommon = CreateObject('property.bocommon');
+			$bocommon->download($data, $cols, $names,array(),$_identificator,$filename);
+			$GLOBALS['phpgw']->common->phpgw_exit();
+			
+		}
+
+		function split_voucher($voucher_id)
+		{
+			$error = false;
+
+			$data = array();
+			if(isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
+			{
+				$file = array
+				(
+					'name'	=> $_FILES['file']['tmp_name'],
+					'type'	=> $_FILES['file']['type']
+				);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('Ingen file er valgt', 'error');
+			}
+
+			switch ($file['type'])
+			{
+				case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+				case 'application/vnd.oasis.opendocument.spreadsheet':
+				case 'application/vnd.ms-excel':
+					$data = $this->getexceldata($file['name']);
+					break;
+				case 'text/csv':
+				case 'text/comma-separated-values':
+					$data = $this->getcsvdata($file['name']);
+					break;
+				default:
+					phpgwapi_cache::message_set("Not a valid filetype: {$file['type']}", 'error');
+					$error = true;
+			}
+
+			if($data)
+			{
+				if($data[0][0] != $voucher_id)
+				{
+					phpgwapi_cache::message_set("Feil bilag", 'error');
+					$error = true;
+				}
+				else
+				{
+					try
+					{
+						$line_id = $this->bo->perform_bulk_split($data, $voucher_id);
+
+					}
+					catch (Exception $e)
+					{
+						if($e)
+						{
+							phpgwapi_cache::message_set($e->getMessage(), 'error');
+							$error = true;
+						}
+					}
+				}
+			}
+
+			if(!$error)
+			{
+				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
+			}
+
+			$result =  array
+			(
+				'status'	=> $error ? 'error' : 'updated',
+				'line_id'	=> $line_id
+			);
+
+			if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			{
+				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+				$result['receipt'] = $receipt;
+			}
+			return $result;
+		}
+
 		function update_voucher()
 		{
 			$receipt = array();
@@ -171,6 +289,11 @@
 
 			if($values = phpgw::get_var('values'))
 			{
+
+				if($_FILES)
+				{
+					return $this->split_voucher($voucher_id);
+				}
 
 				if($values['order_id'] != $values['order_id_orig'])
 				{
@@ -829,4 +952,77 @@
 
 			return $voucher_info;
 		}
+
+		protected function getcsvdata($path)
+		{
+			// Open the csv file
+			$handle = fopen($path, "r");
+
+			// Read the first line to get the headers out of the way
+			$this->fields = $this->getcsv($handle);
+
+			$result = array();
+
+			while(($data = $this->getcsv($handle)) !== false)
+			{
+				$result[] = $data;
+			}
+
+			fclose($handle);
+
+			return $result;
+		}
+
+
+		protected function getexceldata($path)
+		{
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$objPHPExcel = PHPExcel_IOFactory::load($path);
+			$objPHPExcel->setActiveSheetIndex(0);
+
+			$result = array();
+
+			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+
+        	$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+
+			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+
+			$start = 2; // Read the first line to get the headers out of the way
+
+			for ($j=0; $j < $highestColumnIndex; $j++ )
+			{
+				$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,1)->getCalculatedValue();
+			}
+
+			$rows = $rows ? $rows +1 : 0;
+			for ($row=$start; $row < $rows; $row++ )
+			{
+				$_result = array();
+
+				for ($j=0; $j < $highestColumnIndex; $j++ )
+				{
+					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,$row)->getCalculatedValue();
+				}
+
+				$result[] = $_result;
+			}
+
+			return $result;
+		}
+
+
+		/**
+		 * Read the next line from the given file handle and parse it to CSV according to the rules set up
+		 * in the class constants DELIMITER and ENCLOSING.  Returns FALSE like getcsv on EOF.
+		 *
+		 * @param file-handle $handle
+		 * @return array of values from the parsed csv line
+		 */
+		protected function getcsv($handle)
+		{
+			return fgetcsv($handle, 1000, self::DELIMITER, self::ENCLOSING);
+		}
+
 	}

@@ -17,6 +17,12 @@ $(document).ready(function(){
 		update_voucher_filter();
 	});
 
+	$("#template").click(function(e){
+		var oArgs_template = {menuaction:'property.uiinvoice2.get_split_template', voucher_id: $("#voucher_id").val()};
+		var requestUrl_template = phpGWLink('index.php', oArgs_template);
+		window.open(requestUrl_template);
+	});
+
 	$("#voucher_id_filter").change(function () {
 
 		$("#voucher_id").val( '' );
@@ -155,9 +161,19 @@ $(document).ready(function(){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
+
+		var fileInput = document.getElementById('file');
+		var file = fileInput.files[0];
+		var formData = new FormData();
+		formData.append('file', file);
+		document.getElementsByName("file")[0].value = "";
+
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
+			data: formData,
+			processData: false,
+			contentType: false,
 			success: function(data) {
 				if(data)
 				{
@@ -168,17 +184,18 @@ $(document).ready(function(){
 					}
 
 	    			var obj = data;
-		    	
+	   				if(typeof(obj.line_id) != 'undefined')
+	   				{
+						if(obj.line_id > 0 && obj.line_id != line_id)
+						{
+							line_id = obj.line_id;
+						}
+					}
+
 	    			var submitBnt = $(thisForm).find("input[type='submit']");
 	    			if(obj.status == "updated")
 	    			{
 		    			$(submitBnt).val("Lagret");
-				/*
-						var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
-						var requestUrl = phpGWLink('index.php', oArgs, true);
-						requestUrl = requestUrl + "&voucher_id_filter=" + $("#voucher_id").val();
-						execute_async(myDataTable_0,requestUrl);
-				*/
 
 						base_java_url['voucher_id_filter'] = $("#voucher_id").val();
 						base_java_url['line_id'] = line_id;
