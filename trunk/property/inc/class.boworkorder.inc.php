@@ -922,7 +922,7 @@
 
 				$to = implode(';',$toarray);
 				$cc = false;
-				$bcc = 'sigurd.nes@bergen.kommune.no';//test phase
+				$bcc = false;
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $order_id),false,true).'">' . lang('workorder %1 has been edited',$order_id) .'</a>' . "\n";
 				$body .= <<<HTML
 				</br>
