@@ -1587,6 +1587,10 @@
 					'periodization'			 => $this->db->f('periodization'),
 					'periodization_start'	 => $this->db->f('periodization_start'),
 					'continuous'			 => $this->db->f('continuous'),
+					'regtid'				 => $this->db->f('regtid'),
+					'item_type'				=> $this->db->f('item_type'),
+					'item_id'				=> $this->db->f('item_id'),
+					'external_voucher_id'	=> $this->db->f('external_voucher_id'),
 				);
 			}
 
@@ -2629,12 +2633,6 @@
 				phpgwapi_cache::message_set(lang('Project is closed'), 'error');
 				return false;
 			}
-			else if (!ctype_digit($order_id))
-			{
-				$remark = "bestillingsnummeret er på feil format: {$order_id}";
-				phpgwapi_cache::message_set($remark, 'error');
-				return false;
-			}
 			else if (!$order_info['order_exist'])
 			{
 				$remark = 'bestillingsnummeret ikke gyldig: ' . $order_id;
@@ -2683,4 +2681,100 @@
 			$this->db->next_record();
 			return !!$this->db->f('active');
 		}
-	}	
+
+		/**
+		 *
+		 * @param array $data
+		 * @return boolean true on ok, false on error
+		 */
+		function perform_bulk_split($data, $voucher_id)
+		{
+			if(!is_array($data))
+			{
+				throw new Exception('soinvoice::perform_bulk_split() - Not a valid input');
+			}
+			$voucher_id = (int) $voucher_id;
+			$voucher = $this->read_single_voucher($voucher_id);
+			$voucher_line = $voucher[0];
+
+			$amount = 0;
+			foreach($voucher as $entry)
+			{
+				$amount += $entry['amount'];
+			}
+			unset($entry);
+
+			$split_amount = 0;
+			foreach($data as $entry)
+			{
+				$split_amount += (float)$entry[2];
+				if(!$entry[0] || !$entry[0] || !$entry[0])
+				{
+					throw new Exception('soinvoice::perform_bulk_split() - incomplete dataset in input');
+				}
+			}
+
+			if($split_amount != $amount)
+			{
+				throw new Exception('soinvoice::perform_bulk_split() - amount does not add up');
+			}
+
+			$this->db->transaction_begin();
+
+			$this->db->query("DELETE FROM fm_ecobilag WHERE bilagsnr='{$voucher_id}'", __LINE__, __FILE__);
+
+			$_last_line_id = 0;
+
+			foreach($data as $entry)
+			{
+				$value_set = array
+				(
+					'bilagsnr'				=> $voucher_line['voucher_id'],
+					'bilagsnr_ut'			=> $voucher_line['voucher_out_id'],
+					'typeid'				=> $voucher_line['type'],
+					'kildeid'				=> 1,
+					'belop'					=> $entry[2],
+					'fakturadato'			=> $voucher_line['invoice_date'],
+					'merknad'				=> $voucher_line['merknad'],
+					'periode'				=> $voucher_line['period'],
+					'forfallsdato'			=> $voucher_line['payment_date'],
+					'fakturanr'				=> $voucher_line['invoice_id'],
+					'regtid'				=> $voucher_line['regtid'],
+					'artid'					=> $voucher_line['art'],
+					'godkjentbelop'			=> $entry[2],
+					'budsjettansvarligid'	=> $voucher_line['budget_responsible'],
+					'splitt'				=> $_last_line_id,
+					'kreditnota'			=> $voucher_line['parked'],
+					'item_type'				=> $voucher_line['item_type'],
+					'item_id'				=> $voucher_line['item_id'],
+					'spvend_code'			=> $voucher_line['vendor_id'],
+					'external_ref'			=> $voucher_line['external_ref'],
+					'external_voucher_id'	=> $voucher_line['external_voucher_id'],
+					'currency'				=> $voucher_line['currency'],
+					'process_log'			=> $voucher_line['process_log'],
+					'process_code'			=> $voucher_line['process_code'],
+					'periodization'			=> $voucher_line['periodization'],
+					'periodization_start'	=> $voucher_line['periodization_start'],
+					'line_text'				=> $voucher_line['line_text'],
+					'external_voucher_id'	=> $voucher_line['external_voucher_id'],
+					'spbudact_code'			=> $voucher_line['b_account_id'],
+					'kostra_id'				=> $voucher_line['kostra_id'],
+					'mvakode'				=> $voucher_line['tax_code'],
+				);
+				$cols	 = implode(',', array_keys($value_set));
+				$values	 = $this->db->validate_insert(array_values($value_set));
+
+				$this->db->query("INSERT INTO fm_ecobilag ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
+				$_last_line_id = $this->db->get_last_insert_id('fm_ecobilag', 'id');
+
+				if(!$this->reassign_order($_last_line_id, $entry[1]))
+				{
+					$this->db->transaction_abort();
+					throw new Exception("soinvoice::perform_bulk_split() - assigning order {$entry[1]} failed");
+				}
+			}
+
+			$this->db->transaction_commit();
+			return $_last_line_id;
+		}
+	}
