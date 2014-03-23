@@ -1532,18 +1532,34 @@
 								</input>
 							</td>
 						</tr>
+						<tr height="50">
+							<td>
+								<xsl:variable name="lang_send">
+									<xsl:value-of select="php:function('lang', 'save')"/>
+								</xsl:variable>
+								<input type="submit" name="values[save]" value="{$lang_send}" title="{$lang_send}">
+								</input>
+							</td>
+						</tr>
 					</xsl:when>
+					<xsl:otherwise>
+						<tr>
+							<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+								<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+							</td>
+							<td align="left">
+								<textarea cols="60" rows="10" wrap="virtual">
+									<xsl:attribute name="readonly">
+										<xsl:text>readonly</xsl:text>
+									</xsl:attribute>
+									<xsl:value-of select="value_process_log"/>
+								</textarea>
+							</td>
+						</tr>
+
+					</xsl:otherwise>
 				</xsl:choose>
 
-				<tr height="50">
-					<td>
-						<xsl:variable name="lang_send">
-							<xsl:value-of select="php:function('lang', 'save')"/>
-						</xsl:variable>
-						<input type="submit" name="values[save]" value="{$lang_send}" title="{$lang_send}">
-						</input>
-					</td>
-				</tr>
 			</table>
 		</form>
 	</xsl:template>

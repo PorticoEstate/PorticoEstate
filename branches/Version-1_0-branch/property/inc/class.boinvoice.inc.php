@@ -991,4 +991,27 @@
 		{
 			return $this->so->check_valid_b_account($b_account_id);
 		}
+
+		/**
+		 *
+		 * @param array $data
+		 * @param integer $voucher_id
+		 * @return integer $line_id
+		 */
+		function perform_bulk_split($data, $voucher_id)
+		{
+			$line_id = 0;
+			try
+			{
+				$line_id = $this->so->perform_bulk_split($data, $voucher_id);
+			}
+			catch (Exception $e)
+			{
+				if($e)
+				{
+					throw $e;
+				}
+			}
+			return $line_id;
+		}
 	}

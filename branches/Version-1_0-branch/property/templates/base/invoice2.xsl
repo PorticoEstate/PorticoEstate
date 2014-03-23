@@ -105,7 +105,7 @@
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />
 						</table>
-					  	<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
+					  	<form action="{update_action}" name="voucher_form" id="voucher_form" method="post" ENCTYPE="multipart/form-data">
 						<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
@@ -113,7 +113,27 @@
 										<xsl:apply-templates select="datatable"/>
 									</td>
 								</tr>
-								<xsl:call-template name="voucher_fields" />
+								<tr>
+									<td valign="top">
+										<xsl:value-of select="php:function('lang', 'upload file')"/>
+									</td>
+									<td>
+										<input type="file" id="file" name="file" size="40">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+											</xsl:attribute>
+										</input>
+										<xsl:variable name="lang_template"><xsl:value-of select="php:function('lang', 'template')" /></xsl:variable>
+										<input type="button" id = "template" name="template" value="{$lang_template}" title = "{$lang_template}" />
+									</td>
+								</tr>
+								<tr>
+									<td colspan = '6'>
+										<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+										<div class="row_on"><input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/></div>
+									</td>
+								</tr>
+ 								<xsl:call-template name="voucher_fields" />
 								<xsl:call-template name="approve"/>
 							</table>
 						</form>
@@ -569,8 +589,6 @@
 	
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
-  	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-	<div class="row_on"><input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/></div>
 </xsl:template>
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
