@@ -273,12 +273,20 @@
 				'line_id'	=> $line_id
 			);
 
-			if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+
+			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
-				$result['receipt'] = $receipt;
+				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$result['receipt'] = $receipt;
+				}
+				return $result;
 			}
-			return $result;
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
+			}
 		}
 
 		function update_voucher()
@@ -931,7 +939,7 @@
 			foreach($categories['cat_list'] as &$cat)
 			{
 				$cat['id'] = $cat['cat_id'];
-				$cat['selected'] = $cat['selected'] ? 1 : 0;
+				$cat['selected'] = $cat['selected'] ? 1 : '';
 			}
 			$voucher_info['generic']['dime_list'] = array('options' => $categories['cat_list']);			
 			$voucher_info['generic']['approved_list'] = $approved_list;

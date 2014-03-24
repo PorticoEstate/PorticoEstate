@@ -105,7 +105,7 @@
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />
 						</table>
-					  	<form action="{update_action}" name="voucher_form" id="voucher_form" method="post" ENCTYPE="multipart/form-data">
+					  	<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
 						<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
@@ -113,6 +113,7 @@
 										<xsl:apply-templates select="datatable"/>
 									</td>
 								</tr>
+<!--
 								<tr>
 									<td valign="top">
 										<xsl:value-of select="php:function('lang', 'upload file')"/>
@@ -127,6 +128,7 @@
 										<input type="button" id = "template" name="template" value="{$lang_template}" title = "{$lang_template}" />
 									</td>
 								</tr>
+-->
 								<tr>
 									<td colspan = '6'>
 										<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>

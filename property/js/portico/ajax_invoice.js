@@ -162,18 +162,23 @@ $(document).ready(function(){
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
 
+//		var oArgs = { menuaction:'property.uiinvoice2.update_voucher'};
+		
+//		var requestUrl = phpGWLink('index.php', oArgs, true);
+/*
 		var fileInput = document.getElementById('file');
 		var file = fileInput.files[0];
 		var formData = new FormData();
 		formData.append('file', file);
 		document.getElementsByName("file")[0].value = "";
-
+*/
 		$.ajax({
 			type: 'POST',
+//			url: requestUrl + $(thisForm).serialize(),
 			url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			data: formData,
-			processData: false,
-			contentType: false,
+//			data: formData,
+//			processData: false,
+//			contentType: false,
 			success: function(data) {
 				if(data)
 				{
