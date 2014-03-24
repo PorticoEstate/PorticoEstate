@@ -57,7 +57,8 @@
 			'get_single_line'					=> true,
 			'update_voucher'					=> true,
 			'get_first_line'					=> true,
-			'get_split_template'				=> true
+			'get_split_template'				=> true,
+			'split_voucher'						=> true
 		);
 
 		function __construct()
@@ -203,7 +204,37 @@
 			
 		}
 
-		function split_voucher($voucher_id)
+		function split_voucher()
+		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
+			$voucher_id	= phpgw::get_var('voucher_id', 'int');
+			if($_FILES)
+			{
+				$this->_split_voucher($voucher_id);
+			}
+
+			if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			{
+				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+			}
+
+			$data = array
+			(
+					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
+					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice2.split_voucher', 'voucher_id' => $voucher_id)),
+					'voucher_id'			=> $voucher_id
+			);
+
+			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('property', 'portico', 'ajax_invoice.js');
+
+			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('split_voucher' => $data));
+		}
+
+
+		private function _split_voucher($voucher_id)
 		{
 			$error = false;
 
@@ -218,7 +249,8 @@
 			}
 			else
 			{
-				phpgwapi_cache::message_set('Ingen file er valgt', 'error');
+				phpgwapi_cache::message_set('Ingen fil er valgt', 'error');
+				return;
 			}
 
 			switch ($file['type'])
@@ -266,7 +298,7 @@
 			{
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 			}
-
+/*
 			$result =  array
 			(
 				'status'	=> $error ? 'error' : 'updated',
@@ -287,6 +319,8 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
 			}
+ */
+
 		}
 
 		function update_voucher()
@@ -297,12 +331,6 @@
 
 			if($values = phpgw::get_var('values'))
 			{
-
-				if($_FILES)
-				{
-					return $this->split_voucher($voucher_id);
-				}
-
 				if($values['order_id'] != $values['order_id_orig'])
 				{
 					return $this->reassign_order($line_id, $values['order_id'], $voucher_id);

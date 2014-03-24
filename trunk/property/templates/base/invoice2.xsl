@@ -113,22 +113,12 @@
 										<xsl:apply-templates select="datatable"/>
 									</td>
 								</tr>
-<!--
 								<tr>
 									<td valign="top">
-										<xsl:value-of select="php:function('lang', 'upload file')"/>
-									</td>
-									<td>
-										<input type="file" id="file" name="file" size="40">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-											</xsl:attribute>
-										</input>
-										<xsl:variable name="lang_template"><xsl:value-of select="php:function('lang', 'template')" /></xsl:variable>
-										<input type="button" id = "template" name="template" value="{$lang_template}" title = "{$lang_template}" />
+										<div id = 'split_text'>
+										</div>
 									</td>
 								</tr>
--->
 								<tr>
 									<td colspan = '6'>
 										<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
