@@ -17,7 +17,7 @@ $(document).ready(function(){
 		update_voucher_filter();
 	});
 
-	$("#template").click(function(e){
+	$("#get_template").click(function(e){
 		var oArgs_template = {menuaction:'property.uiinvoice2.get_split_template', voucher_id: $("#voucher_id").val()};
 		var requestUrl_template = phpGWLink('index.php', oArgs_template);
 		window.open(requestUrl_template);
@@ -324,12 +324,17 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#voucher_id").val( voucher[0].voucher_id );
 				if( voucher[0].voucher_out_id )
 				{
-					$("#voucher_id_text").html( voucher[0].voucher_out_id );
+					var	voucher_id_text =  voucher[0].voucher_out_id;
 				}
 				else
 				{
-					$("#voucher_id_text").html( voucher[0].voucher_id );
+					var	voucher_id_text =  voucher[0].voucher_id;
 				}
+				$("#voucher_id_text").html( voucher_id_text );
+
+				var htmlString_split  =  " <a href=\"javascript:load_split(" + voucher[0].voucher_id + ");\" title=\"" +  voucher_id_text  + "\" > Splitt " + voucher_id_text +"</a>";
+
+				$("#split_text").html( htmlString_split );
 
 				$("#order_id").val( voucher[0].order_id );
 				$("#order_id_orig").val( voucher[0].order_id );
@@ -648,13 +653,37 @@ function update_form_values( line_id, voucher_id_orig ){
 function load_order( id ){
 	var oArgs = {menuaction: 'property.uiinvoice.view_order', order_id: id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
+	TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local();}});
+}
 
-	TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
-//	$("#curtain").show();
-//	$("#popupBox").fadeIn("slow");
-//	var htmlString = "";
-//	htmlString += "<iframe  width=\"100%\" height=\"100%\" src = \"" + requestUrl + "\" ><p>Your browser does not support iframes.</p></iframe>";
-//	$("#popupBox").html( htmlString );
+function load_split( voucher_id ){
+	var oArgs = {menuaction: 'property.uiinvoice2.split_voucher', voucher_id: voucher_id, nonavbar: true, lean: true};
+	var requestUrl = phpGWLink('index.php', oArgs);
+	TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){reset_table(voucher_id);}});
+}
+
+function reset_table(voucher_id)
+{
+	var oArgs = {menuaction:'property.uiinvoice2.get_first_line', voucher_id: voucher_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var line_id = 0;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function(data) {
+			if( data != null)
+			{
+				line_id = data['line_id'];
+				base_java_url['line_id'] = line_id;
+				base_java_url['voucher_id_filter'] = voucher_id;
+				execute_async(myDataTable_0);
+				update_form_values(line_id, 0);
+			}
+		}
+		});
+
 }
 
 function closeJS_local()
@@ -663,19 +692,12 @@ function closeJS_local()
 	var voucher_id_orig = $("#voucher_id").val();
 	$("#curtain").hide();
 	$("#popupBox").hide();
-	update_form_values(line_id, voucher_id_orig)
+	update_form_values(line_id, voucher_id_orig);
 }
 
 function closeJS_remote()
 {
 	TINY.box.hide();
-/*
-	var line_id = $("#line_id").val( );
-	var voucher_id_orig = $("#voucher_id").val();
-	$("#curtain").hide();
-	$("#popupBox").hide();
-	update_form_values(line_id, voucher_id_orig)
-*/
 }
 
 function hide_popupBox( ){

@@ -25,6 +25,52 @@
 		</xsl:choose>
 	</xsl:template>
 
+<xsl:template match="split_voucher" xmlns:php="http://php.net/xsl">
+	<h2>
+		<xsl:value-of select="php:function('lang', 'upload file')"/>
+	</h2>
+	<form action="{form_action}" name="split_voucher_form" id="split_voucher_form" method="post" ENCTYPE="multipart/form-data">
+		<br/>
+		<br/>
+	  	<input type="hidden" name="voucher_id" id="voucher_id" value="{voucher_id}"/>
+
+		<table align = "center" valign = "center" width="95%">
+				<xsl:choose>
+					<xsl:when test="msgbox_data != ''">
+						<tr>
+							<td align="left" colspan="2">
+								<xsl:call-template name="msgbox"/>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
+
+			<tr>
+				<td >
+					<xsl:variable name="lang_submit">
+						<xsl:value-of select="php:function('lang', 'upload file')"/>
+					</xsl:variable>
+					<input type="submit" name="submit" value="{$lang_submit}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_submit"/>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td>
+					<input type="file" id="file" name="file" size="40">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+						</xsl:attribute>
+					</input>
+					<xsl:variable name="lang_template"><xsl:value-of select="php:function('lang', 'template')" /></xsl:variable>
+					<input type="button" id = "get_template" name="get_template" value="{$lang_template}" title = "{$lang_template}" />
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</xsl:template>
+
 	<!-- New template-->
 	<xsl:template match="remark">
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
