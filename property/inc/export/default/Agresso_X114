@@ -787,7 +787,7 @@
 					'PURCHASEORDERNO'			=> $oRsBilag[0]['order_id'], // 1409220008
 					'PURCHASEORDEROWNER.CODE'	=> $oRsBilag[0]['spvend_code'], // 100644
 					'PURCHASEORDERSTATUS.CODE'	=> $purchaseorderstatus,
-					'GENERALCOMMENT'			=> $comment, // Denne er fakturert i 3 deler OBS OBS!
+					'GENERALCOMMENT'			=> ''//$comment, // Denne er fakturert i 3 deler OBS OBS!
 				)
 			);
 
@@ -972,7 +972,11 @@
 				);
 			}
 
-			$invoiceheader[0]['GENERALCOMMENT'] = implode("\n",$comment);
+//			$invoiceheader[0]['GENERALCOMMENT'] = implode("\n",$comment);
+			if($comment)
+			{
+				$invoiceheader[0]['PURCHASEORDERSTATUS.CODE'] .= " \n" . implode("\n",$comment);
+			}
 			$invoices = array
 			(
 				0 => array
