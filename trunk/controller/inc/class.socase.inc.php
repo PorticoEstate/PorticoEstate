@@ -290,10 +290,10 @@
 				'num_pending_cases' => $num_pending_cases,
 			);
 
-			if($num_open_cases > 0)
-			{
-				$values['status'] = controller_check_list::STATUS_DONE;
-			}
+//			if($num_open_cases > 0)
+//			{
+//				$values['status'] = controller_check_list::STATUS_DONE;
+//			}
 
 			$value_set	= $this->db->validate_update($values);
 			return $this->db->query("UPDATE controller_check_list SET {$value_set} WHERE id = '{$check_list_id}'",__LINE__,__FILE__);

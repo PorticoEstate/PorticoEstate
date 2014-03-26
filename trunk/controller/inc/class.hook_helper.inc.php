@@ -445,7 +445,8 @@ HTML;
 			ksort($my_undone_controls);
 
 			$my_undone_controls_HTML .= "<ul>";
-
+			
+			$lang_planned_date = lang('planned date');
 			foreach($my_undone_controls as $date_ts => $controls_on_date)
 			{
 				// If number of controls on a date exceeds 1 it will be put in expand list
@@ -464,6 +465,10 @@ HTML;
 					$control_area_name = $this->get_control_area_name( $my_control["control_area_id"] );
 
 					$date_str = date($dateformat, $deadline_ts);
+					if($my_control['planned_date'])
+					{
+						$date_str_planned =  $lang_planned_date . ': ' . date($dateformat, $my_control['planned_date']);
+					}
 
 					if($check_list_status == "add")
 					{
@@ -479,14 +484,14 @@ HTML;
 								$link = "";
 								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
 
-								$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+								$my_undone_controls_HTML .= "<li><a href='{$link}' title = '{$date_str_planned}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 							}
 							else
 							{
 								$link = "";
 								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
 
-								$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
+								$my_undone_controls_HTML .= "<a href='{$link} title = '{$date_str_planned}''><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 							}
 
 						}
@@ -501,14 +506,14 @@ HTML;
 								$link = "";
 								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 
-								$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_descr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+								$my_undone_controls_HTML .= "<li><a href='{$link}' title = '{$date_str_planned}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_descr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 							}
 							else
 							{
 								$link = "";
 								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 
-								$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_descr}</div><div class='control-area'>{$control_area_name}</div></a>";
+								$my_undone_controls_HTML .= "<a href='{$link}' title = '{$date_str_planned}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_descr}</div><div class='control-area'>{$control_area_name}</div></a>";
 							}
 						}
 					}
@@ -536,14 +541,14 @@ HTML;
 							$link = "";
 							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 
-							$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+							$my_undone_controls_HTML .= "<li><a href='{$link}' title = '{$date_str_planned}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 						}
 						else
 						{
 							$link = "";
 							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 
-							$my_undone_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+							$my_undone_controls_HTML .= "<li><a href='$link' title = '{$date_str_planned}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 						}
 					}
 				}
