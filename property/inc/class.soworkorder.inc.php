@@ -2156,7 +2156,7 @@
 			{
 				if(isset($_start_period_remainig) && in_array($period, $_start_period_remainig))
 				{
-					if($period <= date('Ym') && !abs($_budget['actual_cost']) > 0)
+					if($period < date('Ym') && !abs($_budget['actual_cost']) > 0)
 					{
 						$_sum_year_remaining_cost += $_budget['combined_cost'];
 						$_budget['combined_cost'] = 0;
