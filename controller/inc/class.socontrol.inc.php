@@ -148,9 +148,11 @@
 			//FIXME
 			if($completed)
 			{
-				$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
-				$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
-				$sql .= " AND controller_check_list.completed_date IS NULL ";
+				$sql .= " AND ( planned_date < $to_date AND controller_check_list.completed_date IS NULL) ";
+
+//				$sql .= " AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
+//				$sql .= " OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+//				$sql .= " AND controller_check_list.completed_date IS NULL ";
 			}
 			else
 			{
@@ -227,9 +229,11 @@
 			//FIXME
 			if($completed)
 			{
-				$sql .= " AND ((deadline <= $to_date AND controller_control.end_date IS NULL) ";
-				$sql .= " OR (deadline <= $to_date AND deadline > $from_date ))";
-				$sql .= " AND controller_check_list.completed_date IS NULL ";			
+				$sql .= " AND ( planned_date < $to_date AND controller_check_list.completed_date IS NULL) ";
+
+//				$sql .= " AND ((deadline <= $to_date AND controller_control.end_date IS NULL) ";
+//				$sql .= " OR (deadline <= $to_date AND deadline > $from_date ))";
+//				$sql .= " AND controller_check_list.completed_date IS NULL ";			
 			}
 			else
 			{

@@ -369,3 +369,4 @@ Register new message	controller	no	Registrer ny melding
 Show message	controller	no	Vis melding
 Status not done	controller	no	Status: Ikke utført
 Status done controller	no	Status: Utført
+planned date  controller	no	Planlagt Dato
