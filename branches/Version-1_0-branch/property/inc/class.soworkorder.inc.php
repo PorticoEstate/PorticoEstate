@@ -1852,125 +1852,6 @@
 				}
 			}
 
-			/**
-			 * Fiktiv periodisering over 12 mnd med startperiode for inneværende mnd for løpende som ikke er periodisert
-			 * Hopper over historiske år.
-			 * Start-periode blir måned for første betaling dersom den er før inneværende måned
-			 * ellers: Start-periode blir måned for start-dato for bestilling dersom den ligger frem i tid
-			 * ellers: Dersom start-dato for bestilling er passert - blir start-periode inneværende måned.
-			 * */
-			$calculate_fictive_periods = $fictive_periodization ? $calculate_fictive_periods : false;
-			$fictive_period						 = array();
-			$exclude_from_fictive_period		 = array();
-			$exclude_year_from_fictive_period	 = array();
-			$order_budget						 = array();
-			if($continuous && $calculate_fictive_periods)
-			{
-				//First payment;
-				$sql = "SELECT periode FROM fm_orders_paid_or_pending_view"
-				. " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00'
-				. " ORDER BY periode ASC";
-
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->next_record();
-				$current_paid_period = (int) $this->db->f('periode');
-
-/*
-				  //FIXME total payment - if needed;
-				  $sql = "SELECT sum(amount) AS actual_cost FROM  fm_orders_paid_or_pending_view"
-				  . " WHERE order_id = '{$order_id}'  AND (periode IS NULL OR periode > " . date('Y') . '00)';
-
-				  $this->db->query($sql,__LINE__,__FILE__);
-				  $this->db->next_record();
-				  $_actual_cost_current_year = $this->db->f('actual_cost');
-*/
-				foreach($_order_budget as $_period => $_budget)
-				{
-					if($_period == "{$_budget['year']}00" && $_budget['year'] == date('Y'))
-					{
-
-						$order_budget[$_period] = $_budget;
-
-						$active_period[$_period] = $active_period[$_period] ? 2 : 0;
-
-						if($current_paid_period && $current_paid_period < (int) date('Ym'))
-						{
-							$_current_month = (int) substr($current_paid_period, -2);
-						}
-						else if((int) $_budget['start_period'] > (int) date('Ym'))
-						{
-							$_current_month = (int) substr($_budget['start_period'], -2);
-						}
-						else
-						{
-							$_current_month = date('n'); // Numeric representation of a month, without leading zeros 1 through 12
-						}
-
-						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']];
-
-
-						$distribution_key = 1 / (13 - $_current_month);
-
-						for($i = $_current_month; $i < 13; $i++)
-						{
-							$period = sprintf("%s%02d", $_budget['year'], $i
-							);
-
-							$fictive_period[$period]				 = true;
-							$active_period[$period]					 = $active_period[$_period] ? 1 : 0;
-							$order_budget[$period]					 = $_budget;
-							$order_budget[$period]['budget']		 = $sum_year_budget[$_budget['year']] * $distribution_key;
-							$order_budget[$period]['combined_cost']	 = $_sum_year_combined_cost * $distribution_key;
-							$order_budget[$period]['active_period']	 = $_budget['active_period'];
-							$order_budget[$period]['month']			 = $i;
-							$closed_period[$period]					 = 0;//(int)$period < date('Ym');
-						}
-
-						$_start_month_remainig	 = $_current_month < 12 ? $_current_month : 0;
-						$_start_year_remainig	 = $_budget['year'];
-						$_start_period_remainig	 = array();
-
-						$distribution_key_remaining = 1 / (13 - $_start_month_remainig);
-
-						if($_start_month_remainig)
-						{
-							for($i = $_start_month_remainig; $i < 13; $i++)
-							{
-								$period = sprintf("%s%02d", $_budget['year'], $i
-								);
-
-								$_start_period_remainig[] = $period;
-							}
-						}
-					}
-					else
-					{
-						//FIXME
-						$exclude_from_fictive_period[$_period]				 = true;
-						$exclude_year_from_fictive_period[$_budget['year']]	 = true;
-
-						$order_budget[$_period] = $_budget;
-					}
-					unset($_budget);
-				}
-			}
-			else
-			{
-				$order_budget = $_order_budget;
-
-				foreach($order_budget as $period => $_budget)
-				{
-					$this->db->query("SELECT closed FROM fm_workorder"
-					. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
-					. " {$this->join} fm_project_budget ON fm_project.id = fm_project_budget.project_id"
-					. " WHERE fm_workorder.id = '{$_budget['order_id']}'"
-					. " AND fm_project_budget.year = {$_budget['year']}"
-					. " AND fm_project_budget.month = {$_budget['month']}", __LINE__, __FILE__);
-					$this->db->next_record();
-					$closed_period[$period] = (int) $this->db->f('closed');
-				}
-			}
-			//_debug_array($_start_period_remainig);
 			$sql = "SELECT periode, amount AS actual_cost, periodization, periodization_start"
 			. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 			. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
@@ -2070,7 +1951,139 @@
 					$orders_paid_or_pending[] = $entry;
 				}
 			}
+//	_debug_array($orders_paid_or_pending);die();
+			/**
+			 * Fiktiv periodisering over 12 mnd med startperiode for inneværende mnd for løpende som ikke er periodisert
+			 * Hopper over historiske år.
+			 * Start-periode blir måned for første betaling dersom den er før inneværende måned
+			 * ellers: Start-periode blir måned for start-dato for bestilling dersom den ligger frem i tid
+			 * ellers: Dersom start-dato for bestilling er passert - blir start-periode inneværende måned.
+			 * */
+			$calculate_fictive_periods = $fictive_periodization ? $calculate_fictive_periods : false;
+			$fictive_period						 = array();
+			$exclude_from_fictive_period		 = array();
+			$exclude_year_from_fictive_period	 = array();
+			$order_budget						 = array();
+			if($continuous && $calculate_fictive_periods)
+			{
+				//First payment;
+				$sql = "SELECT periode FROM fm_orders_paid_or_pending_view"
+				. " WHERE order_id = '{$order_id}'  AND periode > " . date('Y') . '00'
+				. " ORDER BY periode ASC";
 
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$current_paid_period = (int) $this->db->f('periode');
+
+/*
+				  //FIXME total payment - if needed;
+				  $sql = "SELECT sum(amount) AS actual_cost FROM  fm_orders_paid_or_pending_view"
+				  . " WHERE order_id = '{$order_id}'  AND (periode IS NULL OR periode > " . date('Y') . '00)';
+
+				  $this->db->query($sql,__LINE__,__FILE__);
+				  $this->db->next_record();
+				  $_actual_cost_current_year = $this->db->f('actual_cost');
+*/
+				foreach($_order_budget as $_period => $_budget)
+				{
+					if($_period == "{$_budget['year']}00" && $_budget['year'] == date('Y'))
+					{
+
+						$order_budget[$_period] = $_budget;
+
+						$active_period[$_period] = $active_period[$_period] ? 2 : 0;
+						
+						if($current_paid_period && $current_paid_period < (int) date('Ym'))
+						{
+							$_current_month = (int) substr($current_paid_period, -2);
+						}
+						else if((int) $_budget['start_period'] > (int) date('Ym'))
+						{
+							$_current_month = (int) substr($_budget['start_period'], -2);
+						}
+						else
+						{
+							$_current_month = date('n'); // Numeric representation of a month, without leading zeros 1 through 12
+						}
+
+						foreach($orders_paid_or_pending as $_paid_or_pending)
+						{
+							if((int)$_paid_or_pending['periode'] > (int)$_period && (int)$_paid_or_pending['periode'] <  (int)sprintf("%s%02d", $_budget['year'], $_current_month))
+							{
+								$_current_month = (int) substr($_paid_or_pending['periode'], -2);
+								break;
+							}
+						}
+						unset($_paid_or_pending);
+
+						$_sum_year_combined_cost = $sum_year_combined_cost[$_budget['year']];
+
+
+						$distribution_key = 1 / (13 - $_current_month);
+
+						for($i = $_current_month; $i < 13; $i++)
+						{
+							$period = sprintf("%s%02d", $_budget['year'], $i
+							);
+
+							$fictive_period[$period]				 = true;
+							$active_period[$period]					 = $active_period[$_period] ? 1 : 0;
+							$order_budget[$period]					 = $_budget;
+							$order_budget[$period]['budget']		 = $sum_year_budget[$_budget['year']] * $distribution_key;
+							$order_budget[$period]['combined_cost']	 = $_sum_year_combined_cost * $distribution_key;
+							$order_budget[$period]['active_period']	 = $_budget['active_period'];
+							$order_budget[$period]['month']			 = $i;
+							$closed_period[$period]					 = 0;//(int)$period < date('Ym');
+						}
+
+						$_start_month_remainig	 = $_current_month < 12 ? $_current_month : 0;
+						$_start_year_remainig	 = $_budget['year'];
+						$_start_period_remainig	 = array();
+
+						$distribution_key_remaining = 1 / (13 - $_start_month_remainig);
+
+						if($_start_month_remainig)
+						{
+							for($i = $_start_month_remainig; $i < 13; $i++)
+							{
+								$period = sprintf("%s%02d", $_budget['year'], $i
+								);
+
+								$_start_period_remainig[] = $period;
+							}
+						}
+					}
+					else
+					{
+						//FIXME
+						$exclude_from_fictive_period[$_period]				 = true;
+						$exclude_year_from_fictive_period[$_budget['year']]	 = true;
+
+						$order_budget[$_period] = $_budget;
+					}
+					unset($_budget);
+				}
+			}
+			else
+			{
+				$order_budget = $_order_budget;
+
+				foreach($order_budget as $period => $_budget)
+				{
+					$this->db->query("SELECT closed FROM fm_workorder"
+					. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+					. " {$this->join} fm_project_budget ON fm_project.id = fm_project_budget.project_id"
+					. " WHERE fm_workorder.id = '{$_budget['order_id']}'"
+					. " AND fm_project_budget.year = {$_budget['year']}"
+					. " AND fm_project_budget.month = {$_budget['month']}", __LINE__, __FILE__);
+					$this->db->next_record();
+					$closed_period[$period] = (int) $this->db->f('closed');
+				}
+			}
+//_debug_array($order_budget);die();
+//_debug_array($_start_period_remainig);die();
+
+//_debug_array($orders_paid_or_pending);die();
 			foreach($orders_paid_or_pending as $_orders_paid_or_pending)
 			{
 
@@ -2156,7 +2169,7 @@
 			{
 				if(isset($_start_period_remainig) && in_array($period, $_start_period_remainig))
 				{
-					if($period <= date('Ym') && !abs($_budget['actual_cost']) > 0)
+					if($period < date('Ym') && !abs($_budget['actual_cost']) > 0)
 					{
 						$_sum_year_remaining_cost += $_budget['combined_cost'];
 						$_budget['combined_cost'] = 0;
