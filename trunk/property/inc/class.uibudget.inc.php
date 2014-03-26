@@ -2031,6 +2031,7 @@
 					);
 					break;
 				case 'obligations':
+
 					$gross_list= $this->bo->read_obligations();
 					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
 					$list = array();
@@ -2045,6 +2046,7 @@
 							'hits'				=> $entry['hits'],
 							'budget_cost'		=> $entry['budget_cost'],
 							'obligation'		=> $entry['obligation'],
+							'actual_cost_period'=> $entry['actual_cost_period'],
 							'actual_cost'		=> $entry['actual_cost'],
 							'diff'				=> ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
 						);
@@ -2058,6 +2060,7 @@
 						'hits',
 						'budget_cost',
 						'obligation',
+						'actual_cost_period',
 						'actual_cost',
 						'diff'
 					);
@@ -2070,6 +2073,7 @@
 						lang('hits'),
 						lang('budget'),
 						lang('sum orders'),
+						lang('paid') . ' ' . lang('period'),
 						lang('paid'),
 						lang('difference')
 					);
