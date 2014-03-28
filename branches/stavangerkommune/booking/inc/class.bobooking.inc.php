@@ -74,8 +74,8 @@ function array_minus($a, $b)
                     $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
                     $info_deleted .= pretty_timestamp($valid_date['to_']);
     			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']);
+                    $link .= '&from_[]='.urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
                     $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
 				}
 
@@ -124,14 +124,15 @@ function array_minus($a, $b)
 					$res_names = $res_names.$this->so->get_resource($res)." ";
 				}
 				$info_deleted = ':<p>';
-   				$info_deleted = $info_deleted."".$res_names." - ";
-                $info_deleted .= pretty_timestamp($allocation['from_'])." - ";
-                $info_deleted .= pretty_timestamp($allocation['to_']);
-   			    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-                $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
-                $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];                    
-                $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
-
+                foreach ($maildata['delete'] as $valid_date) {
+       				$info_deleted = $info_deleted."".$res_names." - ";
+                    $info_deleted .= pretty_timestamp($allocation['from_'])." - ";
+                    $info_deleted .= pretty_timestamp($allocation['to_']);
+   			        $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+                }
     			$subject = $config->config_data['allocation_canceled_mail_subject'];
                 $body = "<p>".$config->config_data['allocation_canceled_mail'];
                 $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
@@ -152,6 +153,125 @@ function array_minus($a, $b)
     			}
             }
 		}
+
+        function send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates=null)
+        {
+            if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+                return;
+            $send = CreateObject('phpgwapi.send');
+
+            $config	= CreateObject('phpgwapi.config','booking');
+            $config->read();
+
+            $from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
+            $external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+            $subject = $system_message['title'];
+            $body = '<b>Beksjed fra '.$system_message['name'].'</b><br />'.$system_message['message'].'<br /><br /><b>Epost som er sendt til brukere av Hallen:</b><br />';
+            $mailadresses = $config->config_data['emails'];
+            $mailadresses = explode("\n",$mailadresses);
+
+            if(($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
+                ($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] == 'on' &&
+                    $maildata['allocation'] == 0))
+            {
+                $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                $link .= urlencode($booking['from_']).'&to_[]='.urlencode($booking['to_']).'&resource='.$booking['resources'][0];
+
+                $body .= "<p>".$config->config_data['booking_canceled_mail'];
+                $body .= '</p><p>'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'].':<br />';
+                $body .= $this->so->get_resource($booking['resources'][0]).' den '.pretty_timestamp($booking['from_']);
+                $body .=' til '.pretty_timestamp($booking['to_']);
+                $body .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a></p>';
+
+            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] != 'on') {
+                $res_names = '';
+                foreach ($booking['resources'] as $res) {
+                    $res_names = $res_names.$this->so->get_resource($res)." ";
+                }
+                $info_deleted = ':<p>';
+                foreach ($valid_dates as $valid_date) {
+                    $info_deleted = $info_deleted."".$res_names." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['to_']);
+                    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']);
+                    $link .= '&from_[]='.urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+                }
+
+                $body .= "<p>".$config->config_data['booking_canceled_mail'];
+                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
+                $body .= $info_deleted.'</p>';
+
+            } elseif (($maildata['outseason'] == 'on' || $maildata['recurring'] == 'on') && $maildata['delete_allocation'] == 'on') {
+                $res_names = '';
+                foreach ($booking['resources'] as $res) {
+                    $res_names = $res_names.$this->so->get_resource($res)." ";
+                }
+                $info_deleted = ':<p>';
+                foreach ($valid_dates as $valid_date) {
+                    if (!in_array($valid_date,$maildata['delete'])) {
+                        $info_deleted = $info_deleted."".$res_names." - ";
+                        $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+                        $info_deleted .= pretty_timestamp($valid_date['to_']);
+                        $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                        $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                        $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                        $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+                    }
+                }
+                foreach ($maildata['delete'] as $valid_date) {
+                    $info_deleted = $info_deleted."".$res_names." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['from_'])." - ";
+                    $info_deleted .= pretty_timestamp($valid_date['to_']);
+                    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']).'&from_[]=';
+                    $link .= urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+                }
+
+
+                $body .= "<p>".$config->config_data['allocation_canceled_mail'];
+                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
+                $body .= $info_deleted.'</p>';
+
+            } else {
+                $res_names = '';
+                foreach ($booking['resources'] as $res) {
+                    $res_names = $res_names.$this->so->get_resource($res)." ";
+                }
+                $info_deleted = ':<p>';
+                foreach ($maildata['delete'] as $valid_date) {
+                    $info_deleted = $info_deleted."".$res_names." - ";
+                    $info_deleted .= pretty_timestamp($allocation['from_'])." - ";
+                    $info_deleted .= pretty_timestamp($allocation['to_']);
+                    $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
+                    $link .= $booking['building_id'].'&building_name='.urlencode($booking['building_name']);
+                    $link .= '&from_[]='.urlencode($valid_date['from_']).'&to_[]='.urlencode($valid_date['to_']).'&resource='.$booking['resources'][0];
+                    $info_deleted .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a><br />';
+                }
+                $body .= "<p>".$config->config_data['allocation_canceled_mail'];
+                $body .= '<br />'.$booking['group_name'].' har avbestilt tid i '.$booking['building_name'];
+                $body .= $info_deleted.'</p>';
+            }
+
+            $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
+            foreach ($mailadresses as $adr)
+            {
+                try
+                {
+                    $send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
+                }
+                catch (phpmailerException $e)
+                {
+                    // TODO: Inform user if something goes wrong
+                }
+            }
+        }
+
 
 		/**
 		 * @see bocommon_authorized
@@ -303,7 +423,6 @@ function array_minus($a, $b)
         function building_schedule($building_id, $date)
         {
 
-
             $from = clone $date;
             $from->setTime(0, 0, 0);
             // Make sure $from is a monday
@@ -374,7 +493,7 @@ function array_minus($a, $b)
             return array('total_records'=>count($results), 'results'=>$results);
         }
 
-		function building_infoscreen_schedule($building_id, $date)
+		function building_infoscreen_schedule($building_id, $date, $res = False)
 		{
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
@@ -385,10 +504,17 @@ function array_minus($a, $b)
 			}
 			$to = clone $from;
 			$to->modify('+7 days');
-
-            $allocations = $this->so->get_screen_allocation($building_id, $from, $to);
-            $bookings = $this->so->get_screen_booking($building_id, $from, $to);
-            $events = $this->so->get_screen_event($building_id, $from, $to);
+            echo "<pre>";
+            if ($res != False){
+                $resources = $this->so->get_screen_resources($building_id, $res);
+                if (count($resources) > 0)
+                    $resources = "AND bb_resource.id IN (".implode(",", $resources).")";
+                else
+                    $resources = '';
+            }
+            $allocations = $this->so->get_screen_allocation($building_id, $from, $to, $resources);
+            $bookings = $this->so->get_screen_booking($building_id, $from, $to, $resources);
+            $events = $this->so->get_screen_event($building_id, $from, $to, $resources);
 
             $results = array();
 

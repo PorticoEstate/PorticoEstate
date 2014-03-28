@@ -115,6 +115,8 @@
             <dd><xsl:value-of select="application/activity_name"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
 			<dd><div style="width: 80%;"><xsl:value-of select="application/description"/></div></dd>
+            <dt><xsl:value-of select="php:function('lang', 'Extra information')" /></dt>
+            <dd><div style="width: 80%;"><xsl:value-of select="application/equipment"/></div></dd>
 		</dl>
         <dl class="proplist-col">
             <dt class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></dt>

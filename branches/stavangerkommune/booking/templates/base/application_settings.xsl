@@ -25,6 +25,12 @@
 			<dd class="yui-skin-sam">
 			<textarea id="field_application_description" name="application_description"  class="full-width settings" type="text"><xsl:value-of select="config_data/application_description"/></textarea>
 			</dd>
+            <dt>
+               <label for="field_application_equipment"><xsl:value-of select="php:function('lang', 'Extra information for the event')" /></label>
+            </dt>
+            <dd class="yui-skin-sam">
+               <textarea id="field_application_equipment" name="application_equipment"  class="full-width settings" type="text"><xsl:value-of select="config_data/application_equipment"/></textarea>
+            </dd>
             <dt><label for="field_application_howmany"><xsl:value-of select="php:function('lang', 'How many?')" /></label></dt>
 			<dd class="yui-skin-sam">
 				<textarea id="field_application_howmany" name="application_howmany"  class="full-width settings" type="text"><xsl:value-of select="config_data/application_howmany"/></textarea>

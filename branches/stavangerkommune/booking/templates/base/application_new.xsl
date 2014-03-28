@@ -47,6 +47,16 @@
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
+            <dt>
+                <xsl:if test="config/application_equipment">
+                    <p>
+                        <xsl:value-of select="config/application_equipment"/>
+                    </p>
+                </xsl:if>
+            </dt>
+            <dd>
+                <textarea id="field_equipment" class="full-width" name="equipment"><xsl:value-of select="application/equipment"/></textarea>
+            </dd>
 		</dl>
 		<dl class="form-col">
 			<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>

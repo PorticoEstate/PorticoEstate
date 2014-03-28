@@ -112,6 +112,7 @@ dashboard	booking	no	Skrivebord
 day of the week	booking	no	Ukedag
 dec	booking	no	desember
 description	booking	no	Beskrivelse
+Extra information	booking	no	Ekstra informasjon om arrangement
 district	booking	no	Bydel
 document	booking	no	Dokument
 document name	booking	no	Dokumentnavn
@@ -642,3 +643,4 @@ Frontend users can delete bookings	booking	no	Frontend bruker kan slette booking
 Frontend users can delete allocations	booking	no	Frontend bruker kan slette tildelinger
 Activate extra kalendar field on building	booking	no	Aktiver ekstra kalender felt på bygg
 Ids that should be included in the calendar	booking	no	Id som skal brukes i ekstra kalender
+Extra information for the event	booking	no	Ekstra informasjon på arrangement

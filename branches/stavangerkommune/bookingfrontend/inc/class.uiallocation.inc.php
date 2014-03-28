@@ -59,19 +59,25 @@
 			$config->read();
 
 			if ($config->config_data['user_can_delete_allocations'] != 'yes') {
-		
+
 	        	$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'GET')));
                 $organization = $this->organization_bo->read_single($allocation['organization_id']);
 	   			$errors = array();
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 	            {
-	            
+
 	                $outseason = $_POST['outseason'];
 	                $recurring = $_POST['recurring'];
 	                $repeat_until = $_POST['repeat_until'];
 	                $field_interval = $_POST['field_interval'];
-                    
-					date_default_timezone_set("Europe/Oslo");
+
+                    $maildata = array();
+                    $maildata['outseason'] = $outseason;
+                    $maildata['recurring'] = $recurring;
+                    $maildata['repeat_until'] = $repeat_until;
+                    $maildata['field_interval'] = $field_interval;
+
+                    date_default_timezone_set("Europe/Oslo");
 					$date = new DateTime(phpgw::get_var('date'));
 					$system_message = array();
 					$system_message['building_id'] = intval($allocation['building_id']);
@@ -86,7 +92,9 @@
 					$system_message['title'] = lang('Cancelation of allocation from')." ".$allocation['organization_name'];
 	                $link = self::link(array('menuaction' => 'booking.uiallocation.delete','allocation_id' => $allocation['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval));
 	                $link = mb_strcut($link,16,strlen($link));
-	                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel allocation use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
+                    $system_message['link'] = $link;
+                    $system_message['message'] = $system_message['message']."<br /><br />".lang('To cancel allocation use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
+                    $this->bo->send_admin_notification($allocation, $maildata, $system_message);
 					$this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
 
@@ -116,7 +124,7 @@
 				$invalid_dates = array();
 				$valid_dates = array();
 	
-                $mailadresses = $this->building_users($allocation['building_id'],$allocation['organization_id']); 
+                $mailadresses = $this->building_users($allocation['building_id'],$allocation['organization_id']);
 
                 $maildata = array();
                 $maildata['outseason'] = $outseason;		
@@ -157,8 +165,8 @@
 							}
 							$info_deleted = lang("Allocation deleted on")." ".$system_message['building_name'].":<br />".$res_names." - ".pretty_timestamp($allocation['from_'])." - ".pretty_timestamp($allocation['to_']);
 			                $system_message['message'] = $system_message['message']."<br />".$info_deleted;
-							$this->system_message_bo->add($system_message);
-
+                            $this->system_message_bo->add($system_message);
+                            $this->bo->send_admin_notification($allocation, $maildata, $system_message);
                             $this->bo->send_notification($allocation, $maildata, $mailadresses);
 	                        $this->bo->so->delete_allocation($id);
 	                        $this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
@@ -246,9 +254,9 @@
 								$info_deleted = $info_deleted."<br />".$res_names." - ".pretty_timestamp($valid_date['from_'])." - ".pretty_timestamp($valid_date['to_']);
 							}
 			                $system_message['message'] = $system_message['message']."<br />".$info_deleted;
+                            $this->bo->send_admin_notification($allocation, $maildata, $system_message);
                             $this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->system_message_bo->add($system_message);
-
 							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
 						}
 	                }

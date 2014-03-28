@@ -40,6 +40,7 @@
 							'column' 	=> 'name'
 					)),
 					'description'	=> array('type' => 'string', 'query' => true, 'required' => true),
+                    'equipment'	=> array('type' => 'string', 'query' => true, 'required' => false),
 					'contact_name'	=> array('type' => 'string', 'query' => true, 'required'=> true),
 					'contact_email'	=> array('type' => 'string', 'required'=> true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),

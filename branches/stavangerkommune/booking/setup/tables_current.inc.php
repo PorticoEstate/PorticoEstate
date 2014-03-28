@@ -186,6 +186,7 @@
 				'building_name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False),
+                'equipment' => array('type' => 'text', 'nullable' => True),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
 				'contact_email' => array('type' => 'text', 'nullable' => False),
 				'contact_phone' => array('type' => 'text', 'nullable' => False),

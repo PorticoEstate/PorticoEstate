@@ -32,7 +32,7 @@
 			$this->resource_bo = CreateObject('booking.boresource');
 			$this->document_bo = CreateObject('booking.bodocument_building');
 			self::set_active_menu('booking::applications');
-			$this->fields = array('description', 'resources', 'activity_id', 
+			$this->fields = array('description', 'equipment', 'resources', 'activity_id',
 								  'building_id', 'building_name', 'contact_name', 
 								  'contact_email', 'contact_phone', 'audience',
 								  'active', 'accepted_documents');
@@ -584,12 +584,14 @@
 					$timestamp =  strtotime($from);
 					$from =  date("Y-m-d H:i:s",$timestamp);
 				}
+
 				foreach ($_POST['to_'] as &$to) {
 					$timestamp =  strtotime($to);
 					$to =  date("Y-m-d H:i:s",$timestamp);
 				}
 
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+
 
 				if(!$errors)
 				{

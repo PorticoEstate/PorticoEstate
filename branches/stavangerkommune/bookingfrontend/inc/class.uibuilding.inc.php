@@ -27,7 +27,10 @@
 
             $building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
             $start = phpgw::get_var('start', 'GET');
+            $res = phpgw::get_var('res', 'GET');
 
+            $timestart = 8.0;
+            $timeend = 16.0;
             if ($start == 0) {
                 $timestart = 0.0;
                 $timeend = 8.0;
@@ -49,7 +52,7 @@
                 "Sun" => "Søndag"
             );
 
-            $bookings = $this->booking_bo->building_infoscreen_schedule(phpgw::get_var('id', 'GET'),$date);
+            $bookings = $this->booking_bo->building_infoscreen_schedule(phpgw::get_var('id', 'GET'), $date, $res);
 
             $from = clone $date;
             $from->setTime(0, 0, 0);

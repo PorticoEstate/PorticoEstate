@@ -372,6 +372,10 @@
 					if (!$errors)
 					{
 
+                        $max_dato = strtotime($_POST['to_']); // highest date from input
+
+                        $season = $this->season_bo->read_single($booking['season_id']);
+
 						if ($_POST['recurring'] == 'on') {
 							$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
 						} 
@@ -381,10 +385,6 @@
 							$_POST['repeat_until'] = $season['to_'];
 						} 
 
-						$max_dato = strtotime($_POST['to_']); // highest date from input
-	
-						$season = $this->season_bo->read_single($booking['season_id']);
-				
 						$where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d', strtotime($_POST['from_'])));
 						if ($_POST['recurring'] == 'on') {
 							$where_clauses[] = sprintf("bb_booking.to_ < '%s 00:00:00'", date('Y-m-d', $repeat_until));
@@ -635,7 +635,7 @@
 		{
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
-            
+
 			if ($config->config_data['user_can_delete_bookings'] != 'yes') {
 
 	        	$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
@@ -651,8 +651,16 @@
 	                $repeat_until = $_POST['repeat_until'];
 	                $field_interval = $_POST['field_interval'];
 	                $delete_allocation = $_POST['delete_allocation'];
-	
-					date_default_timezone_set("Europe/Oslo");
+                    $allocation = $this->allocation_bo->read_single($booking['allocation_id']);
+
+                    $maildata = array();
+                    $maildata['outseason'] = $outseason;
+                    $maildata['recurring'] = $recurring;
+                    $maildata['repeat_until'] = $repeat_until;
+                    $maildata['delete_allocation'] = $delete_allocation;
+
+
+                    date_default_timezone_set("Europe/Oslo");
 					$date = new DateTime(phpgw::get_var('date'));
 					$system_message = array();
 					$system_message['building_id'] = intval($booking['building_id']);
@@ -661,7 +669,7 @@
 					$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 	                $system_message['type'] = 'cancelation';
 					$system_message['status'] = 'NEW';
-					$system_message['name'] = ' ';
+					$system_message['name'] = $booking['group_name'];
 					$system_message['phone'] = ' ';
 					$system_message['email'] = ' ';
 					$system_message['title'] = lang('Cancelation of booking from')." ".$booking['group_name'];
@@ -669,6 +677,7 @@
 	                $link = self::link(array('menuaction' => 'booking.uibooking.delete','id' => $booking['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval, 'delete_allocation' => $delete_allocation));
 	                $link = mb_strcut($link,16,strlen($link));
 	                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel booking use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
+                    $this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
 
@@ -698,13 +707,12 @@
 	            $allocation_delete = array();
 	            $allocation_keep = array();
 
-                $mailadresses = $this->building_users($booking['building_id'],$booking['group_id'], $delete_allocation); 
-#               $grp = $this->organization_users($booking['group_id']); 
+                $mailadresses = $this->building_users($booking['building_id'],$booking['group_id'], $delete_allocation);
 
                 $maildata = array();
                 $maildata['outseason'] = $outseason;		
                 $maildata['recurring'] = $recurring;		
-                $maildata['repeat_until'] = $field_until;		
+                $maildata['repeat_until'] = $repeat_until;
                 $maildata['delete_allocation'] = $delete_allocation;
 
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -753,7 +761,7 @@
 						$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 		                $system_message['type'] = 'cancelation';
 						$system_message['status'] = 'NEW';
-						$system_message['name'] = ' ';
+						$system_message['name'] = $booking['group_name'];
 						$system_message['phone'] = ' ';
 						$system_message['email'] = ' ';
 						$system_message['title'] = lang("Cancelation of ".$inf_del." from")." ".$this->bo->so->get_organization($booking['group_id'])." - ".$booking['group_name'];
@@ -761,9 +769,8 @@
 							$res_names = $res_names.$this->bo->so->get_resource($res)." ";
 						}
 						$info_deleted = lang($inf_del." deleted on")." ".$system_message['building_name'].":<br />".$res_names." - ".pretty_timestamp($booking['from_'])." - ".pretty_timestamp($booking['to_']);
-
+                        $this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
                         $this->bo->send_notification($booking, $allocation, $maildata, $mailadresses);
-
 			            $system_message['message'] = $system_message['message']."<br />".$info_deleted;
 						$receipt = $this->system_message_bo->add($system_message);
 
@@ -810,7 +817,7 @@
 								if ($step == 3)
 								{
 				            	    $inf_del = "Bookings";
-	                                $stat = $this->bo->so->delete_booking($id);                            
+	                                $stat = $this->bo->so->delete_booking($id);
 	                            }                            
 	                        }
 	                        if ($_POST['delete_allocation'] == 'on')                         {
@@ -826,7 +833,7 @@
 	    							if ($step == 3)
 	    							{
 				            	       $inf_del = "Bookings and allocations";
-	                                   $stat = $this->bo->so->delete_allocation($aid);                            
+	                                   $stat = $this->bo->so->delete_allocation($aid);
 	                                }                            
 	                            }
 	                        }
@@ -852,7 +859,7 @@
 							$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 			                $system_message['type'] = 'cancelation';
 							$system_message['status'] = 'NEW';
-							$system_message['name'] = ' ';
+							$system_message['name'] = $booking['group_name'];
 							$system_message['phone'] = ' ';
 							$system_message['email'] = ' ';
 							$system_message['title'] = lang("Cancelation of ".$inf_del." from")." ".$this->bo->so->get_organization($booking['group_id'])." - ".$booking['group_name'];
@@ -864,9 +871,8 @@
 								$info_deleted = $info_deleted."<br />".$res_names." - ".pretty_timestamp($valid_date['from_'])." - ".pretty_timestamp($valid_date['to_']);
 							}
 				            $system_message['message'] = $system_message['message']."<br />".$info_deleted;
-
+                            $this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates);
                             $this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
-
 							$receipt = $this->system_message_bo->add($system_message);
 							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
 						}
