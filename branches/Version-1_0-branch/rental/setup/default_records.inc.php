@@ -243,7 +243,7 @@ $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, 
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('half-year','6')");
-$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterly','3')");
+$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('free_of_charge','0')");
 
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Fellesareal', '123456789', true, 34.59)");
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Administrasjon', 'Y900', true, 23.00)");
