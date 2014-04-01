@@ -62,7 +62,8 @@
 			'view_calendar_for_month' => true,
 			'view_calendar_for_year' => true,
 			'view_calendar_year_for_locations' => true,
-			'view_calendar_month_for_locations' => true
+			'view_calendar_month_for_locations' => true,
+			'update_bookmark'					=> true
 		);
 
 		public function __construct()
@@ -957,6 +958,38 @@
 		public function query()
 		{
 
+		}
+		public function update_bookmark()
+		{
+			$location_code = phpgw::get_var('location_code', 'string');
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$bookmarks = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
+			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$location_code]))
+			{
+				unset($bookmarks[$location_code]);
+				$status = lang('deleted');
+			}
+			else
+			{
+				if(! is_array($bookmarks))
+				{
+					$bookmarks = array();
+				}
+
+				$bookmarks[$location_code] = true;
+				$status = lang('added');
+			}
+			//FIXME:
+			$status = 'Implement me';
+
+			
+			phpgwapi_cache::user_set('controller', "location_bookmark", $bookmarks, $user_id);
+
+			return array
+			(
+				'status' => $status
+			);
 		}
 
 	}
