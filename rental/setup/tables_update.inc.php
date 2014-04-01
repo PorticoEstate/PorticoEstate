@@ -286,4 +286,14 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.16';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
-
+    
+    $test[] = '0.1.0.16';
+	function rental_upgrade0_1_0_16()
+	{	
+		$sql = "INSERT INTO rental_billing_term (title, months) VALUES ('free_of_charge','0')";
+		$db = clone $GLOBALS['phpgw']->db;
+		$result = $db->query($sql, __LINE__, __FILE__);
+				
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.17';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
