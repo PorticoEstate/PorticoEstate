@@ -243,6 +243,22 @@ phpgw::import_class('booking.sopermission');
 			$sort = phpgw::get_var('sort');
 			$dir = phpgw::get_var('dir');
 
+			/*
+			 * Due to problem on order with offset - we need to set an additional parameter in some cases
+			 * http://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
+			 */
+
+			switch($sort)
+			{
+				case 'cost':
+					$_sort = array('cost','id');
+					break;
+
+				default:
+					$_sort = $sort;
+					break;
+			}
+
 			$filters = array();
 			foreach($this->bo->so->get_field_defs() as $field => $params) {
 				if(phpgw::get_var("filter_$field")) {
@@ -283,7 +299,7 @@ phpgw::import_class('booking.sopermission');
 				'start' => $start,
 				'results' => $results,
 				'query'	=> $query,
-				'sort'	=> $sort,
+				'sort'	=> $_sort,
 				'dir'	=> $dir,
 				'filters' => $filters
 			);
