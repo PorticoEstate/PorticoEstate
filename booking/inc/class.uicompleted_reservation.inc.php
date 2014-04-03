@@ -253,7 +253,33 @@ phpgw::import_class('booking.sopermission');
 				case 'cost':
 					$_sort = array('cost','id');
 					break;
-
+				case 'reservation_type':
+					$_sort = array('reservation_type','id');
+					break;
+				case 'building_name':
+					$_sort = array('building_name','id');
+					break;
+				case 'organization_name':
+					$_sort = array('organization_name','id');
+					break;
+				case 'contact_name':
+					$_sort = array('contact_name','id');
+					break;
+				case 'customer_type':
+					$_sort = array('customer_type','id');
+					break;
+				case 'from_':
+					$_sort = array('from_','id');
+					break;
+				case 'to_':
+					$_sort = array('to_','id');
+					break;
+				case 'exported':
+					$_sort = array('exported','id');
+					break;
+				case 'export_file_id':
+					$_sort = array('export_file_id','id');
+					break;
 				default:
 					$_sort = $sort;
 					break;
