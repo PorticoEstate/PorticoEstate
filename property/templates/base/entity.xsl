@@ -585,6 +585,32 @@
 								<table>
 									<xsl:choose>
 										<xsl:when test="mode='edit'">
+											<xsl:choose>
+												<xsl:when test="department='1'">
+													<tr>
+														<td>
+															<xsl:value-of select="php:function('lang', 'department')"/>
+														</td>
+														<td>
+															<div class="autocomplete">
+																<input id="department_id" name="department_id" type="hidden" value="department_id">
+																</input>
+																<input id="department_name" name="department_name" type="text" value="{department_name}" size='60'>
+																	<xsl:choose>
+																		<xsl:when test="disabled!=''">
+																			<xsl:attribute name="disabled">
+																				<xsl:text>disabled</xsl:text>
+																			</xsl:attribute>
+																		</xsl:when>
+																	</xsl:choose>
+																</input>
+																<div id="department_container"/>
+															</div>
+														</td>
+													</tr>
+												</xsl:when>
+											</xsl:choose>
+
 											<xsl:call-template name="location_form"/>
 										</xsl:when>
 										<xsl:otherwise>
