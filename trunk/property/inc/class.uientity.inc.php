@@ -2378,6 +2378,22 @@ JS;
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
 
+			if($category['department'] && $mode == 'edit')
+			{
+					$_autocomplete = <<<JS
+
+					YAHOO.util.Event.addListener(window, "load", function()
+					{
+						var oArgs = {menuaction:'property.bogeneric.get_autocomplete', type:'department'};
+						var strURL = phpGWLink('index.php', oArgs, true);
+
+					    YAHOO.portico.autocompleteHelper(strURL,
+                               'department_name', 'department_id', 'department_container');
+
+					});
+JS;
+				$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+			}
 
 			$data = array
 			(
@@ -2385,6 +2401,7 @@ JS;
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
 					'enable_bulk'					=> $category['enable_bulk'],
+					'department'					=> $category['department'],
 					'value_location_id' 			=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location),
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
