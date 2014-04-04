@@ -483,3 +483,22 @@
 		}
 	}
 
+	/**
+	* Update catch version from 0.9.17.515 to 0.9.17.516
+	* Add department-flag to entities
+	*/
+
+	$test[] = '0.9.17.515';
+	function catch_upgrade0_9_17_515()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','department',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.516';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+

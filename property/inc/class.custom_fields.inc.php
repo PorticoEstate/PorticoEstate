@@ -74,6 +74,9 @@
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
+//			_debug_array($location_id);
+//			_debug_array($values);die();
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$input_type_array = array
