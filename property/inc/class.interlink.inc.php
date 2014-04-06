@@ -249,7 +249,7 @@
 		 * @return string the linkt to the the related item
 		 */
 
-		public function get_relation_link($linkend_location, $id, $function = 'edit')
+		public function get_relation_link($linkend_location, $id, $function = 'edit', $external = false)
 		{
 			$link = array();
 
@@ -339,7 +339,14 @@
 					);
 			}
 
-			return $GLOBALS['phpgw']->link('/index.php',$link);	
+			if($external)
+			{
+				return $GLOBALS['phpgw']->link('/index.php',$link, false, true);					
+			}
+			else
+			{
+				return $GLOBALS['phpgw']->link('/index.php',$link);	
+			}
 		}
 
 		/**

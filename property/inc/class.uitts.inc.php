@@ -1790,7 +1790,8 @@
 			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,'property');
 
 				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
@@ -2363,7 +2364,7 @@
 				}
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,'property');
 
 				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
@@ -2432,7 +2433,7 @@
 				{
 					$values['assignedto'] = $this->account;
 				}
-
+/*
 				if(isset($values_attribute) && is_array($values_attribute))
 				{
 					foreach ($values_attribute as $attribute )
@@ -2443,7 +2444,7 @@
 						}
 					}
 				}
-
+*/
 				$receipt = $this->bo->update_ticket($values,$id, $receipt, $values_attribute);
 
 				if ( (isset($values['send_mail']) && $values['send_mail']) 

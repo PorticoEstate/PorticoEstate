@@ -143,7 +143,7 @@
 				$datatable['config']['base_java_url'] = "menuaction:'property.uievent.index',"
 					."location_id:'{$this->location_id}',"
 					."user_id:'{$this->user_id}',"
-					."status_id:'{$this->status_id}'";					
+					."status_id:'{$this->status_id}'";
 
 				$values_combo_box = array();
 
@@ -289,7 +289,7 @@
 							)
 						)
 					)
-				);				
+				);
 				$dry_run = true;
 			}
 
@@ -523,7 +523,7 @@
 
 			if($dry_run)
 			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
@@ -667,15 +667,23 @@
 				{
 					if(!isset($values['descr']) || !$values['descr'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please enter a description'));									
+						$receipt['error'][]=array('msg'=>lang('Please enter a description'));
 					}
 					if(!isset($values['responsible_id']) || !$values['responsible_id'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please select a responsible'));									
+						$receipt['error'][]=array('msg'=>lang('Please select a responsible'));
 					}
 					if(!isset($values['action']) || !$values['action'])
 					{
-		//				$receipt['error'][]=array('msg'=>lang('Please select an action'));									
+						$receipt['error'][]=array('msg'=>lang('Please select an action'));
+					}
+					if(!isset($values['start_date']) || !$values['start_date'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a start date'));
+					}
+					if(!isset($values['repeat_type']) || !$values['repeat_type'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a repeat type'));
 					}
 
 /*					if(isset($values['repeat_day']))
@@ -698,6 +706,7 @@
 
 						$js = "opener.document.form.{$field_name}.value = '{$receipt['id']}';\n";
 						$js .= "opener.document.form.{$field_name}_descr.value = '{$values['descr']}';\n";
+						$js .= "opener.document.form.submit();\n";
 
 						if (isset($values['save']) && $values['save'])
 						{
@@ -825,7 +834,7 @@
 					'value_id'						=> isset($values['id']) ? $values['id'] : '',
 
 					'lang_next_run'					=> lang('next run'),
-					'value_next_run'				=> isset($values['next']) ? $values['next'] : '',				
+					'value_next_run'				=> isset($values['next']) ? $values['next'] : '',
 					'value_descr'					=> $values['descr'],
 					'lang_descr_text'				=> lang('Enter a description of the record'),
 					'lang_save_text'				=> lang('Save the record'),
@@ -931,6 +940,7 @@
 						'number'			=> $i,
 						'time'				=> $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],$dateformat),
 						'performed'			=> $GLOBALS['phpgw']->common->show_date($entry['receipt_date'],$dateformat),
+						'user'				=> $entry['receipt_user_id'] ? $GLOBALS['phpgw']->accounts->get($entry['receipt_user_id'])->__toString() : '',
 						'alarm_id'			=> $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],'Ymd'),
 						'enabled'			=> isset($entry['exception']) && $entry['exception']==true ? '' : 1,
 						'location_id' 		=> $entry['location_id'],
@@ -972,7 +982,7 @@
 			{
 				if(count($values))
 				{
-					_debug_array($values);
+//					_debug_array($values);
 					return json_encode($values);
 				}
 				else
@@ -998,11 +1008,12 @@
 			$myColumnDefs[0] = array
 				(
 					'name'   => "0",
-					'values'  => json_encode(array( 
+					'values'  => json_encode(array(
 						array('key' => 'number', 'label'=>'#', 'sortable'=>true,'resizeable'=>true,'width'=>20),
 						array('key' => 'time', 'label'=>lang('plan'), 'sortable'=>true,'resizeable'=>true,'width'=>80),
-						array('key' => 'performed', 'label'=>lang('performed'), 'sortable'=>true,'resizeable'=>true,'width'=>80),					
-						array('key' => 'remark', 'label'=>lang('remark'), 'sortable'=>true,'resizeable'=>true,'width'=>140),					
+						array('key' => 'performed', 'label'=>lang('performed'), 'sortable'=>true,'resizeable'=>true,'width'=>80),
+						array('key' => 'user', 'label'=>lang('user'), 'sortable'=>true,'resizeable'=>true,'width'=>80),
+						array('key' => 'remark', 'label'=>lang('remark'), 'sortable'=>true,'resizeable'=>true,'width'=>140),
 						array('key' => 'enabled','label'=> lang('enabled'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>30),
 						array('key' => 'alarm_id','label'=> 'alarm_id','sortable'=>true,'resizeable'=>true,'hidden'=>false),
 						array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
@@ -1011,7 +1022,7 @@
 			$myButtons[0] = array
 				(
 					'name'   => "0",
-					'values'  => json_encode(array( 
+					'values'  => json_encode(array(
 						array('id' =>'values[set_receipt]','type'=>'buttons', 'value'=>'Receipt', 'label'=> lang('Receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 						array('id' =>'values[delete_receipt]','type'=>'buttons', 'value'=>'Delete Receipt', 'label'=> lang('Delete receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 						array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
