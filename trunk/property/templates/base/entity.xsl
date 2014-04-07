@@ -593,9 +593,9 @@
 														</td>
 														<td>
 															<div class="autocomplete">
-																<input id="department_id" name="department_id" type="hidden" value="department_id">
+																<input id="department_id" name="department_id" type="hidden" value="{value_department_id}">
 																</input>
-																<input id="department_name" name="department_name" type="text" value="{department_name}" size='60'>
+																<input id="department_name" name="department_name" type="text" value="{value_department_name}" title="{value_department_name_path}" size='60'>
 																	<xsl:choose>
 																		<xsl:when test="disabled!=''">
 																			<xsl:attribute name="disabled">
