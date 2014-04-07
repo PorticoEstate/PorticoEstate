@@ -168,7 +168,7 @@
 			$filtermethod = "WHERE fm_event.id = {$id}";
 
 			$sql = "SELECT fm_event.id, fm_event.descr, schedule_time, exception_time, location_id, location_item_id,"
-				." attrib_id, responsible_id, enabled, responsible_id, fm_event.user_id, fm_event_receipt.entry_date as receipt_date"
+				." attrib_id, responsible_id, enabled, responsible_id, fm_event.user_id, fm_event_receipt.entry_date as receipt_date, fm_event_receipt.user_id as receipt_user_id"
 				." FROM  fm_event"
 				." {$this->_join} fm_event_schedule ON (fm_event.id = fm_event_schedule.event_id)"
 				." {$this->_left_join} fm_event_exception ON (fm_event_schedule.event_id = fm_event_exception.event_id AND fm_event_schedule.schedule_time = fm_event_exception.exception_time)"
@@ -193,6 +193,7 @@
 						'enabled'			=> $this->_db->f('enabled'),
 						'exception'			=> $this->_db->f('exception_time') ? 'X' :'',
 						'receipt_date'		=> $this->_db->f('receipt_date'),
+						'receipt_user_id'	=> $this->_db->f('receipt_user_id'),
 						'responsible_id'	=> $this->_db->f('responsible_id'),
 						'user_id'			=> $this->_db->f('user_id')
 					);
@@ -405,12 +406,12 @@
 
 			$id = $this->_db->next_id($table);
 			$cols[] = 'id';
-				$vals[] = $id;
+			$vals[] = $id;
 
 			$cols	= implode(",", $cols);
-				$vals	= $this->_db->validate_insert($vals);
+			$vals	= $this->_db->validate_insert($vals);
 
-				$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$vals})",__LINE__,__FILE__);
+			$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$vals})",__LINE__,__FILE__);
 
 			if($this->_db->transaction_commit())
 			{

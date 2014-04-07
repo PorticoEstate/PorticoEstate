@@ -452,7 +452,8 @@
 					'jasperupload'				=> $this->db->f('jasperupload'),
 					'parent_id'					=> $this->db->f('parent_id'),
 					'level'						=> $this->db->f('level'),
-					'location_id'				=> $this->db->f('location_id')
+					'location_id'				=> $this->db->f('location_id'),
+					'department'				=> $this->db->f('department')
 					);
 			}
 
@@ -579,7 +580,7 @@
 
 			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-
+			$fd['department_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			return $fd;
 		}
 
@@ -629,12 +630,13 @@
 					$values['enable_bulk'],
 					$values['jasperupload'],
 					$values['parent_id'],
+					$values['department'],
 					$level
 				);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,enable_bulk,jasperupload,parent_id,level ) "
+			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,enable_bulk,jasperupload,parent_id,department,level ) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 
@@ -850,7 +852,8 @@
 						'enable_bulk'				=> $entity['enable_bulk'],
 						'jasperupload'				=> $entity['jasperupload'],
 						'parent_id'					=> $entity['parent_id'],
-						'level'						=> $level
+						'level'						=> $level,
+						'department'				=> $entity['department']
 					);
 
 				$value_set	= $this->db->validate_update($value_set);

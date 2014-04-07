@@ -388,6 +388,8 @@ condition survey import	property	no	Import av Tilstandsanalyse
 periodization	property	no	Periodisering
 periodization start	property	no	Startperiode
 periodization outline	property	no	Periodiseringsfordeling
+delete receipt	property	no	Slett kvittering
+plan 	property	no	Tidsplan
 planned year	property	no	Planlagt år
 planning	property	no	Planlagt
 planning date	property	no	Dato planlagt disponering

@@ -63,6 +63,7 @@
 				'jasperupload' => array('type' => 'int','precision' => 2,'nullable' => True),
 				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'level' => array('type' => 'int','precision' => '4','nullable' => True),
+				'department' => array('type' => 'int','precision' => '2','nullable' => True),
 			),
 			'pk' => array('entity_id','id'),
 			'fk' => array(),

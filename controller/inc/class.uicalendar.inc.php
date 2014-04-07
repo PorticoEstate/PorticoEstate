@@ -62,7 +62,8 @@
 			'view_calendar_for_month' => true,
 			'view_calendar_for_year' => true,
 			'view_calendar_year_for_locations' => true,
-			'view_calendar_month_for_locations' => true
+			'view_calendar_month_for_locations' => true,
+			'update_bookmark'					=> true
 		);
 
 		public function __construct()
@@ -451,8 +452,21 @@
 			$control_id = phpgw::get_var('control_id', 'int');
 			$control = $this->so_control->get_single($control_id);
 			$year = phpgw::get_var('year', 'int');
-			$location_code = phpgw::get_var('location_code');
 
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$bookmark_locations  = array();
+			$bookmarks = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
+			if(is_array($bookmarks))
+			{
+				$bookmark_locations = array_keys($bookmarks);
+			}
+
+			if($location_code = phpgw::get_var('location_code'))
+			{
+				$bookmark_locations[] = $location_code;
+			}
+			
 			$locations_list = array();
 
 			if (is_numeric($control_id) & $control_id > 0)
@@ -493,7 +507,7 @@
 				{
 					$curr_location_code = $location['location_code'];
 					
-					if(!$location_code || $curr_location_code != $location_code)
+					if(!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
 					{
 						continue;
 					}
@@ -510,7 +524,14 @@
 
 					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
-					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
+
+					$locations_with_calendar_array[] = array
+					(
+						'location'			=> $location,
+						'calendar_array'	=> $calendar_array,
+						'selected'			=> $bookmarks && isset($bookmarks[$curr_location_code])
+					);
+
 				}
 
 				// COMPONENTS: Process aggregated values for controls with repeat type day or week
@@ -562,7 +583,7 @@
 				{
 					$curr_location_code = $location['location_code'];
 
-					if(!$location_code || $curr_location_code != $location_code)
+					if(!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
 					{
 						continue;
 					}
@@ -573,7 +594,12 @@
 					$year_calendar = new year_calendar($control, $year, null, $curr_location_code, "location");
 					$calendar_array = $year_calendar->build_calendar($check_lists_array);
 
-					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
+					$locations_with_calendar_array[] = array
+					(
+						'location'			=> $location,
+						'calendar_array'	=> $calendar_array,
+						'selected'			=> $bookmarks && isset($bookmarks[$curr_location_code])
+					);
 				}
 
 				foreach ($components_for_control_array as $component)
@@ -646,7 +672,20 @@
 			$control = $this->so_control->get_single($control_id);
 			$year = intval(phpgw::get_var('year'));
 			$month = intval(phpgw::get_var('month'));
-			$location_code = phpgw::get_var('location_code');
+
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$bookmark_locations  = array();
+			$bookmarks = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
+			if(is_array($bookmarks))
+			{
+				$bookmark_locations = array_keys($bookmarks);
+			}
+
+			if($location_code = phpgw::get_var('location_code'))
+			{
+				$bookmark_locations[] = $location_code;
+			}
 
 			if (is_numeric($control_id) & $control_id > 0)
 			{
@@ -685,7 +724,7 @@
 			{
 				$curr_location_code = $location['location_code'];
 
-				if(!$location_code || $curr_location_code != $location_code)
+				if(!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
 				{
 					continue;
 				}
@@ -696,7 +735,12 @@
                 $month_calendar = new month_calendar($control, $year, $month, null, $curr_location_code, "location");
 				$calendar_array = $month_calendar->build_calendar($check_lists_array);
 
-				$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
+				$locations_with_calendar_array[] = array
+				(
+					'location'			=> $location,
+					'calendar_array'	=> $calendar_array,
+					'selected'			=> $bookmarks && isset($bookmarks[$curr_location_code])
+				);
 			}
 
 			foreach ($components_for_control_array as $component)
@@ -957,6 +1001,35 @@
 		public function query()
 		{
 
+		}
+		public function update_bookmark()
+		{
+			$location_code = phpgw::get_var('location_code', 'string');
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$bookmarks = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
+			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$location_code]))
+			{
+				unset($bookmarks[$location_code]);
+				$status = lang('deleted');
+			}
+			else
+			{
+				if(! is_array($bookmarks))
+				{
+					$bookmarks = array();
+				}
+
+				$bookmarks[$location_code] = true;
+				$status = lang('added');
+			}
+			
+			phpgwapi_cache::user_set('controller', "location_bookmark", $bookmarks, $user_id);
+
+			return array
+			(
+				'status' => $status
+			);
 		}
 
 	}

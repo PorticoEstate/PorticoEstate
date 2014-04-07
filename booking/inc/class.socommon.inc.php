@@ -417,7 +417,22 @@
 			
 			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
 
-			$order = $sort ? "ORDER BY $sort $dir ": '';
+			/*
+			 * Due to problem on order with offset - we need to set an additional parameter in some cases
+			 * http://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
+			 */
+
+			if($sort)
+			{
+				if(is_array($sort))
+				{
+					$order = "ORDER BY {$sort[0]} {$dir}, {$sort[1]}";
+				}
+				else
+				{
+					$order = "ORDER BY {$sort} {$dir}";
+				}
+			}
 			
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
 			if ($results) 
@@ -499,7 +514,7 @@
 				'total_records' => $total_records,
 				'results'		=> $results,
 				'start'			=> $start,
-				'sort'			=> $sort,
+				'sort'			=> is_array($sort) ? $sort[0] : $sort,
 				'dir'			=> $dir
 			);
 		}

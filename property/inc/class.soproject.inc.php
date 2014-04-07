@@ -1805,6 +1805,36 @@
 			$this->db->query("INSERT INTO fm_project_buffer_budget ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
 			/**
+			 * In case the transfer is betwee two buffer-projects
+			 */
+			$this->db->query("SELECT project_type_id FROM fm_project WHERE id = {$project_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$project_type_id = $this->db->f('project_type_id');
+			if($project_type_id == 3)//buffer
+			{
+				$value_set = array
+				(
+					'buffer_project_id'	 => $to_project,
+					'year'				 => $year,
+					'amount_in'			 => $amount_out,
+					'amount_out'		 => $amount_in,
+					'from_project'		 => $project_id,
+					'to_project'		 => '',
+					'user_id'			 => $this->account,
+					'entry_date'		 => time(),
+					'active'			 => 1,
+					'remark'			 => $this->db->db_addslashes($transfer_remark)
+				);
+
+				$cols	 = implode(',', array_keys($value_set));
+				$values	 = $this->db->validate_insert(array_values($value_set));
+				$this->db->query("INSERT INTO fm_project_buffer_budget ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
+
+				return;
+			}
+
+			
+			/**
 			 * Transfer fund to another project
 			 * */
 			if($amount_out)

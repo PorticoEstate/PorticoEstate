@@ -93,7 +93,10 @@
 			<xsl:choose>
 				<xsl:when test="locations_with_calendar_array/child::node()">
 				
-			  	<xsl:for-each select="locations_with_calendar_array">
+					<xsl:variable name="lang_bookmark">
+						<xsl:value-of select="php:function('lang', 'bookmark')" />
+					</xsl:variable>
+					<xsl:for-each select="locations_with_calendar_array">
 			  		<tr>				
 						<xsl:choose>
 					        <xsl:when test="(position() mod 2) != 1">
@@ -103,8 +106,14 @@
 					            <xsl:attribute name="class">even</xsl:attribute>
 					        </xsl:otherwise>
 					    </xsl:choose>
-				    
 						<td class="title">
+							<input type="checkbox" name = "bookmark_location" value ="location/location_code" title="{$lang_bookmark}">
+							  <xsl:attribute name="onchange">javascript:update_bookmark('<xsl:value-of select="location/location_code"/>');</xsl:attribute>
+							  <xsl:if test="selected = 1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							  </xsl:if>
+							</input>
+							<xls:text> </xls:text>
 							<xsl:value-of select="location/location_code"/>
 						</td>
 						<td class="location-name">

@@ -69,15 +69,13 @@
 		var $cat_id;
 		var $location_info = array();
 		var $cached_events;
-		protected $event_functions = array
-			(
-				'send_sms'	=> 'send SMS'
-			);
+		protected $event_functions = array();
 
 		var $public_functions = array
 			(
 				'event_schedule_data'		=> true,
-				'event_schedule_week_data'	=> true
+				'event_schedule_week_data'	=> true,
+//				'action'					=> true
 			);
 
 
@@ -88,6 +86,25 @@
 			$this->sbox 		= CreateObject('phpgwapi.sbox');
 			$this->asyncservice = CreateObject('phpgwapi.asyncservice');
 
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
+			{
+				$this->event_functions[1] = array
+				(
+					'id' => 1,
+					'name' => 'Send SMS',
+					'action' => 'property.boevent.send_sms'
+				);
+			}
+
+			if(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+			{
+				$this->event_functions[2] = array
+				(
+					'id' => 2,
+					'name' => 'Send Email',
+					'action' => 'property.boevent.send_email'
+				);
+			}
 			if ($session)
 			{
 				$this->read_sessiondata();
@@ -241,7 +258,7 @@
 		{
 			$data['start_date'] = phpgwapi_datetime::date_to_timestamp($data['start_date']);
 			$data['end_date'] = phpgwapi_datetime::date_to_timestamp($data['end_date']);
-
+//			_debug_array($data);die();
 			if (isset($data['id']) && $data['id'] > 0 && $this->so->read_single($data['id']))
 			{
 				$receipt = $this->so->edit($data);
@@ -250,11 +267,11 @@
 			{
 				$receipt = $this->so->add($data);
 			}
-
+/*
 			$action_object		= CreateObject('property.sogeneric');
 			$action_object->get_location_info('event_action',false);
 			$action	= $action_object->read_single(array('id'=> $data['action']),$values = array());
-
+*/
 			$rpt_day = array
 				(
 					1		=> 0, //'Sunday',
@@ -364,11 +381,13 @@
 
 			$timer_data = array
 				(
-					'start'		=> $data['start_date'],
-					'enabled'	=> true,
-					'owner'		=> $account_id,
-					'enabled'	=> !! $data['enabled'],
-					'action'	=> $action['action']
+					'start'			=> $data['start_date'],
+					'enabled'		=> true,
+					'owner'			=> $account_id,
+					'enabled'		=> !! $data['enabled'],
+//					'action'		=> $action['action'],
+					'action'		=> $this->event_functions[$data['action']]['action'],
+					'action_data'	=> array('responsible_id' => $data['responsible_id'])
 				);
 
 			if($data['end_date'])
@@ -385,7 +404,7 @@
 
 			$location	= phpgw::get_var('location');
 
-			$id = "property{$location}::{$data['item_id']}::{$data['attrib_id']}";
+			$id = "property{$location}::{$data['item_id']}::{$receipt['id']}";
 			$timer_data['id'] = $id;
 
 			$this->asyncservice->cancel_timer($id);
@@ -509,28 +528,85 @@
 			$values					= $action_object->read(array('allrows'=> true));
  */
 			$list = array(0 => lang('none'));
-/*
-			foreach($values as $entry)
+
+			foreach($this->event_functions as $entry)
 			{
 				$list[$entry['id']] = $entry['name'];
 			}
- */
-			$list = array_merge($list,$this->event_functions);
 
 			return $this->sbox->getArrayItem('values[action]', $selected, $list, true);
 		}
 
-		protected function send_sms()
+		public function send_sms($data)
 		{
+			$parts = explode('::',$data['id']);
+			$id = $parts[1];
+			$location_arr = explode($parts[0]);
+			$interlink 	= CreateObject('property.interlink');
+			$relation_link = $interlink->get_relation_link($location_arr[1], $id, 'view', true);
+
+			$responsible_id = isset($data['action_data']['responsible_id']) ? $data['action_data']['responsible_id'] : 0;
+			if(!$responsible_id)
+			{
+				return false;
+			}
+			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$responsible_id);
+
+			$number = $comms[$entry['contact_id']]['mobile (cell) phone'];
+			$subject = lang('reminder');
+			$message = '<a href ="{$relation_link}">' . lang('record').' #' .$id .'</a>'."\n";
+
 			$data = array
 				(
-					'p_num_text'	=> 'xxxxxxxx',//number
-					'message'		=> 'dette er en melding'
+					'p_num_text'	=> $number,
+					'message'		=> "{$subject}:\n{$message}"
 				);
 
 			execMethod('sms.bosms.send_sms', $data);
 		}
 
+		public function send_email($data)
+		{
+			$parts = explode('::',$data['id']);
+			$id = $parts[1];
+			$location_arr = explode($parts[0]);
+			$interlink 	= CreateObject('property.interlink');
+			$relation_link = $interlink->get_relation_link($location_arr[1], $id, 'view', true);
+
+			$responsible_id = isset($data['action_data']['responsible_id']) ? $data['action_data']['responsible_id'] : 0;
+			if(!$responsible_id)
+			{
+				return false;
+			}
+			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$responsible_id);
+
+			$_address = $comms[$entry['contact_id']]['work email'];
+			$subject = lang('reminder');
+			$message = '<a href ="{$relation_link}">' . lang('record').' #' .$id .'</a>'."\n";
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+			try
+			{
+				$GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+			}
+			catch (phpmailerException $e)
+			{
+				$receipt['error'][] = array('msg' => $e->getMessage());
+				$GLOBALS['phpgw']->log->error(array(
+					'text' => 'property_boevent::send_email() failed with %1',
+					'p1'   => $e->getMessage(),
+					'p2'	 => '',
+					'line' => __LINE__,
+					'file' => __FILE__
+				));
+
+				return false;
+
+			}
+
+		}
 		/**
 		 * Find recurring events
 		 *

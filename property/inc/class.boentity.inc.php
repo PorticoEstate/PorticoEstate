@@ -493,7 +493,22 @@
 			}
 			$values = $this->custom->prepare($values, $this->type_app[$this->type],".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['view']);
 
-	//		$soadmin_entity	= CreateObject('property.soadmin_entity');
+			if($values['department_id'])
+			{
+				$bogeneric	= CreateObject('property.sogeneric');
+				$bogeneric->get_location_info('department');
+				$department = $bogeneric->read_single(array('id' => $values['department_id']));
+				$values['department_name'] = $department['name'];
+				$values['department_name_path']	= $department['name'];
+				if($department['parent_id'])
+				{
+					$path = $bogeneric->get_path(array('type' => 'department', 'id' => $department['parent_id']));
+					if($path)
+					{
+						$values['department_name_path']	.= '::' . implode(' > ', $path);					
+					}
+				}		
+			}
 
 			if($values['location_code'])
 			{

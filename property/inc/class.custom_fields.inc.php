@@ -74,6 +74,9 @@
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
+//			_debug_array($location_id);
+//			_debug_array($values);die();
+
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$input_type_array = array
@@ -395,7 +398,7 @@ JS;
 						$attributes['enabled']			= $event['enabled'] ? lang('yes') : lang('no');
 						$attributes['lang_enabled']		= lang('enabled');
 
-						$id = "property{$location}::{$values['id']}::{$attributes['id']}";
+						$id = "property{$location}::{$attributes['item_id']}::{$attributes['value']}";
 						$job = execMethod('phpgwapi.asyncservice.read', $id);
 
 						$attributes['next']				= $GLOBALS['phpgw']->common->show_date($job[$id]['next'],$dateformat);
