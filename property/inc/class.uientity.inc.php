@@ -1526,6 +1526,10 @@ JS;
 
 			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
+				if($category['department'])
+				{
+					$values['extra']['department_id'] = phpgw::get_var('department_id', 'int');
+				}
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
 					$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
@@ -2402,6 +2406,9 @@ JS;
 					'myColumnDefs'					=> $myColumnDefs,	
 					'enable_bulk'					=> $category['enable_bulk'],
 					'department'					=> $category['department'],
+					'value_department_id'			=> $values['department_id'],
+					'value_department_name'			=> $values['department_name'],
+					'value_department_name_path'	=> $values['department_name_path'],
 					'value_location_id' 			=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location),
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],

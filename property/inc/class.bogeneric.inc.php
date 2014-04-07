@@ -166,7 +166,6 @@
 						}
 					}
 				}
-
 			}
 
 			$this->total_records = $this->so->total_records;

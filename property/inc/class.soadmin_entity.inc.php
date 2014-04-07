@@ -580,7 +580,7 @@
 
 			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-
+			$fd['department_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			return $fd;
 		}
 

@@ -7937,3 +7937,49 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.670 to 0.9.17.671
+	* Add department_id to entity tables
+	*/
+	$test[] = '0.9.17.679';
+	function property_upgrade0_9_17_679()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_entity_category");
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+				'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id')
+			);
+		}
+
+		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
+
+		foreach ($categories as $category)
+		{
+			$table = "fm_entity_{$category['entity_id']}_{$category['cat_id']}";
+			if(in_array($table, $tables))
+			{
+				$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
+				if(!isset($metadata['department_id']))
+				{
+					$GLOBALS['phpgw_setup']->oProc->AddColumn($table,'department_id',array('type' => 'int','precision' => 4,'nullable' => True));				
+				}
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.680';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
