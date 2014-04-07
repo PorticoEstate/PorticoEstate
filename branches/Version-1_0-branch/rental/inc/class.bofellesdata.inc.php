@@ -307,7 +307,7 @@
 			{
 				$sql = strtolower($sql);
 			}
-			$db->query($sql,__LINE__,__FILE__);
+			$db->limit_query($sql,0,__LINE__,__FILE__);
 
 			$org_enhet_field	= $db->Type == 'postgres' ? 'org_enhet_id' : 'ORG_ENHET_ID';
 			$name_field			= $db->Type == 'postgres' ? 'org_navn' : 'ORG_NAVN';

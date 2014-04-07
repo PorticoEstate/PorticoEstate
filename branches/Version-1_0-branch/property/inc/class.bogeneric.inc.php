@@ -43,6 +43,10 @@
 		var $location_info = array();
 		var $appname;
 		var $allrows;
+		var $public_functions = array
+			(
+				'get_autocomplete'			=> true
+			);
 
 		function __construct($session=false)
 		{
@@ -162,7 +166,6 @@
 						}
 					}
 				}
-
 			}
 
 			$this->total_records = $this->so->total_records;
@@ -319,4 +322,18 @@
 			return $history_type;
 		}
 
+		function get_autocomplete()
+		{
+			$this->get_location_info();
+			$values = $this->read();
+
+			foreach($values as &$entry)
+			{
+				if($entry['parent_id'])
+				{
+					$entry['name'] .= "::{$entry['parent_id']}";
+				}
+			}
+			return array('ResultSet'=> array('Result'=>$values));
+		}
 	}

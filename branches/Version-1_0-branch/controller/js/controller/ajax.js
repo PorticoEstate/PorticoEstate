@@ -707,3 +707,23 @@ function update_order_nr_for_row(element, sign){
 	// Updating order number in front of row
 	$(span_order_nr).text(updated_order_nr);
 }
+
+//Updates order number for hidden field and number in front of row
+function update_bookmark(location_code){
+		var oArgs = {menuaction:'controller.uicalendar.update_bookmark', location_code:location_code};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+	
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl,
+			  dataType: 'json',
+	    	  success: function(data) {
+	    		  if(data)
+				  {
+					  alert(data.status);
+				  }
+	    	  }
+		   });
+
+
+}

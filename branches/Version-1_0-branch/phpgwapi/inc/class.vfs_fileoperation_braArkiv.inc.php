@@ -132,19 +132,14 @@
 
 		/**
 		* Get filesize
-		* @param object $p path_parts
+		* @param object $path_parts path_parts
 		* @return integer filesize
 		*/
-		public function filesize($p)
+		public function filesize($path_parts)
 		{
-			$sql = "SELECT size FROM phpgw_vfs WHERE  directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
-				. " AND ((mime_type != 'journal' AND mime_type != 'journal-deleted') OR mime_type IS NULL)"
-				. " ORDER BY file_id ASC";//Get the latest version.
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-
-			return $this->db->f('size');
-		}
+			$path = $path_parts->real_full_path;
+			return filesize($path);
+			}
 
 		/**
 		* Retreive file contents
@@ -216,7 +211,14 @@
 			{
 				$fileid = $this->get_file_id($to); //this represent the document
 			}
-
+/*			
+			$putFileAsByteArray = new putFileAsByteArray();
+			$putFileAsByteArray->secKey = $this->secKey;
+			$putFileAsByteArray->documentId = $fileid;
+			$putFileAsByteArray->filename = $to->fake_name_clean;
+			$putFileAsByteArray->file = base64_encode($content);
+			$putFileAsByteArrayResponse = $this->Services->putFileAsByteArray($putFileAsByteArray);
+*/
 			$fileTransferSendChunkedInit = new fileTransferSendChunkedInit();
 			$fileTransferSendChunkedInit->secKey = $this->secKey;
 			$fileTransferSendChunkedInit->docid = $fileid;
@@ -224,7 +226,7 @@
 
 			$fileTransferSendChunkedInitResponse = $this->Services->fileTransferSendChunkedInit($fileTransferSendChunkedInit);
 			$transaction_id = $fileTransferSendChunkedInitResponse->fileTransferSendChunkedInitResult;
-
+//			_debug_array($transaction_id);die();
 			$new_string = chunk_split(base64_encode($content),1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
 
 			$content_arr = explode('\r\n', $new_string);
@@ -267,6 +269,19 @@
 		*/
 		public function touch($p)
 		{
+			static $check_document = array(); // only touch it once.
+			
+			if($check_document[$p>real_full_path])
+			{
+				return true;
+			}
+
+			$check_document[$p>real_full_path] = true;
+/*
+			$bt = debug_backtrace();
+			echo "<b>db::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
+			unset($bt);
+*/
 			$document = new Document();
 			$document->BBRegTime = date('Y-m-d');
 			$document->BaseClassName = "Eiendomsarkiver";
@@ -351,7 +366,7 @@
 			$createDocument->assignDocKey = 0;
 			$createDocument->doc = $document;
 
-	//		_debug_array($createDocument);die();
+//_debug_array($createDocument);//die();
 
 			$createDocumentResponse = $this->Services->createDocument($createDocument);
 			$document_id =  $createDocumentResponse->createDocumentResult->ID;

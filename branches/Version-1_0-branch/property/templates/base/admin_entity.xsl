@@ -623,6 +623,31 @@
 						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>
+						<xsl:when test="department != ''">
+							<tr>
+								<td>
+									<xsl:variable name="lang_department">
+										<xsl:value-of select="php:function('lang', 'department')"/>
+									</xsl:variable>
+									<xsl:value-of select="$lang_department"/>
+								</td>
+								<td>
+									<input type="checkbox" name="values[department]" value="1">
+										<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'department')"/>
+											</xsl:attribute>
+										<xsl:if test="value_department = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+
+					<xsl:choose>
 						<xsl:when test="lookup_tenant != ''">
 							<tr>
 								<td>

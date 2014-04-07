@@ -1382,13 +1382,6 @@
 						}
 					}
 
-					if(isset($ticket['extra']) && is_array($ticket['extra']))
-					{
-						foreach ($ticket['extra'] as $column => $value)
-						{
-							$value_set[$column]	= $value;
-						}
-					}
 
 					$value_set	= $this->db->validate_update($value_set);
 
@@ -1424,7 +1417,6 @@
 
 			$value_set['modified_date']	= time();
 
-
 			// check order-rights
 			
 			$order_add 	= $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
@@ -1441,6 +1433,20 @@
 			}
 
 			$value_set	= $this->db->validate_update($value_set);
+			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
+
+			$value_set	= array();
+
+			if(isset($ticket['extra']) && is_array($ticket['extra']))
+			{
+				foreach ($ticket['extra'] as $column => $value)
+				{
+					$value_set[$column]	= $value;
+				}
+			}
+
+			$value_set	= $this->db->validate_update($value_set);
+
 			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();

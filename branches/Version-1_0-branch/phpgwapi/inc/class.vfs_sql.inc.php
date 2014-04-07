@@ -1151,7 +1151,7 @@
 						return false;
 					}
 
-					$size = $this->fileoperation->filesize($t);
+					$size = $this->fileoperation->filesize($f);
 				}
 				else
 				{
@@ -1420,7 +1420,7 @@
 						$error = $error. "t->real_full_path: $t->real_full_path \n";
 						throw new Exception($error);
 					}
-					$size = $this->fileoperation->filesize($t);
+					$size = $this->fileoperation->filesize($f);
 				}
 				else
 				{

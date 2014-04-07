@@ -483,3 +483,66 @@
 		}
 	}
 
+	/**
+	* Update catch version from 0.9.17.515 to 0.9.17.516
+	* Add department-flag to entities
+	*/
+
+	$test[] = '0.9.17.515';
+	function catch_upgrade0_9_17_515()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','department',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.516';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+
+
+	/**
+	* Update catch version from 0.9.17.516 to 0.9.17.517
+	* Add department_id to catch tables
+	*/
+	$test[] = '0.9.17.516';
+	function catch_upgrade0_9_17_516()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_catch_category");
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+				'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id')
+			);
+		}
+
+		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
+
+		foreach ($categories as $category)
+		{
+			$table = "fm_catch_{$category['entity_id']}_{$category['cat_id']}";
+			if(in_array($table, $tables))
+			{
+				$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
+				if(!isset($metadata['department_id']))
+				{
+					$GLOBALS['phpgw_setup']->oProc->AddColumn($table,'department_id',array('type' => 'int','precision' => 4,'nullable' => True));				
+				}
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.517';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+

@@ -1526,6 +1526,10 @@ JS;
 
 			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
+				if($category['department'])
+				{
+					$values['extra']['department_id'] = phpgw::get_var('department_id', 'int');
+				}
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
 					$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
@@ -2378,6 +2382,22 @@ JS;
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
 
+			if($category['department'] && $mode == 'edit')
+			{
+					$_autocomplete = <<<JS
+
+					YAHOO.util.Event.addListener(window, "load", function()
+					{
+						var oArgs = {menuaction:'property.bogeneric.get_autocomplete', type:'department'};
+						var strURL = phpGWLink('index.php', oArgs, true);
+
+					    YAHOO.portico.autocompleteHelper(strURL,
+                               'department_name', 'department_id', 'department_container');
+
+					});
+JS;
+				$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+			}
 
 			$data = array
 			(
@@ -2385,6 +2405,10 @@ JS;
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
 					'enable_bulk'					=> $category['enable_bulk'],
+					'department'					=> $category['department'],
+					'value_department_id'			=> $values['department_id'],
+					'value_department_name'			=> $values['department_name'],
+					'value_department_name_path'	=> $values['department_name_path'],
 					'value_location_id' 			=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location),
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
