@@ -1443,11 +1443,11 @@
 				{
 					$value_set[$column]	= $value;
 				}
+
+				$value_set	= $this->db->validate_update($value_set);
+
+				$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 			}
-
-			$value_set	= $this->db->validate_update($value_set);
-
-			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
 
