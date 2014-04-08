@@ -2256,6 +2256,16 @@
 					$budget_acc		 = 0;
 				}
 
+				/**
+				 * maintenance: start over each year
+				 */
+				if($project_type_id == 4 && $_year != $entry['year'])
+				{
+					$_year = $entry['year'];
+					$deviation_acc	 = 0;
+					$budget_acc		 = 0;
+				}
+
 				if(abs($entry['actual_cost']) > 0 )
 				{
 					$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
@@ -2570,7 +2580,7 @@
 
 				$this->update_budget($id, $year, $periodization_id, $new_budget, true, 'update', true);
 			}
-			else if($project_type_id == 1)//operation
+			else if($project_type_id == 1 || $project_type_id == 4)//operation or maintenance
 			{
 				//		if($budget['budget_amount'])
 				{
@@ -2731,9 +2741,10 @@
 
 			$project_types = array
 			(
-				1	 => lang('operation'),
-				2	 => lang('investment'),
-				3	 => lang('buffer')
+				1	=> lang('operation'),
+				2	=> lang('investment'),
+				3	=> lang('buffer'),
+				4	=> lang('maintenance')
 			);
 
 			$this->db->query($sql, __LINE__, __FILE__);
