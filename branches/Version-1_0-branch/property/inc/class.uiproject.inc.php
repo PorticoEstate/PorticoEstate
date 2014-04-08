@@ -231,6 +231,7 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['menu']					= $this->bocommon->get_menu();
+
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'			=> 'property.uiproject.index',
@@ -2622,7 +2623,7 @@
 				$_obligation = '';
 				$entry['new_budget'] = '';
 
-				if($entry['project_type_id'] == 1 || $entry['continuous']) // operation or continuous
+				if($entry['project_type_id'] == 1 || $entry['project_type_id'] == 4 || $entry['continuous']) // operation or continuous
 				{
 					$_obligation = 0;
 					$_order = 0;

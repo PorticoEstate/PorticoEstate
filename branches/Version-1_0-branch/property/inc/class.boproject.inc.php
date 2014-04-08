@@ -234,6 +234,11 @@
 				),
 				array
 				(
+					'id'	=> 4,
+					'name'	=> lang('maintenance')
+				),
+				array
+				(
 					'id'	=> 2,
 					'name'	=> lang('investment')
 				),
