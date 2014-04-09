@@ -60,7 +60,7 @@
 				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'department_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'org_unit_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('type','id'),
 			'fk' => array(

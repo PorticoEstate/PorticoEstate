@@ -81,7 +81,7 @@
 			$filter					= phpgw::get_var('filter', 'int');
 			$cat_id					= phpgw::get_var('cat_id', 'int');
 			$dimb_id				= phpgw::get_var('dimb_id', 'int');
-			$department				= phpgw::get_var('department', 'int');
+			$org_unit_id				= phpgw::get_var('org_unit_id', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$year					= phpgw::get_var('year', 'int');
@@ -105,7 +105,7 @@
 			$this->order			= isset($order) && $order ? $order : '';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
-			$this->department		= isset($department) && $department ? $department : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['department'];
+			$this->org_unit_id		= isset($org_unit_id) && $org_unit_id ? $org_unit_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['org_unit_id'];
 
 			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
@@ -157,7 +157,7 @@
 			$budget = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
 				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,
-				'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id, 'department' => $this->department));
+				'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id));
 
 			$this->total_records		= $this->so->total_records;
 			$this->sum_budget_cost		= $this->so->sum_budget_cost;
@@ -194,7 +194,7 @@
 				'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
 				'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
 				'year' => $this->year,'month' => $this->month, 'grouping' => $this->grouping, 'revision' => $this->revision,
-				'details' => $this->details,'dimb_id' => $this->dimb_id, 'department' => $this->department,
+				'details' => $this->details,'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id,
 				'direction'	=> $this->direction));
 
 			$this->total_records			= $this->so->total_records;

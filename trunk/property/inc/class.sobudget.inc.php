@@ -534,7 +534,7 @@
 			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$details		= isset($data['details']) ? $data['details'] : '';
 			$dimb_id		= isset($data['dimb_id'])  && $data['dimb_id'] ? (int)$data['dimb_id'] : 0;
-			$department		= isset($data['department'])  && $data['department'] ? (int)$data['department'] : 0;
+			$org_unit_id	= isset($data['org_unit_id'])  && $data['org_unit_id'] ? (int)$data['org_unit_id'] : 0;
 			$direction		= isset($data['direction'])  && $data['direction'] ? $data['direction'] : 'expenses';
 
 			if(!$year)
@@ -595,20 +595,20 @@
 				$where = 'AND';
 			}
 
-			$_department_dimb = array();
-			if ($department > 0)
+			$_org_unit_dimb = array();
+			if ($org_unit_id > 0)
 			{
-				$_department_dimb[] = -1;//block in case no one found
-				$this->db->query("SELECT id FROM fm_ecodimb WHERE department = $department ",__LINE__,__FILE__);
+				$_org_unit_dimb[] = -1;//block in case no one found
+				$this->db->query("SELECT id FROM fm_ecodimb WHERE org_unit_id = $org_unit_id ",__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
-					$_department_dimb[] = $this->db->f('id');
+					$_org_unit_dimb[] = $this->db->f('id');
 				}
 			}
 
-			if($_department_dimb)
+			if($_org_unit_dimb)
 			{
-				$filtermethod .= " $where fm_project.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$filtermethod .= " $where fm_project.ecodimb IN (" . implode(',', $_org_unit_dimb) . ')';
 				$where = 'AND';
 			}
 
@@ -781,9 +781,9 @@ $_periods=array();
 				$where = 'AND';
 			}
 
-			if($_department_dimb)
+			if($_org_unit_dimb)
 			{
-				$filtermethod .= " $where fm_tts_tickets.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$filtermethod .= " $where fm_tts_tickets.ecodimb IN (" . implode(',', $_org_unit_dimb) . ')';
 				$where = 'AND';
 			}
 
@@ -886,9 +886,9 @@ $_periods=array();
 				$where = 'AND';
 			}
 
-			if($_department_dimb)
+			if($_org_unit_dimb)
 			{
-				$filtermethod .= " $where ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$filtermethod .= " $where ecodimb IN (" . implode(',', $_org_unit_dimb) . ')';
 				$where = 'AND';
 			}
 
@@ -946,9 +946,9 @@ $_periods=array();
 				$where = 'AND';
 			}
 
-			if($_department_dimb)
+			if($_org_unit_dimb)
 			{
-				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_org_unit_dimb) . ')';
 				$where = 'AND';
 			}
 
@@ -1033,9 +1033,9 @@ $_periods=array();
 				$where = 'AND';
 			}
 
-			if($_department_dimb)
+			if($_org_unit_dimb)
 			{
-				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_org_unit_dimb) . ')';
 				$where = 'AND';
 			}
 

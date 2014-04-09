@@ -322,6 +322,10 @@
 			return $history_type;
 		}
 
+		/**
+		 * Fetch data to populate autocomplete from forms
+		 * @return array result to be handled by javascript
+		 */
 		function get_autocomplete()
 		{
 			$this->get_location_info();

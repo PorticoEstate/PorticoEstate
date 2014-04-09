@@ -102,6 +102,27 @@
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
 			$this->bo->location_code = $this->location_code;
+			
+			$_org_units = array();
+			if(is_array($this->header_state['org_unit']))
+			{
+				foreach ($this->header_state['org_unit'] as $org_unit)
+				{
+					$_org_unit_id = (int)$org_unit['ORG_UNIT_ID'];
+					$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $_org_unit_id, 'type' => 'department'));
+					$_org_units[$_org_unit_id] = true;
+					foreach($_subs as $entry)
+					{
+						$_org_units[$entry['id']] = true;
+					}
+				}
+			}
+			$org_units = array_keys($_org_units);
+			_debug_array($this->header_state['org_unit']);
+			_debug_array($org_units);
+			
+			die();
+
 		}
 
 
