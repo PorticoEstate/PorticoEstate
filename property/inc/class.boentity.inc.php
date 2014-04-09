@@ -493,19 +493,19 @@
 			}
 			$values = $this->custom->prepare($values, $this->type_app[$this->type],".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['view']);
 
-			if($values['department_id'])
+			if($values['org_unit_id'])
 			{
 				$bogeneric	= CreateObject('property.sogeneric');
-				$bogeneric->get_location_info('department');
-				$department = $bogeneric->read_single(array('id' => $values['department_id']));
-				$values['department_name'] = $department['name'];
-				$values['department_name_path']	= $department['name'];
-				if($department['parent_id'])
+				$bogeneric->get_location_info('org_unit');
+				$org_unit = $bogeneric->read_single(array('id' => $values['org_unit_id']));
+				$values['org_unit_name'] = $org_unit['name'];
+				$values['org_unit_name_path']	= $org_unit['name'];
+				if($org_unit['parent_id'])
 				{
-					$path = $bogeneric->get_path(array('type' => 'department', 'id' => $department['parent_id']));
+					$path = $bogeneric->get_path(array('type' => 'org_unit', 'id' => $org_unit['parent_id']));
 					if($path)
 					{
-						$values['department_name_path']	.= '::' . implode(' > ', $path);					
+						$values['org_unit_name_path']	.= '::' . implode(' > ', $path);					
 					}
 				}		
 			}

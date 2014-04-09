@@ -308,7 +308,7 @@
 				$querymethod = " $where (" . implode(' AND ',$_querymethod) . ')';
 				unset($_querymethod);
 			}
-			$sql = "SELECT id, location_code, p_location_id, p_id, department_id, xml_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+			$sql = "SELECT id, location_code, p_location_id, p_id, org_unit_id, xml_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
 
 			$sql_cnt = "SELECT count(id) as cnt FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
 
@@ -390,9 +390,9 @@
 						'attrib_id'	=> false,
 					);
 
-				$dataset[$j]['department_id'] = array
+				$dataset[$j]['org_unit_id'] = array
 					(
-						'value'		=> $this->db->f('department_id'),
+						'value'		=> $this->db->f('org_unit_id'),
 						'datatype'	=> false,
 						'attrib_id'	=> false,
 					);
@@ -1608,7 +1608,7 @@
 				$values['status']			= $this->db->f('status');
 				$values['user_id']			= $this->db->f('user_id');
 				$values['entry_date']		= $this->db->f('entry_date');
-				$values['department_id']	= $this->db->f('department_id');
+				$values['org_unit_id']	= $this->db->f('org_unit_id');
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
@@ -1659,7 +1659,7 @@
 				$values['location_code']	= $this->db->f('location_code');
 				$values['user_id']			= $this->db->f('user_id');
 				$values['entry_date']		= $this->db->f('entry_date');
-				$values['department_id']		= $this->db->f('department_id');
+				$values['org_unit_id']		= $this->db->f('org_unit_id');
 
 				$xmldata = $this->db->f('xml_representation',true);
 				$xml = new DOMDocument('1.0', 'utf-8');
@@ -2062,7 +2062,7 @@
 				'location_code'			=> $data['location_code'],
 				'loc1'					=> $data['loc1'],
 				'address'				=> $data['address'],
-				'department_id'			=> $data['department_id']
+				'org_unit_id'			=> $data['org_unit_id']
 			);
 
 			$value_set	= $this->db->validate_update($value_set);

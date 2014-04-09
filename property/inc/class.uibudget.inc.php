@@ -1090,7 +1090,7 @@
 				array_unshift ($values_combo_box[4],array ('id'=>'', 'name'=>lang('no category')));
 
 
-				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'department'));
+				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'org_unit'));
 				array_unshift ($values_combo_box[5], array ('id'=>'','name'=>lang('department')));
 
 				$values_combo_box[6]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
@@ -1181,13 +1181,13 @@
 								),
 								array
 								( 
-									'id' => 'sel_department',
-									'name' => 'department',
+									'id' => 'sel_org_unit_id',
+									'name' => 'org_unit_id',
 									'value'	=> lang('department'),
 									'type' => 'select',
 									'style' => 'filter',
 									'values' => $values_combo_box[5],
-									'onchange'=> 'onChangeSelect("department");',
+									'onchange'=> 'onChangeSelect("org_unit_id");',
 									'tab_index' => 6
 								),
 								array

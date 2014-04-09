@@ -490,7 +490,7 @@
 							),
 							array
 							(
-								'name'			=> 'department',
+								'name'			=> 'org_unit_id',
 								'descr'			=> lang('department'),
 								'type'			=> 'select',
 								'nullable'		=> false,
@@ -500,7 +500,7 @@
 								(
 									'valueset'		=> false,
 									'method'		=> 'property.bogeneric.get_list',
-									'method_input'	=> array('type' => 'department',	'selected' => '##department##')
+									'method_input'	=> array('type' => 'org_unit',	'selected' => '##org_unit_id##')
 								)
 							)
 						),
@@ -1631,11 +1631,11 @@
 					);
 				break;
 
-			case 'department':
+			case 'org_unit':
 
 				$info = array
 					(
-						'table' 			=> 'fm_department',
+						'table' 			=> 'fm_org_unit',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
 						'fields'			=> array
 						(
@@ -1661,7 +1661,7 @@
 								(
 									'valueset'		=> false,
 									'method'		=> 'property.bogeneric.get_list',
-									'method_input'	=> array('type' => 'department', 'role' => 'parent', 'selected' => '##parent_id##')
+									'method_input'	=> array('type' => 'org_unit', 'role' => 'parent', 'selected' => '##parent_id##')
 								)
 							)
 						),
@@ -1670,7 +1670,7 @@
 						'name'				=> lang('department'),
 						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
-						'menu_selection' 	=> 'admin::property::accounting::department',
+						'menu_selection' 	=> 'admin::property::accounting::org_unit',
 						'default'			=> array
 							(
 								'created_by' 	=> array('add'		=> '$this->account'),
@@ -3387,8 +3387,14 @@
 		} 
 
 
+		/**
+		 * Get tree from your node
+		 * @param array $data - 'node_id' as parent and 'type'
+		 * @return array tree
+		 */
 		public function read_tree($data)
 		{
+			$parent_id = isset($data['node_id']) && $data['node_id'] ? (int) $data['node_id'] : 0;
 			$tree = array();
 
 			$this->get_location_info($data['type'], $data['type_id']);
@@ -3399,7 +3405,14 @@
 			}
 			$this->table = $table;
 
-			$filtermthod = 'WHERE (parent_id = 0 OR parent_id IS NULL)';
+			if($parent_id)
+			{
+				$filtermthod = "WHERE parent_id = {$parent_id}";
+			}
+			else
+			{
+				$filtermthod = 'WHERE (parent_id = 0 OR parent_id IS NULL)';
+			}
 
 			if (isset($data['filter']) && is_array($data['filter']))
 			{
@@ -3445,10 +3458,6 @@
 					$node['children'] = $children;
 				}
 			}
-if($tree)
-{
-//	_debug_array($tree);die();
-}
 			return $tree;
 		}
 

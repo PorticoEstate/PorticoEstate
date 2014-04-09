@@ -1526,9 +1526,9 @@ JS;
 
 			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
-				if($category['department'])
+				if($category['org_unit'])
 				{
-					$values['extra']['department_id'] = phpgw::get_var('department_id', 'int');
+					$values['extra']['org_unit_id'] = phpgw::get_var('org_unit_id', 'int');
 				}
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
@@ -2382,17 +2382,17 @@ JS;
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
 
-			if($category['department'] && $mode == 'edit')
+			if($category['org_unit'] && $mode == 'edit')
 			{
 					$_autocomplete = <<<JS
 
 					YAHOO.util.Event.addListener(window, "load", function()
 					{
-						var oArgs = {menuaction:'property.bogeneric.get_autocomplete', type:'department'};
+						var oArgs = {menuaction:'property.bogeneric.get_autocomplete', type:'org_unit'};
 						var strURL = phpGWLink('index.php', oArgs, true);
 
 					    YAHOO.portico.autocompleteHelper(strURL,
-                               'department_name', 'department_id', 'department_container');
+                               'org_unit_name', 'org_unit_id', 'org_unit_container');
 
 					});
 JS;
@@ -2405,10 +2405,10 @@ JS;
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
 					'enable_bulk'					=> $category['enable_bulk'],
-					'department'					=> $category['department'],
-					'value_department_id'			=> $values['department_id'],
-					'value_department_name'			=> $values['department_name'],
-					'value_department_name_path'	=> $values['department_name_path'],
+					'org_unit'					=> $category['org_unit'],
+					'value_org_unit_id'			=> $values['org_unit_id'],
+					'value_org_unit_name'			=> $values['org_unit_name'],
+					'value_org_unit_name_path'	=> $values['org_unit_name_path'],
 					'value_location_id' 			=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location),
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
