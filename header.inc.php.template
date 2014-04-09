@@ -249,7 +249,7 @@ HTML;
 	* @global string $phpgw_info['server']['versions']['header']
 	* Version of this header file
 	*/
-	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.32';
+	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.31';
 
 
 	if ( !isset($GLOBALS['phpgw_info']['flags']['noapi'])
