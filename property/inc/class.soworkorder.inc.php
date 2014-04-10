@@ -216,6 +216,8 @@
 				$cols_return[]	 = 'contract_sum';
 				$cols.= ",fm_workorder.approved";
 				$cols_return[]	 = 'approved';
+				$cols.= ",fm_workorder.account_id as b_account_id";
+				$cols_return[]	 = 'b_account_id';
 
 				/*
 				  $uicols['input_type'][]		= 'text';
@@ -439,11 +441,10 @@
 			$order_field = '';
 			if($order)
 			{
-				$ordermethod = " ORDER BY $order $sort";
+				$ordermethod = " ORDER BY {$order} {$sort}";
 				switch($order)
 				{
 					case 'workorder_id':
-						//					$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";
 						$ordermethod = " ORDER BY fm_workorder.id {$sort}";
 						break;
 					case 'actual_cost':
@@ -461,21 +462,31 @@
 						break;
 					case 'entry_date':
 						$order_field = ", fm_workorder.entry_date";
+						$ordermethod = " ORDER BY fm_workorder.entry_date {$sort}, fm_workorder.id";
 						break;
 					case 'start_date':
 						$order_field = ", fm_workorder.start_date";
+						$ordermethod = " ORDER BY fm_workorder.start_date {$sort}, fm_workorder.id";
 						break;
 					case 'end_date':
 						$order_field = ", fm_workorder.end_date";
+						$ordermethod = " ORDER BY fm_workorder.end_date {$sort}, fm_workorder.id";
 						break;
 					case 'ecodimb':
 						$order_field = ", fm_project.ecodimb";
+						$ordermethod = " ORDER BY fm_workorder.ecodimb {$sort}, fm_workorder.id";
 						break;
 					case 'budget':
 						$order_field = ", fm_workorder.budget";
+						$ordermethod = " ORDER BY fm_workorder.budget {$sort}, fm_workorder.id";
 						break;
 					case 'approved':
 						$order_field = ", fm_workorder.approved";
+						$ordermethod = " ORDER BY fm_workorder.approved {$sort}, fm_workorder.id";
+						break;
+					case 'b_account_id':
+						$order_field = ", fm_workorder.account_id";
+						$ordermethod = " ORDER BY fm_workorder.account_id {$sort}, fm_workorder.id";
 						break;
 					default:
 						$order_field = ", {$order}";
