@@ -586,16 +586,16 @@
 									<xsl:choose>
 										<xsl:when test="mode='edit'">
 											<xsl:choose>
-												<xsl:when test="department='1'">
+												<xsl:when test="org_unit='1'">
 													<tr>
 														<td>
 															<xsl:value-of select="php:function('lang', 'department')"/>
 														</td>
 														<td>
 															<div class="autocomplete">
-																<input id="department_id" name="department_id" type="hidden" value="{value_department_id}">
+																<input id="org_unit_id" name="org_unit_id" type="hidden" value="{value_org_unit_id}">
 																</input>
-																<input id="department_name" name="department_name" type="text" value="{value_department_name}" title="{value_department_name_path}" size='60'>
+																<input id="org_unit_name" name="org_unit_name" type="text" value="{value_org_unit_name}" title="{value_org_unit_name_path}" size='60'>
 																	<xsl:choose>
 																		<xsl:when test="disabled!=''">
 																			<xsl:attribute name="disabled">
@@ -604,7 +604,7 @@
 																		</xsl:when>
 																	</xsl:choose>
 																</input>
-																<div id="department_container"/>
+																<div id="org_unit_container"/>
 															</div>
 														</td>
 													</tr>

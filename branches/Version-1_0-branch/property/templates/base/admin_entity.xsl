@@ -623,20 +623,20 @@
 						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>
-						<xsl:when test="department != ''">
+						<xsl:when test="org_unit != ''">
 							<tr>
 								<td>
-									<xsl:variable name="lang_department">
+									<xsl:variable name="lang_org_unit">
 										<xsl:value-of select="php:function('lang', 'department')"/>
 									</xsl:variable>
-									<xsl:value-of select="$lang_department"/>
+									<xsl:value-of select="$lang_org_unit"/>
 								</td>
 								<td>
-									<input type="checkbox" name="values[department]" value="1">
+									<input type="checkbox" name="values[org_unit]" value="1">
 										<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'department')"/>
 											</xsl:attribute>
-										<xsl:if test="value_department = '1'">
+										<xsl:if test="value_org_unit = '1'">
 											<xsl:attribute name="checked">
 												<xsl:text>checked</xsl:text>
 											</xsl:attribute>

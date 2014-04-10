@@ -1082,11 +1082,11 @@
 			'fk' => array(),
 			'uc' => array()
 		),
-		'fm_department' => array(
+		'fm_org_unit' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'parent_id' => array('type' => 'int','precision' => '4','nullable' => true),
-				'name' => array('type' => 'varchar','precision' => '60','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '200','nullable' => False),
 				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
@@ -1297,11 +1297,11 @@
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'department' => array('type' => 'int','precision' => '4','nullable' => False),
+				'org_unit_id' => array('type' => 'int','precision' => '4','nullable' => False),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
-			'fk' => array('fm_department' => array('department' => 'id')),
+			'fk' => array('fm_org_unit' => array('org_unit_id' => 'id')),
 			'uc' => array()
 		),
 		'fm_ecodimb_role' => array(

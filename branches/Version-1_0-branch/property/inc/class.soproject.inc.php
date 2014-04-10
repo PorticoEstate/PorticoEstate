@@ -1435,7 +1435,7 @@
 				if($old_budget != $new_budget)
 				{
 					$this->db->query("UPDATE fm_project SET budget = {$new_budget} WHERE id = " . (int) $project['id'], __LINE__, __FILE__);
-					$historylog->add('B', $project['id'], $project['budget'], $old_budget);
+					$historylog->add('B', $project['id'], $new_budget, $old_budget);
 				}
 
 				$this->db->query("SELECT id FROM fm_workorder WHERE project_id=" . (int) $project['id'], __LINE__, __FILE__);
@@ -1520,7 +1520,7 @@
 						$historylog->add('B', $project['id'], 0, $old_budget);
 					}
 
-					$sql					 = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = {$new_project_id}";
+					$sql					 = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = {$new_project_id}";
 					$this->db->query($sql, __LINE__, __FILE__);
 					$this->db->next_record();
 					$new_budget_new_project	 = (int) $this->db->f('sum_budget');
@@ -1783,6 +1783,11 @@
 				throw new Exception('property_soproject::update_buffer_budget() - wrong input');
 			}
 
+			if($from_project && $to_project)
+			{
+				throw new Exception('property_soproject::update_buffer_budget() - wrong input');
+			}
+			
 			$value_set = array
 			(
 				'buffer_project_id'	 => $project_id,
@@ -1807,7 +1812,8 @@
 			/**
 			 * In case the transfer is betwee two buffer-projects
 			 */
-			$this->db->query("SELECT project_type_id FROM fm_project WHERE id = {$project_id}", __LINE__, __FILE__);
+			$check_for_buffer_target = $from_project + $to_project;//only one of them has value...
+			$this->db->query("SELECT project_type_id FROM fm_project WHERE id = {$check_for_buffer_target}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$project_type_id = $this->db->f('project_type_id');
 			if($project_type_id == 3)//buffer

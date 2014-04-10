@@ -546,3 +546,45 @@
 		}
 	}
 
+	/**
+	* Update catch version from 0.9.17.517 to 0.9.17.518
+	* Change name from department to org_unit
+	*/
+	$test[] = '0.9.17.517';
+	function catch_upgrade0_9_17_517()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_catch_category");
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+				'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id')
+			);
+		}
+
+		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
+
+		foreach ($categories as $category)
+		{
+			$table = "fm_catch_{$category['entity_id']}_{$category['cat_id']}";
+			if(in_array($table, $tables))
+			{
+				$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
+				if(isset($metadata['department_id']))
+				{
+					$GLOBALS['phpgw_setup']->oProc->RenameColumn($table,'department_id','org_unit_id');
+				}
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.518';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}

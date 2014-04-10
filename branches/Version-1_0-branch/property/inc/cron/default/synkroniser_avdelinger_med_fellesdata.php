@@ -94,13 +94,13 @@
 
 			foreach ($parties as $party)
 			{
-				$sql = "SELECT name, parent_id FROM fm_department WHERE id  = {$party}";
+				$sql = "SELECT name, parent_id FROM fm_org_unit WHERE id  = {$party}";
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
 					$name			= $this->db->f('name');
 					$parent_id		= $this->db->f('parent_id');
-					$path			= $sogeneric->get_path(array('type' => 'department', 'id' => $parent_id));
+					$path			= $sogeneric->get_path(array('type' => 'org_unit', 'id' => $parent_id));
 					$parent_name	= implode(' > ', $path);
 
 					$value_set = array
@@ -295,7 +295,7 @@
 					'modified_on'	=>  time()
 				);
 
-				$table = 'fm_department';
+				$table = 'fm_org_unit';
 				$db->query("SELECT count(*) as cnt FROM {$table} WHERE id =" . (int)$unit['id'],__LINE__,__FILE__);
 				$db->next_record();
 
