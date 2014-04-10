@@ -248,6 +248,12 @@
 					'name'		=> lang('approved'),
 					'sortable'	=> true
 				);
+			$columns['b_account_id'] = array
+				(
+					'id'		=> 'b_account_id',
+					'name'		=> lang('budget account'),
+					'sortable'	=> true
+				);
 
 			return $columns;
 		}
