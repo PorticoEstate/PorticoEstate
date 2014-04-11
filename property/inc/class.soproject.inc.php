@@ -2731,7 +2731,7 @@
 						$end_period		 = (date('Y') - 1) . 13;
 						$join_method .= " {$this->left_join} fm_ecobilagoverf ON ( fm_workorder.id = fm_ecobilagoverf.pmwrkord_code AND fm_ecobilagoverf.periode > $start_period AND fm_ecobilagoverf.periode < $end_period)";
 						$actual_cost	 = ',sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost';
-						$group_method	 = "GROUP BY fm_workorder.id, fm_workorder.account_id, fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id";
+						$group_method	 = "GROUP BY fm_workorder.id, fm_workorder.project_id, fm_workorder.account_id, fm_workorder_status.closed,fm_workorder_status.descr,fm_project.project_type_id";
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
