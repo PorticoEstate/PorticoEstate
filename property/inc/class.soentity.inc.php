@@ -442,6 +442,7 @@
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
 			$control_registered= isset($data['control_registered']) ? $data['control_registered'] : '';
 			$control_id		= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
+			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -483,6 +484,18 @@
 
 			$filtermethod = "WHERE fm_bim_type.location_id = {$location_id}";
 			$where= 'AND';
+
+			if( $category['org_unit'])
+			{
+				if($org_units)
+				{
+					$filtermethod .= " $where ( $entity_table.org_unit_id IN(" . implode(',',$org_units) . "))";
+				}
+				else
+				{
+					return array();
+				}
+			}
 
 			$_config	= CreateObject('phpgwapi.config',$this->type_app[$this->type]);
 			$_config->read();
@@ -823,7 +836,8 @@
 			$j=0;
 
 			$uicols = $this->uicols;
-			$cols_return = $uicols['name'];
+//			$cols_return = $uicols['name'];
+			$cols_return = $this->cols_return;
 			$dataset = array();
 
 			while ($this->db->next_record())
@@ -922,7 +936,7 @@
 				$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 			}
 
-			$this->uicols 	= $this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+			$this->uicols 	= $this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}_{$category['org_unit']}");
 
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
@@ -1022,6 +1036,21 @@
 					$uicols['classname'][]		= '';
 				}
 
+				if($category['org_unit'])
+				{
+					$cols_return[] 				= 'org_unit_id';
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= 'org_unit';
+					$uicols['descr'][]			= lang('department');
+					$uicols['statustext'][]		= lang('department');
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
+					$uicols['sortable'][]		= true;
+					$uicols['exchange'][]		= false;
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
+				}
+
 		//		$cols .= ", {$entity_table}.user_id";
 				$cols_return[] 				= 'user_id';
 
@@ -1038,14 +1067,15 @@
 					$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->sql);
 				}
 
-				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->uicols);
-				$this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return);
+				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}_{$category['org_unit']}", $this->bocommon->uicols);
+				$this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}_{$category['org_unit']}", $this->bocommon->cols_return);
 				$this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return_lookup);
 				$this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_extra);
 
 				$this->uicols				= $this->bocommon->uicols;
 				$this->cols_return_lookup	= $this->bocommon->cols_return_lookup;
 				$this->cols_extra			= $this->bocommon->cols_extra;
+				$this->cols_return			= $this->bocommon->cols_return;
 			}
 			else
 			{
@@ -1057,6 +1087,8 @@
 
 				$this->cols_return_lookup 	= $this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
 				$this->cols_extra			= $this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+				$this->cols_return			= $this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}_{$category['org_unit']}");
+
 			}
 
 			$uicols = &$this->uicols;
@@ -1106,6 +1138,7 @@
 							'datatype'	=> $this->db->f('datatype'),
 							'attrib_id'	=> $this->db->f('id')
 						);
+					$this->cols_return[] = $this->db->f('column_name');
 
 					$i++;
 				}
@@ -1155,6 +1188,7 @@
 			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
+			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -1245,7 +1279,19 @@
 			}
 
 			unset($_config);
-
+			if( $category['org_unit'])
+			{
+				if($org_units)
+				{
+					$filtermethod .= " $where ( $entity_table.org_unit_id IN(" . implode(',',$org_units) . "))";
+					$where= 'AND';
+				}
+				else
+				{
+					return array();
+				}
+			}
+			
 			if ($filter=='all')
 			{
 				if (is_array($grants) && !$bypass_acl_at_entity)
@@ -1499,7 +1545,9 @@
 
 			$j=0;
 			$uicols = $this->uicols;
-			$cols_return = $uicols['name'];
+//			$cols_return = $uicols['name'];
+			$cols_return = $this->cols_return;
+
 			$dataset = array();
 			while ($this->db->next_record())
 			{
