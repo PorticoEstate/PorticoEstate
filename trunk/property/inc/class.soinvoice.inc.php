@@ -2644,6 +2644,8 @@
 				$value_set['project_id']			 = execMethod('property.soXport.get_project', $order_id);
 			}
 
+			phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
+
 			$value_set['pmwrkord_code']		= $order_id;
 			$value_set['dima'] 				= $order_info['dima'];
 			$value_set['dimb'] 				= $order_info['dimb'];
@@ -2701,6 +2703,7 @@
 			foreach($voucher as $entry)
 			{
 				$amount += $entry['amount'];
+				phpgwapi_cache::system_clear('property', "budget_order_{$entry['order_id']}");
 			}
 			unset($entry);
 
