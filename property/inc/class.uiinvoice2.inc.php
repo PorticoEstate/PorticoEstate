@@ -133,10 +133,12 @@
 		 */
 		public function reassign_order($line_id, $order_id, $voucher_id)
 		{
+			$voucher_info	= $this->get_single_line($line_id);
+
 			if( $this->bo->reassign_order($line_id, $order_id))
 			{
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
-				phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
+				phpgwapi_cache::system_clear('property', "budget_order_{$voucher_info['voucher'][0]['order_id']}"); // target is cleared in the so-class
 
 				$result =  array
 				(
