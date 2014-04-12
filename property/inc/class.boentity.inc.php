@@ -45,6 +45,7 @@
 		var $location_code;
 		var $results;
 		var $acl_location;
+		public $org_units = array();
 		protected $xsl_rootdir;
 
 		/**
@@ -342,6 +343,9 @@
 
 		function read($data= array())
 		{
+			static $location_data = array();
+			static $org_units = array();
+
 			if(isset($this->allrows) && $this->allrows)
 			{
 				$data['allrows'] = true;
@@ -388,15 +392,34 @@
 				}
 			}
 
-			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id, 'part_of_town_id' => $this->part_of_town_id,
-				'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'', 'results' => $this->results,
-				'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
-				'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
-				'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
-				'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code,
-				'criteria_id' => $this->criteria_id, 'attrib_filter' => $attrib_filter, 'p_num' => $this->p_num,
-				'control_registered'=>isset($data['control_registered'])?$data['control_registered']:'','control_id'=>isset($data['control_id'])?$data['control_id']:''));
+			$entity = $this->so->read(array
+				(
+					'start' => $this->start,
+					'query' => $this->query,
+					'sort' => $this->sort,
+					'order' => $this->order,
+					'filter' => $this->filter,
+					'cat_id' => $this->cat_id,
+					'district_id' => $this->district_id,
+					'part_of_town_id' => $this->part_of_town_id,
+					'lookup'=>isset($data['lookup'])?$data['lookup']:'',
+					'allrows'=>isset($data['allrows'])?$data['allrows']:'',
+					'results' => $this->results,
+					'entity_id'=>$this->entity_id,
+					'status'=>$this->status,
+					'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
+					'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
+					'dry_run'=>$data['dry_run'],
+					'type'=>$data['type'],
+					'location_code' => $this->location_code,
+					'criteria_id' => $this->criteria_id,
+					'attrib_filter' => $attrib_filter,
+					'p_num' => $this->p_num,
+					'control_registered'=>isset($data['control_registered']) ? $data['control_registered'] : '',
+					'control_id'=>isset($data['control_id']) ? $data['control_id'] : '',
+					'org_units' => $this->org_units
+				)
+			);
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
@@ -429,58 +452,42 @@
 				}
 			}
 
-//_debug_array($cols_extra);
-//_debug_array($this->uicols);die();
-/*
-			$location_relation_data = 	$this->location_relation_data;
-			
-			if ($location_relation_data && is_array($location_relation_data))
+			$sogeneric 	= CreateObject('property.sogeneric');
+			$sogeneric->get_location_info('org_unit');
+
+			foreach ($entity as &$entry)
 			{
-				foreach ($location_relation_data as $entry)
+//_debug_array($entry);die();
+				if(isset($entry['location_code']))
 				{
-					$this->uicols['input_type'][]	= 'text';
-					$this->uicols['name'][]			= $entry['name'];
-					$this->uicols['descr'][]		= $entry['descr'];
-					$this->uicols['statustext'][]	= $entry['descr'];
-					$this->uicols['exchange'][]		= false;
-					$this->uicols['align'][] 		= '';
-					$this->uicols['datatype'][]		= '';
-					$this->uicols['formatter'][]	= '';
-					$this->uicols['classname'][]	= '';
-					$this->uicols['sortable'][]		= false;
-
-					$cols_extra[] 				= $entry['name'];
-
-				}
-			}
-			
-			unset($entry);
-*/
-
-			//_debug_array($entity);
-//			_debug_array($cols_extra);
-			//_debug_array($cols_return_lookup);
-
-//			if(isset($data['lookup']) && $data['lookup'])
-			{
-				foreach ($entity as &$entry)
-				{
-					$location_data = $this->solocation->read_single($entry['location_code']);
+					if(!isset($location_data[$entry['location_code']]))
+					{
+						$location_data[$entry['location_code']] = $this->solocation->read_single($entry['location_code']);
+					}
 					for ($j=0;$j<count($cols_extra);$j++)
 					{
-						$entry[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+						$entry[$cols_extra[$j]] = $location_data[$entry['location_code']][$cols_extra[$j]];
 					}
 
 					if($cols_return_lookup)
 					{
 						for ($k=0;$k<count($cols_return_lookup);$k++)
 						{
-							$entry[$cols_return_lookup[$k]] = $location_data[$cols_return_lookup[$k]];
+							$entry[$cols_return_lookup[$k]] = $location_data[$entry['location_code']][$cols_return_lookup[$k]];
 						}
 					}
 				}
+				if(isset($entry['org_unit_id']))
+				{
+					if(!isset($org_units[$entry['org_unit_id']]))
+					{
+						$org_unit = $sogeneric->read_single(array('id' => $entry['org_unit_id']));
+						$org_units[$entry['org_unit_id']]['name'] = $org_unit['name'];
+					}
+					$entry['org_unit'] = $org_units[$entry['org_unit_id']]['name'];
+				}
 			}
-
+//_debug_array($entity);die();
 			return $entity;
 		}
 

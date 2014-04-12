@@ -109,7 +109,7 @@
 				foreach ($this->header_state['org_unit'] as $org_unit)
 				{
 					$_org_unit_id = (int)$org_unit['ORG_UNIT_ID'];
-					$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $_org_unit_id, 'type' => 'department'));
+					$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $_org_unit_id, 'type' => 'org_unit'));
 					$_org_units[$_org_unit_id] = true;
 					foreach($_subs as $entry)
 					{
@@ -118,10 +118,8 @@
 				}
 			}
 			$org_units = array_keys($_org_units);
-			_debug_array($this->header_state['org_unit']);
-			_debug_array($org_units);
-			
-			die();
+
+			$this->bo->org_units = $org_units;
 
 		}
 
