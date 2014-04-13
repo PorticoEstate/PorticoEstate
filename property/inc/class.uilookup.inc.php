@@ -3593,7 +3593,7 @@ JS;
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'name'; // ASC / DESC
+				$datatable['sorting']['sort'] 			= 'ASC'; // ASC / DESC
 			}
 			else
 			{
@@ -3671,6 +3671,5 @@ JS;
 
 			$this->save_sessiondata();
 		}
-
 
 	}
