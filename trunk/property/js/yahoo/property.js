@@ -360,6 +360,10 @@
 						path_values.start_date = YAHOO.util.Dom.get('start_date').value;
 						path_values.end_date = YAHOO.util.Dom.get('end_date').value;
 					}
+					if(config_values.org_unit_search != undefined && config_values.org_unit_search != 0)
+					{
+						path_values.org_unit_id = YAHOO.util.Dom.get('org_unit_id').value;
+					}
 					execute_ds();
 				}
 			},

@@ -46,6 +46,7 @@
 		var $results;
 		var $acl_location;
 		public $org_units = array();
+		public $org_unit;
 		protected $xsl_rootdir;
 
 		/**
@@ -96,6 +97,7 @@
 			$allrows						= phpgw::get_var('allrows', 'bool');
 			$criteria_id					= phpgw::get_var('criteria_id');
 			$p_num							= phpgw::get_var('p_num');
+			$org_unit_id					= phpgw::get_var('org_unit_id', 'int');
 
 			$this->criteria_id				= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
@@ -187,6 +189,10 @@
 			if($allrows)
 			{
 				$this->allrows = $allrows;
+			}
+			if(isset($_POST['org_unit_id']) || isset($_GET['org_unit_id']))
+			{
+				$this->org_unit_id = $org_unit_id;
 			}
 			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
 		}
@@ -343,8 +349,18 @@
 
 		function read($data= array())
 		{
+			if($this->org_unit_id && !$this->org_units)
+			{
+				$_org_unit_id = (int)$this->org_unit_id;
+				$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $_org_unit_id, 'type' => 'org_unit'));
+				$this->org_units[]= $_org_unit_id;
+				foreach($_subs as $entry)
+				{
+					$this->org_units[]= $entry['id'];
+				}
+			}
 			static $location_data = array();
-			static $org_units = array();
+			static $org_units_data = array();
 
 			if(isset($this->allrows) && $this->allrows)
 			{
@@ -479,12 +495,12 @@
 				}
 				if(isset($entry['org_unit_id']))
 				{
-					if(!isset($org_units[$entry['org_unit_id']]))
+					if(!isset($org_units_data[$entry['org_unit_id']]))
 					{
 						$org_unit = $sogeneric->read_single(array('id' => $entry['org_unit_id']));
-						$org_units[$entry['org_unit_id']]['name'] = $org_unit['name'];
+						$org_units_data[$entry['org_unit_id']]['name'] = $org_unit['name'];
 					}
-					$entry['org_unit'] = $org_units[$entry['org_unit_id']]['name'];
+					$entry['org_unit'] = $org_units_data[$entry['org_unit_id']]['name'];
 				}
 			}
 //_debug_array($entity);die();
