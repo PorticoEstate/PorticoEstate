@@ -491,10 +491,6 @@
 				{
 					$filtermethod .= " $where ( $entity_table.org_unit_id IN(" . implode(',',$org_units) . "))";
 				}
-				else
-				{
-					return array();
-				}
 			}
 
 			$_config	= CreateObject('phpgwapi.config',$this->type_app[$this->type]);
@@ -1285,10 +1281,6 @@
 				{
 					$filtermethod .= " $where ( $entity_table.org_unit_id IN(" . implode(',',$org_units) . "))";
 					$where= 'AND';
-				}
-				else
-				{
-					return array();
 				}
 			}
 			

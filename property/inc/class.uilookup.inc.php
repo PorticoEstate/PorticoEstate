@@ -3451,8 +3451,8 @@ JS;
 
 		function custom()
 		{
-			$get_list_function		= phpgw::get_var('get_list_function');
-			$get_list_function_input 	= urlencode(phpgw::get_var('get_list_function_input'));
+			$type		= phpgw::get_var('type');
+		//	$get_list_function_input 	= urlencode(phpgw::get_var('get_list_function_input'));
 			$column 				= phpgw::get_var('column');
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
@@ -3463,8 +3463,8 @@ JS;
 					'cat_id'				=> $this->cat_id,
 					'query'					=> $this->query,
 					'filter'				=> $this->filter,
-					'get_list_function'		=> $get_list_function,
-					'get_list_function_input' => $get_list_function_input
+					'type'					=> $type,
+//					'get_list_function_input' => $get_list_function_input
 				));
 				$datatable['config']['allow_allrows'] = true;
 
@@ -3472,8 +3472,8 @@ JS;
 					."cat_id:'{$this->cat_id}',"
 					."query:'{$this->query}',"
 					."filter:'{$this->filter}',"
-					."get_list_function:'{$get_list_function}',"
-					."get_list_function_input:'{$get_list_function_input}'";
+					."type:'{$type}'";
+//					."get_list_function_input:'{$get_list_function_input}'";
 		
 				$datatable['actions']['form'] = array
 					(
@@ -3486,8 +3486,8 @@ JS;
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
 								'filter'			=> $this->filter,
-								'get_list_function'	=> $get_list_function,
-								'get_list_function_input' => $get_list_function_input
+								'type'	=> $type,
+//								'get_list_function_input' => $get_list_function_input
 							)
 						),
 						'fields'	=> array
@@ -3521,30 +3521,13 @@ JS;
 					);
 			}
 
-			$uicols = array (
-				'input_type'	=>	array('text','text'),
-				'name'			=>	array('id','name'),
-				'formatter'		=>	array('',''),
-				'descr'			=>	array(lang('ID'),lang('name'))
-			);
+			$bogeneric = CreateObject('property.bogeneric');
+			$bogeneric->get_location_info(phpgw::get_var('type','string'));
+			$values = $bogeneric->read();
 
-			$values = array();
-		//	$bo	= CreateObject('property.bogeneric',true);
-		//	$template_list = $bo->read();
-
-			$template_list = execMethod($get_list_function, unserialize(urldecode($_GET['get_list_function_input'])));
-			if(isset($template_list['ResultSet']['Result']) && is_array($template_list['ResultSet']['Result']))
-			{
-				$values = $template_list['ResultSet']['Result'];
-			}
-			else
-			{
-				$values = $template_list;
-			}
+			$uicols = $bogeneric->uicols;
 			
 //_debug_array($values);die();
-//_debug_array(unserialize(urldecode($get_list_function_input)));
-//_debug_array(unserialize(urldecode($_GET['get_list_function_input'])));
 			$content = array();
 			$j=0;
 			if (is_array($values))
@@ -3560,7 +3543,7 @@ JS;
 				}
 			}
 
-			$uicols_count	= count($uicols['descr']);
+			$uicols_count	= count($uicols['name']);
 			$datatable['rowactions']['action'] = array();
 			for ($i=0;$i<$uicols_count;$i++)
 			{
@@ -3574,16 +3557,16 @@ JS;
 				$datatable['headers']['header'][$i]['sort_field'] 		= $uicols['name'][$i];
 			}
 
-			$custom_id		= $column;
-			$custom_name	= $column . '_name';
-
+			$custom_id		= "{$column}_id";
+			$custom_name	= "{$column}_name";
+//	_debug_array($datatable);die();
 			$function_exchange_values = '';
 
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_id.'")[0].value = "";' ."\r\n";
-			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_name.'")[0].value = "";' ."\r\n";
+			$function_exchange_values .= "opener.document.getElementById('txt_{$column}').innerHTML = '';\r\n";
 
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_id.'")[0].value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_name.'")[0].value = data.getData("name");' ."\r\n";
+			$function_exchange_values .= "opener.document.getElementById('txt_{$column}').innerHTML = data.getData('name');\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
@@ -3605,7 +3588,7 @@ JS;
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$datatable['pagination']['records_returned']= count($values);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+			$datatable['pagination']['records_total'] 	= $bogeneric->total_records;
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
@@ -3669,7 +3652,7 @@ JS;
 			{
 				return $json;
 			}
-
+//	_debug_array($json);die();
 			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
@@ -3684,7 +3667,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.generic.index', 'property' );
 
 			$this->save_sessiondata();
 		}
