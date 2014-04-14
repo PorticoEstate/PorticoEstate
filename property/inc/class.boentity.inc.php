@@ -347,6 +347,21 @@
 			return $this->bocommon->select_list($selected,$criteria);
 		}
 
+		/**
+		* Get the sublevels of the org tree into one arry
+		*/
+		private function _get_children($data = array() )
+		{
+			foreach ($data as $entry)
+			{
+				$this->org_units[]= $entry['id'];			
+				if(isset($entry['children']) && $entry['children'])
+				{
+					$this->_get_children($entry['children']);			
+				}
+			}
+		}
+
 		function read($data= array())
 		{
 			if($this->org_unit_id && !$this->org_units)
@@ -357,8 +372,13 @@
 				foreach($_subs as $entry)
 				{
 					$this->org_units[]= $entry['id'];
+					if(isset($entry['children']) && $entry['children'])
+					{
+						$this->_get_children($entry['children']);			
+					}
 				}
 			}
+
 			static $location_data = array();
 			static $org_units_data = array();
 
