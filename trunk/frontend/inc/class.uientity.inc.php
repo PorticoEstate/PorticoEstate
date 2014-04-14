@@ -114,13 +114,30 @@
 					foreach($_subs as $entry)
 					{
 						$_org_units[$entry['id']] = true;
+						if(isset($entry['children']) && $entry['children'])
+						{
+							$this->_get_children($entry['children'], $_org_units);			
+						}
 					}
 				}
 			}
 			$org_units = array_keys($_org_units);
-
 			$this->bo->org_units = $org_units;
+		}
 
+		/**
+		* Get the sublevels of the org tree into one arry
+		*/
+		private function _get_children($data = array(), &$_org_units)
+		{
+			foreach ($data as $entry)
+			{
+				$_org_units[$entry['id']] = true;
+				if(isset($entry['children']) && $entry['children'])
+				{
+					$this->_get_children($entry['children'], $_org_units);			
+				}
+			}
 		}
 
 
