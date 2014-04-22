@@ -41,6 +41,7 @@
 			'index'			=> true,
 			'download'		=> true,
 			'view'			=> true,
+			'edit'			=> true,
 		);
 
 		public function __construct()
@@ -1003,6 +1004,25 @@ JS;
 
 		public function view()
 		{
+			if(!$this->acl_read)
+			{
+				return;
+			}
+			$this->edit(null, $mode = 'view');
+		}
+
+		/**
+		* Prepare data for view and edit - depending on mode
+		*
+		* @param array  $values  populated object in case of retry
+		* @param string $mode    edit or view
+		* @param int    $id      entity id - no id means 'new'
+		*
+		* @return void
+		*/
+
+		public function edit($values = array(), $mode = 'edit')
+		{
 			$bo	= & $this->bo;
 			$id = phpgw::get_var('id');
 			$values = $bo->read_single(array('id' => $id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'view' => true));
@@ -1230,7 +1250,7 @@ JS;
 
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
-			
+
 			$data = array(
 				'header' 		=> $this->header_state,
 				'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
@@ -1243,7 +1263,15 @@ JS;
 										'menuaction'		=> 'frontend.uientity.index',
 										'location_id'		=> $this->location_id
 									)),
-
+						'entityedit'	=> $GLOBALS['phpgw']->link('/index.php',
+									array
+									(
+										'menuaction'		=> 'frontend.uientity.edit',
+										'location_id'		=> $this->location_id,
+										'id'				=> $id
+									)),
+						'location_id'		=> $this->location_id,
+						'id'			=> $id,
 						'entity'        => $entity,
 						'entityhistory'	=> $entityhistory2,
 						'custom_attributes'	=> array('attributes' => $values['attributes']),
@@ -1270,6 +1298,8 @@ JS;
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.view', 'frontend' );
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview','attributes_view'));
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location_view', 'files'), PHPGW_SERVER_ROOT . '/property/templates/base');

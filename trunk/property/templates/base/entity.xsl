@@ -455,7 +455,9 @@
 						<xsl:when test="mode = 'edit'">
 							<tr>
 								<td colspan="2" align="center">
-									<xsl:call-template name="table_apply"/>
+									<xsl:call-template name="table_apply">
+										<xsl:with-param	name="lean" select="lean"/>
+									</xsl:call-template>
 								</td>
 							</tr>
 						</xsl:when>
@@ -755,7 +757,9 @@
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<tr height="50">
 								<td colspan="2" align="center">
-									<xsl:call-template name="table_apply"/>
+									<xsl:call-template name="table_apply">
+										<xsl:with-param	name="lean" select="lean"/>
+									</xsl:call-template>
 								</td>
 							</tr>
 						</table>
@@ -763,7 +767,7 @@
 				</xsl:choose>
 			</form>
 			<xsl:choose>
-				<xsl:when test="value_id!=''">
+				<xsl:when test="value_id!='' and lean !=1">
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
 						<tr>
 							<xsl:choose>
@@ -834,18 +838,24 @@
 
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="table_apply">
+		<xsl:param name="lean" />
+
 		<table>
 			<tr>
-				<td valign="bottom">
-					<xsl:variable name="lang_save">
-						<xsl:value-of select="php:function('lang', 'save')"/>
-					</xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'save values and exit')"/>
-						</xsl:attribute>
-					</input>
-				</td>
+				<xsl:choose>
+					<xsl:when test="$lean!=1">
+						<td valign="bottom">
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="php:function('lang', 'save')"/>
+							</xsl:variable>
+							<input type="submit" name="values[save]" value="{$lang_save}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'save values and exit')"/>
+								</xsl:attribute>
+							</input>
+						</td>
+					</xsl:when>
+				</xsl:choose>
 				<td valign="bottom">
 					<xsl:variable name="lang_apply">
 						<xsl:value-of select="php:function('lang', 'apply')"/>
@@ -856,16 +866,20 @@
 						</xsl:attribute>
 					</input>
 				</td>
-				<td align="right" valign="bottom">
-					<xsl:variable name="lang_cancel">
-						<xsl:value-of select="php:function('lang', 'cancel')"/>
-					</xsl:variable>
-					<input type="submit" name="values[cancel]" value="{$lang_cancel}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'Back to the list')"/>
-						</xsl:attribute>
-					</input>
-				</td>
+				<xsl:choose>
+					<xsl:when test="$lean!=1">
+						<td align="right" valign="bottom">
+							<xsl:variable name="lang_cancel">
+								<xsl:value-of select="php:function('lang', 'cancel')"/>
+							</xsl:variable>
+							<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Back to the list')"/>
+								</xsl:attribute>
+							</input>
+						</td>
+					</xsl:when>
+				</xsl:choose>
 			</tr>
 		</table>
 	</xsl:template>
