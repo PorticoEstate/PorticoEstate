@@ -99,6 +99,15 @@
 			$p_num							= phpgw::get_var('p_num');
 			$org_unit_id					= phpgw::get_var('org_unit_id', 'int');
 
+			if($location_id	= phpgw::get_var('location_id', 'int'))
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$location_arr	= explode('.', $location_info['location']);
+				$type			= $location_arr[1];
+				$entity_id		= $location_arr[2];
+				$cat_id			= $location_arr[3];
+			}
+			
 			$this->criteria_id				= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
 			$location_code					= phpgw::get_var('location_code');

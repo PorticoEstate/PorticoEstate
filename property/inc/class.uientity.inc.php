@@ -120,6 +120,11 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";
 			}
+			if(phpgw::get_var('noframework', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
+
 		}
 
 
@@ -1420,6 +1425,7 @@ JS;
 		function edit($mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
+			$_lean = phpgw::get_var('lean', 'bool');
 
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
@@ -1816,7 +1822,8 @@ JS;
 					'id'			=> $id,
 					'entity_id'		=> $this->entity_id,
 					'cat_id'		=> $this->cat_id,
-					'type'			=> $this->type
+					'type'			=> $this->type,
+					'lean'			=> $_lean
 				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -2505,7 +2512,8 @@ JS;
 														"entity_id:'{$this->entity_id}',".
 														"cat_id:'{$this->cat_id}',".
 														"type:'{$this->type}'}",
-					'documents'						=> $documents
+					'documents'						=> $documents,
+					'lean'							=> $_lean ? 1 : 0
 				);
 
 			phpgwapi_yui::load_widget('dragdrop');
