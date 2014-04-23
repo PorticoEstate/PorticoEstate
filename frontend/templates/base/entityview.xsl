@@ -35,7 +35,7 @@
 
 	refresh_entity = function(location_id, id)
 	{
-		alert('refresh_entity');
+		parent.location.reload(true)
 	}
 
 
