@@ -743,6 +743,24 @@ JS;
 					);
 			}
 
+			if($this->acl_add)
+			{
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'		=> 'add_tinybox',
+						'text' 			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uientity.edit',
+							'location_id'	=> $location_id,
+							'lean'			=> true,
+							'noframework'	=> true,
+							'target'		=> '_tinybox',
+						)),
+						'parameters'			=> array('parameter' => array(array('name'=> 'dummy','source'	=> 'id')))
+					);
+			}
+
 			$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed' , 'property');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
