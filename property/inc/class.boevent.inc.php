@@ -434,14 +434,15 @@
 
 			if($data['enabled'] && !$this->so->check_event_exception($id,$data['time']))
 			{
-				list($module, $classname) = explode('.', $data['action'], 2);
-				if ( is_file(PHPGW_INCLUDE_ROOT . "/{$module}/class.{$classname}.inc.php") )
+				list($module, $classname) = explode('.', $data['action'], 3);
+				$file = PHPGW_INCLUDE_ROOT . "/{$module}/inc/class.{$classname}.inc.php";
+				if ( is_file($file) )
 				{
 					$message = execMethod($data['action'], $data);
 				}
 				else
 				{
-					$message = "No such file: {$module}/class.{$classname}.inc.php";
+					$message = "No such file: {$file}";
 				}
 
 				$this->so->cron_log(array
@@ -569,9 +570,9 @@
 		{
 			$parts = explode('::',$data['id']);
 			$id = $parts[1];
-			$location_arr = explode($parts[0]);
+			$location_arr = explode('.', $parts[0]);
 			$interlink 	= CreateObject('property.interlink');
-			$relation_link = $interlink->get_relation_link($location_arr[1], $id, 'view', true);
+			$relation_link = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
 
 			$responsible_id = isset($data['action_data']['responsible_id']) ? $data['action_data']['responsible_id'] : 0;
 			if(!$responsible_id)
