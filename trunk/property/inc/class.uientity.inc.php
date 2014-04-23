@@ -1823,7 +1823,8 @@ JS;
 					'entity_id'		=> $this->entity_id,
 					'cat_id'		=> $this->cat_id,
 					'type'			=> $this->type,
-					'lean'			=> $_lean
+					'lean'			=> $_lean,
+					'noframework'	=> isset($GLOBALS['phpgw_info']['flags']['noframework']) ? $GLOBALS['phpgw_info']['flags']['noframework'] : false
 				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
