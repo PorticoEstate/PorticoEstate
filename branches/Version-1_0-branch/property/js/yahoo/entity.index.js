@@ -33,7 +33,8 @@
 
 	// define the hidden column in datatable
 	var config_values = {
-	date_search : 1 //if search has link "Data search"
+	date_search : 1, //if search has link "Data search"
+	org_unit_search : 1 //if search has link "Org unit search"
 	}
 
    	var linktoolTips =[

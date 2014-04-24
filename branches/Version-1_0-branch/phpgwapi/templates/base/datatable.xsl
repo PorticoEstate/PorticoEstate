@@ -307,6 +307,9 @@
 			<xsl:when test="type='link'">
 				<a id="{id}" href="#" onclick="{url}" tabindex="{tab_index}"><xsl:value-of select="value"/></a>
 			</xsl:when>
+			<xsl:when test="type='label_org_unit'">
+				<table><tbody><tr><td><span id="txt_org_unit"></span></td></tr></tbody></table>
+			</xsl:when>
 			<xsl:when test="type='label_date'">
 				<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
 			</xsl:when>

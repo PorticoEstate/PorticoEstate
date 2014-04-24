@@ -277,6 +277,17 @@
 				sUrl=html_entity_decode(sUrl);
 				window.open(sUrl,'_self');
 	 		}
+	 		if(values_ds.rights[i].my_name == 'add_tinybox')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl=html_entity_decode(sUrl);
+				TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:550,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+				close: true,
+				closejs:function(){parent.location.reload()}
+				});
+	 		}
  		}
 	}
 
@@ -359,6 +370,10 @@
 					{
 						path_values.start_date = YAHOO.util.Dom.get('start_date').value;
 						path_values.end_date = YAHOO.util.Dom.get('end_date').value;
+					}
+					if(config_values.org_unit_search != undefined && config_values.org_unit_search != 0)
+					{
+						path_values.org_unit_id = YAHOO.util.Dom.get('org_unit_id').value;
 					}
 					execute_ds();
 				}

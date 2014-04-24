@@ -21,6 +21,24 @@
 		<xsl:for-each select="myColumnDefs">
 			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 		</xsl:for-each>
+
+	showlightbox_edit_entity = function(location_id, id)
+	{
+		var oArgs = {menuaction:'property.uientity.edit', location_id:location_id, id: id, noframework:1, lean: 1};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:550,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		close: true,
+		closejs:function(){refresh_entity(location_id, id)}
+		});
+	}
+
+	refresh_entity = function(location_id, id)
+	{
+		parent.location.reload();
+	}
+
+
 	</script>
 
     <table cellpadding="2" cellspacing="2" width="95%" align="center">
@@ -44,6 +62,11 @@
 
         			<li style="margin-bottom: 1em;">
         				<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
+        			</li>
+        			<li style="margin-bottom: 1em;">
+						<a href="#" onclick="showlightbox_edit_entity({location_id},{id});">
+							<xsl:value-of select="php:function('lang', 'edit')"/>
+						</a>
         			</li>
         			<li>
 						<xsl:choose>

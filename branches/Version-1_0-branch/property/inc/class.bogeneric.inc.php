@@ -56,7 +56,7 @@
 
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
-			$sort				= phpgw::get_var('sort');
+			$sort				= phpgw::get_var('sort', 'string', 'REQUEST', 'DESC');
 			$order				= phpgw::get_var('order');
 			$filter				= phpgw::get_var('filter', 'int');
 			$cat_id				= phpgw::get_var('cat_id', 'int');
