@@ -579,11 +579,15 @@
 			{
 				return false;
 			}
-			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$responsible_id);
 
-			$_address = $comms[$entry['contact_id']]['work email'];
+			$account_id = $GLOBALS['phpgw']->accounts->search_person($responsible_id);
+			$socommon 	= CreateObject('property.socommon');
+			$prefs		= $socommon->create_preferences('property',$account_id);
+			$comms 		= execMethod('addressbook.boaddressbook.get_comm_contact_data',$responsible_id);
+			$_address 	= isset($comms[$responsible_id]['work email']) && $comms[$responsible_id]['work email'] ? $comms[$responsible_id]['work email'] :$prefs['email'];
+
 			$subject = lang('reminder');
-			$message = '<a href ="{$relation_link}">' . lang('record').' #' .$id .'</a>'."\n";
+			$message = "<a href =\"{$relation_link}\">" . lang('record').' #' .$id .'</a>'."\n";
 			if (!is_object($GLOBALS['phpgw']->send))
 			{
 				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
