@@ -46,6 +46,7 @@
 		var $results;
 		var $acl_location;
 		public $org_units = array();
+		public $org_unit;
 		protected $xsl_rootdir;
 
 		/**
@@ -96,7 +97,17 @@
 			$allrows						= phpgw::get_var('allrows', 'bool');
 			$criteria_id					= phpgw::get_var('criteria_id');
 			$p_num							= phpgw::get_var('p_num');
+			$org_unit_id					= phpgw::get_var('org_unit_id', 'int');
 
+			if($location_id	= phpgw::get_var('location_id', 'int'))
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$location_arr	= explode('.', $location_info['location']);
+				$type			= $location_arr[1];
+				$entity_id		= $location_arr[2];
+				$cat_id			= $location_arr[3];
+			}
+			
 			$this->criteria_id				= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
 			$location_code					= phpgw::get_var('location_code');
@@ -187,6 +198,10 @@
 			if($allrows)
 			{
 				$this->allrows = $allrows;
+			}
+			if(isset($_POST['org_unit_id']) || isset($_GET['org_unit_id']))
+			{
+				$this->org_unit_id = $org_unit_id;
 			}
 			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
 		}
@@ -341,10 +356,40 @@
 			return $this->bocommon->select_list($selected,$criteria);
 		}
 
+		/**
+		* Get the sublevels of the org tree into one arry
+		*/
+		private function _get_children($data = array() )
+		{
+			foreach ($data as $entry)
+			{
+				$this->org_units[]= $entry['id'];			
+				if(isset($entry['children']) && $entry['children'])
+				{
+					$this->_get_children($entry['children']);			
+				}
+			}
+		}
+
 		function read($data= array())
 		{
+			if($this->org_unit_id && !$this->org_units)
+			{
+				$_org_unit_id = (int)$this->org_unit_id;
+				$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $_org_unit_id, 'type' => 'org_unit'));
+				$this->org_units[]= $_org_unit_id;
+				foreach($_subs as $entry)
+				{
+					$this->org_units[]= $entry['id'];
+					if(isset($entry['children']) && $entry['children'])
+					{
+						$this->_get_children($entry['children']);			
+					}
+				}
+			}
+
 			static $location_data = array();
-			static $org_units = array();
+			static $org_units_data = array();
 
 			if(isset($this->allrows) && $this->allrows)
 			{
@@ -479,12 +524,12 @@
 				}
 				if(isset($entry['org_unit_id']))
 				{
-					if(!isset($org_units[$entry['org_unit_id']]))
+					if(!isset($org_units_data[$entry['org_unit_id']]))
 					{
 						$org_unit = $sogeneric->read_single(array('id' => $entry['org_unit_id']));
-						$org_units[$entry['org_unit_id']]['name'] = $org_unit['name'];
+						$org_units_data[$entry['org_unit_id']]['name'] = $org_unit['name'];
 					}
-					$entry['org_unit'] = $org_units[$entry['org_unit_id']]['name'];
+					$entry['org_unit'] = $org_units_data[$entry['org_unit_id']]['name'];
 				}
 			}
 //_debug_array($entity);die();

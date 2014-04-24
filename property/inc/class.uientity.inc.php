@@ -120,6 +120,11 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";
 			}
+			if(phpgw::get_var('noframework', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
+
 		}
 
 
@@ -690,6 +695,33 @@
 									),
 									array
 									(//for link "None",
+										'type'=> 'label_org_unit'
+									),
+									array
+									( //hidden org_unit_id
+										'type'	=> 'hidden',
+										'id'	=> 'org_unit_id',
+										'name'	=> 'org_unit_id',
+										'value'	=> $org_unit_id
+									),
+									array
+									(//for link "Org unit",
+										'type'=> 'link',
+										'id'  => 'btn_org_unit_search',
+										'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+											array
+											(
+												'menuaction'				=> 'property.uilookup.custom',
+												'column'					=> 'org_unit',
+												'type'						=> 'org_unit',
+											//	'get_list_function_input'	=> urlencode(serialize(array('type' => 'org_unit')))
+											)
+										)."','link','width=640,height=600')",
+										'value' => lang('department'),
+										'tab_index' => 6
+									),
+									array
+									(//for link "None",
 										'type'=> 'label_date'
 									),
 									array
@@ -715,7 +747,7 @@
 										(
 											'menuaction' => 'property.uiproject.date_search'))."','link','width=350,height=250')",
 											'value' => lang('Date search'),
-											'tab_index' => 6
+											'tab_index' => 5
 										)),
 								'hidden_value' => array
 								(
@@ -1393,6 +1425,7 @@ JS;
 		function edit($mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
+			$_lean = phpgw::get_var('lean', 'bool');
 
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
@@ -1789,7 +1822,9 @@ JS;
 					'id'			=> $id,
 					'entity_id'		=> $this->entity_id,
 					'cat_id'		=> $this->cat_id,
-					'type'			=> $this->type
+					'type'			=> $this->type,
+					'lean'			=> $_lean,
+					'noframework'	=> isset($GLOBALS['phpgw_info']['flags']['noframework']) ? $GLOBALS['phpgw_info']['flags']['noframework'] : false
 				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -2478,7 +2513,8 @@ JS;
 														"entity_id:'{$this->entity_id}',".
 														"cat_id:'{$this->cat_id}',".
 														"type:'{$this->type}'}",
-					'documents'						=> $documents
+					'documents'						=> $documents,
+					'lean'							=> $_lean ? 1 : 0
 				);
 
 			phpgwapi_yui::load_widget('dragdrop');

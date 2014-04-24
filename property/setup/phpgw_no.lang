@@ -777,10 +777,11 @@ enter the total cost of this activity - if not to be calculated from unit-cost	p
 enter the workorder id to search by workorder - at any date	property	no	angi bestilling ID for å søke etter bestilling - gjelder alle datoer
 enter workorder title	property	no	angi bestillings tittel
 entity	property	no	type
-entity has been added	property	no	Entitet er lagt til
-entity has been edited	property	no	Entitet er rettet
-entity has not been edited	property	no	Entitet er IKKE rettet
-entity has not been saved	property	no	Entitet er IKKE lagret
+entity has been added	property	no	Post er lagt til
+entity has been edited	property	no	Post er oppdatert
+entity %1 has been edited	property	no	Post %1 er oppdatert
+entity has not been edited	property	no	Post er IKKE oppdatert
+entity has not been saved	property	no	Post er IKKE lagret
 entity id	property	no	entitet ID
 entity name	property	no	entitet navn
 entity not chosen	property	no	Entitet er ikke valgt
@@ -1270,6 +1271,8 @@ please enter a sql query !	property	no	Angi en sql-spørring
 please enter a value for either material cost, labour cost or both !	property	no	angi enten material kostnader, arbeidskostnader eller begge
 please enter a workorder title !	property	no	Angi en bestillings tittel
 please enter either a budget or contrakt sum	property	no	Angi enten budsjett eller konstraktsum (eller begge)
+Please enter value for attribute %1	property	no	Angi verdi for felt %1
+Please enter integer for attribute %1	property	no	Angi heltall for felt %1
 please enter precision as integer !	property	no	Angi heltall for presisjon
 please enter scale as integer !	property	no	Angi heltall for skalering
 please give som details !	property	no	Angi detaljer
