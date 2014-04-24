@@ -563,7 +563,10 @@
 					'message'		=> "{$subject}:\n{$message}"
 				);
 
-			execMethod('sms.bosms.send_sms', $data);
+			if(execMethod('sms.bosms.send_sms', $data))
+			{
+				return $number;
+			}
 		}
 
 		public function send_email($data)
@@ -610,7 +613,7 @@
 				return false;
 
 			}
-
+			return $_address;
 		}
 		/**
 		 * Find recurring events
