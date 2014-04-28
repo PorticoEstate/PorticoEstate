@@ -36,13 +36,27 @@
 
 		function msg($service, $to, $subject, $body, $msgtype='', $cc='', $bcc='', $from='', $sender='', $content_type='', $boundary='Message-Boundary',$attachments=array(), $receive_notification = false)
 		{
-			if ($from == '')
+			if (!$from)
 			{
-				$from = $GLOBALS['phpgw_info']['user']['fullname'].' <'.$GLOBALS['phpgw_info']['user']['preferences']['email']['address'].'>';
+				if($GLOBALS['phpgw_info']['user']['fullname'])
+				{
+					$from = $GLOBALS['phpgw_info']['user']['fullname'].' <'.$GLOBALS['phpgw_info']['user']['preferences']['email']['address'].'>';
+				}
+				else
+				{
+					$from = "NoReply<NoReply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+				}
 			}
-			if ($sender == '')
+			if (!$sender)
 			{
-				$sender = $GLOBALS['phpgw_info']['user']['fullname'];
+				if($GLOBALS['phpgw_info']['user']['fullname'])
+				{
+					$sender = $GLOBALS['phpgw_info']['user']['fullname'];
+				}
+				else
+				{
+					$sender = "NoReply";
+				}
 			}
 
 			switch( $service )
