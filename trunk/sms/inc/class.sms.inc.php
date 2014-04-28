@@ -179,7 +179,7 @@
 		{
 			$datetime_now = $this->datetime_now();
 			$gateway_module_send = $this->gateway_module_send;
-			$uid = $this->account;
+			$uid = (int)$this->account;
 
 			$mobile_sender = $this->username2mobile($username);
 			$max_length = 160;
