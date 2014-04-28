@@ -542,20 +542,21 @@
 		{
 			$parts = explode('::',$data['id']);
 			$id = $parts[1];
-			$location_arr = explode($parts[0]);
+			$location_arr = explode('.', $parts[0]);
 			$interlink 	= CreateObject('property.interlink');
-			$relation_link = $interlink->get_relation_link($location_arr[1], $id, 'view', true);
+			$relation_link = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
 
 			$responsible_id = isset($data['action_data']['responsible_id']) ? $data['action_data']['responsible_id'] : 0;
 			if(!$responsible_id)
 			{
 				return false;
 			}
+
 			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$responsible_id);
 
-			$number = $comms[$entry['contact_id']]['mobile (cell) phone'];
+			$number = $comms[$responsible_id]['mobile (cell) phone'];
 			$subject = lang('reminder');
-			$message = '<a href ="{$relation_link}">' . lang('record').' #' .$id .'</a>'."\n";
+			$message = "<a href =\"{$relation_link}\">" . lang('record').' #' .$id .'</a>'."\n";
 
 			$data = array
 				(
