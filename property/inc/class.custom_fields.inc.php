@@ -816,4 +816,122 @@ JS;
 			}
 			return $ret;
 		}
+
+		/**
+		 * 
+		 * @param integer $location_id
+		 * @param string $entity_table
+		 * @param string $criteria_id - if specified to datatypes
+		 * @param string $query
+		 * @return array
+		 */
+		function get_custom_filter($location_id,$entity_table, $criteria_id = '', $query = '')
+		{
+			$choice_table			= 'phpgw_cust_choice';
+			$_querymethod			= array();
+			$__querymethod			= array();
+			$_joinmethod_datatype	= array();
+
+			if($criteria_id)
+			{
+				$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
+			}
+
+			$this->_db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND search='1'");
+
+			while ($this->_db->next_record())
+			{
+				switch ($this->_db->f('datatype'))
+				{
+					case 'V':
+					case 'email':
+					case 'T':
+						if(!$criteria_id)
+						{
+							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
+							$__querymethod = array(); // remove block
+						}
+						break;
+					case 'CH':
+						if(!$criteria_id)
+						{
+							// from filter
+							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%,{$query},%'";
+							$__querymethod = array(); // remove block
+
+							// from text-search
+							$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->_db->f('location_id')
+								." AND phpgw_cust_choice.attrib_id =" . (int)$this->_db->f('id')
+								." AND phpgw_cust_choice.value {$this->_like} '%{$query}%')";
+
+							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
+							while ($this->_db2->next_record())
+							{
+								$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " {$this->_like} '%,". $this->_db2->f('id') . ",%'";
+							}
+						}
+						break;
+					case 'R':
+					case 'LB':
+						if(!$criteria_id)
+						{
+							$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->_db->f('location_id')
+								." AND phpgw_cust_choice.attrib_id =" . (int)$this->_db->f('id')
+								." AND phpgw_cust_choice.value {$this->_like} '%{$query}%')";
+
+							$this->_db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
+							$__filter_choise = array();
+							while ($this->_db2->next_record())
+							{
+								$__filter_choise[] = $this->_db2->f('id');
+							}
+
+							if($__filter_choise)
+							{
+								$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . ' IN (' . implode(',', $__filter_choise) . ')';
+							}
+
+							$__querymethod = array(); // remove block
+						}
+						break;
+					case 'I':
+						if(ctype_digit($query) && !$criteria_id)
+						{
+							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " = " . (int)$query;
+							$__querymethod = array(); // remove block
+						}
+						break;
+					case 'VENDOR':
+						if($criteria_id == 'vendor')
+						{
+							$_joinmethod_datatype[] = "{$this->_join} fm_vendor ON ({$entity_table}." . $this->_db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->_like} '%{$query}%') ";
+							$__querymethod = array(); // remove block
+						}
+						break;
+					case 'AB':
+						if($criteria_id == 'ab')
+						{
+							$_joinmethod_datatype[] = "{$this->_join} phpgw_contact_person ON ({$entity_table}." . $this->_db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->_like} '%{$query}%' OR phpgw_contact_person.last_name {$this->_like} '%{$query}%'))";
+							$__querymethod = array(); // remove block
+						}
+						break;
+					case 'ABO':
+						if($criteria_id == 'abo')
+						{
+							$_joinmethod_datatype[] = "{$this->_join} phpgw_contact_org ON ({$entity_table}." . $this->_db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->_like} '%{$query}%')";
+							$__querymethod = array(); // remove block
+						}
+						break;
+					default:
+						if(!$criteria_id)
+						{
+							$_querymethod[]= "$entity_table." . $this->_db->f('column_name') . " = '{$query}'";
+							$__querymethod = array(); // remove block
+						}
+					}
+				}
+
+			$querymethod = array_merge($__querymethod, $_querymethod);
+			return array('querymethod' => $querymethod, 'joinmethod_datatype' => $_joinmethod_datatype);
+		}
 	}
