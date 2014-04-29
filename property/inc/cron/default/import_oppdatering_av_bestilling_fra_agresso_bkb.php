@@ -52,6 +52,7 @@
 			$this->sotts			= CreateObject('property.sotts');
 			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$this->send				= CreateObject('phpgwapi.send');
+			$this->historylog		= CreateObject('property.historylog','tts');
 		}
 
 		public function execute()
@@ -279,6 +280,7 @@
 			}
 
 			$this->receipt['message'][] = array('msg' =>"Oppdaterer melding #{$id} for agresso prosjekt {$agresso_prosjekt}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
+			$this->historylog->add('AC',$id, $new_actual_cost , $old_actual_cost);
 
 			$value_set = array
 			(
