@@ -927,6 +927,7 @@
 			 ** T - Category change
 			 ** S - Subject change
 			 ** B - Budget
+			 **	AC - actual cost changed
 			 ** H - Billing hours
 			 ** F - finnish date
 			 ** C% - Status changed
@@ -1082,6 +1083,7 @@
 			 ** T - Category change
 			 ** S - Subject change
 			 ** B - Budget change
+			 **	AC - actual cost changed
 			 ** H - Billing hours
 			 ** F - finnish date
 			 ** C% - Status change
