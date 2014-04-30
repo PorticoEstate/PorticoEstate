@@ -332,7 +332,7 @@
 			{
 				$content_files[] = array
 					(
-						'file_name' => '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
+						'file_name' => '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.urlencode($_entry['name']).'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
 						'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">'
 					);
 			}
@@ -2151,7 +2151,7 @@ JS;
 			$content_files = array();
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
+				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.urlencode($values['files'][$z]['name']).'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
 				if($mode == 'edit')
 				{
 					$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';

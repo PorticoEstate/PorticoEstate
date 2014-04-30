@@ -404,6 +404,8 @@
 				$where= 'AND';
 			}
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
 			$querymethod = '';
 			if($query)
 			{
@@ -441,6 +443,17 @@
 				{
 					$querymethod .= ')';
 				}
+				$custom_filter = $this->custom->get_custom_filter($location_id,'fm_tts_tickets', $criteria_id = '', $query);
+
+				if ($custom_filter['querymethod'])
+				{
+					$_where = $where = 'AND' ? 'OR' : 'WHERE';
+					$querymethod .= " $_where (" . implode (' OR ',$custom_filter['querymethod']) . ')';
+				}
+				else if(isset($custom_filter['joinmethod_datatype']) && $custom_filter['joinmethod_datatype'])
+				{
+					$querymethod = '';
+				}
 			}
 
 			$return_fields = "fm_tts_tickets.id,fm_tts_tickets.assignedto,fm_tts_tickets.status,fm_tts_tickets.user_id,"
@@ -460,18 +473,34 @@
 				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
 				. " {$order_join}"
-				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')"
-				. " {$filtermethod} {$querymethod}";
+				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
 
+			if(isset($custom_filter['joinmethod_datatype']) && $custom_filter['joinmethod_datatype'])
+			{
+				foreach($custom_filter['joinmethod_datatype'] as $_joinmethod)
+				{
+					$sql .= $_joinmethod;
+				}
+			}
+
+			$sql .= " {$filtermethod} {$querymethod}";
 
 			$sql_cnt = "SELECT DISTINCT fm_tts_tickets.budget ,fm_tts_tickets.actual_cost, fm_tts_tickets.id FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
 				. " $order_join"
-				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')"
-				. " $filtermethod $querymethod";
+				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
 
+			if(isset($custom_filter['joinmethod_datatype']) && $custom_filter['joinmethod_datatype'])
+			{
+				foreach($custom_filter['joinmethod_datatype'] as $_joinmethod)
+				{
+					$sql_cnt .= $_joinmethod;
+				}
+			}
+
+			$sql_cnt .= " {$filtermethod} {$querymethod}";
 //_debug_array($sql);
 
 			$cache_info = phpgwapi_cache::session_get('property','tts_listing_metadata');
@@ -523,7 +552,6 @@
 			$this->sum_actual_cost	= $cache_info['sum_actual_cost'];
 			$this->sum_difference	= $cache_info['sum_difference'];
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
 			$tickets = array();
 			if(!$dry_run)
@@ -927,6 +955,7 @@
 			 ** T - Category change
 			 ** S - Subject change
 			 ** B - Budget
+			 **	AC - actual cost changed
 			 ** H - Billing hours
 			 ** F - finnish date
 			 ** C% - Status changed
@@ -1082,6 +1111,7 @@
 			 ** T - Category change
 			 ** S - Subject change
 			 ** B - Budget change
+			 **	AC - actual cost changed
 			 ** H - Billing hours
 			 ** F - finnish date
 			 ** C% - Status change
