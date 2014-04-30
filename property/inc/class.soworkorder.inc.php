@@ -1837,7 +1837,7 @@
 				(
 					'order_id'		 => $order_id,
 					'start_period'	 => date('Ym', $this->db->f('start_date')), //bigint
-					'budget'		 => $budget,
+					'budget'		 => $budget ? $budget : $combined_cost,
 					'combined_cost'	 => $combined_cost,
 					'year'			 => $year,
 					'month'			 => $month,
@@ -1858,7 +1858,7 @@
 				}
 				if($continuous)
 				{
-					$sum_year_budget[$year] += $budget;
+					$sum_year_budget[$year] += $budget ? $budget : $combined_cost;
 					$sum_year_combined_cost[$year] += $combined_cost;
 				}
 			}
