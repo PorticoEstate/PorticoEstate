@@ -2379,7 +2379,8 @@
 							'entry_date'	=> array('add'	=> 'time()'),
 							'modified_date'	=> array('edit'	=> 'time()'),
 						),
-						'check_grant'		=> false
+						'check_grant'		=> false,
+						'mapping' 			=> array('name' => 'text')
 					);
 
 				break;
@@ -3470,6 +3471,7 @@
 
 		public function get_path($data)
 		{
+
 			$this->get_location_info($data['type'], $data['type_id']);
 
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
@@ -3478,7 +3480,16 @@
 			}
 			$this->table = $table;
 
-			$sql = "SELECT name, parent_id FROM {$table} WHERE id = '{$data['id']}'";
+			if(isset($this->location_info['mapping']) && $this->location_info['mapping'])
+			{
+				$mapping = $this->location_info['mapping'];
+			}
+			else
+			{
+				$mapping = array('name' => 'name');
+			}
+
+			$sql = "SELECT {$mapping['name']}, parent_id FROM {$table} WHERE id = '{$data['id']}'";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->_db->next_record();
