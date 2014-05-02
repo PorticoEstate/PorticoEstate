@@ -20,4 +20,5 @@
 	$GLOBALS['phpgw']->locations->add('.property.refurbishment', 'refurbishment', 'frontend', false);
 	$GLOBALS['phpgw']->locations->add('.property.services', 'services', 'frontend', false);
 	$GLOBALS['phpgw']->locations->add('.delegates', 'delegates', 'frontend', false);
+	$GLOBALS['phpgw']->locations->add('.controller', 'controller', 'frontend', false);
 
