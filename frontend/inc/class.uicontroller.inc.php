@@ -116,13 +116,5 @@
 			
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
         	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','controller'));
-			
-//			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-//			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'controller';
-//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
-//			$uicalendar = CreateObject('controller.uicalendar');
-//			$uicalendar->view_calendar_for_year($this->location_code);
-//			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 		}
-
 	}
