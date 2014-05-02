@@ -103,6 +103,15 @@
 			$this->add     = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_ADD, 'controller');//2 
 			$this->edit    = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_EDIT, 'controller');//4 
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_DELETE, 'controller');//8 
+			if(phpgw::get_var('noframework', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+				phpgwapi_cache::session_set('controller','noframework',true);
+			}
+			else if (phpgwapi_cache::session_get('controller','noframework'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
  		}	
 		
 		private function _get_case_data()

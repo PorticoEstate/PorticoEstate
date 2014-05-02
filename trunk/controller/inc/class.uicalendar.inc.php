@@ -88,6 +88,16 @@
             $this->location_finder = new location_finder();
 			     
 			self::set_active_menu('controller::location_check_list');
+
+			if(phpgw::get_var('noframework', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+				phpgwapi_cache::session_set('controller','noframework',true);
+			}
+			else if (phpgwapi_cache::session_get('controller','noframework'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
 		}
 
 		public function view_calendar_for_month()
@@ -246,9 +256,9 @@
 			}
 		}
 
-		public function view_calendar_for_year()
+		public function view_calendar_for_year($location_code = '')
 		{
-			$location_code = phpgw::get_var('location_code');
+			$location_code = $location_code ? $location_code : phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			$role = phpgw::get_var('role', 'int', 'REQUEST', -1);
 
