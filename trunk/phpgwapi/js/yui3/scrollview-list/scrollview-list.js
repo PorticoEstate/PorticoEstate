@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('scrollview-list', function (Y, NAME) {
 
 /**
@@ -16,8 +17,6 @@ SCROLLVIEW = 'scrollview',
 LIST_CLASS = getCN(SCROLLVIEW, 'list'),
 ITEM_CLASS = getCN(SCROLLVIEW, 'item'),
 CONTENT_BOX = "contentBox",
-RENDERED = 'rendered',
-RENDER_UI = 'renderUI',
 HOST = "host";
 
 /**
@@ -65,7 +64,9 @@ ListPlugin.NS = 'list';
 ListPlugin.ATTRS = {
     
     /**
-     * Specifies whether the list elements (the immediate <ul>'s and the immediate <li>'s inside those <ul>'s) have class names attached to them or not
+     * Specifies whether the list elements (the immediate <ul>'s and the
+     *  immediate <li>'s inside those <ul>'s) have class names attached to
+     *  them or not
      *
      * @attribute isAttached
      * @type boolean
@@ -133,4 +134,4 @@ Y.namespace("Plugin").ScrollViewList = Y.extend(ListPlugin, Y.Plugin.Base, {
 
 
 
-}, '3.7.3', {"requires": ["plugin", "classnamemanager"], "skinnable": true});
+}, '3.16.0', {"requires": ["plugin", "classnamemanager"], "skinnable": true});

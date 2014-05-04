@@ -1,15 +1,16 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('graphics-svg', function (Y, NAME) {
 
 var IMPLEMENTATION = "svg",
     SHAPE = "shape",
 	SPLITPATHPATTERN = /[a-z][^a-z]*/ig,
-    SPLITARGSPATTERN = /[-]?[0-9]*[0-9|\.][0-9]*/g,
+    SPLITARGSPATTERN = /[\-]?[0-9]*[0-9|\.][0-9]*/g,
     Y_LANG = Y.Lang,
 	AttributeLite = Y.AttributeLite,
 	SVGGraphic,
@@ -35,6 +36,18 @@ function SVGDrawing(){}
  * @constructor
  */
 SVGDrawing.prototype = {
+    /**
+     * Rounds a value to the nearest hundredth.
+     *
+     * @method _round
+     * @param {Number} val Value to be rounded.
+     * @return Number
+     * @private
+     */
+    _round: function(val) {
+        return Math.round(val * 100)/100;
+    },
+
     /**
      * Maps path to methods
      *
@@ -93,9 +106,11 @@ SVGDrawing.prototype = {
      * @param {Number} cp2y y-coordinate for the second control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     curveTo: function() {
         this._curveTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
@@ -108,9 +123,11 @@ SVGDrawing.prototype = {
      * @param {Number} cp2y y-coordinate for the second control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     relativeCurveTo: function() {
         this._curveTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
 
     /**
@@ -190,9 +207,11 @@ SVGDrawing.prototype = {
      * @param {Number} cpy y-coordinate for the control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     quadraticCurveTo: function() {
         this._quadraticCurveTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
@@ -203,9 +222,11 @@ SVGDrawing.prototype = {
      * @param {Number} cpy y-coordinate for the control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     relativeQuadraticCurveTo: function() {
         this._quadraticCurveTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
    
     /**
@@ -235,6 +256,7 @@ SVGDrawing.prototype = {
             command = relative ? "q" : "Q",
             relativeX = relative ? parseFloat(this._currentX) : 0,
             relativeY = relative ? parseFloat(this._currentY) : 0;
+        this._pathArray = this._pathArray || [];
         if(this._pathType !== command)
         {
             this._pathType = command;
@@ -280,6 +302,7 @@ SVGDrawing.prototype = {
      * @param {Number} y y-coordinate
      * @param {Number} w width
      * @param {Number} h height
+     * @chainable
      */
     drawRect: function(x, y, w, h) {
         this.moveTo(x, y);
@@ -287,18 +310,20 @@ SVGDrawing.prototype = {
         this.lineTo(x + w, y + h);
         this.lineTo(x, y + h);
         this.lineTo(x, y);
+        return this;
     },
 
     /**
      * Draws a rectangle with rounded corners.
      * 
-     * @method drawRect
+     * @method drawRoundRect
      * @param {Number} x x-coordinate
      * @param {Number} y y-coordinate
      * @param {Number} w width
      * @param {Number} h height
      * @param {Number} ew width of the ellipse used to draw the rounded corners
      * @param {Number} eh height of the ellipse used to draw the rounded corners
+     * @chainable
      */
     drawRoundRect: function(x, y, w, h, ew, eh) {
         this.moveTo(x, y + eh);
@@ -310,6 +335,7 @@ SVGDrawing.prototype = {
         this.quadraticCurveTo(x + w, y, x + w - ew, y);
         this.lineTo(x + ew, y);
         this.quadraticCurveTo(x, y, x, y + eh);
+        return this;
 	},
 
     /**
@@ -319,6 +345,7 @@ SVGDrawing.prototype = {
      * @param {Number} x y-coordinate
      * @param {Number} y x-coordinate
      * @param {Number} r radius
+     * @chainable
      * @protected
      */
 	drawCircle: function(x, y, radius) {
@@ -343,6 +370,7 @@ SVGDrawing.prototype = {
      * @param {Number} y y-coordinate
      * @param {Number} w width
      * @param {Number} h height
+     * @chainable
      * @protected
      */
 	drawEllipse: function(x, y, w, h) {
@@ -368,6 +396,7 @@ SVGDrawing.prototype = {
      * @param {Number} y x-coordinate
      * @param {Number} width width
      * @param {Number} height height
+     * @chainable
      * @protected
      */
     drawDiamond: function(x, y, width, height)
@@ -392,6 +421,7 @@ SVGDrawing.prototype = {
      * @param {Number} arc sweep of the wedge. Negative values draw clockwise.
      * @param {Number} radius radius of wedge. If [optional] yRadius is defined, then radius is the x radius.
      * @param {Number} yRadius [optional] y radius for wedge.
+     * @chainable
      * @private
      */
     drawWedge: function(x, y, startAngle, arc, radius, yRadius)
@@ -411,8 +441,9 @@ SVGDrawing.prototype = {
             diameter = radius * 2,
             currentArray,
             pathArrayLen;
+        this._pathArray = this._pathArray || [];
         yRadius = yRadius || radius;
-        if(this._pathType != "M")
+        if(this._pathType !== "M")
         {
             this._pathType = "M";
             currentArray = ["M"];
@@ -453,8 +484,8 @@ SVGDrawing.prototype = {
             this._pathType = "L";
             pathArrayLen++;
             this._pathArray[pathArrayLen] = ["L"];
-            this._pathArray[pathArrayLen].push(Math.round(ax));
-            this._pathArray[pathArrayLen].push(Math.round(ay));
+            this._pathArray[pathArrayLen].push(this._round(ax));
+            this._pathArray[pathArrayLen].push(this._round(ay));
             pathArrayLen++; 
             this._pathType = "Q";
             this._pathArray[pathArrayLen] = ["Q"];
@@ -466,10 +497,10 @@ SVGDrawing.prototype = {
                 by = y + Math.sin(angle) * yRadius;
                 cx = x + Math.cos(angleMid) * (radius / Math.cos(theta / 2));
                 cy = y + Math.sin(angleMid) * (yRadius / Math.cos(theta / 2));
-                this._pathArray[pathArrayLen].push(Math.round(cx));
-                this._pathArray[pathArrayLen].push(Math.round(cy));
-                this._pathArray[pathArrayLen].push(Math.round(bx));
-                this._pathArray[pathArrayLen].push(Math.round(by));
+                this._pathArray[pathArrayLen].push(this._round(cx));
+                this._pathArray[pathArrayLen].push(this._round(cy));
+                this._pathArray[pathArrayLen].push(this._round(bx));
+                this._pathArray[pathArrayLen].push(this._round(by));
             }
         }
         this._currentX = x;
@@ -484,10 +515,12 @@ SVGDrawing.prototype = {
      * @method lineTo
      * @param {Number} point1 x-coordinate for the end point.
      * @param {Number} point2 y-coordinate for the end point.
+     * @chainable
      */
     lineTo: function()
     {
         this._lineTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
@@ -496,10 +529,12 @@ SVGDrawing.prototype = {
      * @method relativeLineTo
      * @param {Number} point1 x-coordinate for the end point.
      * @param {Number} point2 y-coordinate for the end point.
+     * @chainable
      */
     relativeLineTo: function()
     {
         this._lineTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
 
     /**
@@ -570,10 +605,12 @@ SVGDrawing.prototype = {
      * @method moveTo
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     moveTo: function()
     {
         this._moveTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
@@ -582,10 +619,12 @@ SVGDrawing.prototype = {
      * @method relativeMoveTo
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     relativeMoveTo: function()
     {
         this._moveTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
 
     /**
@@ -621,16 +660,19 @@ SVGDrawing.prototype = {
      * Completes a drawing operation. 
      *
      * @method end
+     * @chainable
      */
     end: function()
     {
         this._closePath();
+        return this;
     },
 
     /**
      * Clears the path.
      *
      * @method clear
+     * @chainable
      */
     clear: function()
     {
@@ -644,6 +686,8 @@ SVGDrawing.prototype = {
         this._bottom = 0;
         this._pathArray = [];
         this._path = "";
+        this._pathType = "";
+        return this;
     },
 
     /**
@@ -659,7 +703,6 @@ SVGDrawing.prototype = {
             pathType,
             len,
             val,
-            val2,
             i,
             path = "",
             node = this.node,
@@ -678,11 +721,11 @@ SVGDrawing.prototype = {
                 {
                     path += pathType + segmentArray[1] + "," + segmentArray[2];
                 }
-                else if(pathType == "z" || pathType == "Z")
+                else if(pathType === "z" || pathType === "Z")
                 {
                     path += " z ";
                 }
-                else if(pathType == "C" || pathType == "c")
+                else if(pathType === "C" || pathType === "c")
                 {
                     path += pathType + (segmentArray[1] - left)+ "," + (segmentArray[2] - top);
                 }
@@ -695,6 +738,7 @@ SVGDrawing.prototype = {
                     case "L" :
                     case "l" :
                     case "M" :
+                    case "m" :
                     case "Q" :
                     case "q" :
                         for(i = 2; i < len; ++i)
@@ -743,10 +787,12 @@ SVGDrawing.prototype = {
      * Ends a fill and stroke
      *
      * @method closePath
+     * @chainable
      */
     closePath: function()
     {
         this._pathArray.push(["z"]);
+        return this;
     },
 
     /**
@@ -870,7 +916,7 @@ Y.SVGDrawing = SVGDrawing;
  * @constructor
  * @param {Object} cfg (optional) Attribute configs
  */
-SVGShape = function(cfg)
+SVGShape = function()
 {
     this._transforms = [];
     this.matrix = new Y.Matrix();
@@ -936,8 +982,9 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
      * Set the Graphic instance for the shape.
      *
      * @method _setGraphic
-     * @param {Graphic | Node | HTMLElement | String} render This param is used to determine the graphic instance. If it is a `Graphic` instance, it will be assigned
-     * to the `graphic` attribute. Otherwise, a new Graphic instance will be created and rendered into the dom element that the render represents.
+     * @param {Graphic | Node | HTMLElement | String} render This param is used to determine the graphic instance. If it is a
+     * `Graphic` instance, it will be assigned to the `graphic` attribute. Otherwise, a new Graphic instance will be created
+     * and rendered into the dom element that the render represents.
      * @private
      */
     _setGraphic: function(render)
@@ -949,7 +996,6 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
         }
         else
         {
-            render = Y.one(render);
             graphic = new Y.SVGGraphic({
                 render: render
             });
@@ -1023,7 +1069,8 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 */
 	contains: function(needle)
 	{
-		return needle === Y.one(this.node);
+		var node = needle instanceof Y.Node ? needle._node : needle;
+        return node === this.node;
 	},
 
 	/**
@@ -1103,7 +1150,15 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
             concat = host._camelCaseConcat,
 			pointerEvents = host.get("pointerEvents");
 		host.node = node;
-		host.addClass(_getClassName(SHAPE) + " " + _getClassName(concat(IMPLEMENTATION, SHAPE)) + " " + _getClassName(name) + " " + _getClassName(concat(IMPLEMENTATION, name))); 
+		host.addClass(
+            _getClassName(SHAPE) +
+            " " +
+            _getClassName(concat(IMPLEMENTATION, SHAPE)) +
+            " " +
+            _getClassName(name) +
+            " " +
+            _getClassName(concat(IMPLEMENTATION, name))
+        );
         if(id)
 		{
 			node.setAttribute("id", id);
@@ -1114,8 +1169,9 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 		}
         if(!host.get("visible"))
         {
-            Y.one(node).setStyle("visibility", "hidden");
+            Y.DOM.setStyle(node, "visibility", "hidden");
         }
+        Y.DOM.setAttribute(this.node, "shape-rendering", this.get("shapeRendering"));
 	},
 	
 
@@ -1132,7 +1188,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	{
 		if(Y.Node.DOM_EVENTS[type])
 		{
-			return Y.one("#" +  this.get("id")).on(type, fn);
+            return Y.on(type, fn, "#" + this.get("id"));
 		}
 		return Y.on.apply(this, arguments);
 	},
@@ -1143,7 +1199,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method _strokeChangeHandler
 	 * @private
 	 */
-	_strokeChangeHandler: function(e)
+	_strokeChangeHandler: function()
 	{
 		var node = this.node,
 			stroke = this.get("stroke"),
@@ -1166,7 +1222,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 			node.setAttribute("stroke-linecap", stroke.linecap);
 			node.setAttribute("stroke-width",  stroke.weight);
 			node.setAttribute("stroke-opacity", stroke.opacity);
-			if(linejoin == "round" || linejoin == "bevel")
+			if(linejoin === "round" || linejoin === "bevel")
 			{
 				node.setAttribute("stroke-linejoin", linejoin);
 			}
@@ -1192,7 +1248,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method _fillChangeHandler
 	 * @private
 	 */
-	_fillChangeHandler: function(e)
+	_fillChangeHandler: function()
 	{
 		var node = this.node,
 			fill = this.get("fill"),
@@ -1201,7 +1257,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 		if(fill)
 		{
 			type = fill.type;
-			if(type == "linear" || type == "radial")
+			if(type === "linear" || type === "radial")
 			{
 				this._setGradientFill(fill);
 				node.setAttribute("fill", "url(#grad" + this.get("id") + ")");
@@ -1261,7 +1317,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 			fy = fill.fy,
 			r = fill.r,
             stopNodes = [];
-		if(type == "linear")
+		if(type === "linear")
 		{
             cx = w/2;
             cy = h/2;
@@ -1390,7 +1446,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @param {Number} x The value to transate on the x-axis.
 	 * @param {Number} y The value to translate on the y-axis.
 	 */
-	translate: function(x, y)
+	translate: function()
 	{
 		this._addTransform("translate", arguments);
 	},
@@ -1402,7 +1458,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method translateX
 	 * @param {Number} x The value to translate.
 	 */
-	translateX: function(x)
+	translateX: function()
     {
         this._addTransform("translateX", arguments);
     },
@@ -1414,7 +1470,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method translateY
 	 * @param {Number} y The value to translate.
 	 */
-	translateY: function(y)
+	translateY: function()
     {
         this._addTransform("translateY", arguments);
     },
@@ -1426,7 +1482,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
      * @param {Number} x The value to skew on the x-axis.
      * @param {Number} y The value to skew on the y-axis.
      */
-    skew: function(x, y)
+    skew: function()
     {
         this._addTransform("skew", arguments);
     },
@@ -1437,7 +1493,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method skewX
 	 * @param {Number} x x-coordinate
 	 */
-	 skewX: function(x)
+    skewX: function()
 	 {
 		this._addTransform("skewX", arguments);
 	 },
@@ -1448,7 +1504,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method skewY
 	 * @param {Number} y y-coordinate
 	 */
-	 skewY: function(y)
+    skewY: function()
 	 {
 		this._addTransform("skewY", arguments);
 	 },
@@ -1459,7 +1515,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method rotate
 	 * @param {Number} deg The degree of the rotation.
 	 */
-	 rotate: function(deg)
+    rotate: function()
 	 {
 		this._addTransform("rotate", arguments);
 	 },
@@ -1470,7 +1526,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 * @method scale
 	 * @param {Number} val
 	 */
-	scale: function(x, y)
+    scale: function()
 	{
 		this._addTransform("scale", arguments);
 	},
@@ -1503,7 +1559,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 	 */
 	_updateTransform: function()
 	{
-		var isPath = this._type == "path",
+		var isPath = this._type === "path",
 		    node = this.node,
 			key,
 			transform,
@@ -1594,7 +1650,7 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
      * @method _updateHandler
 	 * @private
 	 */
-	_updateHandler: function(e)
+	_updateHandler: function()
 	{
 		this._draw();
 	},
@@ -1623,15 +1679,12 @@ Y.extend(SVGShape, Y.GraphicBase, Y.mix({
 			stroke = this.get("stroke"),
             w = this.get("width"),
 			h = this.get("height"),
-			x = type == "path" ? 0 : this._x,
-			y = type == "path" ? 0 : this._y,
+			x = type === "path" ? 0 : this._x,
+			y = type === "path" ? 0 : this._y,
             wt = 0;
-        if(type != "path")
-        {
             if(stroke && stroke.weight)
             {
                 wt = stroke.weight;
-            }
             w = (x + w + wt) - (x - wt); 
             h = (y + h + wt) - (y - wt);
             x -= wt;
@@ -1779,8 +1832,9 @@ SVGShape.ATTRS = {
      *        <dt>matrix</dt><dd>Specifies a 2D transformation matrix comprised of the specified six values.</dd>      
      *    </dl>
      * </p>
-     * <p>Applying transforms through the transform attribute will reset the transform matrix and apply a new transform. The shape class also contains corresponding methods for each transform
-     * that will apply the transform to the current matrix. The below code illustrates how you might use the `transform` attribute to instantiate a recangle with a rotation of 45 degrees.</p>
+     * <p>Applying transforms through the transform attribute will reset the transform matrix and apply a new transform. The shape class also contains
+     * corresponding methods for each transform that will apply the transform to the current matrix. The below code illustrates how you might use the
+     * `transform` attribute to instantiate a recangle with a rotation of 45 degrees.</p>
             var myRect = new Y.Rect({
                 type:"rect",
                 width: 50,
@@ -1918,6 +1972,41 @@ SVGShape.ATTRS = {
 	},
 
 	/**
+     * Only implemented in SVG implementation.
+     * Applies the SVG shape-rendering attribute to the shape.
+     *  <dl>
+     *      <dt>auto</dt>
+     *      <dd>Indicates that the user agent shall make appropriate tradeoffs to balance speed,
+     *      crisp edges and geometric precision, but with geometric precision given more importance than speed and crisp edges.</dd>
+     *      <dt>optimizeSpeed</dt>
+     *      <dd>Indicates that the user agent shall emphasize rendering speed over geometric precision and crisp edges.
+     *      This option will sometimes cause the user agent to turn off shape anti-aliasing.</dd>
+     *      <dt>crispEdges</dt>
+     *      <dd>Indicates that the user agent shall attempt to emphasize the contrast between clean edges of artwork over rendering
+     *      speed and geometric precision. To achieve crisp edges, the user agent might turn off anti-aliasing for all lines and curves
+     *      or possibly just for straight lines which are close to vertical or horizontal. Also, the user agent might adjust line
+     *      positions and line widths to align edges with device pixels.</dd>
+     *      <dt>geometricPrecision</dt>
+     *      <dd>Indicates that the user agent shall emphasize geometric precision over speed and crisp edges.</dd>
+     *  </dl>
+     *
+     *  @config shapeRendering
+     *  @type String
+     */
+    shapeRendering: {
+        value: "auto",
+
+        setter: function(val) {
+            if(this.node)
+            {
+                Y.DOM.setAttribute(this.node, "shape-rendering", val);
+            }
+            return val;
+        }
+    },
+
+
+	/**
 	 * Contains information about the fill of the shape. 
      *  <dl>
      *      <dt>color</dt><dd>The color of the fill.</dd>
@@ -1935,23 +2024,27 @@ SVGShape.ATTRS = {
      *      <dt>stops</dt><dd>An array of objects containing the following properties:
      *          <dl>
      *              <dt>color</dt><dd>The color of the stop.</dd>
-     *              <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stop. The default value is 1. Note: No effect for IE 6 - 8</dd>
+     *              <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stop. The default value is 1.
+     *              Note: No effect for IE 6 - 8</dd>
      *              <dt>offset</dt><dd>Number between 0 and 1 indicating where the color stop is positioned.</dd> 
      *          </dl>
      *      </dd>
      *      <p>Linear gradients also have the following property:</p>
-     *      <dt>rotation</dt><dd>Linear gradients flow left to right by default. The rotation property allows you to change the flow by rotation. (e.g. A rotation of 180 would make the gradient pain from right to left.)</dd>
+     *      <dt>rotation</dt><dd>Linear gradients flow left to right by default. The rotation property allows you to change the
+     *      flow by rotation. (e.g. A rotation of 180 would make the gradient pain from right to left.)</dd>
      *      <p>Radial gradients have the following additional properties:</p>
      *      <dt>r</dt><dd>Radius of the gradient circle.</dd>
      *      <dt>fx</dt><dd>Focal point x-coordinate of the gradient.</dd>
      *      <dt>fy</dt><dd>Focal point y-coordinate of the gradient.</dd>
      *      <dt>cx</dt><dd>
      *          <p>The x-coordinate of the center of the gradient circle. Determines where the color stop begins. The default value 0.5.</p>
-     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and `VMLShape` classes which are used on Android or IE 6 - 8.</p>
+     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and
+     *          `VMLShape` classes which are used on Android or IE 6 - 8.</p>
      *      </dd>
      *      <dt>cy</dt><dd>
      *          <p>The y-coordinate of the center of the gradient circle. Determines where the color stop begins. The default value 0.5.</p>
-     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and `VMLShape` classes which are used on Android or IE 6 - 8.</p>
+     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and `VMLShape`
+     *          classes which are used on Android or IE 6 - 8.</p>
      *      </dd>
      *  </dl>
 	 *
@@ -1968,7 +2061,7 @@ SVGShape.ATTRS = {
 			fill = (val) ? Y.merge(tmpl, val) : null;
 			if(fill && fill.color)
 			{
-				if(fill.color === undefined || fill.color == "none")
+				if(fill.color === undefined || fill.color === "none")
 				{
 					fill.color = null;
 				}
@@ -1983,8 +2076,8 @@ SVGShape.ATTRS = {
      *      <dt>color</dt><dd>The color of the stroke.</dd>
      *      <dt>weight</dt><dd>Number that indicates the width of the stroke.</dd>
      *      <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stroke. The default value is 1.</dd>
-     *      <dt>dashstyle</dt>Indicates whether to draw a dashed stroke. When set to "none", a solid stroke is drawn. When set to an array, the first index indicates the
-     *  length of the dash. The second index indicates the length of gap.
+     *      <dt>dashstyle</dt>Indicates whether to draw a dashed stroke. When set to "none", a solid stroke is drawn. When set
+     *      to an array, the first index indicates the length of the dash. The second index indicates the length of gap.
      *      <dt>linecap</dt><dd>Specifies the linecap for the stroke. The following values can be specified:
      *          <dl>
      *              <dt>butt (default)</dt><dd>Specifies a butt linecap.</dd>
@@ -1996,8 +2089,8 @@ SVGShape.ATTRS = {
      *          <dl>
      *              <dt>round (default)</dt><dd>Specifies that the linejoin will be round.</dd>
      *              <dt>bevel</dt><dd>Specifies a bevel for the linejoin.</dd>
-     *              <dt>miter limit</dt><dd>An integer specifying the miter limit of a miter linejoin. If you want to specify a linejoin of miter, you simply specify the limit as opposed to having
-     *  separate miter and miter limit values.</dd>
+     *              <dt>miter limit</dt><dd>An integer specifying the miter limit of a miter linejoin. If you want to specify a linejoin
+     *              of miter, you simply specify the limit as opposed to having separate miter and miter limit values.</dd>
      *          </dl>
      *      </dd>
      *  </dl>
@@ -2070,9 +2163,10 @@ SVGShape.ATTRS = {
 	},
 
     /**
-     * Represents an SVG Path string. This will be parsed and added to shape's API to represent the SVG data across all implementations. Note that when using VML or SVG 
-     * implementations, part of this content will be added to the DOM using respective VML/SVG attributes. If your content comes from an untrusted source, you will need 
-     * to ensure that no malicious code is included in that content. 
+     * Represents an SVG Path string. This will be parsed and added to shape's API to represent the SVG data across all
+     * implementations. Note that when using VML or SVG implementations, part of this content will be added to the DOM using
+     * respective VML/SVG attributes. If your content comes from an untrusted source, you will need to ensure that no
+     * malicious code is included in that content.
      *
      * @config data
      * @type String
@@ -2117,7 +2211,7 @@ Y.SVGShape = SVGShape;
  * @extends SVGShape
  * @constructor
  */
-SVGPath = function(cfg)
+SVGPath = function()
 {
 	SVGPath.superclass.constructor.apply(this, arguments);
 };
@@ -2261,7 +2355,7 @@ Y.SVGRect = SVGRect;
  * @class SVGEllipse
  * @constructor
  */
-SVGEllipse = function(cfg)
+SVGEllipse = function()
 {
 	SVGEllipse.superclass.constructor.apply(this, arguments);
 };
@@ -2364,7 +2458,7 @@ Y.SVGEllipse = SVGEllipse;
  * @class SVGCircle
  * @constructor
  */
- SVGCircle = function(cfg)
+ SVGCircle = function()
  {
     SVGCircle.superclass.constructor.apply(this, arguments);
  };
@@ -2483,7 +2577,7 @@ Y.extend(SVGPieSlice, Y.SVGShape, Y.mix({
 	 * @private
 	 * @method _updateHandler
 	 */
-	_draw: function(e)
+	_draw: function()
 	{
         var x = this.get("cx"),
             y = this.get("cy"),
@@ -2544,7 +2638,7 @@ Y.SVGPieSlice = SVGPieSlice;
  * @class SVGGraphic
  * @constructor
  */
-SVGGraphic = function(cfg) {
+SVGGraphic = function() {
     SVGGraphic.superclass.constructor.apply(this, arguments);
 };
 
@@ -2552,7 +2646,8 @@ SVGGraphic.NAME = "svgGraphic";
 
 SVGGraphic.ATTRS = {
     /**
-     * Whether or not to render the `Graphic` automatically after to a specified parent node after init. This can be a Node instance or a CSS selector string.
+     * Whether or not to render the `Graphic` automatically after to a specified parent node after init. This can be a Node
+     * instance or a CSS selector string.
      * 
      * @config render
      * @type Node | String 
@@ -2668,12 +2763,15 @@ SVGGraphic.ATTRS = {
      *  Determines the sizing of the Graphic. 
      *
      *  <dl>
-     *      <dt>sizeContentToGraphic</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code> and <code>height</code>
-     *      attributes or are determined by the dimensions of the parent element. The content contained in the Graphic will be sized to fit with in the Graphic instance's 
-     *      dimensions. When using this setting, the <code>preserveAspectRatio</code> attribute will determine how the contents are sized.</dd>
-     *      <dt>sizeGraphicToContent</dt><dd>(Also accepts a value of true) The Graphic's width and height are determined by the size and positioning of the content.</dd>
-     *      <dt>false</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code> and <code>height</code>
-     *      attributes or are determined by the dimensions of the parent element. The contents of the Graphic instance are not affected by this setting.</dd>
+     *      <dt>sizeContentToGraphic</dt><dd>The Graphic's width and height attributes are, either explicitly set through the
+     *      <code>width</code> and <code>height</code> attributes or are determined by the dimensions of the parent element. The
+     *      content contained in the Graphic will be sized to fit with in the Graphic instance's dimensions. When using this
+     *      setting, the <code>preserveAspectRatio</code> attribute will determine how the contents are sized.</dd>
+     *      <dt>sizeGraphicToContent</dt><dd>(Also accepts a value of true) The Graphic's width and height are determined by the
+     *      size and positioning of the content.</dd>
+     *      <dt>false</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code>
+     *      and <code>height</code> attributes or are determined by the dimensions of the parent element. The contents of the
+     *      Graphic instance are not affected by this setting.</dd>
      *  </dl>
      *
      *
@@ -2811,9 +2909,10 @@ Y.extend(SVGGraphic, Y.GraphicBase, {
      * @param {Any} value The value to set the attribute to. This value is ignored if an object is received as 
      * the name param.
      */
-	set: function(attr, value) 
+	set: function()
 	{
 		var host = this,
+            attr = arguments[0],
             redrawAttrs = {
                 autoDraw: true,
                 autoSize: true,
@@ -2873,11 +2972,11 @@ Y.extend(SVGGraphic, Y.GraphicBase, {
      */
     getXY: function()
     {
-        var node = Y.one(this._node),
+        var node = this._node,
             xy;
         if(node)
         {
-            xy = node.getXY();
+            xy = Y.DOM.getXY(node);
         }
         return xy;
     },
@@ -2921,12 +3020,20 @@ Y.extend(SVGGraphic, Y.GraphicBase, {
      * @param {HTMLElement} parentNode node in which to render the graphics node into.
      */
     render: function(render) {
-        var parentNode = Y.one(render),
-            w = this.get("width") || parseInt(parentNode.getComputedStyle("width"), 10),
-            h = this.get("height") || parseInt(parentNode.getComputedStyle("height"), 10);
-        parentNode = parentNode || Y.one(DOCUMENT.body);
-        parentNode.append(this._node);
-        this.parentNode = parentNode;
+        var parentNode = render || DOCUMENT.body,
+            w,
+            h;
+        if(render instanceof Y.Node)
+        {
+            parentNode = render._node;
+        }
+        else if(Y.Lang.isString(render))
+        {
+            parentNode = Y.Selector.query(render, DOCUMENT.body, true);
+        }
+        w = this.get("width") || parseInt(Y.DOM.getComputedStyle(parentNode, "width"), 10);
+        h = this.get("height") || parseInt(Y.DOM.getComputedStyle(parentNode, "height"), 10);
+        parentNode.appendChild(this._node);
         this.set("width", w);
         this.set("height", h);
         return this;
@@ -2952,7 +3059,10 @@ Y.extend(SVGGraphic, Y.GraphicBase, {
         if(this._node)
         {
             this._removeChildren(this._node);
-            Y.one(this._node).remove(true);
+            if(this._node.parentNode)
+            {
+                this._node.parentNode.removeChild(this._node);
+            }
             this._node = null;
         }
     },
@@ -2971,8 +3081,8 @@ Y.extend(SVGGraphic, Y.GraphicBase, {
         {
             cfg.visible = false;
         }
-        var shapeClass = this._getShapeClass(cfg.type),
-            shape = new shapeClass(cfg);
+        var ShapeClass = this._getShapeClass(cfg.type),
+            shape = new ShapeClass(cfg);
         this._appendShape(shape);
         return shape;
     },
@@ -3206,11 +3316,11 @@ Y.extend(SVGGraphic, Y.GraphicBase, {
             node;
         if(autoSize)
         {
-            if(autoSize == "sizeContentToGraphic")
+            if(autoSize === "sizeContentToGraphic")
             {
-                node = Y.one(this._node);
-                computedWidth = parseFloat(node.getComputedStyle("width"));
-                computedHeight = parseFloat(node.getComputedStyle("height"));
+                node = this._node;
+                computedWidth = parseFloat(Y.DOM.getComputedStyle(node, "width"));
+                computedHeight = parseFloat(Y.DOM.getComputedStyle(node, "height"));
                 computedLeft = computedTop = 0;
                 this._contentNode.setAttribute("preserveAspectRatio", preserveAspectRatio);
             }
@@ -3352,7 +3462,7 @@ Y.extend(SVGGraphic, Y.GraphicBase, {
     {
         var node = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", "svg:" + type),
             v = pe || "none";
-        if(type !== "defs" && type !== "stop" && type !== "linearGradient" && type != "radialGradient")
+        if(type !== "defs" && type !== "stop" && type !== "linearGradient" && type !== "radialGradient")
         {
             node.setAttribute("pointer-events", v);
         }
@@ -3451,4 +3561,4 @@ Y.SVGGraphic = SVGGraphic;
 
 
 
-}, '3.7.3', {"requires": ["graphics"]});
+}, '3.16.0', {"requires": ["graphics"]});

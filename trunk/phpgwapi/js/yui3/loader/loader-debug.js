@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('loader-base', function (Y, NAME) {
 
 /**
@@ -12,36 +13,39 @@ YUI.add('loader-base', function (Y, NAME) {
  * @submodule loader-base
  */
 
-if (!YUI.Env[Y.version]) {
-
-    (function() {
+(function() {
         var VERSION = Y.version,
             BUILD = '/build/',
-            ROOT = VERSION + BUILD,
+        ROOT = VERSION + '/',
             CDN_BASE = Y.Env.base,
-            GALLERY_VERSION = 'gallery-2012.10.10-19-59',
+        GALLERY_VERSION = 'gallery-2014.04.02-20-01',
             TNT = '2in3',
             TNT_VERSION = '4',
             YUI2_VERSION = '2.9.0',
             COMBO_BASE = CDN_BASE + 'combo?',
-            META = { version: VERSION,
+        META = {
+            version: VERSION,
                               root: ROOT,
                               base: Y.Env.base,
                               comboBase: COMBO_BASE,
-                              skin: { defaultSkin: 'sam',
+            skin: {
+                defaultSkin: 'sam',
                                            base: 'assets/skins/',
                                            path: 'skin.css',
-                                           after: ['cssreset',
+                after: [
+                    'cssreset',
                                                           'cssfonts',
                                                           'cssgrids',
                                                           'cssbase',
                                                           'cssreset-context',
-                                                          'cssfonts-context']},
+                    'cssfonts-context'
+                ]
+            },
                               groups: {},
-                              patterns: {} },
+            patterns: {}
+        },
             groups = META.groups,
             yui2Update = function(tnt, yui2, config) {
-
                                   var root = TNT + '.' +
                                             (tnt || TNT_VERSION) + '/' +
                         (yui2 || YUI2_VERSION) + BUILD,
@@ -70,9 +74,13 @@ if (!YUI.Env[Y.version]) {
             combine: true,
             comboBase: COMBO_BASE,
             update: galleryUpdate,
-            patterns: { 'gallery-': { },
+        patterns: {
+            'gallery-': {},
                         'lang/gallery-': {},
-                        'gallerycss-': { type: 'css' } }
+            'gallerycss-': {
+                type: 'css'
+            }
+        }
         };
 
         groups.yui2 = {
@@ -99,11 +107,16 @@ if (!YUI.Env[Y.version]) {
         galleryUpdate();
         yui2Update();
 
-        YUI.Env[VERSION] = META;
-    }());
-}
+    if (YUI.Env[VERSION]) {
+        Y.mix(META, YUI.Env[VERSION], false, [
+            'modules',
+            'groups',
+            'skin'
+        ], 0, true);
+    }
 
-
+    YUI.Env[VERSION] = META;
+}());
 /*jslint forin: true, maxlen: 350 */
 
 /**
@@ -182,6 +195,19 @@ Y.Env.meta = META;
         });
         var out = loader.resolve(true);
 
+ * If the Loader needs to be patched before it is used for the first time, it
+ * should be done through the `doBeforeLoader` hook. Simply make the patch
+ * available via configuration before YUI is loaded:
+
+        YUI_config = YUI_config || {};
+        YUI_config.doBeforeLoader = function (config) {
+            var resolve = this.context.Loader.prototype.resolve;
+            this.context.Loader.prototype.resolve = function () {
+                // do something here
+                return resolve.apply(this, arguments);
+            };
+        };
+
  * @constructor
  * @class Loader
  * @param {Object} config an optional set of configuration options.
@@ -201,13 +227,13 @@ Y.Env.meta = META;
  * @param {Object} config.context Execution context for all callbacks
  * @param {Function} config.onSuccess Callback for the 'success' event
  * @param {Function} config.onFailure Callback for the 'failure' event
- * @param {Function} config.onCSS Callback for the 'CSSComplete' event.  When loading YUI components with CSS the CSS is loaded first, then the script.  This provides a moment you can tie into to improve the presentation of the page while the script is loading.
  * @param {Function} config.onTimeout Callback for the 'timeout' event
  * @param {Function} config.onProgress Callback executed each time a script or css file is loaded
  * @param {Object} config.modules A list of module definitions.  See <a href="#method_addModule">Loader.addModule</a> for the supported module metadata
  * @param {Object} config.groups A list of group definitions.  Each group can contain specific definitions for `base`, `comboBase`, `combine`, and accepts a list of `modules`.
  * @param {String} config.2in3 The version of the YUI 2 in 3 wrapper to use.  The intrinsic support for YUI 2 modules in YUI 3 relies on versions of the YUI 2 components inside YUI 3 module wrappers.  These wrappers change over time to accomodate the issues that arise from running YUI 2 in a YUI 3 sandbox.
  * @param {String} config.yui2 When using the 2in3 project, you can select the version of YUI 2 to use.  Valid values are `2.2.2`, `2.3.1`, `2.4.1`, `2.5.2`, `2.6.0`, `2.7.0`, `2.8.0`, `2.8.1` and `2.9.0` [default] -- plus all versions of YUI 2 going forward.
+ * @param {Function} config.doBeforeLoader An optional hook that allows for the patching of the loader instance. The `Y` instance is available as `this.context` and the only argument to the function is the Loader configuration object.
  */
 Y.Loader = function(o) {
 
@@ -242,16 +268,6 @@ Y.Loader = function(o) {
     // self.onFailure = null;
 
     /**
-     * Callback for the 'CSSComplete' event.  When loading YUI components
-     * with CSS the CSS is loaded first, then the script.  This provides
-     * a moment you can tie into to improve the presentation of the page
-     * while the script is loading.
-     * @method onCSS
-     * @type function
-     */
-    // self.onCSS = null;
-
-    /**
      * Callback executed each time a script or css file is loaded
      * @method onProgress
      * @type function
@@ -271,6 +287,11 @@ Y.Loader = function(o) {
      * @default {YUI} the YUI instance
      */
     self.context = Y;
+
+    // Hook that allows the patching of loader
+    if (o.doBeforeLoader) {
+        o.doBeforeLoader.apply(self, arguments);
+    }
 
     /**
      * Data that is passed to all callbacks
@@ -466,10 +487,8 @@ Y.Loader = function(o) {
     self.patterns = {};
 
     /**
-     * The library metadata
-     * @property moduleInfo
+     * Internal loader instance metadata. Use accessor `getModuleInfo()` instead.
      */
-    // self.moduleInfo = Y.merge(Y.Env.meta.moduleInfo);
     self.moduleInfo = {};
 
     self.groups = Y.merge(Y.Env.meta.groups);
@@ -516,7 +535,7 @@ Y.Loader = function(o) {
     self.config = o;
     self._internal = true;
 
-    self._populateCache();
+    self._populateConditionsCache();
 
     /**
      * Set when beginning to compute the dependency tree.
@@ -624,39 +643,107 @@ Y.Loader = function(o) {
 
 Y.Loader.prototype = {
     /**
-    * Checks the cache for modules and conditions, if they do not exist
-    * process the default metadata and populate the local moduleInfo hash.
-    * @method _populateCache
+    * Gets the module info from the local moduleInfo hash, or from the
+    * default metadata and populate the local moduleInfo hash.
+    * @method getModuleInfo
+    * @param {string} name of the module
+    * @public
+    */
+    getModuleInfo: function(name) {
+
+        var m = this.moduleInfo[name],
+            rawMetaModules, globalRenderedMods, internal, v;
+
+        if (m) {
+            return m;
+            }
+
+        rawMetaModules = META.modules;
+        globalRenderedMods = GLOBAL_ENV._renderedMods;
+        internal = this._internal;
+
+        /*
+        The logic here is:
+
+        - if the `moduleInfo[name]` is avilable,
+          then short circuit
+        - otherwise, if the module is in the globalCache (cross Y instance),
+          then port it from the global registry into `moduleInfo[name]`
+        - otherwise, if the module has raw metadata (from meta modules)
+          then add it to the global registry and to `moduleInfo[name]`
+
+        */
+        if (globalRenderedMods && globalRenderedMods.hasOwnProperty(name) && !this.ignoreRegistered) {
+            this.moduleInfo[name] = Y.merge(globalRenderedMods[name]);
+        } else {
+            if (rawMetaModules.hasOwnProperty(name)) {
+                this._internal = true; // making sure that modules from raw data are marked as internal
+                v = this.addModule(rawMetaModules[name], name);
+                // Inspect the page for the CSS module and mark it as loaded.
+                if (v && v.type === CSS) {
+                    if (this.isCSSLoaded(v.name, true)) {
+                        Y.log('Found CSS module on page: ' + v.name, 'info', 'loader');
+                        this.loaded[v.name] = true;
+                    }
+                }
+                this._internal = internal;
+            }
+        }
+        return this.moduleInfo[name];
+    },
+    /**
+    * Expand the names that are aliases to other modules.
+    * @method _expandAliases
+    * @param {string[]} list a module name or a list of names to be expanded
+    * @private
+    * @return {array}
+    */
+    _expandAliases: function(list) {
+        var expanded = [],
+            aliases = YUI.Env.aliases,
+            i, name;
+        list = Y.Array(list);
+        for (i = 0; i < list.length; i += 1) {
+            name = list[i];
+            expanded.push.apply(expanded, aliases[name] ? aliases[name] : [name]);
+        }
+        return expanded;
+    },
+    /**
+    * Populate the conditions cache from raw modules, this is necessary
+    * because no other module will require a conditional module, instead
+    * the condition has to be executed and then the module is analyzed
+    * to be included in the final requirement list. Without this cache
+    * conditional modules will be simply ignored.
+    * @method _populateConditionsCache
     * @private
     */
-    _populateCache: function() {
-        var self = this,
-            defaults = META.modules,
-            cache = GLOBAL_ENV._renderedMods,
-            i;
+    _populateConditionsCache: function() {
+        var rawMetaModules = META.modules,
+            cache = GLOBAL_ENV._conditions,
+            i, j, t, trigger;
 
-        if (cache && !self.ignoreRegistered) {
+        // if we have conditions in cache and cache is enabled
+        // we should port them to this loader instance
+        if (cache && !this.ignoreRegistered) {
             for (i in cache) {
                 if (cache.hasOwnProperty(i)) {
-                    self.moduleInfo[i] = Y.merge(cache[i]);
+                    this.conditions[i] = Y.merge(cache[i]);
                 }
             }
-
-            cache = GLOBAL_ENV._conditions;
-            for (i in cache) {
-                if (cache.hasOwnProperty(i)) {
-                    self.conditions[i] = Y.merge(cache[i]);
-                }
-            }
-
         } else {
-            for (i in defaults) {
-                if (defaults.hasOwnProperty(i)) {
-                    self.addModule(defaults[i], i);
+            for (i in rawMetaModules) {
+                if (rawMetaModules.hasOwnProperty(i) && rawMetaModules[i].condition) {
+                    t = this._expandAliases(rawMetaModules[i].condition.trigger);
+                    for (j = 0; j < t.length; j += 1) {
+                        trigger = t[j];
+                        this.conditions[trigger] = this.conditions[trigger] || {};
+                        this.conditions[trigger][rawMetaModules[i].name || i] = rawMetaModules[i].condition;
                 }
             }
         }
-
+            GLOBAL_ENV._conditions = this.conditions;
+        }
     },
     /**
     * Reset modules in the module cache to a pre-processed state so additional
@@ -668,7 +755,7 @@ Y.Loader.prototype = {
         var self = this, i, o,
             mod, name, details;
         for (i in self.moduleInfo) {
-            if (self.moduleInfo.hasOwnProperty(i)) {
+            if (self.moduleInfo.hasOwnProperty(i) && self.moduleInfo[i]) {
                 mod = self.moduleInfo[i];
                 name = mod.name;
                 details  = (YUI.Env.mods[name] ? YUI.Env.mods[name].details : null);
@@ -689,8 +776,8 @@ Y.Loader.prototype = {
                         }
                     }
                 }
-                delete mod.langCache;
-                delete mod.skinCache;
+                mod.langCache = undefined;
+                mod.skinCache = undefined;
                 if (mod.skinnable) {
                     self._addSkin(self.skin.defaultSkin, mod.name);
                 }
@@ -738,23 +825,11 @@ Y.Loader.prototype = {
    _inspectPage: function() {
         var self = this, v, m, req, mr, i;
 
-        //Inspect the page for CSS only modules and mark them as loaded.
-        for (i in self.moduleInfo) {
-            if (self.moduleInfo.hasOwnProperty(i)) {
-                v = self.moduleInfo[i];
-                if (v.type && v.type === CSS) {
-                    if (self.isCSSLoaded(v.name)) {
-                        Y.log('Found CSS module on page: ' + v.name, 'info', 'loader');
-                        self.loaded[i] = true;
-                    }
-                }
-            }
-        }
         for (i in ON_PAGE) {
             if (ON_PAGE.hasOwnProperty(i)) {
                 v = ON_PAGE[i];
            if (v.details) {
-                    m = self.moduleInfo[v.name];
+                    m = self.getModuleInfo(v.name);
                     req = v.details.requires;
                    mr = m && m.requires;
 
@@ -781,9 +856,8 @@ Y.Loader.prototype = {
    _requires: function(mod1, mod2) {
 
         var i, rm, after_map, s,
-            info = this.moduleInfo,
-            m = info[mod1],
-            other = info[mod2];
+            m = this.getModuleInfo(mod1),
+            other = this.getModuleInfo(mod2);
 
         if (!m || !other) {
             return false;
@@ -806,7 +880,7 @@ Y.Loader.prototype = {
         }
 
         // check if this module requires one the other supersedes
-        s = info[mod2] && info[mod2].supersedes;
+        s = other.supersedes;
         if (s) {
             for (i = 0; i < s.length; i++) {
                 if (this._requires(mod1, s[i])) {
@@ -815,7 +889,7 @@ Y.Loader.prototype = {
             }
         }
 
-        s = info[mod1] && info[mod1].supersedes;
+        s = m.supersedes;
         if (s) {
             for (i = 0; i < s.length; i++) {
                 if (this._requires(mod2, s[i])) {
@@ -845,7 +919,7 @@ Y.Loader.prototype = {
     */
     _config: function(o) {
         var i, j, val, a, f, group, groupName, self = this,
-            mods = [], mod;
+            mods = [], mod, modInfo;
         // apply config values
         if (o) {
             for (i in o) {
@@ -895,9 +969,13 @@ Y.Loader.prototype = {
                             }
                         }
                     } else if (i === 'gallery') {
+                        if (this.groups.gallery.update) {
                         this.groups.gallery.update(val, o);
+                        }
                     } else if (i === 'yui2' || i === '2in3') {
+                        if (this.groups.yui2.update) {
                         this.groups.yui2.update(o['2in3'], o.yui2, o);
+                        }
                     } else {
                         self[i] = val;
                     }
@@ -921,8 +999,9 @@ Y.Loader.prototype = {
             if (self.filterName === 'COVERAGE' && L.isArray(self.coverage) && self.coverage.length) {
                 for (i = 0; i < self.coverage.length; i++) {
                     mod = self.coverage[i];
-                    if (self.moduleInfo[mod] && self.moduleInfo[mod].use) {
-                        mods = [].concat(mods, self.moduleInfo[mod].use);
+                    modInfo = self.getModuleInfo(mod);
+                    if (modInfo && modInfo.use) {
+                        mods = mods.concat(modInfo.use);
                     } else {
                         mods.push(mod);
                     }
@@ -967,16 +1046,15 @@ Y.Loader.prototype = {
      * @private
      */
     _addSkin: function(skin, mod, parent) {
-        var mdef, pkg, name, nmod,
-            info = this.moduleInfo,
+        var pkg, name, nmod,
             sinf = this.skin,
-            ext = info[mod] && info[mod].ext;
+            mdef = mod && this.getModuleInfo(mod),
+            ext = mdef && mdef.ext;
 
         // Add a module definition for the module-specific skin css
         if (mod) {
             name = this.formatSkin(skin, mod);
-            if (!info[name]) {
-                mdef = info[mod];
+            if (!this.getModuleInfo(name)) {
                 pkg = mdef.pkg || mod;
                 nmod = {
                     skin: true,
@@ -996,7 +1074,7 @@ Y.Loader.prototype = {
                 }
                 this.addModule(nmod, name);
 
-                Y.log('Adding skin (' + name + '), ' + parent + ', ' + pkg + ', ' + info[name].path, 'info', 'loader');
+                Y.log('Adding skin (' + name + '), ' + parent + ', ' + pkg + ', ' + nmod.path, 'info', 'loader');
             }
         }
 
@@ -1094,9 +1172,10 @@ Y.Loader.prototype = {
      * @param {Object} [config.submodules] Hash of submodules
      * @param {String} [config.group] The group the module belongs to -- this is set automatically when it is added as part of a group configuration.
      * @param {Array} [config.lang] Array of BCP 47 language tags of languages for which this module has localized resource bundles, e.g., `["en-GB", "zh-Hans-CN"]`
-     * @param {Object} [config.condition] Specifies that the module should be loaded automatically if a condition is met.  This is an object with up to three fields:
+     * @param {Object} [config.condition] Specifies that the module should be loaded automatically if a condition is met. This is an object with up to four fields:
      * @param {String} [config.condition.trigger] The name of a module that can trigger the auto-load
      * @param {Function} [config.condition.test] A function that returns true when the module is to be loaded.
+     * @param {String} [config.condition.ua] The UA name of <a href="UA.html">Y.UA</a> object that returns true when the module is to be loaded. e.g., `"ie"`, `"nodejs"`.
      * @param {String} [config.condition.when] Specifies the load order of the conditional module
      *  with regard to the position of the trigger module.
      *  This should be one of three values: `before`, `after`, or `instead`.  The default is `after`.
@@ -1117,19 +1196,20 @@ Y.Loader.prototype = {
         var subs, i, l, t, sup, s, smod, plugins, plug,
             j, langs, packName, supName, flatSup, flatLang, lang, ret,
             overrides, skinname, when, g, p,
+            modInfo = this.moduleInfo[name],
             conditions = this.conditions, trigger;
 
         //Only merge this data if the temp flag is set
         //from an earlier pass from a pattern or else
         //an override module (YUI_config) can not be used to
         //replace a default module.
-        if (this.moduleInfo[name] && this.moduleInfo[name].temp) {
+        if (modInfo && modInfo.temp) {
             //This catches temp modules loaded via a pattern
             // The module will be added twice, once from the pattern and
             // Once from the actual add call, this ensures that properties
             // that were added to the module the first time around (group: gallery)
             // are also added the second time around too.
-            o = Y.merge(this.moduleInfo[name], o);
+            o = Y.merge(modInfo, o);
         }
 
         o.name = name;
@@ -1204,7 +1284,7 @@ Y.Loader.prototype = {
             for (j = 0; j < langs.length; j++) {
                 lang = langs[j];
                 packName = this.getLangPackName(lang, name);
-                smod = this.moduleInfo[packName];
+                smod = this.getModuleInfo(packName);
                 if (!smod) {
                     smod = this._addLangPack(lang, o, packName);
                 }
@@ -1256,7 +1336,7 @@ Y.Loader.prototype = {
                             lang = langs[j];
                             packName = this.getLangPackName(lang, name);
                             supName = this.getLangPackName(lang, i);
-                            smod = this.moduleInfo[packName];
+                            smod = this.getModuleInfo(packName);
 
                             if (!smod) {
                                 smod = this._addLangPack(lang, o, packName);
@@ -1283,7 +1363,7 @@ Y.Loader.prototype = {
                             packName = this.getLangPackName(ROOT_LANG, name);
                             supName = this.getLangPackName(ROOT_LANG, i);
 
-                            smod = this.moduleInfo[packName];
+                            smod = this.getModuleInfo(packName);
 
                             if (!smod) {
                                 smod = this._addLangPack(lang, o, packName);
@@ -1328,14 +1408,7 @@ Y.Loader.prototype = {
         }
 
         if (o.condition) {
-            t = o.condition.trigger;
-            if (YUI.Env.aliases[t]) {
-                t = YUI.Env.aliases[t];
-            }
-            if (!Y.Lang.isArray(t)) {
-                t = [t];
-            }
-
+            t = this._expandAliases(o.condition.trigger);
             for (i = 0; i < t.length; i++) {
                 trigger = t[i];
             when = o.condition.when;
@@ -1502,7 +1575,6 @@ Y.Loader.prototype = {
             r, old_mod,
             o, skinmod, skindef, skinpar, skinname,
             intl = mod.lang || mod.intl,
-            info = this.moduleInfo,
             ftests = Y.Features && Y.Features.tests.load,
             hash, reparse;
 
@@ -1596,7 +1668,7 @@ Y.Loader.prototype = {
                 if (!hash[o[i]]) {
                     d.push(o[i]);
                     hash[o[i]] = true;
-                    m = info[o[i]];
+                    m = this.getModuleInfo(o[i]);
                     if (m) {
                         add = this.getRequires(m);
                         intl = intl || (m.expanded_map &&
@@ -1707,6 +1779,7 @@ Y.Loader.prototype = {
     * Check to see if named css module is already loaded on the page
     * @method isCSSLoaded
     * @param {String} name The name of the css file
+    * @param {Boolean} skip To skip the short-circuit for ignoreRegister
     * @return Boolean
     */
     isCSSLoaded: function(name, skip) {
@@ -1819,7 +1892,7 @@ Y.Loader.prototype = {
     _addLangPack: function(lang, m, packName) {
         var name = m.name,
             packPath, conf,
-            existing = this.moduleInfo[packName];
+            existing = this.getModuleInfo(packName);
 
         if (!existing) {
 
@@ -1853,7 +1926,7 @@ Y.Loader.prototype = {
             }
         }
 
-        return this.moduleInfo[packName];
+        return this.getModuleInfo(packName);
     },
 
     /**
@@ -1998,7 +2071,7 @@ Y.Loader.prototype = {
         }
 
         var p, found, pname,
-            m = this.moduleInfo[mname],
+            m = this.getModuleInfo(mname),
             patterns = this.patterns;
 
         // check the patterns library to see if we should automatically add
@@ -2212,16 +2285,18 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
     /**
     * The default Loader onTimeout handler, calls this.onTimeout with a payload
     * @method _onTimeout
+    * @param {Get.Transaction} transaction The Transaction object from `Y.Get`
     * @private
     */
-    _onTimeout: function() {
+    _onTimeout: function(transaction) {
         Y.log('loader timeout: ' + Y.id, 'error', 'loader');
         var f = this.onTimeout;
         if (f) {
             f.call(this.context, {
                 msg: 'timeout',
                 data: this.data,
-                success: false
+                success: false,
+                transaction: transaction
             });
         }
     },
@@ -2232,70 +2307,64 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
      * @private
      */
     _sort: function() {
+        var name,
 
-        // create an indexed list
-        var s = YObject.keys(this.required),
-            // loaded = this.loaded,
-            //TODO Move this out of scope
-            done = {},
-            p = 0, l, a, b, j, k, moved, doneKey;
+            // Object containing module names.
+            required = this.required,
 
-        // keep going until we make a pass without moving anything
-        for (;;) {
+            // Keep track of whether we've visited a module.
+            visited = {};
 
-            l = s.length;
-            moved = false;
+        // Will contain modules names, in the correct order,
+        // according to dependencies.
+        this.sorted = [];
 
-            // start the loop after items that are already sorted
-            for (j = p; j < l; j++) {
+        for (name in required) {
+            if (!visited[name] && required.hasOwnProperty(name)) {
+                this._visit(name, visited);
+            }
+        }
+    },
 
-                // check the next module on the list to see if its
-                // dependencies have been met
-                a = s[j];
+    /**
+     * Recursively visits the dependencies of the module name
+     * passed in, and appends each module name to the `sorted` property.
+     * @param {String} name The name of a module.
+     * @param {Object} visited Keeps track of whether a module was visited.
+     * @method _visit
+     * @private
+     */
+    _visit: function (name, visited) {
+        var required, condition, moduleInfo, dependency, dependencies,
+            trigger, isAfter, i, l;
 
-                // check everything below current item and move if we
-                // find a requirement for the current item
-                for (k = j + 1; k < l; k++) {
-                    doneKey = a + s[k];
+        visited[name] = true;
+        required = this.required;
+        moduleInfo = this.moduleInfo[name];
+        condition = this.conditions[name] || {};
 
-                    if (!done[doneKey] && this._requires(a, s[k])) {
+        if (moduleInfo) {
+            // Recurse on each dependency of this module,
+            // figuring out its dependencies, and so on.
+            dependencies = moduleInfo.expanded || moduleInfo.requires;
 
-                        // extract the dependency so we can move it up
-                        b = s.splice(k, 1);
+            for (i = 0, l = dependencies.length; i < l; ++i) {
+                dependency = dependencies[i];
+                trigger = condition[dependency];
 
-                        // insert the dependency above the item that
-                        // requires it
-                        s.splice(j, 0, b[0]);
+                // We cannot process this dependency yet if it must
+                // appear after our current module.
+                isAfter = trigger && (!trigger.when || trigger.when === "after");
 
-                        // only swap two dependencies once to short circut
-                        // circular dependencies
-                        done[doneKey] = true;
-
-                        // keep working
-                        moved = true;
-
-                        break;
+                // Is this module name in the required list of modules,
+                // and have we not already visited it?
+                if (required[dependency] && !visited[dependency] && !isAfter) {
+                    this._visit(dependency, visited);
                     }
                 }
-
-                // jump out of loop if we moved something
-                if (moved) {
-                    break;
-                // this item is sorted, move our pointer and keep going
-                } else {
-                    p++;
-                }
             }
 
-            // when we make it here and moved is false, we are
-            // finished sorting
-            if (!moved) {
-                break;
-            }
-
-        }
-
-        this.sorted = s;
+        this.sorted.push(name);
     },
 
     /**
@@ -2545,7 +2614,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
         var f = this.filter,
             hasFilter = name && (name in this.filters),
             modFilter = hasFilter && this.filters[name],
-            groupName = group || (this.moduleInfo[name] ? this.moduleInfo[name].group : null);
+            groupName = group || (this.getModuleInfo(name) || {}).group || null;
 
         if (groupName && this.groups[groupName] && this.groups[groupName].filter) {
             modFilter = this.groups[groupName].filter;
@@ -2568,7 +2637,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
      * @method _url
      * @param {string} path the path fragment.
      * @param {String} name The name of the module
-     * @param {String} [base=self.base] The base url to use
+     * @param {String} [base] The base url to use. Defaults to self.base
      * @return {string} the full url.
      * @private
      */
@@ -2579,7 +2648,8 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
     * Returns an Object hash of file arrays built from `loader.sorted` or from an arbitrary list of sorted modules.
     * @method resolve
     * @param {Boolean} [calc=false] Perform a loader.calculate() before anything else
-    * @param {Array} [s=loader.sorted] An override for the loader.sorted array
+    * @param {Array} [s] An override for the loader.sorted array. Defaults to
+    * `loader.sorted`.
     * @return {Object} Object hash (js and css) of two arrays of file lists
     * @example This method can be used as an off-line dep calculator
     *
@@ -2723,6 +2793,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
 
 
         for (j in resCombos) {
+            if (resCombos.hasOwnProperty(j)) {
             base = j;
             comboSep = resCombos[base].comboSep || self.comboSep;
             maxURLLength = resCombos[base].maxURLLength || self.maxURLLength;
@@ -2769,6 +2840,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
                 }
             }
         }
+        }
 
         resCombos = null;
 
@@ -2792,7 +2864,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
 
 
     @method load
-    @param {Callback} cb Executed after all load operations are complete
+    @param {Function} cb Executed after all load operations are complete
      */
     load: function(cb) {
         if (!cb) {
@@ -2814,7 +2886,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
 
 
 
-}, '3.7.3', {"requires": ["get", "features"]});
+}, '@VERSION@', {"requires": ["get", "features"]});
 YUI.add('loader-rollup', function (Y, NAME) {
 
 /**
@@ -2916,17 +2988,20 @@ Y.Loader.prototype._rollup = function() {
 };
 
 
-}, '3.7.3', {"requires": ["loader-base"]});
+}, '@VERSION@', {"requires": ["loader-base"]});
 YUI.add('loader-yui3', function (Y, NAME) {
 
-/* This file is auto-generated by src/loader/scripts/meta_join.js */
+/* This file is auto-generated by (yogi.js loader --mix --yes) */
+
+/*jshint maxlen:900, eqeqeq: false */
 
 /**
  * YUI 3 module metadata
  * @module loader
- * @submodule yui3
+ * @submodule loader-yui3
  */
-YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
+YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {};
+Y.mix(YUI.Env[Y.version].modules, {
     "align-plugin": {
         "requires": [
             "node-screen",
@@ -3004,6 +3079,7 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "model",
             "model-list",
             "model-sync-rest",
+            "model-sync-local",
             "router",
             "view",
             "view-node-map"
@@ -3097,7 +3173,7 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "attribute-base": {
                 "requires": [
             "attribute-core",
-            "attribute-events",
+            "attribute-observable",
             "attribute-extras"
                 ]
             }, 
@@ -3112,8 +3188,8 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         ]
     },
     "attribute-events": {
-        "requires": [
-            "event-custom"
+        "use": [
+            "attribute-observable"
         ]
     },
     "attribute-extras": {
@@ -3121,6 +3197,11 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "oop"
         ]
     }, 
+    "attribute-observable": {
+        "requires": [
+            "event-custom"
+        ]
+    },
     "autocomplete": {
         "use": [
             "autocomplete-base",
@@ -3171,7 +3252,10 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "autocomplete-sources"
         ],
                 "lang": [
-                    "en"
+            "en",
+            "es",
+            "hu",
+            "it"
                 ], 
         "requires": [
             "autocomplete-base",
@@ -3226,6 +3310,85 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "autocomplete-base"
                 ]
     }, 
+    "axes": {
+        "use": [
+            "axis-numeric",
+            "axis-category",
+            "axis-time",
+            "axis-stacked"
+        ]
+    },
+    "axes-base": {
+        "use": [
+            "axis-numeric-base",
+            "axis-category-base",
+            "axis-time-base",
+            "axis-stacked-base"
+        ]
+    },
+    "axis": {
+        "requires": [
+            "dom",
+            "widget",
+            "widget-position",
+            "widget-stack",
+            "graphics",
+            "axis-base"
+        ]
+    },
+    "axis-base": {
+        "requires": [
+            "classnamemanager",
+            "datatype-number",
+            "datatype-date",
+            "base",
+            "event-custom"
+        ]
+    },
+    "axis-category": {
+        "requires": [
+            "axis",
+            "axis-category-base"
+        ]
+    },
+    "axis-category-base": {
+        "requires": [
+            "axis-base"
+        ]
+    },
+    "axis-numeric": {
+        "requires": [
+            "axis",
+            "axis-numeric-base"
+        ]
+    },
+    "axis-numeric-base": {
+        "requires": [
+            "axis-base"
+        ]
+    },
+    "axis-stacked": {
+        "requires": [
+            "axis-numeric",
+            "axis-stacked-base"
+        ]
+    },
+    "axis-stacked-base": {
+        "requires": [
+            "axis-numeric-base"
+        ]
+    },
+    "axis-time": {
+        "requires": [
+            "axis",
+            "axis-time-base"
+        ]
+    },
+    "axis-time-base": {
+        "requires": [
+            "axis-base"
+        ]
+    },
     "base": {
         "use": [
             "base-base",
@@ -3234,12 +3397,10 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         ]
     },
             "base-base": {
-                "after": [
-                    "attribute-complex"
-                ], 
                 "requires": [
+            "attribute-base",
             "base-core",
-                    "attribute-base"
+            "base-observable"
                 ]
             }, 
             "base-build": {
@@ -3250,6 +3411,12 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
     "base-core": {
         "requires": [
             "attribute-core"
+        ]
+    },
+    "base-observable": {
+        "requires": [
+            "attribute-observable",
+            "base-core"
         ]
     },
             "base-pluginhost": {
@@ -3269,7 +3436,8 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         "requires": [
             "attribute-core",
             "classnamemanager",
-            "node-base"
+            "node-base",
+            "escape"
         ]
     },
     "button-group": {
@@ -3311,16 +3479,6 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                 ]
     },
     "calendar": {
-        "lang": [
-            "de",
-            "en",
-            "fr",
-            "ja",
-            "nb-NO",
-            "pt-BR",
-            "ru",
-            "zh-HANT-TW"
-        ],
         "requires": [
             "calendar-base",
             "calendarnavigator"
@@ -3331,16 +3489,24 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         "lang": [
             "de",
             "en",
+            "es",
+            "es-AR",
             "fr",
+            "hu",
+            "it",
             "ja",
             "nb-NO",
+            "nl",
             "pt-BR",
             "ru",
+            "zh-Hans",
+            "zh-Hans-CN",
+            "zh-Hant",
+            "zh-Hant-HK",
             "zh-HANT-TW"
         ],
         "requires": [
             "widget",
-            "substitute",
             "datatype-date",
             "datatype-date-math",
             "cssgrids"
@@ -3352,28 +3518,41 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "plugin",
             "classnamemanager",
             "datatype-date",
-            "node",
-            "substitute"
+            "node"
         ],
         "skinnable": true
     }, 
     "charts": {
-        "requires": [
+        "use": [
             "charts-base"
         ]
     },
     "charts-base": {
         "requires": [
             "dom", 
-            "datatype-number",
-            "datatype-date",
-            "event-custom", 
             "event-mouseenter", 
             "event-touch",
-            "widget", 
-            "widget-position", 
-            "widget-stack",
-            "graphics"
+            "graphics-group",
+            "axes",
+            "series-pie",
+            "series-line",
+            "series-marker",
+            "series-area",
+            "series-spline",
+            "series-column",
+            "series-bar",
+            "series-areaspline",
+            "series-combo",
+            "series-combospline",
+            "series-line-stacked",
+            "series-marker-stacked",
+            "series-area-stacked",
+            "series-spline-stacked",
+            "series-column-stacked",
+            "series-bar-stacked",
+            "series-areaspline-stacked",
+            "series-combo-stacked",
+            "series-combospline-stacked"
         ]
     }, 
     "charts-legend": {
@@ -3400,10 +3579,39 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "array-invoke"
         ]
     }, 
+    "color": {
+        "use": [
+            "color-base",
+            "color-hsl",
+            "color-harmony"
+        ]
+    },
+    "color-base": {
+        "requires": [
+            "yui-base"
+        ]
+    },
+    "color-harmony": {
+        "requires": [
+            "color-hsl"
+        ]
+    },
+    "color-hsl": {
+        "requires": [
+            "color-base"
+        ]
+    },
+    "color-hsv": {
+        "requires": [
+            "color-base"
+        ]
+    },
     "console": {
         "lang": [
             "en", 
             "es",
+            "hu",
+            "it",
             "ja"
         ], 
                 "requires": [
@@ -3419,6 +3627,14 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         ], 
         "skinnable": true
     }, 
+    "content-editable": {
+        "requires": [
+            "node-base",
+            "editor-selection",
+            "stylesheet",
+            "plugin"
+        ]
+    },
     "controller": {
         "use": [
             "router"
@@ -3467,28 +3683,41 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
     }, 
     "cssgrids": {
         "optional": [
-            "cssreset", 
-            "cssfonts"
+            "cssnormalize"
         ], 
         "type": "css"
     }, 
     "cssgrids-base": {
         "optional": [
-            "cssreset",
-            "cssfonts"
+            "cssnormalize"
+        ],
+        "type": "css"
+    },
+    "cssgrids-responsive": {
+        "optional": [
+            "cssnormalize"
+        ],
+        "requires": [
+            "cssgrids",
+            "cssgrids-responsive-base"
         ], 
         "type": "css"
     }, 
     "cssgrids-units": {
         "optional": [
-            "cssreset",
-            "cssfonts"
+            "cssnormalize"
         ], 
         "requires": [
             "cssgrids-base"
         ], 
         "type": "css"
     }, 
+    "cssnormalize": {
+        "type": "css"
+    },
+    "cssnormalize-context": {
+        "type": "css"
+    },
     "cssreset": {
         "type": "css"
     }, 
@@ -3632,15 +3861,6 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         ],
         "skinnable": true
     },
-    "datatable-base-deprecated": {
-        "requires": [
-                    "recordset-base", 
-                    "widget", 
-                    "substitute", 
-                    "event-mouseenter"
-                ], 
-                "skinnable": true
-            }, 
     "datatable-body": {
         "requires": [
             "datatable-core",
@@ -3667,19 +3887,18 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "datasource-local"
                 ]
             }, 
-    "datatable-datasource-deprecated": {
+    "datatable-foot": {
         "requires": [
-            "datatable-base-deprecated",
-            "plugin",
-            "datasource-local"
+            "datatable-core",
+            "view"
         ]
     },
-    "datatable-deprecated": {
-        "use": [
-            "datatable-base-deprecated",
-            "datatable-datasource-deprecated",
-            "datatable-sort-deprecated",
-            "datatable-scroll-deprecated"
+    "datatable-formatters": {
+        "requires": [
+            "datatable-body",
+            "datatype-number-format",
+            "datatype-date-format",
+            "escape"
         ]
     },
     "datatable-head": {
@@ -3689,9 +3908,25 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "classnamemanager"
         ]
     },
+    "datatable-highlight": {
+        "requires": [
+            "datatable-base",
+            "event-hover"
+        ],
+        "skinnable": true
+    },
+    "datatable-keynav": {
+        "requires": [
+            "datatable-base"
+        ]
+    },
     "datatable-message": {
         "lang": [
-            "en"
+            "en",
+            "fr",
+            "es",
+            "hu",
+            "it"
         ],
         "requires": [
             "datatable-base"
@@ -3703,6 +3938,25 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "datatable-base"
         ]
     },
+    "datatable-paginator": {
+        "lang": [
+            "en",
+            "fr"
+        ],
+        "requires": [
+            "model",
+            "view",
+            "paginator-core",
+            "datatable-foot",
+            "datatable-paginator-templates"
+        ],
+        "skinnable": true
+    },
+    "datatable-paginator-templates": {
+        "requires": [
+            "template"
+        ]
+    },
             "datatable-scroll": {
                 "requires": [
                     "datatable-base", 
@@ -3711,30 +3965,17 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         ],
         "skinnable": true
     },
-    "datatable-scroll-deprecated": {
-        "requires": [
-            "datatable-base-deprecated",
-            "plugin"
-                ]
-            }, 
             "datatable-sort": {
                 "lang": [
-                    "en"
+            "en",
+            "fr",
+            "es",
+            "hu"
                 ], 
                 "requires": [
             "datatable-base"
         ],
         "skinnable": true
-    },
-    "datatable-sort-deprecated": {
-        "lang": [
-            "en"
-        ],
-        "requires": [
-            "datatable-base-deprecated",
-                    "plugin", 
-                    "recordset-sort"
-                ]
     },
     "datatable-table": {
         "requires": [
@@ -3805,6 +4046,7 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "fr-FR", 
                     "hi", 
                     "hi-IN", 
+            "hu",
                     "id", 
                     "id-ID", 
                     "it", 
@@ -3856,7 +4098,11 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                 ]
             }, 
     "datatype-number-format": {},
-    "datatype-number-parse": {},
+    "datatype-number-parse": {
+        "requires": [
+            "escape"
+        ]
+    },
             "datatype-xml": {
         "use": [
             "datatype-xml-parse",
@@ -3959,7 +4205,8 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
     "dial": {
         "lang": [
             "en", 
-            "es"
+            "es",
+            "hu"
         ], 
         "requires": [
             "widget", 
@@ -3992,11 +4239,6 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "features"
         ]
     },
-            "dom-deprecated": {
-                "requires": [
-                    "dom-base"
-                ]
-            }, 
     "dom-screen": {
         "requires": [
             "dom-base",
@@ -4005,7 +4247,8 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
     },
     "dom-style": {
         "requires": [
-            "dom-base"
+            "dom-base",
+            "color-base"
         ]
     },
             "dom-style-ie": {
@@ -4080,6 +4323,12 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "editor-base"
                 ]
             }, 
+    "editor-inline": {
+        "requires": [
+            "editor-base",
+            "content-editable"
+        ]
+    },
             "editor-lists": {
                 "requires": [
                     "editor-base"
@@ -4310,6 +4559,7 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                 "requires": [
             "base",
             "node",
+            "plugin",
             "selector-css3",
             "yui-throttle"
                 ]
@@ -4364,6 +4614,11 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "trigger": "graphics"
         }
     }, 
+    "graphics-group": {
+        "requires": [
+            "graphics"
+        ]
+    },
     "graphics-svg": {
         "condition": {
             "name": "graphics-svg",
@@ -4426,9 +4681,7 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         ]
     },
     "handlebars-base": {
-        "requires": [
-            "escape"
-        ]
+        "requires": []
     },
     "handlebars-compiler": {
         "requires": [
@@ -4459,7 +4712,6 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         "use": [
             "history-base",
             "history-hash",
-            "history-hash-ie",
             "history-html5"
         ]
     },
@@ -4582,11 +4834,69 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "yui-base"
                 ]
             }, 
+    "json-parse-shim": {
+        "condition": {
+            "name": "json-parse-shim",
+            "test": function (Y) {
+    var _JSON = Y.config.global.JSON,
+        Native = Object.prototype.toString.call(_JSON) === '[object JSON]' && _JSON,
+        nativeSupport = Y.config.useNativeJSONParse !== false && !!Native;
+
+    function workingNative( k, v ) {
+        return k === "ok" ? true : v;
+    }
+    
+    // Double check basic functionality.  This is mainly to catch early broken
+    // implementations of the JSON API in Firefox 3.1 beta1 and beta2
+    if ( nativeSupport ) {
+        try {
+            nativeSupport = ( Native.parse( '{"ok":false}', workingNative ) ).ok;
+        }
+        catch ( e ) {
+            nativeSupport = false;
+        }
+    }
+
+    return !nativeSupport;
+},
+            "trigger": "json-parse"
+        },
+        "requires": [
+            "json-parse"
+        ]
+    },
             "json-stringify": {
                 "requires": [
                     "yui-base"
                 ]
     }, 
+    "json-stringify-shim": {
+        "condition": {
+            "name": "json-stringify-shim",
+            "test": function (Y) {
+    var _JSON = Y.config.global.JSON,
+        Native = Object.prototype.toString.call(_JSON) === '[object JSON]' && _JSON,
+        nativeSupport = Y.config.useNativeJSONStringify !== false && !!Native;
+
+    // Double check basic native functionality.  This is primarily to catch broken
+    // early JSON API implementations in Firefox 3.1 beta1 and beta2.
+    if ( nativeSupport ) {
+        try {
+            nativeSupport = ( '0' === Native.stringify(0) );
+        } catch ( e ) {
+            nativeSupport = false;
+        }
+    }
+
+
+    return !nativeSupport;
+},
+            "trigger": "json-stringify"
+        },
+        "requires": [
+            "json-stringify"
+        ]
+    },
     "jsonp": {
         "requires": [
             "get",
@@ -4649,6 +4959,12 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "model"
                 ]
             }, 
+    "model-sync-local": {
+        "requires": [
+            "model",
+            "json-stringify"
+        ]
+    },
     "model-sync-rest": {
                 "requires": [
             "model",
@@ -4669,7 +4985,8 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                 "requires": [
             "event-base",
             "node-core",
-            "dom-base"
+            "dom-base",
+            "dom-style"
                 ]
             }, 
     "node-core": {
@@ -4678,11 +4995,6 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "selector"
                 ]
         }, 
-    "node-deprecated": {
-                "requires": [
-            "node-base"
-                ]
-            }, 
             "node-event-delegate": {
                 "requires": [
                     "node-base", 
@@ -4749,11 +5061,12 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
     },
     "node-scroll-info": {
         "requires": [
+            "array-extras",
             "base-build",
-            "dom-screen",
             "event-resize",
             "node-pluginhost",
-            "plugin"
+            "plugin",
+            "selector"
         ]
     },
     "node-style": {
@@ -4778,6 +5091,21 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         ], 
         "skinnable": true
     }, 
+    "paginator": {
+        "requires": [
+            "paginator-core"
+        ]
+    },
+    "paginator-core": {
+        "requires": [
+            "base"
+        ]
+    },
+    "paginator-url": {
+        "requires": [
+            "paginator"
+        ]
+    },
     "panel": {
         "requires": [
             "widget",
@@ -4845,9 +5173,9 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "pluginhost-base"
                 ]
     }, 
-    "profiler": {
+    "promise": {
         "requires": [
-            "yui-base"
+            "timers"
         ]
     }, 
     "querystring": {
@@ -5050,6 +5378,163 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "dom-base"
         ]
     },
+    "series-area": {
+        "requires": [
+            "series-cartesian",
+            "series-fill-util"
+        ]
+    },
+    "series-area-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-area"
+        ]
+    },
+    "series-areaspline": {
+        "requires": [
+            "series-area",
+            "series-curve-util"
+        ]
+    },
+    "series-areaspline-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-areaspline"
+        ]
+    },
+    "series-bar": {
+        "requires": [
+            "series-marker",
+            "series-histogram-base"
+        ]
+    },
+    "series-bar-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-bar"
+        ]
+    },
+    "series-base": {
+        "requires": [
+            "graphics",
+            "axis-base"
+        ]
+    },
+    "series-candlestick": {
+        "requires": [
+            "series-range"
+        ]
+    },
+    "series-cartesian": {
+        "requires": [
+            "series-base"
+        ]
+    },
+    "series-column": {
+        "requires": [
+            "series-marker",
+            "series-histogram-base"
+        ]
+    },
+    "series-column-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-column"
+        ]
+    },
+    "series-combo": {
+        "requires": [
+            "series-cartesian",
+            "series-line-util",
+            "series-plot-util",
+            "series-fill-util"
+        ]
+    },
+    "series-combo-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-combo"
+        ]
+    },
+    "series-combospline": {
+        "requires": [
+            "series-combo",
+            "series-curve-util"
+        ]
+    },
+    "series-combospline-stacked": {
+        "requires": [
+            "series-combo-stacked",
+            "series-curve-util"
+        ]
+    },
+    "series-curve-util": {},
+    "series-fill-util": {},
+    "series-histogram-base": {
+        "requires": [
+            "series-cartesian",
+            "series-plot-util"
+        ]
+    },
+    "series-line": {
+        "requires": [
+            "series-cartesian",
+            "series-line-util"
+        ]
+    },
+    "series-line-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-line"
+        ]
+    },
+    "series-line-util": {},
+    "series-marker": {
+        "requires": [
+            "series-cartesian",
+            "series-plot-util"
+        ]
+    },
+    "series-marker-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-marker"
+        ]
+    },
+    "series-ohlc": {
+        "requires": [
+            "series-range"
+        ]
+    },
+    "series-pie": {
+        "requires": [
+            "series-base",
+            "series-plot-util"
+        ]
+    },
+    "series-plot-util": {},
+    "series-range": {
+        "requires": [
+            "series-cartesian"
+        ]
+    },
+    "series-spline": {
+        "requires": [
+            "series-line",
+            "series-curve-util"
+        ]
+    },
+    "series-spline-stacked": {
+        "requires": [
+            "series-stacked",
+            "series-spline"
+        ]
+    },
+    "series-stacked": {
+        "requires": [
+            "axis-stacked"
+        ]
+    },
     "shim-plugin": {
                 "requires": [
             "node-style",
@@ -5130,8 +5615,7 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "tabview-base": {
                 "requires": [
                     "node-event-delegate", 
-                    "classnamemanager", 
-                    "skin-sam-tabview"
+            "classnamemanager"
                 ]
             }, 
             "tabview-plugin": {
@@ -5139,6 +5623,22 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "tabview-base"
                 ]
         }, 
+    "template": {
+        "use": [
+            "template-base",
+            "template-micro"
+        ]
+    },
+    "template-base": {
+        "requires": [
+            "yui-base"
+        ]
+    },
+    "template-micro": {
+        "requires": [
+            "escape"
+        ]
+    },
     "test": {
         "requires": [
             "event-simulate",
@@ -5182,6 +5682,11 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "text-data-wordbreak"
                 ]
     }, 
+    "timers": {
+        "requires": [
+            "yui-base"
+        ]
+    },
     "transition": {
                 "requires": [
             "node-style"
@@ -5207,30 +5712,55 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             "transition"
                 ]
     }, 
+    "tree": {
+        "requires": [
+            "base-build",
+            "tree-node"
+        ]
+    },
+    "tree-labelable": {
+        "requires": [
+            "tree"
+        ]
+    },
+    "tree-lazy": {
+        "requires": [
+            "base-pluginhost",
+            "plugin",
+            "tree"
+        ]
+    },
+    "tree-node": {},
+    "tree-openable": {
+        "requires": [
+            "tree"
+        ]
+    },
+    "tree-selectable": {
+        "requires": [
+            "tree"
+        ]
+    },
+    "tree-sortable": {
+        "requires": [
+            "tree"
+        ]
+    },
     "uploader": {
         "requires": [
             "uploader-html5",
             "uploader-flash"
         ]
-    },
-    "uploader-deprecated": {
-        "requires": [
-            "event-custom", 
-            "node", 
-            "base", 
-            "swf"
-        ]
     }, 
     "uploader-flash": {
                 "requires": [
-            "swf",
+            "swfdetect",
+            "escape",
             "widget",
-            "substitute",
             "base",
             "cssbutton",
             "node",
             "event-custom",
-            "file-flash",
             "uploader-queue"
                 ]
             }, 
@@ -5238,7 +5768,6 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                 "requires": [
             "widget",
             "node-event-simulate",
-            "substitute",
             "file-html5",
             "uploader-queue"
                 ]
@@ -5322,11 +5851,6 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "widget-base"
                 ]
             }, 
-    "widget-locale": {
-                "requires": [
-                    "widget-base"
-                ]
-            }, 
     "widget-modality": {
                 "requires": [
             "base-build",
@@ -5385,6 +5909,22 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
             }, 
     "yql": {
                 "requires": [
+            "oop"
+        ]
+    },
+    "yql-jsonp": {
+        "condition": {
+            "name": "yql-jsonp",
+            "test": function (Y) {
+    /* Only load the JSONP module when not in nodejs or winjs
+    TODO Make the winjs module a CORS module
+    */
+    return (!Y.UA.nodejs && !Y.UA.winjs);
+},
+            "trigger": "yql"
+        },
+        "requires": [
+            "yql",
             "jsonp",
             "jsonp-url"
                 ]
@@ -5393,17 +5933,21 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
         "condition": {
             "name": "yql-nodejs",
             "trigger": "yql",
-            "ua": "nodejs",
-            "when": "after"
-        }
+            "ua": "nodejs"
+        },
+        "requires": [
+            "yql"
+        ]
     },
     "yql-winjs": {
         "condition": {
             "name": "yql-winjs",
             "trigger": "yql",
-            "ua": "winjs",
-            "when": "after"
-        }
+            "ua": "winjs"
+        },
+        "requires": [
+            "yql"
+        ]
     },
     "yui": {},
             "yui-base": {}, 
@@ -5422,9 +5966,9 @@ YUI.Env[Y.version].modules = YUI.Env[Y.version].modules || {
                     "yui-base"
                 ]
             }
-};
-YUI.Env[Y.version].md5 = 'a28e022ad022130f7a4fb4ac77a2f1df';
+});
+YUI.Env[Y.version].md5 = 'e61397b06e7b9d3e4298ee7a7a4ea6a1';
 
 
-}, '3.7.3', {"requires": ["loader-base"]});
-YUI.add('loader', function (Y, NAME) {}, '3.7.3', {"use": ["loader-base", "loader-rollup", "loader-yui3"]});
+}, '@VERSION@', {"requires": ["loader-base"]});
+YUI.add('loader', function (Y, NAME) {}, '@VERSION@', {"use": ["loader-base", "loader-rollup", "loader-yui3"]});

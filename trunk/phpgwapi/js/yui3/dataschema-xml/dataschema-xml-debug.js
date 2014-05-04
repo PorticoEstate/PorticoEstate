@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('dataschema-xml', function (Y, NAME) {
 
 /**
@@ -115,7 +116,7 @@ SchemaXML = {
           details.
       @param {Array} [schema.metaFields] XPath locators to extract extra
           non-record related information from the XML data
-    @param {XMLDoc} data XML data to parse
+    @param {XMLDocument} data XML data to parse
     @return {Object} An Object with properties `results` and `meta`
     @static
     **/
@@ -388,4 +389,4 @@ SchemaXML = {
 Y.DataSchema.XML = Y.mix(SchemaXML, Y.DataSchema.Base);
 
 
-}, '3.7.3', {"requires": ["dataschema-base"]});
+}, '3.16.0', {"requires": ["dataschema-base"]});

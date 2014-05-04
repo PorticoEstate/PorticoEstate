@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('widget-stdmod', function (Y, NAME) {
 
 /**
@@ -65,14 +66,7 @@ YUI.add('widget-stdmod', function (Y, NAME) {
      * @class WidgetStdMod
      * @param {Object} The user configuration object
      */
-    function StdMod(config) {
-
-        this._stdModNode = this.get(CONTENT_BOX);
-
-        Y.before(this._renderUIStdMod, this, RENDERUI);
-        Y.before(this._bindUIStdMod, this, BINDUI);
-        Y.before(this._syncUIStdMod, this, SYNCUI);
-    }
+    function StdMod(config) {}
 
     /**
      * Constant used to refer the the standard module header, in methods which expect a section specifier
@@ -262,6 +256,14 @@ YUI.add('widget-stdmod', function (Y, NAME) {
 
     StdMod.prototype = {
 
+        initializer : function() {
+            this._stdModNode = this.get(CONTENT_BOX);
+
+            Y.before(this._renderUIStdMod, this, RENDERUI);
+            Y.before(this._bindUIStdMod, this, BINDUI);
+            Y.before(this._syncUIStdMod, this, SYNCUI);
+        },
+
         /**
          * Synchronizes the UI to match the Widgets standard module state.
          * <p>
@@ -439,7 +441,7 @@ YUI.add('widget-stdmod', function (Y, NAME) {
             if (this.get(FILL_HEIGHT)) {
                 var height = this.get(HEIGHT);
                 if (height != EMPTY && height != AUTO) {
-                    this.fillHeight(this._currFillNode);
+                    this.fillHeight(this.getStdModNode(this.get(FILL_HEIGHT)));
                 }
             }
         },
@@ -782,4 +784,4 @@ YUI.add('widget-stdmod', function (Y, NAME) {
     Y.WidgetStdMod = StdMod;
 
 
-}, '3.7.3', {"requires": ["base-build", "widget"]});
+}, '3.16.0', {"requires": ["base-build", "widget"]});

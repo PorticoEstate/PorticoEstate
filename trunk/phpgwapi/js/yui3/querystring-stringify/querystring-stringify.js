@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('querystring-stringify', function (Y, NAME) {
 
 /**
@@ -11,8 +12,6 @@ YUI.add('querystring-stringify', function (Y, NAME) {
  *
  * @module querystring
  * @submodule querystring-stringify
- * @for QueryString
- * @static
  */
 
 var QueryString = Y.namespace("QueryString"),
@@ -25,8 +24,8 @@ var QueryString = Y.namespace("QueryString"),
  * the delimiters would not normally be handled properly by the builtin
  * (en|de)codeURIComponent functions.
  * Default: encodeURIComponent
- * @module querystring
- * @submodule querystring-stringify
+ *
+ * @method escape
  * @for QueryString
  * @static
  **/
@@ -38,8 +37,9 @@ QueryString.escape = encodeURIComponent;
  * <p>Objects with cyclical references will trigger an exception.</p>
  *
  * @method stringify
+ * @for QueryString
  * @public
- * @param obj {Variant} any arbitrary value to convert to query string
+ * @param obj {Any} any arbitrary value to convert to query string
  * @param cfg {Object} (optional) Configuration object.  The three
  * supported configurations are:
  * <ul><li>sep: When defined, the value will be used as the key-value
@@ -110,4 +110,4 @@ QueryString.stringify = function (obj, c, name) {
 };
 
 
-}, '3.7.3', {"requires": ["yui-base"]});
+}, '3.16.0', {"requires": ["yui-base"]});

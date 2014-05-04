@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('node-menunav', function (Y, NAME) {
 
 /**
@@ -84,7 +85,10 @@ YUI.add('node-menunav', function (Y, NAME) {
 * </code>
 * </p>
 * 
-* @module node-menunav
+DEPRECATED. The MenuNav Node Plugin has been deprecated as of YUI 3.9.0. This module will be removed from the library in a future version. If you require functionality similar to the one provided by this module, consider taking a look at the various modules in the YUI Gallery <http://yuilibrary.com/gallery/>.
+
+@module node-menunav
+@deprecated 3.9.0
 */
 
 
@@ -171,6 +175,7 @@ var getPreviousSibling = function (node) {
 		oPrevious = oChildren.item(oChildren.size() - 1);
 	}
 	
+
 	return oPrevious;
 
 };
@@ -701,6 +706,7 @@ Y.extend(NodeMenuNav, Y.Plugin.Base, {
 			aHandlers = [],
 			oDoc;
 
+		Y.log("WARNING: Node-MenuNav is a deprecated module as of YUI 3.9.0. This module will be removed from a later version of the library.", "warn");
 
 		if (oRootMenu) {
 
@@ -2187,4 +2193,4 @@ Y.namespace('Plugin');
 Y.Plugin.NodeMenuNav = NodeMenuNav;
 
 
-}, '3.7.3', {"requires": ["node", "classnamemanager", "plugin", "node-focusmanager"], "skinnable": true});
+}, '3.16.0', {"requires": ["node", "classnamemanager", "plugin", "node-focusmanager"], "skinnable": true});

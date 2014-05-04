@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatable-base', function (Y, NAME) {
 
 /**
@@ -133,7 +134,8 @@ var columns = [
 
 ### Row Data Configuration
 
-The `data` configuration attribute is responsible for housing the data objects that will be rendered as rows.  You can provide this information in two ways by default:
+The `data` configuration attribute is responsible for housing the data objects
+that will be rendered as rows.  You can provide this information in two ways by default:
 
 1. An array of simple objects with key:value pairs
 2. A ModelList of Base-based class instances (presumably Model subclass
@@ -286,7 +288,7 @@ Y.DataTable.Base = Y.Base.create('datatable', Y.Widget, [Y.DataTable.Core], {
     @return {Node}
     @since 3.5.0
     **/
-    getCell: function (seed, shift) {
+    getCell: function (/* seed, shift */) {
         return this.view && this.view.getCell &&
             this.view.getCell.apply(this.view, arguments);
     },
@@ -304,7 +306,7 @@ Y.DataTable.Base = Y.Base.create('datatable', Y.Widget, [Y.DataTable.Core], {
     @return {Node}
     @since 3.5.0
     **/
-    getRow: function (id) {
+    getRow: function (/* id */) {
         return this.view && this.view.getRow &&
             this.view.getRow.apply(this.view, arguments);
     },
@@ -477,7 +479,7 @@ Y.DataTable.Base = Y.Base.create('datatable', Y.Widget, [Y.DataTable.Core], {
                     },
                     // FIXME: guarantee that the properties are available, even
                     // if the configured (or omitted) views don't create them
-                    renderTable: function (e) {
+                    renderTable: function () {
                         var contentBox = this.get('container');
 
                         self._tableNode = this.tableNode ||
@@ -686,4 +688,14 @@ Y.DataTable = Y.mix(
     Y.DataTable); // Migrate static and namespaced classes
 
 
-}, '3.7.3', {"requires": ["datatable-core", "datatable-table", "datatable-head", "datatable-body", "base-build", "widget"], "skinnable": true});
+}, '3.16.0', {
+    "requires": [
+        "datatable-core",
+        "datatable-table",
+        "datatable-head",
+        "datatable-body",
+        "base-build",
+        "widget"
+    ],
+    "skinnable": true
+});

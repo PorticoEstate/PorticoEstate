@@ -1,15 +1,18 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('swf', function (Y, NAME) {
 
 /**
  * Embed a Flash applications in a standard manner and communicate with it
  * via External Interface.
  * @module swf
+ * @deprecated The swf module is deprecated and will not be replaced. YUI has
+ * no plans for providing a utility for embedding Flash into HTML pages. 
  */
 
     var Event = Y.Event,
@@ -38,7 +41,8 @@ YUI.add('swf', function (Y, NAME) {
          * Creates the SWF instance and keeps the configuration data
          *
          * @class SWF
-         * @augments Y.Event.Target
+         * @deprecated
+         * @uses Y.Event.Target
          * @constructor
          * @param {String|HTMLElement} id The id of the element, or the element itself that the SWF will be inserted into.
          *        The width and height of the SWF will be set to the width and height of this container element.
@@ -54,7 +58,6 @@ YUI.add('swf', function (Y, NAME) {
          *              tabindex, wmode.</code> event from the thumb</dd>
          *        </dl>
          */
-
 function SWF (p_oElement /*:String*/, swfURL /*:String*/, p_oAttributes /*:Object*/ ) {
 
     this._id = Y.guid("yuiswf");
@@ -205,4 +208,4 @@ Y.augment(SWF, Y.EventTarget);
 Y.SWF = SWF;
 
 
-}, '3.7.3', {"requires": ["event-custom", "node", "swfdetect", "escape"]});
+}, '3.16.0', {"requires": ["event-custom", "node", "swfdetect", "escape"]});

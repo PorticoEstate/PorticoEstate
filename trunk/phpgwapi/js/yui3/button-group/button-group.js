@@ -1,30 +1,31 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('button-group', function (Y, NAME) {
 
 /**
-* A Widget to create groups of buttons
-*
-* @module button-group
-* @since 3.5.0
-*/
+ * A Widget to create groups of buttons
+ *
+ * @module button-group
+ * @since 3.5.0
+ */
 
 var CONTENT_BOX = "contentBox",
     CLICK_EVENT = "click",
     CLASS_NAMES = Y.ButtonCore.CLASS_NAMES;
 
 /**
-* Creates a ButtonGroup
-*
-* @class ButtonGroup
-* @extends Widget
-* @param config {Object} Configuration object
-* @constructor
-*/
+ * Creates a ButtonGroup
+ *
+ * @class ButtonGroup
+ * @extends Widget
+ * @param config {Object} Configuration object
+ * @constructor
+ */
 function ButtonGroup() {
     ButtonGroup.superclass.constructor.apply(this, arguments);
 }
@@ -51,6 +52,14 @@ Y.ButtonGroup = Y.extend(ButtonGroup, Y.Widget, {
             cb = group.get(CONTENT_BOX);
 
         cb.delegate(CLICK_EVENT, group._handleClick, Y.ButtonGroup.BUTTON_SELECTOR, group);
+        group.after('disabledChange', group._afterDisabledChange);
+    },
+
+    _afterDisabledChange: function (e) {
+        this.getButtons().each(e.newVal
+            ? Y.ButtonCore.prototype.disable
+            : Y.ButtonCore.prototype.enable
+        );
     },
 
     /**
@@ -90,17 +99,13 @@ Y.ButtonGroup = Y.extend(ButtonGroup, Y.Widget, {
     * @public
     */
     getSelectedValues: function() {
-        var group = this,
-            value,
+        var selected = this.getSelectedButtons(),
             values = [],
-            selected = group.getSelectedButtons(),
-            selectedClass = ButtonGroup.CLASS_NAMES.SELECTED;
+            value;
 
         Y.Array.each(selected, function(node){
-            if (node.hasClass(selectedClass)){
                 value = node.getContent();
                 values.push(value);
-            }
         });
 
         return values;
@@ -121,7 +126,6 @@ Y.ButtonGroup = Y.extend(ButtonGroup, Y.Widget, {
             buttons;
 
         // TODO: Anything for 'push' groups?
-
         if (type === 'checkbox') {
             clickedNode.toggleClass(selectedClass, !isSelected);
             /**
@@ -132,15 +136,13 @@ Y.ButtonGroup = Y.extend(ButtonGroup, Y.Widget, {
              */
             group.fire('selectionChange', {originEvent: e});
         }
-        else if (type === 'radio') {
-            if (!isSelected) {
+        else if (type === 'radio' && !isSelected) {
                 buttons = group.getButtons(); // Todo: getSelectedButtons()? Need it to return an arraylist then.
                 buttons.removeClass(selectedClass);
                 clickedNode.addClass(selectedClass);
                 group.fire('selectionChange', {originEvent: e});
             }
         }
-    }
 
 }, {
     // Y.ButtonGroup static properties
@@ -167,6 +169,11 @@ Y.ButtonGroup = Y.extend(ButtonGroup, Y.Widget, {
     * @static
     */
     ATTRS: {
+
+        /**
+         * @attribute type
+         * @type String
+         */
         type: {
             writeOnce: 'initOnly',
             value: 'radio'
@@ -184,10 +191,11 @@ Y.ButtonGroup = Y.extend(ButtonGroup, Y.Widget, {
     
     /**
      * Selector used to find buttons inside a ButtonGroup
+     * @property BUTTON_SELECTOR
      * @type {String}
      */
     BUTTON_SELECTOR: "button, input[type=button], input[type=reset], input[type=submit], input[type=radio], input[type=checkbox]"
 });
 
 
-}, '3.7.3', {"requires": ["button-plugin", "cssbutton", "widget"]});
+}, '3.16.0', {"requires": ["button-plugin", "cssbutton", "widget"]});

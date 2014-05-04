@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('selector-native', function (Y, NAME) {
 
 (function(Y) {
@@ -44,6 +45,13 @@ var Selector = {
         }
     },
 
+    /**
+     *  Use the native version of `querySelectorAll`, if it exists.
+     *
+     * @property useNative
+     * @default true
+     * @static
+     */
     useNative: true,
 
     _escapeId: function(id) {
@@ -122,10 +130,10 @@ var Selector = {
      * Retrieves a set of nodes based on a given CSS selector. 
      * @method query
      *
-     * @param {string} selector The CSS Selector to test the node against.
-     * @param {HTMLElement} root optional An HTMLElement to start the query from. Defaults to Y.config.doc
+     * @param {String} selector A CSS selector.
+     * @param {HTMLElement} root optional A node to start the query from. Defaults to `Y.config.doc`.
      * @param {Boolean} firstOnly optional Whether or not to return only the first match.
-     * @return {Array} An array of nodes that match the given selector.
+     * @return {HTMLElement[]} The array of nodes that matched the given selector.
      * @static
      */
     query: function(selector, root, firstOnly, skipNative) {
@@ -245,8 +253,11 @@ var Selector = {
     },
 
     _nativeQuery: function(selector, root, one) {
-        if (Y.UA.webkit && selector.indexOf(':checked') > -1 &&
-                (Y.Selector.pseudos && Y.Selector.pseudos.checked)) { // webkit (chrome, safari) fails to pick up "selected"  with "checked"
+        if (
+            (Y.UA.webkit || Y.UA.opera) &&          // webkit (chrome, safari) and Opera
+            selector.indexOf(':checked') > -1 &&    // fail to pick up "selected"  with ":checked"
+            (Y.Selector.pseudos && Y.Selector.pseudos.checked)
+        ) {
             return Y.Selector.query(selector, root, one, true); // redo with skipNative true to try brute query
         }
         try {
@@ -258,6 +269,15 @@ var Selector = {
         }
     },
 
+    /**
+     * Filters out nodes that do not match the given CSS selector.
+     * @method filter
+     *
+     * @param {HTMLElement[]} nodes An array of nodes.
+     * @param {String} selector A CSS selector to test each node against.
+     * @return {HTMLElement[]} The nodes that matched the given CSS selector.
+     * @static
+     */
     filter: function(nodes, selector) {
         var ret = [],
             i, node;
@@ -276,6 +296,16 @@ var Selector = {
         return ret;
     },
 
+    /**
+     * Determines whether or not the given node matches the given CSS selector.
+     * @method test
+     * 
+     * @param {HTMLElement} node A node to test.
+     * @param {String} selector A CSS selector to test the node against.
+     * @param {HTMLElement} root optional A node to start the query from. Defaults to the parent document of the node.
+     * @return {Boolean} Whether or not the given node matched the given CSS selector.
+     * @static
+     */
     test: function(node, selector, root) {
         var ret = false,
             useFrag = false,
@@ -338,16 +368,17 @@ var Selector = {
     },
 
     /**
-     * A convenience function to emulate Y.Node's aNode.ancestor(selector).
-     * @param {HTMLElement} element An HTMLElement to start the query from.
-     * @param {String} selector The CSS selector to test the node against.
-     * @return {HTMLElement} The ancestor node matching the selector, or null.
-     * @param {Boolean} testSelf optional Whether or not to include the element in the scan 
-     * @static
+     * A convenience method to emulate Y.Node's aNode.ancestor(selector).
      * @method ancestor
+     *
+     * @param {HTMLElement} node A node to start the query from.
+     * @param {String} selector A CSS selector to test the node against.
+     * @param {Boolean} testSelf optional Whether or not to include the node in the scan.
+     * @return {HTMLElement} The ancestor node matching the selector, or null.
+     * @static
      */
-    ancestor: function (element, selector, testSelf) {
-        return Y.DOM.ancestor(element, function(n) {
+    ancestor: function (node, selector, testSelf) {
+        return Y.DOM.ancestor(node, function(n) {
             return Y.Selector.test(n, selector);
         }, testSelf);
     },
@@ -378,4 +409,4 @@ Y.mix(Y.Selector, Selector, true);
 })(Y);
 
 
-}, '3.7.3', {"requires": ["dom-base"]});
+}, '3.16.0', {"requires": ["dom-base"]});

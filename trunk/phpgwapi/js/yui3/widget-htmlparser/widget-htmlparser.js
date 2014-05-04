@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('widget-htmlparser', function (Y, NAME) {
 
 /**
@@ -86,6 +87,44 @@ Y.mix(Widget.prototype, {
      */
     _getSrcNode : function(val) {
         return val || this.get(CONTENT_BOX);
+    },
+
+    /**
+     * Implement the BaseCore _preAddAttrs method hook, to add
+     * the srcNode and related attributes, so that HTML_PARSER
+     * (which relies on `this.get("srcNode")`) can merge in it's
+     * results before the rest of the attributes are added.
+     *
+     * @method _preAddAttrs
+     * @protected
+     *
+     * @param attrs {Object} The full hash of statically defined ATTRS
+     * attributes being added for this instance
+     *
+     * @param userVals {Object} The hash of user values passed to
+     * the constructor
+     *
+     * @param lazy {boolean} Whether or not to add the attributes lazily
+     */
+    _preAddAttrs : function(attrs, userVals, lazy) {
+
+        var preAttrs = {
+            id : attrs.id,
+            boundingBox : attrs.boundingBox,
+            contentBox : attrs.contentBox,
+            srcNode : attrs.srcNode
+        };
+
+        this.addAttrs(preAttrs, userVals, lazy);
+
+        delete attrs.boundingBox;
+        delete attrs.contentBox;
+        delete attrs.srcNode;
+        delete attrs.id;
+
+        if (this._applyParser) {
+            this._applyParser(userVals);
+        }
     },
 
     /**
@@ -180,4 +219,4 @@ Y.mix(Widget.prototype, {
 });
 
 
-}, '3.7.3', {"requires": ["widget-base"]});
+}, '3.16.0', {"requires": ["widget-base"]});
