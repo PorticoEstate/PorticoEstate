@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('event-touch', function (Y, NAME) {
 
 /**
@@ -33,16 +34,16 @@ var SCALE = "scale",
  * @private
  * @param ev {Event} the DOM event
  * @param currentTarget {HTMLElement} the element the listener was attached to
- * @param wrapper {Event.Custom} the custom event wrapper for this DOM event
+ * @param wrapper {CustomEvent} the custom event wrapper for this DOM event
  */
 Y.DOMEventFacade.prototype._touch = function(e, currentTarget, wrapper) {
 
     var i,l, etCached, et,touchCache;
 
-    Y.log("Calling facade._touch() with e = " + e, "info", "event-touch");
+    Y.log("Calling facade._touch() with e = " + e, "debug", "event-touch");
 
     if (e.touches) {
-        Y.log("Found e.touches. Replicating on facade");
+        Y.log("Found e.touches. Replicating on facade", "info", "event-touch");
 
         /**
          * Array of individual touch events for touch points that are still in
@@ -139,29 +140,42 @@ if (Y.Node.DOM_EVENTS) {
         gestureend:1,
         MSPointerDown:1, 
         MSPointerUp:1,
-        MSPointerMove:1
+        MSPointerMove:1,
+        MSPointerCancel:1,
+        pointerdown:1,
+        pointerup:1,
+        pointermove:1,
+        pointercancel:1
     });
 }
 
 //Add properties to Y.EVENT.GESTURE_MAP based on feature detection.
 if ((win && ("ontouchstart" in win)) && !(Y.UA.chrome && Y.UA.chrome < 6)) {
-    GESTURE_MAP.start = "touchstart";
-    GESTURE_MAP.end = "touchend";
-    GESTURE_MAP.move = "touchmove";
+    GESTURE_MAP.start = ["touchstart", "mousedown"];
+    GESTURE_MAP.end = ["touchend", "mouseup"];
+    GESTURE_MAP.move = ["touchmove", "mousemove"];
+    GESTURE_MAP.cancel = ["touchcancel", "mousecancel"];
 }
 
-
+else if (win && win.PointerEvent) {
+    GESTURE_MAP.start = "pointerdown";
+    GESTURE_MAP.end = "pointerup";
+    GESTURE_MAP.move = "pointermove";
+    GESTURE_MAP.cancel = "pointercancel";
+}
 
 else if (win && ("msPointerEnabled" in win.navigator)) {
     GESTURE_MAP.start = "MSPointerDown";
     GESTURE_MAP.end = "MSPointerUp";
     GESTURE_MAP.move = "MSPointerMove";
+    GESTURE_MAP.cancel = "MSPointerCancel";
 }
 
 else {
     GESTURE_MAP.start = "mousedown";
     GESTURE_MAP.end = "mouseup";
     GESTURE_MAP.move = "mousemove";
+    GESTURE_MAP.cancel = "mousecancel";
 }
 
 /**
@@ -177,4 +191,4 @@ else {
 Y.Event._GESTURE_MAP = GESTURE_MAP;
 
 
-}, '3.7.3', {"requires": ["node-base"]});
+}, '3.16.0', {"requires": ["node-base"]});

@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('dd-drag', function (Y, NAME) {
 
 
@@ -27,14 +28,14 @@ YUI.add('dd-drag', function (Y, NAME) {
         OFFSET_HEIGHT = 'offsetHeight',
         OFFSET_WIDTH = 'offsetWidth',
         /**
+        * Handles the mouseup DOM event, does nothing internally just fires.
         * @event drag:mouseup
-        * @description Handles the mouseup DOM event, does nothing internally just fires.
         * @bubbles DDM
         * @type {CustomEvent}
         */
         /**
+        * Handles the mousedown DOM event, checks to see if you have a valid handle then starts the drag timers.
         * @event drag:mouseDown
-        * @description Handles the mousedown DOM event, checks to see if you have a valid handle then starts the drag timers.
         * @preventable _defMouseDownFn
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl><dt>ev</dt><dd>The original mousedown event.</dd></dl>
@@ -43,8 +44,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_MOUSE_DOWN = 'drag:mouseDown',
         /**
+        * Fires after the mousedown event has been cleared.
         * @event drag:afterMouseDown
-        * @description Fires after the mousedown event has been cleared.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl><dt>ev</dt><dd>The original mousedown event.</dd></dl>
         * @bubbles DDM
@@ -52,8 +53,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_AFTER_MOUSE_DOWN = 'drag:afterMouseDown',
         /**
+        * Fires after a handle is removed.
         * @event drag:removeHandle
-        * @description Fires after a handle is removed.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl><dt>handle</dt><dd>The handle that was removed.</dd></dl>
         * @bubbles DDM
@@ -61,8 +62,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_REMOVE_HANDLE = 'drag:removeHandle',
         /**
+        * Fires after a handle is added.
         * @event drag:addHandle
-        * @description Fires after a handle is added.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl><dt>handle</dt><dd>The handle that was added.</dd></dl>
         * @bubbles DDM
@@ -70,8 +71,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_ADD_HANDLE = 'drag:addHandle',
         /**
+        * Fires after an invalid selector is removed.
         * @event drag:removeInvalid
-        * @description Fires after an invalid selector is removed.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl><dt>handle</dt><dd>The handle that was removed.</dd></dl>
         * @bubbles DDM
@@ -79,8 +80,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_REMOVE_INVALID = 'drag:removeInvalid',
         /**
+        * Fires after an invalid selector is added.
         * @event drag:addInvalid
-        * @description Fires after an invalid selector is added.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl><dt>handle</dt><dd>The handle that was added.</dd></dl>
         * @bubbles DDM
@@ -88,8 +89,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_ADD_INVALID = 'drag:addInvalid',
         /**
+        * Fires at the start of a drag operation.
         * @event drag:start
-        * @description Fires at the start of a drag operation.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>pageX</dt><dd>The original node position X.</dd>
@@ -101,8 +102,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_START = 'drag:start',
         /**
+        * Fires at the end of a drag operation.
         * @event drag:end
-        * @description Fires at the end of a drag operation.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>pageX</dt><dd>The current node position X.</dd>
@@ -115,8 +116,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_END = 'drag:end',
         /**
+        * Fires every mousemove during a drag operation.
         * @event drag:drag
-        * @description Fires every mousemove during a drag operation.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>pageX</dt><dd>The current node position X.</dd>
@@ -129,9 +130,9 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_DRAG = 'drag:drag',
         /**
+        * Fires when this node is aligned.
         * @event drag:align
         * @preventable _defAlignFn
-        * @description Fires when this node is aligned.
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>pageX</dt><dd>The current node position X.</dd>
@@ -142,8 +143,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         EV_ALIGN = 'drag:align',
         /**
+        * Fires when this node is over a Drop Target. (Fired from dd-drop)
         * @event drag:over
-        * @description Fires when this node is over a Drop Target. (Fired from dd-drop)
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>drop</dt><dd>The drop object at the time of the event.</dd>
@@ -153,8 +154,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         * @type {CustomEvent}
         */
         /**
+        * Fires when this node enters a Drop Target. (Fired from dd-drop)
         * @event drag:enter
-        * @description Fires when this node enters a Drop Target. (Fired from dd-drop)
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>drop</dt><dd>The drop object at the time of the event.</dd>
@@ -164,8 +165,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         * @type {CustomEvent}
         */
         /**
+        * Fires when this node exits a Drop Target. (Fired from dd-drop)
         * @event drag:exit
-        * @description Fires when this node exits a Drop Target. (Fired from dd-drop)
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>drop</dt><dd>The drop object at the time of the event.</dd>
@@ -174,8 +175,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         * @type {CustomEvent}
         */
         /**
+        * Fires when this node is dropped on a valid Drop Target. (Fired from dd-ddm-drop)
         * @event drag:drophit
-        * @description Fires when this node is dropped on a valid Drop Target. (Fired from dd-ddm-drop)
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>drop</dt><dd>The best guess on what was dropped on.</dd>
@@ -186,8 +187,8 @@ YUI.add('dd-drag', function (Y, NAME) {
         * @type {CustomEvent}
         */
         /**
+        * Fires when this node is dropped on an invalid Drop Target. (Fired from dd-ddm-drop)
         * @event drag:dropmiss
-        * @description Fires when this node is dropped on an invalid Drop Target. (Fired from dd-ddm-drop)
         * @param {EventFacade} event An Event Facade object with the following specific property added:
         * <dl>
         * <dt>pageX</dt><dd>The current node position X.</dd>
@@ -218,8 +219,8 @@ YUI.add('dd-drag', function (Y, NAME) {
 
     Drag.ATTRS = {
         /**
+        * Y.Node instance to use as the element to initiate a drag operation
         * @attribute node
-        * @description Y.Node instance to use as the element to initiate a drag operation
         * @type Node
         */
         node: {
@@ -235,8 +236,8 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Y.Node instance to use as the draggable element, defaults to node
         * @attribute dragNode
-        * @description Y.Node instance to use as the draggable element, defaults to node
         * @type Node
         */
         dragNode: {
@@ -252,40 +253,40 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Offset the drag element by the difference in cursor position: default true
         * @attribute offsetNode
-        * @description Offset the drag element by the difference in cursor position: default true
         * @type Boolean
         */
         offsetNode: {
             value: true
         },
         /**
+        * Center the dragNode to the mouse position on drag:start: default false
         * @attribute startCentered
-        * @description Center the dragNode to the mouse position on drag:start: default false
         * @type Boolean
         */
         startCentered: {
             value: false
         },
         /**
+        * The number of pixels to move to start a drag operation, default is 3.
         * @attribute clickPixelThresh
-        * @description The number of pixels to move to start a drag operation, default is 3.
         * @type Number
         */
         clickPixelThresh: {
             value: DDM.get('clickPixelThresh')
         },
         /**
+        * The number of milliseconds a mousedown has to pass to start a drag operation, default is 1000.
         * @attribute clickTimeThresh
-        * @description The number of milliseconds a mousedown has to pass to start a drag operation, default is 1000.
         * @type Number
         */
         clickTimeThresh: {
             value: DDM.get('clickTimeThresh')
         },
         /**
+        * Set to lock this drag element so that it can't be dragged: default false.
         * @attribute lock
-        * @description Set to lock this drag element so that it can't be dragged: default false.
         * @type Boolean
         */
         lock: {
@@ -300,24 +301,24 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * A payload holder to store arbitrary data about this drag object, can be used to store any value.
         * @attribute data
-        * @description A payload holder to store arbitrary data about this drag object, can be used to store any value.
         * @type Mixed
         */
         data: {
             value: false
         },
         /**
+        * If this is false, the drag element will not move with the cursor: default true. Can be used to "resize" the element.
         * @attribute move
-        * @description If this is false, the drag element will not move with the cursor: default true. Can be used to "resize" the element.
         * @type Boolean
         */
         move: {
             value: true
         },
         /**
+        * Use the protective shim on all drag operations: default true. Only works with dd-ddm, not dd-ddm-base.
         * @attribute useShim
-        * @description Use the protective shim on all drag operations: default true. Only works with dd-ddm, not dd-ddm-base.
         * @type Boolean
         */
         useShim: {
@@ -352,8 +353,8 @@ YUI.add('dd-drag', function (Y, NAME) {
             value: false
         },
         /**
+        * This attribute only works if the dd-drop module has been loaded. It will make this node a drop target as well as draggable.
         * @attribute target
-        * @description This attribute only works if the dd-drop module has been loaded. It will make this node a drop target as well as draggable.
         * @type Boolean
         */
         target: {
@@ -375,8 +376,8 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Array of groups to add this drag into.
         * @attribute groups
-        * @description Array of groups to add this drag into.
         * @type Array
         */
         groups: {
@@ -384,24 +385,19 @@ YUI.add('dd-drag', function (Y, NAME) {
             getter: function() {
                 if (!this._groups) {
                     this._groups = {};
+                    return [];
                 }
-                var ret = [];
-                Y.each(this._groups, function(v, k) {
-                    ret[ret.length] = k;
-                });
-                return ret;
+
+                return Y.Object.keys(this._groups);
             },
             setter: function(g) {
-                this._groups = {};
-                Y.each(g, function(v) {
-                    this._groups[v] = true;
-                }, this);
+                this._groups = Y.Array.hash(g);
                 return g;
             }
         },
         /**
+        * Array of valid handles to add. Adding something here will set all handles, even if previously added with addHandle
         * @attribute handles
-        * @description Array of valid handles to add. Adding something here will set all handles, even if previously added with addHandle
         * @type Array
         */
         handles: {
@@ -409,7 +405,7 @@ YUI.add('dd-drag', function (Y, NAME) {
             setter: function(g) {
                 if (g) {
                     this._handles = {};
-                    Y.each(g, function(v) {
+                    Y.Array.each(g, function(v) {
                         var key = v;
                         if (v instanceof Y.Node || v instanceof Y.NodeList) {
                             key = v._yuid;
@@ -435,8 +431,8 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Should the mousedown event be halted. Default: true
         * @attribute haltDown
-        * @description Should the mousedown event be halted. Default: true
         * @type Boolean
         */
         haltDown: {
@@ -461,16 +457,15 @@ YUI.add('dd-drag', function (Y, NAME) {
             return false;
         },
         /**
+        * The default bubbleTarget for this object. Default: Y.DD.DDM
         * @private
         * @property _bubbleTargets
-        * @description The default bubbleTarget for this object. Default: Y.DD.DDM
         */
         _bubbleTargets: Y.DD.DDM,
         /**
+        * Add this Drag instance to a group, this should be used for on-the-fly group additions.
         * @method addToGroup
-        * @description Add this Drag instance to a group, this should be used for on-the-fly group additions.
         * @param {String} g The group to add this Drag Instance to.
-        * @return {Self}
         * @chainable
         */
         addToGroup: function(g) {
@@ -479,10 +474,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Remove this Drag instance from a group, this should be used for on-the-fly group removals.
         * @method removeFromGroup
-        * @description Remove this Drag instance from a group, this should be used for on-the-fly group removals.
         * @param {String} g The group to remove this Drag Instance from.
-        * @return {Self}
         * @chainable
         */
         removeFromGroup: function(g) {
@@ -491,15 +485,15 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * This will be a reference to the Drop instance associated with this drag if the target: true config attribute is set..
         * @property target
-        * @description This will be a reference to the Drop instance associated with this drag if the target: true config attribute is set..
         * @type {Object}
         */
         target: null,
         /**
+        * Attribute handler for the target config attribute.
         * @private
         * @method _handleTarget
-        * @description Attribute handler for the target config attribute.
         * @param {Boolean/Object} config The Config
         */
         _handleTarget: function(config) {
@@ -513,7 +507,7 @@ YUI.add('dd-drag', function (Y, NAME) {
                     if (!Y.Lang.isObject(config)) {
                         config = {};
                     }
-                    config.bubbleTargets = config.bubbleTargets || Y.Object.values(this._yuievt.targets);
+                    config.bubbleTargets = config.bubbleTargets || this.getTargets();
                     config.node = this.get(NODE);
                     config.groups = config.groups || this.get('groups');
                     this.target = new Y.DD.Drop(config);
@@ -521,16 +515,16 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Storage Array for the groups this drag belongs to.
         * @private
         * @property _groups
-        * @description Storage Array for the groups this drag belongs to.
         * @type {Array}
         */
         _groups: null,
         /**
+        * This method creates all the events for this Event Target and publishes them so we get Event Bubbling.
         * @private
         * @method _createEvents
-        * @description This method creates all the events for this Event Target and publishes them so we get Event Bubbling.
         */
         _createEvents: function() {
 
@@ -581,7 +575,7 @@ YUI.add('dd-drag', function (Y, NAME) {
                 'drag:exit'
             ];
 
-            Y.each(ev, function(v) {
+            Y.Array.each(ev, function(v) {
                 this.publish(v, {
                     type: v,
                     emitFacade: true,
@@ -593,37 +587,37 @@ YUI.add('dd-drag', function (Y, NAME) {
             }, this);
         },
         /**
+        * A private reference to the mousedown DOM event
         * @private
         * @property _ev_md
-        * @description A private reference to the mousedown DOM event
         * @type {EventFacade}
         */
         _ev_md: null,
         /**
+        * The getTime of the mousedown event. Not used, just here in case someone wants/needs to use it.
         * @private
         * @property _startTime
-        * @description The getTime of the mousedown event. Not used, just here in case someone wants/needs to use it.
         * @type Date
         */
         _startTime: null,
         /**
+        * The getTime of the mouseup event. Not used, just here in case someone wants/needs to use it.
         * @private
         * @property _endTime
-        * @description The getTime of the mouseup event. Not used, just here in case someone wants/needs to use it.
         * @type Date
         */
         _endTime: null,
         /**
+        * A private hash of the valid drag handles
         * @private
         * @property _handles
-        * @description A private hash of the valid drag handles
         * @type {Object}
         */
         _handles: null,
         /**
+        * A private hash of the invalid selector strings
         * @private
         * @property _invalids
-        * @description A private hash of the invalid selector strings
         * @type {Object}
         */
         _invalids: null,
@@ -635,78 +629,78 @@ YUI.add('dd-drag', function (Y, NAME) {
         */
         _invalidsDefault: {'textarea': true, 'input': true, 'a': true, 'button': true, 'select': true },
         /**
+        * Private flag to see if the drag threshhold was met
         * @private
         * @property _dragThreshMet
-        * @description Private flag to see if the drag threshhold was met
         * @type {Boolean}
         */
         _dragThreshMet: null,
         /**
+        * Flag to determine if the drag operation came from a timeout
         * @private
         * @property _fromTimeout
-        * @description Flag to determine if the drag operation came from a timeout
         * @type {Boolean}
         */
         _fromTimeout: null,
         /**
+        * Holder for the setTimeout call
         * @private
         * @property _clickTimeout
-        * @description Holder for the setTimeout call
         * @type {Boolean}
         */
         _clickTimeout: null,
         /**
+        * The offset of the mouse position to the element's position
         * @property deltaXY
-        * @description The offset of the mouse position to the element's position
         * @type {Array}
         */
         deltaXY: null,
         /**
+        * The initial mouse position
         * @property startXY
-        * @description The initial mouse position
         * @type {Array}
         */
         startXY: null,
         /**
+        * The initial element position
         * @property nodeXY
-        * @description The initial element position
         * @type {Array}
         */
         nodeXY: null,
         /**
+        * The position of the element as it's moving (for offset calculations)
         * @property lastXY
-        * @description The position of the element as it's moving (for offset calculations)
         * @type {Array}
         */
         lastXY: null,
         /**
+        * The xy that the node will be set to. Changing this will alter the position as it's dragged.
         * @property actXY
-        * @description The xy that the node will be set to. Changing this will alter the position as it's dragged.
         * @type {Array}
         */
         actXY: null,
         /**
+        * The real xy position of the node.
         * @property realXY
-        * @description The real xy position of the node.
         * @type {Array}
         */
         realXY: null,
         /**
+        * The XY coords of the mousemove
         * @property mouseXY
-        * @description The XY coords of the mousemove
         * @type {Array}
         */
         mouseXY: null,
         /**
+        * A region object associated with this drag, used for checking regions while dragging.
         * @property region
-        * @description A region object associated with this drag, used for checking regions while dragging.
         * @type Object
         */
         region: null,
         /**
+        * Handler for the mouseup DOM event
         * @private
         * @method _handleMouseUp
-        * @description Handler for the mouseup DOM event
         * @param {EventFacade} ev The Event
         */
         _handleMouseUp: function() {
@@ -729,23 +723,23 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * The function we use as the onselectstart handler when we start a drag in Internet Explorer
         * @private
         * @method _ieSelectFix
-        * @description The function we use as the onselectstart handler when we start a drag in Internet Explorer
         */
         _ieSelectFix: function() {
             return false;
         },
         /**
+        * We will hold a copy of the current "onselectstart" method on this property, and reset it after we are done using it.
         * @private
         * @property _ieSelectBack
-        * @description We will hold a copy of the current "onselectstart" method on this property, and reset it after we are done using it.
         */
         _ieSelectBack: null,
         /**
+        * This method copies the onselectstart listner on the document to the _ieSelectFix property
         * @private
         * @method _fixIEMouseDown
-        * @description This method copies the onselectstart listner on the document to the _ieSelectFix property
         */
         _fixIEMouseDown: function() {
             if (Y.UA.ie) {
@@ -754,9 +748,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * This method copies the _ieSelectFix property back to the onselectstart listner on the document.
         * @private
         * @method _fixIEMouseUp
-        * @description This method copies the _ieSelectFix property back to the onselectstart listner on the document.
         */
         _fixIEMouseUp: function() {
             if (Y.UA.ie) {
@@ -764,18 +758,19 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Handler for the mousedown DOM event
         * @private
         * @method _handleMouseDownEvent
-        * @description Handler for the mousedown DOM event
         * @param {EventFacade} ev  The Event
         */
         _handleMouseDownEvent: function(ev) {
+            ev.preventDefault();
             this.fire(EV_MOUSE_DOWN, { ev: ev });
         },
         /**
+        * Handler for the mousedown DOM event
         * @private
         * @method _defMouseDownFn
-        * @description Handler for the mousedown DOM event
         * @param {EventFacade} e  The Event
         */
         _defMouseDownFn: function(e) {
@@ -822,7 +817,7 @@ YUI.add('dd-drag', function (Y, NAME) {
             nlist = null,
             set = false;
             if (this._handles) {
-                Y.each(this._handles, function(i, n) {
+                Y.Object.each(this._handles, function(i, n) {
                     if (i instanceof Y.Node || i instanceof Y.NodeList) {
                         if (!r) {
                             nlist = i;
@@ -851,7 +846,7 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
             if (r) {
                 if (this._invalids) {
-                    Y.each(this._invalids, function(i, n) {
+                    Y.Object.each(this._invalids, function(i, n) {
                         if (Y.Lang.isString(n)) {
                             //Am I this or am I inside this
                             if (tar.test(n + ', ' + n + ' *')) {
@@ -878,9 +873,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             return r;
         },
         /**
+        * Sets the current position of the Element and calculates the offset
         * @private
         * @method _setStartPosition
-        * @description Sets the current position of the Element and calculates the offset
         * @param {Array} xy The XY coords to set the position to.
         */
         _setStartPosition: function(xy) {
@@ -895,9 +890,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * The method passed to setTimeout to determine if the clickTimeThreshold was met.
         * @private
         * @method _timeoutCheck
-        * @description The method passed to setTimeout to determine if the clickTimeThreshold was met.
         */
         _timeoutCheck: function() {
             if (!this.get('lock') && !this._dragThreshMet && this._ev_md) {
@@ -907,10 +902,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Remove a Selector added by addHandle
         * @method removeHandle
-        * @description Remove a Selector added by addHandle
         * @param {String} str The selector for the handle to be removed.
-        * @return {Self}
         * @chainable
         */
         removeHandle: function(str) {
@@ -925,10 +919,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Add a handle to a drag element. Drag only initiates when a mousedown happens on this element.
         * @method addHandle
-        * @description Add a handle to a drag element. Drag only initiates when a mousedown happens on this element.
         * @param {String} str The selector to test for a valid handle. Must be a child of the element.
-        * @return {Self}
         * @chainable
         */
         addHandle: function(str) {
@@ -944,10 +937,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Remove an invalid handle added by addInvalid
         * @method removeInvalid
-        * @description Remove an invalid handle added by addInvalid
         * @param {String} str The invalid handle to remove from the internal list.
-        * @return {Self}
         * @chainable
         */
         removeInvalid: function(str) {
@@ -959,10 +951,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Add a selector string to test the handle against. If the test passes the drag operation will not continue.
         * @method addInvalid
-        * @description Add a selector string to test the handle against. If the test passes the drag operation will not continue.
         * @param {String} str The selector to test against to determine if this is an invalid drag handle.
-        * @return {Self}
         * @chainable
         */
         addInvalid: function(str) {
@@ -973,9 +964,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Internal init handler
         * @private
         * @method initializer
-        * @description Internal init handler
         */
         initializer: function() {
 
@@ -1004,9 +995,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             this.set('groups', this.get('groups'));
         },
         /**
+        * Attach event listners and add classname
         * @private
         * @method _prep
-        * @description Attach event listners and add classname
         */
         _prep: function() {
             this._dragThreshMet = false;
@@ -1017,9 +1008,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             node.on('dragstart', Y.bind(this._fixDragStart, this));
         },
         /**
+        * Detach event listeners and remove classname
         * @private
         * @method _unprep
-        * @description Detach event listeners and remove classname
         */
         _unprep: function() {
             var node = this.get(NODE);
@@ -1036,9 +1027,8 @@ YUI.add('dd-drag', function (Y, NAME) {
             this.realXY = [];
         },
         /**
+        * Starts the drag operation
         * @method start
-        * @description Starts the drag operation
-        * @return {Self}
         * @chainable
         */
         start: function() {
@@ -1078,9 +1068,8 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Ends the drag operation
         * @method end
-        * @description Ends the drag operation
-        * @return {Self}
         * @chainable
         */
         end: function() {
@@ -1105,18 +1094,18 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Handler for fixing the selection in IE
         * @private
         * @method _defEndFn
-        * @description Handler for fixing the selection in IE
         */
         _defEndFn: function() {
             this._fixIEMouseUp();
             this._ev_md = null;
         },
         /**
+        * Handler for preventing the drag:end event. It will reset the node back to it's start position
         * @private
         * @method _prevEndFn
-        * @description Handler for preventing the drag:end event. It will reset the node back to it's start position
         */
         _prevEndFn: function() {
             this._fixIEMouseUp();
@@ -1126,27 +1115,27 @@ YUI.add('dd-drag', function (Y, NAME) {
             this.region = null;
         },
         /**
+        * Calculates the offsets and set's the XY that the element will move to.
         * @private
         * @method _align
-        * @description Calculates the offsets and set's the XY that the element will move to.
         * @param {Array} xy The xy coords to align with.
         */
         _align: function(xy) {
             this.fire(EV_ALIGN, {pageX: xy[0], pageY: xy[1] });
         },
         /**
+        * Calculates the offsets and set's the XY that the element will move to.
         * @private
         * @method _defAlignFn
-        * @description Calculates the offsets and set's the XY that the element will move to.
         * @param {EventFacade} e The drag:align event.
         */
         _defAlignFn: function(e) {
             this.actXY = [e.pageX - this.deltaXY[0], e.pageY - this.deltaXY[1]];
         },
         /**
+        * This method performs the alignment before the element move.
         * @private
         * @method _alignNode
-        * @description This method performs the alignment before the element move.
         * @param {Array} eXY The XY to move the element to, usually comes from the mousemove DOM event.
         */
         _alignNode: function(eXY, scroll) {
@@ -1156,9 +1145,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * This method performs the actual element move.
         * @private
         * @method _moveNode
-        * @description This method performs the actual element move.
         */
         _moveNode: function(scroll) {
             //if (!this.get(DRAGGING)) {
@@ -1198,25 +1187,31 @@ YUI.add('dd-drag', function (Y, NAME) {
             this.lastXY = xy;
         },
         /**
+        * Default function for drag:drag. Fired from _moveNode.
         * @private
         * @method _defDragFn
-        * @description Default function for drag:drag. Fired from _moveNode.
         * @param {EventFacade} ev The drag:drag event
         */
         _defDragFn: function(e) {
             if (this.get('move')) {
                 if (e.scroll && e.scroll.node) {
+                    var domNode = e.scroll.node.getDOMNode();
+                    //If it's the window
+                    if (domNode === Y.config.win) {
+                        domNode.scrollTo(e.scroll.left, e.scroll.top);
+                    } else {
                     e.scroll.node.set('scrollTop', e.scroll.top);
                     e.scroll.node.set('scrollLeft', e.scroll.left);
+                }
                 }
                 this.get(DRAG_NODE).setXY([e.pageX, e.pageY]);
                 this.realXY = [e.pageX, e.pageY];
             }
         },
         /**
+        * Fired from DragDropMgr (DDM) on mousemove.
         * @private
         * @method _move
-        * @description Fired from DragDropMgr (DDM) on mousemove.
         * @param {EventFacade} ev The mousemove DOM event
         */
         _move: function(ev) {
@@ -1245,9 +1240,8 @@ YUI.add('dd-drag', function (Y, NAME) {
             }
         },
         /**
+        * Method will forcefully stop a drag operation. For example calling this from inside an ESC keypress handler will stop this drag.
         * @method stopDrag
-        * @description Method will forcefully stop a drag operation. For example calling this from inside an ESC keypress handler will stop this drag.
-        * @return {Self}
         * @chainable
         */
         stopDrag: function() {
@@ -1257,9 +1251,9 @@ YUI.add('dd-drag', function (Y, NAME) {
             return this;
         },
         /**
+        * Lifecycle destructor, unreg the drag from the DDM and remove listeners
         * @private
         * @method destructor
-        * @description Lifecycle destructor, unreg the drag from the DDM and remove listeners
         */
         destructor: function() {
             this._unprep();
@@ -1275,4 +1269,4 @@ YUI.add('dd-drag', function (Y, NAME) {
 
 
 
-}, '3.7.3', {"requires": ["dd-ddm-base"]});
+}, '3.16.0', {"requires": ["dd-ddm-base"]});

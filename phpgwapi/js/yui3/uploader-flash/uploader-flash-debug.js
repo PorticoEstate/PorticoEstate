@@ -1,39 +1,572 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('uploader-flash', function (Y, NAME) {
 
-
-    /**
-     * This module provides a UI for file selection and multiple file upload capability using
-     * Flash as a transport engine.
-     * The supported features include: automatic upload queue management, upload progress
-     * tracking, file filtering, server response retrieval and error reporting.
-     *
-     * @module uploader-flash
-     */     
+/**
+* This module provides a UI for file selection and multiple file upload capability using
+* Flash as a transport engine.
+* The supported features include: automatic upload queue management, upload progress
+* tracking, file filtering, server response retrieval and error reporting.
+*
+* @module uploader-flash
+* @deprecated
+*/
 
 // Shorthands for external modules
-var  substitute            = Y.substitute,
-     UploaderQueue         = Y.Uploader.Queue,
-     getCN                 = Y.ClassNameManager.getClassName,
-     UPLOADER              = 'uploader',
-     SELECT_FILES          = getCN(UPLOADER, 'selectfiles-button');
+var substitute            = Y.Lang.sub,
+    UploaderQueue         = Y.Uploader.Queue;
 
+
+/**
+ * Embed a Flash applications in a standard manner and communicate with it
+ * via External Interface.
+ * @module swf
+ */
+
+    var Event = Y.Event,
+        SWFDetect = Y.SWFDetect,
+        Lang = Y.Lang,
+        uA = Y.UA,
+        Node = Y.Node,
+        Escape = Y.Escape,
+
+        // private
+        FLASH_CID = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000",
+        FLASH_TYPE = "application/x-shockwave-flash",
+        FLASH_VER = "10.0.22",
+        EXPRESS_INSTALL_URL = "http://fpdownload.macromedia.com/pub/flashplayer/update/current/swf/autoUpdater.swf?" + Math.random(),
+        EVENT_HANDLER = "SWF.eventHandler",
+        possibleAttributes = {align:"", allowFullScreen:"", allowNetworking:"", allowScriptAccess:"", base:"", bgcolor:"", loop:"", menu:"", name:"", play: "", quality:"", salign:"", scale:"", tabindex:"", wmode:""};
 
     /**
-     * This module provides a UI for file selection and multiple file upload capability
-     * using Flash as a transport engine.
-     * @class UploaderFlash
-     * @extends Widget
+         * The SWF utility is a tool for embedding Flash applications in HTML pages.
+         * @module swf
+         * @title SWF Utility
+         * @requires event-custom, node, swfdetect
+         */
+
+        /**
+         * Creates the SWF instance and keeps the configuration data
+     *
+         * @class SWF
+         * @uses Y.Event.Target
+         * @constructor
+         * @param {String|HTMLElement} id The id of the element, or the element itself that the SWF will be inserted into.
+         *        The width and height of the SWF will be set to the width and height of this container element.
+         * @param {String} swfURL The URL of the SWF to be embedded into the page.
+         * @param {Object} p_oAttributes (optional) Configuration parameters for the Flash application and values for Flashvars
+         *        to be passed to the SWF. The p_oAttributes object allows the following additional properties:
+         *        <dl>
+         *          <dt>version : String</dt>
+         *          <dd>The minimum version of Flash required on the user's machine.</dd>
+         *          <dt>fixedAttributes : Object</dt>
+         *          <dd>An object literal containing one or more of the following String keys and their values: <code>align,
+         *              allowFullScreen, allowNetworking, allowScriptAccess, base, bgcolor, menu, name, quality, salign, scale,
+         *              tabindex, wmode.</code> event from the thumb</dd>
+         *        </dl>
+     */     
+
+function SWF (p_oElement /*:String*/, swfURL /*:String*/, p_oAttributes /*:Object*/ ) {
+
+    this._id = Y.guid("yuiswf");
+
+
+    var _id = this._id;
+    var oElement = Node.one(p_oElement);
+
+    var p_oAttributes = p_oAttributes || {};
+
+    var flashVersion = p_oAttributes.version || FLASH_VER;
+
+    var flashVersionSplit = (flashVersion + '').split(".");
+    var isFlashVersionRight = SWFDetect.isFlashVersionAtLeast(parseInt(flashVersionSplit[0], 10), parseInt(flashVersionSplit[1], 10), parseInt(flashVersionSplit[2], 10));
+    var canExpressInstall = (SWFDetect.isFlashVersionAtLeast(8,0,0));
+    var shouldExpressInstall = canExpressInstall && !isFlashVersionRight && p_oAttributes.useExpressInstall;
+    var flashURL = (shouldExpressInstall)?EXPRESS_INSTALL_URL:swfURL;
+    var objstring = '<object ';
+    var w, h;
+    var flashvarstring = "yId=" + Y.id + "&YUISwfId=" + _id + "&YUIBridgeCallback=" + EVENT_HANDLER + "&allowedDomain=" + document.location.hostname;
+
+    Y.SWF._instances[_id] = this;
+    if (oElement && (isFlashVersionRight || shouldExpressInstall) && flashURL) {
+        objstring += 'id="' + _id + '" ';
+        if (uA.ie) {
+            objstring += 'classid="' + FLASH_CID + '" ';
+        } else {
+            objstring += 'type="' + FLASH_TYPE + '" data="' + Escape.html(flashURL) + '" ';
+        }
+
+        w = "100%";
+        h = "100%";
+
+        objstring += 'width="' + w + '" height="' + h + '">';
+
+        if (uA.ie) {
+            objstring += '<param name="movie" value="' + Escape.html(flashURL) + '"/>';
+        }
+
+        for (var attribute in p_oAttributes.fixedAttributes) {
+            if (possibleAttributes.hasOwnProperty(attribute)) {
+                objstring += '<param name="' + Escape.html(attribute) + '" value="' + Escape.html(p_oAttributes.fixedAttributes[attribute]) + '"/>';
+            }
+        }
+
+        for (var flashvar in p_oAttributes.flashVars) {
+            var fvar = p_oAttributes.flashVars[flashvar];
+            if (Lang.isString(fvar)) {
+                flashvarstring += "&" + Escape.html(flashvar) + "=" + Escape.html(encodeURIComponent(fvar));
+            }
+        }
+
+        if (flashvarstring) {
+            objstring += '<param name="flashVars" value="' + flashvarstring + '"/>';
+        }
+
+        objstring += "</object>";
+        //using innerHTML as setHTML/setContent causes some issues with ExternalInterface for IE versions of the player
+        oElement.set("innerHTML", objstring);
+
+        this._swf = Node.one("#" + _id);
+    } else {
+    /**
+         * Fired when the Flash player version on the user's machine is
+         * below the required value.
+         *
+         * @event wrongflashversion
+         */
+        var event = {};
+        event.type = "wrongflashversion";
+        this.publish("wrongflashversion", {fireOnce:true});
+        this.fire("wrongflashversion", event);
+    }
+}
+
+/**
+ * @private
+ * The static collection of all instances of the SWFs on the page.
+ * @property _instances
+ * @type Object
+ */
+
+SWF._instances = SWF._instances || {};
+
+/**
+ * @private
+ * Handles an event coming from within the SWF and delegate it
+ * to a specific instance of SWF.
+ * @method eventHandler
+ * @param swfid {String} the id of the SWF dispatching the event
+ * @param event {Object} the event being transmitted.
+ */
+SWF.eventHandler = function (swfid, event) {
+    SWF._instances[swfid]._eventHandler(event);
+};
+
+SWF.prototype = {
+    /**
+     * @private
+     * Propagates a specific event from Flash to JS.
+     * @method _eventHandler
+     * @param event {Object} The event to be propagated from Flash.
+     */
+    _eventHandler: function(event) {
+        if (event.type === "swfReady") {
+            this.publish("swfReady", {fireOnce:true});
+            this.fire("swfReady", event);
+        } else if(event.type === "log") {
+            Y.log(event.message, event.category, this.toString());
+        } else {
+            this.fire(event.type, event);
+        }
+    },
+
+        /**
+     * Calls a specific function exposed by the SWF's
+     * ExternalInterface.
+     * @method callSWF
+     * @param func {String} the name of the function to call
+     * @param args {Array} the set of arguments to pass to the function.
+     */
+
+    callSWF: function (func, args)
+    {
+    if (!args) {
+          args= [];
+    }
+        if (this._swf._node[func]) {
+        return(this._swf._node[func].apply(this._swf._node, args));
+        } else {
+        return null;
+        }
+    },
+
+    /**
+     * Public accessor to the unique name of the SWF instance.
+     *
+     * @method toString
+     * @return {String} Unique name of the SWF instance.
+     */
+    toString: function()
+    {
+        return "SWF " + this._id;
+    }
+};
+
+Y.augment(SWF, Y.EventTarget);
+
+Y.SWF = SWF;
+    /**
+     * The FileFlash class provides a wrapper for a file pointer stored in Flash. The File wrapper
+     * also implements the mechanics for uploading a file and tracking its progress.
+     * @module file-flash
+     */
+    /**
+     * The class provides a wrapper for a file pointer in Flash.
+     * @class FileFlash
+     * @extends Base
      * @constructor
      * @param {Object} config Configuration object.
      */
 
-function UploaderFlash(config) {
+    var FileFlash = function(o) {
+        FileFlash.superclass.constructor.apply(this, arguments);
+    };
+
+    Y.extend(FileFlash, Y.Base, {
+
+       /**
+        * Construction logic executed during FileFlash instantiation.
+        *
+        * @method initializer
+        * @protected
+        */
+        initializer : function (cfg) {
+            if (!this.get("id")) {
+                this._set("id", Y.guid("file"));
+            }
+        },
+
+       /**
+        * Handler of events dispatched by the Flash player.
+        *
+        * @method _swfEventHandler
+        * @param {Event} event The event object received from the Flash player.
+        * @protected
+        */
+        _swfEventHandler: function (event) {
+          if (event.id === this.get("id")) {
+          switch (event.type) {
+            /**
+             * Signals that this file's upload has started.
+             *
+             * @event uploadstart
+             * @param event {Event} The event object for the `uploadstart` with the
+             *                      following payload:
+             *  <dl>
+             *      <dt>uploader</dt>
+             *          <dd>The Y.SWF instance of Flash uploader that's handling the upload.</dd>
+             *  </dl>
+             */
+            case "uploadstart":
+                 this.fire("uploadstart", {uploader: this.get("uploader")});
+                 break;
+            case "uploadprogress":
+
+                  /**
+                   * Signals that progress has been made on the upload of this file.
+                   *
+                   * @event uploadprogress
+                   * @param event {Event} The event object for the `uploadprogress` with the
+                   *                      following payload:
+                   *  <dl>
+                   *      <dt>originEvent</dt>
+                   *          <dd>The original event fired by the Flash uploader instance.</dd>
+                   *      <dt>bytesLoaded</dt>
+                   *          <dd>The number of bytes of the file that has been uploaded.</dd>
+                   *      <dt>bytesTotal</dt>
+                   *          <dd>The total number of bytes in the file (the file size)</dd>
+                   *      <dt>percentLoaded</dt>
+                   *          <dd>The fraction of the file that has been uploaded, out of 100.</dd>
+                   *  </dl>
+                   */
+                 this.fire("uploadprogress", {originEvent: event,
+                                              bytesLoaded: event.bytesLoaded,
+                                              bytesTotal: event.bytesTotal,
+                                              percentLoaded: Math.min(100, Math.round(10000*event.bytesLoaded/event.bytesTotal)/100)
+                                             });
+                 this._set("bytesUploaded", event.bytesLoaded);
+                 break;
+            case "uploadcomplete":
+
+                  /**
+                   * Signals that this file's upload has completed, but data has not yet been received from the server.
+                   *
+                   * @event uploadfinished
+                   * @param event {Event} The event object for the `uploadfinished` with the
+                   *                      following payload:
+                   *  <dl>
+                   *      <dt>originEvent</dt>
+                   *          <dd>The original event fired by the Flash player instance.</dd>
+                   *  </dl>
+                   */
+                 this.fire("uploadfinished", {originEvent: event});
+                 break;
+            case "uploadcompletedata":
+                /**
+                 * Signals that this file's upload has completed and data has been received from the server.
+                 *
+                 * @event uploadcomplete
+                 * @param event {Event} The event object for the `uploadcomplete` with the
+                 *                      following payload:
+                 *  <dl>
+                 *      <dt>originEvent</dt>
+                 *          <dd>The original event fired by the Flash player instance.</dd>
+                 *      <dt>data</dt>
+                 *          <dd>The data returned by the server.</dd>
+                 *  </dl>
+                 */
+                 this.fire("uploadcomplete", {originEvent: event,
+                                              data: event.data});
+                 break;
+            case "uploadcancel":
+
+                /**
+                 * Signals that this file's upload has been cancelled.
+                 *
+                 * @event uploadcancel
+                 * @param event {Event} The event object for the `uploadcancel` with the
+                 *                      following payload:
+                 *  <dl>
+                 *      <dt>originEvent</dt>
+                 *          <dd>The original event fired by the Flash player instance.</dd>
+                 *  </dl>
+                 */
+                 this.fire("uploadcancel", {originEvent: event});
+                 break;
+            case "uploaderror":
+
+                /**
+                 * Signals that this file's upload has encountered an error.
+                 *
+                 * @event uploaderror
+                 * @param event {Event} The event object for the `uploaderror` with the
+                 *                      following payload:
+                 *  <dl>
+                 *      <dt>originEvent</dt>
+                 *          <dd>The original event fired by the Flash player instance.</dd>
+                 *      <dt>status</dt>
+                 *          <dd>The status code reported by the Flash Player. If it's an HTTP error,
+                 *                then this corresponds to the HTTP status code received by the uploader.</dd>
+                 *      <dt>statusText</dt>
+                 *          <dd>The text of the error event reported by the Flash Player.</dd>
+                 *      <dt>source</dt>
+                 *          <dd>Either "http" (if it's an HTTP error), or "io" (if it's a network transmission
+                 *              error.)</dd>
+                 *  </dl>
+                 */
+                 this.fire("uploaderror", {originEvent: event, status: event.status, statusText: event.message, source: event.source});
+
+          }
+        }
+        },
+
+       /**
+        * Starts the upload of a specific file.
+        *
+        * @method startUpload
+        * @param url {String} The URL to upload the file to.
+        * @param parameters {Object} (optional) A set of key-value pairs to send as variables along with the file upload HTTP request.
+        * @param fileFieldName {String} (optional) The name of the POST variable that should contain the uploaded file ('Filedata' by default)
+        */
+        startUpload: function(url, parameters, fileFieldName) {
+
+        if (this.get("uploader")) {
+
+            var myUploader = this.get("uploader"),
+                fileField = fileFieldName || "Filedata",
+                id = this.get("id"),
+                params = parameters || null;
+
+            this._set("bytesUploaded", 0);
+
+            myUploader.on("uploadstart", this._swfEventHandler, this);
+            myUploader.on("uploadprogress", this._swfEventHandler, this);
+            myUploader.on("uploadcomplete", this._swfEventHandler, this);
+            myUploader.on("uploadcompletedata", this._swfEventHandler, this);
+            myUploader.on("uploaderror", this._swfEventHandler, this);
+
+            myUploader.callSWF("upload", [id, url, params, fileField]);
+         }
+
+        },
+
+       /**
+        * Cancels the upload of a specific file, if currently in progress.
+        *
+        * @method cancelUpload
+        */
+        cancelUpload: function () {
+         if (this.get("uploader")) {
+           this.get("uploader").callSWF("cancel", [this.get("id")]);
+           this.fire("uploadcancel");
+         }
+        }
+
+    }, {
+
+       /**
+        * The identity of the class.
+        *
+        * @property NAME
+        * @type String
+        * @default 'file'
+        * @readOnly
+        * @protected
+        * @static
+        */
+        NAME: 'file',
+
+       /**
+        * The type of transport.
+        *
+        * @property TYPE
+        * @type String
+        * @default 'flash'
+        * @readOnly
+        * @protected
+        * @static
+        */
+        TYPE: "flash",
+
+       /**
+        * Static property used to define the default attribute configuration of
+        * the File.
+        *
+        * @property ATTRS
+        * @type {Object}
+        * @protected
+        * @static
+        */
+        ATTRS: {
+
+       /**
+        * A String containing the unique id of the file wrapped by the FileFlash instance.
+        * The id is supplied by the Flash player uploader.
+        *
+        * @attribute id
+        * @type {String}
+        * @initOnly
+        */
+        id: {
+            writeOnce: "initOnly",
+            value: null
+        },
+
+       /**
+        * The size of the file wrapped by FileFlash. This value is supplied by the Flash player uploader.
+        *
+        * @attribute size
+        * @type {Number}
+        * @initOnly
+        */
+        size: {
+            writeOnce: "initOnly",
+            value: 0
+        },
+
+       /**
+        * The name of the file wrapped by FileFlash. This value is supplied by the Flash player uploader.
+        *
+        * @attribute name
+        * @type {String}
+        * @initOnly
+        */
+        name: {
+            writeOnce: "initOnly",
+            value: null
+        },
+
+       /**
+        * The date that the file wrapped by FileFlash was created on. This value is supplied by the Flash player uploader.
+        *
+        * @attribute dateCreated
+        * @type {Date}
+        * @initOnly
+        */
+        dateCreated: {
+            writeOnce: "initOnly",
+            value: null
+        },
+
+       /**
+        * The date that the file wrapped by FileFlash was last modified on. This value is supplied by the Flash player uploader.
+        *
+        * @attribute dateModified
+        * @type {Date}
+        * @initOnly
+        */
+        dateModified: {
+            writeOnce: "initOnly",
+            value: null
+        },
+
+       /**
+        * The number of bytes of the file that has been uploaded to the server. This value is
+        * non-zero only while a file is being uploaded.
+        *
+        * @attribute bytesUploaded
+        * @type {Date}
+        * @readOnly
+        */
+        bytesUploaded: {
+            readOnly: true,
+            value: 0
+        },
+
+       /**
+        * The type of the file wrapped by FileFlash. This value is provided by the Flash player
+        * uploader.
+        *
+        * @attribute type
+        * @type {String}
+        * @initOnly
+        */
+        type: {
+            writeOnce: "initOnly",
+            value: null
+        },
+
+       /**
+        * The instance of Y.SWF wrapping the Flash player uploader associated with this file.
+        *
+        * @attribute uploder
+        * @type {SWF}
+        * @initOnly
+        */
+        uploader: {
+            writeOnce: "initOnly",
+            value: null
+        }
+        }
+    });
+
+    Y.FileFlash = FileFlash;
+/**
+* This module provides a UI for file selection and multiple file upload capability
+* using Flash as a transport engine.
+* @class UploaderFlash
+* @extends Widget
+* @param {Object} config Configuration object.
+* @constructor
+* @deprecated
+*/
+
+function UploaderFlash() {
   UploaderFlash.superclass.constructor.apply ( this, arguments );
 }
 
@@ -87,7 +620,7 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
    * it will be ignored.
    *
    * @property queue
-   * @type {Y.Uploader.Queue}
+    * @type {Uploader.Queue}
    */
    queue: null,
 
@@ -101,7 +634,7 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
   _tabElementBindings: null,
 
 
-/**
+    /**
  * Construction logic executed during UploaderFlash instantiation.
  *
  * @method initializer
@@ -295,21 +828,25 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
   renderUI : function () {
      var boundingBox = this.get("boundingBox"),
          contentBox = this.get('contentBox'),
-         selFilesButton = this.get("selectFilesButton");
- 
-     boundingBox.setStyle("position", "relative");
-     selFilesButton.setStyles({width: "100%", height: "100%"});
-     contentBox.append(selFilesButton);
-     contentBox.append(Y.Node.create(substitute(UploaderFlash.FLASH_CONTAINER, 
-                                              {swfContainerId: this._swfContainerId})));
-     var flashContainer = Y.one("#" + this._swfContainerId);
-     var params = {version: "10.0.45",
-                     fixedAttributes: {wmode: "transparent", 
+            selFilesButton = this.get("selectFilesButton"),
+            flashContainer = Y.Node.create(substitute(UploaderFlash.FLASH_CONTAINER, {
+                swfContainerId: this._swfContainerId
+            })),
+            params = {
+                version: "10.0.45",
+                fixedAttributes: {
+                    wmode: "transparent",
                                        allowScriptAccess:"always", 
                                        allowNetworking:"all", 
                                        scale: "noscale"
                                       }
                     };
+
+        boundingBox.setStyle("position", "relative");
+        selFilesButton.setStyles({width: "100%", height: "100%"});
+        contentBox.append(selFilesButton);
+        contentBox.append(flashContainer);
+
      this._swfReference = new Y.SWF(flashContainer, this.get("swfURL"), params);
   },
 
@@ -344,26 +881,29 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
         this._swfReference.on("mouseenter", function () {
             this.fire("mouseenter");
             this._setButtonClass("hover", true);
-            if (this._buttonState == "down") {
+            if (this._buttonState === "down") {
                 this._setButtonClass("active", true);
             }
         }, this);
+
         this._swfReference.on("mouseleave", function () {
             this.fire("mouseleave");
             this._setButtonClass("hover", false);
             this._setButtonClass("active", false);
-            
         }, this);
+
         this._swfReference.on("mousedown", function () {
             this.fire("mousedown");
             this._buttonState = "down";
             this._setButtonClass("active", true);
         }, this);
+
         this._swfReference.on("mouseup", function () {
             this.fire("mouseup");
             this._buttonState = "up";
             this._setButtonClass("active", false);
         }, this);
+
         this._swfReference.on("click", function () {
             this.fire("click");
             this._buttonFocus = true;
@@ -383,7 +923,7 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
    * @protected
    * @param ev {Event} Optional event payload if called as a `tabElementsChange` handler.
    */
-  _attachTabElements : function (ev) {
+    _attachTabElements : function () {
       if (this.get("tabElements") !== null && this.get("tabElements").from !== null && this.get("tabElements").to !== null) {
 
         if (this._tabElementBindings !== null) {
@@ -398,12 +938,12 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
           this._tabElementBindings = {};
         }
 
-          var fromElement = Y.one(this.get("tabElements").from);
-          var toElement = Y.one(this.get("tabElements").to);
+            var fromElement = Y.one(this.get("tabElements").from),
+                toElement = Y.one(this.get("tabElements").to);
 
 
           this._tabElementBindings.from = fromElement.on("keydown", function (ev) { 
-                                                    if (ev.keyCode == 9 && !ev.shiftKey) {
+                if (ev.keyCode === 9 && !ev.shiftKey) {
                                                         ev.preventDefault();
                                                         this._swfReference._swf.setAttribute("tabindex", 0); 
                                                         this._swfReference._swf.setAttribute("role", "button");
@@ -411,20 +951,40 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
                                                         this._swfReference._swf.focus();
                                                     }
                                                   }, this);
-          this._tabElementBindings.to = toElement.on("keydown", function (ev) { 
-                                                    if (ev.keyCode == 9 && ev.shiftKey) {
-                                                        ev.preventDefault();
-                                                        this._swfReference._swf.setAttribute("tabindex", 0); 
-                                                        this._swfReference._swf.setAttribute("role", "button");
-                                                        this._swfReference._swf.setAttribute("aria-label", this.get("selectButtonLabel"));
-                                                        this._swfReference._swf.focus();
-                                                    }
-                                                  }, this);
-          this._tabElementBindings.tabback = this._swfReference.on("tabback", function (ev) {this._swfReference._swf.blur(); setTimeout(function () {fromElement.focus();}, 30);}, this);
-          this._tabElementBindings.tabforward = this._swfReference.on("tabforward", function (ev) {this._swfReference._swf.blur(); setTimeout(function () {toElement.focus();}, 30);}, this);
 
-          this._tabElementBindings.focus = this._swfReference._swf.on("focus", function (ev) {this._buttonFocus = true; this._setButtonClass("focus", true);}, this);
-          this._tabElementBindings.blur = this._swfReference._swf.on("blur", function (ev) {this._buttonFocus = false; this._setButtonClass("focus", false);}, this);
+          this._tabElementBindings.to = toElement.on("keydown", function (ev) { 
+                if (ev.keyCode === 9 && ev.shiftKey) {
+                                                        ev.preventDefault();
+                                                        this._swfReference._swf.setAttribute("tabindex", 0); 
+                                                        this._swfReference._swf.setAttribute("role", "button");
+                                                        this._swfReference._swf.setAttribute("aria-label", this.get("selectButtonLabel"));
+                                                        this._swfReference._swf.focus();
+                                                    }
+                                                  }, this);
+
+            this._tabElementBindings.tabback = this._swfReference.on("tabback", function () {
+                this._swfReference._swf.blur();
+                setTimeout(function () {
+                    fromElement.focus();
+                }, 30);
+            }, this);
+
+            this._tabElementBindings.tabforward = this._swfReference.on("tabforward", function () {
+                this._swfReference._swf.blur();
+                setTimeout(function () {
+                    toElement.focus();
+                }, 30);
+            }, this);
+
+            this._tabElementBindings.focus = this._swfReference._swf.on("focus", function () {
+                this._buttonFocus = true;
+                this._setButtonClass("focus", true);
+            }, this);
+
+            this._tabElementBindings.blur = this._swfReference._swf.on("blur", function () {
+                this._buttonFocus = false;
+                this._setButtonClass("focus", false);
+            }, this);
       }
       else if (this._tabElementBindings !== null) {
           this._tabElementBindings.from.detach();
@@ -467,7 +1027,6 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
           if (this._swfReference && this.get("fileFilters").length > 0) {
             this._swfReference.callSWF("setFileFilters", [this.get("fileFilters")]);
           } 
-
   },
 
 
@@ -511,7 +1070,7 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
    * @method _getFileList
    * @private
    */
-    _getFileList : function (arr) {
+    _getFileList : function () {
         return this._fileList.concat();
     },
 
@@ -546,7 +1105,8 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
          fileConfObjects = [],
          parsedFiles = [],
          swfRef = this._swfReference,
-         filterFunc = this.get("fileFilterFunction");
+            filterFunc = this.get("fileFilterFunction"),
+            oldfiles;
  
      Y.each(newfiles, function (value) {
        var newFileConf = {};
@@ -576,12 +1136,12 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
        }
 
      if (parsedFiles.length > 0) {
-        var oldfiles = this.get("fileList");
+            oldfiles = this.get("fileList");
 
         this.set("fileList", 
                  this.get("appendNewFiles") ? oldfiles.concat(parsedFiles) : parsedFiles );
 
-        this.fire("fileselect", {fileList: parsedFiles});
+            this.fire("fileselect", { fileList: parsedFiles });
      }
 
   },
@@ -614,11 +1174,11 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
                    this.queue = null;
                    this.fire("alluploadscomplete", event);
                 break;
-                case "file:uploaderror":
+            case "file:uploaderror": //overflow intentional
                 case "uploaderqueue:uploaderror":
                    this.fire("uploaderror", event);
                 break;
-                case "file:uploadcancel":
+            case "file:uploadcancel": // overflow intentional
                 case "uploaderqueue:uploadcancel":
                    this.fire("uploadcancel", event);
                 break;
@@ -632,12 +1192,11 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
    * Starts the upload of a specific file.
    *
    * @method upload
-   * @param file {Y.FileFlash} Reference to the instance of the file to be uploaded.
+    * @param file {FileFlash} Reference to the instance of the file to be uploaded.
    * @param url {String} The URL to upload the file to.
-   * @param postVars {Object} (optional) A set of key-value pairs to send as variables along with the file upload HTTP request.
+    * @param [postVars] {Object} A set of key-value pairs to send as variables along with the file upload HTTP request.
    *                          If not specified, the values from the attribute `postVarsPerFile` are used instead. 
    */
-
   upload : function (file, url, postvars) {
         
         var uploadURL = url || this.get("uploadURL"),
@@ -663,7 +1222,7 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
    *
    * @method uploadAll
    * @param url {String} The URL to upload the files to.
-   * @param postVars {Object} (optional) A set of key-value pairs to send as variables along with the file upload HTTP request.
+    * @param [postVars] {Object} A set of key-value pairs to send as variables along with the file upload HTTP request.
    *                          If not specified, the values from the attribute `postVarsPerFile` are used instead. 
    */
   uploadAll : function (url, postvars) {
@@ -676,7 +1235,7 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
    * @method uploadThese
    * @param files {Array} The list of files to upload.
    * @param url {String} The URL to upload the files to.
-   * @param postVars {Object} (optional) A set of key-value pairs to send as variables along with the file upload HTTP request.
+    * @param [postVars] {Object} A set of key-value pairs to send as variables along with the file upload HTTP request.
    *                          If not specified, the values from the attribute `postVarsPerFile` are used instead. 
    */
   uploadThese : function (files, url, postvars) {
@@ -684,7 +1243,8 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
         var uploadURL = url || this.get("uploadURL"),
             postVars = postvars || this.get("postVarsPerFile");
 
-           this.queue = new UploaderQueue({simUploads: this.get("simLimit"), 
+            this.queue = new UploaderQueue({
+                simUploads: this.get("simLimit"),
                                            errorAction: this.get("errorAction"),
                                            fileFieldName: this.get("fileFieldName"),
                                            fileList: files,
@@ -692,12 +1252,13 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
                                            perFileParameters: postVars,
                                            retryCount: this.get("retryCount")
                                                });
+
            this.queue.on("uploadstart", this._uploadEventHandler, this);
            this.queue.on("uploadprogress", this._uploadEventHandler, this);
            this.queue.on("totaluploadprogress", this._uploadEventHandler, this);
            this.queue.on("uploadcomplete", this._uploadEventHandler, this);
            this.queue.on("alluploadscomplete", this._uploadEventHandler, this);
-           this.queue.on("alluploadscancelled", function (ev) {this.queue = null;}, this);
+            this.queue.on("alluploadscancelled", function () {this.queue = null;}, this);
            this.queue.on("uploaderror", this._uploadEventHandler, this);
            this.queue.startUpload();  
            
@@ -715,9 +1276,11 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
    * @property FLASH_CONTAINER
    * @type {String}
    * @static
-   * @default "<div id='{swfContainerId}' style='position:absolute; top:0px; left: 0px; margin: 0; padding: 0; border: 0; width:100%; height:100%'></div>"
+    * @default '<div id="{swfContainerId}" style="position:absolute; top:0px; left: 0px; margin: 0; padding: 0;
+    *           border: 0; width:100%; height:100%"></div>'
    */
-  FLASH_CONTAINER: "<div id='{swfContainerId}' style='position:absolute; top:0px; left: 0px; margin: 0; padding: 0; border: 0; width:100%; height:100%'></div>",
+    FLASH_CONTAINER: '<div id="{swfContainerId}" style="position:absolute; top:0px; left: 0px; margin: 0; ' +
+                     'padding: 0; border: 0; width:100%; height:100%"></div>',
 
   /**
    * The template for the "Select Files" button.
@@ -833,8 +1396,13 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
          */
         errorAction: {
             value: "continue",
-            validator: function (val, name) {
-                 return (val === UploaderQueue.CONTINUE || val === UploaderQueue.STOP || val === UploaderQueue.RESTART_ASAP || val === UploaderQueue.RESTART_AFTER);           
+            validator: function (val) {
+                return (
+                    val === UploaderQueue.CONTINUE ||
+                    val === UploaderQueue.STOP ||
+                    val === UploaderQueue.RESTART_ASAP ||
+                    val === UploaderQueue.RESTART_AFTER
+                );
              }
         },
 
@@ -961,7 +1529,7 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
          */
         simLimit: {
                 value: 2,
-                validator: function (val, name) {
+            validator: function (val) {
                     return (val >= 2 && val <= 5);
                 }
             },
@@ -973,17 +1541,18 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
          *
          * @attribute swfURL
          * @type {String}
-         * @default "CDN Prefix + uploader/assets/flashuploader.swf" with a 
+        * @default "flashuploader.swf" with a
          * random GET parameter for IE (to prevent buggy behavior when the SWF 
          * is cached).
          */
         swfURL: {
           valueFn: function () {
-            var prefix = Y.Env.cdn + "uploader/assets/flashuploader.swf";
+                var prefix = "flashuploader.swf";
 
             if (Y.UA.ie > 0) {
               return (prefix + "?t=" + Y.guid("uploader"));
             }
+
             return prefix;
           }
         },
@@ -1036,6 +1605,15 @@ Y.UploaderFlash = Y.extend(UploaderFlash, Y.Widget, {
 Y.UploaderFlash.Queue = UploaderQueue;
 
 
-
-
-}, '3.7.3', {"requires": ["swf", "widget", "substitute", "base", "cssbutton", "node", "event-custom", "file-flash", "uploader-queue"]});
+}, '3.16.0', {
+    "requires": [
+        "swfdetect",
+        "escape",
+        "widget",
+        "base",
+        "cssbutton",
+        "node",
+        "event-custom",
+        "uploader-queue"
+    ]
+});

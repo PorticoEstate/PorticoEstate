@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('event-synthetic', function (Y, NAME) {
 
 /**
@@ -64,8 +65,8 @@ function Notifier(handle, emitFacade) {
  * automatically added after those passed to fire().</p>
  *
  * @method fire
- * @param e {EventFacade|DOMEventFacade|Object|any} (see description)
- * @param arg* {any} additional arguments received by all subscriptions
+ * @param {EventFacade|DOMEventFacade|any} e (see description)
+ * @param {any[]} [arg*] additional arguments received by all subscriptions
  * @private
  */
 Notifier.prototype.fire = function (e) {
@@ -103,6 +104,17 @@ Notifier.prototype.fire = function (e) {
 
     sub.context = thisObj || event.currentTarget || ce.host;
     ret = ce.fire.apply(ce, args);
+
+    // have to handle preventedFn and stoppedFn manually because
+    // Notifier CustomEvents are forced to emitFacade=false
+    if (e.prevented && ce.preventedFn) {
+        ce.preventedFn.apply(ce, args);
+    }
+
+    if (e.stopped && ce.stoppedFn) {
+        ce.stoppedFn.apply(ce, args);
+    }
+
     sub.context = thisObj; // reset for future firing
 
     // to capture callbacks that return false to stopPropagation.
@@ -111,7 +123,9 @@ Notifier.prototype.fire = function (e) {
 };
 
 /**
- * Manager object for synthetic event subscriptions to aggregate multiple synths on the same node without colliding with actual DOM subscription entries in the global map of DOM subscriptions.  Also facilitates proper cleanup on page unload.
+ * Manager object for synthetic event subscriptions to aggregate multiple synths on the
+ * same node without colliding with actual DOM subscription entries in the global map of
+ * DOM subscriptions.  Also facilitates proper cleanup on page unload.
  *
  * @class SynthRegistry
  * @constructor
@@ -835,4 +849,4 @@ Y.Event.define = function (type, config, force) {
 };
 
 
-}, '3.7.3', {"requires": ["node-base", "event-custom-complex"]});
+}, '3.16.0', {"requires": ["node-base", "event-custom-complex"]});

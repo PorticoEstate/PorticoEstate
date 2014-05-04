@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('widget-position-align', function (Y, NAME) {
 
 /**
@@ -41,15 +42,7 @@ passed to `Base.build`).
 @param {Object} config User configuration object.
 @constructor
 **/
-function PositionAlign (config) {
-    if ( ! this._posNode) {
-        Y.error('WidgetPosition needs to be added to the Widget, ' + 
-            'before WidgetPositionAlign is added'); 
-    }
-
-    Y.after(this._bindUIPosAlign, this, 'bindUI');
-    Y.after(this._syncUIPosAlign, this, 'syncUI');
-}
+function PositionAlign (config) {}
 
 PositionAlign.ATTRS = {
 
@@ -226,6 +219,17 @@ PositionAlign.CC = 'cc';
 
 PositionAlign.prototype = {
     // -- Protected Properties -------------------------------------------------
+
+
+    initializer : function() {
+        if (!this._posNode) {
+            Y.error('WidgetPosition needs to be added to the Widget, ' +
+                'before WidgetPositionAlign is added');
+        }
+
+        Y.after(this._bindUIPosAlign, this, 'bindUI');
+        Y.after(this._syncUIPosAlign, this, 'syncUI');
+    },
 
     /**
     Holds the alignment-syncing event handles.
@@ -652,4 +656,4 @@ PositionAlign.prototype = {
 Y.WidgetPositionAlign = PositionAlign;
 
 
-}, '3.7.3', {"requires": ["widget-position"]});
+}, '3.16.0', {"requires": ["widget-position"]});

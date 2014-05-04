@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('scrollview-scrollbars', function (Y, NAME) {
 
 /**
@@ -30,8 +31,6 @@ var getClassName = Y.ClassNameManager.getClassName,
     LEFT = "left",
     WIDTH = "width",
     HEIGHT = "height",
-    SCROLL_WIDTH = "scrollWidth",
-    SCROLL_HEIGHT = "scrollHeight",
 
     HORIZ_CACHE = "_sbh",
     VERT_CACHE = "_sbv",
@@ -171,7 +170,9 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
      */    
     _hostDimensionsChange: function() {
         var host = this._host,
-            axis = host._cAxis;
+            axis = host._cAxis,
+            scrollX = host.get(SCROLL_X),
+            scrollY = host.get(SCROLL_Y);
 
         this._dims = host._getScrollDims();
 
@@ -183,7 +184,7 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
             this._renderBar(this.get(HORIZONTAL_NODE), true, 'horiz');
         }
 
-        this._update();
+        this._update(scrollX, scrollY);
 
         Y.later(500, this, 'flash', true);
     },
@@ -192,13 +193,17 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
      * Handler for the scrollEnd event fired by the host. Default implementation flashes the scrollbar
      *
      * @method _hostScrollEnd
-     * @param {Event.Facade} e The event facade.
+     * @param {EventFacade} e The event facade.
      * @protected
      */
-    _hostScrollEnd : function(e) {
-        if (!this._host._flicking) {
+    _hostScrollEnd : function() {
+        var host = this._host,
+            scrollX = host.get(SCROLL_X),
+            scrollY = host.get(SCROLL_Y);
+
             this.flash();
-        }
+
+        this._update(scrollX, scrollY);
     },
 
     /**
@@ -278,7 +283,6 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
 
         var host = this._host,
             basic = this._basic,
-            cb = host._cb,
 
             scrollbarSize = 0,
             scrollbarPos = 1,
@@ -331,6 +335,8 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
             scrollbarSize = scrollbarSize - (scrollbarPos - (widgetSize - scrollbarSize));
         } else if (scrollbarPos < 0) {
             scrollbarSize = scrollbarPos + scrollbarSize;
+            scrollbarPos = 0;
+        } else if (isNaN(scrollbarPos)) {
             scrollbarPos = 0;
         }
 
@@ -432,8 +438,7 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
      * @param easing {String} Optional easing equation to use during the animation, if duration is set
      * @protected
      */
-    _update: function(x, y, duration, easing) {
-
+    _update: function(x, y, duration) {
         var vNode = this.get(VERTICAL_NODE),
             hNode = this.get(HORIZONTAL_NODE),
             host = this._host,
@@ -445,11 +450,11 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
             this.show();
         }
 
-        if (axis && axis.y && vNode) {
+        if (axis && axis.y && vNode && y !== null) {
             this._updateBar(vNode, y, duration, false);
         }
 
-        if (axis && axis.x && hNode) {
+        if (axis && axis.x && hNode && x !== null) {
             this._updateBar(hNode, x, duration, true);
         }
     },
@@ -503,11 +508,11 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
             opacity : opacity
         };
 
-        if (verticalNode) {
+        if (verticalNode && verticalNode._node) {
             verticalNode.transition(transition);
         }
 
-        if (horizontalNode) {
+        if (horizontalNode && horizontalNode._node) {
             horizontalNode.transition(transition);
         }
     },
@@ -518,8 +523,6 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
      * @method flash
      */
     flash: function() {
-        var host = this._host;
-
         this.show(true);
         this._flashTimer = Y.later(800, this, 'hide', true);
     },
@@ -564,4 +567,4 @@ Y.namespace("Plugin").ScrollViewScrollbars = Y.extend(ScrollbarsPlugin, Y.Plugin
 });
 
 
-}, '3.7.3', {"requires": ["classnamemanager", "transition", "plugin"], "skinnable": true});
+}, '3.16.0', {"requires": ["classnamemanager", "transition", "plugin"], "skinnable": true});

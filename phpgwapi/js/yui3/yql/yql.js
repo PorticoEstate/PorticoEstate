@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('yql', function (Y, NAME) {
 
 /**
@@ -11,7 +12,7 @@ YUI.add('yql', function (Y, NAME) {
      * @module yql
      */     
 /**
-     * Utility Class used under the hood my the YQL class
+ * Utility Class used under the hood by the YQL class
      * @class YQLRequest
      * @constructor
      * @param {String} sql The SQL statement to execute
@@ -99,7 +100,7 @@ YQLRequest.prototype = {
     send: function () {
         var qs = [], url = ((this._opts && this._opts.proto) ? this._opts.proto : Y.YQLRequest.PROTO), o;
 
-        Y.each(this._params, function (v, k) {
+        Y.Object.each(this._params, function (v, k) {
             qs.push(k + '=' + encodeURIComponent(v));
             });
             
@@ -124,19 +125,8 @@ YQLRequest.prototype = {
     * @param {String} url The URL to request
     * @param {Object} o The config object
     */
-    _send: function(url, o) {
-            if (o.allowCache !== false) {
-                o.allowCache = true;
-            }
-            if (!this._jsonp) {
-                this._jsonp = Y.jsonp(url, o);
-            } else {
-                this._jsonp.url = url;
-                if (o.on && o.on.success) {
-                    this._jsonp._config.on.success = o.on.success;
-                }
-                this._jsonp.send();
-            }
+    _send: function() {
+        //Overwritten in plugins
         }
 };
 
@@ -181,4 +171,4 @@ Y.YQL = function (sql, callback, params, opts) {
 };
 
 
-}, '3.7.3', {"requires": ["jsonp", "jsonp-url"]});
+}, '3.16.0', {"requires": ["oop"]});

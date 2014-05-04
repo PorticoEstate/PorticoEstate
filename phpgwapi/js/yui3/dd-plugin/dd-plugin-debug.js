@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('dd-plugin', function (Y, NAME) {
 
 
@@ -36,15 +37,15 @@ YUI.add('dd-plugin', function (Y, NAME) {
         EV_DRAG_END = 'drag:end';
 
         /**
+        * dd-plugin
         * @property NAME
-        * @description dd-plugin
         * @type {String}
         */
         Drag.NAME = "dd-plugin";
 
         /**
+        * The Drag instance will be placed on the Node instance under the dd namespace. It can be accessed via Node.dd;
         * @property NS
-        * @description The Drag instance will be placed on the Node instance under the dd namespace. It can be accessed via Node.dd;
         * @type {String}
         */
         Drag.NS = "dd";
@@ -208,4 +209,4 @@ YUI.add('dd-plugin', function (Y, NAME) {
 
 
 
-}, '3.7.3', {"optional": ["dd-constrain", "dd-proxy"], "requires": ["dd-drag"]});
+}, '3.16.0', {"optional": ["dd-constrain", "dd-proxy"], "requires": ["dd-drag"]});

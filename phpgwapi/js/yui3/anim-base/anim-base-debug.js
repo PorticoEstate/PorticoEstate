@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('anim-base', function (Y, NAME) {
 
 /**
@@ -181,7 +182,7 @@ YUI.add('anim-base', function (Y, NAME) {
         node: {
             setter: function(node) {
                 if (node) {
-                    if (typeof node == 'string' || node.nodeType) {
+                    if (typeof node === 'string' || node.nodeType) {
                         node = Y.one(node);
                     }
                 }
@@ -341,7 +342,8 @@ YUI.add('anim-base', function (Y, NAME) {
         },
 
         /**
-         * If true, animation begins from last frame
+         * If true, the `from` and `to` attributes are swapped, 
+         * and the animation is then run starting from `from`.
          * @attribute reverse
          * @type Boolean
          * @default false 
@@ -359,8 +361,9 @@ YUI.add('anim-base', function (Y, NAME) {
      * @static
      */    
     Y.Anim.run = function() {
-        var instances = Y.Anim._instances;
-        for (var i in instances) {
+        var instances = Y.Anim._instances,
+            i;
+        for (i in instances) {
             if (instances[i].run) {
                 instances[i].run();
             }
@@ -414,8 +417,9 @@ YUI.add('anim-base', function (Y, NAME) {
      * @static
      */    
     Y.Anim._runFrame = function() {
-        var done = true;
-        for (var anim in _running) {
+        var done = true,
+            anim;
+        for (anim in _running) {
             if (_running[anim]._runFrame) {
                 done = false;
                 _running[anim]._runFrame();
@@ -532,9 +536,7 @@ YUI.add('anim-base', function (Y, NAME) {
             var d = this._runtimeAttr.duration,
                 t = new Date() - this.get(START_TIME),
                 reverse = this.get(REVERSE),
-                done = (t >= d),
-                attribute,
-                setter;
+                done = (t >= d);
                 
             this._runAttrs(t, d, reverse);
             this._actualFrames += 1;
@@ -631,8 +633,8 @@ YUI.add('anim-base', function (Y, NAME) {
                     begin = begin.call(this, node);
                 }
 
-                var mFrom = Y.Anim.RE_UNITS.exec(begin);
-                var mTo = Y.Anim.RE_UNITS.exec(val);
+                var mFrom = Y.Anim.RE_UNITS.exec(begin),
+                    mTo = Y.Anim.RE_UNITS.exec(val);
 
                 begin = mFrom ? mFrom[1] : begin;
                 end = mTo ? mTo[1] : val;
@@ -664,10 +666,11 @@ YUI.add('anim-base', function (Y, NAME) {
             var node = this._node,
                 val = node.getComputedStyle(attr),
                 get = (attr === 'left') ? 'getX': 'getY',
-                set = (attr === 'left') ? 'setX': 'setY';
+                set = (attr === 'left') ? 'setX': 'setY',
+                position;
 
             if (val === 'auto') {
-                var position = node.getStyle('position');
+                position = node.getStyle('position');
                 if (position === 'absolute' || position === 'fixed') {
                     val = node[get]();
                     node[set](val);
@@ -687,4 +690,4 @@ YUI.add('anim-base', function (Y, NAME) {
     Y.extend(Y.Anim, Y.Base, proto);
 
 
-}, '3.7.3', {"requires": ["base-base", "node-style"]});
+}, '3.16.0', {"requires": ["base-base", "node-style"]});

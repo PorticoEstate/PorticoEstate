@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('model-list', function (Y, NAME) {
 
 /**
@@ -342,7 +343,9 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
                 self.add(model, options);
             }
 
-            callback && callback.apply(null, arguments);
+            if (callback) {
+                callback.apply(null, arguments);
+            }
         });
     },
 
@@ -410,7 +413,7 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
         @param {Number} callback.index Index of the current model.
         @param {ModelList} callback.list The ModelList being filtered.
 
-    @return {Array|ModelList} Array of models for which the callback function
+    @return {Model[]|ModelList} Array of models for which the callback function
         returned a truthy value (empty if it never returned a truthy value). If
         the `options.asList` option is truthy, a new ModelList instance will be
         returned instead of an array.
@@ -455,7 +458,7 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
 
     @method get
     @param {String} name Attribute name or object property path.
-    @return {Any|Array} Attribute value or array of attribute values.
+    @return {Any|Any[]} Attribute value or array of attribute values.
     @see Model.get()
     **/
     get: function (name) {
@@ -542,7 +545,7 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
     @method invoke
     @param {String} name Name of the method to call on each model.
     @param {Any} [args*] Zero or more arguments to pass to the invoked method.
-    @return {Array} Array of return values, indexed according to the index of
+    @return {Any[]} Array of return values, indexed according to the index of
       the model on which the method was called.
     **/
     invoke: function (name /*, args* */) {
@@ -621,7 +624,9 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
                 self.fire(EVT_LOAD, facade);
             }
 
-            callback && callback.apply(null, arguments);
+            if (callback) {
+                callback.apply(null, arguments);
+            }
         });
 
         return this;
@@ -821,6 +826,8 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
         `reset` event.
       @param {Boolean} [options.silent=false] If `true`, no `reset` event will
           be fired.
+      @param {Boolean} [options.descending=false] If `true`, the sort is
+          performed in descending order.
     @chainable
     **/
     sort: function (options) {
@@ -833,15 +840,18 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
 
         options || (options = {});
 
-        models.sort(Y.bind(this._sort, this));
+        models.sort(Y.rbind(this._sort, this, options));
 
         facade = Y.merge(options, {
             models: models,
             src   : 'sort'
         });
 
-        options.silent ? this._defResetFn(facade) :
+        if (options.silent) {
+            this._defResetFn(facade);
+        } else {
                 this.fire(EVT_RESET, facade);
+        }
 
         return this;
     },
@@ -851,7 +861,9 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
     list. The default method just calls the callback without actually doing
     anything.
 
-    This method is called internally by `load()`.
+    This method is called internally by `load()` and its implementations relies
+    on the callback being called. This effectively means that when a callback is
+    provided, it must be called at some point for the class to operate correctly.
 
     @method sync
     @param {String} action Sync action to perform. May be one of the following:
@@ -886,7 +898,7 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
     Returns an array containing the models in this list.
 
     @method toArray
-    @return {Array} Array containing the models in this list.
+    @return {Model[]} Array containing the models in this list.
     **/
     toArray: function () {
         return this._items.concat();
@@ -954,7 +966,11 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
             model: model
         });
 
-        options.silent ? this._defAddFn(facade) : this.fire(EVT_ADD, facade);
+        if (options.silent) {
+            this._defAddFn(facade);
+        } else {
+            this.fire(EVT_ADD, facade);
+        }
 
         return model;
     },
@@ -1116,8 +1132,11 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
             model: model
         });
 
-        options.silent ? this._defRemoveFn(facade) :
+        if (options.silent) {
+            this._defRemoveFn(facade);
+        } else {
                 this.fire(EVT_REMOVE, facade);
+        }
 
         return model;
     },
@@ -1128,11 +1147,23 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
     @method _sort
     @param {Model} a First model to compare.
     @param {Model} b Second model to compare.
-    @return {Number} `-1` if _a_ is less than _b_, `0` if equal, `1` if greater.
+    @param {Object} [options] Options passed from `sort()` function.
+        @param {Boolean} [options.descending=false] If `true`, the sort is
+          performed in descending order.
+    @return {Number} `-1` if _a_ is less than _b_, `0` if equal, `1` if greater
+      (for ascending order, the reverse for descending order).
     @protected
     **/
-    _sort: function (a, b) {
-        return this._compare(this.comparator(a), this.comparator(b));
+    _sort: function (a, b, options) {
+        var result = this._compare(this.comparator(a), this.comparator(b));
+
+        // Early return when items are equal in their sort comparison.
+        if (result === 0) {
+            return result;
+        }
+
+        // Flips sign when the sort is to be peformed in descending order.
+        return options && options.descending ? -result : result;
     },
 
     // -- Event Handlers -------------------------------------------------------
@@ -1242,4 +1273,4 @@ Y.ModelList = Y.extend(ModelList, Y.Base, {
 Y.augment(ModelList, Y.ArrayList);
 
 
-}, '3.7.3', {"requires": ["array-extras", "array-invoke", "arraylist", "base-build", "escape", "json-parse", "model"]});
+}, '3.16.0', {"requires": ["array-extras", "array-invoke", "arraylist", "base-build", "escape", "json-parse", "model"]});

@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('range-slider', function (Y, NAME) {
 
 /**
@@ -31,4 +32,4 @@ Y.Slider = Y.Base.build( 'slider', Y.SliderBase,
     [ Y.SliderValueRange, Y.ClickableRail ] );
 
 
-}, '3.7.3', {"requires": ["slider-base", "slider-value-range", "clickable-rail"]});
+}, '3.16.0', {"requires": ["slider-base", "slider-value-range", "clickable-rail"]});

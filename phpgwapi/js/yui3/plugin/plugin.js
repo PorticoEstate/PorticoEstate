@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('plugin', function (Y, NAME) {
 
     /**
@@ -172,6 +173,24 @@ YUI.add('plugin', function (Y, NAME) {
         },
 
         /**
+         * Listens for the "on" moment of events fired by the host object one time only.
+         * The listener is immediately detached when it is executed.
+         *
+         * Listeners attached through this method will be detached when the plugin is unplugged.
+         *
+         * @method onceHostEvent
+         * @param {String | Object} type The event type.
+         * @param {Function} fn The listener.
+         * @param {Object} context The execution context. Defaults to the plugin instance.
+         * @return handle {EventHandle} The detach handle for the listener.
+         */
+        onceHostEvent : function(type, fn, context) {
+            var handle = this.get("host").once(type, fn, context || this);
+            this._handles.push(handle);
+            return handle;
+        },
+
+        /**
          * Listens for the "after" moment of events fired by the host object.
          *
          * Listeners attached through this method will be detached when the plugin is unplugged.
@@ -184,6 +203,24 @@ YUI.add('plugin', function (Y, NAME) {
          */
         afterHostEvent : function(type, fn, context) {
             var handle = this.get("host").after(type, fn, context || this);
+            this._handles.push(handle);
+            return handle;
+        },
+
+        /**
+         * Listens for the "after" moment of events fired by the host object one time only.
+         * The listener is immediately detached when it is executed.
+         *
+         * Listeners attached through this method will be detached when the plugin is unplugged.
+         *
+         * @method onceAfterHostEvent
+         * @param {String | Object} type The event type.
+         * @param {Function} fn The listener.
+         * @param {Object} context The execution context. Defaults to the plugin instance.
+         * @return handle {EventHandle} The detach handle for the listener.
+         */
+        onceAfterHostEvent : function(type, fn, context) {
+            var handle = this.get("host").onceAfter(type, fn, context || this);
             this._handles.push(handle);
             return handle;
         },
@@ -230,4 +267,4 @@ YUI.add('plugin', function (Y, NAME) {
     Y.namespace("Plugin").Base = Plugin;
 
 
-}, '3.7.3', {"requires": ["base-base"]});
+}, '3.16.0', {"requires": ["base-base"]});

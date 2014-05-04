@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('pjax-content', function (Y, NAME) {
 
 /**
@@ -71,13 +72,13 @@ PjaxContent.prototype = {
             titleSelector   = this.get('titleSelector'),
             titleNode;
 
-        if (contentSelector) {
+        if (contentSelector && frag) {
             content.node = frag.all(contentSelector).toFrag();
         } else {
             content.node = frag;
         }
 
-        if (titleSelector) {
+        if (titleSelector && frag) {
             titleNode = frag.one(titleSelector);
 
             if (titleNode) {
@@ -284,4 +285,4 @@ PjaxContent.ATTRS = {
 Y.PjaxContent = PjaxContent;
 
 
-}, '3.7.3', {"requires": ["io-base", "node-base", "router"]});
+}, '3.16.0', {"requires": ["io-base", "node-base", "router"]});

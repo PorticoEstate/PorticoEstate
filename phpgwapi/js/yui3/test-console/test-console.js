@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('test-console', function (Y, NAME) {
 
 /**
@@ -70,7 +71,7 @@ Y.namespace('Test').Console = Y.extend(TestConsole, Y.Console, {
     * @return {Boolean} True if this is Istanbul Coverage
     */
     _isIstanbul: function(json) {
-        var first = Object.keys(json)[0],
+        var first = Y.Object.keys(json)[0],
             ret = false;
 
         if (json[first].s !== undefined && json[first].fnMap !== undefined) {
@@ -310,4 +311,4 @@ Y.namespace('Test').Console = Y.extend(TestConsole, Y.Console, {
 });
 
 
-}, '3.7.3', {"requires": ["console-filters", "test", "array-extras"], "skinnable": true});
+}, '3.16.0', {"requires": ["console-filters", "test", "array-extras"], "skinnable": true});

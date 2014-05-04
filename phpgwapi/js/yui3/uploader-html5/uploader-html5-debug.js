@@ -1,34 +1,33 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('uploader-html5', function (Y, NAME) {
 
-
-    /**
-     * This module provides a UI for file selection and multiple file upload capability using
-     * HTML5 XMLHTTPRequest Level 2 as a transport engine.
-     * The supported features include: automatic upload queue management, upload progress
-     * tracking, drag-and-drop support, server response retrieval and error reporting.
-     *
-     * @module uploader-html5
-     */     
+/**
+* This module provides a UI for file selection and multiple file upload capability using
+* HTML5 XMLHTTPRequest Level 2 as a transport engine.
+* The supported features include: automatic upload queue management, upload progress
+* tracking, drag-and-drop support, server response retrieval and error reporting.
+*
+* @module uploader-html5
+*/
 
 // Shorthands for the external modules
-var  substitute  = Y.substitute,
+var  substitute  = Y.Lang.sub,
      UploaderQueue = Y.Uploader.Queue;
 
-    /**
-     * This module provides a UI for file selection and multiple file upload capability using
-     * HTML5 XMLHTTPRequest Level 2 as a transport engine.
-     * @class UploaderHTML5
-     * @extends Widget
-     * @constructor
-     */
-
-function UploaderHTML5(config) {
+/**
+* This module provides a UI for file selection and multiple file upload capability using
+* HTML5 XMLHTTPRequest Level 2 as a transport engine.
+* @class UploaderHTML5
+* @extends Widget
+* @constructor
+*/
+function UploaderHTML5() {
   UploaderHTML5.superclass.constructor.apply ( this, arguments );
 }
 
@@ -64,7 +63,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
     * it will be ignored.
     *
     * @property queue
-    * @type {Y.Uploader.Queue}
+    * @type {Uploader.Queue}
     */
     queue: null,
 
@@ -232,7 +231,13 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
     * Signals that an object has been dropped over the uploader's associated drag-and-drop area. 
     *
     * @event drop
-    * @param event {Event} The event object for the `drop`.
+        * @param event {Event} The event object for the `drop` with the
+        *                      following payload:
+        *  <dl>
+        *      <dt>fileList</dt>
+        *          <dd>An `Array` of files dropped by the user, encapsulated
+        *              in Y.FileHTML5 objects.</dd>
+        *  </dl>
     */
     this.publish("drop");
                 
@@ -248,8 +253,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
      * @protected
      */
     renderUI : function () {
-       var boundingBox = this.get("boundingBox"),
-           contentBox = this.get('contentBox'),
+        var contentBox = this.get('contentBox'),
            selButton = this.get("selectFilesButton");
 
        selButton.setStyles({width:"100%", height:"100%"});
@@ -277,8 +281,13 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
         this.after("enabledChange", this._triggerEnabled, this);
         this.after("selectFilesButtonChange", this._bindSelectButton, this);
         this.after("dragAndDropAreaChange", this._bindDropArea, this);
-        this.after("tabIndexChange", function (ev) {this.get("selectFilesButton").set("tabIndex", this.get("tabIndex"));}, this);
+        this.after("tabIndexChange", function () {
+            this.get("selectFilesButton").set("tabIndex", this.get("tabIndex"));
+        }, this);
         this._fileInputField.on("change", this._updateFileList, this);
+        this._fileInputField.on("click", function(event) {
+            event.stopPropagation();
+        }, this);
 
         this.get("selectFilesButton").set("tabIndex", this.get("tabIndex"));
     },
@@ -309,7 +318,8 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
      * @protected
      */
     _bindDropArea : function (event) {
-        var ev = event || {prevVal: null};
+        var ev = event || {prevVal: null},
+            ddArea = this.get("dragAndDropArea");
 
         if (ev.prevVal !== null) {
             ev.prevVal.detach('drop', this._ddEventHandler);
@@ -317,8 +327,6 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
             ev.prevVal.detach('dragover', this._ddEventHandler);
             ev.prevVal.detach('dragleave', this._ddEventHandler);
         }
-
-        var ddArea = this.get("dragAndDropArea");
 
         if (ddArea !== null) {
             ddArea.on('drop', this._ddEventHandler, this);
@@ -348,9 +356,11 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
      */
     _ddEventHandler : function (event) {
 
+
        event.stopPropagation();
        event.preventDefault();  
                           
+        if (Y.Array.indexOf(event._event.dataTransfer.types, 'Files') > -1) {
        switch (event.type) {
                 case "dragenter":
                   this.fire("dragenter"); 
@@ -365,7 +375,8 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
 
                    var newfiles = event._event.dataTransfer.files,
                        parsedFiles = [],
-                       filterFunc = this.get("fileFilterFunction");
+                        filterFunc = this.get("fileFilterFunction"),
+                        oldfiles;
               
                    if (filterFunc) {
                         Y.each(newfiles, function (value) {
@@ -382,15 +393,16 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
                    }
 
                    if (parsedFiles.length > 0) {
-                   var oldfiles = this.get("fileList");
+                        oldfiles = this.get("fileList");
                    this.set("fileList", 
                             this.get("appendNewFiles") ? oldfiles.concat(parsedFiles) : parsedFiles);
                    this.fire("fileselect", {fileList: parsedFiles});
                    }
 
-                   this.fire("drop");
+                    this.fire("drop", {fileList: parsedFiles});
                 break;
        }
+        }
     },
 
     /**
@@ -471,7 +483,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
    * @method _getFileList
    * @private
    */
-    _getFileList : function (arr) {
+    _getFileList : function () {
         return this._fileList.concat();
     },
 
@@ -499,7 +511,8 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
     _updateFileList : function (ev) {
        var newfiles = ev.target.getDOMNode().files,
            parsedFiles = [],
-           filterFunc = this.get("fileFilterFunction");
+            filterFunc = this.get("fileFilterFunction"),
+            oldfiles;
 
        if (filterFunc) {
           Y.each(newfiles, function (value) {
@@ -516,7 +529,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
        }
 
        if (parsedFiles.length > 0) {
-           var oldfiles = this.get("fileList");
+            oldfiles = this.get("fileList");
 
            this.set("fileList", 
                     this.get("appendNewFiles") ? oldfiles.concat(parsedFiles) : parsedFiles );
@@ -554,11 +567,11 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
                    this.queue = null;
                    this.fire("alluploadscomplete", event);
                 break;
-                case "file:uploaderror":
+            case "file:uploaderror": // overflow intentional
                 case "uploaderqueue:uploaderror":
                    this.fire("uploaderror", event);
                 break;
-                case "file:uploadcancel":
+            case "file:uploadcancel": // overflow intentional
                 case "uploaderqueue:uploadcancel":
                    this.fire("uploadcancel", event);
                 break;
@@ -582,7 +595,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
     * Starts the upload of a specific file.
     *
     * @method upload
-    * @param file {Y.File} Reference to the instance of the file to be uploaded.
+    * @param file {File} Reference to the instance of the file to be uploaded.
     * @param url {String} The URL to upload the file to.
     * @param postVars {Object} (optional) A set of key-value pairs to send as variables along with the file upload HTTP request.
     *                          If not specified, the values from the attribute `postVarsPerFile` are used instead. 
@@ -612,7 +625,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
     *
     * @method uploadAll
     * @param url {String} The URL to upload the files to.
-    * @param postVars {Object} (optional) A set of key-value pairs to send as variables along with the file upload HTTP request.
+    * @param [postVars] {Object} A set of key-value pairs to send as variables along with the file upload HTTP request.
     *                          If not specified, the values from the attribute `postVarsPerFile` are used instead. 
     */
     uploadAll : function (url, postvars) {
@@ -625,7 +638,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
     * @method uploadThese
     * @param files {Array} The list of files to upload.
     * @param url {String} The URL to upload the files to.
-    * @param postVars {Object} (optional) A set of key-value pairs to send as variables along with the file upload HTTP request.
+    * @param [postVars] {Object} A set of key-value pairs to send as variables along with the file upload HTTP request.
     *                          If not specified, the values from the attribute `postVarsPerFile` are used instead. 
     */
     uploadThese : function (files, url, postvars) {
@@ -633,7 +646,8 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
         var uploadURL = url || this.get("uploadURL"),
             postVars = postvars || this.get("postVarsPerFile");
 
-           this.queue = new UploaderQueue({simUploads: this.get("simLimit"), 
+            this.queue = new UploaderQueue({
+                simUploads: this.get("simLimit"),
                                            errorAction: this.get("errorAction"),
                                            fileFieldName: this.get("fileFieldName"),
                                            fileList: files,
@@ -643,6 +657,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
                                            uploadHeaders: this.get("uploadHeaders"),
                                            withCredentials: this.get("withCredentials")
                                                });
+
            this.queue.on("uploadstart", this._uploadEventHandler, this);
            this.queue.on("uploadprogress", this._uploadEventHandler, this);
            this.queue.on("totaluploadprogress", this._uploadEventHandler, this);
@@ -661,9 +676,8 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
            }, this);
        }
     }
-},
+}, {
 
-{
    /**
     * The template for the hidden file input field container. The file input field will only
     * accept clicks if its visibility is set to hidden (and will not if it's `display` value
@@ -681,9 +695,11 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
    * @property SELECT_FILES_BUTTON
    * @type {String}
    * @static
-   * @default "<button type='button' class='yui3-button' role='button' aria-label='{selectButtonLabel}' tabindex='{tabIndex}'>{selectButtonLabel}</button>"
+    * @default '<button type="button" class="yui3-button" role="button" aria-label="{selectButtonLabel}"
+    *           tabindex="{tabIndex}">{selectButtonLabel}</button>'
    */  
-    SELECT_FILES_BUTTON: "<button type='button' class='yui3-button' role='button' aria-label='{selectButtonLabel}' tabindex='{tabIndex}'>{selectButtonLabel}</button>",
+    SELECT_FILES_BUTTON: '<button type="button" class="yui3-button" role="button" aria-label="{selectButtonLabel}" ' +
+                         'tabindex="{tabIndex}">{selectButtonLabel}</button>',
 
     /**
     * The static property reflecting the type of uploader that `Y.Uploader`
@@ -797,8 +813,14 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
          */
         errorAction: {
             value: "continue",
-            validator: function (val, name) {
-                 return (val === UploaderQueue.CONTINUE || val === UploaderQueue.STOP || val === UploaderQueue.RESTART_ASAP || val === UploaderQueue.RESTART_AFTER);           }
+            validator: function (val) {
+                return (
+                    val === UploaderQueue.CONTINUE ||
+                    val === UploaderQueue.STOP ||
+                    val === UploaderQueue.RESTART_ASAP ||
+                    val === UploaderQueue.RESTART_AFTER
+                );
+            }
         },
 
         /**
@@ -909,8 +931,10 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
          */
         selectFilesButton : {
             valueFn: function () {
-                return Y.Node.create(substitute(Y.UploaderHTML5.SELECT_FILES_BUTTON, {selectButtonLabel: this.get("selectButtonLabel"),
-                                                                                      tabIndex: this.get("tabIndex")}));
+                return Y.Node.create(substitute(Y.UploaderHTML5.SELECT_FILES_BUTTON, {
+                    selectButtonLabel: this.get("selectButtonLabel"),
+                    tabIndex: this.get("tabIndex")
+                }));
             }
         },
 
@@ -926,7 +950,7 @@ Y.UploaderHTML5 = Y.extend( UploaderHTML5, Y.Widget, {
          */
         simLimit: {
             value: 2,
-            validator: function (val, name) {
+            validator: function (val) {
                 return (val >= 1 && val <= 5);
             }
         },
@@ -986,4 +1010,4 @@ Y.UploaderHTML5.Queue = UploaderQueue;
 
 
 
-}, '3.7.3', {"requires": ["widget", "node-event-simulate", "substitute", "file-html5", "uploader-queue"]});
+}, '3.16.0', {"requires": ["widget", "node-event-simulate", "file-html5", "uploader-queue"]});

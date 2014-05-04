@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('widget-base', function (Y, NAME) {
 
 /**
@@ -188,7 +189,7 @@ ATTRS[RENDERED] = {
  * @writeOnce
  */
 ATTRS[BOUNDING_BOX] = {
-    value:null,
+    valueFn:"_defaultBB",
     setter: "_setBB",
     writeOnce: TRUE
 };
@@ -378,7 +379,7 @@ Y.extend(Widget, Y.Base, {
      * </code>
      *
      * @method getClassName
-     * @param {String}+ One or more classname bits to be joined and prefixed
+     * @param {String} [classnames*] One or more classname bits to be joined and prefixed
      */
     getClassName: function () {
         return _getClassName.apply(ClassNameManager, [this._cssPrefix].concat(Y.Array(arguments), true));
@@ -411,10 +412,6 @@ Y.extend(Widget, Y.Base, {
          * @preventable false
          * @param {EventFacade} e The Event Facade
          */
-
-        if (this._applyParser) {
-            this._applyParser(config);
-        }
     },
 
     /**
@@ -468,7 +465,8 @@ Y.extend(Widget, Y.Base, {
      * from proceeding.
      * </p>
      * @method destroy
-     * @param destroyAllNodes {Boolean} If true, all nodes contained within the Widget are removed and destroyed. Defaults to false due to potentially high run-time cost. 
+     * @param destroyAllNodes {Boolean} If true, all nodes contained within the Widget are
+     * removed and destroyed. Defaults to false due to potentially high run-time cost.
      * @return {Widget} A reference to this object
      * @chainable
      */
@@ -499,17 +497,18 @@ Y.extend(Widget, Y.Base, {
 
         this._unbindUI(boundingBox);
 
-        if (deep) {
-            // Removes and destroys all child nodes.
-            boundingBox.empty();
-            boundingBox.remove(TRUE);
-        } else {
             if (contentBox) {
+            if (deep) {
+                contentBox.empty();
+            }
                 contentBox.remove(TRUE);
             }
+
             if (!same) {
-                boundingBox.remove(TRUE);
+            if (deep) {
+                boundingBox.empty();
             }
+            boundingBox.remove(TRUE);
         }
     },
 
@@ -554,7 +553,7 @@ Y.extend(Widget, Y.Base, {
               * after rendering is complete.
               * </p>
               *
-              * @event widget:render
+              * @event render
               * @preventable _defRenderFn
               * @param {EventFacade} e The Event Facade
               */
@@ -760,7 +759,7 @@ Y.extend(Widget, Y.Base, {
      *
      * @method _setBB
      * @private
-     * @param Node/String
+     * @param {Node|String} node
      * @return Node
      */
     _setBB: function(node) {
@@ -777,6 +776,25 @@ Y.extend(Widget, Y.Base, {
      */
     _setCB: function(node) {
         return (this.CONTENT_TEMPLATE === null) ? this.get(BOUNDING_BOX) : this._setBox(null, node, this.CONTENT_TEMPLATE, false);
+    },
+
+    /**
+     * Returns the default value for the boundingBox attribute.
+     *
+     * For the Widget class, this will most commonly be null (resulting in a new
+     * boundingBox node instance being created), unless a srcNode was provided
+     * and CONTENT_TEMPLATE is null, in which case it will be srcNode.
+     * This behavior was introduced in 3.16.0 to accomodate single-box widgets
+     * whose BB & CB both point to srcNode (e.g. Y.Button).
+     *
+     * @method _defaultBB
+     * @protected
+     */
+    _defaultBB : function() {
+        var node = this.get(SRC_NODE),
+            nullCT = (this.CONTENT_TEMPLATE === null);
+
+        return ((node && nullCT) ? node : null);
     },
 
     /**
@@ -802,7 +820,7 @@ Y.extend(Widget, Y.Base, {
      * @param {String} id The node's id attribute
      * @param {Node|String} node The node reference
      * @param {String} template HTML string template for the node
-     * @param {boolean} true if this is the boundingBox, false if it's the contentBox
+     * @param {boolean} isBounding true if this is the boundingBox, false if it's the contentBox
      * @return {Node} The node
      */
     _setBox : function(id, node, template, isBounding) {
@@ -1264,4 +1282,15 @@ Y.extend(Widget, Y.Base, {
 Y.Widget = Widget;
 
 
-}, '3.7.3', {"requires": ["attribute", "base-base", "base-pluginhost", "classnamemanager", "event-focus", "node-base", "node-style"], "skinnable": true});
+}, '3.16.0', {
+    "requires": [
+        "attribute",
+        "base-base",
+        "base-pluginhost",
+        "classnamemanager",
+        "event-focus",
+        "node-base",
+        "node-style"
+    ],
+    "skinnable": true
+});

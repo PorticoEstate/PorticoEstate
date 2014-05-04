@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatable-datasource', function (Y, NAME) {
 
 /**
@@ -91,7 +92,7 @@ Y.extend(DataTableDataSource, Y.Plugin.Base, {
     /**
     * @method _setDataSource
     * @description Creates new DataSource instance if one is not provided.
-    * @param ds {Object | Y.DataSource}
+    * @param ds {Object|DataSource}
     * @return {DataSource}
     * @private
     */
@@ -105,7 +106,7 @@ Y.extend(DataTableDataSource, Y.Plugin.Base, {
     * @param request {Object} DataSource request.
     * @private
     */
-    _setInitialRequest: function(request) {
+    _setInitialRequest: function(/* request */) {
     },
 
     /////////////////////////////////////////////////////////////////////////////
@@ -171,7 +172,7 @@ Y.extend(DataTableDataSource, Y.Plugin.Base, {
      * an entire DataTable with new data, clearing previous data, if any.
      *
      * @method onDataReturnInitializeTable
-     * @param e {Event.Facade} DataSource Event Facade object.
+     * @param e {EventFacade} DataSource Event Facade object.
      */
     onDataReturnInitializeTable : function(e) {
         var records = (e.response && e.response.results) || [];
@@ -183,4 +184,4 @@ Y.extend(DataTableDataSource, Y.Plugin.Base, {
 Y.namespace("Plugin").DataTableDataSource = DataTableDataSource;
 
 
-}, '3.7.3', {"requires": ["datatable-base", "plugin", "datasource-local"]});
+}, '3.16.0', {"requires": ["datatable-base", "plugin", "datasource-local"]});

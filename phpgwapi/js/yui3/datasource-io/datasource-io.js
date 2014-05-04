@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datasource-io', function (Y, NAME) {
 
 /**
@@ -92,7 +93,7 @@ Y.extend(DSIO, Y.DataSource.Local, {
     * @method successHandler
     * @param id {String} Transaction ID.
     * @param response {String} Response.
-    * @param e {Event.Facade} Event facade.
+    * @param e {EventFacade} Event facade.
     * @private
     */
     successHandler: function (id, response, e) {
@@ -116,7 +117,7 @@ Y.extend(DSIO, Y.DataSource.Local, {
     * @method failureHandler
     * @param id {String} Transaction ID.
     * @param response {String} Response.
-    * @param e {Event.Facade} Event facade.
+    * @param e {EventFacade} Event facade.
     * @private
     */
     failureHandler: function (id, response, e) {
@@ -159,7 +160,7 @@ Y.extend(DSIO, Y.DataSource.Local, {
      * response is received asynchronously.
      *
      * @method _defRequestFn
-     * @param e {Event.Facade} Event Facade with the following properties:
+     * @param e {EventFacade} Event Facade with the following properties:
      * <dl>
      * <dt>tId (Number)</dt> <dd>Unique transaction ID.</dd>
      * <dt>request (Object)</dt> <dd>The request.</dd>
@@ -204,4 +205,4 @@ Y.extend(DSIO, Y.DataSource.Local, {
 Y.DataSource.IO = DSIO;
 
 
-}, '3.7.3', {"requires": ["datasource-local", "io-base"]});
+}, '3.16.0', {"requires": ["datasource-local", "io-base"]});
