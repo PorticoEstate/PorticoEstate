@@ -33,6 +33,15 @@
 		});
 	}
 
+	showlightbox_start_ticket = function(sUrl)
+	{
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:550,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		close: true,
+		closejs:function(){refresh_entity(false, false)}
+		});
+	}
+
+
 	refresh_entity = function(location_id, id)
 	{
 		parent.location.reload();
@@ -66,6 +75,11 @@
         			<li style="margin-bottom: 1em;">
 						<a href="#" onclick="showlightbox_edit_entity({location_id},{id});">
 							<xsl:value-of select="php:function('lang', 'edit')"/>
+						</a>
+        			</li>
+        			<li style="margin-bottom: 1em;">
+						<a href="#" onclick="showlightbox_start_ticket('{start_ticket}');">
+							<xsl:value-of select="php:function('lang', 'add ticket')"/>
 						</a>
         			</li>
         			<li>
