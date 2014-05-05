@@ -151,7 +151,7 @@
 
 	flush();
 
-	echo '<body class="yui-skin-sam" align = "left">';
+	echo '<body class="yui-skin-sam">';
 
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
