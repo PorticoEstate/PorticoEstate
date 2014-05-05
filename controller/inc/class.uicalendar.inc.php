@@ -256,11 +256,11 @@
 			}
 		}
 
-		public function view_calendar_for_year($location_code = '')
+		public function view_calendar_for_year()
 		{
-			$location_code = $location_code ? $location_code : phpgw::get_var('location_code');
+			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
-			$role = phpgw::get_var('role', 'int', 'REQUEST', -1);
+			$role = phpgw::get_var('role', 'int');
 
 			$repeat_type = phpgw::get_var('repeat_type');
 
