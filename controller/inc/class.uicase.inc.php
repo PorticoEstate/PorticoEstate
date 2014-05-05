@@ -188,6 +188,9 @@
 			//Populating array with saved control items for each group
 			//Cache result
 			$components_at_location = array();
+			$org_units_data = array();
+			$sogeneric 	= CreateObject('property.sogeneric');
+			$sogeneric->get_location_info('org_unit');
 			
 			foreach ($saved_control_groups as $control_group)
 			{	
@@ -227,6 +230,8 @@
 						if( !isset($components_at_location[$component_location_id][$location_code_search_components])  || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
 						{
 							$_components_at_location = execMethod('property.soentity.get_eav_list', $criterias_array);
+
+
 							$components_at_location[$component_location_id][$location_code_search_components] = $_components_at_location;
 						}
 						
@@ -236,6 +241,20 @@
 						{
 							foreach($_components_at_location as &$_component_at_location)
 							{
+
+								/**
+								* Add org unit to short description
+								*/
+								if(isset($_component_at_location['org_unit_id']) && $_component_at_location['org_unit_id'])
+								{
+									if(!isset($org_units_data[$_component_at_location['org_unit_id']]))
+									{
+										$org_unit = $sogeneric->read_single(array('id' => $_component_at_location['org_unit_id']));
+										$org_units_data[$_component_at_location['org_unit_id']]['name'] = $org_unit['name'];
+									}
+									$_component_at_location['short_description'] .= " [{$org_units_data[$_component_at_location['org_unit_id']]['name']}]";
+								}
+
 								if(isset($cases_at_component_group[$control_group->get_id()][$_component_at_location['location_id']][$_component_at_location['id']]))
 								{
 									$_component_at_location['short_description'] .= ' (' . $cases_at_component_group[$control_group->get_id()][$_component_at_location['location_id']][$_component_at_location['id']] . ')';
