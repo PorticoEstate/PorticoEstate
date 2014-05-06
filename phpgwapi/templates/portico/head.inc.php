@@ -43,6 +43,13 @@
 		{
 			$javascripts[] = "/phpgwapi/templates/portico/js/menu.js";
 		}
+
+		else if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu')
+		{
+			phpgw::import_class('phpgwapi.jquery');
+			phpgwapi_jquery::load_widget('menu');
+		}
+
 	}
 
 	phpgwapi_yui::load_widget('button');
