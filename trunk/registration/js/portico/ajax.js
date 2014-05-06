@@ -181,7 +181,7 @@ $(document).ready(function(){
     });
 /*
 
-$(".choose_loc").live( "change", function () {
+$(".choose_loc").on( "change", function () {
 		var thisSelectBox = $(this);
 		var loc_code = $(this).val();
 		var loc_id = $(this).attr("id");

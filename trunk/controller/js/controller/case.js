@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	// REGISTER CASE
-	$(".frm_register_case").live("submit", function(e) {
+	$(".frm_register_case").on("submit", function(e) {
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -120,7 +120,7 @@ $(document).ready(function() {
 	});
 
 	// UPDATE CASE
-	$(".frm_update_case").live("submit", function(e) {
+	$(".frm_update_case").on("submit", function(e) {
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -181,7 +181,7 @@ $(document).ready(function() {
 		});
 	});
 
-	$("a.quick_edit_case").live("click", function(e) {
+	$("a.quick_edit_case").on("click", function(e) {
 		e.preventDefault();
 		//   console.log("sdfsdfsd");
 		var clickRow = $(this).closest("li");
@@ -192,7 +192,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$(".frm_update_case .cancel").live("click", function(e) {
+	$(".frm_update_case .cancel").on("click", function(e) {
 		var clickRow = $(this).closest("li");
 
 
@@ -203,7 +203,7 @@ $(document).ready(function() {
 	});
 
 	// DELETE CASE
-	$(".delete_case").live("click", function() {
+	$(".delete_case").on("click", function() {
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -244,7 +244,7 @@ $(document).ready(function() {
 	});
 
 	// CLOSE CASE
-	$(".close_case").live("click", function() {
+	$(".close_case").on("click", function() {
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -285,7 +285,7 @@ $(document).ready(function() {
 	});
 
 	// OPEN CASE
-	$(".open_case").live("click", function() {
+	$(".open_case").on("click", function() {
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
