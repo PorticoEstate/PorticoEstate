@@ -367,3 +367,8 @@ Tilsynsvakt telephone	bookingfrontend	no	Tilsynsvakt telefon
 Public schedule	bookingfrontend	no	Publikumsbading
 Apply for time	bookingfrontend	no	Søk om tid
 Could not delete allocation due to a booking still use it	bookingfrontend	no	Kunne ikke slette tildeling på grunn av at en booking forsatt bruker den
+Event Delete Information	bookingfrontend	no	Fjerning av arrangement er permanent.
+Event Delete Information2	bookingfrontend	no	Arrangement blir satt inaktivt.
+Edit Events	bookingfrontend	no	Rediger arrangement
+Delete Event	bookingfrontend	no	Slett arrangement
+Check calendar	bookingfrontend	no	Sjekk kalender

@@ -505,7 +505,9 @@
 			}
 			else 
 			{
-			array_set_default($application, 'resources', array(get_var('resource', int, 'GET')));
+                $resources = explode(",",phpgw::get_var('resource', 'GET'));
+                array_set_default($application, 'resources', $resources);
+
 			}
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
 

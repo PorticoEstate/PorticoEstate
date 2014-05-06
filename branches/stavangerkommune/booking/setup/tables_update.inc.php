@@ -2779,3 +2779,17 @@ function booking_upgrade0_2_15()
         return $GLOBALS['setup_info']['booking']['currentver'];
     }
 }
+
+
+$test[] = '0.2.16';
+function booking_upgrade0_2_16()
+{
+    $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+    $GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN building_id int DEFAULT NULL");
+    $GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_event SET building_id = br2.building_id FROM bb_resource br2 WHERE EXISTS (SELECT 1 FROM bb_event be, bb_event_resource ber, bb_resource br WHERE be.id = ber.event_id AND ber.resource_id = br.id AND br2.id = br.id AND bb_event.id=be.id )");
+    if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+    {
+        $GLOBALS['setup_info']['booking']['currentver'] = '0.2.17';
+        return $GLOBALS['setup_info']['booking']['currentver'];
+    }
+}

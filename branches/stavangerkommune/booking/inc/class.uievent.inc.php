@@ -521,7 +521,7 @@
 				$customer['customer_ssn'] = $event['customer_ssn'];
 				$customer['customer_organization_number'] = $event['customer_organization_number'];
 				$customer['customer_internal'] = $event['customer_internal'];
-			}	
+			}
 			list($event, $errors) = $this->extract_and_validate($event);
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')

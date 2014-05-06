@@ -11,7 +11,7 @@
     <form action="" method="POST">
 
        <dl class="form">
-            <dt><label for="field_user_can_delete_bookings"><xsl:value-of select="php:function('lang', 'Frontend users can delete bookings')"/></label></dt>
+            <dt><label for="field_user_can_delete_bookings"><xsl:value-of select="php:function('lang', 'Frontend users can delete bookings/events')"/></label></dt>
 			<dd>
 				<select id="field_user_can_delete_bookings" name="config_data[user_can_delete_bookings]">
                     <option value="no">
@@ -28,6 +28,23 @@
 		           </option>
 		        </select>
 			</dd>
+           <dd><xsl:value-of select="php:function('lang', 'Events is deleted from database')"/></dd>
+           <dd>
+               <select id="field_user_can_delete_events" name="config_data[user_can_delete_events]">
+                   <option value="no">
+                       <xsl:if test="config_data/user_can_delete_events='no'">
+                           <xsl:attribute name="selected">checked</xsl:attribute>
+                       </xsl:if>
+                       <xsl:value-of select="php:function('lang', 'No')" />
+                   </option>
+                   <option value="yes">
+                       <xsl:if test="config_data/user_can_delete_events='yes'">
+                           <xsl:attribute name="selected">checked</xsl:attribute>
+                       </xsl:if>
+                       <xsl:value-of select="php:function('lang', 'Yes')" />
+                   </option>
+               </select>
+           </dd>
             <dt><label for="field_user_can_delete_allocations"><xsl:value-of select="php:function('lang', 'Frontend users can delete allocations')"/></label></dt>
 			<dd>
 				<select id="field_user_can_delete_allocations" name="config_data[user_can_delete_allocations]">

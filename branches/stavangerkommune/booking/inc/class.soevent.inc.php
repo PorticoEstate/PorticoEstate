@@ -13,7 +13,8 @@
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'application_id'	=> array('type' => 'int', 'required' => false),
 					'description' => array('type' => 'string', 'required'=> true, 'query' => true),
-					'building_name' => array('type' => 'string', 'required'=> true, 'query' => true),
+                    'building_id'	=> array('type' => 'int', 'required' => true),
+    				'building_name' => array('type' => 'string', 'required'=> true, 'query' => true),
 					'from_'		=> array('type' => 'string', 'required'=> true),
 					'to_'		=> array('type' => 'string', 'required'=> true),
 					'cost'		=> array('type' => 'decimal', 'required' => true),
@@ -358,6 +359,17 @@
 			}
 			return $results;
 
+        }
+        function get_resources($ids)
+        {
+
+            $results = array();
+            $this->db->query("select name from bb_resource where id in ($ids)", __LINE__, __FILE__);
+            while ($this->db->next_record())
+            {
+                $results[] = $this->db->f('name', false);
+            }
+            return $results;
         }
 
 	}

@@ -159,14 +159,15 @@
 
 		function get_tilsyn_email($id)
 		{
-			$sql = "SELECT tilsyn_email, tilsyn_email2 FROM bb_building where id=(select id from bb_building where name = '$id' AND active = 1)";
+			$sql = "SELECT tilsyn_email, tilsyn_email2, email FROM bb_building where id=(select id from bb_building where name = '$id' AND active = 1)";
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
 				return False;
 			}
 			return array('email1' => $this->db->f('tilsyn_email', false),
-						 'email2' => $this->db->f('tilsyn_email2', false));
+						 'email2' => $this->db->f('tilsyn_email2', false),
+                         'email3' => $this->db->f('email', false));
 
 		}
 

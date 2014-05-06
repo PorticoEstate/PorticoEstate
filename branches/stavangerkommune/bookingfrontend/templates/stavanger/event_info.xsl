@@ -34,5 +34,17 @@
 				<xsl:value-of select="php:function('lang', 'Private event')"/>
 			</dd>
 		</xsl:if>
+        <xsl:if test="event/edit_link">
+            <div class="actions">
+                <button onclick="location.href='{event/edit_link}'"><xsl:value-of select="php:function('lang', 'Edit event')"/></button>
+                <xsl:if test="user_can_delete_bookings != 1">
+                    <button onclick="location.href='{event/cancel_link}'"><xsl:value-of select="php:function('lang', 'Cancel event')"/></button>
+                </xsl:if>
+                <xsl:if test="user_can_delete_bookings != 0">
+                    <button onclick="location.href='{event/cancel_link}'"><xsl:value-of select="php:function('lang', 'Delete event')"/></button>
+                </xsl:if>
+            </div>
+        </xsl:if>
+
 	</dl>
 </xsl:template>

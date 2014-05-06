@@ -57,6 +57,18 @@
 			<dd class="yui-skin-sam">
 				<textarea id="field_event_canceled_mail" class="full-width settings" name="event_canceled_mail" type="text"><xsl:value-of select="config_data/event_canceled_mail"/></textarea>
 			</dd>
+
+            <dt><label for="field_event_edited_mail_subject"><xsl:value-of select="php:function('lang', 'Event Edited Subject')"/></label></dt>
+            <dd>
+                <input id="field_event_edited_mail_subject" name="event_edited_mail_subject" type="text" size="50">
+                    <xsl:attribute name="value"><xsl:value-of select="config_data/event_edited_mail_subject"/></xsl:attribute>
+                </input>
+            </dd>
+
+            <dt><label for="field_event_edited_mail"><xsl:value-of select="php:function('lang', 'Mail for event edited')"/></label></dt>
+            <dd class="yui-skin-sam">
+                <textarea id="field_event_edited_mail" class="full-width settings" name="event_edited_mail" type="text"><xsl:value-of select="config_data/event_edited_mail"/></textarea>
+            </dd>
             </dl>
     		<div class="clr"/>
             <dl class="form">

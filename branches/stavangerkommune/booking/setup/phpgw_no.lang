@@ -639,8 +639,16 @@ Booking Canceled Subject	booking	no	Booking avbestilt e-post emne
 Mail for booking canceled	booking	no	Booking avbestilt e-post tekst
 Allocation Canceled Subject	booking	no	Tildeling avbestilt e-post emne
 Mail for allocation canceled	booking	no	Tildeling avbestilt e-post tekst
-Frontend users can delete bookings	booking	no	Frontend bruker kan slette bookinger
+Frontend users can delete bookings/events	booking	no	Frontend bruker kan slette bookinger/arrangementer
+Events is deleted from database	booking	no	Arrangementer slettes fra databasen
 Frontend users can delete allocations	booking	no	Frontend bruker kan slette tildelinger
 Activate extra kalendar field on building	booking	no	Aktiver ekstra kalender felt på bygg
 Ids that should be included in the calendar	booking	no	Id som skal brukes i ekstra kalender
 Extra information for the event	booking	no	Ekstra informasjon på arrangement
+Event Edited Subject	booking	no	E-Post emne når Arrangement Redigeres
+Mail for event edited	booking	no	E-Post når når Arrangement Redigeres
+Email warnings	booking	no	E-Post Varsel
+Cancelation Email Adresses	booking	no	E-Post adresser som får varsel ved avbestilling(1 adresse pr. linje)
+file configuration	common	no	Fil konfigurasjon
+file attributes	common	no	Fil attributer
+file categories	common	no	Fil kategorier
