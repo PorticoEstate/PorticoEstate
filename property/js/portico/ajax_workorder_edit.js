@@ -23,7 +23,7 @@ $(document).ready(function(){
 	});
 
 
-	$("#workorder_edit").live("submit", function(e){
+	$("#workorder_edit").on("submit", function(e){
 
 		if($("#lean").val() == 0)
 		{
@@ -102,7 +102,7 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#workorder_cancel").live("submit", function(e){
+	$("#workorder_cancel").on("submit", function(e){
 		if($("#lean").val() == 0)
 		{
 			return;

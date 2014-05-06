@@ -86,7 +86,7 @@ $(document).ready(function(){
 			});
 	});
 
-	$("#approve_line").live("click", function(e){
+	$("#approve_line").on("click", function(e){
 		$("#receipt").html('');
 		var line_id = $(this).val();
 		var voucher_id_orig = $("#voucher_id").val();
@@ -113,7 +113,7 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#voucher_form").live("submit", function(e){
+	$("#voucher_form").on("submit", function(e){
 		e.preventDefault();
 		var line_id = $("#line_id").val();
 		var voucher_id_orig = $("#voucher_id").val();

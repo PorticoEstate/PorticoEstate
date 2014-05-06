@@ -58,31 +58,33 @@
 			switch ( $widget )
 			{
 				case 'core':
-					$load = array("js/jquery-1.7.2{$_type}");
+					$load = array
+					(
+						"js/jquery-1.11.1{$_type}",
+						"js/jquery-migrate-1.2.1"
+					);
 					break;
 				
 				case 'datepicker':
-					$load = array("js/jquery-1.7.2{$_type}", "js/jquery-ui-1.8.19.custom{$_type}", "development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}");
+					$load = array
+					(
+						"js/jquery-1.11.1{$_type}",
+						"js/jquery-ui-1.10.4.custom{$_type}",
+						"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
+						"js/jquery-migrate-1.2.1"
+					);
 					break;
 
+				case 'menu':
 				case 'autocomplete':
-/*
 					$load = array
 					(
-						"js/jquery-1.7.2{$_type}",
-						'development-bundle/ui/minified/jquery.ui.core.min',
-						'development-bundle/ui/minified/jquery.ui.widget.min',
-						'development-bundle/ui/minified/jquery.ui.position.min',
-						'development-bundle/ui/minified/jquery.ui.autocomplete.min'
-					);
-*/
-					$load = array
-					(
-						"js/jquery-1.7.2{$_type}",
-						"js/jquery-ui-1.8.19.custom{$_type}"
+						"js/jquery-1.11.1{$_type}",
+						"js/jquery-ui-1.10.4.custom{$_type}",
+						"js/jquery-migrate-1.2.1"
 					);
 
-					$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/jquery/css/ui-lightness/jquery-ui-1.8.19.custom.css');
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/ui-lightness/jquery-ui-1.10.4.custom{$_type}.css");
 
 					break;
 
@@ -105,4 +107,5 @@
 			}
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
+
 	}

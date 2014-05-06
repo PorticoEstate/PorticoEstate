@@ -95,7 +95,7 @@ $(document).ready(function(){
 	});
 
 
-	$("#form").live("submit", function(e){
+	$("#form").on("submit", function(e){
 
 		var error = false;
 		if( !$("#id_konf_1").prop('checked') && (!$("#id_konf_2").prop('checked') && !$("#id_konf_3").prop('checked') && !$("#id_konf_4").prop('checked')))

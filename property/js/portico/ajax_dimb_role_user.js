@@ -21,7 +21,7 @@ $(document).ready(function()
 		update_dimb_role_user_table();
     });
 
-	$("#acl_form").live("submit", function(e){
+	$("#acl_form").on("submit", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");

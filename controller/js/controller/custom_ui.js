@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 	/* ==========================  EXPANDING/COLLAPSING WHEN TITLE IS CLICKED  ====================== */
 	
-	$(".expand_list h4").live("click", function(){
+	$(".expand_list h4").on("click", function(){
 		if( $(this).parent().parent().hasClass('active')){
 			$(this).parent().find(".expand_item").slideUp("slow");
 			$(this).find("img").attr("src", "controller/images/arrow_right.png");
@@ -18,7 +18,7 @@ $(document).ready(function() {
 		}
 	});
   
-  $(".expand-trigger").live("click", function(){
+  $(".expand-trigger").on("click", function(){
     var parentNode = $(this).closest("li");
     
 		if( $(parentNode).hasClass('expanded')){

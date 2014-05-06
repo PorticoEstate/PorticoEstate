@@ -119,7 +119,7 @@
 
 			$script = "<script>";
 			$script .= "$(document).ready(function(){";
-			$script .= " $('.expand_trigger').live('click', function() {";
+			$script .= " $('.expand_trigger').on('click', function() {";
 			$script .= " var liTag = $(this).closest('li'); ";
 			$script .= " var expandList = $(liTag).find('.expand_list'); ";
 			$script .= " if( !$(expandList).hasClass('active') ){ $(expandList).show(); $(expandList).addClass('active');  ";
