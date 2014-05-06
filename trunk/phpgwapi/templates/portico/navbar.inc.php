@@ -179,6 +179,17 @@ HTML;
 HTML;
 		}
 
+		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu')
+		{
+			$var['treemenu'] .= <<<JS
+				<script type="text/javascript">
+				$(function() {
+				$("#navbar").menu();
+			});
+			</script>
+JS;
+
+		}
 
 
 		$GLOBALS['phpgw']->template->set_var($var);
