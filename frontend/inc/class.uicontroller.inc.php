@@ -56,6 +56,7 @@
 			phpgwapi_cache::session_set('frontend','tab',$this->location_id);
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
+/*
 			$this->bo->location_code = $this->location_code;
 			
 			$_org_units = array();
@@ -78,6 +79,7 @@
 			}
 			$org_units = array_keys($_org_units);
 			$this->bo->org_units = $org_units;
+*/
 		}
 
 		/**
@@ -111,7 +113,8 @@
 			(
 				'header'		=>$this->header_state,
 				'tabs'			=> $this->tabs,
-				'controller'		=> array('location_code'=> $this->location_code)
+				'menu'			=> $this->menu,
+				'controller'	=> array('location_code'=> $this->location_code)
 			);
 			
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));

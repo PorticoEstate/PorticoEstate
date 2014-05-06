@@ -1,5 +1,4 @@
 <xsl:template match="controller" xmlns:php="http://php.net/xsl">
-    <div class="yui-navset" id="controller_tabview">
         <div class="yui-content">
 
 		<xsl:variable name="controller_params">
@@ -17,7 +16,7 @@
 		</iframe>
          <xsl:value-of select="php:function('lang', 'controller')"/>
         </div>
-    </div>
+
 </xsl:template>
 
 
