@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('autocomplete-list', function (Y, NAME) {
 
 /**
@@ -155,12 +156,6 @@ List = Y.Base.create('autocompleteList', Y.Widget, [
         if (useShim) {
             boundingBox.plug(Y.Plugin.Shim);
         }
-
-        // Force position: absolute on the boundingBox. This works around a
-        // potential CSS loading race condition in Gecko that can cause the
-        // boundingBox to become relatively positioned, which is all kinds of
-        // no good.
-        boundingBox.setStyle('position', 'absolute');
 
         this._ariaNode    = ariaNode;
         this._boundingBox = boundingBox;
@@ -625,8 +620,8 @@ List = Y.Base.create('autocompleteList', Y.Widget, [
         var boundingBox = this._boundingBox,
             target      = e.target;
 
-        if(target !== this._inputNode && target !== boundingBox &&
-                target.ancestor('#' + boundingBox.get('id'), true)){
+        if (target !== this._inputNode && target !== boundingBox &&
+                !target.ancestor('#' + boundingBox.get('id'), true)){
             this.hide();
         }
     },
@@ -897,4 +892,22 @@ for API docs.
 Y.AutoComplete = List;
 
 
-}, '3.7.3', {"lang": ["en"], "requires": ["autocomplete-base", "event-resize", "node-screen", "selector-css3", "shim-plugin", "widget", "widget-position", "widget-position-align"], "skinnable": true});
+}, '3.16.0', {
+    "lang": [
+        "en",
+        "es",
+        "hu",
+        "it"
+    ],
+    "requires": [
+        "autocomplete-base",
+        "event-resize",
+        "node-screen",
+        "selector-css3",
+        "shim-plugin",
+        "widget",
+        "widget-position",
+        "widget-position-align"
+    ],
+    "skinnable": true
+});

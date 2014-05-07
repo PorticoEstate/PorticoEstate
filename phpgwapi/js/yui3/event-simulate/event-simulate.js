@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('event-simulate', function (Y, NAME) {
 
 (function() {
@@ -16,6 +17,7 @@ YUI.add('event-simulate', function (Y, NAME) {
 
 //shortcuts
 var L   = Y.Lang,
+    win = Y.config.win,
     isFunction  = L.isFunction,
     isString    = L.isString,
     isBoolean   = L.isBoolean,
@@ -32,6 +34,20 @@ var L   = Y.Lang,
         mouseup:    1,
         mousemove:  1,
         contextmenu:1
+    },
+
+    pointerEvents = (win && win.PointerEvent) ? {
+        pointerover:  1,
+        pointerout:   1,
+        pointerdown:  1,
+        pointerup:    1,
+        pointermove:  1
+    } : {
+        MSPointerOver:  1,
+        MSPointerOut:   1,
+        MSPointerDown:  1,
+        MSPointerUp:    1,
+        MSPointerMove:  1
     },
 
     //key events supported
@@ -96,27 +112,25 @@ Y.mix(bubbleEvents, touchEvents);
  * @param {HTMLElement} target The target of the given event.
  * @param {String} type The type of event to fire. This can be any one of
  *      the following: keyup, keydown, and keypress.
- * @param {Boolean} bubbles (Optional) Indicates if the event can be
+ * @param {Boolean} [bubbles=true] Indicates if the event can be
  *      bubbled up. DOM Level 3 specifies that all key events bubble by
- *      default. The default is true.
- * @param {Boolean} cancelable (Optional) Indicates if the event can be
+ *      default.
+ * @param {Boolean} [cancelable=true] Indicates if the event can be
  *      canceled using preventDefault(). DOM Level 3 specifies that all
- *      key events can be cancelled. The default
- *      is true.
- * @param {Window} view (Optional) The view containing the target. This is
- *      typically the window object. The default is window.
- * @param {Boolean} ctrlKey (Optional) Indicates if one of the CTRL keys
- *      is pressed while the event is firing. The default is false.
- * @param {Boolean} altKey (Optional) Indicates if one of the ALT keys
- *      is pressed while the event is firing. The default is false.
- * @param {Boolean} shiftKey (Optional) Indicates if one of the SHIFT keys
- *      is pressed while the event is firing. The default is false.
- * @param {Boolean} metaKey (Optional) Indicates if one of the META keys
- *      is pressed while the event is firing. The default is false.
- * @param {int} keyCode (Optional) The code for the key that is in use.
- *      The default is 0.
- * @param {int} charCode (Optional) The Unicode code for the character
- *      associated with the key being used. The default is 0.
+ *      key events can be cancelled.
+ * @param {Window} [view=window] The view containing the target. This is
+ *      typically the window object.
+ * @param {Boolean} [ctrlKey=false] Indicates if one of the CTRL keys
+ *      is pressed while the event is firing.
+ * @param {Boolean} [altKey=false] Indicates if one of the ALT keys
+ *      is pressed while the event is firing.
+ * @param {Boolean} [shiftKey=false] Indicates if one of the SHIFT keys
+ *      is pressed while the event is firing.
+ * @param {Boolean} [metaKey=false] Indicates if one of the META keys
+ *      is pressed while the event is firing.
+ * @param {Number} [keyCode=0] The code for the key that is in use.
+ * @param {Number} [charCode=0] The Unicode code for the character
+ *      associated with the key being used.
  */
 function simulateKeyEvent(target /*:HTMLElement*/, type /*:String*/,
                              bubbles /*:Boolean*/,  cancelable /*:Boolean*/,
@@ -293,15 +307,15 @@ function simulateKeyEvent(target /*:HTMLElement*/, type /*:String*/,
  *      is false.
  * @param {Window} view (Optional) The view containing the target. This is
  *      typically the window object. The default is window.
- * @param {int} detail (Optional) The number of times the mouse button has
+ * @param {Number} detail (Optional) The number of times the mouse button has
  *      been used. The default value is 1.
- * @param {int} screenX (Optional) The x-coordinate on the screen at which
+ * @param {Number} screenX (Optional) The x-coordinate on the screen at which
  *      point the event occured. The default is 0.
- * @param {int} screenY (Optional) The y-coordinate on the screen at which
+ * @param {Number} screenY (Optional) The y-coordinate on the screen at which
  *      point the event occured. The default is 0.
- * @param {int} clientX (Optional) The x-coordinate on the client at which
+ * @param {Number} clientX (Optional) The x-coordinate on the client at which
  *      point the event occured. The default is 0.
- * @param {int} clientY (Optional) The y-coordinate on the client at which
+ * @param {Number} clientY (Optional) The y-coordinate on the client at which
  *      point the event occured. The default is 0.
  * @param {Boolean} ctrlKey (Optional) Indicates if one of the CTRL keys
  *      is pressed while the event is firing. The default is false.
@@ -311,7 +325,7 @@ function simulateKeyEvent(target /*:HTMLElement*/, type /*:String*/,
  *      is pressed while the event is firing. The default is false.
  * @param {Boolean} metaKey (Optional) Indicates if one of the META keys
  *      is pressed while the event is firing. The default is false.
- * @param {int} button (Optional) The button being pressed while the event
+ * @param {Number} button (Optional) The button being pressed while the event
  *      is executing. The value should be 0 for the primary mouse button
  *      (typically the left button), 1 for the terciary mouse button
  *      (typically the middle button), and 2 for the secondary mouse button
@@ -330,21 +344,20 @@ function simulateMouseEvent(target /*:HTMLElement*/, type /*:String*/,
                                shiftKey /*:Boolean*/,   metaKey /*:Boolean*/,
                                button /*:int*/,         relatedTarget /*:HTMLElement*/) /*:Void*/
 {
-
     //check target
     if (!target){
         Y.error("simulateMouseEvent(): Invalid target.");
     }
 
-    //check event type
-    if (isString(type)){
-        type = type.toLowerCase();
 
-        //make sure it's a supported mouse event
-        if (!mouseEvents[type]){
+    if (isString(type)){
+
+        //make sure it's a supported mouse event or an msPointerEvent.
+        if (!mouseEvents[type.toLowerCase()] && !pointerEvents[type]){
             Y.error("simulateMouseEvent(): Event type '" + type + "' not supported.");
         }
-    } else {
+    }
+    else {
         Y.error("simulateMouseEvent(): Event type must be a string.");
     }
 
@@ -353,7 +366,7 @@ function simulateMouseEvent(target /*:HTMLElement*/, type /*:String*/,
         bubbles = true; //all mouse events bubble
     }
     if (!isBoolean(cancelable)){
-        cancelable = (type != "mousemove"); //mousemove is the only one that can't be cancelled
+        cancelable = (type !== "mousemove"); //mousemove is the only one that can't be cancelled
     }
     if (!isObject(view)){
         view = Y.config.win; //view is typically window
@@ -434,9 +447,9 @@ function simulateMouseEvent(target /*:HTMLElement*/, type /*:String*/,
          * event.
          */
         if (relatedTarget && !customEvent.relatedTarget){
-            if (type == "mouseout"){
+            if (type === "mouseout"){
                 customEvent.toElement = relatedTarget;
-            } else if (type == "mouseover"){
+            } else if (type === "mouseover"){
                 customEvent.fromElement = relatedTarget;
             }
         }
@@ -516,7 +529,7 @@ function simulateMouseEvent(target /*:HTMLElement*/, type /*:String*/,
  *      is false.
  * @param {Window} view (Optional) The view containing the target. This is
  *      typically the window object. The default is window.
- * @param {int} detail (Optional) The number of times the mouse button has
+ * @param {Number} detail (Optional) The number of times the mouse button has
  *      been used. The default value is 1.
  */
 function simulateUIEvent(target /*:HTMLElement*/, type /*:String*/,
@@ -550,7 +563,7 @@ function simulateUIEvent(target /*:HTMLElement*/, type /*:String*/,
         bubbles = (type in bubbleEvents);  //not all events bubble
     }
     if (!isBoolean(cancelable)){
-        cancelable = (type == "submit"); //submit is the only one that can be cancelled
+        cancelable = (type === "submit"); //submit is the only one that can be cancelled
     }
     if (!isObject(view)){
         view = Y.config.win; //view is typically window
@@ -607,15 +620,15 @@ function simulateUIEvent(target /*:HTMLElement*/, type /*:String*/,
  *      is false.
  * @param {Window} view (Optional) The view containing the target. This is
  *      typically the window object. The default is window.
- * @param {int} detail (Optional) Specifies some detail information about 
+ * @param {Number} detail (Optional) Specifies some detail information about
  *      the event depending on the type of event.
- * @param {int} screenX (Optional) The x-coordinate on the screen at which
+ * @param {Number} screenX (Optional) The x-coordinate on the screen at which
  *      point the event occured. The default is 0.
- * @param {int} screenY (Optional) The y-coordinate on the screen at which
+ * @param {Number} screenY (Optional) The y-coordinate on the screen at which
  *      point the event occured. The default is 0.
- * @param {int} clientX (Optional) The x-coordinate on the client at which
+ * @param {Number} clientX (Optional) The x-coordinate on the client at which
  *      point the event occured. The default is 0.
- * @param {int} clientY (Optional) The y-coordinate on the client at which
+ * @param {Number} clientY (Optional) The y-coordinate on the client at which
  *      point the event occured. The default is 0.
  * @param {Boolean} ctrlKey (Optional) Indicates if one of the CTRL keys
  *      is pressed while the event is firing. The default is false.
@@ -625,10 +638,10 @@ function simulateUIEvent(target /*:HTMLElement*/, type /*:String*/,
  *      is pressed while the event is firing. The default is false.
  * @param {Boolean} metaKey (Optional) Indicates if one of the META keys
  *      is pressed while the event is firing. The default is false. 
- * @param {float} scale (iOS v2+ only) The distance between two fingers 
+ * @param {Number} scale (iOS v2+ only) The distance between two fingers
  *      since the start of an event as a multiplier of the initial distance. 
  *      The default value is 1.0.
- * @param {float} rotation (iOS v2+ only) The delta rotation since the start 
+ * @param {Number} rotation (iOS v2+ only) The delta rotation since the start
  *      of an event, in degrees, where clockwise is positive and 
  *      counter-clockwise is negative. The default value is 0.0.   
  */
@@ -710,15 +723,15 @@ function simulateGestureEvent(target, type,
  *      is false.
  * @param {Window} view (Optional) The view containing the target. This is
  *      typically the window object. The default is window.
- * @param {int} detail (Optional) Specifies some detail information about 
+ * @param {Number} detail (Optional) Specifies some detail information about
  *      the event depending on the type of event.
- * @param {int} screenX (Optional) The x-coordinate on the screen at which
+ * @param {Number} screenX (Optional) The x-coordinate on the screen at which
  *      point the event occured. The default is 0.
- * @param {int} screenY (Optional) The y-coordinate on the screen at which
+ * @param {Number} screenY (Optional) The y-coordinate on the screen at which
  *      point the event occured. The default is 0.
- * @param {int} clientX (Optional) The x-coordinate on the client at which
+ * @param {Number} clientX (Optional) The x-coordinate on the client at which
  *      point the event occured. The default is 0.
- * @param {int} clientY (Optional) The y-coordinate on the client at which
+ * @param {Number} clientY (Optional) The y-coordinate on the client at which
  *      point the event occured. The default is 0.
  * @param {Boolean} ctrlKey (Optional) Indicates if one of the CTRL keys
  *      is pressed while the event is firing. The default is false.
@@ -734,10 +747,10 @@ function simulateGestureEvent(target, type,
  *      representing all touches associated with this target.
  * @param {TouchList} changedTouches A collection of Touch objects 
  *      representing all touches that changed in this event.
- * @param {float} scale (iOS v2+ only) The distance between two fingers 
+ * @param {Number} scale (iOS v2+ only) The distance between two fingers
  *      since the start of an event as a multiplier of the initial distance. 
  *      The default value is 1.0.
- * @param {float} rotation (iOS v2+ only) The delta rotation since the start 
+ * @param {Number} rotation (iOS v2+ only) The delta rotation since the start
  *      of an event, in degrees, where clockwise is positive and 
  *      counter-clockwise is negative. The default value is 0.0.   
  */
@@ -809,7 +822,7 @@ function simulateTouchEvent(target, type,
     // setup default values
     if (!Y.Lang.isBoolean(bubbles)) { bubbles = true; } // bubble by default.
     if (!Y.Lang.isBoolean(cancelable)) { 
-        cancelable = (type != "touchcancel"); // touchcancel is not cancelled 
+        cancelable = (type !== "touchcancel"); // touchcancel is not cancelled
     } 
     if (!Y.Lang.isObject(view))     { view = Y.config.win; }
     if (!Y.Lang.isNumber(detail))   { detail = 1; } // usually not used. defaulted to # of touch objects.
@@ -828,13 +841,13 @@ function simulateTouchEvent(target, type,
     //check for DOM-compliant browsers first
     if (Y.Lang.isFunction(Y.config.doc.createEvent)) {
         if (Y.UA.android) {
-            /**
+            /*
                 * Couldn't find android start version that supports touch event. 
                 * Assumed supported(btw APIs broken till icecream sandwitch) 
                 * from the beginning.
                 */
             if(Y.UA.android < 4.0) {
-                /**
+                /*
                     * Touch APIs are broken in androids older than 4.0. We will use 
                     * simulated touch apis for these versions. 
                     * App developer still can listen for touch events. This events
@@ -893,7 +906,6 @@ function simulateTouchEvent(target, type,
  *      (i.e., "click", "doubletap", "flick").
  * @param {Object} options (Optional) Extra options to copy onto the event object.
  *      For gestures, options are used to refine the gesture behavior.
- * @return {void}
  * @for Event
  * @method simulate
  * @static
@@ -902,7 +914,7 @@ Y.Event.simulate = function(target, type, options){
 
     options = options || {};
 
-    if (mouseEvents[type]){
+    if (mouseEvents[type] || pointerEvents[type]){
         simulateMouseEvent(target, type, options.bubbles,
             options.cancelable, options.view, options.detail, options.screenX,
             options.screenY, options.clientX, options.clientY, options.ctrlKey,
@@ -949,4 +961,4 @@ Y.Event.simulate = function(target, type, options){
 
 
 
-}, '3.7.3', {"requires": ["event-base"]});
+}, '3.16.0', {"requires": ["event-base"]});

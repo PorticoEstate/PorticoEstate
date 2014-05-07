@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatype-xml-format', function (Y, NAME) {
 
 /**
@@ -27,7 +28,7 @@ Y.mix(Y.namespace("XML"), {
      * Converts data to type XMLDocument.
      *
      * @method format
-     * @param data {XMLDoc} Data to convert.
+     * @param data {XMLDocument} Data to convert.
      * @return {String} String.
      */
     format: function(data) {
@@ -55,4 +56,4 @@ Y.namespace("DataType");
 Y.DataType.XML = Y.XML;
 
 
-}, '3.7.3');
+}, '3.16.0');

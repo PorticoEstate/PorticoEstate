@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('attribute-base', function (Y, NAME) {
 
     /**
@@ -49,33 +50,27 @@ YUI.add('attribute-base', function (Y, NAME) {
      * of attributes for derived classes, accounting for values passed into the constructor.</p>
      *
      * @class Attribute
-     * @param attrs {Object} The attributes to add during construction (passed through to <a href="#method_addAttrs">addAttrs</a>). These can also be defined on the constructor being augmented with Attribute by defining the ATTRS property on the constructor.
-     * @param values {Object} The initial attribute values to apply (passed through to <a href="#method_addAttrs">addAttrs</a>). These are not merged/cloned. The caller is responsible for isolating user provided values if required.
+     * @param attrs {Object} The attributes to add during construction (passed through to <a href="#method_addAttrs">addAttrs</a>).
+     *        These can also be defined on the constructor being augmented with Attribute by defining the ATTRS property on the constructor.
+     * @param values {Object} The initial attribute values to apply (passed through to <a href="#method_addAttrs">addAttrs</a>).
+     *        These are not merged/cloned. The caller is responsible for isolating user provided values if required.
      * @param lazy {boolean} Whether or not to add attributes lazily (passed through to <a href="#method_addAttrs">addAttrs</a>).
      * @uses AttributeCore
-     * @uses AttributeEvents
+     * @uses AttributeObservable
      * @uses EventTarget
      * @uses AttributeExtras
      */
-    var Attribute = function() {
-
-        // Fix #2531929 
-        // Complete hack, to make sure the first clone of a node value in IE doesn't doesn't hurt state - maintains 3.4.1 behavior.
-        // Too late in the release cycle to do anything about the core problem.
-        // The root issue is that cloning a Y.Node instance results in an object which barfs in IE, when you access it's properties (since 3.3.0).
-        this._ATTR_E_FACADE = null;
-        this._yuievt = null;
-
+    function Attribute() {
         Y.AttributeCore.apply(this, arguments);
-        Y.AttributeEvents.apply(this, arguments);
+        Y.AttributeObservable.apply(this, arguments);
         Y.AttributeExtras.apply(this, arguments);
-    };
+    }
 
     Y.mix(Attribute, Y.AttributeCore, false, null, 1);
     Y.mix(Attribute, Y.AttributeExtras, false, null, 1);
 
-    // Needs to be "true", to overwrite methods from AttributeCore
-    Y.mix(Attribute, Y.AttributeEvents, true, null, 1);
+    // Needs to be `true`, to overwrite methods from AttributeCore
+    Y.mix(Attribute, Y.AttributeObservable, true, null, 1);
 
     /**
      * <p>The value to return from an attribute setter in order to prevent the set from going through.</p>
@@ -103,8 +98,20 @@ YUI.add('attribute-base', function (Y, NAME) {
      * @static
      * @protected
      */
-    Attribute._ATTR_CFG = Y.AttributeCore._ATTR_CFG.concat(Y.AttributeEvents._ATTR_CFG);
+    Attribute._ATTR_CFG = Y.AttributeCore._ATTR_CFG.concat(Y.AttributeObservable._ATTR_CFG);
+
+    /**
+     * Utility method to protect an attribute configuration hash, by merging the
+     * entire object and the individual attr config objects.
+     *
+     * @method protectAttrs
+     * @static
+     * @param {Object} attrs A hash of attribute to configuration object pairs.
+     * @return {Object} A protected version of the `attrs` argument.
+     */
+    Attribute.protectAttrs = Y.AttributeCore.protectAttrs;
 
     Y.Attribute = Attribute;
 
-}, '3.7.3', {"requires": ["attribute-core", "attribute-events", "attribute-extras"]});
+
+}, '3.16.0', {"requires": ["attribute-core", "attribute-observable", "attribute-extras"]});

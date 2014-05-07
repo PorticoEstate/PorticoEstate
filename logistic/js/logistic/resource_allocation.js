@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	$("#requirement-container table tr").live("click", function(e){
+	$("#requirement-container table tr").on("click", function(e){
 		var thisRow = $(this);
 		
 		var requirement_id = $(thisRow).find("td.requirement_id").find("div").text();
@@ -8,7 +8,7 @@ $(document).ready(function(){
 		updateAllocationTable( requirement_id );
     });
 	
-	$("#allocation-container table .btn-sm.delete").live("click", function(e){
+	$("#allocation-container table .btn-sm.delete").on("click", function(e){
 		var thisRow = $(this).parents("tr");
 		
 		var requestUrl = $(this).attr("href");

@@ -414,8 +414,8 @@
 			{
 				phpgwapi_jquery::load_widget('core');
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-				self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+				self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-formvalidator/gallery-formvalidator-min.js');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
 				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');	
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 				self::add_javascript('manual', 'portico', 'documents.add.js');

@@ -75,7 +75,7 @@
 			}
 
 
-			$this->acl 					= & $GLOBALS['phpgw']->acl;			
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
@@ -98,12 +98,12 @@
 			$this->category_dir			= "{$this->type}_{$this->entity_id}_{$this->cat_id}";
 			$this->bo->category_dir			= $this->category_dir;
 
-	
+
 			phpgwapi_cache::session_set('frontend','tab',$this->location_id);
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
 			$this->bo->location_code = $this->location_code;
-			
+
 			$_org_units = array();
 			if(is_array($this->header_state['org_unit']))
 			{
@@ -117,7 +117,7 @@
 						$_org_units[$entry['id']] = true;
 						if(isset($entry['children']) && $entry['children'])
 						{
-							$this->_get_children($entry['children'], $_org_units);			
+							$this->_get_children($entry['children'], $_org_units);
 						}
 					}
 				}
@@ -136,7 +136,7 @@
 				$_org_units[$entry['id']] = true;
 				if(isset($entry['children']) && $entry['children'])
 				{
-					$this->_get_children($entry['children'], $_org_units);			
+					$this->_get_children($entry['children'], $_org_units);
 				}
 			}
 		}
@@ -373,7 +373,7 @@
 				$datatable['actions']['form'][0]['fields']['hidden_value'][] = array
 				(
 					'id' 	=> "values_combo_box_0",
-					'value'	=> $this->bocommon->select2String($values_combo_box[0])						
+					'value'	=> $this->bocommon->select2String($values_combo_box[0])
 				);
 
 				$button_def[] = "oMenuButton_0";
@@ -418,7 +418,7 @@
 							$datatable['actions']['form'][0]['fields']['hidden_value'][] = array
 							(
 								'id' 	=> "values_combo_box_{$i}",
-								'value'	=> $this->bocommon->select2String($values_combo_box[$i])						
+								'value'	=> $this->bocommon->select2String($values_combo_box[$i])
 							);
 							$i++;
 						}
@@ -472,7 +472,7 @@
 					case 'entry_date':
 						$uicols['input_type'][$i] = 'hidden';
 						break;
-				
+
 				}
 			}
 
@@ -524,7 +524,7 @@
 
 				if($_config_section_data['image_in_table'])
 				{
-			
+
 					$remote_image_in_table = true;
 					$js = <<<JS
 	var show_picture_remote = function(elCell, oRecord, oColumn, oData)
@@ -561,7 +561,7 @@ JS;
 			}
 			else
 			{
-				$uicols['formatter'][]	= 'show_picture_remote';			
+				$uicols['formatter'][]	= 'show_picture_remote';
 			}
 
 
@@ -591,7 +591,7 @@ JS;
 						$_files = $vfs->ls(array(
 							'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
 							'relatives' => array(RELATIVE_NONE)));
-	
+
 						if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
 						{
 							$entity_entry['file_name']	= urlencode($_files[0]['name']);
@@ -611,7 +611,7 @@ JS;
 								$uicols['input_type'][$i] = 'hidden';
 								break;
 						}
-						
+
 						if($uicols['input_type'][$i]!='hidden')
 						{
 							if(isset($entity_entry['query_location'][$uicols['name'][$i]]))
@@ -737,7 +737,7 @@ JS;
 							'p_cat_id'		=> $this->cat_id,
 							'type'			=> $this->type,
 							'bypass'		=> true,
-							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",							
+							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
 						)),
 						'parameters'			=> $parameters2
 					);
@@ -876,7 +876,7 @@ JS;
 
 			if($dry_run)
 			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
@@ -1007,7 +1007,7 @@ JS;
 
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
-			
+
 			$data = array(
 				'header' 		=> $this->header_state,
 				'tabs'			=> $this->tabs,
@@ -1050,7 +1050,7 @@ JS;
 			$entity = $this->soadmin_entity->read_single($this->entity_id);
 			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 			$location_data = array();
-			
+
 			if($entity['location_form'] && $category['location_level'] > 0)
 			{
 				$bolocation	= CreateObject('property.bolocation');
@@ -1066,7 +1066,7 @@ JS;
 					));
 			}
 
-			
+
 // ---- START INTEGRATION -------------------------
 
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
@@ -1123,7 +1123,7 @@ JS;
 
 					$cxContext = stream_context_create($aContext);
 					$response = trim(file_get_contents($request, False, $cxContext));
-		
+
 					$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
 					$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
 
@@ -1132,7 +1132,7 @@ JS;
 					foreach ($output as $_dummy => $_substitute)
 					{
 						$_keys[] = $_substitute;
-	
+
 						$__value = false;
 						if(!$__value = urlencode($values[str_replace(array('__','*'),array('',''), $_substitute)]))
 						{
@@ -1232,8 +1232,8 @@ JS;
 
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				$content_files[$z]['url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
-				$content_files[$z]['file_name'] = $values['files'][$z]['name'];			
+				$content_files[$z]['url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
+				$content_files[$z]['file_name'] = $values['files'][$z]['name'];
 
 				if(in_array($values['files'][$z]['mime_type'], $img_types))
 				{
@@ -1241,7 +1241,7 @@ JS;
 					$content_files[$z]['directory']	= urlencode($values['files'][$z]['directory']);
 					$content_files[$z]['img_id']	= $values['files'][$z]['file_id'];
 				}
-			}									
+			}
 
 
 
@@ -1288,6 +1288,19 @@ JS;
 										'location_id'		=> $this->location_id,
 										'id'				=> $id
 									)),
+						'start_ticket'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+							'noframework'	=> 1,
+							'p_entity_id'	=> $this->entity_id,
+							'p_cat_id'		=> $this->cat_id,
+							'type'			=> $this->type,
+							'bypass'		=> true,
+							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
+							'location_code'	=> $this->location_code,
+							'origin_id'		=> $id,
+							'p_num'			=> $id
+						)),
 						'location_id'		=> $this->location_id,
 						'id'			=> $id,
 						'entity'        => $entity,

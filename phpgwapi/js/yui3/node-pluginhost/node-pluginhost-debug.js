@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('node-pluginhost', function (Y, NAME) {
 
 /**
@@ -44,6 +45,11 @@ Y.Node.unplug = function() {
 };
 
 Y.mix(Y.Node, Y.Plugin.Host, false, null, 1);
+
+// run PluginHost constructor on cached Node instances
+Y.Object.each(Y.Node._instances, function (node) {
+    Y.Plugin.Host.apply(node);
+});
 
 // allow batching of plug/unplug via NodeList
 // doesn't use NodeList.importMethod because we need real Nodes (not tmpNode)
@@ -89,4 +95,4 @@ Y.NodeList.prototype.unplug = function() {
 };
 
 
-}, '3.7.3', {"requires": ["node-base", "pluginhost"]});
+}, '3.16.0', {"requires": ["node-base", "pluginhost"]});

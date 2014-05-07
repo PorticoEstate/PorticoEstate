@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatype-date-math', function (Y, NAME) {
 
 /**
@@ -92,7 +93,7 @@ Y.mix(Y.namespace("Date"), {
 	 * @for Date
 	 * @method addDays
 	 * @param oDate {Date} The date to add days to.
-	 * @param numMonths {Number} The number of days to add (can be negative)
+     * @param numDays {Number} The number of days to add (can be negative)
 	 * @return {Date} A new Date with the specified number of days
 	 * added to the original date.
 	 */	
@@ -211,4 +212,4 @@ Y.namespace("DataType");
 Y.DataType.Date = Y.Date;
 
 
-}, '3.7.3', {"requires": ["yui-base"]});
+}, '3.16.0', {"requires": ["yui-base"]});

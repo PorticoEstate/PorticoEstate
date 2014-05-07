@@ -516,8 +516,8 @@
 
 			self::add_javascript('logistic', 'logistic', 'activity.js');
 			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-formvalidator/gallery-formvalidator-min.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
 //_debug_array($data);die();
 			self::render_template_xsl('activity/add_activity_item', $data);
 		}

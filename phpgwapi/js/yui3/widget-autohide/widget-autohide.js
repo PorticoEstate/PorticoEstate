@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('widget-autohide', function (Y, NAME) {
 
 /**
@@ -226,6 +227,7 @@ WidgetAutohide.prototype = {
          * Default function called when hideOn Attribute is changed. Remove existing listeners and create new listeners.
          *
          * @method _afterHideOnChange
+         * @protected
          */
         _afterHideOnChange : function(e) {
             this._detachUIHandlesAutohide();
@@ -239,4 +241,4 @@ WidgetAutohide.prototype = {
 Y.WidgetAutohide = WidgetAutohide;
 
 
-}, '3.7.3', {"requires": ["base-build", "event-key", "event-outside", "widget"]});
+}, '3.16.0', {"requires": ["base-build", "event-key", "event-outside", "widget"]});

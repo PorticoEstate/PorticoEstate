@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('editor-bidi', function (Y, NAME) {
 
 
@@ -19,7 +20,7 @@ YUI.add('editor-bidi', function (Y, NAME) {
 
     var EditorBidi = function() {
         EditorBidi.superclass.constructor.apply(this, arguments);
-    }, HOST = 'host', DIR = 'dir', BODY = 'BODY', NODE_CHANGE = 'nodeChange',
+    }, HOST = 'host', DIR = 'dir', NODE_CHANGE = 'nodeChange',
     B_C_CHANGE = 'bidiContextChange', STYLE = 'style';
 
     Y.extend(EditorBidi, Y.Base, {
@@ -48,7 +49,7 @@ YUI.add('editor-bidi', function (Y, NAME) {
                 node, direction;
 
             if (sel.isCollapsed) {
-                node = EditorBidi.blockParent(sel.focusNode);
+                node = EditorBidi.blockParent(sel.focusNode, false, inst.EditorSelection.ROOT);
                 if (node) {
                     direction = node.getStyle('direction');
                     if (direction !== this.lastDirection) {
@@ -134,20 +135,22 @@ YUI.add('editor-bidi', function (Y, NAME) {
         * @static
         * @method blockParent
         */
-        blockParent: function(node, wrap) {
+        blockParent: function(node, wrap, root) {
             var parent = node, divNode, firstChild;
 
+            root = root || Y.EditorSelection.ROOT;
+            
             if (!parent) {
-                parent = Y.one(BODY);
+                parent = root;
             }
 
             if (!parent.test(EditorBidi.BLOCKS)) {
                 parent = parent.ancestor(EditorBidi.BLOCKS);
             }
-            if (wrap && parent.test(BODY)) {
+            if (wrap && parent.compareTo(root)) {
                 // This shouldn't happen if the RTE handles everything
-                // according to spec: we should get to a P before BODY. But
-                // we don't want to set the direction of BODY even if that
+                // according to spec: we should get to a P before ROOT. But
+                // we don't want to set the direction of ROOT even if that
                 // happens, so we wrap everything in a DIV.
 
                 // The code is based on YUI3's Y.EditorSelection._wrapBlock function.
@@ -176,7 +179,7 @@ YUI.add('editor-bidi', function (Y, NAME) {
         * @static
         * @method addParents
         */
-        addParents: function(nodeArray) {
+        addParents: function(nodeArray, root) {
             var i, parent, addParent;
                 tester = function(sibling) {
                     if (!sibling.getData(EditorBidi._NODE_SELECTED)) {
@@ -184,6 +187,8 @@ YUI.add('editor-bidi', function (Y, NAME) {
                         return true; // stop more processing
                     }
                 };
+
+            root = root || Y.EditorSelection.ROOT;
 
             for (i = 0; i < nodeArray.length; i += 1) {
                 nodeArray[i].setData(EditorBidi._NODE_SELECTED, true);
@@ -197,10 +202,10 @@ YUI.add('editor-bidi', function (Y, NAME) {
             for (i = 0; i < nodeArray.length; i += 1) {
                 parent = nodeArray[i].get('parentNode');
 
-                // Don't add the parent if the parent is the BODY element.
-                // We don't want to change the direction of BODY. Also don't
+                // Don't add the parent if the parent is the ROOT element.
+                // We don't want to change the direction of ROOT. Also don't
                 // do it if the parent is already in the list.
-                if (!parent.test(BODY) && !parent.getData(EditorBidi._NODE_SELECTED)) {
+                if (!root.compareTo(parent) && !parent.getData(EditorBidi._NODE_SELECTED)) {
                     addParent = true;
                     parent.get('children').some(tester);
                     if (addParent) {
@@ -277,6 +282,7 @@ YUI.add('editor-bidi', function (Y, NAME) {
             sel = new inst.EditorSelection(),
             ns = this.get(HOST).get(HOST).editorBidi,
             returnValue, block, b,
+            root = inst.EditorSelection.ROOT,
             selected, selectedBlocks, dir;
 
         if (!ns) {
@@ -287,9 +293,9 @@ YUI.add('editor-bidi', function (Y, NAME) {
         inst.EditorSelection.filterBlocks();
 
         if (sel.isCollapsed) { // No selection
-            block = EditorBidi.blockParent(sel.anchorNode);
+            block = EditorBidi.blockParent(sel.anchorNode, false, root);
             if (!block) {
-                block = inst.one('body').one(inst.EditorSelection.BLOCKS);
+                block = root.one(inst.EditorSelection.BLOCKS);
             }
             //Remove text-align attribute if it exists
             block = EditorBidi.removeTextAlign(block);
@@ -314,9 +320,9 @@ YUI.add('editor-bidi', function (Y, NAME) {
             selected = sel.getSelected();
             selectedBlocks = [];
             selected.each(function(node) {
-                selectedBlocks.push(EditorBidi.blockParent(node));
+                selectedBlocks.push(EditorBidi.blockParent(node, false, root));
             });
-            selectedBlocks = inst.all(EditorBidi.addParents(selectedBlocks));
+            selectedBlocks = inst.all(EditorBidi.addParents(selectedBlocks, root));
             selectedBlocks.each(function(n) {
                 var d = direction;
                 //Remove text-align attribute if it exists
@@ -337,7 +343,4 @@ YUI.add('editor-bidi', function (Y, NAME) {
         return returnValue;
     };
 
-
-
-
-}, '3.7.3', {"requires": ["editor-base"]});
+}, '3.16.0', {"requires": ["editor-base"]});

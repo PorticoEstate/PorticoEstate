@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatable-head', function (Y, NAME) {
 
 /**
@@ -64,6 +65,7 @@ Supported properties of the column objects include:
   * `headerTemplate` - Overrides the instance's `CELL_TEMPLATE` for cells in this
     column only.
   * `abbr`      - The content of the 'abbr' attribute of the `<th>`
+  * `title`     - The content of the 'title' attribute of the `<th>`
   * `className` - Adds this string of CSS classes to the column header
 
 Through the life of instantiation and rendering, the column objects will have
@@ -92,12 +94,12 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
     customize how header cell markup is created.
 
     @property CELL_TEMPLATE
-    @type {HTML}
-    @default '<th id="{id}" colspan="{_colspan}" rowspan="{_rowspan}" class="{className}" scope="col" {_id}{abbr}>{content}</th>'
+    @type {String}
+    @default '<th id="{id}" colspan="{_colspan}" rowspan="{_rowspan}" class="{className}" scope="col" {_id}{abbr}{title}>{content}</th>'
     @since 3.5.0
     **/
     CELL_TEMPLATE:
-        '<th id="{id}" colspan="{_colspan}" rowspan="{_rowspan}" class="{className}" scope="col" {_id}{abbr}>{content}</th>',
+        '<th id="{id}" colspan="{_colspan}" rowspan="{_rowspan}" class="{className}" scope="col" {_id}{abbr}{title}>{content}</th>',
 
     /**
     The data representation of the header rows to render.  This is assigned by
@@ -117,7 +119,7 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
     customize the row markup.
 
     @property ROW_TEMPLATE
-    @type {HTML}
+    @type {String}
     @default '<tr>{content}</tr>'
     @since 3.5.0
     **/
@@ -141,7 +143,7 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
     HTML templates used to create the `<thead>` containing the table headers.
 
     @property THEAD_TEMPLATE
-    @type {HTML}
+    @type {String}
     @default '<thead class="{className}">{content}</thead>'
     @since 3.6.0
     **/
@@ -185,7 +187,6 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
     from the `columns` property.
     
     @method render
-    @return {HeaderView} The instance
     @chainable
     @since 3.5.0
     **/
@@ -197,7 +198,8 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
             defaults = {
                 _colspan: 1,
                 _rowspan: 1,
-                abbr: ''
+                abbr: '',
+                title: ''
             },
             i, len, j, jlen, col, html, content, values;
 
@@ -224,6 +226,10 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
                         
                         if (col.abbr) {
                             values.abbr = ' abbr="' + col.abbr + '"';
+                        }
+
+                        if (col.title) {
+                            values.title = ' title="' + col.title + '"';
                         }
 
                         if (col.className) {
@@ -385,6 +391,7 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
       * `children` - Array of columns to appear below this column in the next
                      row.
       * `abbr`     - The content of the 'abbr' attribute of the `<th>`
+      * `title`    - The content of the 'title' attribute of the `<th>`
       * `headerTemplate` - Overrides the instance's `CELL_TEMPLATE` for cells
         in this column only.
 
@@ -529,4 +536,4 @@ Y.namespace('DataTable').HeaderView = Y.Base.create('tableHeader', Y.View, [], {
 });
 
 
-}, '3.7.3', {"requires": ["datatable-core", "view", "classnamemanager"]});
+}, '3.16.0', {"requires": ["datatable-core", "view", "classnamemanager"]});

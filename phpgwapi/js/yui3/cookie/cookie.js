@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('cookie', function (Y, NAME) {
 
 /**
@@ -161,12 +162,13 @@ YUI.add('cookie', function (Y, NAME) {
          * Parses a cookie string into an object representing all accessible cookies.
          * @param {String} text The cookie string to parse.
          * @param {Boolean} shouldDecode (Optional) Indicates if the cookie values should be decoded or not. Default is true.
+         * @param {Object} options (Optional) Contains settings for loading the cookie.
          * @return {Object} An object containing entries for each accessible cookie.
          * @method _parseCookieString
          * @private
          * @static
          */
-        _parseCookieString : function (text /*:String*/, shouldDecode /*:Boolean*/) /*:Object*/ {
+        _parseCookieString : function (text /*:String*/, shouldDecode /*:Boolean*/, options /*:Object*/) /*:Object*/ {
         
             var cookies /*:Object*/ = {};        
             
@@ -179,7 +181,6 @@ YUI.add('cookie', function (Y, NAME) {
                     cookieNameValue = NULL;
                 
                 for (var i=0, len=cookieParts.length; i < len; i++){
-                
                     //check for normally-formatted cookie (name-value)
                     cookieNameValue = cookieParts[i].match(/([^=]+)=/i);
                     if (cookieNameValue instanceof Array){
@@ -194,7 +195,14 @@ YUI.add('cookie', function (Y, NAME) {
                         cookieName = decode(cookieParts[i]);
                         cookieValue = "";
                     }
+                    // don't overwrite an already loaded cookie if set by option
+                    if (!isUndefined(options) && options.reverseCookieLoading) {
+                        if (isUndefined(cookies[cookieName])) {
+                            cookies[cookieName] = cookieValue;
+                        }
+                    } else {
                     cookies[cookieName] = cookieValue;
+                }
                 }
 
             }
@@ -210,7 +218,6 @@ YUI.add('cookie', function (Y, NAME) {
          * <code>Y.config.doc</code> to change the document that the cookie
          * utility uses for everyday purposes.
          * @param {Object} newDoc The object to use as the document.
-         * @return {void}
          * @method _setDoc
          * @private
          */         
@@ -243,12 +250,13 @@ YUI.add('cookie', function (Y, NAME) {
          * Returns the cookie value for the given name.
          * @param {String} name The name of the cookie to retrieve.
          * @param {Function|Object} options (Optional) An object containing one or more
-         *      cookie options: raw (true/false) and converter (a function).
+         *      cookie options: raw (true/false), reverseCookieLoading (true/false)
+         *      and converter (a function).
          *      The converter function is run on the value before returning it. The
          *      function is not used if the cookie doesn't exist. The function can be
          *      passed instead of the options object for backwards compatibility. When
          *      raw is set to true, the cookie value is not URI decoded.
-         * @return {Variant} If no converter is specified, returns a string or null if
+         * @return {Any} If no converter is specified, returns a string or null if
          *      the cookie doesn't exist. If the converter is specified, returns the value
          *      returned from the converter or null if the cookie doesn't exist.
          * @method get
@@ -272,7 +280,7 @@ YUI.add('cookie', function (Y, NAME) {
                 options = {};
             }
             
-            cookies = this._parseCookieString(doc.cookie, !options.raw);
+            cookies = this._parseCookieString(doc.cookie, !options.raw, options);
             cookie = cookies[name];
             
             //should return null, not undefined if the cookie doesn't exist
@@ -293,16 +301,17 @@ YUI.add('cookie', function (Y, NAME) {
          * @param {String} subName The name of the subcookie to retrieve.
          * @param {Function} converter (Optional) A function to run on the value before returning
          *      it. The function is not used if the cookie doesn't exist.
-         * @return {Variant} If the cookie doesn't exist, null is returned. If the subcookie
+         * @param {Object} options (Optional) Containing one or more settings for cookie parsing.
+         * @return {Any} If the cookie doesn't exist, null is returned. If the subcookie
          *      doesn't exist, null if also returned. If no converter is specified and the
          *      subcookie exists, a string is returned. If a converter is specified and the
          *      subcookie exists, the value returned from the converter is returned.
          * @method getSub
          * @static
          */
-        getSub : function (name /*:String*/, subName /*:String*/, converter /*:Function*/) /*:Variant*/ {
+        getSub : function (name /*:String*/, subName /*:String*/, converter /*:Function*/, options /*:Object*/) /*:Variant*/ {
           
-            var hash /*:Variant*/ = this.getSubs(name);  
+            var hash /*:Variant*/ = this.getSubs(name, options);
     
             if (hash !== NULL) {
                 
@@ -326,16 +335,17 @@ YUI.add('cookie', function (Y, NAME) {
         /**
          * Returns an object containing name-value pairs stored in the cookie with the given name.
          * @param {String} name The name of the cookie to retrieve.
+         * @param {Object} options (Optional) Containing one or more settings for cookie parsing.
          * @return {Object} An object of name-value pairs if the cookie with the given name
          *      exists, null if it does not.
          * @method getSubs
          * @static
          */
-        getSubs : function (name) {
+        getSubs : function (name /*:String*/, options /*:Object*/) {
             
             validateCookieName(name);   //throws error
             
-            var cookies = this._parseCookieString(doc.cookie, false);
+            var cookies = this._parseCookieString(doc.cookie, false, options);
             if (isString(cookies[name])){
                 return this._parseCookieHash(cookies[name]);
             }
@@ -417,7 +427,7 @@ YUI.add('cookie', function (Y, NAME) {
         /**
          * Sets a cookie with a given name and value.
          * @param {String} name The name of the cookie to set.
-         * @param {Variant} value The value to set for the cookie.
+         * @param {Any} value The value to set for the cookie.
          * @param {Object} options (Optional) An object containing one or more
          *      cookie options: path (a string), domain (a string), expires (a Date object),
          *      secure (true/false), and raw (true/false). Setting raw to true indicates
@@ -445,7 +455,7 @@ YUI.add('cookie', function (Y, NAME) {
          * Sets a sub cookie with a given name to a particular value.
          * @param {String} name The name of the cookie to set.
          * @param {String} subName The name of the subcookie to set.
-         * @param {Variant} value The value to set.
+         * @param {Any} value The value to set.
          * @param {Object} options (Optional) An object containing one or more
          *      cookie options: path (a string), domain (a string), expires (a Date object),
          *      and secure (true/false).
@@ -502,4 +512,4 @@ YUI.add('cookie', function (Y, NAME) {
     };
 
 
-}, '3.7.3', {"requires": ["yui-base"]});
+}, '3.16.0', {"requires": ["yui-base"]});

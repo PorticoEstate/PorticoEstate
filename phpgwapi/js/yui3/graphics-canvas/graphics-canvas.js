@@ -1,15 +1,16 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('graphics-canvas', function (Y, NAME) {
 
 var IMPLEMENTATION = "canvas",
     SHAPE = "shape",
 	SPLITPATHPATTERN = /[a-z][^a-z]*/ig,
-    SPLITARGSPATTERN = /[-]?[0-9]*[0-9|\.][0-9]*/g,
+    SPLITARGSPATTERN = /[\-]?[0-9]*[0-9|\.][0-9]*/g,
     DOCUMENT = Y.config.doc,
     Y_LANG = Y.Lang,
     AttributeLite = Y.AttributeLite,
@@ -191,8 +192,9 @@ CanvasDrawing.prototype = {
      * Queues up a method to be executed when a shape redraws.
      *
      * @method _updateDrawingQueue
-     * @param {Array} val An array containing data that can be parsed into a method and arguments. The value at zero-index of the array is a string reference of
-     * the drawing method that will be called. All subsequent indices are argument for that method. For example, `lineTo(10, 100)` would be structured as:
+     * @param {Array} val An array containing data that can be parsed into a method and arguments. The value at zero-index
+     * of the array is a string reference of the drawing method that will be called. All subsequent indices are argument for
+     * that method. For example, `lineTo(10, 100)` would be structured as:
      * `["lineTo", 10, 100]`.
      * @private
      */
@@ -207,22 +209,26 @@ CanvasDrawing.prototype = {
      * @method lineTo
      * @param {Number} point1 x-coordinate for the end point.
      * @param {Number} point2 y-coordinate for the end point.
+     * @chainable
      */
     lineTo: function()
     {
         this._lineTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
      * Draws a line segment from the current drawing position to the relative x and y coordinates.
      * 
-     * @method lineTo
+     * @method relativeLineTo
      * @param {Number} point1 x-coordinate for the end point.
      * @param {Number} point2 y-coordinate for the end point.
+     * @chainable
      */
     relativeLineTo: function()
     {
         this._lineTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
 
     /**
@@ -283,10 +289,12 @@ CanvasDrawing.prototype = {
      * @method moveTo
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     moveTo: function()
     {
         this._moveTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
@@ -295,10 +303,12 @@ CanvasDrawing.prototype = {
      * @method relativeMoveTo
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     relativeMoveTo: function()
     {
         this._moveTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
 
     /**
@@ -333,24 +343,28 @@ CanvasDrawing.prototype = {
      * @param {Number} cp2y y-coordinate for the second control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     curveTo: function() {
         this._curveTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
      * Draws a bezier curve relative to the current coordinates.
      *
-     * @method curveTo
+     * @method relativeCurveTo
      * @param {Number} cp1x x-coordinate for the first control point.
      * @param {Number} cp1y y-coordinate for the first control point.
      * @param {Number} cp2x x-coordinate for the second control point.
      * @param {Number} cp2y y-coordinate for the second control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     relativeCurveTo: function() {
         this._curveTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
     
     /**
@@ -411,9 +425,11 @@ CanvasDrawing.prototype = {
      * @param {Number} cpy y-coordinate for the control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     quadraticCurveTo: function() {
         this._quadraticCurveTo.apply(this, [Y.Array(arguments), false]);
+        return this;
     },
 
     /**
@@ -424,9 +440,11 @@ CanvasDrawing.prototype = {
      * @param {Number} cpy y-coordinate for the control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     relativeQuadraticCurveTo: function() {
         this._quadraticCurveTo.apply(this, [Y.Array(arguments), true]);
+        return this;
     },
 
     /**
@@ -451,7 +469,6 @@ CanvasDrawing.prototype = {
             top,
             i,
             len = args.length - 3,
-            wt = this._stroke && this._strokeWeight ? this._strokeWeight : 0,
             relativeX = relative ? parseFloat(this._currentX) : 0,
             relativeY = relative ? parseFloat(this._currentY) : 0;
         for(i = 0; i < len; i = i + 4)
@@ -482,6 +499,7 @@ CanvasDrawing.prototype = {
      * @param {Number} x y-coordinate
      * @param {Number} y x-coordinate
      * @param {Number} r radius
+     * @chainable
      * @protected
      */
 	drawCircle: function(x, y, radius) {
@@ -506,6 +524,7 @@ CanvasDrawing.prototype = {
      * @param {Number} y x-coordinate
      * @param {Number} width width
      * @param {Number} height height
+     * @chainable
      * @protected
      */
     drawDiamond: function(x, y, width, height)
@@ -528,6 +547,7 @@ CanvasDrawing.prototype = {
      * @param {Number} y y-coordinate
      * @param {Number} w width
      * @param {Number} h height
+     * @chainable
      * @protected
      */
 	drawEllipse: function(x, y, w, h) {
@@ -570,9 +590,9 @@ CanvasDrawing.prototype = {
      * @param {Number} y y-coordinate
      * @param {Number} w width
      * @param {Number} h height
+     * @chainable
      */
     drawRect: function(x, y, w, h) {
-        var wt = this._stroke && this._strokeWeight ? this._strokeWeight : 0;
         this._drawingComplete = false;
         this.moveTo(x, y);
         this.lineTo(x + w, y);
@@ -592,9 +612,9 @@ CanvasDrawing.prototype = {
      * @param {Number} h height
      * @param {Number} ew width of the ellipse used to draw the rounded corners
      * @param {Number} eh height of the ellipse used to draw the rounded corners
+     * @chainable
      */
     drawRoundRect: function(x, y, w, h, ew, eh) {
-        var wt = this._stroke && this._strokeWeight ? this._strokeWeight : 0;
         this._drawingComplete = false;
         this.moveTo( x, y + eh);
         this.lineTo(x, y + h - eh);
@@ -618,6 +638,7 @@ CanvasDrawing.prototype = {
      * @param {Number} arc sweep of the wedge. Negative values draw clockwise.
      * @param {Number} radius radius of wedge. If [optional] yRadius is defined, then radius is the x radius.
      * @param {Number} yRadius [optional] y radius for wedge.
+     * @chainable
      * @private
      */
     drawWedge: function(x, y, startAngle, arc, radius, yRadius)
@@ -693,6 +714,7 @@ CanvasDrawing.prototype = {
      * Completes a drawing operation. 
      *
      * @method end
+     * @chainable
      */
     end: function() {
         this._closePath();
@@ -703,18 +725,30 @@ CanvasDrawing.prototype = {
      * Ends a fill and stroke
      *
      * @method closePath
+     * @chainable
      */
     closePath: function()
     {
         this._updateDrawingQueue(["closePath"]);
         this._updateDrawingQueue(["beginPath"]);
+        return this;
     },
 
 	/**
 	 * Clears the graphics object.
 	 *
 	 * @method clear
+     * @chainable
 	 */
+    clear: function() {
+		this._initProps();
+        if(this.node)
+        {
+            this._context.clearRect(0, 0, this.node.width, this.node.height);
+        }
+        return this;
+	},
+
     
     /**
      * Returns a linear gradient fill
@@ -925,7 +959,7 @@ CanvasDrawing.prototype = {
      * @return HTMLCanvasElement
      * @private
      */
-    _createGraphic: function(config) {
+    _createGraphic: function() {
         var graphic = Y.config.doc.createElement('canvas');
         return graphic;
     },
@@ -1034,7 +1068,7 @@ Y.CanvasDrawing = CanvasDrawing;
  * @class CanvasShape
  * @constructor
  */
-CanvasShape = function(cfg)
+CanvasShape = function()
 {
     this._transforms = [];
     this.matrix = new Y.Matrix();
@@ -1086,8 +1120,9 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
      * Set the Graphic instance for the shape.
      *
      * @method _setGraphic
-     * @param {Graphic | Node | HTMLElement | String} render This param is used to determine the graphic instance. If it is a `Graphic` instance, it will be assigned
-     * to the `graphic` attribute. Otherwise, a new Graphic instance will be created and rendered into the dom element that the render represents.
+     * @param {Graphic | Node | HTMLElement | String} render This param is used to determine the graphic instance. If it is a
+     * `Graphic` instance, it will be assigned to the `graphic` attribute. Otherwise, a new Graphic instance will be created
+     * and rendered into the dom element that the render represents.
      * @private
      */
     _setGraphic: function(render)
@@ -1099,7 +1134,6 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
         }
         else
         {
-            render = Y.one(render);
             graphic = new Y.CanvasGraphic({
                 render: render
             });
@@ -1116,8 +1150,8 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 */
 	addClass: function(className)
 	{
-		var node = Y.one(this.get("node"));
-		node.addClass(className);
+		var node = this.get("node");
+		Y.DOM.addClass(node, className);
 	},
 	
 	/**
@@ -1128,8 +1162,8 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 */
 	removeClass: function(className)
 	{
-		var node = Y.one(this.get("node"));
-		node.removeClass(className);
+		var node = this.get("node");
+		Y.DOM.removeClass(node, className);
 	},
 
 	/**
@@ -1173,7 +1207,8 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 */
 	contains: function(needle)
 	{
-		return needle === Y.one(this.node);
+		var node = needle instanceof Y.Node ? needle._node : needle;
+        return node === this.node;
 	},
 
 	/**
@@ -1185,8 +1220,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 */
 	test: function(selector)
 	{
-		return Y.one(this.get("node")).test(selector);
-		//return Y.Selector.test(this.node, selector);
+		return Y.Selector.test(this.node, selector);
 	},
 
 	/**
@@ -1297,7 +1331,15 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 		node.setAttribute("id", id);
 		id = "#" + id;
 	    host.node = node;
-		host.addClass(_getClassName(SHAPE) + " " + _getClassName(concat(IMPLEMENTATION, SHAPE)) + " " + _getClassName(name) + " " + _getClassName(concat(IMPLEMENTATION, name))); 
+		host.addClass(
+            _getClassName(SHAPE) +
+            " " +
+            _getClassName(concat(IMPLEMENTATION, SHAPE)) +
+            " " +
+            _getClassName(name) +
+            " " +
+            _getClassName(concat(IMPLEMENTATION, name))
+        );
 	},
 	
 	/**
@@ -1313,7 +1355,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	{
 		if(Y.Node.DOM_EVENTS[type])
 		{
-			return Y.one("#" +  this.get("id")).on(type, fn);
+            return Y.on(type, fn, "#" + this.get("id"));
 		}
 		return Y.on.apply(this, arguments);
 	},
@@ -1361,7 +1403,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
                 this._strokeStyle = color;
             }
             this._linecap = linecap;
-            if(linejoin == "round" || linejoin == "bevel")
+            if(linejoin === "round" || linejoin === "bevel")
             {
                 this._linejoin = linejoin;
             }
@@ -1392,8 +1434,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
      */
 	set: function() 
 	{
-		var host = this,
-			val = arguments[0];
+		var host = this;
 		AttributeLite.prototype.set.apply(host, arguments);
 		if(host.initialized)
 		{
@@ -1418,7 +1459,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
         {
             color = fill.color;
             type = fill.type;
-            if(type == "linear" || type == "radial")
+            if(type === "linear" || type === "radial")
             {
                 this._fillType = type;
             }
@@ -1497,7 +1538,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
      * @param {Number} x The value to skew on the x-axis.
      * @param {Number} y The value to skew on the y-axis.
      */
-    skew: function(x, y)
+    skew: function()
     {
         this._addTransform("skew", arguments);
     },
@@ -1508,7 +1549,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 * @method skewX
 	 * @param {Number} x x-coordinate
 	 */
-	 skewX: function(x)
+    skewX: function()
 	 {
 		this._addTransform("skewX", arguments);
 	 },
@@ -1519,7 +1560,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 * @method skewY
 	 * @param {Number} y y-coordinate
 	 */
-	 skewY: function(y)
+    skewY: function()
 	 {
 		this._addTransform("skewY", arguments);
 	 },
@@ -1530,9 +1571,8 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 * @method rotate
 	 * @param {Number} deg The degree of the rotation.
 	 */
-	 rotate: function(deg)
+    rotate: function()
 	 {
-		this._rotation = deg;
 		this._addTransform("rotate", arguments);
 	 },
 
@@ -1542,20 +1582,11 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 	 * @method scale
 	 * @param {Number} val
 	 */
-	scale: function(x, y)
+    scale: function()
 	{
 		this._addTransform("scale", arguments);
 	},
 	
-    /**
-     * Storage for `rotation` atribute.
-     *
-     * @property _rotation
-     * @type Number
-	 * @private
-	 */
-	_rotation: 0,
-    
     /**
      * Storage for the transform attribute.
      *
@@ -1687,7 +1718,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 			{
 				methods[i] = cachedMethods[i].concat();
 				args = methods[i];
-                argsLen = (args[0] == "quadraticCurveTo" || args[0] == "bezierCurveTo") ? args.length : 3;
+                argsLen = (args[0] === "quadraticCurveTo" || args[0] === "bezierCurveTo") ? args.length : 3;
 				for(j = 1; j < argsLen; ++j)
 				{
 					if(j % 2 === 0)
@@ -1711,12 +1742,12 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 					method = args.shift();
 					if(method)
 					{
-                        if(method == "closePath")
+                        if(method === "closePath")
                         {
                             context.closePath();
                             this._strokeAndFill(context);
                         }
-						else if(method && method == "lineTo" && this._dashstyle)
+						else if(method && method === "lineTo" && this._dashstyle)
 						{
 							args.unshift(this._xcoords[i] - this._left, this._ycoords[i] - this._top);
 							this._drawDashedLine.apply(this, args);
@@ -1748,11 +1779,11 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
     {
         if (this._fillType) 
         {
-            if(this._fillType == "linear")
+            if(this._fillType === "linear")
             {
                 context.fillStyle = this._getLinearGradient();
             }
-            else if(this._fillType == "radial")
+            else if(this._fillType === "radial")
             {
                 context.fillStyle = this._getRadialGradient();
             }
@@ -1830,17 +1861,6 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 		context.moveTo(xEnd, yEnd);
 	},
 
-	//This should move to CanvasDrawing class. 
-    //Currently docmented in CanvasDrawing class.
-    clear: function() {
-		this._initProps();
-        if(this.node) 
-        {
-            this._context.clearRect(0, 0, this.node.width, this.node.height);
-        }
-        return this;
-	},
-	
 	/**
 	 * Returns the bounds for a shape.
 	 *
@@ -1857,7 +1877,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
 			h = this.get("height"),
 			x = this.get("x"),
 			y = this.get("y");
-        if(type == "path")
+        if(type === "path")
         {
             x = x + this._left;
             y = y + this._top;
@@ -1889,7 +1909,7 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
             transform,
             key,
             contentRect;
-        if(this._type == "path")
+        if(this._type === "path")
         {
             transformX = transformX + x;
             transformY = transformY + y;
@@ -2010,7 +2030,12 @@ Y.extend(CanvasShape, Y.GraphicBase, Y.mix({
     {
         if(this.node)
         {
-            Y.one(this.node).remove(true);
+            Y.Event.purgeElement(this.node, true);
+            if(this.node.parentNode)
+            {
+                this.node.style.visibility = "";
+                this.node.parentNode.removeChild(this.node);
+            }
             this._context = null;
             this.node = null;
         }
@@ -2047,8 +2072,9 @@ CanvasShape.ATTRS =  {
      *        <dt>matrix</dt><dd>Specifies a 2D transformation matrix comprised of the specified six values.</dd>      
      *    </dl>
      * </p>
-     * <p>Applying transforms through the transform attribute will reset the transform matrix and apply a new transform. The shape class also contains corresponding methods for each transform
-     * that will apply the transform to the current matrix. The below code illustrates how you might use the `transform` attribute to instantiate a recangle with a rotation of 45 degrees.</p>
+     * <p>Applying transforms through the transform attribute will reset the transform matrix and apply a new transform. The shape class also contains
+     * corresponding methods for each transform that will apply the transform to the current matrix. The below code illustrates how you might use the
+     * `transform` attribute to instantiate a recangle with a rotation of 45 degrees.</p>
             var myRect = new Y.Rect({
                 type:"rect",
                 width: 50,
@@ -2193,12 +2219,14 @@ CanvasShape.ATTRS =  {
      *      <dt>stops</dt><dd>An array of objects containing the following properties:
      *          <dl>
      *              <dt>color</dt><dd>The color of the stop.</dd>
-     *              <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stop. The default value is 1. Note: No effect for IE 6 - 8</dd>
+     *              <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stop. The default value is 1.
+     *              Note: No effect for IE 6 - 8</dd>
      *              <dt>offset</dt><dd>Number between 0 and 1 indicating where the color stop is positioned.</dd> 
      *          </dl>
      *      </dd>
      *      <p>Linear gradients also have the following property:</p>
-     *      <dt>rotation</dt><dd>Linear gradients flow left to right by default. The rotation property allows you to change the flow by rotation. (e.g. A rotation of 180 would make the gradient pain from right to left.)</dd>
+     *      <dt>rotation</dt><dd>Linear gradients flow left to right by default. The rotation property allows you to change the
+     *      flow by rotation. (e.g. A rotation of 180 would make the gradient pain from right to left.)</dd>
      *      <p>Radial gradients have the following additional properties:</p>
      *      <dt>r</dt><dd>Radius of the gradient circle.</dd>
      *      <dt>fx</dt><dd>Focal point x-coordinate of the gradient.</dd>
@@ -2208,9 +2236,13 @@ CanvasShape.ATTRS =  {
      *  <dl>
      *      <dt>cx</dt><dd>
      *          <p>The x-coordinate of the center of the gradient circle. Determines where the color stop begins. The default value 0.5.</p>
+     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and
+     *          `VMLShape` classes which are used on Android or IE 6 - 8.</p>
      *      </dd>
      *      <dt>cy</dt><dd>
      *          <p>The y-coordinate of the center of the gradient circle. Determines where the color stop begins. The default value 0.5.</p>
+     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and `VMLShape`
+     *          classes which are used on Android or IE 6 - 8.</p>
      *      </dd>
      *  </dl>
      *  <p>These properties are not currently implemented in `CanvasShape` or `VMLShape`.</p> 
@@ -2228,7 +2260,7 @@ CanvasShape.ATTRS =  {
 			fill = (val) ? Y.merge(tmpl, val) : null;
 			if(fill && fill.color)
 			{
-				if(fill.color === undefined || fill.color == "none")
+				if(fill.color === undefined || fill.color === "none")
 				{
 					fill.color = null;
 				}
@@ -2244,8 +2276,8 @@ CanvasShape.ATTRS =  {
      *      <dt>color</dt><dd>The color of the stroke.</dd>
      *      <dt>weight</dt><dd>Number that indicates the width of the stroke.</dd>
      *      <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stroke. The default value is 1.</dd>
-     *      <dt>dashstyle</dt>Indicates whether to draw a dashed stroke. When set to "none", a solid stroke is drawn. When set to an array, the first index indicates the
-     *  length of the dash. The second index indicates the length of gap.
+     *      <dt>dashstyle</dt>Indicates whether to draw a dashed stroke. When set to "none", a solid stroke is drawn. When set
+     *      to an array, the first index indicates the length of the dash. The second index indicates the length of gap.
      *      <dt>linecap</dt><dd>Specifies the linecap for the stroke. The following values can be specified:
      *          <dl>
      *              <dt>butt (default)</dt><dd>Specifies a butt linecap.</dd>
@@ -2257,8 +2289,8 @@ CanvasShape.ATTRS =  {
      *          <dl>
      *              <dt>round (default)</dt><dd>Specifies that the linejoin will be round.</dd>
      *              <dt>bevel</dt><dd>Specifies a bevel for the linejoin.</dd>
-     *              <dt>miter limit</dt><dd>An integer specifying the miter limit of a miter linejoin. If you want to specify a linejoin of miter, you simply specify the limit as opposed to having
-     *  separate miter and miter limit values.</dd>
+     *              <dt>miter limit</dt><dd>An integer specifying the miter limit of a miter linejoin. If you want to specify a linejoin
+     *              of miter, you simply specify the limit as opposed to having separate miter and miter limit values.</dd>
      *          </dl>
      *      </dd>
      *  </dl>
@@ -2303,9 +2335,10 @@ CanvasShape.ATTRS =  {
 	},
 
     /**
-     * Represents an SVG Path string. This will be parsed and added to shape's API to represent the SVG data across all implementations. Note that when using VML or SVG 
-     * implementations, part of this content will be added to the DOM using respective VML/SVG attributes. If your content comes from an untrusted source, you will need 
-     * to ensure that no malicious code is included in that content. 
+     * Represents an SVG Path string. This will be parsed and added to shape's API to represent the SVG data across all
+     * implementations. Note that when using VML or SVG implementations, part of this content will be added to the DOM using
+     * respective VML/SVG attributes. If your content comes from an untrusted source, you will need to ensure that no
+     * malicious code is included in that content.
      *
      * @config data
      * @type String
@@ -2348,7 +2381,7 @@ Y.CanvasShape = CanvasShape;
  * @class CanvasPath
  * @extends CanvasShape
  */
-CanvasPath = function(cfg)
+CanvasPath = function()
 {
 	CanvasPath.superclass.constructor.apply(this, arguments);
 };
@@ -2397,7 +2430,15 @@ Y.extend(CanvasPath, Y.CanvasShape, {
 		node.setAttribute("id", id);
 		id = "#" + id;
 		host.node = node;
-		host.addClass(_getClassName(SHAPE) + " " + _getClassName(concat(IMPLEMENTATION, SHAPE)) + " " + _getClassName(name) + " " + _getClassName(concat(IMPLEMENTATION, name))); 
+		host.addClass(
+            _getClassName(SHAPE) +
+            " " +
+            _getClassName(concat(IMPLEMENTATION, SHAPE)) +
+            " " +
+            _getClassName(name) +
+            " " +
+            _getClassName(concat(IMPLEMENTATION, name))
+        );
 	},
 
     /**
@@ -2408,6 +2449,7 @@ Y.extend(CanvasPath, Y.CanvasShape, {
     end: function()
     {
         this._draw();
+        return this;
     }
 });
 
@@ -2523,7 +2565,7 @@ Y.CanvasRect = CanvasRect;
  * @class CanvasEllipse
  * @constructor
  */
-CanvasEllipse = function(cfg)
+CanvasEllipse = function()
 {
 	CanvasEllipse.superclass.constructor.apply(this, arguments);
 };
@@ -2615,7 +2657,7 @@ Y.CanvasEllipse = CanvasEllipse;
  * @class CanvasCircle
  * @constructor
  */
-CanvasCircle = function(cfg)
+CanvasCircle = function()
 {
 	CanvasCircle.superclass.constructor.apply(this, arguments);
 };
@@ -2728,7 +2770,7 @@ Y.extend(CanvasPieSlice, Y.CanvasShape, {
 	 * @private
 	 * @method _updateHandler
 	 */
-	_draw: function(e)
+	_draw: function()
 	{
         var x = this.get("cx"),
             y = this.get("cy"),
@@ -2794,7 +2836,7 @@ Y.CanvasPieSlice = CanvasPieSlice;
  * @class CanvasGraphic
  * @constructor
  */
-function CanvasGraphic(config) {
+function CanvasGraphic() {
     
     CanvasGraphic.superclass.constructor.apply(this, arguments);
 }
@@ -2803,7 +2845,8 @@ CanvasGraphic.NAME = "canvasGraphic";
 
 CanvasGraphic.ATTRS = {
     /**
-     * Whether or not to render the `Graphic` automatically after to a specified parent node after init. This can be a Node instance or a CSS selector string.
+     * Whether or not to render the `Graphic` automatically after to a specified parent node after init. This can be a Node
+     * instance or a CSS selector string.
      * 
      * @config render
      * @type Node | String 
@@ -2919,12 +2962,15 @@ CanvasGraphic.ATTRS = {
      *  Determines the sizing of the Graphic. 
      *
      *  <dl>
-     *      <dt>sizeContentToGraphic</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code> and <code>height</code>
-     *      attributes or are determined by the dimensions of the parent element. The content contained in the Graphic will be sized to fit with in the Graphic instance's 
-     *      dimensions. When using this setting, the <code>preserveAspectRatio</code> attribute will determine how the contents are sized.</dd>
-     *      <dt>sizeGraphicToContent</dt><dd>(Also accepts a value of true) The Graphic's width and height are determined by the size and positioning of the content.</dd>
-     *      <dt>false</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code> and <code>height</code>
-     *      attributes or are determined by the dimensions of the parent element. The contents of the Graphic instance are not affected by this setting.</dd>
+     *      <dt>sizeContentToGraphic</dt><dd>The Graphic's width and height attributes are, either explicitly set through the
+     *      <code>width</code> and <code>height</code> attributes or are determined by the dimensions of the parent element. The
+     *      content contained in the Graphic will be sized to fit with in the Graphic instance's dimensions. When using this
+     *      setting, the <code>preserveAspectRatio</code> attribute will determine how the contents are sized.</dd>
+     *      <dt>sizeGraphicToContent</dt><dd>(Also accepts a value of true) The Graphic's width and height are determined by the
+     *      size and positioning of the content.</dd>
+     *      <dt>false</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code>
+     *      and <code>height</code> attributes or are determined by the dimensions of the parent element. The contents of the
+     *      Graphic instance are not affected by this setting.</dd>
      *  </dl>
      *
      *
@@ -3058,9 +3104,10 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
      * @param {Any} value The value to set the attribute to. This value is ignored if an object is received as 
      * the name param.
      */
-	set: function(attr, value) 
+	set: function()
 	{
 		var host = this,
+            attr = arguments[0],
             redrawAttrs = {
                 autoDraw: true,
                 autoSize: true,
@@ -3120,11 +3167,11 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
      */
     getXY: function()
     {
-        var node = Y.one(this._node),
+        var node = this._node,
             xy;
         if(node)
         {
-            xy = node.getXY();
+            xy = Y.DOM.getXY(node);
         }
         return xy;
     },
@@ -3136,7 +3183,7 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
      * @param {Object} config Optional attributes 
      * @private
      */
-    initializer: function(config) {
+    initializer: function() {
         var render = this.get("render"),
             visibility = this.get("visible") ? "visible" : "hidden",
             w = this.get("width") || 0,
@@ -3167,16 +3214,25 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
      * @param {HTMLElement} parentNode node in which to render the graphics node into.
      */
     render: function(render) {
-        var parentNode = Y.one(render),
+        var parentNode = render || DOCUMENT.body,
             node = this._node,
-            w = this.get("width") || parseInt(parentNode.getComputedStyle("width"), 10),
-            h = this.get("height") || parseInt(parentNode.getComputedStyle("height"), 10);
-        parentNode = parentNode || DOCUMENT.body;
+            w,
+            h;
+        if(render instanceof Y.Node)
+        {
+            parentNode = render._node;
+        }
+        else if(Y.Lang.isString(render))
+        {
+            parentNode = Y.Selector.query(render, DOCUMENT.body, true);
+        }
+        w = this.get("width") || parseInt(Y.DOM.getComputedStyle(parentNode, "width"), 10);
+        h = this.get("height") || parseInt(Y.DOM.getComputedStyle(parentNode, "height"), 10);
         parentNode.appendChild(node);
         node.style.display = "block";
         node.style.position = "absolute";
-        node.style.left = "0px";
-        node.style.top = "0px";
+        node.style.left = this.get("x") + "px";
+        node.style.top = this.get("y") + "px";
         this.set("width", w);
         this.set("height", h);
         this.parentNode = parentNode;
@@ -3194,7 +3250,11 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
         if(this._node)
         {
             this._removeChildren(this._node);
-            Y.one(this._node).destroy();
+            if(this._node.parentNode)
+            {
+                this._node.parentNode.removeChild(this._node);
+            }
+            this._node = null;
         }
     },
 
@@ -3212,8 +3272,8 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
         {
             cfg.visible = false;
         }
-        var shapeClass = this._getShapeClass(cfg.type),
-            shape = new shapeClass(cfg);
+        var ShapeClass = this._getShapeClass(cfg.type),
+            shape = new ShapeClass(cfg);
         this._appendShape(shape);
         return shape;
     },
@@ -3442,14 +3502,14 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
             node = this.get("node");
         if(autoSize)
         {
-            if(autoSize == "sizeContentToGraphic")
+            if(autoSize === "sizeContentToGraphic")
             {
                 contentWidth = box.right - box.left;
                 contentHeight = box.bottom - box.top;
                 w = parseFloat(Y_DOM.getComputedStyle(node, "width"));
                 h = parseFloat(Y_DOM.getComputedStyle(node, "height"));
                 matrix = new Y.Matrix();
-                if(preserveAspectRatio == "none")
+                if(preserveAspectRatio === "none")
                 {
                     xScale = w/contentWidth;
                     yScale = h/contentHeight;
@@ -3635,4 +3695,4 @@ Y.extend(CanvasGraphic, Y.GraphicBase, {
 Y.CanvasGraphic = CanvasGraphic;
 
 
-}, '3.7.3', {"requires": ["graphics"]});
+}, '3.16.0', {"requires": ["graphics"]});

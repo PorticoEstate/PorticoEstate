@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('widget-position-constrain', function (Y, NAME) {
 
 /**
@@ -44,12 +45,7 @@ var CONSTRAIN = "constrain",
  * @class WidgetPositionConstrain
  * @param {Object} User configuration object
  */
-function PositionConstrain(config) {
-    if (!this._posNode) {
-        Y.error("WidgetPosition needs to be added to the Widget, before WidgetPositionConstrain is added"); 
-    }
-    Y.after(this._bindUIPosConstrained, this, BINDUI);
-}
+function PositionConstrain(config) {}
 
 /**
  * Static property used to define the default attribute 
@@ -110,6 +106,13 @@ PREVENT_OVERLAP_MAP = PositionConstrain._PREVENT_OVERLAP = {
 };
 
 PositionConstrain.prototype = {
+
+    initializer : function() {
+        if (!this._posNode) {
+            Y.error("WidgetPosition needs to be added to the Widget, before WidgetPositionConstrain is added");
+        }
+        Y.after(this._bindUIPosConstrained, this, BINDUI);
+    },
 
     /**
      * Calculates the constrained positions for the XY positions provided, using
@@ -296,7 +299,7 @@ PositionConstrain.prototype = {
      * Updates the UI if enabling constraints, and sets up the xyChange event listeners
      * to constrain whenever the widget is moved. Disabling constraints removes the listeners.
      * 
-     * @method enable or disable constraints listeners
+     * @method _enableConstraints
      * @private
      * @param {boolean} enable Enable or disable constraints 
      */
@@ -349,4 +352,4 @@ PositionConstrain.prototype = {
 Y.WidgetPositionConstrain = PositionConstrain;
 
 
-}, '3.7.3', {"requires": ["widget-position"]});
+}, '3.16.0', {"requires": ["widget-position"]});

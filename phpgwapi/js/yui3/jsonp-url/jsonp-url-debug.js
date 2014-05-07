@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('jsonp-url', function (Y, NAME) {
 
 var JSONPRequest = Y.JSONPRequest,
@@ -112,8 +113,14 @@ Y.mix(JSONPRequest.prototype, {
      * @protected
      */
     _format: function (url, proxy) {
-        var callback = this._template.replace(/\{callback\}/, proxy),
-            lastChar;
+        var callbackRE = /\{callback\}/,
+            callback, lastChar;
+
+        if (callbackRE.test(url)) {
+            return url.replace(callbackRE, proxy);
+        }
+
+        callback = this._template.replace(callbackRE, proxy);
 
         if (this._pattern.test(url)) {
             return url.replace(this._pattern, callback);
@@ -129,4 +136,4 @@ Y.mix(JSONPRequest.prototype, {
 }, true);
 
 
-}, '3.7.3', {"requires": ["jsonp"]});
+}, '3.16.0', {"requires": ["jsonp"]});

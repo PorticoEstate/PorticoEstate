@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('calendar', function (Y, NAME) {
 
 /**
@@ -25,7 +26,6 @@ var getCN             = Y.ClassNameManager.getClassName,
     KEY_RIGHT         = 39,
     KEY_ENTER         = 13,
     KEY_SPACE         = 32,
-    CAL_HD            = getCN(CALENDAR, 'header'),
     CAL_DAY_SELECTED  = getCN(CALENDAR, 'day-selected'),
     CAL_DAY_HILITED   = getCN(CALENDAR, 'day-highlighted'),
     CAL_DAY           = getCN(CALENDAR, 'day'),
@@ -33,7 +33,6 @@ var getCN             = Y.ClassNameManager.getClassName,
     CAL_NEXTMONTH_DAY = getCN(CALENDAR, 'nextmonth-day'),
     CAL_GRID          = getCN(CALENDAR, 'grid'),
     ydate             = Y.DataType.Date,
-    delegate          = Y.delegate,
     CAL_PANE          = getCN(CALENDAR, 'pane'),
     os                = Y.UA.os;
 
@@ -46,7 +45,7 @@ var getCN             = Y.ClassNameManager.getClassName,
   * @param config {Object} Configuration object (see Configuration attributes)
   * @constructor
   */
-function Calendar(config) {
+function Calendar() {
   Calendar.superclass.constructor.apply ( this, arguments );
 }
 
@@ -75,7 +74,6 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
   initializer : function () {
     this.plug(Y.Plugin.CalendarNavigator);
 
-
     this._keyEvents = [];
     this._highlightedDateNode = null;
     this._lastSelectedDate = null;
@@ -90,12 +88,16 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
   _bindCalendarEvents : function () {
     var contentBox = this.get('contentBox'),
         pane       = contentBox.one("." + CAL_PANE);
+
     pane.on("selectstart", this._preventSelectionStart);
     pane.delegate("click", this._clickCalendar, "." + CAL_DAY + ", ." + CAL_PREVMONTH_DAY + ", ." + CAL_NEXTMONTH_DAY, this);
     pane.delegate("keydown", this._keydownCalendar, "." + CAL_GRID, this);
     pane.delegate("focus", this._focusCalendarGrid, "." + CAL_GRID, this);
     pane.delegate("focus", this._focusCalendarCell, "." + CAL_DAY, this);
     pane.delegate("blur", this._blurCalendarGrid, "." + CAL_GRID + ",." + CAL_DAY, this);
+
+
+        this.after(['minimumDateChange', 'maximumDateChange'], this._afterCustomRendererChange);
   },
 
   /**
@@ -141,6 +143,7 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
    */   
   _getGridNumber : function (gridNode) {
     var idParts = gridNode.get("id").split("_").reverse();
+
         return parseInt(idParts[0], 10);
   },
 
@@ -149,7 +152,7 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
    * @method _blurCalendarGrid
    * @protected
    */   
-   _blurCalendarGrid : function (ev) {
+    _blurCalendarGrid : function () {
       this._unhighlightCurrentDateNode();
    },
 
@@ -169,7 +172,7 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
    * @method _focusCalendarGrid
    * @protected
    */ 
-   _focusCalendarGrid : function (ev) {     
+    _focusCalendarGrid : function () {
        this._unhighlightCurrentDateNode();
        this._highlightedDateNode = null;
    },
@@ -184,7 +187,12 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
         curDate = !this._highlightedDateNode ? null : this._nodeToDate(this._highlightedDateNode),
         keyCode = ev.keyCode,
         dayNum = 0,
-        dir = '';
+            dir = '',
+            selMode,
+            newDate,
+            startDate,
+            endDate,
+            lastPaneDate;
 
         switch(keyCode) {
           case KEY_DOWN: 
@@ -206,16 +214,14 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
           case KEY_SPACE: case KEY_ENTER:
             ev.preventDefault();
             if (this._highlightedDateNode) {
-            var selMode = this.get("selectionMode");
+                    selMode = this.get("selectionMode");
             if (selMode === "single" && !this._highlightedDateNode.hasClass(CAL_DAY_SELECTED)) {
                 this._clearSelection(true);
                 this._addDateToSelection(curDate);
-            }
-            else if (selMode === "multiple" || selMode === "multiple-sticky") {
+                    } else if (selMode === "multiple" || selMode === "multiple-sticky") {
                 if (this._highlightedDateNode.hasClass(CAL_DAY_SELECTED)) {
                   this._removeDateFromSelection(curDate);
-                }
-                else {
+                        } else {
                   this._addDateToSelection(curDate);
                 }
              }
@@ -224,23 +230,24 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
         }
  
 
-      if (keyCode == KEY_DOWN || keyCode == KEY_UP || keyCode == KEY_LEFT || keyCode == KEY_RIGHT) {
+        if (keyCode === KEY_DOWN || keyCode === KEY_UP || keyCode === KEY_LEFT || keyCode === KEY_RIGHT) {
 
       if (!curDate) {
              curDate = ydate.addMonths(this.get("date"), gridNum);
              dayNum = 0;
       }
+
               ev.preventDefault();
-          var newDate = ydate.addDays(curDate, dayNum),
-              startDate = this.get("date"),
-              endDate = ydate.addMonths(this.get("date"), this._paneNumber - 1),
+
+            newDate = ydate.addDays(curDate, dayNum);
+            startDate = this.get("date");
+            endDate = ydate.addMonths(this.get("date"), this._paneNumber - 1);
               lastPaneDate = new Date(endDate);
               endDate.setDate(ydate.daysInMonth(endDate));
           
           if (ydate.isInRange(newDate, startDate, endDate)) {
 /*
               var paneShift = (newDate.getMonth() - curDate.getMonth()) % 10;
-
 
               if (paneShift != 0) {
                 var newGridNum = gridNum + paneShift,
@@ -250,20 +257,17 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
               }
 */
               this._highlightDateNode(newDate);
-          }
-          else if (ydate.isGreater(startDate, newDate)) {
+            } else if (ydate.isGreater(startDate, newDate)) {
             if (!ydate.isGreaterOrEqual(this.get("minimumDate"), startDate)) {
                  this.set("date", ydate.addMonths(startDate, -1));
                  this._highlightDateNode(newDate);
             }
-          }
-          else if (ydate.isGreater(newDate, endDate)) {
+            } else if (ydate.isGreater(newDate, endDate)) {
             if (!ydate.isGreaterOrEqual(lastPaneDate, this.get("maximumDate"))) {
                  this.set("date", ydate.addMonths(startDate, 1));
                  this._highlightDateNode(newDate);
             }
           }
-
         }
    },
 
@@ -278,7 +282,10 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
             clickedCellIsDay = clickedCell.hasClass(CAL_DAY) && 
                                !clickedCell.hasClass(CAL_PREVMONTH_DAY) && 
                                !clickedCell.hasClass(CAL_NEXTMONTH_DAY),
-            clickedCellIsSelected = clickedCell.hasClass(CAL_DAY_SELECTED);
+
+        clickedCellIsSelected = clickedCell.hasClass(CAL_DAY_SELECTED),
+        selectedDate;
+
         switch (this.get("selectionMode")) {
           case("single"):
                if (clickedCellIsDay) {
@@ -292,8 +299,7 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
                if (clickedCellIsDay) {
                  if (clickedCellIsSelected) {
                   this._removeDateFromSelection(this._nodeToDate(clickedCell));
-                 }
-                 else {
+                    } else {
                   this._addDateToSelection(this._nodeToDate(clickedCell));
                  }
                }
@@ -304,37 +310,30 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
                       this._clearSelection(true);
                       this._lastSelectedDate = this._nodeToDate(clickedCell);
                       this._addDateToSelection(this._lastSelectedDate);
-                 }
-                 else if (((os == 'macintosh' && ev.metaKey) || (os != 'macintosh' && ev.ctrlKey)) && !ev.shiftKey) {
+                    } else if (((os === 'macintosh' && ev.metaKey) || (os !== 'macintosh' && ev.ctrlKey)) && !ev.shiftKey) {
                     if (clickedCellIsSelected) {
                       this._removeDateFromSelection(this._nodeToDate(clickedCell));
                       this._lastSelectedDate = null;
-                    }
-                    else {
+                        } else {
                       this._lastSelectedDate = this._nodeToDate(clickedCell);
                       this._addDateToSelection(this._lastSelectedDate);
                     }
-                 }
-                 else if (((os == 'macintosh' && ev.metaKey) || (os != 'macintosh' && ev.ctrlKey)) && ev.shiftKey) {
+                    } else if (((os === 'macintosh' && ev.metaKey) || (os !== 'macintosh' && ev.ctrlKey)) && ev.shiftKey) {
                     if (this._lastSelectedDate) {
-                      var selectedDate = this._nodeToDate(clickedCell);
+                            selectedDate = this._nodeToDate(clickedCell);
                       this._addDateRangeToSelection(selectedDate, this._lastSelectedDate);
                       this._lastSelectedDate = selectedDate;
-                    }
-                    else {
+                        } else {
                       this._lastSelectedDate = this._nodeToDate(clickedCell);
                       this._addDateToSelection(this._lastSelectedDate);
                     }
-  
-                 }
-                 else if (ev.shiftKey) {
+                    } else if (ev.shiftKey) {
                       if (this._lastSelectedDate) {
-                        var selectedDate = this._nodeToDate(clickedCell);
+                            selectedDate = this._nodeToDate(clickedCell);
                         this._clearSelection(true);
                         this._addDateRangeToSelection(selectedDate, this._lastSelectedDate);
                         this._lastSelectedDate = selectedDate;
-                      }
-                      else {
+                        } else {
                         this._clearSelection(true);
                         this._lastSelectedDate = this._nodeToDate(clickedCell);
                           this._addDateToSelection(this._lastSelectedDate);
@@ -353,8 +352,7 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
      * @event dateClick
      */
         this.fire("dateClick", {cell: clickedCell, date: this._nodeToDate(clickedCell)});
-      }
-      else if (clickedCell.hasClass(CAL_PREVMONTH_DAY)) {
+        } else if (clickedCell.hasClass(CAL_PREVMONTH_DAY)) {
    /**
      * Fired when any of the previous month's days displayed before the calendar grid
      * are clicked.
@@ -362,8 +360,7 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
      * @event prevMonthClick
      */
         this.fire("prevMonthClick");
-      }
-      else if (clickedCell.hasClass(CAL_NEXTMONTH_DAY)) {
+        } else if (clickedCell.hasClass(CAL_NEXTMONTH_DAY)) {
    /**
      * Fired when any of the next month's days displayed after the calendar grid
      * are clicked.
@@ -375,51 +372,125 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
     },
 
   /**
+     * Overrides CalendarBase.prototype._canBeSelected to disable
+     * nodes earlier than minimumDate and later than maximumDate
+     * @method _canBeSelected
+     * @private
+     */
+    _canBeSelected : function (date) {
+        var minDate = this.get('minimumDate'),
+            maxDate = this.get('maximumDate');
+
+        if ((minDate && !ydate.isGreaterOrEqual(date, minDate)) ||
+            (maxDate &&  ydate.isGreater(date, maxDate))) {
+            return false;
+        }
+
+        return Calendar.superclass._canBeSelected.call(this, date);
+    },
+
+    /**
+     * Overrides CalendarBase.prototype._renderCustomRules to disable
+     * nodes earlier than minimumDate and later than maximumDate
+     * @method _renderCustomRules
+     * @private
+     */
+    _renderCustomRules: function () {
+        Calendar.superclass._renderCustomRules.call(this);
+
+        var minDate = this.get('minimumDate'),
+            maxDate = this.get('maximumDate'),
+            dates = [],
+            i, l,
+            paneDate,
+            paneNum;
+
+        if (!minDate && !maxDate) {
+            return;
+        }
+
+        for (paneNum = 0; paneNum < this._paneNumber; paneNum++) {
+            paneDate = ydate.addMonths(this.get("date"), paneNum);
+            dates = dates.concat(ydate.listOfDatesInMonth(paneDate));
+        }
+
+        if (minDate) {
+            for (i = 0, l = dates.length; i < l; i++) {
+                if (!ydate.isGreaterOrEqual(dates[i], minDate)) {
+                    this._disableDate(dates[i]);
+                } else {
+                    break;
+                }
+            }
+        }
+
+        if (maxDate) {
+            for (i = dates.length - 1; i >= 0; i--) {
+                if (ydate.isGreater(dates[i], maxDate)) {
+                    this._disableDate(dates[i]);
+                } else {
+                    break;
+                }
+            }
+        }
+    },
+
+    /**
    * Subtracts one month from the current calendar view.
    * @method subtractMonth
+     * @return {Calendar} A reference to this object
+     * @chainable
    */   
   subtractMonth : function (e) {
     this.set("date", ydate.addMonths(this.get("date"), -1));
     if (e) {
       e.halt();
     }
+        return this;
   },
 
   /**
    * Subtracts one year from the current calendar view.
    * @method subtractYear
+     * @return {Calendar} A reference to this object
+     * @chainable
    */ 
   subtractYear : function (e) {
     this.set("date", ydate.addYears(this.get("date"), -1));
     if (e) {
       e.halt();
     }
+        return this;
   },
 
   /**
    * Adds one month to the current calendar view.
    * @method addMonth
+     * @return {Calendar} A reference to this object
+     * @chainable
    */   
   addMonth : function (e) {    
     this.set("date", ydate.addMonths(this.get("date"), 1));
     if (e) {
       e.halt();
     }
+        return this;
   },
 
   /**
    * Adds one year to the current calendar view.
    * @method addYear
+     * @return {Calendar} A reference to this object
+     * @chainable
    */   
   addYear : function (e) {
     this.set("date", ydate.addYears(this.get("date"), 1));
     if (e) {
       e.halt();
     }
+        return this;
   }
-},
-
-{
+}, {
    /**
     * The identity of the widget.
     *
@@ -477,29 +548,24 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
       setter: function (val) {
 
         var newDate = this._normalizeDate(val),
-            newTopDate = ydate.addMonths(newDate, this._paneNumber - 1);
-        var minDate = this.get("minimumDate");
-        var maxDate = this.get("maximumDate");
+                    newEndDate = ydate.addMonths(newDate, this._paneNumber - 1),
+                    minDate    = this.get("minimumDate"),
+                    maxDate    = this.get("maximumDate");
+
             if ((!minDate || ydate.isGreaterOrEqual(newDate, minDate)) && 
-                (!maxDate || ydate.isGreaterOrEqual(maxDate, newTopDate))) {
+                    (!maxDate || ydate.isGreaterOrEqual(maxDate, newEndDate))
+                ) {
                 return newDate;
-            }
-
-            else if (minDate && ydate.isGreater(minDate, newDate)) {
-                   return minDate;
-            }
-
-            else if (maxDate && ydate.isGreater(newTopDate, maxDate)) {
-                var actualMaxDate = ydate.addMonths(maxDate, -1*(this._paneNumber - 1));
-                  return actualMaxDate;
+                } else if (minDate && ydate.isGreater(minDate, newDate)) {
+                    return this._normalizeDate(minDate);
+                } else if (maxDate && ydate.isGreater(newEndDate, maxDate)) {
+                    return ydate.addMonths(this._normalizeDate(maxDate), 1 - this._paneNumber);
             }
      }
     },
 
     /**
-     * The minimum date that can be displayed by the calendar. The calendar will not
-     * allow dates earlier than this one to be set, and will reset any earlier date to
-     * this date. Should be `null` if no minimum date is needed.
+         * Unless minimumDate is null, it will not be possible to display and select dates earlier than this one.
      *
      * @attribute minimumDate
      * @type Date
@@ -508,24 +574,21 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
     minimumDate: {
       value: null,
       setter: function (val) {
-        if (val) {
+                if (Y.Lang.isDate(val)) {
           var curDate = this.get('date'),
-              newMinDate = this._normalizeDate(val);
-          if (curDate && !ydate.isGreaterOrEqual(curDate, newMinDate)) {
-              this.set('date', newMinDate);
-          }
-          return newMinDate;
+                        newMin  = this._normalizeTime(val);
+                    if (curDate && !ydate.isGreaterOrEqual(curDate, newMin)) {
+                        this.set('date', val);
         }
-        else {
-          return this._normalizeDate(val);
+                    return newMin;
+                } else {
+                    return null;
         }
       }
     },
 
     /**
-     * The maximum date that can be displayed by the calendar. The calendar will not
-     * allow dates later than this one to be set, and will reset any later date to
-     * this date. Should be `null` if no maximum date is needed.
+         * Unless maximumDate is null, it will not be possible to display and select dates later than this one.
      *
      * @attribute maximumDate
      * @type Date
@@ -534,20 +597,21 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
     maximumDate: {
       value: null,
       setter: function (val) {
-        if (val) {
-          var curDate = this.get('date'),
-              newMaxDate = this._normalizeDate(val);
+                if (Y.Lang.isDate(val)) {
+                    var curDate = this.get('date');
+
           if (curDate && !ydate.isGreaterOrEqual(val, ydate.addMonths(curDate, this._paneNumber - 1))) {
-              this.set('date', ydate.addMonths(newMaxDate, -1*(this._paneNumber -1)));
+                        this.set('date', ydate.addMonths(this._normalizeDate(val), 1 - this._paneNumber));
           }
-          return newMaxDate;
-        }
-        else {
-          return val;
+
+                    return this._normalizeTime(val);
+                } else {
+                    return null;
         }
       }
     }
   }
 });
 
-}, '3.7.3', {"requires": ["calendar-base", "calendarnavigator"], "lang": ["de", "en", "fr", "ja", "nb-NO", "pt-BR", "ru", "zh-HANT-TW"], "skinnable": true});
+
+}, '3.16.0', {"requires": ["calendar-base", "calendarnavigator"], "skinnable": true});

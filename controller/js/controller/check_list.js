@@ -1,7 +1,7 @@
 $(document).ready(function(){
 		
 	// ADD CHECKLIST
-	$("#frm_add_check_list").live("submit", function(e){
+	$("#frm_add_check_list").on("submit", function(e){
 		var thisForm = $(this);
 		var statusFieldVal = $("#status").val();
 		var statusRow = $("#status").closest(".row");
@@ -27,7 +27,7 @@ $(document).ready(function(){
 	});	
 	
 	// Display submit button on click
-	$("#frm_add_check_list").live("click", function(e){
+	$("#frm_add_check_list").on("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
@@ -36,7 +36,7 @@ $(document).ready(function(){
 	
 	
 	// UPDATE CHECKLIST DETAILS	
-	$("#frm_update_check_list").live("submit", function(e){
+	$("#frm_update_check_list").on("submit", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");

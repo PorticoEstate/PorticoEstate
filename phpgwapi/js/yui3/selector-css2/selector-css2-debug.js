@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('selector-css2', function (Y, NAME) {
 
 /**
@@ -66,13 +67,15 @@ var PARENT_NODE = 'parentNode',
         _bruteQuery: function(selector, root, firstOnly) {
             var ret = [],
                 nodes = [],
+                visited,
                 tokens = Selector._tokenize(selector),
                 token = tokens[tokens.length - 1],
                 rootDoc = Y.DOM._getDoc(root),
                 child,
                 id,
                 className,
-                tagName;
+                tagName,
+                isUniversal;
 
             if (token) {
                 // prefilter nodes
@@ -93,16 +96,30 @@ var PARENT_NODE = 'parentNode',
                     }
 
                 } else { // brute getElementsByTagName()
+                    visited = [];
                     child = root.firstChild;
+                    isUniversal = tagName === "*";
                     while (child) {
-                        // only collect HTMLElements
-                        // match tag to supplement missing getElementsByTagName
-                        if (child.tagName && (tagName === '*' || child.tagName === tagName)) {
+                    while (child) {
+                            // IE 6-7 considers comment nodes as element nodes, and gives them the tagName "!".
+                            // We can filter them out by checking if its tagName is > "@".
+                            // This also avoids a superflous nodeType === 1 check.
+                            if (child.tagName > "@" && (isUniversal || child.tagName === tagName)) {
                             nodes.push(child);
                         }
-                        child = child.nextSibling || child.firstChild;
+
+                            // We may need to traverse back up the tree to find more unvisited subtrees.
+                            visited.push(child);
+                            child = child.firstChild;
+                        }
+
+                        // Find the most recently visited node who has a next sibling.
+                        while (visited.length > 0 && !child) {
+                            child = visited.pop().nextSibling;
+                        }
                     }
                 }
+
                 if (nodes.length) {
                     ret = Selector._filterNodes(nodes, tokens, firstOnly);
                 }
@@ -447,5 +464,4 @@ if (Y.Selector.useNative && Y.config.doc.querySelector) {
 }
 
 
-
-}, '3.7.3', {"requires": ["selector-native"]});
+}, '3.16.0', {"requires": ["selector-native"]});

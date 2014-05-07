@@ -231,7 +231,7 @@ YAHOO.util.Event.addListener(window, "load", function()
 // jquery
 $(document).ready(function(){
 
-	$("#edit_inventory").live("submit", function(e){
+	$("#edit_inventory").on("submit", function(e){
 
 		e.preventDefault();
 
@@ -306,7 +306,7 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#workorder_cancel").live("submit", function(e){
+	$("#workorder_cancel").on("submit", function(e){
 		if($("#lean").val() == 0)
 		{
 			return;

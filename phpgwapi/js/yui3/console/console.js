@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('console', function (Y, NAME) {
 
 /**
@@ -19,10 +20,6 @@ YUI.add('console', function (Y, NAME) {
  * configured logLevel.
  *
  * @module console
- * @class Console
- * @extends Widget
- * @param conf {Object} Configuration object (see Configuration attributes)
- * @constructor
  */
 var getCN = Y.ClassNameManager.getClassName,
     CHECKED        = 'checked',
@@ -96,7 +93,14 @@ var getCN = Y.ClassNameManager.getClassName,
     merge      = Y.merge,
     substitute = Y.Lang.sub;
     
+/**
+A basic console that displays messages logged throughout your application.
 
+@class Console
+@constructor
+@extends Widget
+@param [config] {Object} Object literal specifying widget configuration properties.
+**/
 function Console() {
     Console.superclass.constructor.apply(this,arguments);
 }
@@ -313,7 +317,7 @@ Y.Console = Y.extend(Console, Y.Widget,
          * behavior defined in _defEntryFn.
          *
          * @event entry
-         * @param event {Event.Facade} An Event Facade object with the following attribute specific properties added:
+         * @param event {EventFacade} An Event Facade object with the following attribute specific properties added:
          *  <dl>
          *      <dt>message</dt>
          *          <dd>The message data normalized into an object literal (see _normalizeMessage)</dd>
@@ -326,7 +330,7 @@ Y.Console = Y.extend(Console, Y.Widget,
          * Triggers the reset behavior via the default logic in _defResetFn.
          *
          * @event reset
-         * @param event {Event.Facade} Event Facade object
+         * @param event {EventFacade} Event Facade object
          * @preventable _defResetFn
          */
         this.publish(RESET, { defaultFn: this._defResetFn });
@@ -1517,4 +1521,4 @@ Y.Console = Y.extend(Console, Y.Widget,
 });
 
 
-}, '3.7.3', {"requires": ["yui-log", "widget"], "skinnable": true, "lang": ["en", "es", "ja"]});
+}, '3.16.0', {"requires": ["yui-log", "widget"], "skinnable": true, "lang": ["en", "es", "hu", "it", "ja"]});

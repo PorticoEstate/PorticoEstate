@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('jsonp', function (Y, NAME) {
 
 var isFunction = Y.Lang.isFunction;
@@ -196,13 +197,17 @@ JSONPRequest.prototype = {
         // TODO: queuing
         YUI.Env.JSONP[proxy] = wrap(config.on.success);
 
-        Y.Get.script(url, {
+        // Y.Get transactions block each other by design, but can easily
+        //  be made non-blocking by just calling execute() on the transaction.
+        // https://github.com/yui/yui3/pull/393#issuecomment-11961608
+        Y.Get.js(url, {
             onFailure : wrap(config.on.failure),
             onTimeout : wrap(config.on.timeout, true),
             timeout   : config.timeout,
             charset   : config.charset,
-            attributes: config.attributes
-        });
+            attributes: config.attributes,
+            async     : config.async
+        }).execute();
 
         return self;
     },
@@ -250,4 +255,4 @@ if (!YUI.Env.JSONP) {
 }
 
 
-}, '3.7.3', {"requires": ["get", "oop"]});
+}, '3.16.0', {"requires": ["get", "oop"]});

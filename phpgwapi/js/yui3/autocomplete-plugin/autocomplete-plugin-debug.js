@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('autocomplete-plugin', function (Y, NAME) {
 
 /**
@@ -51,4 +52,4 @@ Plugin.AutoComplete     = ACListPlugin;
 Plugin.AutoCompleteList = ACListPlugin;
 
 
-}, '3.7.3', {"requires": ["autocomplete-list", "node-pluginhost"]});
+}, '3.16.0', {"requires": ["autocomplete-list", "node-pluginhost"]});

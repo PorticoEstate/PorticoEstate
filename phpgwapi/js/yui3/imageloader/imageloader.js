@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('imageloader', function (Y, NAME) {
 
 /**
@@ -261,7 +262,7 @@ YUI.add('imageloader', function (Y, NAME) {
 		 * Registers an image with the group.
 		 * Arguments are passed through to a <code>Y.ImgLoadImgObj</code> constructor; see that class' attribute documentation for detailed information. "<code>domId</code>" is a required attribute.
 		 * @method registerImage
-		 * @param {Object} *  A configuration object literal with attribute name/value pairs  (passed through to a <code>Y.ImgLoadImgObj</code> constructor)
+		 * @param {Object} config A configuration object literal with attribute name/value pairs  (passed through to a <code>Y.ImgLoadImgObj</code> constructor)
 		 * @return {Object}  <code>Y.ImgLoadImgObj</code> that was registered
 		 */
 		registerImage: function() {
@@ -565,7 +566,7 @@ YUI.add('imageloader', function (Y, NAME) {
 		 * Displays the image; puts the URL into the DOM.
 		 * This method shouldn't be called externally, but is not private in the rare event that it needs to be called immediately.
 		 * @method fetch
-		 * @param {Int} withinY  The pixel distance from the top of the page, for which if the image lies within, it will be fetched. Undefined indicates that no check should be made, and the image should always be fetched
+		 * @param {Number} withinY  The pixel distance from the top of the page, for which if the image lies within, it will be fetched. Undefined indicates that no check should be made, and the image should always be fetched
 		 * @return {Boolean}  Whether the image has been fetched (either during this execution or previously)
 		 */
 		fetch: function(withinY) {
@@ -624,7 +625,7 @@ YUI.add('imageloader', function (Y, NAME) {
 		/**
 		 * Gets the object (as a <code>Y.Node</code>) of the DOM element indicated by "<code>domId</code>".
 		 * @method _getImgEl
-		 * @returns {Object} DOM element of the image as a <code>Y.Node</code> object
+		 * @return {Object} DOM element of the image as a <code>Y.Node</code> object
 		 * @private
 		 */
 		_getImgEl: function() {
@@ -638,7 +639,7 @@ YUI.add('imageloader', function (Y, NAME) {
 		 * Gets the Y position of the node in page coordinates.
 		 * Expects that the page-coordinate position of the image won't change.
 		 * @method _getYPos
-		 * @returns {Object} The Y position of the image
+		 * @return {Object} The Y position of the image
 		 * @private
 		 */
 		_getYPos: function() {
@@ -656,4 +657,4 @@ YUI.add('imageloader', function (Y, NAME) {
 
 
 
-}, '3.7.3', {"requires": ["base-base", "node-style", "node-screen"]});
+}, '3.16.0', {"requires": ["base-base", "node-style", "node-screen"]});
