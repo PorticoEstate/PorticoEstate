@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('widget-position', function (Y, NAME) {
 
 /**
@@ -37,12 +38,6 @@ YUI.add('widget-position', function (Y, NAME) {
      * @param {Object} config User configuration object
      */
     function Position(config) {
-        this._posNode = this.get(BOUNDING_BOX);
-
-        // WIDGET METHOD OVERLAP
-        Y.after(this._renderUIPosition, this, RENDERUI);
-        Y.after(this._syncUIPosition, this, SYNCUI);
-        Y.after(this._bindUIPosition, this, BINDUI);
     }
 
     /**
@@ -118,6 +113,15 @@ YUI.add('widget-position', function (Y, NAME) {
 
     Position.prototype = {
 
+        initializer : function() {
+            this._posNode = this.get(BOUNDING_BOX);
+
+            // WIDGET METHOD OVERLAP
+            Y.after(this._renderUIPosition, this, RENDERUI);
+            Y.after(this._syncUIPosition, this, SYNCUI);
+            Y.after(this._bindUIPosition, this, BINDUI);
+        },
+
         /**
          * Creates/Initializes the DOM to support xy page positioning.
          * <p>
@@ -167,11 +171,9 @@ YUI.add('widget-position', function (Y, NAME) {
          *
          * @method move
          *
-         * @param {Number} x The new x position
-         * @param {Number} y The new y position
-         * <p>Or</p>
-         * @param {Array} x, y values passed as an array ([x, y]), to support
-         * simple pass through of Node.getXY results
+         * @param {Number|Number[]} x The new x position or [x, y] values passed
+         * as an array to support simple pass through of Node.getXY results
+         * @param {Number} [y] The new y position
          */
         move: function () {
             var args = arguments,
@@ -278,4 +280,4 @@ YUI.add('widget-position', function (Y, NAME) {
     Y.WidgetPosition = Position;
 
 
-}, '3.7.3', {"requires": ["base-build", "node-screen", "widget"]});
+}, '3.16.0', {"requires": ["base-build", "node-screen", "widget"]});

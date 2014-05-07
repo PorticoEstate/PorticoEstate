@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('base-base', function (Y, NAME) {
 
     /**
@@ -22,32 +23,10 @@ YUI.add('base-base', function (Y, NAME) {
      * @submodule base-base
      */
 
-    /**
-     * The base module provides the Base class, which objects requiring attribute and custom event support can extend. 
-     * The module also provides two ways to reuse code - It augments Base with the Plugin.Host interface which provides 
-     * plugin support and also provides the Base.build method which provides a way to build custom classes using extensions.
-     *
-     * @module base
-     */
-
-    /**
-     * The base-base submodule provides the Base class without the Plugin support, provided by Plugin.Host, 
-     * and without the extension support provided by Base.build.
-     *
-     * @module base
-     * @submodule base-base
-     */
-    var L = Y.Lang,
-
-        DESTROY = "destroy",
-        INIT = "init",
-
-        BUBBLETARGETS = "bubbleTargets",
-        _BUBBLETARGETS = "_bubbleTargets",
-
+    var AttributeCore   = Y.AttributeCore,
+        AttributeExtras = Y.AttributeExtras,
         BaseCore = Y.BaseCore,
-        AttributeCore = Y.AttributeCore,
-        Attribute = Y.Attribute;
+        BaseObservable  = Y.BaseObservable;
 
     /**
      * <p>
@@ -59,6 +38,20 @@ YUI.add('base-base', function (Y, NAME) {
      * </p>
      *
      * <p>
+     * **NOTE:** Prior to version 3.11.0, ATTRS would get added a class at a time. That is,
+     * Base would loop through each class in the hierarchy, and add the class' ATTRS, and
+     * then call it's initializer, and move on to the subclass' ATTRS and initializer. As of
+     * 3.11.0, ATTRS from all classes in the hierarchy are added in one `addAttrs` call before
+     * any initializers are called. This fixes subtle edge-case issues with subclass ATTRS overriding
+     * superclass `setter`, `getter` or `valueFn` definitions and being unable to get/set attributes
+     * defined by the subclass. This order of operation change may impact `setter`, `getter` or `valueFn`
+     * code which expects a superclass' initializer to have run. This is expected to be rare, but to support
+     * it, Base supports a `_preAddAttrs()`, method hook (same signature as `addAttrs`). Components can
+     * implement this method on their prototype for edge cases which do require finer control over
+     * the order in which attributes are added (see widget-htmlparser).
+     * </p>
+     *
+     * <p>
      * The static <a href="#property_NAME">NAME</a> property of each class extending 
      * from Base will be used as the identifier for the class, and is used by Base to prefix 
      * all events fired by instances of that class.
@@ -67,9 +60,9 @@ YUI.add('base-base', function (Y, NAME) {
      * @class Base
      * @constructor
      * @uses BaseCore
-     * @uses Attribute
+     * @uses BaseObservable
      * @uses AttributeCore
-     * @uses AttributeEvents
+     * @uses AttributeObservable
      * @uses AttributeExtras
      * @uses EventTarget
      *
@@ -83,17 +76,23 @@ YUI.add('base-base', function (Y, NAME) {
      *
      * <dl>
      *     <dt>on</dt>
-     *     <dd>An event name to listener function map, to register event listeners for the "on" moment of the event. A constructor convenience property for the <a href="Base.html#method_on">on</a> method.</dd>
+     *   <dd>An event name to listener function map, to register event listeners for the "on" moment of the event.
+     *       A constructor convenience property for the <a href="Base.html#method_on">on</a> method.</dd>
      *     <dt>after</dt>
-     *     <dd>An event name to listener function map, to register event listeners for the "after" moment of the event. A constructor convenience property for the <a href="Base.html#method_after">after</a> method.</dd>
+     *   <dd>An event name to listener function map, to register event listeners for the "after" moment of the event.
+     *       A constructor convenience property for the <a href="Base.html#method_after">after</a> method.</dd>
      *     <dt>bubbleTargets</dt>
-     *     <dd>An object, or array of objects, to register as bubble targets for bubbled events fired by this instance. A constructor convenience property for the <a href="EventTarget.html#method_addTarget">addTarget</a> method.</dd>
+     *   <dd>An object, or array of objects, to register as bubble targets for bubbled events fired by this instance.
+     *       A constructor convenience property for the <a href="EventTarget.html#method_addTarget">addTarget</a> method.</dd>
      *     <dt>plugins</dt>
-     *     <dd>A plugin, or array of plugins to be plugged into the instance (see PluginHost's plug method for signature details). A constructor convenience property for the <a href="Plugin.Host.html#method_plug">plug</a> method.</dd>
+     *   <dd>A plugin, or array of plugins to be plugged into the instance (see PluginHost's plug method for signature details).
+     *       A constructor convenience property for the <a href="Plugin.Host.html#method_plug">plug</a> method.</dd>
      * </dl>
      */
     function Base() {
         BaseCore.apply(this, arguments);
+        BaseObservable.apply(this, arguments);
+        AttributeExtras.apply(this, arguments);
     }
 
     /**
@@ -105,8 +104,7 @@ YUI.add('base-base', function (Y, NAME) {
      * @static
      * @private
      */
-    Base._ATTR_CFG = Attribute._ATTR_CFG.concat("cloneDefaultValue");
-    Base._ATTR_CFG_HASH = Y.Array.hash(Base._ATTR_CFG);
+    Base._ATTR_CFG = BaseCore._ATTR_CFG.concat(BaseObservable._ATTR_CFG);
 
     /**
      * The array of non-attribute configuration properties supported by this class. 
@@ -123,7 +121,7 @@ YUI.add('base-base', function (Y, NAME) {
      * @static
      * @private
      */
-    Base._NON_ATTRS_CFG = BaseCore._NON_ATTRS_CFG.concat(["on", "after", "bubbleTargets"]);
+    Base._NON_ATTRS_CFG = BaseCore._NON_ATTRS_CFG.concat(BaseObservable._NON_ATTRS_CFG);
 
     /**
      * <p>
@@ -139,7 +137,7 @@ YUI.add('base-base', function (Y, NAME) {
      * @type String
      * @static
      */
-    Base.NAME = "base";
+    Base.NAME = 'base';
 
     /**
      * The default set of attributes which will be available for instances of this class, and 
@@ -155,193 +153,34 @@ YUI.add('base-base', function (Y, NAME) {
      * @type Object
      * @static
      */
-    Base.ATTRS = AttributeCore.prototype._protectAttrs(BaseCore.ATTRS);
-
-    Base.prototype = {
+    Base.ATTRS = AttributeCore.protectAttrs(BaseCore.ATTRS);
 
         /**
-         * Internal construction logic for Base.
-         *
-         * @method _initBase
-         * @param {Object} config The constructor configuration object
-         * @private
-         */
-        _initBase: function(cfg) {
+    Provides a way to safely modify a `Y.Base` subclass' static `ATTRS` after
+    the class has been defined or created.
 
-            this._eventPrefix = this.constructor.EVENT_PREFIX || this.constructor.NAME;
+    Base-based classes cache information about the class hierarchy in order to
+    efficiently create instances. This cache includes includes the aggregated
+    `ATTRS` configs. If the static `ATTRS` configs need to be modified after the
+    class has been defined or create, then use this method which will make sure
+    to clear any cached data before making any modifications.
 
-            Y.BaseCore.prototype._initBase.call(this, cfg);
-        },
+    @method modifyAttrs
+    @param {Function} [ctor] The constructor function whose `ATTRS` should be
+        modified. If a `ctor` function is not specified, then `this` is assumed
+        to be the constructor which hosts the `ATTRS`.
+    @param {Object} configs The collection of `ATTRS` configs to mix with the
+        existing attribute configurations.
+    @static
+    @since 3.10.0
+    **/
+    Base.modifyAttrs = BaseCore.modifyAttrs;
 
-        /**
-         * Initializes Attribute 
-         * 
-         * @method _initAttribute
-         * @private
-         */
-        _initAttribute: function(cfg) {
-            Attribute.call(this);
-            this._yuievt.config.prefix = this._eventPrefix;
-        },
-
-        /**
-         * Utility method to define the attribute hash used to filter/whitelist property mixes for 
-         * this class. 
-         * 
-         * @method _attrCfgHash
-         * @private
-         */
-        _attrCfgHash: function() {
-            return Base._ATTR_CFG_HASH;
-        },
-
-        /**
-         * Init lifecycle method, invoked during construction.
-         * Fires the init event prior to setting up attributes and 
-         * invoking initializers for the class hierarchy.
-         *
-         * @method init
-         * @chainable
-         * @param {Object} config Object with configuration property name/value pairs
-         * @return {Base} A reference to this object
-         */
-        init: function(config) {
-            /**
-             * <p>
-             * Lifecycle event for the init phase, fired prior to initialization. 
-             * Invoking the preventDefault() method on the event object provided 
-             * to subscribers will prevent initialization from occuring.
-             * </p>
-             * <p>
-             * Subscribers to the "after" momemt of this event, will be notified
-             * after initialization of the object is complete (and therefore
-             * cannot prevent initialization).
-             * </p>
-             *
-             * @event init
-             * @preventable _defInitFn
-             * @param {EventFacade} e Event object, with a cfg property which 
-             * refers to the configuration object passed to the constructor.
-             */
-            this.publish(INIT, {
-                queuable:false,
-                fireOnce:true,
-                defaultTargetOnly:true,
-                defaultFn:this._defInitFn
-            });
-
-            this._preInitEventCfg(config);
-
-            this.fire(INIT, {cfg: config});
-
-            return this;
-        },
-
-        /**
-         * Handles the special on, after and target properties which allow the user to
-         * easily configure on and after listeners as well as bubble targets during 
-         * construction, prior to init.
-         *
-         * @private
-         * @method _preInitEventCfg
-         * @param {Object} config The user configuration object
-         */
-        _preInitEventCfg : function(config) {
-            if (config) {
-                if (config.on) {
-                    this.on(config.on);
-                }
-                if (config.after) {
-                    this.after(config.after);
-                }
-            }
-
-            var i, l, target,
-                userTargets = (config && BUBBLETARGETS in config);
-
-            if (userTargets || _BUBBLETARGETS in this) {
-                target = userTargets ? (config && config.bubbleTargets) : this._bubbleTargets;
-                if (L.isArray(target)) {
-                    for (i = 0, l = target.length; i < l; i++) { 
-                        this.addTarget(target[i]);
-                    }
-                } else if (target) {
-                    this.addTarget(target);
-                }
-            }
-        },
-
-        /**
-         * <p>
-         * Destroy lifecycle method. Fires the destroy
-         * event, prior to invoking destructors for the
-         * class hierarchy.
-         * </p>
-         * <p>
-         * Subscribers to the destroy
-         * event can invoke preventDefault on the event object, to prevent destruction
-         * from proceeding.
-         * </p>
-         * @method destroy
-         * @return {Base} A reference to this object
-         * @chainable
-         */
-        destroy: function() {
-
-            /**
-             * <p>
-             * Lifecycle event for the destroy phase, 
-             * fired prior to destruction. Invoking the preventDefault 
-             * method on the event object provided to subscribers will 
-             * prevent destruction from proceeding.
-             * </p>
-             * <p>
-             * Subscribers to the "after" moment of this event, will be notified
-             * after destruction is complete (and as a result cannot prevent
-             * destruction).
-             * </p>
-             * @event destroy
-             * @preventable _defDestroyFn
-             * @param {EventFacade} e Event object
-             */
-            this.publish(DESTROY, {
-                queuable:false,
-                fireOnce:true,
-                defaultTargetOnly:true,
-                defaultFn: this._defDestroyFn
-            });
-            this.fire(DESTROY);
-
-            this.detachAll();
-            return this;
-        },
-
-        /**
-         * Default init event handler
-         *
-         * @method _defInitFn
-         * @param {EventFacade} e Event object, with a cfg property which 
-         * refers to the configuration object passed to the constructor.
-         * @protected
-         */
-        _defInitFn : function(e) {
-            this._baseInit(e.cfg);
-        },
-
-        /**
-         * Default destroy event handler
-         *
-         * @method _defDestroyFn
-         * @param {EventFacade} e Event object
-         * @protected
-         */
-        _defDestroyFn : function(e) {
-            this._baseDestroy(e.cfg);
-        }
-    };
-
-    Y.mix(Base, Attribute, false, null, 1);
     Y.mix(Base, BaseCore, false, null, 1);
+    Y.mix(Base, AttributeExtras, false, null, 1);
+
+    // Needs to be `true`, to overwrite methods from `BaseCore`.
+    Y.mix(Base, BaseObservable, true, null, 1);
 
     // Fix constructor
     Base.prototype.constructor = Base;
@@ -349,4 +188,4 @@ YUI.add('base-base', function (Y, NAME) {
     Y.Base = Base;
 
 
-}, '3.7.3', {"requires": ["base-core", "attribute-base"]});
+}, '3.16.0', {"requires": ["attribute-base", "base-core", "base-observable"]});

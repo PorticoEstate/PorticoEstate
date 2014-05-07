@@ -1,19 +1,20 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('dd-ddm-base', function (Y, NAME) {
 
 
     /**
-     * Provides the base Drag Drop Manger required for making a Node draggable.
+     * Provides the base Drag Drop Manager required for making a Node draggable.
      * @module dd
      * @submodule dd-ddm-base
      */
      /**
-     * Provides the base Drag Drop Manger required for making a Node draggable.
+     * Provides the base Drag Drop Manager required for making a Node draggable.
      * @class DDM
      * @extends Base
      * @constructor
@@ -28,32 +29,32 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
 
     DDMBase.ATTRS = {
         /**
+        * The cursor to apply when dragging, if shimmed the shim will get the cursor.
         * @attribute dragCursor
-        * @description The cursor to apply when dragging, if shimmed the shim will get the cursor.
         * @type String
         */
         dragCursor: {
             value: 'move'
         },
         /**
+        * The number of pixels to move to start a drag operation, default is 3.
         * @attribute clickPixelThresh
-        * @description The number of pixels to move to start a drag operation, default is 3.
         * @type Number
         */
         clickPixelThresh: {
             value: 3
         },
         /**
+        * The number of milliseconds a mousedown has to pass to start a drag operation, default is 1000.
         * @attribute clickTimeThresh
-        * @description The number of milliseconds a mousedown has to pass to start a drag operation, default is 1000.
         * @type Number
         */
         clickTimeThresh: {
             value: 1000
         },
         /**
+        * The number of milliseconds to throttle the mousemove event. Default: 150
         * @attribute throttleTime
-        * @description The number of milliseconds to throttle the mousemove event. Default: 150
         * @type Number
         */
         throttleTime: {
@@ -78,16 +79,16 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
     Y.extend(DDMBase, Y.Base, {
         _createPG: function() {},
         /**
+        * flag set when we activate our first drag, so DDM can start listening for events.
         * @property _active
-        * @description flag set when we activate our first drag, so DDM can start listening for events.
         * @type {Boolean}
         */
         _active: null,
         /**
+        * Handler for dragMode attribute setter.
         * @private
         * @method _setDragMode
-        * @description Handler for dragMode attribute setter.
-        * @param String/Number The Number value or the String for the DragMode to default all future drag instances to.
+        * @param {String|Number} mode The Number value or the String for the DragMode to default all future drag instances to.
         * @return Number The Mode to be set
         */
         _setDragMode: function(mode) {
@@ -108,29 +109,29 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             return 0;
         },
         /**
+        * The PREFIX to attach to all DD CSS class names
         * @property CSS_PREFIX
-        * @description The PREFIX to attach to all DD CSS class names
         * @type {String}
         */
         CSS_PREFIX: Y.ClassNameManager.getClassName('dd'),
         _activateTargets: function() {},
         /**
+        * Holder for all registered drag elements.
         * @private
         * @property _drags
-        * @description Holder for all registered drag elements.
         * @type {Array}
         */
         _drags: [],
         /**
+        * A reference to the currently active draggable object.
         * @property activeDrag
-        * @description A reference to the currently active draggable object.
         * @type {Drag}
         */
         activeDrag: false,
         /**
+        * Adds a reference to the drag object to the DDM._drags array, called in the constructor of Drag.
         * @private
         * @method _regDrag
-        * @description Adds a reference to the drag object to the DDM._drags array, called in the constructor of Drag.
         * @param {Drag} d The Drag object
         */
         _regDrag: function(d) {
@@ -145,14 +146,14 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             return true;
         },
         /**
+        * Remove this drag object from the DDM._drags array.
         * @private
         * @method _unregDrag
-        * @description Remove this drag object from the DDM._drags array.
         * @param {Drag} d The drag object.
         */
         _unregDrag: function(d) {
             var tmp = [];
-            Y.each(this._drags, function(n) {
+            Y.Array.each(this._drags, function(n) {
                 if (n !== d) {
                     tmp[tmp.length] = n;
                 }
@@ -160,9 +161,9 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             this._drags = tmp;
         },
         /**
+        * Add the document listeners.
         * @private
         * @method _setupListeners
-        * @description Add the document listeners.
         */
         _setupListeners: function() {
             this._createPG();
@@ -173,18 +174,18 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             doc.on('mouseup', Y.bind(this._end, this));
         },
         /**
+        * Internal method used by Drag to signal the start of a drag operation
         * @private
         * @method _start
-        * @description Internal method used by Drag to signal the start of a drag operation
         */
         _start: function() {
             this.fire('ddm:start');
             this._startDrag();
         },
         /**
+        * Factory method to be overwritten by other DDM's
         * @private
         * @method _startDrag
-        * @description Factory method to be overwritten by other DDM's
         * @param {Number} x The x position of the drag element
         * @param {Number} y The y position of the drag element
         * @param {Number} w The width of the drag element
@@ -192,16 +193,16 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
         */
         _startDrag: function() {},
         /**
+        * Factory method to be overwritten by other DDM's
         * @private
         * @method _endDrag
-        * @description Factory method to be overwritten by other DDM's
         */
         _endDrag: function() {},
         _dropMove: function() {},
         /**
+        * Internal method used by Drag to signal the end of a drag operation
         * @private
         * @method _end
-        * @description Internal method used by Drag to signal the end of a drag operation
         */
         _end: function() {
             if (this.activeDrag) {
@@ -213,9 +214,8 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             }
         },
         /**
+        * Method will forcefully stop a drag operation. For example calling this from inside an ESC keypress handler will stop this drag.
         * @method stopDrag
-        * @description Method will forcefully stop a drag operation. For example calling this from inside an ESC keypress handler will stop this drag.
-        * @return {Self}
         * @chainable
         */
         stopDrag: function() {
@@ -225,18 +225,18 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             return this;
         },
         /**
+        * Set to true when drag starts and useShim is true. Used in pairing with _docMove
         * @private
         * @property _shimming
-        * @description Set to true when drag starts and useShim is true. Used in pairing with _docMove
         * @see _docMove
         * @type {Boolean}
         */
         _shimming: false,
         /**
+        * Internal listener for the mousemove on Document. Checks if the shim is in place to only call _move once per mouse move
         * @private
         * @method _docMove
-        * @description Internal listener for the mousemove on Document. Checks if the shim is in place to only call _move once per mouse move
-        * @param {Event.Facade} ev The Dom mousemove Event
+        * @param {EventFacade} ev The Dom mousemove Event
         */
         _docMove: function(ev) {
             if (!this._shimming) {
@@ -244,10 +244,10 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             }
         },
         /**
+        * Internal listener for the mousemove DOM event to pass to the Drag's move method.
         * @private
         * @method _move
-        * @description Internal listener for the mousemove DOM event to pass to the Drag's move method.
-        * @param {Event.Facade} ev The Dom mousemove Event
+        * @param {EventFacade} ev The Dom mousemove Event
         */
         _move: function(ev) {
             if (this.activeDrag) {
@@ -281,8 +281,8 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             };
         },
         /**
+        * Get a valid Drag instance back from a Node or a selector string, false otherwise
         * @method getDrag
-        * @description Get a valid Drag instance back from a Node or a selector string, false otherwise
         * @param {String/Object} node The Node instance or Selector string to check for a valid Drag Object
         * @return {Object}
         */
@@ -290,7 +290,7 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             var drag = false,
                 n = Y.one(node);
             if (n instanceof Y.Node) {
-                Y.each(this._drags, function(v) {
+                Y.Array.each(this._drags, function(v) {
                     if (n.compareTo(v.get('node'))) {
                         drag = v;
                     }
@@ -299,8 +299,8 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             return drag;
         },
         /**
+        * Swap the position of 2 nodes based on their CSS positioning.
         * @method swapPosition
-        * @description Swap the position of 2 nodes based on their CSS positioning.
         * @param {Node} n1 The first node to swap
         * @param {Node} n2 The first node to swap
         * @return {Node}
@@ -316,8 +316,8 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             return n1;
         },
         /**
+        * Return a node instance from the given node, selector string or Y.Base extended object.
         * @method getNode
-        * @description Return a node instance from the given node, selector string or Y.Base extended object.
         * @param {Node/Object/String} n The node to resolve.
         * @return {Node}
         */
@@ -337,8 +337,8 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
             return n;
         },
         /**
+        * Swap the position of 2 nodes based on their DOM location.
         * @method swapNode
-        * @description Swap the position of 2 nodes based on their DOM location.
         * @param {Node} n1 The first node to swap
         * @param {Node} n2 The first node to swap
         * @return {Node}
@@ -365,17 +365,17 @@ YUI.add('dd-ddm-base', function (Y, NAME) {
     Y.DD.DDM = new DDMBase();
 
     /**
+    * Fires from the DDM before all drag events fire.
     * @event ddm:start
-    * @description Fires from the DDM before all drag events fire.
     * @type {CustomEvent}
     */
     /**
+    * Fires from the DDM after the DDM finishes, before the drag end events.
     * @event ddm:end
-    * @description Fires from the DDM after the DDM finishes, before the drag end events.
     * @type {CustomEvent}
     */
 
 
 
 
-}, '3.7.3', {"requires": ["node", "base", "yui-throttle", "classnamemanager"]});
+}, '3.16.0', {"requires": ["node", "base", "yui-throttle", "classnamemanager"]});

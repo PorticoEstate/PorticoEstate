@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('graphics', function (Y, NAME) {
 
 /**
@@ -47,8 +48,8 @@ var SETTER = "setter",
     AttributeLite;
     
     /**
-	 * AttributeLite provides Attribute-like getters and setters for shape classes in the Graphics module. It provides a get/set API without the event infastructure.
-     * This class is temporary and a work in progress.
+	 * AttributeLite provides Attribute-like getters and setters for shape classes in the Graphics module.
+     * It provides a get/set API without the event infastructure. This class is temporary and a work in progress.
 	 *
 	 * @class AttributeLite
 	 * @constructor
@@ -152,7 +153,7 @@ var SETTER = "setter",
                 getter = attrConfig[attr].getter;
                 if(getter)
                 {
-                    if(typeof getter == STR)
+                    if(typeof getter === STR)
                     {
                         return host[getter].apply(host);
                     }
@@ -173,9 +174,10 @@ var SETTER = "setter",
          * @param {Any} value The value to set the attribute to. This value is ignored if an object is received as 
          * the name param.
          */
-        set: function(attr, val)
+        set: function()
         {
-            var i;
+            var attr = arguments[0],
+                i;
             if(Y_LANG.isObject(attr))
             {
                 for(i in attr)
@@ -214,7 +216,7 @@ var SETTER = "setter",
 				if(setter)
 				{
 					args = [val];
-					if(typeof setter == STR)
+					if(typeof setter === STR)
 					{
 						val = host[setter].apply(host, args);
 					}
@@ -314,20 +316,6 @@ Y.GraphicBase = GraphicBase;
  * @constructor
  */
     /**
-     * Draws a line segment using the current line style from the current drawing position to the specified x and y coordinates.
-     * 
-     * @method lineTo
-     * @param {Number} point1 x-coordinate for the end point.
-     * @param {Number} point2 y-coordinate for the end point.
-     */
-    /**
-     * Moves the current drawing position to specified x and y coordinates.
-     *
-     * @method moveTo
-     * @param {Number} x x-coordinate for the end point.
-     * @param {Number} y y-coordinate for the end point.
-     */
-    /**
      * Draws a bezier curve.
      *
      * @method curveTo
@@ -337,6 +325,7 @@ Y.GraphicBase = GraphicBase;
      * @param {Number} cp2y y-coordinate for the second control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     /**
      * Draws a quadratic bezier curve.
@@ -346,6 +335,7 @@ Y.GraphicBase = GraphicBase;
      * @param {Number} cpy y-coordinate for the control point.
      * @param {Number} x x-coordinate for the end point.
      * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     /**
      * Draws a rectangle.
@@ -355,6 +345,7 @@ Y.GraphicBase = GraphicBase;
      * @param {Number} y y-coordinate
      * @param {Number} w width
      * @param {Number} h height
+     * @chainable
      */
     /**
      * Draws a rectangle with rounded corners.
@@ -366,16 +357,102 @@ Y.GraphicBase = GraphicBase;
      * @param {Number} h height
      * @param {Number} ew width of the ellipse used to draw the rounded corners
      * @param {Number} eh height of the ellipse used to draw the rounded corners
+     * @chainable
+     */
+    /**
+     * Draws a circle.
+     *
+     * @method drawCircle
+     * @param {Number} x y-coordinate
+     * @param {Number} y x-coordinate
+     * @param {Number} r radius
+     * @chainable
+     * @protected
+     */
+    /**
+     * Draws an ellipse.
+     *
+     * @method drawEllipse
+     * @param {Number} x x-coordinate
+     * @param {Number} y y-coordinate
+     * @param {Number} w width
+     * @param {Number} h height
+     * @chainable
+     * @protected
+     */
+    /**
+     * Draws a diamond.
+     *
+     * @method drawDiamond
+     * @param {Number} x y-coordinate
+     * @param {Number} y x-coordinate
+     * @param {Number} width width
+     * @param {Number} height height
+     * @chainable
+     * @protected
+     */
+    /**
+     * Draws a wedge.
+     *
+     * @method drawWedge
+     * @param {Number} x x-coordinate of the wedge's center point
+     * @param {Number} y y-coordinate of the wedge's center point
+     * @param {Number} startAngle starting angle in degrees
+     * @param {Number} arc sweep of the wedge. Negative values draw clockwise.
+     * @param {Number} radius radius of wedge. If [optional] yRadius is defined, then radius is the x radius.
+     * @param {Number} yRadius [optional] y radius for wedge.
+     * @chainable
+     * @private
+     */
+    /**
+     * Draws a line segment using the current line style from the current drawing position to the specified x and y coordinates.
+     *
+     * @method lineTo
+     * @param {Number} point1 x-coordinate for the end point.
+     * @param {Number} point2 y-coordinate for the end point.
+     * @chainable
+     */
+    /**
+     * Draws a line segment using the current line style from the current drawing position to the relative x and y coordinates.
+     *
+     * @method relativeLineTo
+     * @param {Number} point1 x-coordinate for the end point.
+     * @param {Number} point2 y-coordinate for the end point.
+     * @chainable
+     */
+    /**
+     * Moves the current drawing position to specified x and y coordinates.
+     *
+     * @method moveTo
+     * @param {Number} x x-coordinate for the end point.
+     * @param {Number} y y-coordinate for the end point.
+     * @chainable
+     */
+    /**
+     * Moves the current drawing position relative to specified x and y coordinates.
+     *
+     * @method relativeMoveTo
+     * @param {Number} x x-coordinate for the end point.
+     * @param {Number} y y-coordinate for the end point.
+     * @chainable
      */
     /**
      * Completes a drawing operation. 
      *
      * @method end
+     * @chainable
      */
     /**
      * Clears the path.
      *
      * @method clear
+     * @chainable
+     */
+    /**
+     * Ends a fill and stroke
+     *
+     * @method closePath
+     * @chainable
      */
 /**
  *  <p>Base class for creating shapes.</p>
@@ -556,10 +633,12 @@ Y.GraphicBase = GraphicBase;
      *        <dt>translateY</dt><dd>Translates the shape along the y-axis.</dd>
      *        <dt>skewX</dt><dd>Skews the shape around the x-axis.</dd>
      *        <dt>skewY</dt><dd>Skews the shape around the y-axis.</dd>
+     *        <dt>matrix</dt><dd>Specifies a 2D transformation matrix comprised of the specified six values.</dd>
      *    </dl>
      * </p>
-     * <p>Applying transforms through the transform attribute will reset the transform matrix and apply a new transform. The shape class also contains corresponding methods for each transform
-     * that will apply the transform to the current matrix. The below code illustrates how you might use the `transform` attribute to instantiate a recangle with a rotation of 45 degrees.</p>
+     * <p>Applying transforms through the transform attribute will reset the transform matrix and apply a new transform. The shape class also contains
+     * corresponding methods for each transform that will apply the transform to the current matrix. The below code illustrates how you might use the
+     * `transform` attribute to instantiate a recangle with a rotation of 45 degrees.</p>
             var myRect = new Y.Rect({
                 type:"rect",
                 width: 50,
@@ -626,23 +705,27 @@ Y.GraphicBase = GraphicBase;
      *      <dt>stops</dt><dd>An array of objects containing the following properties:
      *          <dl>
      *              <dt>color</dt><dd>The color of the stop.</dd>
-     *              <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stop. The default value is 1. Note: No effect for IE 6 - 8</dd>
+     *              <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stop. The default value is 1.
+     *              Note: No effect for IE 6 - 8</dd>
      *              <dt>offset</dt><dd>Number between 0 and 1 indicating where the color stop is positioned.</dd> 
      *          </dl>
      *      </dd>
      *      <p>Linear gradients also have the following property:</p>
-     *      <dt>rotation</dt><dd>Linear gradients flow left to right by default. The rotation property allows you to change the flow by rotation. (e.g. A rotation of 180 would make the gradient pain from right to left.)</dd>
+     *      <dt>rotation</dt><dd>Linear gradients flow left to right by default. The rotation property allows you to change the
+     *      flow by rotation. (e.g. A rotation of 180 would make the gradient pain from right to left.)</dd>
      *      <p>Radial gradients have the following additional properties:</p>
      *      <dt>r</dt><dd>Radius of the gradient circle.</dd>
      *      <dt>fx</dt><dd>Focal point x-coordinate of the gradient.</dd>
      *      <dt>fy</dt><dd>Focal point y-coordinate of the gradient.</dd>
      *      <dt>cx</dt><dd>
      *          <p>The x-coordinate of the center of the gradient circle. Determines where the color stop begins. The default value 0.5.</p>
-     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and `VMLShape` classes which are used on Android or IE 6 - 8.</p>
+     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and
+     *          `VMLShape` classes which are used on Android or IE 6 - 8.</p>
      *      </dd>
      *      <dt>cy</dt><dd>
      *          <p>The y-coordinate of the center of the gradient circle. Determines where the color stop begins. The default value 0.5.</p>
-     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and `VMLShape` classes which are used on Android or IE 6 - 8.</p>
+     *          <p><strong>Note: </strong>Currently, this property is not implemented for corresponding `CanvasShape` and `VMLShape`
+     *          classes which are used on Android or IE 6 - 8.</p>
      *      </dd>
      *  </dl>
 	 *
@@ -655,8 +738,8 @@ Y.GraphicBase = GraphicBase;
      *      <dt>color</dt><dd>The color of the stroke.</dd>
      *      <dt>weight</dt><dd>Number that indicates the width of the stroke.</dd>
      *      <dt>opacity</dt><dd>Number between 0 and 1 that indicates the opacity of the stroke. The default value is 1.</dd>
-     *      <dt>dashstyle</dt>Indicates whether to draw a dashed stroke. When set to "none", a solid stroke is drawn. When set to an array, the first index indicates the
-     *  length of the dash. The second index indicates the length of gap.
+     *      <dt>dashstyle</dt>Indicates whether to draw a dashed stroke. When set to "none", a solid stroke is drawn. When set
+     *      to an array, the first index indicates the length of the dash. The second index indicates the length of gap.
      *      <dt>linecap</dt><dd>Specifies the linecap for the stroke. The following values can be specified:
      *          <dl>
      *              <dt>butt (default)</dt><dd>Specifies a butt linecap.</dd>
@@ -668,8 +751,8 @@ Y.GraphicBase = GraphicBase;
      *          <dl>
      *              <dt>round (default)</dt><dd>Specifies that the linejoin will be round.</dd>
      *              <dt>bevel</dt><dd>Specifies a bevel for the linejoin.</dd>
-     *              <dt>miter limit</dt><dd>An integer specifying the miter limit of a miter linejoin. If you want to specify a linejoin of miter, you simply specify the limit as opposed to having
-     *  separate miter and miter limit values.</dd>
+     *              <dt>miter limit</dt><dd>An integer specifying the miter limit of a miter linejoin. If you want to specify a linejoin
+     *              of miter, you simply specify the limit as opposed to having separate miter and miter limit values.</dd>
      *          </dl>
      *      </dd>
      *  </dl>
@@ -685,9 +768,10 @@ Y.GraphicBase = GraphicBase;
 	 * @readOnly
 	 */
     /**
-     * Represents an SVG Path string. This will be parsed and added to shape's API to represent the SVG data across all implementations. Note that when using VML or SVG 
-     * implementations, part of this content will be added to the DOM using respective VML/SVG attributes. If your content comes from an untrusted source, you will need 
-     * to ensure that no malicious code is included in that content. 
+     * Represents an SVG Path string. This will be parsed and added to shape's API to represent the SVG data across all
+     * implementations. Note that when using VML or SVG implementations, part of this content will be added to the DOM using
+     * respective VML/SVG attributes. If your content comes from an untrusted source, you will need to ensure that no
+     * malicious code is included in that content.
      *
      * @config data
      * @type String
@@ -702,9 +786,10 @@ Y.GraphicBase = GraphicBase;
 
 /**
  * <p>Creates circle shape with editable attributes.</p> 
- * <p>`Circle` instances can be created using the <a href="Graphic.html#method_addShape">`addShape`</a> method of the <a href="Graphic.html">`Graphic`</a> class. 
- * The method's `cfg` argument contains a `type` attribute. Assigning "circle" or `Y.Circle` to this attribute will create a `Circle` instance. Required attributes
- * for instantiating a `Circle` are `type` and `radius`. Optional attributes include:
+ * <p>`Circle` instances can be created using the <a href="Graphic.html#method_addShape">`addShape`</a> method of the
+ * <a href="Graphic.html">`Graphic`</a> class. The method's `cfg` argument contains a `type` attribute. Assigning "circle"
+ * or `Y.Circle` to this attribute will create a `Circle` instance. Required attributes for instantiating a `Circle` are
+ * `type` and `radius`. Optional attributes include:
  *  <ul>
  *      <li><a href="#attr_fill">fill</a></li>
  *      <li><a href="#attr_id">id</a></li>
@@ -765,9 +850,10 @@ Y.GraphicBase = GraphicBase;
      */
 /**
  * <p>Creates an ellipse shape with editable attributes.</p>
- * <p>`Ellipse` instances can be created using the <a href="Graphic.html#method_addShape">`addShape`</a> method of the <a href="Graphic.html">`Graphic`</a> class. 
- * The method's `cfg` argument contains a `type` attribute. Assigning "ellipse" or `Y.Ellipse` to this attribute will create a `Ellipse` instance. Required attributes
- * for instantiating a `Ellipse` are `type`, `width` and `height`. Optional attributes include:
+ * <p>`Ellipse` instances can be created using the <a href="Graphic.html#method_addShape">`addShape`</a> method of the
+ * <a href="Graphic.html">`Graphic`</a> class. The method's `cfg` argument contains a `type` attribute. Assigning "ellipse"
+ * or `Y.Ellipse` to this attribute will create a `Ellipse` instance. Required attributes for instantiating a `Ellipse` are
+ * `type`, `width` and `height`. Optional attributes include:
  *  <ul>
  *      <li><a href="#attr_fill">fill</a></li>
  *      <li><a href="#attr_id">id</a></li>
@@ -824,9 +910,10 @@ Y.GraphicBase = GraphicBase;
  */
 /**
  * <p>Creates an rectangle shape with editable attributes.</p>
- * <p>`Rect` instances can be created using the <a href="Graphic.html#method_addShape">`addShape`</a> method of the <a href="Graphic.html">`Graphic`</a> 
- * class. The method's `cfg` argument contains a `type` attribute. Assigning "rect" or `Y.Rect` to this attribute will create a `Rect` instance. 
- * Required attributes for instantiating a `Rect` are `type`, `width` and `height`. Optional attributes include:
+ * <p>`Rect` instances can be created using the <a href="Graphic.html#method_addShape">`addShape`</a> method of the
+ * <a href="Graphic.html">`Graphic`</a> class. The method's `cfg` argument contains a `type` attribute. Assigning "rect"
+ * or `Y.Rect` to this attribute will create a `Rect` instance. Required attributes for instantiating a `Rect` are `type`,
+ * `width` and `height`. Optional attributes include:
  *  <ul>
  *      <li><a href="#attr_fill">fill</a></li>
  *      <li><a href="#attr_id">id</a></li>
@@ -894,10 +981,11 @@ Y.GraphicBase = GraphicBase;
  *      <li><a href="#method_quadraticCurveTo">`quadraticCurveTo`</a></li>
  *  </ul>
  *
- *  <p>Like other shapes, `Path` elements are created using the <a href="Graphic.html#method_addShape">`addShape`</a> method of the <a href="Graphic.html">`Graphic`</a> 
- *  class. The method's `cfg` argument contains a `type` attribute. Assigning "path" or `Y.Path` to this attribute will create a `Path` instance.
- *  After instantiation, a series of drawing operations must be performed in order to render a shape. The below code instantiates a path element by defining the `type` 
- *  attribute as "path":</p>
+ *  <p>Like other shapes, `Path` elements are created using the <a href="Graphic.html#method_addShape">`addShape`</a>
+ *  method of the <a href="Graphic.html">`Graphic`</a> class. The method's `cfg` argument contains a `type` attribute.
+ *  Assigning "path" or `Y.Path` to this attribute will create a `Path` instance. After instantiation, a series of drawing
+ *  operations must be performed in order to render a shape. The below code instantiates a path element by defining the
+ *  `type` attribute as "path":</p>
 
         var myPath = myGraphic.addShape({
             type: "path",
@@ -923,8 +1011,8 @@ Y.GraphicBase = GraphicBase;
             }
         });
 
- * After instantiation, a shape or segment needs to be drawn for an element to render. After all draw operations are performed, the <a href="#method_end">`end`</a>
- * method will render the shape. The code below will draw a triangle:
+ * After instantiation, a shape or segment needs to be drawn for an element to render. After all draw operations are performed,
+ * the <a href="#method_end">`end`</a> method will render the shape. The code below will draw a triangle:
  
         myPath.moveTo(35, 5);
         myPath.lineTo(65, 65);
@@ -975,7 +1063,8 @@ Y.GraphicBase = GraphicBase;
  * @constructor
  */
     /**
-     * Whether or not to render the `Graphic` automatically after to a specified parent node after init. This can be a Node instance or a CSS selector string.
+     * Whether or not to render the `Graphic` automatically after to a specified parent node after init. This can be a Node
+     * instance or a CSS selector string.
      * 
      * @config render
      * @type Node | String 
@@ -1023,12 +1112,15 @@ Y.GraphicBase = GraphicBase;
      *  Determines the sizing of the Graphic. 
      *
      *  <dl>
-     *      <dt>sizeContentToGraphic</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code> and <code>height</code>
-     *      attributes or are determined by the dimensions of the parent element. The content contained in the Graphic will be sized to fit with in the Graphic instance's 
-     *      dimensions. When using this setting, the <code>preserveAspectRatio</code> attribute will determine how the contents are sized.</dd>
-     *      <dt>sizeGraphicToContent</dt><dd>(Also accepts a value of true) The Graphic's width and height are determined by the size and positioning of the content.</dd>
-     *      <dt>false</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code> and <code>height</code>
-     *      attributes or are determined by the dimensions of the parent element. The contents of the Graphic instance are not affected by this setting.</dd>
+     *      <dt>sizeContentToGraphic</dt><dd>The Graphic's width and height attributes are, either explicitly set through the
+     *      <code>width</code> and <code>height</code> attributes or are determined by the dimensions of the parent element. The
+     *      content contained in the Graphic will be sized to fit with in the Graphic instance's dimensions. When using this
+     *      setting, the <code>preserveAspectRatio</code> attribute will determine how the contents are sized.</dd>
+     *      <dt>sizeGraphicToContent</dt><dd>(Also accepts a value of true) The Graphic's width and height are determined by the
+     *      size and positioning of the content.</dd>
+     *      <dt>false</dt><dd>The Graphic's width and height attributes are, either explicitly set through the <code>width</code>
+     *      and <code>height</code> attributes or are determined by the dimensions of the parent element. The contents of the
+     *      Graphic instance are not affected by this setting.</dd>
      *  </dl>
      *
      *
@@ -1182,4 +1274,4 @@ Y.GraphicBase = GraphicBase;
 	 */
 
 
-}, '3.7.3', {"requires": ["node", "event-custom", "pluginhost", "matrix", "classnamemanager"]});
+}, '3.16.0', {"requires": ["node", "event-custom", "pluginhost", "matrix", "classnamemanager"]});

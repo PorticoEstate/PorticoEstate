@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	// UPDATE CHECKLIST STATUS
-	$("#update-check-list-status").live("submit", function(e) {
+	$("#update-check-list-status").on("submit", function(e) {
 		e.preventDefault();
 
 		var thisForm = $(this);

@@ -1,102 +1,13 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
-if (typeof _yuitest_coverage == "undefined"){
-    _yuitest_coverage = {};
-    _yuitest_coverline = function(src, line){
-        var coverage = _yuitest_coverage[src];
-        if (!coverage.lines[line]){
-            coverage.calledLines++;
-        }
-        coverage.lines[line]++;
-    };
-    _yuitest_coverfunc = function(src, name, line){
-        var coverage = _yuitest_coverage[src],
-            funcId = name + ":" + line;
-        if (!coverage.functions[funcId]){
-            coverage.calledFunctions++;
-        }
-        coverage.functions[funcId]++;
-    };
+
+if (typeof __coverage__ === 'undefined') { __coverage__ = {}; }
+if (!__coverage__['build/datatype-date-parse/datatype-date-parse.js']) {
+   __coverage__['build/datatype-date-parse/datatype-date-parse.js'] = {"path":"build/datatype-date-parse/datatype-date-parse.js","s":{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0},"b":{"1":[0,0],"2":[0,0]},"f":{"1":0,"2":0},"fnMap":{"1":{"name":"(anonymous_1)","line":1,"loc":{"start":{"line":1,"column":31},"end":{"line":1,"column":50}}},"2":{"name":"(anonymous_2)","line":18,"loc":{"start":{"line":18,"column":11},"end":{"line":18,"column":26}}}},"statementMap":{"1":{"start":{"line":1,"column":0},"end":{"line":35,"column":13}},"2":{"start":{"line":10,"column":0},"end":{"line":26,"column":3}},"3":{"start":{"line":19,"column":8},"end":{"line":19,"column":42}},"4":{"start":{"line":20,"column":8},"end":{"line":24,"column":9}},"5":{"start":{"line":21,"column":12},"end":{"line":21,"column":23}},"6":{"start":{"line":23,"column":12},"end":{"line":23,"column":24}},"7":{"start":{"line":29,"column":0},"end":{"line":29,"column":43}},"8":{"start":{"line":31,"column":0},"end":{"line":31,"column":24}},"9":{"start":{"line":32,"column":0},"end":{"line":32,"column":25}}},"branchMap":{"1":{"line":19,"type":"binary-expr","locations":[{"start":{"line":19,"column":27},"end":{"line":19,"column":32}},{"start":{"line":19,"column":36},"end":{"line":19,"column":40}}]},"2":{"line":20,"type":"if","locations":[{"start":{"line":20,"column":8},"end":{"line":20,"column":8}},{"start":{"line":20,"column":8},"end":{"line":20,"column":8}}]}},"code":["(function () { YUI.add('datatype-date-parse', function (Y, NAME) {","","/**"," * Parse number submodule."," *"," * @module datatype-date"," * @submodule datatype-date-parse"," * @for Date"," */","Y.mix(Y.namespace(\"Date\"), {","    /**","     * Converts data to type Date.","     *","     * @method parse","     * @param data {Date|Number|String} date object, timestamp (string or number), or string parsable by Date.parse","     * @return {Date} a Date object or null if unable to parse","     */","    parse: function(data) {","        var val = new Date(+data || data);","        if (Y.Lang.isDate(val)) {","            return val;","        } else {","            return null;","        }","    }","});","","// Add Parsers shortcut","Y.namespace(\"Parsers\").date = Y.Date.parse;","","Y.namespace(\"DataType\");","Y.DataType.Date = Y.Date;","","","}, '3.16.0');","","}());"]};
 }
-_yuitest_coverage["build/datatype-date-parse/datatype-date-parse.js"] = {
-    lines: {},
-    functions: {},
-    coveredLines: 0,
-    calledLines: 0,
-    coveredFunctions: 0,
-    calledFunctions: 0,
-    path: "build/datatype-date-parse/datatype-date-parse.js",
-    code: []
-};
-_yuitest_coverage["build/datatype-date-parse/datatype-date-parse.js"].code=["YUI.add('datatype-date-parse', function (Y, NAME) {","","/**"," * Parse number submodule."," *"," * @module datatype-date"," * @submodule datatype-date-parse"," * @for Date"," */","var LANG = Y.Lang;","","Y.mix(Y.namespace(\"Date\"), {","    /**","     * Converts data to type Date.","     *","     * @method parse","     * @param data {String | Number} Data to convert. Values supported by the Date constructor are supported.","     * @return {Date} A Date, or null.","     */","    parse: function(data) {","        var date = null;","","        //Convert to date","        if(!(LANG.isDate(data))) {","            date = new Date(data);","        }","        else {","            return date;","        }","","        // Validate","        if(LANG.isDate(date) && (date != \"Invalid Date\") && !isNaN(date)) { // Workaround for bug 2527965","            return date;","        }","        else {","            return null;","        }","    }","});","","// Add Parsers shortcut","Y.namespace(\"Parsers\").date = Y.Date.parse;","","Y.namespace(\"DataType\");","Y.DataType.Date = Y.Date;","","","}, '3.7.3');"];
-_yuitest_coverage["build/datatype-date-parse/datatype-date-parse.js"].lines = {"1":0,"10":0,"12":0,"21":0,"24":0,"25":0,"28":0,"32":0,"33":0,"36":0,"42":0,"44":0,"45":0};
-_yuitest_coverage["build/datatype-date-parse/datatype-date-parse.js"].functions = {"parse:20":0,"(anonymous 1):1":0};
-_yuitest_coverage["build/datatype-date-parse/datatype-date-parse.js"].coveredLines = 13;
-_yuitest_coverage["build/datatype-date-parse/datatype-date-parse.js"].coveredFunctions = 2;
-_yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 1);
-YUI.add('datatype-date-parse', function (Y, NAME) {
-
-/**
- * Parse number submodule.
- *
- * @module datatype-date
- * @submodule datatype-date-parse
- * @for Date
- */
-_yuitest_coverfunc("build/datatype-date-parse/datatype-date-parse.js", "(anonymous 1)", 1);
-_yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 10);
-var LANG = Y.Lang;
-
-_yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 12);
-Y.mix(Y.namespace("Date"), {
-    /**
-     * Converts data to type Date.
-     *
-     * @method parse
-     * @param data {String | Number} Data to convert. Values supported by the Date constructor are supported.
-     * @return {Date} A Date, or null.
-     */
-    parse: function(data) {
-        _yuitest_coverfunc("build/datatype-date-parse/datatype-date-parse.js", "parse", 20);
-_yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 21);
-var date = null;
-
-        //Convert to date
-        _yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 24);
-if(!(LANG.isDate(data))) {
-            _yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 25);
-date = new Date(data);
-        }
-        else {
-            _yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 28);
-return date;
-        }
-
-        // Validate
-        _yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 32);
-if(LANG.isDate(date) && (date != "Invalid Date") && !isNaN(date)) { // Workaround for bug 2527965
-            _yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 33);
-return date;
-        }
-        else {
-            _yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 36);
-return null;
-        }
-    }
-});
-
-// Add Parsers shortcut
-_yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 42);
-Y.namespace("Parsers").date = Y.Date.parse;
-
-_yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 44);
-Y.namespace("DataType");
-_yuitest_coverline("build/datatype-date-parse/datatype-date-parse.js", 45);
-Y.DataType.Date = Y.Date;
-
-
-}, '3.7.3');
+var __cov_aGPMKf1ehajkwXQ9npW2$A = __coverage__['build/datatype-date-parse/datatype-date-parse.js'];
+__cov_aGPMKf1ehajkwXQ9npW2$A.s['1']++;YUI.add('datatype-date-parse',function(Y,NAME){__cov_aGPMKf1ehajkwXQ9npW2$A.f['1']++;__cov_aGPMKf1ehajkwXQ9npW2$A.s['2']++;Y.mix(Y.namespace('Date'),{parse:function(data){__cov_aGPMKf1ehajkwXQ9npW2$A.f['2']++;__cov_aGPMKf1ehajkwXQ9npW2$A.s['3']++;var val=new Date((__cov_aGPMKf1ehajkwXQ9npW2$A.b['1'][0]++,+data)||(__cov_aGPMKf1ehajkwXQ9npW2$A.b['1'][1]++,data));__cov_aGPMKf1ehajkwXQ9npW2$A.s['4']++;if(Y.Lang.isDate(val)){__cov_aGPMKf1ehajkwXQ9npW2$A.b['2'][0]++;__cov_aGPMKf1ehajkwXQ9npW2$A.s['5']++;return val;}else{__cov_aGPMKf1ehajkwXQ9npW2$A.b['2'][1]++;__cov_aGPMKf1ehajkwXQ9npW2$A.s['6']++;return null;}}});__cov_aGPMKf1ehajkwXQ9npW2$A.s['7']++;Y.namespace('Parsers').date=Y.Date.parse;__cov_aGPMKf1ehajkwXQ9npW2$A.s['8']++;Y.namespace('DataType');__cov_aGPMKf1ehajkwXQ9npW2$A.s['9']++;Y.DataType.Date=Y.Date;},'3.16.0');

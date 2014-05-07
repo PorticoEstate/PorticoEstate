@@ -27,8 +27,7 @@
 	phpgw::import_class('frontend.bofrontend');
 	phpgw::import_class('frontend.bofellesdata');
 	phpgw::import_class('frontend.borental');
-
-
+	
 	/**
 	 * Frontend main class
 	 *
@@ -69,6 +68,8 @@
 			$tab			= isset($location_id) ? $location_id : phpgwapi_cache::session_get('frontend','tab');
 			$selected		= isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));
 			$this->tabs		= $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
+			$this->menu		= $this->create_menu($tabs, $selected);
+
 			phpgwapi_cache::session_set('frontend','tab',$selected);
 
 			// Get header state
@@ -276,6 +277,9 @@
 
 			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+			$GLOBALS['phpgw']->js->validate_file('jquery', 'menu' , 'frontend');
+
 		}
 
 		function get_tabs()
@@ -334,6 +338,87 @@
 			phpgwapi_cache::session_clear('frontend', 'extra_tabs');
 
 			return $tabs;
+		}
+		
+		/**
+		* Create Menu
+		*
+		* @param array   $tabs      With ($id,$tab) pairs
+		* @param integer $selection array key of selected tab
+		*
+		* @return string html snippet for creating menu in a modern browser
+		*/
+		public function create_menu($tabs, $selection)
+		{
+			/**
+			* Import the jQuery class
+			*/
+			phpgw::import_class('phpgwapi.jquery');
+
+			$html = self::menu_generate($tabs, $selection);
+			$output = <<<HTML
+			<div class="menubar">
+				{$html}
+			</div>
+
+HTML;
+			return $output;
+		}
+
+		/**
+		* Create a menu "bar"
+		*
+		* @param array   $tabs      list of tabs as an array($id => $tab)
+		* @param integer $selection array key of selected tab
+		*
+		* @return string HTML output string
+		*/
+		public static function menu_generate($tabs, $selection)
+		{
+
+			phpgwapi_jquery::load_widget('menu');
+
+			$output = <<<HTML
+
+				<ul id="menu">
+				<li><a href="#">moduler</a>
+				<ul>
+HTML;
+			foreach($tabs as $id => $tab)
+			{
+				$selected = $id == $selection ? ' class="selected"' : '';
+				$label = $tab['label'];
+				$_function = '';
+				if(isset($tab['function']))
+				{
+					$_function = " onclick=\"javascript: {$tab['function']};\"";
+				}
+
+				if(!isset($tab['link']) && !isset($tab['function']))
+				{
+					$selected = $selected ? $selected : ' class="ui-state-disabled"';
+					$output .= <<<HTML
+
+						<li{$selected}><a><em>{$label}</em></a></li>
+HTML;
+				}
+				else
+				{
+					$output .= <<<HTML
+
+						<li{$selected}><a href="{$tab['link']}"{$_function}><em>{$label}</em></a></li>
+HTML;
+				
+				}
+			}
+			$output .= <<<HTML
+
+				</ul>
+				</li>
+				</ul>
+
+HTML;
+			return $output;
 		}
 
 		function insert_links_on_header_state()

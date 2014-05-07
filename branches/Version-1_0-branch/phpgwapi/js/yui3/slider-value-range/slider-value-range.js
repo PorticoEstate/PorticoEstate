@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('slider-value-range', function (Y, NAME) {
 
 /**
@@ -252,12 +253,11 @@ Y.SliderValueRange = Y.mix( SliderValueRange, {
         _afterValueChange: function ( e ) {
             var val = e.newVal;
             this._setPosition( val, { source: 'set' } );
-            this.thumb.set('aria-valuenow', val);
-            this.thumb.set('aria-valuetext', val);
         },
 
         /**
-         * Positions the thumb in accordance with the translated value.
+         * Positions the thumb and its ARIA attributes in accordance with the
+         * translated value.
          *
          * @method _setPosition
          * @param value {Number} Value to translate to a pixel position
@@ -266,6 +266,8 @@ Y.SliderValueRange = Y.mix( SliderValueRange, {
          */
         _setPosition: function ( value, options ) {
             this._uiMoveThumb( this._valueToOffset( value ), options );
+            this.thumb.set('aria-valuenow', value);
+            this.thumb.set('aria-valuetext', value);
         },
 
         /**
@@ -305,7 +307,10 @@ Y.SliderValueRange = Y.mix( SliderValueRange, {
          * @protected
          */
         _setNewValue: function ( value ) {
+            if ( Y.Lang.isNumber( value ) ) {
             return round( this._nearestValue( value ) );
+            }
+            return Y.Attribute.INVALID_VALUE;
         },
 
         /**
@@ -417,4 +422,4 @@ Y.SliderValueRange = Y.mix( SliderValueRange, {
 }, true );
 
 
-}, '3.7.3', {"requires": ["slider-base"]});
+}, '3.16.0', {"requires": ["slider-base"]});

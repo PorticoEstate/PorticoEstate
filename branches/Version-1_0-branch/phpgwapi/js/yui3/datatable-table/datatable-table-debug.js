@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatable-table', function (Y, NAME) {
 
 /**
@@ -39,21 +40,21 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
     attribute is set.
 
     @property CAPTION_TEMPLATE
-    @type {HTML}
-    @default '<caption class="{className}"/>'
+    @type {String}
+    @default '<caption class="{className}"></caption>'
     @since 3.6.0
     **/
-    CAPTION_TEMPLATE: '<caption class="{className}"/>',
+    CAPTION_TEMPLATE: '<caption class="{className}"></caption>',
 
     /**
     The HTML template used to create the table Node.
 
     @property TABLE_TEMPLATE
-    @type {HTML}
-    @default '<table cellspacing="0" class="{className}"/>'
+    @type {String}
+    @default '<table cellspacing="0" class="{className}"></table>'
     @since 3.6.0
     **/
-    TABLE_TEMPLATE  : '<table cellspacing="0" class="{className}"/>',
+    TABLE_TEMPLATE  : '<table cellspacing="0" class="{className}"></table>',
 
     /**
     The object or instance of the class assigned to `bodyView` that is
@@ -124,7 +125,7 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
     @return {Node}
     @since 3.5.0
     **/
-    getCell: function (seed, shift) {
+    getCell: function (/* seed, shift */) {
         return this.body && this.body.getCell &&
             this.body.getCell.apply(this.body, arguments);
     },
@@ -184,7 +185,7 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
     @return {Node}
     @since 3.5.0
     **/
-    getRow: function (id) {
+    getRow: function (/* id */) {
         return this.body && this.body.getRow &&
             this.body.getRow.apply(this.body, arguments);
     },
@@ -422,7 +423,9 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
             }
         }
 
+        if (columns) {
         process(columns);
+        }
 
         /**
         Array of the columns that correspond to those with value cells in the
@@ -503,7 +506,6 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
     Creates the UI in the configured `container`.
 
     @method render
-    @return {TableView}
     @chainable
     **/
     render: function () {
@@ -528,7 +530,7 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
     value.  Empty values result in the caption being removed.
 
     @method _uiSetCaption
-    @param {HTML} htmlContent The content to populate the table caption
+    @param {String} htmlContent The content to populate the table caption
     @protected
     @since 3.5.0
     **/
@@ -584,8 +586,8 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
         // Table width needs to account for borders
         table.setStyle('width', !width ? '' :
             (this.get('container').get('offsetWidth') -
-             (parseInt(table.getComputedStyle('borderLeftWidth'), 10)|0) -
-             (parseInt(table.getComputedStyle('borderLeftWidth'), 10)|0)) +
+             (parseInt(table.getComputedStyle('borderLeftWidth'), 10)||0) -
+             (parseInt(table.getComputedStyle('borderLeftWidth'), 10)||0)) +
              'px');
 
         table.setStyle('width', width);
@@ -757,4 +759,4 @@ Y.namespace('DataTable').TableView = Y.Base.create('table', Y.View, [], {
 
 
 
-}, '3.7.3', {"requires": ["datatable-core", "datatable-head", "datatable-body", "view", "classnamemanager"]});
+}, '3.16.0', {"requires": ["datatable-core", "datatable-head", "datatable-body", "view", "classnamemanager"]});

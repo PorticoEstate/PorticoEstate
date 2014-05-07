@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('event-key', function (Y, NAME) {
 
 /**
@@ -22,6 +23,7 @@ var ALT      = "+alt",
     eventDef = {
         KEY_MAP: {
             enter    : 13,
+            space    : 32,
             esc      : 27,
             backspace: 8,
             tab      : 9,
@@ -151,13 +153,13 @@ eventDef.detachDelegate = eventDef.detach;
  *   <dt>modifier</dt>
  *   <dd><code>"shift", "ctrl", "alt", or "meta"</code></dd>
  *   <dt>keyName</dt>
- *   <dd><code>"enter", "backspace", "esc", "tab", "pageup", or "pagedown"</code></dd>
+ *   <dd><code>"enter", "space", "backspace", "esc", "tab", "pageup", or "pagedown"</code></dd>
  * </dl>
  *
  * <p>Examples:</p>
  * <ul>
  *   <li><code>Y.on("key", callback, "press:12,65+shift+ctrl", "#my-input");</code></li>
- *   <li><code>Y.delegate("key", preventSubmit, "enter", "#forms", "input[type=text]");</code></li>
+ *   <li><code>Y.delegate("key", preventSubmit, "#forms", "enter", "input[type=text]");</code></li>
  *   <li><code>Y.one("doc").on("key", viNav, "j,k,l,;");</code></li>
  * </ul>
  *   
@@ -174,4 +176,4 @@ eventDef.detachDelegate = eventDef.detach;
 Y.Event.define('key', eventDef, true);
 
 
-}, '3.7.3', {"requires": ["event-synthetic"]});
+}, '3.16.0', {"requires": ["event-synthetic"]});

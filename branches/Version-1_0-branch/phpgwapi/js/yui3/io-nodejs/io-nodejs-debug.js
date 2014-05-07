@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('io-nodejs', function (Y, NAME) {
 
 /*global Y: false, Buffer: false, clearInterval: false, clearTimeout: false, console: false, exports: false, global: false, module: false, process: false, querystring: false, require: false, setInterval: false, setTimeout: false, __filename: false, __dirname: false */
@@ -105,17 +106,10 @@ YUI.add('io-nodejs', function (Y, NAME) {
                 };
 
                 if (config.data) {
-                    if (Y.Lang.isObject(config.data)) {
-                        if (Y.QueryString && Y.QueryString.stringify) {
-                            Y.log('Stringifying config.data for request', 'info', 'io');
-                            rconf.body = Y.QueryString.stringify(config.data);
-                        } else {
-                            Y.log('Failed to stringify config.data object, likely because `querystring-stringify-simple` is missing.', 'warn', 'io');
-                        }
-                    } else if (Y.Lang.isString(config.data)) {
+                    if (Y.Lang.isString(config.data)) {
                         rconf.body = config.data;
                     }
-                    if (rconf.method === 'GET') {
+                    if (rconf.body && rconf.method === 'GET') {
                         rconf.uri += (rconf.uri.indexOf('?') > -1 ? '&' : '?') + rconf.body;
                         rconf.body = '';
                     }
@@ -145,7 +139,7 @@ YUI.add('io-nodejs', function (Y, NAME) {
                             statusCode: data.statusCode,
                             statusText: codes[data.statusCode],
                             headers: data.headers,
-                            responseText: data.body,
+                            responseText: data.body || '',
                             responseXML: null,
                             getResponseHeader: function(name) {
                                 return this.headers[name];
@@ -173,4 +167,4 @@ YUI.add('io-nodejs', function (Y, NAME) {
 
 
 
-}, '3.7.3', {"requires": ["io-base"]});
+}, '3.16.0', {"requires": ["io-base"]});

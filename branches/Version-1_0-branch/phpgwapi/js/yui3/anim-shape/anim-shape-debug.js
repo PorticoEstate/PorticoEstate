@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('anim-shape', function (Y, NAME) {
 
 /**
@@ -14,9 +15,9 @@ YUI.add('anim-shape', function (Y, NAME) {
  * @deprecated Use anim-shape instead.
  */
 /**
- * Adds support for the <code>transform</code>, <code>fill</code>, and <code> attributes of <code>Graphic</code>
- * <code>Shape</code> instances. The <code>anim-shape</code> submodule can be used for all animations involving
- * <code>Graphic</code> <code>Shape</code> attributes. 
+ * Adds support for the <code>transform</code> and <code>fill</code> attributes of <code>Graphic</code>
+ * and <code>Shape</code> instances. The <code>anim-shape</code> submodule can be used for all animations
+ * involving <code>Graphic</code> <code>Shape</code> attributes.
  * 
  * @module anim
  * @submodule anim-shape
@@ -35,15 +36,6 @@ YUI.add('anim-shape', function (Y, NAME) {
             fromStop,
             prop,
             len = to.length,
-            color,
-            opacity,
-            offset,
-            rotation,
-            r,
-            fx,
-            fy,
-            cx,
-            cy,
             stops = [],
             stop;
         for(; i < len; i = i + 1)
@@ -55,9 +47,15 @@ YUI.add('anim-shape', function (Y, NAME) {
             {
                 if(toStop.hasOwnProperty(prop))
                 {
-                    if(prop == COLOR)
+                    if(prop === COLOR)
                     {
-                        stop[prop] = Y.Color.toHex(getUpdatedColorValue(Y.Color.toHex(fromStop[prop]), Y.Color.toHex(toStop[prop]), elapsed, duration, fn));
+                        stop[prop] = Y.Color.toHex(getUpdatedColorValue(
+                            Y.Color.toHex(fromStop[prop]),
+                            Y.Color.toHex(toStop[prop]),
+                            elapsed,
+                            duration,
+                            fn
+                        ));
                     }
                     else
                     {
@@ -77,7 +75,7 @@ YUI.add('anim-shape', function (Y, NAME) {
             getUpdatedStops = GETUPDATEDSTOPS;
             for(i in to)
             {
-                if(to.hasOwnProperty(i) && i != TYPE)
+                if(to.hasOwnProperty(i) && i !== TYPE)
                 {
                     switch(i)
                     {
@@ -141,7 +139,6 @@ YUI.add('anim-shape', function (Y, NAME) {
         get: function(anim) {
             var node = anim._node,
                 fromMatrix = node.matrix,
-                toAttr = anim.get("to") || {},
                 toString = anim.get("to").transform,
                 fromString = node.get("transform"),
                 toArray = Y.MatrixUtil.getTransformArray(toString),
@@ -177,7 +174,7 @@ YUI.add('anim-shape', function (Y, NAME) {
                     for(i = 0; i < len; ++i)
                     {
                         transformFunction = toArray[i].shift();
-                        transformFunction = transformFunction == "matrix" ? "multiply" : transformFunction;
+                        transformFunction = transformFunction === "matrix" ? "multiply" : transformFunction;
                         toMatrix[transformFunction].apply(toMatrix, toArray[i]); 
                     }
 
@@ -192,4 +189,4 @@ YUI.add('anim-shape', function (Y, NAME) {
 
 
 
-}, '3.7.3', {"requires": ["anim-base", "anim-easing", "anim-color", "matrix"]});
+}, '3.16.0', {"requires": ["anim-base", "anim-easing", "anim-color", "matrix"]});

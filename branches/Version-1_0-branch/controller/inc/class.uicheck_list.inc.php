@@ -102,6 +102,16 @@
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_DELETE, 'controller');//8 
 
 			self::set_active_menu('controller::control::check_list');
+
+			if(phpgw::get_var('noframework', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+				phpgwapi_cache::session_set('controller','noframework',true);
+			}
+			else if (phpgwapi_cache::session_get('controller','noframework'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
 		}
 
 		/**

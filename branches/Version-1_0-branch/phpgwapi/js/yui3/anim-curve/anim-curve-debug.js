@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('anim-curve', function (Y, NAME) {
 
 /**
@@ -22,7 +23,7 @@ Y.Anim.behaviors.curve = {
         anim._node.setXY(Y.Anim.getBezier(to, t));
     },
 
-    get: function(anim, att) {
+    get: function(anim) {
         return anim._node.getXY();
     }
 };
@@ -36,19 +37,21 @@ Y.Anim.behaviors.curve = {
  * @for Anim
  * @method getBezier
  * @static
- * @param {Array} points An array containing Bezier points
+ * @param {Number[]} points An array containing Bezier points
  * @param {Number} t A number between 0 and 1 which is the basis for determining current position
- * @return {Array} An array containing int x and y member data
+ * @return {Number[]} An array containing int x and y member data
  */
 Y.Anim.getBezier = function(points, t) {  
-    var n = points.length;
-    var tmp = [];
+    var n = points.length,
+        tmp = [],
+        i,
+        j;
 
-    for (var i = 0; i < n; ++i){
+    for (i = 0; i < n; ++i){
         tmp[i] = [points[i][0], points[i][1]]; // save input
     }
     
-    for (var j = 1; j < n; ++j) {
+    for (j = 1; j < n; ++j) {
         for (i = 0; i < n - j; ++i) {
             tmp[i][0] = (1 - t) * tmp[i][0] + t * tmp[parseInt(i + 1, 10)][0];
             tmp[i][1] = (1 - t) * tmp[i][1] + t * tmp[parseInt(i + 1, 10)][1]; 
@@ -60,4 +63,4 @@ Y.Anim.getBezier = function(points, t) {
 };
 
 
-}, '3.7.3', {"requires": ["anim-xy"]});
+}, '3.16.0', {"requires": ["anim-xy"]});

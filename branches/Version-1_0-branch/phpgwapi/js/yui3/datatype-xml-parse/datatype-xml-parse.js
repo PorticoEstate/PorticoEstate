@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatype-xml-parse', function (Y, NAME) {
 
 /**
@@ -14,42 +15,31 @@ YUI.add('datatype-xml-parse', function (Y, NAME) {
  * @for XML
  */
 
-var LANG = Y.Lang;
-
 Y.mix(Y.namespace("XML"), {
     /**
      * Converts data to type XMLDocument.
      *
      * @method parse
      * @param data {String} Data to convert.
-     * @return {XMLDoc} XML Document.
+     * @return {XMLDocument} XML Document.
      */
     parse: function(data) {
-        var xmlDoc = null;
-        if(LANG.isString(data)) {
-            try {
-                if(!LANG.isUndefined(ActiveXObject)) {
+        var xmlDoc = null, win;
+        if (typeof data === "string") {
+            win = Y.config.win;
+            if (win.ActiveXObject !== undefined) {
                         xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
                         xmlDoc.async = false;
                         xmlDoc.loadXML(data);
-                }
-            }
-            catch(ee) {
-                try {
-                    if (!LANG.isUndefined(DOMParser)) {
+            } else if (win.DOMParser !== undefined) {
                         xmlDoc = new DOMParser().parseFromString(data, "text/xml");
-                    }
-                    if (!LANG.isUndefined(Windows.Data.Xml.Dom)) {
+            } else if (win.Windows !== undefined) {
                         xmlDoc = new Windows.Data.Xml.Dom.XmlDocument();
                         xmlDoc.loadXml(data);
                     }
                 }
-                catch(e) {
-                }
-            }
-        }
         
-        if( (LANG.isNull(xmlDoc)) || (LANG.isNull(xmlDoc.documentElement)) || (xmlDoc.documentElement.nodeName === "parsererror") ) {
+        if (xmlDoc === null || xmlDoc.documentElement === null || xmlDoc.documentElement.nodeName === "parsererror") {
         }
         
         return xmlDoc;
@@ -63,4 +53,4 @@ Y.namespace("DataType");
 Y.DataType.XML = Y.XML;
 
 
-}, '3.7.3');
+}, '3.16.0');

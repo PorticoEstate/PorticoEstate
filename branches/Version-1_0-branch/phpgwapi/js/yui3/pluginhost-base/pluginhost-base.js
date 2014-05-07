@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('pluginhost-base', function (Y, NAME) {
 
     /**
@@ -159,7 +160,7 @@ YUI.add('pluginhost-base', function (Y, NAME) {
          * instance through the "plugins" configuration property.
          *
          * @method _initPlugins
-         * @param {Config} config The configuration object with property name/value pairs.
+         * @param {Object} config The configuration object with property name/value pairs.
          * @private
          */
         
@@ -184,4 +185,4 @@ YUI.add('pluginhost-base', function (Y, NAME) {
     Y.namespace("Plugin").Host = PluginHost;
 
 
-}, '3.7.3', {"requires": ["yui-base"]});
+}, '3.16.0', {"requires": ["yui-base"]});

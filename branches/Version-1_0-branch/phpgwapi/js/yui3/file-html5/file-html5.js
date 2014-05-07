@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('file-html5', function (Y, NAME) {
 
     /**
@@ -146,6 +147,7 @@ YUI.add('file-html5', function (Y, NAME) {
                    }
                    else {
                         this.fire("uploaderror", {originEvent: event,
+                                                  data: xhr.responseText,
                                                   status: xhr.status,
                                                   statusText: xhr.statusText,
                                                   source: "http"});
@@ -162,6 +164,8 @@ YUI.add('file-html5', function (Y, NAME) {
                    *  <dl>
                    *      <dt>originEvent</dt>
                    *          <dd>The original event fired by the XMLHttpRequest instance.</dd>
+                   *      <dt>data</dt>
+                   *          <dd>The data returned by the server.</dd>
                    *      <dt>status</dt>
                    *          <dd>The status code reported by the XMLHttpRequest. If it's an HTTP error,
                                   then this corresponds to the HTTP status code received by the uploader.</dd>
@@ -174,6 +178,7 @@ YUI.add('file-html5', function (Y, NAME) {
                    *  </dl>
                    */
                    this.fire("uploaderror", {originEvent: event,
+                                                  data: xhr.responseText,
                                                   status: xhr.status,
                                                   statusText: xhr.statusText,
                                                   source: "io"});
@@ -284,7 +289,10 @@ YUI.add('file-html5', function (Y, NAME) {
         * @method cancelUpload
         */    
         cancelUpload: function () {
-            this.get('xhr').abort();
+            var xhr = this.get('xhr');
+            if (xhr) {
+                xhr.abort();
+            }
         }
 
 
@@ -498,4 +506,5 @@ YUI.add('file-html5', function (Y, NAME) {
 
     Y.FileHTML5 = FileHTML5;
 
-}, '3.7.3', {"requires": ["base"]});
+
+}, '3.16.0', {"requires": ["base"]});

@@ -271,7 +271,7 @@ $(document).ready(function()
     });
 
 
-	$("#acl_form").live("submit", function(e){
+	$("#acl_form").on("submit", function(e){
 		e.preventDefault();
 		var control_id = $("#control_id_hidden").val();
 

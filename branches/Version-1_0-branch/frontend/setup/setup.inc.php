@@ -1,6 +1,6 @@
 <?php
 	$setup_info['frontend']['name'] = 'frontend';
-	$setup_info['frontend']['version'] = '0.5';
+	$setup_info['frontend']['version'] = '0.6';
 	$setup_info['frontend']['app_order'] = 9;
 //	$setup_info['frontend']['tables'] = array();
 	$setup_info['frontend']['enable'] = 1;
@@ -12,6 +12,12 @@
 	(
 		'name'	=> 'Bouvet ASA',
 		'email'	=> 'info@bouvet.no'
+	);
+
+	$setup_info['property']['maintainer'] = array
+	(
+		'name'	=> 'Sigurd Nes',
+		'email'	=> 'sigurd.nes@bergen.kommune.no'
 	);
 
 	/* Dependencies for this app to work */

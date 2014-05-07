@@ -337,7 +337,7 @@ $(document).ready(function(){
 	/* =========================  CONTROL OPTION ======================================== */
 	  
 	// SHOW CONTROL OPTION PANEL
-	$(".control_item_type").live("click", function(){
+	$(".control_item_type").on("click", function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");
 		
@@ -365,12 +365,13 @@ $(document).ready(function(){
 	});
 
 	// DELETE CONTROL OPTION FROM CHOSEN LIST
-	$("#control_item_options li .delete").live("click", function(e){
+	$("#control_item_options li .delete").on("click", function(e){
 		$(this).closest("li").remove();
 	});
 
 	// ADD OPTION VALUE TO OPTION LIST	
-	$("#add_control_item_list_value input[type=button]").live("click", function(e){
+	$("#add_control_item_list_value input[type=button]").on("click", function(e){
+
 		e.preventDefault();
 		
 		var listValue = $(this).parent().find("input[name=option_value]").val();

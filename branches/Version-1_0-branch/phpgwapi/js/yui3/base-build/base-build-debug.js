@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('base-build', function (Y, NAME) {
 
     /**
@@ -15,16 +16,41 @@ YUI.add('base-build', function (Y, NAME) {
      * @submodule base-build
      * @for Base
      */
-    var Base = Y.Base,
+    var BaseCore = Y.BaseCore,
+        Base     = Y.Base,
         L = Y.Lang,
+
         INITIALIZER = "initializer",
         DESTRUCTOR = "destructor",
-        build,
-        arrayAggregator = function (prop, r, s) {
+        AGGREGATES  = ["_PLUG", "_UNPLUG"],
+
+        build;
+
+    // Utility function used in `_buildCfg` to aggregate array values into a new
+    // array from the sender constructor to the receiver constructor.
+    function arrayAggregator(prop, r, s) {
             if (s[prop]) {
                 r[prop] = (r[prop] || []).concat(s[prop]);
             }    
-        };
+    }
+
+    // Utility function used in `_buildCfg` to aggregate `_ATTR_CFG` array
+    // values from the sender constructor into a new array on receiver's
+    // constructor, and clear the cached hash.
+    function attrCfgAggregator(prop, r, s) {
+        if (s._ATTR_CFG) {
+            // Clear cached hash.
+            r._ATTR_CFG_HASH = null;
+
+            arrayAggregator.apply(null, arguments);
+        }
+    }
+
+    // Utility function used in `_buildCfg` to aggregate ATTRS configs from one
+    // the sender constructor to the receiver constructor.
+    function attrsAggregator(prop, r, s) {
+        BaseCore.modifyAttrs(r, s.ATTRS);
+    }
 
     Base._build = function(name, main, extensions, px, sx, cfg) {
 
@@ -83,6 +109,9 @@ YUI.add('base-build', function (Y, NAME) {
         if (dynamic) {
             builtClass.NAME = name;
             builtClass.prototype.constructor = builtClass;
+
+            // Carry along the reference to `modifyAttrs()` from `main`.
+            builtClass.modifyAttrs = main.modifyAttrs;
         }
 
         return builtClass;
@@ -335,7 +364,7 @@ YUI.add('base-build', function (Y, NAME) {
      *           "CustomProperty" : function(property, Receiver, Supplier) {
      *              ...
      *              var triggers = Receiver.CustomProperty.triggers; 
-                    Receiver.CustomProperty.triggers = triggers.concat(Supplier.CustomProperty.triggers);
+     *              Receiver.CustomProperty.triggers = triggers.concat(Supplier.CustomProperty.triggers);
      *              ...
      *           }
      *        }
@@ -363,8 +392,9 @@ YUI.add('base-build', function (Y, NAME) {
      *
      * @method create
      * @static
-     * @param {Function} name The name of the newly created class. Used to define the NAME property for the new class.
-     * @param {Function} main The base class which the new class should extend. This class needs to be Base or a class derived from base (e.g. Widget).
+     * @param {String} name The name of the newly created class. Used to define the NAME property for the new class.
+     * @param {Function} main The base class which the new class should extend.
+     * This class needs to be Base or a class derived from base (e.g. Widget).
      * @param {Function[]} extensions The list of extensions which will be mixed into the built class.
      * @param {Object} px The set of prototype properties/methods to add to the built class.
      * @param {Object} sx The set of static properties/methods to add to the built class.
@@ -378,20 +408,26 @@ YUI.add('base-build', function (Y, NAME) {
      * <p>Mixes in a list of extensions to an existing class.</p>
      * @method mix
      * @static
-     * @param {Function} main The existing class into which the extensions should be mixed.  The class needs to be Base or a class derived from Base (e.g. Widget)
+     * @param {Function} main The existing class into which the extensions should be mixed.
+     * The class needs to be Base or a class derived from Base (e.g. Widget)
      * @param {Function[]} extensions The set of extension classes which will mixed into the existing main class.
      * @return {Function} The modified main class, with extensions mixed in.
      */
     Base.mix = function(main, extensions) {
+
+        if (main._CACHED_CLASS_DATA) {
+            main._CACHED_CLASS_DATA = null;
+        }
+
         return build(null, main, extensions, null, null, {dynamic:false});
     };
 
     /**
      * The build configuration for the Base class.
      *
-     * Defines the static fields which need to be aggregated
-     * when the Base class is used as the main class passed to
-     * the <a href="#method_Base.build">Base.build</a> method.
+     * Defines the static fields which need to be aggregated when the Base class
+     * is used as the main class passed to the
+     * <a href="#method_Base.build">Base.build</a> method.
      *
      * @property _buildCfg
      * @type Object
@@ -399,30 +435,26 @@ YUI.add('base-build', function (Y, NAME) {
      * @final
      * @private
      */
+    BaseCore._buildCfg = {
+        aggregates: AGGREGATES.concat(),
+
+        custom: {
+            ATTRS         : attrsAggregator,
+            _ATTR_CFG     : attrCfgAggregator,
+            _NON_ATTRS_CFG: arrayAggregator
+        }
+    };
+
+    // Makes sure Base and BaseCore use separate `_buildCfg` objects.
     Base._buildCfg = {
-        custom : {
-            ATTRS : function(prop, r, s) {
+        aggregates: AGGREGATES.concat(),
 
-                r.ATTRS = r.ATTRS || {};
-
-                if (s.ATTRS) {
-
-                    var sAttrs = s.ATTRS,
-                        rAttrs = r.ATTRS,
-                        a;
-
-                    for (a in sAttrs) {
-                        if (sAttrs.hasOwnProperty(a)) {
-                            rAttrs[a] = rAttrs[a] || {};
-                            Y.mix(rAttrs[a], sAttrs[a], true);
-                        }
+        custom: {
+            ATTRS         : attrsAggregator,
+            _ATTR_CFG     : attrCfgAggregator,
+            _NON_ATTRS_CFG: arrayAggregator
                     }
-                }
-            },
-            _NON_ATTRS_CFG : arrayAggregator
-        },
-        aggregates : ["_PLUG", "_UNPLUG"]
     };
 
 
-}, '3.7.3', {"requires": ["base-base"]});
+}, '3.16.0', {"requires": ["base-base"]});

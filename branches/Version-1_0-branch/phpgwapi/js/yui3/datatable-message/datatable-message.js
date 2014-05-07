@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('datatable-message', function (Y, NAME) {
 
 /**
@@ -55,7 +56,7 @@ Y.mix(Message.prototype, {
     Template used to generate the node that will be used to report messages.
 
     @property MESSAGE_TEMPLATE
-    @type {HTML}
+    @type {String}
     @default <tbody class="{className}"><td class="{contentClass}" colspan="{colspan}"></td></tbody>
     @since 3.5.0
     **/
@@ -123,7 +124,7 @@ Y.mix(Message.prototype, {
     @protected
     @since 3.5.0
     **/
-    _afterMessageColumnsChange: function (e) {
+    _afterMessageColumnsChange: function () {
         var contentNode;
 
         if (this._messageNode) {
@@ -146,7 +147,7 @@ Y.mix(Message.prototype, {
     @protected
     @since 3.5.0
     **/
-    _afterMessageDataChange: function (e) {
+    _afterMessageDataChange: function () {
         this._uiSetMessage();
     },
 
@@ -201,7 +202,7 @@ Y.mix(Message.prototype, {
         this._initMessageStrings();
 
         if (this.get('showMessages')) {
-            this.after('renderBody', Y.bind('_initMessageNode', this));
+            this.after('table:renderBody', Y.bind('_initMessageNode', this));
         }
 
         this.after(Y.bind('_bindMessageUI', this), this, 'bindUI');
@@ -293,4 +294,4 @@ if (Y.Lang.isFunction(Y.DataTable)) {
 }
 
 
-}, '3.7.3', {"requires": ["datatable-base"], "lang": ["en"], "skinnable": true});
+}, '3.16.0', {"requires": ["datatable-base"], "lang": ["en", "fr", "es", "hu", "it"], "skinnable": true});

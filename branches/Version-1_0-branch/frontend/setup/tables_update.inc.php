@@ -75,3 +75,18 @@
 		$GLOBALS['setup_info']['frontend']['currentver'] = '0.5';
 		return $GLOBALS['setup_info']['frontend']['currentver'];
 	}
+
+	/**
+	* Update frontend version from 04 to 0.5
+	* Add new location as placeholders for functions and menues
+	* 
+	*/
+	$test[] = '0.5';
+	function frontend_upgrade0_5()
+	{
+		$GLOBALS['phpgw']->locations->add('.controller', 'controller', 'frontend', false);
+		$GLOBALS['setup_info']['frontend']['currentver'] = '0.6';
+		return $GLOBALS['setup_info']['frontend']['currentver'];
+	}
+
+

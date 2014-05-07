@@ -1,9 +1,10 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('event-focus', function (Y, NAME) {
 
 /**
@@ -26,20 +27,26 @@ var Event    = Y.Event,
         // which throws an exception in Win8 packaged apps, due to additional security restrictions:
         // http://msdn.microsoft.com/en-us/library/windows/apps/hh465380.aspx#differences
 
-        var p = Y.config.doc.createElement("p"),
-            listener;
+        var supported = false,
+            doc = Y.config.doc,
+            p;
 
+        if (doc) {
+
+            p = doc.createElement("p");
         p.setAttribute("onbeforeactivate", ";");
-        listener = p.onbeforeactivate;
 
-        // listener is a function in IE8+.
-        // listener is a string in IE6,7 (unfortunate, but that's not going to change. Otherwise we could have just checked for function).
-        // listener is a function in IE10, in a Win8 App environment (no exception running the test).
+            // onbeforeactivate is a function in IE8+.
+            // onbeforeactivate is a string in IE6,7 (unfortunate, otherwise we could have just checked for function below).
+            // onbeforeactivate is a function in IE10, in a Win8 App environment (no exception running the test).
 
-        // listener is undefined in Webkit/Gecko.
-        // listener is a function in Webkit/Gecko if it's a supported event (e.g. onclick).
+            // onbeforeactivate is undefined in Webkit/Gecko.
+            // onbeforeactivate is a function in Webkit/Gecko if it's a supported event (e.g. onclick).
 
-        return (listener !== undefined);
+            supported = (p.onbeforeactivate !== undefined);
+        }
+
+        return supported;
     }());
 
 function define(type, proxy, directEvent) {
@@ -216,7 +223,14 @@ function define(type, proxy, directEvent) {
                             ret = notifier.fire(e);
                         }
 
-                        if (ret === false || e.stopped === 2) {
+                        if (ret === false || e.stopped === 2 ||
+                            // If e.stopPropagation() is called, notify any
+                            // delegate subs from the same container, but break
+                            // once the container changes. This emulates
+                            // delegate() behavior for events like 'click' which
+                            // won't notify delegates higher up the parent axis.
+                            (e.stopped && delegates[i+1] &&
+                             delegates[i+1].container !== notifier.container)) {
                             break;
                         }
                     }
@@ -270,4 +284,4 @@ if (useActivate) {
 }
 
 
-}, '3.7.3', {"requires": ["event-synthetic"]});
+}, '3.16.0', {"requires": ["event-synthetic"]});

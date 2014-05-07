@@ -519,4 +519,13 @@ div#paging {
 	margin-top: 40px;
 	}
 
+#menu {
+  height: 30px;
+  width: 150px;
+}
+#menu > li {
+   float: left;  
+   width:auto;    
+}
+
 

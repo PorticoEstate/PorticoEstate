@@ -1,37 +1,28 @@
 /*
-YUI 3.7.3 (build 5687)
-Copyright 2012 Yahoo! Inc. All rights reserved.
+YUI 3.16.0 (build 76f0e08)
+Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 http://yuilibrary.com/license/
 */
+
 YUI.add('uploader-queue', function (Y, NAME) {
 
+/**
+* The class manages a queue of files that should be uploaded to the server.
+* It initializes the required number of uploads, tracks them as they progress,
+* and automatically advances to the next upload when a preceding one has completed.
+* @module uploader-queue
+*/
 
-    /**
-     * The class manages a queue of files that should be uploaded to the server.
-     * It initializes the required number of uploads, tracks them as they progress,
-     * and automatically advances to the next upload when a preceding one has completed.
-     * @module uploader-queue
-     */     
 
-    var Lang = Y.Lang,
-        Bind = Y.bind,
-        Win = Y.config.win,
-        queuedFiles,
-        numberOfUploads,        
-        currentUploadedByteValues,
-        currentFiles,
-        totalBytesUploaded,
-        totalBytes;
 
-    /**
-     * This class manages a queue of files to be uploaded to the server.
-     * @class Uploader.Queue
-     * @extends Base
-     * @constructor
-     * @param {Object} config Configuration object
-     */
-    var UploaderQueue = function(o) {
+/**
+* This class manages a queue of files to be uploaded to the server.
+* @class Uploader.Queue
+* @extends Base
+* @constructor
+*/
+var UploaderQueue = function() {
         this.queuedFiles = [];
         this.uploadRetries = {};
         this.numberOfUploads = 0;
@@ -41,10 +32,10 @@ YUI.add('uploader-queue', function (Y, NAME) {
         this.totalBytes = 0;      
   
         UploaderQueue.superclass.constructor.apply(this, arguments);
-    };
+};
 
 
-    Y.extend(UploaderQueue, Y.Base, {
+Y.extend(UploaderQueue, Y.Base, {
 
        /**
         * Stored value of the current queue state
@@ -61,9 +52,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
         * @method initializer
         * @protected
         */
-        initializer : function (cfg) {
-
-        },
+    initializer : function () {},
 
        /**
         * Handles and retransmits upload start event.
@@ -88,8 +77,11 @@ YUI.add('uploader-queue', function (Y, NAME) {
         * @private
         */
         _uploadErrorHandler : function (event) {
-           var errorAction = this.get("errorAction");
-           var updatedEvent = event;
+        var errorAction = this.get("errorAction"),
+            updatedEvent = event,
+            fileid,
+            retries;
+
            updatedEvent.file = event.target;
            updatedEvent.originEvent = event;
 
@@ -104,8 +96,9 @@ YUI.add('uploader-queue', function (Y, NAME) {
            }
 
            else if (errorAction === UploaderQueue.RESTART_ASAP) {
-            var fileid = event.target.get("id"),
+            fileid = event.target.get("id");
                 retries = this.uploadRetries[fileid] || 0;
+
             if (retries < this.get("retryCount")) {
                this.uploadRetries[fileid] = retries + 1;
                this.addToQueueTop(event.target);
@@ -113,8 +106,9 @@ YUI.add('uploader-queue', function (Y, NAME) {
                this._startNextFile();
            }
            else if (errorAction === UploaderQueue.RESTART_AFTER) {
-            var fileid = event.target.get("id"),
+            fileid = event.target.get("id");
                 retries = this.uploadRetries[fileid] || 0;
+
             if (retries < this.get("retryCount")) {
                this.uploadRetries[fileid] = retries + 1;
                this.addToQueueBottom(event.target);
@@ -174,8 +168,9 @@ YUI.add('uploader-queue', function (Y, NAME) {
         */
         _unregisterUpload : function (file) {
           if (this.numberOfUploads > 0) {
-            this.numberOfUploads -=1;
+            this.numberOfUploads -= 1;
           }
+
           delete this.currentFiles[file.get("id")];
           delete this.uploadRetries[file.get("id")];
 
@@ -209,21 +204,22 @@ YUI.add('uploader-queue', function (Y, NAME) {
                this._startNextFile();
            }
            
-           var updatedEvent = event;
+        var updatedEvent = event,
+            uploadedTotal = this.totalBytesUploaded,
+            percentLoaded = Math.min(100, Math.round(10000*uploadedTotal/this.totalBytes) / 100);
+
            updatedEvent.file = event.target;
            updatedEvent.originEvent = event;
-
-           var uploadedTotal = this.totalBytesUploaded;
 
            Y.each(this.currentUploadedByteValues, function (value) {
               uploadedTotal += value; 
            });
            
-           var percentLoaded = Math.min(100, Math.round(10000*uploadedTotal/this.totalBytes) / 100); 
-           
-           this.fire("totaluploadprogress", {bytesLoaded: uploadedTotal, 
+        this.fire("totaluploadprogress", {
+            bytesLoaded: uploadedTotal,
                                              bytesTotal: this.totalBytes,
-                                             percentLoaded: percentLoaded});
+            percentLoaded: percentLoaded
+        });
 
            this.fire("uploadcomplete", updatedEvent);
 
@@ -231,8 +227,6 @@ YUI.add('uploader-queue', function (Y, NAME) {
                this.fire("alluploadscomplete");
                this._currentState = UploaderQueue.STOPPED;
            }
-
-
         },
 
        /**
@@ -248,7 +242,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
           updatedEvent.originEvent = event;
           updatedEvent.file = event.target;
 
-          this.fire("uploadcacel", updatedEvent);
+        this.fire("uploadcancel", updatedEvent);
         },
 
 
@@ -264,23 +258,24 @@ YUI.add('uploader-queue', function (Y, NAME) {
           
           this.currentUploadedByteValues[event.target.get("id")] = event.bytesLoaded;
           
-          var updatedEvent = event;
+        var updatedEvent = event,
+            uploadedTotal = this.totalBytesUploaded,
+            percentLoaded = Math.min(100, Math.round(10000*uploadedTotal/this.totalBytes) / 100);
+
           updatedEvent.originEvent = event;
           updatedEvent.file = event.target;
 
           this.fire("uploadprogress", updatedEvent);
           
-          var uploadedTotal = this.totalBytesUploaded;
-
           Y.each(this.currentUploadedByteValues, function (value) {
              uploadedTotal += value; 
           });
           
-          var percentLoaded = Math.min(100, Math.round(10000*uploadedTotal/this.totalBytes) / 100);
-
-          this.fire("totaluploadprogress", {bytesLoaded: uploadedTotal, 
+        this.fire("totaluploadprogress", {
+            bytesLoaded: uploadedTotal,
                                             bytesTotal: this.totalBytes,
-                                            percentLoaded: percentLoaded});
+            percentLoaded: percentLoaded
+        });
         },
 
        /**
@@ -289,7 +284,6 @@ YUI.add('uploader-queue', function (Y, NAME) {
         * @method startUpload
         */
         startUpload: function() {
-           
            this.queuedFiles = this.get("fileList").slice(0);
            this.numberOfUploads = 0;
            this.currentUploadedByteValues = {};
@@ -332,7 +326,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
         * by cancelling its upload and immediately relaunching it.
         * 
         * @method forceReupload
-        * @param file {Y.File} The file to force reupload on.
+    * @param file {File} The file to force reupload on.
         */
         forceReupload : function (file) {
             var id = file.get("id");
@@ -350,7 +344,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
         * drops below the maximum permissible value).
         * 
         * @method addToQueueTop
-        * @param file {Y.File} The file to add to the top of the queue.
+    * @param file {File} The file to add to the top of the queue.
         */
         addToQueueTop: function (file) {
             this.queuedFiles.unshift(file);
@@ -361,7 +355,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
         * launched after all the other queued files are uploaded.)
         * 
         * @method addToQueueBottom
-        * @param file {Y.File} The file to add to the bottom of the queue.
+    * @param file {File} The file to add to the bottom of the queue.
         */
         addToQueueBottom: function (file) {
             this.queuedFiles.push(file);
@@ -373,13 +367,17 @@ YUI.add('uploader-queue', function (Y, NAME) {
         * stopped.
         * 
         * @method cancelUpload
-        * @param file {Y.File} An optional parameter - the file whose upload
+    * @param file {File} An optional parameter - the file whose upload
         * should be cancelled.
         */
         cancelUpload: function (file) {
+        var id,
+            i,
+            fid;
 
           if (file) {
-            var id = file.get("id");
+            id = file.get("id");
+
             if (this.currentFiles[id]) {
               this.currentFiles[id].cancelUpload();
               this._unregisterUpload(this.currentFiles[id]);
@@ -388,7 +386,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
               }
             }
             else {
-              for (var i = 0, len = this.queuedFiles.length; i < len; i++) {
+                for (i = 0, len = this.queuedFiles.length; i < len; i++) {
                 if (this.queuedFiles[i].get("id") === id) {
                   this.queuedFiles.splice(i, 1);
                   break;
@@ -397,7 +395,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
             }
           }
           else {
-            for (var fid in this.currentFiles) {
+            for (fid in this.currentFiles) {
               this.currentFiles[fid].cancelUpload();
               this._unregisterUpload(this.currentFiles[fid]);
             }
@@ -409,9 +407,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
             this._currentState = UploaderQueue.STOPPED;
           }
         }
-    }, 
-
-    {
+}, {
       /** 
        * Static constant for the value of the `errorAction` attribute:
        * prescribes the queue to continue uploading files in case of 
@@ -503,13 +499,13 @@ YUI.add('uploader-queue', function (Y, NAME) {
            * Maximum number of simultaneous uploads; must be in the
            * range between 1 and 5. The value of `2` is default. It
            * is recommended that this value does not exceed 3.
-           * @property simUploads
+        * @attribute simUploads
            * @type Number
            * @default 2
            */
            simUploads: {
                value: 2,
-               validator: function (val, name) {
+                 validator: function (val) {
                    return (val >= 1 && val <= 5);
                }
            },
@@ -522,20 +518,25 @@ YUI.add('uploader-queue', function (Y, NAME) {
            * should restart immediately on the errored out file and continue as planned), or
            * Y.Uploader.Queue.RESTART_AFTER (the upload of the errored out file should restart
            * after all other files have uploaded)
-           * @property errorAction
+        * @attribute errorAction
            * @type String
            * @default Y.Uploader.Queue.CONTINUE
            */
            errorAction: {
                value: "continue",
-               validator: function (val, name) {
-                   return (val === UploaderQueue.CONTINUE || val === UploaderQueue.STOP || val === UploaderQueue.RESTART_ASAP || val === UploaderQueue.RESTART_AFTER);
+                validator: function (val) {
+                return (
+                    val === UploaderQueue.CONTINUE ||
+                    val === UploaderQueue.STOP ||
+                    val === UploaderQueue.RESTART_ASAP ||
+                    val === UploaderQueue.RESTART_AFTER
+                );
                }
            },
 
           /**
            * The total number of bytes that has been uploaded.
-           * @property bytesUploaded
+        * @attribute bytesUploaded
            * @type Number
            */   
            bytesUploaded: {
@@ -545,7 +546,7 @@ YUI.add('uploader-queue', function (Y, NAME) {
    
           /**
            * The total number of bytes in the queue.
-           * @property bytesTotal
+        * @attribute bytesTotal
            * @type Number
            */ 
            bytesTotal: {
@@ -558,8 +559,8 @@ YUI.add('uploader-queue', function (Y, NAME) {
            * before the upload has been started; modifying it after starting
            * the upload has no effect, and `addToQueueTop` or `addToQueueBottom` methods
            * should be used instead.
-           * @property fileList
-           * @type Number
+        * @attribute fileList
+        * @type Array
            */    
            fileList: {
                value: [],
@@ -652,10 +653,11 @@ YUI.add('uploader-queue', function (Y, NAME) {
            }
 
         }
-    });
+});
 
 
-    Y.namespace('Uploader');
-    Y.Uploader.Queue = UploaderQueue;
+Y.namespace('Uploader');
+Y.Uploader.Queue = UploaderQueue;
 
-}, '3.7.3', {"requires": ["base"]});
+
+}, '3.16.0', {"requires": ["base"]});
