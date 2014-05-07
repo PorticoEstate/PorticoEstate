@@ -521,6 +521,7 @@ div#paging {
 
 #menu {
   height: 30px;
+  width: 150px;
 }
 #menu > li {
    float: left;  
