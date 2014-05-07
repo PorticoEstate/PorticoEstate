@@ -2913,6 +2913,7 @@
 
 				if($old_status != $status_new)
 				{
+					phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 					$this->db->query("UPDATE fm_workorder SET status = '{$status_new}' WHERE id = '{$id}'", __LINE__, __FILE__);
 					$historylog->add('S', $id, $status_new, $old_status);
 					$historylog->add('RM', $id, 'Status endret via masseoppdatering eller prosjekt');
