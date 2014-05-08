@@ -32,8 +32,6 @@
             $config	= CreateObject('phpgwapi.config','booking');
             $config->read();
 
-            $external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
-            $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id='.$event['building_id']."&date=".substr($event['from_'],0,-9);
             $errors = array();
             $customer = array();
 
@@ -54,7 +52,6 @@
                 $customer['customer_ssn'] = $organization['customer_internal'];
                 $customer['customer_organization_number'] = $organization['organization_number'];
                 $customer['customer_internal'] = $organization['customer_internal'];
-
             }
             $mailadresses = $this->building_users($event['building_id'],$event['organization_id']);
 
@@ -102,7 +99,6 @@
                     }
                     $message = '';
                     $this->bo->send_admin_notification(true, $event, $message, $orgdate);
-                    exit;
                     $this->bo->update($event);
                     $date = substr($event['from_'], 0, 10);
                     $this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=> $event['building_id'], 'date' => $date));
@@ -168,7 +164,6 @@
                     if($bouser->is_organization_admin($event['customer_organization_id'])) {
                         $this->bo->send_notification(false, $event, $mailadresses);
                         $this->bo->send_admin_notification(false, $event, $_POST['message']);
-                        exit;
                         if ($can_delete_events) {
                             $this->bo->so->delete_event($event['id']);
                         } else {

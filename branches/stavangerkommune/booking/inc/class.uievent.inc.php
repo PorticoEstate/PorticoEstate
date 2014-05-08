@@ -515,14 +515,33 @@
             $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id='.$event['building_id']."&date=".substr($event['from_'],0,-9);
 			$errors = array();
 			$customer = array();
-			if ($event['customer_identifier_type'])
-			{
-				$customer['customer_identifier_type'] = $event['customer_identifier_type'];
-				$customer['customer_ssn'] = $event['customer_ssn'];
-				$customer['customer_organization_number'] = $event['customer_organization_number'];
-				$customer['customer_internal'] = $event['customer_internal'];
-			}
+
+            if ($event['customer_identifier_type'])
+            {
+                $customer['customer_identifier_type'] = $event['customer_identifier_type'];
+                $customer['customer_ssn'] = $event['customer_ssn'];
+                $customer['customer_organization_number'] = $event['customer_organization_number'];
+                $customer['customer_internal'] = $event['customer_internal'];
+                $orginfo = $this->bo->so->get_org($event['customer_organization_number']);
+                $customer['customer_organization_id'] = $orginfo['id'];
+                $customer['customer_organization_name'] = $orginfo['name'];
+            } else {
+                $customer['customer_organization_name'] = $event['customer_organization_name'];
+                $customer['customer_organization_id'] = $event['customer_organization_id'];
+                $organization = $this->organization_bo->read_single($event['customer_organization_id']);
+                $customer['customer_identifier_type'] = 'organization_number';
+                $customer['customer_ssn'] = $organization['customer_internal'];
+                $customer['customer_organization_number'] = $organization['organization_number'];
+                $customer['customer_internal'] = $organization['customer_internal'];
+            }
+
 			list($event, $errors) = $this->extract_and_validate($event);
+
+            if ($event['customer_organization_number']) {
+                $orginfo = $this->bo->so->get_org($event['customer_organization_number']);
+                $event['customer_organization_id'] = $orginfo['id'];
+                $event['customer_organization_name'] = $orginfo['name'];
+            }
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
