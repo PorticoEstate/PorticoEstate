@@ -41,19 +41,43 @@
 			$getNyeInnkommendeMeldinger->kodeord = $kodeord;
 			
 			$ReturnValue = $service->getNyeInnkommendeMeldinger($getNyeInnkommendeMeldinger);
+			
+			$response = array();
+			if(isset($ReturnValue->return))
+			{
+				$_response = $ReturnValue->return;
+				if(is_array($_response))
+				{
+					$response = $_response;
+				}
+				else
+				{
+					$response[] = $_response;
+				}
+			}
 
-			_debug_array($ReturnValue);
+//	_debug_array($ReturnValue->return);
 
-			die();
+			$datetime_format = phpgwapi_db::datetime_format();
 
+			foreach ($response as $entry)
+			{
+				$sms_datetime = date($datetime_format, time()); // should not be calculated
 
-/*
-			    if ($this->setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
-			    {
+				$message = trim(ltrim($entry->tekst, $entry->kodeord));
+				$array_target_code = explode(' ',$message);
+				$target_code = strtoupper(trim($array_target_code[0]));
+				$message = $array_target_code[1];
+				for ($i=2;$i<count($array_target_code);$i++)
+				{
+					$message .= " {$array_target_code[$i]}";
+				}
+//	_debug_array($target_code);
+//	_debug_array($message);
+				$this->setsmsincomingaction($sms_datetime,$entry->tlfavsender,$target_code,$message);
+			}
 
-			    }
+//			_debug_array($ReturnValue);
 
-*/
 		}
-
 	}
