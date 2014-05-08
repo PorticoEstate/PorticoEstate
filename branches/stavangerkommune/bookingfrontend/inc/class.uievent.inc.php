@@ -160,7 +160,7 @@
             $mailadresses = $this->building_users($event['building_id'],$event['organization_id']);
             if($_SERVER['REQUEST_METHOD'] == 'POST')
             {
-                if($cdate > $event['to_']) {
+                if($cdate < $event['to_']) {
                     if($bouser->is_organization_admin($event['customer_organization_id'])) {
                         $this->bo->send_notification(false, $event, $mailadresses);
                         $this->bo->send_admin_notification(false, $event, $_POST['message']);

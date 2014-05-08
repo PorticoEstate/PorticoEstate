@@ -106,7 +106,6 @@ class booking_boevent extends booking_bocommon_authorized
 //        $link .= $event['building_id'].'&building_name='.urlencode($event['building_name']).'&from_[]=';
 //        $link .= urlencode($event['from_']).'&to_[]='.urlencode($event['to_']).'&resource='.implode(",",$event['resources']);
 
-
         $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id=';
         $link .= $event['building_id'].'&date='.substr($event['from_'], 0, 10);
         $body = "";
@@ -139,17 +138,6 @@ class booking_boevent extends booking_bocommon_authorized
         $body .= ' - <a href="'.$link.'">'.lang('Check calendar').'</a></p>';
         $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
 
-        echo "<pre>\n";
-        print_r($mailadresses);
-        echo "\n";
-        print_r($from);
-        echo "\n";
-        print_r($subject);
-        echo "\n";
-        print_r($body);
-        echo "\n";
-        print_r($event);
-        exit;
         foreach ($mailadresses as $adr)
         {
             try
@@ -207,12 +195,6 @@ class booking_boevent extends booking_bocommon_authorized
         $body .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a></p>';
         $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
 
-        echo "admin: ";
-        print_r($subject);
-        print_r($body);
-        print_r($_POST);
-        print_r($event);
-        exit;
         foreach ($mailadresses as $adr)
         {
             try
