@@ -372,3 +372,4 @@ Event Delete Information2	bookingfrontend	no	Arrangement blir satt inaktivt.
 Edit Events	bookingfrontend	no	Rediger arrangement
 Delete Event	bookingfrontend	no	Slett arrangement
 Check calendar	bookingfrontend	no	Sjekk kalender
+You can't cancel event that has started, for help contacts site admin	bookingfrontend	no	Du kan ikke slette arrangement som er over.
