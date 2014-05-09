@@ -56,8 +56,6 @@
 				}
 			}
 
-//	_debug_array($ReturnValue->return);
-
 			$datetime_format = phpgwapi_db::datetime_format();
 
 			foreach ($response as $entry)
@@ -72,12 +70,10 @@
 				{
 					$message .= " {$array_target_code[$i]}";
 				}
-//	_debug_array($target_code);
-//	_debug_array($message);
 				$this->setsmsincomingaction($sms_datetime,$entry->tlfavsender,$target_code,$message);
 			}
 
-//			_debug_array($ReturnValue);
+			return $ReturnValue;
 
 		}
 	}
