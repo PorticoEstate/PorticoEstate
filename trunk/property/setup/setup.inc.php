@@ -168,6 +168,7 @@
 		'fm_event_receipt',
 		'fm_idgenerator',
 		'fm_document',
+		'fm_document_relation',
 		'fm_document_history',
 		'fm_document_status',
 		'fm_standard_unit',
