@@ -61,7 +61,7 @@
 					$load = array
 					(
 						"js/jquery-1.11.1{$_type}",
-						"js/jquery-migrate-1.2.1"
+//						"js/jquery-migrate-1.2.1"
 					);
 					break;
 				
@@ -71,7 +71,7 @@
 						"js/jquery-1.11.1{$_type}",
 						"js/jquery-ui-1.10.4.custom{$_type}",
 						"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
-						"js/jquery-migrate-1.2.1"
+//						"js/jquery-migrate-1.2.1"
 					);
 					break;
 
@@ -81,7 +81,7 @@
 					(
 						"js/jquery-1.11.1{$_type}",
 						"js/jquery-ui-1.10.4.custom{$_type}",
-						"js/jquery-migrate-1.2.1"
+//						"js/jquery-migrate-1.2.1"
 					);
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/ui-lightness/jquery-ui-1.10.4.custom{$_type}.css");

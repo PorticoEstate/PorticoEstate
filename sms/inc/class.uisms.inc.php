@@ -867,7 +867,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
 
 			$sms = CreateObject('sms.sms');
-			$sms->getsmsinbox();
+			$sms->getsmsinbox(true);
 			$sms->getsmsstatus();
 
 			$receipt['message'][]=array('msg'=>lang('Daemon refreshed'));

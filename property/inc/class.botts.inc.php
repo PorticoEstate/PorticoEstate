@@ -267,6 +267,11 @@
 					);
 			}
 
+			$columns['ecodimb'] = array
+				(
+					'id' => 'ecodimb',
+					'name'=> lang('dim b')
+				);
 			$columns['vendor'] = array
 				(
 					'id' => 'vendor',

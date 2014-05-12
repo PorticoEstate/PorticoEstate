@@ -461,9 +461,13 @@
 			return $ok;
 		}
 
-		function getsmsinbox()
+		function getsmsinbox($debug = false)
 		{
-			$this->gw_set_incoming_action();
+			$ReturnValue = $this->gw_set_incoming_action();
+			if($debug)
+			{
+				_debug_array($ReturnValue);
+			}
 		}
 
 		function getsmsstatus()
