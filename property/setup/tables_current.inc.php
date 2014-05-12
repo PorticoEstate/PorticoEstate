@@ -1725,6 +1725,19 @@
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
+		'fm_document_relation' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'document_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'location_item_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_document' => array('document_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_document_status' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
