@@ -15,6 +15,7 @@
 
 		function gw_set_incoming_action()
 		{
+		    $response = array();
 		    $handle = @opendir($this->gnokii_param[path] . "/cache/smsd");
 		    while ($sms_in_file = @readdir($handle))
 		    {
@@ -39,11 +40,20 @@
 				    }
 				    // collected:
 				    // $sms_datetime, $sms_sender, $target_code, $message
+					$response[] = array
+					(
+						'sms_datetime'	=> $sms_datetime,
+						'sms_sender'	=> $sms_sender,
+						'target_code'	=> $target_code,
+						'message'		=> $message	
+					);
+
 				    if ($this->setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
 				    {
 						@unlink($tobe_deleted);
 				    }
 				}
 		    }
+		    return $response;
 		}
 	}
