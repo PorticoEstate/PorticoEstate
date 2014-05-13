@@ -3155,7 +3155,7 @@
 			{				
 				if ($link_to_files != '')
 				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$ticket['files'][$z]['directory'].'/'.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$ticket['files'][$z]['name'].'</a>';
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$ticket['files'][$z]['directory'].'/'.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$ticket['files'][$z]['name'].'</a>';
 				}
 				else
 				{

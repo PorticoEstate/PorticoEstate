@@ -1419,7 +1419,7 @@
 				</input>
 			</td>
 			<td>
-				<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}" style="cursor:help">
+				<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}">
 					<option value="">
 						<xsl:value-of select="//lang_no_wo_hour_cat"/>
 					</option>
@@ -1814,7 +1814,7 @@
 				<input type="text" size="6" name="values[quantity][{counter}]"/>
 			</td>
 			<td>
-				<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}" style="cursor:help">
+				<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}">
 					<option value="">
 						<xsl:value-of select="//lang_no_wo_hour_cat"/>
 					</option>

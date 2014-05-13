@@ -1364,8 +1364,8 @@
 
 			for($z=0; $z<count($agreement['files']); $z++)
 			{
-				$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$agreement['files'][$z]['name'].'</a>';
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$agreement['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
+				$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$agreement['files'][$z]['name'].'</a>';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$agreement['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}
 
 			$datavalues[2] = array
@@ -2170,11 +2170,11 @@
 			{
 				if ($link_to_files != '')
 				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$agreement['files'][$z]['directory'].'/'.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$agreement['files'][$z]['name'].'</a>';
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$agreement['files'][$z]['directory'].'/'.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$agreement['files'][$z]['name'].'</a>';
 				}
 				else
 				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$agreement['files'][$z]['name'].'</a>';
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$agreement['files'][$z]['name'].'</a>';
 				}
 			}
 
