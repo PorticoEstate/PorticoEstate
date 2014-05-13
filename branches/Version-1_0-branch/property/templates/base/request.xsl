@@ -628,18 +628,6 @@
 									<xsl:call-template name="file_upload"/>
 								</xsl:when>
 							</xsl:choose>
-							<tr height="50">
-								<td>
-									<xsl:variable name="lang_save">
-										<xsl:value-of select="lang_save"/>
-									</xsl:variable>
-									<input type="submit" name="values[save]" value="{$lang_save}">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_save_statustext"/>
-										</xsl:attribute>
-									</input>
-								</td>
-							</tr>
 						</table>
 					</div>
 					<div id="history">

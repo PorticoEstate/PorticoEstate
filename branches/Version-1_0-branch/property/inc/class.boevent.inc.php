@@ -305,73 +305,73 @@
 				$dow = $rpt_day[$data['repeat_day'][0]];
 				switch($data['repeat_type'])
 				{
-				case '0':
-					$times = $data['start_date'];
-					break;
-				case '1': //'Daily'
-					if($data['repeat_interval'])
-					{
-						$times = array('day' => "*/{$data['repeat_interval']}");
-					}
-					else
-					{
-						$times = array('day' => "*/1");
-					}
-					break;
-				case '2': //'Weekly'
-					if($data['repeat_interval'])
-					{
-						$day = $data['repeat_interval'] * 7;
-						$times = array('day' => "*/{$day}");
-					}
-					else
-					{
-						$times = array('day' => "*/7");
-					}
-					if ($data['repeat_day'])
-					{
-						$times['dow'] = $repeat_day;
-					}
-					break;
-				case '3': //'Monthly (by day)'
-					if( !isset($data['repeat_day']) || !is_array($data['repeat_day']) )
-					{
-						$dow = 1;
-					}
+					case '0':
+						$times = $data['start_date'];
+						break;
+					case '1': //'Daily'
+						if($data['repeat_interval'])
+						{
+							$times = array('day' => "*/{$data['repeat_interval']}");
+						}
+						else
+						{
+							$times = array('day' => "*/1");
+						}
+						break;
+					case '2': //'Weekly'
+						if($data['repeat_interval'])
+						{
+							$day = $data['repeat_interval'] * 7;
+							$times = array('day' => "*/{$day}");
+						}
+						else
+						{
+							$times = array('day' => "*/7");
+						}
+						if ($data['repeat_day'])
+						{
+							$times['dow'] = $repeat_day;
+						}
+						break;
+					case '3': //'Monthly (by day)'
+						if( !isset($data['repeat_day']) || !is_array($data['repeat_day']) )
+						{
+							$dow = 1;
+						}
 
-					if($data['repeat_interval'])
-					{
-						$times = array('month' => "*/{$data['repeat_interval']}", 'dow' => $dow);
-					}
-					else
-					{
-						$times = array('month' => "*/1", 'dow' => $dow);
-					}
-					break;
-				case '4': //'Monthly (by date)'
-					if($data['repeat_interval'])
-					{
-						$times = array('month' => "*/{$data['repeat_interval']}", 'day' => 1);
-					}
-					else
-					{
-						$times = array('day' => 1);
-					}
-					break;
-				case '5': //'Yearly'
-					$month = date(n, $data['start_date']);
-					if($data['repeat_interval'])
-					{
-						$times = array('year' => "*/{$data['repeat_interval']}", 'month' => $month);
-					}
-					else
-					{
-						$times = array('month' => $month);
-					}
-					break;
-				default:
-					$times = $data['start_date'];
-					break;
+						if($data['repeat_interval'])
+						{
+							$times = array('month' => "*/{$data['repeat_interval']}", 'dow' => $dow);
+						}
+						else
+						{
+							$times = array('month' => "*/1", 'dow' => $dow);
+						}
+						break;
+					case '4': //'Monthly (by date)'
+						if($data['repeat_interval'])
+						{
+							$times = array('month' => "*/{$data['repeat_interval']}", 'day' => 1);
+						}
+						else
+						{
+							$times = array('day' => 1);
+						}
+						break;
+					case '5': //'Yearly'
+						$month = date(n, $data['start_date']);
+						if($data['repeat_interval'])
+						{
+							$times = array('year' => "*/{$data['repeat_interval']}", 'month' => $month);
+						}
+						else
+						{
+							$times = array('month' => $month);
+						}
+						break;
+					default:
+						$times = $data['start_date'];
+						break;
 				}
 			}
 
@@ -431,8 +431,25 @@
 		{
 			$parts = explode('::',$data['id']);
 			$id = end($parts);
+			$now = time();
 
-			if($data['enabled'] && !$this->so->check_event_exception($id,$data['time']))
+			$event = $this->so->read_single($id);
+			$_perform_action = false;
+			
+			foreach($event['event_schedule'] as $_schedule)
+			{
+				if (in_array($_schedule, $event['event_receipt']) || in_array($_schedule, $event['repeat_exception']))
+				{
+					continue;
+				}
+				if($_schedule < $now && $data['enabled'])
+				{
+					$_perform_action = true;
+					break;
+				}
+			}
+			
+			if($_perform_action)
 			{
 				list($module, $classname) = explode('.', $data['action'], 3);
 				$file = PHPGW_INCLUDE_ROOT . "/{$module}/inc/class.{$classname}.inc.php";

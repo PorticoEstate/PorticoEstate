@@ -62,7 +62,7 @@
 								</td>
 								<td class="th_text" align="left">
 									<xsl:for-each select="data">
-										<a href="{link}" title="{//lang_origin_statustext}" style="cursor:help">
+										<a href="{link}" title="{//lang_origin_statustext}">
 											<xsl:value-of select="id"/>
 										</a>
 										<xsl:text> </xsl:text>

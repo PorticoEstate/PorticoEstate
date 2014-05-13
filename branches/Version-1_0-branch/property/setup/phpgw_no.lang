@@ -1559,7 +1559,7 @@ select the category the apartment belongs to. to do not use a category select no
 select the category the building belongs to. to do not use a category select no category	property	no	velg kategori bygningene tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the claim belongs to. to do not use a category select no category	property	no	Velg kategorien dette kravet tilhører
 select the category the custom belongs to. to do not use a category select no category	property	no	Velg kategorien denne egentilpassede tilhører
-select the category the data belong to. to do not use a category select no category	property	no	Velg kategorien dataen hører til
+select the category the data belong to. to do not use a category select no category	property	no	Velg kategorien posten tilhører
 select the category the document belongs to. to do not use a category select no category	property	no	velg kategori dokumentene tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the entrance belongs to. to do not use a category select no category	property	no	velg kategori inngang tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the equipment belongs to. to do not use a category select no category	property	no	velg kategori utstyr tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT

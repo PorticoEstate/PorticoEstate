@@ -93,7 +93,7 @@
 			</td>
 			<xsl:choose>
 				<xsl:when test="lang_select_migrate_text != ''">
-					<td align="center" title="{lang_select_migrate_text}" style="cursor:help">
+					<td align="center" title="{lang_select_migrate_text}">
 						<input type="checkbox" name="values[]" value="{domain}">
 						</input>
 					</td>

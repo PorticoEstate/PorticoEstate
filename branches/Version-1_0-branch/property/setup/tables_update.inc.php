@@ -8032,3 +8032,35 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.681 to 0.9.17.682
+	* Add one-to-many relation on documents
+	*/
+	$test[] = '0.9.17.681';
+	function property_upgrade0_9_17_681()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_document_relation', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'document_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'location_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'location_item_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_document' => array('document_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.682';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
