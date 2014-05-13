@@ -1208,7 +1208,7 @@
 				}
 			}
 
-			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
+			if ($ticket['assignedto'] && ( ($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore') )
 			{
 				$this->fields_updated[] = 'assignedto';
 
@@ -1219,7 +1219,7 @@
 				$this->historylog->add('A',$id,$ticket['assignedto'],$oldassigned);
 			}
 
-			if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
+			if ($ticket['group_id'] && ( ($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore') )
 			{
 				$this->fields_updated[] = 'group_id';
 
@@ -1245,7 +1245,7 @@
 				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id=$id",__LINE__,__FILE__);
 			}
 
-			if (($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore')
+			if ($ticket['cat_id'] && ( ($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore') )
 			{
 				$this->fields_updated[] = 'cat_id';
 				$this->db->query("update fm_tts_tickets set cat_id='" . $ticket['cat_id']
