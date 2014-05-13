@@ -16,7 +16,7 @@
 		<xsl:variable name="select_name"><xsl:value-of select="select_name"/></xsl:variable>
 		<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
 		<form method="post" action="{$select_url}">
-			<select name="{$select_name}" onChange="this.form.submit();" onMouseout="window.status='';return true;">
+			<select name="{$select_name}" onChange="this.form.submit();">
 				<xsl:attribute name="title">
 					<xsl:value-of select="lang_cat_statustext"/>
 				</xsl:attribute>
@@ -33,10 +33,19 @@
 	<xsl:template match="cat_select">
 	<xsl:variable name="lang_cat_statustext"><xsl:value-of select="lang_cat_statustext"/></xsl:variable>
 	<xsl:variable name="select_name"><xsl:value-of select="select_name"/></xsl:variable>
-		<select id = "global_category_id" name="{$select_name}" class="forms" onMouseover="window.status='{$lang_cat_statustext}'; return true;" onMouseout="window.status='';return true;">
+		<select id = "global_category_id" name="{$select_name}" class="forms" title="{$lang_cat_statustext}">
+				<xsl:if test="disabled = 1">
+					<xsl:attribute name="disabled">
+						<xsl:text>disabled</xsl:text>
+					</xsl:attribute>
+				</xsl:if>
 			<option value="0"><xsl:value-of select="lang_no_cat"/></option>
 				<xsl:apply-templates select="cat_list"/>
 		</select>
+		<xsl:if test="disabled = 1">
+			<input type="hidden" name="{$select_name}" value="{hidden_value}"/>
+		</xsl:if>
+
 	</xsl:template>
 
 	<xsl:template match="cat_list">
