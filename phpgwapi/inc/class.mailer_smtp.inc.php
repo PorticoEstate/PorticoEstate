@@ -34,7 +34,7 @@
 			$this->Host = $GLOBALS['phpgw_info']['server']['smtp_server'];
 			$this->Port = isset($GLOBALS['phpgw_info']['server']['smtp_port']) ? $GLOBALS['phpgw_info']['server']['smtp_port'] : 25;
 			$this->SMTPSecure = isset($GLOBALS['phpgw_info']['server']['smtpSecure']) ? $GLOBALS['phpgw_info']['server']['smtpSecure'] : '';
-			$this->Version = 'custom - phpGroupWare 1.73';
+			$this->Version = 'custom - phpGroupWare 5.2.7';
 			$this->CharSet = 'utf-8';
  
 			if ( isset($GLOBALS['phpgw_info']['server']['smtpAuth']) && $GLOBALS['phpgw_info']['server']['smtpAuth'] == 'yes' )
