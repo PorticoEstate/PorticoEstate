@@ -422,16 +422,16 @@
 			$dry_run = false;
 			$second_display = phpgw::get_var('second_display', 'bool');
 
-			$default_category 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
 			//FIXME: differentiate mainsreen and helpdesk if this should be used.
 			$default_status 	= '';//isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']:'';
 			$start_date 		= urldecode($this->start_date);
 			$end_date 			= urldecode($this->end_date);
 
-			if ($default_category && !$second_display && !$this->district_id)
+			if ($default_district && !$second_display && !$this->district_id)
 			{
-				$this->bo->district_id	= $default_category;
-				$this->district_id		= $default_category;
+				$this->bo->district_id	= $default_district;
+				$this->district_id		= $default_district;
 			}
 
 			if ($default_status && !$second_display)
@@ -1393,15 +1393,15 @@
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 
-			$default_category = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
 			$default_status = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']:'');
 			$start_date 	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
 
-			if ($default_category && !$second_display && !$this->district_id)
+			if ($default_district && !$second_display && !$this->district_id)
 			{
-				$this->bo->district_id	= $default_category;
-				$this->district_id		= $default_category;
+				$this->bo->district_id	= $default_district;
+				$this->district_id		= $default_district;
 			}
 
 			if ($default_status && !$second_display)
@@ -3242,6 +3242,39 @@
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl));
+			
+			$_ticket_cat_found = false;
+			if(isset($cat_select['cat_list']) && is_array($cat_select['cat_list']))
+			{
+				foreach($cat_select['cat_list'] as $cat_list_entry)
+				{
+					if($cat_list_entry['cat_id'] == $ticket['cat_id'])
+					{
+						$_ticket_cat_found = true;
+						break;
+					}
+				}
+			}
+			
+			if(!$_ticket_cat_found)
+			{
+				$category = $this->cats->return_single($ticket['cat_id']);
+//_debug_array($category);
+
+				array_unshift ($cat_select['cat_list'],array
+					(
+						'cat_id'		=> $category[0]['id'],
+						'name'			=> $category[0]['name'],
+						'description'	=> $category[0]['description'],
+						'selected'		=> true,
+					)
+				);
+				$cat_select['disabled']	= true;
+				$cat_select['hidden_value']	= $ticket['cat_id'];
+//_debug_array($cat_select);die();			
+			}
+
+
 			$this->cats->set_appname('property','.project');
 			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));
 
