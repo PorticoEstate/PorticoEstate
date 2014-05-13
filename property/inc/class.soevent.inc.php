@@ -338,7 +338,28 @@
 				$values['end']['min']	= $end_date ? date('i',$end_date) : 0;
 				$values['end']['sec']	= $end_date ? date('s',$end_date) : 0;
 
-				$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$id}'";
+
+				$values['event_schedule'] = array();
+				$values['event_receipt'] = array();
+				$values['repeat_exception'] = array();
+
+				$sql = "SELECT * FROM fm_event_schedule WHERE event_id ='{$id}' ORDER BY schedule_time";
+
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while ($this->_db->next_record())
+				{
+					$values['event_schedule'][] = $this->_db->f('schedule_time');
+				}
+
+				$sql = "SELECT * FROM fm_event_receipt WHERE event_id ='{$id}' ORDER BY receipt_time";
+
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while ($this->_db->next_record())
+				{
+					$values['event_receipt'][] = $this->_db->f('receipt_time');
+				}
+
+				$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$id}' ORDER BY exception_time";
 
 				$this->_db->query($sql,__LINE__,__FILE__);
 				while ($this->_db->next_record())
