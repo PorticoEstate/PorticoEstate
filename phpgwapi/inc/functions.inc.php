@@ -113,9 +113,12 @@
 	 * Get global phpgw_link from XSLT templates
 	 * @param string $path on the format 'index.php'
 	 * @param string $params on the format 'param1:value1,param2:value2'
+	 * @param boolean $redirect  want '&';rather than '&amp;'; 
+	 * @param boolean $external is the resultant link being used as external access (i.e url in emails..)
+	 * @param boolean $force_backend if the resultant link is being used to reference resources in the api
 	 * @return string containing url
 	 */
-	function get_phpgw_link($path, $params)
+	function get_phpgw_link($path, $params, $redirect = true, $external = false, $force_backend = false)
 	{
 		$path = '/' . ltrim($path, '/');
 		$link_data = array();
@@ -130,7 +133,7 @@
 			}
 		}
 		
-		$ret = $GLOBALS['phpgw']->link($path, $link_data, true);//true: want '&';rather than '&amp;'; 
+		$ret = $GLOBALS['phpgw']->link($path, $link_data, $redirect, $external, $force_backend);//redirect: want '&';rather than '&amp;'; 
 		return $ret;
 	}
 

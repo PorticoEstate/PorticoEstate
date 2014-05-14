@@ -178,12 +178,13 @@
 		 * @param array   $extravars	Extra params to be passed to the url
 		 * @param boolean $redirect is the resultant link being used in a header('Location:' ... redirect?
 		 * @param boolean $external is the resultant link being used as external access (i.e url in emails..)
+		 * @param boolean $force_backend if the resultant link is being used to reference resources in the api
 		 * @return string The full url after processing
 		 * @see	session->link()
 		 */
-		public function link($url = '', $extravars = array(), $redirect = false, $external = false)
+		public function link($url = '', $extravars = array(), $redirect = false, $external = false, $force_backend = false)
 		{
-			return $this->session->link($url, $extravars, $redirect, $external);
+			return $this->session->link($url, $extravars, $redirect, $external, $force_backend);
 		}
 
 		/**
