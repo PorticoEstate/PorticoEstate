@@ -398,4 +398,11 @@ height:20px;
 padding-top: 1.5em;
 }
 
-
+#yui-history-iframe {
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    width: 1px;
+}
