@@ -181,19 +181,25 @@ function checkAvailabitily()
 	<fieldset>
 		<!-- Filters -->
 		<h3><?php echo lang('filters') ?></h3>
-		
-		<!-- Møbleringsstatus -->
-		<label for="furnished_status"><?php echo lang('furnish_type') ?></label>
-		<select name="furnished_status" id="<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites">
-			<?php
-				$furnish_types_arr = rental_composite::get_furnish_types();
-				 
-				echo "<option value='4'>Alle</option>";
-				foreach($furnish_types_arr as $id => $title){
-					echo "<option value='$id'>" . $title . "</option>";
-				}
-			?>
-		</select>
+		<?php
+                        if(isset($config->config_data['contract_furnished_status']) && $config->config_data['contract_furnished_status'])
+                        {
+
+                ?>
+                    <!-- Møbleringsstatus -->
+                    <label for="furnished_status"><?php echo lang('furnish_type') ?></label>
+                    <select name="furnished_status" id="<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites">
+                            <?php
+                                    $furnish_types_arr = rental_composite::get_furnish_types();
+
+                                    echo "<option value='4'>Alle</option>";
+                                    foreach($furnish_types_arr as $id => $title){
+                                            echo "<option value='$id'>" . $title . "</option>";
+                                    }
+                            ?>
+                    </select>
+                <?php }
+                ?>
 		<label for="ctrl_toggle_active_rental_composites"><?php echo lang('availability') ?></label>
 		<select name="is_active" id="<?php echo $list_id ?>_ctrl_toggle_active_rental_composites">
 			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>

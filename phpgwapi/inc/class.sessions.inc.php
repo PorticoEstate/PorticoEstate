@@ -536,17 +536,20 @@
 		* @param array   $extravars query string arguements
 		* @param boolean $redirect  is this for a redirect link ?
 		* @param boolean $external is the resultant link being used as external access (i.e url in emails..)
+		* @param boolean $force_backend if the resultant link is being used to reference resources in the api
 		*
 		* @return string generated url
 		*/
-		public function link($url, $extravars = array(), $redirect=false, $external = false)
+		public function link($url, $extravars = array(), $redirect=false, $external = false, $force_backend = false)
 		{
-
-			$custom_frontend = isset($GLOBALS['phpgw_info']['flags']['custom_frontend']) && $GLOBALS['phpgw_info']['flags']['custom_frontend'] ? $GLOBALS['phpgw_info']['flags']['custom_frontend'] : '';
-
-			if($custom_frontend && substr($url, 0, 4) != 'http')
+			if(!$force_backend)
 			{
-				$url = '/' . $custom_frontend . '/' . ltrim($url, '/');
+				$custom_frontend = isset($GLOBALS['phpgw_info']['flags']['custom_frontend']) && $GLOBALS['phpgw_info']['flags']['custom_frontend'] ? $GLOBALS['phpgw_info']['flags']['custom_frontend'] : '';
+
+				if($custom_frontend && substr($url, 0, 4) != 'http')
+				{
+					$url = '/' . $custom_frontend . '/' . ltrim($url, '/');
+				}
 			}
 
 			//W3C Compliant in markup	

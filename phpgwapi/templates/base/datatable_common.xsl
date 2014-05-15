@@ -35,7 +35,7 @@
 <xsl:template name="datatable" xmlns:php="http://php.net/xsl">
 	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html">
 		<xsl:attribute name="src">
-			<xsl:value-of select="php:function('get_phpgw_link', '/phpgwapi/js/yahoo/history/assets/blank.html')" />
+			<xsl:value-of select="php:function('get_phpgw_link', '/phpgwapi/js/yahoo/history/assets/blank.html',0, 0, 1, 1)" />
 		</xsl:attribute>	
 	</iframe>
 	<input id="yui-history-field" type="hidden"/>
