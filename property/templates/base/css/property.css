@@ -45,3 +45,8 @@ span.yui-menu-button en {
 
 .rightClasss {white-space:nowrap; text-align: right!important;}
 .centerClasss {text-align: center!important;}
+
+.required {
+border: 1px solid red
+}
+
