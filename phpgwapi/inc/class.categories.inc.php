@@ -645,14 +645,15 @@
 		{
 			if(is_array($data))
 			{
-				$format			= isset($data['format']) ? $data['format'] : 'filter';
-				$type			= isset($data['type']) ? $data['type'] : 'all';
+				$format			= isset($data['format'])  && $data['format'] ? $data['format'] : 'filter';
+				$type			= isset($data['type']) && $data['type'] ? $data['type'] : 'all';
 				$selected		= isset($data['selected']) ? $data['selected'] : '';
 				$self			= isset($data['self']) ? $data['self'] : '';
-				$globals		= isset($data['globals']) ? $data['globals'] : true;
-				$link_data		= isset($data['link_data']) ? $data['link_data'] : array();
-				$select_name	= isset($data['select_name'])?$data['select_name'] : 'cat_id';
+				$globals		= isset($data['globals']) && $data['globals'] ? $data['globals'] : true;
+				$link_data		= isset($data['link_data']) && $data['link_data'] ? $data['link_data'] : array();
+				$select_name	= isset($data['select_name']) && $data['select_name'] ? $data['select_name'] : 'cat_id';
 				$use_acl		= isset($data['use_acl']) ? $data['use_acl'] : '';
+				$class			= isset($data['class']) && $data['class'] ? $data['class'] : 'forms';
 			}
 			else
 			{
@@ -723,7 +724,8 @@
 				'lang_cat_statustext'	=> lang('Select the category the data belong to. To do not use a category select NO CATEGORY'),
 				'select_url'			=> $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'select_name'			=> $select_name,
-				'lang_submit'			=> lang('submit')
+				'lang_submit'			=> lang('submit'),
+				'class'				=> $class
 			);
 			return $cat_data;
 		}
