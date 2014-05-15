@@ -406,3 +406,113 @@ padding-top: 1.5em;
     visibility: hidden;
     width: 1px;
 }
+
+
+.requirement {
+	line-height:2;
+}
+.requirement hr {
+	border: 1px solid white;
+}
+.requirement-responsibility-left {
+	float: left;
+	margin-left: 1em;
+}
+.requirement-responsibility-left h2 {
+	text-transform: uppercase;
+	margin-bottom: 0em;;
+}
+.requirement-responsibility-left-sub {
+	float: left;
+}
+.requirement-responsibility-right {
+	float: right;
+	margin-left: 1em;
+}
+
+.requirement-responsibility-right .proplist-col {
+	width: auto;
+}
+.requirement-description {
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+.requirement-condition {
+	margin-left: 1em;
+	line-height: 2.2;
+}
+.requirement-related {
+	margin-left: 1em;
+}
+.requirement-action-left {
+	float:left;
+	width: 20%;
+	margin-left:1em;
+	border-right: 1px solid white;
+}
+.requirement-action-right {
+	margin-left: 1em;
+	width: 75%;
+	float:right;
+}
+.requirement-action-label {
+	width: 45%;
+}
+.requirement-action-label-wide {
+	width: 45%;
+}
+.requirement-action-sub-left {
+	float:left;
+	width:45%;
+}
+.requirement-action-sub-left div {
+	line-height: 2;
+}
+.requirement-action-sub-right {
+	float: right;
+	text-align: left;
+	width: 50%;
+}
+.requirement-action-sub-right div {
+	line-height: 2;
+}
+.clearBoth {
+	clear: both;
+}
+.messages {
+	font-size: 15px;
+}
+.messages table {
+	display: inline;
+	position: absolute;
+}
+.coordinator_select dd select{
+	width:300px;
+}
+.controlButton {
+	margin-left: 2em;
+	margin-right: 1.5em;
+	float: right;
+}
+.requirement-condition .proplist-col table tr td table {
+	border: none;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.requirement-condition .proplist-col table tr td table th {
+	border: none;
+	background: none;
+	font-weight: bold;
+	padding-right: 1em;
+}
+.requirement-condition .proplist-col table tr td table td {
+	border: none;
+	padding-right: 1em;
+	text-align: center;
+	font-weight: bold;
+}
+
+.required {
+border: 1px solid red
+}
+
