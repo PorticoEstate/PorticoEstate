@@ -296,7 +296,7 @@
 														<xsl:value-of select="php:function('lang', 'request status')"/>
 													</label>
 													<br/>
-													<select name="values[status]" class="forms" style="width:200px;">
+													<select name="values[status]"  class='required' style="width:200px;">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'Set the status of the request')"/>
 														</xsl:attribute>
@@ -391,7 +391,7 @@
 								<xsl:value-of select="php:function('lang', 'building part')"/>
 							</label>
 							<br/>
-							<select name="values[building_part]">
+							<select class='required' name="values[building_part]">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'select building part')"/>
 								</xsl:attribute>
@@ -408,7 +408,7 @@
 								<xsl:value-of select="php:function('lang', 'request action title')"/>
 							</label>
 							<br/>
-							<input type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}">
+							<input class='required' type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}">
 							</input>
 							<br/>
 							<xsl:variable name="lang_request_description">
