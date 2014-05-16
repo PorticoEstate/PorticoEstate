@@ -261,7 +261,7 @@
 			}
 
 			//prosjektnummer;prosjektstatus;bestillingsnummer;beløp
-    		$agresso_prosjekt	= (int)$data[0];
+    		$agresso_prosjekt	= trim($data[0]);
 			$prosjektstatus		= trim($data[1]);
 			$order_id			= trim($data[2]);
 			$diff_actual_cost	= (float)trim($data[3]);
@@ -302,7 +302,7 @@
 
 		private function update_status($data)
 		{
-    		$agresso_prosjekt	= (int)$data[0];
+    		$agresso_prosjekt	= trim($data[0]);
 			$prosjektstatus		= trim($data[1]);
 			$order_id			= trim($data[2]);
 
@@ -321,7 +321,7 @@
 				return false;
 			}
 
-			$this->db->query("UPDATE fm_tts_tickets SET agresso_prosjekt = $agresso_prosjekt WHERE id={$id}",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_tts_tickets SET agresso_prosjekt = '{$agresso_prosjekt}' WHERE id={$id}",__LINE__,__FILE__);
 
 			$ok = true;
 			if(preg_match('/(^C|^P)/i', $prosjektstatus))
