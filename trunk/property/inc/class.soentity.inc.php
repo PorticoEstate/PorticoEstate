@@ -832,8 +832,8 @@
 			$j=0;
 
 			$uicols = $this->uicols;
-//			$cols_return = $uicols['name'];
-			$cols_return = $this->cols_return;
+			$cols_return = $uicols['name'];
+//			$cols_return = $this->cols_return;
 			$dataset = array();
 
 			while ($this->db->next_record())
@@ -1537,8 +1537,8 @@
 
 			$j=0;
 			$uicols = $this->uicols;
-//			$cols_return = $uicols['name'];
-			$cols_return = $this->cols_return;
+			$cols_return = $uicols['name'];
+//			$cols_return = $this->cols_return;
 
 			$dataset = array();
 			while ($this->db->next_record())
