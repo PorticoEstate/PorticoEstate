@@ -210,7 +210,7 @@
 		{
 			if($this->billing_terms == null)
 			{
-				$sql	 = "SELECT id, title FROM rental_billing_term WHERE NOT months=0 ORDER BY months DESC";
+				$sql	 = "SELECT id, title FROM rental_billing_term ORDER BY months DESC";
 				//FIXME Sigurd 21.june 2010: this query trigger fetch_single mode for next_record()
 				$this->db->query($sql, __LINE__, __FILE__, false, true);
 				$results = array();
