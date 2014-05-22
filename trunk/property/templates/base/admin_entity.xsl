@@ -1671,6 +1671,25 @@
 							</textarea>
 						</td>
 					</tr>
+
+					<xsl:choose>
+						<xsl:when test="datatype = 'link'">
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'action')"/>
+								</td>
+								<td align="left">
+									<textarea cols="60" rows="10" name="values[javascript_action]">
+										<xsl:attribute name="title">
+											<xsl:text>optional javascript, __id__ is replaced by id</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="value_javascript_action"/>
+									</textarea>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+
 					<xsl:choose>
 						<xsl:when test="multiple_choice = 1">
 							<tr>
