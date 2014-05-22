@@ -44,6 +44,7 @@
 		var $entity_id;
 		var $status_id;
 		var $allrows;
+		var $acl_location	= '.document';
 
 		var $public_functions = array
 			(
