@@ -1,3 +1,21 @@
+var arURLParts = strBaseURL.split('?');
+var comboBase = arURLParts[0] + 'phpgwapi/inc/yui-combo-master/combo.php?';
+
+YUI_config = {
+    //Don't combine the files
+    combine: true,
+    //Ignore things that are already loaded (in this process)
+    ignoreRegistered: false,
+    //Set the base path
+	comboBase: comboBase,
+    base: '',
+    //And the root
+    root: '',
+    //Require your deps
+    require: [ ]
+};
+
+
 /*$Id: yui_booking_i18n.xsl 8267 2011-12-11 12:27:18Z sigurdne $*/
 YAHOO.namespace('portico');
 
