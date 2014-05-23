@@ -82,6 +82,11 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
 
+			if($yui == 'yui3')
+			{
+				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			}
+
 			self::add_javascript('phpgwapi', $yui, 'common.js');
 
 			$this->url_prefix = str_replace('_', '.', get_class($this));
