@@ -86,13 +86,13 @@ onDownloadClick = function()
 }
 
 
-YUI().use("datatable", "datasource-io", "datasource-jsonschema", "datatable-datasource", function(Y)
+YUI().use("datasource-io", "datatable-base", 'gallery-datatable-paginator', 'gallery-paginator-view', function(Y)
 {
 
 	YAHOO.portico.setupToolbar();
 	YAHOO.portico.setupListActions();
 	YAHOO.portico.setupDatasource();
-	var pag = YAHOO.portico.setupPaginator();
+//	var pag = YAHOO.portico.setupPaginator();
 
 	var fields = [];
 	for (var i = 0; i < YAHOO.portico.columnDefs.length; i++) {
@@ -104,108 +104,84 @@ YUI().use("datatable", "datasource-io", "datasource-jsonschema", "datatable-data
 	}
 
 	if (YAHOO.portico.initialSortedBy) {
-//      baseUrl += 'sort=' + YAHOO.portico.initialSortedBy.key + '&dir=' + YAHOO.portico.initialSortedBy.dir;
+//	  baseUrl += 'sort=' + YAHOO.portico.initialSortedBy.key + '&dir=' + YAHOO.portico.initialSortedBy.dir;
 	} else {
-//      baseUrl += 'sort=' + fields[0];
+//	  baseUrl += 'sort=' + fields[0];
 	}
 
-	///----------- start eksempel ----------
 	/*
-	 var url = "http://query.yahooapis.com/v1/public/yql?format=json" +
-	 "&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys",
-	 query = "&q=" + encodeURIComponent(
-	 'select * from local.search ' +
-	 'where zip = "94089" and query = "pizza"'),
-	 dataSource,
-	 table;
+	 Y.MyPaginatorView = Y.Base.create('paginator', Y.DataTable.Paginator.View, [], {
+	 _modelChange: function(e) {
+	 var changed = e.changed,
+	 page = (changed && changed.page),
+	 itemsPerPage = (changed && changed.itemsPerPage),
+	 totalItems = (changed && changed.totalItems);
 	 
-	 console.log(fields);
-	 
-	 dataSource = new Y.DataSource.IO({source: url});
-	 
-	 dataSource.plug(Y.Plugin.DataSourceJSONSchema, {
-	 schema: {
-	 resultListLocator: "query.results.Result",
-	 resultFields: fields
+	 if (totalItems) {
+	 this._updateControlsUI(e.target.get('page'));
 	 }
-	 });
-	 
-	 table = new Y.DataTable({
-	 columns: fields,
-	 summary: "Pizza places near 98089",
-	 caption: "Table with JSON data from YQL",
-	 rowsPerPage: 10,
-	 paginatorLocation: ['header', 'footer']
-	 });
-	 
-	 table.plug(Y.Plugin.DataTableDataSource, {datasource: dataSource});
-	 
-	 table.render("#datatable-container");
-	 
-	 table.datasource.load({
-	 request: query,
-	 callback: {
-	 success: function(e) {
-	 table.datasource.onDataReturnInitializeTable(e);
-	 },
-	 failure: function() {
-	 Y.one('#datatable-container').setHTML(
-	 'The data could not be retrieved. Please <a href="?mock=true">try this example with mocked data</a> instead.');
+	 if (page) {
+	 this._updateControlsUI(page.newVal);
 	 }
+	 if (itemsPerPage) {
+	 this._updateItemsPerPageUI(itemsPerPage.newVal);
+	 if (!page) {
+	 this._updateControlsUI(e.target.get('page'));
+	 }
+	 }
+	 
 	 }
 	 });
 	 */
-	//--- slutt eksempel--//
 
 
-
-	//	  baseUrl += '&results=' + pag.getRowsPerPage() + '&';
-	var dataSource = new Y.DataSource.IO({
-		source: baseUrl
-	});
-	var query = '&results=' + pag.getRowsPerPage() + '&';
-
-	dataSource.plug(Y.Plugin.DataSourceJSONSchema, {
-		schema: {
-			resultListLocator: "ResultSet.Result",
-			resultFields: fields,
-			metaFields: {
-				totalResultsAvailable: "ResultSet.totalResultsAvailable",
-				startIndex: 'ResultSet.startIndex',
-				pageSize: 'ResultSet.pageSize',
-				sortKey: 'ResultSet.sortKey',
-				sortDir: 'ResultSet.sortDir'
+	var paginator = new Y.PaginatorView({
+		model: new Y.PaginatorModel({
+			page: 3,
+			itemsPerPage: 20,
+			serverPaginationMap: {
+				totalItems: 'ResultSet.totalResultsAvailable',
+		//		page: {toServer: 'requestedPage', fromServer: 'returnedPageNo'},
+				itemIndexStart: 'ResultSet.startIndex',
+				itemsPerPage: 'ResultSet.pageSize'
 			}
-		}
+		}),
+		container: '#paginator',
 	});
 
 
-	table = new Y.DataTable({
-		columns: fields //FIXME: YAHOO.portico.columnDefs
-		//   summary: "Pizza places near 98089",
-		//   caption: "Table with JSON data from YQL"
-	//	rowsPerPage: 10,
-	//	paginatorLocation: ['header', 'footer']
-
-	});
-
-	table.plug(Y.Plugin.DataTableDataSource, {datasource: dataSource});
-
-	table.render("#datatable-container");
-
-	table.datasource.load({
-		request: query,
-		callback: {
-			success: function(e) {
-alert('hei');
+	var configuration,
+		datatable, data,
+		urifordata = baseUrl,
+		dataTableContainer = Y.one("#datatable-container"),
+		configuration = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
 			},
-			failure: function() {
-				Y.one('#datatable-container').setHTML(
-					'The data could not be retrieved.');
-			}
-		}
-	});
+			on: {
+				success: function(transactionid, response, arguments) {
+					data = JSON.parse(response.responseText);
+					datatable = new Y.DataTable({
+//						paginatorView: "MyPaginatorView",
+						columns: YAHOO.portico.columnDefs,
+						sortBy: [{loc1: 'asc'}, {loc1_name: -1}],
+						data: data.ResultSet.Result,
+						paginator: paginator,
+						paginatorResize: true,
+						paginationSource: 'server', // server-side pagination
+					}).render("#datatable-container");
 
+				},
+				failure: function(transactionid, response, arguments) {
+					alert("Failure In Data Loading.");
+				}
+			}
+		};
+
+	Y.io(urifordata, configuration);
 });
+
+
 
 
