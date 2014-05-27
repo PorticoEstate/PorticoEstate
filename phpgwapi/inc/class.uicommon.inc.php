@@ -53,9 +53,10 @@
 
 	//	public $flash_msgs;
 
-		public function __construct($currentapp ='')
+		public function __construct($currentapp ='', $yui = '')
 		{
 
+			$yui = isset($yui) && $yui == 'yui3' ? 'yui3' : 'yahoo';
 			$currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 		//	self::set_active_menu('controller');
@@ -81,7 +82,12 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
 
-			self::add_javascript('phpgwapi', 'yahoo', 'common.js');
+			if($yui == 'yui3')
+			{
+				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			}
+
+			self::add_javascript('phpgwapi', $yui, 'common.js');
 
 			$this->url_prefix = str_replace('_', '.', get_class($this));
 

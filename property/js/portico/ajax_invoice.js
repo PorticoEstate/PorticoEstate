@@ -62,6 +62,7 @@ $(document).ready(function(){
 		$("#close_order_orig").val( '' );
 		$("#park_order").html( '' );
 		$("#receipt").html('');
+		$("#email_link").html('');
 
 		var voucher_id = $(this).val();
 		var oArgs = {menuaction:'property.uiinvoice2.get_first_line'};
@@ -606,6 +607,12 @@ function update_form_values( line_id, voucher_id_orig ){
 					$("#approve_as2").html( htmlString2 );
 			//		$("#approve_as").html( htmlString );
 				}
+				var Url_email = email_base_url + '&voucher_id=' + voucher[0].voucher_id;
+
+				var email_buttons = "<input type=\"button\" name=\"Kopier til utklippstavle\" onClick=\"copyToClipboard('"+Url_email+"');\" value=\"Kopier til utklippstavle\" title=\"Kopier til utklippstavle\">";
+				email_buttons += "<a href=\"mailto:?&subject=Link til faktura\" target=\"_\"><input type=\"button\" value=\"Åpne epost\"/></a>";
+				$("#email_link").html(email_buttons);
+
 			}
 			else
 			{
@@ -642,6 +649,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#order_text").html( 'Bestilling' );
 				$("#invoice_id_text").html('FakturaNr');
 				$("#receipt").html('');
+				$("#email_link").html('');
 				document.getElementById('image_content').src = '';
 			}
 		}
@@ -710,3 +718,8 @@ function hide_popupBox( ){
 
 
 
+function copyToClipboard(text) {
+  window.prompt("Kopier til utklippstavle: Ctrl+C, Enter", text);
+ // window.open("mailto:?&subject=Link til faktura");
+ // window.close();
+}

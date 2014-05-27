@@ -74,7 +74,7 @@
 						<option value="<?php echo $term_id ?>-3" <?php echo ($term_id."-3" == $billing_term_selection ? 'selected="selected"' : '')?>>3. kvartal</option>
 						<option value="<?php echo $term_id ?>-4" <?php echo ($term_id."-4" == $billing_term_selection ? 'selected="selected"' : '')?>>4. kvartal</option>
 					<?php }
-					else{?>
+					else if($current == 3){?>
 					 <?php 
 						$this_month = date('n');
 						for($i = 1; $i <= 12; $i++)
@@ -83,7 +83,9 @@
 							<option value="<?php echo $term_id ?>-<?php echo $i ?>"<?php echo ($term_id."-".$i == $billing_term_selection ? ' selected="selected"' : '')?>><?php echo lang('month ' . $i . ' capitalized') ?></option>
 							<?php
 						}
-					}
+					}else{?>
+					 <option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term_selection ? 'selected="selected"' : '')?>><?php echo lang($term_title) ?></option>
+					<?php }
 					$current++;?>
 					</optgroup>
 			<?php }
