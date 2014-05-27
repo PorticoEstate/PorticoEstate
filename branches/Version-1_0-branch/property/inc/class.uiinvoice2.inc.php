@@ -620,6 +620,7 @@
 				'td_count'						=> '""',
 				'base_java_url'					=> "{menuaction:'property.uiinvoice2.query'}",
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'email_base_url'				=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice2.index'),true,true)),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
 				'myButtons'						=> $myButtons,

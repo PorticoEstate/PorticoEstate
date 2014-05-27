@@ -173,7 +173,7 @@
 				$type_id			= $this->bocommon->fm_cache('type_id_document_' . $entity_id);
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
-
+//_debug_array($this->uicols);
 			$groupmethod= " GROUP BY fm_document.location_code, fm_location1.loc1_name";
 
 			if ($entity_id)

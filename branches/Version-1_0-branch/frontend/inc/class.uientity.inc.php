@@ -638,6 +638,13 @@ JS;
 									$datatable['rows']['row'][$j]['column'][$i]['link']			= $entity_entry[$uicols['name'][$i]];
 									$datatable['rows']['row'][$j]['column'][$i]['target']	   = '_blank';
 								}
+								//override action
+								if(isset($uicols['javascript_action']) && isset($uicols['javascript_action'][$uicols['name'][$i]]))
+								{
+									$datatable['rows']['row'][$j]['column'][$i]['format'] 				= 'javascript_action';		
+									$datatable['rows']['row'][$j]['column'][$i]['javascript_action']	= $entity_entry[$uicols['name'][$i]];
+									$datatable['rows']['row'][$j]['column'][$i]['value']				= $uicols['descr'][$i];
+								}
 							}
 						}
 						else
@@ -821,10 +828,13 @@ JS;
 			unset($parameters);
 
 			//$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
-			$link =	$GLOBALS['phpgw']->link(
+			if(!isset($uicols['javascript_action']) || !$uicols['javascript_action'])
+			{
+				$link =	$GLOBALS['phpgw']->link(
 					'/index.php',
 					array('menuaction'	=> 'frontend.uientity.view'));
-			$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id + '&location_id={$this->location_id}';";
+				$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id + '&location_id={$this->location_id}';";
+			}
 
 
 			$uicols_count	= count($uicols['descr']);
@@ -928,6 +938,10 @@ JS;
 						else if(isset($column['format']) && $column['format']== "link")
 						{
 							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "javascript_action")
+						{
+							$json_row[$column['name']] = "<a href='#' title='{$column['statustext']}' onclick='javascript:{$column['javascript_action']}'>{$column['value']}</a>";
 						}
 						else
 						{
