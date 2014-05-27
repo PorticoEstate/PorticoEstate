@@ -1219,7 +1219,7 @@
 				$this->historylog->add('A',$id,$ticket['assignedto'],$oldassigned);
 			}
 
-			if ($ticket['group_id'] && ( ($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore') )
+			if ( ($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore' )
 			{
 				$this->fields_updated[] = 'group_id';
 
