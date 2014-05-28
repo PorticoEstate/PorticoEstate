@@ -499,13 +499,6 @@
 	<xsl:template xmlns:php="http://php.net/xsl" name="approve">
 		<xsl:apply-templates select="voucher_info/generic/approved_list"/>
 		<tr class ='row_off'>
-			<td>
-			</td>
-			<td>
-				<div id = 'email_link'></div>
-			</td>
-		</tr>
-		<tr class ='row_off'>
 			<input id="sign_orig" type="hidden" name="values[sign_orig]" value="{voucher_info/generic/sign_orig}"/>
 			<input id="my_initials" type="hidden" name="values[my_initials]" value="{voucher_info/generic/my_initials}"/>
 			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
@@ -513,6 +506,13 @@
 			</td>
 			<td class="th_text" valign="top" align="left">
 				<div id = "approve_as2"> </div>
+			</td>
+		</tr>
+		<tr class ='row_off'>
+			<td>
+			</td>
+			<td>
+				<div id = 'email_link'></div>
 			</td>
 		</tr>
 		<tr class ='row_off'>
