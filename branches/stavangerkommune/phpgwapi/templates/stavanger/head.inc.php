@@ -205,22 +205,31 @@ JS;
 #		$tpl_vars['help_url'] = => '#';
 	}
 	$bouser = CreateObject('bookingfrontend.bouser');
-	if($bouser->is_logged_in())
+    $org = CreateObject('bookingfrontend.uiorganization');
+    $orgid = $org->get_orgid($bouser->orgnr);
+    if($bouser->is_logged_in())
 	{
 		$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
 
 		$tpl_vars['change_org_header'] = lang('Change organization');
 
         if ( $bouser->orgname == '000000000') {
-            $tpl_vars['login_text'] = lang('SSN not registred'). ' :: ' . lang('Logout');
+            $tpl_vars['login_text_org'] = lang('SSN not registred');
+            $tpl_vars['login_text'] = lang('Logout');
+            $tpl_vars['org_url'] = '#';
         } else {
-        	$tpl_vars['login_text'] = $bouser->orgname . ' :: ' . lang('Logout');
+        	$tpl_vars['login_text_org'] = $bouser->orgname;
+            $tpl_vars['login_text'] = lang('Logout');
+            $tpl_vars['org_url'] = "/bookingfrontend/?menuaction=bookingfrontend.uiorganization.show&id=".$orgid;
         }
-		$tpl_vars['login_url'] = 'logout.php';
+#        $tpl_vars['login_url'] = 'logout.php'; #dev
+        $tpl_vars['login_url'] = '/logout.php';
 	}
 	else
 	{
-		$tpl_vars['login_text'] = lang('Login');
+        $tpl_vars['login_text_org'] = '';
+        $tpl_vars['org_url'] = '#';
+        $tpl_vars['login_text'] = lang('Login');
 		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
 		$config		= CreateObject('phpgwapi.config','bookingfrontend');
 		$config->read();

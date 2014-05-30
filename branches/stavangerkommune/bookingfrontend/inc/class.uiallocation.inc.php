@@ -300,14 +300,18 @@
 		{
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
-			if ($config->config_data['user_can_delete_allocations'] != 'yes')
-			{
-				$user_can_delete_allocations = 0;
-			
-			} else {
-				$user_can_delete_allocations = 1;
-			}
-			
+			if ($config->config_data['user_can_delete_allocations'] != 'never') {
+                if ($config->config_data['user_can_delete_allocations'] != 'yes')
+                {
+                    $user_can_delete_allocations = 0;
+                }
+                else
+                {
+                    $user_can_delete_allocations = 1;
+                }
+            } else {
+                $user_can_delete_allocations = 2;
+            }
 
 			$allocation = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$allocation['resources']), 'sort'=>'name'));

@@ -60,6 +60,12 @@
                         </xsl:if>
                         <xsl:value-of select="php:function('lang', 'Yes')" />
 		           </option>
+                    <option value="never">
+                        <xsl:if test="config_data/user_can_delete_allocations='never'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="php:function('lang', 'No action')" />
+                    </option>
 		        </select>
 			</dd>
             <dt><label for="field_extra_schedule"><xsl:value-of select="php:function('lang', 'Activate extra kalendar field on building')"/></label></dt>

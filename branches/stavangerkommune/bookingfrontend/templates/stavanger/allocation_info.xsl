@@ -17,12 +17,14 @@
 	<xsl:if test="allocation/add_link">
 		<div class="actions">
 			<button onclick="location.href='{allocation/add_link}'"><xsl:value-of select="php:function('lang', 'Create new booking')"/></button>
-			<xsl:if test="user_can_delete_allocations != 1">
-			<button onclick="location.href='{allocation/cancel_link}'"><xsl:value-of select="php:function('lang', 'Cancel allocation')"/></button>
-			</xsl:if>
-			<xsl:if test="user_can_delete_allocations != 0">
-			<button onclick="location.href='{allocation/cancel_link}'"><xsl:value-of select="php:function('lang', 'Delete allocation')"/></button>
-			</xsl:if>
+            <xsl:if test="user_can_delete_allocations!=2">
+        		<xsl:if test="user_can_delete_allocations != 1">
+            		<button onclick="location.href='{allocation/cancel_link}'"><xsl:value-of select="php:function('lang', 'Cancel allocation')"/></button>
+		        </xsl:if>
+		        <xsl:if test="user_can_delete_allocations != 0">
+    		        <button onclick="location.href='{allocation/cancel_link}'"><xsl:value-of select="php:function('lang', 'Delete allocation')"/></button>
+		        </xsl:if>
+            </xsl:if>
 		</div>
 	</xsl:if>
 </xsl:template>
