@@ -753,7 +753,7 @@
 					$Konto	 = sprintf("%-8s", $invoice_line['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
 					$Dim_1	 = sprintf("%-8s", "0{$invoice_line['dimb']}");// 64040 verdi: Ansvarssted, type: c8, plass: 29 - 36
 					$Dim_2	 = sprintf("%-8s", $invoice_line['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
-					$Dim_3	 = sprintf("%-8s", substr($invoice_line['dima'], 0, 6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
+					$Dim_3	 = sprintf("%-8s", substr($invoice_line['dima'], 0, 4));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
 
 					$Dim_4	 = sprintf("%-8s", '');// verdi: Ressurs, type: c8, plass: 53 - 60
 					$Dim_5	 = sprintf("%-12s", $invoice_line['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
