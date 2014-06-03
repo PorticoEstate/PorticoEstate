@@ -1049,6 +1049,14 @@ JS;
 									$datatable['rows']['row'][$j]['column'][$i]['link']			= $entity_entry[$uicols['name'][$i]];
 									$datatable['rows']['row'][$j]['column'][$i]['target']	   = '_blank';
 								}
+
+								//override action
+								if(isset($uicols['javascript_action']) && isset($uicols['javascript_action'][$uicols['name'][$i]]))
+								{
+									$datatable['rows']['row'][$j]['column'][$i]['format'] 				= 'javascript_action';		
+									$datatable['rows']['row'][$j]['column'][$i]['javascript_action']	= $entity_entry[$uicols['name'][$i]];
+									$datatable['rows']['row'][$j]['column'][$i]['value']				= $uicols['descr'][$i];
+								}
 							}
 						}
 						else
@@ -1345,6 +1353,10 @@ JS;
 						{
 							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
 						}
+						else if(isset($column['format']) && $column['format']== "javascript_action")
+						{
+							$json_row[$column['name']] = "<a href='#' title='{$column['statustext']}' onclick='javascript:{$column['javascript_action']}'>{$column['value']}</a>";
+						}
 						else
 						{
 							$json_row[$column['name']] = $column['value'];
@@ -1418,6 +1430,10 @@ JS;
 
 			// Prepare YUI Library
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.index', 'property' );
+
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
 
 			//die(_debug_array($datatable));
 		}
