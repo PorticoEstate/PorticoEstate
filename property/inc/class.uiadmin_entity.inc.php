@@ -2449,6 +2449,7 @@
 				'value_input_text'					=> $values['input_text'],
 				'value_statustext'					=> $values['statustext'],
 				'datatype_list'						=> $this->bocommon->select_datatype($values['column_info']['type']),
+				'datatype'							=> $values['column_info']['type'],
 				'attrib_group_list'					=> $this->bo->get_attrib_group_list($entity_id,$cat_id, $values['group_id']),
 				'value_precision'					=> $values['column_info']['precision'],
 				'value_scale'						=> $values['column_info']['scale'],
@@ -2464,7 +2465,8 @@
 				'value_get_list_function_input'		=> print_r($values['get_list_function_input'],true),
 				'value_get_single_function'			=> $values['get_single_function'],
 				'value_get_single_function_input'	=> print_r($values['get_single_function_input'],true),
-				'value_short_description'			=> $values['short_description']
+				'value_short_description'			=> $values['short_description'],
+				'value_javascript_action'			=> $values['javascript_action']
 			);
 
 			$appname = lang('entity');

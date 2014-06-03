@@ -402,6 +402,8 @@
 			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 
 			$attrib_filter = array();
+			$javascript_action = array();
+			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 			if($attrib_data)
 			{
 				foreach ( $attrib_data as $attrib )
@@ -434,6 +436,28 @@
 							}
 						}
 					}
+
+					if($attrib['datatype'] == 'link')
+					{
+						if($attrib['javascript_action'])
+						{
+							$javascript_action[$attrib['name']] = $attrib['javascript_action'];
+							$js = <<<JS
+
+							javascript_action_{$attrib['name']} = function(id,location_code)
+							{
+JS;
+								$js .= str_replace (array('__entity_id__','__cat_id__','__location_id__'),array($this->entity_id,$this->cat_id,$location_id), $attrib['javascript_action']);
+
+								$js .= <<<JS
+							}
+JS;
+
+							$GLOBALS['phpgw']->js->add_code('', $js);
+
+						}
+					}
+
 				}
 			}
 
@@ -477,7 +501,6 @@
 
 			$cols_extra		= $this->so->cols_extra;
 			$cols_return_lookup		= $this->so->cols_return_lookup;
-
 
 			foreach ($custom_cols as $col_id => $col_info)
 			{
@@ -531,8 +554,14 @@
 					}
 					$entry['org_unit'] = $org_units_data[$entry['org_unit_id']]['name'];
 				}
+				
+				foreach($javascript_action as $_name => $_action)
+				{
+					$entry[$_name] = "javascript_action_{$_name}({$entry['id']},{$entry['location_code']})";
+					$this->uicols['javascript_action'][$_name] = true;
+				}
 			}
-//_debug_array($entity);die();
+
 			return $entity;
 		}
 

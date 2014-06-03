@@ -755,7 +755,8 @@
 					'get_list_function_input' => $attrib['get_list_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_list_function_input'])) : '',
 					'get_single_function'		=> $attrib['get_single_function'],
 					'get_single_function_input' => $attrib['get_single_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_single_function_input'])) : '',
-					'short_description'			=> isset($attrib['short_description']) && $attrib['short_description'] ? (int) $attrib['short_description'] : false
+					'short_description'			=> isset($attrib['short_description']) && $attrib['short_description'] ? (int) $attrib['short_description'] : false,
+					'javascript_action'		=> $this->_db->db_addslashes($attrib['javascript_action']),
 				);
 
 				if($OldGroup != $attrib['group_id'])
@@ -1143,8 +1144,8 @@
 					'get_list_function_input' => $this->_db->f('get_list_function_input') ? unserialize($this->_db->f('get_list_function_input', true)) : '',
 					'get_single_function'		=> $this->_db->f('get_single_function'),
 					'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
-					'short_description'			=> $this->_db->f('short_description')
-
+					'short_description'			=> $this->_db->f('short_description'),
+					'javascript_action'			=>$this->_db->f('javascript_action',true),
 				);
 			}
 
@@ -1395,6 +1396,7 @@
 				'get_single_function'		=>$this->_db->f('get_single_function',true),
 				'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
 				'short_description'			=> $this->_db->f('short_description'),
+				'javascript_action'			=>$this->_db->f('javascript_action'),
 				'column_info'				=> array
 											(
 												'precision'	=> $this->_db->f('precision_'),
