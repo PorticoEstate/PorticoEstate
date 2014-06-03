@@ -610,9 +610,8 @@ function update_form_values( line_id, voucher_id_orig ){
 				var Url_email = email_base_url + '&voucher_id=' + voucher[0].voucher_id;
 
 				var email_buttons = "<input type=\"button\" name=\"Kopier til utklippstavle\" onClick=\"copyToClipboard('"+Url_email+"');\" value=\"Kopier til utklippstavle\" title=\"Kopier til utklippstavle\">";
-				email_buttons += "<a href=\"mailto:?&subject=Link til faktura\" target=\"_\"><input type=\"button\" value=\"Åpne epost\"/></a>";
+				email_buttons += "<input type=\"button\" value=\"Åpne epost\" onClick=\"javascript:location.href = 'mailto:?subject=Link til faktura&body=Lim inn linken her...';\" />";
 				$("#email_link").html(email_buttons);
-
 			}
 			else
 			{
