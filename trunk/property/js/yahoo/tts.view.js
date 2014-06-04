@@ -42,7 +42,14 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 								else
 								{
 									document.getElementById(action).value = 1;
-									document.form.submit();
+									try
+									{
+										validate_save();
+									}
+									catch (e)
+									{
+										document.form.submit();
+									}
 								}
 							},
 							failure: function(o)

@@ -1429,7 +1429,7 @@
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if ( $entry['active'] && is_file($file) )
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'])
 				{
 					require $file;
 				}

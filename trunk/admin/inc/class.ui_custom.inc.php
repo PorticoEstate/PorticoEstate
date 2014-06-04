@@ -479,6 +479,7 @@
 						'descr'						=> $entry['descr'],
 						'sorting'					=> $entry['sorting'],
 						'active'					=> $entry['active']?'X':'',
+						'client_side'				=> $entry['client_side']?'X':'',
 						'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array
 														(
 															'menuaction'		=> 'admin.ui_custom.list_custom_function',
@@ -532,6 +533,7 @@
 			(
 				'lang_descr'		=> lang('Descr'),
 				'lang_active'		=> lang('Active'),
+				'lang_client_side'	=> lang('client side'),
 				'lang_sorting'		=> lang('sorting'),
 				'lang_search'		=> lang('search'),
 				'lang_edit'			=> lang('edit'),
@@ -740,6 +742,7 @@
 				'custom_function_list'				=> $this->bo->select_custom_function(isset($values['custom_function_file'])?$values['custom_function_file']:'',$appname),
 
 				'value_active'						=> isset($values['active'])?$values['active']:'',
+				'value_client_side'					=> $values['client_side'],
 				'lang_active'						=> lang('Active'),
 				'lang_active_statustext'			=> lang('check to activate custom function'),
 			);

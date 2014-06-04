@@ -36,7 +36,7 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+		<form ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 			<div class="yui-navset" id="ticket_tabview">
 				<div class="yui-content">
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -274,7 +274,7 @@
 				<xsl:variable name="form_action">
 					<xsl:value-of select="form_action"/>
 				</xsl:variable>
-				<form name="form" method="post" action="{$form_action}">
+				<form name="form" method="post" id="form" action="{$form_action}">
 					<xsl:call-template name="location_view"/>
 					<tr>
 						<td valign="top">
@@ -431,7 +431,7 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+		<form ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 			<div class="yui-navset" id="ticket_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
@@ -1310,7 +1310,7 @@
 				<xsl:variable name="form_action">
 					<xsl:value-of select="form_action"/>
 				</xsl:variable>
-				<form name="form" method="post" action="{$form_action}">
+				<form id="form" name="form" method="post" action="{$form_action}">
 					<tr class="th">
 						<td class="th_text" valign="top">
 							<xsl:value-of select="lang_ticket"/>
