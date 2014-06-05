@@ -148,7 +148,7 @@
 										</label>
 									</td>
 									<td>
-										<select name="values[status]">
+										<select id="status_id" name="values[status]">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 											</xsl:attribute>
@@ -628,7 +628,7 @@
 													</label>
 												</td>
 												<td>
-													<select name="values[status]" class="forms">
+													<select id="status_id" name="values[status]" class="forms">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 														</xsl:attribute>
@@ -1055,7 +1055,7 @@
 													</label>
 												</td>
 												<td>
-													<select name="values[status]" class="forms">
+													<select id="status_id" name="values[status]" class="forms">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 														</xsl:attribute>
