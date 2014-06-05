@@ -1,38 +1,27 @@
 
-function validate_save()
+function validate_submit()
 {
-	alert($("#id_feilkoder").val());
+	var error = false;
+	var feilkode_id = $("#id_feilkoder").val();
+	var category_id = $("#global_category_id").val();
+	var group_id = $("#global_category_id").val();
+	var status_id = $("#status_id").val();	
+
+	if(category_id == 20)
+	{
+		if (!feilkode_id && status_id == 'X')
+		{
+			error = true;
+		}
+	}
+
+	if(error)
+	{
+		alert('Feilkode må velges før meldingen kan avsluttes');
+	}
+	else
+	{
+		document.form.submit();
+	}
 }
 
-$(document).ready(function(){
-
-//id_feilkoder
-	$("#form").on("submit", function(e){
-
-		var error = false;
-		if( !$("#id_konf_1").prop('checked') && (!$("#id_konf_2").prop('checked') && !$("#id_konf_3").prop('checked') && !$("#id_konf_4").prop('checked')))
-		{
-			error = true;
-			alert('Du må angi kriterie for Konfidensialitetsvurdering');
-		}
-
-		if( !$("#id_integritet_1").prop('checked') && (!$("#id_integritet_2").prop('checked') && !$("#id_integritet_3").prop('checked') && !$("#id_integritet_4").prop('checked')))
-		{
-			error = true;
-			alert('Du må angi kriterie for Integritetsvurdering');
-		}
-
-		if( !$("#id_tilgjengelighet_1").prop('checked') && (!$("#id_tilgjengelighet_2").prop('checked') && !$("#id_tilgjengelighet_3").prop('checked') && !$("#id_tilgjengelighet_4").prop('checked')))
-		{
-			error = true;
-			alert('Du må angi kriterie for Tilgjengelighetsvurdering');
-		}
-
-		if(error)
-		{
-			e.preventDefault();
-			return;
-		}
-	});
-
-});
