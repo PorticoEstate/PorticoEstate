@@ -2086,6 +2086,7 @@
 			$function_msg					= lang('add ticket');
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.add', 'property' );
+			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files','attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
@@ -2238,6 +2239,8 @@
 
 			$appname					= lang('helpdesk');
 			$function_msg				= lang('add ticket');
+
+			//$this->_insert_custom_js();
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add2' => $data));
@@ -3420,6 +3423,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.view', 'property' );
+			$this->_insert_custom_js();
 			//-----------------------datatable settings---
 
 			//_debug_array($data);die();
@@ -3977,6 +3981,50 @@
 			{
 				return $document;
 			}
+		}
+
+		/**
+		 * 
+		 */
+		private function _insert_custom_js()
+		{
+			$criteria = array
+			(
+				'appname'	=> 'property',
+				'location'	=> $this->acl_location,
+				'allrows'	=> true
+			);
+
+			if(! $custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria))
+			{
+				return false;
+			}
+
+			$js_found = false;
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
+				if ( $entry['active'] && $entry['client_side'] && is_file($file))
+				{
+					$GLOBALS['phpgw']->js->add_external_file("/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
+					$js_found = true;
+				}
+			}
+
+			if($js_found)
+			{
+				phpgw::import_class('phpgwapi.jquery');
+				phpgwapi_jquery::load_widget('core');
+			}
+
 		}
 
 	}

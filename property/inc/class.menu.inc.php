@@ -176,7 +176,12 @@
 						(
 							'text'	=> lang('ticket Attributes'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' => '.ticket', 'menu_selection' => 'admin::property::ticket::ticket_attribs') )
-						)
+						),
+						'ticket_functions'	=> array
+						(
+							'text'	=> lang('custom functions'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function','appname' => 'property', 'location' => '.ticket', 'menu_selection' => 'admin::property::ticket::ticket_functions') )
+						),
 					);
 
 				$admin_children_owner = array
