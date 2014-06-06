@@ -733,7 +733,7 @@
 			$order_info = array();
 			$toarray = array();
 			$order_id = (int) $order_id;
-			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
+			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_project.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			if(	$this->db->next_record())
