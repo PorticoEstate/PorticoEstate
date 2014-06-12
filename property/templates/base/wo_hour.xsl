@@ -369,8 +369,8 @@
 		<xsl:variable name="send_order_action">
 			<xsl:value-of select="send_order_action"/>
 		</xsl:variable>
-		<table align="left" width="100%">
-			<form method="post" action="{$send_order_action}">
+		<form method="post" action="{$send_order_action}">
+			<table align="left" width="100%">
 				<xsl:choose>
 					<xsl:when test="no_email =''">
 						<tr>
@@ -599,8 +599,8 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-			</form>
-		</table>
+			</table>
+		</form>
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js"/>;
 			var datatable = new Array();
