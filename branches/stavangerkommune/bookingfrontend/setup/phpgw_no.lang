@@ -112,7 +112,7 @@ log on	bookingfrontend	no	Logg inn
 log off	bookingfrontend	no	Logg ut
 login	common	no	Logg inn
 logout	common	no	Logg ut
-SSN not registred	common	no	Organisasjonen er ikke registrert eller mangler organisasjonesnummer i AktivBy
+SSN not registred	common	no	Du er ikke registert i Frivillighetsregisteret eller organisasjonen din mangler organisasjonesnummer i AktivBy
 male	bookingfrontend	no	Mann
 mar	bookingfrontend	no	mars
 may	bookingfrontend	no	mai
