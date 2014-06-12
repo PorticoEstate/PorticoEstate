@@ -793,38 +793,15 @@
 
 			$accountline = array();
 
-			if ( $oRsBilag[0]['periode'] )
+			$_periode = $oRsBilag[0]['periode'] ? $oRsBilag[0]['periode'] : date('Ym');
+
+			if((int)$this->min_period < (int)$_periode)
 			{
-				if((int)$this->min_period < (int)$oRsBilag[0]['periode'])
-				{
-					$periode = $this->min_period;
-				}
-				else
-				{
-					$periode = $oRsBilag[0]['periode'];
-				}
-			}
-			else if (isset($this->config->config_data['export']['dato_aarsavslutning']) && time() < $this->config->config_data['export']['dato_aarsavslutning'] )
-			{
-				if(date('Y',time()) == date('Y', $this->config->config_data['export']['dato_aarsavslutning']))
-				{
-					$periode = date('Y',time()) - 1 . '12';
-				}
-				else
-				{
-					$periode = date('Ym',time());
-				}	
+				$periode = $this->min_period;
 			}
 			else
 			{
-				$time = time();
-
-				if ( date('j',$time) < 7 ) //Day of the month without leading zeros
-				{
-					$time = $time - (7 * 24 * 3600);
-				}
-				
-				$periode = date('Ym',$time);
+				$periode = $_periode;
 			}
 
 			$sum_amount = 0;
