@@ -143,7 +143,7 @@
 					. "   Fødselsdato:{$values['foedselsdato']}\n"
 					. "   Tlf:{$values['telefonnummer']}\n"
 					. "   Avd:{$values['avdeling']}\n   Innbetaling av leie: {$values['innbetaling_av_leie']}\n"
-					. "   Fakturaadresse: {$values['fakturaadresse']}",
+					. "   Fakturaadresse: {$values['faktura_sendes_til']}",
 					'col2' => $address
 				),
 			);
