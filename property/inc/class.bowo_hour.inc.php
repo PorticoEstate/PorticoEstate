@@ -408,6 +408,51 @@
 			return $receipt;
 		}
 
+		/**
+		 *
+		 * @param type $data
+		 * @param type $workorder_id
+		 */
+		function import_calculation($data, $workorder_id)
+		{
+			$GLOBALS['phpgw']->db->transaction_begin();
+			foreach($data as $section => $valueset)
+			{
+				$section_name = $valueset['name'];
+				foreach($valueset['data'] as $entry)
+				{
+					if((int)$entry[4] > 0)
+					{
+			//_debug_array($entry[5]);
+			//_debug_array($entry[4]);
+						$values = array
+						(
+							'descr'				=> $entry[1],
+							'unit'				=> 8, // FIXME
+							'cost'				=> $entry[5],
+							'quantity'			=> $entry[4],
+							'billperae'			=> $entry[3],
+							'ns3420_id'			=> '',
+							'dim_d'				=> '',
+							'new_grouping'		=> $section_name,
+							'building_part_id'	=> '',
+							'tolerance_id'		=> '',
+						);
+						try
+						{
+							$this->so->add_custom_hour($values,$workorder_id);
+						}
+						catch(Exception $exc)
+						{
+							throw $exc->getTraceAsString();
+						}
+					}
+				}
+
+			}
+			$GLOBALS['phpgw']->db->transaction_commit();
+		}
+
 		function get_email($selected, $vendor_id)
 		{
 			$email_list = $this->so->get_email($vendor_id);

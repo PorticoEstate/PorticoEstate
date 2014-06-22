@@ -16,14 +16,16 @@
 	]
 	
 	// define buttons
-	var oNormalButton_0,oNormalButton_1,oNormalButton_2,oNormalButton_3,oNormalButton_4,oNormalButton_5;
+	var oNormalButton_0,oNormalButton_1,oNormalButton_2,oNormalButton_3,oNormalButton_4,oNormalButton_5,oNormalButton_6;
 	var normalButtons = [
-	{order:0, name:'btn_add_prizebook', funct:"onAddPrizebookClick"},
-	{order:1, name:'btn_add_template',	funct:"onAddTemplate"},
-	{order:2, name:'btn_add_custom',	funct:"onAddCustom"},
-	{order:3, name:'btn_save_template',	funct:"onSaveTemplate"},
-	{order:4, name:'btn_print_preview',	funct:"onPrintPreview"},
-	{order:5, name:'btn_view_tender',	funct:"onViewTender"}
+
+	{order:0, name:'btn_import_calculation', funct:"onImportCalculationClick"},
+	{order:1, name:'btn_add_prizebook', funct:"onAddPrizebookClick"},
+	{order:2, name:'btn_add_template',	funct:"onAddTemplate"},
+	{order:3, name:'btn_add_custom',	funct:"onAddCustom"},
+	{order:4, name:'btn_save_template',	funct:"onSaveTemplate"},
+	{order:5, name:'btn_print_preview',	funct:"onPrintPreview"},
+	{order:6, name:'btn_view_tender',	funct:"onViewTender"}
 	]
 
 	// define Text buttons
@@ -37,6 +39,24 @@
 	
 	var div_footer, table, tableYUI ;
 /****************************************************************************************/
+
+this.onImportCalculationClick = function()
+{
+		for(i=0;i<values_ds.rights_form.length;i++)
+		{
+	 		if(values_ds.rights_form[i].my_name == 'import_calculation')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights_form[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl=html_entity_decode(sUrl);
+				TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){parent.location.reload();}});
+			}
+ 		}
+}
+
+
+
 
 	this.onAddPrizebookClick = function()
 	{
@@ -539,9 +559,3 @@
 		}
 
 	});
-
-
-
-
-
-
