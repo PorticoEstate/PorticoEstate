@@ -423,10 +423,9 @@
 				{
 					if((int)$entry[4] > 0)
 					{
-			//_debug_array($entry[5]);
-			//_debug_array($entry[4]);
 						$values = array
 						(
+							'activity_num'		=> $entry[0],
 							'descr'				=> $entry[1],
 							'unit'				=> 8, // FIXME
 							'cost'				=> $entry[5],

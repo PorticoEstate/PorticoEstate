@@ -2717,16 +2717,6 @@
 				</xsl:choose>
 
 			<tr>
-				<td >
-					<xsl:variable name="lang_submit">
-						<xsl:value-of select="php:function('lang', 'upload file')"/>
-					</xsl:variable>
-					<input type="submit" name="submit" value="{$lang_submit}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_submit"/>
-						</xsl:attribute>
-					</input>
-				</td>
 				<td>
 					<input type="file" id="file" name="file" size="40">
 						<xsl:attribute name="title">
@@ -2737,6 +2727,16 @@
 					<xsl:variable name="lang_template"><xsl:value-of select="php:function('lang', 'template')" /></xsl:variable>
 					<input type="button" id = "get_template" name="get_template" value="{$lang_template}" title = "{$lang_template}" />
 					-->
+				</td>
+				<td >
+					<xsl:variable name="lang_submit">
+						<xsl:value-of select="php:function('lang', 'upload file')"/>
+					</xsl:variable>
+					<input type="submit" name="submit" value="{$lang_submit}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_submit"/>
+						</xsl:attribute>
+					</input>
 				</td>
 			</tr>
 		</table>

@@ -58,7 +58,7 @@
 		/**
 		 * @var boolean $_simple use simplified interface
 		 */
-		protected $_simple = false;
+		protected $simple = false;
 		protected $_show_finnish_date = false;
 		protected $_category_acl = false;
 		var $part_of_town_id;
