@@ -46,18 +46,19 @@
 
 		var $public_functions = array
 			(
-				'index'  		=> true,
-				'tender'  		=> true,
-				'view'  		=> true,
-				'template'		=> true,
+				'index'				=> true,
+				'tender'			=> true,
+				'view'				=> true,
+				'template'			=> true,
 				'save_template'		=> true,
-				'prizebook'		=> true,
-				'add'			=> true,
-				'edit'			=> true,
-				'delete'		=> true,
-				'deviation'		=> true,
-				'edit_deviation'=> true,
-				'pdf_order'		=> true
+				'prizebook'			=> true,
+				'add'				=> true,
+				'edit'				=> true,
+				'delete'			=> true,
+				'deviation'			=> true,
+				'edit_deviation'	=> true,
+				'pdf_order'			=> true,
+				'import_calculation'=> true,
 			);
 
 		function property_uiwo_hour()
@@ -753,12 +754,19 @@
 									'value'	=> lang('Add from template')
 								),			                                        			                                        		                                        		                                        																								
 								array
-								( 
+								(
 									'type'	=> 'button',
 									'id'	=> 'btn_add_prizebook',
 									'tab_index' => 1,
 									'value'	=> lang('Add from prizebook')
-								)											   				                                        			                                        			                                                                                		                                                                                
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_import_calculation',
+									'tab_index' => 1,
+									'value'	=> lang('import calculation')
+								)
 							),
 							'hidden_value' => array
 							(
@@ -968,6 +976,16 @@
 				);
 
 			unset($parameters);
+
+			$datatable['rowactions']['action_form'][] = array
+				(
+					'my_name' 		=> 'import_calculation',
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'property.uiwo_hour.import_calculation',
+						'workorder_id'	=> $workorder_id
+					))
+				);
 
 			$datatable['rowactions']['action_form'][] = array
 				(
@@ -1194,6 +1212,9 @@
 
 			// Prepare YUI Library
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.index', 'property' );
+
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			$this->save_sessiondata();												
 		}
@@ -3478,4 +3499,164 @@ HTML;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
+
+		function import_calculation()
+		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
+			$workorder_id	= phpgw::get_var('workorder_id');
+			if($_FILES)
+			{
+				$this->_import_calculation($workorder_id);
+
+				$bofiles	= CreateObject('property.bofiles');
+
+				$file_name = @str_replace(' ','_',$_FILES['file']['name']);
+
+				$to_file = "{$bofiles->fakebase}/workorder/{$workorder_id}/{$file_name}";
+
+				if($bofiles->vfs->file_exists(array(
+					'string' => $to_file,
+					'relatives' => Array(RELATIVE_NONE)
+				)))
+				{
+					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
+				}
+				else
+				{
+					$bofiles->create_document_dir("workorder/{$workorder_id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if(!$bofiles->vfs->cp(array (
+						'from'	=> $_FILES['file']['tmp_name'],
+						'to'	=> $to_file,
+						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+					{
+						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+
+			if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			{
+				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+			}
+
+			$data = array
+			(
+					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
+					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiwo_hour.import_calculation')),
+					'workorder_id'			=> $workorder_id
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file('wo_hour');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('import_calculation' => $data));
+		}
+
+		private function _import_calculation($workorder_id)
+		{
+			$error = false;
+
+			$data = array();
+			if(isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
+			{
+				$file = array
+				(
+					'name'	=> $_FILES['file']['tmp_name'],
+					'type'	=> $_FILES['file']['type']
+				);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('Ingen fil er valgt', 'error');
+				return;
+			}
+
+			switch ($file['type'])
+			{
+				case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+				case 'application/vnd.oasis.opendocument.spreadsheet':
+				case 'application/vnd.ms-excel':
+					$data = $this->getexceldata($file['name']);
+					break;
+				default:
+					phpgwapi_cache::message_set("Not a valid filetype: {$file['type']}", 'error');
+					$error = true;
+			}
+
+			if($data)
+			{
+				try
+				{
+					//Import
+					$this->bo->import_calculation($data, $workorder_id);
+
+				}
+				catch (Exception $e)
+				{
+					if($e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$error = true;
+					}
+				}
+			}
+
+			if(!$error)
+			{
+				phpgwapi_cache::message_set(lang('workorder is updated'), 'message');
+			}
+		}
+
+		protected function getexceldata($path)
+		{
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$inputFileType = PHPExcel_IOFactory::identify($path); // Identify the type of file.
+			$objReader = PHPExcel_IOFactory::createReader($inputFileType); // Create a reader of the identified file type.
+			$worksheetNames = $objReader->listWorksheetNames($path);
+//			_debug_array($worksheetNames);
+
+			$objPHPExcel = PHPExcel_IOFactory::load($path);
+
+			$result = array();
+
+			foreach($worksheetNames as $_index => $sheet_name)
+			{
+				$result[$_index]['name'] = $sheet_name;
+				$objPHPExcel->setActiveSheetIndex($_index);
+
+//				$objWorksheet = $objPHPExcel->getActiveSheet();
+//				_debug_array($objWorksheet->getTitle());
+
+				$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+
+				$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+
+				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+
+				$start = 2; // Read the first line to get the headers out of the way
+
+				for ($j=0; $j < $highestColumnIndex; $j++ )
+				{
+					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,1)->getCalculatedValue();
+				}
+
+				$rows = $rows ? $rows +1 : 0;
+				for ($row=$start; $row < $rows; $row++ )
+				{
+					$_data = array();
+
+					for ($j=0; $j < $highestColumnIndex; $j++ )
+					{
+						$_data[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j,$row)->getCalculatedValue();
+					}
+
+					$result[$_index]['data'][] = $_data;
+				}
+			}
+			return $result;
+		}
+
 	}

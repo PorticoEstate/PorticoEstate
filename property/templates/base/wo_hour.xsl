@@ -28,6 +28,9 @@
 			<xsl:when test="edit_deviation">
 				<xsl:apply-templates select="edit_deviation"/>
 			</xsl:when>
+			<xsl:when test="import_calculation">
+				<xsl:apply-templates select="import_calculation"/>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="list_hour"/>
 			</xsl:otherwise>
@@ -2690,3 +2693,53 @@
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</option>
 	</xsl:template>
+
+	<!-- Import calculation -->
+	
+	<xsl:template match="import_calculation" xmlns:php="http://php.net/xsl">
+	<h2>
+		<xsl:value-of select="php:function('lang', 'upload file')"/>
+	</h2>
+	<form action="{form_action}" name="import_calculation_form" id="split_voucher_form" method="post" ENCTYPE="multipart/form-data">
+		<br/>
+		<br/>
+	  	<input type="hidden" name="workorder_id" id="workorder_id" value="{workorder_id}"/>
+
+		<table align = "center" valign = "center" width="95%">
+				<xsl:choose>
+					<xsl:when test="msgbox_data != ''">
+						<tr>
+							<td align="left" colspan="2">
+								<xsl:call-template name="msgbox"/>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
+
+			<tr>
+				<td>
+					<input type="file" id="file" name="file" size="40">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+						</xsl:attribute>
+					</input>
+					<!--
+					<xsl:variable name="lang_template"><xsl:value-of select="php:function('lang', 'template')" /></xsl:variable>
+					<input type="button" id = "get_template" name="get_template" value="{$lang_template}" title = "{$lang_template}" />
+					-->
+				</td>
+				<td >
+					<xsl:variable name="lang_submit">
+						<xsl:value-of select="php:function('lang', 'upload file')"/>
+					</xsl:variable>
+					<input type="submit" name="submit" value="{$lang_submit}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_submit"/>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</xsl:template>
