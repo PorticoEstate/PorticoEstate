@@ -471,10 +471,9 @@
 
 			if($hour['grouping_id'])
 			{
-				$this->db->query("SELECT grouping_descr , max(record) as record FROM fm_wo_hours where grouping_id='" .$hour['grouping_id'] . "' and workorder_id= '$workorder_id' GROUP by grouping_descr",__LINE__,__FILE__);
+				$this->db->query("SELECT grouping_descr FROM fm_wo_hours where grouping_id='" .$hour['grouping_id'] . "' and workorder_id= '$workorder_id' GROUP by grouping_descr",__LINE__,__FILE__);
 				$this->db->next_record();
 				$hour['grouping_descr']	= $this->db->f('grouping_descr');
-//				$hour['record']	= $this->db->f('record')+1;
 			}
 
 			if($hour['new_grouping'])
@@ -490,7 +489,6 @@
 					$this->db->query("SELECT max(grouping_id) as grouping_id FROM fm_wo_hours where workorder_id= '$workorder_id'",__LINE__,__FILE__);
 					$this->db->next_record();
 					$hour['grouping_id']	= $this->db->f('grouping_id')+1;
-//					$hour['record']	= 1;
 				}
 
 				$hour['grouping_descr']	= $hour['new_grouping'];
@@ -503,6 +501,7 @@
 			//_debug
 			$values= array(
 				$this->account,
+				$hour['activity_num'],
 				$hour['descr'],
 				$hour['unit'],
 				$hour['cost'],
@@ -524,7 +523,7 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$this->db->query("insert into fm_wo_hours (owner,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
+			$this->db->query("INSERT INTO fm_wo_hours (owner,activity_num,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
 				. " grouping_id,grouping_descr,record,building_part,tolerance,remark,entry_date,workorder_id,category,cat_per_cent) "
 				. "VALUES ( $values )",__LINE__,__FILE__);
 

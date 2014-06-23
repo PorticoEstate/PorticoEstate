@@ -894,6 +894,7 @@ if files can be uploaded for this category	property	no	Om filer skal kunne laste
 if this entity type is to be linked to a location	property	no	Om denne entitetstypen skal linkes til en lokalisering
 if this entity type is to be linked to documents	property	no	Om denne entitetstypen skal linkes til dokumentasjon
 if this entity type is to look up tenants	property	no	Om denne entiteten skal gjøre oppslag på leietakere
+import calculation	property	no	Importer kalkulasjon
 import	property	no	Import
 importance	property	no	Viktighet
 import detail	property	no	Importer detalj

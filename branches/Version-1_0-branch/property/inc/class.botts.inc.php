@@ -1408,7 +1408,7 @@
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
-			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute);
+			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute, $this->simple);
 			$this->fields_updated = $this->so->fields_updated;
 
 			$criteria = array
