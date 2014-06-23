@@ -30,6 +30,10 @@
 	{
 		date_search : 1 //if search has link "Data search"
 	}
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<P align=\"right\">"+oData+"</p>";
+	}
 
 	this.particular_setting = function()
 	{

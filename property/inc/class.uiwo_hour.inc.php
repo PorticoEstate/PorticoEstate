@@ -3507,6 +3507,34 @@ HTML;
 			if($_FILES)
 			{
 				$this->_import_calculation($workorder_id);
+
+				$bofiles	= CreateObject('property.bofiles');
+
+				$file_name = @str_replace(' ','_',$_FILES['file']['name']);
+
+				$to_file = "{$bofiles->fakebase}/workorder/{$workorder_id}/{$file_name}";
+
+				if($bofiles->vfs->file_exists(array(
+					'string' => $to_file,
+					'relatives' => Array(RELATIVE_NONE)
+				)))
+				{
+					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
+				}
+				else
+				{
+					$bofiles->create_document_dir("workorder/{$workorder_id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if(!$bofiles->vfs->cp(array (
+						'from'	=> $_FILES['file']['tmp_name'],
+						'to'	=> $to_file,
+						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+					{
+						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
 			}
 
 			if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))

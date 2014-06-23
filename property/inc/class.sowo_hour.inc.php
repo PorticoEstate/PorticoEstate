@@ -501,6 +501,7 @@
 			//_debug
 			$values= array(
 				$this->account,
+				$hour['activity_num'],
 				$hour['descr'],
 				$hour['unit'],
 				$hour['cost'],
@@ -522,7 +523,7 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$this->db->query("INSERT INTO fm_wo_hours (owner,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
+			$this->db->query("INSERT INTO fm_wo_hours (owner,activity_num,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
 				. " grouping_id,grouping_descr,record,building_part,tolerance,remark,entry_date,workorder_id,category,cat_per_cent) "
 				. "VALUES ( $values )",__LINE__,__FILE__);
 
