@@ -3289,6 +3289,19 @@
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
 
+			$year	= date('Y') -1;
+			$limit	= $year + 3;
+
+			while ($year < $limit)
+			{
+				$year_list[] = array
+				(
+					'id'	=>  $year,
+					'name'	=>  $year
+				);
+				$year++;
+			}
+
 			$data = array
 				(
 					'custom_attributes'				=> array('attributes' => $ticket['attributes']),
@@ -3304,6 +3317,7 @@
 					'ecodimb_data' 					=> $ecodimb_data,
 					'value_budget'					=> $ticket['budget'],
 					'value_actual_cost'				=> $ticket['actual_cost'],
+					'year_list'						=> array('options' => $this->bocommon->select_list( $ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list )),
 					'need_approval'					=> $need_approval,
 					'value_approval_mail_address'	=> $supervisor_email,
 	//				'vendor_email'					=> $vendor_email,

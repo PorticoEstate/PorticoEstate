@@ -459,7 +459,7 @@
 			$return_fields = "fm_tts_tickets.id,fm_tts_tickets.assignedto,fm_tts_tickets.status,fm_tts_tickets.user_id,"
 			. "fm_tts_tickets.subject,fm_tts_tickets.address,fm_tts_tickets.location_code,fm_tts_tickets.priority,fm_tts_tickets.cat_id,fm_tts_tickets.group_id,"
 			. "fm_tts_tickets.entry_date,fm_tts_tickets.modified_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,fm_tts_tickets.actual_cost,"
-			. "fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name,fm_tts_tickets.ecodimb {$result_order_field}";
+			. "fm_tts_tickets.actual_cost_year,fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name,fm_tts_tickets.ecodimb {$result_order_field}";
 
 			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
 			
@@ -601,6 +601,7 @@
 							'order_id'			=> $this->db->f('order_id'),
 							'vendor_id'			=> $this->db->f('vendor_id'),
 							'actual_cost'		=> $this->db->f('actual_cost'),
+							'actual_cost_year'	=> $this->db->f('actual_cost_year'),
 							'estimate'			=> $this->db->f('budget'),
 							'new_ticket'		=> $this->db->f('view') ? false : true,
 							'billable_hours'	=> $this->db->f('billable_hours'),
@@ -692,6 +693,7 @@
 				$ticket['ecodimb']			= $this->db->f('ecodimb');
 				$ticket['budget']			= $this->db->f('budget');
 				$ticket['actual_cost']		= $this->db->f('actual_cost');
+				$ticket['actual_cost_year']	= $this->db->f('actual_cost_year');
 				$ticket['order_cat_id']		= $this->db->f('order_cat_id');
 				$ticket['building_part']	= $this->db->f('building_part',true);
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
@@ -1466,13 +1468,12 @@
 					$this->historylog->add('B',$id,$ticket['budget'],$old_budget);
 				}
 
-				$value_set['vendor_id']		= $ticket['vendor_id'];
-				$value_set['b_account_id']	= $ticket['b_account_id'];
-				$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
-				$value_set['ecodimb']		= $ticket['ecodimb'];
-//				$value_set['budget']		= $ticket['budget'];
-				$value_set['branch_id']		= $ticket['branch_id'];
-
+				$value_set['vendor_id']			= $ticket['vendor_id'];
+				$value_set['b_account_id']		= $ticket['b_account_id'];
+				$value_set['order_descr']		= $this->db->db_addslashes($ticket['order_descr']);
+				$value_set['ecodimb']			= $ticket['ecodimb'];
+				$value_set['actual_cost_year']	= $ticket['actual_cost_year'];
+				$value_set['branch_id']			= $ticket['branch_id'];
 			}
 
 			$value_set	= $this->db->validate_update($value_set);
