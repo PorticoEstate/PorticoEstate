@@ -944,7 +944,22 @@
 													</label>
 												</td>
 												<td>
-													<input type="text" name="values[actual_cost]" value="{value_actual_cost}"><xsl:attribute name="title"><xsl:value-of select="php:function('lang', 'Enter actual cost')"/></xsl:attribute></input><!--<xsl:value-of select="value_actual_cost"/> --><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+													<input type="text" name="values[actual_cost]" value="{value_actual_cost}">
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'Enter actual cost')"/>
+														</xsl:attribute>
+													</input>
+													<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+													<xsl:variable name="lang_year"><xsl:value-of select="php:function('lang', 'year')"/></xsl:variable>
+
+													<select name="values[actual_cost_year]">
+														<xsl:attribute name="title">
+															<xsl:value-of select='$lang_year'/>
+														</xsl:attribute>
+														<xsl:apply-templates select="year_list/options"/>
+													</select>
+
+													<xsl:text> </xsl:text> [ <xsl:value-of select='$lang_year'/> ]
 												</td>
 											</tr>
 											<tr>

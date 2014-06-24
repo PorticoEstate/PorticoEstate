@@ -1059,6 +1059,7 @@
 				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'budget' => array('type' => 'int','precision' => '4','nullable' => True),
 				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'actual_cost_year' => array('type' => 'int','precision' => '4','nullable' => True),
 				'order_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'building_part'=> array('type' => 'varchar','precision' => 4,'nullable' => True),
 				'order_dim1'=> array('type' => 'int','precision' => 4,'nullable' => True),
@@ -1728,9 +1729,9 @@
 		'fm_document_relation' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-				'document_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'location_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'location_item_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'document_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'location_item_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id'),
