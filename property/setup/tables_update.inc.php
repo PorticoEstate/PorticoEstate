@@ -8046,9 +8046,9 @@
 			'fm_document_relation', array(
 				'fd' => array(
 					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-					'document_id' => array('type' => 'int','precision' => '4','nullable' => True),
-					'location_id' => array('type' => 'int','precision' => '4','nullable' => True),
-					'location_item_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'document_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'location_item_id' => array('type' => 'int','precision' => '4','nullable' => False),
 					'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				),
 				'pk' => array('id'),
@@ -8061,6 +8061,19 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.682';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.682';
+	function property_upgrade0_9_17_682()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','actual_cost_year',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.683';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
