@@ -285,7 +285,8 @@
 			$value_set = array
 			(
 	    		'agresso_prosjekt'	=> $agresso_prosjekt,
-				'actual_cost'		=> $new_actual_cost
+				'actual_cost'		=> $new_actual_cost,
+				'actual_cost_year'	=> date('Y')
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
