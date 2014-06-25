@@ -275,10 +275,25 @@
 			return $receipt;
 		}
 
-
-		function next_record($workorder_id)
+		/**
+		 * Fetch ids from within given grouping serie
+		 * @param integer $workorder_id
+		 * @param integer $grouping_id
+		 * @return integer
+		 */
+		function next_record($workorder_id, $grouping_id = 0)
 		{
-			$this->db->query("SELECT  max(record) as record FROM fm_wo_hours where workorder_id='$workorder_id'",__LINE__,__FILE__);
+			$grouping_id = (int) $grouping_id;
+			if($grouping_id)
+			{
+				$gouping_filter = "AND  grouping_id = {$grouping_id}";
+			}
+			else
+			{
+				$gouping_filter = "AND  grouping_id IS NULL";
+			}
+
+			$this->db->query("SELECT  max(record) as record FROM fm_wo_hours where workorder_id='{$workorder_id}' {$gouping_filter}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$record	= $this->db->f('record')+1;
 			return $record;
@@ -312,11 +327,13 @@
 
 			$hour = $this->read(array('workorder_id' => $workorder_id));
 
-			$record	= $this->next_record($workorder_id);
 
 			for ($i=0; $i<count($hour); $i++)
 			{
-				$values_insert= array(
+				$record	= $this->next_record($workorder_id,$hour[$i]['grouping_id']);
+
+				$values_insert= array
+				(
 					$hour[$i]['activity_id'],
 					$hour[$i]['activity_num'],
 					$this->account,
@@ -333,7 +350,8 @@
 					$hour[$i]['tolerance'],
 					$hour[$i]['building_part'],
 					$record,
-					$template_id );
+					$template_id
+				);
 
 				$values_insert	= $this->db->validate_insert($values_insert);
 
@@ -357,7 +375,8 @@
 
 			for ($i=0; $i<count($hour); $i++)
 			{
-				$values= array(
+				$values= array
+				(
 					$hour[$i]['activity_id'],
 					$hour[$i]['activity_num'],
 					$this->account,
@@ -393,8 +412,6 @@
 		function add_hour_from_template($hour,$workorder_id)
 		{
 
-			$record	= $this->next_record($workorder_id);
-
 			if($hour[0]['chapter_id'])
 			{
 				$this->db->query("UPDATE fm_workorder set
@@ -421,6 +438,8 @@
 
 					$grouping_descr	= $hour[$i]['new_grouping'];
 				}
+
+				$record	= $this->next_record($workorder_id,$grouping_id);
 
 				$values= array(
 					$this->account,
@@ -461,7 +480,6 @@
 
 		function add_custom_hour($hour,$workorder_id)
 		{
-			$hour['record']	= $this->next_record($workorder_id);
 
 			if($hour['chapter_id'])
 			{
@@ -483,6 +501,7 @@
 				if ( $this->db->f('grouping_id'))
 				{
 					$hour['grouping_id']	= $this->db->f('grouping_id');
+
 				}
 				else
 				{
@@ -493,6 +512,8 @@
 
 				$hour['grouping_descr']	= $hour['new_grouping'];
 			}
+
+			$hour['record']	= $this->next_record($workorder_id,$hour['grouping_id']);
 
 			if(!$hour['cat_per_cent'])
 			{
