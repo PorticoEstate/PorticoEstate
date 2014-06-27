@@ -89,6 +89,7 @@ powered by phpgroupware version %1	common	no	Powered by <a href="http://www.phpg
 preferences	common	no	Innstillinger
 previous page	common	no	Forrige side
 prev	common	no	Forrige
+print	common	no	Utskrift
 priority	common	no	Prioritet
 private	common	no	Privat
 rename	common	no	Endre navn
