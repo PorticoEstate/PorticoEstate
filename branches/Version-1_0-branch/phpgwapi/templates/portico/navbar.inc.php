@@ -12,6 +12,8 @@
 
 		$var = array
 		(
+			'print_url'		=> strpos($_SERVER['REQUEST_URI'], '?') ? "{$_SERVER['REQUEST_URI']}&phpgw_return_as=noframes" : "{$_SERVER['REQUEST_URI']}?phpgw_return_as=noframes",
+			'print_text'	=> lang('print'),
 			'home_url'		=> $GLOBALS['phpgw']->link('/home.php'),
 			'home_text'		=> lang('home'),
 			'home_icon'		=> 'icon icon-home',
