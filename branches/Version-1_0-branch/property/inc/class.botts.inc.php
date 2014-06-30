@@ -996,37 +996,25 @@
 			return (int)$result['id'];	
 		}
 
-		function add($ticket, $values_attribute = array())
+		function add($data, $values_attribute = array())
 		{
-			if((!isset($ticket['location_code']) || ! $ticket['location_code']) && isset($ticket['location']) && is_array($ticket['location']))
+			if((!isset($data['location_code']) || ! $data['location_code']) && isset($data['location']) && is_array($data['location']))
 			{
-				while (is_array($ticket['location']) && list(,$value) = each($ticket['location']))
+				while (is_array($data['location']) && list(,$value) = each($data['location']))
 				{
 					if($value)
 					{
 						$location[] = $value;
 					}
 				}
-				$ticket['location_code']=implode("-", $location);
+				$data['location_code']=implode("-", $location);
 			}
 
-			$ticket['finnish_date']	= $this->bocommon->date_to_timestamp($ticket['finnish_date']);
+			$data['finnish_date']	= $this->bocommon->date_to_timestamp($data['finnish_date']);
 
 			if($values_attribute && is_array($values_attribute))
 			{
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
-			}
-
-			$receipt = $this->so->add($ticket, $values_attribute);
-
-			$this->config->read();
-
-			if ( (isset($ticket['send_mail']) && $ticket['send_mail']) 
-				|| (isset($this->config->config_data['mailnotification'])
-					&& $this->config->config_data['mailnotification'])
-			)
-			{
-				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code'], false, isset($ticket['send_mail']) && $ticket['send_mail'] ? true : false);
 			}
 
 			$criteria = array
@@ -1047,7 +1035,35 @@
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if ( $entry['active'] && is_file($file) )
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && $entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
+			$receipt = $this->so->add($data, $values_attribute);
+
+			$this->config->read();
+
+			if ( (isset($data['send_mail']) && $data['send_mail'])
+				|| (isset($this->config->config_data['mailnotification'])
+					&& $this->config->config_data['mailnotification'])
+			)
+			{
+				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$data['location_code'], false, isset($data['send_mail']) && $data['send_mail'] ? true : false);
+			}
+
+			reset($custom_functions);
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && !$entry['pre_commit'])
 				{
 					require_once $file;
 				}
@@ -1407,15 +1423,12 @@
 			return $receipt;
 		}
 
-		public function update_ticket($data, $id,$receipt = array(),$values_attribute = array())
+		public function update_ticket(&$data, $id,$receipt = array(),$values_attribute = array())
 		{
 			if($values_attribute && is_array($values_attribute))
 			{
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
-
-			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute, $this->simple);
-			$this->fields_updated = $this->so->fields_updated;
 
 			$criteria = array
 			(
@@ -1435,7 +1448,28 @@
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if ( $entry['active'] && is_file($file)  && !$entry['client_side'])
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && $entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
+			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute, $this->simple);
+			$this->fields_updated = $this->so->fields_updated;
+
+
+			reset($custom_functions);
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && !$entry['pre_commit'])
 				{
 					require $file;
 				}

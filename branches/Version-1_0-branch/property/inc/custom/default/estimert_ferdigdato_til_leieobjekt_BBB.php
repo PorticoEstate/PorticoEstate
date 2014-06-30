@@ -1,5 +1,5 @@
 <?php
-	if($ticket['cat_id'] == 4)
+	if($data['cat_id'] == 4)
 	{
 		$db = $this->bocommon->new_db();
 
