@@ -480,6 +480,7 @@
 						'sorting'					=> $entry['sorting'],
 						'active'					=> $entry['active']?'X':'',
 						'client_side'				=> $entry['client_side']?'X':'',
+						'pre_commit'				=> $entry['pre_commit']?'X':'',
 						'link_up'					=> $GLOBALS['phpgw']->link('/index.php',array
 														(
 															'menuaction'		=> 'admin.ui_custom.list_custom_function',
@@ -533,6 +534,7 @@
 			(
 				'lang_descr'		=> lang('Descr'),
 				'lang_active'		=> lang('Active'),
+				'lang_pre_commit'	=> lang('pre commit'),
 				'lang_client_side'	=> lang('client side'),
 				'lang_sorting'		=> lang('sorting'),
 				'lang_search'		=> lang('search'),
@@ -743,6 +745,7 @@
 
 				'value_active'						=> isset($values['active'])?$values['active']:'',
 				'value_client_side'					=> $values['client_side'],
+				'value_pre_commit'					=> $values['pre_commit'],
 				'lang_active'						=> lang('Active'),
 				'lang_active_statustext'			=> lang('check to activate custom function'),
 			);

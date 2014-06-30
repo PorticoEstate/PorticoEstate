@@ -706,15 +706,6 @@ JS;
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
-			if ($action=='edit')
-			{
-				$receipt = $this->so->edit($values,$values_attribute,$entity_id,$cat_id);
-			}
-			else
-			{
-				$receipt = $this->so->add($values,$values_attribute,$entity_id,$cat_id);
-			}
-
 			$criteria = array
 				(
 					'appname'	=> $this->type_app[$this->type],
@@ -734,7 +725,34 @@ JS;
 
 				$file = PHPGW_SERVER_ROOT . "/{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
-				if ( $entry['active'] && !$entry['client_side'] && is_file($file) )
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && $entry['pre_commit'])
+				{
+					require_once $file;
+				}
+			}
+
+
+			if ($action=='edit')
+			{
+				$receipt = $this->so->edit($values,$values_attribute,$entity_id,$cat_id);
+			}
+			else
+			{
+				$receipt = $this->so->add($values,$values_attribute,$entity_id,$cat_id);
+			}
+
+			reset($custom_functions);
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && !$entry['pre_commit'])
 				{
 					require_once $file;
 				}

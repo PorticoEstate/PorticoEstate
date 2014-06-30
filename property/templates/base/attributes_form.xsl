@@ -39,6 +39,7 @@
 			<xsl:choose>
 				<xsl:when test="not(hide_row)">
 					<td  class="first" title="{$statustext}">
+						<div id="label_{name}">
 						<label>
 						<xsl:choose>
 							<xsl:when test="helpmsg=1">
@@ -71,6 +72,7 @@
 							</xsl:when>
 						</xsl:choose>
 						</label>
+						</div>
 					</td>
 				</xsl:when>
 			</xsl:choose>

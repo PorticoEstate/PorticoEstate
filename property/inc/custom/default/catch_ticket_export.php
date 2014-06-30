@@ -282,5 +282,5 @@
 	}
 
 	$export = new catch_ticket_export();
-	$export->export_ticket($ticket);
+	$export->export_ticket($data);
 
