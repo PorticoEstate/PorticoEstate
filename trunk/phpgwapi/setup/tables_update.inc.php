@@ -3232,3 +3232,26 @@
 		}
 	}
 
+	$test[] = '0.9.17.545';
+	/**
+	* Add option on pre/post commit on custom functions - when to include function
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_545()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		//otherwise: post commit
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_function','pre_commit', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.546';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
