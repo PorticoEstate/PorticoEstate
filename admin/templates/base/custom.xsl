@@ -544,6 +544,9 @@
 				<xsl:value-of select="lang_descr"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
+				<xsl:value-of select="lang_pre_commit"/>
+			</td>
+			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_client_side"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
@@ -585,6 +588,9 @@
 				</td>
 				<td>
 					<xsl:value-of select="descr"/>
+				</td>
+				<td align = 'center'>
+					<xsl:value-of select="pre_commit"/>
 				</td>
 				<td align = 'center'>
 					<xsl:value-of select="client_side"/>
@@ -722,23 +728,40 @@
 					</xsl:choose>
 				</td>
 			</tr>
-					<tr>
-						<td>
-							<xsl:value-of select="php:function('lang', 'client-side')"/>
-						</td>
-						<td>
-							<input type="checkbox" name="values[client_side]" value="1">
-								<xsl:attribute name="title">
-									<xsl:text>otherwise: server-side</xsl:text>
-								</xsl:attribute>
-								<xsl:if test="value_client_side = '1'">
-									<xsl:attribute name="checked">
-										<xsl:text>checked</xsl:text>
-								</xsl:attribute>
-								</xsl:if>
-							</input>
-						</td>
-					</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="php:function('lang', 'pre commit')"/>
+				</td>
+				<td>
+					<input type="checkbox" name="values[pre_commit]" value="1">
+						<xsl:attribute name="title">
+							<xsl:text>otherwise: post commit</xsl:text>
+						</xsl:attribute>
+						<xsl:if test="value_pre_commit = '1'">
+							<xsl:attribute name="checked">
+								<xsl:text>checked</xsl:text>
+						</xsl:attribute>
+						</xsl:if>
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="php:function('lang', 'client-side')"/>
+				</td>
+				<td>
+					<input type="checkbox" name="values[client_side]" value="1">
+						<xsl:attribute name="title">
+							<xsl:text>otherwise: server-side</xsl:text>
+						</xsl:attribute>
+						<xsl:if test="value_client_side = '1'">
+							<xsl:attribute name="checked">
+								<xsl:text>checked</xsl:text>
+						</xsl:attribute>
+						</xsl:if>
+					</input>
+				</td>
+			</tr>
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
