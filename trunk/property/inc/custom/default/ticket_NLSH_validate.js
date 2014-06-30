@@ -1,13 +1,29 @@
 
 $(document).ready(function()
 {
-	if (!$("#global_category_id").val() === 20)
+	show_feilkoder();
+
+	$("#global_category_id").change(function()
+	{
+		show_feilkoder();
+	});
+
+});
+
+function show_feilkoder()
+{
+	if ($("#global_category_id").val() == 20)
+	{
+		document.getElementById('label_feilkoder').style.display = 'block';
+		document.getElementById('id_feilkoder').style.display = 'block';
+	}
+	else
 	{
 		document.getElementById('label_feilkoder').style.display = 'none';
 		document.getElementById('id_feilkoder').style.display = 'none';
 	}
-});
 
+}
 function validate_submit()
 {
 	var error = false;
