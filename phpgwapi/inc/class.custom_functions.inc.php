@@ -130,6 +130,7 @@
 				'file_name'		=> $this->_db->db_addslashes($custom_function['custom_function_file']),
 				'descr'			=> $this->_db->db_addslashes($custom_function['descr']),
 				'active'		=> !!$custom_function['active'],
+				'pre_commit'	=> !!$custom_function['pre_commit'],
 				'client_side'	=> !!$custom_function['client_side'],
 				'custom_sort'	=> $custom_sort
 			);
@@ -218,6 +219,7 @@
 				'descr'			=> $this->_db->db_addslashes($custom_function['descr']),
 				'file_name'		=> $custom_function['custom_function_file'],
 				'active'		=> $custom_function['active'],
+				'pre_commit'	=> $custom_function['pre_commit'],
 				'client_side'	=> $custom_function['client_side'],
 			);
 			unset($custom_function);
@@ -320,6 +322,7 @@
 					'sorting'		=> $this->_db->f('custom_sort'),
 					'descr'			=> $this->_db->f('descr'),
 					'active'		=> !!$this->_db->f('active'),
+					'pre_commit'	=> !!$this->_db->f('pre_commit'),
 					'client_side'	=> !!$this->_db->f('client_side')
 				);
 			}
@@ -362,6 +365,7 @@
 				'descr'					=> $this->_db->f('descr', true),
 				'custom_function_file'	=> $this->_db->f('file_name'),
 				'active'				=> !!$this->_db->f('active'),
+				'pre_commit'			=> !!$this->_db->f('pre_commit'),
 				'client_side'			=> !!$this->_db->f('client_side')
 			);
 		}
