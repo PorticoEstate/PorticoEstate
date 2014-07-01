@@ -871,6 +871,25 @@
 						$receipt['id'] = $project['id'];
 					}
 				}
+				if(isset($project['send_order']) && $project['send_order'])
+				{
+					$uiwo_hour 	= CreateObject('property.uiwo_hour');
+
+					foreach($project['send_order'] as $_order_id)
+					{
+						try
+						{
+							$uiwo_hour->send_order($_order_id);
+						}
+						catch(Exception $e)
+						{
+							if ( $e )
+							{
+								phpgwapi_cache::message_set($e->getMessage(), 'error');
+							}
+						}
+					}
+				}
 			}
 			else
 			{

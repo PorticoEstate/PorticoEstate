@@ -1964,6 +1964,16 @@
 
 //_debug_array($values['workorder_budget']);die();
 			$content_orders = $this->get_orders($id, date('Y'));
+//			_debug_array($content_orders);die();
+			foreach($content_orders as & $_order_entry)
+			{
+				$_order_entry['send_order'] = '';
+				if(isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
+				{
+					$_title = implode(';', $_order_entry['mail_recipients']);
+					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
+				}
+			}
 			//FIXME: deviation from this one
 			$datavalues[1] = array
 				(
@@ -1990,7 +2000,8 @@
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
+														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'send_order','label'=>lang('send workorder'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
 
 

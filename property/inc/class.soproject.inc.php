@@ -925,7 +925,8 @@
 			}
 
 			$this->db->query("SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
-			. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant"
+			. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
+			. " fm_workorder.mail_recipients"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 			. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
@@ -943,6 +944,7 @@
 					'charge_tenant'			 => $this->db->f('charge_tenant'),
 					'status'				 => $this->db->f('status'),
 					'closed'				 => !!$this->db->f('closed'),
+					'mail_recipients'		 => explode(',', trim($this->db->f('mail_recipients'), ',')),
 					'b_account_id'			 => $this->db->f('b_account_id'),
 					'addition_percentage'	 => (int) $this->db->f('addition'),
 					'calculation'			 => $this->db->f('calculation'),

@@ -3659,4 +3659,97 @@ HTML;
 			return $result;
 		}
 
+		function send_order($workorder_id)
+		{
+			$workorder = $this->boworkorder->read_single($workorder_id);
+			$show_cost = true;
+			$email_receipt = true;
+			$pdfcode = $this->pdf_order($workorder_id, $show_cost);
+			$dir =  "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+			$attachments = array();
+
+			//save the file
+			if (!file_exists($dir))
+			{
+				mkdir ($dir,0777);
+			}
+			$fname = tempnam($dir.'/','PDF_').'.pdf';
+			$fp = fopen($fname,'w');
+			fwrite($fp,$pdfcode);
+			fclose($fp);
+
+			$attachments[] = array
+			(
+				'file' => $fname,
+				'name' => "order_{$workorder_id}.pdf",
+				'type' => 'application/pdf'
+			);
+
+			$body = lang('order') . '.</br></br>' . lang('see attachment');
+			$_to = isset($workorder['mail_recipients'][0]) && $workorder['mail_recipients'][0] ? implode(';', $workorder['mail_recipients']) : '';
+//			_debug_array($_to);die();
+			$GLOBALS['phpgw']->preferences->set_account_id($workorder['user_id'], true);
+
+			$from_name =	$GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
+			$from_email =	"{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
+			if($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt']==1)
+			{
+				$bcc = $from_email;
+			}
+
+			$subject  = lang('Workorder').": ".$workorder_id;
+
+			$address_element = execMethod('property.botts.get_address_element', $workorder['location_code']);
+			$_address = array();
+			foreach($address_element as $entry)
+			{
+				$_address[] = "{$entry['text']}: {$entry['value']}";
+			}
+
+			if($_address)
+			{
+				$subject .= ', ' . implode(', ', $_address);
+			}
+
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+
+			$_status = isset($this->config->config_data['workorder_ordered_status']) && $this->config->config_data['workorder_ordered_status'] ? $this->config->config_data['workorder_ordered_status'] : 0;
+
+			if(!$_status)
+			{
+				throw new Exception('status on ordered not given in config');
+			}
+
+			try
+			{
+				$GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
+			}
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+
+			try
+			{
+				execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id, 'status' => $_status));
+			}
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+
+			$_attachment_log = $attachment_log ? "::$attachment_log" : '';
+			$historylog	= CreateObject('property.historylog','workorder');
+			$historylog->add('M',$workorder_id,"{$_to}{$_attachment_log}");
+
+		}
 	}
