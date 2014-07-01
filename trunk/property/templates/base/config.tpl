@@ -105,7 +105,7 @@
 			</td>
 		</tr>
 
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_project_status_on_last_order_closed}:</td>
 			<td>
 				<select name="newsettings[project_status_on_last_order_closed]">
@@ -114,7 +114,7 @@
 			</td>
 		</tr>
 
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_workorder_status_on_approval}:</td>
 			<td>
 				<select name="newsettings[workorder_approval_status]">
@@ -122,8 +122,16 @@
 				</select>
 			</td>
 		</tr>
-
 		<tr class="row_on">
+			<td>{lang_workorder_status_on_ordered}:</td>
+			<td>
+				<select name="newsettings[workorder_ordered_status]">
+					{hook_workorder_ordered_status}
+				</select>
+			</td>
+		</tr>
+
+		<tr class="row_off">
 			<td>{lang_request_status_on_project_hookup}:</td>
 			<td>
 				<select name="newsettings[request_project_hookup_status]">
@@ -133,14 +141,14 @@
 		</tr>
 
 
-	<tr class="row_off">
+	<tr class="row_on">
 		<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
 		<td>
 			<select name="newsettings[workorder_closed_status]">
 				{hook_workorder_closed_status}
 			</select>
 		</td>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_workorder_reopen_status_that_are_to_be_set_when_invoice_is_processed}:</td>
 			<td>
 				<select name="newsettings[workorder_reopen_status]">
@@ -157,7 +165,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_delay_operation_workorder_end_date}, {lang_last_day_in_year}:</td>
 			<td>
 				<select name="newsettings[delay_operation_workorder_end_date]">
@@ -168,25 +176,25 @@
 		</tr>
 
 
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Default_municipal_number}:</td>
 			<td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Tax}: [%]</td>
 			<td><input name="newsettings[fm_tax]" value="{value_fm_tax}"></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Enter_the_location_of_files_URL} <br>
 				{lang_Example}: http://www.domain.com/files</td>
 			<td><input name="newsettings[files_url]" value="{value_files_url}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Path_to_external_files_for_use_with_location}:<br>
 				{lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
 			<td><input name="newsettings[external_files]" value="{value_external_files}"></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_max_recursive_level_at_external_files}:</td>
 			<td>
 				<select name="newsettings[external_files_maxlevel]">
@@ -202,7 +210,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_of">
 			<td>{lang_filter_at_level_at_external_files}: <br/>(loc1)</td>
 			<td>
 				<select name="newsettings[external_files_filterlevel]">
@@ -218,17 +226,17 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Enter_MAP_URL} <br>
 				{lang_Example}: http://www.domain.com/map</td>
 			<td><input name="newsettings[map_url]" value="{value_map_url}"></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Enter_GAB_Location_Level} <br>
 				{lang_Default_value_is}: 3</td>
 			<td><input name="newsettings[gab_insert_level]" value="{value_gab_insert_level}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Enter_GAB_URL} <br>
 				{lang_Example}: http://www.domain.com/gab</td>
 			<td><input name="newsettings[gab_url]" value="{value_gab_url}"></td>
