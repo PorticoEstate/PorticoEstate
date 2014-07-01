@@ -79,49 +79,70 @@
 		{
 			$this->db->query("SELECT descr FROM fm_b_account where id='$id' ");
 			$this->db->next_record();
-			return $this->db->f('descr');
+			return $this->db->f('descr',true);
 		}
 
 		function select_status_list()
 		{
+			static $values = array();
+			if($values)
+			{
+				return $values;
+			}
+
 			$this->db->query("SELECT id, descr FROM fm_workorder_status ORDER BY id ");
 
-			$i = 0;
 			while($this->db->next_record())
 			{
-				$status_entries[$i]['id']	 = $this->db->f('id');
-				$status_entries[$i]['name']	 = stripslashes($this->db->f('descr'));
-				$i++;
+				$values[] = array
+				(
+					'id'	 => $this->db->f('id'),
+					'name'	 => $this->db->f('descr',true)
+				);
 			}
-			return $status_entries;
+			return $values;
 		}
 
 		function select_branch_list()
 		{
+			static $values = array();
+			if($values)
+			{
+				return $values;
+			}
+
 			$this->db->query("SELECT id, descr FROM fm_branch ORDER BY id ");
 
-			$i = 0;
 			while($this->db->next_record())
 			{
-				$branch_entries[$i]['id']	 = $this->db->f('id');
-				$branch_entries[$i]['name']	 = stripslashes($this->db->f('descr'));
-				$i++;
+				$values[] = array
+				(
+					'id'	 => $this->db->f('id'),
+					'name'	 => $this->db->f('descr',true)
+				);
 			}
-			return $branch_entries;
+			return $values;
 		}
 
 		function select_key_location_list()
 		{
+			static $values = array();
+			if($values)
+			{
+				return $values;
+			}
+
 			$this->db->query("SELECT id, descr FROM fm_key_loc ORDER BY descr ");
 
-			$i = 0;
 			while($this->db->next_record())
 			{
-				$key_location_entries[$i]['id']		 = $this->db->f('id');
-				$key_location_entries[$i]['name']	 = stripslashes($this->db->f('descr'));
-				$i++;
+				$values[] = array
+				(
+					'id'	 => $this->db->f('id'),
+					'name'	 => $this->db->f('descr',true)
+				);
 			}
-			return (isset($key_location_entries) ? $key_location_entries : '');
+			return $values;
 		}
 
 		function read($data)
@@ -2836,4 +2857,84 @@
 			}
 		}
 
+		function update_status($data)
+		{
+			$order_id = $data['order_id'];
+			$status = $data['status'];
+
+			$historylog	 = CreateObject('property.historylog', 'workorder');
+
+			$this->db->query("SELECT status FROM fm_workorder WHERE id = {$order_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+
+			$old_status			 = $this->db->f('status');
+			$check_pending_action = false;
+
+			$this->db->transaction_begin();
+
+			if($old_status != $status)
+			{
+				$historylog->add('S', $order_id, $status, $old_status);
+				$check_pending_action		 = true;
+				$this->db->query("UPDATE fm_workorder SET status = '{$status}' WHERE id = '{$order_id}'", __LINE__, __FILE__);
+			}
+
+			if($check_pending_action)
+			{
+				$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$status}'");
+				$this->db->next_record();
+				if($this->db->f('approved'))
+				{
+					$action_params = array
+					(
+						'appname'			 => 'property',
+						'location'			 => '.project.workorder',
+						'id'				 => $order_id,
+						'responsible'		 => $this->account,
+						'responsible_type'	 => 'user',
+						'action'			 => 'approval',
+						'remark'			 => '',
+						'deadline'			 => ''
+					);
+
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					unset($action_params);
+				}
+				if($this->db->f('in_progress'))
+				{
+					$action_params = array
+					(
+						'appname'			 => 'property',
+						'location'			 => '.project.workorder',
+						'id'				 => $order_id,
+						'responsible'		 => $workorder['vendor_id'],
+						'responsible_type'	 => 'vendor',
+						'action'			 => 'remind',
+						'remark'			 => '',
+						'deadline'			 => ''
+					);
+
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					unset($action_params);
+				}
+				if($this->db->f('delivered') || $this->db->f('closed'))
+				{
+					$action_params = array
+					(
+						'appname'			 => 'property',
+						'location'			 => '.project.workorder',
+						'id'				 => $order_id,
+						'responsible'		 => $this->account,
+						'responsible_type'	 => 'user',
+						'action'			 => 'approval',
+						'remark'			 => '',
+						'deadline'			 => ''
+					);
+
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					unset($action_params);
+				}
+			}
+			return $this->db->transaction_commit();
+		}
 	}	
