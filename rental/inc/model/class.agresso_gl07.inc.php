@@ -44,6 +44,21 @@ class rental_agresso_gl07 implements rental_exportable
 	
 	public function get_missing_billing_info($contract)
 	{
+
+		//FIXME: Might have to check for this one...
+	/*
+		static $responsibility_arr = array();
+		static $responsibility_check = array();
+		if(!$responsibility_arr)
+		{
+			$responsibility_arr = execMethod('property.bogeneric.get_list',array('type' => 'responsibility_unit'));
+			foreach ($responsibility_arr as $responsibility_entry)
+			{
+				$responsibility_check[$responsibility_entry['id']] = true;
+			}
+		}
+	*/
+
 		$missing_billing_info = array();
 		
 		$payer_id = $contract->get_payer_id();
