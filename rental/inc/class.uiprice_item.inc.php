@@ -289,6 +289,17 @@ class rental_uiprice_item extends rental_uicommon
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => $contract_id)));
 					$value['labels'][] = lang('add');
+
+					$sogeneric 			= CreateObject('property.sogeneric','composite_standard');
+					$composite_standards = $sogeneric->read(array('allrows' => true));
+					foreach($composite_standards as $composite_standard)
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => $contract_id, 'factor' => $composite_standard['factor'])));
+						$value['labels'][] = lang('add') . " {$composite_standard['name']}";
+					}
+
+	//FIXME: Add actions for composite standard factors
 				}
 				break;
 			default:

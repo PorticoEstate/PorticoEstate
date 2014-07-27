@@ -491,10 +491,30 @@ function loadDatatables(currTab){
 					</dt>
 					<dd>
 						<?php
-						if ($editable) {
-						?>
-							<input type="text" name="responsibility_id" id="responsibility_id" value="<?php echo $contract->get_responsibility_id(); ?>"/>
-						<?php
+						if ($editable)
+						{
+							$cur_responsibility_id = $contract->get_responsibility_id();
+							$contract_responsibility_arr = $contract->get_responsibility_arr($cur_responsibility_id);
+
+							if($contract_responsibility_arr)
+							{
+								?>
+								<select name="responsibility_id">
+								<?php
+									foreach($contract_responsibility_arr as $contract_responsibility)
+									{
+										echo "<option ".($contract_responsibility['selected'] == 1 ? 'selected="selected"' : "")." value=\"{$contract_responsibility['id']}\">{$contract_responsibility['name']}</option>";
+									}
+								?>
+								</select>
+								<?php
+							}
+							else
+							{
+							?>
+								<input type="text" name="responsibility_id" id="responsibility_id" value="<?php echo $contract->get_responsibility_id(); ?>"/>
+							<?php
+							}
 						}
 						else
 						{
@@ -556,7 +576,7 @@ function loadDatatables(currTab){
 							$cid = $contract->get_id();
 							if(!isset($cid) || $cid <= 0)
 							{
-								echo '';
+								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
 							}
 							else
 							{

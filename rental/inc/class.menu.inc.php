@@ -145,6 +145,16 @@
 					'text'	=> lang('Configure Access Permissions'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'rental') )
 				),
+				'composite_standard'	=> array
+				(
+					'text'	=> lang('composite standard'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'composite_standard', 'admin' => true) )
+				),
+				'responsibility_unit'	=> array
+				(
+					'text'	=> lang('responsibility'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'responsibility_unit', 'admin' => true) )
+				),
 				'import'	=> array
 				(
 					'text'	=> lang('facilit_import'),

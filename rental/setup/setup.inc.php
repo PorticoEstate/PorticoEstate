@@ -1,6 +1,6 @@
 <?php
 	$setup_info['rental']['name'] = 'rental';		// Module identifier
-	$setup_info['rental']['version'] = '0.1.0.17';	// Current module version
+	$setup_info['rental']['version'] = '0.1.0.18';	// Current module version
 	$setup_info['rental']['app_order'] = 51;		// (?)
 	$setup_info['rental']['tables'] = array(
 		'rental_party',						// All contract participants, tenants etc.
@@ -8,7 +8,9 @@
 		'rental_contract_composite',		// Connection between contracts and composites
 		'rental_contract_party',			// Connection between tenants and contracts
 		'rental_composite',					// Rental object, an aggregation of rental units
+		'rental_composite_standard',		// Optional standard clsasses
 		'rental_contract_price_item',		// Price items from the price book tied to a contract
+		'rental_contract_responsibility_unit',	// optional list of candidates
 		'rental_billing',					// Contains information about the job creating invoices
 		'rental_invoice',					// Contract invoices
 		'rental_invoice_price_item',		// Price items from the contract tied to a past invoice
