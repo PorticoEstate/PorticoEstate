@@ -348,7 +348,7 @@
 		 * 
 		 * @param $billing_job
 		 */
-		public function generate_export(&$billing_job, $excel_export = false)
+		public function generate_export(&$billing_job, $excel_export_type = false)
 		{
 			$exportable = null;
 			switch($billing_job->get_export_format())
@@ -365,9 +365,9 @@
 			}
 			if($exportable != null)
 			{
-				if($excel_export)
+				if($excel_export_type)
 				{
-					$export_data = $exportable->get_contents_excel();
+					$export_data = $exportable->get_contents_excel($excel_export_type);
 					//_debug_array($export_data[1]);
 					return $export_data;
 				}

@@ -652,9 +652,9 @@ class rental_uibilling extends rental_uicommon
                     }
                     else
                     {
-			$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
-                        $billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
-
+						$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
+						$billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
+						$type = phpgw::get_var('type', 'string', 'GET', 'bk');
                         if($billing_job == null) // Not found
                         {
                                 $errorMsgs[] = lang('Could not find specified billing job.');
@@ -675,7 +675,7 @@ class rental_uibilling extends rental_uicommon
                             $billing_job->set_year($year);
                             $billing_job->set_month($month);
                             
-                            $list = rental_sobilling::get_instance()->generate_export($billing_job, true);
+                            $list = rental_sobilling::get_instance()->generate_export($billing_job, $type);
                             //_debug_array($list[0]);
                             /*foreach ($list as $l)
                             {

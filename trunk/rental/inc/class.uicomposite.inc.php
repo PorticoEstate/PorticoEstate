@@ -348,6 +348,7 @@
 					$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
 					$composite->set_description(phpgw::get_var('description'));
 					$composite->set_furnish_type_id(phpgw::get_var('furnish_type_id'));
+					$composite->set_standard_id(phpgw::get_var('composite_standard_id','int'));
 
 					if(rental_socomposite::get_instance()->store($composite))
 					{

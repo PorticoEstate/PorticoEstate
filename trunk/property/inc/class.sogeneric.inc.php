@@ -2746,7 +2746,61 @@
 				break;
 
 // END CONTROLLER TABLES
-
+// START RENTAL TABLES
+				case 'composite_standard':
+					$info = array
+					(
+						'table' 			=> 'rental_composite_standard',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'factor',
+								'descr' => lang('factor'),
+								'type'		=> 'numeric',
+								'nullable'	=> false,
+								'size'		=> 4,
+								'sortable'	=> true
+							)
+						),
+						'edit_msg'			=> lang('edit unit'),
+						'add_msg'			=> lang('add unit'),
+						'name'				=> lang('unit'),
+						'acl_app' 			=> 'rental',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::rental::composite_standard'
+					);
+				break;
+				case 'responsibility_unit':
+					$info = array
+					(
+						'table' 			=> 'rental_contract_responsibility_unit',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+						),
+						'edit_msg'			=> lang('edit unit'),
+						'add_msg'			=> lang('add unit'),
+						'name'				=> lang('unit'),
+						'acl_app' 			=> 'rental',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::rental::responsibility_unit'
+					);
+				break;
+// END RENTAL TABLES
 
 			default:
 				$message =lang('ERROR: illegal type %1', $type);

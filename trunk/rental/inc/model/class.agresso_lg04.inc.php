@@ -46,11 +46,11 @@
 			return $contents;
 		}
 
-		public function get_contents_excel()
+		public function get_contents_excel($excel_export_type)
 		{
 			if($this->orders == null) // Data hasn't been created yet
 			{
-				$this->run_excel_export();
+				$this->run_excel_export($excel_export_type);
 			}
 			return $this->orders;
 		}
@@ -167,8 +167,21 @@
 			return $so_invoice->transaction_commit();
 		}
 
-		protected function run_excel_export()
+		protected function run_excel_export($excel_export_type)
 		{
+			switch($excel_export_type)
+			{
+				case 'bk':
+					$get_order_excel = 'get_order_excel_bk';
+					break;
+				case 'nlsh':
+					$get_order_excel = 'get_order_excel_nlsh';
+					break;
+
+				default:
+					$get_order_excel = 'get_order_excel_bk';
+					break;
+			}
 			$this->orders		 = array();
 			$decimal_separator	 = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
@@ -210,7 +223,7 @@
 					$serialized_party	 = $invoice->get_party()->serialize();
 					$party_name			 = $serialized_party['name'];
 
-					$this->orders[] = $this->get_order_excel(
+					$this->orders[] = $this->$get_order_excel(
 					$invoice->get_header(), $invoice->get_party()->get_identifier(), $party_name, $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $invoice->get_reference(), $price_item_counter
 					);
 					$price_item_counter++;
@@ -405,7 +418,7 @@
 		 * Builds one single order of the excel file.
 		 * 
 		 */
-		protected function get_order_excel($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter)
+		protected function get_order_excel_bk($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter)
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -439,6 +452,49 @@
 				'client'				 => 'BY',
 				'item_counter'			 => $item_counter,
 				'text'					 => utf8_decode($text)
+			);
+
+			return str_replace(array("\n", "\r"), '', $order);
+		}
+
+		protected function get_order_excel_nlsh($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter)
+		{
+
+			//$order_id = $order_id + 39500000;
+			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
+			//$order = array();
+
+			$item_counter	 = $counter;
+			$order			 = array
+			(
+				'Kontraktstype'				=> 'Kontraktstype',//FIXME
+				'Art/konto inntektsside' => $account,
+				'Art/konto utgiftsside'	=> 'Art/konto utgiftsside',//FIXME
+				'client_ref'			 => $client_ref,
+				'header'				 => utf8_decode($header),
+				'bill_year'				 => $bill_year,
+				'bill_month'			 => $bill_month,
+				'Ansvar'				 => 'BKBPE',//FIXME
+				'Ansvar2'				 => 'BKBPE',//FIXME
+				'Party'					 => $party_id,
+				'name'					 => $party_name,
+				'amount'				 => $this->get_formatted_amount_excel($product_item['amount']),
+//                        'amount' => $this->get_formatted_amount($product_items[0]['amount']),
+				'article description'	 => utf8_decode($product_item['article_description']),
+				'article_code'			 => $product_item['article_code'],
+				'batch_id'				 => "BKBPE{$this->date_str}",
+				'client'				 => 'BY',
+				'responsibility'		 => $responsibility,
+				'service'				 => $service,
+				'project'				 => $project,
+				'counter'				 => ++$item_counter,
+				'bill_year'				 => $bill_year,
+				'bill_month'			 => $bill_month,
+				'batch_id'				 => "BKBPE{$this->date_str}",
+				'client'				 => 'BY',
+				'item_counter'			 => $item_counter,
+				'text'					 => utf8_decode($text),
+				'Kommentar'				=> 'Kommentar',//FIXME
 			);
 
 			return str_replace(array("\n", "\r"), '', $order);
