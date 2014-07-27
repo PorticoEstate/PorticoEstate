@@ -1156,6 +1156,11 @@
 				$this->set_validation_error('responsibility_id', lang('responsibility_id_not_numeric'));
 				$valid_numeric = false;
 			}
+
+			if($this->get_responsibility_id() != null && is_numeric($this->get_responsibility_id()) && $this->get_responsibility_arr()){
+				$valid_numeric = true; // this one is ok
+			}
+
 			if($this->get_account_in() != null && !is_numeric($this->get_account_in())){
 				$this->set_validation_error('account_in', lang('account_in_not_numeric'));
 				$valid_numeric = false;
