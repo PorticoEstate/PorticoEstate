@@ -34,7 +34,7 @@
 
 	include_class('property', 'cron_parent', 'inc/cron/');
 
-	class synkroniser_med_boei extends property_cron_parent
+	class synkroniser_med_boei_2 extends property_cron_parent
 	{
 
 		function __construct()
@@ -74,40 +74,35 @@
 			}
 
 			$this->db_boei2 = clone($this->db_boei);
+			$this->db2 = clone($this->db);
 		}
 
 
 		function execute()
 		{
-			set_time_limit(500);
-			$receipt = $this->legg_til_eier_phpgw();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->legg_til_gateadresse_phpgw();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->legg_til_objekt_phpgw();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->legg_til_bygg_phpgw();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->legg_til_seksjon_phpgw();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->legg_til_leieobjekt_phpgw();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->legg_til_leietaker_phpgw();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->oppdater_leieobjekt();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->oppdater_boa_objekt();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->oppdater_boa_bygg();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->oppdater_boa_del();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->oppdater_oppsagtdato();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->slett_feil_telefon();
-			$this->cron_log($receipt,$cron);
-			$receipt = $this->update_tenant_name();
-			$this->cron_log($receipt,$cron);
+			$start = time();
+			set_time_limit(1200);
+			$this->update_tables();
+
+			$this->legg_til_eier_phpgw();
+			$this->legg_til_gateadresse_phpgw();
+			$this->legg_til_objekt_phpgw();
+			$this->legg_til_bygg_phpgw();
+			$this->legg_til_seksjon_phpgw();
+			$this->legg_til_leieobjekt_phpgw();
+			$this->legg_til_leietaker_phpgw();
+			$this->oppdater_leieobjekt();
+			$this->oppdater_boa_objekt();
+			$this->oppdater_boa_bygg();
+			$this->oppdater_boa_del();
+			$this->oppdater_oppsagtdato();
+			$this->slett_feil_telefon();
+			$this->update_tenant_name();
+			$this->oppdater_namssakstatus_pr_leietaker();
+			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+			$this->cron_log($msg,$cron);
+
+			$this->receipt['message'][]=array('msg'=> $msg);
 
 		}
 
@@ -128,99 +123,692 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-		function legg_til_eier_phpgw()
+		/**
+		 * v_Eier
+		*	v_Gateadresse
+		*	boei_objekt
+		*	boei_bygg
+		*	boei_seksjon
+		*	boei_leieobjekt
+		*	boei_leietaker
+		*	boei_reskontro
+		 */
+		function update_tables()
 		{
-			$sql = " SELECT TOP 100 PERCENT v_Eier.id, v_Eier.category"
-				. " FROM  v_Eier";
+			$this->update_table_eier();
+			$this->update_table_gateadresse();
+			$this->update_table_Objekt();
+			$this->update_table_Bygg();
+			$this->update_table_seksjon();
+			$this->update_table_leieobjekt();
+			$this->update_table_leietaker();
+			$this->update_table_reskontro();
+		}
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+		function update_table_eier()
+		{
+			$metadata = $this->db_boei->metadata('Eier');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_eier');
+//_debug_array($metadata);
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_eier
+				(
+				  eier_id integer NOT NULL,
+				  navn character varying(50),
+				  eiertype_id integer NOT NULL,
+				  CONSTRAINT boei_eier_pkey PRIMARY KEY (eier_id)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_eier', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Eier';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_eier (eier_id, navn, eiertype_id)'
+							. ' VALUES(?, ?, ?)';
+			$valueset=array();
+
 			while ($this->db_boei->next_record())
 			{
-				if($this->db_boei->f('category')==0)
-				{
-					$category = 4;
-				}
-				else
-				{
-					$category = $this->db_boei->f('category');
-				}
-				$owner[]= array (
-				 'id' 		=> $this->db_boei->f('id'),
-				 'category' 	=> $category,
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Eier_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('Navn')),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('EierType_ID'),
+						'type'	=> PDO::PARAM_INT
+					)
+				);
+
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		function update_table_Gateadresse()
+		{
+			$metadata = $this->db_boei->metadata('Gateadresse');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_gateadresse');
+//_debug_array($metadata);
+//die();
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_gateadresse
+				(
+				  gateadresse_id integer NOT NULL,
+				  gatenavn character varying(50),
+				  nasjonalid integer,
+				  CONSTRAINT boei_gateadresse_pkey PRIMARY KEY (gateadresse_id)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_gateadresse', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Gateadresse';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_gateadresse (gateadresse_id, gatenavn, nasjonalid)'
+							. ' VALUES(?, ?, ?)';
+			$valueset=array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Gateadresse_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('GateNavn')),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('NasjonalID'),
+						'type'	=> PDO::PARAM_INT
+					)
+				);
+
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		function update_table_Objekt()
+		{
+			$metadata = $this->db_boei->metadata('Objekt');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_objekt');
+//_debug_array($metadata);
+//die();
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_objekt
+				(
+					objekt_id character varying(4) NOT NULL,
+					navn character varying(50),
+					generelladresse character varying(50),
+					bydel_id integer,
+					postnr_id character varying(4),
+					eier_id integer,
+					tjenestested integer,
+				  CONSTRAINT boei_objekt_pkey PRIMARY KEY (objekt_id)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_objekt', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Objekt';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_objekt (objekt_id, navn, generelladresse, bydel_id,postnr_id,eier_id,tjenestested)'
+							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
+			$valueset=array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $this->db_boei->f('Objekt_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					2	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('Navn')),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('GenerellAdresse')),
+						'type'	=> PDO::PARAM_STR
+					),
+					4	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Bydel_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					5	=> array
+					(
+						'value'	=> $this->db_boei->f('Postnr_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					6	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Eier_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					7	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Tjenestested'),
+						'type'	=> PDO::PARAM_INT
+					)
+				);
+
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		function update_table_Bygg()
+		{
+			$metadata = $this->db_boei->metadata('Bygg');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_bygg');
+//_debug_array($metadata);
+//die();
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_bygg
+				(
+					objekt_id character varying(4) NOT NULL,
+					bygg_id character varying(2) NOT NULL,
+					byggnavn character varying(50),
+					generelladresse character varying(50),
+					driftstatus smallint,
+				  CONSTRAINT boei_bygg_pkey PRIMARY KEY (objekt_id, bygg_id)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_bygg', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Bygg';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_bygg (objekt_id, bygg_id, byggnavn, generelladresse, driftstatus)'
+							. ' VALUES(?, ?, ?, ?, ?)';
+			$valueset=array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $this->db_boei->f('Objekt_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					2	=> array
+					(
+						'value'	=> $this->db_boei->f('Bygg_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('ByggNavn')),
+						'type'	=> PDO::PARAM_STR
+					),
+					4	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('GenerellAdresse')),
+						'type'	=> PDO::PARAM_STR
+					),
+					5	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Driftstatus'),
+						'type'	=> PDO::PARAM_INT
+					),
+				);
+
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		function update_table_Seksjon()
+		{
+			$metadata = $this->db_boei->metadata('Seksjon');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_seksjon');
+//_debug_array($metadata);
+//die();
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_seksjon
+				(
+					objekt_id character varying(4) NOT NULL,
+					bygg_id character varying(2) NOT NULL,
+					seksjons_id character varying(2) NOT NULL,
+					beskrivelse character varying(35),
+				  CONSTRAINT boei_seksjon_pkey PRIMARY KEY (objekt_id, bygg_id, seksjons_id)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_seksjon', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Seksjon';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_seksjon (objekt_id, bygg_id, seksjons_id, beskrivelse)'
+							. ' VALUES(?, ?, ?, ?)';
+			$valueset=array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $this->db_boei->f('Objekt_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					2	=> array
+					(
+						'value'	=> $this->db_boei->f('Bygg_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> $this->db_boei->f('Seksjons_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					4	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('Beskrivelse')),
+						'type'	=> PDO::PARAM_STR
+					)
+				);
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+
+		function update_table_leieobjekt()
+		{
+			$metadata = $this->db_boei->metadata('Leieobjekt');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_leieobjekt');
+//_debug_array($metadata);
+//die();
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_leieobjekt
+				(
+					objekt_id character varying(4) NOT NULL,
+					bygg_id character varying(2) NOT NULL,
+					seksjons_id character varying(2) NOT NULL,
+					leie_id character varying(3) NOT NULL,
+					flyttenr smallint,
+					formaal_id smallint,
+					gateadresse_id integer,
+					gatenr character varying(30),
+					etasje character varying(5),
+					antallrom smallint,
+					boareal integer,
+					andelavfellesareal smallint,
+					livslopsstd smallint,
+					heis smallint,
+					driftsstatus_id smallint,
+					leietaker_id integer,
+					beregnet_boa numeric(20,2),
+
+				  CONSTRAINT boei_leieobjekt_pkey PRIMARY KEY (objekt_id, bygg_id, seksjons_id, leie_id)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_leieobjekt', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Leieobjekt';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_leieobjekt (objekt_id, bygg_id, seksjons_id, leie_id, flyttenr, formaal_id, gateadresse_id, gatenr, etasje, antallrom, boareal, andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa)'
+							. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			$valueset=array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $this->db_boei->f('Objekt_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					2	=> array
+					(
+						'value'	=> $this->db_boei->f('Bygg_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> $this->db_boei->f('Seksjons_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					4	=> array
+					(
+						'value'	=> $this->db_boei->f('Leie_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					5	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Flyttenr'),
+						'type'	=> PDO::PARAM_INT
+					),
+					6	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Formaal_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					7	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Gateadresse_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					8	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('Gatenr')),
+						'type'	=> PDO::PARAM_STR
+					),
+					9	=> array
+					(
+						'value'	=> $this->db_boei->f('Etasje'),
+						'type'	=> PDO::PARAM_STR
+					),
+					10	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('AntallRom'),
+						'type'	=> PDO::PARAM_INT
+					),
+					11	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Boareal'),
+						'type'	=> PDO::PARAM_INT
+					),
+					12	=> array
+					(
+						'value'	=>(int) $this->db_boei->f('AndelAvFellesareal'),
+						'type'	=> PDO::PARAM_INT
+					),
+					13	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Livslopsstd'),
+						'type'	=> PDO::PARAM_INT
+					),
+					14	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Heis'),
+						'type'	=> PDO::PARAM_INT
+					),
+					15	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Driftsstatus_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					16	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Leietaker_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					17	=> array
+					(
+						'value'	=> (float)$this->db_boei->f('Beregnet_Boa'),
+						'type'	=> PDO::PARAM_STR
+					)
+				);
+
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+
+		function update_table_leietaker()
+		{
+			$metadata = $this->db_boei->metadata('Leietaker');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_leietaker');
+//_debug_array($metadata);
+//die();
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_leietaker
+				(
+					leietaker_id integer NOT NULL,
+					fornavn character varying(30),
+					etternavn character varying(30),
+					kjonn_juridisk smallint,
+					oppsagtdato character varying(10),
+					namssakstatusdrift_id smallint,
+					namssakstatusokonomi_id smallint,
+					hemmeligadresse smallint,
+					CONSTRAINT boei_leietaker_pkey PRIMARY KEY (leietaker_id)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_leietaker', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Leietaker';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse)'
+							. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+			$valueset=array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Leietaker_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('Fornavn')),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> utf8_encode($this->db_boei->f('Etternavn')),
+						'type'	=> PDO::PARAM_STR
+					),
+					4	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Kjonn_Juridisk'),
+						'type'	=> PDO::PARAM_INT
+					),
+					5	=> array
+					(
+						'value'	=> $this->db_boei->f('OppsagtDato'),
+						'type'	=> PDO::PARAM_STR
+					),
+					6	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('NamssakStatusDrift_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					7	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('NamssakStatusOkonomi_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					8	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('hemmeligAdresse'),
+						'type'	=> PDO::PARAM_INT
+					)
+				);
+
+			}
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		function update_table_reskontro()
+		{
+			$metadata = $this->db_boei->metadata('reskontro');
+//_debug_array($metadata);
+			$metadata = $this->db->metadata('boei_reskontro');
+//_debug_array($metadata);
+//die();
+			if(!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_reskontro
+				(
+					objekt_id character varying(4) NOT NULL,
+					leie_id character varying(3) NOT NULL,
+					flyttenr smallint,
+					leietaker_id integer NOT NULL,
+					innflyttetdato character varying(10),
+					CONSTRAINT boei_reskontro_pkey PRIMARY KEY (objekt_id,leie_id,flyttenr)
+				);
+SQL;
+				$this->db->query($sql_table,__LINE__,__FILE__);
+			}
+			$this->db->query('DELETE FROM boei_reskontro', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT * FROM reskontro';
+			$this->db_boei->query($sql_boei,__LINE__,__FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_reskontro (objekt_id,leie_id,flyttenr,leietaker_id, innflyttetdato )'
+							. ' VALUES(?, ?, ?, ?, ?)';
+			$valueset=array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $this->db_boei->f('Objekt_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					2	=> array
+					(
+						'value'	=> $this->db_boei->f('Leie_ID'),
+						'type'	=> PDO::PARAM_STR
+					),
+					3	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Flyttenr'),
+						'type'	=> PDO::PARAM_INT
+					),
+					4	=> array
+					(
+						'value'	=> (int)$this->db_boei->f('Leietaker_ID'),
+						'type'	=> PDO::PARAM_INT
+					),
+					5	=> array
+					(
+						'value'	=> $this->db_boei->f('InnflyttetDato'),
+						'type'	=> PDO::PARAM_STR
+					)
+				);
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		function legg_til_eier_phpgw()
+		{
+			$sql = " SELECT boei_eier.eier_id as id, boei_eier.eiertype_id as category"
+				. " FROM boei_eier";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$owners = array();
+			while ($this->db->next_record())
+			{
+				$category = $this->db->f('category');
+				$owners[]= array
+				(
+					'id' 		=> (int)$this->db->f('id'),
+					'category' 	=> $category == 0 ? 4 : $category
 				 );
 			}
-	//		$this->db->transaction_begin();
-	//		$this->db_boei->transaction_begin();
+			$this->db->transaction_begin();
 
-			for ($i=0; $i<count($owner); $i++)
+			foreach ($owners as $owner)
 			{
-				$sql2 = "UPDATE fm_owner set category = '{$owner[$i]['category']}' WHERE id = '{$owner[$i]['id']}'";
+				$sql2 = "UPDATE fm_owner set category = '{$owner['category']}' WHERE id = '{$owner['id']}'";
 
 				$this->db->query($sql2,__LINE__,__FILE__);
-				$this->db_boei->query($sql2,__LINE__,__FILE__);
 			}
 
 			unset($owner);
+			$owners = array();
 
-			$sql = "SELECT v_Eier.id, v_Eier.org_name,v_Eier.category FROM  fm_owner RIGHT OUTER JOIN "
-			        . " v_Eier ON fm_owner.id = v_Eier.id"
+			$sql = "SELECT boei_eier.eier_id, boei_eier.navn as org_name,boei_eier.eiertype_id as category FROM  fm_owner RIGHT OUTER JOIN "
+			        . " boei_eier ON fm_owner.id = boei_eier.eier_id"
 					. " WHERE (fm_owner.id IS NULL)";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
-			while ($this->db_boei->next_record())
+			$this->db->query($sql,__LINE__,__FILE__);
+			while ($this->db->next_record())
 			{
-				if($this->db_boei->f('category')==0)
-				{
-					$category = 4;
-				}
-				else
-				{
-					$category = $this->db_boei->f('category');
-				}
-				$owner_utf[]= array (
-				 'id' 		=> $this->db_boei->f('id'),
-				 'org_name' 	=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('org_name'))),
-				 'remark' 	=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('org_name'))),
-				 'category' 	=> $category,
-				 'entry_date'	=> time(),
-				 'owner_id'		=> 6
-				 );
+				$category = $this->db->f('category');
 
-				$owner_latin[]= array (
-				 'id' 		=> $this->db_boei->f('id'),
-				 'org_name' 	=> $this->db->db_addslashes($this->db_boei->f('org_name')),
-				 'remark' 	=> $this->db->db_addslashes($this->db_boei->f('org_name')),
-				 'category' 	=> $category,
-				 'entry_date'	=> time(),
-				 'owner_id'		=> 6
-				 );
+				$owners[]= array
+				(
+					'id'			=> $this->db->f('eier_id'),
+					'org_name'		=> $this->db->f('org_name'),
+					'remark'		=> $this->db->f('org_name'),
+					'category'		=> $category == 0 ? 4 : $category,
+					'entry_date'	=> time(),
+					'owner_id'		=> 6
+				);
 
 			}
 
-			for ($i=0; $i<count($owner_utf); $i++)
+			foreach ($owners as $owner)
 			{
-				$sql2_utf = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
-					. "VALUES (" . $this->db->validate_insert($owner_utf[$i]) . ")";
 
-				$sql2_latin = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
-					. "VALUES (" . $this->db->validate_insert($owner_latin[$i]) . ")";
+				$sql2 = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
+					. "VALUES (" . $this->db->validate_insert($owner) . ")";
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2,__LINE__,__FILE__);
 
-				$owner_msg[]=$owner_utf[$i]['org_name'];
+				$owner_msg[]=$owner['org_name'];
 			}
 
-	//		$this->db->transaction_commit();
-	//		$this->db_boei->transaction_commit();
+			$this->db->transaction_commit();
 
-			$msg = count($owner) . ' eier er lagt til: ' . @implode(",", $owner_msg);
+			$msg = count($owners) . ' eier er lagt til: ' . @implode(",", $owner_msg);
 			$this->receipt['message'][]=array('msg'=> $msg);
-			unset ($owner_utf);
-			unset ($owner_latin);
-			unset ($owner_msg);
-			return $msg;
-
+			$this->cron_log($msg);
 		}
 
 
@@ -228,682 +816,503 @@
 		function legg_til_gateadresse_phpgw()
 		{
 			//legg til
-			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM fm_streetaddress RIGHT OUTER JOIN "
-			        . " v_Gateadresse ON fm_streetaddress.id = v_Gateadresse.gateadresse_id"
+			$sql = "SELECT boei_gateadresse.gateadresse_id, boei_gateadresse.gatenavn FROM fm_streetaddress RIGHT OUTER JOIN "
+			        . " boei_gateadresse ON fm_streetaddress.id = boei_gateadresse.gateadresse_id"
 					. " WHERE (fm_streetaddress.id IS NULL)";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
-			$gate = array();
-			while ($this->db_boei->next_record())
+			$this->db->query($sql,__LINE__,__FILE__);
+			$gater = array();
+			while ($this->db->next_record())
 			{
-				$gate[]= array (
-				 'id' 		=> $this->db_boei->f('gateadresse_id'),
-				 'descr' 	=> $this->db_boei->f('gatenavn')
+				$gater[]= array
+				(
+					'id' 		=> (int)$this->db->f('gateadresse_id'),
+					'descr' 	=> $this->db->f('gatenavn')
 				 );
 
 			}
 			$this->db->transaction_begin();
-			$this->db_boei->transaction_begin();
 
-			for ($i=0; $i<count($gate); $i++)
+			foreach($gater as $gate)
 			{
+				$sql2 = "INSERT INTO fm_streetaddress (id,descr)"
+					. " VALUES ({$gate['id']}, '{$gate['descr']}')";
 
-				$sql = "DELETE from fm_streetaddress WHERE id = " . (int)$gate[$i]['id'];
-				$sql2_latin = "INSERT INTO fm_streetaddress (id,descr)"
-					. " VALUES (" . $gate[$i]['id'] . ", '". $gate[$i]['descr']. "')";
-
-				$sql2_utf = "INSERT INTO fm_streetaddress (id,descr)"
-					. " VALUES (" . $gate[$i]['id'] . ", '". utf8_encode($gate[$i]['descr']). "')";
-
-				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db_boei->query($sql,__LINE__,__FILE__);
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$gate_msg[]=utf8_encode($gate[$i]['descr']);
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$gate_msg[]=$gate[$i]['descr'];
 			}
 
 
 			//oppdater gatenavn - om det er endret
 
-			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM v_Gateadresse";
+			$sql = "SELECT boei_gateadresse.gateadresse_id, boei_gateadresse.gatenavn FROM boei_gateadresse";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 
 			$msg = count($gate) . ' gateadresser er lagt til: ' . @implode(",", $gate_msg);
 
 			$gate = array();
-			while ($this->db_boei->next_record())
+			while ($this->db->next_record())
 			{
 				$gate[]= array
 				(
-					'id' 		=> $this->db_boei->f('gateadresse_id'),
-					'descr' 	=> $this->db_boei->f('gatenavn')
+					'id' 		=> (int)$this->db->f('gateadresse_id'),
+					'descr' 	=> $this->db->f('gatenavn')
 				);
 			}
-			
+
 			foreach ($gate as $gate_info)
 			{
-				$descr = utf8_encode($gate_info['descr']);
-				$sql_utf = "UPDATE fm_streetaddress SET descr = '{$descr}' WHERE id = " . (int)$gate_info['id'];
+				$sql_utf = "UPDATE fm_streetaddress SET descr = '{$gate_info['descr']}' WHERE id = " . (int)$gate_info['id'];
 				$this->db->query($sql_utf,__LINE__,__FILE__);
 			}
 
 			$this->db->transaction_commit();
-			$this->db_boei->transaction_commit();
-
 
 			$this->receipt['message'][]=array('msg'=> $msg);
-			unset ($gate);
-			unset ($gate_msg);
-			return $msg;
-
+			$this->cron_log($msg);
 		}
 
 		function legg_til_objekt_phpgw()
 		{
-			$sql = "SELECT v_Objekt.objekt_id, v_Objekt.navn, v_Objekt.bydel_id, v_Objekt.eier_id,v_Objekt.tjenestested"
+			$sql = "SELECT boei_objekt.objekt_id, boei_objekt.navn, boei_objekt.bydel_id, boei_objekt.eier_id,boei_objekt.tjenestested"
 					. " FROM fm_location1 RIGHT OUTER JOIN "
-			        . " v_Objekt ON fm_location1.loc1 = v_Objekt.objekt_id"
+			        . " boei_objekt ON fm_location1.loc1 = boei_objekt.objekt_id"
 					. " WHERE fm_location1.loc1 IS NULL";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
-			while ($this->db_boei->next_record())
+			$this->db->query($sql,__LINE__,__FILE__);
+			$objekt_latin = array();
+			while ($this->db->next_record())
 			{
-				$objekt_utf[]= array (
-				 'location_code' 	=> $this->db_boei->f('objekt_id'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc1_name' 		=> utf8_encode($this->db_boei->f('navn')),
-				 'part_of_town_id' 	=> $this->db_boei->f('bydel_id'),
-				 'owner_id' 		=> $this->db_boei->f('eier_id'),
-				 'kostra_id' 		=> $this->db_boei->f('tjenestested'),
-				 'category' 		=> 1
+				$objekt_latin[]= array
+				(
+					'location_code' 	=> $this->db->f('objekt_id'),
+					'loc1'				=> $this->db->f('objekt_id'),
+					'loc1_name' 		=> $this->db->f('navn'),
+					'part_of_town_id' 	=> $this->db->f('bydel_id'),
+					'owner_id'			=> $this->db->f('eier_id'),
+					'kostra_id' 		=> $this->db->f('tjenestested'),
+					'category'			=> 1
 				 );
-				$objekt_latin[]= array (
-				 'location_code' 	=> $this->db_boei->f('objekt_id'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc1_name' 		=> $this->db_boei->f('navn'),
-				 'part_of_town_id' 	=> $this->db_boei->f('bydel_id'),
-				 'owner_id' 		=> $this->db_boei->f('eier_id'),
-				 'kostra_id' 		=> $this->db_boei->f('tjenestested'),
-				 'category' 		=> 1
-				 );
-
 			}
 
-	//		$this->db->transaction_begin();
-	//		$this->db_boei->transaction_begin();
+			$this->db->transaction_begin();
 
-			for ($i=0; $i<count($objekt_latin); $i++)
+			foreach($objekt_latin as $objekt)
 			{
 
-				$sql2_utf = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
-					. "VALUES (" . $this->db->validate_insert($objekt_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
-					. "VALUES (" . $this->db->validate_insert($objekt_latin[$i]) . ")";
+				$sql2 = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
+					. "VALUES (" . $this->db->validate_insert($objekt) . ")";
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (1, '{$objekt_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (1, '{$objekt['location_code']}', '{$objekt['loc1']}')",__LINE__,__FILE__);
 
-				$obj_msg[]=$objekt_utf[$i]['loc1'];
+				$obj_msg[]=$objekt['loc1'];
 			}
 
-	//		$this->db->transaction_commit();
-	//		$this->db_boei->transaction_commit();
+			$this->db->transaction_commit();
 
 			$msg = count($objekt_latin) . ' Objekt er lagt til: ' . @implode(",", $obj_msg);
 			$this->receipt['message'][]=array('msg'=> $msg);
-			unset ($objekt_utf);
-			unset ($objekt_latin);
-			unset ($obj_msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
 
 		function legg_til_bygg_phpgw()
 		{
-			$sql = "SELECT v_Bygg.objekt_id + '-' + v_Bygg.bygg_id AS location_code, v_Bygg.objekt_id, v_Bygg.bygg_id, v_Bygg.byggnavn,v_Bygg.driftstatus"
-				. " FROM v_Bygg LEFT OUTER JOIN"
-		        . " fm_location2 ON v_Bygg.objekt_id = fm_location2.loc1 AND v_Bygg.bygg_id = fm_location2.loc2"
+			$sql = "SELECT boei_bygg.objekt_id || '-' || boei_bygg.bygg_id AS location_code, boei_bygg.objekt_id, boei_bygg.bygg_id, boei_bygg.byggnavn,boei_bygg.driftstatus"
+				. " FROM boei_bygg LEFT OUTER JOIN"
+		        . " fm_location2 ON boei_bygg.objekt_id = fm_location2.loc1 AND boei_bygg.bygg_id = fm_location2.loc2"
 		        . " WHERE fm_location2.loc1 IS NULL";
 
-
-			$this->db_boei->query($sql,__LINE__,__FILE__);
-			while ($this->db_boei->next_record())
+			$this->db->query($sql,__LINE__,__FILE__);
+			$bygg_latin = array();
+			while ($this->db->next_record())
 			{
-				$bygg_utf[]= array (
-				 'location_code' 	=> $this->db_boei->f('location_code'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc2' 			=> $this->db_boei->f('bygg_id'),
-				 'loc2_name' 		=> utf8_encode($this->db_boei->f('byggnavn')),
-				 'category' 		=> 98
-				 );
-				$bygg_latin[]= array (
-				 'location_code' 	=> $this->db_boei->f('location_code'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc2' 			=> $this->db_boei->f('bygg_id'),
-				 'loc2_name' 		=> $this->db_boei->f('byggnavn'),
-				 'category' 		=> 98
-				 );
+				$bygg_latin[]= array
+				(
+					'location_code' 	=> $this->db->f('location_code'),
+					'loc1'				=> $this->db->f('objekt_id'),
+					'loc2'				=> $this->db->f('bygg_id'),
+					'loc2_name' 		=> $this->db->f('byggnavn'),
+					'category'			=> 98
+				);
 			}
 
-		//	$this->db->transaction_begin();
-		//	$this->db_boei->transaction_begin();
+			$this->db->transaction_begin();
 
-			for ($i=0; $i<count($bygg_latin); $i++)
+			foreach($bygg_latin as $bygg)
 			{
 
-				$sql2_utf = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
-					. "VALUES (" . $this->db->validate_insert($bygg_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
-					. "VALUES (" . $this->db->validate_insert($bygg_latin[$i]) . ")";
+				$sql2 = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
+					. "VALUES (" . $this->db->validate_insert($bygg) . ")";
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (2, '{$bygg_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (2, '{$bygg['location_code']}', '{$bygg['loc1']}')",__LINE__,__FILE__);
 
-				$bygg_msg[]=$bygg_utf[$i]['location_code'];
+				$bygg_msg[]=$bygg['location_code'];
 			}
 
-		//	$this->db->transaction_commit();
-		//	$this->db_boei->transaction_commit();
+			$this->db->transaction_commit();
 
 			$msg = count($bygg_latin) . ' Bygg er lagt til: ' . @implode(",", $bygg_msg);
 			$this->receipt['message'][]=array('msg'=> $msg);
-			unset ($bygg_utf);
-			unset ($bygg_latin);
-			unset ($bygg_msg);
-			return $msg;
-
+			$this->cron_log($msg);
 		}
 
 		function legg_til_seksjon_phpgw()
 		{
 
-			$sql = "SELECT v_Seksjon.objekt_id + '-' + v_Seksjon.bygg_id + '-' + v_Seksjon.seksjons_id AS location_code, v_Seksjon.objekt_id, v_Seksjon.bygg_id,"
-				. " v_Seksjon.seksjons_id, v_Seksjon.beskrivelse, v_Seksjon.totalt_fellesareal"
-				. " FROM v_Seksjon LEFT OUTER JOIN"
-				. " fm_location3 ON v_Seksjon.objekt_id = fm_location3.loc1 AND v_Seksjon.bygg_id = fm_location3.loc2 AND "
-				. " v_Seksjon.seksjons_id = fm_location3.loc3"
+			$sql = "SELECT boei_seksjon.objekt_id || '-' || boei_seksjon.bygg_id || '-' || boei_seksjon.seksjons_id AS location_code, boei_seksjon.objekt_id, boei_seksjon.bygg_id,"
+				. " boei_seksjon.seksjons_id, boei_seksjon.beskrivelse"
+				. " FROM boei_seksjon LEFT OUTER JOIN"
+				. " fm_location3 ON boei_seksjon.objekt_id = fm_location3.loc1 AND boei_seksjon.bygg_id = fm_location3.loc2 AND "
+				. " boei_seksjon.seksjons_id = fm_location3.loc3"
 				. " WHERE fm_location3.loc1 IS NULL";
 
-
-			$this->db_boei->query($sql,__LINE__,__FILE__);
-			while ($this->db_boei->next_record())
+			$this->db->query($sql,__LINE__,__FILE__);
+			$seksjon_latin = array();
+			while ($this->db->next_record())
 			{
-				$seksjon_utf[]= array (
-				 'location_code' 	=> $this->db_boei->f('location_code'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc2' 			=> $this->db_boei->f('bygg_id'),
-				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
-				 'loc3_name' 		=> utf8_encode($this->db_boei->f('beskrivelse')),
-				 'fellesareal' 	=> $this->db_boei->f('totalt_fellesareal'),
-				 'category' 		=> 98
-				 );
 				$seksjon_latin[]= array (
-				 'location_code' 	=> $this->db_boei->f('location_code'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc2' 			=> $this->db_boei->f('bygg_id'),
-				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
-				 'loc3_name' 		=> $this->db_boei->f('beskrivelse'),
-				 'fellesareal' 	=> $this->db_boei->f('totalt_fellesareal'),
+				 'location_code' 	=> $this->db->f('location_code'),
+				 'loc1' 			=> $this->db->f('objekt_id'),
+				 'loc2' 			=> $this->db->f('bygg_id'),
+				 'loc3' 			=> $this->db->f('seksjons_id'),
+				 'loc3_name' 		=> $this->db->f('beskrivelse'),
 				 'category' 		=> 98
 				 );
 			}
 
-		//	$this->db->transaction_begin();
-		//	$this->db_boei->transaction_begin();
+			$this->db->transaction_begin();
 
-			for ($i=0; $i<count($seksjon_latin); $i++)
+			foreach($seksjon_latin as $seksjon)
 			{
+				$sql2 = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, category) "
+					. "VALUES (" . $this->db->validate_insert($seksjon) . ")";
 
-				$sql2_utf = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
-					. "VALUES (" . $this->db->validate_insert($seksjon_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
-					. "VALUES (" . $this->db->validate_insert($seksjon_latin[$i]) . ")";
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (3, '{$seksjon['location_code']}', '{$seksjon['loc1']}')",__LINE__,__FILE__);
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (3, '{$seksjon_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
-
-				$seksjon_msg[]=$seksjon_utf[$i]['location_code'];
+				$seksjon_msg[]=$seksjon['location_code'];
 			}
 
-		//	$this->db->transaction_commit();
-		//	$this->db_boei->transaction_commit();
+			$this->db->transaction_commit();
 
 			$msg = count($seksjon_latin) . ' Seksjon er lagt til: ' . @implode(",", $seksjon_msg);
 			$this->receipt['message'][]=array('msg'=> $msg);
-			unset ($seksjon_utf);
-			unset ($seksjon_latin);
-			unset ($seksjon_msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
 
 		function legg_til_leieobjekt_phpgw()
 		{
-
-			$sql = "SELECT v_Leieobjekt.objekt_id + '-' + v_Leieobjekt.bygg_id + '-' + v_Leieobjekt.seksjons_id + '-' + v_Leieobjekt.leie_id AS location_code,"
-                  . " v_Leieobjekt.objekt_id, v_Leieobjekt.leie_id, v_Leieobjekt.leieobjekttype_id, v_Leieobjekt.bygg_id, v_Leieobjekt.seksjons_id,"
-                  . " v_Leieobjekt.formaal_id, v_Leieobjekt.gateadresse_id, v_Leieobjekt.gatenr, v_Leieobjekt.etasje, v_Leieobjekt.antallrom,"
-                  . " v_Leieobjekt.boareal, v_Leieobjekt.livslopsstd, v_Leieobjekt.heis, v_Leieobjekt.driftsstatus_id, v_Leieobjekt.leietaker_id,"
-                  . " v_Leieobjekt.beregnet_boa, v_Leieobjekt.flyttenr"
-                  . " FROM v_Leieobjekt LEFT OUTER JOIN"
-                  . " fm_location4 ON v_Leieobjekt.objekt_id = fm_location4.loc1 AND v_Leieobjekt.leie_id = fm_location4.loc4"
+			$sql = "SELECT boei_leieobjekt.objekt_id || '-' || boei_leieobjekt.bygg_id || '-' || boei_leieobjekt.seksjons_id || '-' || boei_leieobjekt.leie_id AS location_code,"
+                  . " boei_leieobjekt.objekt_id, boei_leieobjekt.leie_id, boei_leieobjekt.bygg_id, boei_leieobjekt.seksjons_id,"
+                  . " boei_leieobjekt.formaal_id, boei_leieobjekt.gateadresse_id, boei_leieobjekt.gatenr, boei_leieobjekt.etasje, boei_leieobjekt.antallrom,"
+                  . " boei_leieobjekt.boareal, boei_leieobjekt.livslopsstd, boei_leieobjekt.heis, boei_leieobjekt.driftsstatus_id, boei_leieobjekt.leietaker_id,"
+                  . " boei_leieobjekt.beregnet_boa, boei_leieobjekt.flyttenr"
+                  . " FROM boei_leieobjekt LEFT OUTER JOIN"
+                  . " fm_location4 ON boei_leieobjekt.objekt_id = fm_location4.loc1 AND boei_leieobjekt.leie_id = fm_location4.loc4"
                   . " WHERE fm_location4.loc1 IS NULL";
 
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 
-			while ($this->db_boei->next_record())
+			$leieobjekt_latin = array();
+
+			while ($this->db->next_record())
 			{
-				$leieobjekt_utf[]= array (
-				 'location_code' 	=> $this->db_boei->f('location_code'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc4' 			=> $this->db_boei->f('leie_id'),
-				 'leieobjekttype_id'=> $this->db_boei->f('leieobjekttype_id'),
-				 'loc2' 			=> $this->db_boei->f('bygg_id'),
-				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
-				 'category' 		=> $this->db_boei->f('formaal_id'),
-				 'street_id'	 	=> $this->db_boei->f('gateadresse_id'),
-				 'street_number' 	=> utf8_encode($this->db_boei->f('gatenr')),
-				 'etasje' 			=> utf8_encode($this->db_boei->f('etasje')),
-				 'antallrom'	 	=> $this->db_boei->f('antallrom'),
-				 'boareal' 			=> $this->db_boei->f('boareal'),
-				 'livslopsstd' 		=> $this->db_boei->f('livslopsstd'),
-				 'heis' 			=> $this->db_boei->f('heis'),
-				 'driftsstatus_id' 	=> $this->db_boei->f('driftsstatus_id'),
-				 'tenant_id'	 	=> $this->db_boei->f('leietaker_id'),
-				 'beregnet_boa' 	=> $this->db_boei->f('beregnet_boa'),
-				 'flyttenr' 		=> $this->db_boei->f('flyttenr')
-				 );
-				$leieobjekt_latin[]= array (
-				 'location_code' 	=> $this->db_boei->f('location_code'),
-				 'loc1' 			=> $this->db_boei->f('objekt_id'),
-				 'loc4' 			=> $this->db_boei->f('leie_id'),
-				 'leieobjekttype_id'=> $this->db_boei->f('leieobjekttype_id'),
-				 'loc2' 			=> $this->db_boei->f('bygg_id'),
-				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
-				 'category' 		=> $this->db_boei->f('formaal_id'),
-				 'street_id'	 	=> $this->db_boei->f('gateadresse_id'),
-				 'street_number' 	=> $this->db_boei->f('gatenr'),
-				 'etasje' 			=> $this->db_boei->f('etasje'),
-				 'antallrom'	 	=> $this->db_boei->f('antallrom'),
-				 'boareal' 			=> $this->db_boei->f('boareal'),
-				 'livslopsstd' 		=> $this->db_boei->f('livslopsstd'),
-				 'heis' 			=> $this->db_boei->f('heis'),
-				 'driftsstatus_id' 	=> $this->db_boei->f('driftsstatus_id'),
-				 'tenant_id'	 	=> $this->db_boei->f('leietaker_id'),
-				 'beregnet_boa' 	=> $this->db_boei->f('beregnet_boa'),
-				 'flyttenr' 		=> $this->db_boei->f('flyttenr')
-				 );
-
+				$leieobjekt_latin[]= array
+				(
+					'location_code' 	=> $this->db->f('location_code'),
+					'loc1'				=> $this->db->f('objekt_id'),
+					'loc4'				=> $this->db->f('leie_id'),
+					'loc2'				=> $this->db->f('bygg_id'),
+					'loc3'				=> $this->db->f('seksjons_id'),
+					'category'			=> $this->db->f('formaal_id'),
+					'street_id'			=> $this->db->f('gateadresse_id'),
+					'street_number' 	=> $this->db->f('gatenr'),
+					'etasje' 			=> $this->db->f('etasje'),
+					'antallrom'			=> $this->db->f('antallrom'),
+					'boareal' 			=> $this->db->f('boareal'),
+					'livslopsstd' 		=> $this->db->f('livslopsstd'),
+					'heis'				=> $this->db->f('heis'),
+					'driftsstatus_id' 	=> $this->db->f('driftsstatus_id'),
+					'tenant_id'			=> $this->db->f('leietaker_id'),
+					'beregnet_boa'		=> $this->db->f('beregnet_boa'),
+					'flyttenr'			=> $this->db->f('flyttenr')
+				);
 			}
 
-		//	$this->db->transaction_begin();
-		//	$this->db_boei->transaction_begin();
+			$this->db->transaction_begin();
 
-			for ($i=0; $i<count($leieobjekt_latin); $i++)
+			foreach($leieobjekt_latin as $leieobjekt)
 			{
-
-				$sql2_utf = "INSERT INTO fm_location4 (location_code, loc1, loc4, leieobjekttype_id, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
+				$sql2 = "INSERT INTO fm_location4 (location_code, loc1, loc4, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
                       tenant_id, beregnet_boa, flyttenr)"
-					. "VALUES (" . $this->db->validate_insert($leieobjekt_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_location4 (location_code, loc1, loc4, leieobjekttype_id, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
-                      tenant_id, beregnet_boa, flyttenr)"
-					. "VALUES (" . $this->db->validate_insert($leieobjekt_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leieobjekt) . ")";
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (4, '{$leieobjekt_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (4, '{$leieobjekt['location_code']}', '{$leieobjekt['loc1']}')",__LINE__,__FILE__);
 
-				$leieobjekt_msg[]=$leieobjekt_utf[$i]['location_code'];
+				$leieobjekt_msg[]=$leieobjekt['location_code'];
 			}
 
-		//	$this->db->transaction_commit();
-		//	$this->db_boei->transaction_commit();
+			$this->db->transaction_commit();
 
 			$msg = count($leieobjekt_latin) . ' Leieobjekt er lagt til: ' . @implode(",", $leieobjekt_msg);
 			$this->receipt['message'][]=array('msg'=> $msg);
-			unset ($leieobjekt_latin);
-			unset ($leieobjekt_utf);
-			unset ($leieobjekt_msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
 
 		function legg_til_leietaker_phpgw()
 		{
-			$sql = " SELECT v_Leietaker.leietaker_id, v_Leietaker.fornavn, v_Leietaker.etternavn, v_Leietaker.kjonn_juridisk,"
-				. " v_Leietaker.namssakstatusokonomi_id, v_Leietaker.namssakstatusdrift_id"
+			$sql = " SELECT boei_leietaker.leietaker_id, boei_leietaker.fornavn, boei_leietaker.etternavn, boei_leietaker.kjonn_juridisk,"
+				. " boei_leietaker.namssakstatusokonomi_id, boei_leietaker.namssakstatusdrift_id"
 				. " FROM fm_tenant RIGHT OUTER JOIN"
-				. " v_Leietaker ON fm_tenant.id = v_Leietaker.leietaker_id"
+				. " boei_leietaker ON fm_tenant.id = boei_leietaker.leietaker_id"
 				. " WHERE fm_tenant.id IS NULL";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 
-			while ($this->db_boei->next_record())
+			$leietaker_latin = array();
+
+			while ($this->db->next_record())
 			{
-				$leietaker_utf[]= array (
-				 'id' 				=> $this->db_boei->f('leietaker_id'),
-				 'first_name'		=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('fornavn'))),
-				 'last_name' 		=> $this->db->db_addslashes(utf8_encode($this->db_boei->f('etternavn'))),
-				 'category'			=> $this->db_boei->f('kjonn_juridisk') + 1,
-				 'status_eco'		=> $this->db_boei->f('namssakstatusokonomi_id'),
-				 'status_drift' 	=> $this->db_boei->f('namssakstatusdrift_id'),
-				 'entry_date'		=> time(),
-				 'owner_id'			=> 6
-				 );
-				$leietaker_latin[]= array (
-				 'id' 				=> $this->db_boei->f('leietaker_id'),
-				 'first_name'		=> $this->db->db_addslashes($this->db_boei->f('fornavn')),
-				 'last_name' 		=> $this->db->db_addslashes($this->db_boei->f('etternavn')),
-				 'category'			=> $this->db_boei->f('kjonn_juridisk') + 1,
-				 'status_eco'		=> $this->db_boei->f('namssakstatusokonomi_id'),
-				 'status_drift' 	=> $this->db_boei->f('namssakstatusdrift_id'),
-				 'entry_date'		=> time(),
-				 'owner_id'			=> 6
+				$leietaker_latin[]= array
+				(
+					'id' 				=> $this->db->f('leietaker_id'),
+					'first_name'		=> $this->db->f('fornavn'),
+					'last_name' 		=> $this->db->f('etternavn'),
+					'category'			=> $this->db->f('kjonn_juridisk') + 1,
+					'status_eco'		=> $this->db->f('namssakstatusokonomi_id'),
+					'status_drift'		=> $this->db->f('namssakstatusdrift_id'),
+					'entry_date'		=> time(),
+					'owner_id'			=> 6
 				 );
 			}
 
-		//	$this->db->transaction_begin();
-		//	$this->db_boei->transaction_begin();
+			$this->db->transaction_begin();
 
-			for ($i=0; $i<count($leietaker_latin); $i++)
+			foreach($leietaker_latin as $leietaker)
 			{
-				$this->db->query("DELETE FROM fm_tenant WHERE id=" . (int)$leietaker_latin[$i]['id'],__LINE__,__FILE__);
-				$this->db_boei->query("DELETE FROM fm_tenant WHERE id=" . (int)$leietaker_latin[$i]['id'],__LINE__,__FILE__);
+				$sql2 = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
+					. "VALUES (" . $this->db->validate_insert($leietaker) . ")";
 
-				$sql2_utf = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
-					. "VALUES (" . $this->db->validate_insert($leietaker_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
-					. "VALUES (" . $this->db->validate_insert($leietaker_latin[$i]) . ")";
+				$this->db->query($sql2,__LINE__,__FILE__);
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-
-				$leietaker_msg[]= '[' .$leietaker_utf[$i]['last_name'] . ', ' . $leietaker_utf[$i]['first_name'] . ']';
+				$leietaker_msg[]= "[{$leietaker['last_name']}, '{$leietaker['first_name']}']";
 			}
 
-		//	$this->db->transaction_commit();
-		//	$this->db_boei->transaction_commit();
+			$this->db->transaction_commit();
 
 			$msg = count($leietaker_latin) . ' Leietaker er lagt til: ' . @implode(",", $leietaker_msg);
 			$this->receipt['message'][]=array('msg'=> $msg);
-			unset ($leietaker);
-			unset ($leietaker_msg);
-			return $msg;
-
+			$this->cron_log($msg);
 		}
 
 		function update_tenant_name()
 		{
-			$sql = " SELECT leietaker_id, fornavn, etternavn FROM v_Leietaker";
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$sql = "SELECT boei_leietaker.leietaker_id, boei_leietaker.fornavn, boei_leietaker.etternavn FROM boei_leietaker"
+			. " JOIN fm_tenant ON boei_leietaker.leietaker_id = fm_tenant.id"
+			. " WHERE first_name != fornavn OR last_name != etternavn";
+			$this->db->query($sql,__LINE__,__FILE__);
 
 			$i=0;
-			while ($this->db_boei->next_record())
+			while ($this->db->next_record())
 			{
-				$sql2_utf = " UPDATE  fm_tenant SET "
-				. " first_name		= '" . $this->db->db_addslashes(utf8_encode($this->db_boei->f('fornavn'))) . "',"
-				. " last_name 		= '" . $this->db->db_addslashes(utf8_encode($this->db_boei->f('etternavn'))) ."'"
-				. " WHERE  id = " . (int)$this->db_boei->f('leietaker_id');
-
-				$sql2_latin = " UPDATE  fm_tenant SET "
-				. " first_name		= '" . $this->db->db_addslashes($this->db_boei->f('fornavn')) . "',"
-				. " last_name 		= '" . $this->db->db_addslashes($this->db_boei->f('etternavn')) ."'"
-				. " WHERE  id = " . (int)$this->db_boei->f('leietaker_id');
-
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
+				$sql2 = "UPDATE fm_tenant SET"
+				. " first_name = '" . $this->db->f('fornavn') . "',"
+				. " last_name = '" . $this->db->f('etternavn') ."'"
+				. " WHERE id = " . (int)$this->db->f('leietaker_id');
+//_debug_array($sql2);
+				$this->db2->query($sql2,__LINE__,__FILE__);
 				$i++;
 			}
 
 			$msg = $i . ' Leietakere er oppdatert';
 			$this->receipt['message'][]=array('msg'=> $msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
 
 
 		function oppdater_leieobjekt()
 		{
-			$sql = " SELECT TOP 100 PERCENT v_Leieobjekt.objekt_id,v_Leieobjekt.leie_id,v_Leieobjekt.leietaker_id, boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, v_Leieobjekt.flyttenr, innflyttetdato"
-				. " FROM  v_Leieobjekt LEFT JOIN v_reskontro ON v_Leieobjekt.objekt_id=v_reskontro.objekt_id AND v_Leieobjekt.leie_id=v_reskontro.leie_id"
-				. " AND v_Leieobjekt.flyttenr=v_reskontro.flyttenr AND v_Leieobjekt.leietaker_id=v_reskontro.leietaker_id";
+			$sql = "SELECT boei_leieobjekt.objekt_id,boei_leieobjekt.leie_id,boei_leieobjekt.leietaker_id, boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, boei_leieobjekt.flyttenr, innflyttetdato"
+				. " FROM  boei_leieobjekt LEFT JOIN boei_reskontro ON boei_leieobjekt.objekt_id=boei_reskontro.objekt_id AND boei_leieobjekt.leie_id=boei_reskontro.leie_id"
+				. " AND boei_leieobjekt.flyttenr=boei_reskontro.flyttenr AND boei_leieobjekt.leietaker_id=boei_reskontro.leietaker_id";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 
-		//	$this->db->transaction_begin();
-		//	$this->db_boei2->transaction_begin();
+			$this->db->transaction_begin();
 
 
 			$i=0;
-			while ($this->db_boei->next_record())
+			while ($this->db->next_record())
 			{
-				$sql2_utf = " UPDATE  fm_location4 SET "
-				. " tenant_id = '" . $this->db_boei->f('leietaker_id') . "',"
-				. " category = '" . $this->db_boei->f('formaal_id') . "',"
-				. " etasje = '" . utf8_encode($this->db_boei->f('etasje')) . "',"
-				. " street_id = '" . $this->db_boei->f('gateadresse_id') . "',"
-				. " street_number = '" . utf8_encode($this->db_boei->f('gatenr')) . "',"
-				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
-				. " boareal = '" . $this->db_boei->f('boareal') . "',"
-				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
-				. " innflyttetdato = '" . date($this->db->date_format(),strtotime($this->db_boei->f('innflyttetdato'))) . "'"
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
-				$sql2_latin = " UPDATE  fm_location4 SET "
-				. " tenant_id = '" . $this->db_boei->f('leietaker_id') . "',"
-				. " category = '" . $this->db_boei->f('formaal_id') . "',"
-				. " etasje = '" . $this->db_boei->f('etasje') . "',"
-				. " street_id = '" . $this->db_boei->f('gateadresse_id') . "',"
-				. " street_number = '" . $this->db_boei->f('gatenr') . "',"
-				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
-				. " boareal = '" . $this->db_boei->f('boareal') . "',"
-				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
-				. " innflyttetdato = '" . date("M d Y",strtotime($this->db_boei->f('innflyttetdato'))) . "'"
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
+				$sql2 = " UPDATE  fm_location4 SET "
+				. " tenant_id = '" . $this->db->f('leietaker_id') . "',"
+				. " category = '" . $this->db->f('formaal_id') . "',"
+				. " etasje = '" . $this->db->f('etasje') . "',"
+				. " street_id = '" . $this->db->f('gateadresse_id') . "',"
+				. " street_number = '" . $this->db->f('gatenr') . "',"
+				. " driftsstatus_id = '" . $this->db->f('driftsstatus_id') . "',"
+				. " boareal = '" . $this->db->f('boareal') . "',"
+				. " flyttenr = '" . $this->db->f('flyttenr') . "',"
+				. " innflyttetdato = '" . date("M d Y",strtotime($this->db->f('innflyttetdato'))) . "'"
+				. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'  AND  loc4= '" . $this->db->f('leie_id') . "'";
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
+				$this->db2->query($sql2,__LINE__,__FILE__);
 				$i++;
 			}
 
-		//	$this->db->transaction_commit();
-		//	$this->db_boei2->transaction_commit();
+			$this->db->transaction_commit();
 
 			$msg = $i . ' Leieobjekt er oppdatert';
 			$this->receipt['message'][]=array('msg'=> $msg);
-			return $msg;
+			$this->cron_log($msg);
 
 		}
 
 		function oppdater_boa_objekt()
 		{
-			$sql = " SELECT TOP 100 PERCENT v_Objekt.objekt_id,bydel_id,tjenestested,navn,v_Objekt.eier_id FROM v_Objekt";
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$sql = " SELECT boei_objekt.objekt_id,bydel_id,tjenestested,navn,boei_objekt.eier_id"
+			. " FROM boei_objekt JOIN fm_location1 ON boei_objekt.objekt_id = fm_location1.loc1"
+			. " WHERE boei_objekt.navn != fm_location1.loc1_name"
+			. " OR  boei_objekt.bydel_id != fm_location1.part_of_town_id"
+			. " OR  boei_objekt.eier_id != fm_location1.owner_id"
+			. " OR  boei_objekt.tjenestested != fm_location1.kostra_id";
+			$this->db->query($sql,__LINE__,__FILE__);
 
-			while ($this->db_boei->next_record())
-			{
-				$sql2_utf = " UPDATE fm_location1 SET "
-				. " loc1_name = '" . utf8_encode($this->db_boei->f('navn')) . "',"
-				. " part_of_town_id = " . (int)$this->db_boei->f('bydel_id') . ","
-				. " owner_id = " . (int)$this->db_boei->f('eier_id') . ","
-				. " kostra_id = " . (int)$this->db_boei->f('tjenestested')
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
-				$sql2_latin = " UPDATE fm_location1 SET "
-				. " loc1_name = '" . $this->db_boei->f('navn') . "',"
-				. " part_of_town_id = " . (int)$this->db_boei->f('bydel_id') . ","
-				. " owner_id = " . (int)$this->db_boei->f('eier_id') . ","
-				. " kostra_id = " . (int)$this->db_boei->f('tjenestested')
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
-
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
-			}
-
-			$sql = " SELECT TOP 100 PERCENT sum(v_Leieobjekt.boareal) as sum_boa, count(leie_id) as ant_leieobjekt,"
-					. " v_Objekt.objekt_id FROM  v_Objekt {$this->join} v_Leieobjekt ON v_Objekt.objekt_id = v_Leieobjekt.objekt_id"
-					. " WHERE v_Leieobjekt.formaal_id NOT IN (99)"
-					. " GROUP BY v_Objekt.objekt_id";
-
-			$this->db_boei->query($sql,__LINE__,__FILE__);
-
-		//	$this->db->transaction_begin();
-		//	$this->db_boei2->transaction_begin();
-
-			$i=0;
-			while ($this->db_boei->next_record())
+			while ($this->db->next_record())
 			{
 				$sql2 = " UPDATE fm_location1 SET "
-				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
-				. " ant_leieobjekt = " . (int)$this->db_boei->f('ant_leieobjekt')
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
-				$this->db->query($sql2,__LINE__,__FILE__);
-				$this->db_boei2->query($sql2,__LINE__,__FILE__);
+				. " loc1_name = '" . $this->db->f('navn') . "',"
+				. " part_of_town_id = " . (int)$this->db->f('bydel_id') . ","
+				. " owner_id = " . (int)$this->db->f('eier_id') . ","
+				. " kostra_id = " . (int)$this->db->f('tjenestested')
+				. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'";
+
+				$this->db2->query($sql2,__LINE__,__FILE__);
+			}
+
+			$sql = " SELECT sum(boei_leieobjekt.boareal) as sum_boa, count(leie_id) as ant_leieobjekt,"
+					. " boei_objekt.objekt_id FROM  boei_objekt {$this->join} boei_leieobjekt ON boei_objekt.objekt_id = boei_leieobjekt.objekt_id"
+					. " WHERE boei_leieobjekt.formaal_id NOT IN (99)"
+					. " GROUP BY boei_objekt.objekt_id";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+		//	$this->db->transaction_begin();
+
+			$i=0;
+			while ($this->db->next_record())
+			{
+				$sql2 = " UPDATE fm_location1 SET "
+				. " sum_boa = '" . $this->db->f('sum_boa') . "',"
+				. " ant_leieobjekt = " . (int)$this->db->f('ant_leieobjekt')
+				. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'";
+				$this->db2->query($sql2,__LINE__,__FILE__);
 				$i++;
 			}
 		//	$this->db->transaction_commit();
-		//	$this->db_boei2->transaction_commit();
 
 			$msg = $i . ' Objekt er oppdatert';
 			$this->receipt['message'][]=array('msg'=> $msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
 
 		function oppdater_boa_bygg()
 		{
-			$sql = " SELECT TOP 100 PERCENT sum(v_Leieobjekt.boareal) as sum_boa, count(leie_id) as ant_leieobjekt,"
-					. " v_Bygg.objekt_id,v_Bygg.bygg_id , byggnavn  FROM  v_Bygg $this->join v_Leieobjekt "
-					. " ON v_Bygg.objekt_id = v_Leieobjekt.objekt_id AND v_Bygg.bygg_id = v_Leieobjekt.bygg_id"
-					. " WHERE v_Leieobjekt.formaal_id NOT IN (99)"
-					. " GROUP BY v_Bygg.objekt_id,v_Bygg.bygg_id ,byggnavn";
+			$sql = " SELECT sum(boei_leieobjekt.boareal) as sum_boa, count(leie_id) as ant_leieobjekt,"
+					. " boei_bygg.objekt_id,boei_bygg.bygg_id , byggnavn  FROM  boei_bygg $this->join boei_leieobjekt "
+					. " ON boei_bygg.objekt_id = boei_leieobjekt.objekt_id AND boei_bygg.bygg_id = boei_leieobjekt.bygg_id"
+					. " WHERE boei_leieobjekt.formaal_id NOT IN (99)"
+					. " GROUP BY boei_bygg.objekt_id,boei_bygg.bygg_id ,byggnavn";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 
 		//	$this->db->transaction_begin();
-		//	$this->db_boei2->transaction_begin();
 
 			$i=0;
-			while ($this->db_boei->next_record())
+			while ($this->db->next_record())
 			{
-				$sql2_utf = " UPDATE fm_location2 SET "
-				. " loc2_name = '" . utf8_encode($this->db_boei->f('byggnavn')) . "',"
-				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
-				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'";
-				$sql2_latin = " UPDATE fm_location2 SET "
-				. " loc2_name = '" . $this->db_boei->f('byggnavn') . "',"
-				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
-				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'";
+				$sql2 = " UPDATE fm_location2 SET "
+				. " loc2_name = '" . $this->db->f('byggnavn') . "',"
+				. " sum_boa = '" . $this->db->f('sum_boa') . "',"
+				. " ant_leieobjekt = '" . $this->db->f('ant_leieobjekt') . "'"
+				. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'  AND  loc2= '" . $this->db->f('bygg_id') . "'";
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
+				$this->db2->query($sql2,__LINE__,__FILE__);
 				$i++;
 			}
 		//	$this->db->transaction_commit();
-		//	$this->db_boei2->transaction_commit();
 
 			$msg = $i . ' Bygg er oppdatert';
 			$this->receipt['message'][]=array('msg'=> $msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
 
 		function oppdater_boa_del()
 		{
+			$sql = " SELECT sum(boei_leieobjekt.boareal) as sum_boa, count(leie_id) as ant_leieobjekt,"
+					. " boei_seksjon.objekt_id,boei_seksjon.bygg_id,boei_seksjon.seksjons_id , beskrivelse   FROM  boei_seksjon $this->join boei_leieobjekt "
+					. " ON boei_seksjon.objekt_id = boei_leieobjekt.objekt_id"
+					. " AND boei_seksjon.bygg_id = boei_leieobjekt.bygg_id"
+					. " AND boei_seksjon.seksjons_id = boei_leieobjekt.seksjons_id"
+					. " WHERE boei_leieobjekt.formaal_id NOT IN (99)"
+					. " GROUP BY boei_seksjon.objekt_id,boei_seksjon.bygg_id,boei_seksjon.seksjons_id,beskrivelse";
 
-			$sql = " SELECT TOP 100 PERCENT sum(v_Leieobjekt.boareal) as sum_boa, count(leie_id) as ant_leieobjekt,"
-					. " v_Seksjon.objekt_id,v_Seksjon.bygg_id,v_Seksjon.seksjons_id , beskrivelse   FROM  v_Seksjon $this->join v_Leieobjekt "
-					. " ON v_Seksjon.objekt_id = v_Leieobjekt.objekt_id"
-					. " AND v_Seksjon.bygg_id = v_Leieobjekt.bygg_id"
-					. " AND v_Seksjon.seksjons_id = v_Leieobjekt.seksjons_id"
-					. " WHERE v_Leieobjekt.formaal_id NOT IN (99)"
-					. " GROUP BY v_Seksjon.objekt_id,v_Seksjon.bygg_id,v_Seksjon.seksjons_id,beskrivelse";
-
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 
 			$i=0;
 
 		//	$this->db->transaction_begin();
-		//	$this->db_boei2->transaction_begin();
 
-			while ($this->db_boei->next_record())
+			while ($this->db->next_record())
 			{
-				$sql2_utf = " UPDATE fm_location3 SET "
-				. " loc3_name = '" . utf8_encode($this->db_boei->f('beskrivelse')) . "',"
-				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
-				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'  AND  loc3= '" . $this->db_boei->f('seksjons_id') . "'";
-				$sql2_latin = " UPDATE fm_location3 SET "
-				. " loc3_name = '" . $this->db_boei->f('beskrivelse') . "',"
-				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
-				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "'"
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc2= '" . $this->db_boei->f('bygg_id') . "'  AND  loc3= '" . $this->db_boei->f('seksjons_id') . "'";
+				$sql2 = "UPDATE fm_location3 SET "
+				. " loc3_name = '" . $this->db->f('beskrivelse') . "',"
+				. " sum_boa = '" . $this->db->f('sum_boa') . "',"
+				. " ant_leieobjekt = '" . $this->db->f('ant_leieobjekt') . "'"
+				. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'  AND  loc2= '" . $this->db->f('bygg_id') . "'  AND  loc3= '" . $this->db->f('seksjons_id') . "'";
 
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
+				$this->db2->query($sql2,__LINE__,__FILE__);
 				$i++;
 			}
 		//	$this->db->transaction_commit();
-		//	$this->db_boei2->transaction_commit();
 
 			$msg = $i . ' Seksjoner er oppdatert';
 			$this->receipt['message'][]=array('msg'=> $msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
 
 		function oppdater_oppsagtdato()
 		{
-
-			$sql = "SELECT TOP 100 PERCENT fm_tenant.id"
+			$sql = "SELECT fm_tenant.id,boei_leietaker.oppsagtdato"
 					. " FROM  fm_tenant LEFT OUTER JOIN"
-                    . " v_Leietaker ON fm_tenant.id = v_Leietaker.leietaker_id AND "
-                    . " fm_tenant.oppsagtdato = v_Leietaker.oppsagtdato"
-					. " WHERE (v_Leietaker.leietaker_id IS NULL)";
+                    . " boei_leietaker ON fm_tenant.id = boei_leietaker.leietaker_id AND "
+                    . " fm_tenant.oppsagtdato = boei_leietaker.oppsagtdato"
+					. " WHERE (boei_leietaker.leietaker_id IS NULL)";
 
-			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 
 	//		$this->db->transaction_begin();
-	//		$this->db_boei->transaction_begin();
 
-			while ($this->db_boei->next_record())
+			while ($this->db->next_record())
 			{
-				$leietaker[]= $this->db_boei->f('id');
+				$sql2 = "UPDATE fm_tenant SET "
+				. " oppsagtdato = '" . $this->db->f('oppsagtdato') . "'"
+				. " WHERE  id = " . (int)$this->db->f('id');
+
+				$this->db2->query($sql,__LINE__,__FILE__);
 			}
-
-			for ($i=0; $i<count($leietaker); $i++)
-			{
-				$sql = "SELECT oppsagtdato"
-					. " FROM  v_Leietaker"
-					. " WHERE (v_Leietaker.leietaker_id = '" . $leietaker[$i] . "')";
-
-				$this->db_boei->query($sql,__LINE__,__FILE__);
-
-				$this->db_boei->next_record();
-				$leietaker_oppdatert[]= array (
-				 'id' 				=> $leietaker[$i],
-				 'oppsagtdato'		=> $this->db_boei->f('oppsagtdato')
-				 );
-
-			}
-
-			for ($i=0; $i<count($leietaker_oppdatert); $i++)
-			{
-				$sql = " UPDATE fm_tenant SET "
-				. " oppsagtdato = '" . $leietaker_oppdatert[$i]['oppsagtdato'] . "'"
-				. " WHERE  id = '" . $leietaker_oppdatert[$i]['id'] . "'";
-
-				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db_boei->query($sql,__LINE__,__FILE__);
-			}
-
 		//	$this->db->transaction_commit();
-		//	$this->db_boei->transaction_commit();
 
 			$msg = $i . ' oppsagtdato er oppdatert';
 			$this->receipt['message'][]=array('msg'=> $msg);
-			return $msg;
+			$this->cron_log($msg);
 
 		}
-
 
 		function slett_feil_telefon()
 		{
@@ -921,6 +1330,59 @@
 
 			$msg = $ant_tlf . ' Telefon nr er slettet';
 			$this->receipt['message'][]=array('msg'=> $msg);
-			return $msg;
+			$this->cron_log($msg);
 		}
+
+		function oppdater_namssakstatus_pr_leietaker()
+		{
+
+			$sql = "SELECT fm_tenant.id"
+					. " FROM  fm_tenant LEFT OUTER JOIN"
+                    . " boei_leietaker ON fm_tenant.id = boei_leietaker.leietaker_id AND "
+                    . " fm_tenant.status_drift = boei_leietaker.namssakstatusdrift_id AND "
+                    . " fm_tenant.status_eco = boei_leietaker.namssakstatusokonomi_id"
+					. " WHERE (boei_leietaker.leietaker_id IS NULL)";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$this->db->transaction_begin();
+
+			while ($this->db->next_record())
+			{
+				$leietaker[]= (int)$this->db->f('id');
+			}
+
+			for ($i=0; $i<count($leietaker); $i++)
+			{
+				$sql = "SELECT namssakstatusokonomi_id, namssakstatusdrift_id"
+					. " FROM  boei_leietaker"
+					. " WHERE (boei_leietaker.leietaker_id = '" . $leietaker[$i] . "')";
+
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				$this->db->next_record();
+				$leietaker_oppdatert[]= array (
+				 'id' 				=> (int)$leietaker[$i],
+				 'status_drift'		=> (int)$this->db->f('namssakstatusdrift_id'),
+				 'status_eco' 		=> (int)$this->db->f('namssakstatusokonomi_id')
+				 );
+			}
+
+			for ($i=0; $i<count($leietaker_oppdatert); $i++)
+			{
+				$sql = " UPDATE fm_tenant SET "
+				. " status_eco = '" . $leietaker_oppdatert[$i]['status_eco'] . "',"
+				. " status_drift = '" . $leietaker_oppdatert[$i]['status_drift'] . "'"
+				. " WHERE  id = '" . $leietaker_oppdatert[$i]['id'] . "'";
+
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			$this->db->transaction_commit();
+
+			$msg = $i . ' namssakstatus er oppdatert';
+			$this->receipt['message'][]=array('msg'=> $msg);
+			$this->cron_log($msg);
+		}
+
 	}
