@@ -1085,6 +1085,19 @@
 			return false;
 		}
 
+		/**
+		 * Fetch responsibility candidates on the form array(array('id' => 1, 'name' => 'some text', 'selected' => 1|0))
+		 * @return array
+		 */
+		public function get_responsibility_arr($selected)
+		{
+			if( $responsibility_arr = execMethod('property.bogeneric.get_list',array('type' => 'responsibility_unit', 'selected' => $selected)))
+			{
+				array_unshift ($responsibility_arr,array('id' => '', 'name' => lang('none')));
+			}
+			return $responsibility_arr;
+        }
+
 		public function set_rented_area($rented_area)
 		{
 			$this->rented_area = $rented_area;
@@ -1143,6 +1156,11 @@
 				$this->set_validation_error('responsibility_id', lang('responsibility_id_not_numeric'));
 				$valid_numeric = false;
 			}
+
+			if($this->get_responsibility_id() != null && is_numeric($this->get_responsibility_id()) && $this->get_responsibility_arr()){
+				$valid_numeric = true; // this one is ok
+			}
+
 			if($this->get_account_in() != null && !is_numeric($this->get_account_in())){
 				$this->set_validation_error('account_in', lang('account_in_not_numeric'));
 				$valid_numeric = false;

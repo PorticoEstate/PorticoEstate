@@ -23,6 +23,7 @@
         protected $area;
         protected $status;
         protected $furnish_type_id;
+        protected $standard_id;
 		
 		protected $units;
 		protected $contracts;
@@ -269,7 +270,7 @@
 		public function get_furnish_type_id() {
             return (int) $this->furnish_type_id;
         }
-        
+      
 		public function get_furnish_type() {
 			
 			$furnish_types = $this->get_furnish_types();
@@ -288,6 +289,30 @@
 			
         	return self::$furnish_types_arr;
     	}
+
+		public function set_standard_id($standard_id)
+		{
+//			_debug_array($standard_id);die();
+			$this->standard_id = (int)$standard_id;
+        }
+
+		public function get_standard_id()
+		{
+            return (int) $this->standard_id;
+        }
+
+		/**
+		 * Fetch composite standards on the form array(array('id' => 1, 'name' => 'some text', 'selected' => 1|0))
+		 * @return array
+		 */
+		public function get_standards($selected)
+		{
+			if( $composite_standards = execMethod('property.bogeneric.get_list',array('type' => 'composite_standard', 'selected' => $selected)))
+			{
+				array_unshift ($composite_standards,array('id' => '', 'name' => lang('none')));
+			}
+			return $composite_standards;
+        }
 
         public function set_area($area) {
             $this->area = $area;

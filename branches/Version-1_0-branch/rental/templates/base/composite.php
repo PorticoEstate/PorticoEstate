@@ -73,6 +73,47 @@
 						?>
 					</dd>
 					<dt>
+						<!-- composite standard  -->
+						<label for="composite_standard_id"><?php echo lang('composite standard') ?></label>
+							<?php
+								$cur_standard_id = $composite->get_standard_id();
+
+								$composite_standard_arr = $composite->get_standards($cur_standard_id);
+
+							// Edit composite
+							if ($editable && $composite_standard_arr)
+							{
+								?>
+								<select name="composite_standard_id">
+								<?php
+									foreach($composite_standard_arr as $composite_standard)
+									{
+										echo "<option ".($composite_standard['selected'] == 1 ? 'selected="selected"' : "")." value=\"{$composite_standard['id']}\">{$composite_standard['name']}</option>";
+									}
+								?>
+								</select>
+							<?php
+							// View composite
+							}
+							else if($composite_standard_arr)
+							{
+								$composite_standard_name = '';
+								foreach($composite_standard_arr as $composite_standard)
+								{
+									if ($composite_standard['selected'] == 1)
+									{
+										$composite_standard_name = $composite_standard['name'];
+										break;
+									}
+								}
+
+								?>
+									<input type="text" id="composite_standard_id" value='<?php echo $composite_standard_name; ?>' disabled="disabled" />
+								<?php
+
+							} ?>
+					</dt>
+					<dt>
 						<!-- Furnish status  -->
 						<label for="furnish_type_id"><?php echo lang('furnish_type') ?></label>
 							<?php
@@ -82,21 +123,21 @@
 							// Edit composite
 							if ($editable) { ?>
 								<select name="furnish_type_id">
-								<?php 
+								<?php
 									foreach($furnish_types_arr as $id => $title){
 										if($cur_furnish_type_id == $id)
 											echo "<option selected='true' value='$id'>" . $title . "</option>";
-										else 
+										else
 											echo "<option value='$id'>" . $title . "</option>";
 									}
 								?>
-								</select>			
-							<?php 
+								</select>
+							<?php
 							// View composite
 							}else{ ?>
 								<input type="text" id="furnish_type_id" value='<?php echo $furnish_types_arr[$cur_furnish_type_id]; ?>' disabled="disabled" />
 							<?php } ?>
-					</dt>	
+					</dt>
 					<?php if ($editable) { // Only show custom address fields if we're in edit mode ?>
 					<dt>
 						<label for="has_custom_address"><?php echo lang('has_custom_address') ?></label>

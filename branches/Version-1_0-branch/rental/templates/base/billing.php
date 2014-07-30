@@ -107,7 +107,8 @@ if($billing_job != null)
 			{
 				?>
 				<a href="<?php echo $download_link ?>"><?php echo lang('Download export') ?></a><br />
-                <a href="<?php echo $download_link . '&amp;toExcel=true' ?>">Last ned eksportfil i Excel-format</a>
+                <a href="<?php echo $download_link . '&amp;toExcel=true&amp;type=bk' ?>"><?php echo lang('Download Excel export') . ' BK'?></a><br />
+                <a href="<?php echo $download_link . '&amp;toExcel=true&amp;type=nlsh' ?>">Last ned eksportfil i Excel-format NLSH</a>
 				<?php
 				if(!$billing_job->is_commited())
 				{

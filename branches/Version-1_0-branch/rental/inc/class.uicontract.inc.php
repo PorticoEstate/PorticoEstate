@@ -839,11 +839,12 @@
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$price_item_id = (int)phpgw::get_var('price_item_id');
+			$factor =  phpgw::get_var('factor','float');
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id);
+				return rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
 			}
 			return false;
 		}
