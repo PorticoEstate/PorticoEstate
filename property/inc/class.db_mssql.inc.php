@@ -13,22 +13,23 @@
 
 	class db_mssql
 	{
-		var $Host         = '';
-		var $Database     = '';
-		var $User         = '';
-		var $Password     = '';
+		var $Host				= '';
+		var $Database			= '';
+		var $User				= '';
+		var $Password			= '';
 
-		var $Link_ID      = 0;
-		var $Query_ID     = 0;
-		var $Record       = array();
-		var $Row          = 0;
-		var $VEOF         = -1;
+		var $Link_ID			= 0;
+		var $Query_ID			= 0;
+		var $Record				= array();
+		var $Row				= 0;
+		var $VEOF				= -1;
 
-		var $Errno        = 0;
-		var $Error        = '';
-		var $Auto_Free    = 0;     ## set this to 1 to automatically free results
-		var $Debug        = false;
-		protected $Transaction  = false;
+		var $Errno				= 0;
+		var $Error				= '';
+		var $Auto_Free			= 0;     ## set this to 1 to automatically free results
+		var $Debug				= false;
+		var $auto_stripslashes	= false;
+		protected $Transaction	= false;
 
 		function connect()
 		{
@@ -230,12 +231,17 @@
 			for($i=0; $i<$count; $i++)
 			{
 				$info = mssql_fetch_field($id, $i);
+				$res[$info->name]  = $info;
+/*
 				$res[$i]['table'] = $table;
-				$res[$i]['name']  = $info['name'];
-				$res[$i]['len']   = $info['max_length'];
-				$res[$i]['flags'] = $info['numeric'];
-			}
-			$this->free_result();
+				$res[$i]['name']  = $info->name;
+				$res[$i]['len']   = $info->max_length;
+				$res[$i]['flags'] = $info->numeric;
+				$res[$i]['type'] = $info->type;
+*/
+ 			}
+
+ 			$this->free_result();
 			return $res;
 		}
 
@@ -272,9 +278,20 @@
 			print $this->num_rows();
 		}
 
-		function f($Field_Name)
+		public function f($name, $strip_slashes = False)
 		{
-			return $this->Record[strtolower($Field_Name)];
+			if( isset($this->Record[$name]) )
+			{
+				if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
+				{
+					return htmlspecialchars_decode(stripslashes($this->Record[$name]));
+				}
+				else
+				{
+					return $this->Record[$name];
+				}
+			}
+			return '';
 		}
 
 		function p($Field_Name)
