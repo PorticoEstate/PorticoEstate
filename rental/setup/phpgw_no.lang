@@ -101,6 +101,8 @@ composite	rental	no	Leieobjekt
 composite_back	rental	no	Leieobjektsliste
 composite_has_contract	rental	no	Leieobjekt med aktive kontrakter
 composite_has_no_contract	rental	no	Leieobjekt uten aktive kontrakter
+composite standard	rental	no	Leieobjekt standard
+factor	common	no	Faktor
 contract	rental	no	Kontrakt
 contract_back	rental	no	Kontraktsliste
 contract_id	rental	no	Kontraktsnummer

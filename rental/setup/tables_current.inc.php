@@ -28,7 +28,19 @@
 					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
                     'object_type_id' =>     array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => null),
                     'area' =>               array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
-					'furnish_type_id' => 	array('type' => 'int', 'precision' => 4, 'nullable' => true)
+					'furnish_type_id' => 	array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'standard_id' => 	array('type' => 'int', 'precision' => 4, 'nullable' => true)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+		),
+		'rental_composite_standard' => array(
+				'fd' => array(
+					'id' => 				array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'name' => 				array('type' => 'varchar','precision' => '255','nullable' => false),
+                    'factor' =>               array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -70,6 +82,17 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'rental_contract_responsibility_unit' => array(
+				'fd' => array(
+					'id' => 				array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'name' => 				array('type' => 'varchar','precision' => '255','nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+		),
+
 		// Describes different billing terms like 'Monthly', 'Yearly', etc.
 		'rental_billing_term' => array(
 			'fd' => array(

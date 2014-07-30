@@ -334,8 +334,9 @@ class rental_soprice_item extends rental_socommon
 	 * @param $price_item	the price item to add
 	 * @return true if successful, false otherwise
 	 */
-	function add_price_item($contract_id, $price_item_id)
+	function add_price_item($contract_id, $price_item_id,$factor)
 	{
+		$factor = $factor ? (float) $factor : 1;
 		$price_item = $this->get_single($price_item_id);
 		$contract = rental_socontract::get_instance()->get_single($contract_id);
 		$rented_area = 0;
@@ -345,7 +346,7 @@ class rental_soprice_item extends rental_socommon
 			if($rented_area == ''){
 				$rented_area = 0;
 			}
-			$total_price = ($rented_area * $price_item->get_price());
+			$total_price = ($rented_area * $price_item->get_price() * $factor);
 			//var_dump($total_price, $rented_area, $price_item->get_price());
 		}
 		if($price_item)
@@ -357,7 +358,7 @@ class rental_soprice_item extends rental_socommon
 				str_replace(',','.',$rented_area),
 				"'" . $price_item->get_agresso_id() . "'",
 				$price_item->is_area() ? 'true' : 'false',
-				str_replace(',','.',$price_item->get_price()),
+				(str_replace(',','.',$price_item->get_price()) * $factor),
 				str_replace(',','.',$total_price)
 			);
 			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price) VALUES (" . join(',', $values) . ")";

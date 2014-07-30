@@ -297,3 +297,47 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.17';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
+
+
+	$test[] = '0.1.0.17';
+	function rental_upgrade0_1_0_17()
+	{
+		$GLOBALS['phpgw']->locations->add('.admin', 'Admin section', 'rental');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite','standard_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => 'True'
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_composite_standard', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => false),
+					'name' => array('type' => 'varchar','precision' => '255','nullable' => false),
+                    'factor' => array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_contract_responsibility_unit', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => false),
+					'name' => array('type' => 'varchar','precision' => '255','nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.18';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+
