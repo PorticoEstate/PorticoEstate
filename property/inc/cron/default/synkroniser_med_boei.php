@@ -34,7 +34,7 @@
 
 	include_class('property', 'cron_parent', 'inc/cron/');
 
-	class synkroniser_med_boei_2 extends property_cron_parent
+	class synkroniser_med_boei extends property_cron_parent
 	{
 
 		function __construct()
@@ -839,7 +839,7 @@ SQL;
 					. " VALUES ({$gate['id']}, '{$gate['descr']}')";
 
 				$this->db->query($sql2,__LINE__,__FILE__);
-				$gate_msg[]=$gate[$i]['descr'];
+				$gate_msg[]=$gate['descr'];
 			}
 
 
