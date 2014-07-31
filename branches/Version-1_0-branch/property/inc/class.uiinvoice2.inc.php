@@ -703,7 +703,7 @@
 				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve_line]\" value=\"{$entry['id']}\">";
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
 				$entry['approved_amount_hidden'] = $entry['approved_amount'];
-				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
+				$entry['approved_amount'] = "<input id=\"approved_amount_{$entry['id']}\" type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
 				if($entry['dime'])
 				{
 					$catetory = execMethod('phpgwapi.categories.return_single',$entry['dime']);
