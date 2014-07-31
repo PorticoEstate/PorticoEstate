@@ -839,7 +839,7 @@ SQL;
 					. " VALUES ({$gate['id']}, '{$gate['descr']}')";
 
 				$this->db->query($sql2,__LINE__,__FILE__);
-				$gate_msg[]=$gate[$i]['descr'];
+				$gate_msg[]=$gate['descr'];
 			}
 
 
