@@ -124,6 +124,14 @@ $(document).ready(function(){
 			return;
 		}
 
+		var approved_amount = $("#approved_amount_" +line_id).val();
+		var process_log = $("#process_log").val();
+		if(approved_amount == 0 && !process_log)
+		{
+			alert('Du må begrunne i fakturaloggen hvorfor godkjent beløp = 0 ');
+			return;
+		}
+
 		var periodization = document.getElementById("periodization").value;
 		var periodization_start = document.getElementById("periodization_start").value;
 		var dim_e = document.getElementById("dim_e").value;
