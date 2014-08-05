@@ -49,7 +49,7 @@
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header_inbox"/>
 				<xsl:apply-templates select="values_inbox"/>
 				<xsl:choose>
@@ -64,28 +64,27 @@
 		<xsl:variable name="sort_entry_time"><xsl:value-of select="sort_entry_time"/></xsl:variable>
 		<xsl:variable name="sort_sender"><xsl:value-of select="sort_sender"/></xsl:variable>
 		<tr class="th">
-			<td class="th_text" width="1%" align="right">
+			<th class="th_text" width="1%" align="right">
 				<xsl:value-of select="lang_id"/>
-			</td>
-			<td class="th_text" width="1%" align="right">
+			</th>
+			<th class="th_text" width="1%" align="right">
 				<xsl:value-of select="lang_user"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<a href="{$sort_sender}"><xsl:value-of select="lang_sender"/></a>
-			</td>
-
-			<td class="th_text" width="10%" align="center">
+			</th>
+			<th class="th_text" width="10%" align="center">
 				<a href="{$sort_entry_time}"><xsl:value-of select="lang_entry_time"/></a>
-			</td>
-			<td class="th_text" width="50%" align="center">
+			</th>
+			<th class="th_text" width="50%" align="center">
 				<xsl:value-of select="lang_message"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_answer"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_delete"/>
-			</td>
+			</th>
 		</tr>
 	</xsl:template>
 
@@ -164,7 +163,7 @@
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header_outbox"/>
 				<xsl:apply-templates select="values_outbox"/>
 				<xsl:choose>
@@ -177,34 +176,34 @@
 
 	<xsl:template match="table_header_outbox">
 		<xsl:variable name="sort_entry_time"><xsl:value-of select="sort_entry_time"/></xsl:variable>
-		<tr class="th">
-			<td class="th_text" width="1%" align="right">
+		<tr>
+			<th class="th_text" width="1%" align="right">
 				<xsl:value-of select="lang_id"/>
-			</td>
-			<td class="th_text" width="1%" align="right">
+			</th>
+			<th class="th_text" width="1%" align="right">
 				<xsl:value-of select="lang_user"/>
-			</td>
+			</th>
 
-			<td class="th_text" width="10%" align="center">
+			<th class="th_text" width="10%" align="center">
 				<a href="{$sort_entry_time}"><xsl:value-of select="lang_entry_time"/></a>
-			</td>
+			</th>
 
-			<td class="th_text" width="5%" align="center">
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_receiver"/>
-			</td>
-			<td class="th_text" width="50%" align="center">
+			</th>
+			<th class="th_text" width="50%" align="center">
 				<xsl:value-of select="lang_message"/>
-			</td>
+			</th>
 
-			<td class="th_text" width="5%" align="center">
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_status"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_group"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_delete"/>
-			</td>
+			</th>
 		</tr>
 	</xsl:template>
 

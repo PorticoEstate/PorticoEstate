@@ -142,7 +142,7 @@
 					<xsl:value-of select="name"/>
 				</td>
 				<td>
-				<table width="100%" cellpadding="2" cellspacing="2" align="center">
+				<table class="pure-table pure-table-bordered" width="100%" cellpadding="2" cellspacing="2" align="center">
 					<tr class="th">
 						<xsl:call-template name="value_header"/>
 					</tr>
@@ -185,7 +185,7 @@
 					<xsl:value-of select="name"/>
 				</td>
 				<td>
-				<table width="100%" cellpadding="2" cellspacing="2" align="center">
+				<table class="pure-table pure-table-bordered" width="100%" cellpadding="2" cellspacing="2" align="center">
 					<tr class="th">
 						<xsl:call-template name="value_header"/>
 					</tr>

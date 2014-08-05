@@ -68,7 +68,7 @@
 			</tr>
 		</table>
 
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table class="pure-table pure-table-bordered">
 			<xsl:apply-templates select="table_header"/>
 			<xsl:choose>
 				<xsl:when test="values != ''">
@@ -513,7 +513,7 @@
 			</tr>
 			
 			
-			<table width="100%" cellpadding="2" cellspacing="2" align="center">
+			<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header_task"/>
 				<xsl:apply-templates select="values_task"/>
 			</table>
@@ -851,7 +851,7 @@
 			</tr>
 			
 			
-			<table width="100%" cellpadding="2" cellspacing="2" align="center">
+			<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header_qualification"/>
 				<xsl:apply-templates select="values_qualification"/>
 			</table>
