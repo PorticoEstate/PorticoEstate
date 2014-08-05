@@ -33,7 +33,7 @@
 						<xsl:value-of select="lang_remove" />
 					</button>
 				</div>
-				<table>
+				<table class="pure-table pure-table-bordered">
 					<thead>
 						<tr>
 							<td><xsl:value-of select="lang_id" /></td>

@@ -25,7 +25,7 @@
 				<xsl:call-template name="nextmatchs"/>
 			</div>
 
-			<table border="0" cellspacing="2" cellpadding="2">
+			<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
 				<thead>
 					<xsl:apply-templates select="group_header"/>
 				</thead>

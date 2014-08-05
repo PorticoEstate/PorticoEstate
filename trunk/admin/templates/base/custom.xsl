@@ -76,7 +76,7 @@
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header_attrib"/>
 				<xsl:choose>
 					<xsl:when test="values_attrib != ''">
@@ -91,27 +91,27 @@
 		<xsl:variable name="sort_sorting"><xsl:value-of select="sort_sorting"/></xsl:variable>
 		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
 		<tr class="th">
-			<td class="th_text" width="10%" align="left">
+			<th class="th_text" width="10%" align="left">
 				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
-			</td>
-			<td class="th_text" width="20%" align="left">
+			</th>
+			<th class="th_text" width="20%" align="left">
 				<xsl:value-of select="lang_descr"/>
-			</td>
-			<td class="th_text" width="1%" align="left">
+			</th>
+			<th class="th_text" width="1%" align="left">
 				<xsl:value-of select="lang_datatype"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<a href="{$sort_sorting}"><xsl:value-of select="lang_sorting"/></a>
-			</td>
-			<td class="th_text" width="1%" align="center">
+			</th>
+			<th class="th_text" width="1%" align="center">
 				<xsl:value-of select="lang_search"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_edit"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
+			</th>
+			<th class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_delete"/>
-			</td>
+			</th>
 		</tr>
 	</xsl:template>
 
@@ -523,7 +523,7 @@
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table width="100%" cellpadding="2" cellspacing="2" align="center"  class="pure-table pure-table-bordered">
 			<xsl:apply-templates select="table_header_custom_function"/>
 			<xsl:choose>
 				<xsl:when test="values_custom_function != ''">

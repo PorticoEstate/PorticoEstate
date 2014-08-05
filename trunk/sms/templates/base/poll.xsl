@@ -40,7 +40,7 @@
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header"/>
 				<xsl:apply-templates select="values"/>
 				<xsl:apply-templates select="table_add"/>
