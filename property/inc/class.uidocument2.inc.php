@@ -27,10 +27,10 @@
 	 * @subpackage logistic
 	 * @version $Id: class.uidocument2.inc.php 11942 2014-05-04 19:43:36Z sigurdne $
 	 */
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
 
-	class property_uidocument2 extends phpgwapi_uicommon
+	class property_uidocument2 extends phpgwapi_uicommon_jquery
 	{
 
 		private $bo;
@@ -157,14 +157,17 @@
 				return;
 			}
 
+			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
+
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
 			self::add_javascript('phpgwapi', 'yui3', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
 
 			$categories = $this->_get_categories();
 			$columns	= $this->_get_columns();
@@ -293,7 +296,7 @@
 					);
 			}
 
-			self::render_template_xsl('datatable_common', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 
