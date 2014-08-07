@@ -15,7 +15,7 @@
 
 	<!-- New template-->
 	<xsl:template match="list_permission">
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table class="pure-table pure-table-bordered">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -152,7 +152,7 @@
 						<xsl:value-of select="name"/>
 					</td>
 					<td>
-						<table width="100%" cellpadding="2" cellspacing="2" align="center">
+						<table class="pure-table pure-table-bordered"  width="100%" cellpadding="2" cellspacing="2" align="center">
 							<tr class="th">
 								<xsl:call-template name="value_header"/>
 							</tr>
@@ -194,7 +194,7 @@
 						<xsl:value-of select="name"/>
 					</td>
 					<td>
-						<table width="100%" cellpadding="2" cellspacing="2" align="center">
+						<table class="pure-table pure-table-bordered"  width="100%" cellpadding="2" cellspacing="2" align="center">
 							<tr class="th">
 								<xsl:call-template name="value_header"/>
 							</tr>

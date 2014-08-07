@@ -15,7 +15,7 @@
 
 	<xsl:template match="cat_list">
 		<center>
-		<table border="0" cellspacing="2" cellpadding="2">
+		<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered">
 			<tr>
 				<td colspan="5" width="100%">
 					<xsl:call-template name="nextmatchs"/>
