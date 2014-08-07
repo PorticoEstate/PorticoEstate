@@ -28,7 +28,7 @@
 				<xsl:call-template name="nextmatchs"/>
 			</div>
 
-			<table>
+			<table class="pure-table pure-table-bordered">
 				<thead>
 					<xsl:apply-templates select="user_header"/>
 				</thead>

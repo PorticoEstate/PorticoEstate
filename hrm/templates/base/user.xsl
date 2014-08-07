@@ -46,7 +46,7 @@
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+		<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header"/>
 				<xsl:apply-templates select="values"/>
 		</table>
@@ -131,7 +131,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:call-template name="user_values"/>
-			<table width="100%" cellpadding="2" cellspacing="2" align="center">
+			<table class="pure-table pure-table-bordered">
 				<xsl:apply-templates select="table_header_training"/>
 				<xsl:apply-templates select="values_training"/>
 			</table>

@@ -423,10 +423,17 @@
 				{
 					if((int)$entry[5] > 0)
 					{
+						$descr	= $entry[1];
+
+						if(isset($entry[7]) && $entry[7])
+						{
+							$descr	.= ": {$entry[7]}";
+						}
+
 						$values = array
 						(
 							'activity_num'		=> $entry[0],
-							'descr'				=> $entry[1],
+							'descr'				=> $descr,
 							'unit'				=> $entry[2],
 							'cost'				=> $entry[6],
 							'quantity'			=> $entry[5],
