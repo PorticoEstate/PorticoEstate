@@ -50,13 +50,17 @@
 											</xsl:if>
 						            	</input>
 						            	<input type="hidden" name="control_group_id"  value="{$control_group_id}" />
-						            	<input type="hidden" name="component_location_id"  value="" />
-						            	<input type="hidden" name="component_id"  value="" />
+										<input type="hidden" name="component_location_id">
+											<xsl:attribute name="value"><xsl:value-of select="//check_list/location_id"/></xsl:attribute>
+										</input>
+										<input type="hidden" name="component_id">
+											<xsl:attribute name="value"><xsl:value-of select="//check_list/component_id"/></xsl:attribute>
+										</input>
 										<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 										<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 										<input type="hidden" name="check_list_id">
-											<xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute
-										></input>
+											<xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute>
+										</input>
 
 										<xsl:choose>
 											<xsl:when test="what_to_do !=''">
