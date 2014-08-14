@@ -268,15 +268,14 @@
 
             $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
             $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
-			$time_from = split(" ",phpgw::get_var('from_', 'str', 'GET'));
-			$time_to = 	split(" ",phpgw::get_var('to_', 'str', 'GET'));
+			$time_from = explode(" ",phpgw::get_var('from_', 'str', 'GET'));
+			$time_to = explode(" ",phpgw::get_var('to_', 'str', 'GET'));
 
 			$step = phpgw::get_var('step', 'str', 'POST');
 			if (! isset($step)) $step = 1;
 			if (! isset($allocation_id)) $noallocation = 1;
 			$invalid_dates = array();
 			$valid_dates = array();
-			
 			if(isset($allocation_id))
 			{
 				$allocation = $this->allocation_bo->read_single($allocation_id);
@@ -288,14 +287,13 @@
 				array_set_default($booking, 'resources', array(get_var('resource', int, 'GET')));
 				$booking['organization_id'] = $allocation['organization_id'];
 				$booking['organization_name'] = $allocation['organization_name'];
+                $noallocation = False;
 			} else {
   				$season = $this->season_bo->read_single($_POST['season_id']);
 				$booking['organization_id'] = $_POST['organization_id'];
 				$booking['organization_name'] = $_POST['organization_name'];
-                $noallocation = 1;
+                $noallocation = True;
             }
-
-
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$today = getdate();
@@ -350,7 +348,7 @@
 
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
-			        if( isset($noallocation)) {
+                    if($noallocation) {
                         $allocation['resources'] = $booking['resources'];
                         $allocation['cost'] = $booking['cost'];
                         $allocation['building_id'] = $booking['building_id'];
@@ -391,6 +389,7 @@
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
+
 					while (($max_dato+($interval*$i)) <= $repeat_until)
 					{
 						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval*$i));
@@ -411,8 +410,7 @@
 							$valid_dates[$i]['to_'] = $todate;
 							if ($step == 3)
 							{
-                                $gotnoallocation = $this->bo->so->got_no_allocation($booking); 
-                                if( isset($noallocation) || $gotnoallocation) {
+                                if( $noallocation ) {
                                     $allocation['resources'] = $booking['resources'];
                                     $allocation['cost'] = $booking['cost'];
                                     $allocation['building_id'] = $booking['building_id'];
