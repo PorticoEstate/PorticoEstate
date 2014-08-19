@@ -21,7 +21,9 @@
             <li><xsl:value-of select="php:function('lang', 'schedule')"/></li>
 		</ul>
 
-       	<button onclick="window.location.href='{resource/application_link}'"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+        <xsl:if test="resource/deactivate_application=0">
+            <button onclick="window.location.href='{resource/application_link}'"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+        </xsl:if>
 
 		<xsl:call-template name="msgbox"/>
 		<ul id="week-selector">
