@@ -8065,6 +8065,10 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.682 to 0.9.17.683
+	* Add actual cost year to tickets
+	*/
 	$test[] = '0.9.17.682';
 	function property_upgrade0_9_17_682()
 	{
@@ -8074,6 +8078,28 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.683';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.681 to 0.9.17.682
+	* Add tender related dates to workorder
+	*/
+	$test[] = '0.9.17.683';
+	function property_upgrade0_9_17_683()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','tender_deadline',array('type' => 'int','precision' => 8,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','tender_received',array('type' => 'int','precision' => 8,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','inspection_on_completion',array('type' => 'int','precision' => 8,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.684';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

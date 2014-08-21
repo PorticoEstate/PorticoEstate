@@ -1217,7 +1217,7 @@
 			if ($quotient >= 1)
 			{
 				//If yes, get top level column + the current column code
-				return getexcelcolumnname($quotient-1). chr(($index % 26)+65);
+				return $this->getexcelcolumnname($quotient-1). chr(($index % 26)+65);
 			}
 			else
 			{

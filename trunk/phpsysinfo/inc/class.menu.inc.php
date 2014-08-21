@@ -53,7 +53,7 @@
 						'url'	=> $GLOBALS['phpgw']->link('/phpsysinfo/index.php')
 								. '" onclick="window.open(\''
 								. $GLOBALS['phpgw']->link('/phpsysinfo/index.php')
-								. '\'); return false;"',
+								. '\'); return false;',
 					'image'	=> array('admin', 'php')
 				);
 
