@@ -8,8 +8,8 @@
 	phpgwapi_jquery::load_widget('core');
 
 	phpgw::import_class('phpgwapi.yui');
-	phpgwapi_yui::load_widget('button');
-	phpgwapi_yui::load_widget('container');
+//	phpgwapi_yui::load_widget('button');
+//	phpgwapi_yui::load_widget('container');
 
 	$javascripts[] = "/phpgwapi/js/SlickNav/jquery.slicknav.js";
 
@@ -50,28 +50,28 @@
 //		$stylesheets[] = '/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css';
 	}
 
-	$stylesheets[] = "/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
+	//$stylesheets[] = "/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
 //	$stylesheets[] = "/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css";
 //	$stylesheets[] = "/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css";
-	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
-	$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
+	//$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
+	//$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
 //	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
 		$stylesheets[] = "/phpgwapi/templates/pure/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
-	$stylesheets[] = "/{$app}/templates/base/css/base.css";
-	$stylesheets[] = "/{$app}/templates/portico/css/base.css";
+	//$stylesheets[] = "/{$app}/templates/base/css/base.css";
+	//$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
 		$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
-
+/*
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap'])
 	{
 		$stylesheets[] = "/phpgwapi/templates/base/css/yui_table_nowrap.css";
 	}
-
+*/
 	foreach ( $stylesheets as $stylesheet )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
