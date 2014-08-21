@@ -225,8 +225,8 @@
 
 			}
 
-			$ret = "!{$key}";	// save key if we dont find a translation
 			$key = $lookup_key;
+			$ret = '';
 
 			if ( isset($this->lang[$app_name][$key]) )
 			{
@@ -236,7 +236,15 @@
 			{
 				$ret = $this->lang['common'][$key];
 			}
-			else if ($this->collect_missing)
+
+			if (!$ret)
+			{
+				$ret = "!{$key}";	// save key if we dont find a translation
+				//don't look for it again
+				$this->lang[$app_name][$key] = $ret;
+			}
+
+			if ($this->collect_missing)
 			{
 				$lookup_key = $GLOBALS['phpgw']->db->db_addslashes($lookup_key);
 				$sql = "SELECT message_id FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '{$lookup_key}'"
