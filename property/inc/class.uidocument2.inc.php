@@ -59,7 +59,7 @@
 
 		public function __construct()
 		{
-			parent::__construct('', 'yui3');
+			parent::__construct(); //'', 'yui3');
 
 			$this->bo 					= CreateObject('property.bodocument');
 			$this->bocommon				= & $this->bo->bocommon;
@@ -110,11 +110,6 @@
            $columns = array();
 
 			$columns[] = array(
-							'key' => 'id',
-							'label' => 'id',
-							'hidden' => true
-						);
-			$columns[] = array(
 							'key' => 'loc1',
 							'label' => lang('property'),
 							'sortable' => true,
@@ -141,7 +136,9 @@
 						);
 			$columns[] = array(
 							'key' => 'link',
-							'hidden' => true
+							'label' => 'dummy',
+							'hidden' => true,
+							'sortable' => false,
 						);
 
 
@@ -157,15 +154,32 @@
 				return;
 			}
 
+			//FIXME:Responsive(js/css) - shows 'hidden' columns...
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
+
+//			self::add_javascript('phpgwapi', 'jquery-mobile', 'jquery.mobile-1.4.3.min.js');
+
+			//FIXME: working?
+//			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.columnFilter.js');
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/media/css/jquery.dataTables.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Responsive/css/dataTables.responsive.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colvis.jqueryui.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/TableTools/css/dataTables.tableTools.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/jquery-mobile/jquery.mobile-1.4.3.min.css');
+
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
-			self::add_javascript('phpgwapi', 'yui3', 'datatable.js');
+//			self::add_javascript('phpgwapi', 'yui3', 'datatable.js');
 //			phpgwapi_yui::load_widget('datatable');
 //			phpgwapi_yui::load_widget('paginator');
 
@@ -183,40 +197,29 @@
 								'text' => lang('category') . ':',
 								'list' => $categories,
 							),
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
 							array(
 								'type' => 'link',
 								'value' => lang('new'),
-								'href' => self::link(array('menuaction' => 'property.uidocument2.add')),
+								'href' => self::link(array('menuaction' => 'property.uidocument.edit')),
 								'class' => 'new_item'
 							),
-							array(
+/*							array(
 								'type' => 'link',
 								'value' => lang('download'),
 								'href' => 'javascript:window.open("'. self::link(array('menuaction' => 'property.uidocument2.download', 'export' => true, 'allrows' => true)) . '","window")',
 								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['allrows'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => 'property.uidocument2.index', 'allrows' => true))
-							),
-
+							)*/
 						),
 					),
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uidocument2.index', 'phpgw_return_as' => 'json')),
 					'editor_action' => 'property.uidocument2.edit_survey_title',
-					'field' => $columns
+					'field' => $columns,
+					'allrows'	=> true,
+				//	'left_click_action'	=> 'console.log',
+				//	'dbl_click_action'	=> 'alert', // Only one of them (or none..)
+					'download'	=> self::link(array('menuaction' => 'property.uidocument2.download', 'export' => true, 'allrows' => true)),
 				),
 			);
 
@@ -228,6 +231,11 @@
 						(
 							'name'		=> 'id',
 							'source'	=> 'id'
+						),
+						array
+						(
+							'name'		=> 'loc1',
+							'source'	=> 'loc1'
 						),
 					)
 				);
@@ -302,35 +310,37 @@
 
 		public function query()
 		{
-			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', 0),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+
+			$columns = $this->_get_columns();
+
+
+			$params = array
+			(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $order,
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('allrows', 'bool')
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
-			$result_objects = array();
-			$result_count = 0;
+			$values = $this->bo->read2(array('columns' => $columns, 'params' => $params));
 
-			$values = $this->bo->read($params);
 			if ( phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
 
 			$result_data = array('results' => $values);
-
 			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['start'] = $params['start'];
-			$result_data['sort'] = $params['sort'];
-			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
 
 			array_walk(	$result_data['results'], array($this, '_add_links'), "property.uidocument2.view" );
 
-			return $this->yui_results($result_data);
+			return $this->jquery_results($result_data);
 		}
 
 
@@ -1351,10 +1361,22 @@
 			{
 				if ( $e )
 				{
-					return $e->getMessage(); 
+					$result =  array
+					(
+						'status'	=> 'deleted',
+						'receipt'	=> $e->getMessage()
+					);
+					return $result;
 				}
 			}
-			return 'Deleted';
+
+			$result =  array
+			(
+				'status'	=> 'deleted',
+				'receipt'	=> lang('deleted') . " {$id}"
+			);
+
+			return $result;
 		}
 
 		/**

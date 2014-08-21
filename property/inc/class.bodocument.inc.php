@@ -180,6 +180,41 @@
 			return $documents;
 		}
 
+		function read2($data)
+		{
+			$documents = $this->so->read2($data);
+			$this->total_records = $this->so->total_records;
+
+			$this->uicols	= $this->so->uicols;
+			$cols_extra		= $this->so->cols_extra;
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($documents as &$document)
+			{
+				$location_data	= $this->solocation->read_single($document['location_code']);
+
+				if(isset($location_data['street_name']) && $location_data['street_name'])
+				{
+					$document['address'] = "{$location_data['street_name']} {$location_data['street_number']}";
+				}
+				elseif($location_data['loc2_name'])
+				{
+					$document['address'] = $location_data['loc2_name'];
+				}
+				elseif($location_data['loc1_name'])
+				{
+					$document['address'] = $location_data['loc1_name'];
+				}
+
+				for ($j=0;$j<count($cols_extra);$j++)
+				{
+					$document[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+				}
+			}
+
+			return $documents;
+		}
+
 		function get_files_at_location($data)
 		{
 			return $this->so->get_files_at_location($data);

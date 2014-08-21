@@ -259,7 +259,7 @@ HTML;
 				$history_url[] ="<a href='{$breadcrumb['url']}'>{$breadcrumb['name']}</a>";
 			}
 			$breadcrumbs = '<div class="breadcrumbs"><h4>' . implode(' >> ', $history_url) . '</h4></div>';
-			echo $breadcrumbs;
+//			echo $breadcrumbs;
 		}
 
 

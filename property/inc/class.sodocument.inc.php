@@ -84,18 +84,55 @@
 			return $branch;
 		}
 
+		function read2($data)
+		{
+			$columns = $data['columns'];
+			$params =  $data['params'];
+			$ordermethod_arr = array();
+
+			if(isset($params['order']) && is_array($params['order']))
+			{
+				foreach ($params['order'] as &$order)
+				{
+	//				$ordermethod_arr[] = "{$columns[$order['column']]['key']} {$order['dir']}";
+				}
+			}
+
+			$ordermethod = ' ';
+			if($ordermethod_arr)
+			{
+				$ordermethod = 'ORDER BY ' . implode(',', $ordermethod_arr);
+			}
+
+			$values = $this->read(array	(
+				'start'			=> isset($params['start']) && $params['start'] ? $params['start'] : 0,
+				'filter'		=> isset($params['filter'])?$params['filter']:'',
+				'query'			=> isset($params['query'])?$params['query']:'',
+				'sort'			=> isset($params['sort']) && $params['sort'] ? $params['sort'] : 'DESC',
+				'order'			=> isset($params['order'])?$params['order']:'',
+				'ordermethod'	=> $ordermethod,
+				'cat_id'		=> isset($params['cat_id']) && $params['cat_id'] ? $params['cat_id']:0,
+				'entity_id'		=> isset($params['entity_id'])?$params['entity_id']:'',
+				'doc_type'		=> isset($params['doc_type']) && $params['doc_type'] ? $params['doc_type']: 0,
+				'allrows'		=> isset($params['allrows'])?$params['allrows']:'',
+			));
+			return $values;
+
+		}
 		function read($data)
 		{
 			if(is_array($data))
 			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter'])?$data['filter']:'';
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-				$entity_id	= isset($data['entity_id'])?$data['entity_id']:'';
-				$doc_type	= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']: 0;
+				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			= isset($data['filter'])?$data['filter']:'';
+				$query			= isset($data['query'])?$data['query']:'';
+				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			= isset($data['order'])?$data['order']:'';
+				$ordermethod	= isset($data['ordermethod'])?$data['ordermethod']:'';
+				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$entity_id		= isset($data['entity_id'])?$data['entity_id']:'';
+				$doc_type		= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']: 0;
+				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 			}
 
 			$doc_types = $this->get_sub_doc_types($doc_type);
@@ -185,11 +222,11 @@
 			//FIXME
 			$groupmethod = '';
 
-			if ($order)
+			if (!$ordermethod && $order)
 			{
 				$ordermethod = " order by fm_document.$order $sort";
 			}
-			else
+			else if (!$ordermethod)
 			{
 				$ordermethod = ' order by fm_document.location_code ASC';
 			}
@@ -242,7 +279,16 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+
 
 			$document_list = array();
 			$j=0;
