@@ -654,7 +654,7 @@ onMouseOut="nd()">
 			</table>
 			<xsl:choose>
 				<xsl:when test="values != ''">
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<table class="pure-table pure-table-bordered">
 						<xsl:call-template name="table_header_history"/>
 						<xsl:call-template name="values_history"/>
 					</table>

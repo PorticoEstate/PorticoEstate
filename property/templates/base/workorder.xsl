@@ -26,7 +26,7 @@
 						<xsl:value-of select="lang_add"/>
 					</xsl:variable>
 					<form method="post" action="{$add_action}">
-						<input type="submit" class="forms" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
+						<input type="submit" class="forms" name="add" value="{$lang_add}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_add_statustext"/>
 							</xsl:attribute>
@@ -39,7 +39,7 @@
 						<xsl:value-of select="lang_search"/>
 					</xsl:variable>
 					<form method="post" action="{$search_action}">
-						<input type="submit" class="forms" name="search" value="{$lang_search}" onMouseout="window.status='';return true;">
+						<input type="submit" class="forms" name="search" value="{$lang_search}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_search_statustext"/>
 							</xsl:attribute>
@@ -52,7 +52,7 @@
 						<xsl:value-of select="lang_done"/>
 					</xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" class="forms" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+						<input type="submit" class="forms" name="done" value="{$lang_done}">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_done_statustext"/>
@@ -381,7 +381,7 @@
 									<xsl:value-of select="lang_descr"/>
 								</td>
 								<td>
-									<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
+									<textarea cols="60" rows="6" name="values[descr]">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_descr_statustext"/>
 										</xsl:attribute>
@@ -463,7 +463,7 @@
 									<xsl:value-of select="lang_remark"/>
 								</td>
 								<td>
-									<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
+									<textarea cols="60" rows="6" name="values[remark]">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_remark_statustext"/>
 										</xsl:attribute>
@@ -477,27 +477,88 @@
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="lang_start_date"/>
+									<xsl:value-of select="php:function('lang', 'Workorder start date')"/>
 									<div id="ctx"><!--Align lightbox to me--></div> 
 								</td>
 								<td>
-									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;">
+									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
 										<xsl:attribute name="title">
-											<xsl:value-of select="lang_start_date_statustext"/>
+										<xsl:value-of select="php:function('lang', 'Select the estimated start date for the Project')"/>
 										</xsl:attribute>
 									</input>
 								</td>
 							</tr>
 							<tr>
+								<xsl:variable name="lang_end_date">
+									<xsl:value-of select="php:function('lang', 'Workorder end date')"/>
+								</xsl:variable>
 								<td valign="top">
-									<xsl:value-of select="lang_end_date"/>
+									<xsl:value-of select="$lang_end_date"/>
 								</td>
 								<td>
-									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;">
+									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
 										<xsl:attribute name="title">
-											<xsl:value-of select="lang_end_date_statustext"/>
+											<xsl:value-of select="$lang_end_date"/>
 										</xsl:attribute>
 									</input>
+								</td>
+							</tr>
+							<tr>
+								<xsl:variable name="lang_tender_deadline">
+									<xsl:value-of select="php:function('lang', 'tender deadline')"/>
+								</xsl:variable>
+								<td valign="top">
+									<xsl:value-of select="$lang_tender_deadline"/>
+								</td>
+								<td>
+									<input type="text" id="values_tender_deadline" name="values[tender_deadline]" size="10" value="{value_tender_deadline}" readonly="readonly">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_tender_deadline"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<xsl:variable name="lang_tender_received">
+									<xsl:value-of select="php:function('lang', 'tender received')"/>
+								</xsl:variable>
+								<td valign="top">
+									<xsl:value-of select="$lang_tender_received"/>
+								</td>
+								<td>
+									<input type="text" id="values_tender_received" name="values[tender_received]" size="10" value="{value_tender_received}" readonly="readonly">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_tender_received"/>
+										</xsl:attribute>
+									</input>
+									<xsl:if test="value_tender_delay > 0">
+
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'delay')"/>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="value_tender_delay"/>
+									</xsl:if>
+								</td>
+							</tr>
+							<tr>
+								<xsl:variable name="lang_inspection_on_completion">
+									<xsl:value-of select="php:function('lang', 'inspection on completion')"/>
+								</xsl:variable>
+								<td valign="top">
+									<xsl:value-of select="$lang_inspection_on_completion"/>
+								</td>
+								<td>
+									<input type="text" id="values_inspection_on_completion" name="values[inspection_on_completion]" size="10" value="{value_inspection_on_completion}" readonly="readonly">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_inspection_on_completion"/>
+										</xsl:attribute>
+									</input>
+									<xsl:if test="value_end_date_delay > 0">
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'delay')"/>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="value_end_date_delay"/>
+									</xsl:if>
 								</td>
 							</tr>
 							<xsl:choose>
@@ -645,7 +706,7 @@
 									<xsl:value-of select="lang_budget"/>
 								</td>
 								<td>
-									<input type="text" name="values[budget]" value="{value_budget}" onMouseout="window.status='';return true;"><xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+									<input type="text" name="values[budget]" value="{value_budget}"><xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</td>
 							</tr>
 							<tr>
@@ -653,7 +714,7 @@
 									<xsl:value-of select="lang_addition_rs"/>
 								</td>
 								<td>
-									<input type="text" name="values[addition_rs]" value="{value_addition_rs}" onMouseout="window.status='';return true;"><xsl:attribute name="title"><xsl:value-of select="lang_addition_rs_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+									<input type="text" name="values[addition_rs]" value="{value_addition_rs}"><xsl:attribute name="title"><xsl:value-of select="lang_addition_rs_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</td>
 							</tr>
 								<td valign="top">
@@ -826,7 +887,7 @@
 											<xsl:variable name="lang_key_fetch_statustext">
 												<xsl:value-of select="lang_key_fetch_statustext"/>
 											</xsl:variable>
-											<select name="values[key_fetch]" class="forms" onMouseover="window.status='{$lang_key_fetch_statustext}'; return true;" onMouseout="window.status='';return true;">
+											<select name="values[key_fetch]" class="forms" onMouseover="window.status='{$lang_key_fetch_statustext}'; return true;">
 												<option value="">
 													<xsl:value-of select="lang_no_key_fetch"/>
 												</option>
@@ -842,7 +903,7 @@
 											<xsl:variable name="lang_key_deliver_statustext">
 												<xsl:value-of select="lang_key_deliver_statustext"/>
 											</xsl:variable>
-											<select name="values[key_deliver]" class="forms" onMouseover="window.status='{$lang_key_deliver_statustext}'; return true;" onMouseout="window.status='';return true;">
+											<select name="values[key_deliver]" class="forms" onMouseover="window.status='{$lang_key_deliver_statustext}'; return true;">
 												<option value="">
 													<xsl:value-of select="lang_no_key_deliver"/>
 												</option>
@@ -962,7 +1023,7 @@
 								<xsl:value-of select="lang_edit"/>
 							</xsl:variable>
 							<form method="post" action="{$edit_action}">
-								<input type="submit" class="forms" name="edit" value="{$lang_edit}" onMouseout="window.status='';return true;">
+								<input type="submit" class="forms" name="edit" value="{$lang_edit}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_edit_statustext"/>
 									</xsl:attribute>

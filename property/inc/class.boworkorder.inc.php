@@ -229,6 +229,37 @@
 					'name'=> lang('end date'),
 					'sortable'	=> true
 				);
+			$columns['tender_deadline'] = array
+				(
+					'id' => 'tender_deadline',
+					'name'=> lang('tender deadline'),
+					'sortable'	=> true
+				);
+			$columns['tender_received'] = array
+				(
+					'id' => 'tender_received',
+					'name'=> lang('tender received'),
+					'sortable'	=> true
+				);
+
+			$columns['tender_delay'] = array
+				(
+					'id' => 'tender_delay',
+					'name'=> lang('tender delay'),
+					'sortable'	=> false
+				);
+			$columns['inspection_on_completion'] = array
+				(
+					'id' => 'inspection_on_completion',
+					'name'=> lang('inspection on completion'),
+					'sortable'	=> true
+				);
+			$columns['end_date_delay'] = array
+				(
+					'id' => 'end_date_delay',
+					'name'=> lang('end date delay'),
+					'sortable'	=> false
+				);
 			$columns['billable_hours'] = array
 				(
 					'id' => 'billable_hours',
@@ -512,9 +543,16 @@
 
 			foreach ($workorder as &$entry)
 			{
-				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
-				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
-				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
+				$entry['tender_delay']				= phpgwapi_datetime::get_working_days($entry['tender_deadline'], $entry['tender_received']);
+				$entry['end_date_delay']			= phpgwapi_datetime::get_working_days($entry['end_date'], $entry['inspection_on_completion']);
+
+				//Formatting
+				$entry['entry_date']				= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
+				$entry['start_date']				= $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+				$entry['end_date']					= $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
+				$entry['tender_deadline']			= $GLOBALS['phpgw']->common->show_date($entry['tender_deadline'],$dateformat);
+				$entry['tender_received']			= $GLOBALS['phpgw']->common->show_date($entry['tender_received'],$dateformat);
+				$entry['inspection_on_completion']	= $GLOBALS['phpgw']->common->show_date($entry['inspection_on_completion'],$dateformat);
 			}
 
 			return $workorder;
@@ -529,10 +567,17 @@
 
 			$contacts	= CreateObject('property.sogeneric');
 			$contacts->get_location_info('vendor',false);
-			$workorder						= $this->so->read_single($workorder_id);
-			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$workorder['start_date']		= $GLOBALS['phpgw']->common->show_date($workorder['start_date'],$dateformat);
-			$workorder['end_date']			= $GLOBALS['phpgw']->common->show_date($workorder['end_date'],$dateformat);
+			$workorder								= $this->so->read_single($workorder_id);
+			$dateformat								= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			//Delay;
+			$workorder['tender_delay']				= phpgwapi_datetime::get_working_days($workorder['tender_deadline'], $workorder['tender_received']);
+			$workorder['end_date_delay']			= phpgwapi_datetime::get_working_days($workorder['end_date'], $workorder['inspection_on_completion']);
+			//formtatting
+			$workorder['start_date']				= $GLOBALS['phpgw']->common->show_date($workorder['start_date'],$dateformat);
+			$workorder['end_date']					= $GLOBALS['phpgw']->common->show_date($workorder['end_date'],$dateformat);
+			$workorder['tender_deadline']			= $GLOBALS['phpgw']->common->show_date($workorder['tender_deadline'],$dateformat);
+			$workorder['tender_received']			= $GLOBALS['phpgw']->common->show_date($workorder['tender_received'],$dateformat);
+			$workorder['inspection_on_completion']	= $GLOBALS['phpgw']->common->show_date($workorder['inspection_on_completion'],$dateformat);
 
 			if(isset($workorder['vendor_id']) && $workorder['vendor_id'])
 			{
@@ -752,9 +797,12 @@
 
 		function save($workorder,$action='')
 		{
-			$workorder['start_date']	= $this->bocommon->date_to_timestamp($workorder['start_date']);
-			$workorder['end_date']	= $this->bocommon->date_to_timestamp($workorder['end_date']);
-			$workorder['location_code'] = isset($workorder['location']) && $workorder['location'] ? implode('-',$workorder['location']) : '';
+			$workorder['start_date']				= $this->bocommon->date_to_timestamp($workorder['start_date']);
+			$workorder['end_date']					= $this->bocommon->date_to_timestamp($workorder['end_date']);
+			$workorder['tender_deadline']			= $this->bocommon->date_to_timestamp($workorder['tender_deadline']);
+			$workorder['tender_received']			= $this->bocommon->date_to_timestamp($workorder['tender_received']);
+			$workorder['inspection_on_completion']	= $this->bocommon->date_to_timestamp($workorder['inspection_on_completion']);
+			$workorder['location_code']				= isset($workorder['location']) && $workorder['location'] ? implode('-',$workorder['location']) : '';
 
 			if ($action=='edit')
 			{

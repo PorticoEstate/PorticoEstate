@@ -1708,6 +1708,10 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 
+			$GLOBALS['phpgw']->jqcal->add_listener('values_tender_deadline');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_tender_received');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_inspection_on_completion');
+
 			if( isset($receipt) && is_array($receipt))
 			{
 				$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -2094,13 +2098,13 @@
 				'b_group_data'							=> $b_group_data,
 				'b_account_data'						=> $b_account_data,
 
-				'lang_start_date_statustext'			=> lang('Select the estimated end date for the Project'),
-				'lang_start_date'						=> lang('Workorder start date'),
 				'value_start_date'						=> $values['start_date'],
-
-				'lang_end_date_statustext'				=> lang('Select the estimated end date for the Project'),
-				'lang_end_date'							=> lang('Workorder end date'),
 				'value_end_date'						=> $values['end_date'],
+				'value_tender_deadline'					=> $values['tender_deadline'],
+				'value_tender_received'					=> $values['tender_received'],
+				'value_tender_delay'					=> $values['tender_delay'],
+				'value_inspection_on_completion'		=> $values['inspection_on_completion'],
+				'value_end_date_delay'					=> $values['end_date_delay'],
 
 				'lang_copy_workorder'					=> lang('Copy workorder ?'),
 				'lang_copy_workorder_statustext'		=> lang('Choose Copy Workorder to copy this workorder to a new workorder'),
