@@ -1962,7 +1962,7 @@ workorder %1 has been edited	property	no	Bestilling %1 er oppdatert
 workorder %1 has been saved	property	no	Bestilling %1 er lagret
 workorder %1 needs approval	property	no	Bestilling %1 venter på godkjenning
 workorder detail categories	property	no	Detaljering av bestilling
-workorder end date	property	no	Frist for bestilling
+workorder end date	property	no	Sluttdato
 workorder entry date	property	no	Registreringsdato
 workorder id	property	no	Bestilling
 workorder is sent by email!	property	no	Bestilling er sendt pr e-post!
@@ -2032,3 +2032,8 @@ cost investment	property	no	Andel investering i kr.
 grant category	property	no	Tilskuddskategori
 what	property	no	Hva
 fictive periodization	property	no	Periodiser løpende ut året
+tender deadline	property	no	Tilbudsfrist
+tender received	property	no	Mottatt tilbud
+inspection on completion	property	no	Ferdigbefaring
+end date delay	property	no	Forsinket utførelse
+tender delay	property	no	Forsinket tilbud

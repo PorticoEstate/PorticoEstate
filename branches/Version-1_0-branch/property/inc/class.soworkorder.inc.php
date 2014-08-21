@@ -231,6 +231,13 @@
 				$cols_return[]	 = 'start_date';
 				$cols .= ",fm_workorder.end_date as end_date";
 				$cols_return[]	 = 'end_date';
+				$cols .= ",fm_workorder.tender_deadline as tender_deadline";
+				$cols_return[]	 = 'tender_deadline';
+				$cols .= ",fm_workorder.tender_received as tender_received";
+				$cols_return[]	 = 'tender_received';
+				$cols .= ",fm_workorder.inspection_on_completion as inspection_on_completion";
+				$cols_return[]	 = 'inspection_on_completion';
+
 				$cols.= ",fm_project.ecodimb";
 				$cols_return[]	 = 'ecodimb';
 				$cols.= ",fm_workorder.contract_sum";
@@ -492,6 +499,18 @@
 					case 'end_date':
 						$order_field = ", fm_workorder.end_date";
 						$ordermethod = " ORDER BY fm_workorder.end_date {$sort}, fm_workorder.id";
+						break;
+					case 'tender_deadline':
+						$order_field = ", fm_workorder.tender_deadline";
+						$ordermethod = " ORDER BY fm_workorder.tender_deadline {$sort}, fm_workorder.id";
+						break;
+					case 'tender_received':
+						$order_field = ", fm_workorder.tender_received";
+						$ordermethod = " ORDER BY fm_workorder.tender_received {$sort}, fm_workorder.id";
+						break;
+					case 'inspection_on_completion':
+						$order_field = ", fm_workorder.inspection_on_completion";
+						$ordermethod = " ORDER BY fm_workorder.inspection_on_completion {$sort}, fm_workorder.id";
 						break;
 					case 'ecodimb':
 						$order_field = ", fm_project.ecodimb";
@@ -893,14 +912,17 @@
 					'b_account_id'			 => (int) $this->db->f('account_id'),
 					'addition_percentage'	 => (int) $this->db->f('addition'),
 					'addition_rs'			 => (int) $this->db->f('rig_addition'),
-					//		'act_mtrl_cost'			=> $this->db->f('act_mtrl_cost'),
-					//		'act_vendor_cost'		=> $this->db->f('act_vendor_cost'),
+			//		'act_mtrl_cost'			=> $this->db->f('act_mtrl_cost'),
+			//		'act_vendor_cost'		=> $this->db->f('act_vendor_cost'),
 					'user_id'				 => $this->db->f('user_id'),
 					'vendor_id'				 => $this->db->f('vendor_id'),
-					//		'coordinator'			=> $this->db->f('coordinator'),
+			//		'coordinator'			=> $this->db->f('coordinator'),
 					'access'				 => $this->db->f('access'),
 					'start_date'			 => $this->db->f('start_date'),
 					'end_date'				 => $this->db->f('end_date'),
+					'tender_deadline'		 => $this->db->f('tender_deadline'),
+					'tender_received'		 => $this->db->f('tender_received'),
+					'inspection_on_completion'	=> $this->db->f('inspection_on_completion'),
 					'cat_id'				 => $this->db->f('category'),
 					'chapter_id'			 => $this->db->f('chapter_id'),
 					'chapter'				 => $this->db->f('chapter'),
@@ -1189,6 +1211,9 @@
 				time(),
 				$workorder['start_date'],
 				$workorder['end_date'],
+				$workorder['tender_deadline'],
+				$workorder['tender_received'],
+				$workorder['inspection_on_completion'],
 				$workorder['status'],
 				$workorder['descr'],
 				(int) $workorder['budget'],
@@ -1213,7 +1238,8 @@
 
 			$values = $this->db->validate_insert($values);
 
-			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
+			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,tender_deadline,"
+			. "tender_received,inspection_on_completion,status,"
 			. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,"
 			. "user_id,ecodimb,category,billable_hours,contract_sum,approved,continuous,fictive_periodization,mail_recipients  $cols) "
 			. "VALUES ( {$values} {$vals})", __LINE__, __FILE__);
@@ -1330,29 +1356,30 @@
 
 			$value_set = array
 			(
-				'title'					 => $workorder['title'],
-				'status'				 => $workorder['status'],
-				'start_date'			 => $workorder['start_date'],
-				'end_date'				 => $workorder['end_date'],
-				'descr'					 => $workorder['descr'],
-				'budget'				 => (int) $workorder['budget'],
-//				'combined_cost'			=> $combined_cost,
-				'key_deliver'			 => $workorder['key_deliver'],
-				'key_fetch'				 => $workorder['key_fetch'],
-				'account_id'			 => $workorder['b_account_id'],
-				'rig_addition'			 => $workorder['addition_rs'],
-				'addition'				 => $workorder['addition_percentage'],
-				'charge_tenant'			 => $workorder['charge_tenant'],
-				'vendor_id'				 => $workorder['vendor_id'],
-				'user_id'				 => $workorder['user_id'],
-				'ecodimb'				 => $workorder['ecodimb'],
-				'category'				 => $workorder['cat_id'],
-				'billable_hours'		 => $workorder['billable_hours'],
-//				'contract_sum'			=> $workorder['contract_sum'],
-				'approved'				 => $workorder['approved'],
-				'continuous'			 => $workorder['continuous'],
-				'fictive_periodization'	 => $workorder['fictive_periodization'],
-				'mail_recipients'		 => isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
+				'title'						=> $workorder['title'],
+				'status'					=> $workorder['status'],
+				'start_date'				=> $workorder['start_date'],
+				'end_date'					=> $workorder['end_date'],
+				'tender_deadline'			=> $workorder['tender_deadline'],
+				'tender_received'			=> $workorder['tender_received'],
+				'inspection_on_completion'	=> $workorder['inspection_on_completion'],
+				'descr'						=> $workorder['descr'],
+				'budget'					=> (int) $workorder['budget'],
+				'key_deliver'				=> $workorder['key_deliver'],
+				'key_fetch'					=> $workorder['key_fetch'],
+				'account_id'				=> $workorder['b_account_id'],
+				'rig_addition'				=> $workorder['addition_rs'],
+				'addition'					=> $workorder['addition_percentage'],
+				'charge_tenant'				=> $workorder['charge_tenant'],
+				'vendor_id'					=> $workorder['vendor_id'],
+				'user_id'					=> $workorder['user_id'],
+				'ecodimb'					=> $workorder['ecodimb'],
+				'category'					=> $workorder['cat_id'],
+				'billable_hours'			=> $workorder['billable_hours'],
+				'approved'					=> $workorder['approved'],
+				'continuous'				=> $workorder['continuous'],
+				'fictive_periodization'		=> $workorder['fictive_periodization'],
+				'mail_recipients'			=> isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 			);
 
 
@@ -1417,9 +1444,7 @@
 
 			$this->activate_period_from_budget($workorder['id'], $_active_period);
 
-			unset($_close_period);
 			unset($_active_period);
-
 
 			if($workorder['delete_b_period'])
 			{

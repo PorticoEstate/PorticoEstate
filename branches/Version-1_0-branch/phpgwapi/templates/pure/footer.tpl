@@ -1,10 +1,8 @@
-					</div>
 				</div>
-
-				<div class="footer">
-					<div class="button-bar">
-						{powered_by}
-					</div>
+			</div>
+			<div class="footer">
+				<div class="button-bar">
+					{powered_by}
 				</div>
 			</div>
 		</div>
