@@ -389,22 +389,24 @@
 						if ($_POST['recurring'] == 'on') {
 							$where_clauses[] = sprintf("bb_booking.to_ < '%s 00:00:00'", date('Y-m-d', $repeat_until));
 						}
+                        $where_clauses[] = sprintf("EXTRACT(DOW FROM bb_booking.from_) in (%s)",date('w', strtotime($_POST['from_'])));
+                        $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.from_) = %s",date('H', strtotime($_POST['from_'])));
+                        $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.from_) = %s",date('i', strtotime($_POST['from_'])));
+                        $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.to_) = %s",date('H', strtotime($_POST['to_'])));
+                        $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.to_) = %s",date('i', strtotime($_POST['to_'])));
+                        $params['sort'] = 'from_';
 						$params['filters']['where'] = $where_clauses;
 						$params['filters']['season_id'] = $booking['season_id'];
 						$params['filters']['group_id'] = $booking['group_id'];
-
 						$bookings = $this->bo->so->read($params);
 
 						if ($step == 2)
 						{
-							
 							$_SESSION['audience'] = $_POST['audience'];
 							$_SESSION['male'] = $_POST['male'];
 							$_SESSION['female'] = $_POST['female'];
-						
 						}
-
-						if ($step == 3)
+                        if ($step == 3)
 						{
 							foreach($bookings['results'] as $b)
 							{
@@ -421,26 +423,24 @@
 										$i++;
 									}
 								}
-
 								$b['agegroups'] = $temp_agegroup;
 								$b['audience'] = $_SESSION['audience'];
 								$b['group_id'] =$_POST['group_id'];
 								$b['activity_id'] = $_POST['activity_id'];
 								$errors = $this->bo->validate($b);
+
 								if(!$errors)
 								{
-
 									$receipt = $this->bo->update($b);
 									$update_count++;
-									
 								}
 							}
-							unset($_SESSION['female']);
+                            unset($_SESSION['female']);
 							unset($_SESSION['male']);
 							unset($_SESSION['audience']);
 
 						}
-					}
+                    }
 				}
 			}
 			$this->flash_form_errors($errors);

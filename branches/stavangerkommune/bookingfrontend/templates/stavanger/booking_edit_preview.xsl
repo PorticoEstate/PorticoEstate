@@ -20,6 +20,9 @@
 					<input type="hidden" name="group_id" value="{group_id}"/>
 					<input type="hidden" name="activity_id" value="{activity_id}"/>
 					<input type="hidden" name="building_id" value="{booking/building_id}"/>
+                    <input type="hidden" name="from_" value="{booking/from_}"/>
+                    <input type="hidden" name="to_" value="{booking/to_}"/>
+
 					<select size="10">
 						<xsl:for-each select="bookings/results">
 							<option>
