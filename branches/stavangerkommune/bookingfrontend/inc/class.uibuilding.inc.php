@@ -20,6 +20,8 @@
             $this->resource_bo = CreateObject('booking.boresource');
         }
 
+//        TODO: remove debug kode
+
 		public function information_screen()
 		{
             $today = new DateTime(phpgw::get_var('date', 'GET'), new DateTimeZone('Europe/Oslo'));
@@ -52,8 +54,10 @@
                 "Sun" => "Søndag"
             );
 
+            echo "<pre>\n";
             $bookings = $this->booking_bo->building_infoscreen_schedule(phpgw::get_var('id', 'GET'), $date, $res);
-
+            print_r($bookings);
+            exit;
             $from = clone $date;
             $from->setTime(0, 0, 0);
             // Make sure $from is a monday
@@ -188,9 +192,11 @@
             exit;
 		}
 
+//    TODO:  remove debug kode
+
 		public function schedule()
 		{
-			$backend = phpgw::get_var('backend', 'GET');
+            $backend = phpgw::get_var('backend', 'GET');
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding');
 			if ($building['deactivate_application'] == 0) { 
 				$building['application_link'] = self::link(array(
@@ -218,7 +224,7 @@
 			{
 				$building['date'] = phpgw::get_var('date', 'GET');
 			}
-            
+
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('building_schedule', array('building' => $building, 'backend' => $backend));
 		}

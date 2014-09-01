@@ -420,9 +420,10 @@ function array_minus($a, $b)
 		 * @return array containing values from $array for the keys in $keys.
 		 */
 
+//        todo: remove debug kode
         function building_schedule($building_id, $date)
         {
-
+//            echo "debug:\n";
             $from = clone $date;
             $from->setTime(0, 0, 0);
             // Make sure $from is a monday
@@ -472,7 +473,10 @@ function array_minus($a, $b)
             }
 
             $bookings = array_merge($allocations, $bookings);
+//            echo "before rem\n";
             $bookings = $this->_remove_event_conflicts($bookings, $events);
+//            echo "after rem\n";
+
             $bookings = array_merge($events, $bookings);
 
             $resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
@@ -490,6 +494,7 @@ function array_minus($a, $b)
             array_multisort($sort, SORT_ASC, $resources);
             $bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
             $results = build_schedule_table($bookings, $resources);
+//            exit;
             return array('total_records'=>count($results), 'results'=>$results);
         }
 
@@ -966,27 +971,152 @@ function array_minus($a, $b)
                 $e['conflicts'] = array();
             }
             $new_bookings = array();
+            $last = array();
             foreach($bookings as $b)
             {
+                if ($last) {
+                    foreach ($last as $l) {
+//                        echo $l['id']."-".$l['from_']."-".$l['to_']."\n";
+                        $new_bookings[] = $l;
+                    }
+                    $last = array();
+                }
                 $keep = true;
+//                $i = 0;
                 foreach($events as &$e)
                 {
+
+//                    echo $b['id']."\tfrom: ".substr($b['from_'],11,19)." to: ".substr($b['to_'],11,19)."\n";
+//                    echo $e['id']."\tfrom: ".substr($e['from_'],11,19)." to: ".substr($e['to_'],11,19)." ".$e['name']."\n";
+
                     if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
                             ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
                             ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
                     {
+//                        echo "##$i\n";
                         $keep = false;
                         $e['conflicts'][] = $b;
-                        break;
+
+                        $bf = $b['from_'];
+                        $bt = $b['to_'];
+                        $ef = $e['from_'];
+                        $et = $e['to_'];
+                        $tmp = $b;
+
+                        if ($last) {
+                            $ilast = $last;
+                            $last = array();
+                            foreach ($ilast as $l) {
+                                $lf = $l['from_'];
+                                $lt = $l['to_'];
+                                $tmp = $l;
+                                if ($ef <= $lf && $et >= $lt) {
+//                                    echo "B0: break ef <= bf && et >= bt\n\n";
+                                    $last[] = $l;
+                                    break;
+                                } elseif (($ef >= $lf) && ($et > $lt)) {
+//                                    echo "B1: (ef >= lf) && (et > lt)\n";
+                                    $tmp['from_'] = $lf;
+                                    $tmp['to_'] = $ef;
+                                    $last[] = $tmp;
+                                } elseif (($ef <= $lf) && ($et < $lt)) {
+//                                    echo "B2: (ef <= lf) && (et < lt)\n";
+                                    $tmp['from_'] = $et;
+                                    $tmp['to_'] = $lt;
+                                    $last[] = $tmp;
+                                } elseif (($ef > $lf) && ($et < $lt)) {
+//                                    echo "B3: (ef > lf) && (et < lt)\n";
+                                    $tmp['from_'] = $lf;
+                                    $tmp['to_'] = $ef;
+                                    $last[] = $tmp;
+                                    $tmp['from_'] = $et;
+                                    $tmp['to_'] = $lt;
+                                    $last[] = $tmp;
+                                } else {
+//                                    echo "B4: else break\n\n";
+                                    $last[] = $l;
+                                    break;
+                                }
+                            }
+                        } else {
+                            if ($ef <= $bf && $et >= $bt) {
+//                                echo "A0: break ef <= bf && et >= bt\n\n";
+                                break;
+                            } elseif (($ef >= $bf) && ($et > $bt)) {
+//                                echo "A1: (ef >= bf) && (et > bt)\n";
+                                $tmp['from_'] = $bf;
+                                $tmp['to_'] = $ef;
+                                $last[] = $tmp;
+                            } elseif (($ef <= $bf) && ($et < $bt)) {
+//                                echo "A2: (ef <= bf) && (et < bt)\n";
+                                $tmp['from_'] = $et;
+                                $tmp['to_'] = $bt;
+                                $last[] = $tmp;
+                            } elseif (($ef > $bf) && ($et < $bt)) {
+//                                echo "A3: (ef > bf) && (et < bt)\n";
+                                $tmp['from_'] = $bf;
+                                $tmp['to_'] = $ef;
+                                $last[] = $tmp;
+                                $tmp['from_'] = $et;
+                                $tmp['to_'] = $bt;
+                                $last[] = $tmp;
+                            } else {
+//                                echo "A4: else break\n\n";
+                                break;
+                            }
+                        }
+//                        print_r($last);
                     }
+//                    $i+=1;
                 }
+
+                if($last)
+                {
+                    foreach ($last as $l) {
+//                        echo $l['id']."-".$l['from_']."-".$l['to_']."\n";
+                        $new_bookings[] = $l;
+                    }
+                    $last = array();
+                }
+
                 if($keep)
                 {
                     $new_bookings[] = $b;
                 }
             }
+//            print_r($new_bookings);
             return $new_bookings;
+//            exit;
         }
+
+      function _remove_event_conflicts_org($bookings, &$events)
+      {
+          foreach($events as &$e)
+          {
+              $e['conflicts'] = array();
+          }
+          $new_bookings = array();
+          foreach($bookings as $b)
+          {
+              $keep = true;
+              foreach($events as &$e)
+              {
+                  if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
+                          ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
+                          ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
+                  {
+                      $keep = false;
+                      $e['conflicts'][] = $b;
+                      break;
+                  }
+              }
+              if($keep)
+              {
+                  $new_bookings[] = $b;
+              }
+          }
+          return $new_bookings;
+      }
 
 		public function complete_expired(&$bookings) {
 			$this->so->complete_expired($bookings);
