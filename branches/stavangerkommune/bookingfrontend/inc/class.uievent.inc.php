@@ -62,7 +62,7 @@
 
             $currres = $event['resources'];
 
-            list($event, $errors) = $this->extract_and_validate($event);
+//            list($event, $errors) = $this->extract_and_validate($event);
 
             if ($event['customer_organization_number']) {
                 $orginfo = $this->bo->so->get_org($event['customer_organization_number']);
@@ -80,11 +80,13 @@
 
             if($_SERVER['REQUEST_METHOD'] == 'POST')
             {
+                $test = $this->bo->read_single($event['id']);
                 $event['from_'] = substr($_POST['org_from'],0,11).$_POST['from_'].":00";
                 $event['to_'] = substr($_POST['org_to'],0,11).$_POST['to_'].":00";
                 array_set_default($_POST, 'resources', array());
 
-                if ($event['from_'] < $_POST['org_from'] || $event['to_'] > $_POST['org_to']) {
+//                if ($event['from_'] < $_POST['org_from'] || $event['to_'] > $_POST['org_to']) {
+                if ($event['from_'] < $test['from_'] || $event['to_'] > $test['to_']) {
                     $errors['out_of_range'] = lang("You can't extend the event, for that contact administrator");
                 }
 

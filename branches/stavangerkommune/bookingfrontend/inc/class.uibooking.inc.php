@@ -330,7 +330,7 @@
 			$booking = $this->bo->read_single($id);
 			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
 			$booking['building_name'] = $booking['building']['name'];
-			$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
+			$group = $this->group_bo->read_single($booking['group_id']);
 			$errors = array();
 			$update_count = 0;
 			$today = getdate();
@@ -507,9 +507,15 @@
 				$step++;
 
 				$season = $this->season_bo->read_single($booking['season_id']);
-				
-				$where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d'));
-				//$params['filters']['where'] = $where_clauses;
+
+                $where_clauses[] = sprintf("EXTRACT(DOW FROM bb_booking.from_) in (%s)",date('w', strtotime($booking['from_'])));
+                $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.from_) = %s",date('H', strtotime($booking['from_'])));
+                $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.from_) = %s",date('i', strtotime($booking['from_'])));
+                $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.to_) = %s",date('H', strtotime($booking['to_'])));
+                $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.to_) = %s",date('i', strtotime($booking['to_'])));
+                $where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d'));
+                $params['sort'] = 'from_';
+				$params['filters']['where'] = $where_clauses;
 				$params['filters']['season_id'] = $booking['season_id'];
 				$params['filters']['group_id'] = $booking['group_id'];
 				$booking = $this->bo->so->read($params);

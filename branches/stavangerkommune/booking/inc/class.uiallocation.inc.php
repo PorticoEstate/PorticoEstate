@@ -479,8 +479,8 @@
 						$allocation['from_'] = $fromdate;
 						$allocation['to_'] = $todate;
 
-                        $id = $this->bo->so->get_allocation_id($allocation);                
-						if ($id) 
+                        $id = $this->bo->so->get_allocation_id($allocation);
+						if ($id)
 						{
 						   $err  = $this->bo->so->check_for_booking($id);
 						}
