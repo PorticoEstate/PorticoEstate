@@ -455,6 +455,7 @@
             $config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
             $orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+            $application_text = $config->config_data;
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
