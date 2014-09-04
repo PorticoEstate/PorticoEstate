@@ -54,10 +54,10 @@
                 "Sun" => "Søndag"
             );
 
-            echo "<pre>\n";
+//            echo "<pre>\n";
             $bookings = $this->booking_bo->building_infoscreen_schedule(phpgw::get_var('id', 'GET'), $date, $res);
-            print_r($bookings);
-            exit;
+//            print_r($bookings);
+//            exit;
             $from = clone $date;
             $from->setTime(0, 0, 0);
             // Make sure $from is a monday
