@@ -182,19 +182,40 @@ class booking_boevent extends booking_bocommon_authorized
         $mailadresses = $config->config_data['emails'];
         $mailadresses = explode("\n",$mailadresses);
 
-//        $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add&building_id=';
-//        $link .= $event['building_id'].'&building_name='.urlencode($event['building_name']).'&from_[]=';
-//        $link .= urlencode($event['from_']).'&to_[]='.urlencode($event['to_']).'&resource='.implode(",",$event['resources']);
         $link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id=';
         $link .= $event['building_id'].'&date='.substr($event['from_'], 0, 10);
 
-        $body .= "<p>".$config->config_data['event_canceled_mail'];
+        if (!$type) {
+            $body .= $config->config_data['event_canceled_mail_subject'];
+            $body .= "<p>".$config->config_data['event_canceled_mail'];
+        } else {
+            $body .= $config->config_data['event_edited_mail_subject'];
+            $body .= "<p>".$config->config_data['event_edited_mail'];
+        }
+
+        if ($_POST['org_from'] < $event['from_'] && $_POST['org_to'] == $event['to_']) {
+            $event['from_'] = $_POST['org_from'];
+            $event['to_'] = $event['from_'];
+            $freetime = pretty_timestamp($event['from_']).' til '.pretty_timestamp($event['to_']);
+        }
+        elseif ($_POST['org_from'] == $event['from_'] && $_POST['org_to'] > $event['to_']) {
+            $event['from_'] = $event['to_'];
+            $event['to_'] = $_POST['org_to'];
+            $freetime = pretty_timestamp($event['from_']).' til '.pretty_timestamp($event['to_']);
+        }
+        elseif ($_POST['org_from'] < $event['from_'] && $_POST['org_to'] > $event['to_']) {
+            $freetime = pretty_timestamp($_POST['org_from']).' til '.pretty_timestamp($event['from_'])." og \n";
+            $freetime .= pretty_timestamp($event['to_']).' til '.pretty_timestamp($_POST['org_to']);
+        }
+
         $body .= '</p><p>'.$event['customer_organization_name'].' har avbestilt tid i '.$event['building_name'].':<br />';
-        $body .= implode(", ",$this->so->get_resources(implode(",",$event['resources']))).' den '.pretty_timestamp($event['from_']);
-        $body .=' til '.pretty_timestamp($event['to_']);
-        $body .= ' - <a href="'.$link.'">'.lang('Apply for time').'</a></p>';
+        $body .= implode(", ",$this->so->get_resources(implode(",",$event['resources']))).' den '.$freetime;
+        $body .= ' - <a href="'.$link.'">'.lang('Check calendar').'</a></p>';
         $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
 
+
+
+        print_r($body);
         foreach ($mailadresses as $adr)
         {
             try

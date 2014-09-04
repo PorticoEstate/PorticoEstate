@@ -85,7 +85,6 @@
                 $event['to_'] = substr($_POST['org_to'],0,11).$_POST['to_'].":00";
                 array_set_default($_POST, 'resources', array());
 
-//                if ($event['from_'] < $_POST['org_from'] || $event['to_'] > $_POST['org_to']) {
                 if ($event['from_'] < $test['from_'] || $event['to_'] > $test['to_']) {
                     $errors['out_of_range'] = lang("You can't extend the event, for that contact administrator");
                 }
@@ -96,7 +95,9 @@
 
                 if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data']  && !$errors['contact_name'] && !$errors['out_of_range'])
                 {
-                    if ($event['from_'] > $orgdate['from'] || $event['to_'] < $orgdate['to']) {
+
+                    if ($event['from_'] > $test['from_'] || $event['to_'] < $test['to_']) {
+
                         $this->bo->send_notification(true, $event, $mailadresses, $orgdate);
                     }
                     $message = '';
