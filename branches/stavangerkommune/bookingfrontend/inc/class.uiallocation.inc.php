@@ -91,7 +91,12 @@
 					$system_message['email'] = $organization['contacts'][0]['email'];
 					$system_message['title'] = lang('Cancelation of allocation from')." ".$allocation['organization_name'];
 	                $link = self::link(array('menuaction' => 'booking.uiallocation.delete','allocation_id' => $allocation['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval));
-	                $link = mb_strcut($link,16,strlen($link));
+                    if (strpos($link,'/portico/bookingfrontend') !== false) {
+                        $link = mb_strcut($link,24,strlen($link));
+                        $link = "/portico".$link;
+                    } else {
+                        $link = mb_strcut($link,16,strlen($link));
+                    }
                     $system_message['link'] = $link;
                     $system_message['message'] = $system_message['message']."<br /><br />".lang('To cancel allocation use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
                     $this->bo->send_admin_notification($allocation, $maildata, $system_message);
