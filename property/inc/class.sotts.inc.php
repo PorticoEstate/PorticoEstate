@@ -966,6 +966,8 @@
 			 ** M - Mail sent to vendor
 			 */
 
+			$this->fields_updated = false;
+
 			if ($old_status != $ticket['status'])
 			{
 				$check_old_custom = (int) trim($old_status,'C');
@@ -1029,6 +1031,8 @@
 		{
 			$id = (int) $id;
 			$receipt = array();
+			$this->fields_updated = false;
+
 			$this->db->query("SELECT priority FROM fm_tts_tickets WHERE id={$id}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$oldpriority  = $this->db->f('priority');
