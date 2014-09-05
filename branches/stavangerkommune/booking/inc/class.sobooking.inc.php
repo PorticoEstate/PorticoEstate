@@ -662,15 +662,15 @@
 
         function get_screen_event($building_id, $start, $end, $resources = '')
         {
-            $start = $start->format('Y-m-d H:i');
+            $start = $start->format('Y-m-d H:i:s');
 
             $test = $end->format('H:i');
 
             if ($test != '00:00') {
-                $end = $end->format('Y-m-d H:i');
+                $end = $end->format('Y-m-d H:i:s');
 
             } else {
-                $end = $end->format('Y-m-d').' 24:00';
+                $end = $end->format('Y-m-d').' 24:00:00';
             }
 
             $building_id = intval($building_id);
@@ -688,7 +688,13 @@
                     FROM bb_event
                     INNER JOIN bb_event_resource ON (bb_event_resource.event_id = bb_event.id)
                     INNER JOIN bb_resource ON (bb_resource.id = bb_event_resource.resource_id)
-                    WHERE bb_event.from_ > '".$start."' AND bb_event.to_ < '".$end."'
+                    WHERE
+                    (
+                    (bb_event.from_ >= '".$start."' AND bb_event.to_ <= '".$end."')
+                    OR (bb_event.from_ < '".$start."' AND bb_event.to_ <= '".$end."' AND bb_event.to_ > '".$start."')
+                    OR (bb_event.from_ >='".$start."' AND bb_event.from_ < '".$end."' AND bb_event.to_ > '".$end."')
+                    OR (bb_event.from_ < '".$start."' AND bb_event.to_ > '".$end."')
+                    )
                     AND bb_resource.building_id = (".$building_id.")
                      ".$resources."
                     AND bb_event.active = 1

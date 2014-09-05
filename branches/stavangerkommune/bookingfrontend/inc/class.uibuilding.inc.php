@@ -20,8 +20,6 @@
             $this->resource_bo = CreateObject('booking.boresource');
         }
 
-//        TODO: remove debug kode
-
 		public function information_screen()
 		{
             $today = new DateTime(phpgw::get_var('date', 'GET'), new DateTimeZone('Europe/Oslo'));
@@ -54,10 +52,7 @@
                 "Sun" => "Søndag"
             );
 
-//            echo "<pre>\n";
             $bookings = $this->booking_bo->building_infoscreen_schedule(phpgw::get_var('id', 'GET'), $date, $res);
-//            print_r($bookings);
-//            exit;
             $from = clone $date;
             $from->setTime(0, 0, 0);
             // Make sure $from is a monday
@@ -68,6 +63,19 @@
             }
             $from = $from->format('d.m.Y');
 
+            $list = array(
+                'Mon' => array(),
+                'Tue' =>array(),
+                'Wed' =>array(),
+                'Thu' =>array(),
+                'Fri' =>array(),
+                'Sat' =>array(),
+                'Sun' =>array()
+            );
+            foreach ($list as $key => &$item)
+            {
+                    $item = $bookings['results'][$key];
+            }
 
             $time = $timestart;
             $html = '<html><head><title>Kalender for '.$building['name'].'</title>';
@@ -91,7 +99,7 @@
             $html .= '<tbody>';
             $first = '';
             $len =  (($timeend-$timestart)*2)+2;
-            foreach ($bookings['results'] as $day => $resources) {
+            foreach ($list as $day => $resources) {
                 if ($first != $day) {
                     $first = $day;
                     $html .= '<tr style="background-color: #999; color: white;">';
@@ -191,8 +199,6 @@
             echo $html;
             exit;
 		}
-
-//    TODO:  remove debug kode
 
 		public function schedule()
 		{
