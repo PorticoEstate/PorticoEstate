@@ -361,7 +361,21 @@ class rental_soprice_item extends rental_socommon
 				(str_replace(',','.',$price_item->get_price()) * $factor),
 				str_replace(',','.',$total_price)
 			);
-			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price) VALUES (" . join(',', $values) . ")";
+				$start_date_field = '';
+				$end_date_field = '';
+
+			if( $start_date = $contract->get_billing_start_date())
+			{
+				$values[] = $start_date;
+				$start_date_field = ", date_start";
+			}
+			if( $end_date = $contract->get_billing_end_date())
+			{
+				$values[] = $end_date;
+				$end_date_field = ", date_end";
+			}
+
+			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price {$start_date_field} {$end_date_field}) VALUES (" . join(',', $values) . ")";
 			//var_dump($q);
 			$result = $this->db->query($q);
 			if($result)

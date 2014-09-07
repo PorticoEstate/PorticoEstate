@@ -65,6 +65,7 @@ billing time limit	rental	no	Faktura - tidsgrense
 billing_external	rental	no	Ekstern
 billing_internal	rental	no	Intern
 billing_start	rental	no	Fakturastart
+billing_end	rental	no	Fakturastopp
 billing_term	rental	no	Termin
 billing_terms	rental	no	Terminer
 billing_unit	rental	no	Ansvar-/tjenestested	
@@ -587,6 +588,7 @@ user_found_in_Fellesdata	rental	no	Personen finnes i Fellesdata.
 user_not_in_fellesdata	rental	no	Personen finnes ikke i Fellesdata.
 user_found_in_PE	rental	no	Personen er bruker av dette systemet.
 warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
+warning_billing_end_date_between	rental	no	Fakturastopp må være innenfor kontraktens datoer!
 warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!
 warning_lacking_start_date	rental	no	Kontrakten mangler start-dato!
 warning_price_item_date_between	rental	no	Priselementets datoer må være innenfor kontraktens datoer!

@@ -341,3 +341,16 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 
+	$test[] = '0.1.0.18';
+	function rental_upgrade0_1_0_18()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract','billing_end',array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => 'True'
+		));
+
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.19';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}

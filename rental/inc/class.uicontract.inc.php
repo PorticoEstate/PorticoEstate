@@ -16,6 +16,8 @@
 	include_class('rental', 'contract_price_item', 'inc/model/');
 	include_class('rental', 'notification', 'inc/model/');
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	class rental_uicontract extends rental_uicommon
 	{
 		private $pdf_templates = array();
@@ -151,7 +153,8 @@
 					
 					break;
 				case 'contracts_for_composite': // ... all contracts this composite is involved in, filters (status and date)
-					$filters = array('composite_id' => phpgw::get_var('composite_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('date_status_hidden'));
+					$filters = array('composite_id' => phpgw::get_var('composite_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'));
+					$filters['status_date']			= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_status'));
 					break;
 				case 'get_contract_warnings':	//get the contract warnings
 					$contract = rental_socontract::get_instance()->get_single(phpgw::get_var('contract_id'));
@@ -167,7 +170,11 @@
 					phpgwapi_cache::session_set('rental', 'contract_status', phpgw::get_var('contract_status'));
 					phpgwapi_cache::session_set('rental', 'contract_status_date', phpgw::get_var('date_status'));
 					phpgwapi_cache::session_set('rental', 'contract_type', phpgw::get_var('contract_type'));
-					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('date_status_hidden'));
+					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'));
+					$filters['status_date']			= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_status'));
+					$filters['start_date_report']	= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('start_date_report'));
+					$filters['end_date_report']		= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('end_date_report'));
+//					_debug_array($filters);
 			}
 			if($type != 'get_contract_warnings'){
 				$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
@@ -336,6 +343,9 @@
 		 */
 		public function index()
 		{
+//			phpgw::import_class('phpgwapi.jquery');
+//			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('rental', 'rental', 'contract.index.js');
 
 			$search_for = phpgw::get_var('search_for');
 			if($search_for)
@@ -450,6 +460,10 @@
 			$contract_id = (int)phpgw::get_var('id');
 			$location_id = (int)phpgw::get_var('location_id');
 			$update_price_items = false;
+
+			phpgw::import_class('phpgwapi.jquery');
+			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('rental', 'rental', 'contract.edit.js');
 			
 			$message = null;
 			$error = null;
@@ -497,8 +511,8 @@
 					}
 				}
 				
-				$date_start =  strtotime(phpgw::get_var('date_start_hidden'));
-				$date_end =  strtotime(phpgw::get_var('date_end_hidden'));
+				$date_start =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_start'));
+				$date_end =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_end'));
 				
 				if(isset($contract)){ 
 					$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
@@ -512,7 +526,8 @@
 						$contract->set_location_id($location_id); // only present when new contract
 					}
 					$contract->set_term_id(phpgw::get_var('billing_term'));
-					$contract->set_billing_start_date(strtotime(phpgw::get_var('billing_start_date_hidden')));
+					$contract->set_billing_start_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_start_date')));
+					$contract->set_billing_end_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_end_date')));
 					$contract->set_service_id(phpgw::get_var('service_id'));
 					$contract->set_responsibility_id(phpgw::get_var('responsibility_id'));
 					$contract->set_reference(phpgw::get_var('reference'));
@@ -539,7 +554,7 @@
 					//}
 					
 					$contract->set_project_id(phpgw::get_var('project_id'));
-					$contract->set_due_date(strtotime(phpgw::get_var('due_date_hidden')));
+					$contract->set_due_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('due_date')));
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
 					$old_rented_area = $contract->get_rented_area();
 					$new_rented_area = phpgw::get_var('rented_area');
@@ -618,10 +633,10 @@
 				{
 					$account_id = phpgw::get_var('notification_target');
 					$location_id = phpgw::get_var('notification_location');
-					$date = phpgw::get_var('date_notification_hidden');
+					$date = phpgw::get_var('date_notification');
 					if($date)
 					{
-						$date = strtotime($date);
+						$date = phpgwapi_datetime::date_to_timestamp($date);
 					}
 					$notification = new rental_notification(-1, $account_id, $location_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
 					if (rental_sonotification::get_instance()->store($notification))
@@ -714,6 +729,7 @@
 				$contract->set_contract_date(null);
 				$contract->set_due_date(null);
 				$contract->set_billing_start_date(null);
+				$contract->set_billing_end_date(null);
 				if($so_contract->store($contract))
 				{
 					// copy the contract

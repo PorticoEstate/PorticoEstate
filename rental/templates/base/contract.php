@@ -369,12 +369,14 @@ function loadDatatables(currTab){
 					</dt>
 					<dd>
 						<?php
-							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '-';
-							$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
-							$start_date_cal = $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);?>
-						<?php if ($editable) {
-								echo $start_date_cal;
-							} else {
+							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
+							$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date()) : '';
+							if ($editable)
+							{
+								echo $GLOBALS['phpgw']->jqcal->add_listener('date_start', 'date', $start_date);
+							}
+							else
+							{
 								echo $start_date;
 							}
 						?>
@@ -385,15 +387,17 @@ function loadDatatables(currTab){
 					</dt>
 					<dd>
 						<?php
-							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '-';
-							$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
-							$end_date_cal =  $GLOBALS['phpgw']->yuical->add_listener('date_end', $end_date);
-						?>
-						<?php if ($editable) {
-								echo $end_date_cal;
-							} else {
+							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
+							$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date()) : '';
+							if ($editable)
+							{
+								echo $GLOBALS['phpgw']->jqcal->add_listener('date_end', 'date', $end_date);
+							}
+							else
+							{
 								echo $end_date;
-						 }?>
+							}
+						 ?>
 						<br/>
 					</dd>
 					<dt>
@@ -401,11 +405,15 @@ function loadDatatables(currTab){
 					</dt>
 					<dd>
 						<?php
-							$due_date = $contract->get_due_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_due_date()) : '-';
-							$due_date_yui = $contract->get_due_date() ? date('Y-m-d', $contract->get_due_date()) : '';
-							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('due_date', $due_date);
-							} else {
+							$due_date = $contract->get_due_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_due_date()) : '';
+							$due_date_yui = $contract->get_due_date() ? $GLOBALS['phpgw']->common->show_date($contract->get_due_date()) : '';
+							if ($editable)
+							{
+								echo $GLOBALS['phpgw']->jqcal->add_listener('due_date', 'date', $due_date);
+					//			echo $GLOBALS['phpgw']->yuical->add_listener('due_date', $due_date);
+							}
+							else
+							{
 								echo $due_date;
 							}
 						?>
@@ -459,12 +467,34 @@ function loadDatatables(currTab){
 					</dt>
 					<dd>
 						<?php
-							$billing_start_date = $contract->get_billing_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_billing_start_date()) : '-';
-							$billing_start_date_yui = $contract->get_billing_start_date() ? date('Y-m-d', $contract->get_billing_start_date()) : '';
-							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
-							} else {
+							$billing_start_date = $contract->get_billing_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_billing_start_date()) : '';
+							$billing_start_date_yui = $contract->get_billing_start_date() ? $GLOBALS['phpgw']->common->show_date($contract->get_billing_start_date()) : '';
+							if ($editable)
+							{
+//								echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
+								echo $GLOBALS['phpgw']->jqcal->add_listener('billing_start_date', 'date', $billing_start_date);
+							}
+							else
+							{
 								echo $billing_start_date;
+							}
+						?>
+					</dd>
+					<dt>
+						<label for="billing_end_date"><?php echo lang('billing_end') ?></label>
+					</dt>
+					<dd>
+						<?php
+							$billing_end_date = $contract->get_billing_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_billing_end_date()) : '';
+							$billing_end_date_yui = $contract->get_billing_end_date() ? $GLOBALS['phpgw']->common->show_date($contract->get_billing_end_date()) : '';
+							if ($editable)
+							{
+//								echo $GLOBALS['phpgw']->yuical->add_listener('billing_end_date', $billing_end_date);
+								echo $GLOBALS['phpgw']->jqcal->add_listener('billing_end_date', 'date', $billing_end_date);
+							}
+							else
+							{
+								echo $billing_end_date;
 							}
 						?>
 					</dd>
@@ -858,10 +888,13 @@ function loadDatatables(currTab){
 			?>
 				<form action="?menuaction=rental.uicontract.edit&id=<?php echo $contract->get_id() ?>" method="post">
 					<?php
-					$notification_date = date('Y-m-d');
-					if(isset($notification))
+					if(isset($notification))//Never??
 					{
-						$notification_date = date('Y-m-d',$notification->get_date());
+						$notification_date = $GLOBALS['phpgw']->common->show_date($notification->get_date());
+					}
+					else
+					{
+						$notification_date = $GLOBALS['phpgw']->common->show_date(time());
 					}
 					?>
 
@@ -872,8 +905,11 @@ function loadDatatables(currTab){
 
 								<label for="calendarNotificationDate"><?php echo lang('date') ?></label>
 								<!--<input type="text" name="date_notification" id="date_notification" size="10" value="<?php echo isset($notification) ? htmlentities($notification->get_date()) : '' ?>" /> -->
-								<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_notification', $notification_date); ?>
-								<?php echo rental_uicommon::get_field_error($notification, 'date') ?>
+								<?php 
+	//								echo $GLOBALS['phpgw']->yuical->add_listener('date_notification', $notification_date);
+									echo $GLOBALS['phpgw']->jqcal->add_listener('date_notification', 'date', $notification_date);
+									echo rental_uicommon::get_field_error($notification, 'date')
+								?>
 									<label for="notification_recurrence"><?php echo lang('recurrence') ?></label>
 								<select name="notification_recurrence" id="notification_recurrence">
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_NEVER ? 'selected="selected"' : '' ?>value="<?php echo rental_notification::RECURRENCE_NEVER ?>"><?php echo lang('never') ?></option>
