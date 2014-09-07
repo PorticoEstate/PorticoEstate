@@ -236,17 +236,32 @@ class rental_socontract extends rental_socommon
 		 * - ended:
 		 * the end date is smaller than the target date
 		 */
-		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){
+		if($filters['start_date_report'])
+		{
+			$filters['contract_status'] = 'all';
+			$filter_clauses[] = "contract.date_end > {$filters['start_date_report']}";
+			$filter_clauses[] = "contract.date_start < {$filters['start_date_report']}";
 
-			if(isset($filters['status_date_hidden']) && $filters['status_date_hidden'] != "")
+		}
+		if($filters['end_date_report'])
+		{
+			$filters['contract_status'] = 'all';
+			$filter_clauses[] = "contract.date_end < {$filters['end_date_report']}";
+
+		}
+//_debug_array($filtes);die();
+		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all')
+		{
+			if(isset($filters['status_date']) && $filters['status_date'])
 			{
-				$ts_query = strtotime($filters['status_date_hidden']); // target timestamp specified by user
+				$ts_query = $filters['status_date']; // target timestamp specified by user
 			}
 			else
 			{
 				$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 			}
-			switch($filters['contract_status']){
+			switch($filters['contract_status'])
+			{
 				case 'under_planning':
 					$filter_clauses[] = "contract.date_start > {$ts_query} OR contract.date_start IS NULL";
 					break;
@@ -324,7 +339,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,contract.publish_comment';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.billing_end, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,contract.publish_comment';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name, party.department, party.org_enhet_id';
 			$columns[] = 'c_t.is_payer';
@@ -385,6 +400,7 @@ class rental_socontract extends rental_socommon
 				)
 			);
 			$contract->set_billing_start_date($this->unmarshal($this->db->f('billing_start'),'int'));
+			$contract->set_billing_end_date($this->unmarshal($this->db->f('billing_end'),'int'));
 			$contract->set_old_contract_id($this->unmarshal($this->db->f('old_contract_id'),'string'));
 			$contract->set_contract_type_title($this->unmarshal($this->db->f('title'),'string'));
 			$contract->set_comment($this->unmarshal($this->db->f('comment'),'string'));
@@ -580,6 +596,7 @@ class rental_socontract extends rental_socommon
 		$values[] = "invoice_header = ". 	$this->marshal($contract->get_invoice_header(),'string');
 		$values[] = "term_id = " .			$this->marshal($contract->get_term_id(), 'int');
 		$values[] = "billing_start = " . 	$this->marshal($contract->get_billing_start_date(), 'int');
+		$values[] = "billing_end = " .		$this->marshal($contract->get_billing_end_date(), 'int');
 		$values[] = "reference = ". 		$this->marshal($contract->get_reference(),'string');
 
 		// FORM COLUMN 2
@@ -724,6 +741,11 @@ class rental_socontract extends rental_socommon
 		if ($contract->get_billing_start_date()) {
 			$cols[] = 'billing_start';
 			$values[] = $this->marshal($contract->get_billing_start_date(), 'int');
+		}
+
+		if ($contract->get_billing_end_date()) {
+			$cols[] = 'billing_end';
+			$values[] = $this->marshal($contract->get_billing_end_date(), 'int');
 		}
 
 		if ($contract->get_contract_date()) {

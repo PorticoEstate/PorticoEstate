@@ -121,7 +121,7 @@
 		'index.php?menuaction=rental.uicontract.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_contract_status','<?php echo $list_id ?>_ctrl_toggle_contract_type','date_status'],
+		['<?php echo $list_id ?>_ctrl_toggle_contract_status','<?php echo $list_id ?>_ctrl_toggle_contract_type','date_status_hidden'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -150,7 +150,7 @@
 		var startDate = document.getElementById('start_date_report').value;
 		var endDate = document.getElementById('end_date_report').value;
         
-        var dl = window.open('index.php?menuaction=rental.uicontract.download'+
+        var url = 'index.php?menuaction=rental.uicontract.download'+
             '&amp;type='+ctype+
             '&amp;contract_type='+typeoption+
             '&amp;contract_status='+statusoption+
@@ -158,9 +158,12 @@
             '&amp;query='+query+
             '&amp;search_option='+sOption+
             //'&amp;results=100'+
-            '&amp;date_start='+startDate+
-            '&amp;date_end='+endDate+
-            '&amp;export=true');
+            '&amp;start_date_report='+startDate+
+            '&amp;end_date_report='+endDate+
+            '&amp;export=true';
+  //          alert(url);
+
+        var dl = window.open(url);
     }
 
     function contract_export_price_items(ctype) {
@@ -260,9 +263,9 @@
 			<a href="javascript:contract_export('<?php echo $list_id ?>');"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="<?php echo lang('export_contracts') ?>" title="<?php echo lang('export_contracts') ?>" /></a>
 			<a href="javascript:contract_export_price_items('<?php echo $list_id ?>');"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="<?php echo lang('export_contract_price_items') ?>" title="<?php echo lang('export_contract_price_items') ?>" /></a>
 			<label class="toolbar_element_label" for="start_date_report" id="label_start_date_report"><?php echo lang('date_start') ?></label>
-			<?php echo $GLOBALS['phpgw']->yuical->add_listener('start_date_report', $notification_date); ?>
+			<?php echo $GLOBALS['phpgw']->yuical->add_listener('start_date_report',  $notification_date); ?>
 			<label class="toolbar_element_label" for="end_date_report" id="label_end_date_report"><?php echo lang('date_end') ?></label>
-			<?php echo $GLOBALS['phpgw']->yuical->add_listener('end_date_report', $notification_date); ?>
+			<?php echo $GLOBALS['phpgw']->yuical->add_listener('end_date_report',  $notification_date); ?>
 		</div>
 	</fieldset>
 </form>
@@ -290,7 +293,7 @@ if(datestatus != undefined && datestatus != null) {
 	alert("tester1");
     function date_event() {
         alert("i date_event");
-        var hidden_date = document.getElementById('date_status_hidden');
+        var hidden_date = document.getElementById('date_status');
         if(hidden_date != undefined) {
             var date = datestatus.value.split("/");
             hidden_date.value = date[2]+"-"+date[1]+"-"+date[0];

@@ -110,7 +110,8 @@
 				'id' => 				array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'date_start' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'date_end' => 			array('type' => 'int', 'precision' => '8', 'nullable' => true),
-				'billing_start' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true),						
+				'billing_start' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'billing_end' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'location_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
 				'term_id' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'security_type' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),

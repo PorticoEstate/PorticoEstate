@@ -42,6 +42,7 @@
 		protected $parties;
 		protected $contract_date;
 		protected $billing_start_date;
+		protected $billing_end_date;
 		protected $location_id;
 		protected $term_id;
 		protected $term_id_title;
@@ -205,6 +206,31 @@
 			if(isset($this->contract_date))
 			{
 				return $this->contract_date->get_start_date();
+			}
+
+			return '';
+		}
+
+		public function set_billing_end_date($date)
+		{
+			$this->billing_end_date = $date;
+		}
+
+		/**
+		 * Returns date of when the last invoice should be produced for the
+		 * contract.
+		 * @return string with UNIX time.
+		 */
+		public function get_billing_end_date()
+		{
+			if(isset($this->billing_end_date))
+			{
+				return $this->billing_end_date;
+			}
+
+			if(isset($this->contract_date))
+			{
+				return $this->contract_date->get_end_date();
 			}
 
 			return '';
@@ -1207,6 +1233,16 @@
 				{
 					if($billing_start < $start_date || (isset($end_date) && $billing_start > $end_date)){
 						$this->set_consistency_warning(lang('warning_billing_date_between'));
+					}
+				}
+
+				// If set, the billing date must be between the contract's start date and end date
+				$billing_end = $this->get_billing_end_date();
+				if(isset($billing_end) && is_numeric($billing_end) && $billing_end > 0)
+				{
+					if($billing_end < $start_date || (isset($end_date) && $billing_end > $end_date))
+					{
+						$this->set_consistency_warning(lang('warning_billing_end_date_between'));
 					}
 				}
 
