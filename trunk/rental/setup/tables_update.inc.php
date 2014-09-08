@@ -355,7 +355,7 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
         
-        $test[] = '0.1.0.18';
+        $test[] = '0.1.0.19';
 	function rental_upgrade0_1_0_19()
 	{
 		// Add unit_leader column
