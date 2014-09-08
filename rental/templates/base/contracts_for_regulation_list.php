@@ -33,6 +33,9 @@
 			$adjustment_date = $adjustment->get_adjustment_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $adjustment->get_adjustment_date()) : '-';
 			echo $adjustment_date;
 		?>
+                <br/>
+                <label for="extra_adjustment"><?php echo lang('extra_adjustment')?></label>
+                <input type="checkbox" name="extra_adjustment" id="extra_adjustment"<?php echo $adjustment->is_extra_adjustment() ? ' checked="checked"' : '' ?> disabled="disabled"/>
 		<br/>
 		<?php if($adjustment->is_executed()){?>
 			<label for="is_executed"><?php echo lang("adjustment_is_executed")?></label>

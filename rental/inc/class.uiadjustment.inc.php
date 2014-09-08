@@ -168,6 +168,7 @@ class rental_uiadjustment extends rental_uicommon {
 				$adjustment->set_percent(phpgw::get_var('percent'));
 				$adjustment->set_interval(phpgw::get_var('interval'));
 				$adjustment->set_adjustment_type(phpgw::get_var('adjustment_type'));
+                                $adjustment->set_extra_adjustment(phpgw::get_var('extra_adjustment') == 'on' ? true : false);
 				
 				$so_adjustment = rental_soadjustment::get_instance();
 				if($so_adjustment->store($adjustment))

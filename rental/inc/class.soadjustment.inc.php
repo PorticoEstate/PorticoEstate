@@ -65,7 +65,7 @@ class rental_soadjustment extends rental_socommon
 		}
 		else
 		{
-			$cols = 'id, price_item_id, responsibility_id, new_price, percent, adjustment_interval, adjustment_date, adjustment_type, is_executed, year';
+			$cols = 'id, price_item_id, responsibility_id, new_price, percent, adjustment_interval, adjustment_date, adjustment_type, extra_adjustment, is_executed, year';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": ' ORDER BY adjustment_date DESC';
 		}
 		
@@ -85,6 +85,7 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
 			$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
 			$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'),'bool'));
+                        $adjustment->set_extra_adjustment($this->unmarshal($this->db->f('extra_adjustment'),'bool'));
 			$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'),'bool'));
 			$adjustment->set_year($this->unmarshal($this->db->f('year'), 'int'));
 		}
@@ -116,6 +117,7 @@ class rental_soadjustment extends rental_socommon
 			'adjustment_type = \'' . $adjustment->get_adjustment_type() . '\'',
 			'is_manual = ' . ($adjustment->is_manual() ? "true" : "false"),
 			'is_executed = ' . ($adjustment->is_executed() ? "true" : "false"),
+                        'extra_adjustment = ' . ($adjustment->is_extra_adjustment() ? "true" : "false"),
 			'year = ' . $adjustment->get_year()
 		);
 
@@ -133,7 +135,7 @@ class rental_soadjustment extends rental_socommon
 	public function add(&$adjustment)
 	{
 		// Build a db-friendly array of the adjustment object
-		$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'adjustment_interval', 'adjustment_date', 'adjustment_type', 'is_manual', 'is_executed', 'year');
+		$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'adjustment_interval', 'adjustment_date', 'adjustment_type', 'is_manual', 'is_executed', 'extra_adjustment', 'year');
 		$values = array(
 			$adjustment->get_price_item_id(),
 			$adjustment->get_responsibility_id(),
@@ -144,6 +146,7 @@ class rental_soadjustment extends rental_socommon
 			'\''.$adjustment->get_adjustment_type().'\'',
 			($adjustment->is_manual() ? "true" : "false"),
 			($adjustment->is_executed() ? "true" : "false"),
+                        ($adjustment->is_extra_adjustment() ? "true" : "false"),
 			$adjustment->get_year()
 		);
 
@@ -204,7 +207,7 @@ class rental_soadjustment extends rental_socommon
 
 		//get incomplete adjustments for today
 		$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date < {$next_day} AND adjustment_date >= {$prev_day})";
-		//var_dump($adjustments_query);
+		var_dump($adjustments_query);
 		$result = $this->db->query($adjustments_query);
 		//var_dump("etter spr");
 		//there are un-executed adjustments
@@ -222,6 +225,7 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
 			$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'),'bool'));
 			$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'),'bool'));
+                        $adjustment->set_extra_adjustment($this->unmarshal($this->db->f('extra_adjustment'),'bool'));
 			$adjustment->set_year($this->unmarshal($this->db->f('year'), 'int'));
 			$adjustments[] = $adjustment;
 		}
@@ -264,11 +268,18 @@ class rental_soadjustment extends rental_socommon
 			$adjustable_contracts = "SELECT id, adjustment_share, date_start, adjustment_year FROM rental_contract ";
 			$adjustable_contracts .= "WHERE location_id = '{$adjustment->get_responsibility_id()}' AND adjustable ";
 			$adjustable_contracts .= "AND adjustment_interval = {$adjustment->get_interval()} ";
-			$adjustable_contracts .= "AND (((adjustment_year + {$adjustment->get_interval()}) <= {$adjustment->get_year()})";
-			$adjustable_contracts .= " OR ";
-			$adjustable_contracts .= "(adjustment_year IS NULL OR adjustment_year = 0)";
-			$adjustable_contracts .= ")";
-			//var_dump($adjustable_contracts);
+                        $adjustable_contracts .= "AND (((adjustment_year + {$adjustment->get_interval()}) <= {$adjustment->get_year()})";
+                        $adjustable_contracts .= " OR ";
+                        $adjustable_contracts .= "(";
+                        if($adjustment->is_extra_adjustment())
+                        {
+                            $adjustable_contracts .= "adjustment_year = {$adjustment->get_year()}";
+                            $adjustable_contracts .= " OR ";
+                        }
+                        $adjustable_contracts .= "(adjustment_year IS NULL OR adjustment_year = 0)";   
+                        $adjustable_contracts .= "))";
+			var_dump($adjustable_contracts);
+                        die();
 			$result = $this->db->query($adjustable_contracts);
 			while($this->db->next_record())
 			{

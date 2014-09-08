@@ -354,3 +354,17 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.19';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
+        
+        $test[] = '0.1.0.18';
+	function rental_upgrade0_1_0_19()
+	{
+		// Add unit_leader column
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_adjustment', 'extra_adjustment', array(
+			'type' => 'bool', 
+			'nullable' => true,
+			'default' => 'false'
+		));
+				
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.20';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
