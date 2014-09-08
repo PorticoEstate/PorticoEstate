@@ -55,7 +55,7 @@
 			}
 
 			$this->_input_modern($name, $_type);
-			return "<input id='{$name}' type='text' value='{$value}' size='10' name='date_start'/>";
+			return "<input id='{$name}' type='text' value='{$value}' size='10' name='{$name}'/>";
 		}
 
 		/**
