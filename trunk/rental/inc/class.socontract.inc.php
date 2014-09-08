@@ -207,6 +207,9 @@ class rental_socontract extends rental_socommon
 			if($filters['adjustment_is_executed']){
 				$filter_clauses[] = "contract.adjustment_year = {$adjustment_year}";
 			}
+                        else if($filters['extra_adjustment']){
+                            $filter_clauses[] = "(contract.adjustment_year + {$adjustment_interval} <= {$adjustment_year} OR contract.adjustment_year = {$adjustment_year} )";
+                        }
 			else{
 				$filter_clauses[] = "contract.adjustment_year + {$adjustment_interval} <= {$adjustment_year}";
 			}

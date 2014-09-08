@@ -120,6 +120,21 @@ class rental_adjustment extends rental_model
 	{
 		$this->is_executed = (boolean)$is_executed;
 	}
+        
+        public function get_extra_adjustment()
+	{
+		return $this->extra_adjustment;
+	}
+	
+	public function is_extra_adjustment()
+	{
+		return $this->extra_adjustment;
+	}
+	
+	public function set_extra_adjustment($extra_adjustment)
+	{
+		$this->extra_adjustment = (boolean)$extra_adjustment;
+	}
 	
 	public function get_interval()
 	{

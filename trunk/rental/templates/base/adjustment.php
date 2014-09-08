@@ -113,6 +113,16 @@
 				}
 			?>
 		</dd>
+                <dt>
+			<label for="extra_adjustment"><?php echo lang('extra_adjustment')?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+                            <input type="checkbox" name="extra_adjustment" id="extra_adjustment"<?php echo $adjustment->is_extra_adjustment() ? ' checked="checked"' : '' ?>/>
+			<?php }else{?>
+                            <input type="checkbox" name="extra_adjustment" id="extra_adjustment"<?php echo $adjustment->is_extra_adjustment() ? ' checked="checked"' : '' ?> disabled="disabled"/>
+			<?php }?>
+		</dd>
 		<dt>
 			<?php if($adjustment->is_executed()){?>
 				<label for="is_executed"><?php echo lang("adjustment_is_executed")?></label>
