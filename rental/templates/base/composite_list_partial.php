@@ -122,10 +122,15 @@ function checkAvailabitily()
     function composite_export(compType) {
         var availabilityselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active_rental_composites');
         var availabilityoption = availabilityselect.options[availabilityselect.selectedIndex].value;
-
+<?php
+	if(isset($config->config_data['contract_future_info']) && $config->config_data['contract_future_info'])
+	{
+?>
         var furnished_select = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites');
         var furnished_status_id = furnished_select.options[furnished_select.selectedIndex].value;
-
+<?php
+	}
+?>
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
 
         var sSelect = document.getElementById('<?php echo $list_id ?>_ctrl_search_option');
