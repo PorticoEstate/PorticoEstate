@@ -75,6 +75,11 @@
 			label: "<?php echo lang('responsibility') ?>",
 		  	sortable: true
 		},
+                {
+			key: "extra_adjustment",
+			label: "<?php echo lang('extra_adjustment')?>",
+			sortable: true
+		},
 		{
 			key: "is_executed",
 			label: "<?php echo lang('is_executed')?>",

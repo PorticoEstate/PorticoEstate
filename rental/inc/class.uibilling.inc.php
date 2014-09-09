@@ -519,7 +519,13 @@ class rental_uibilling extends rental_uicommon
 		{
 			case 'all_billings':
 				$filters = array();
-				if($sort_field == 'responsibility_title'){
+				if(!$sort_field)
+				{
+					$sort_field = 'timestamp_stop';
+					$sort_ascending = false;
+				}
+				else if($sort_field == 'responsibility_title')
+				{
 					$sort_field = 'location_id';
 				}
 				$result_objects = rental_sobilling::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
