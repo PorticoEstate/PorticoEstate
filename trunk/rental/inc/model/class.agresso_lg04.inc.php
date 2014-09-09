@@ -206,8 +206,9 @@
 
 				/**Sigurd:Start contract type**/
 				$contract = rental_socontract::get_instance()->get_single($invoice->get_contract_id());
-				$current_contract_type_id = $contract->get_contract_type_id();
-				$contract_type_label = lang(rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id));
+				$current_contract_type_id	= $contract->get_contract_type_id();
+				$contract_type_label		= lang(rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id));
+				$contract_id				= $contract->get_old_contract_id();
 				/**End contract type**/
 
 				$price_item_data	 = array();
@@ -248,8 +249,8 @@
 						$price_item_counter,
 						$invoice->get_account_in(),//ny
 						$invoice->get_responsibility_id(),//ny
-						$contract_type_label //ny
-
+						$contract_type_label, //ny
+						$contract_id //ny
 					);
 					$price_item_counter++;
 				}
@@ -443,7 +444,7 @@
 		 * Builds one single order of the excel file.
 		 * 
 		 */
-		protected function get_order_excel_bk($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter)
+		protected function get_order_excel_bk($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -452,6 +453,7 @@
 
 			$item_counter	 = $counter;
 			$order			 = array(
+				'contract_id'			=> $contract_id,
 				'account'				 => $account,
 				'client_ref'			 => $client_ref,
 				'header'				 => utf8_decode($header),
@@ -482,14 +484,15 @@
 			return str_replace(array("\n", "\r"), '', $order);
 		}
 
-		protected function get_order_excel_nlsh($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label)
+		protected function get_order_excel_nlsh($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
 		{
 
 //_debug_array(func_get_args());
 			$item_counter	 = $counter;
 			$order			 = array
 			(
-				'Kontraktstype'				=> $contract_type_label,//FIXME
+				'contract_id'			=> $contract_id,
+				'Kontraktstype'			=> $contract_type_label,//FIXME
 				'Art/konto inntektsside' => $account_in,
 				'Art/konto utgiftsside'	=> $account_out,//FIXME
 				'client_ref'			 => $client_ref,
