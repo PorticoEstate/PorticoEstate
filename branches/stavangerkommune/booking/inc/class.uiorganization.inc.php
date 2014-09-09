@@ -248,8 +248,7 @@
 					}
 				}
 			}
-			$this->flash_form_errors($errors);
-			$this->flash_form_errors($errors);
+    		$this->flash_form_errors($errors);
 			$organization['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $id));
 
 			$contact_form_link = self::link(array('menuaction' => $this->module . '.uicontactperson.edit', ));
