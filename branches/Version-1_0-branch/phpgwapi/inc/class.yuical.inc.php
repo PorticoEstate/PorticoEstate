@@ -180,7 +180,7 @@ JS;
 			$lang_close = lang('close');
 			$lang_clear = lang('clear');
 			$html .= <<<HTML
-				<input type="text" name="{$name}" id="{$name}" size="10" value="$value" readonly="true" />
+				<input type="text" name="{$name}" id="{$name}" size="10" value="$date" readonly="true" />
 			<!--	<img src="$img" alt="$alt" id="{$name}_img" title="$name"> -->
 				<input type="hidden" name="{$name}_hidden" id="{$name}_hidden" value="{$date2}"/>
 				<div id="calendar{$name}">

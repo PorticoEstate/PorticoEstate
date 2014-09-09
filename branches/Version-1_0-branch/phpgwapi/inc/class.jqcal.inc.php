@@ -41,7 +41,7 @@
 
 		}
 
-		function add_listener($name, $type = 'date')
+		function add_listener($name, $type = 'date', $value = '')
 		{
 			switch($type)
 			{
@@ -55,6 +55,7 @@
 			}
 
 			$this->_input_modern($name, $_type);
+			return "<input id='{$name}' type='text' value='{$value}' size='10' name='{$name}'/>";
 		}
 
 		/**

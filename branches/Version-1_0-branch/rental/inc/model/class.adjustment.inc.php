@@ -120,6 +120,21 @@ class rental_adjustment extends rental_model
 	{
 		$this->is_executed = (boolean)$is_executed;
 	}
+        
+        public function get_extra_adjustment()
+	{
+		return $this->extra_adjustment;
+	}
+	
+	public function is_extra_adjustment()
+	{
+		return $this->extra_adjustment;
+	}
+	
+	public function set_extra_adjustment($extra_adjustment)
+	{
+		$this->extra_adjustment = (boolean)$extra_adjustment;
+	}
 	
 	public function get_interval()
 	{
@@ -153,6 +168,7 @@ class rental_adjustment extends rental_model
 			'interval' => $this->get_interval(),
 			'adjustment_type' => lang(($this->get_adjustment_type())?$this->get_adjustment_type():'none'),
 			'adjustment_date' => date($date_format, $this->get_adjustment_date()),
+                        'extra_adjustment' => lang(($this->is_extra_adjustment())?'yes':'no'),
 			'is_executed' => lang(($this->is_executed())?'yes':'no'),
 			'year' => $this->get_year()
 		);
