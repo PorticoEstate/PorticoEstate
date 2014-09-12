@@ -1083,7 +1083,6 @@
 		//	$old_billable_rate	= $this->db->f('billable_rate');
 			$old_subject			= $this->db->f('subject');
 			$old_contact_id			= $this->db->f('contact_id');
-			$old_actual_cost		= $this->db->f('actual_cost');
 			$old_order_cat_id		= $this->db->f('order_cat_id');
 			$old_building_part		= $this->db->f('building_part',true);
 			$old_order_dim1			= (int)$this->db->f('order_dim1');
@@ -1432,11 +1431,31 @@
 
 			if($order_add || $order_edit)
 			{
-				if ((int)$old_actual_cost != (int)$ticket['actual_cost'])
+				if ((int)$ticket['actual_cost'])
 				{
-					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='" . (float)$ticket['actual_cost']
+
+					$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__,__FILE__);
+					$this->db->next_record();
+					$old_actual_cost = $this->db->f('actual_cost');
+					$new_actual_cost = $old_actual_cost + $ticket['actual_cost'];
+
+					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='" . (float) $new_actual_cost
 						. "' WHERE id='$id'",__LINE__,__FILE__);
-					$this->historylog->add('AC',$id,(float)$ticket['actual_cost'] , $old_actual_cost);
+
+					$value_set_cost = array
+					(
+						'ticket_id'	=> $id,
+						'amount'	=> $ticket['actual_cost'],
+						'period'	=> $ticket['actual_cost_period'],
+						'created_on'=> time(),
+						'created_by'=> $this->account
+					);
+
+					$cols_cost = implode(',', array_keys($value_set_cost));
+					$values_cost	= $this->db->validate_insert(array_values($value_set_cost));
+					$this->db->query("INSERT INTO fm_tts_payments ({$cols_cost}) VALUES ({$values_cost})");
+
+					$this->historylog->add('AC',$id,(float)$new_actual_cost , $old_actual_cost);
 					$receipt['message'][]= array('msg' => lang('actual cost has been updated'));
 				}
 
@@ -1693,4 +1712,29 @@
 
 			return $values;
 		}
+
+		public function get_payments($id)
+		{
+			$id = (int) $id;
+			$values = array();
+			$sql = "SELECT * FROM fm_tts_payments WHERE ticket_id = {$id}  ORDER BY period ASC";
+
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'		=> $this->db->f('id'),
+					'ticket_id'	=> $this->db->f('ticket_id'),
+					'amount'	=> $this->db->f('amount'),
+					'period'	=> $this->db->f('period'),
+					'created_on'=> $this->db->f('created_on'),
+					'created_by'=> $this->db->f('created_by'),
+					'remark'	=> $this->db->f('remark', true)
+				);
+			}
+			return $values;
+		}
+
 	}

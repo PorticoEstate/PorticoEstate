@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.684';
+	$setup_info['property']['version']		= '0.9.17.685';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -140,6 +140,7 @@
 		'fm_tts_tickets',
 		'fm_tts_history',
 		'fm_tts_views',
+		'fm_tts_payments',
 		'fm_org_unit',
 		'fm_ecoart',
 		'fm_ecoavvik',
