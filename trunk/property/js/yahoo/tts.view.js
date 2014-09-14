@@ -33,6 +33,7 @@ this.addFooterDatatable = function(paginator,datatable)
 
 	td_sum('Sum');
 	td_sum(tmp_sum1);
+	td_empty(1);
 
 	myfoot = tableYUI.createTFoot();
 	myfoot.setAttribute("id","myfoot");

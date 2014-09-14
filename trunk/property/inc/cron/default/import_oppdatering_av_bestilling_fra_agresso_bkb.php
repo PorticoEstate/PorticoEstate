@@ -286,6 +286,7 @@
 				'ticket_id'	=> $id,
 				'amount'	=> $diff_actual_cost,
 				'period'	=> date('Ym'),
+				'remark'	=> 'Oppdatert fra Agresso',
 				'created_on'=> time(),
 				'created_by'=> -1
 			);

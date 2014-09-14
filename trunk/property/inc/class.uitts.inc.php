@@ -3222,7 +3222,8 @@
 				(
 					'name'		=> "4",
 					'values'	=>	json_encode(array(	array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter'=> 'FormatterAmount2')))
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter'=> 'FormatterAmount2'),
+														array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true)))
 				);
 
 			$payments = $this->bo->get_payments($id);
