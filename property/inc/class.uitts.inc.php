@@ -3218,6 +3218,27 @@
 					'footer'				=> 0
 				);
 
+			$myColumnDefs[4] = array
+				(
+					'name'		=> "4",
+					'values'	=>	json_encode(array(	array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter'=> 'FormatterAmount2'),
+														array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true)))
+				);
+
+			$payments = $this->bo->get_payments($id);
+
+			$datavalues[4] = array
+				(
+					'name'					=> "4",
+					'values' 				=> json_encode($payments),
+					'total_records'			=> count($payments),
+					'permission'   			=> "''",
+					'is_paginator'			=> 1,
+					'edit_action'			=> "''",
+					'footer'				=> 0
+				);
+
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$notify_info = execMethod('property.notify.get_yui_table_def',array
@@ -3318,6 +3339,8 @@
 					'value_budget'					=> $ticket['budget'],
 					'value_actual_cost'				=> $ticket['actual_cost'],
 					'year_list'						=> array('options' => $this->bocommon->select_list( $ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list )),
+					'period_list'					=> array('options' => execMethod('property.boinvoice.period_list', date('Ym'))),
+
 					'need_approval'					=> $need_approval,
 					'value_approval_mail_address'	=> $supervisor_email,
 	//				'vendor_email'					=> $vendor_email,

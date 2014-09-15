@@ -1223,6 +1223,7 @@ parked	property	no	Parkert
 park invoice	property	no	Parker faktura
 part of town	property	no	Bydel
 part of town id	property	no	Bydel
+payment	property	no	Betaling
 payment date	property	no	Forfallsdato
 pdf	property	no	PDF
 per agreement	property	no	pr avtale

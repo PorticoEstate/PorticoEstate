@@ -2,18 +2,54 @@ var	myPaginator_0, myDataTable_0
 var	myPaginator_1, myDataTable_1;
 var	myPaginator_2, myDataTable_2;
 var	myPaginator_3, myDataTable_3;
+var	myPaginator_4, myDataTable_4;
+var	myPaginator_5, myDataTable_5;
 var d;
 var vendor_id = 0;
 
 /********************************************************************************/
 this.myParticularRenderEvent = function()
 {
+	this.addFooterDatatable(myPaginator_4,myDataTable_4);
+}
+
+this.addFooterDatatable = function(paginator,datatable)
+{
+	//call getSumPerPage(name of column) in property.js
+	tmp_sum1 = getTotalSum('amount',2,paginator,datatable);
+
+	if(typeof(tableYUI)=='undefined')
+	{
+		tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[2].parentNode;
+		tableYUI.setAttribute("id","tableYUI");
+	}
+	else
+	{
+		tableYUI.deleteTFoot();
+	}
+
+	//Create ROW
+	newTR = document.createElement('tr');
+
+	td_sum('Sum');
+	td_sum(tmp_sum1);
+	td_empty(1);
+
+	myfoot = tableYUI.createTFoot();
+	myfoot.setAttribute("id","myfoot");
+	myfoot.appendChild(newTR);
 }
 
 /********************************************************************************/	
 var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 {
 	elCell.innerHTML = "<center>"+oData+"</center>";
+}
+
+var FormatterAmount2 = function(elCell, oRecord, oColumn, oData)
+{
+	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+	elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
 }
 
  /********************************************************************************/

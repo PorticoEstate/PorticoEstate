@@ -260,12 +260,6 @@
 						'name'=> lang('actual cost')
 					);
 
-				$columns['actual_cost_year'] = array
-					(
-						'id' => 'actual_cost_year',
-						'name'=> lang('year')
-					);
-
 				$columns['difference'] = array
 					(
 						'id' => 'difference',
@@ -1651,5 +1645,15 @@
 			$values['attributes'] = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
 			$values = $this->custom->prepare($values, 'property', '.ticket', false);
 			return $values;
+		}
+
+		public function get_payments($id)
+		{
+			$payments = $this->so->get_payments($id);
+			foreach($payments as &$payment)
+			{
+				$payment['created_on_date'] = $GLOBALS['phpgw']->common->show_date($payment['created_on'],$this->dateformat);
+			}
+			return $payments;
 		}
 	}

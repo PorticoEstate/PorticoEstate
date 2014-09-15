@@ -61,14 +61,14 @@
 
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
-			if ( preg_match('/\./', $dirname) 
+			if ( preg_match('/\./', $dirname)
 			 || !is_dir($dirname) )
 			{
 				return array();
 			}
 
 			$file_list = array();
-			$dir = new DirectoryIterator($dirname); 
+			$dir = new DirectoryIterator($dirname);
 			if ( is_object($dir) )
 			{
 				foreach ( $dir as $file )
@@ -127,7 +127,7 @@
 						$this->db->transaction_abort();
 					}
 				}
-				
+
 				if (!$this->debug)
 				{
 					$this->alert_assigned();
@@ -193,7 +193,7 @@
 
 					if( preg_match('/csv$/i', $file_name) )
 					{
-						$file_remote = $file_name;	   
+						$file_remote = $file_name;
 						$file_local = "{$directory_local}/{$file_name}";
 
 						$fp = fopen($file_local, "wb");
@@ -220,7 +220,7 @@
 						}
 						else
 						{
-							echo "Feiler på ftp_fget()<br/>";						
+							echo "Feiler på ftp_fget()<br/>";
 						}
 						fclose($fp);
 					}
@@ -266,18 +266,34 @@
 			$order_id			= trim($data[2]);
 			$diff_actual_cost	= (float)trim($data[3]);
 
-			$this->db->query("SELECT id, actual_cost FROM fm_tts_tickets WHERE order_id= '{$order_id}'",__LINE__,__FILE__);
+			$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id= '{$order_id}'",__LINE__,__FILE__);
 			$this->db->next_record();
-			$id							= $this->db->f('id');
-			(float) $old_actual_cost	= $this->db->f('actual_cost');
-			
-			$new_actual_cost = $diff_actual_cost + $old_actual_cost;
+			$id	= $this->db->f('id');
 
 			if(!$id)
 			{
 				$this->receipt['error'][] = array('msg' =>"Oppdatere beløp for agresso prosjekt {$agresso_prosjekt}: fant ikke bestillingen, hopper over: {$order_id}");
 				return false;
 			}
+
+			$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__,__FILE__);
+			$this->db->next_record();
+			$old_actual_cost = (float)$this->db->f('actual_cost');
+			$new_actual_cost = $old_actual_cost + $diff_actual_cost;
+
+			$value_set_cost = array
+			(
+				'ticket_id'	=> $id,
+				'amount'	=> $diff_actual_cost,
+				'period'	=> date('Ym'),
+				'remark'	=> 'Oppdatert fra Agresso',
+				'created_on'=> time(),
+				'created_by'=> -1
+			);
+
+			$cols_cost = implode(',', array_keys($value_set_cost));
+			$values_cost	= $this->db->validate_insert(array_values($value_set_cost));
+			$this->db->query("INSERT INTO fm_tts_payments ({$cols_cost}) VALUES ({$values_cost})");
 
 			$this->receipt['message'][] = array('msg' =>"Oppdaterer melding #{$id} for agresso prosjekt {$agresso_prosjekt}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
 			$this->historylog->add('AC',$id, $new_actual_cost , $old_actual_cost);
@@ -291,7 +307,7 @@
 
 			$value_set	= $this->db->validate_update($value_set);
 			$ok = $this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
-			
+
 			if($ok)
 			{
 				$this->updated_tickects[$id] = true;
@@ -345,7 +361,7 @@
 		{
 
 			$updated_tickects = array_keys($this->updated_tickects);
-			
+
 			foreach ($updated_tickects as $id)
 			{
 				$this->db->query("SELECT assignedto FROM fm_tts_tickets WHERE id= '{$id}'",__LINE__,__FILE__);
