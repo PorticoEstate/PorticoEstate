@@ -260,12 +260,6 @@
 						'name'=> lang('actual cost')
 					);
 
-				$columns['actual_cost_year'] = array
-					(
-						'id' => 'actual_cost_year',
-						'name'=> lang('year')
-					);
-
 				$columns['difference'] = array
 					(
 						'id' => 'difference',
