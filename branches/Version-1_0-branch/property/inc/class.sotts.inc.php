@@ -390,11 +390,28 @@
 				$where = 'AND';
 			}
 
+			$actual_cost_field = 'fm_tts_tickets.actual_cost';
 			if ($start_date)
 			{
-				$end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
-				$start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
-				$filtermethod .= " $where fm_tts_tickets.entry_date >= $start_date AND fm_tts_tickets.entry_date <= $end_date ";
+				$order_add 	= $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
+				$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
+
+				if($order_add || $order_edit)
+				{
+					$end_date	= date('Ym', $end_date);
+					$start_date	= date('Ym', $start_date);
+					$filtermethod .= " $where fm_tts_payments.period >= $start_date AND fm_tts_payments.period <= $end_date ";
+					$date_join = " LEFT OUTER JOIN fm_tts_payments ON fm_tts_tickets.id=fm_tts_payments.ticket_id";
+					$actual_cost_field = 'SUM(fm_tts_payments.amount) AS actual_cost';
+				}
+				else
+				{
+					$end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+					$start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+					$filtermethod .= " $where fm_tts_tickets.entry_date >= $start_date AND fm_tts_tickets.entry_date <= $end_date ";
+					$date_join = '';
+				}
+
 				$where= 'AND';
 			}
 
@@ -458,8 +475,8 @@
 
 			$return_fields = "fm_tts_tickets.id,fm_tts_tickets.assignedto,fm_tts_tickets.status,fm_tts_tickets.user_id,"
 			. "fm_tts_tickets.subject,fm_tts_tickets.address,fm_tts_tickets.location_code,fm_tts_tickets.priority,fm_tts_tickets.cat_id,fm_tts_tickets.group_id,"
-			. "fm_tts_tickets.entry_date,fm_tts_tickets.modified_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,fm_tts_tickets.actual_cost,"
-			. "fm_tts_tickets.actual_cost_year,fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name,fm_tts_tickets.ecodimb {$result_order_field}";
+			. "fm_tts_tickets.entry_date,fm_tts_tickets.modified_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,"
+			. "fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name,fm_tts_tickets.ecodimb {$result_order_field}";
 
 			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
 			
@@ -468,11 +485,11 @@
 				$return_fields .= ",fm_tts_tickets.{$custom_col['column_name']}";
 			}
 
-			$sql = "SELECT DISTINCT {$return_fields}  FROM fm_tts_tickets"
+			$sql = "SELECT DISTINCT {$return_fields},{$actual_cost_field} FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
-				. " {$order_join}"
+				. " {$order_join}{$date_join}"
 				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
 
 			if(isset($custom_filter['joinmethod_datatype']) && $custom_filter['joinmethod_datatype'])
@@ -483,13 +500,14 @@
 				}
 			}
 
-			$sql .= " {$filtermethod} {$querymethod}";
+			$group_fields = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array('fm_district.descr','fm_tts_views.id'), $return_fields);
+			$sql .= " {$filtermethod} {$querymethod} GROUP BY {$group_fields}";
 
-			$sql_cnt = "SELECT DISTINCT fm_tts_tickets.budget ,fm_tts_tickets.actual_cost, fm_tts_tickets.id FROM fm_tts_tickets"
+			$sql_cnt = "SELECT DISTINCT fm_tts_tickets.budget ,{$actual_cost_field}, fm_tts_tickets.id FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 				. " {$this->left_join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 				. " {$this->left_join} fm_district ON fm_district.id = fm_part_of_town.district_id"
-				. " $order_join"
+				. " {$order_join}{$date_join}"
 				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')";
 
 			if(isset($custom_filter['joinmethod_datatype']) && $custom_filter['joinmethod_datatype'])
@@ -512,7 +530,7 @@
 
 			if(!$cache_info)
 			{
-				$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt}) as t";
+				$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget) as t";
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
 				unset($sql2);
@@ -537,7 +555,7 @@
 				}
 
 				$filter_closed = "{$where} fm_tts_tickets.status NOT IN ('" . implode("','", $closed_status) . "')";
-				$sql2 = "SELECT (sum(budget) - sum(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed}) as t";
+				$sql2 = "SELECT (SUM(budget) - SUM(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget) as t";
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
 				unset($sql2);
@@ -601,7 +619,6 @@
 							'order_id'			=> $this->db->f('order_id'),
 							'vendor_id'			=> $this->db->f('vendor_id'),
 							'actual_cost'		=> $this->db->f('actual_cost'),
-							'actual_cost_year'	=> $this->db->f('actual_cost_year'),
 							'estimate'			=> $this->db->f('budget'),
 							'new_ticket'		=> $this->db->f('view') ? false : true,
 							'billable_hours'	=> $this->db->f('billable_hours'),
@@ -693,7 +710,6 @@
 				$ticket['ecodimb']			= $this->db->f('ecodimb');
 				$ticket['budget']			= $this->db->f('budget');
 				$ticket['actual_cost']		= $this->db->f('actual_cost');
-				$ticket['actual_cost_year']	= $this->db->f('actual_cost_year');
 				$ticket['order_cat_id']		= $this->db->f('order_cat_id');
 				$ticket['building_part']	= $this->db->f('building_part',true);
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
@@ -1083,7 +1099,6 @@
 		//	$old_billable_rate	= $this->db->f('billable_rate');
 			$old_subject			= $this->db->f('subject');
 			$old_contact_id			= $this->db->f('contact_id');
-			$old_actual_cost		= $this->db->f('actual_cost');
 			$old_order_cat_id		= $this->db->f('order_cat_id');
 			$old_building_part		= $this->db->f('building_part',true);
 			$old_order_dim1			= (int)$this->db->f('order_dim1');
@@ -1432,11 +1447,31 @@
 
 			if($order_add || $order_edit)
 			{
-				if ((int)$old_actual_cost != (int)$ticket['actual_cost'])
+				if ((int)$ticket['actual_cost'])
 				{
-					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='" . (float)$ticket['actual_cost']
+
+					$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__,__FILE__);
+					$this->db->next_record();
+					$old_actual_cost = $this->db->f('actual_cost');
+					$new_actual_cost = $old_actual_cost + $ticket['actual_cost'];
+
+					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='" . (float) $new_actual_cost
 						. "' WHERE id='$id'",__LINE__,__FILE__);
-					$this->historylog->add('AC',$id,(float)$ticket['actual_cost'] , $old_actual_cost);
+
+					$value_set_cost = array
+					(
+						'ticket_id'	=> $id,
+						'amount'	=> $ticket['actual_cost'],
+						'period'	=> $ticket['actual_cost_period'],
+						'created_on'=> time(),
+						'created_by'=> $this->account
+					);
+
+					$cols_cost = implode(',', array_keys($value_set_cost));
+					$values_cost	= $this->db->validate_insert(array_values($value_set_cost));
+					$this->db->query("INSERT INTO fm_tts_payments ({$cols_cost}) VALUES ({$values_cost})");
+
+					$this->historylog->add('AC',$id,(float)$new_actual_cost , $old_actual_cost);
 					$receipt['message'][]= array('msg' => lang('actual cost has been updated'));
 				}
 
@@ -1476,7 +1511,6 @@
 				$value_set['b_account_id']		= $ticket['b_account_id'];
 				$value_set['order_descr']		= $this->db->db_addslashes($ticket['order_descr']);
 				$value_set['ecodimb']			= $ticket['ecodimb'];
-				$value_set['actual_cost_year']	= $ticket['actual_cost_year'];
 				$value_set['branch_id']			= $ticket['branch_id'];
 			}
 
@@ -1693,4 +1727,29 @@
 
 			return $values;
 		}
+
+		public function get_payments($id)
+		{
+			$id = (int) $id;
+			$values = array();
+			$sql = "SELECT * FROM fm_tts_payments WHERE ticket_id = {$id}  ORDER BY period ASC";
+
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'		=> $this->db->f('id'),
+					'ticket_id'	=> $this->db->f('ticket_id'),
+					'amount'	=> $this->db->f('amount'),
+					'period'	=> $this->db->f('period'),
+					'created_on'=> $this->db->f('created_on'),
+					'created_by'=> $this->db->f('created_by'),
+					'remark'	=> $this->db->f('remark', true)
+				);
+			}
+			return $values;
+		}
+
 	}

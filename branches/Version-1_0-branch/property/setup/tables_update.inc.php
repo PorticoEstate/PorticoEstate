@@ -8083,7 +8083,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.681 to 0.9.17.682
+	* Update property version from 0.9.17.683 to 0.9.17.684
 	* Add tender related dates to workorder
 	*/
 	$test[] = '0.9.17.683';
@@ -8100,6 +8100,69 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.684';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.684 to 0.9.17.685
+	* Add tender related dates to workorder
+	*/
+	$test[] = '0.9.17.684';
+	function property_upgrade0_9_17_684()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_payments', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'ticket_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'amount' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => false),
+					'period' => array('type' => 'int','precision' => '4','nullable' => false),
+					'remark' => array('type' => 'text','nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id, actual_cost, modified_date FROM fm_tts_tickets WHERE actual_cost != '0.00' ORDER BY modified_date");
+
+		$tickets = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$tickets[] = array
+			(
+				'id'				=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'actual_cost'		=> $GLOBALS['phpgw_setup']->oProc->f('actual_cost'),
+				'modified_date'		=> $GLOBALS['phpgw_setup']->oProc->f('modified_date')
+			);
+		}
+
+		foreach($tickets as $ticket)
+		{
+			$period = date('Ym', $ticket['modified_date']);
+			$value_set = array
+			(
+				'ticket_id'	=> $ticket['id'],
+				'amount'	=> $ticket['actual_cost'],
+				'period'	=> $period,
+				'created_on'=> $ticket['modified_date']
+			);
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO fm_tts_payments ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.685';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

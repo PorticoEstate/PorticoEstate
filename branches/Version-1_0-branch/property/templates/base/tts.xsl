@@ -940,26 +940,37 @@
 											<tr>
 												<td valign="top">
 													<label>
-														<xsl:value-of select="php:function('lang', 'actual cost')"/>
+														<xsl:value-of select="php:function('lang', 'payment')"/>
 													</label>
 												</td>
 												<td>
-													<input type="text" name="values[actual_cost]" value="{value_actual_cost}">
+													<input type="text" name="values[actual_cost]">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'Enter actual cost')"/>
 														</xsl:attribute>
 													</input>
 													<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-													<xsl:variable name="lang_year"><xsl:value-of select="php:function('lang', 'year')"/></xsl:variable>
+													<xsl:variable name="lang_period"><xsl:value-of select="php:function('lang', 'period')"/></xsl:variable>
 
-													<select name="values[actual_cost_year]">
+													<select name="values[actual_cost_period]">
 														<xsl:attribute name="title">
-															<xsl:value-of select='$lang_year'/>
+															<xsl:value-of select='$lang_period'/>
 														</xsl:attribute>
-														<xsl:apply-templates select="year_list/options"/>
+														<xsl:apply-templates select="period_list/options"/>
 													</select>
 
-													<xsl:text> </xsl:text> [ <xsl:value-of select='$lang_year'/> ]
+													<xsl:text> </xsl:text> [ <xsl:value-of select='$lang_period'/> ]
+												</td>
+											</tr>
+											<tr>
+												<td valign="top" class="th_text">
+													<label>
+														<xsl:value-of select="php:function('lang', 'actual cost')"/>
+													</label>
+												</td>
+												<td>
+													<div id="paging_4"> </div>
+													<div id="datatable-container_4"/>
 												</td>
 											</tr>
 											<tr>
@@ -1133,9 +1144,9 @@
 									</label>
 								</td>
 								<td>
-									<div id="paging_4"> </div>
-									<div id="datatable-container_4"/>
-									<div id="datatable-buttons_4"/>
+									<div id="paging_5"> </div>
+									<div id="datatable-container_5"/>
+									<div id="datatable-buttons_5"/>
 								</td>
 							</tr>
 						</table>

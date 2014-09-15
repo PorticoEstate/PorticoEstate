@@ -97,7 +97,13 @@
 	* @global object $GLOBALS['server']
 	*/
 
-	$wdsl = PHPGW_SERVER_ROOT . '/sms/inc/plugin/gateway/pswin/Receive.wdsl';
+	$wsdl = PHPGW_SERVER_ROOT . '/sms/inc/plugin/gateway/pswin/Receive.wsdl';
+	if(isset($_GET['wsdl']))
+	{
+		header('Content-Type: text/xml');
+		readfile($wsdl);
+		$GLOBALS['phpgw']->common->phpgw_exit();
+	}
 
 	$options = array
 	(
@@ -107,7 +113,7 @@
 	);
 
 	ini_set("soap.wsdl_cache_enabled","0");
-	$GLOBALS['server'] = new SoapServer($wdsl, $options);
+	$GLOBALS['server'] = new SoapServer($wsdl, $options);
 
 
 	/**
