@@ -30,7 +30,12 @@
 			</xsl:variable>
 			
 			<h2 style="float:left;"><xsl:value-of select="php:function('lang', 'Resource requirement')" /></h2>
-			<a id="add-requirement-btn" class="btn focus" onClick="load_requirement_edit({$activity_id});"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
+			<xsl:if test="acl_add = '1'">
+				<a id="add-requirement-btn" class="btn focus" onClick="load_requirement_edit({$activity_id});">
+					<xsl:value-of select="php:function('lang', 'Add requirement')" />
+				</a>
+			</xsl:if>
+
 			<div style="clear:both;" id="paging"></div>
 			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
