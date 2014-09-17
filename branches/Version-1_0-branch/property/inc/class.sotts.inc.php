@@ -391,6 +391,7 @@
 			}
 
 			$actual_cost_field = 'fm_tts_tickets.actual_cost';
+			$actual_cost_group_field = ',fm_tts_tickets.actual_cost';
 			if ($start_date)
 			{
 				$order_add 	= $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
@@ -403,6 +404,7 @@
 					$filtermethod .= " $where fm_tts_payments.period >= $start_date AND fm_tts_payments.period <= $end_date ";
 					$date_join = " LEFT OUTER JOIN fm_tts_payments ON fm_tts_tickets.id=fm_tts_payments.ticket_id";
 					$actual_cost_field = 'SUM(fm_tts_payments.amount) AS actual_cost';
+					$actual_cost_group_field = '';
 				}
 				else
 				{
@@ -501,7 +503,7 @@
 			}
 
 			$group_fields = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array('fm_district.descr','fm_tts_views.id'), $return_fields);
-			$sql .= " {$filtermethod} {$querymethod} GROUP BY {$group_fields}";
+			$sql .= " {$filtermethod} {$querymethod} GROUP BY {$group_fields}{$actual_cost_group_field}";
 
 			$sql_cnt = "SELECT DISTINCT fm_tts_tickets.budget ,{$actual_cost_field}, fm_tts_tickets.id FROM fm_tts_tickets"
 				. " {$this->left_join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
@@ -530,7 +532,7 @@
 
 			if(!$cache_info)
 			{
-				$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget) as t";
+				$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget {$actual_cost_group_field}) as t";
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
 				unset($sql2);
@@ -555,7 +557,7 @@
 				}
 
 				$filter_closed = "{$where} fm_tts_tickets.status NOT IN ('" . implode("','", $closed_status) . "')";
-				$sql2 = "SELECT (SUM(budget) - SUM(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget) as t";
+				$sql2 = "SELECT (SUM(budget) - SUM(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget {$actual_cost_group_field}) as t";
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
 				unset($sql2);
