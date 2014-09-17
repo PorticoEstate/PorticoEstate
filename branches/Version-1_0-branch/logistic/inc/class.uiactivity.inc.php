@@ -73,11 +73,11 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
 
-			$this->read    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_READ, 'logistic');//1 
-			$this->add     = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_ADD, 'logistic');//2 
-			$this->edit    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_EDIT, 'logistic');//4 
-			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
-			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
+			$this->acl_read    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_READ, 'logistic');//1
+			$this->acl_add     = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_ADD, 'logistic');//2
+			$this->acl_edit    = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_EDIT, 'logistic');//4
+			$this->acl_delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8
+			$this->acl_manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
 
 		}
 
@@ -578,7 +578,7 @@
 			}
 			else
 			{
-				$this->edit($activity);
+				$this->acl_edit($activity);
 			}
 		}
 
@@ -698,7 +698,7 @@
 			);
 
 
-			if($this->add)
+			if($this->acl_add)
 			{
 				$data['datatable']['field'][] = array
 				(
@@ -707,7 +707,7 @@
 					'sortable'	=> false,
 				);
 			}
-			if($this->add)
+			if($this->acl_add)
 			{
 				$data['datatable']['field'][] = array
 				(
@@ -717,7 +717,7 @@
 				);
 			}
 
-			if($this->delete)
+			if($this->acl_delete)
 			{
 				$data['datatable']['field'][] = array
 				(
@@ -733,10 +733,11 @@
 
 			$tabs = $this->make_tab_menu($activity_id);
 
-			$data['tabs']		 	= $GLOBALS['phpgw']->common->create_tabs($tabs, 1);
+			$data['tabs']		= $GLOBALS['phpgw']->common->create_tabs($tabs, 1);
 			$data['view'] 	 	= 'requirement_overview';
-			$data['activity'] = $activity;
+			$data['activity']	= $activity;
 			$data['breadcrumb'] = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id');
+			$data['acl_add'] 	= $this->acl_add;
 
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
 			self::add_javascript('logistic', 'logistic', 'requirement_overview.js');

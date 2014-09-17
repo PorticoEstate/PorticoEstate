@@ -1615,8 +1615,14 @@
 			return $receipt;
 		}
 
+		/**
+		 * Close project if all orders is closed
+		 * @param integer $order_id
+		 * @return boolean true if mother project is closed as a result on all orders closed
+		 */
 		public function check_project_status($order_id)
 		{
+			$ret = false;
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read_repository();
 
@@ -1649,8 +1655,10 @@
 
 					$historylog_project->add('S', $project_id, $project_status_on_last_order_closed, $old_status);
 					$historylog_project->add('RM', $project_id, 'Status endret ved at siste bestilling er avsluttet');
+					$ret = true;
 				}
 			}
+			return $ret;
 		}
 
 		function delete($workorder_id)
