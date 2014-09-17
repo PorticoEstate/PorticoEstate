@@ -979,6 +979,7 @@
 							{
 								$historylog_workorder->add($entry, $id, $status_code[$entry]);
 								$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status='{$status_code[$entry]}' WHERE id = {$id}");
+								execMethod('property.soworkorder.check_project_status', $id);
 								$receipt['message'][] = array('msg' => lang('Workorder %1 is %2', $id, $status_code[$entry]));
 							}
 							break;
