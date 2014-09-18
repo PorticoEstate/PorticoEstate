@@ -286,7 +286,7 @@
 			if ($event['secret'] != phpgw::get_var('secret', 'GET'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
-				self::render_template('report_numbers', array('event_object' => $booking, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
+				self::render_template('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
 				return false;
 			}
 

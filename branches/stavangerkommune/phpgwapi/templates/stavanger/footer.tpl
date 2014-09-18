@@ -53,7 +53,7 @@ function init() {
 			orgbox();
 			var oList = document.getElementById("orglist");
 			oList.innerHTML += '<div style="padding-top: 10px">PS: Du kan bruke <i class="fa fa-users"></i> ikonet for å bytte organisasjon.</div>';			
-			setCookie('orgbox',1,1);
+			setCookie('orgbox','default',1);
 		}
 	}
 }

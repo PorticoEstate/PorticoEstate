@@ -34,6 +34,7 @@
 			$this->assoc_bo = new booking_boapplication_association();
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->resource_bo = CreateObject('booking.boresource');
+            $this->building_bo = CreateObject('booking.bobuilding');
             $this->organization_bo = CreateObject('booking.boorganization');
 			$this->document_bo = CreateObject('booking.bodocument_building');
 			self::set_active_menu('booking::applications');
@@ -460,6 +461,8 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+                $building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'GET'))));
+
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
 				array_set_default($_POST, 'from_', array());
@@ -498,6 +501,9 @@
 						$errors['agegroups'] = lang('Agegroups can not be larger than 9999 peoples');
 					}
 				}
+                if ($building['results'][0]['deactivate_application']) {
+                    $errors['application_deactivated'] = lang('Application on this building is not possible.');
+                }
 
 				if(!$errors)
 				{

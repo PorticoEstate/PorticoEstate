@@ -18,7 +18,7 @@ function getCookie(c_name)
 		{
 			c_end = c_value.length;
 		}
-		c_value = unescape(c_value.substring(c_start,c_end));
+		c_value = decodeURI(c_value.substring(c_start,c_end));
 	}
 	return c_value;
 }
@@ -26,7 +26,7 @@ function setCookie(c_name,value,exdays)
 {
 	var exdate=new Date();
 	exdate.setDate(exdate.getDate() + exdays);
-	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+	var c_value=encodeURI(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
 	document.cookie=c_name + "=" + c_value;
 }
 

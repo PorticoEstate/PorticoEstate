@@ -111,14 +111,23 @@
 
 		private function create_body_text($from, $to, $where, $who, $id, $secret, $type, $external_site_address)
 		{
-			$body = "Informasjon om kommende arrangement:\n";
+            $config	= CreateObject('phpgwapi.config','booking');
+            $config->read();
+
+            $body = "Informasjon om kommende arrangement:\n";
 			$body .= "Hvor: %WHERE%\n";
 			$body .= "Når:  %WHEN%\n";
 			if (strlen($who) > 0)
 			{
 				$body .= "Hvem: %WHO%\n";
 			}
-			$body .= "\nStavanger kommune fører statistikk på bruk av lokaler og ber derfor om at dere \n";
+            if ($config->config_data['metatag_author'] != '') {
+                $body .= "\n".$config->config_data['metatag_author'];
+            } else {
+                $body .= "\nAktivby ";
+            }
+
+			$body .= " fører statistikk på bruk av lokaler og ber derfor om at dere \n";
 			$body .= "\netter arrangementet melder inn korrekt deltakertall til oss.\n";
 			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor.\n\n%URL%";
 

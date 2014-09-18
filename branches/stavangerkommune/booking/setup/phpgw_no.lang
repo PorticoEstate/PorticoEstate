@@ -584,7 +584,8 @@ Frontend users can delete bookings and allocations	booking	no	Brukere av fronten
 All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.	booking	no	Alle som leier lokaler hos Stavanger kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.
 Delete Information	booking	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
 Delete information2	booking	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
-Booking Delete information	booking	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
+Booking Delete information	booking	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst.
+Booking Delete information3	booking	no	Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
 Booking  Delete information2	booking	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 There is a cost of %1 assosiated with the allocation you are useing	booking	no	Det er en kostnad på %1kr knyttet til den tildelingen du bruker.
 Export	booking	no	Eksport
@@ -652,3 +653,7 @@ Cancelation Email Adresses	booking	no	E-Post adresser som får varsel ved avbest
 file configuration	common	no	Fil konfigurasjon
 file attributes	common	no	Fil attributer
 file categories	common	no	Fil kategorier
+Outdoors	booking	no	Utendørs
+Indoors	booking	no	Innendørs
+Activities	booking	no	Aktiviteter
+Application on this building is not possible.	booking	no	Det er ikke mulig å søke om tid på dette bygget.
