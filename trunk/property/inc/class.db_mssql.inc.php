@@ -30,6 +30,7 @@
 		var $Debug				= false;
 		var $auto_stripslashes	= false;
 		protected $Transaction	= false;
+		var $fetchmode			= 'ASSOC';//'BOTH';
 
 		function connect()
 		{
@@ -155,7 +156,10 @@
 					$this->Record = array();
 					for($i = 0; $i < count($rec); $i++)
 					{
-						$this->Record[$i] = $rec[$i];
+						if($this->fetchmode == 'BOTH')
+						{
+							$this->Record[$i] = $rec[$i];
+						}
 						$o = mssql_fetch_field($this->Query_ID, $i);
 						$this->Record[$o->name] = $rec[$i];
 					}
