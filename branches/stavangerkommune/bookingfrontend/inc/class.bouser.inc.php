@@ -213,7 +213,7 @@
 		}
         protected function get_breg_orgs($fodselsnr) {
             $breg_conn = pg_connect("host=".$GLOBALS['phpgw_domain']['default']['db_host']." port=5432 dbname=breg user=".$GLOBALS['phpgw_domain']['default']['db_user']." password=".$GLOBALS['phpgw_domain']['default']['db_pass']) or die('connection failed');
-            $sql = "SELECT orgnr FROM breg.personcurrent WHERE fodselsnr ='".$fodselsnr."'";
+            $sql = "SELECT distinct orgnr FROM breg.personcurrent WHERE fodselsnr ='".$fodselsnr."'";
             $results = pg_query($breg_conn, $sql);
             $orgs = pg_fetch_all($results);
             print_r($sql);
