@@ -39,6 +39,7 @@
 		var	$function_name = 'import_oppdatering_av_bestilling_fra_agresso_bkb';
 		var $debug = true;
 		protected $updated_tickects = array();
+		protected $updated_tickects_per_file = array();
 		protected $receipt = array();
 
 		function __construct()
@@ -96,6 +97,7 @@
 						_debug_array("Start import file: $file");
 					}
 
+					$this->updated_tickects_per_file = array();
 					$ok = $this->import($file);
 
 					if ($ok)
@@ -119,6 +121,7 @@
 						else
 						{
 							$this->db->transaction_commit();
+							$this->updated_tickects = array_merge($this->updated_tickects,$this->updated_tickects_per_file);
 						}
 					}
 					else
@@ -310,7 +313,7 @@
 
 			if($ok)
 			{
-				$this->updated_tickects[$id] = true;
+				$this->updated_tickects_per_file[$id] = true;
 				$this->update_status($data);
 			}
 
@@ -350,7 +353,7 @@
 
 				if( $this->sotts->update_status($ticket,$id))
 				{
-					$this->updated_tickects[$id] = true;
+					$this->updated_tickects_per_file[$id] = true;
 				}
 			}
 
