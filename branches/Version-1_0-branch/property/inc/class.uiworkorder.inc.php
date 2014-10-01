@@ -1088,6 +1088,16 @@
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a budget account !'));
 				}
+				else 
+				{
+					$_b_account = execMethod('property.bogeneric.read_single', array('id' => $values['b_account_id'], 'location_info' => array('type' => 'budget_account')));
+					if(!$_b_account || !$_b_account['active'])
+					{
+						$values['b_account_id'] = '';
+						$values['b_account_name'] = '';
+						$receipt['error'][]=array('msg'=>lang('Please select a valid budget account !'));
+					}
+				}
 
 				if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'],'-')))
 				{
