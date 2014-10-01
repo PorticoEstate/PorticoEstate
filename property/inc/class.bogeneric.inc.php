@@ -176,6 +176,11 @@
 
 		public function read_single($data=array())
 		{
+			if(isset($data['location_info']) && $data['location_info']['type'])
+			{
+				$this->get_location_info($data['location_info']['type'],(int)$data['location_info']['type']);
+				unset($data['location_info']);
+			}
 			$custom_fields = false;
 			if($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{

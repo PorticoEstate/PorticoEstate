@@ -1280,6 +1280,7 @@ please enter scale as integer !	property	no	Angi heltall for skalering
 please give som details !	property	no	Angi detaljer
 please select a branch !	property	no	Velg fag
 please select a budget account !	property	no	Velg en kostnadsart
+please select a valid budget account !	property	no	Velg en gyldig kostnadsart
 please select a budget reponsible!	property	no	Velg en anviser
 please select a building id !	property	no	Velg bygnings ID
 please select a category !	property	no	velg kategori
