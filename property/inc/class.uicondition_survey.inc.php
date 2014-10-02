@@ -103,7 +103,10 @@
 
 		}
 
-
+		/**
+		 * Prepare UI
+		 * @return void
+		 */
 		public function index()
 		{
 			if(!$this->acl_read)
@@ -298,6 +301,10 @@
 		}
 
 
+		/**
+		 * Fetch data from $this->bo based on parametres
+		 * @return array
+		 */
 		public function query()
 		{
 			$params = array(
