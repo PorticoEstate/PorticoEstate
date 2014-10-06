@@ -1,0 +1,14 @@
+PlaySMS gateway module for bergen_kommune
+
+Need a config-section named 'bergen_kommune' with values:
+
+array
+(
+	'wsdl'			=> 'http://soa01a.srv.bergenkom.no/biz/bk/sms/SmsService-v1?wsdl'// using SOAP
+	'service_url'	=> 'http://soa01a.srv.bergenkom.no/biz/bk/sms/SmsService-v1'// using SOAP
+	'login'			=>
+	'password'		=>
+	'proxy_host'	=>
+	'proxy_port'	=>
+);
+

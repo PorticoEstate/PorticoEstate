@@ -1,0 +1,29 @@
+are you sure you want to delete %1 ?	ftp	de	Mchten Sie %1 wirklich l&ouml;schen ?
+attempt to create a directory with empty name	ftp	de	Es wurde versucht, ein Verzeichnis mit leerem Namen anzulegen
+cancel	ftp	de	abbrechen
+cd	ftp	de	cd
+connect	ftp	de	Connect
+create new directory	ftp	de	Neues Verzeichnis erstellen
+delete	ftp	de	%1 l&ouml;schen
+failed to connect to %1 with user %2 and password %3	ftp	de	Verbindung zu %1 mit UserNamen %2 und Passwort %3 fehlgeschlagen
+failed to create directory %1	ftp	de	Failed to create directory %1
+failed to delete %1	ftp	de	Konnte %1 nicht l&ouml;schen
+failed to rename %1 to %2	ftp	de	Konnte %1 nicht in %2 umbenennen
+failed to upload %1	ftp	de	%1 konnte nicht hochgeladen werden
+ftp client	ftp	de	Ftp Client
+ftp server	ftp	de	Ftp Server
+home	ftp	de	Home
+logout/relogin	ftp	de	LogOut/ReLogin
+password	ftp	de	Password
+rename	ftp	de	%1 umbenennen
+rename from	ftp	de	Umbenennen von
+rename to	ftp	de	in
+renamed %1 to %2	ftp	de	%1 umbenannt in %2
+save	ftp	de	Speichern
+save to filemanager	ftp	de	In den FileManager speichern
+succesfully created directory %1	ftp	de	%1 erfolgreich erstellt
+successfully deleted %1	ftp	de	%1 erfolgreich gel&ouml;scht
+successfully uploaded %1	ftp	de	%1 erfolgreich hochgeladen
+upload	ftp	de	Upload
+username	ftp	de	Username
+view	ftp	de	Anzeigen

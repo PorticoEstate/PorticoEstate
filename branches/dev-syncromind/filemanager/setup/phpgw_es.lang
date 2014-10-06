@@ -1,0 +1,105 @@
+%1 already exists as a file	filemanager	es	%1 ya existe como archivo
+application	filemanager	es	Aplicación
+back to file manager	filemanager	es	Volver al administrador de archivos
+cannot create directory because it begins or ends in a space	filemanager	es	No se puede crear la carpeta porque empieza o termina con un espacio
+cannot replace %1 because it is a directory	filemanager	es	No se puede sustituir %1 porque es una carpeta
+choose directory -->	filemanager	es	Elija una carpeta -->
+command sucessfully run	filemanager	es	Comando ejecutado correctamente
+comment	filemanager	es	Comentario
+comments cannot contain "%1"	filemanager	es	Los comentarios no pueden contener "%1"
+copied %1 to %2	filemanager	es	%1 ha sido copiado a %2
+copy to	filemanager	es	Copiar a
+copy to:	filemanager	es	Copiar a:
+could not copy %1 to %2	filemanager	es	No ha sido posible copiar %1 a %2
+Could not copy %1 to %2 Quota exceeded	filemanager	es	No se puede copiar %1 a %2 - Límite de espacio excedido
+could not create %1	filemanager	es	No se ha podido crear %1
+could not create directory %1	filemanager	es	No se ha podido crear la carpeta %1
+could not delete %1	filemanager	es	No se ha podido borrar %1
+could not move %1 to %2	filemanager	es	%1 no ha podido ser movido a %2
+Could not move %1 to %2 Quota exceeded	filemanager	es	No se ha podido mover %1 a %2 - Límite de espacio excedido
+could not rename %1 to %2	filemanager	es	No se ha podido renombrar %1 a %2
+could not save %1	filemanager	es	No se ha podido grabar %1
+could not upload %1 Quota exceeded	filemanager	es	No se ha podido subir %1 - Límite de espacio excedido
+create file	filemanager	es	Crear un archivo
+create folder	filemanager	es	Crear una carpeta
+created	filemanager	es	Creado
+created %1	filemanager	es	%1 ha sido creado
+created by	filemanager	es	Creado por
+created directory %1	filemanager	es	La carpeta %1 ha sido creada
+date	filemanager	es	Fecha
+default number of upload fields to show	filemanager	es	Número de campos de subida que se muestran por defecto
+delete	filemanager	es	Borrar
+deleted %1	filemanager	es	%1 ha sido borrado
+directory	filemanager	es	Carpeta
+directory %1 already exists	filemanager	es	La carpeta %1 ya existe
+directory %1 does not exist	filemanager	es	La carpeta %1 no existe
+directory names cannot contain "%1"	filemanager	es	Los nombres de carpeta no pueden contener "%1"
+display attributes	filemanager	es	Muestra los atributos
+download	filemanager	es	Descargar
+edit	filemanager	es	Editar
+edit comments	filemanager	es	Editar comentarios
+edit quota	filemanager	es	Editar límite de espacio
+Enter comma separated Quota value in MB	filemanager	es	Introduzca el valor del límite de espacio en MB separado por comas
+erroneous input! check quota value!	filemanager	es	¡Valor erroneo! Compruebe el valor del límite de espacio
+error running command	filemanager	es	Ha ocurrido un error al ejecutar el comando
+execute	filemanager	es	Ejecutar
+failed to create directory	filemanager	es	No se ha podido crear la carpeta
+file	filemanager	es	Archivo
+file %1 already exists. please edit it or delete it first.	filemanager	es	El archivo %1 ya existe. Por favor, edítelo o bórrelo primero.
+file %1 could not be created.	filemanager	es	El archivo %1 no ha podido ser creado.
+file name	filemanager	es	Nombre de archivo
+file names cannot contain "%1"	filemanager	es	Los nombres de archivo no pueden contener "%1"
+file names cannot contain \ or /	filemanager	es	Los nombres de archivo no pueden contener \ o /
+filemanager	common	es	Administrador de archivos
+filemanager preferences	filemanager	es	Preferencias del administrador de archivos
+files	filemanager	es	Archivos
+folder	filemanager	es	Carpeta
+go to	filemanager	es	Ir a
+go to %1	filemanager	es	Ir a %1
+go to your home directory	filemanager	es	Ir a la carpeta personal
+go to:	filemanager	es	Ir a:
+home	filemanager	es	Carpeta personal
+locked	filemanager	es	Bloqueado
+menu -->	filemanager	es	Menú -->
+mime type	filemanager	es	Tipo MIME
+modified	filemanager	es	Modificado
+modified by	filemanager	es	Modificado por
+move to	filemanager	es	Mover a
+move to:	filemanager	es	Mover a:
+moved %1 to %2	filemanager	es	%1 ha sido movido a %2
+no version history for this file/directory	filemanager	es	No hay historia de versión para este fichero/carpeta
+operation	filemanager	es	Operación
+other settings	filemanager	es	Otras preferencias
+owner	filemanager	es	Propietario
+preview %1	filemanager	es	Previsualizar %1
+preview of %1	filemanager	es	Vista previa de %1
+refresh	filemanager	es	Refrescar
+rename	filemanager	es	Cambiar nombre
+renamed %1 to %2	filemanager	es	%1 ha sido renombrado a %2
+replaced %1	filemanager	es	%1 ha sido reemplazado
+save %1	filemanager	es	Guardar %1
+save all	filemanager	es	Guardar todo
+saved %1	filemanager	es	%1 ha sido guardado
+show	filemanager	es	Mostrar
+show ..	filemanager	es	Mostrar ..
+show .files	filemanager	es	Mostrar .archivos
+show command line (experimental. dangerous)	filemanager	es	Mostrar línea de comandos (EXPERIMENTAL. PELIGROSO)
+show dotfiles	filemanager	es	Mostrar ficheros dot
+show help	filemanager	es	Mostrar ayuda
+size	filemanager	es	Tamaño
+sort by:	filemanager	es	Ordenar por:
+total files	filemanager	es	Archivos totales
+unknown mime-type defaults to text/plain when viewing	filemanager	es	Los tipos MIME desconocidos se muestran por defecto como text/plain
+unused space	filemanager	es	Espacio libre
+up	filemanager	es	Arriba
+update	filemanager	es	Actualizar
+updated comment for %1	filemanager	es	El comentario para %1 ha sido actualizado
+upload fields	filemanager	es	Subir campos
+upload files	filemanager	es	Subir ficheros
+used space	filemanager	es	Espacio usado
+users	filemanager	es	Usuarios
+version	filemanager	es	Versión
+view documents in new window	filemanager	es	Mostrar los documentos en una ventana nueva
+view documents on server (if available)	filemanager	es	Ver los documentos en el servidor (si está disponible)
+who	filemanager	es	Quien
+you do not have access to %1	filemanager	es	No tiene acceso a %1

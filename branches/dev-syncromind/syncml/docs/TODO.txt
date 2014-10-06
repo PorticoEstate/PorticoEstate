@@ -1,0 +1,16 @@
+TODO
+
+Stuff to do in the SyncML module.
+
+* Native PHP WBXML support.
+* SyncML 1.2 support.
+* Per-database authentication.
+* Logging and debugging tools.
+* HTML UI.
+  * Add, remove, edit sources.
+  * Add, remove, edit databases.
+  * Handle conflicts.
+* Better conflict handling
+  * Merging.
+  * HTML UI.
+

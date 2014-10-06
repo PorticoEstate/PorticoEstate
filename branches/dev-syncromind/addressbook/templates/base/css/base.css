@@ -1,0 +1,21 @@
+#contacts_view
+{
+	margin: 0px auto;
+	width: 80%
+}
+
+td.contacts_v_label
+{
+	text-align: left;
+	width: 30%;
+}
+
+td.contacts_v_val
+{
+	width: 70%;
+}
+
+ul.tabs li input
+{
+	padding-top: 3px;
+}

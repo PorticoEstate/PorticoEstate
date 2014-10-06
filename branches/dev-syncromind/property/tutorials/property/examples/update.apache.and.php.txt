@@ -1,0 +1,21 @@
+/usr/local/apache2/bin/apachectl stop &&\
+cd /opt/web/httpd-2.0.52 &&\
+./configure --enable-so --enable-deflate --enable-headers &&\
+make &&\
+make install &&\
+cd ../php-4.3.9 &&\
+export LDFLAGS=-lstdc++ &&\
+make clean &&\
+./configure --with-sybase-ct=/usr/local/freetds\
+ --with-apxs2=/usr/local/apache2/bin/apxs --enable-mail --enable-xslt\
+ --with-xslt-sablot --with-zlib --with-pspell --with-jpeg-dir=/usr/lib\
+ --with-png-dir=/usr --with-freetype-dir=/usr/lib --with-gd --enable-ftp &&\
+make &&\
+make install &&\
+cd ../turck-mmcache-2.4.6 &&\
+export PHP_PREFIX="/usr/local" &&\
+$PHP_PREFIX/bin/phpize &&\
+./configure --enable-mmcache=shared --with-php-config=$PHP_PREFIX/bin/php-config &&\
+make &&\
+make install &&\
+/usr/local/apache2/bin/apachectl start

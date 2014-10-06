@@ -1,0 +1,39 @@
+access type	todo	da	Adgangstype
+add main project	todo	da	Tilføj hovedprojekt
+add sub project	todo	da	Tilføj underprojekt
+addsub	todo	da	Tilføj under
+are you sure you want to delete this entry	todo	da	Vil du virkelig slette dette felt
+assigned to	todo	da	Tildelt til
+clear form	todo	da	Slet formular
+completed	todo	da	udført
+created by	todo	da	Lavet af
+date due	todo	da	Forfalden dato
+days datedue	todo	da	Dage til forfalden
+description can not exceed 8000 characters in length	todo	da	Beskrivelser kan ikke overstige 8000 tegn!
+do you also want to delete all sub projects ?	todo	da	Ønsker du at slette alle underprojekter?
+edit main project	todo	da	Rediger hovedprojekt
+edit sub project	todo	da	Rediger underprojekt
+ending date can not be before start date	todo	da	Slutdato kan ikke være før startdato!
+high	todo	da	Høj
+last updated	todo	da	Sidst opdateret
+low	todo	da	Lav
+normal	todo	da	Normal
+or: days from startdate:	todo	da	eller: dage fra startdato:
+or: select for today:	todo	da	eller: vælg for idag:
+parent project	todo	da	Overprojekt
+please enter a title	todo	da	Indtast venligst en titel
+project description	todo	da	Projekt beskrivelse
+status	todo	da	Status
+to do list	common	da	At-gøre liste
+todo	common	da	At gøre
+todo list	common	da	At-gøre liste
+todo list - add	todo	da	At-gøre liste - tilføj
+todo list - edit	todo	da	At-gøre liste - redigér
+urgency	todo	da	Prioritet
+view matrix of actual month	todo	da	Vis matrice for aktuelle måned
+view todo item	todo	da	Vis at-gøre indtastning
+which groups	todo	da	Hvilke grupper
+you can only enter numbers for days from now	todo	da	Du kan kun indtaste antal dage fra nu!
+you have entered an ending invalid date	todo	da	Du har indtastet en ugyldig slutdato!
+you have entered an invailed date	todo	da	Du har angivet en ugyldig dato
+you have entered an starting invalid date	todo	da	Du har indtastet en ugyldig startdato!

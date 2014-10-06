@@ -1,0 +1,204 @@
+1 message has been deleted	email	da	1 besked er slettet
+1 message has been moved to	email	da	1 besked er flyttet til
+<b>apply all</b> filters	email	da	<b>Benyt alle</b> filtre
+account	email	da	Konto
+account user name	email	da	Konto bruger navn
+accounts:	email	da	Konti:
+add to addressbook	email	da	Føj til adressebog
+addressbook	email	da	addressebog
+and	email	da	og
+arrival date	email	da	Ankomst dato
+as	email	da	som
+attach file	email	da	Vedhæft fil
+attach signature	email	da	Vedhæft signatur
+attachment	email	da	Vedhæftning
+bcc	email	da	bcc
+bigger	email	da	Større
+biggest	email	da	Størst
+cancel	email	da	Annuler
+cc	email	da	CC
+choose for rename	email	da	Vælg for at omdøbe
+choose to rename	email	da	Vælg for at omdøbe
+compose	email	da	Skriv ny e-mail
+compose new	common	da	Skriv ny e-mail
+contains	email	da	Indeholder
+could not open this mailbox	email	da	Kunne ikke åbne denne mailbox
+create (expert)	email	da	Lav (ekspert)
+create a folder	email	da	Opret en mappe
+create a folder email	email	da	Opret e-mail mappe
+current attachments	email	da	Nuværende vedhæftninger
+custom e-mail preferences	email	da	Tilpas e-mail præferencer
+custom e-mail settings	email	da	Tilpas e-mail indstillinger
+custom email settings	email	da	Tilpas e-mail indstillinger
+date	email	da	Dato
+default sorting order	email	da	Standard sorteringsrækkefølge
+default:	common	da	standard:
+delete	email	da	Slet
+delete (expert)	email	da	Slet (ekspert)
+delete a folder	email	da	Slet en mappe
+delete account	common	da	Slet konto
+deleted messages (trash) folder	email	da	Slettede beskeder (skraldespand)
+deleted messages go to trash	email	da	Slettede beskeder går i skraldespanden
+disabled	email	da	Slået fra
+discard	email	da	Kasser
+does not contain	email	da	Indeholder ikke
+done	email	da	Færdig
+e-mail extra account	email	da	Ekstra e-mail konto
+e-mail extra accounts	email	da	Ekstra e-mail konti
+e-mail extra accounts list	email	da	Liste over ekstra e-mail konti
+e-mail filters	common	da	E-mail filtre
+e-mail folders	common	da	E-mail mapper
+e-mail inbox filters list	email	da	E-mail indboks filtre
+e-mail preferences	common	da	E-mail præferencer
+edit	email	da	Rediger
+email	email	da	e-mail
+email account name	email	da	E-mail brugernavn
+email address	email	da	E-mail adresse
+email date	email	da	E-mail dato
+email filters	email	da	E-mail filtre
+email password	email	da	E-mail password
+email preferences	email	da	E-mail præferencer
+email signature	email	da	E-mail underskrift
+email type	common	da	E-mail type
+enable this email account	common	da	Aktiver denne e-mail konto
+enable utf-7 encoded folder names	email	da	Tillad utf-7 kodede mappe-navne
+enter your default mail domain ( from: user@domain )	admin	da	Indtast dit standard domæne navn (fra: bruger@domæne)
+enter your pop	admin	da	Indtast POP-server navn
+enter your smtp server hostname or ip address	admin	da	Indtast SMTP-server navn
+enter your smtp server port	admin	da	Indtast SMTP-server port
+error	email	da	fejl
+error moving messages to	email	da	Fejl ved flytning af beskeder til
+error: unknown message data	email	da	Fejl: Ukendt besked-data
+extra accounts	email	da	Ekstra konti
+extra e-mail account	common	da	Ekstra e-mail konto
+extra e-mail accounts	common	da	Ekstra e-mail konti
+fewer actions	email	da	Færre muligheder
+fewer choices	email	da	Færre valg
+file	email	da	Fil
+file attachment	email	da	Fil vedhæftning
+file into	email	da	Fil til
+fill in as much as you can	email	da	Udfyld så meget du kan
+filter [number	email	da	filter [nummer] og navn
+firstname	email	da	Fornavn
+folder	email	da	Mappe
+folder maintenance	email	da	Mappe vedligehold
+folder name	email	da	Mappe navn
+folder size	email	da	Mappe størrelse
+folders	email	da	Mapper
+for the file to actually upload	email	da	For at filen faktisk lægges op
+for these items, fill only what is different from you default e-mail preferences	common	da	Udfyld kun hvad der adskiller sig fra dine standard e-mail præferencer for disse elementer
+forward	email	da	Videresend e-mail
+from	email	da	Fra
+go	email	da	
+hidden	email	da	Skjult
+if applicable	email	da	Hvis passende
+if fileto then select destination folder	email	da	Hvis fil-til vælg da destinations mappe
+if messages match	email	da	Hvis beskeder matcher
+image	email	da	Billede
+imap mail server hostname or ip address	admin	da	IMAP-server navn
+imap server type	common	da	IMAP server type
+input error:	email	da	Indtastningsfejl:
+keep	email	da	Behold
+keywords	email	da	Nøgleord
+lastname	email	da	Efternavn
+layout 1	common	da	Layout 1
+layout 2	common	da	Layout 2
+lines	email	da	Linjer
+long names	email	da	Lange navne
+mail folder(uw-maildir)	email	da	Post mappe (uw-maildir)
+mail server	email	da	Post server
+mail server login type	admin	da	Post server login type
+mail server type	email	da	Post server type
+mail settings	admin	da	Post indstillinger
+manage accounts	email	da	Vedligehold konti
+manage folders	email	da	Vedligehold mapper
+message	email	da	Besked
+message list layout	common	da	Beskedliste layout
+messages	email	da	Beskeder
+messages have been moved to	email	da	Beskeder er blevet flyttet til
+monitor	email	da	Monitor
+more actions	email	da	Flere muligheder
+more choices	email	da	Flere valg
+move down	email	da	Flyt ned
+move selected messages into	email	da	Flyt valgte beskeder til
+move this message into	email	da	Flyt denne besked til
+move up	email	da	Flyt op
+new	email	da	Ny
+new account	email	da	Ny konto
+new filter	email	da	Nyt filter
+new message	email	da	Ny besked
+newest	common	da	Nyeste
+next	email	da	Næste
+no error returned from server	email	da	Ingen fejlbeskeder fra serveren
+no next message	email	da	Ingen næste besked
+no previous message	email	da	Ingen forrig besked
+no subject	email	da	Intet emne
+non-standard	email	da	Ikke-standard
+none	email	da	ingen
+number	common	da	Nummer
+oldest	common	da	ældst
+or	common	da	eller
+or enter text	email	da	eller indsæt tekst
+please fill in everything you need	email	da	Indsæt venligst den information der er brug for
+please select a folder to rename	email	da	Vælg en mappe er skal omdøbes
+please select a message first	email	da	Vælg venligst en sætning først
+please submit a filename to attach	email	da	Indsæt venligst filnavn der skal vedhæftes
+please type a folder name in the text box	email	da	Skriv venligst et mappe-navn i tekstboksen
+previous	email	da	Forrige
+raw message	email	da	Rå beskedtekst
+read mail	email	da	Læs post
+redirect	email	da	Omdirriger
+reject	email	da	Afvis
+rename (expert)	email	da	Omdøb (ekspert)
+rename a folder	email	da	Omdøb en mappe
+reply	email	da	Svar
+reply all	email	da	Svar alle
+replyto	email	da	Svar til
+required	email	da	Krævet
+reset	email	da	Nulstil
+result	email	da	resultat
+search this folder	email	da	søg i denne folder
+section	email	da	Afsnit
+select your mail server type	admin	da	Vælg din mailserver type
+send	email	da	Send
+send deleted messages to the trash	email	da	Læg slettede beskeder i skraldespanden
+sent messages folder	common	da	Sendte beskeder
+sent messages saved in "sent" folder	common	da	Sendte beskeder gemt i &quot;sendte beskeder&quot; mappen
+short names	email	da	Korte navne
+show new messages on main screen	email	da	Vis nye beskeder på forsiden
+show sender's email address with name	email	da	Vis afsenderens e-mail adresse med navn
+size	email	da	Størrelse
+smaller	email	da	Mindre
+smallest	email	da	Mindst
+somebody	email	da	En eller anden
+sort by	email	da	Sorter efter
+standard e-mail preferences	email	da	Standard e-mail præferencer
+stop if matched	email	da	Stop hvis match fundert
+subject	email	da	Emne
+submit	email	da	Send
+switch accounts	email	da	Skift konto
+switch current folder to	common	da	Gå til mappe
+then take this actions	email	da	og udfør da følgende
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	da	Der opstod en fejl under forbindelsesforsøg til din mailserver.<br /> Kontroller venligst at dit brugernavn og password er korrekt, eller kontakt din systemadministrator.
+this data not supplied.	email	da	Blev ikke forsynet med disse data
+this folder is empty	email	da	Denne mappe er tom
+to	email	da	Til
+total messages	email	da	Total antal beskeder
+u-wash mail folder	email	da	U-Wash post mappe
+undisclosed recipients	email	da	Ubekendte modtagere
+undisclosed sender	email	da	Ubekendt afsender
+unknown action	email	da	Ukendt handling
+unknown error	email	da	Ukendt fejl
+use custom settings	email	da	Anvend personlige indstillinger
+view as html	email	da	Se som html
+view formatted	email	da	Se formatteret
+view headers	email	da	Se mail-headers
+view unformatted	email	da	Se uformatteret
+%1 messages have been deleted	email	da	%1 beskeder er slettet
+you have 1 new message!	common	da	Du har 1 ny besked!
+you have messages!	common	da	Du har nye beskeder!
+you have no new messages	common	da	Du har ingen nye beskeder!
+you have %1 new messages!	common	da	Du har %1 nye beskeder!
+you must click	email	da	Du skal klikke
+your full name	common	da	Dit fulde navn
+your message has been sent	common	da	Din besked er blevet sendt!

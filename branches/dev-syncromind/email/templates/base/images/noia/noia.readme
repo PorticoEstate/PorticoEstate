@@ -1,0 +1,40 @@
+The noia icons for KDE.
+Made by Carlitus (Carles Carbonell Bernado)
+mail@carlitus.net
+http://www.carlitus.net
+Thanks to all people that helped me correcting this text ;)
+
+Please, read this entire document ;)
+Read the 'changelog' text file for release's information
+
+Thanks
+
+HISTORY
+These icons are initially released for Microsoft WindowsXP and received much praise from the start. Therefore, i created 3 more variations.
+With these icons i obtained the 1st place in the Axialis Contest in July, 2002.
+I like having alternatives, therefore a long time ago (and lots of times) to install Linux on my x86 computers, without success. However, recently, Using Suse 8.0 I was able to succesful install Linux on my computer! I like Linux, it is a very powerful operating system and KDE is a nice desktop wich is rapidly being improved.
+Due to nature of Linux and thanks to the thousands of people who have contributed their work to it, surely my icon set will become old soon :p
+Finally, on November 7 2002 i finished my first icon set for KDE: The Noia icons.
+Differences between Windows & KDE Noia icons:
+-All icons actualized (the shadows weren't OK before)
+-Higher sizes ;)
+-The icons looks good on 16 bits modes :)) (I know, this is a KDE advantage, WIndowsXP don't shows correctly the 8bits alphablended icons on 16bits screen modes)
+-The devices icons are 50% new for this version
+-The filesystem icons are 90% new for this version
+-The mimetyps icons are 99% new for this version
+-The actions icons are 99% new for this version
+-The application icons are entirelly new for this version
+-Most importantly: THIS VERSION COVERS ALL (or almost all) OF THE ENTIRE SYSTEM! I've haven't been able to do this on Windows or MAc OSX. This is really COOL!!
+
+ICON DESCRIPTIONS
+This is a icon set for KDE 3. I used 'the 'hilight' icons as a template, but initially i didn't release all of the icons. The final version will cover all 'hilight' icons except specific application icons (such math, midi etc.)
+All icons are 32 bits, anti-aliased, and they have shadows and transparencies.
+I tried to make my icons as original i could, unfortunately i had to use some concepts from other OSes and desktops.
+All designs have been created by me and some of them are very original, at least on my opinion ;)
+The result of my work is afresh, comic, clean, unique and modern set of icons.
+I used Ulead Photoimpact 7. Ok, this is a program that only turns on the Windows Operative System... hopefully the Wine developers will soon allow me to run it under Linux instead.
+
+WISHES
+I call for your collaboration to complete this project. When it is finished, i will release different styles of the theme and some icons apart (for applications, and generics, not covered by KDE).
+Please sent me your opinions, bug reports and suggestions to me (mail@carlitus.net).
+If there are missing icons covered in KDE not yet present in this icon set, please let me know.

@@ -1,0 +1,19 @@
+PlaySMS gateway module for pswin
+
+Need a config-section named 'pswin' with values:
+
+array
+(
+	'wsdl'			=> 'http://sms.pswin.com/SOAP/SMS.asmx?wsdl'// using SOAP
+	'send_url'		=> // using GET
+	'service_url'	=> 'http://sms.pswin.com/SOAP/SMS.asmx'// using SOAP
+	'login'			=>
+	'password'		=>
+	'proxy_host'	=>
+	'proxy_port'	=>
+	'originator'	=>
+	'type'			=> SOAP | GET //Send type
+	'receive_url'	=> ''//local url to webservice for pswin to deliver messages and reports
+);
+
+The common-section needs the 'anonymous_user' and the 'anonymous_pass'

@@ -1,0 +1,46 @@
+1 message has been deleted	email	hu	1 üzenet kitörölve
+add to addressbook	email	hu	Hozzáad a címlistához
+cc	email	hu	Kapja még
+compose	email	hu	Levelet ír
+date	email	hu	Dátum
+default sorting order	email	hu	Alapértelmezett sorrend
+delete	email	hu	Töröl
+email	email	hu	E-Mail
+email account name	email	hu	Email hozzáférés neve
+email address	email	hu	Email cím
+email password	email	hu	Email jelszó
+email signature	email	hu	E-Mail aláírás
+files	email	hu	Fájlok
+folder	email	hu	Dosszié
+forward	email	hu	Továbbküld
+from	email	hu	Feladó
+if applicable	email	hu	If Applicable
+image	email	hu	Kép
+imap server type	email	hu	IMAP Server Type
+mail server	email	hu	Mail szerver
+mail server type	email	hu	Mail szerver fajtája
+message	email	hu	Üzeenet
+messages	email	hu	Üzenetek
+monitor	email	hu	Monitor
+move selected messages into	email	hu	Kiválasztott üzenetetek áthelyezése
+new message	email	hu	Új üzenet
+next	email	hu	Következő
+no subject	email	hu	Tárgy nélkül
+non-standard	email	hu	Nem szabványos
+please select a message first	email	hu	Először válasszon ki egy üzenetet
+previous	email	hu	Előző
+reply	email	hu	Válaszol
+reply all	email	hu	Mindenkinek válaszol
+section	email	hu	Részleg
+send	email	hu	Elküld
+send deleted messages to the trash	email	hu	Törölt üzenet a kukába
+show new messages on main screen	email	hu	Új üzenetek megjelenítése a főképernyőn
+size	email	hu	Méret
+subject	email	hu	Tárgy
+switch current folder to	email	hu	Dosszié kiválasztása
+this folder is empty	email	hu	Ez az dosszié üres
+to	email	hu	Címzett
+undisclosed recipients	email	hu	Címzett nincs kitöltve
+undisclosed sender	email	hu	Feladó nincs kitöltve
+use custom settings	email	hu	Testreszabott beállítások használata
+%1 messages have been deleted	email	hu	%1 üzenet kitörölve

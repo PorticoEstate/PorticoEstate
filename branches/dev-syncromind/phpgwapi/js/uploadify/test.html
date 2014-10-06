@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="./uploadify.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="./jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="./swfobject.js"></script>
+		<script type="text/javascript" src="./jquery.uploadify.v2.1.4.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function()
+			{
+				$('#custom_file_upload').uploadify({
+	
+					'uploader'       : './uploadify.swf',
+					'script'         : '/~sn5607/jquery.uploadify-v2.1.4/uploadify.php',
+					'cancelImg'      : './cancel.png',
+					'folder'         : '/tmp/uploads',
+					'multi'		     : true,
+					'auto'           : true,
+					'fileExt'        : '*.jpg;*.gif;*.png',
+					'fileDesc'       : 'Image Files (.JPG, .GIF, .PNG)',
+					'queueID'        : 'custom-queue',
+					'queueSizeLimit' : 3,
+					'simUploadLimit' : 3,
+//					'scriptData': { 'session': '<?php echo session_id();>'}
+					'removeCompleted': false,
+					'onSelectOnce'   : function(event,data) {
+					    $('#status-message').text(data.filesSelected + ' files have been added to the queue.');
+					  },
+					'onAllComplete'  : function(event,data) {
+					    $('#status-message').text(data.filesUploaded + ' files uploaded, ' + data.errors + ' errors.');
+					  }
+				});
+			});
+		</script>
+
+	</head>
+	<body>
+		<div class="demo-box">
+			<div id="status-message">Select some files to upload:</div>
+			<div id="custom-queue"></div>
+			<input id="custom_file_upload" type="file" name="Filedata" />
+		</div>
+	</body>
+</html>

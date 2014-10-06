@@ -1,0 +1,138 @@
+activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
+Activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
+office	activitycalendarfrontend	no	Hovedansvarlig kulturkontor
+arena	activitycalendarfrontend	no	Lokale
+description	activitycalendarfrontend	no	Beskrivelse (max 255 tegn)
+date_start	activitycalendarfrontend	no	Startdato
+date_end	activitycalendarfrontend	no	Sluttdato
+special_adaptation	activitycalendarfrontend	no	Ja, aktiviteten er spesielt tilpasset for utviklingshemmede
+target	activitycalendarfrontend	no	Målgruppe
+contact_person_1	activitycalendarfrontend	no	Kontaktperson 1
+contact_person_2	activitycalendarfrontend	no	Kontaktperson 2
+Activities	activitycalendarfrontend	no	Aktiviteter
+activities	activitycalendarfrontend	no	Aktiviteter
+Arena	activitycalendarfrontend	no	Arena
+arenas	activitycalendarfrontend	no	Arena
+OrganizationList	activitycalendarfrontend	no	Organisasjoner/Grupper
+f_new_activity	activitycalendarfrontend	no	Ny aktivitet
+f_new_arena	activitycalendarfrontend	no	Ny arena
+search_for	activitycalendarfrontend	no	Søk etter
+activity_type	activitycalendarfrontend	no	Aktivitetstype
+all	activitycalendarfrontend	no	Alle
+not_internal	activitycalendarfrontend	no	Ikke intern
+organization_id	activitycalendarfrontend	no	Organisasjon ID
+arena_type	activitycalendarfrontend	no	Arenatype
+internal_arena_id	activitycalendarfrontend	no	Intern arena ID
+reset	activitycalendarfrontend	no	Nullstill
+organization_number	activitycalendarfrontend	no	Organisasjonsnummer
+elements_pr_page	activitycalendarfrontend	no	elementer per side
+shows_from	activitycalendarfrontend	no	Viser fra
+of_total	activitycalendarfrontend	no	av totalt
+DATATABLE_MSG_EMPTY	activitycalendarfrontend	no	Ingen elementer
+export_to	activitycalendarfrontend	no	Eksporter til
+activity_state	activitycalendarfrontend	no	Status
+processed	activitycalendarfrontend	no	Behandlet
+show	activitycalendarfrontend	no	Vis
+last_change_date	activitycalendarfrontend	no	Sist endret
+first	activitycalendarfrontend	no	Første
+last	activitycalendarfrontend	no	Siste
+previous	activitycalendarfrontend	no	Forrige
+state	activitycalendarfrontend	no	Status
+state_0	activitycalendarfrontend	no	Ingen
+state_1	activitycalendarfrontend	no	Ny
+state_2	activitycalendarfrontend	no	Endring
+state_3	activitycalendarfrontend	no	Akseptert
+state_4	activitycalendarfrontend	no	Behandlet
+state_5	activitycalendarfrontend	no	Avvist
+new	activitycalendarfrontend	no	Ny
+accepted	activitycalendarfrontend	no	Akseptert
+rejected	activitycalendarfrontend	no	Avvist
+activity	activitycalendarfrontend	no	Aktivitet
+organization	activitycalendarfrontend	no	Organisasjon
+group	activitycalendarfrontend	no	Gruppe/Lag
+district	activitycalendarfrontend	no	Bydel
+title	activitycalendarfrontend	no	Tittel
+activity_helptext	activitycalendarfrontend	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.
+building	activitycalendarfrontend	no	Kommunale bygg
+title_helptext	activitycalendarfrontend	no	Skriv inn tittel på aktiviteten slik du vil den skal vises i kommuneportalen
+int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted i et kommunalt bygg velges dette fra listen her.
+arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.
+messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret.<br/>Når aktiviteten er godkjent av kulturkontoret vil den vises på kommunens nettsider.
+messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lagring
+change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er sendt inn for organisasjon %1
+target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!
+district_not_selected	activitycalendarfrontend	no	Distrikt må velges!
+org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon" og fyll ut feltene som vises under. 
+group_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal registreres med andre kontaktpersoner og beskrivelse, kan du gjøre det ved å velge «Ny gruppe» og fylle ut feltene under.<br/>Du kan også velge en eksisterende  gruppe/lag fra listen, eller ikke velge en gruppe/lag.<br/>Ønsker du å redigere/endre eksisterende informasjonen om organisasjon eller beskrivelse,<br/>vil du etter at du har valgt Send-knappen få opp et nytt bilde hvor du du kan velge Rediger.
+criteria_label	activitycalendarfrontend	no	Valgkriterier/søkeord i portalen
+criteria_helptext	activitycalendarfrontend	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking. 
+what	activitycalendarfrontend	no	HVA
+where_when	activitycalendarfrontend	no	HVOR/NÅR
+who	activitycalendarfrontend	no	HVEM
+arena_helptext	activitycalendarfrontend	no	Oppgi arena ved å velge kommunalt bygg eller eksterne bygg.<br/>Dersom ikke arena som skal benyttes finnes i listen, kan du registrere en ny.<br/>Velg "Ny arena" i nedtrekksmenyen for Eksterne bygg og oppgi deretter riktig navn og adresse på arenaen.
+new_arena	activitycalendarfrontend	no	Ny Arena
+register_new_arena	activitycalendarfrontend	no	Registrer nytt lokale
+external_arena	activitycalendarfrontend	no	Eksterne bygg
+category_helptext	activitycalendarfrontend	no	Velg kategori
+target_helptext	activitycalendarfrontend	no	Velg målgruppe(r)
+district_helptext	activitycalendarfrontend	no	Velg bydel(er) hvor aktiviteten foregår
+adaptation_helptext	activitycalendarfrontend	no	Kryss av om aktiviteten er spesielt tilpasset
+time_helptext	activitycalendarfrontend	no	Oppgi tidspunkt for aktiviteten, f.eks. onsdag kl. 20-21
+time	activitycalendarfrontend	no	Dag og tid
+office_helptext	activitycalendarfrontend	no	Oppgi kontor som saksbehandler aktiviteten
+contact_info	activitycalendarfrontend	no	Kontaktinformasjon for kulturkontoret
+contact_info_helptext	activitycalendarfrontend	no	Hentes fra booking/organisasjonsregister ved lagring.
+store_org_group	activitycalendarfrontend	no	Lagre organisasjon/gruppe
+save_activity	activitycalendarfrontend	no	Send
+org_helptext_step1	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon"<br/>Klikk deretter på "Neste" for å registrere aktivitet.
+activity_org_helptext_step1	activitycalendarfrontend	no	Velg organisasjon aktiviteten som skal endres er tilknyttet i nedtrekksmenyen, du kan søke ved å skrive inn navnet.
+next	activitycalendarfrontend	no	Neste
+new_activity	activitycalendarfrontend	no	Ny aktivitet
+update_request_sent	activitycalendarfrontend	no	Oppdateringsforespørsel er sendt på e-post til kontaktperson for aktiviteten "%1" tilknyttet organisasjon "%2"
+edit_activity	activitycalendarfrontend	no	Endre aktivitet
+activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker å endre fra listen under.
+send_change_request	activitycalendarfrontend	no	Send inn endringsønske
+edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
+address	activitycalendarfrontend	no	Adresse
+activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for aktiviteten.<br/>Du velger først organisasjon og deretter aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
+mail_body_update_frontend	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/>%3<br><br/> Mvh %4 kulturkontor
+mail_body_update	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
+mail_subject_update	activitycalendarfrontend	no	Melding fra AktivBy - Aktivitetsoversikt
+save_organization_next	activitycalendarfrontend	no	Lagre organisasjon og gå videre til Ny aktivitet
+new_organization	activitycalendarfrontend	no	Ny organisasjon
+organization_saved_form	activitycalendarfrontend	no	Organisasjonen er opprettet i aktivitetsoversikten.<br/>Du kan nå registrere en aktivitet tilknyttet den nye organisasjonen.
+required_fields	activitycalendarfrontend	no	Felt merket med (*) er påkrevde felt.
+mailBaseURL	activitycalendarfrontend	no	Base-URL for e-post
+ajaxURL	activitycalendarfrontend	no	URL for AJAX-kall
+Anonymous_user	activitycalendarfrontend	no	Brukernavn for frontend
+Anonymous_password	activitycalendarfrontend	no	Passord for frontend
+new_activity_helptext	activitycalendarfrontend	no	Hvem arrangerer aktiviteten?
+responsible	activitycalendarfrontend	no	Arrangør
+choose_org	activitycalendarfrontend	no	Velg organisasjon
+activity_title	activitycalendarfrontend	no	Navn på aktiviteten (max 255 tegn)
+location	activitycalendarfrontend	no	Lokale
+contact_person	activitycalendarfrontend	no	Kontaktperson for aktiviteten
+activity_ok_message	activitycalendarfrontend	no	Aktiviteten er lagret uten endringer
+activity_ok	activitycalendarfrontend	no	Opplysningene er korrekte
+change_activity	activitycalendarfrontend	no	Endre opplysningene
+help_choose_activity_org	activitycalendarfrontend	no	I aktivitetsoversikten må en aktivitet alltid tilhøre en organisasjon.\\n\\n Dersom en organisasjonen er oppført med andre aktiviteter fra før, skal du velge denne i stedet for å registrere ny. Du kan søke deg frem til din organisasjon ved å skrive i feltet.\\n\\nDersom organisasjon ikke er registrert tidligere velger du «Registrer ny organisasjon».\\n\\nDersom det ikke er et skarpt skille mellom organisasjon og aktivitet, skal du likevel velge organisasjon/registrere ny organisasjon. Det gjør ingen ting om enkelte opplysninger, som f.eks. kontaktinformasjon, skrives inn to ganger.
+help_organization_name	activitycalendarfrontend	no	I aktivitetsoversikten må en aktivitet alltid tilhøre en organisasjon. \\n\\nDersom det ikke er et skarpt skille mellom organisasjon og aktivitet, skal du likevel skrive inn navn i feltet for organisasjonsnavn. Det gjør ingen ting om navnet på organisasjonen er det samme som navnet på aktiviteten.
+help_new_activity_org	activitycalendarfrontend	no	I aktivitetsoversikten må en aktivitet alltid tilhøre en organisasjon. \\n\\nDersom det ikke er et skarpt skille mellom organisasjon og aktivitet, skal du likevel skrive inn navn i feltet for organisasjonsnavn. Det gjør ingen ting om navnet på organisasjonen er det samme som navnet på aktiviteten.
+help_streetaddress	activitycalendarfrontend	no	For å unngå feil innskriving av gateadresse, er feltet for «Gateadresse» koplet mot kommunens gateregister med oversikt over alle gatenavn i Bergen. Begynn å fylle ut feltet og velg rett gatenavn som løsningen foreslår.
+help_homepage	activitycalendarfrontend	no	Dersom organisasjonen/aktiviteten har egen internettside, så kan du skrive den inn her.
+help_contact_person	activitycalendarfrontend	no	Skriv inn navn, telefonnummer og e-postadresse til kontaktperson for organisasjonen.\\n\\nDersom organisasjon og aktivitet har samme kontaktperson, skal du likevel skrive inn kontaktopplysninger. Det gjør ingen ting om disse opplysningene senere også skrives inn på aktiviteten.\\n\\nI aktivitetsoversikten på kommunens internettsider, er det opplysningene skrevet inn på kontaktperson for aktiviteten som vil vises, ikke kontaktperson for organisasjonen.
+help_new_activity_title	activitycalendarfrontend	no	Skriv inn navnet på aktiviteten. (max 255 tegn)
+help_new_activity_description	activitycalendarfrontend	no	Gi en KORT beskrivelse av hva aktiviteten går ut på. Skriv helst kun én setning, maksimalt to. (max 255 tegn)
+help_new_activity_category	activitycalendarfrontend	no	Velg den kategorien som passer best for din aktivitet.
+help_new_activity_target	activitycalendarfrontend	no	Velg en eller flere målgrupper.
+help_new_activity_spec_adapt	activitycalendarfrontend	no	Hak av dersom aktiviteten passer for utviklingshemmede.
+help_new_activity_location	activitycalendarfrontend	no	Du må spesifisere hvor aktiviteten foregår.\\n\\nListen er sortert i «Kommunale bygg» og «Eksterne bygg», dvs. bygg som brukere av løsningen har registrert tidligere. \\n\\nVelg «Registrer nytt lokale» dersom du ikke finner det i listen.
+help_new_arena	activitycalendarfrontend	no	Her skriver du inn lokalets navn, gateadresse, husnummer, postnummer og poststed.
+help_new_arena_name	activitycalendarfrontend	no	Skriv inn lokalets navn.\\n\\nLokalets navn vil vises i aktivitetsoversikten på kommunens nettsider. Det er derfor viktig at du velger et navn som gir mening for publikum, f.eks. «Grendahuset på Nymark». 
+help_new_arena_address	activitycalendarfrontend	no	For å unngå feil innskriving av gateadresse, er feltet for «Gateadresse» koplet mot kommunens gateregister med oversikt over alle gatenavn i Bergen. Begynn å fylle ut feltet og velg rett gatenavn som løsningen foreslår.
+help_new_activity_district	activitycalendarfrontend	no	Velg bydelen hvor aktiviteten foregår.
+help_new_activity_time	activitycalendarfrontend	no	Skriv inn dag og klokkeslett når aktiviteten foregår, f.eks. slik «Mandag kl. 20 – 21» eller slik «Hver andre tirsdag kl. 19 – 21».
+help_new_activity_contact_person	activitycalendarfrontend	no	Skriv inn navn, telefonnummer og e-postadresse til kontaktperson for aktiviteten.
+help_new_activity_office	activitycalendarfrontend	no	Det kommunale kulturkontoret mottar registreringen. Velg kulturkontoret i den bydelen hvor aktiviteten foregår.
+help_edit_activity_location	activitycalendarfrontend	no	Du må spesifisere hvor aktiviteten foregår.\\n\\nListen er sortert i «Kommunale bygg» og «Eksterne bygg», dvs. bygg som brukere av løsningen har registrert tidligere.
+help_edit_activity_org	activitycalendarfrontend	no	Her kan du endre opplysninger som tidligere er registrert for din organisasjon.

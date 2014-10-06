@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO [admin]</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>Administration</h2>
+				<p>
+					Now go to your phpgroupware root in the browser, mine 
+					is <a href="#">http://server/~chris/phpgroupware/</a>.
+					Login as your admin user. You will have the default "Verdilak" 
+					template and a purple color theme. you can change this in 
+					Preferences (link on the top right). On the preferences pages as 
+					Admin you can select the Default or Forced preferences. Default 
+					only applies to new users but lets them change it later, and 
+					Forced will change any existing users too and disables the ability 
+					to change it. In these default and forced prefs if you leave an 
+					option as "Select One" or leave it blank, the system default will 
+					apply and the users will be allowed to change that option. Go 
+					ahead and find which template you like for a default by selecting 
+					one under Your Preferences then set it to be the default or force 
+					it. Note that if you choose Idsociety template it looks best with 
+					the Idsociety theme.
+				</p>
+				<p>
+					By default the only app granted access to is the Administration app. 
+					Using this app you can change some site settings without using the 
+					setup app, manage users and groups and installed applications, 
+					and other things. Let's edit User accounts and edit our Admin user. 
+					If you leave the password fields blank the current password will not 
+					be changed. To demonstrate how user and group application permissions 
+					work, make sure your user is in both Default and Admin groups, leave 
+					Administration checked,	and check only System Information. Any app 
+					you grant access to will not show up until you do any one other thing. 
+					This is because the menu list is built before the admin apps runs to 
+					save the changes.  System Information does not have a menu icon. 
+					It's only accessible through the admin app. Now go into User Groups 
+					and edit the Admin group. Select Messenger. Now edit the Default 
+					group. you will notice the Messenger icon in your menu now. Give 
+					the default group access to Addressbook, Calendar, Notify Window, 
+					Preferences, User Manual, E-Mail, filemanager, and To Do List. Now 
+					submit your changes and	edit the default group again. Click the 
+					little blue box in the ACL column next to To Do and a new 
+					window will open. Here you can use the ACL to grant permissions 
+					to users data for other users. Grant Read, Add and Edit for Admins 
+					and only Read for Default. Users will also have access to this tool 
+					through the Preferences for Apps that support it so they can grant 
+					even more granular access. Submit and close the window. Go back to 
+					the Administration app, you now have a section for each of the apps 
+					you have rights to use. Go into each one and set anything needed for 
+					your installation. To use Email be sure to enter your site settings 
+					including an SMTP server. The Email app does not use php's built
+					in mail() function nor a local sendmail, it speaks STMP so that it 
+					can support more advanced MIME functions like a real email client. 
+					Also note here that in order for email to work, your phpgw usernames and 
+					passwords MUST be exactly the same as your mail server accounts. If they 
+					are not, or you don't want them to be, you will have use the Custom 
+					email settings and set it for each user, one at a time.
+				</p>
+				<p>
+					The Manual app will give you some insight on how to work each of 
+					the apps, but be aware that some of the information is out of date.
+				</p>
+				<p>
+					Hopefully this will give you enough of a start to begin using 
+					phpGroupWare for your workgroup needs!
+				</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>

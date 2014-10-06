@@ -1,0 +1,58 @@
+1 message has been deleted	email	zh	成功移除 1 封电子邮件
+add to addressbook	email	zh	加入通讯录
+cc	email	zh	附件
+compose	email	zh	写信
+custom email settings	email	zh	自订电子邮件设定
+default sorting order	email	zh	预设排序方式
+email account name	email	zh	电子邮件帐号名称
+email address	email	zh	电子邮件地址
+email password	email	zh	电子邮件信箱密码
+e-mail preferences	common	zh	电子邮件喜好设定
+email signature	email	zh	电子邮件签名
+email type	common	zh	电子邮件类型
+enter your default mail domain ( From: user@domain )	admin	zh	输入您预设的电子邮件网域（From: user@domain）
+enter your pop	admin	zh	输入您的 POP
+enter your smtp server hostname or ip address	admin	zh	输入您的 SMTP 主机名称或网路位址
+enter your smtp server port	admin	zh	输入您的 SMTP 主机连接埠
+folder	email	zh	资料夹
+forward	email	zh	转寄
+from	email	zh	来自
+if applicable	email	zh	如果可行
+image	email	zh	影像
+imap mail server hostname or ip address	admin	zh	IMAP 主机名称或网路位址
+imap server type	email	zh	IMAP 主机类型
+mail folder(uw-maildir)	email	zh	邮件资料夹型态（uw-maildir）
+mail server	email	zh	电子邮件主机
+mail server login type	admin	zh	电子邮件主机登入类型
+mail server type	email	zh	电子邮件主机类型
+mail settings	admin	zh	信件设定
+messages	email	zh	信件
+move selected messages into	email	zh	移动选择的信件到
+new message	email	zh	新信件
+non-standard	email	zh	非标准
+please select a message first	email	zh	请先选择一封信件
+previous	email	zh	前一个
+reply all	email	zh	全部回覆
+reply	email	zh	回覆
+replyto	email	zh	回覆给
+section	email	zh	段落
+select your mail server type	admin	zh	选择您的邮件伺服器类型
+send deleted messages to the trash	email	zh	将删除的信件一到回收桶
+send	email	zh	送出
+show new messages on main screen	email	zh	在主画面显示新到达的信件
+show sender's email address with name	email	zh	显示记见者的电子邮件地址及姓名
+size	email	zh	大小
+switch current folder to	email	zh	切换目前的文件夹到
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	zh	无法正常连线到邮件伺服器主机，<br />请检查您的登入帐号、密码或和网路管理者联系。
+this folder is empty	email	zh	空的文件夹
+to	email	zh	收件者
+undisclosed recipients	email	zh	Undisclosed Recipients
+undisclosed sender	email	zh	Undisclosed Sender
+use custom settings	email	zh	使用自订的设定
+%1 messages have been deleted	email	zh	已删除 %1 封信件
+you have 1 new message!	common	zh	您有 1 封新信件！
+you have messages!	common	zh	您有信件！
+you have no new messages	common	zh	您没有新信件！
+you have %1 new messages!	common	zh	您有 %1 封新信件！
+your message has been sent	common	zh	您的信件以送出！
+

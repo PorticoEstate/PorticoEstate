@@ -1,0 +1,177 @@
+1 message has been deleted	email	pl	Usunięto 1 wiadomość
+1 message has been moved to	email	pl	1 komunikat przesunięto do
+<b>apply all</b> filters	email	pl	<b>WŁĄCZ WSZYSTKIE</b> filtry
+account	email	pl	Konto
+account user name	email	pl	Nazwa konta użytkownika
+add to addressbook	email	pl	Dodaj do książki adresowej
+and	email	pl	i
+arrival date	email	pl	Data dostarczenia
+as	email	pl	jako
+attach file	email	pl	Dołącz plik
+attach signature	email	pl	Dołącz sygnaturkę
+attachment	email	pl	Załącznik
+bcc	email	pl	UDW
+cc	email	pl	DW
+choose to rename	email	pl	
+compose	email	pl	Utwórz
+compose new	common	pl	Utwórz nową
+contains	email	pl	Zawiera
+could not open this mailbox	email	pl	
+create (expert)	email	pl	
+create a folder email	email	pl	
+current attachments	email	pl	Załączniki
+custom e-mail preferences	email	pl	Ustawienia własne konta e-mail
+custom email settings	email	pl	Ustawienia użytkownika
+default sorting order	email	pl	Domyślny porządek sortowania
+default:	common	pl	domyślne:
+delete (expert)	email	pl	
+delete a folder	email	pl	Usuń folder
+delete account	common	pl	Usuń konto
+deleted messages (trash) folder	email	pl	Folder na usuwane wiadomości (kosz)
+deleted messages go to trash	email	pl	Przenosić usuwane wiadomości do kosza?
+discard	email	pl	
+does not contain	email	pl	Nie zawiera
+e-mail extra accounts list	email	pl	
+e-mail filters	common	pl	Filtry E-mail
+e-mail folders	common	pl	Foldery e-mail
+e-mail inbox filters list	email	pl	
+e-mail preferences	common	pl	Ustawienia e-mail
+email account name	email	pl	Nazwa konta
+email address	email	pl	Adres e-mail
+email date	email	pl	Data emaila
+email filters	email	pl	Filtry pocztowe
+email password	email	pl	Hasło
+email preferences	email	pl	Preferencje
+email signature	email	pl	Sygnaturka
+email type	common	pl	Typ e-mail
+enable this email account	common	pl	Uaktywnij to konto
+enable utf-7 encoded folder names	email	pl	Uaktywnij kodowanie UTF-7 nazw folderów
+enter your default mail domain ( from: user@domain )	admin	pl	Podaj nazwę swojej domeny (użytkownik@domena)
+enter your pop	admin	pl	Podaj dane swojego POP
+enter your smtp server hostname or ip address	admin	pl	Podaj nazwę hosta serwera SMTP lub adres IP
+enter your smtp server port	admin	pl	Podaj port serwera SMTP
+error moving messages to	email	pl	
+error: unknown message data	email	pl	
+extra e-mail account	common	pl	Dodatkowe konto e-mail
+extra e-mail accounts	common	pl	Dodatkowe konta e-mail
+fewer actions	email	pl	
+fewer choices	email	pl	Mniejszy wybór
+file	email	pl	Plik
+file into	email	pl	
+filter [number	email	pl	
+firstname	email	pl	Imię
+folder	email	pl	Folder
+folder maintenance	email	pl	
+folder name	email	pl	Nazwa folderu
+folder size	email	pl	
+folders	email	pl	Foldery
+for these items, fill only what is different from you default e-mail preferences	common	pl	
+forward	email	pl	Przekaż
+from	email	pl	Od
+hidden	email	pl	ukryte
+if applicable	email	pl	Jeśli wybrano
+if fileto then select destination folder	email	pl	
+if messages match	email	pl	Jeśli wiadomość pasuje
+image	email	pl	Obrazek
+imap mail server hostname or ip address	admin	pl	Nazwa hosta lub adres IP serwera IMAP
+imap server type	common	pl	Typ serwera IMAP
+keep	email	pl	
+keywords	email	pl	
+lastname	email	pl	Nazwisko
+layout 1	common	pl	Układ 1
+layout 2	common	pl	Układ 2
+lines	email	pl	
+long names	email	pl	długie nazwy
+mail folder(uw-maildir)	email	pl	Katalog poczty (uw-maildir)
+mail server	email	pl	Serwer pocztowy
+mail server login type	admin	pl	Rodzaj logowania do serwera pocztowego
+mail server type	email	pl	Typ serwera pocztowego
+mail settings	admin	pl	Ustawienia email
+manage accounts	email	pl	Zarządzaj kontami
+manage folders	email	pl	Zarządzaj folderami
+message list layout	common	pl	Układ listy wiadomości
+messages	email	pl	Wiadomości
+messages have been moved to	email	pl	
+more actions	email	pl	
+more choices	email	pl	Szerszy wybór
+move down	email	pl	Przesuń w dół
+move selected messages into	email	pl	Przenieś zaznaczone wiadomości do
+move this message into	email	pl	
+move up	email	pl	Przesuń w górę
+new	email	pl	Nowe
+new account	email	pl	Nowe konto
+new filter	email	pl	Nowy filtr
+new message	email	pl	Nowa wiadomość
+newest	common	pl	Najnowsze
+no error returned from server	email	pl	
+no next message	email	pl	Nie ma następnych wiadomości
+no previous message	email	pl	Nie ma poprzednich wiadomości
+non-standard	email	pl	Niestandardowe
+number	common	pl	
+number.1	email	pl	Numer 1
+number.2	email	pl	Numer 2
+number.3	email	pl	Numer 3
+oldest	common	pl	Najstarsze
+or	common	pl	lub
+or enter text	email	pl	lub podaj tekst
+please fill in everything you need	email	pl	Proszę wypełnić poprzebne pola
+please select a folder to rename	email	pl	
+please select a message first	email	pl	Proszę najpierw wybrać wiadomość
+please type a folder name in the text box	email	pl	
+previous	email	pl	Poprzednia
+raw message	email	pl	
+read mail	email	pl	
+redirect	email	pl	Przekieruj
+reject	email	pl	Odrzuć
+rename (expert)	email	pl	
+rename a folder	email	pl	Zmiana nazwy folderu
+reply	email	pl	Odpowiedz
+reply all	email	pl	Odpowiedz wszystkim
+replyto	email	pl	Odpowiedz do
+reset	email	pl	Skasuj
+result	email	pl	
+search this folder	email	pl	
+section	email	pl	Sekcja
+select home email address	email	pl	Wybierz adres prywatny
+select work email address	email	pl	Wybierz adres służbowy
+select your mail server type	admin	pl	Wybierz typ Twojego serwera pocztowego
+send	email	pl	Wyślij
+send deleted messages to the trash	email	pl	Przenosić usunięte wiadomości do kosza?
+sent messages folder	common	pl	Folder na wysłane wiadomości
+sent messages saved in "sent" folder	common	pl	Przenoś wysłane wiadomości do folderu ,,Wysłane\'\'
+short names	email	pl	
+show new messages on main screen	email	pl	Wyświetlać nowe wiadomości na stronie głównej?
+show sender's email address with name	email	pl	
+show sender\'s email address with name	email	pl	Pokaż adres nadawcy w polu
+size	email	pl	Rozmiar
+somebody	email	pl	
+sort by	email	pl	Sortuj wg
+standard	email	pl	Standardowe
+standard e-mail preferences	email	pl	Ustawienia standardowe konta e-mail
+stop if matched	email	pl	
+switch accounts	email	pl	Zmień konto
+switch current folder to	common	pl	Zmień bieżący folder na
+then take this actions	email	pl	
+there was an error trying to connect to your imap server.<br />please contact your admin to check the servername, username or password.	email	pl	Wystąpił błąd przy próbie połączenia się z Twoim serwerem IMAP.<br />Proszę sprawdzić nazwę użytkownika i hasło lub skontaktować się z administratorem.
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	pl	Wystąpił błąd przy próbie połączenia się z Twoim serwerem pocztowym.<br />Proszę sprawdzić nazwę użytkownika i hasło lub skontaktować się z administratorem.
+this data not supplied.	email	pl	
+this folder is empty	email	pl	Ten folder jest pusty
+to	email	pl	Do
+total messages	email	pl	Wszystkich wadomości
+u-wash mail folder	email	pl	
+undisclosed recipients	email	pl	Ukryci odbiorcy
+undisclosed sender	email	pl	Ukryty nadawca
+unknown action	email	pl	
+unknown error	email	pl	
+use custom settings	email	pl	Użyj ustawień użytkownika
+view as html	email	pl	
+view formatted	email	pl	Pokaż formatowane
+view headers	email	pl	Pokaż nagłówki
+view unformatted	email	pl	Pokaż bez formatowania
+%1 messages have been deleted	email	pl	Usunięto %1 wiadomości
+you have 1 new message!	common	pl	Masz 1 nową wiadomość
+you have messages!	common	pl	Masz wiadomość!
+you have no new messages	common	pl	Nie masz wiadomości
+you have %1 new messages!	common	pl	Masz %1 nowych wiadomości
+your full name	common	pl	Twoja pełna nazwa
+your message has been sent	common	pl	Wiadomość została wysłana!

@@ -1,0 +1,36 @@
+AT	Neujahrstag	1	1	0	0	0
+AT	Hl.3 Könige	6	1	0	0	0
+AT	Ostermontag	24	3	2008	0	0
+AT	Ostermontag	28	3	2005	0	0
+AT	Ostermontag	9	4	2007	0	0
+AT	Ostermontag	12	4	2004	0	0
+AT	Ostermontag	13	4	2009	0	0
+AT	Ostermontag	17	4	2006	0	0
+AT	Ostermontag	21	4	2003	0	0
+AT	Tag der	Arbeit	1	5	0	0	0
+AT	Himmelfahrt	1	5	2008	0	0
+AT	Himmelfahrt	5	5	2005	0	0
+AT	Pfingstmontag	12	5	2008	0	0
+AT	Pfingstmontag	16	5	2005	0	0
+AT	Himmelfahrt	17	5	2007	0	0
+AT	Himmelfahrt	20	5	2004	0	0
+AT	Himmelfahrt	21	5	2009	0	0
+AT	Fronleichnahm	22	5	2008	0	0
+AT	Himmelfahrt	25	5	2006	0	0
+AT	Fronleichnahm	26	5	2005	0	0
+AT	Pfingstmontag	28	5	2007	0	0
+AT	Himmelfahrt	29	5	2003	0	0
+AT	Pfingstmontag	31	5	2004	0	0
+AT	Fronleichnahm	7	6	2007	0	0
+AT	Pfingstmontag	9	6	2003	0	0
+AT	Fronleichnahm	10	6	2004	0	0
+AT	Fronleichnahm	11	6	2009	0	0
+AT	Fronleichnahm	15	6	2006	0	0
+AT	Fronleichnahm	19	6	2003	0	0
+AT	Mariä Himmelfahrt	15	8	0	0	0
+AT	Nationalfeiertag	26	10	0	0	0
+AT	Allerheiligen	1	11	0	0	0
+AT	Mariä Empfängnis	8	12	0	0	0
+AT	Christtag	25	12	0	0	0
+AT	Stefani	26	12	0	0	0
+AT	Pfingstmontag	1	65	2009	0	0

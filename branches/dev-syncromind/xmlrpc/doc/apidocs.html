@@ -1,0 +1,424 @@
+<HTML
+><HEAD
+><TITLE
+>Class documentation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.64
+"><LINK
+REV="MADE"
+HREF="edd@usefulinc.com"><LINK
+REL="HOME"
+TITLE="XML-RPC for PHP"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="The Jellyfish Book"
+HREF="jellyfish.html"><LINK
+REL="NEXT"
+TITLE="xmlrpcmsg"
+HREF="xmlrpcmsg.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XML-RPC for PHP: version 1.0b9</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="jellyfish.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="xmlrpcmsg.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="APIDOCS"
+>Chapter 5. Class documentation</A
+></H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="apidocs.html#XMLRPC-CLIENT"
+>xmlrpc_client</A
+></DT
+><DT
+><A
+HREF="xmlrpcmsg.html"
+>xmlrpcmsg</A
+></DT
+><DT
+><A
+HREF="xmlrpcresp.html"
+>xmlrpcresp</A
+></DT
+><DT
+><A
+HREF="xmlrpcval.html"
+>xmlrpcval</A
+></DT
+><DT
+><A
+HREF="xmlrpc-server.html"
+>xmlrpc_server</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="XMLRPC-CLIENT"
+>xmlrpc_client</A
+></H1
+><P
+>This is the basic class used to represent a client of an
+		XML-RPC server.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN160"
+>Creation</A
+></H2
+><P
+>The constructor has the following syntax:</P
+><DIV
+CLASS="FUNCSYNOPSIS"
+><A
+NAME="AEN163"
+></A
+><P
+></P
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>$client=new xmlrpc_client</CODE
+>($server_path, $server_hostname, $server_port);</CODE
+></P
+><P
+></P
+></DIV
+><P
+>Here's an example client set up to query Userland's XML-RPC
+		server at <I
+CLASS="EMPHASIS"
+>betty.userland.com</I
+>:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>$client=new xmlrpc_client("/RPC2", "betty.userland.com", 80);</PRE
+><P
+>The <TT
+CLASS="PARAMETER"
+><I
+>server_port</I
+></TT
+> parameter is
+		optional, and if omitted will default to 80.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN177"
+>Methods</A
+></H2
+><P
+>This class supports the following methods.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="XMLRPC-CLIENT-SEND"
+>send</A
+></H3
+><P
+>This method takes the form:</P
+><DIV
+CLASS="FUNCSYNOPSIS"
+><A
+NAME="AEN183"
+></A
+><P
+></P
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>$response=$client-&#62;send</CODE
+>($xmlrpc_message, $timeout);</CODE
+></P
+><P
+></P
+></DIV
+><P
+>Where <TT
+CLASS="PARAMETER"
+><I
+>$xmlrpc_message</I
+></TT
+> is an
+			instance of <TT
+CLASS="CLASSNAME"
+>xmlrpcmsg</TT
+> (see <A
+HREF="xmlrpcmsg.html"
+>xmlrpcmsg</A
+>), and 
+						<TT
+CLASS="PARAMETER"
+><I
+>$response</I
+></TT
+> is an
+			instance of <TT
+CLASS="CLASSNAME"
+>xmlrpcresp</TT
+> (see <A
+HREF="xmlrpcresp.html"
+>xmlrpcresp</A
+>).</P
+><P
+>The <TT
+CLASS="PARAMETER"
+><I
+>$timeout</I
+></TT
+> is optional, and
+						will be set to <TT
+CLASS="LITERAL"
+>0</TT
+> (wait forever) if omitted. This timeout
+						value is passed to <TT
+CLASS="FUNCTION"
+>fsockopen()</TT
+>.</P
+><P
+>If the value of <TT
+CLASS="PARAMETER"
+><I
+>$response</I
+></TT
+> is
+			<TT
+CLASS="LITERAL"
+>0</TT
+> rather than an
+			<TT
+CLASS="CLASSNAME"
+>xmlrpcresp</TT
+> object, then this
+			signifies an I/O error has occured. You can find out what
+			the I/O error was from the values
+			<TT
+CLASS="FUNCTION"
+>$client-&#62;errno</TT
+> and
+			<TT
+CLASS="FUNCTION"
+>$client-&#62;errstring</TT
+>.
+			</P
+><P
+>In addition to low-level errors, the XML-RPC server you
+			were querying may return an error in the
+			<TT
+CLASS="CLASSNAME"
+>xmlrpcresp</TT
+> object. See <A
+HREF="xmlrpcresp.html"
+>xmlrpcresp</A
+> for details of
+			how to handle these errors.
+		  </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN210"
+>setCredentials</A
+></H3
+><DIV
+CLASS="FUNCSYNOPSIS"
+><A
+NAME="AEN212"
+></A
+><P
+></P
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>$client-&#62;setCredentials</CODE
+>($username, $password);</CODE
+></P
+><P
+></P
+></DIV
+><P
+>This method sets the username and password for authorizing the
+						client to a server. With the default (HTTP) transport, this
+						information is used for HTTP Basic authorization.
+						
+		  </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN220"
+>setDebug</A
+></H3
+><DIV
+CLASS="FUNCSYNOPSIS"
+><A
+NAME="AEN222"
+></A
+><P
+></P
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>$client-&#62;setDebug</CODE
+>($debugOn);</CODE
+></P
+><P
+></P
+></DIV
+><P
+><TT
+CLASS="PARAMETER"
+><I
+>$debugOn</I
+></TT
+> is either
+			<TT
+CLASS="LITERAL"
+>0</TT
+> or <TT
+CLASS="LITERAL"
+>1</TT
+> depending on
+			whether you require the client to print debugging
+			information to the browser.  The default is not to output
+			this information.</P
+><P
+>			The debugging information includes the raw data returned
+			from the XML-RPC server it was querying, and the PHP value
+			the client attempts to create to represent the value
+			returned by the server.  This option can be very useful when 
+			debugging servers as it allows you to see exactly what the
+			server returns.
+		  </P
+></DIV
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="jellyfish.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="xmlrpcmsg.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The Jellyfish Book</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>xmlrpcmsg</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

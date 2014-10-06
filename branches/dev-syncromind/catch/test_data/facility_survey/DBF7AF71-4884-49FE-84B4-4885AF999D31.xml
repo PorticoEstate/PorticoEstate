@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PPCC UUID="DBF7AF71-4884-49FE-84B4-4885AF999D31">
+<UnitID>ReSightjan_hd</UnitID>
+<Byggnavn>Harstad Brygge</Byggnavn>
+<Byggtype>15 - Boligblokk</Byggtype>
+<BTA>6000</BTA>
+<GNR>55</GNR>
+<BNR>12</BNR>
+<FNR>6</FNR>
+<SNR>77</SNR>
+<adresse>Havnegata 9</adresse>
+<postnr>9487</postnr>
+<Poststed>HARSTAD</Poststed>
+<kommune>HARSTAD</kommune>
+<hjemmelshaver>Ole Olsen</hjemmelshaver>
+<Kontrollr>Jan Tegnander</Kontrollr>
+<Datokontrollert>2008-06-18</Datokontrollert>
+<Romnr>900</Romnr>
+<Romtype>Stue</Romtype>
+<Kapittel>4 Elkraft</Kapittel>
+<Kategori>44 Lys</Kategori>
+<Bygningsdel>440 Lys, generelt</Bygningsdel>
+<Komponent>lampe </Komponent>
+<Symptom>Funksjonssvikt, kan ikke repareres</Symptom>
+<Hva>lysarmatur</Hva>
+<TG>3</TG>
+<KG_sikkerhet>1</KG_sikkerhet>
+<KG_Okonomi>1</KG_Okonomi>
+<KG_Estetikk>3</KG_Estetikk>
+<KG_Innendorsklima>3</KG_Innendorsklima>
+<KG_Virksomhetskritisk>2</KG_Virksomhetskritisk>
+<KG>1,8</KG>
+<Sannsynlighet>2</Sannsynlighet>
+<Risiko>3,6</Risiko>
+<TR_verdi>10,8</TR_verdi>
+<Omfang1>1</Omfang1>
+<Enhet2>stk</Enhet2>
+<Tiltak>Skiftes ut</Tiltak>
+<Tiltaksum>700</Tiltaksum>
+<Sikkerhet>10</Sikkerhet>
+<Okonomi>8</Okonomi>
+<Estetikk>4</Estetikk>
+<Innendorsklima>6</Innendorsklima>
+<Virksomhetskritiske_behov>7</Virksomhetskritiske_behov>
+<Sum_vekting_KG>35</Sum_vekting_KG>
+</PPCC>

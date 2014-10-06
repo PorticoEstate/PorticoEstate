@@ -1,0 +1,38 @@
+account password retrieval	registration	tr	Hesap şifresini elden geçirmek
+account registration	registration	tr	Hesap kaydı
+address	registration	tr	Adres
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	tr	Kullanıcı adınızı girdikten sonra, sorulan sorular doğrultusunda kayıt aşamasında verdiğiniz e-posta adresine mail olarak şifreniz gönderilecektir.
+change password for user	registration	tr	Kullanıc şifresini değiştir
+checkbox	registration	tr	İşaret kutusu
+current fields:	registration	tr	Şuanki alanlar:
+dropdown	registration	tr	açılır kutu
+enter your new password	registration	tr	Yeni şifrenizi girin
+gender	registration	tr	Cins
+i have read the terms and conditions and agree by them.	registration	tr	Tüm şartları ve terimleri okudum ve şartları kabul ediyorum.
+name (blank unless text, textarea, dropdown, checkbox; else alphanumeric only)	registration	tr	İsim (Metin, Metinalanı, Açılı kutu, İşaret kutusu olmadıkça boş bırakabilirsiniz; bunların dışında ise karakter girin)
+order	registration	tr	Düzen
+phone	registration	tr	Tel
+phpgroupware - account registration	registration	tr	phpGroupWare - Hesap Kaydı
+re-enter password	registration	tr	Şifrenizi tekrar girin
+re-enter your password	registration	tr	Şifrenizi tekrar girin
+registration	common	tr	Kayıt
+remove	registration	tr	Sil
+report all problems and abuse to	registration	tr	Tüm sorunları rapor edin
+required	registration	tr	Gerekli
+sorry, that username does not exist.	registration	tr	Kullanıcı adı bulunamadı.
+sorry, that username is already taken.	registration	tr	Bu kullanıcı adı zaten var.
+text	registration	tr	Metin
+textarea	registration	tr	Metinalanı
+the passwords you entered don't match	registration	tr	Girilen iki şifre birbirini tutmuyor
+the two passwords are not the same	registration	tr	Girilen iki şifre de aynı değil
+type	registration	tr	Tip
+update/add	registration	tr	Güncelle/Ekle
+values (for dropdown only; comma separated)	registration	tr	Değerler (Açılıkutu için sadece virgül ile ayrılmış şekilde)
+wrong session	registration	tr	Yanlış oturum
+you have entered an invalid birthday	registration	tr	Geçersiz doğumgünü tarihi
+you have entered an invalid email address	registration	tr	Geçersiz bir e-posta adresi girdiniz
+you must enter a password	registration	tr	Bir şifre girmelisiniz
+you must enter a username	registration	tr	Bir kullanıcıadı girmelisiniz
+you must fill in all of the required fields	registration	tr	Doldurulması gereken tüm alanları doldurmalısınız
+you specified a value for 	registration	tr	Bir değer belirttiniz 
+zip/postal	registration	tr	ZIP/Posta kodu

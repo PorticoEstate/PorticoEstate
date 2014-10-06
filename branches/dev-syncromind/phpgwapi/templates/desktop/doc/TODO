@@ -1,0 +1,7 @@
+Roughly in this order:
+* Add a bit more color
+* Commit to HEAD
+* Add additional css themes
+* Support sidebox menu
+* Add template specific navbar icons
+* Make the basic templates use XHTML not tag soup

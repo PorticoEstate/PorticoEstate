@@ -1,0 +1,116 @@
+#admin_account_form label, span.label
+{
+	display: block;
+	float: left;
+	width: 200px;
+}
+
+#admin_account_form input, #admin_account_form select, #admin_account_form textarea, span.value
+{
+	display: block;
+	float: left;
+	width: 300px;
+}
+
+#admin_account_form label.check
+{
+	padding-left: 1em;
+	width: 500px;
+}
+
+#admin_account_form input[type=checkbox], #admin_account_form input.check
+{
+	text-align: right;
+	width: auto;
+}
+
+#admin_account_form span.dates input, #admin_account_form span.dates select
+{
+	display: auto;
+	width: auto;
+}
+
+table tbody .inactive td
+{
+	text-decoration: line-through;
+}
+
+.button_group input, .button_group button
+{
+	display: inline;
+	margin: 5px;
+	text-align: right;
+	width: auto;
+}
+
+
+#admin_view_user div ul
+{
+	height: 20em;
+	overflow: auto;
+}
+
+#admin_view_user ul
+{
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+#admin_view_user li
+{
+	padding: 2px 0px;
+}
+
+#admin_view_user li span
+{
+	display: block;
+	float: left;
+	text-align: center;
+	width: 25px;
+}
+
+div.search
+{
+	text-align: right;
+}
+
+#admin_accounts_list tbody td, #admin_group_list tbody td
+{
+	width: 75em;
+}
+
+#admin_accounts_list tbody td.icon
+{
+	text-align: center;
+	width: 20px;
+}
+
+#admin_accounts_list tbody td.action, #admin_group_list tbody td.action
+{
+	text-align: center;
+	width: 20em;
+	max-width: 20em;
+}
+
+#admin_accounts_list th, #admin_group_list th
+{
+	text-align: center;
+}
+
+ul.app_list
+{
+	height: 20em;
+	overflow: auto;
+}
+
+#account_edit_tabview div.yui-content, #group_edit_tabview div.yui-content
+{
+	/*height: 25em;*/
+	min-height: 25em;
+}
+
+br.eol, div.yui-content br
+{
+	clear: both;
+}

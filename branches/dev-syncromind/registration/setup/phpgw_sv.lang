@@ -1,0 +1,39 @@
+account password retrieval	registration	sv	Hämta kontots lösenord
+account registration	registration	sv	Kontoregistrering
+address	registration	sv	Adress
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	sv	Efter du angett ditt användarnamn kommer instruktioner om hur du ändrar ditt lösenord att sändas till dig med epost till den adress du angav när du registrerade dig.
+change password for user	registration	sv	Ändra lösenord för användare
+checkbox	registration	sv	Valruta
+current fields:	registration	sv	Nuvarande fält:
+dropdown	registration	sv	Lista
+enter your new password	registration	sv	Ange ditt nya lösenord
+gender	registration	sv	Kön
+i have read the terms and conditions and agree by them.	registration	sv	Jag har tagit del av villkoren och godkänner dem.
+name (blank unless text, textarea, dropdown, checkbox; else alphanumeric only)	registration	sv	Namn (tomt om inte text, textarea, dropdown, valruta; annars alfanumeriskt endast)
+order	registration	sv	Ordning
+phone	registration	sv	Telefon
+phpgroupware - account registration	registration	sv	phpGroupWare - Kontoregistrering
+re-enter password	registration	sv	Ange lösenord igen
+re-enter your password	registration	sv	Ange ditt lösenord igen
+registration	common	sv	Registrering
+remove	registration	sv	Radera
+report all problems and abuse to	registration	sv	Rapportera alla problem och missbruk till
+required	registration	sv	Obligatoriskt
+sorry, that username does not exist.	registration	sv	Tyvärr, det användarnamnet existerar inte.
+sorry, that username is already taken.	registration	sv	Tyvärr, det användarnamnet är taget redan.
+text	registration	sv	Text
+textarea	registration	sv	Textarea
+the passwords you entered don't match	registration	sv	Lösenordet du angav stämmer inte
+the two passwords are not the same	registration	sv	Lösenorden är inte lika
+type	registration	sv	Typ
+update/add	registration	sv	Uppdatera/Lägg till
+values (for dropdown only; comma separated)	registration	sv	Värden (endast för lista, kommaseparerad)
+wrong session	registration	sv	Fel session
+you have entered an invalid birthday	registration	sv	Du har angett en felaktig födelsetid
+you have entered an invalid email address	registration	sv	Du har angett en felaktig epostadress
+you must enter a password	registration	sv	Du måste ange ett lösenord
+you must enter a username	registration	sv	Du måste ange ett användarnamn
+you must fill in all of the required fields	registration	sv	Du måste fylla i alla obligatoriska fält
+you specified a value for	registration	sv	Du måste ange ett värde för
+zip/postal	registration	sv	Postnummer
+

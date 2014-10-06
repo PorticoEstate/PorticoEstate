@@ -1,0 +1,1175 @@
+%1 Buildings has been updated to not active of %2 already not active	property	fr	%1 immeubles ont été mis à jour en non actifs sur %2 déjà non actifs
+%1 Entrances has been updated to not active of %2 already not active	property	fr	%1 entrées ont été mises à jour en non actives sur %2 déjà non actives
+%1 entries is added!	property	fr	%1 entrées sont ajoutées!
+%1 entries is updated!	property	fr	%1 entrées sont mises à jour!
+%1 Properties has been updated to not active of %2 already not active	property	fr	%1 propriétés ont été mises à jour en non actives sur %2 déjà non actives
+An unique code for this activity	property	fr	Un code unique pour cette activité
+abstract	property	fr	Abstrait
+access	property	fr	Accès
+Acquisition date	property	fr	Date d'acquisition
+Action	property	fr	Action
+Activity	property	fr	Activité
+Activity Code	property	fr	Code d'activité
+Activity has been edited	property	fr	L'activité a été modifiée
+Activity has been saved	property	fr	L'activité a été entrgistrée
+Activity ID	property	fr	ID d'activité
+Activity Num	property	fr	Numéro d'activité
+Add	property	fr	Ajouter
+add a apartment	property	fr	Ajouter un appartement
+add an attrib	property	fr	Ajouter un attribut
+add a building	property	fr	Ajouter un immeuble
+add a category	property	fr	Ajouter une catégorie
+add a document	property	fr	Ajouter un document
+add a entrance	property	fr	Ajouter une entrée
+add a equipment	property	fr	Ajouter un équipement
+add a gab	property	fr	Ajouter une description
+add a hour	property	fr	Ajouter une heure
+add a hour to this template	property	fr	Ajouter une heure à ce gabarit
+add an investment	property	fr	Ajouter un investissement
+add a location	property	fr	Ajouter un endroit
+add a meter	property	fr	Ajouter un mètre
+add a owner	property	fr	Ajouter un propriétaire
+add a project	property	fr	Ajouter un projet
+add a property	property	fr	Ajouter une propriété
+add a report	property	fr	Ajouter un rapport
+add a request	property	fr	Ajouter une requête
+add a standard	property	fr	Ajouter un standard
+add a template	property	fr	Ajouter un gabarit
+add a tenant	property	fr	Ajouter un locataire
+add a ticket	property	fr	Ajouter un ticket
+add a workorder	property	fr	Ajouter un ordre de travail
+Add a workorder to this project	property	fr	Ajouter un ordre de travail à ce projet
+Add Activity	property	fr	Ajouter l'activité
+Add agreement	property	fr	Ajouter un accord
+add an activity	property	fr	Ajouter une activité
+add apartment	property	fr	Ajouter appartement
+add attribute	property	fr	Ajouter attribut
+add building	property	fr	Ajouter immeuble
+Add custom	property	fr	Ajouter personnalisé
+Add document	property	fr	Ajouter document
+add entrance	property	fr	Ajouter entrée
+Add equipment	property	fr	Ajouter un équipement
+Add first value for this prizing	property	fr	Ajouter une première valeur pour cette évaluation
+Add from prizebook	property	fr	Ajouter depuis le livre des prix
+Add from template	property	fr	Ajouter depuis le gabarit
+add gab	property	fr	Ajouter description
+Add hour	property	fr	Ajouter une heure
+add investment	property	fr	Ajouter un investissement
+add items from a predefined template	property	fr	Ajouter des objets depuis un gabarit prédéfini
+add items from this vendors prizebook	property	fr	Ajouter des objets depuis le livre de prix de ce vendeur
+add location	property	fr	Ajouter endroit
+add meter	property	fr	Ajouter mètre
+Add new comments	property	fr	Ajouter nouveaux commentaires
+Add project	property	fr	Ajouter un projet
+add property	property	fr	Ajouter propriété
+add report	property	fr	Ajouter rapport
+Add request	property	fr	Ajouter une requête
+add request for this project	property	fr	Ajouter requêtes pour ce projet
+add selected request to project	property	fr	Ajouter la requête sélectionnée au projet
+Add single custom line	property	fr	Ajouter une unique ligne personnalisée
+add standard	property	fr	Ajouter standard
+Add template	property	fr	Ajouter gabarit
+Add the selected items	property	fr	Ajouter les objets sélectionnés
+Add this vendor to this activity	property	fr	Ajouter ce vendeur à cette activité
+Add Ticket	property	fr	Ajouter un ticket
+Add workorder	property	fr	Ajouter l'ordre de travail
+Additional notes	property	fr	Notes additionnelles
+Address	property	fr	Adresse
+addressbook	property	fr	Carnet d'adresses
+Adds a new project - then a new workorder	property	fr	Ajoute un nouveau projet - puis un nouvel ordre de travail
+Adds a new workorder to an existing project	property	fr	Ajoute un nouvel ordre de travail à un projet existant
+Adds this workorders calculation as a template for later use	property	fr	Ajoute ce calcul d'ordres de travail comme un gabarit pour usage ultérieur
+Aesthetics	property	fr	Esthétique
+again	property	fr	A nouveau
+Agreement	property	fr	Accord
+Agreement Code	property	fr	Code d'accord
+Agreement has been edited	property	fr	L'accord a été modifié
+Agreement has been saved	property	fr	L'accord a été enregistré
+Agreement ID	property	fr	ID d'accord
+All	property	fr	Tous
+All users	property	fr	Tous les utilisateurs
+Amount	property	fr	Montant
+Apartment	property	fr	Appartement
+Apartment has been edited	property	fr	L'appartement a été modifié
+Apartment has been saved	property	fr	L'appartement a été enregistré
+apartment id	property	fr	ID d'appartement
+apply	property	fr	Appliquer
+apply the values	property	fr	Appliquer les valeurs
+archive	property	fr	Archive
+Art	property	fr	Art
+Ask for approval	property	fr	Demander l'approbation
+Assign to	property	fr	Assigner à
+Assigned from	property	fr	Assigné depuis
+Assigned to	property	fr	Assigné à
+at location %1	property	fr	A l'endroit %1
+Attribute	property	fr	Attribut
+Attribute has been edited	property	fr	L'attribut a été modifié
+Attribute has been saved	property	fr	L'attribut a été enregistré
+Attribute has NOT been edited	property	fr	L'attribut n'a PAS été modifié
+Attribute has NOT been saved	property	fr	L'attribut n'a PAS été enregistré
+Attribute ID	property	fr	ID d'attribut
+Attributes	property	fr	Attributs
+attributes for the attrib	property	fr	Attributs pour l'atttribut
+attributes for the standard	property	fr	Attributs pour le standard
+Authorities Demands	property	fr	Demandes d'autorités
+B - responsible	property	fr	B - responsable
+Back to Admin	property	fr	Retourner à l'administration
+Back to calculation	property	fr	Retourner au calcul
+Back to investment list 	property	fr	Retourner à la liste des investissements
+Back to list	property	fr	Retourner à la liste
+Back to the list	property	fr	Retourner à la liste
+Back to the ticket list	property	fr	Retourner à la liste des tickets
+Back to the workorder list	property	fr	Retourner à la liste des ordres de travail
+Base	property	fr	Base
+Base description	property	fr	Description de base
+bilagsnr	property	fr	bilagsnr
+Bill per unit	property	fr	Facture par unité
+Billable hours changed	property	fr	Heures facturables changées
+Billable rate changed	property	fr	Taux facturable changé
+Branch	property	fr	Branche
+Bruks nr	property	fr	Bruks nr
+Budget	property	fr	Budget
+Budget account	property	fr	Compte de budget
+Budget account is missing:	property	fr	Le compte de budget est manquant:
+Budget changed	property	fr	Budget modifié
+Budget code is missing from sub invoice in :	property	fr	Le code du budget manque dans la sous-facture dans :
+Budget Responsible	property	fr	Responsable du budget
+Building	property	fr	Immeuble
+Building has been edited	property	fr	L'immeuble a été modifié
+Building has been saved	property	fr	L'immeuble a été enregistré
+building id	property	fr	ID d'immeuble
+Building part	property	fr	Partie d'immeuble
+building_part	property	fr	Partie d'immeuble
+But Your message could not be sent by mail!	property	fr	Mais votre message n'a pas pu être envoyé par mail!
+budget account	property	fr	Compte budget
+Calculate	property	fr	Calculer
+calculate the workorder	property	fr	Calculer l'ordre de travail
+calculate this workorder	property	fr	Calculer cet ordre de travail
+Calculate Workorder	property	fr	Calculer ordre de travail
+Calculate workorder by adding items from vendors prizebook or adding general hours	property	fr	Calculer l'ordre de travail en ajoutant les objets depuis les livres de prix des vendeurs ou en ajoutant les heures générales
+Cancel	property	fr	Annuler
+cancel the import	property	fr	Annuler l'import
+Category	property	fr	Catégorie
+Category changed	property	fr	Catégorie changée
+category has been edited	property	fr	La catégorie a été modifiée
+category has been saved	property	fr	La catégorie a été enregistrée
+category id	property	fr	ID de catégorie
+Chapter	property	fr	Chapitre
+char	property	fr	Carac
+Character	property	fr	Caractère
+Charge tenant	property	fr	Charge locataire
+Check this to have the output to screen before import (recommended)	property	fr	Cochez ceci pour avoir la sortie sur l'écran avant l'import (recommandé)
+Check this to notify your supervisor by email	property	fr	Cochez ceci pour prévenir votre superviseur par EMail
+Check this to send a mail to your supervisor for approval	property	fr	Cochez ceci pour envoyer un EMail à votre superviseur pour approbation
+check to delete file	property	fr	Cochez pour effacer le fichier
+check to delete this request from this project	property	fr	Cochez pour effacer cette requpete de ce projet
+check to inherit from this location	property	fr	Cochez pour hériter de cet endroit
+check to reset the query	property	fr	Cochez pour réinitialiser la requête
+Check to update the email-address for this vendor	property	fr	Cochez pour mettre à jour l'adresse EMail pour ce vendeur
+Choose charge tenant if the tenant i to pay for this project	property	fr	Sélectionnez facturer le locataire si le locataire est sensé payer pour ce projet
+Choose Copy Hour to copy this hour to a new hour	property	fr	Sélectionnez copier l'heure pour copier cette heure vers une nouvelle heure
+Choose Copy Project to copy this project to a new project	property	fr	Sélectionnez copier le projet pour copier ce projet vers un nouveau projet
+Choose Copy request to copy this request to a new request	property	fr	Sélectionnez copier la requête pour copier cette requête vers une nouvelle requête
+Choose Copy Workorder to copy this workorder to a new workorder	property	fr	Sélectionnez copier l'ordre de travail pour copier cet ordre de travail vers un nouvel ordre de travail
+Choose Generate ID to automaticly assign new ID based on type-prefix	property	fr	Sélectionnez générer l'ID pour assigner un nouvel ID basé sur le préfixe de type automatiquement
+chose if this column is nullable	property	fr	Sélectionnez si cette colonne peut être mise à zéro
+Close Order	property	fr	Fermer l'ordre
+Close this window	property	fr	Fermer cette fenêtre
+Closed	property	fr	Fermé
+Code	property	fr	Code
+column %1 could not be moved	property	fr	La colonne %1 n'a pas pu être déplacée
+column %1 has been moved	property	fr	La colonne %1 a été déplacée
+column could not be added	property	fr	La colonne n'a pas pu être ajoutée
+column name	property	fr	Nom de colonne
+column name not entered!	property	fr	Le nom de colonne n'a pas été entré!
+Condidtion degree	property	fr	Dégré de condition
+config	property	fr	Configuration
+Consequence	property	fr	Conséquence
+Consequential damage	property	fr	Dégâts résultants
+consume	property	fr	Consommer
+Contact phone	property	fr	Téléphone du contact
+content	property	fr	Contenu
+Conversion	property	fr	Conversion
+Coordinator	property	fr	Coordinateur
+Coordinator changed	property	fr	Le coordinateur a changé
+Copy hour ?	property	fr	Copier l'heure ?
+Copy Project ?	property	fr	Copier le projet ?
+Copy request ?	property	fr	Copier la requête ?
+Copy Workorder ?	property	fr	Copier l'ordre de travail ?
+Cost	property	fr	Coût
+Cost (incl tax):	property	fr	Coût (incluant les taxes):
+Cost per unit	property	fr	Coût par unité
+could not find any location to save to!	property	fr	N'a pas pu trouver un endroit vers lequel enregistrer!
+Count	property	fr	Compter
+Datatype	property	fr	Type de donnée
+Datatype type not chosen!	property	fr	Type de données non sélectionné!
+Date	property	fr	Date
+Date Closed	property	fr	Date de fermeture
+Date opened	property	fr	Date d'ouverture
+Datetime	property	fr	Dateheure
+Days	property	fr	Jours
+Debug	property	fr	Debug
+Debug output in browser	property	fr	Deboguer la sortie dans le navigateur
+Decimal	property	fr	Décimal
+default	property	fr	Défaut
+delete	property	fr	Effacer
+Delete a single entry by passing the id.	property	fr	Effacer une unique entrée en passant l'ID.
+delete activity	property	fr	Effacer activité
+Delete agreement and all the activities associated with it!	property	fr	Effacer l'accord et toutes ses activités associées avec!
+delete apartment	property	fr	Effacer appartement
+delete building	property	fr	Effacer immeuble
+delete document	property	fr	Effacer document
+delete entrance	property	fr	Effacer entrée
+delete equipment	property	fr	Effacer équipement
+delete file	property	fr	Effacer fichier
+delete gab at:	property	fr	Effacer description à:
+delete investment history element	property	fr	Effacer l'élément historique d'investissement
+Delete last entry	property	fr	Effacer dernière entrée
+delete location	property	fr	Effacer endroit
+delete location standard	property	fr	Effacer standard d'emplacement
+delete meter	property	fr	Effacer mètre
+delete owner	property	fr	Effacer propriétaire
+delete prize-index	property	fr	Effacer index de prix
+delete project	property	fr	Effacer projet
+delete property	property	fr	Effacer propriété
+delete report	property	fr	Effacer rapport
+delete request	property	fr	Effacer requête
+delete template	property	fr	Effacer gabarit
+delete tenant	property	fr	Effacer locataire
+delete the apartment	property	fr	Effacer l'appartement
+delete the attrib	property	fr	Effacer l'attribut
+delete the building	property	fr	Effacer l'immeuble
+delete the category	property	fr	Effacer la catégorie
+delete the entrance	property	fr	Effacer l'entrée
+Delete the entry	property	fr	Effacer l'entrée
+delete the equipment	property	fr	Effacer l'équipement
+delete the location	property	fr	Effacer l'endroit
+delete the meter	property	fr	Effacer le mètre
+delete the owner	property	fr	Effacer le propriétaire
+delete the project	property	fr	Effacer le projet
+delete the property	property	fr	Effacer la propriété
+delete the request	property	fr	Effacer la requête
+delete the standard	property	fr	Effacer le standard
+delete the template	property	fr	Effacer le gabarite
+delete the tenant	property	fr	Effacer le locataire
+delete the workorder	property	fr	Effacer l'ordre de travail
+delete this activity	property	fr	Effacer cette activité
+Delete this agreement	property	fr	Effacer cet accord
+delete this document	property	fr	Effacer ce document
+Delete this entry	property	fr	Effacer cette entrée
+delete this equipment	property	fr	Effacer cet équipement
+delete this gab	property	fr	Effacer cette description
+delete this hour	property	fr	Effacer cette heure
+delete this project	property	fr	Effacer ce projet
+delete this report	property	fr	Effacer ce rapport
+delete this request	property	fr	Effacer cette requête
+delete this vendor from this activity	property	fr	Effacer ce vendeur de cette activité
+delete this workorder	property	fr	Effacer cet ordre de travail
+delete ticket	property	fr	Efacer ticket
+delete vendor activity	property	fr	Effacer activité du vendeur
+delete workorder	property	fr	Effacer ordre de travail
+Descr	property	fr	Descr
+Description	property	fr	Description
+Details	property	fr	Détails
+Dim A	property	fr	Dim A
+Dim A is missing	property	fr	Dim A est manquant
+Dim B	property	fr	Dim B
+Dim D	property	fr	Dim D
+Dima is missing from sub invoice in:	property	fr	DIma est manquant dans la sous-facture dans:
+directory created	property	fr	Répertoire crée
+District	property	fr	Quartier
+Do not import this invoice	property	fr	Ne pas importer cette facture
+do you really want to delete this entry	property	fr	Voulez-vous réellement effacer cette entrée
+Do you really want to update the categories	property	fr	Voulez-vous réellement mettre à jour les catégories
+Do you really want to update the categories again	property	fr	Voulez-vous réellement mettre à jour les catégories à nouveau
+Document	property	fr	Document
+document %1 has been edited	property	fr	Le document %1 a été modifié
+document %1 has been saved	property	fr	Le document %1 a été enregistré
+document date	property	fr	Date du document
+document ID	property	fr	ID du document
+Document name	property	fr	Nom du document
+Documentation	property	fr	Documentation
+Documents	property	fr	Documents
+done	property	fr	Fait
+DRAFT	property	fr	EBAUCHE
+E-Mail	property	fr	EMail
+Edit	property	fr	Modifier
+Edit Activity	property	fr	Modifier activité
+edit agreement	property	fr	Modifier accord
+edit apartment	property	fr	Modifier appartement
+edit attribute	property	fr	Modifier attribut
+edit building	property	fr	Modifier immeuble
+Edit document	property	fr	Modifier document
+edit entrance	property	fr	Modifier entrée
+Edit Equipment	property	fr	Modifier équipement
+edit gab	property	fr	Modifier description
+Edit hour	property	fr	Modifier heure
+Edit ID	property	fr	Modifier ID
+edit information about the document	property	fr	Modifier les informations à propos du document
+edit information about the gab	property	fr	Modifier les informations à propos de la description
+edit location	property	fr	Modifier endroit
+edit location config for	property	fr	Modifier configuration de l'endroit pour
+edit meter	property	fr	Modifier mètre
+Edit period	property	fr	Modifier période
+edit pricing	property	fr	Modifier évaluation
+Edit priority key	property	fr	Modifier clé de priorité
+Edit Project	property	fr	Modifier projet
+edit property	property	fr	Modifier propriété
+edit report	property	fr	Modifier rapport
+Edit request	property	fr	Modifier requête
+edit standard	property	fr	Modifier standard
+Edit template	property	fr	Modifier gabarit
+edit the agreement	property	fr	Modifier l'accord
+edit the apartment	property	fr	Modifier l'appartement
+edit the attrib	property	fr	Modifier l'attribut
+edit the building	property	fr	Modifier l'immeuble
+edit the category	property	fr	Modifier la catégorie
+edit the column relation	property	fr	Modifier la relation de la colonne
+edit the entrance	property	fr	Modifier l'entrée
+edit the equipment	property	fr	Modifier l'équipement
+edit the location	property	fr	Modifier l'endroit
+edit the meter	property	fr	Modifier le mètre
+edit the owner	property	fr	Modifier le propriétaire
+edit the pricebook	property	fr	Modifier le livre des prix
+edit the project	property	fr	Modifier le projet
+edit the property	property	fr	Modifier la propriété
+edit the report	property	fr	Modifier le rapport
+edit the request	property	fr	Modifier la requête
+edit the standard	property	fr	Modifier le standard
+edit the template	property	fr	Modifier le gabarit
+edit the tenant	property	fr	Modifier le locataire
+edit the workorder	property	fr	Modifier l'ordre de travail
+edit this activity	property	fr	Modifier cette activité
+Edit this entry	property	fr	Modifier cette entrée
+Edit this entry equipment	property	fr	Modifier cet équipement d'entrée
+Edit this entry project	property	fr	Modifier ce projet d'entrée
+edit this entry report	property	fr	Modifier ce rapport d'entrée
+Edit this entry request	property	fr	Modifier cette requête d'entrée
+Edit this entry workorder	property	fr	Modifier cet ordre de travail d'entrée
+Edit this meter	property	fr	Modifier ce mètre
+Edit workorder	property	fr	Modifier ordre de travail
+edit/customise this hour	property	fr	Modifier/personnaliser cette heure
+End date	property	fr	Date de fin
+Enter a description for prerequisitions for this activity - if any	property	fr	Entrez une description pour les prérequis pour cette activité - s'il y en a
+Enter a description of the document	property	fr	Entrez une description du document
+Enter a description of the equipment	property	fr	Entrez une description de l'équipement
+Enter a description of the project	property	fr	Entrez une description du projet
+Enter a description of the request	property	fr	Entrez une description de la requête
+Enter a description of the standard	property	fr	Entrez une description du standard
+Enter a description the attribute	property	fr	Entrez une description de l'attribut
+enter a description the category	property	fr	Entrez une description de la catégorie
+Enter a description the standard	property	fr	Entrez une description du standard
+Enter a name of the standard	property	fr	Entrez un nom pour le standard
+Enter a new grouping for this activity if not found in the list	property	fr	Entrer un nouveau regroupement pour cette activité si aucun trouvé dans la liste
+Enter a new index	property	fr	Entrer un nouvel index
+Enter a new writeoff period if it is NOT in the list	property	fr	Entrez une nouvelle période hors-écriture si elle n'est PAS dans la liste
+Enter a remark - if any	property	fr	Entrez une remarque - s'il y en a
+enter a remark for this entity	property	fr	Entrez une remarque pour cette entité
+enter a remark for this owner	property	fr	Entrez une remarque pour ce propriétaire
+Enter a short description of the workorder	property	fr	Entrez une brève description de l'ordre de travail
+Enter a short description of this template	property	fr	Entrez une brève description de ce gabarit
+Enter a standard prefix for the id of the equipments	property	fr	Entrez un préfixe standard pour l'ID des équipements
+enter a statustext for the inputfield in forms	property	fr	Entrez un texte de statut pour les champs de saisie dans les formulaires
+Enter a value for the labour cost	property	fr	Entrez une valeur pour le coût du travail
+Enter a value for the material cost	property	fr	Entrez une valeur pour le coût du matériel
+Enter additional remarks to the description - if any	property	fr	Entrez des remarques additionnelles à la desciption - s'il y en a
+Enter any persentage addition per unit	property	fr	Entrez toute addition de pourcentage par unité
+enter any remark for this location	property	fr	Entrez toute remarque pour cet endroit
+Enter any remarks regarding this apartment	property	fr	Entrez toute remarque concernant cet appartement
+Enter any remarks regarding this building	property	fr	Entrez toute remarque concernant cet immeuble
+Enter any remarks regarding this entrance	property	fr	Entrez toute remarque concernant cette entrée
+enter any remarks regarding this location	property	fr	Entrez toute remarque concernant cet endroit
+Enter any round sum addition per order	property	fr	Entrez toute addition de somme arrondie par ordre
+Enter apartment ID	property	fr	Entrez ID d'appartement
+Enter Building ID	property	fr	Entrez ID d'immeuble
+Enter document Name	property	fr	Entrez nom de document
+Enter document title	property	fr	Entrez titre de document
+Enter document version	property	fr	Entrez version de document
+Enter entrance ID	property	fr	Entrez ID d'entrée
+Enter equipment ID	property	fr	Entrez ID d'équipement
+Enter Invoice Number	property	fr	Entrez numéro de facture
+Enter Kid nr	property	fr	Entrez no d'enfant
+enter location id	property	fr	Entrez ID d'endroit
+Enter other branch if not found in the list	property	fr	Entrez l'autre branche si non trouvé dans la liste
+Enter Project Name	property	fr	Entrez nom du projet
+Enter quantity of unit	property	fr	Entrez quantité d'unités
+enter report id	property	fr	Entrez ID de rapport
+enter report title	property	fr	Entrez titre de rapport
+Enter request Title	property	fr	Entrez titre de requête
+enter the abstract of the report	property	fr	Entrez l'abstrait du rapport
+Enter the attribute ID	property	fr	Entrez l'ID d'attribut
+Enter the attribute value for this entity	property	fr	entrez la valeur de l'attribut pour cette entité
+Enter the budget	property	fr	Entrez le budget
+enter the category id	property	fr	Entrez l'ID de catégorie
+Enter the cost per unit	property	fr	Entrez le coût par unité
+enter the default value	property	fr	Entrez la valeur par défaut
+Enter the description	property	fr	Entrez la description
+Enter the description for this activity	property	fr	Entrez la description pour cette activité
+Enter the description for this template	property	fr	Entrez la description pour ce gabarit
+Enter the details of this ticket	property	fr	Entrez les détails de ce ticket
+Enter the expected longevity in years	property	fr	Entrez la longévité attendue en années
+Enter the floor	property	fr	Entrez le plancher
+Enter the floor ID	property	fr	Entrez l'ID de plancher
+Enter the general address	property	fr	Entrez l'adresse générale
+enter the input name for records	property	fr	Entrez le nom de l'entrée pour les enregistrements
+enter the input text for records	property	fr	Entrez le texte de l'entrée pour les enregistrements
+Enter the invoice date	property	fr	Entrez la date de facture
+Enter the meter ID	property	fr	Entrez l'ID de mètre
+enter the name for the column	property	fr	Entrez le nom pour la colonne
+enter the name for this location	property	fr	Entrez le nom pour cet endroit
+Enter the name of the apartment	property	fr	Entrez le nom de l'appartement
+Enter the name of the building	property	fr	Entrez le nom de l'immeuble
+Enter the name of the entrance	property	fr	Entrez le nom de l'entrée
+enter the name of the location	property	fr	Entrez le nom de l'endroit
+Enter the name of the meter	property	fr	Entrez le nom du mètre
+Enter the name of the property	property	fr	Entrez le nom de la propriété
+enter the name of the tenant	property	fr	Entrez le nom du locataire
+Enter the name the template	property	fr	Entrez le nom du gabarit
+Enter the payment date or the payment delay	property	fr	Entrez la date de paiement ou le délai de paiement
+Enter the power meter	property	fr	Entrez le mètre pouvoir
+Enter the Property ID	property	fr	Entrez l'ID de la propriété
+Enter the purchase cost	property	fr	Entrez le coût d'achat
+enter the record length	property	fr	Entrez la longueur de l'enregistrement
+enter the scale if type is decimal	property	fr	Entrez l'échelle si le type est décimal
+Enter the search string. To show all entries, empty this field and press the SUBMIT button again	property	fr	Entrez la chaîne de recherche. Pour montrer toutes les entrées, videz ce champ et cliquez à nouveau sur le bouton SOUMETTRE
+Enter the standard ID	property	fr	Entrez l'ID standard
+Enter the street number	property	fr	Entrez le numéro de la rue
+Enter the subject of this ticket	property	fr	Entrez le sujet de ce ticket
+Enter the total cost of this activity - if not to be calculated from unit-cost	property	fr	Entrez le coût total de cette activité - si elle n'a pas à être calculée à partir du coût par unité
+enter the Workorder ID to search by workorder - at any date	property	fr	Entrez l'ID d'ordre de travail pour rechercher par ordre de travail - à n'importe quelle date
+Enter Workorder title	property	fr	Entrez le titre de l'ordre de travail
+entity id 	property	fr	ID d'entité
+Entity name	property	fr	Nom d'entité
+Entity type	property	fr	Type d'entité
+Entity type not chosen!	property	fr	Type d'entité non choisi!
+Entrance	property	fr	Entrée
+Entrance has been edited	property	fr	L'entrée a été modifiée
+Entrance has been saved	property	fr	L'entrée a été enregistrée
+entrance id	property	fr	ID d'entrée
+Entry date	property	fr	Entrer la date
+Equipment	property	fr	Equipement
+equipment %1 has been edited	property	fr	L'équipement %1 a été modifié
+Equipment %1 has been saved	property	fr	L'équipement %1 a été enregistré
+Equipment ID	property	fr	ID d'équipement
+Equipment type	property	fr	Type d'équipement
+equipment_id	property	fr	ID d'équipement
+Event	property	fr	Evènement
+Events	property	fr	Evènements
+Export date	property	fr	Date d'export
+Export invoice	property	fr	Exporter la facture
+Export to file	property	fr	Exporter vers le fichier
+failed to create directory	property	fr	Echec à la création du répertoire
+failed to delete file	property	fr	Echec à l'effacement du fichier
+failed to upload file !	property	fr	Echec à l'upload du fichier !
+false	property	fr	Faux
+female	property	fr	Féminin
+Feste nr	property	fr	Feste nr
+File	property	fr	Fichier
+file deleted	property	fr	Fichier effacé
+filename	property	fr	Nom du fichier
+First entry is added!	property	fr	La première entrée est ajoutée!
+First Note Added	property	fr	Première note ajoutée
+Firstname	property	fr	Prénom
+Floor	property	fr	Plancher
+Floor ID	property	fr	ID de plancher
+From	property	fr	De
+Funding	property	fr	Financement
+Gaards nr	property	fr	Gaards nr
+gab	property	fr	Description
+gab %1 has been added	property	fr	La description %1 a été ajoutée
+gab %1 has been edited	property	fr	La  description %1 a été modifiée
+gab %1 has been updated	property	fr	La description %1 a été mise à jour
+gabnr	property	fr	NoDesc
+General Address	property	fr	Adresse générale
+General Info	property	fr	Informations générales
+Generate a project from this request	property	fr	Générer un projet à partir de cette requête
+Generate ID ?	property	fr	Générer l'ID ?
+Generate order	property	fr	Générer l'ordre
+Generate project	property	fr	Générer le projet
+Generate Request	property	fr	Générer la requête
+Group	property	fr	Groupe
+Grouping	property	fr	Regroupement
+Helpdesk	property	fr	Helpdesk
+Highest	property	fr	Le plus haut
+History	property	fr	Historique
+hour %1 has been deleted	property	fr	L'heure %1 a été effacée
+hour %1 has been edited	property	fr	L'heure %1 a été modifiée
+hour %1 is added!	property	fr	L'heure %1 est ajoutée!
+Hour ID	property	fr	ID d'heure
+ID	property	fr	ID
+ID is updated	property	fr	L'ID est mis à jour
+Import	property	fr	Importer
+Import from CSV	property	fr	Importer depuis CSV
+Import invoice	property	fr	Importer la facture
+Import this invoice	property	fr	Importer cette facture
+Importance	property	fr	Importance
+Index Count	property	fr	Compteur d'index
+Indoor climate	property	fr	Climat intérieur
+Initial Category	property	fr	Catégorie initiale
+Initial Coordinator	property	fr	Coordinateur initial
+Initial Status	property	fr	Statut initial
+Initial value	property	fr	Valeur initiale
+input name not entered!	property	fr	Nom en entrée non saisi!
+input text	property	fr	Texte d'entrée
+input text not entered!	property	fr	Texte d'entrée non entré!
+input_name	property	fr	Nom en entrée
+insert the date for the acquisition	property	fr	Insérez la date pour l'acquisition
+insert the date for the initial value	property	fr	Insérez la date pour la valeur initiale
+insert the value at the start-date as a positive amount	property	fr	Insérez la valeur à la date de départ comme un montant positif
+Integer	property	fr	Entier
+Investment	property	fr	Investissement
+Investment added !	property	fr	Investissement ajouté !
+investment history	property	fr	Historique d'investissements
+investment id	property	fr	ID d'investissement
+Investment ID:	property	fr	ID d'investissement:
+Investment value	property	fr	Valeur d'investissement
+Invoice	property	fr	Facture
+Invoice date	property	fr	Date de facture
+Invoice ID	property	fr	ID de facture
+Invoice Number	property	fr	Numéro de facture
+Invoice transferred	property	fr	Facture transférée
+is registered	property	fr	est enregistré
+Is there a demand from the authorities to correct this condition?	property	fr	Y a-t'il une demande de la part des autorités pour corriger cette condition?
+Janitor	property	fr	Concierge
+key deliver location	property	fr	Endroit pour la livraison de la clé
+key fetch location	property	fr	Endroit pour la récupération de la clé
+Key responsible	property	fr	Responsable clé
+KID nr	property	fr	KID no
+click this button to start the import	property	fr	Cliquez sur ce bouton pour démarrer l'import
+click this link to edit the period	property	fr	Cliquez sur ce lien pour modifier la période
+click this link to enter the list of sub-invoices	property	fr	Cliquez sur ce lien pour entrer la liste des sous-factures
+click this link to select	property	fr	Cliquez sur ce lien pour sélectionner
+click this link to select apartment	property	fr	Cliquez sur ce lien pour sélectionner l'appartement
+click this link to select budget account	property	fr	Cliquez sur ce lien pour sélectionner le compte budget
+click this link to select building	property	fr	Cliquez sur ce lien pour sélectionner l'immeuble
+click this link to select entrance	property	fr	Cliquez sur ce lien pour sélectionner l'entrée
+click this link to select equipment	property	fr	Cliquez sur ce lien pour sélectionner l'équipement
+click this link to select owner from the addressbook	property	fr	Cliquez sur ce lien pour sélectionner le propriétaire depuis le carnet d'adresses
+click this link to select property	property	fr	Cliquez sur ce lien pour sélectionner la propriété
+click this link to select tenant	property	fr	Cliquez sur ce lien pour sélectionner le locataire
+click this link to select vendor	property	fr	Cliquez sur ce lien pour sélectionner le vendeur
+click this link to view the remark	property	fr	Cliquez sur ce lien pour voir la remarque
+click this to generate a request with this information	property	fr	Cliquez ceci pour générer une requête avec cette information
+click this to generate an order with this information	property	fr	Cliquez ceci pour générer un ordre avec cette information
+click this to start a report	property	fr	Cliquez ceci pour démarrer un rapport
+click to view file	property	fr	Cliquez pour visualiser le fichier
+kommune nr	property	fr	No de commune
+Kreditnota	property	fr	Nota crédit
+Labour cost	property	fr	Coût du travail
+Large	property	fr	Large
+Last index	property	fr	Dernier index
+Lastname	property	fr	Nom
+leave the owner untouched and return back to the list	property	fr	Laisser le propriétaire tel quel et retourner à la liste
+leave the tenant untouched and return back to the list	property	fr	Laisser le locataire tel quel et retourner à la liste
+link to the origin for this project	property	fr	Lier à l'origine pour ce projet
+link to the origin for this report	property	fr	Lier à l'origine pour ce rapport
+link to the origin for this request	property	fr	Lier à l'origine pour cette requête
+link to the project originatet from this request	property	fr	Lier à l'initiateur du projet depuis cette requête
+link to the project originatet from this ticket	property	fr	Lier à l'initiateur du projet depuis ce ticket
+link to the report originatet from this ticket	property	fr	Lier à l'initiateur du rapport depuis ce ticket
+link to the request for this project	property	fr	Lier à la requête pour ce projet
+link to the request originatet from this ticket	property	fr	Lier à l'initiateur de la requête depuis ce ticket
+link to the ticket for this project	property	fr	Lier au ticket pour ce projet
+list 	property	fr	Liste
+list activities per agreement	property	fr	Lister les activités par accord
+list agreement	property	fr	Lister accords
+list apartment	property	fr	Lister appartements
+list budget account	property	fr	Lister comptes budget
+list building	property	fr	Lister immeubles
+list config	property	fr	Lister configurations
+list consume	property	fr	Lister consommations
+list document	property	fr	Lister documents
+list entrance	property	fr	Lister entrées
+list equipment	property	fr	Lister équipements
+list gab	property	fr	Lister descriptions
+list gab detail	property	fr	Lister détails descriptions
+List hours	property	fr	Lister heures
+list investment	property	fr	Lister invertissements
+list invoice	property	fr	Lister factures
+list location	property	fr	Lister endroits
+list location attribute	property	fr	Lister attributs d'endroits
+list location standard	property	fr	Lister standard d'endroits
+list meter	property	fr	Lister mètres
+list paid invoice	property	fr	Lister factures payées
+list pricebook	property	fr	Lister livres de prix
+list pricebook per vendor	property	fr	Lister livres de prix par vendeur
+list Project	property	fr	Lister projets
+list property	property	fr	Lister propriétés
+list report	property	fr	Lister rapports
+list request	property	fr	Lister requêtes
+list standard description	property	fr	Lister descriptions standard
+list street	property	fr	Lister rues
+list template	property	fr	Lister gabarits
+list tenant	property	fr	Lister locataires
+list ticket	property	fr	Lister tickets
+list vendors	property	fr	Lister vendeurs
+list vendors per activity	property	fr	Lister vendeurs par activité
+list voucher	property	fr	Lister reçus
+list workorder	property	fr	Lister ordres de travail
+Location	property	fr	Emplacement
+location %1 has been edited	property	fr	L'endroit %1 a été modifié
+location %1 has been saved	property	fr	L'endroit %1 a été enregistré
+Location Code	property	fr	Code d'emplacement
+location config	property	fr	Configuration d'endroit
+location id	property	fr	ID d'endroit
+Location type	property	fr	Type d'endroit
+location type not chosen!	property	fr	Type d'endroit non choisi!
+Longevity	property	fr	Longévité
+Lowest	property	fr	Le plus bas
+Mailing method is not chosen! (admin section)	property	fr	Méthode de mailing non choisie! (section admin)
+male	property	fr	Home
+Manager	property	fr	Gestionnaire
+Mark as DRAFT	property	fr	Marquer comme BROUILLON
+Mark the tender as DRAFT	property	fr	Marquer le tenancier comme BROUILLON
+Material cost	property	fr	Coût du matériel
+Materials:__________	property	fr	Matériels:__________
+Medium	property	fr	Moyen
+Medium Consequences	property	fr	Conséquences moyennes
+memo	property	fr	Mémo
+Meter	property	fr	Mètre
+Meter %1 has been edited	property	fr	Le mètre %1 a été modifié
+Meter %1 has been saved	property	fr	Le mètre %1 a été enregistré
+meter id	property	fr	ID de mètre
+Meter type	property	fr	Type de mètre
+Minor	property	fr	Mineur
+Minor Consequences	property	fr	Conséquences mineures
+Name	property	fr	Nom
+Name not entered!	property	fr	Nom non entré!
+New	property	fr	Nouveau
+New Grouping	property	fr	Nouveau groupement
+New Index	property	fr	Nouvel index
+New value	property	fr	Nouvelle valeur
+no	property	fr	Non
+No account	property	fr	Pas de compte
+No additional notes	property	fr	Pas de notes additionnelles
+No branch	property	fr	Pas de branche
+no category	property	fr	Pas de catégorie
+No conversion type could be located.	property	fr	Aucun type de conversion n'a pu être localisé.
+No datatype	property	fr	Pas de type de données
+No Dim B	property	fr	Pas de Dim B
+No Dim D	property	fr	Pas de Dim D
+no district	property	fr	Pas de quartier
+No entity type	property	fr	Pas de type d'entité
+No equipment type	property	fr	Pas de type d'équipement
+No file selected	property	fr	Pas de fichier sélectionné
+No history	property	fr	Pas d'historique
+No history for this record	property	fr	Pas d'historique pour cet enregistrement
+No janitor	property	fr	Pas de concierge
+No location	property	fr	Pas d'endroit
+No mailaddress is selected	property	fr	Aucune adresse postale sélectionnée
+No part of town	property	fr	Aucune partie de la ville
+No status	property	fr	Pas de statu
+No supervisor	property	fr	Pas de superviseur
+No type	property	fr	Pas de type
+No user	property	fr	Pas d'utilisateur
+No workorder budget	property	fr	Pas de budget ordre de travail
+None	property	fr	Aucun
+None Consequences	property	fr	Pas de conséquences
+Note	property	fr	Note
+Nothing to do!	property	fr	Rien à faire!
+Notify	property	fr	Notifier
+NS3420	property	fr	NS3420
+ns3420 description	property	fr	Description ns3420
+nullable	property	fr	Positionnable à zéro
+nullable not chosen!	property	fr	Positionnable à zéro non choisi!
+Num	property	fr	Num
+Number	property	fr	Nombre
+of	property	fr	De
+open	property	fr	Ouvrir
+Open Date	property	fr	Date d'ouverture
+Opened	property	fr	Ouvert
+Opened by	property	fr	Ouvert par
+Order	property	fr	Ordre
+origin	property	fr	Origine
+Other branch	property	fr	Autre branche
+overview	property	fr	Vue générale
+owner	property	fr	Propriétaire
+owner %1 has been edited	property	fr	Le propriétaire %1 a été modifié
+owner %1 has been saved	property	fr	Le propriétaire %1 a été enregistré
+owner id	property	fr	ID de propriétaire
+Paid	property	fr	Payé
+Part of town	property	fr	Partie de la ville
+Payment date	property	fr	Date de paiement
+Per Agreement	property	fr	Par accord
+Per Vendor	property	fr	Par vendeur
+Percentage addition	property	fr	Addition de pourcentage
+Period	property	fr	Période
+permission	property	fr	Permission
+permissions are updated!	property	fr	Les permissions sont mises à jour!
+Pleace select a location - or an equipment !	property	fr	SVP choisissez un endroit - ou un équipement !
+Please - select a file to import from !	property	fr	SVP - choisissez un fichier depuis lequel importer !
+Please - select a import format !	property	fr	SVP - choisissez un format d'import !
+Please - select a vendor!	property	fr	SVP - choisissez un vendeur!
+Please - select budget responsible!	property	fr	SVP - choisissez un responsable de budget !
+Please - select either payment date or number of days from invoice date !	property	fr	SVP - choisissez soit la date de paiement soit le nombre de jours depuis la date de facture !
+Please - select type invoice!	property	fr	SVP - choisissez le type de facture !
+Please - select type order!	property	fr	SVP - choisissez le type d'ordre !
+Please - select Vendor!	property	fr	SVP - choisissez le fournisseur!
+Please choose a conversion type	property	fr	SVP choisissez un type de conversion
+Please choose a conversion type from the list	property	fr	SVP choisissez un type de conversion depuis la liste
+please choose a file	property	fr	SVP choisissez un fichier
+Please either select GENERATE ID or type a Equipment ID !	property	fr	SVP choisissez GENERER l'ID ou tapez un ID d'équipement !
+Please enter a Apartment ID !	property	fr	SVP entrez un ID d'appartement !
+Please enter a Building ID !	property	fr	SVP entrez un ID d'immeuble !
+Please enter a Entrance ID !	property	fr	SVP entrez un ID d'entrée !
+please enter a name !	property	fr	SVP entrez un nom !
+Please enter a new index for calculating next value(s)!	property	fr	SVP entrez un nouvel index pour calculer la(les) valeur(s) suivante(s)!
+Please enter a project NAME !	property	fr	SVP entrez un NOM de projet !
+Please enter a Property ID !	property	fr	SVP zntrez un ID de propriété !
+Please enter a request TITLE !	property	fr	SVP entrez un TITRE de requête !
+Please enter a value for either material cost, labour cost or both !	property	fr	SVP entrez une valeur pour soit le coût du matériel, le coût du travail ou les deux !
+Please enter a workorder title !	property	fr	SVP entrez un titre d'ordre de travail !
+Please enter an activity code !	property	fr	SVP entrez un code d'activité !
+Please enter an agreement code !	property	fr	SVP entrez un code d'accord !
+please enter an integer !	property	fr	SVP entrez un entier !
+please enter precision !	property	fr	SVP entrez la précision !
+please enter precision as integer !	property	fr	SVP entrez un entier pour la précision !
+please enter scale as integer !	property	fr	SVP entrez un entier pour la graduation !
+Please give som details !	property	fr	SVP entrez des détails !
+Please select a branch !	property	fr	SVP choisissez une branche !
+Please select a Building ID !	property	fr	SVP choisissez un ID d'immeuble !
+Please select a category !	property	fr	SVP choisissez une catégorie !
+please select a contact !	property	fr	SVP choisissez un contact !
+Please select a date !	property	fr	SVP choisissez une date !
+Please select a Entrance ID !	property	fr	SVP choisissez un ID d'entrée !
+please select a file to upload !	property	fr	SVP choisissez un fichier à uploader !
+Please select a location !	property	fr	SVP choisissez un endroit !
+please select a location %1 id !	property	fr	SVP choisissez un ID %1 d'endroit !
+Please select a period for write off !	property	fr	SVP choisissez une période pour le remboursement !
+Please select a person to handle the ticket !	property	fr	SVP choisissez une personne qui gère le ticket !
+Please select a Property ID !	property	fr	SVP choisissez un ID de propriété !
+Please select a status !	property	fr	SVP choisissez un statut !
+Please select a type !	property	fr	SVP choisissez un type !
+Please select a valid project !	property	fr	SVP choisissez un projet valide !
+Please select an agreement !	property	fr	SVP choisissez un accord !
+Please select equipment type !	property	fr	SVP choisissez un type d'équipement !
+please select report type !	property	fr	SVP choisissez un type de rapport !
+Please set an initial value!	property	fr	SVP réglez une valeur initiale !
+Please set a new index !	property	fr	SVP réglez un nouvel index !
+Please type a subject for this ticket !	property	fr	SVP entrez un sujet pour ce ticket !
+Popup Calendar	property	fr	Fenêtre de notification de calendrier
+Post	property	fr	Poster
+Power meter	property	fr	Mesure de puissance
+precision	property	fr	Précision
+prefix	property	fr	Préfixe
+Pricebook	property	fr	Livre de prix
+Print view	property	fr	Imprimer la vue
+Priority	property	fr	Priorité
+Priority changed	property	fr	Priorité changée
+Priority key	property	fr	Clé de priorité
+priority keys has been updated	property	fr	Les clés de prorité ont été mises à jour
+private	property	fr	Privé
+Prizing	property	fr	Mise à prix
+Probability	property	fr	Probabilité
+Project	property	fr	Projet
+project %1 has been edited	property	fr	Le projet %1 a été modifié
+project %1 has been saved	property	fr	Le projet %1 a été enregistré
+project coordinator	property	fr	Coordinateur du projet
+Project end date	property	fr	Date de fin du projet
+Project ID	property	fr	ID de projet
+Project name	property	fr	Nom de projet
+Project start date	property	fr	Date de début du projet
+propagate	property	fr	Propager
+Property	property	fr	Propriété
+Property has been edited	property	fr	La propriété a été modifiée
+Property has been saved	property	fr	La propriété a été enregistrée
+property ID	property	fr	ID de propriété
+property name	property	fr	Nom de propriété
+Purchase cost	property	fr	Coût d'achat
+Quantity	property	fr	Quantité
+Re-assigned	property	fr	Ré-assigné
+Re-opened	property	fr	Ré-ouvert
+Read	property	fr	Lire
+Read a list of entries.	property	fr	Lire une liste d'entrées.
+Read a single entry by passing the id and fieldlist.	property	fr	Lire une unique entrée en passant l'ID et la liste des champs.
+Read this list of methods.	property	fr	Lire cette liste de méthodes.
+Record	property	fr	Enregistrement
+Remark	property	fr	Remarque
+report	property	fr	Rapport
+report %1 has been edited	property	fr	Le rapport %1 a été modifié
+report %1 has been saved	property	fr	Le rapport %1 a été enregistré
+report id	property	fr	ID de rapport
+repost !	property	fr	Reposter !
+Request	property	fr	Requête
+request %1 has already been added to project %2	property	fr	La requête %1 a déjà été ajoutée au projet %2
+request %1 has been added	property	fr	La requête %1 a été ajoutée
+request %1 has been deleted from project %2	property	fr	La requête %1 a été effacée du projet%2
+request %1 has been edited	property	fr	La requête %1 a été modifiée
+request %1 has been saved	property	fr	La requête %1 a été enregistrée
+request end date	property	fr	Date de fin de requête
+request entry date	property	fr	Date d'entrée de requête
+request ID	property	fr	ID de requête
+request start date	property	fr	Date de début de requête
+request title	property	fr	Titre de requête
+requirement	property	fr	Condition
+Residential environment	property	fr	Enviromment résidentiel
+Rig addition	property	fr	Bricoler addition
+Roll back	property	fr	Annuler
+Rollback invoice	property	fr	Annuler la facture
+Safety	property	fr	Sécurité
+save	property	fr	Enregistrer
+Save as template	property	fr	Enregistrer comme un gabarit
+Save the apartment	property	fr	Enregistrer l'appartement
+Save the attribute	property	fr	Enregistrer les attributs
+Save the building	property	fr	Enregistrer l'immeuble
+save the category	property	fr	Enregistrer la catégorie
+Save the document	property	fr	Enregistrer le document
+Save the entrance	property	fr	Enregistrer l'entrée
+Save the equipment	property	fr	Enregistrer l'équipement
+save the gab	property	fr	Enregistrer la description
+Save the investment	property	fr	Enregistrer l'investissement
+save the location	property	fr	Enregistrer l'endroit
+Save the meter	property	fr	Enregistrer le mètre
+save the owner and return back to the list	property	fr	Enregistrer le propriétaire et retourner à la liste
+Save the project	property	fr	Enregistrer le projet
+Save the property	property	fr	Enregistrer la propriété
+save the report	property	fr	Enregistrer le rapport
+Save the request	property	fr	Enregistrer la requête
+Save the standard	property	fr	Enregistrer le standard
+save the tenant and return back to the list	property	fr	Enregistrer le locataire et retourner à la liste
+Save the ticket	property	fr	Enregistrer le ticket
+Save the voucher	property	fr	Enregistrer le reçu
+Save the workorder	property	fr	Enregistrer l'ordre de travail
+Save this workorder as a template for later use	property	fr	Enregistrer cet ordre de travail comme un gabarit pour un usage ultérieur
+scale	property	fr	Graduation
+Score	property	fr	Score
+Search	property	fr	Rechercher
+search by bruk. to show all entries, empty all fields and press the submit button again	property	fr	Rechercher par "bruk". Pour montrer toutes les entrées, videz tous les champs et cliquez sur le bouton SOUMETTRE à nouveau
+search by feste. to show all entries, empty all fields and press the submit button again	property	fr	Rechercher par "feste". Pour montrer toutes les entrées, videz tous les champs et cliquez sur le bouton SOUMETTRE à nouveau
+search by gaards nr. to show all entries, empty all fields and press the submit button again	property	fr	Rechercher par numéro de "gaards". Pour montrer toutes les entrées, videz tous les champs et cliquez sur le bouton SOUMETTRE à nouveau
+Search by property	property	fr	Rechercher par propriété
+search by property_id. to show all entries, empty all fields and press the submit button again	property	fr	Rechercher par ID de propriété. Pour montrer toutes les entrées, videz tous les champs et cliquez sur le bouton SOUMETTRE à nouveau
+search by seksjon. to show all entries, empty all fields and press the submit button again	property	fr	Rechercher par "seksjon". Pour montrer toutes les entrées, videz tous les champs et cliquez sur le bouton SOUMETTRE à nouveau
+search for history at this location	property	fr	Rechercher l'historique à cet endroit
+Search for investment entries	property	fr	Rechercher les entrées d'investissement
+Search for paid invoices	property	fr	Rechercher les factures payées
+Seksjons nr	property	fr	Seksjons nr
+Select	property	fr	Choisir
+Select a datatype	property	fr	Choisir un type de données
+Select a entity type	property	fr	Choisir un type d'entité
+select a location	property	fr	Choisir un endroit
+Select a standard-code from the norwegian standard	property	fr	Choisir un code standard depuis le standard norvégien
+select a tenant	property	fr	Choisir un locataire
+Select agreement	property	fr	Choisir l'accord
+Select All	property	fr	Choisir tous
+Select B-Responsible	property	fr	Choisir le B-Responsable
+Select Branch	property	fr	Choisir la branche
+Select building part	property	fr	Choisir la partie d'immeuble
+Select category	property	fr	Choisir la catégorie
+Select chapter	property	fr	Choisir le chapitre
+Select conversion	property	fr	Choisir la conversion
+Select coordinator	property	fr	Choisir le coordinateur
+Select date for the file to roll back	property	fr	Choisir la date à laquelle faire une annulation du fichier
+Select date the document was created	property	fr	Choisir la date à laquelle le document a été crée
+select either a location or an equipment	property	fr	Choisir soit un endroit soit un équipement
+Select email	property	fr	Choisir EMail
+Select file to roll back	property	fr	Choisir le fichier à annuler
+select file to upload	property	fr	Choisir le fichier à uploader
+Select grouping	property	fr	Choisir le regroupement
+Select Invoice Type	property	fr	Choisir le type de facture
+Select key responsible	property	fr	Choisir le responsable de la clé
+select nullable	property	fr	Choisir positionnable à zéro
+select owner	property	fr	Choisir le propriétaire
+Select per button !	property	fr	Choisissez par bouton !
+select request	property	fr	Choisir la requête
+Select status	property	fr	Choisir le statut
+Select submodule	property	fr	Choisir le sous-module
+Select the account class the selection belongs to	property	fr	Choisir la classe de compte à laquelle la sélection appartient
+Select the agreement the pricebook belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir l'accord auquel le livre de prix appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the agreement this activity belongs to.	property	fr	Choisir l'accord auquel cette activité appartient.
+Select the appropriate condition degree	property	fr	Choisir le degré de condition approprié
+Select the appropriate consequence by breakdown of this component for this theme	property	fr	Choisir la conséquence appropriée par rupture de ce composant pour ce thème
+Select the appropriate propability for worsening of the condition	property	fr	Choisir la probabilité appropriée pour la dégradation de la condition
+select the appropriate tax code	property	fr	Choisir le code de taxe approprié
+Select the branch for this activity.	property	fr	Choisir la branche pour cette activité.
+Select the branch for this document	property	fr	Choisir la branche pour ce document
+Select the branches for this project	property	fr	Choisir les branches pour ce projet
+Select the branches for this request	property	fr	Choisir les branches pour cette requête
+Select the building part for this activity.	property	fr	Choisir la partie d'immeuble pour cette activité.
+Select the category the apartment belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle l'appartement appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the building belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle l'immeuble appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the document belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle le document appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the entrance belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle l'entrée appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the equipment belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle l'équipement appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the investment belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle l'investissement appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+select the category the location belongs to. to do not use a category select no category	property	fr	Choisir la catégorie à laquelle l'endroit appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the meter belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle le mètre appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+select the category the owner belongs to. to do not use a category select no category	property	fr	Choisir la catégorie à laquelle le propriétaire appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the pricebook belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle le livre de prix appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the project belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle le projet appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the property belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle la propriété appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+select the category the report belongs to. to do not use a category select no category	property	fr	Choisir la catégorie à laquelle le rapport appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the request belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle la requête appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+select the category the tenant belongs to. to do not use a category select no category	property	fr	Choisir la catégorie à laquelle le locataire appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the ticket belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle le ticket appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the category the workorder belongs to. To do not use a category select NO CATEGORY	property	fr	Choisir la catégorie à laquelle l'ordre de travail appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the chapter (for tender) for this activity.	property	fr	Choisir le chapitre (pour le tenancier) pour cette activité.
+Select the coordinator the document belongs to. To do not use a category select NO USER	property	fr	Choisir le coordinateur auquel le document appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the coordinator the project belongs to. To do not use a category select NO USER	property	fr	Choisir le coordinateur auquel le projet appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the coordinator the request belongs to. To do not use a category select NO USER	property	fr	Choisir le coordinateur auquel la requête appartient. Pour ne pas utiliser de catégorie choisir PAS DE CATEGORIE
+Select the date for the first value	property	fr	Choisir la date pour la première valeur
+Select the date for the update	property	fr	Choisir la date pour la mise à jour
+Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B	property	fr	Choisir la Dim B pour cette facture. Pour ne pas utiliser la Dim B -  choisir PAS DE DIM B
+Select the Dim D for this activity. To do not use Dim D -  select NO DIM D	property	fr	Choisir la Dim D pour cette activité. Pour ne pas  utiliser la Dim D -  choisir PAS DE DIM D
+Select the district the selection belongs to. To do not use a district select NO DISTRICT	property	fr	Choisir le quartier auquel la sélection appartient. Pour ne pas utiliser de quartier choisir PAS DE QUARTIER
+Select the equipment type the document belongs to. To do not use a type select NO equipment type	property	fr	Choisir le type d'équipement auquel le document appartient. Pour ne pas utiliser de type choisir PAS DE TYPE D'EQUIPEMENT
+Select the estimated end date for the Project	property	fr	Choisir la date de fin estimée pour le projet
+Select the estimated end date for the request	property	fr	Choisir la date de fin estimée pour la requête
+Select the file to import from	property	fr	Choisir le fichier depuis lequel importer
+Select the filter. To show all entries select SHOW ALL	property	fr	Choisir le filtre. Pour montrer toutes les entrées choisir MONTRER TOUS
+Select the grouping for this activity.	property	fr	Choisir le regroupement pour cette activité.
+Select the janitor responsible for this invoice. To do not use janitor -  select NO JANITOR	property	fr	Choisir le responsable concierge pour cette facture. Pour ne pas utiliser de concierge - choisir PAS DE CONCIERGE
+Select the key responsible for this project	property	fr	Choisir le responsable clé pour ce projet
+select the level for this information	property	fr	Choisir le niveau pour cette information
+select the owner	property	fr	Choisir le propriétaire
+select the owner type. to show all entries select show all	property	fr	Choisissez le type de propriétaire. Pour montrer toutes les entrées choisissez MONTRER TOUS
+Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN	property	fr	Choisir la partie de ville à laquelle l'immeuble appartient. Pour ne pas utiliser de partie de ville - choisir AUCUNE PARTIE DE VILLE
+Select the part of town the investment belongs to. To do not use a part of town -  select NO PART OF TOWN	property	fr	Choisir la partie de ville à laquelle l'investissement appartient. Pour ne pas utiliser de partie de ville - choisir AUCUNE PARTIE DE VILLE
+Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN	property	fr	Choisir la partie de ville à laquelle la propriété appartient. Pour ne pas utiliser de partie de ville - choisir AUCUNE PARTIE DE VILLE
+Select the priority the selection belongs to.	property	fr	Choisir la priorité à laquelle la sélection appartient.
+Select the property by clicking this link	property	fr	Choisir la propriété en cliquant sur ce lien
+Select the status the agreement belongs to. To do not use a category select NO STATUS	property	fr	Choisir le statut auquel l'agrément appartient. Pour ne pas utiliser de catégorie choisir PAS DE STATUT
+Select the status the document belongs to. To do not use a category select NO STATUS	property	fr	Choisir le statu auquel le document appartient. Pour ne pas utiliser de catégorie choisir PAS DE STATUT
+Select the street name	property	fr	Choisir le nom de la rue
+Select the supervisor responsible for this invoice. To do not use supervisor -  select NO SUPERVISOR	property	fr	Choisir le superviseur responsable pour cette facture. Pour ne pas utiliser de superviseur - choisir PAS DE SUPERVISEUR
+Select the template-chapter	property	fr	Choisir le chapitre-gabarit
+Select the tolerance for this activity.	property	fr	Choisir la tolérance pour cette activité.
+Select the type  invoice. To do not use type -  select NO TYPE	property	fr	Choisir le type de facture. Pour ne pas utiliser de type - choisir PAS DE TYPE
+Select the type of conversion:	property	fr	Choisir le type de conversion:
+Select the type of value	property	fr	Choisir le type de valeur
+Select the unit for this activity.	property	fr	Choisir l'unité pour cette activité.
+Select the user the document belongs to. To do not use a category select NO USER	property	fr	Choisir l'utilisateur auquel le document appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
+Select the user the project belongs to. To do not use a category select NO USER	property	fr	Choisir l'utilisateur auquel le projet appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
+Select the user the request belongs to. To do not use a category select NO USER	property	fr	Choisir l'utilisateur auquel la requête appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
+Select the user the selection belongs to. To do not use a user select NO USER	property	fr	Choisir l'utilisateur auquel la sélection appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
+Select the user the template belongs to. To do not use a category select NO USER	property	fr	Choisir l'utilisateur auquel le gabarit appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
+Select the user the workorder belongs to. To do not use a category select NO USER	property	fr	Choisir l'utilisateur auquel l'ordre de travail appartient. Pour ne pas utiliser de catégorie choisir PAS D'UTILISATEUR
+Select the vendor by clicking the button	property	fr	Choisir le vendeur en cliquant sur le bouton
+Select the vendor by clicking this button	property	fr	Choisir le vendeur en cliquant sur ce bouton
+Select the vendor by clicking this link	property	fr	Choisir le vendeur en cliquant sur ce lien
+Select this budget account	property	fr	Choisir ce compte de budget
+Select this ns3420 - code	property	fr	Choisir ce code ns3420
+Select this street	property	fr	Choisir cette rue
+Select this template to view the details	property	fr	Choisir ce gabarit pour voir les détails
+select this tenant	property	fr	Choisir ce locataire
+Select this vendor	property	fr	Choisir ce vendeur
+Select tolerance	property	fr	Chosir la tolérance
+Select Unit	property	fr	Choisir l'unité
+Select user	property	fr	Choisir l'utilisateur
+Select where to deliver the key	property	fr	Choisir où délivrer la clé
+Select where to fetch the key	property	fr	Choisir où récupérer la clé
+Send Order	property	fr	Envoyer l'ordre
+Send this order by email	property	fr	Envoyer cet ordre par EMail
+Sendt by email to	property	fr	Envoyé par EMail à
+Serious	property	fr	Sérieux
+Serious Consequences	property	fr	Conséquences sérieuses
+set permission	property	fr	Régler les permissions
+Set the status of the ticket	property	fr	Régler le statut du ticket
+Show all	property	fr	Montrer tous
+Show calculated cost	property	fr	Montrer le coût calculé
+Show calculated cost on the printview	property	fr	Montrer le coût calculé dans le vue imprimable
+Small	property	fr	Petit
+Sort the tickets by their ID	property	fr	Trier les tickets par leur ID
+Sort the tickets by their priority	property	fr	Trier les tickets par leur priorité
+Standard	property	fr	Standard
+Standard description	property	fr	Description standard
+standard has been edited	property	fr	Le standard a été modifié
+standard has been saved	property	fr	Le standard a été enregistré
+Standard has NOT been edited	property	fr	Le standard n'a PAS été modifié
+standard id	property	fr	ID standard
+Standard prefix	property	fr	Préfixe standard
+Start date	property	fr	Date de début
+start report	property	fr	Démarrer le rapport
+Started	property	fr	Démarré
+Status	property	fr	Statut
+Status changed	property	fr	Statut modifié
+statustext	property	fr	Texte de statut
+statustext not entered!	property	fr	Texte de statut non entré!
+street	property	fr	Rue
+Street name	property	fr	Nom de rue
+Street number	property	fr	Numéro de rue
+Subject	property	fr	Sujet
+Subject changed	property	fr	Sujet modifié
+Submit	property	fr	Soumettre
+Submit the search string	property	fr	Soumettre la chaîne de recherche
+Sum	property	fr	Somme
+Sum Calculation	property	fr	Calcul de somme
+Sum of calculation	property	fr	Somme de calcul
+Sum Tax	property	fr	Somme de taxe
+Supervisor	property	fr	Superviseur
+table %1 has been saved	property	fr	La table %1 a été enregistrée
+table could not be added	property	fr	La table n'a pas pu être ajoutée
+table has not been saved	property	fr	La table n'a PAS été enregistrée
+table name	property	fr	Nom de table
+Tax code	property	fr	Code de taxe
+Template	property	fr	Gabarit
+template %1 is added	property	fr	Le gabarit %1 est ajouté
+Template ID	property	fr	ID de gabarit
+Tenant	property	fr	Locataire
+tenant %1 has been edited	property	fr	Le locataire %1 a été modifié
+tenant %1 has been saved	property	fr	Le locataire %1 a été enregistré
+tenant id	property	fr	ID de locataire
+Tenant phone	property	fr	Téléphone du locataire
+That Vendor ID is not valid !	property	fr	Cet ID de fournisseur n'est pas valide !
+The address to which this order will be sendt	property	fr	L'adresse à laquelle cet ordre va être envoyé
+The apartment is private. If the apartment should be public, uncheck this box	property	fr	L'appartement est privé. Si l'appartement doit être public, décochez cette case
+The apartment is public. If the apartment should be private, check this box	property	fr	L'appartement est public. Si l'appartement doit être privé, cochez cette case
+The building is private. If the building should be public, uncheck this box	property	fr	L'immeuble est privé. Si l'immeuble doit être public, décochez cette case
+The building is public. If the building should be private, check this box	property	fr	L'immeuble est public. Si l'immeuble doit être privé, cochez cette case
+The entrance is private. If the entrance should be public, uncheck this box	property	fr	L'entrée est privée. Si l'entrée doit être publique, décochez cette case
+The entrance is public. If the entrance should be private, check this box	property	fr	L'entrée est publique. Si l'entrée doit être privée, cochez cette case
+The file is already imported !	property	fr	Le fichier est déjà importé !
+the file is empty or removed!	property	fr	Le fichier est vide ou enlevé!
+the location is private. if the location should be public, uncheck this box	property	fr	L'endroit est privé. Si l'endroit doit être public, décochez cette case
+the location is public. if the location should be private, check this box	property	fr	L'endroit est public. Si l'endroit doit être privé, cochez cette case
+The mail server returned	property	fr	Le serveur de mail a renvoyé
+the number of %1 hour is added!	property	fr	Le nombre de %1 heures est ajouté!
+The property is private. If the property should be public, uncheck this box	property	fr	La propriété est privée. Si la propriété doit être publique, décochez cette case
+The property is public. If the property should be private, check this box	property	fr	La propriété est publique. Si la propriété doit être privée, cochez cette case
+The recipient did not get the email:	property	fr	Le destinataire n'a pas eu l'EMail:
+This account is not valid:	property	fr	Ce compte n'est pas valide:
+This activity code is already registered!	property	fr	Ce code d'activité est déjà enregistré!
+This agreement code is already registered!	property	fr	Ce code d'agrément est déjà enregistré!
+This apartment ID does not exist!	property	fr	Cet ID d'appartement n'existe pas!
+This apartment is already registered!	property	fr	Cet appartement est déjà enregistré!
+This Building ID does not exist!	property	fr	Cet ID d'immeuble n'existe pas!
+This building is already registered!	property	fr	Cet immeuble est déjà enregistré!
+This Dim A is not valid:	property	fr	Ce Dim A n'est pas valide:
+This Dim D is not valid:	property	fr	Ce Dim D n'est pas valide:
+This Entrance ID does not exist!	property	fr	Cet ID d'entrée n'existe pas!
+This entrance is already registered!	property	fr	Cette entrée est déjà enregistrée!
+This Equipment ID already exists!	property	fr	Cet ID d'équipement existe déjà!
+This equipment ID does not exist!	property	fr	Cet ID d'équipement n'existe pas!
+This file already exists !	property	fr	Ce fichier existe déjà !
+this location id does not exist!	property	fr	Cet ID d'endroit n'existe pas!
+this location is already registered!	property	fr	Cet ID d'endroit est déjà enregistré!
+this location parent id does not exist!	property	fr	Cet ID parent d'endroit n'existe pas!
+This meter id is already registered!	property	fr	Cet ID de mètre est déjà enregistré!
+This property ID does not exist!	property	fr	Cet ID de propriété n'existe pas!
+this report id already exists!	property	fr	Cet ID de rapport existe déjà!
+this report id does not exist!	property	fr	Cet ID de rapport n'existe pas!
+This user has not defined an email address !	property	fr	Cet utilisateur n'a pas défini d'adresse EMail !
+This Vendor is already registered for this activity	property	fr	Ce vendeur est déjà enregistré pour cette activité
+Ticket	property	fr	Ticket
+Ticket has been saved	property	fr	Le ticket a été enregistré
+Ticket has been updated	property	fr	Le ticket a été mis à jour
+Ticket ID	property	fr	ID de ticket
+time created	property	fr	Temps crée
+Title	property	fr	Titre
+To	property	fr	Vers
+To alter the priority key	property	fr	Pour modifier la clé de priorité
+Tolerance	property	fr	Tolérance
+Total Cost	property	fr	Coût total
+Total records	property	fr	Total d'enregistrements
+Total sum	property	fr	Somme totale
+Transfer	property	fr	Transférer
+true	property	fr	Vrai
+Type	property	fr	Type
+Type invoice II	property	fr	Type de facture II
+Uncheck to debug the result	property	fr	Décochez pour déboguer le résultat
+Unit	property	fr	Unité
+Update	property	fr	Mettre à jour
+Update a single entry by passing the fields.	property	fr	Mettre à jour une unique entrée en passant les champs.
+Update email	property	fr	Mettre à jour l'EMail
+Update file	property	fr	Mettre à jour le fichier
+update project	property	fr	Mettre à jour le projet
+update selected investments	property	fr	Mettre à jour les investissements choisis
+Update the category to not active based on if there is only nonactive apartments	property	fr	Mettre à jour la catégorie en non active s'il n'y a que des appartements non actifs
+Update the not active category for locations	property	fr	Mettre à jour la catégorie non actifs pour les endroits
+upload file	property	fr	Uploader le fichier
+User	property	fr	Utilisateur
+User gratification	property	fr	Satisfaction de l'utilisateur
+Username / Group	property	fr	Nom d'utilisateur / groupe
+Value	property	fr	Valeur
+varchar	property	fr	Chaîne de caractères
+Vendor	property	fr	Fournisseur
+Vendor has been added	property	fr	Le vendeur a été ajouté
+Vendor ID	property	fr	ID de fournisseur
+Vendor Name	property	fr	Nom du vendeur
+Version	property	fr	Version
+view	property	fr	Voir
+view apartment	property	fr	Voir appartement
+view building	property	fr	Voir immeuble
+view document	property	fr	Voir document
+view documents for this location/equipment	property	fr	Voir les documents pour cet endroit/équipement
+view edit the prize for this activity	property	fr	Voir et modifier le prix pour cette activité
+view entrance	property	fr	Voir entrée
+view equipment	property	fr	Voir équipement
+view gab	property	fr	Voir description
+view gab detail	property	fr	Voir détails de la description
+view information about the document	property	fr	Voir les informations à propos du document
+view information about the gab	property	fr	Voir les informations à propos de la description
+view investment	property	fr	Voir investissement
+view location	property	fr	Voir endroit
+View meter	property	fr	Voir  mètre
+view or edit prizing history of this element	property	fr	Voir ou modifier l'historique d'évaluation de cet élément
+View Project	property	fr	Voir projet
+view property	property	fr	Voir propriété
+view report	property	fr	Voir rapport
+View request	property	fr	Voir requête
+view template detail	property	fr	Voir détail du gabarit
+View tender	property	fr	Voir tenancier
+view the apartment	property	fr	Voir l'appartement
+view the attrib	property	fr	Voir l'attribut
+view the building	property	fr	Voir l'immeuble
+view the category	property	fr	Voir la catégorie
+View the complete workorder	property	fr	Voir l'ordre de travail complet
+View the complete workorder as a tender for bidding	property	fr	Voir l'ordre de travail complet comme un tenancier pour l'offre de prix
+view the document	property	fr	Voir le document
+view the entrance	property	fr	Voir l'entrée
+view the equipment	property	fr	Voir l'équipement
+view the gab	property	fr	Voir la description
+view the location	property	fr	Voir l'endroit
+view the meter	property	fr	Voir le mètre
+view the owner	property	fr	Voir le propriétaire
+view the project	property	fr	Voir le projet
+view the property	property	fr	Voir la propriété
+view the report	property	fr	Voir le rapport
+view the request	property	fr	Voir la requête
+view the standard	property	fr	Voir le standard
+view the template	property	fr	Voir le gabarit
+view the tenant	property	fr	Voir le locataire
+view the ticket	property	fr	Voir le ticket
+view the vendor(s) for this activity	property	fr	Voir le(s) vendeur(s) pour cette activité
+view the workorder	property	fr	Voir l'ordre de travail
+view ticket detail	property	fr	Voir détail du ticket
+View workorder	property	fr	Voir ordre de travail
+View/Edit the history	property	fr	Voir/Modifier l'historique
+Voucher	property	fr	Reçu
+Voucher Date	property	fr	Date de reçu
+Voucher ID	property	fr	ID de reçu
+Voucher is updated 	property	fr	Le reçu est mis à jour
+voucher is updated: 	property	fr	Le reçu est mis à jour:
+voucher period is updated	property	fr	La période du reçu est mise à jour
+What is the current status of this document ?	property	fr	Quel est le statut actuel de ce document ?
+What is the current status of this equipment ?	property	fr	Quel est le statut actuel de cet équipement ?
+What is the current status of this project ?	property	fr	Quel est le statut actuel de ce projet ?
+what is the current status of this report ?	property	fr	Quel est le statut actuel de ce rapport ?
+What is the current status of this request ?	property	fr	Quel est le statut actuel de cette requête ?
+What is the current status of this workorder ?	property	fr	Quel est le statut actuel de cet ordre de travail ?
+Where to deliver the key	property	fr	Où livrer la clé
+Where to fetch the key	property	fr	Où récupérer la clé
+Where to pick up the key	property	fr	Où prendre la clé
+work:____________	property	fr	Travail:____________
+Workorder	property	fr	Ordre de travail
+workorder %1 has been edited	property	fr	L'ordre de travail %1 a été modifié
+workorder %1 has been saved	property	fr	L'ordre de travail %1 a été enregistré
+Workorder end date	property	fr	Date de fin d'ordre de travail
+workorder entry date	property	fr	Date d'entrée d'ordre de travail
+Workorder ID	property	fr	ID d'ordre de travail
+Workorder is sent by email!	property	fr	L'ordre de travail est envoyé par EMail !
+Workorder start date	property	fr	Date de début d'ordre de travail
+workorder status	property	fr	Statut de l'ordre de travail
+Workorder template	property	fr	Modèle d'ordre de travail
+Workorder title	property	fr	Titre d'ordre de travail
+workorder user	property	fr	Utilisateur de l'ordre de travail
+write off	property	fr	Ecriture désactivée
+Write off period	property	fr	Période d'écriture désactivée
+Year	property	fr	Année
+yes	property	fr	Oui
+You have entered an invalid end date !	property	fr	Vous avez entré une date de fin invalide !
+You have entered an invalid start date !	property	fr	Vous avez entré une date de début invalide !
+You have to select a budget responsible for this invoice in order to make the import	property	fr	Vous devez choisir un responsable du budget pour cette facture afin de pouvoir faire l'import
+You have to select the Conversion for this import	property	fr	Vous devez choisir la Conversion pour cet import
+You have to select type of invoice	property	fr	Vous devez choisir le type de facture
+Your message could not be sent!	property	fr	Votre message n'a pas pu être envoyé!

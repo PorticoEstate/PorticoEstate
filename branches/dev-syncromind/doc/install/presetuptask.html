@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>Pre setup Tasks</h2>
+				<p>
+					There are a few thing you must do before phpgroupware's setup system can 
+					be run. For the time being it is recommended that php's register_globals 
+					be Off. Most applications have been ported to not require register_globals = On
+					but there are a few which may not run properly.  You can change this in your 
+					php.ini file. If an application behaves oddly try changing it to 
+					register_globals = On.
+				</p>
+				<p>
+					Create a database and a user with full access to this new database. 
+					You may use your favorite GUI to do this, I prefer Webmin, or use the 
+					mysql command line tool. You do not need to root run this, but you will 
+					need to use a mysql user with full access to the "mysql" database, the 
+					mysql root user has this by default. The command to create a database 
+					called "phpgroupware" and user "phpgw" with password "my-db-passwd" is:
+				</p>
+				<pre>
+			$ mysqladmin -u root -p create phpgroupware (enter root's password when prompted)
+			$ mysql -u root -p
+			mysql> grant all on phpgroupware.* to phpgw@localhost identified by "my-db-passwd";
+			mysql> exit;
+				</pre>
+    				<p>
+					for postgresql you use:
+				</p>
+				<pre>
+			$ /usr/bin/createdb phpgroupware
+			$ /usr/bin/createuser phpgroupware --pwprompt
+			$ psql -U phpgroupware phpgroupware
+			phpgroupware=# GRANT ALL PRIVILEGES ON DATABASE phpgroupware TO PUBLIC;
+				</pre>
+				<p>
+					if the psql line doesn't work, you're not connecting to the db. You need 
+					to read the postgresql site and look into pg_hdba.conf and pg_ident.conf 
+					settings .. it's been a while since I did it (if you find out what to 
+					do, post the settings to the mailing list so we can add them here for 
+					future users)
+				</p>
+				<p>
+					Next, you need to prepare setup to create the "header.inc.php" file 
+					where the database connectivity and other core configuration data 
+					will be stored. Go to 
+					<a href="#">http://www.your_server.whatever/phpgroupware/setup</a> 
+					and you should see a web form to fill in a bunch of settings including 
+					the above db user and password. To save the settings, you have 2 options, 
+					all will assume you're still in the phpgroupware directory from doing the 
+					cvs update, the security issues of each will be addressed in section 3:
+				</p>
+				<ol>
+					<li>Least secure but easiest: Make your phpgroupware directory world 
+						writable $chmod a+w ../phpgroupware</li>
+					<li>Most secure but slightly error prone: Use the "view" or "download" 
+						option in header manager and upload or copy/paste the result to 
+						your server. If you choose this method take care there is no white 
+						space (spaces, tabs, blank lines) at all before the first "&lt;?php" 
+						and that your editor doesn't wrap any lines for you where it shouldn't 
+						have. You may then make the header.inc.php world writable, which is 
+						better than #1 but still has risks.</li>
+				</ol>
+				<p>
+					Whichever you choose, I recommend not leaving this world writable, and 
+					only making it writable when you actually need to change some configuration, 
+					which is very rare once you have a working system.
+				</p>
+				<p>
+					If you plan on using the phpwebhosting filemanager or any application 
+					that makes use of the vfs home/group directories (sorry, I don't have 
+					a list of other apps that do) you will need to prepare the "files" 
+					directory. By default, the files directory is in the phpgroupware root, 
+					but this would allow smart users to upload/create a php file and execute 
+					whatever they want, including reading your header config and then the 
+					database! Luckily, the default is also to disallow the ability to upload 
+					files in the first place since the files directory is not writable by the 
+					anonymous web user. We will be moving the files dir outside of the web 
+					root for securities sake. Since I'm installing under my home directory I've 
+					made ~/phpgwadmin/ and I'm going to put it there and make it and all its 
+					contents world writable. You can put it wherever you want so long as every 
+					directory up to it is world readable:
+				</p>
+				<pre>
+			$ mv files ~/phpgwadmin/
+			$ chmod -R a+w ~/phpgwadmin/files
+				</pre>
+				<p>
+					NOTE: I am told the FreeBSD port doens't include the files directory, 
+					you can create the following tree in ~/phpgwadmin/ and then chmod.
+				</p>
+				<p>
+					<b>NOTE:</b> As of 0.9.14.006 the files directory MUST be outside the web root.
+				</p>
+				<pre>
+			files/
+			|-- home/
+			| |-- groups/
+			| |-- users/
+			| |-- home/
+				</pre>
+				<p>
+					Now as along as the prereqs are up and running we are ready to configure!
+				</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>

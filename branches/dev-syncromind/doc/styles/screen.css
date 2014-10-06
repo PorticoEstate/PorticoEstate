@@ -1,0 +1,242 @@
+/* phpGroupWare style sheet
+   Developed by Dave Hall - skwashd at phpgroupware.org
+   Copyright 2004 Free Software Foundation Inc
+*/
+
+/* Tags */
+a, a:visited
+{
+	color: #537991;
+	text-decoration: none;
+}
+
+a:hover, a:active
+{
+	text-decoration: underline;
+}
+
+body, p, div
+{
+	background-color: #fff;
+	color: #333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+
+body
+{
+	background-color: #ccc;
+	border: 1px dashed #999;
+	margin: 20px;
+}
+
+h1
+{
+	color: #537991;
+	font-size: 14pt;
+	margin-bottom: 0px;
+}
+
+h2
+{
+	background-color: #537991;
+	color: #fff;
+	display: block;
+	font-size: 12pt;
+	font-weight: bold;
+	margin-bottom: 0px;
+}
+
+h3
+{
+	color: #537991;
+	font-size: 11pt;
+	font-weight: bold;
+	margin-bottom: 0px;
+}
+
+ul
+{
+	list-style-type: circle; 
+	margin-top: 0px;
+	padding-top: 0px;
+}
+
+
+/* Tags with classes */
+a.heading
+{
+	color: #fff;
+}
+
+img.photo
+{
+	margin-right: 15px;
+}
+
+/* IDs */
+#content
+{
+	height: 100%;
+	margin-left: 75px;
+	margin-right: 25px;
+	min-height: 400px;
+}
+
+#footer
+{
+	background-color: #537991;
+	color: #fff;
+	font-size: 8pt;
+	height: 75px;
+	padding: 10px;
+	text-align: center;
+}
+
+#footer a
+{
+	color: #fff;
+}
+
+#printheader
+{
+	display: none;
+}
+
+#sidenav
+{
+	background-color: #fff;
+	background-image: url('../images/honeycomb.png');
+	background-position: 10px 0px;
+	background-repeat: no-repeat;
+	float: left;
+	width: 160px;
+}
+
+#sidenav li
+{
+	border-bottom: 1px solid #999;
+	font-weight: bold;
+	margin: 0;
+}
+
+#sidenav ul
+{
+	border: none;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;	
+}
+
+#sidenav ul li a
+{
+	border-left: 10px solid #333;
+	color: #666;
+	display: block;
+	padding: 2px;
+	text-decoration: none;
+}
+
+#sidenav ul li a:hover
+{
+	border-left: 10px solid #144767;
+	background-color: #537991;
+	color: #fff;
+}
+
+#sitename
+{
+	/*background-color: #537991;
+	background-image: url('../images/gradient.png');
+	background-repeat: repeat-x;*/
+	background: #fff;
+	border-bottom: 2px ridge #fff;
+	font-weight: bold;
+	height: 20px;
+	padding-left: 5px;
+}
+
+#sitename a
+{
+	color: #333;
+}
+
+#top
+{
+	background-color: #537991;
+	border-width: 0px;
+	border-collapse: collapse;
+	padding: 0px;
+	margin: 0px;
+}
+
+#top li a
+{
+	color: #FFFFFF;
+	text-decoration: none;
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+#topnav
+{
+	margin-left: 0;
+	padding-left: 0;
+	display: inline;
+	border-bottom: 1px solid #000;
+}
+
+#topnav li
+{
+	background-color: #999999;
+	border: 1px solid #000;
+	display: inline;
+	height: 15px;
+	list-style: none;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding: 0px 5px 0px 5px;
+	text-align: center;
+
+	/* Gecko */
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	
+	/* CSS3 */
+	border-radius-topleft: 10px;
+	border-radius-topright: 10px;
+}
+
+#topnav li.navspacer
+{
+	background: transparent;
+	border: 0px;
+}
+
+#topnav li.navtabnow
+{
+	background-color: #fff;
+	border-bottom: 1px solid #fff;
+	display: inline;
+	list-style: none;	
+}
+
+#topnav li.navtabnow a
+{
+	color: #537991;
+	text-decoration:none;
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+/* Module Specific */
+div.news
+{
+	margin: 0px 20px 0px 0px;
+}
+
+div.newscontent
+{
+	background-color: #fff;
+	padding: 10px;
+}

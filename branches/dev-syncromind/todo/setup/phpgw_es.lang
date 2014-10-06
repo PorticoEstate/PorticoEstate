@@ -1,0 +1,32 @@
+access type	todo	es	Tipo de Acceso
+add main project	todo	es	Agregar Proyecto Principal
+add sub project	todo	es	Agregar SubProyecto
+addsub	todo	es	Agregar Sub
+are you sure you want to delete this entry	todo	es	Esta seguro de querer borrar esta entrada?
+completed	todo	es	completada
+created by	todo	es	Creado por
+date due	todo	es	Fecha pautada
+days datedue	todo	es	Dias hasta la Fecha pautada
+Description can not exceed 8000 characters in length	todo	es	¡ La descripción no debe exceder 8000 caracteres de longitud !
+do you also want to delete all sub projects ?	todo	es	¿Desea tambien eliminar todos los subproyectos?
+edit main project	todo	es	Editar proyecto principal
+edit sub project	todo	es	Editar subproyecto
+Ending date can not be before start date	todo	en	¡ La fecha de finalización no debe ser previa a la de inicio !
+last updated	todo	es	Ultima Actualización
+or: days from startdate:	todo	es	o: dias desde la fecha de inicio
+or: select for today:	todo	es	o: seleccionar para hoy
+parent project	todo	es	Proyecto Padre
+please enter a title	todo	es	Por favor introduzca un título
+project description	todo	es	Descripción del proyecto
+status	todo	es	Estado
+todo	common	es	Tareas
+todo list - add	todo	es	Lista de tareas - agregar
+to do list	common	es	Lista de tareas
+todo list	common	es	Lista de tareas
+todo list - edit	todo	es	Lista de tareas - editar
+urgency	todo	es	Urgencia
+view matrix of actual month	todo	es	Ver matriz del mes actual
+which groups	todo	es	Que grupos
+You can only enter numbers for days from now	todo	es	Usted solo puede introducir numeros para dias desde ahora
+You have entered an ending invalid date	todo	es	¡ Ha introducido una fecha de finalización invalida !
+You have entered an starting invalid date	todo	es	¡ Ha introducido una fecha de inicio invalida !
