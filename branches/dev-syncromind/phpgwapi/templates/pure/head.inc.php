@@ -8,7 +8,7 @@
 	phpgwapi_jquery::load_widget('core');
 
 	phpgw::import_class('phpgwapi.yui');
-//	phpgwapi_yui::load_widget('button');
+	phpgwapi_yui::load_widget('button');
 //	phpgwapi_yui::load_widget('container');
 
 	$javascripts[] = "/phpgwapi/js/SlickNav/jquery.slicknav.js";
