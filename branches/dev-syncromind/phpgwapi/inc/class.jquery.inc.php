@@ -89,6 +89,18 @@
 
 					break;
 
+				case 'tabview':
+					$load = array
+					(
+						"js/jquery-2.1.1{$_type}",
+						"js/tabs/jquery.responsiveTabs.min"
+					);
+
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/responsive-tabs.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/style.css");
+
+					break;
+				
 				default:
 					$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
 					trigger_error(lang($err, $widget), E_USER_WARNING);
@@ -109,4 +121,62 @@
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
 
+		public static function tabview_generate($tabs, $selection)
+		{
+			self::load_widget('tabview');
+			$output = <<<HTML
+				<div id="horizontalTab">
+					<ul>
+
+HTML;
+			foreach($tabs as $id => $tab)
+			{
+				$selected = $id == $selection ? ' class="selected"' : '';
+				$label = $tab['label'];
+				$_function = '';
+				if(isset($tab['function']))
+				{
+					$_function = " onclick=\"javascript: {$tab['function']};\"";
+				}
+
+				if(!isset($tab['link']) && !isset($tab['function']))
+				{
+					$selected = $selected ? $selected : ' class="disabled"';
+					$output .= <<<HTML
+						<li{$selected}><a><em>{$label}</em></a></li>
+HTML;
+				}
+				else
+				{
+					$output .= <<<HTML
+						<li{$selected}><a href="{$tab['link']}"{$_function}><em>{$label}</em></a></li>
+HTML;
+				
+				}
+			}
+			$output .= <<<HTML
+					</ul>
+				</div>
+
+HTML;
+			$js = <<<JS
+			$(document).ready(function () {
+            $('#horizontalTab').responsiveTabs({
+                rotate: false,
+                startCollapsed: 'accordion',
+                collapsible: 'accordion',
+                setHash: true,
+                activate: function(e, tab) {
+                    $('.info').html('Tab <strong>' + tab.id + '</strong> activated!');
+                },
+                activateState: function(e, state) {
+                    //console.log(state);
+                    $('.info').html('Switched from <strong>' + state.oldState + '</strong> state to <strong>' + state.newState + '</strong> state!');
+                }
+            });
+			$('#horizontalTab').responsiveTabs('activate', 1);
+JS;
+			return $output;
+		}
+		
 	}
