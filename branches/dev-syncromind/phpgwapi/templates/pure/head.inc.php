@@ -10,7 +10,7 @@
 	phpgw::import_class('phpgwapi.yui');
 	phpgwapi_yui::load_widget('button');
 //	phpgwapi_yui::load_widget('container');
-
+        $GLOBALS['phpgw_info']['server']['no_jscombine']=true;
 	$javascripts[] = "/phpgwapi/js/SlickNav/jquery.slicknav.js";
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
