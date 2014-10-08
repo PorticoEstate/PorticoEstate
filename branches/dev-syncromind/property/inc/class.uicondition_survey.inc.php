@@ -27,10 +27,10 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
 
-	class property_uicondition_survey extends phpgwapi_uicommon
+	class property_uicondition_survey extends phpgwapi_uicommon_jquery
 	{
 
 		private $bo;
@@ -120,7 +120,7 @@
 				return $this->query();
 			}
 
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
+			//self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 	//		phpgwapi_yui::load_widget('datatable');
 	//		phpgwapi_yui::load_widget('paginator');
 
@@ -175,7 +175,7 @@
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+//							'formatter' => 'YAHOO.portico.formatLink'
 						),
 		/*				array(
 							'key' => 'title',
@@ -215,7 +215,9 @@
 						),
 						array(
 							'key' => 'link',
-							'hidden' => true
+							'label' => 'dummy',
+							'hidden' => true,
+							'sortable' => false,
 						)
 					)
 				),
@@ -297,7 +299,7 @@
 					);
 			}
 
-			self::render_template_xsl('datatable_common', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 
@@ -307,10 +309,15 @@
 		 */
 		public function query()
 		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			
+
 			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', 0),
-				'query' => phpgw::get_var('query'),
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search,
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
@@ -329,13 +336,14 @@
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['start'] = $params['start'];
-			$result_data['sort'] = $params['sort'];
-			$result_data['dir'] = $params['dir'];
+//			$result_data['start'] = $params['start'];
+//			$result_data['sort'] = $params['sort'];
+//			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
 
 			array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
 
-			return $this->yui_results($result_data);
+			return $this->jquery_results($result_data);
 		}
 
 
