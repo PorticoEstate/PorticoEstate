@@ -400,7 +400,7 @@
 
 			phpgwapi_cache::session_clear('property.request','session_data');
 
-			phpgwapi_yui::tabview_setup('survey_edit_tabview');
+			//phpgwapi_jquery::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
@@ -520,7 +520,7 @@
 				'categories'					=> array('options' => $categories),
 				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 						=> $mode == 'edit',
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'multiple_uploader'				=> $mode == 'edit' ? true : '',
 			);
 
