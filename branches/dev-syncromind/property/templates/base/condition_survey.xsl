@@ -42,8 +42,11 @@
 						</xsl:when>
 					</xsl:choose>
 				</dl>
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				
 				<div class="yui-content">
+					
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				
 				<div id="generic" class="content-wrp">
 
 				<dl class="proplist-col">
