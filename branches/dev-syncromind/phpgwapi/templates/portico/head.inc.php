@@ -14,6 +14,8 @@
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
+	
+	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
 
 	$javascripts = array();
 
