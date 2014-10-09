@@ -93,7 +93,7 @@
 					$load = array
 					(
 						"js/jquery-2.1.1{$_type}",
-						"js/tabs/jquery.responsiveTabs.min"
+						"tabs/jquery.responsiveTabs{$_type}"
 					);
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/responsive-tabs.css");
@@ -125,9 +125,7 @@
 		{
 			self::load_widget('tabview');
 			$output = <<<HTML
-				<div id="horizontalTab">
 					<ul>
-
 HTML;
 			$disabled = array();
 			$tab_map = array();
@@ -137,7 +135,7 @@ HTML;
 				$tab_map[$id] = $i;
 				$i++;
 
-				$selected = in_array($selection,$tab_map) ? $tab_map[$selection] : 1;
+				$selected = in_array($selection,$tab_map) ? $tab_map[$selection] : 0;
 
 				$label = $tab['label'];
 				$_function = '';
@@ -146,50 +144,54 @@ HTML;
 					$_function = " onclick=\"javascript: {$tab['function']};\"";
 				}
 
-				if(!isset($tab['link']) && !isset($tab['function']))
+				if(true)
+				//if(!isset($tab['link']) && !isset($tab['function']))
 				{
-					if(in_array($selection,$tab_map))
-					{
+					//if(in_array($selection,$tab_map))
+					//{
 						$disabled[] = $tab_map[$selection];
-					}
-					$selected = $selected ? $selected : ' class="disabled"';
+					//}
+					//$selected = $selected ? $selected : ' class="disabled"';
 					$output .= <<<HTML
-						<li{$selected}><a><em>{$label}</em></a></li>
+						<li><a>{$label}</a></li>
 HTML;
 				}
 				else
 				{
 					$output .= <<<HTML
-						<li{$selected}><a href="{$tab['link']}"{$_function}><em>{$label}</em></a></li>
+						<li><a href="{$tab['link']}"{$_function}>{$label}</a></li>
 HTML;
 				
 				}
 			}
+			
+			
 			$disabled_js = '[' . explode(',', $disabled) .']';
 
 			$output .= <<<HTML
 					</ul>
-				</div>
-
 HTML;
 			$js = <<<JS
-			$(document).ready(function () {
-            $('#horizontalTab').responsiveTabs({
-                rotate: false,
-                startCollapsed: 'accordion',
-                collapsible: 'accordion',
-                setHash: true,
-				disabled: $disabled_js,
-                activate: function(e, tab) {
-                    $('.info').html('Tab <strong>' + tab.id + '</strong> activated!');
-                },
-                activateState: function(e, state) {
-                    //console.log(state);
-                    $('.info').html('Switched from <strong>' + state.oldState + '</strong> state to <strong>' + state.newState + '</strong> state!');
-                }
-            });
-			$('#horizontalTab').responsiveTabs('activate', $selected);
+			$(document).ready(function () 
+			{
+				$('.yui-content').responsiveTabs({
+					startCollapsed: 'accordion',
+					collapsible: 'accordion',
+					rotate: false,
+					disabled: $disabled_js,
+					startCollapsed: 'accordion',
+					collapsible: 'accordion',
+					setHash: true,
+					activate: function(e, tab) {
+						$('.info').html('Tab <strong>' + tab.id + '</strong> activated!');
+					}
+					
+				});
+
+				$('.yui-content').responsiveTabs('activate', $selected);
+			});
 JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
 			return $output;
 		}
 		
