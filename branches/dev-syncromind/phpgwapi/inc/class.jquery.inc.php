@@ -133,9 +133,6 @@ HTML;
 			foreach($tabs as $id => $tab)
 			{
 				$tab_map[$id] = $i;
-				$i++;
-
-				$selected = in_array($selection,$tab_map) ? $tab_map[$selection] : 0;
 
 				$label = $tab['label'];
 				$_function = '';
@@ -144,13 +141,9 @@ HTML;
 					$_function = " onclick=\"javascript: {$tab['function']};\"";
 				}
 
-				if(!isset($tab['link']) && !isset($tab['function']))
+				if(empty($tab['link']) && empty($tab['function']))
 				{
-					//if(in_array($selection,$tab_map))
-//					{
-						$disabled[] = $tab_map[$selection];
-//					}
-					//$selected = $selected ? $selected : ' class="disabled"';
+					$disabled[] = $i;
 					$output .= <<<HTML
 						<li><a href="{$tab['link']}">{$label}</a></li>
 HTML;
@@ -162,9 +155,11 @@ HTML;
 HTML;
 				
 				}
+				$i++;
 			}
-			
-			$disabled_js = '[' . explode(',', $disabled) .']';
+			$selected = in_array($selection,$tab_map) ? $tab_map[$selection] : 0;
+
+			$disabled_js = '[' . implode(',', $disabled) .']';
 
 			$output .= <<<HTML
 					</ul>
@@ -186,7 +181,7 @@ HTML;
 					
 				});
 
-				$('.yui-content').responsiveTabs('activate', $selected);
+				$('#tab-content').responsiveTabs('activate', $selected);
 			});
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
