@@ -129,7 +129,7 @@
 HTML;
 			$disabled = array();
 			$tab_map = array();
-			$i = 1;
+			$i = 0;
 			foreach($tabs as $id => $tab)
 			{
 				$tab_map[$id] = $i;
@@ -144,16 +144,15 @@ HTML;
 					$_function = " onclick=\"javascript: {$tab['function']};\"";
 				}
 
-				if(true)
-				//if(!isset($tab['link']) && !isset($tab['function']))
+				if(!isset($tab['link']) && !isset($tab['function']))
 				{
 					//if(in_array($selection,$tab_map))
-					//{
+//					{
 						$disabled[] = $tab_map[$selection];
-					//}
+//					}
 					//$selected = $selected ? $selected : ' class="disabled"';
 					$output .= <<<HTML
-						<li><a>{$label}</a></li>
+						<li><a href="{$tab['link']}">{$label}</a></li>
 HTML;
 				}
 				else
@@ -165,7 +164,6 @@ HTML;
 				}
 			}
 			
-			
 			$disabled_js = '[' . explode(',', $disabled) .']';
 
 			$output .= <<<HTML
@@ -174,7 +172,7 @@ HTML;
 			$js = <<<JS
 			$(document).ready(function () 
 			{
-				$('.yui-content').responsiveTabs({
+				$('#tab-content').responsiveTabs({
 					startCollapsed: 'accordion',
 					collapsible: 'accordion',
 					rotate: false,
