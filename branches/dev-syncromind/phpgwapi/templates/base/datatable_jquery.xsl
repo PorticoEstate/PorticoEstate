@@ -318,7 +318,7 @@ toolbar
 					<xsl:if test="formatter">
 					 render: function (dummy1, dummy2, oData) {
 							try {
-								var ret = <xsl:value-of select="formatter"/>(oData);
+								var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
 							}
 							catch(err) {
 								return err.message;

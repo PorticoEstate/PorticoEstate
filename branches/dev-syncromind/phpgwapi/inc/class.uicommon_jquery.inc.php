@@ -67,7 +67,8 @@
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 				self::add_javascript('phpgwapi', $yui, 'common.js');
 			}
-			//self::add_javascript('phpgwapi', "jquery", 'common.js');
+
+			self::add_javascript('phpgwapi', "jquery", 'common.js');
 
 			$this->url_prefix = str_replace('_', '.', get_class($this));
 
