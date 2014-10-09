@@ -324,7 +324,7 @@
 		}
 		public function add_jquery_translation(&$data)
 		{
-//			$this->add_template_file('yui_phpgw_i18n');
+			$this->add_template_file('jquery_phpgw_i18n');
 			$previous = lang('prev');
 			$next = lang('next');
 			$first = lang('first');
@@ -406,7 +406,7 @@
 
 			$this->reset_flash_msgs();
 
-			//$this->add_yui_translation($data);
+//			$this->add_yui_translation($data);
 			$this->add_jquery_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 

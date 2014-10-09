@@ -129,9 +129,16 @@
 					<ul>
 
 HTML;
+			$disabled = array();
+			$tab_map = array();
+			$i = 1;
 			foreach($tabs as $id => $tab)
 			{
-				$selected = $id == $selection ? ' class="selected"' : '';
+				$tab_map[$id] = $i;
+				$i++;
+
+				$selected = in_array($selection,$tab_map) ? $tab_map[$selection] : 1;
+
 				$label = $tab['label'];
 				$_function = '';
 				if(isset($tab['function']))
@@ -141,6 +148,10 @@ HTML;
 
 				if(!isset($tab['link']) && !isset($tab['function']))
 				{
+					if(in_array($selection,$tab_map))
+					{
+						$disabled[] = $tab_map[$selection];
+					}
 					$selected = $selected ? $selected : ' class="disabled"';
 					$output .= <<<HTML
 						<li{$selected}><a><em>{$label}</em></a></li>
@@ -154,6 +165,8 @@ HTML;
 				
 				}
 			}
+			$disabled_js = '[' . explode(',', $disabled) .']';
+
 			$output .= <<<HTML
 					</ul>
 				</div>
@@ -166,6 +179,7 @@ HTML;
                 startCollapsed: 'accordion',
                 collapsible: 'accordion',
                 setHash: true,
+				disabled: $disabled_js,
                 activate: function(e, tab) {
                     $('.info').html('Tab <strong>' + tab.id + '</strong> activated!');
                 },
@@ -174,7 +188,7 @@ HTML;
                     $('.info').html('Switched from <strong>' + state.oldState + '</strong> state to <strong>' + state.newState + '</strong> state!');
                 }
             });
-			$('#horizontalTab').responsiveTabs('activate', 1);
+			$('#horizontalTab').responsiveTabs('activate', $selected);
 JS;
 			return $output;
 		}
