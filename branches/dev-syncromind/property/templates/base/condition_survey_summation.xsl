@@ -18,7 +18,7 @@
 </func:function>
 
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
-		<xsl:call-template name="yui_phpgw_i18n"/>
+		<xsl:call-template name="jquery_phpgw_i18n"/>
 
 		<div class="yui-navset" id="survey_edit_tabview">
 		<h1>
