@@ -316,7 +316,7 @@ toolbar
 					visible			:false,
 					</xsl:if>
 					<xsl:if test="formatter">
-					 render: function (dummy1, dummy2, oData {
+					 render: function (dummy1, dummy2, oData) {
 							try {
 								var ret = <xsl:value-of select="formatter"/>(oData);
 							}
