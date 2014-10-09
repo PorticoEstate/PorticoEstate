@@ -65,8 +65,9 @@
 			if($yui == 'yui3')
 			{
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-				self::add_javascript('phpgwapi', $yui, 'common.js');
 			}
+
+			self::add_javascript('phpgwapi', $yui, 'common.js');
 
 			self::add_javascript('phpgwapi', "jquery", 'common.js');
 
