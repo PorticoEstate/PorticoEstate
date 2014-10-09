@@ -403,7 +403,7 @@
 			//phpgwapi_jquery::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
-			$active_tab = 'generic';
+			$active_tab = 'import';
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
 			$tabs['request']	= array('label' => lang('request'), 'link' => null);
 			$tabs['summation']	= array('label' => lang('summation'), 'link' => null);
