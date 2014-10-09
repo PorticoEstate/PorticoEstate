@@ -175,7 +175,7 @@
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
-//							'formatter' => 'YAHOO.portico.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 		/*				array(
 							'key' => 'title',
