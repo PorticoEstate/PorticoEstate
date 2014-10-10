@@ -15,16 +15,15 @@ JqueryPortico.formatLink = function(key, oData) {
 JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, label_attr) {
 	$(document).ready(function () 
 	{
-		var oArgs = {menuaction:'property.uicondition_survey.get_users'};
-		var strURL = phpGWLink('index.php', oArgs, true);
-
-		$("#coordinator_name").autocomplete({
+		$("#" + field).autocomplete({
 			source: function( request, response ) {
+				//console.log(request.term);
 				$.ajax({
-					url: strURL,
+					url: baseUrl,
 					dataType: "json",
 					data: {
-						location_name: request.term,
+						//location_name: request.term,
+						query: request.term,
 						phpgw_return_as: "json"
 					},
 					success: function( data ) {
@@ -47,6 +46,7 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 			}
         });
 	});
+
 
 };
 		
