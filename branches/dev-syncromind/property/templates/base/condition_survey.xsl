@@ -189,12 +189,12 @@
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <div class="autocomplete">
+                                    <!--div class="autocomplete"-->
                                         <input type="hidden" id="coordinator_id" name="values[coordinator_id]"  value="{survey/coordinator_id}"/>
                                         <input type="text" id="coordinator_name" name="values[coordinator_name]" value="{survey/coordinator_name}">
                                         </input>
                                         <div id="coordinator_container"/>
-                                    </div>
+                                    <!--/div-->
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="survey/coordinator_name" />
