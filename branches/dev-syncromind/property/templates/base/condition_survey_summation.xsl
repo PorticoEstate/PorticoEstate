@@ -54,7 +54,9 @@
 					<label><xsl:value-of select="php:function('lang', 'summation')"/></label>
 				</dt>
 				<dd>
-					<div style="clear:both;" id="datatable-container_0"></div>
+				<table id="datatable-container_0" class="display cell-border compact responsive no-wrap" width="100%">
+				</table>					
+					<!--<div style="clear:both;" id="datatable-container_0"></div>-->
 				</dd>
 			</dl>
 	</div>
@@ -119,6 +121,7 @@
 <xsl:template name="datasource-definition">
 	<script>
 		var columnDefs = [];
+		var params = [];
 		YAHOO.util.Event.onDOMReady(function(){
 			<xsl:for-each select="datatable_def">
 				columnDefs = [
@@ -144,19 +147,22 @@
 				</xsl:for-each>
 				];
 			
-			YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
+			<!--YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);-->
+			params = JqueryPortico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
+			
+			<![CDATA[
+
+				$('#' + params['container']).dataTable({
+					"processing": true,
+					"serverSide": true,
+					"ajax": params['url'],
+					"columns": params['columns'],
+					"order": [[1, 'asc']]
+				});
+			]]>
+				
 		</xsl:for-each>
 
-		var PaginatorName0 = 'paginator_containerdatatable-container_0';
-		var DatatableName0 = 'datatable_containerdatatable-container_0';
-
-		var  myPaginator_0 = YAHOO.portico.Paginator[PaginatorName0];
-		var  myDataTable_0 = YAHOO.portico.DataTable[DatatableName0];
-
-		myDataTable_0.subscribe("renderEvent", function()
-		{
-			addFooterDatatable0(myPaginator_0,myDataTable_0);
-		});
 
   	});
   </script>
