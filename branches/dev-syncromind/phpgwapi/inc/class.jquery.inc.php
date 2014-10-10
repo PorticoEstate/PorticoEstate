@@ -75,6 +75,15 @@
 //						"js/jquery-migrate-1.2.1"
 					);
 					break;
+                                    
+                                case 'validator':
+					$load = array
+					(
+                                            "js/jquery-2.1.1{$_type}",
+                                            "validator/jquery.form-validator{$_type}"
+					);
+                                        $GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/css/main.css");
+					break;
 
 				case 'menu':
 				case 'autocomplete':
@@ -120,6 +129,25 @@
 			}
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
+                
+                public static function formvalidator_generate($modules=array())
+                {
+                    self::load_widget('validator');
+                    $modules_js = '"' . implode(',', $modules). '"';
+                    
+                    $js = <<<JS
+                            
+			$(document).ready(function () 
+			{
+                            $.validate({
+                                modules : $modules_js,
+                                form: '#form'
+                            });
+			});
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+			return $output;
+                }
 
 		public static function tabview_generate($tabs, $selection)
 		{
