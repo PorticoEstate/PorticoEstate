@@ -4,9 +4,9 @@
 	</xsl:template>
 
 	<!-- New template-->
-	<xsl:template match="location_data2" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
+	<xsl:template match="location_data2" xmlns:php="http://php.net/xsl">
 		<xsl:for-each select="location">
-			<dt>
+			<div class="pure-control-group">
 				<label title="{statustext}">
 					<xsl:choose>
 						<xsl:when test="lookup_link=1">
@@ -19,8 +19,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</label>
-			</dt>
-			<dd>
+			
 				<xsl:choose>
 					<xsl:when test="readonly=1">
 						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
@@ -28,11 +27,8 @@
 								<xsl:attribute name="title">
 									<xsl:value-of select="statustext"/>
 								</xsl:attribute>
-								<xsl:attribute name="formvalidator:FormField">
-									<xsl:text>yes</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="formvalidator:Type">
-									<xsl:text>TextBaseField</xsl:text>
+								<xsl:attribute name="data-validation">
+									<xsl:text>number</xsl:text>
 								</xsl:attribute>
 							</xsl:if>
 						</input>
@@ -65,6 +61,6 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
-			</dd>
+			</div>
 		</xsl:for-each>
 	</xsl:template>
