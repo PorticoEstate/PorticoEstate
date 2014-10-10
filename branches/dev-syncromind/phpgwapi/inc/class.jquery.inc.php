@@ -1,141 +1,134 @@
 <?php
+
+/**
+ * phpGroupWare jQuery wrapper class
+ *
+ * @author Sigurd Nes
+ * @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
+ * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
+ * @package phpgroupware
+ * @subpackage phpgwapi
+ * @version $Id$
+ */
+/*
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * phpGroupWare jQuery wrapper class
+ *
+ * @package phpgroupware
+ * @subpackage phpgwapi
+ * @category gui
+ */
+class phpgwapi_jquery {
+
 	/**
-	 * phpGroupWare jQuery wrapper class
-	 *
-	 * @author Sigurd Nes
-	 * @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
-	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
-	 * @package phpgroupware
-	 * @subpackage phpgwapi
-	 * @version $Id$
+	 * @var int $counter the widget id counter
 	 */
-
-	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 2 of the License, or
-	   (at your option) any later version.
-
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU General Public License for more details.
-
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 */
+	private static $counter = 0;
 
 	/**
-	 * phpGroupWare jQuery wrapper class
+	 * Load all the dependencies for a YUI widget
 	 *
-	 * @package phpgroupware
-	 * @subpackage phpgwapi
-	 * @category gui
+	 * @param string $widget the name of the widget to load, such as autocomplete
+	 *
+	 * @return string yahoo namespace for widget - empty string on failure
+	 *
+	 * @internal this does not render the widget it only includes the header js files
 	 */
+	public static function load_widget($widget) {
+		$_type = '.min'; // save some download
 
-
-	class phpgwapi_jquery
-	{
-		/**
-		* @var int $counter the widget id counter
-		*/
-		private static $counter = 0;
-
-		/**
-		* Load all the dependencies for a YUI widget
-		*
-		* @param string $widget the name of the widget to load, such as autocomplete
-		*
-		* @return string yahoo namespace for widget - empty string on failure
-		*
-		* @internal this does not render the widget it only includes the header js files
-		*/
-		public static function load_widget($widget)
-		{
-			$_type = '.min';	// save some download
-
-			$load = array();
-			switch ( $widget )
-			{
-				case 'core':
-					$load = array
+		$load = array();
+		switch ($widget) {
+			case 'core':
+				$load = array
 					(
-						//"js/jquery-1.11.1{$_type}",
-                        "js/jquery-2.1.1{$_type}",
+					//"js/jquery-1.11.1{$_type}",
+					"js/jquery-2.1.1{$_type}",
 //						"js/jquery-migrate-1.2.1"
-					);
-					break;
-				
-				case 'datepicker':
-					$load = array
+				);
+				break;
+
+			case 'datepicker':
+				$load = array
 					(
-						"js/jquery-2.1.1{$_type}",
-						"js/jquery-ui-1.11.1{$_type}",
-						"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
+					"js/jquery-2.1.1{$_type}",
+					"js/jquery-ui-1.11.1{$_type}",
+					"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 //						"js/jquery-migrate-1.2.1"
-					);
-					break;
-                                    
-                                case 'validator':
-					$load = array
-					(
-                                            "js/jquery-2.1.1{$_type}",
-                                            "validator/jquery.form-validator{$_type}"
-					);
-                                        $GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/css/main.css");
-					break;
+				);
+				break;
 
-				case 'menu':
-				case 'autocomplete':
-					$load = array
+			case 'validator':
+				$load = array
 					(
-						"js/jquery-2.1.1{$_type}",
-						"js/jquery-ui-1.11.1{$_type}",
+					"js/jquery-2.1.1{$_type}",
+					"validator/jquery.form-validator{$_type}"
+				);
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/css/main.css");
+				break;
+
+			case 'menu':
+			case 'autocomplete':
+				$load = array
+					(
+					"js/jquery-2.1.1{$_type}",
+					"js/jquery-ui-1.11.1{$_type}",
 //						"js/jquery-migrate-1.2.1"
-					);
+				);
 
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-1.11.1{$_type}.css");
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-1.11.1{$_type}.css");
 
-					break;
+				break;
 
-				case 'tabview':
-					$load = array
+			case 'tabview':
+				$load = array
 					(
-						"js/jquery-2.1.1{$_type}",
-						"tabs/jquery.responsiveTabs{$_type}"
-					);
+					"js/jquery-2.1.1{$_type}",
+					"tabs/jquery.responsiveTabs{$_type}"
+				);
 
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/responsive-tabs.css");
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/style.css");
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/responsive-tabs.css");
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/style.css");
 
-					break;
-				
-				default:
-					$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
-					trigger_error(lang($err, $widget), E_USER_WARNING);
-					return '';
-			}
+				break;
 
-			foreach ( $load as $script )
-			{
-				$test = $GLOBALS['phpgw']->js->validate_file('jquery', $script);
-
-				if ( !$test )
-				{
-					$err = "Unable to load jQuery script '%1' when attempting to load widget: '%2'";
-					trigger_error(lang($err, $script, $widget), E_USER_WARNING);
-					return '';
-				}
-			}
-			return "phpgroupware.{$widget}" . ++self::$counter;
+			default:
+				$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
+				trigger_error(lang($err, $widget), E_USER_WARNING);
+				return '';
 		}
-                
-                public static function formvalidator_generate($modules=array())
-                {
-                    self::load_widget('validator');
-                    $modules_js = '"' . implode(',', $modules). '"';
-                    
-                    $js = <<<JS
+
+		foreach ($load as $script) {
+			$test = $GLOBALS['phpgw']->js->validate_file('jquery', $script);
+
+			if (!$test) {
+				$err = "Unable to load jQuery script '%1' when attempting to load widget: '%2'";
+				trigger_error(lang($err, $script, $widget), E_USER_WARNING);
+				return '';
+			}
+		}
+		return "phpgroupware.{$widget}" . ++self::$counter;
+	}
+
+	public static function formvalidator_generate($modules = array()) {
+		self::load_widget('validator');
+		$modules_js = '"' . implode(',', $modules) . '"';
+
+		$js = <<<JS
                             
 			$(document).ready(function () 
 			{
@@ -145,54 +138,47 @@
                             });
 			});
 JS;
-			$GLOBALS['phpgw']->js->add_code('', $js);
-			return $output;
-                }
+		$GLOBALS['phpgw']->js->add_code('', $js);
+		return $output;
+	}
 
-		public static function tabview_generate($tabs, $selection)
-		{
-			self::load_widget('tabview');
-			$output = <<<HTML
+	public static function tabview_generate($tabs, $selection) {
+		self::load_widget('tabview');
+		$output = <<<HTML
 					<ul>
 HTML;
-			$disabled = array();
-			$tab_map = array();
-			$i = 0;
-			foreach($tabs as $id => $tab)
-			{
-				$tab_map[$id] = $i;
+		$disabled = array();
+		$tab_map = array();
+		$i = 0;
+		foreach ($tabs as $id => $tab) {
+			$tab_map[$id] = $i;
 
-				$label = $tab['label'];
-				$_function = '';
-				if(isset($tab['function']))
-				{
-					$_function = " onclick=\"javascript: {$tab['function']};\"";
-				}
+			$label = $tab['label'];
+			$_function = '';
+			if (isset($tab['function'])) {
+				$_function = " onclick=\"javascript: {$tab['function']};\"";
+			}
 
-				if(empty($tab['link']) && empty($tab['function']))
-				{
-					$disabled[] = $i;
-					$output .= <<<HTML
+			if (empty($tab['link']) && empty($tab['function'])) {
+				$disabled[] = $i;
+				$output .= <<<HTML
 						<li><a href="{$tab['link']}">{$label}</a></li>
 HTML;
-				}
-				else
-				{
-					$output .= <<<HTML
+			} else {
+				$output .= <<<HTML
 						<li><a href="{$tab['link']}"{$_function}>{$label}</a></li>
 HTML;
-				
-				}
-				$i++;
 			}
-			$selected = in_array($selection,$tab_map) ? $tab_map[$selection] : 0;
+			$i++;
+		}
+		$selected = in_array($selection, $tab_map) ? $tab_map[$selection] : 0;
 
-			$disabled_js = '[' . implode(',', $disabled) .']';
+		$disabled_js = '[' . implode(',', $disabled) . ']';
 
-			$output .= <<<HTML
+		$output .= <<<HTML
 					</ul>
 HTML;
-			$js = <<<JS
+		$js = <<<JS
 			$(document).ready(function () 
 			{
 				$('#tab-content').responsiveTabs({
@@ -212,8 +198,8 @@ HTML;
 				$('#tab-content').responsiveTabs('activate', $selected);
 			});
 JS;
-			$GLOBALS['phpgw']->js->add_code('', $js);
-			return $output;
-		}
-		
+		$GLOBALS['phpgw']->js->add_code('', $js);
+		return $output;
 	}
+
+}
