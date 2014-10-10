@@ -52,6 +52,11 @@
 //	    YAHOO.portico.autocompleteHelper(strURL, 
 //		'coordinator_name', 'coordinator_id', 'coordinator_container');
 //	});
+//	
+//	call to AutoCompleteHelper JQUERY
+	var oArgs = {menuaction:'property.uicondition_survey.get_users'};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.autocompleteHelper(strURL, 'coordinator_name', 'coordinator_id', 'coordinator_container');
 
 	this.fileuploader = function()
 	{
