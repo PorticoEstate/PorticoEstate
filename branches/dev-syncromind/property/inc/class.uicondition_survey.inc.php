@@ -696,7 +696,7 @@
 
 		function get_summation()
 		{
-			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+			/*$id 	= phpgw::get_var('id', 'int', 'REQUEST');
 			$year 	= phpgw::get_var('year', 'int', 'REQUEST');
 
 			if( !$this->acl_read)
@@ -737,7 +737,52 @@
 					'activePage' => floor($start / $num_rows) + 1
 				)
 			);
-			return $data;
+			return $data;*/
+			
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+			$year 	= phpgw::get_var('year', 'int', 'REQUEST');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+
+			$values = $this->bo->get_summation($id, $year);
+
+			$total_records = count($values);
+			
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
+			$allrows = true;
+			$num_rows = $total_records;
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+			
+
+			$result_data = array('results' => $out);
+
+			$result_data['total_records'] = $total_records;
+//			$result_data['start'] = $params['start'];
+//			$result_data['sort'] = $params['sort'];
+//			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
+
+
+			return $this->jquery_results($result_data);
+			
 		}
 
 
