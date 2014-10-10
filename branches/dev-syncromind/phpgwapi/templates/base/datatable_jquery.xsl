@@ -297,24 +297,45 @@ toolbar
 		<thead>
 			<tr>
 				<xsl:for-each select="//datatable/field">
-					<th>
-						<xsl:value-of select="label"/>
-					</th>
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								<th>
+									<xsl:value-of select="label"/>
+								</th>
+								</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<th>
+								<xsl:value-of select="label"/>
+							</th>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:for-each>
 			</tr>
 		</thead>
 	</table>
 	<script>
-		JqueryPortico.columns = [
+		var columns = [
 			<xsl:for-each select="//datatable/field">
 				{
 					data:			"<xsl:value-of select="key"/>",
 					class:			"<xsl:value-of select="className"/>",
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-					<xsl:if test="hidden">
-					class:			'none', //FIXME - virker ikke...'responsive' plukker den fram igjen
-					visible			:false,
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								visible			:true,
+							</xsl:if>
+							<xsl:if test="hidden =1">
+								class:			'none', //FIXME - virker ikke...'responsive' plukker den fram igjen
+								visible			:false,
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+								visible			:true,
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:if test="formatter">
 					 render: function (dummy1, dummy2, oData) {
 							try {
@@ -331,6 +352,18 @@ toolbar
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
 		];
+<![CDATA[
+		JqueryPortico.columns = [];
+
+		for(i=0;i < columns.length;i++)
+		{
+			if ( columns[i]['visible'] == true )
+			{
+				JqueryPortico.columns.push(columns[i]);
+			}
+		}
+		console.log(JqueryPortico.columns);
+]]>
 	</script>
 
 	<script type="text/javascript" class="init">
