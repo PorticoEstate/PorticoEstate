@@ -1,0 +1,56 @@
+/* Form validator */
+
+.help-block {
+    display: inline;
+    padding-left: 6px;
+    font-size: 85%;
+}
+
+span.form-error.help-block {
+    display: block;
+    color: red;
+    margin-top: 6px;
+    padding-left: 0;
+}
+
+div.form-error {
+    padding: 6px 12px;
+    line-height: 180%;
+    background: #ffe5ed;
+    border-radius: 4px;
+    margin-bottom: 22px;
+    color: darkred;
+}
+
+input.valid {
+    background: url(../img/icon-ok.png) no-repeat right center #e3ffe5;
+    color: #002f00;
+    border-color: #96b796 !important;
+}
+
+input.error {
+    background: url(../img/icon-fail.png) no-repeat right center #ffebef;
+    color: #480000;
+}
+
+.form-suggest-element {
+    padding: 4px;
+}
+
+form.validating-server-side .server-validation {
+    background: url(../img/ajax-loader.gif?v=2) no-repeat center right #FFF;
+    opacity: 0.5;
+}
+
+.max-chars {
+    background: #EEE;
+    color: #999;
+}
+
+.form-help {
+    padding-left: 6px;
+    font-size: 90%;
+    color: #888;
+}
+
+
