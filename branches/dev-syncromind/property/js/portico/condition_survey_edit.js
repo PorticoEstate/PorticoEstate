@@ -57,6 +57,10 @@
 	var oArgs = {menuaction:'property.uicondition_survey.get_users'};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.autocompleteHelper(strURL, 'coordinator_name', 'coordinator_id', 'coordinator_container');
+	
+	var oArgs = {menuaction:'property.uicondition_survey.get_vendors'};
+	var strURL = phpGWLink('index.php', oArgs, true);
+    JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_container');
 
 	this.fileuploader = function()
 	{
