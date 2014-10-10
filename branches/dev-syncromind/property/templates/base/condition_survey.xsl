@@ -18,7 +18,7 @@
 </func:function>
 
 <!-- add / edit -->
-<xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
     <xsl:call-template name="jquery_phpgw_i18n"/>
 
     <div id="survey_edit_tabview">
@@ -32,6 +32,8 @@
             <xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.save')" />
         </xsl:variable>
 
+        <xsl:value-of select="validator"/>
+        
         <form name="form" class="pure-form pure-form-aligned" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
                             
             <dl>
@@ -76,39 +78,32 @@
                                 </xsl:choose>
                             </xsl:when>
                         </xsl:choose>
-
-                        <dt>
+                        
+                        <div class="pure-control-group">
                             <label for="name">
                                 <xsl:value-of select="php:function('lang', 'name')" />
                             </label>
-                        </dt>
-                        <dd>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
                                     <input id="title" name='values[title]' type="text" value="{survey/title}"
-                                                                       formvalidator:FormField="yes"
-                                                                       placeholder="title"
-                                                                       formvalidator:Type="TextBaseField">
+                                                                       data-validation="required"
+                                                                       placeholder="title">
                                     </input>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="survey/title" />
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </dd>
-
-
-                        <dt>
+                        </div>
+                        
+                        <div class="pure-control-group">
                             <label for="name">
                                 <xsl:value-of select="php:function('lang', 'description')" />
                             </label>
-                        </dt>
-                        <dd>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
                                     <textarea id="descr" name="values[descr]" rows="5" cols="60"
-                                                                          formvalidator:FormField="yes"
-                                                                          formvalidator:Type="TextBaseField">
+                                                                          data-validation="required">
                                         <xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
                                     </textarea>
                                 </xsl:when>
@@ -116,19 +111,15 @@
                                     <xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </dd>
+                        </div>
 
-                        <dt>
+                        <div class="pure-control-group">
                             <label for="category">
                                 <xsl:value-of select="php:function('lang', 'category')" />
                             </label>
-                        </dt>
-                        <dd>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <select id="cat_id" name="values[cat_id]"
-                                                                        formvalidator:FormField="yes"
-                                                                        formvalidator:Type="SelectField">
+                                    <select id="cat_id" name="values[cat_id]" data-validation="required">
                                         <xsl:apply-templates select="categories/options"/>
                                     </select>
                                 </xsl:when>
@@ -140,58 +131,45 @@
                                     </xsl:for-each>
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </dd>
-                        <dt>
+                        </div>
+                        
+                        <div class="pure-control-group">
                             <label for="multiplier">
                                 <xsl:value-of select="php:function('lang', 'multiplier')" />
                             </label>
-                        </dt>
-                        <dd>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
                                     <input id="multiplier" name='values[multiplier]' type="text" value="{survey/multiplier}"
-                                                                       formvalidator:FormField="yes" 
-                                                                       formvalidator:Type="DoubleField" 
-                                                                       formvalidator:min="1" 
-                                                                       formvalidator:maxDecimalPlaces="2" 
-                                                                       formvalidator:minInclusive="true" 
-                                                                       formvalidator:maxInclusive="true" /> 
+                                                                       data-validation="number" data-validation-allowing="float"/> 
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="survey/multiplier"/>
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </dd>
+                        </div>
 
-                        <dt>
+                        <div class="pure-control-group">
                             <label for="date">
                                 <xsl:value-of select="php:function('lang', 'date')" />
                             </label>
-                        </dt>
-                        <dd>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
                                     <input id="report_date" name='values[report_date]' type="text" value="{survey/report_date}"
-                                                                       formvalidator:FormField="yes"
-                                                                       formvalidator:type="TextBaseField"/>
+                                                                       data-validation="date" data-validation-format="dd/mm/yyyy"/>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="survey/report_date"/>
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </dd>
+                        </div>
 
-                        <dt>
+                        <div class="pure-control-group">
                             <label for="status">
                                 <xsl:value-of select="php:function('lang', 'status')" />
                             </label>
-                        </dt>
-                        <dd>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <select id="status_id" name="values[status_id]"
-                                                                        formvalidator:FormField="yes"
-                                                                        formvalidator:Type="SelectField">
+                                    <select id="status_id" name="values[status_id]" data-validation="required">
                                         <xsl:apply-templates select="status_list/options"/>
                                     </select>
                                 </xsl:when>
@@ -203,15 +181,12 @@
                                     </xsl:for-each>
                                 </xsl:otherwise>
                             </xsl:choose>
-
-                        </dd>
-                        <dt>
+                        </div>
+                        
+						<div class="pure-control-group">
                             <label for="coordinator">
                                 <xsl:value-of select="lang_coordinator" />
                             </label>
-                        </dt>
-                        <dd>
-
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
                                     <div class="autocomplete">
@@ -225,33 +200,26 @@
                                     <xsl:value-of select="survey/coordinator_name" />
                                 </xsl:otherwise>
                             </xsl:choose>
+						</div>
 
-                        </dd>
-
-
-
-                        <dt>
+                        <div class="pure-control-group">
                             <label for="vendor">
                                 <xsl:value-of select="php:function('lang', 'vendor')" />
                             </label>
-                        </dt>
-                        <dd>
-
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <div class="autocomplete">
+                                    <!--div class="autocomplete"-->
                                         <input type="hidden" id="vendor_id" name="values[vendor_id]"  value="{survey/vendor_id}"/>
                                         <input type="text" id="vendor_name" name="values[vendor_name]" value="{survey/vendor_name}">
                                         </input>
                                         <div id="vendor_container"/>
-                                    </div>
+                                    <!--/div-->
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="survey/vendor_name" />
                                 </xsl:otherwise>
                             </xsl:choose>
-
-                        </dd>
+                        </div>
 
 
                     </fieldset>
