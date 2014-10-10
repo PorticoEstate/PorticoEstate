@@ -521,6 +521,7 @@
 				'editable' 						=> $mode == 'edit',
 				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'multiple_uploader'				=> $mode == 'edit' ? true : '',
+                                'validator'                                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
