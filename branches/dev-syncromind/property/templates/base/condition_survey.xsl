@@ -595,7 +595,7 @@
 		}
 ]]>
 
-		JqueryPortico.inlineTableHelper2("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns);
+		JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns);
 
 	</script>
 </xsl:template>

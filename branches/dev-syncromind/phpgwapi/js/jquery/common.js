@@ -25,7 +25,7 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 //		columns.push({"data":colDefs[i]['key']});
 //	}
 
-	return {container:container, columns: columns, url: url};
+//	return {container:container, columns: columns, url: url};
 
 	$(document).ready(function ()
 	{
