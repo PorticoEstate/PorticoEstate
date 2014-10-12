@@ -253,8 +253,17 @@
                             </label>
                         </dt>
                         <dd>
-                            <div style="clear:both;" id="datatable-container_0"></div>
-                        </dd>
+                            <!--div style="clear:both;" id="datatable-container_0"></div-->
+							<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+										  <xsl:with-param name="container" select ='container'/>
+										  <xsl:with-param name="requestUrl" select ='requestUrl' />
+										  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										</xsl:call-template>
+									</xsl:if>
+							</xsl:for-each>
+						</dd>
 
                         <xsl:choose>
                             <xsl:when test="editable = 1">
@@ -295,8 +304,18 @@
                             </label>
                         </dt>
                         <dd>
-                            <div style="clear:both;" id="datatable-container_1"></div>
-                        </dd>
+                            <!--div style="clear:both;" id="datatable-container_1"></div-->
+							<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_1'">
+										<xsl:call-template name="table_setup">
+										  <xsl:with-param name="container" select ='container'/>
+										  <xsl:with-param name="requestUrl" select ='requestUrl' />
+										  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										</xsl:call-template>
+									</xsl:if>
+							</xsl:for-each>
+
+						</dd>
                     </dl>
                 </div>
                 <div id="summation">
@@ -307,7 +326,17 @@
                             </label>
                         </dt>
                         <dd>
-                            <div style="clear:both;" id="datatable-container_2"></div>
+                            <!--div style="clear:both;" id="datatable-container_2"></div-->
+							<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_2'">
+										<xsl:call-template name="table_setup">
+										  <xsl:with-param name="container" select ='container'/>
+										  <xsl:with-param name="requestUrl" select ='requestUrl' />
+										  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										</xsl:call-template>
+									</xsl:if>
+							</xsl:for-each>
+
                         </dd>
                     </dl>
                 </div>
@@ -433,7 +462,7 @@
             </xsl:for-each>
             ];
 			
-            YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
+ //           YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
         </xsl:for-each>
 
         var PaginatorName2 = 'paginator_containerdatatable-container_2';
@@ -489,5 +518,85 @@
             </dt>
         </xsl:when>
     </xsl:choose>
+</xsl:template>
+
+<xsl:template name="table_setup">
+	<xsl:param name="container" />
+	<xsl:param name="requestUrl" />
+	<xsl:param name="ColumnDefs" />
+	<table id="{$container}" class="display cell-border compact responsive no-wrap" width="100%">
+		<thead>
+			<tr>
+				<xsl:for-each select="$ColumnDefs">
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								<th>
+									<xsl:value-of select="label"/>
+								</th>
+								</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<th>
+								<xsl:value-of select="label"/>
+							</th>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
+		</thead>
+	</table>
+	<script>
+		var PreColumns = [
+				<xsl:for-each select="$ColumnDefs">
+				{
+					data:			"<xsl:value-of select="key"/>",
+					class:			"<xsl:value-of select="className"/>",
+					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								visible			:true,
+							</xsl:if>
+							<xsl:if test="hidden =1">
+								class:			'none',
+								visible			:false,
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+								visible			:true,
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:if test="formatter">
+					 render: function (dummy1, dummy2, oData) {
+							try {
+								var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
+							}
+							catch(err) {
+								return err.message;
+							}
+							return ret;
+                         },
+
+					</xsl:if>
+					defaultContent:	"<xsl:value-of select="defaultContent"/>"
+				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+			</xsl:for-each>
+		];
+<![CDATA[
+		columns = [];
+
+		for(i=0;i < PreColumns.length;i++)
+		{
+			if ( PreColumns[i]['visible'] == true )
+			{
+				columns.push(PreColumns[i]);
+			}
+		}
+]]>
+
+		JqueryPortico.inlineTableHelper2("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns);
+
+	</script>
 </xsl:template>
 

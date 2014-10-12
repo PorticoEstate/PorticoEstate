@@ -470,10 +470,10 @@
 //				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'condition_degree','label'=>lang('condition degree'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'score','label'=>lang('score'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'amount_investment','label'=>lang('investment'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'amount_operation','label'=>lang('operation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'amount_potential_grants','label'=>lang('potential grants'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-//				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'amount_investment','label'=>lang('investment'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'amount_operation','label'=>lang('operation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'amount_potential_grants','label'=>lang('potential grants'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+//				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 				array('key' => 'recommended_year','label'=>lang('recommended year'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'planned_year','label'=>lang('planned year'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'related','label'=>lang('related'),'sortable'=>false,'resizeable'=>true),
@@ -490,13 +490,13 @@
 			(
 				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'category','label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 			);
 
 			$datatable_def[] = array
@@ -646,7 +646,7 @@
 
 //------ Start pagination
 
-			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$total_records = count($files);
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
@@ -678,7 +678,8 @@
 					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}
-
+/*
+ * yui-result
 			$data = array(
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $total_records,
@@ -691,7 +692,14 @@
 				)
 			);
 			return $data;
-
+*/
+			//Jquery result
+			return array(
+				'recordsTotal'		=> $total_records,
+				'recordsFiltered'	=> $total_records,
+				'draw'				=> phpgw::get_var('draw', 'int'),
+				'data'				=> $values,
+			);
 		}
 
 		function get_summation()
@@ -755,7 +763,7 @@
 			$total_records = count($values);
 			
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
-			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 
 			$allrows = true;
 			$num_rows = $total_records;
@@ -771,17 +779,12 @@
 				$out = $values_part[$page];
 			}
 			
-
-			$result_data = array('results' => $out);
-
-			$result_data['total_records'] = $total_records;
-//			$result_data['start'] = $params['start'];
-//			$result_data['sort'] = $params['sort'];
-//			$result_data['dir'] = $params['dir'];
-			$result_data['draw'] = $draw;
-
-
-			return $this->jquery_results($result_data);
+			return array(
+				'recordsTotal'		=> $total_records,
+				'recordsFiltered'	=> $total_records,
+				'draw'				=> phpgw::get_var('draw', 'int'),
+				'data'				=> $out
+			);
 			
 		}
 
@@ -796,7 +799,7 @@
 			}
 
 			$borequest	= CreateObject('property.borequest');
-			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$sortKey = phpgw::get_var('sort', 'string', 'REQUEST', 'request_id');
 			$sortDir = phpgw::get_var('dir', 'string', 'REQUEST', 'ASC');
 
@@ -818,6 +821,7 @@
 			}
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+/* yui-data
 			$data = array(
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $total_records,
@@ -830,6 +834,14 @@
 				)
 			);
 			return $data;
+ *
+ */
+			return array(
+				'recordsTotal'		=> $total_records,
+				'recordsFiltered'	=> $total_records,
+				'draw'				=> phpgw::get_var('draw', 'int'),
+				'data'				=> $values,
+			);
 		}
 
 
@@ -1514,13 +1526,13 @@
 			(
 				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YJqueryPortico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 			);
 
 			$datatable_def = array();
