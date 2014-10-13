@@ -54,6 +54,11 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 	});
 };
 
+JqueryPortico.updateinlineTableHelper = function(oTable, requestUrl)
+{
+	oTable.ajax.url( requestUrl ).load();
+};
+
 JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, label_attr) {
 	$(document).ready(function () 
 	{
