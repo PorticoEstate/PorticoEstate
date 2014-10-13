@@ -126,7 +126,7 @@ class phpgwapi_jquery {
 
 	public static function formvalidator_generate($modules = array()) {
 		self::load_widget('validator');
-		$modules_js = '"' . implode(',', $modules) . '"';
+		$modules_js = '"' . implode(',', $modules) . '"';!
 
 		$js = <<<JS
                             
@@ -159,16 +159,16 @@ HTML;
 				$_function = " onclick=\"javascript: {$tab['function']};\"";
 			}
 
-			if (empty($tab['link']) && empty($tab['function'])) {
+			//Set disabled tabs
+			//if (empty($tab['link']) && empty($tab['function'])) {
+			if ($tab['disable'] == 1) {
 				$disabled[] = $i;
-				$output .= <<<HTML
-						<li><a href="{$tab['link']}">{$label}</a></li>
-HTML;
-			} else {
-				$output .= <<<HTML
-						<li><a href="{$tab['link']}"{$_function}>{$label}</a></li>
-HTML;
 			}
+			
+			$output .= <<<HTML
+				<li><a href="{$tab['link']}"{$_function}>{$label}</a></li>
+HTML;
+
 			$i++;
 		}
 		$selected = in_array($selection, $tab_map) ? $tab_map[$selection] : 0;
