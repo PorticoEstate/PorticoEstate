@@ -1,11 +1,11 @@
-/*! Responsive 1.0.1
+/*! Responsive 1.0.2
  * 2014 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     Responsive
  * @description Responsive tables plug-in for DataTables
- * @version     1.0.1
+ * @version     1.0.2
  * @file        dataTables.responsive.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -77,21 +77,23 @@ var Responsive = function ( settings, opts ) {
 	if ( ! DataTable.versionCheck || ! DataTable.versionCheck( '1.10.1' ) ) {
 		throw 'DataTables Responsive requires DataTables 1.10.1 or newer';
 	}
-	else if ( settings.responsive ) {
-		return;
-	}
 
 	this.s = {
 		dt: new DataTable.Api( settings ),
 		columns: []
 	};
 
+	// Check if responsive has already been initialised on this table
+	if ( this.s.dt.settings()[0].responsive ) {
+		return;
+	}
+
 	// details is an object, but for simplicity the user can give it as a string
 	if ( opts && typeof opts.details === 'string' ) {
 		opts.details = { type: opts.details };
 	}
 
-	this.c = $.extend( true, {}, Responsive.defaults, opts );
+	this.c = $.extend( true, {}, Responsive.defaults, DataTable.defaults.responsive, opts );
 	settings.responsive = this;
 	this._constructor();
 };
@@ -129,6 +131,11 @@ Responsive.prototype = {
 			return a.width < b.width ? 1 :
 				a.width > b.width ? -1 : 0;
 		} );
+
+		// Determine which columns are already hidden, and should therefore
+		// remain hidden. TODO - should this be done? See thread 22677
+		//
+		// this.s.alwaysHidden = dt.columns(':hidden').indexes();
 
 		this._classLogic();
 		this._resizeAuto();
@@ -181,7 +188,7 @@ Responsive.prototype = {
 				false :
 				col.auto === true ?
 					'-' :
-					col.includeIn.indexOf( breakpoint ) !== -1;
+					$.inArray( breakpoint, col.includeIn ) !== -1;
 		} );
 
 		// Auto column control - first pass: how much width is taken by the
@@ -224,7 +231,7 @@ Responsive.prototype = {
 		var showControl = false;
 
 		for ( i=0, ien=columns.length ; i<ien ; i++ ) {
-			if ( ! columns[i].control && ! display[i] ) {
+			if ( ! columns[i].control && ! columns[i].never && ! display[i] ) {
 				showControl = true;
 				break;
 			}
@@ -234,6 +241,12 @@ Responsive.prototype = {
 			if ( columns[i].control ) {
 				display[i] = showControl;
 			}
+		}
+
+		// Finally we need to make sure that there is at least one column that
+		// is visible
+		if ( $.inArray( true, display ) === -1 ) {
+			display[0] = true;
 		}
 
 		return display;
@@ -254,11 +267,14 @@ Responsive.prototype = {
 		var calc = {};
 		var breakpoints = this.c.breakpoints;
 		var columns = this.s.dt.columns().eq(0).map( function (i) {
+			var className = this.column(i).header().className;
+
 			return {
-				className: this.column(i).header().className,
+				className: className,
 				includeIn: [],
 				auto:      false,
-				control:   false
+				control:   false,
+				never:     className.match(/\bnever\b/) ? true : false
 			};
 		} );
 
@@ -267,7 +283,7 @@ Responsive.prototype = {
 		var add = function ( colIdx, name ) {
 			var includeIn = columns[ colIdx ].includeIn;
 
-			if ( includeIn.indexOf( name ) === -1 ) {
+			if ( $.inArray( name, includeIn ) === -1 ) {
 				includeIn.push( name );
 			}
 		};
@@ -327,7 +343,7 @@ Responsive.prototype = {
 					} );
 					return;
 				}
-				else if ( className === 'none' ) {
+				else if ( className === 'none' || className === 'never' ) {
 					// Include in none (default) and no auto
 					hasClass = true;
 					return;
@@ -399,6 +415,11 @@ Responsive.prototype = {
 				return;
 			}
 
+			// Check that the row is actually a DataTable's controlled node
+			if ( ! dt.row( $(this).closest('tr') ).length ) {
+				return;
+			}
+
 			// For column index, we determine if we should act or not in the
 			// handler - otherwise it is already okay
 			if ( typeof target === 'number' ) {
@@ -437,7 +458,17 @@ Responsive.prototype = {
 		var that = this;
 		var dt = this.s.dt;
 
-		var hiddenColumns = dt.columns(':hidden').indexes().flatten();
+		// Find how many columns are hidden
+		var hiddenColumns = dt.columns().indexes().filter( function ( idx ) {
+			var col = dt.column( idx );
+
+			if ( col.visible() ) {
+				return null;
+			}
+
+			// Only counts as hidden if it doesn't have the `never` class
+			return $( col.header() ).hasClass( 'never' ) ? null : idx;
+		} );
 		var haveHidden = true;
 
 		if ( hiddenColumns.length === 0 || ( hiddenColumns.length === 1 && this.s.columns[ hiddenColumns[0] ].control ) ) {
@@ -558,7 +589,7 @@ Responsive.prototype = {
 
 		// This is a bit slow, but we need to get a clone of each row that
 		// includes all columns. As such, try to do this as little as possible.
-		dt.rows( { page: 'current' } ).indexes().each( function ( idx ) {
+		dt.rows( { page: 'current' } ).indexes().flatten().each( function ( idx ) {
 			var clone = dt.row( idx ).node().cloneNode( true );
 			
 			if ( dt.columns( ':hidden' ).flatten().length ) {
@@ -655,23 +686,32 @@ Responsive.defaults = {
 		renderer: function ( api, rowIdx ) {
 			var data = api.cells( rowIdx, ':hidden' ).eq(0).map( function ( cell ) {
 				var header = $( api.column( cell.column ).header() );
+				var idx = api.cell( cell ).index();
 
-				if ( header.hasClass( 'control' ) ) {
+				if ( header.hasClass( 'control' ) || header.hasClass( 'never' ) ) {
 					return '';
 				}
 
-				return '<li>'+
+				// Use a non-public DT API method to render the data for display
+				// This needs to be updated when DT adds a suitable method for
+				// this type of data retrieval
+				var dtPrivate = api.settings()[0];
+				var cellData = dtPrivate.oApi._fnGetCellData(
+					dtPrivate, idx.row, idx.column, 'display'
+				);
+
+				return '<li data-dtr-index="'+idx.column+'">'+
 						'<span class="dtr-title">'+
 							header.text()+':'+
 						'</span> '+
 						'<span class="dtr-data">'+
-							api.cell( cell ).data()+
+							cellData+
 						'</span>'+
 					'</li>';
 			} ).toArray().join('');
 
 			return data ?
-				$('<ul/>').append( data ) :
+				$('<ul data-dtr-index="'+rowIdx+'"/>').append( data ) :
 				false;
 		},
 
@@ -692,13 +732,22 @@ Api.register( 'responsive()', function () {
 	return this;
 } );
 
-Api.register( 'responsive.recalc()', function ( rowIdx, intParse, virtual ) {
+Api.register( 'responsive.recalc()', function () {
 	this.iterator( 'table', function ( ctx ) {
 		if ( ctx._responsive ) {
 			ctx._responsive._resizeAuto();
 			ctx._responsive._resize();
 		}
 	} );
+} );
+
+Api.register( 'responsive.index()', function ( li ) {
+	li = $(li);
+
+	return {
+		column: li.data('dtr-index'),
+		row:    li.parent().data('dtr-index')
+	};
 } );
 
 
@@ -708,7 +757,7 @@ Api.register( 'responsive.recalc()', function ( rowIdx, intParse, virtual ) {
  * @name Responsive.version
  * @static
  */
-Responsive.version = '1.0.1';
+Responsive.version = '1.0.2';
 
 
 $.fn.dataTable.Responsive = Responsive;
@@ -719,7 +768,8 @@ $.fn.DataTable.Responsive = Responsive;
 $(document).on( 'init.dt.dtr', function (e, settings, json) {
 	if ( $(settings.nTable).hasClass( 'responsive' ) ||
 		 $(settings.nTable).hasClass( 'dt-responsive' ) ||
-		 settings.oInit.responsive
+		 settings.oInit.responsive ||
+		 DataTable.defaults.responsive
 	) {
 		var init = settings.oInit.responsive;
 
