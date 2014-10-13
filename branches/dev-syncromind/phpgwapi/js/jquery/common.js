@@ -84,7 +84,8 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 			},
 			minLength: 1,
 			select: function( event, ui ) {
-			  chooseLocation( ui.item.label, ui.item.value);
+				$("#" + hidden).val(ui.item.value); 
+				chooseLocation( ui.item.label, ui.item.value);
 			}
         });
 	});
