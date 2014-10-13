@@ -61,6 +61,74 @@
 			</dl>
 	</div>
 
+	</xsl:template>
+
+<xsl:template name="datasource-definition">
+	<script>
+		var PreColumns = [];
+		var oTable = null;
+		YAHOO.util.Event.onDOMReady(function(){
+			<xsl:for-each select="datatable_def">
+				PreColumns = [
+					<xsl:for-each select="ColumnDefs">
+					{
+						data: "<xsl:value-of select="key"/>",
+						class: "<xsl:value-of select="className"/>",
+						orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+						<xsl:choose>
+							<xsl:when test="hidden">
+								<xsl:if test="hidden =0">
+									visible			:true,
+								</xsl:if>
+								<xsl:if test="hidden =1">
+									class:			'none',
+									visible			:false,
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+									visible			:true,
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:if test="formatter">
+						 render: function (dummy1, dummy2, oData) {
+								try {
+									var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
+								}
+								catch(err) {
+									return err.message;
+								}
+								return ret;
+							 },
+
+						</xsl:if>
+						<xsl:if test="editor">
+						editor: <xsl:value-of select="editor"/>,
+					    </xsl:if>
+					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+				</xsl:for-each>
+				];
+			
+			<!--YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);-->
+<![CDATA[
+		columns = [];
+
+		for(i=0;i < PreColumns.length;i++)
+		{
+			if ( PreColumns[i]['visible'] == true )
+			{
+				columns.push(PreColumns[i]);
+			}
+		}
+]]>
+
+			<!--YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);-->
+			JqueryPortico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columns);
+				
+		</xsl:for-each>
+
+
+  	});
+  </script>
 
 	<script>
 	function update_summation()
@@ -69,7 +137,7 @@
 	   	var year = document.getElementById("year").value;
 		var oArgs = {menuaction:'property.uicondition_survey.get_summation', id:survey_id, year: year};
 		var strURL = phpGWLink('index.php', oArgs, true);
-		YAHOO.portico.updateinlineTableHelper('datatable-container_0', strURL);
+		JqueryPortico.updateinlineTableHelper(oTable, strURL);
 	}
 
 
@@ -114,59 +182,6 @@
 
 
   </script>
-
-
-	</xsl:template>
-
-<xsl:template name="datasource-definition">
-	<script>
-		var columnDefs = [];
-		var params = [];
-		YAHOO.util.Event.onDOMReady(function(){
-			<xsl:for-each select="datatable_def">
-				columnDefs = [
-					<xsl:for-each select="ColumnDefs">
-					{
-						resizeable: true,
-						key: "<xsl:value-of select="key"/>",
-						<xsl:if test="label">
-						label: "<xsl:value-of select="label"/>",
-						</xsl:if>
-						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden">
-						hidden: true,
-						</xsl:if>
-						<xsl:if test="formatter">
-						formatter: <xsl:value-of select="formatter"/>,
-						</xsl:if>
-						<xsl:if test="editor">
-						editor: <xsl:value-of select="editor"/>,
-					    </xsl:if>
-						className: "<xsl:value-of select="className"/>"
-					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-				</xsl:for-each>
-				];
-			
-			<!--YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);-->
-			params = JqueryPortico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
-			
-			<![CDATA[
-
-				$('#' + params['container']).dataTable({
-					"processing": true,
-					"serverSide": true,
-					"ajax": params['url'],
-					"columns": params['columns'],
-					"order": [[1, 'asc']]
-				});
-			]]>
-				
-		</xsl:for-each>
-
-
-  	});
-  </script>
-
 </xsl:template>
 
 
