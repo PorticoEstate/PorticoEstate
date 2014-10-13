@@ -27,13 +27,13 @@ $(document).ready(function() {
 	$('#example').DataTable( {
 		"ajax": "../../../../examples/ajax/data/objects.txt",
 		"columns": [
-			{ "data": "name",       className="all" },
-			{ "data": "position",   className="min-phone-l" },
-			{ "data": "office",     className="min-tablet" },
-			{ "data": "extn",       className="min-tablet" },
-			{ "data": "start_date", className="desktop" },
-			{ "data": "salary",     className="desktop" },
-			{ "data": "extn",       className="none" }
+			{ "data": "name",       className: "all" },
+			{ "data": "position",   className: "min-phone-l" },
+			{ "data": "office",     className: "min-tablet" },
+			{ "data": "extn",       className: "min-tablet" },
+			{ "data": "start_date", className: "never" },
+			{ "data": "salary",     className: "desktop" },
+			{ "data": "extn",       className: "none" }
 		]
 	} );
 } );
@@ -98,13 +98,13 @@ $(document).ready(function() {
 	$('#example').DataTable( {
 		&quot;ajax&quot;: &quot;../../../../examples/ajax/data/objects.txt&quot;,
 		&quot;columns&quot;: [
-			{ &quot;data&quot;: &quot;name&quot;,       className=&quot;all&quot; },
-			{ &quot;data&quot;: &quot;position&quot;,   className=&quot;min-phone-l&quot; },
-			{ &quot;data&quot;: &quot;office&quot;,     className=&quot;min-tablet&quot; },
-			{ &quot;data&quot;: &quot;extn&quot;,       className=&quot;min-tablet&quot; },
-			{ &quot;data&quot;: &quot;start_date&quot;, className=&quot;desktop&quot; },
-			{ &quot;data&quot;: &quot;salary&quot;,     className=&quot;desktop&quot; },
-			{ &quot;data&quot;: &quot;extn&quot;,       className=&quot;none&quot; }
+			{ &quot;data&quot;: &quot;name&quot;,       className: &quot;all&quot; },
+			{ &quot;data&quot;: &quot;position&quot;,   className: &quot;min-phone-l&quot; },
+			{ &quot;data&quot;: &quot;office&quot;,     className: &quot;min-tablet&quot; },
+			{ &quot;data&quot;: &quot;extn&quot;,       className: &quot;min-tablet&quot; },
+			{ &quot;data&quot;: &quot;start_date&quot;, className: &quot;never&quot; },
+			{ &quot;data&quot;: &quot;salary&quot;,     className: &quot;desktop&quot; },
+			{ &quot;data&quot;: &quot;extn&quot;,       className: &quot;none&quot; }
 		]
 	} );
 } );</code>
@@ -172,6 +172,7 @@ $(document).ready(function() {
 							<li><a href="../initialisation/option.html">Configuration option</a></li>
 							<li><a href="../initialisation/new.html">`new` constructor</a></li>
 							<li><a href="../initialisation/ajax.html">Ajax data</a></li>
+							<li><a href="../initialisation/default.html">Default initialisation</a></li>
 						</ul>
 					</div>
 

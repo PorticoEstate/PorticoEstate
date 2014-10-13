@@ -1,6 +1,6 @@
 {
 	"name": "DataTables",
-	"version": "1.10.2",
+	"version": "1.10.3",
 	"title": "DataTables",
 	"author": {
 		"name": "Allan Jardine",
@@ -26,5 +26,9 @@
 		"page",
 		"internationalisable"
 	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DataTables/DataTables.git"
+	},
 	"homepage": "http://datatables.net"
 }

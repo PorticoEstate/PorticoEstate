@@ -72,7 +72,8 @@ $(document).ready(function() {
 
 				<ul class="markdown">
 					<li><code>all</code> - Always display</li>
-					<li><code>none</code> - Never display</li>
+					<li><code>none</code> - Don't display as a column, but show in the child row</li>
+					<li><code>never</code> - Never display</li>
 					<li><code>control</code> - Used for the <code>column</code> <a href=
 					"//datatables.net/extensions/responsive/reference/option/responsive.details.type"><code class=
 					"option" title="Responsive initialisation option">responsive.details.type<span>R</span></code></a>
@@ -82,9 +83,10 @@ $(document).ready(function() {
 				<p>Please <a href="//datatables.net/extensions/responsive/">refer to the Responsive manual</a> for
 				further details of these options.</p>
 
-				<p>This example shows the <code>start date</code> and <code>salary</code> columns visible on a desktop
-				only - <code>office</code> and <code>age</code> require a tablet, while the <code>position</code>
-				column requires a phone in landscape or larger. The <code>name</code> column is always visible.</p>
+				<p>This example shows the <code>salary</code> column visible on a desktop only - <code>office</code>
+				and <code>age</code> require a tablet, while the <code>position</code> column requires a phone in
+				landscape or larger. The <code>name</code> column is always visible and the <code>start date</code> is
+				never visible.</p>
 
 				<p>This can be useful if you wish to change the format of the data shown on different devices, for
 				example using a combination of <code>mobile</code> and <code>not-mobile</code> on two different columns
@@ -100,7 +102,7 @@ $(document).ready(function() {
 						<th class="min-phone-l">Position</th>
 						<th class="min-tablet">Office</th>
 						<th class="min-tablet">Age</th>
-						<th class="desktop">Start date</th>
+						<th class="never">Start date</th>
 						<th class="desktop">Salary</th>
 						<th class="none">Extn.</th>
 					</tr>
@@ -208,6 +210,7 @@ $(document).ready(function() {
 							<li><a href="../initialisation/option.html">Configuration option</a></li>
 							<li><a href="../initialisation/new.html">`new` constructor</a></li>
 							<li><a href="../initialisation/ajax.html">Ajax data</a></li>
+							<li><a href="../initialisation/default.html">Default initialisation</a></li>
 						</ul>
 					</div>
 

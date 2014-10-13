@@ -5,7 +5,7 @@
 	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=2.0">
 
-	<title>Responsive example - Custom child row renderer</title>
+	<title>Responsive example - Default initialisation</title>
 	<link rel="stylesheet" type="text/css" href="../../../../media/css/jquery.dataTables.css">
 	<link rel="stylesheet" type="text/css" href="../../css/dataTables.responsive.css">
 	<link rel="stylesheet" type="text/css" href="../../../../examples/resources/syntax/shCore.css">
@@ -22,32 +22,12 @@
 
 
 
+$.extend( $.fn.dataTable.defaults, {
+    responsive: true
+} );
+
 $(document).ready(function() {
-	$('#example').DataTable( {
-		responsive: {
-			details: {
-				renderer: function ( api, rowIdx ) {
-					// Select hidden columns for the given row
-					var data = api.cells( rowIdx, ':hidden' ).eq(0).map( function ( cell ) {
-						var header = $( api.column( cell.column ).header() );
-
-						return '<tr>'+
-								'<td>'+
-									header.text()+':'+
-								'</td> '+
-								'<td>'+
-									api.cell( cell ).data()+
-								'</td>'+
-							'</tr>';
-					} ).toArray().join('');
-
-					return data ?
-						$('<table/>').append( data ) :
-						false;
-				}
-			}
-		}
-	} );
+	$('#example').DataTable();
 } );
 
 
@@ -58,20 +38,19 @@ $(document).ready(function() {
 <body class="dt-example">
 	<div class="container">
 		<section>
-			<h1>Responsive example <span>Custom child row renderer</span></h1>
+			<h1>Responsive example <span>Default initialisation</span></h1>
 
 			<div class="info">
-				<p>The child row's for a collapsed table in Responsive, by default, show a <code class="tag" title=
-				"HTML tag">ul/li</code> list of the data from the hidden columns. The <a href=
-				"//datatables.net/extensions/responsive/reference/option/responsive.details.renderer"><code class=
-				"option" title="Responsive initialisation option">responsive.details.renderer<span>R</span></code></a>
-				option provide the ability to create your own custom renderer. It is given two parameters: the
-				DataTables API instance for the table and the row index to use.</p>
+				<p>It can often be useful to be able to set a default value for DataTables' initialisation options,
+				providing a common starting point for initialisation when working with multiple tables over many pages
+				or even just on a single page. DataTables provides that ability through the
+				<code>$.fn.dataTable.defaults</code> object which can have any of the <a href=
+				"//datatables.net/reference/option">initialisation options</a> set.</p>
 
-				<p>This example shows the <a href="//datatables.net/reference/api/cells()"><code class="api" title=
-				"DataTables API method">cells()<span>DT</span></code></a> method being used to select the hidden
-				columns and constructing a table of the data. You could refine the selector to select only certain
-				columns, or show all columns, etc.</p>
+				<p>Extending that ability, Responsive can also be set to initialise by default, as shown in this
+				example thorugh the <code>$.fn.dataTable.defaults.responsive</code> property. Extending that, <a href=
+				"//datatables.net/extensions/responsive/reference/option/">all of the Responsive options</a> can also
+				be set using this configuration option (i.e. use <code>responsive</code> as an object).</p>
 			</div>
 
 			<table id="example" class="display nowrap" cellspacing="0" width="100%">
@@ -731,32 +710,12 @@ $(document).ready(function() {
 			<div class="tabs">
 				<div class="js">
 					<p>The Javascript shown below is used to initialise the table shown in this
-					example:</p><code class="multiline brush: js;">$(document).ready(function() {
-	$('#example').DataTable( {
-		responsive: {
-			details: {
-				renderer: function ( api, rowIdx ) {
-					// Select hidden columns for the given row
-					var data = api.cells( rowIdx, ':hidden' ).eq(0).map( function ( cell ) {
-						var header = $( api.column( cell.column ).header() );
+					example:</p><code class="multiline brush: js;">$.extend( $.fn.dataTable.defaults, {
+    responsive: true
+} );
 
-						return '&lt;tr&gt;'+
-								'&lt;td&gt;'+
-									header.text()+':'+
-								'&lt;/td&gt; '+
-								'&lt;td&gt;'+
-									api.cell( cell ).data()+
-								'&lt;/td&gt;'+
-							'&lt;/tr&gt;';
-					} ).toArray().join('');
-
-					return data ?
-						$('&lt;table/&gt;').append( data ) :
-						false;
-				}
-			}
-		}
-	} );
+$(document).ready(function() {
+	$('#example').DataTable();
 } );</code>
 
 					<p>In addition to the above code, the following Javascript library files are loaded for use in this
@@ -816,13 +775,13 @@ $(document).ready(function() {
 
 				<div class="toc">
 					<div class="toc-group">
-						<h3><a href="../initialisation/index.html">Basic initialisation</a></h3>
-						<ul class="toc">
-							<li><a href="../initialisation/className.html">Class name</a></li>
-							<li><a href="../initialisation/option.html">Configuration option</a></li>
-							<li><a href="../initialisation/new.html">`new` constructor</a></li>
-							<li><a href="../initialisation/ajax.html">Ajax data</a></li>
-							<li><a href="../initialisation/default.html">Default initialisation</a></li>
+						<h3><a href="./index.html">Basic initialisation</a></h3>
+						<ul class="toc active">
+							<li><a href="./className.html">Class name</a></li>
+							<li><a href="./option.html">Configuration option</a></li>
+							<li><a href="./new.html">`new` constructor</a></li>
+							<li><a href="./ajax.html">Ajax data</a></li>
+							<li class="active"><a href="./default.html">Default initialisation</a></li>
 						</ul>
 					</div>
 
@@ -844,13 +803,13 @@ $(document).ready(function() {
 					</div>
 
 					<div class="toc-group">
-						<h3><a href="./index.html">Child rows</a></h3>
-						<ul class="toc active">
-							<li><a href="./disable-child-rows.html">Disable child rows</a></li>
-							<li><a href="./column-control.html">Column controlled child rows</a></li>
-							<li><a href="./right-column.html">Column control - right</a></li>
-							<li><a href="./whole-row-control.html">Whole row child row control</a></li>
-							<li class="active"><a href="./custom-renderer.html">Custom child row renderer</a></li>
+						<h3><a href="../child-rows/index.html">Child rows</a></h3>
+						<ul class="toc">
+							<li><a href="../child-rows/disable-child-rows.html">Disable child rows</a></li>
+							<li><a href="../child-rows/column-control.html">Column controlled child rows</a></li>
+							<li><a href="../child-rows/right-column.html">Column control - right</a></li>
+							<li><a href="../child-rows/whole-row-control.html">Whole row child row control</a></li>
+							<li><a href="../child-rows/custom-renderer.html">Custom child row renderer</a></li>
 						</ul>
 					</div>
 				</div>
