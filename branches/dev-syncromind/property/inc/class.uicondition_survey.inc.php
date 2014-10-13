@@ -403,20 +403,24 @@
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
-			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
-			$tabs['request']	= array('label' => lang('request'), 'link' => null);
-			$tabs['summation']	= array('label' => lang('summation'), 'link' => null);
-			$tabs['import']		= array('label' => lang('import'), 'link' => null);
+			$tabs['documents']	= array('label' => lang('documents'), 'link' => "#documents", 'disable' => 1);
+			$tabs['request']	= array('label' => lang('request'), 'link' => "#request", 'disable' => 1);
+			$tabs['summation']	= array('label' => lang('summation'), 'link' => "#summation", 'disable' => 1);
+			$tabs['import']		= array('label' => lang('import'), 'link' => "#import", 'disable' => 1);
 
 			if ($id)
 			{
 				if($mode == 'edit')
 				{
 					$tabs['import']['link'] = '#import';
+					$tabs['import']['disable'] = 0;
 				}
 				$tabs['documents']['link'] = '#documents';
+				$tabs['documents']['disable'] = 0;
 				$tabs['request']['link'] = '#request';
+				$tabs['request']['disable'] = 0;
 				$tabs['summation']['link'] = '#summation';
+				$tabs['summation']['disable'] = 0;
 
 				if (!$values)
 				{
@@ -521,8 +525,10 @@
 				'editable' 						=> $mode == 'edit',
 				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'multiple_uploader'				=> $mode == 'edit' ? true : '',
-                                'validator'                                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+                'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
+			
+			//print_r($data['tabs']); die;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
