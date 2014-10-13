@@ -371,8 +371,8 @@
                             <xsl:variable name="lang_save">
                                 <xsl:value-of select="php:function('lang', 'save')" />
                             </xsl:variable>
-                            <input type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
-                            <input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
+                            <input type="submit" class="pure-button" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
+                            <input class="pure-button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:variable name="lang_edit">
@@ -381,9 +381,9 @@
                             <xsl:variable name="lang_new_survey">
                                 <xsl:value-of select="php:function('lang', 'new')" />
                             </xsl:variable>
-                            <input type="button" name="edit_survey" value="{$lang_edit}" title = "{$lang_edit}"  onClick="document.load_edit_form.submit();"/>
-                            <input type="button" name="new_survey" value="{$lang_new_survey}" title = "{$lang_new_survey}" onClick="document.new_form.submit();"/>
-                            <input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
+                            <input type="button" class="pure-button" name="edit_survey" value="{$lang_edit}" title = "{$lang_edit}"  onClick="document.load_edit_form.submit();"/>
+                            <input type="button" class="pure-button" name="new_survey" value="{$lang_new_survey}" title = "{$lang_new_survey}" onClick="document.new_form.submit();"/>
+                            <input class="pure-button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </div>
