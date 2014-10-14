@@ -176,13 +176,14 @@
 							'sortable' => true,
 							'formatter' => 'JqueryPortico.formatLink'
 						),
-		/*				array(
+						array(
 							'key' => 'title',
 							'label' => lang('title'),
 							'sortable' => true,
+							//FIXME: to be implemented: http://jquery-datatables-editable.googlecode.com/svn/trunk/inline-edit.html
 							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})'
 						),
-						array(
+/*						array(
 							'key' => 'descr',
 							'label' => lang('description'),
 							'sortable' => false,
