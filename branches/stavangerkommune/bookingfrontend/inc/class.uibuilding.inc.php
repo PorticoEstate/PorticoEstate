@@ -28,6 +28,7 @@
             $building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
             $start = phpgw::get_var('start', 'GET');
             $res = phpgw::get_var('res', 'GET');
+            $pal = phpgw::get_var('pal', 'GET');
 
             $timestart = 8.0;
             $timeend = 16.0;
@@ -81,7 +82,32 @@
             $html = '<html><head><title>Kalender for '.$building['name'].'</title>';
             $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
             $html .= '<meta name="author" content="Stavanger Kommune">';
-            $html .= '<style>body { font-size: 12px; padding: 0px; border-spacing: 0px;} table { width: 100%; margin: 0px; font-size: 14px; border-collapse: collapse;} th { text-align: left; padding: 2px 8px; border: 1px solid black;} td { text-align: left; padding: 3px 8px; border: 1px solid black;}</style>';
+            $html .= '<style>';
+            $html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;}';
+            $html .= 'table { width: 100%; margin: 0px; font-size: 14px; border-collapse: collapse;}';
+            $html .= 'th { text-align: left; padding: 2px 8px; border: 1px solid black;}';
+            $html .= 'td { font-weight: bold; text-align: left; padding: 4px 8px; border: 1px solid black;}';
+            if ($pal == 1)
+            {
+                $html .= 'tr.header { background-color: #333; color: white; }';
+                $html .= 'td.data { background-color: #CCCCFF; }';
+            } elseif ($pal == 2) {
+                $html .= 'tr.header { background-color: #333; color: white; }';
+                $html .= 'td.data { background-color: #CCFFCC; }';
+            } elseif ($pal == 3) {
+                $html .= 'tr.header { background-color: #333; color: white; }';
+                $html .= 'td.data { background-color: #FFCCCC; }';
+            } elseif ($pal == 4) {
+                $html .= 'tr.header { background-color: #333; color: white; }';
+                $html .= 'td.data { background-color: #FFFFCC; }';
+            } elseif ($pal == 5) {
+                $html .= 'tr.header { background-color: #333; color: white; }';
+                $html .= 'td.data { background-color: #FFCCFF; }';
+            } else {
+                $html .= 'tr.header { background-color: #333; color: white; }';
+                $html .= 'td.data { background-color: #CCFFFF; }';
+            }
+            $html .= '</style>';
             $html .= '</head><body style="color: black; margin: 8px; font-weight: bold;">';
 //            $html .= '<div style="font-size: 15px;">'.$building['name'].'</div>';
             $html .= '<pre style="color: black; font-weight: bold;">';
@@ -102,7 +128,7 @@
             foreach ($list as $day => $resources) {
                 if ($first != $day) {
                     $first = $day;
-                    $html .= '<tr style="background-color: #999; color: white;">';
+                    $html .= '<tr class="header">';
                     $html .= '<td colspan="'.$len.'" width="12%">';
                     $html .= $days[$day];
                     $html .= " ";
@@ -144,7 +170,7 @@
                                 }
                                 $testlen = 12*$colspan;
 
-                                $html .= '<td colspan="'.$colspan.'" style="background-color: cyan;">';
+                                $html .= '<td colspan="'.$colspan.'" class="data" style="">';
                                 if (strlen($value['name']) > $testlen)
                                     $html .= $value['shortname']." ";
                                 else
@@ -155,7 +181,7 @@
                             } elseif ($last === -1 && $bftime < $timestart && $bttime > $timestart) {
                                 $last = $bttime;
                                 $colspan = ($bttime - $timestart)*2;
-                                $html .= '<td colspan="'.$colspan.'" style="background-color: cyan;">';
+                                $html .= '<td colspan="'.$colspan.'" class="data" style="">';
                                 $testlen = 12*$colspan;
                                 if (strlen($value['name']) > $testlen)
                                     $html .= $value['shortname']." ";
