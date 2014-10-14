@@ -29,19 +29,19 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 
 	$(document).ready(function ()
 	{
-		var oTable = $("#" + container).dataTable( {
+		oTable = $("#" + container).DataTable({
 			processing:		true,
 			serverSide:		true,
 			responsive:		true,
 			deferRender:	true,
-			ajax:			{
+			ajax: {
 				url: ajax_url,
 //				data: { cat_id: '' },
 				type: 'GET'
 			},
 		//	lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 		//	language:		JqueryPortico.i18n.datatable(),
-			columns:		columns,
+			columns: columns
 		//	colVis: {
 		//					exclude: exclude_colvis
 		//	},
@@ -50,12 +50,12 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 		//	stateDuration: -1, //sessionstorage
 		//	tabIndex:		1,
 		//	oTableTools: JqueryPortico.TableTools
-		} );
+		});
 	});
 };
 
 JqueryPortico.updateinlineTableHelper = function(oTable, requestUrl)
-{
+{	
 	oTable.ajax.url( requestUrl ).load();
 };
 
@@ -96,6 +96,4 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 	});
 
 
-};
-
-		
+};	
