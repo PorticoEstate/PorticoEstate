@@ -29,18 +29,28 @@
             $start = phpgw::get_var('start', 'GET');
             $res = phpgw::get_var('res', 'GET');
             $color = phpgw::get_var('color', 'GET');
-            $fsize = phpgw::get_var('fsize', 'GET');
+            $fontsize = phpgw::get_var('fontsize', 'GET');
+            $weekend = phpgw::get_var('weekend', 'GET');
 
             $timestart = 8.0;
             $timeend = 16.0;
             if ($start == 0) {
                 $timestart = 0.0;
-                $timeend = 8.0;
+                $timeend = 4.0;
             } elseif ($start == 1) {
-                $timestart = 8.0;
-                $timeend = 16.0;
+                $timestart = 4.0;
+                $timeend = 8.0;
             } elseif ($start == 2) {
+                $timestart = 8.0;
+                $timeend = 12.0;
+            } elseif ($start == 3) {
+                $timestart = 12.0;
+                $timeend = 16.0;
+            } elseif ($start == 4) {
                 $timestart = 16.0;
+                $timeend = 20.0;
+            } elseif ($start == 5) {
+                $timestart = 20.0;
                 $timeend = 24.0;
             }
 
@@ -65,7 +75,18 @@
             }
             $from = $from->format('d.m.Y');
 
-            $list = array(
+            $list1 = array(
+                'Mon' => array(),
+                'Tue' =>array(),
+                'Wed' =>array(),
+                'Thu' =>array(),
+                'Fri' =>array(),
+            );
+            $list2 = array(
+                'Sat' =>array(),
+                'Sun' =>array()
+            );
+            $list3 = array(
                 'Mon' => array(),
                 'Tue' =>array(),
                 'Wed' =>array(),
@@ -74,9 +95,16 @@
                 'Sat' =>array(),
                 'Sun' =>array()
             );
+            if ($weekend == 1)
+                $list = $list2;
+            elseif ($weekend == 2)
+                $list = $list3;
+            else
+                $list = $list1;
+
             foreach ($list as $key => &$item)
             {
-                    $item = $bookings['results'][$key];
+                $item = $bookings['results'][$key];
             }
 
             $time = $timestart;
@@ -85,9 +113,9 @@
             $html .= '<meta name="author" content="Stavanger Kommune">';
             $html .= '<style>';
             $html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;} ';
-            if ($fsize != '' )
+            if ($fontsize != '' )
             {
-                $html .= 'table { font-family: Tahoma, Verdana, Helvetica; width: 100%; margin: 0px; font-size: '.$fsize.'px; border-collapse: collapse;} ';
+                $html .= 'table { font-family: Tahoma, Verdana, Helvetica; width: 100%; margin: 0px; font-size: '.$fontsize.'px; border-collapse: collapse;} ';
             } else {
                 $html .= 'table { font-family: Tahoma, Verdana,Helvetica; width: 100%; margin: 0px; font-size: 12px; border-collapse: collapse;} ';
             }
@@ -108,8 +136,8 @@
             $html .= '<tr>';
             $html .= '<th colspan="2" style="text-align: left; width: 12%;">Bane</th>';
             while ($time < $timeend) {
-                $html .= '<th colspan="1" style="width: 5.5%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':00</th>';
-                $html .= '<th colspan="1" style="width: 5.5%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':30</th>';
+                $html .= '<th colspan="1" style="width: 11%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':00</th>';
+                $html .= '<th colspan="1" style="width: 11%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':30</th>';
                 $time += 1;
             }
             $html .= '</tr>';
@@ -117,6 +145,7 @@
             $html .= '<tbody>';
             $first = '';
             $len =  (($timeend-$timestart)*2)+2;
+
             foreach ($list as $day => $resources) {
                 if ($first != $day) {
                     $first = $day;
@@ -167,8 +196,6 @@
                                     $html .= $value['shortname']." ";
                                 else
                                     $html .= $value['name']." ";
-//                                $html .= substr($value['from_'],-8)." - ";
-//                                $html .= substr($value['to_'],-8);
                                 $html .= '</td>';
                             } elseif ($last === -1 && $bftime < $timestart && $bttime > $timestart) {
                                 $last = $bttime;
@@ -179,8 +206,6 @@
                                     $html .= $value['shortname']." ";
                                 else
                                     $html .= $value['name']." ";
-//                                $html .= substr($value['from_'],-8)." - ";
-//                                $html .= substr($value['to_'],-8);
                                 $html .= '</td>';
                             } elseif ($last === -1 && $bftime != $timestart && $bftime < $timeend && $bftime > $timestart) {
                                 $colspan = ($bftime - $timestart)*2;
