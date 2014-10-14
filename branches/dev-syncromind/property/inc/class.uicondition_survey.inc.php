@@ -754,10 +754,8 @@
 			);
 			return $data;*/
 			
-			//$id 	= phpgw::get_var('id', 'int', 'REQUEST');
-			$id 	= 4;
-			//$year 	= phpgw::get_var('year', 'int', 'REQUEST');
-			$year 	= 2014;
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+			$year 	= phpgw::get_var('year', 'int', 'REQUEST');
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
