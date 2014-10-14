@@ -93,7 +93,8 @@
 			
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
+			//self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
 
