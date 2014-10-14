@@ -28,7 +28,8 @@
             $building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
             $start = phpgw::get_var('start', 'GET');
             $res = phpgw::get_var('res', 'GET');
-            $pal = phpgw::get_var('pal', 'GET');
+            $color = phpgw::get_var('color', 'GET');
+            $fsize = phpgw::get_var('fsize', 'GET');
 
             $timestart = 8.0;
             $timeend = 16.0;
@@ -83,34 +84,25 @@
             $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
             $html .= '<meta name="author" content="Stavanger Kommune">';
             $html .= '<style>';
-            $html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;}';
-            $html .= 'table { width: 100%; margin: 0px; font-size: 14px; border-collapse: collapse;}';
-            $html .= 'th { text-align: left; padding: 2px 8px; border: 1px solid black;}';
-            $html .= 'td { font-weight: bold; text-align: left; padding: 4px 8px; border: 1px solid black;}';
-            if ($pal == 1)
+            $html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;} ';
+            if ($fsize != '' )
             {
-                $html .= 'tr.header { background-color: #333; color: white; }';
-                $html .= 'td.data { background-color: #CCCCFF; }';
-            } elseif ($pal == 2) {
-                $html .= 'tr.header { background-color: #333; color: white; }';
-                $html .= 'td.data { background-color: #CCFFCC; }';
-            } elseif ($pal == 3) {
-                $html .= 'tr.header { background-color: #333; color: white; }';
-                $html .= 'td.data { background-color: #FFCCCC; }';
-            } elseif ($pal == 4) {
-                $html .= 'tr.header { background-color: #333; color: white; }';
-                $html .= 'td.data { background-color: #FFFFCC; }';
-            } elseif ($pal == 5) {
-                $html .= 'tr.header { background-color: #333; color: white; }';
-                $html .= 'td.data { background-color: #FFCCFF; }';
+                $html .= 'table { font-family: Tahoma, Verdana, Helvetica; width: 100%; margin: 0px; font-size: '.$fsize.'px; border-collapse: collapse;} ';
             } else {
-                $html .= 'tr.header { background-color: #333; color: white; }';
-                $html .= 'td.data { background-color: #CCFFFF; }';
+                $html .= 'table { font-family: Tahoma, Verdana,Helvetica; width: 100%; margin: 0px; font-size: 12px; border-collapse: collapse;} ';
+            }
+            $html .= 'th { text-align: left; padding: 2px 8px; border: 1px solid black;} ';
+            $html .= 'td { font-weight: bold; text-align: left; padding: 4px 8px; border: 1px solid black;} ';
+            $html .= 'tr.header { background-color: #333; color: white; } ';
+            if ($color != '' )
+            {
+                $html .= 'td.data { background-color: #'.$color.'; } ';
+
+            } else {
+                $html .= 'td.data { background-color: #ccffff; } ';
             }
             $html .= '</style>';
             $html .= '</head><body style="color: black; margin: 8px; font-weight: bold;">';
-//            $html .= '<div style="font-size: 15px;">'.$building['name'].'</div>';
-            $html .= '<pre style="color: black; font-weight: bold;">';
             $html .= '<table class="calender">';
             $html .= '<thead>';
             $html .= '<tr>';
@@ -218,7 +210,6 @@
             }
             $html .= '</tbody>';
             $html .= '</table>';
-            $html .= '</pre>';
             $html .= '</body></html>';
 
             header('Content-type: text/html');
