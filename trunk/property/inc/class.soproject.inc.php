@@ -1620,7 +1620,7 @@
 
 				$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
 
-				if($old_status != $project['status'])
+				if($old_status != $project['status']  && !$close_workorders)
 				{
 					$historylog->add('S', $project['id'], $project['status'], $old_status);
 					$receipt['notice_owner'][] = lang('Status changed') . ': ' . $project['status'];
