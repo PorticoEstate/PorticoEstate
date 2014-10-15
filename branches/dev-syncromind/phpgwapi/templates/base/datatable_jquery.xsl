@@ -552,6 +552,14 @@ toolbar
 					data: { cat_id: '' },
 					type: 'GET'
 				},
+				fnDrawCallback: function () {
+					$('#datatable-container tbody td').editable( '../example.php', {
+						"callback": function( sValue, y ) {
+							oTable.fnDraw();
+						},
+						"height": "14px"
+					});
+				},
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 				language:		JqueryPortico.i18n.datatable(),
 				columns:		JqueryPortico.columns,
