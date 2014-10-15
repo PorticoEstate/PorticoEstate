@@ -27,32 +27,17 @@
 
             $building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
             $start = phpgw::get_var('start', 'GET');
+            $end = phpgw::get_var('end', 'GET');
             $res = phpgw::get_var('res', 'GET');
             $color = phpgw::get_var('color', 'GET');
             $fontsize = phpgw::get_var('fontsize', 'GET');
             $weekend = phpgw::get_var('weekend', 'GET');
 
-            $timestart = 8.0;
-            $timeend = 16.0;
-            if ($start == 0) {
-                $timestart = 0.0;
-                $timeend = 4.0;
-            } elseif ($start == 1) {
-                $timestart = 4.0;
-                $timeend = 8.0;
-            } elseif ($start == 2) {
-                $timestart = 8.0;
-                $timeend = 12.0;
-            } elseif ($start == 3) {
-                $timestart = 12.0;
-                $timeend = 16.0;
-            } elseif ($start == 4) {
-                $timestart = 16.0;
-                $timeend = 20.0;
-            } elseif ($start == 5) {
-                $timestart = 20.0;
-                $timeend = 24.0;
-            }
+            $timestart = $start;
+            $timeend = $end;
+
+            $timediff = $timeend-$timestart;
+            $cellwidth = 88/($timediff*2);
 
             $days = array(
                 "Mon" => "Mandag",
@@ -136,8 +121,8 @@
             $html .= '<tr>';
             $html .= '<th colspan="2" style="text-align: left; width: 12%;">Bane</th>';
             while ($time < $timeend) {
-                $html .= '<th colspan="1" style="width: 11%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':00</th>';
-                $html .= '<th colspan="1" style="width: 11%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':30</th>';
+                $html .= '<th colspan="1" style="width: '.$cellwidth.'%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':00</th>';
+                $html .= '<th colspan="1" style="width: '.$cellwidth.'%; text-align: left;">'.str_pad($time,2,'0', STR_PAD_LEFT).':30</th>';
                 $time += 1;
             }
             $html .= '</tr>';
