@@ -33,8 +33,16 @@
             $fontsize = phpgw::get_var('fontsize', 'GET');
             $weekend = phpgw::get_var('weekend', 'GET');
 
-            $timestart = $start;
-            $timeend = $end;
+
+            if ($start != '')
+                $timestart = $start;
+            else
+                $timestart = 8;
+
+            if ($end !='')
+                $timeend = $end;
+            else
+                $timeend = 22;
 
             $timediff = $timeend-$timestart;
             $cellwidth = 88/($timediff*2);
