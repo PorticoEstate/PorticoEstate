@@ -123,6 +123,7 @@
 			//self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 	//		phpgwapi_yui::load_widget('datatable');
 	//		phpgwapi_yui::load_widget('paginator');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 
 			$categories = $this->_get_categories();
                         
