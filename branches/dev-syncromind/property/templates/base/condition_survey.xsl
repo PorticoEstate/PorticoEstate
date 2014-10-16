@@ -34,9 +34,7 @@
 
         <xsl:value-of select="validator"/>
 		
-		<h1><input type="text" id="txt1" value="{$action_url}" /></h1>
-        
-        <form name="form" class="pure-form pure-form-aligned" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
+		<form name="form" class="pure-form pure-form-aligned" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
                             
             <dl>
                 <xsl:choose>
@@ -98,16 +96,15 @@
                             </xsl:choose>
                         </div>
                         
-                        <div class="pure-control-group">
+                        <div class="pure-control-group" style="width:50%; ">
                             <label for="name">
                                 <xsl:value-of select="php:function('lang', 'description')" />
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <textarea id="descr" name="values[descr]" rows="5" cols="60"
-                                                                          data-validation="required">
-                                        <xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
-                                    </textarea>
+									<textarea id="descr" rows="6" style="width:60%; resize:none;" name="values[descr]" data-validation="required">
+										<xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
+									</textarea>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
