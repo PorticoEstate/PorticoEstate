@@ -293,6 +293,8 @@ toolbar
 </xsl:template>
 
 <xsl:template name="datasource-definition">
+
+
 	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
 			<tr>
@@ -316,6 +318,13 @@ toolbar
 		</thead>
 	</table>
 	<script>
+
+	var editor_action = '';
+	<xsl:if test="//datatable/editor_action">
+		var oArgs = {menuaction: "<xsl:value-of select="//datatable/editor_action"/>"};
+		var editor_action = phpGWLink('index.php', oArgs, true);
+	</xsl:if>
+
 		var columns = [
 			<xsl:for-each select="//datatable/field">
 				{
@@ -362,7 +371,7 @@ toolbar
 				JqueryPortico.columns.push(columns[i]);
 			}
 		}
-		console.log(JqueryPortico.columns);
+//		console.log(JqueryPortico.columns);
 ]]>
 	</script>
 
@@ -553,7 +562,7 @@ toolbar
 					type: 'GET'
 				},
 				fnDrawCallback: function () {
-					$('#datatable-container tbody td').editable( '../example.php', {
+					$('#datatable-container tbody td').editable( editor_action, {
 						"callback": function( sValue, y ) {
 							oTable.fnDraw();
 						},
