@@ -319,12 +319,6 @@ toolbar
 	</table>
 	<script>
 
-	var editor_action = '';
-	<xsl:if test="//datatable/editor_action">
-		var oArgs = {menuaction: "<xsl:value-of select="//datatable/editor_action"/>"};
-		var editor_action = phpGWLink('index.php', oArgs, true);
-	</xsl:if>
-
 		var columns = [
 			<xsl:for-each select="//datatable/field">
 				{
@@ -357,6 +351,19 @@ toolbar
                          },
 
 					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="editor">
+							<xsl:if test="editor =0">
+								editor:	false,
+							</xsl:if>
+							<xsl:if test="editor =1">
+								editor:	true,
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+								editor:	false,
+						</xsl:otherwise>
+					</xsl:choose>
 					defaultContent:	"<xsl:value-of select="defaultContent"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
@@ -382,6 +389,8 @@ toolbar
 			var ajax_url = '<xsl:value-of select="source"/>';
 			var download_url = '<xsl:value-of select="download"/>';
 			var exclude_colvis = [];
+			var editor_cols = [];
+			var editor_action = '<xsl:value-of select="editor_action"/>';
 <![CDATA[
 			TableTools.BUTTONS.download = {
 				"sAction": "text",
@@ -551,6 +560,16 @@ toolbar
 				}
 			}
 
+			for(i=0;i < JqueryPortico.columns.length;i++)
+			{
+				if (JqueryPortico.columns[i]['editor'] === true)
+				{
+					editor_cols.push({});
+				} else {
+					editor_cols.push(null);
+				}
+			}
+			
 			var oTable = $('#datatable-container').dataTable( {
 				processing:		true,
 				serverSide:		true,
@@ -562,11 +581,19 @@ toolbar
 					type: 'GET'
 				},
 				fnDrawCallback: function () {
-					$('#datatable-container tbody td').editable( editor_action, {
-						"callback": function( sValue, y ) {
-							oTable.fnDraw();
-						},
-						"height": "14px"
+					oTable.makeEditable({
+							sUpdateURL: editor_action,
+							fnOnEditing: function(input)
+										 {  
+											id = input.parents("tr")
+													   .children("td:first")
+													   .text();
+											return true
+										},
+							oUpdateParameters: { 
+								"id": function(){ return id; }
+							},
+							aoColumns: editor_cols
 					});
 				},
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
