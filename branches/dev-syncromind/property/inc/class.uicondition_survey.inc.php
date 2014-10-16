@@ -124,6 +124,7 @@
 	//		phpgwapi_yui::load_widget('datatable');
 	//		phpgwapi_yui::load_widget('paginator');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			$categories = $this->_get_categories();
                         
@@ -169,7 +170,8 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'phpgw_return_as' => 'json')),
-					'editor_action' => 'property.uicondition_survey.edit_survey_title',
+					//'editor_action' => 'property.uicondition_survey.edit_survey_title',
+					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -182,7 +184,7 @@
 							'label' => lang('title'),
 							'sortable' => true,
 							//FIXME: to be implemented: http://jquery-datatables-editable.googlecode.com/svn/trunk/inline-edit.html
-							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})'
+							'editor' => true
 						),
 /*						array(
 							'key' => 'descr',
@@ -217,8 +219,8 @@
 						array(
 							'key' => 'link',
 							'label' => 'dummy',
-							'hidden' => true,
 							'sortable' => false,
+							'hidden' => true,
 						)
 					)
 				),
