@@ -588,12 +588,12 @@ toolbar
 											id = input.parents("tr")
 													   .children("td:first")
 													   .text();
-											return true
+											return true;
 										},
 							oUpdateParameters: { 
 								"id": function(){ return id; }
 							},
-							aoColumns: editor_cols
+							aoColumns: editor_cols						
 					});
 				},
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
