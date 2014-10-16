@@ -657,3 +657,14 @@ Outdoors	booking	no	Utendørs
 Indoors	booking	no	Innendørs
 Activities	booking	no	Aktiviteter
 Application on this building is not possible.	booking	no	Det er ikke mulig å søke om tid på dette bygget.
+Split mail if building contains swiming pools resources	booking	no	Spesial behandle bygg med svømmebasseng
+Split mail when building has swiming pool	booking	no	Ikke send e-post om svømming til andre idretter og omvendt.
+activities that uses swimming pools	booking	no	Svømmehaller
+other activities	booking	no	Andre idretter.
+activities that all should get except those in the next field.	booking	no	Aktiviteter som det altid skal sendes e-post om.
+activities that never should get mail	booking	no	Aktiviteter som det aldri skal sendes e-post om kanselering til.
+Who get cancelation mails	booking	no	Hvem får kanselerings e-poster.
+Users of current season or users the last 300 days	booking	no	Brukere denne sesongen eller bruker de siste 300 dager.
+Last 300 days	booking	no	Siste 300 dager
+Cancelation Email Addresses	booking	no	Hvem som skal få kanselerings e-post. (saksbehandeler)
+One e-mail pr. line.	booking	no	Bare en e-post adresse pr. linje.
