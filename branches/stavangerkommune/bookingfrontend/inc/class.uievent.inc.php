@@ -31,7 +31,6 @@
             $bouser = CreateObject('bookingfrontend.bouser');
             $config	= CreateObject('phpgwapi.config','booking');
             $config->read();
-
             $errors = array();
             $customer = array();
 
@@ -53,7 +52,15 @@
                 $customer['customer_organization_number'] = $organization['organization_number'];
                 $customer['customer_internal'] = $organization['customer_internal'];
             }
-            $mailadresses = $this->building_users($event['building_id'],$event['organization_id']);
+            if ($config->config_data['split_pool'] == 'yes')
+            {
+                $split = 1;
+            } else {
+                $split = 0;
+            }
+            $resources = $event['resources'];
+            $activity=$this->organization_bo->so->get_resource_activity($resources);
+            $mailadresses = $this->building_users($event['building_id'], $split, $activity);
 
             if(!$bouser->is_organization_admin($customer['customer_organization_id'])) {
                 $date = substr($event['from_'], 0, 10);
@@ -139,7 +146,6 @@
             $config	= CreateObject('phpgwapi.config','booking');
             $config->read();
 
-
             $event = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
             $bouser = CreateObject('bookingfrontend.bouser');
             $errors = array();
@@ -160,7 +166,17 @@
                 $event['customer_organization_name'] = $orginfo['name'];
             }
 
-            $mailadresses = $this->building_users($event['building_id'],$event['organization_id']);
+            if ($config->config_data['split_pool'] == 'yes')
+            {
+                $split = 1;
+            } else {
+                $split = 0;
+            }
+
+            $resources = $event['resources'];
+            $activity=$this->organization_bo->so->get_resource_activity($resources);
+            $mailadresses = $this->building_users($event['building_id'], $split, $activity);
+
             if($_SERVER['REQUEST_METHOD'] == 'POST')
             {
                 if($cdate < $event['to_']) {
@@ -196,9 +212,9 @@
             self::render_template('event_delete', array('event' => $event, 'activities' => $activities, 'can_delete_events' => $can_delete_events));
         }
 
-        public function building_users($building_id) {
+        public function building_users($building_id, $type=false, $activities=array()) {
             $contacts = array();
-            $organizations = $this->organization_bo->find_building_users($building_id);
+            $organizations = $this->organization_bo->find_building_users($building_id, $type, $activities);
             foreach($organizations['results'] as $key => $org)
             {
                 if ($org['email'] != '' && strstr($org['email'], '@')) {

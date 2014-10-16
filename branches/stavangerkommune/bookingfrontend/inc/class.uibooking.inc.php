@@ -592,12 +592,9 @@
 					);
 		}
 
-		public function building_users($building_id, $group_id, $delete_allocation) {
-
+		public function building_users($building_id, $group_id, $type=false, $activities=array()) {
             $contacts = array();
-#            $building = $this->building_bo->so->read_single($building_id);
-            
-			$organizations = $this->organization_bo->find_building_users($building_id);
+			$organizations = $this->organization_bo->find_building_users($building_id, $type, $activities);
             foreach($organizations['results'] as $org)
             {
                 if ($org['email'] != '' && strstr($org['email'], '@')) {
@@ -716,7 +713,15 @@
 	            $allocation_delete = array();
 	            $allocation_keep = array();
 
-                $mailadresses = $this->building_users($booking['building_id'],$booking['group_id'], $delete_allocation);
+                if ($config->config_data['split_pool'] == 'yes')
+                {
+                    $split = 1;
+                } else {
+                    $split = 0;
+                }
+                $resources = $booking['resources'];
+                $activity=$this->organization_bo->so->get_resource_activity($resources);
+                $mailadresses = $this->building_users($booking['building_id'],$booking['group_id'], $split, $activity);
 
                 $maildata = array();
                 $maildata['outseason'] = $outseason;		

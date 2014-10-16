@@ -20,12 +20,9 @@
 			$this->booking_bo = CreateObject('booking.bobooking');
 	}
 
-		public function building_users($building_id) {
-
+		public function building_users($building_id, $type=false, $activities=array() ) {
             $contacts = array();
-#            $building = $this->building_bo->so->read_single($building_id);
-            
-			$organizations = $this->organization_bo->find_building_users($building_id);
+			$organizations = $this->organization_bo->find_building_users($building_id, $type, $activities);
             foreach($organizations['results'] as $org)
             {
                 if ($org['email'] != '' && strstr($org['email'], '@')) {
@@ -128,8 +125,16 @@
 	            $errors = array();
 				$invalid_dates = array();
 				$valid_dates = array();
-	
-                $mailadresses = $this->building_users($allocation['building_id'],$allocation['organization_id']);
+
+                if ($config->config_data['split_pool'] == 'yes')
+                {
+                    $split = 1;
+                } else {
+                    $split = 0;
+                }
+                $resources = $allocation['resources'];
+                $activity=$this->organization_bo->so->get_resource_activity($resources);
+                $mailadresses = $this->building_users($allocation['building_id'], $split, $activity);
 
                 $maildata = array();
                 $maildata['outseason'] = $outseason;		
