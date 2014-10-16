@@ -96,13 +96,13 @@
                             </xsl:choose>
                         </div>
                         
-                        <div class="pure-control-group" style="width:50%; ">
+                        <div class="pure-control-group" >
                             <label for="name">
                                 <xsl:value-of select="php:function('lang', 'description')" />
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-									<textarea id="descr" rows="6" style="width:60%; resize:none;" name="values[descr]" data-validation="required">
+									<textarea id="descr" rows="6" style="width:40%; resize:none;" name="values[descr]" data-validation="required">
 										<xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
 									</textarea>
                                 </xsl:when>
