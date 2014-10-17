@@ -122,7 +122,7 @@
 			$start			= isset($data['start']) && $data['start'] ? (int)$data['start']:0;
 			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
 			$user_id		= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id']: 0;
-			$owner_id		= isset($data['owner_id'])?$data['owner_id']:'';
+			$reported_by	= isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by']: 0;
 			$query			= isset($data['query'])?$data['query']:'';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
@@ -372,9 +372,9 @@
 				$where = 'AND';
 			}
 
-			if ($owner_id > 0)
+			if ($reported_by > 0)
 			{
-				$filtermethod .= " $where fm_tts_tickets.user_id=" . (int)$owner_id;
+				$filtermethod .= " $where fm_tts_tickets.user_id=" . (int)$reported_by;
 				$where = 'AND';
 			}
 
@@ -1754,4 +1754,22 @@
 			return $values;
 		}
 
+		public function get_reported_by()
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT user_id as id , account_lastname, account_firstname FROM fm_tts_tickets $this->join phpgw_accounts ON fm_tts_tickets.user_id = phpgw_accounts.account_id ORDER BY account_lastname ASC";
+
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true)
+				);
+			}
+
+			return $values;
+		}
 	}
