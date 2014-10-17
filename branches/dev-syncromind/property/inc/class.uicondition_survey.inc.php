@@ -1397,10 +1397,12 @@
 				{
 					if ( $e )
 					{
-						return $e->getMessage(); 
+						echo $e->getMessage(); 
 					}
 				}
-				return 'OK';
+				echo true;
+			} else {
+				echo "ERROR";
 			}
 		}
 
