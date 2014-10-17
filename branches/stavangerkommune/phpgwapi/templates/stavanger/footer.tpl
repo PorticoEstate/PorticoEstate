@@ -39,21 +39,28 @@ function orgbox() {
 		oElement.setAttribute('onclick', 'orgbox();');
 	}
 }
+function clearCookie() {
+    setCookie('orgbox',0);
+    var oElement = document.getElementById("login");
+    oElement.removeAttribute('onclick');
+}
 function init() {
-	if ('{organization_json}' != 'null' && '{organization_json}' != '') {
+    if ('{organization_json}' != 'null' && '{organization_json}' != '') {
 		var oElement = document.getElementById("change");
 		oElement.innerHTML = '<i class="fa fa-users"></i>';
 		oElement.setAttribute('onclick', 'orgbox();');
 		oElement.style.color='black';
 		oElement.style.padding='6px 0px 0px 5px';
 		oElement.style.cursor='pointer';
+        var oElement = document.getElementById("login");
+        oElement.setAttribute('onclick', 'clearCookie();');
 
 		var cookie = getCookie('orgbox');
 		if (cookie != 1) {
 			orgbox();
 			var oList = document.getElementById("orglist");
 			oList.innerHTML += '<div style="padding-top: 10px">PS: Du kan bruke <i class="fa fa-users"></i> ikonet for å bytte organisasjon.</div>';			
-			setCookie('orgbox','default',1);
+			setCookie('orgbox',1);
 		}
 	}
 }
