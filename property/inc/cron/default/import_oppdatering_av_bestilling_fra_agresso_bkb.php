@@ -199,22 +199,16 @@
 						$file_remote = $file_name;
 						$file_local = "{$directory_local}/{$file_name}";
 
-						$fp = fopen($file_local, "wb");
-
-						if ($this->debug)
+						if(ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
 						{
-							_debug_array('debug fopen(): ' . $fp);
-						}
-
-						if(ftp_fget($connection,$fp,$file_remote,FTP_ASCII))
-						{
-							if( ftp_delete($connection, $file_remote))
+							if(ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
 							{
+								echo "File remote: {$file_remote} was moved to archive: arkiv/{$file_remote}<br/>";
 								echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
 							}
 							else
 							{
-								echo "ERROR! File remote: {$file_remote} failed to move from remote: {$directory_remote}/{$file_name}<br/>";
+								echo "ERROR! File remote: {$file_remote} failed to move from remote: {$directory_remote}/arkiv/{$file_name}<br/>";
 								if(unlink($file_local))
 								{
 									echo "Lokal file was deleted: {$file_local}<br/>";
@@ -225,7 +219,6 @@
 						{
 							echo "Feiler på ftp_fget()<br/>";
 						}
-						fclose($fp);
 					}
 				}
 			}
