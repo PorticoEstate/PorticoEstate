@@ -583,17 +583,23 @@ toolbar
 				fnDrawCallback: function () {
 					oTable.makeEditable({
 							sUpdateURL: editor_action,
-							fnOnEditing: function(input)
-										 {  
-											id = input.parents("tr")
-													   .children("td:first")
-													   .text();
-											return true;
-										},
+							fnOnEditing: function(input){  
+								cell = input.parents("td");
+								id = input.parents("tr")
+										   .children("td:first")
+										   .text();
+								return true;
+							},
+							fnOnEdited: function(status, sOldValue, sNewCellDisplayValue, aPos0, aPos1, aPos2)
+							{ 	
+								document.getElementById("message").innerHTML += '<br/>' + status;
+							},
 							oUpdateParameters: { 
 								"id": function(){ return id; }
 							},
-							aoColumns: editor_cols						
+							aoColumns: editor_cols,		
+						    sSuccessResponse: "IGNORE",
+							fnShowError: function(){ return; }		
 					});
 				},
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
