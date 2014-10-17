@@ -193,6 +193,7 @@ ask for approval	property	no	Be om godkjenning
 assigned from	property	no	Tildelt fra
 assignedto	property	no	Tildelt til
 assigned to	property	no	Tildelt til
+reported by	property	no	Innmeldt av
 assign to	property	no	Til
 async	property	no	async
 asynchronous timed services	property	no	Planlagte oppgaver
