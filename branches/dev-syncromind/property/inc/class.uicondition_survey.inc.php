@@ -1376,7 +1376,7 @@
 
 		public function edit_survey_title()
 		{
-			$id = phpgw::get_var('id', 'int', 'GET');
+			$id = phpgw::get_var('id', 'int', 'POST');
 
 			if(!$this->acl_edit)
 			{
