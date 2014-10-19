@@ -12,5 +12,6 @@
 		</div>
 		<div id="popupBox"></div>	
 		<div id="curtain"></div>
-	</body>
+		{javascript_end}
+				</body>
 </html>

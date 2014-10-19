@@ -375,7 +375,8 @@ HTML;
 		(
 	//		'user_fullname'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString(),
 			'powered_by'	=> $powered_by,
-			'lang_login'	=> lang('login')
+			'lang_login'	=> lang('login'),
+			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

@@ -1105,6 +1105,27 @@ HTML;
 		}
 
 		/**
+		* Include JavaScript after </body>
+		*
+		* The method is included here to make it easier to change the js support
+		* in phpgw. One change then all templates will support it (as long as they
+		* include a call to this method).
+		*
+		* @author Sigurd Nes
+		* @return string The JavaScript code to include
+		*/
+		public function get_javascript_end()
+		{
+			$js = '';
+
+			if (isset($GLOBALS['phpgw_info']['flags']['java_script_end']))
+			{
+				$js .= $GLOBALS['phpgw_info']['flags']['java_script_end'] . "\n";
+			}
+			return $js;
+		}
+
+		/**
 		* Get window.on* events from javascript class
 		*
 		* @author Dave Hall skwashd at phpgroupware.org

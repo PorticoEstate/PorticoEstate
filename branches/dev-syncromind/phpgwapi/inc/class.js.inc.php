@@ -302,9 +302,10 @@ HTML;
 			}
 		}
 
-		public function add_code($namespace, $code)
+		public function add_code($namespace, $code, $end_of_page = false)
 		{
-			$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
+			$key = $end_of_page ? 'java_script_end' : 'java_script';
+			$GLOBALS['phpgw_info']['flags'][$key] .= "\n"
 				. '<script type="text/javascript">' ."\n"
 				. '//<[CDATA[' ."\n"
 				. $code ."\n"

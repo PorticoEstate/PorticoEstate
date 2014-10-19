@@ -26,7 +26,6 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
-
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
@@ -43,6 +42,17 @@
 
 		}
 	}
+
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";
+
+//	$stylesheets[] = "/phpgwapi/js/DataTables/media/css/jquery.dataTables.css";
+//	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/dataTables.responsive.css";
+//	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css";
+//	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colvis.jqueryui.css";
+//	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/TableTools/css/dataTables.tableTools.css";
 
 
 	if( !isset($GLOBALS['phpgw_info']['flags']['no_reset_fonts']) )
@@ -110,7 +120,7 @@
 
 	flush();
 
-	echo '<body class="yui-skin-sam">';
+	echo '<body>';
 
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{

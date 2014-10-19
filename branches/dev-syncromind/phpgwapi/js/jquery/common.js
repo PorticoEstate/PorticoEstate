@@ -6,6 +6,10 @@
 //Namespacing
 ;var JqueryPortico = {};
 
+/* Sigurd: Need to delay tab-rendering to after all tables are finished*/
+JqueryPortico.inlineTablesDefined = 0;
+JqueryPortico.inlineTablesRendered = 0;
+
 JqueryPortico.formatLink = function(key, oData) {
 	var name = oData[key];
 	var link = oData['link'];
@@ -20,12 +24,6 @@ JqueryPortico.FormatterAmount0 = function(key, oData) {
 };
 
 JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options, disablePagination) {
-//	var columns = [];
-//	for (i=0; i<colDefs.length; i++) {
-//		columns.push({"data":colDefs[i]['key']});
-//	}
-
-//	return {container:container, columns: columns, url: url};
 
 	$(document).ready(function ()
 	{
@@ -36,8 +34,23 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 			deferRender:	true,
 			ajax: {
 				url: ajax_url,
-//				data: { cat_id: '' },
 				type: 'GET'
+			},
+			fnInitComplete: function (oSettings, json)
+			{
+				JqueryPortico.inlineTablesRendered += 1;
+				if(JqueryPortico.inlineTablesRendered == JqueryPortico.inlineTablesDefined)
+				{
+					if(typeof(JqueryPortico.render_tabs) == 'function')
+					{
+						var delay=15;//allow extra 15 milliseconds to really finish
+						setTimeout(function()
+						{
+							JqueryPortico.render_tabs();
+
+						},delay);
+					}
+				}
 			},
 		//	lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 		//	language:		JqueryPortico.i18n.datatable(),
@@ -51,6 +64,7 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 		//	tabIndex:		1,
 		//	oTableTools: JqueryPortico.TableTools
 		});
+
 	});
 };
 

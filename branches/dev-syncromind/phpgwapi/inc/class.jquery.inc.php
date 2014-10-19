@@ -179,8 +179,17 @@ HTML;
 					</ul>
 HTML;
 		$js = <<<JS
-			$(document).ready(function () 
+		$(document).ready(function ()
+		{
+			if(!JqueryPortico.inlineTablesDefined == 'undefined' || JqueryPortico.inlineTablesDefined == 0)
 			{
+				JqueryPortico.render_tabs();
+			}
+		});
+
+			JqueryPortico.render_tabs = function ()
+			{
+
 				$('#tab-content').responsiveTabs({
 					startCollapsed: 'accordion',
 					collapsible: 'accordion',
@@ -192,13 +201,14 @@ HTML;
 					activate: function(e, tab) {
 						$('.info').html('Tab <strong>' + tab.id + '</strong> activated!');
 					}
-					
+
 				});
 
 				$('#tab-content').responsiveTabs('activate', $selected);
-			});
+
+			};
 JS;
-		$GLOBALS['phpgw']->js->add_code('', $js);
+		$GLOBALS['phpgw']->js->add_code('', $js, true);
 		return $output;
 	}
 

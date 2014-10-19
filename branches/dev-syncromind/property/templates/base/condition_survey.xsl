@@ -546,6 +546,7 @@
 		</thead>
 	</table>
 	<script>
+		JqueryPortico.inlineTablesDefined += 1;
 		var PreColumns = [
 				<xsl:for-each select="$ColumnDefs">
 				{
