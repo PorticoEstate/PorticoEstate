@@ -886,7 +886,7 @@ JS;
 				{
 					for ($k=0;$k<count($input_name);$k++)
 					{
-						$function_exchange_values .= 'opener.document.getElementsByName("'.$input_name[$k].'")[0].value = "";' ."\r\n";
+						$function_exchange_values .= 'parent.document.getElementsByName("'.$input_name[$k].'")[0].value = "";' ."\r\n";
 					}
 				}
 
@@ -894,12 +894,12 @@ JS;
 				{
 					if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
 					{
-						$function_exchange_values .= 'opener.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = "";' ."\r\n";
-						$function_exchange_values .= 'opener.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
+						$function_exchange_values .= 'parent.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = "";' ."\r\n";
+						$function_exchange_values .= 'parent.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
 					}
 				}
 
-				$function_exchange_values .='window.close()';
+				$function_exchange_values .='window.parent.TINY.box.hide();';
 
 				$datatable['exchange_values'] = $function_exchange_values;
 
