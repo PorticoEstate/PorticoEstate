@@ -90,6 +90,150 @@
 			}
 		}
 
+		/*
+		* Overrides with incoming data from POST
+		*/
+		private function _populate($data = array())
+		{
+			$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
+
+			$values	= phpgw::get_var('values');
+
+			$_fields = array
+			(
+				array
+				(
+					'name' => 'title',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'descr',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'cat_id',
+					'type'	=> 'integer',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'report_date',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'status_id',
+					'type'	=> 'integer',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'vendor_id',
+					'type'	=> 'integer',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'vendor_name',
+					'type'	=> 'string',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'coordinator_id',
+					'type'	=> 'integer',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'coordinator_name',
+					'type'	=> 'string',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'multiplier',
+					'type'	=> 'float',
+					'required'	=> false
+				),
+			);
+
+
+			foreach ($_fields as $_field)
+			{
+				if($data[$_field['name']] = $_POST['values'][$_field['name']])
+				{
+					$data[$_field['name']] =  phpgw::clean_value($data[$_field['name']], $_field['type']);
+				}
+				if($_field['required'] && !$data[$_field['name']])
+				{
+					$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $_field['name']));
+				}
+			}
+
+			$values = $this->bocommon->collect_locationdata($data,$insert_record);
+
+			if(!isset($values['location_code']) || ! $values['location_code'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
+			}
+
+			/*
+			* Extra data from custom fields
+			*/
+			$values['attributes']	= phpgw::get_var('values_attribute');
+
+			if(is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as $attribute )
+				{
+					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+					{
+						$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+					}
+				}
+			}
+
+			if(!isset($values['cat_id']) || !$values['cat_id'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a category !'));
+			}
+
+			if(!isset($values['title']) || !$values['title'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please give a title !'));
+			}
+
+			if(!isset($values['report_date']) || !$values['report_date'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a date!'));
+			}
+
+			return $values;
+		}
+		
+		private function _get_categories($selected = 0)
+		{
+			$cats	= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$cats->supress_info	= true;
+			$categories = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $selected,'globals' => true,'use_acl' => $this->_category_acl));
+			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+			array_unshift ($categories['cat_list'],$default_value);
+
+			foreach ($categories['cat_list'] as & $_category)
+			{
+				$_category['id'] = $_category['cat_id'];
+			}
+
+			return $categories['cat_list'];
+		}
+		
+		
 		function save_sessiondata()
 		{
 			$data = array
@@ -595,8 +739,242 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'generic.index', 'property' );
+			
+			/*
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+			
+			$categories = $this->_get_categories();
+                        
+			$data = array(
+				'datatable_name'	=> lang('condition survey'),
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array('type' => 'filter',
+								'name' => 'cat_id',
+								'text' => lang('category') . ':',
+								'list' => $categories,
+							),
+							array('type' => 'text',
+								'text' => lang('search'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
+								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('download'),
+								'href' => 'javascript:window.open("'. self::link(array('menuaction' => 'property.uicondition_survey.download', 'export' => true, 'allrows' => true)) . '","window")',
+								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['allrows'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'allrows' => true))
+							),
+
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'phpgw_return_as' => 'json')),
+					//'editor_action' => 'property.uicondition_survey.edit_survey_title',
+					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
+					'field' => array(
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable' => true,
+							'formatter' => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key' => 'title',
+							'label' => lang('title'),
+							'sortable' => true,
+							//FIXME: to be implemented: http://jquery-datatables-editable.googlecode.com/svn/trunk/inline-edit.html
+							'editor' => true
+						),
+						array(
+							'key' => 'address',
+							'label' => lang('buildingname'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'vendor',
+							'label' => lang('vendor'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'year',
+							'label' => lang('year'),
+							'sortable' => true,
+						),
+						array(
+							'key' => 'multiplier',
+							'label' => lang('multiplier'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'cnt',
+							'label' => lang('count'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'link',
+							'label' => 'dummy',
+							'sortable' => false,
+							'hidden' => true,
+						)
+					)
+				),
+			);
+			
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'view_survey',
+						'text' 			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.view'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'edit_survey',
+						'text' 			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'import_survey',
+						'text' 			=> lang('import'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.import'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+
+			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'delete_imported_records',
+						'text' 			=> lang('delete imported records'),
+						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.delete_imported_records'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+
+			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'delete_survey',
+						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.delete'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+
+			self::render_template_xsl('datatable_jquery', $data);
+			* 
+			*/
+			
 		}
 
+		
+		/**
+		 * Fetch data from $this->bo based on parametres
+		 * @return array
+		 */
+		public function query()
+		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search,
+				'sort' => phpgw::get_var('sort'),
+				'dir' => phpgw::get_var('dir'),
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('allrows', 'bool')
+			);
+
+			$result_objects = array();
+			$result_count = 0;
+
+			$values = $this->bo->read($params);
+			if ( phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records;
+//			$result_data['start'] = $params['start'];
+//			$result_data['sort'] = $params['sort'];
+//			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
+
+			array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
+
+			return $this->jquery_results($result_data);
+		}
+		
+		
 		function edit()
 		{
 			if(!$this->acl_add)
