@@ -6,6 +6,8 @@
 		function __construct()
 		{
 			parent::__construct();
+            $this->activity_bo = CreateObject('booking.boactivity');
+            $this->organization_bo = CreateObject('booking.boorganization');
 			$this->so = CreateObject('booking.soapplication');
 		}
 
@@ -54,8 +56,7 @@
 				}
 
 				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']); 
-				$body .= '</p><pre>'.$config->config_data['application_mail_pending'].' <a href="'.$link.'">Link til '.$config->config_data
-['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
+				$body .= '</p><pre>'.$config->config_data['application_mail_pending'].' <a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
 				$body .= "<pre>Godkjent: ".$adates."</pre>";
 				$body .= "<pre>Avvist: ".$rdates."</pre>";
 
@@ -90,7 +91,12 @@
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
-			}
+			} else {
+                $subject = $config->config_data['application_comment_mail_subject'];
+                $body = "<pre><p>".$config->config_data['application_comment_added_mail']."</p>";
+                $body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p></pre>';
+                $body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
+            }
 			$body .= "<p>".$config->config_data['application_mail_signature']."</p>";
 
 			try
@@ -102,8 +108,62 @@
 				// TODO: Inform user if something goes wrong
 			}
 		}
-		
-		/**
+
+        /**
+         * @ Send message about comment on application to case officer.
+         */
+        function send_admin_notification($application, $message = null)
+        {
+            if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+                return;
+            $send = CreateObject('phpgwapi.send');
+
+            $config = CreateObject('phpgwapi.config', 'booking');
+            $config->read();
+
+            $from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
+            $external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+            $subject = $config->config_data['application_comment_mail_subject_caseofficer'];
+
+            $mailadresses = $config->config_data['emails'];
+            $mailadresses = explode("\n", $mailadresses);
+
+            $link = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+
+            $activity = $this->activity_bo->read_single($application['activity_id']);
+
+            if (strlen($application['customer_organization_number']) == 9) {
+                $orgid = $this->organization_bo->so->get_orgid($application['customer_organization_number']);
+                $organization = $this->organization_bo->read_single($orgid);
+                $body = '<b>Kommentar fra ' . $organization['name'] . '</b><br />' . $message . '<br /><br/>';
+            } else {
+                $body = '<b>Kommentar fra '.$application['contact_name'].'</b><br />'.$message.'<br /><br/>';
+            }
+
+            $body .= '<b>Bygg: </b>'.$application['building_name'].'<br />';
+            $body .= '<b>Aktivitet: </b>'.$activity['name'].'<br /><br />';
+            $body .= '<b>Kontaktperson:</b> '.$application['contact_name'].'<br />';
+            $body .= '<b>Epost:</b> '.$application['contact_email'].'<br />';
+            $body .= '<b>Telefon:</b> '.$application['contact_phone'].'<br /><br />';
+            $body .= '<a href="'.$link.'">Lenke til søknad</a><br /><br />';
+
+            foreach ($mailadresses as $adr)
+            {
+                try
+                {
+                    $send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
+                }
+                catch (phpmailerException $e)
+                {
+                    // TODO: Inform user if something goes wrong
+                }
+            }
+        }
+
+
+        /**
 		* Returns an array of application ids from applications assocciated with buildings
 		* which the given user has access to
 		*

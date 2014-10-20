@@ -213,9 +213,6 @@ class booking_boevent extends booking_bocommon_authorized
         $body .= ' - <a href="'.$link.'">'.lang('Check calendar').'</a></p>';
         $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
 
-
-
-        print_r($body);
         foreach ($mailadresses as $adr)
         {
             try

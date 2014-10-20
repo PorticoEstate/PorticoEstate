@@ -25,6 +25,8 @@
 				$this->add_comment($application, $_POST['comment']);
 				$this->set_display_in_dashboard($application, true, array('force' => true));
 				$application['frontend_modified'] = 'now';
+                $this->bo->send_admin_notification($application, $_POST['comment']);
+
 				$receipt = $this->bo->update($application);
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id'], 'secret'=>$application['secret']));
 			}

@@ -10,6 +10,9 @@
 
     <form action="" method="POST">
 
+       <dl class="form">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'Application email settings')"/></dt>
+       </dl>
        <dl class="form-col">
             <dt><label for="field_application_mail_systemname"><xsl:value-of select="php:function('lang', 'System name')"/></label></dt>
             <dd>
@@ -46,6 +49,28 @@
 				</input>
             </dd>
 
+        </dl>
+
+        <div class="clr"/>
+        <dl class="form">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'Application comment email settings')"/></dt>
+
+            <dt><label for="field_application_comment_mail_subject_caseofficer"><xsl:value-of select="php:function('lang', 'Subject caseofficer')"/></label></dt>
+            <dd>
+                <input id="field_application_comment_mail_subject_caseofficer" name="application_comment_mail_subject_caseofficer" type="text" size="50">
+                    <xsl:attribute name="value"><xsl:value-of select="config_data/application_comment_mail_subject_caseofficer"/></xsl:attribute>
+                </input>
+            </dd>
+            <dt><label for="field_application_comment_mail_subject"><xsl:value-of select="php:function('lang', 'Subject')"/></label></dt>
+            <dd>
+                <input id="field_application_comment_mail_subject" name="application_comment_mail_subject" type="text" size="50">
+                    <xsl:attribute name="value"><xsl:value-of select="config_data/application_comment_mail_subject"/></xsl:attribute>
+                </input>
+            </dd>
+            <dt><label for="field_application_comment_added_mail"><xsl:value-of select="php:function('lang', 'Mail text for comment added')"/></label></dt>
+            <dd class="yui-skin-sam">
+                <textarea id="field_application_comment_added_mail" class="full-width settings" name="application_comment_added_mail" type="text"><xsl:value-of select="config_data/application_comment_added_mail"/></textarea>
+            </dd>
         </dl>
 
 		<div class="form-buttons">

@@ -791,9 +791,9 @@
 					$notify = true;
 				}
 				
-				$update AND $receipt = $this->bo->update($application);
-				$notify AND $this->bo->send_notification($application);
-				
+                $update AND $receipt = $this->bo->update($application);
+                $notify AND $this->bo->send_notification($application);
+
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
 
