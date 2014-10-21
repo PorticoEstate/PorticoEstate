@@ -96,6 +96,7 @@
 			$this->order				= $this->bo->order;
 			$this->status_id			= $this->bo->status_id;
 			$this->user_id				= $this->bo->user_id;
+			$this->reported_by			= $this->bo->reported_by;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->vendor_id			= $this->bo->vendor_id;
 			$this->district_id			= $this->bo->district_id;
@@ -121,6 +122,7 @@
 					'order'			=> $this->order,
 					'status_id'		=> $this->status_id,
 					'user_id'		=> $this->user_id,
+					'reported_by'	=> $this->reported_by,
 					'cat_id'		=> $this->cat_id,
 					'vendor_id'		=> $this->vendor_id,
 					'district_id'	=> $this->district_id,
@@ -477,6 +479,7 @@
 					."cat_id:'{$this->cat_id}',"
 					."vendor_id:'{$this->vendor_id}',"
 					."status_id: '{$this->status_id}',"
+					."reported_by: '{$this->reported_by}',"
 					."user_id: '{$this->user_id}',"
 					."query: '{$this->query}',"
 					."p_num: '{$this->p_num}',"
@@ -497,6 +500,7 @@
 						'vendor_id'			=> $this->vendor_id,
 						'status_id'			=> $this->status_id,
 						'user_id'			=> $this->user_id,
+						'reported_by'		=> $this->reported_by,
 						'query'				=> $this->query,
 						'district_id'		=> $this->district_id,
 						'part_of_town_id'   => $this->part_of_town_id,
@@ -537,6 +541,7 @@
 					array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my assigned tickets')));
 					$_my_negative_self = (-1 * $GLOBALS['phpgw_info']['user']['account_id']);
 	
+/*
 					$default_value = array
 					(
 						'id'		=> $_my_negative_self,
@@ -545,9 +550,14 @@
 					);
 					unset($_my_negative_self);
 					array_unshift ($values_combo_box[4],$default_value);
-
-					$default_value = array('id'=>'','name'=>lang('no user'));
+*/
+					$default_value = array('id'=>'','name'=>lang('assigned to'));
 					array_unshift ($values_combo_box[4],$default_value);
+
+					$values_combo_box[5]  = $this->bo->get_reported_by($this->reported_by);
+					array_unshift ($values_combo_box[5],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my submitted tickets')));
+					array_unshift ($values_combo_box[5],array('id'=>'','name'=>lang('reported by')));
+
 
 					$datatable['actions']['form'] = array
 						(
@@ -618,58 +628,70 @@
 										'tab_index' => 5
 									),
 									array
+									( //boton 	USER
+										//	'id' => 'btn_user_id',
+										'id' => 'sel_reported_by', // testing traditional listbox for long list
+										'name' => 'reported_by',
+										'value'	=> lang('reported by'),
+										'type' => 'select',
+										'style' => 'filter',
+										'values' => $values_combo_box[5],
+										'onchange'=> 'onChangeSelect("reported_by");',
+										'tab_index' => 6
+									),
+									array
 									(//for link "columns", next to Export button
 										'type' => 'link',
 										'id' => 'btn_columns',
 										'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-										array
-										(
-											'menuaction' => 'property.uitts.columns'
-										)
-									)."','','width=300,height=600,scrollbars=1')",
-									'value' => lang('columns'),
-									'tab_index' => 11
-								),
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_export',
-									'value'	=> lang('download'),
-									'tab_index' => 10
-								),
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_new',
-									'value'	=> lang('add'),
-									'tab_index' => 9
-								),
-								array
-								( //hidden start_date
-									'type' => 'hidden',
-									'id' => 'start_date',
-									'value' => $start_date
-								),
-								array
-								( //hidden end_date
-									'type' => 'hidden',
-									'id' => 'end_date',
-									'value' => $end_date
-								),
-								array
-								(//for link "None",
-									'type'=> 'label_date'
-								),
-								array
-								(//for link "Date search",
-									'type'=> 'link',
-									'id'  => 'btn_data_search',
-									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+											array
+											(
+												'menuaction' => 'property.uitts.columns'
+											)
+										)."','','width=300,height=600,scrollbars=1')",
+										'value' => lang('columns'),
+										'tab_index' => 12
+									),
+									array
+									(
+										'type'	=> 'button',
+										'id'	=> 'btn_export',
+										'value'	=> lang('download'),
+										'tab_index' => 11
+									),
+									array
+									(
+										'type'	=> 'button',
+										'id'	=> 'btn_new',
+										'value'	=> lang('add'),
+										'tab_index' => 10
+									),
+									array
+									( //hidden start_date
+										'type' => 'hidden',
+										'id' => 'start_date',
+										'value' => $start_date
+									),
+									array
+									( //hidden end_date
+										'type' => 'hidden',
+										'id' => 'end_date',
+										'value' => $end_date
+									),
+									array
+									(//for link "None",
+										'type'=> 'label_date'
+									),
+									array
+									(//for link "Date search",
+										'type'=> 'link',
+										'id'  => 'btn_data_search',
+										'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
 									array
 									(
 										'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 										'value' => lang('Date search'),
-										'tab_index' => 8
+										'tab_index' => 9
 									),
 									array
 									( //boton     SEARCH
@@ -677,7 +699,7 @@
 										'name' => 'search',
 										'value'    => lang('search'),
 										'type' => 'button',
-										'tab_index' => 7
+										'tab_index' => 8
 									),
 									array
 									( // TEXT INPUT
@@ -687,7 +709,7 @@
 										'type' => 'text',
 										'onkeypress' => 'return pulsar(event)',
 										'size'    => 28,
-										'tab_index' => 6
+										'tab_index' => 7
 									)
 								),
 								'hidden_value' => array

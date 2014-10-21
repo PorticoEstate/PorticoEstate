@@ -143,7 +143,7 @@
 			$cats->supress_info	= true;
 
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
-			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+                        array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
 			$control_areas_array = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{

@@ -47,6 +47,7 @@
 		var $fields_updated = false;
 		var $status_id;
 		var $user_id;
+		var $reported_by;
 		var $part_of_town_id;
 		var $district_id;
 		public $total_records	= 0;
@@ -119,6 +120,7 @@
 			$order					= phpgw::get_var('order');
 			$status_id				= phpgw::get_var('status_id', 'string');
 			$user_id				= phpgw::get_var('user_id', 'int');
+			$reported_by				= phpgw::get_var('reported_by', 'int');
 			$cat_id					= phpgw::get_var('cat_id', 'int');
 			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
 			$district_id			= phpgw::get_var('district_id', 'int');
@@ -140,7 +142,9 @@
 			$this->order			= isset($_REQUEST['order']) 		? $order			: $this->order;
 			$this->cat_id			= isset($_REQUEST['cat_id']) 		? $cat_id			:  $this->cat_id;
 			$this->status_id		= isset($_REQUEST['status_id'])		? $status_id		: $this->status_id;
-			$this->user_id			= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;;
+			$this->user_id			= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;
+			$this->reported_by			= isset($_REQUEST['user_id']) 	? $reported_by			: $this->reported_by;
+
 			$this->part_of_town_id	= isset($_REQUEST['part_of_town_id'])? $part_of_town_id : $this->part_of_town_id;
 			$this->district_id		= isset($_REQUEST['district_id']) 	? $district_id		: $this->district_id;
 			$this->allrows			= isset($allrows) && $allrows 		? $allrows			: '';
@@ -172,6 +176,7 @@
 			$this->start			= isset($data['start'])?$data['start']:'';
 			$this->query			= isset($data['query'])?$data['query']:'';
 			$this->user_id			= isset($data['user_id'])?$data['user_id']:'';
+			$this->reported_by		= isset($data['reported_by'])?$data['reported_by']:'';
 			$this->sort				= isset($data['sort'])?$data['sort']:'';
 			$this->order			= isset($data['order'])?$data['order']:'';
 			$this->status_id		= isset($data['status_id'])?$data['status_id']:'';
@@ -499,7 +504,7 @@
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 				'part_of_town_id' => $this->part_of_town_id, 'start_date'=>$start_date,'end_date'=>$end_date,
-				'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
+				'allrows'=>$this->allrows,'user_id' => $this->user_id,'reported_by' => $this->reported_by, 'external'=>$external, 'dry_run' => $dry_run,
 				'location_code' => $this->location_code, 'p_num' => $this->p_num, 'vendor_id' => $this->vendor_id,
 				'ecodimb' => $this->ecodimb, 'b_account' => $this->b_account, 'building_part' => $this->building_part,
 				'branch_id' => $this->branch_id ,'order_dim1' => $this->order_dim1));
@@ -1655,5 +1660,17 @@
 				$payment['created_on_date'] = $GLOBALS['phpgw']->common->show_date($payment['created_on'],$this->dateformat);
 			}
 			return $payments;
+		}
+
+		public function get_reported_by($selected=0)
+		{
+			$values = $this->so->get_reported_by();
+
+			foreach($values as &$entry)
+			{
+				$entry['selected']	= $entry['id'] == $selected ? 1 : 0;
+			}
+			return $values;
+
 		}
 	}

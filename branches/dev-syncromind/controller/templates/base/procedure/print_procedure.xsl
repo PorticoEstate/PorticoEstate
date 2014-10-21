@@ -17,8 +17,10 @@
 		</div>
 		<div>
 			<label for="start_date"><xsl:value-of select="php:function('lang','Procedure valid from date')" /></label>
-			<xsl:variable name="startdate"><xsl:value-of select="procedure/start_date" /></xsl:variable>
-			<xsl:value-of select="php:function('date', $date_format, $startdate)" />
+                        <xsl:if test="procedure/start_date != 0">
+                            <xsl:variable name="startdate"><xsl:value-of select="procedure/start_date" /></xsl:variable>
+                            <xsl:value-of select="php:function('date', $date_format, $startdate)" />
+                        </xsl:if>
 		</div>
 		<div>
 			<label for="revision_date"><xsl:value-of select="php:function('lang','Procedure revision date')" /></label>
@@ -41,7 +43,7 @@
 		</div>
 		<div>
 			<label for="responsibility"><xsl:value-of select="php:function('lang','Procedure responsibility')" /></label>
-			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/responsibility" /></span>
+			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/responsibility" disable-output-escaping="yes"/></span>
 		</div>
 		<div>
 			<label for="description"><xsl:value-of select="php:function('lang','Procedure description')" /></label>
@@ -109,6 +111,10 @@
 	    font-size: 18px;
 	    margin: 0 0 5px;
 	}
+    
+        #procedure ul li{
+            list-style: disc;
+        }
 		
 </style>
 </xsl:template>

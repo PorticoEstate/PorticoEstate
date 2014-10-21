@@ -1,6 +1,16 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 
 <xsl:template match="data">
+    
+    <h1><xsl:value-of select="control/title" /></h1>
+    <xsl:choose>
+        <xsl:when test="location_level = 1">
+                <h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
+        </xsl:when>
+        <xsl:otherwise>
+                <h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+        </xsl:otherwise>
+    </xsl:choose>
 
 <ul class="groups">
 	<xsl:for-each select="saved_groups_with_items_array">
@@ -27,7 +37,7 @@
 			 			<li class="list_item">
 			 				<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
 			 				<br/><i>Hva skal utføres</i><br/><xsl:value-of select="what_to_do" disable-output-escaping="yes"/>
-			 				<br/><i>Utførelsesbeskrivelse</i><br/><xsl:value-of select="how_to_do" disable-output-escaping="yes"/><br/><br/>
+			 				<br/><br/><i>Utførelsesbeskrivelse</i><br/><xsl:value-of select="how_to_do" disable-output-escaping="yes"/><br/>
 			 			</li>
 					</xsl:for-each>
 				</ul>
@@ -55,6 +65,10 @@ li{
 	list-style: none outside none;
 }
 
+li.list_item ol li{
+    list-style: decimal;
+}
+    
 ul.groups li {
     padding: 3px 0;
 }
