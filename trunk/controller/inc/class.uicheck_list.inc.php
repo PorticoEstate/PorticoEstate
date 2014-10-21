@@ -679,6 +679,11 @@
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
+                        
+                        $location_code = $check_list->get_location_code();
+                        $location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+                        $level = $this->location_finder->get_location_level($location_code);
+                        //var_dump($location_array);
 
 			$saved_groups_with_items_array = array();
 
@@ -695,7 +700,10 @@
 			$data = array
 			(
 				'saved_groups_with_items_array' => $saved_groups_with_items_array,
-				'check_list' => $check_list
+				'check_list' => $check_list,
+                                'control' => $control->toArray(),
+                                'location_array' => $location_array,
+                                'location_level' => $level
 			);
 
 			self::render_template_xsl('check_list/print_check_list', $data);
