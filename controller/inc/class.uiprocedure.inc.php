@@ -615,6 +615,7 @@
 				'procedure'	=> $procedure->toArray(),
 				'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 			);
+                        //var_dump($procedure->toArray());
 			
 			if( !empty($control_group_id) )
 			{
