@@ -37,6 +37,7 @@
 	class property_uigeneric extends phpgwapi_uicommon_jquery
 	{
 		protected $appname = 'property';
+		private $receipt = array();
 		var $grants;
 		var $start;
 		var $query;
@@ -48,6 +49,7 @@
 
 		var $public_functions = array
 			(
+				'query'				=> true,
 				'index'  			=> true,
 				'edit'   			=> true,
 				'delete'			=> true,
@@ -58,7 +60,9 @@
 
 		function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			parent::__construct();
+			
+			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bogeneric',true);
 			$this->bo->get_location_info();
@@ -84,7 +88,7 @@
 			$this->type 		= $this->bo->type;
 			$this->type_id 		= $this->bo->type_id;
 
-			if($appname = $this->bo->appname)
+			if($appname == $this->bo->appname)
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$this->appname = $appname;
@@ -343,8 +347,8 @@
 				return;
 			}
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
-			$this->save_sessiondata();
+			//$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
+			//$this->save_sessiondata();
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
 
@@ -352,7 +356,10 @@
 			{
 				return $this->query();
 			}
-			                       
+
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),
 				'form' => array(
@@ -422,6 +429,7 @@
 				array_push ($data['form']['toolbar']['item'], $filter);
 			}
 			
+			$this->bo->read();
 			$uicols = $this->bo->uicols;
 
 			$j = 0;
@@ -433,10 +441,9 @@
 				{
 					array_push ($data['datatable']['field'], array(
 																	'key' => $uicols['name'][$k],
-																	'label' => $uicols['name'][$k],
-																	'sortable' => false,
-																	'hidden' => false,
-																	'formatter' => $uicols['datatype'][$k]
+																	'label' => $uicols['descr'][$k],
+																	'sortable' => ($uicols['sortable'][$k]) ? true : false,
+																	'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 																));
 				}
 			}
@@ -509,7 +516,7 @@
 			
 			if($this->acl_add)
 			{
-				$datatable['datatable']['actions'][] = array
+				$data['datatable']['actions'][] = array
 					(
 						'my_name' 			=> 'add',
 						'statustext' 	=> lang('add'),
@@ -524,11 +531,13 @@
 					);
 			}
 
+			$appname			=  $this->location_info['name'];
+			$function_msg		= lang('list %1', $appname);
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			
 			self::render_template_xsl('datatable_jquery', $data);
 
-			
 		}
 
 		
@@ -538,6 +547,7 @@
 		 */
 		public function query()
 		{
+			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
@@ -547,6 +557,7 @@
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search,
+				'order' => '',
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
@@ -569,8 +580,6 @@
 //			$result_data['sort'] = $params['sort'];
 //			$result_data['dir'] = $params['dir'];
 			$result_data['draw'] = $draw;
-
-			array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
 
 			return $this->jquery_results($result_data);
 		}
