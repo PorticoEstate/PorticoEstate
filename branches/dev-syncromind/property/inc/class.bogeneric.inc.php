@@ -149,10 +149,12 @@
 				}
 			}
 
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/*$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+				'allrows'=>$this->allrows),$filter);*/
+
+			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,
 				'allrows'=>$this->allrows),$filter);
-
-
+			
 			foreach ( $this->location_info['fields'] as $field )
 			{
 				if (isset($field['role']) && $field['role'] == 'parent')
