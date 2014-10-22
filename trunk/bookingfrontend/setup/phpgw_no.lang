@@ -262,7 +262,7 @@ Send	bookingfrontend	no	Send
 Go back	bookingfrontend	no	Tilbake
 Your application has now been registered and a confirmation email has been sent to you.	bookingfrontend	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	bookingfrontend	no	En saksbehandler vil behandle søknaden så fort som mulig.
-Please check your Spam Filter if you are missing mail.	bookingfrontend	no	Vi gjør oppmerksom på at e-postsvar blir automatisk generert og derfor noen ganger vil ende i ditt spamfilter/nettsøppel.
+Please check your Spam Filter if you are missing mail.	bookingfrontend	no	Vi gjør oppmerksom på at e-postsvar blir automatisk generert og derfor noen ganger vil ende i spamfilter/nettsøppel.
 Loading...	bookingfrontend	no	Laster...
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer er ugyldig
