@@ -98,7 +98,8 @@ class phpgwapi_jquery {
 				$load = array
 					(
 					"js/jquery-2.1.1{$_type}",
-					"tabs/jquery.responsiveTabs{$_type}"
+					"tabs/jquery.responsiveTabs{$_type}",
+					'common'
 				);
 
 				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/responsive-tabs.css");
@@ -112,10 +113,12 @@ class phpgwapi_jquery {
 				return '';
 		}
 
-		foreach ($load as $script) {
+		foreach ($load as $script)
+		{
 			$test = $GLOBALS['phpgw']->js->validate_file('jquery', $script);
 
-			if (!$test) {
+			if (!$test)
+			{
 				$err = "Unable to load jQuery script '%1' when attempting to load widget: '%2'";
 				trigger_error(lang($err, $script, $widget), E_USER_WARNING);
 				return '';
@@ -142,7 +145,8 @@ JS;
 		return $output;
 	}
 
-	public static function tabview_generate($tabs, $selection) {
+	public static function tabview_generate($tabs, $selection)
+	{
 		self::load_widget('tabview');
 		$output = <<<HTML
 					<ul>
@@ -164,6 +168,12 @@ HTML;
 			if ($tab['disable'] == 1) {
 				$disabled[] = $i;
 			}
+
+			if($tab['link'] && !preg_match('/(^#)/i', $tab['link']))
+			{
+				  $_function =  " onclick=\"javascript: window.location = '{$tab['link']}';\"";
+				  $tab['link'] = "#";
+			}
 			
 			$output .= <<<HTML
 				<li><a href="{$tab['link']}"{$_function}>{$label}</a></li>
@@ -181,7 +191,7 @@ HTML;
 		$js = <<<JS
 		$(document).ready(function ()
 		{
-			if(!JqueryPortico.inlineTablesDefined == 'undefined' || JqueryPortico.inlineTablesDefined == 0)
+			if(typeof(JqueryPortico.inlineTablesDefined) == 'undefined' || JqueryPortico.inlineTablesDefined == 0)
 			{
 				JqueryPortico.render_tabs();
 			}

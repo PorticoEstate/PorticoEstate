@@ -500,7 +500,7 @@ HTML;
 		*/
 		public function create_tabs($tabs, $selection, $lang = false)
 		{
-			phpgw::import_class('phpgwapi.yui');
+			phpgw::import_class('phpgwapi.jquery');
 			if ( $lang )
 			{
 				foreach ( $tabs as &$tab )
@@ -509,9 +509,9 @@ HTML;
 				}
 			}
 
-			$html = phpgwapi_yui::tabview_generate($tabs, $selection);
+			$html = phpgwapi_jquery::tabview_generate($tabs, $selection);
 			$output = <<<HTML
-			<div class="yui-navset">
+			<div id="tab-content">
 				{$html}
 			</div>
 
