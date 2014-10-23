@@ -52,6 +52,7 @@
 			$dir		= isset($data['dir']) ? $data['dir'] :  'DESC';
 			$cat_id		= isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
 			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$results	= isset($data['results'])  ? (int) $data['results'] : 0;
 
 			$table = 'fm_condition_survey';
 			if ($sort)
@@ -101,7 +102,7 @@
 
 			if(!$allrows)
 			{
-				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{

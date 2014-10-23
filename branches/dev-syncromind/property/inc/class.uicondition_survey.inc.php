@@ -138,39 +138,19 @@
 								'text' => lang('category') . ':',
 								'list' => $categories,
 							),
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
 							array(
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
 								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('download'),
-								'href' => 'javascript:window.open("'. self::link(array('menuaction' => 'property.uicondition_survey.download', 'export' => true, 'allrows' => true)) . '","window")',
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['allrows'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'allrows' => true))
-							),
-
+							)
 						),
 					),
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'phpgw_return_as' => 'json')),
-					//'editor_action' => 'property.uicondition_survey.edit_survey_title',
+					'download'	=> self::link(array('menuaction' => 'property.uicondition_survey.download', 'export' => true, 'allrows' => true)),
+					'allrows'	=> true,
 					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
 					'field' => array(
 						array(
@@ -324,7 +304,7 @@
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('allrows', 'bool')
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
 			$result_objects = array();
