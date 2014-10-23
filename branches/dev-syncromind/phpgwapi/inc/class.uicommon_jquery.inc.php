@@ -431,7 +431,7 @@
 		}
 
 		// Add link key to a result array
-		public function _add_links(&$value, $key, $menuaction)
+		public function _add_links(&$value, $key, $link_data)
 		{
 			$unset = 0;
 			// FIXME: Fugly workaround
@@ -442,8 +442,10 @@
 				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
 				$unset = 1;
 			}
+			
+			$link_data['id'] = $value['id'];
 
-			$value['link'] = self::link(array('menuaction' => $menuaction, 'id' => $value['id']));
+			$value['link'] = self::link($link_data);
 
 			// FIXME: Fugly workaround
 			// I kid you not my friend. There is something very wonky going on
