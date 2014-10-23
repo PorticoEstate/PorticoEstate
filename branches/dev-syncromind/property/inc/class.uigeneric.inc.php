@@ -229,7 +229,7 @@
 			$i = 0;
 			foreach ( $this->location_info['fields'] as $field )
 			{
-				if (isset($field['filter']) && $field['filter'])
+				if (!empty($field['filter']) && empty($field['hidden']))
 				{
 					if($field['values_def']['valueset'])
 					{
@@ -425,31 +425,31 @@
 					'field' => array()
 				),
 			);
-			
+	
 			$filters = $this->_get_categories();
 			
 			foreach ($filters as $filter) 
 			{
-				array_push ($data['form']['toolbar']['item'], $filter);
+				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 			
 			$this->bo->read();
 			$uicols = $this->bo->uicols;
 
-			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
 			for($k=0;$k<$count_uicols_name;$k++)
 			{
-				if($uicols['input_type'][$k] != 'hidden')
-				{
-					array_push ($data['datatable']['field'], array(
-																	'key' => $uicols['name'][$k],
-																	'label' => $uicols['descr'][$k],
-																	'sortable' => ($uicols['sortable'][$k]) ? true : false,
-																	'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
-																));
-				}
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'sortable' => ($uicols['sortable'][$k]) ? true : false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
+					if ($uicols['name'][$k] == 'id') {
+						$params['formatter'] = 'JqueryPortico.formatLink';
+					}
+					array_push ($data['datatable']['field'], $params);
 			}
 
 			$parameters = array
@@ -513,7 +513,7 @@
 							'type'			=> $this->type,
 							'type_id'		=> $this->type_id
 						)),
-						'parameters'	=> $parameters
+						'parameters'	=> json_encode($parameters)
 					);
 			}
 			unset($parameters);
@@ -587,10 +587,17 @@
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
-//			$result_data['start'] = $params['start'];
-//			$result_data['sort'] = $params['sort'];
-//			$result_data['dir'] = $params['dir'];
 			$result_data['draw'] = $draw;
+			
+			$link_data = array
+			(
+				'menuaction' => 'property.uigeneric.edit',
+				'appname'	 => $this->appname,
+				'type'		 => $this->type,
+				'type_id'	 => $this->type_id
+			);
+			
+			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
 
 			return $this->jquery_results($result_data);
 		}
