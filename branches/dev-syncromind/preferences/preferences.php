@@ -12,11 +12,11 @@
 	(
 		'noheader'				=> true,
 		'noappheader'			=> true,
-		'nonavbar'				=> true,
+	//	'nonavbar'				=> true,
 		'currentapp'			=> isset($_GET['appname']) ? htmlspecialchars($_GET['appname']) : 'preferences',
 		'enable_nextmatchs'		=> true
 	);
-	
+
 	/**
 	 * Include phpgroupware header
 	 */
@@ -620,7 +620,7 @@
 
 	$GLOBALS['phpgw_info']['flags']['app_header'] = $appname == 'preferences' ?
 		lang('Preferences') : lang('%1 - Preferences', lang($appname) );
-	$GLOBALS['phpgw']->common->phpgw_header(true);
+//	$GLOBALS['phpgw']->common->phpgw_header(true);
 
 	$t->set_var('messages',$error);
 	$t->set_var('action_url',$GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'=> $appname, 'type' => $GLOBALS['type'])));
@@ -761,9 +761,11 @@
 	{
 		show_list();
 	}
+
+	$GLOBALS['phpgw']->common->phpgw_header(true);
+
 	$t->pfp('phpgw_body','preferences');
 	
 	//echo '<pre style="text-align: left;">'; print_r($GLOBALS['phpgw']->preferences->data); echo "</pre>\n";
 	
 	$GLOBALS['phpgw']->common->phpgw_footer(true);
-?>
