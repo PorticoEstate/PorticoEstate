@@ -86,7 +86,7 @@
 			if($query)
 			{
 				$query			= $this->_db->db_addslashes($query);
-				$querymethod	= " {$where} {$table}.title {$this->_like} '%{$query}%'";
+				$querymethod	= " {$where} {$table}.title {$this->_like} '%{$query}%' OR {$table}.address {$this->_like} '%{$query}%'";
 			}
 
 			$groupmethod = "GROUP BY $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier";
