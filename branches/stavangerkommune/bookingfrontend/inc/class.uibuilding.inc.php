@@ -64,9 +64,13 @@
             if($from->format('w') != 1)
             {
                 $from->modify('last monday');
-
+                if ($weekend == 1)
+                    $from->modify('next Saturday');
             }
+
+
             $from = $from->format('d.m.Y');
+
 
             $list1 = array(
                 'Mon' => array(),
@@ -140,6 +144,7 @@
             $len =  (($timeend-$timestart)*2)+2;
 
             foreach ($list as $day => $resources) {
+
                 if ($first != $day) {
                     $first = $day;
                     $html .= '<tr class="header">';
