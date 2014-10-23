@@ -324,7 +324,7 @@
 //			$result_data['dir'] = $params['dir'];
 			$result_data['draw'] = $draw;
 
-			array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
+			array_walk(	$result_data['results'], array($this, '_add_links'), array('menuaction' => 'property.uicondition_survey.view') );
 
 			return $this->jquery_results($result_data);
 		}
