@@ -136,24 +136,13 @@
 			return $column_list;
 		}
 
-		public function read($filter = array())
+		public function read($data = array())
 		{
-			if (! $filter )
-			{
-				foreach ( $this->location_info['fields'] as $field )
-				{
-					if (isset($field['filter']) && $field['filter'])
-					{
-						$filter[$field['name']] = phpgw::get_var($field['name']);
-					}
-				}
-			}
 
 			/*$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'allrows'=>$this->allrows),$filter);*/
 
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,
-				'allrows'=>$this->allrows),$filter);
+			$values = $this->so->read($data);
 			
 			foreach ( $this->location_info['fields'] as $field )
 			{

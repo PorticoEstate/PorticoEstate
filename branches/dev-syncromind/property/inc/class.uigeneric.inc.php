@@ -404,7 +404,11 @@
 							array(
 								'type' => 'link',
 								'value' => $_SESSION['allrows'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'allrows' => true))
+								'href' => self::link(array('menuaction' => 'property.uigeneric.index',
+									'appname'    => $this->appname,
+									'type'       => $this->type,
+									'type_id'    => $this->type_id,
+									'allrows' => true))
 							),
 						),
 					),
@@ -547,22 +551,29 @@
 		 */
 		public function query()
 		{
-			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
-			
+			$columns = phpgw::get_var('columns');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search,
-				'order' => '',
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('allrows', 'bool')
 			);
+
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
+				}
+			}
 
 			$result_objects = array();
 			$result_count = 0;

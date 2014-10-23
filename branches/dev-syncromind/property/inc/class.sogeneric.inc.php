@@ -57,7 +57,7 @@
 			
 		}
 
-		function read($data, $filter = array())
+		function read($data)
 		{
 			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query				= isset($data['query']) ? $data['query']:'';
@@ -65,6 +65,7 @@
 			$order				= isset($data['order']) ? $data['order'] : '';
 			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_criteria	= isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
+			$filter				= isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
 
 			$values = array();
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
