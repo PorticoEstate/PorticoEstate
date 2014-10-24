@@ -88,9 +88,14 @@
 	
 	<tr class="row_off">
 		<td>{lang_SMTP_server_port_number}:</td>
-	<td><input name="newsettings[smtp_port]" value="{value_smtp_port}" /></td>
+		<td><input name="newsettings[smtp_port]" value="{value_smtp_port}" /></td>
 	</tr>
-	
+
+	<tr class="row_off">
+		<td>{lang_SMTP_server_timeout}:</td>
+		<td><input name="newsettings[smtp_timeout]" value="{value_smtp_timeout}" /></td>
+	</tr>
+
 	<tr class="row_on">
 		<td>{lang_Use_SMTP_auth}:</td>
 		<td>
