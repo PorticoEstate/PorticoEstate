@@ -410,15 +410,18 @@ toolbar
 				"fnMouseout": null,
 				"fnClick": function( nButton, oConfig ) {
 					var oParams = this.s.dt.oApi._fnAjaxParameters( this.s.dt );
-					oParams.length = null;
+					oParams.length = -1;
 					oParams.columns = null;
 					oParams.start = null;
 					oParams.draw = null;
 					var iframe = document.createElement('iframe');
 					iframe.style.height = "0px";
 					iframe.style.width = "0px";
-					iframe.src = oConfig.sUrl+"?"+$.param(oParams) + "&allrows=1";
-					document.body.appendChild( iframe );
+					iframe.src = oConfig.sUrl+"?"+$.param(oParams) + "&export=1";
+					if(confirm("This will take some time..."))
+					{
+						document.body.appendChild( iframe );
+					}
 				},
 				"fnSelect": null,
 				"fnComplete": null,
