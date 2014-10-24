@@ -590,7 +590,7 @@
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('generic','attributes_form'));
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('generic','attributes_form'));
 			$receipt = array();
 
 			if (is_array($values))
@@ -768,7 +768,7 @@
 					}
 				}
 
-				phpgwapi_yui::tabview_setup('general_edit_tabview');
+				//phpgwapi_jquery::tabview_setup('general_edit_tabview');
 
 				$attributes_groups = $this->custom->get_attribute_groups($this->location_info['acl_app'], $this->acl_location, $values['attributes']);
 //_debug_array($attributes_groups);die();
@@ -867,7 +867,7 @@
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, 'general'),
 					'id_name'						=> $this->location_info['id']['name'],
 					'id_type'						=> $this->location_info['id']['type'],
 					'fields'						=> $this->location_info['fields']
@@ -876,7 +876,9 @@
 			$appname	=  $this->location_info['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			self::render_template_xsl(array('generic','attributes_form'), array('edit' => $data));
 		}
 
 		function attrib_history()
@@ -1128,6 +1130,67 @@
 			{
 				$this->bo->delete($id);
 				return lang('id %1 has been deleted', $id);
+			}
+		}
+		
+		/**
+		* Saves an entry to the database for new/edit - redirects to view
+		*
+		* @param int  $id  entity id - no id means 'new'
+		*
+		* @return void
+		*/
+
+		public function save()
+		{
+			$id = (int)phpgw::get_var('id');
+
+			if ($id )
+			{
+				$values = $this->bo->read_single( array('id' => $id,  'view' => true) );
+			}
+			else
+			{
+				$values = array();
+			}
+
+			/*
+			* Overrides with incoming data from POST
+			*/
+			$values = $this->_populate($values);
+
+			if( $this->receipt['error'] )
+			{
+				$this->edit( $values );
+			}
+			else
+			{
+
+				try
+				{
+					$id = $this->bo->save($values);
+				}
+
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						$this->edit( $values );
+						return;
+					}
+				}
+
+				$this->_handle_files($id);
+				if($_FILES['import_file']['tmp_name'])
+				{
+					$this->_handle_import($id);
+				}
+				else
+				{
+					phpgwapi_cache::message_set('ok!', 'message'); 
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.edit', 'id' => $id));
+				}
 			}
 		}
 	}
