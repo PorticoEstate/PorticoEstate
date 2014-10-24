@@ -359,24 +359,16 @@
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+
+			$appname			=  $this->location_info['name'];
+			$function_msg		= lang('list %1', $appname);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			
 			$data = array(
-				'datatable_name'	=> lang('condition survey'),
+				'datatable_name'	=> $appname,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type'  => 'text',
-								'name'  => 'query',
-								'id'    => 'txt_query',
-								'value' => $this->query
-							),
-							array(
-								'type'  => 'submit',
-								'name'  => 'search',
-								'id'    => 'btn_search',
-								'value' => lang('Search')
-							),
 							array(
 								'type' => 'link',
 								'value' => lang('new'),
@@ -387,31 +379,9 @@
 									'type_id'    => $this->type_id								
 									)),
 								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('download'),
-								'href' => 'javascript:window.open("'. self::link(array(
-									'menuaction' => 'property.uigeneric.download', 
-									'appname'    => $this->appname,
-									'type'       => $this->type,
-									'type_id'    => $this->type_id,									
-									'export'     => true, 
-									'allrows'    => true
-									)) . '","window")',
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['allrows'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => 'property.uigeneric.index',
-									'appname'    => $this->appname,
-									'type'       => $this->type,
-									'type_id'    => $this->type_id,
-									'allrows' => true))
-							),
-						),
-					),
+							)
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array(
@@ -421,9 +391,16 @@
 						'type_id'		=> $this->type_id,
 						'phpgw_return_as' => 'json'
 					)),
+					'download'	=> self::link(array('menuaction' => 'property.uigeneric.download',
+									'appname'    => $this->appname,
+									'type'       => $this->type,
+									'type_id'    => $this->type_id,
+									'export'     => true,
+									'allrows'    => true)),
+					'allrows'	=> true,
 					'editor_action' => '',
 					'field' => array()
-				),
+				)
 			);
 	
 			$filters = $this->_get_categories();
@@ -534,11 +511,6 @@
 						))
 					);
 			}
-
-			$appname			=  $this->location_info['name'];
-			$function_msg		= lang('list %1', $appname);
-			
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			
 			self::render_template_xsl('datatable_jquery', $data);
 
@@ -564,7 +536,7 @@
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('allrows', 'bool')
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
 			foreach ( $this->location_info['fields'] as $field )

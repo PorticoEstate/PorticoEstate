@@ -66,6 +66,7 @@
 			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_criteria	= isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
 			$filter				= isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
+			$results	= isset($data['results'])  ? (int) $data['results'] : 0;
 
 			$values = array();
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
@@ -327,7 +328,7 @@
 
 			if(!$allrows)
 			{
-				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__, $results);
 			}
 			else
 			{
