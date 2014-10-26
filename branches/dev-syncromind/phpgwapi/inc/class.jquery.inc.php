@@ -106,6 +106,16 @@ class phpgwapi_jquery {
 				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/style.css");
 
 				break;
+			case 'mmenu':
+				$load = array
+					(
+					"js/jquery-2.1.1{$_type}",
+					"mmenu/src/js/jquery.mmenu.min.all"
+				);
+
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/mmenu/src/css/jquery.mmenu.all.css");
+
+				break;
 
 			default:
 				$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
@@ -145,7 +155,15 @@ JS;
 		return $output;
 	}
 
-	public static function tabview_generate($tabs, $selection)
+	/**
+	 * Add the events required for tabs to work
+	 *
+	 * @param array $tabs
+	 * @param string $selection active tab
+	 * @param string $tab_set indentificator of tabset
+	 * @return string HTML definition of the tabs
+	 */
+	public static function tabview_generate($tabs, $selection, $tab_set = 'tab-content')
 	{
 		self::load_widget('tabview');
 		$output = <<<HTML
@@ -200,11 +218,11 @@ HTML;
 			JqueryPortico.render_tabs = function ()
 			{
 
-				$('#tab-content').responsiveTabs({
+				$('#{$tab_set}').responsiveTabs({
 					startCollapsed: 'accordion',
 					collapsible: 'accordion',
 					rotate: false,
-					disabled: $disabled_js,
+					disabled: {$disabled_js},
 					startCollapsed: 'accordion',
 					collapsible: 'accordion',
 					setHash: true,
@@ -214,7 +232,7 @@ HTML;
 
 				});
 
-				$('#tab-content').responsiveTabs('activate', $selected);
+				$('#tab-content').responsiveTabs('activate', {$selected});
 
 			};
 JS;

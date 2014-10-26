@@ -3,16 +3,24 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
 		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
 		<meta name="description" content="phpGroupWare">
 		<meta name="keywords" content="phpGroupWare">
 		<meta name="robots" content="none">
 		<title>{site_title}</title>
+		<script type="text/javascript">
+			if(typeof(Storage)=="undefined")
+			{
+				alert('{browser_not_supported}');
+			}
+		</script>
 
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
+		<link href="{webserver_url}/phpgwapi/js/jquery/mmenu/src/css/extensions/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
+
 
 		{css}
 

@@ -31,11 +31,12 @@
 		$about_text	= lang('about');
 		$logout_url	= $GLOBALS['phpgw']->link('/logout.php');
 		$logout_text	= lang('logout');
+		$var['user_fullname'] = $user_fullname;
 
 
 		$var['topmenu'] = <<<HTML
-			<a class="pure-menu-heading" href="#">{$user_fullname}</a>
-			 <ul>
+
+			<ul class="topmenu">
 				<li>
 					<a href="{$print_url}"  target="_blank">{$print_text}</a>
 				</li>
@@ -148,55 +149,7 @@ HTML;
 			}
 		}
 
-		if (!$nonavbar && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
-		{
-			$exclude = array('logout', 'about', 'preferences');
-			$i = 1;
-			foreach ( $navbar as $app => $app_data )
-			{
-				if ( in_array($app, $exclude) )
-				{
-					continue;
-				}
-
-				$applications[] = array
-				(
-					'value'=> array
-					(
-						'id'	=> $i,
-						'app'	=> $app,
-						'label' => $app_data['text'],
-						'href'	=> str_replace('&amp;','&', $app_data['url']),
-					),
-					'children'	=> array()
-				);
-
-				$mapping[$i] = array
-				(
-					'id'		=> $i,
-					'name'		=> $app,
-					'expanded'	=> false,
-					'highlight'	=> $app == $currentapp ? true : false,
-					'is_leaf'	=> false
-				);
-
-				$i ++;
-			}
-			$applications = json_encode($applications);
-			$mapping = json_encode($mapping);
-			$_menu_selection = str_replace('::', '|', $GLOBALS['phpgw_info']['flags']['menu_selection']);
-
-			$var['treemenu'] = <<<HTML
-				<div id="MenutreeDiv1"></div>
-				<script type="text/javascript">
-		 			var apps = {$applications};
-					var mapping = {$mapping};
-					var proxy_data = ['first_element_is_dummy'];
-					var menu_selection = '{$_menu_selection}';
-				</script>
-HTML;
-		}
-		else if (!$nonavbar)
+		if (!$nonavbar)
 		{
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
@@ -209,35 +162,23 @@ HTML;
 				}
 			}
 			$var['treemenu'] = <<<HTML
-			<ul id="menutree">
+
+				<ul id="menutree">
 HTML;
-			if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
-			{
-				$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
-				$preferences_text = lang('preferences');
+				if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
+				{
+					$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
+					$preferences_text = lang('preferences');
+					$var['treemenu'] .= <<<HTML
+
+					<li>
+						<a href="{$preferences_url}">{$preferences_text}</a>
+					</li>
+HTML;
+				}
 				$var['treemenu'] .= <<<HTML
-				<li>
-					<a href="{$preferences_url}">{$preferences_text}</a>
-				</li>
-HTML;
-			}
-			$var['treemenu'] .= <<<HTML
-			{$treemenu}
-			</ul>
-			<script type="text/javascript">
-			$(document).ready(function(){
-				   $('#menutree').slicknav({
-					allowParentLinks: true,
-					easingOpen: "swing",
-					label: "",
-					prependTo:'#MenutreeDiv1'
-				});
-				var height = $(window).height();
-				$('.slicknav_menu').css({'max-height': height, 'overflow-y':'scroll'});
-			});
-
-			</script>
-
+				{$treemenu}
+				</ul>
 HTML;
 		}
 
@@ -293,22 +234,22 @@ HTML;
 	function render_item($item, $id='', $children='')
 	{
 		$current_class = '';
-/*
+
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
-			$current_class = 'pure-menu-selected';
+			$current_class = 'Selected';
 		}
-*/
+
 		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}")) // need it for MySQL and Oracle
 		{
-			$current_class = 'pure-menu-selected';
+//			$current_class = 'Selected';
 			$item['text'] = "<b>[ {$item['text']} ]</b>";
 		}
 
 		$link_class =" class=\"{$current_class}\"";
 
 		$out = <<<HTML
-				<li>
+				<li {$link_class}>
 HTML;
 		$target = '';
 		if(isset($item['target']))
@@ -322,7 +263,7 @@ HTML;
 
 		return <<<HTML
 $out
-					<a href="{$item['url']}"{$link_class} id="{$id}" {$target}>{$item['text']}</a>
+					<a href="{$item['url']}" id="{$id}" {$target}>{$item['text']}</a>
 {$children}
 				</li>
 

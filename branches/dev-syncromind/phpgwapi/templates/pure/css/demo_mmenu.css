@@ -1,0 +1,332 @@
+html, body
+{
+	padding: 0;
+	margin: 0;
+}
+body
+{
+	background-color: #fff;
+	font-family: Arial, Helvetica, Verdana;
+	font-size: 14px;
+	line-height: 22px;
+	color: #666;
+	position: relative;
+	-webkit-text-size-adjust: none;
+}
+body *
+{
+	text-shadow: none;
+}
+h1, h2, h3, h4, h5, h6
+{
+	line-height: 1;
+	font-weight: bold;
+	margin: 20px 0 10px 0;
+}
+h1, h2, h3
+{
+	font-size: 18px;
+}
+h4, h5, h6
+{
+	font-size: 16px;
+}
+p
+{
+	margin: 0 0 10px 0;
+}
+a, a:link, a:active, a:visited, a:hover
+{
+	color: inherit;
+	text-decoration: underline;
+}
+
+nav:not(.mm-menu)
+{
+	display: none;
+}
+
+.header,
+.footer
+{
+	text-align: center;
+}
+.header,
+.footer
+{
+	background: #777;
+	font-size: 16px;
+	font-weight: bold;
+	color: #fff;
+	line-height: 40px;
+
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;	
+	width: 100%;
+	height: 40px;
+	padding: 0 50px;
+}
+.header a
+{
+	background: center center no-repeat transparent;
+/*	background-image: url( data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNpi/P//PwOtARMDHQBdLGFBYtMq3BiHT3DRPU4YR4NrNAmPJuHRJDyahEeT8Ii3BCDAAF0WBj5Er5idAAAAAElFTkSuQmCC );
+*/
+	display: block;
+	width: 40px;
+	height: 40px;
+	position: absolute;
+	top: 0;
+	left: 10px;
+}
+.content
+{
+	padding: 80px 50px 50px 50px;
+	text-align: left;
+
+}
+
+/*
+	LAYOUT
+*/
+#hamburger
+{
+	display: block;
+	width: 40px;
+	height: 36px;
+/*	margin: 20px;*/
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 2;
+}
+#hamburger:before,
+#hamburger:after,
+#hamburger span
+{
+	background: #fff;
+	content: '';
+	display: block;
+	width: 30px;
+	height: 6px;
+	position: absolute;
+	left: 5px;
+}
+#hamburger:before
+{
+	top: 5px;
+}
+#hamburger:after
+{
+	bottom: 5px;
+}
+#hamburger span
+{
+	top: 50%;
+	margin-top: -3px;
+}
+
+@media all and (min-width: 1430px)
+{
+	#hamburger {
+		display: none;
+	}
+}
+
+/* Hamburger animation */
+#hamburger:before,
+#hamburger:after,
+#hamburger span
+{
+	transition: none 0.5s ease 0.5s;
+	transition-property: transform, top, bottom, left, opacity;
+}
+html.mm-opening #hamburger span
+{
+	left: -50px;
+	opacity: 0;
+}
+html.mm-opening #hamburger:before
+{
+	transform: rotate( 45deg );
+	top: 15px;
+}
+html.mm-opening #hamburger:after
+{
+	transform: rotate( -45deg );
+	bottom: 15px;
+}
+
+/* topmenu*/
+div.username {
+	/* side link container */
+	position: absolute;
+	left: 0px;
+    top: 40px;
+	height: 30px;
+	width: 200px;
+	background-color: #999;
+	z-index: 5;
+}
+div.topLink {
+	/* side link container */
+	left: 0px;
+    position: absolute;
+    right: 0px;
+    top: 40px;
+	height: 30px;
+	background-color: #999;
+}
+.topmenu,
+.topmenu ul,
+.topmenu li
+{
+  padding: 0px;
+  margin: 0px;
+}
+.topmenu li
+{
+  list-style-type: none;
+}
+
+/*Float and Clear*/
+
+
+.topmenu li
+{
+  float: left;
+}
+.topmenu + *
+{
+  clear: left;
+}
+.endmenu
+{
+  clear: left;
+}
+
+/*Sub-menus only display on demand*/
+
+.topmenu ul
+{
+  display: none;
+}
+.topmenu li:hover > ul
+{
+  display: block;
+}
+.topmenu ul.parent_hover
+{
+  display: block;
+}
+
+
+/*Sub-menu layout should be nice and clean*/
+
+.topmenu ul
+{
+  position: absolute;
+}
+.topmenu li
+{
+  border: 1px solid #777;
+  color: #000033;
+  background-color: #999;
+}
+.topmenu a
+{
+  color: #000033;
+}
+
+
+.topmenu > li
+{
+  float: right;
+}
+
+/*Links should occupy the full box*/
+
+.topmenu a
+{
+  display:block;
+  width: 100%;
+  text-decoration: none;
+}
+.topmenu a:hover
+{
+  background-color: #f8f8fb;
+}
+
+/*Sub-sub menus should pop out to the side*/
+
+.topmenu li
+{
+  position: relative;
+}
+.topmenu ul ul
+{
+  top: 0;
+  left: 99%;
+}
+
+.topmenu li
+{
+  padding-left: 1px;
+}
+.topmenu ul ul
+{
+  /* top: 0; --- remove this*/
+  margin-top: -1.2em;
+  left: 99%;
+}
+
+
+.topmenu ul
+{
+  margin-left: -2px;
+}
+
+
+.topmenu span
+{
+  display: block;
+}
+
+/*Exposed background*/
+
+.topmenu
+{
+  width: 100%;
+  background-color: #999;
+}
+
+.topmenu
+{
+  float: right;
+}
+
+/*Spacing around text*/
+
+.topmenu li
+{
+  padding: 2px;
+}
+
+.topmenu li
+{
+  /* padding-left: 1px; --- remove this */
+}
+.topmenu ul
+{
+  margin-left: -3px; /* was -2px */
+  margin-top: 2px;
+}
+
+.topmenu li:hover
+{
+  background-color: #f8f8fb;
+}
+.topmenu li.hover
+{
+  background-color: #f8f8fb;
+}

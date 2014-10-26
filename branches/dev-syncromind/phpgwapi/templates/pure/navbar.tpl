@@ -1,18 +1,19 @@
-<div id="layout_">
- 	<div id="MenutreeDiv1">
-	</div>
 
-	<div id="menu_">
-        <div class="home-menu pure-menu pure-menu-open pure-menu-horizontal pure-menu-fixed">
-			{topmenu}
-			{treemenu}
-        </div>
-		<!--script src="{webserver_url}/phpgwapi/templates/pure/js/ui.js"></script-->
-   </div>
+		<div id="page">
+			<div class="header">
+				<a id="hamburger" class="FixedTop" href="#menu"><span></span></a>
+				{current_app_title}
+			</div>
 
-	<div id="main" >
-		<div class="header">
-            <h2>{current_app_title}</h2>
-        </div>
+			<div class ="username">
+				{user_fullname}
+			</div>
 
-		<div class="content">
+			<div class ="topLink">
+				{topmenu}
+			</div>
+
+			<nav id="menu">
+				{treemenu}
+			</nav>
+			<div class="content">

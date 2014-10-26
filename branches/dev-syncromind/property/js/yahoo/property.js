@@ -7,7 +7,7 @@
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
 	var showTimer,hideTimer;
-	var tt = new YAHOO.widget.Tooltip("myTooltip");
+//	var tt = new YAHOO.widget.Tooltip("myTooltip");//Sigurd: dont work with mmenu
 	var lightbox;
 	var maxRowsPerPage = 500000;
 	var myLoading;
@@ -864,7 +864,7 @@
 	{
 		if(typeof(linktoolTips)=='object')
 		{
-			show_link_tooltips();
+//			show_link_tooltips();
 		}
 
 		create_lightbox();
@@ -1308,6 +1308,7 @@
 */
 	this.create_lightbox = function()
 	{
+		return;// Sigurd: don't work with mmenu
 		lightbox = new YAHOO.widget.Dialog("datatable-detail",
 		{
 			width : "600px",

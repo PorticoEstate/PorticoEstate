@@ -286,9 +286,9 @@
 
 		function download()
 		{
-			$list = $this->bo->read();
+			$values = $this->query();
 			$uicols	= $this->bo->uicols;
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($values,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function columns()

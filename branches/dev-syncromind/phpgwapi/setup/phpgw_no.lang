@@ -148,3 +148,4 @@ Password must contain at least 2 lower case characters	common	no	Passord må inn
 Password must contain at least 1 number	common	no	Passord må inneholde minst 1 tall
 Password must contain at least 1 non alphanumeric character	common	no	Passord må inneholde minst 1 spesialtegn
 The passwords don't match	common	no	Passordene er ikke like
+browser not supported	common	no	Nettleseren ser ikke ut til å støtte HTML5
