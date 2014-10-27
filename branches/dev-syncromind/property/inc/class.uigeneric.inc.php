@@ -575,7 +575,7 @@
 		}
 		
 		
-		function edit()
+		function edit($values = array(), $mode = 'edit')
 		{
 			if(!$this->acl_add)
 			{
@@ -584,146 +584,41 @@
 			}
 
 			$id			= phpgw::get_var($this->location_info['id']['name']);
-			$values		= phpgw::get_var('values');
+			//$values		= phpgw::get_var('values');
 
 			$values_attribute  = phpgw::get_var('values_attribute');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('generic','attributes_form'));
-			$receipt = array();
-
-			if (is_array($values))
+			/*if ($id)
 			{
-				$insert_record_attributes = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",$this->location_info['acl_app']);
-
-				if(is_array($insert_record_attributes))
+				if (!$values)
 				{
-					foreach ($insert_record_attributes as $attribute)
-					{
-						foreach ($values_attribute as &$attr)
-						{
-							if($attr['name'] ==  $attribute)
-							{
-								$attr['value'] = phpgw::get_var($attribute, 'string', 'POST');
-							}
-						}
-					}
+					$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
 				}
-
-//				$values = $this->bocommon->collect_locationdata($values,$insert_record_values);
-				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
-				{
-					if($GLOBALS['phpgw']->session->is_repost())
-					{
-						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
-					}
-
-					if(!$id && !$values[$this->location_info['id']['name']] && $this->location_info['id']['type'] !='auto')
-					{
-						$receipt['error'][]=array('msg'=>lang('missing value for %1', lang('id')));									
-					}
-
-					foreach ( $this->location_info['fields'] as $field_info )
-					{
-						if (isset($field_info['nullable']) && $field_info['nullable'] != true)
-						{
-							if( !$values[$field_info['name']] )
-							{
-								$receipt['error'][]=array('msg'=>lang('missing value for %1', $field_info['descr']));									
-							}
-						}
-
-						if ($field_info['type'] == 'int')
-						{
-							if( $values[$field_info['name']] && !ctype_digit($values[$field_info['name']]) )
-							{
-								$receipt['error'][]=array('msg'=> "{$field_info['descr']}: " . lang('Please enter an integer !'));
-							}
-						}
-						else if ($field_info['type'] == 'numeric')
-						{
-							$values[$field_info['name']] = str_replace(',', '.', $values[$field_info['name']]);
-							if( $values[$field_info['name']] && ! is_numeric($values[$field_info['name']]) )
-							{
-								$receipt['error'][]=array('msg'=> "{$field_info['descr']}: " . lang('Please enter a numeric value !'));
-							}
-						}
-					}
-
-					if($values['id'] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values['id']))
-					{
-						$receipt['error'][]=array('msg'=>lang('Please enter an integer !'));
-						unset($values['id']);
-					}
-
-					if(isset($values_attribute) && is_array($values_attribute))
-					{
-						foreach ($values_attribute as $attribute )
-						{
-
-							if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-							{
-								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
-							}
-	
-							if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
-							{
-								$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
-							}
-						}
-					}
-
-					if($id)
-					{
-						$values['id']=$id;
-						$action='edit';
-					}
-					else
-					{
-						$id =	$values['id'];
-					}
-
-					if(!$receipt['error'])
-					{
-						$receipt = $this->bo->save($values,$action,$values_attribute);
-
-						if (isset($values['save']) && $values['save'])
-						{
-							$GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}", $receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index',
-													'appname'		=> $this->appname,
-													'type'			=> $this->type,
-													'type_id'		=> $this->type_id));
-						}
-						$id = $receipt['id'];
-					}
-
-				}
-				else
-				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 
-														'appname'		=> $this->appname,
-														'type'			=> $this->type,
-														'type_id' 		=> $this->type_id));
-				}
-			}
-
+			}*/
+			
 			if ($id)
 			{
-				$values = $this->bo->read_single(array('id' => $id));
-				$function_msg = $this->location_info['edit_msg'];
-				$action='edit';
+				if (!$values)
+				{
+					$values = $this->bo->read_single(array('id' => $id));
+					$function_msg = $this->location_info['edit_msg'];
+					$action='edit';
+				}
 			}
 			else
 			{
-				$values = $this->bo->read_single();
-				$function_msg = $this->location_info['add_msg'];
-				$action='add';
+				if (!$values)
+				{
+					$values = $this->bo->read_single();
+					$function_msg = $this->location_info['add_msg'];
+					$action='add';
+				}
 			}
 
 			/* Preserve attribute values from post */
-			if(isset($receipt['error']))
+			/*if(isset($receipt['error']))
 			{
 				foreach ( $this->location_info['fields'] as $field )
 				{
@@ -734,7 +629,7 @@
 				{
 					$values = $this->custom->preserve_attribute_values($values,$values_attribute);
 				}
-			}
+			}*/
 
 			$link_data = array
 				(
@@ -768,23 +663,11 @@
 					}
 				}
 
-				//phpgwapi_jquery::tabview_setup('general_edit_tabview');
-
 				$attributes_groups = $this->custom->get_attribute_groups($this->location_info['acl_app'], $this->acl_location, $values['attributes']);
-//_debug_array($attributes_groups);die();
-				if((isset($attributes_groups[0]['id']) && $attributes_groups[0]['id'] > 0 ) || count($attributes_groups) > 1 )
-				{
-//					$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-				}
 
 				$attributes = array();
 				foreach ($attributes_groups as $group)
 				{
-					if(isset($group['attributes']) && isset($tabs['general']))
-					{
-//						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
-//						$group['link'] = str_replace(' ', '_', $group['name']);
-					}
 					$attributes[] = $group;
 				}
 				unset($attributes_groups);
@@ -848,13 +731,17 @@
 					}
 				}
 			}
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+	
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 				(
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uigeneric.index', 
+														'appname'		=> $this->appname,
+														'type'			=> $this->type,
+														'type_id' 		=> $this->type_id)),
 					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type, 'type_id'=> $this->type_id)),
 					'lang_descr'					=> lang('Descr'),
 					'lang_save'						=> lang('save'),
@@ -862,7 +749,6 @@
 					'lang_apply'					=> lang('apply'),
 					'value_id'						=> isset($values['id']) ? $values['id'] : '',
 					'value_descr'					=> $values['descr'],
-
 					'attributes_group'				=> $attributes,
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
@@ -876,8 +762,7 @@
 			$appname	=  $this->location_info['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
-			
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			//print_r($data); die;
 			self::render_template_xsl(array('generic','attributes_form'), array('edit' => $data));
 		}
 
