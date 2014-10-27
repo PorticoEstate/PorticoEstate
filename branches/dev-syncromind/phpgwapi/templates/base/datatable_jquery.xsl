@@ -17,7 +17,6 @@
 
 <xsl:template match="data">
 
-<div id="main_content">
 	<xsl:choose>
 		<xsl:when test="datatable_name">
 			<h3>
@@ -26,11 +25,10 @@
 		</xsl:when>
 	</xsl:choose>
 	  <xsl:call-template name="datatable" />
-</div>
 </xsl:template>
 
 
-<xsl:template name="datatable" xmlns:php="http://php.net/xsl">
+<xsl:template name="datatable">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
 	<div id="list_flash">
@@ -43,7 +41,7 @@
 
 
 <xsl:template match="toolbar">
-	<style id='toggle-box-css' type='text/css'>
+	<style id='toggle-box-css' type='text/css' scoped='scoped'>
 .toggle-box {
   display: none;
 }

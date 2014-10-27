@@ -1,3 +1,5 @@
+	
+				</div>
 				<div class="footer">
 					<div class="button-bar">
 						{powered_by}
@@ -10,6 +12,6 @@
 				<div id="popupBox"></div>
 				<div id="curtain"></div>
 			</div>
-				{javascript_end}
-		</body>
+			{javascript_end}
+	</body>
 </html>

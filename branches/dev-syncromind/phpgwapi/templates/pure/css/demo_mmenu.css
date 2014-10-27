@@ -217,10 +217,14 @@ div.topLink {
 .topmenu li:hover > ul
 {
   display: block;
+  z-index: 5;
+
 }
 .topmenu ul.parent_hover
 {
   display: block;
+  z-index: 5;
+
 }
 
 
@@ -269,6 +273,8 @@ div.topLink {
 {
   top: 0;
   left: 99%;
+	z-index: 5;
+
 }
 
 .topmenu li
@@ -277,7 +283,7 @@ div.topLink {
 }
 .topmenu ul ul
 {
-  /* top: 0; --- remove this*/
+  top: 0;
   margin-top: -1.2em;
   left: 99%;
 }

@@ -38,6 +38,9 @@
 
 			<ul class="topmenu">
 				<li>
+					<a href="{$logout_url}">{$logout_text}</a>
+				</li>
+				<li>
 					<a href="{$print_url}"  target="_blank">{$print_text}</a>
 				</li>
 				<li>
@@ -102,13 +105,6 @@ HTML;
 			</li>
 HTML;
 		}
-
-		$var['topmenu'] .= <<<HTML
-		<li>
-			<a href="{$logout_url}">{$logout_text}</a>
-		</li>
-	 </ul>
-HTML;
 
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
@@ -183,6 +179,35 @@ HTML;
 				{$treemenu}
 				</ul>
 HTML;
+
+		$var['topmenu'] .= <<<HTML
+
+				<li>
+					<a href="#"  >Bookmarks</a>
+					<ul>
+HTML;
+
+				$collected_bm = set_get_bookmarks();
+				foreach($collected_bm as $entry)
+				{
+				$var['topmenu'] .= <<<HTML
+
+				<li>
+					<a href="{$entry['url']}">{$entry['text']}</a>
+				</li>
+
+HTML;
+					
+				}
+		$var['topmenu'] .= <<<HTML
+
+				</ul>
+			</li>
+		</ul>
+HTML;
+
+
+
 		}
 
 
@@ -236,6 +261,7 @@ HTML;
 
 	function render_item($item, $id='', $children='', $bookmarks = array())
 	{
+		static $checkbox_id = 1;
 		$current_class = '';
 
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
@@ -246,21 +272,20 @@ HTML;
 		$bookmark = '';
 		if(preg_match("/(^navbar::)/i", $id)) // bookmarks
 		{
-	//		$_bookmark_candidate = $item;
-	//		$_bookmark_candidate['id'] = $id;
-	//		$_bookmark_candidate = json_encode($_bookmark_candidate);
 			$_bookmark_checked = '';
 			if(is_array($bookmarks) && isset($bookmarks[$id]))
 			{
 				$_bookmark_checked = "checked = 'checked'";
+				set_get_bookmarks($item);
 			}
 
-//			$bookmark = "<input type='checkbox' name='bookmark_menu' value=''  onchange='javascript:update_bookmark_menu(\"{$id}\");' {$_bookmark_checked}/>";
+//			$bookmark = "<input type='checkbox' name='update_bookmark_menu' value='{$id}'  onchange='javascript:update_bookmark_menu(\"{$id}\");' {$_bookmark_checked}/>";
+			$bookmark = "<input type='checkbox' name='update_bookmark_menu' id='{$checkbox_id}' value='{$id}' {$_bookmark_checked}/>";
+			$checkbox_id ++;
 		}
 
 		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"))
 		{
-//			$current_class = 'Selected';
 			$item['text'] = "<b>[ {$item['text']} ]</b>";
 		}
 
@@ -281,7 +306,7 @@ HTML;
 
 		return <<<HTML
 $out
-					{$bookmark} <a href="{$item['url']}" id="{$id}" {$target}>{$item['text']}</a>
+					<a href="{$item['url']}" id="{$id}" {$target}>{$bookmark} {$item['text']}</a>
 {$children}
 				</li>
 
@@ -377,4 +402,20 @@ HTML;
 			$navbar['admin']['children'] = execMethod('phpgwapi.menu.get', 'admin');
 		}
 		uasort($navbar, 'sort_navbar');
+	}
+
+	/**
+	 * Cheat function to collect bookmarks
+	 * @staticvar array $bookmarks
+	 * @param array $item
+	 * @return array bookmarks
+	 */
+	function set_get_bookmarks($item = array())
+	{
+		static $bookmarks = array();
+		if($item)
+		{
+			$bookmarks[] = $item;
+		}
+		return $bookmarks;
 	}
