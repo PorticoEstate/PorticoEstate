@@ -50,3 +50,20 @@ $(function() {
 		);
 
 });	
+
+function update_bookmark_menu(bookmark_candidate){
+	var oArgs = {menuaction:'phpgwapi.menu.update_bookmark_menu', bookmark_candidate:bookmark_candidate};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		  type: 'POST',
+		  url: requestUrl,
+		  dataType: 'json',
+		  success: function(data) {
+			  if(data)
+			  {
+				  alert(data.status);
+			  }
+		  }
+	   });
+}

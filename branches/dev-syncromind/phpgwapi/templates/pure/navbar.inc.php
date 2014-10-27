@@ -151,14 +151,17 @@ HTML;
 
 		if (!$nonavbar)
 		{
+			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
+//		_debug_array($bookmarks);die();
+
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
 			foreach($navbar as $app => $app_data)
 			{
 				if(!in_array($app, array('logout', 'about', 'preferences')))
 				{
-					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app]) : '';
-					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu);
+					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks) : '';
+					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
 				}
 			}
 			$var['treemenu'] = <<<HTML
@@ -231,7 +234,7 @@ HTML;
 		return isset( $navbar_state[ $id ]);
 	}
 
-	function render_item($item, $id='', $children='')
+	function render_item($item, $id='', $children='', $bookmarks = array())
 	{
 		$current_class = '';
 
@@ -240,7 +243,22 @@ HTML;
 			$current_class = 'Selected';
 		}
 
-		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}")) // need it for MySQL and Oracle
+		$bookmark = '';
+		if(preg_match("/(^navbar::)/i", $id)) // bookmarks
+		{
+	//		$_bookmark_candidate = $item;
+	//		$_bookmark_candidate['id'] = $id;
+	//		$_bookmark_candidate = json_encode($_bookmark_candidate);
+			$_bookmark_checked = '';
+			if(is_array($bookmarks) && isset($bookmarks[$id]))
+			{
+				$_bookmark_checked = "checked = 'checked'";
+			}
+
+//			$bookmark = "<input type='checkbox' name='bookmark_menu' value=''  onchange='javascript:update_bookmark_menu(\"{$id}\");' {$_bookmark_checked}/>";
+		}
+
+		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"))
 		{
 //			$current_class = 'Selected';
 			$item['text'] = "<b>[ {$item['text']} ]</b>";
@@ -263,20 +281,20 @@ HTML;
 
 		return <<<HTML
 $out
-					<a href="{$item['url']}" id="{$id}" {$target}>{$item['text']}</a>
+					{$bookmark} <a href="{$item['url']}" id="{$id}" {$target}>{$item['text']}</a>
 {$children}
 				</li>
 
 HTML;
 	}
 
-	function render_submenu($parent, $menu)
+	function render_submenu($parent, $menu, $bookmarks = array())
 	{
 		$out = '';
 		foreach ( $menu as $key => $item )
 		{
-			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children']) : '';
-			$out .= render_item($item, "navbar::{$parent}::{$key}", $children);
+			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children'], $bookmarks) : '';
+			$out .= render_item($item, "navbar::{$parent}::{$key}", $children, $bookmarks);
 			//$debug .= "{$parent}::{$key}<br>";
 		}
 

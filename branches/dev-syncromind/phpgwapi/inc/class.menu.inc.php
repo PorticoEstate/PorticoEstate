@@ -35,7 +35,8 @@
 	{
 		var $public_functions = array
 		(
-			'get_local_menu_ajax' => true
+			'get_local_menu_ajax'	=> true,
+			'update_bookmark_menu'	=> true
 		);
 		
 		/**
@@ -505,4 +506,35 @@ HTML;
 
 			return $menu;
 		}
+
+		public function update_bookmark_menu()
+		{
+			$bookmark_candidate = phpgw::get_var('bookmark_candidate', 'string');
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $user_id);
+			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$bookmark_candidate]))
+			{
+				unset($bookmarks[$bookmark_candidate]);
+				$status = lang('deleted');
+			}
+			else
+			{
+				if(! is_array($bookmarks))
+				{
+					$bookmarks = array();
+				}
+
+				$bookmarks[$bookmark_candidate] = true;
+				$status = lang('added');
+			}
+
+			phpgwapi_cache::user_set('phpgwapi', "bookmark_menu", $bookmarks, $user_id);
+
+			return array
+			(
+				'status' => $status
+			);
+		}
+
 	}

@@ -70,8 +70,7 @@ nav:not(.mm-menu)
 .header a
 {
 	background: center center no-repeat transparent;
-/*	background-image: url( data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNpi/P//PwOtARMDHQBdLGFBYtMq3BiHT3DRPU4YR4NrNAmPJuHRJDyahEeT8Ii3BCDAAF0WBj5Er5idAAAAAElFTkSuQmCC );
-*/
+	background-image: url( data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNpi/P//PwOtARMDHQBdLGFBYtMq3BiHT3DRPU4YR4NrNAmPJuHRJDyahEeT8Ii3BCDAAF0WBj5Er5idAAAAAElFTkSuQmCC );
 	display: block;
 	width: 40px;
 	height: 40px;
@@ -89,6 +88,7 @@ nav:not(.mm-menu)
 /*
 	LAYOUT
 */
+
 #hamburger
 {
 	display: block;
@@ -101,10 +101,10 @@ nav:not(.mm-menu)
 	z-index: 2;
 }
 #hamburger:before,
-#hamburger:after,
-#hamburger span
+#hamburger:after/*,
+#hamburger span*/
 {
-	background: #fff;
+	/*background: #fff;*/
 	content: '';
 	display: block;
 	width: 30px;
@@ -120,12 +120,13 @@ nav:not(.mm-menu)
 {
 	bottom: 5px;
 }
+/*
 #hamburger span
 {
 	top: 50%;
 	margin-top: -3px;
 }
-
+*/
 @media all and (min-width: 1430px)
 {
 	#hamburger {
@@ -134,6 +135,8 @@ nav:not(.mm-menu)
 }
 
 /* Hamburger animation */
+/*Sigurd: Don't work in IE - even for 10 +'*/
+/*
 #hamburger:before,
 #hamburger:after,
 #hamburger span
@@ -156,12 +159,12 @@ html.mm-opening #hamburger:after
 	transform: rotate( -45deg );
 	bottom: 15px;
 }
-
+*/
 /* topmenu*/
 div.username {
 	/* side link container */
 	position: absolute;
-	left: 0px;
+	left: 10px;
     top: 40px;
 	height: 30px;
 	width: 200px;
