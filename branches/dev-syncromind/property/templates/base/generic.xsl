@@ -180,7 +180,8 @@
 								</input>
 							</td>
 							<td align="right" valign="bottom">
-								<input type="submit" name="values[cancel]" value="{lang_cancel}" onMouseout="window.status='';return true;">
+								
+								<input type="button" name="values[cancel]" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Leave the record untouched and return to the list')"/>
 									</xsl:attribute>
@@ -189,6 +190,8 @@
 						</tr>
 					</table>
 				</div>
+			</form>
+			<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
 			</form>
 		</div>
 	</xsl:template>
