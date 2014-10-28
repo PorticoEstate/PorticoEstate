@@ -112,7 +112,7 @@
         /**
          * @ Send message about comment on application to case officer.
          */
-        function send_admin_notification($application, $message = null)
+        function send_admin_notification:_($application, $message = null)
         {
             if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
                 return;
@@ -130,7 +130,10 @@
             $mailadresses = $config->config_data['emails'];
             $mailadresses = explode("\n", $mailadresses);
 
-            $link = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+            if ($GLOBALS['phpgw_info']['server']['webserver_url'] != '' && isset($config->config_data['external_site_address']))
+                $link = $external_site_address . $GLOBALS['phpgw_info']['server']['webserver_url'] . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+            else
+                $link = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
 
             $activity = $this->activity_bo->read_single($application['activity_id']);
 
