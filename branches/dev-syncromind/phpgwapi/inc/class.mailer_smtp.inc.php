@@ -36,6 +36,7 @@
 			$this->SMTPSecure = isset($GLOBALS['phpgw_info']['server']['smtpSecure']) ? $GLOBALS['phpgw_info']['server']['smtpSecure'] : '';
 			$this->Version = 'custom - phpGroupWare 5.2.7';
 			$this->CharSet = 'utf-8';
+			$this->Timeout = isset($GLOBALS['phpgw_info']['server']['smtp_timeout']) && $GLOBALS['phpgw_info']['server']['smtp_timeout'] ? (int)$GLOBALS['phpgw_info']['server']['smtp_timeout'] : 10;
  
 			if ( isset($GLOBALS['phpgw_info']['server']['smtpAuth']) && $GLOBALS['phpgw_info']['server']['smtpAuth'] == 'yes' )
 			{
@@ -62,7 +63,7 @@
     		 * @see SMTP::$Debugoutput
     		 */
 
-			if ( isset($GLOBALS['phpgw_info']['server']['Debugoutput']) && $GLOBALS['phpgw_info']['server']['smtpAuth'] != 'echo' )
+			if ( isset($GLOBALS['phpgw_info']['server']['Debugoutput']) && $GLOBALS['phpgw_info']['server']['Debugoutput'] != 'echo' )
 			{
    				switch ($GLOBALS['phpgw_info']['server']['Debugoutput'])
    				{

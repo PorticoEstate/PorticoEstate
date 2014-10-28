@@ -75,6 +75,26 @@
 		}
 	}
 
+	$base_url	= $GLOBALS['phpgw']->link('/', array(), true);
+	if(substr($base_url, 0, 4) != 'http')
+	{
+		$base_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}{$base_url}";
+	}
+
+	if ( isset($GLOBALS['phpgw_info']['server']['enforce_ssl'])
+		&& $GLOBALS['phpgw_info']['server']['enforce_ssl'])
+	{
+		if(substr($base_url, 0, 4) != 'http')
+		{
+			$base_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}{$base_url}";
+		}
+		else
+		{
+			$base_url = preg_replace('/http:/', 'https:', $base_url);
+		}
+	}
+
+
 	$tpl_vars = array
 	(
 		'noheader'				=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
@@ -84,7 +104,7 @@
 		'img_icon'				=> $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'			=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'browser_not_supported'	=> lang('browser not supported'),
-		'str_base_url'			=> $GLOBALS['phpgw']->link('/', array(), true),
+		'str_base_url'			=> $base_url,
 		'webserver_url'			=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'			=> $GLOBALS['phpgw']->common->get_on_events(),
 	);

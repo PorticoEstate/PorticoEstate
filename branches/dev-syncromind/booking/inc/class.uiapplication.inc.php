@@ -463,7 +463,8 @@
 					$this->bo->send_notification($application, true);
                     $this->bo->so->update_id_string();
 					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
-								 lang("A Case officer will review your application as soon as possible."));
+								 lang("A Case officer will review your application as soon as possible.")."<br />".
+								 lang("Please check your Spam Filter if you are missing mail."));
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}
