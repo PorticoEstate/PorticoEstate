@@ -11,6 +11,7 @@
 	phpgwapi_yui::load_widget('button');
 	phpgwapi_yui::load_widget('container');
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
+	$javascripts[] = "/phpgwapi/js/yui3/yui/yui-min.js";
 	$javascripts[] = "/phpgwapi/js/jquery/mmenu/src/js/jquery.mmenu.min.all.js";
 	$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
 

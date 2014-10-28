@@ -32,13 +32,23 @@
 		$logout_url	= $GLOBALS['phpgw']->link('/logout.php');
 		$logout_text	= lang('logout');
 		$var['user_fullname'] = $user_fullname;
+		$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
+		$preferences_text = lang('preferences');
 
 
 		$var['topmenu'] = <<<HTML
 
-			<ul class="topmenu">
+			<ul id="std-menu-items">
 				<li>
-					<a href="{$logout_url}">{$logout_text}</a>
+					<a href="#">{$user_fullname}</a>
+					<ul>
+						<li>
+							<a href="{$preferences_url}">{$preferences_text}</a>
+						</li>
+						<li>
+							<a href="{$logout_url}">{$logout_text}</a>
+						</li>
+					</ul
 				</li>
 				<li>
 					<a href="{$print_url}"  target="_blank">{$print_text}</a>
@@ -166,8 +176,6 @@ HTML;
 HTML;
 				if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 				{
-					$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
-					$preferences_text = lang('preferences');
 					$var['treemenu'] .= <<<HTML
 
 					<li>
@@ -182,19 +190,20 @@ HTML;
 
 		$var['topmenu'] .= <<<HTML
 
-				<li>
-					<a href="#"  >Bookmarks</a>
+				<li >
+					<a href="#">Bookmarks</a>
 					<ul>
 HTML;
 
 				$collected_bm = set_get_bookmarks();
 				foreach($collected_bm as $entry)
 				{
-				$var['topmenu'] .= <<<HTML
+					$seleced_bm = isset($entry['selected']) && $entry['selected'] ? 'class="pure-menu-selected"' : '';
+					$var['topmenu'] .= <<<HTML
 
-				<li>
-					<a href="{$entry['url']}">{$entry['text']}</a>
-				</li>
+					<li {$seleced_bm}>
+						<a href="{$entry['url']}">{$entry['text']}</a>
+					</li>
 
 HTML;
 					
@@ -267,6 +276,8 @@ HTML;
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
 			$current_class = 'Selected';
+//			$item['selected'] = true;
+			$item['text'] = "<b>[ {$item['text']} ]</b>";
 		}
 
 		$bookmark = '';
@@ -279,7 +290,6 @@ HTML;
 				set_get_bookmarks($item);
 			}
 
-//			$bookmark = "<input type='checkbox' name='update_bookmark_menu' value='{$id}'  onchange='javascript:update_bookmark_menu(\"{$id}\");' {$_bookmark_checked}/>";
 			$bookmark = "<input type='checkbox' name='update_bookmark_menu' id='{$checkbox_id}' value='{$id}' {$_bookmark_checked}/>";
 			$checkbox_id ++;
 		}
