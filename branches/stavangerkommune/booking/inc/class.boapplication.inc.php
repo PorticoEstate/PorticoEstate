@@ -112,7 +112,7 @@
         /**
          * @ Send message about comment on application to case officer.
          */
-        function send_admin_notification:_($application, $message = null)
+        function send_admin_notification($application, $message = null)
         {
             if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
                 return;
