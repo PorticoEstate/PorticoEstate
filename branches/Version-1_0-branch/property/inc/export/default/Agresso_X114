@@ -921,10 +921,26 @@
 				$this->db->next_record();
 				$_vendor_category = $this->db->f('category');
 
+				switch($_vendor_category)
+				{
+					case 1:
+						$reskontroart = 2400;
+						break;
+					case 2:
+						$reskontroart = 2460;
+						break;
+					case 3:
+						$reskontroart = 2401;
+						break;
+					default:
+						$reskontroart = 2400;
+						break;
+				}
+
 				$accountline[] = array
 				(
 					'TRANSACTIONTYPE'		=> 'R114',
-					'ACCOUNTLINK.CODE'		=> $_vendor_category == 1 ? 2400 : 2460,
+					'ACCOUNTLINK.CODE'		=> $reskontroart,
 					'CURRENCY'				=> $oRsBilag[0]['currency'],
 					'AMOUNT'				=> (-1 * $sum_amount),
 					'TAXCODE'				=> $oRsBilag[0]['mvakode'],
