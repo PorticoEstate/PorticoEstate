@@ -52,6 +52,7 @@
 				'query'				=> true,
 				'index'  			=> true,
 				'edit'   			=> true,
+				'save'   			=> true,
 				'delete'			=> true,
 				'download'			=> true,
 				'columns'			=> true,
@@ -103,124 +104,47 @@
 			$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
 
 			$values	= phpgw::get_var('values');
-
-			$_fields = array
-			(
-				array
-				(
-					'name' => 'title',
-					'type'	=> 'string',
-					'required'	=> true
-				),
-				array
-				(
-					'name' => 'descr',
-					'type'	=> 'string',
-					'required'	=> true
-				),
-				array
-				(
-					'name' => 'cat_id',
-					'type'	=> 'integer',
-					'required'	=> true
-				),
-				array
-				(
-					'name' => 'report_date',
-					'type'	=> 'string',
-					'required'	=> true
-				),
-				array
-				(
-					'name' => 'status_id',
-					'type'	=> 'integer',
-					'required'	=> true
-				),
-				array
-				(
-					'name' => 'vendor_id',
-					'type'	=> 'integer',
-					'required'	=> false
-				),
-				array
-				(
-					'name' => 'vendor_name',
-					'type'	=> 'string',
-					'required'	=> false
-				),
-				array
-				(
-					'name' => 'coordinator_id',
-					'type'	=> 'integer',
-					'required'	=> false
-				),
-				array
-				(
-					'name' => 'coordinator_name',
-					'type'	=> 'string',
-					'required'	=> false
-				),
-				array
-				(
-					'name' => 'multiplier',
-					'type'	=> 'float',
-					'required'	=> false
-				),
-			);
-
-
-			foreach ($_fields as $_field)
+			$values_attribute  = phpgw::get_var('values_attribute');
+					
+			foreach ( $this->location_info['fields'] as $_field )
 			{
-				if($data[$_field['name']] = $_POST['values'][$_field['name']])
+				if ($data[$_field['name']] = $values[$_field['name']])
 				{
 					$data[$_field['name']] =  phpgw::clean_value($data[$_field['name']], $_field['type']);
 				}
-				if($_field['required'] && !$data[$_field['name']])
+				if (isset($_field['nullable']) && $_field['nullable'] != true)
 				{
-					$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $_field['name']));
+					if (!$data[$_field['name']])
+					{
+						$this->receipt['error'][] = array('msg'=>lang('missing value for %1', $_field['name']));									
+					}
 				}
-			}
-
-			$values = $this->bocommon->collect_locationdata($data,$insert_record);
-
-			if(!isset($values['location_code']) || ! $values['location_code'])
-			{
-				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
 			}
 
 			/*
 			* Extra data from custom fields
 			*/
-			$values['attributes']	= phpgw::get_var('values_attribute');
 
-			if(is_array($values['attributes']))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
-				foreach ($values['attributes'] as $attribute )
+				foreach ($values_attribute as $attribute )
 				{
 					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 					{
 						$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 					}
+
+					if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+					{
+						$this->receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
+					}
 				}
 			}
+			$data['attributes'] = $values_attribute;
 
-			if(!isset($values['cat_id']) || !$values['cat_id'])
-			{
-				$this->receipt['error'][]=array('msg'=>lang('Please select a category !'));
-			}
-
-			if(!isset($values['title']) || !$values['title'])
-			{
-				$this->receipt['error'][]=array('msg'=>lang('Please give a title !'));
-			}
-
-			if(!isset($values['report_date']) || !$values['report_date'])
-			{
-				$this->receipt['error'][]=array('msg'=>lang('Please select a date!'));
-			}
-
-			return $values;
+			return $data;
 		}
+		
 		
 		private function _get_categories($selected = 0)
 		{
@@ -586,7 +510,7 @@
 			$id			= phpgw::get_var($this->location_info['id']['name']);
 			//$values		= phpgw::get_var('values');
 
-			$values_attribute  = phpgw::get_var('values_attribute');
+			//$values_attribute  = phpgw::get_var('values_attribute');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
@@ -633,13 +557,21 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uigeneric.edit',
+					'menuaction'	=> 'property.uigeneric.save',
 					'id'			=> $id,
 					'appname'		=> $this->appname,
 					'type'			=> $this->type,
 					'type_id'		=> $this->type_id
 				);
 
+			$link_index = array
+				(
+					'menuaction'	=> 'property.uigeneric.index',
+					'appname'		=> $this->appname,
+					'type'			=> $this->type,
+					'type_id'		=> $this->type_id
+				);
+						
 			$tabs = array();
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
@@ -738,10 +670,7 @@
 				(
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uigeneric.index', 
-														'appname'		=> $this->appname,
-														'type'			=> $this->type,
-														'type_id' 		=> $this->type_id)),
+					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type, 'type_id'=> $this->type_id)),
 					'lang_descr'					=> lang('Descr'),
 					'lang_save'						=> lang('save'),
@@ -1032,11 +961,11 @@
 
 			if ($id )
 			{
-				$values = $this->bo->read_single( array('id' => $id,  'view' => true) );
+				$values = $this->bo->read_single( array('id' => $id) );
 			}
 			else
 			{
-				$values = array();
+				$values = $this->bo->read_single();
 			}
 
 			/*
@@ -1053,7 +982,11 @@
 
 				try
 				{
-					$id = $this->bo->save($values);
+					$datos = $values;
+					$attributes = $datos['attributes'];
+					unset($datos['attributes']);
+					
+					$id = $this->bo->save($datos, $attributes);
 				}
 
 				catch(Exception $e)
