@@ -198,7 +198,13 @@ HTML;
 				$collected_bm = set_get_bookmarks();
 				foreach($collected_bm as $entry)
 				{
-					$seleced_bm = isset($entry['selected']) && $entry['selected'] ? 'class="pure-menu-selected"' : '';
+					$seleced_bm = '';
+					if( isset($entry['selected']) && $entry['selected'])
+					{
+						$seleced_bm = 'class="pure-menu-selected"' ;
+						$entry['text'] = "<b>[ {$entry['text']} ]</b>";
+					}
+
 					$var['topmenu'] .= <<<HTML
 
 					<li {$seleced_bm}>
@@ -276,8 +282,7 @@ HTML;
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
 			$current_class = 'Selected';
-//			$item['selected'] = true;
-			$item['text'] = "<b>[ {$item['text']} ]</b>";
+			$item['selected'] = true;
 		}
 
 		$bookmark = '';
