@@ -6,10 +6,10 @@
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
 		<xsl:for-each select="attributes_group">
-			<div id="{link}" class="fields_wrp">
-				<table style="float:left;">
+			<div class="content-wrp">
+				<fieldset>
 					<xsl:apply-templates select="attributes"/>
-				</table>
+				</fieldset>
 			</div>
 		</xsl:for-each>
 	</xsl:template>
@@ -27,19 +27,16 @@
 
 		<xsl:choose>
 			<xsl:when test="datatype='section'">
-				<tr>
-					<td  colspan="2">
-						<xsl:value-of select="descr" disable-output-escaping="yes"/>				
-					</td>
-				</tr>
+				<div class="pure-control-group">
+					<xsl:value-of select="descr" disable-output-escaping="yes"/>				
+				</div>
 			</xsl:when>
 		</xsl:choose>
 
-		<tr>
+		<div class="pure-control-group">
 			<xsl:choose>
 				<xsl:when test="not(hide_row)">
-					<td  class="first" title="{$statustext}">
-						<div id="label_{name}">
+					
 						<label>
 						<xsl:choose>
 							<xsl:when test="helpmsg=1">
@@ -72,12 +69,11 @@
 							</xsl:when>
 						</xsl:choose>
 						</label>
-						</div>
-					</td>
+					
 				</xsl:when>
 			</xsl:choose>
 
-			<td>
+			
 				<xsl:choose>
 					<xsl:when test="name!=''">
 						<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"/>
@@ -650,8 +646,8 @@
 						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
-			</td>
-		</tr>
+			
+		</div>
 	</xsl:template>
 
 	<!-- New template-->
