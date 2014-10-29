@@ -508,20 +508,9 @@
 			}
 
 			$id			= phpgw::get_var($this->location_info['id']['name']);
-			//$values		= phpgw::get_var('values');
-
-			//$values_attribute  = phpgw::get_var('values_attribute');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
-			/*if ($id)
-			{
-				if (!$values)
-				{
-					$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
-				}
-			}*/
-			
 			if ($id)
 			{
 				if (!$values)
@@ -541,21 +530,7 @@
 				}
 			}
 
-			/* Preserve attribute values from post */
-			/*if(isset($receipt['error']))
-			{
-				foreach ( $this->location_info['fields'] as $field )
-				{
-					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']]);
-				}
-
-				if(isset( $values_attribute) && is_array( $values_attribute))
-				{
-					$values = $this->custom->preserve_attribute_values($values,$values_attribute);
-				}
-			}*/
-
-			$link_data = array
+			$link_save = array
 				(
 					'menuaction'	=> 'property.uigeneric.save',
 					'id'			=> $id,
@@ -600,7 +575,10 @@
 				$attributes = array();
 				foreach ($attributes_groups as $group)
 				{
-					$attributes[] = $group;
+					if (is_array($group['attributes'])) 
+					{
+						$attributes[] = $group;
+					}
 				}
 				unset($attributes_groups);
 				unset($values['attributes']);
@@ -669,7 +647,7 @@
 			$data = array
 				(
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_save),
 					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type, 'type_id'=> $this->type_id)),
 					'lang_descr'					=> lang('Descr'),
@@ -691,7 +669,7 @@
 			$appname	=  $this->location_info['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
-			//print_r($data); die;
+	
 			self::render_template_xsl(array('generic','attributes_form'), array('edit' => $data));
 		}
 
@@ -962,10 +940,12 @@
 			if ($id )
 			{
 				$values = $this->bo->read_single( array('id' => $id) );
+				$action = 'edit';
 			}
 			else
 			{
 				$values = $this->bo->read_single();
+				$action = 'add';
 			}
 
 			/*
@@ -979,14 +959,13 @@
 			}
 			else
 			{
-
 				try
 				{
 					$datos = $values;
 					$attributes = $datos['attributes'];
 					unset($datos['attributes']);
 					
-					$id = $this->bo->save($datos, $attributes);
+					$receipt = $this->bo->save($datos, $action, $attributes);
 				}
 
 				catch(Exception $e)
@@ -998,17 +977,12 @@
 						return;
 					}
 				}
-
-				$this->_handle_files($id);
-				if($_FILES['import_file']['tmp_name'])
-				{
-					$this->_handle_import($id);
-				}
-				else
-				{
-					phpgwapi_cache::message_set('ok!', 'message'); 
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.edit', 'id' => $id));
-				}
+				
+				phpgwapi_cache::message_set($receipt, 'message'); 
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index',
+										'appname'		=> $this->appname,
+										'type'			=> $this->type,
+										'type_id'		=> $this->type_id));
 			}
 		}
 	}
