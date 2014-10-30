@@ -158,7 +158,6 @@ HTML;
 		if (!$nonavbar)
 		{
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
-//		_debug_array($bookmarks);die();
 
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$treemenu = '';
@@ -304,7 +303,7 @@ HTML;
 			$item['text'] = "<b>[ {$item['text']} ]</b>";
 		}
 
-		$link_class =" class=\"{$current_class}\"";
+		$link_class = $current_class ? "class=\"{$current_class}\"" : '';
 
 		$out = <<<HTML
 				<li {$link_class}>

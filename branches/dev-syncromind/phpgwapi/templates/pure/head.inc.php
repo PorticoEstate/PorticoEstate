@@ -12,6 +12,10 @@
 	phpgwapi_yui::load_widget('container');
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
 	$javascripts[] = "/phpgwapi/js/yui3/yui/yui-min.js";
+	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu/gallery-sm-menu-min.js";
+	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-base/gallery-sm-menu-base-min.js";
+	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-item/gallery-sm-menu-item-min.js";
+	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
 	$javascripts[] = "/phpgwapi/js/jquery/mmenu/src/js/jquery.mmenu.min.all.js";
 	$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
 
@@ -35,7 +39,6 @@
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/src/css/jquery.mmenu.all.css";
-//	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/src/css/extensions/jquery.mmenu.widescreen.css"  media="all and (min-width: 900px)" />
 
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";
@@ -75,26 +78,6 @@
 		}
 	}
 
-	$base_url	= $GLOBALS['phpgw']->link('/', array(), true);
-	if(substr($base_url, 0, 4) != 'http')
-	{
-		$base_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}{$base_url}";
-	}
-
-	if ( isset($GLOBALS['phpgw_info']['server']['enforce_ssl'])
-		&& $GLOBALS['phpgw_info']['server']['enforce_ssl'])
-	{
-		if(substr($base_url, 0, 4) != 'http')
-		{
-			$base_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}{$base_url}";
-		}
-		else
-		{
-			$base_url = preg_replace('/http:/', 'https:', $base_url);
-		}
-	}
-
-
 	$tpl_vars = array
 	(
 		'noheader'				=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
@@ -104,7 +87,7 @@
 		'img_icon'				=> $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'			=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'browser_not_supported'	=> lang('browser not supported'),
-		'str_base_url'			=> $base_url,
+		'str_base_url'			=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'			=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'			=> $GLOBALS['phpgw']->common->get_on_events(),
 	);
