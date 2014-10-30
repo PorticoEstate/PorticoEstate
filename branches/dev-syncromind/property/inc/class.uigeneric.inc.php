@@ -51,6 +51,7 @@
 			(
 				'query'				=> true,
 				'index'  			=> true,
+				'add'   			=> true,
 				'edit'   			=> true,
 				'save'   			=> true,
 				'delete'			=> true,
@@ -101,20 +102,38 @@
 		*/
 		private function _populate($data = array())
 		{
-			$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
-
+			//$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
+			
+			$id_name = $this->location_info['id']['name'];
+			
+			$id	= phpgw::get_var($id_name);
 			$values	= phpgw::get_var('values');
 			$values_attribute  = phpgw::get_var('values_attribute');
+			
+			if(!$id && !$values[$id_name] && $this->location_info['id']['type'] !='auto')
+			{
+				$this->receipt['error'][]=array('msg'=>lang('missing value for %1', lang('id')));									
+			}
+
+			if($values[$id_name] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values[$id_name]))
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please enter an integer !'));
+				unset($values[$id_name]);
+			}
+			
+			if($values[$id_name])
+			{
+				$data[$id_name] = $values[$id_name];
+			}
 					
 			foreach ( $this->location_info['fields'] as $_field )
 			{
-				if ($data[$_field['name']] = $values[$_field['name']])
-				{
-					$data[$_field['name']] =  phpgw::clean_value($data[$_field['name']], $_field['type']);
-				}
+				$data[$_field['name']] = $values[$_field['name']];
+				$data[$_field['name']] =  phpgw::clean_value($data[$_field['name']], $_field['type']);
+				
 				if (isset($_field['nullable']) && $_field['nullable'] != true)
 				{
-					if (!$data[$_field['name']])
+					if(empty($data[$_field['name']]))
 					{
 						$this->receipt['error'][] = array('msg'=>lang('missing value for %1', $_field['name']));									
 					}
@@ -139,8 +158,9 @@
 						$this->receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
 					}
 				}
+				
+				$data = $this->custom->preserve_attribute_values($data,$values_attribute);
 			}
-			$data['attributes'] = $values_attribute;
 
 			return $data;
 		}
@@ -297,7 +317,7 @@
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array(
-									'menuaction' => 'property.uigeneric.edit', 
+									'menuaction' => 'property.uigeneric.add', 
 									'appname'    => $this->appname,
 									'type'       => $this->type,
 									'type_id'    => $this->type_id								
@@ -428,7 +448,7 @@
 						'text'			=> lang('add'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.add',
 							'appname'		=> $this->appname,
 							'type'			=> $this->type,
 							'type_id'		=> $this->type_id
@@ -498,8 +518,12 @@
 			return $this->jquery_results($result_data);
 		}
 		
+		public function add()
+		{
+			$this->edit();
+		}
 		
-		function edit($values = array(), $mode = 'edit')
+		function edit($values = array())
 		{
 			if(!$this->acl_add)
 			{
@@ -935,37 +959,38 @@
 
 		public function save()
 		{
-			$id = (int)phpgw::get_var('id');
+			$id = phpgw::get_var($this->location_info['id']['name']);
+			$values	= phpgw::get_var('values');
 
-			if ($id )
+			if ($id)
 			{
-				$values = $this->bo->read_single( array('id' => $id) );
+				$data = $this->bo->read_single( array('id' => $id) );
 				$action = 'edit';
 			}
 			else
 			{
-				$values = $this->bo->read_single();
+				$data = $this->bo->read_single();
 				$action = 'add';
 			}
 
 			/*
 			* Overrides with incoming data from POST
 			*/
-			$values = $this->_populate($values);
+			$data = $this->_populate($data);
 
 			if( $this->receipt['error'] )
 			{
-				$this->edit( $values );
+				$this->edit( $data );
 			}
 			else
 			{
 				try
 				{
-					$datos = $values;
-					$attributes = $datos['attributes'];
-					unset($datos['attributes']);
+					$fields = $data;
+					$attributes = $data['attributes'];
+					unset($fields['attributes']);
 					
-					$receipt = $this->bo->save($datos, $action, $attributes);
+					$receipt = $this->bo->save($fields, $action, $attributes);
 				}
 
 				catch(Exception $e)
@@ -973,12 +998,16 @@
 					if ( $e )
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
-						$this->edit( $values );
+						$this->edit( $data );
 						return;
 					}
 				}
-				
+
 				phpgwapi_cache::message_set($receipt, 'message'); 
+				if ($values['apply']) {
+					$this->edit();
+					return;
+				}
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index',
 										'appname'		=> $this->appname,
 										'type'			=> $this->type,
