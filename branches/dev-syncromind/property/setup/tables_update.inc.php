@@ -8166,3 +8166,71 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.685 to 0.9.17.686
+	* Convert id from character ti integer for fm_vendor_category::id
+	*/
+	$test[] = '0.9.17.685';
+	function property_upgrade0_9_17_685()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_vendor_category');
+
+		if($metadata['id']->type == 'varchar')
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_vendor_category");
+			$cats = array();
+			while ($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$cats[] = array
+				(
+					'id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'descr'		=> $GLOBALS['phpgw_setup']->oProc->f('descr',true),
+				);
+			}
+
+			$GLOBALS['phpgw_setup']->oProc->DropTable('fm_vendor_category');
+			$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'fm_vendor_category', array(
+					'fd' => array(
+						'id' => array('type' => 'int','precision' => 4,'nullable' => false),
+						'descr' => array('type' => 'varchar','precision' => 255,'nullable' => false),
+					),
+					'pk' => array('id'),
+					'fk' => array(),
+					'ix' => array(),
+					'uc' => array()
+				)
+			);
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_vendor','category','_category');
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_vendor','category',array('type' => 'int','precision' => 4,'nullable' => True));
+
+			$id = 1;
+			foreach($cats as $cat)
+			{
+				$value_set = array
+				(
+					'id'	=> $id,
+					'descr'	=> $cat['descr']
+				);
+				$cols = implode(',', array_keys($value_set));
+				$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+				$sql = "INSERT INTO fm_vendor_category ({$cols}) VALUES ({$values})";
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_vendor SET category = {$id} WHERE _category = '{$cat['descr']}'",__LINE__,__FILE__);
+
+				$id++;
+			}
+			$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_vendor',array(),'_category');
+
+		}
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.686';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
