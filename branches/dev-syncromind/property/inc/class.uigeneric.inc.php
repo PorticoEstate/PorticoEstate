@@ -412,9 +412,9 @@
 							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
 							'appname'		=> $this->appname,
 							'type'			=> $this->type,
-							'type_id'		=> $this->type_id,
-							'target'		=> '_blank'
+							'type_id'		=> $this->type_id
 						)),
+						'target'		=> '_blank',
 						'parameters'	=> json_encode($parameters)
 					);
 			}
