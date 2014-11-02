@@ -565,7 +565,7 @@ toolbar
 			{
 				if (JqueryPortico.columns[i]['editor'] === true)
 				{
-					editor_cols.push({});
+					editor_cols.push({sUpdateURL:editor_action + '&field_name=' + JqueryPortico.columns[i]['data']});
 				} else {
 					editor_cols.push(null);
 				}
