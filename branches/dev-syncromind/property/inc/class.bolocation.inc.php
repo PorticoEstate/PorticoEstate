@@ -724,7 +724,7 @@ JS;
 		function read($data = array())
 		{
 //_debug_array($data);
-			$type_id = isset($data['type_id']) && $data['type_id'] ? $data['type_id'] : $this->type_id;
+			/*$type_id = isset($data['type_id']) && $data['type_id'] ? $data['type_id'] : $this->type_id;
 			$allrows = isset($data['allrows']) && $data['allrows'] ? $data['allrows'] : $this->allrows;
 			
 			$locations = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
@@ -734,7 +734,9 @@ JS;
 				'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
 				'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id'],
 				'results' => $data['results'],'control_registered' => $data['control_registered'],
-					 'control_id' => $data['control_id']));
+					 'control_id' => $data['control_id']));*/
+			
+			$locations = $this->so->read($data);
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
