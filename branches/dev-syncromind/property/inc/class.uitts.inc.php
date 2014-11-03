@@ -32,9 +32,12 @@
 	 * @package property
 	 */
 
-	phpgw::import_class('phpgwapi.yui');
+	//phpgw::import_class('phpgwapi.yui');
 
-	class property_uitts
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.jquery');
+
+	class property_uitts extends phpgwapi_uicommon_jquery
 	{
 		var $public_functions = array
 		(
@@ -68,6 +71,8 @@
 
 		public function __construct()
 		{
+			parent::__construct();
+			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::helpdesk';
 			if($this->tenant_id	= $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
 			{
@@ -110,6 +115,63 @@
 			$this->show_finnish_date	= $this->bo->show_finnish_date;
 
 			$this->_category_acl = isset($this->bo->config->config_data['acl_at_tts_category']) ? $this->bo->config->config_data['acl_at_tts_category'] : false;
+		}
+		
+		/**
+		 * Fetch data from $this->bo based on parametres
+		 * @return array
+		 */
+		public function query()
+		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1
+			);
+
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
+				}
+			}
+
+			$result_objects = array();
+			$result_count = 0;
+
+			$values = $this->bo->read($params);
+			if ( phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+			
+			$link_data = array
+			(
+				'menuaction' => 'property.uigeneric.edit',
+				'appname'	 => $this->appname,
+				'type'		 => $this->type,
+				'type_id'	 => $this->type_id
+			);
+			
+			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+
+			return $this->jquery_results($result_data);
 		}
 
 		function save_sessiondata()
@@ -412,7 +474,7 @@
 		{
 			if($this->tenant_id)
 			{
-				//				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
+				//$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
 			}
 
 			if(!$this->acl_read)
@@ -1382,12 +1444,12 @@
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
 
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('connection');
+//			phpgwapi_yui::load_widget('loader');
+//			phpgwapi_yui::load_widget('paginator');
 
 			// Prepare CSS Style
 			$GLOBALS['phpgw']->css->validate_file('datatable');
