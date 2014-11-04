@@ -16,6 +16,12 @@ JqueryPortico.formatLink = function(key, oData) {
 	return '<a href="' + link + '">' + name + '</a>';
 };
 
+JqueryPortico.searchLink = function(key, oData) {
+	var name = oData[key];
+	var link = oData['query_location'].loc1;
+	return '<a id="' + link + '" onclick="filterData(this.id);">' + name + '</a>';
+};
+			
 JqueryPortico.FormatterAmount0 = function(key, oData) {
 //	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 	//FIXME...
