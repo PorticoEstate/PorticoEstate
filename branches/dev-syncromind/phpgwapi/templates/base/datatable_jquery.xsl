@@ -381,7 +381,8 @@ toolbar
 	</script>
 
 	<script type="text/javascript" class="init">
-
+		
+		var oTable = null;
 		$(document).ready(function() {
 
 			var ajax_url = '<xsl:value-of select="source"/>';
@@ -389,6 +390,7 @@ toolbar
 			var exclude_colvis = [];
 			var editor_cols = [];
 			var editor_action = '<xsl:value-of select="editor_action"/>';
+			
 <![CDATA[
 			TableTools.BUTTONS.download = {
 				"sAction": "text",
@@ -462,79 +464,7 @@ toolbar
 												<xsl:for-each select="//datatable/actions">
 													{
 														sExtends:		"select",
-														sButtonText:	"<xsl:value-of select="text"/>",
-														fnClick:		function (nButton, oConfig, oFlash) {
-																		var receiptmsg = [];
-																		var selected = fnGetSelected();
-																		var numSelected = 	selected.length;
-														
-																		if (numSelected ==0){
-																			alert('None selected');
-																			return false;
-																		}
-
-																		<xsl:if test="confirm_msg">
-																			var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-																			var r = confirm(confirm_msg);
-																			if (r != true) {
-																				return false;
-																			}
-																		</xsl:if>
-
-																		var target = "<xsl:value-of select="target"/>";
-																		if(!target)
-																		{
-																			target = '_self';
-																		}
-
-																		if (numSelected &gt; 1){
-																			target = '_blank';
-																		}
-
-
-																		var n = 0;
-																		for (; n &lt; numSelected; ) {
-
-															//				console.log(selected[n]);
-																			var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
-															//				console.log(aData);
-
-
-																			//delete stuff comes here
-																			var action = "<xsl:value-of select="action"/>";
-
-																			<xsl:if test="parameters">
-																				var parameters = <xsl:value-of select="parameters"/>;
-															//						console.log(parameters.parameter);
-																				var i = 0;
-																				len = parameters.parameter.length;
-																				for (; i &lt; len; ) {
-																					action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-																					i++;
-																				}
-																			</xsl:if>
-																			// look for the word "DELETE" in URL
-																			if(substr_count(action,'delete')>0)
-																			{
-																					action += "&amp;confirm=yes&amp;phpgw_return_as=json";
-																					receipt = execute_ajax(action);
-																					oTable.fnDraw();
-																			}
-																			else if (target == 'ajax')
-																			{
-																					action += "&amp;phpgw_return_as=json";
-																					execute_ajax(action);
-																					oTable.fnDraw();
-
-																			}
-																			else
-																			{
-																				window.open(action,target);
-																			}
-
-																			n++;
-																		}
-																}
+														sButtonText:	"<xsl:value-of select="text"/>"
 
 													}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 												</xsl:for-each>
@@ -571,7 +501,7 @@ toolbar
 				}
 			}
 			
-			var oTable = $('#datatable-container').dataTable( {
+			oTable = $('#datatable-container').dataTable( {
 				processing:		true,
 				serverSide:		true,
 				responsive:		true,
@@ -713,8 +643,17 @@ toolbar
 				return cnt;
 			}
 
+
 		} );
 
+			function filterData(query)
+			{
+				var a = $('#datatable-container_filter').find('input');
+				var search = {'value': query};
+				oTable.dataTableSettings[0]['ajax']['data']['search'] = search;
+				oTable.fnDraw();
+				a[0].value = query;
+			}
 ]]>
 	</script>
 
