@@ -193,7 +193,7 @@
 				'type_id'	 => $type_id
 			);
 			
-			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+			//array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
 
 			return $this->jquery_results($result_data);
 		}
@@ -546,7 +546,7 @@
 				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 					
-			$this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 			$uicols = $this->bo->uicols;
 	
 			$count_uicols_name = count($uicols['name']);
@@ -561,12 +561,12 @@
 								);
 					
 					if ($uicols['datatype'][$k] == 'link') {
-						$params['formatter'] = 'JqueryPortico.formatLink';
+						$params['formatter'] = 'JqueryPortico.searchLink';
 					}
 					
 					if($uicols['name'][$k]=='loc1')
 					{
-						$params['formatter'] = 'JqueryPortico.formatLink';
+						$params['formatter'] = 'JqueryPortico.searchLink';
 						$params['sortable']	= true;
 						$params['sort_field'] = 'fm_location1.loc1';
 					}
