@@ -551,6 +551,12 @@
 	
 			$count_uicols_name = count($uicols['name']);
 
+			$searc_levels = array();
+			for($i=1;$i< $type_id; $i++)
+			{
+				$searc_levels[] = "loc{$i}";
+			}
+
 			for($k=0;$k<$count_uicols_name;$k++)
 			{
 					$params = array(
@@ -561,10 +567,10 @@
 								);
 					
 					if ($uicols['datatype'][$k] == 'link') {
-						$params['formatter'] = 'JqueryPortico.searchLink';
+						$params['formatter'] = 'JqueryPortico.formatLinkGeneric';
 					}
 					
-					if($uicols['name'][$k]=='loc1')
+					if(in_array($uicols['name'][$k], $searc_levels))
 					{
 						$params['formatter'] = 'JqueryPortico.searchLink';
 						$params['sortable']	= true;

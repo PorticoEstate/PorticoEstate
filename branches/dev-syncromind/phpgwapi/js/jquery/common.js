@@ -16,9 +16,16 @@ JqueryPortico.formatLink = function(key, oData) {
 	return '<a href="' + link + '">' + name + '</a>';
 };
 
+JqueryPortico.formatLinkGeneric = function(key, oData) {
+	var name = 'Link';
+	var link = oData[key];
+	return '<a href="' + link + '">' + name + '</a>';
+};
+
 JqueryPortico.searchLink = function(key, oData) {
 	var name = oData[key];
-	var link = oData['query_location'].loc1;
+	var link = oData['query_location'][key];
+
 	return '<a id="' + link + '" onclick="filterData(this.id);">' + name + '</a>';
 };
 			

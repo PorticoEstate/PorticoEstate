@@ -49,11 +49,11 @@
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:variable name="form_action">
-				<xsl:value-of select="form_action"/>
-			</xsl:variable>
-			<form method="post" action="{$form_action}">
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
+		<form method="post" action="{$form_action}">
+			<table width="100%" cellpadding="2" cellspacing="2" align="center">
 				<tr height="30">
 					<td valign="top" align="left">
 						<xsl:value-of select="lang_enable_inheritance"/>
@@ -107,7 +107,9 @@
 						</input>
 					</td>
 				</tr>
-			</form>
+			</table>
+		</form>
+		<table>
 			<tr>
 				<td>
 					<xsl:variable name="done_action">
@@ -153,9 +155,11 @@
 					</td>
 					<td>
 						<table class="pure-table pure-table-bordered"  width="100%" cellpadding="2" cellspacing="2" align="center">
-							<tr class="th">
-								<xsl:call-template name="value_header"/>
-							</tr>
+							<thead>
+								<tr>
+									<xsl:call-template name="value_header"/>
+								</tr>
+							</thead>
 							<tr>
 								<xsl:call-template name="right"/>
 							</tr>
@@ -195,9 +199,11 @@
 					</td>
 					<td>
 						<table class="pure-table pure-table-bordered"  width="100%" cellpadding="2" cellspacing="2" align="center">
-							<tr class="th">
-								<xsl:call-template name="value_header"/>
-							</tr>
+							<thead>
+								<tr>
+									<xsl:call-template name="value_header"/>
+								</tr>
+						    </thead>
 							<tr>
 								<xsl:call-template name="right"/>
 							</tr>
@@ -218,37 +224,37 @@
 	<xsl:template name="value_header">
 		<td>
 		</td>
-		<td class="th_text" align="center">
+		<td align="center">
 			<xsl:value-of select="lang_read"/>
 		</td>
-		<td class="th_text" align="center">
+		<td align="center">
 			<xsl:value-of select="lang_add"/>
 		</td>
-		<td class="th_text" align="center">
+		<td align="center">
 			<xsl:value-of select="lang_edit"/>
 		</td>
-		<td class="th_text" align="center">
+		<td align="center">
 			<xsl:value-of select="lang_delete"/>
 		</td>
 		<xsl:choose>
 			<xsl:when test="//permission= 1">
-				<td class="th_text" align="center">
+				<td align="center">
 					<xsl:value-of select="lang_manage"/>
 				</td>
 			</xsl:when>
 		</xsl:choose>
 		<xsl:choose>
-			<xsl:when test="//location='.invoice' and //permission= 1 ">
-				<td class="th_text" align="center">
+			<xsl:when test="//location='.invoice' and //permission= 1 and type= 'users'">
+				<td align="center">
 					<xsl:value-of select="lang_janitor"/>
 				</td>
-				<td class="th_text" align="center">
+				<td align="center">
 					<xsl:value-of select="lang_supervisor"/>
 				</td>
-				<td class="th_text" align="center">
+				<td align="center">
 					<xsl:value-of select="lang_budget_responsible"/>
 				</td>
-				<td class="th_text" align="center">
+				<td align="center">
 					<xsl:value-of select="lang_initials"/>
 				</td>
 			</xsl:when>
@@ -450,16 +456,6 @@
 					<INPUT type="text" size="4" name="initials[{account_id}]" value="{initials}"/>
 				</td>
 			</xsl:when>
-			<xsl:otherwise>
-				<td>
-				</td>
-				<td>
-				</td>
-				<td>
-				</td>
-				<td>
-				</td>
-			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
@@ -889,6 +885,10 @@
 	<!-- New template-->
 	<xsl:template match="contact_info">
 		<div align="left">
+				<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
+				<form method="post" name="form" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -907,10 +907,6 @@
 						<xsl:call-template name="user_id_filter"/>
 					</td>
 				</tr>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" name="form" action="{$form_action}">
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="lang_email"/>
@@ -1032,7 +1028,9 @@
 							</input>
 						</td>
 					</tr>
-				</form>
+				</table>
+			</form>
+			<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
