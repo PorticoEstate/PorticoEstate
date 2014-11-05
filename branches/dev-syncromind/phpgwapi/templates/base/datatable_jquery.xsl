@@ -721,11 +721,8 @@ toolbar
 
 			function filterData(query)
 			{
-				var a = $('#datatable-container_filter').find('input');
-				var search = {'value': query};
-				oTable.dataTableSettings[0]['ajax']['data']['search'] = search;
-				oTable.fnDraw();
-				a[0].value = query;
+				var api = oTable.api();
+				api.search( query ).draw();
 			}
 ]]>
 	</script>
