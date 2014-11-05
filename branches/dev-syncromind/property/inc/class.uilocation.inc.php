@@ -172,7 +172,8 @@
 				'district_id' => phpgw::get_var('district_id', 'int'),
 				'status' => phpgw::get_var('status'),
 				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
-				'location_code' => phpgw::get_var('location_code')
+				'location_code' => phpgw::get_var('location_code'),
+				'filter'		=> phpgw::get_var('filter', 'int')
 			);
 
 			//$values = $this->bo->read($params);
