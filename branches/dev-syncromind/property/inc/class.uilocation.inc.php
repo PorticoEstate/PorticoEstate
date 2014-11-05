@@ -547,13 +547,12 @@
 				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 					
-			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+			$this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
 			$uicols = $this->bo->uicols;
 	
 			$count_uicols_name = count($uicols['name']);
 
-			$searc_levels = array();
-			for($i=1;$i< $type_id; $i++)
+			for($i=1; $i<$type_id; $i++)
 			{
 				$searc_levels[] = "loc{$i}";
 			}
@@ -574,18 +573,19 @@
 					if(in_array($uicols['name'][$k], $searc_levels))
 					{
 						$params['formatter'] = 'JqueryPortico.searchLink';
+					}
+					if($uicols['name'][$k]=='loc1')
+					{
+						$params['formatter'] = 'JqueryPortico.searchLink';
 						$params['sortable']	= true;
-						$params['sort_field'] = 'fm_location1.loc1';
 					}
 					else if($uicols['name'][$k]=='street_name')
 					{
 						$params['sortable']	= true;
-						$params['sort_field'] = 'street_name';
 					}
 					else if(isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k]!='T' || $uicols['cols_return_extra'][$k]!='CH'))
 					{
 						$params['sortable']	= true;
-						$params['sort_field'] = $uicols['name'][$k];
 					}
 					
 					array_push ($data['datatable']['field'], $params);
