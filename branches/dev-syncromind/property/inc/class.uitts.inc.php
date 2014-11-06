@@ -123,11 +123,20 @@
 		 */
 		public function query()
 		{
+			$type_id	= $this->type_id;
+			$lookup 	= $this->lookup;
+			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+
+			if(!$type_id)
+			{
+				$type_id = 1;
+			}
+			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-
+			
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
@@ -136,20 +145,19 @@
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				
+				'type_id' => $type_id,
+				'lookup_tenant' => $lookup_tenant,
+				'lookup' => $lookup,
+				'district_id' => phpgw::get_var('district_id', 'int'),
+				'status' => phpgw::get_var('status'),
+				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
+				'location_code' => phpgw::get_var('location_code'),
+				'filter'		=> phpgw::get_var('filter', 'int')
 			);
 
-			foreach ( $this->location_info['fields'] as $field )
-			{
-				if (isset($field['filter']) && $field['filter'])
-				{
-					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
-				}
-			}
-
-			$result_objects = array();
-			$result_count = 0;
-
+			//$values = $this->bo->read($params);
 			$values = $this->bo->read($params);
 			if ( phpgw::get_var('export', 'bool'))
 			{
@@ -163,17 +171,15 @@
 			
 			$link_data = array
 			(
-				'menuaction' => 'property.uigeneric.edit',
-				'appname'	 => $this->appname,
-				'type'		 => $this->type,
-				'type_id'	 => $this->type_id
+				'menuaction' => 'property.uitts.index',
+				'type_id'	 => $type_id
 			);
 			
-			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+			//array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
 
 			return $this->jquery_results($result_data);
 		}
-
+		
 		function save_sessiondata()
 		{
 			$data = array
@@ -469,8 +475,197 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 		}
 
+		private function _get_categories($selected = 0)
+		{
+			$cats	= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$cats->supress_info	= true;
+			$categories = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $selected,'globals' => true,'use_acl' => $this->_category_acl));
+			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+			array_unshift ($categories['cat_list'],$default_value);
 
+			foreach ($categories['cat_list'] as & $_category)
+			{
+				$_category['id'] = $_category['cat_id'];
+			}
+
+			return $categories['cat_list'];
+		}
+		
 		function index()
+		{
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			//self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
+	//		phpgwapi_yui::load_widget('datatable');
+	//		phpgwapi_yui::load_widget('paginator');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+
+			$categories = $this->_get_categories();
+                        
+			$data = array(
+				'datatable_name'	=> lang('condition survey'),
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array('type' => 'filter',
+								'name' => 'cat_id',
+								'text' => lang('category') . ':',
+								'list' => $categories,
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array('menuaction' => 'property.uitts.add')),
+								'class' => 'new_item'
+							)
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'property.uitts.index', 'phpgw_return_as' => 'json')),
+					'download'	=> self::link(array('menuaction' => 'property.uitts.download', 'export' => true, 'allrows' => true)),
+					'allrows'	=> true,
+					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
+					'field' => array(
+						
+						array(
+							'key' => 'priority',
+							'label' => lang('priority'),
+							'sortable' => true,
+							//FIXME: to be implemented: http://jquery-datatables-editable.googlecode.com/svn/trunk/inline-edit.html
+							'editor' => true
+						),
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable' => true,
+							'formatter' => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key' => 'subject',
+							'label' => lang('subject'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'vendor',
+							'label' => lang('vendor'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'year',
+							'label' => lang('year'),
+							'sortable' => true,
+						),
+						array(
+							'key' => 'multiplier',
+							'label' => lang('multiplier'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'cnt',
+							'label' => lang('count'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'link',
+							'label' => 'dummy',
+							'sortable' => false,
+							'hidden' => true,
+						)
+					)
+				),
+			);
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'view_survey',
+						'text' 			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uitts.view'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'edit_survey',
+						'text' 			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uitts.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'import_survey',
+						'text' 			=> lang('import'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uitts.import'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+
+			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'delete_imported_records',
+						'text' 			=> lang('delete imported records'),
+						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uitts.delete_imported_records'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+
+			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'delete_survey',
+						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uitts.delete'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+
+			self::render_template_xsl('datatable_jquery', $data);
+		}
+		
+		function indexyahoo()
 		{
 			if($this->tenant_id)
 			{
