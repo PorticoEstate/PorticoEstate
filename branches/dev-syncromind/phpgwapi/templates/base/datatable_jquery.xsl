@@ -519,13 +519,17 @@ toolbar
 																			if(substr_count(action,'delete')>0)
 																			{
 																					action += "&amp;confirm=yes&amp;phpgw_return_as=json";
-																					receipt = execute_ajax(action);
+																					execute_ajax(action, function(result){
+																						document.getElementById("message").innerHTML += '<br/>' + result;
+																					});
 																					oTable.fnDraw();
 																			}
 																			else if (target == 'ajax')
 																			{
 																					action += "&amp;phpgw_return_as=json";
-																					execute_ajax(action);
+																					execute_ajax(action, function(result){
+																						document.getElementById("message").innerHTML += '<br/>' + result;
+																					});
 																					oTable.fnDraw();
 
 																			}
@@ -661,6 +665,7 @@ toolbar
 						$('select#<xsl:value-of select="name"/>').change( function() {
 						oTable.dataTableSettings[0]['ajax']['data']['<xsl:value-of select="name"/>'] = $(this).val();
 						oTable.fnDraw();
+						<xsl:value-of select="extra"/>
 					} );
 					</xsl:if>
 				</xsl:for-each>
@@ -680,17 +685,21 @@ toolbar
 				 return aReturn;
 			}
 
-			function execute_ajax(requestUrl)
+			function execute_ajax(requestUrl, type, dataType, data, callback)
 			{
+				type = typeof type !== 'undefined' ? type : 'POST';
+				dataType = typeof dataType !== 'undefined' ? dataType : 'html';
+				data = typeof data !== 'undefined' ? data : {};
+   
 				$.ajax({
-					type: 'POST',
-					dataType: 'json',
+					type: type,
+					dataType: dataType,
+					data: data,
 					url: requestUrl,
-					success: function(data) {
-						document.getElementById("message").innerHTML += '<br/>' + data.receipt;
+					success: function(result) {
+						callback(result);
 					}
 				});
-
 			}
 
 			function substr_count( haystack, needle, offset, length )
