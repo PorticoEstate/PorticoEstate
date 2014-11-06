@@ -490,8 +490,18 @@
 			$this->uicols_related = $this->so->uicols_related;
 			return $related;
 		}
+		
+		function read($data = array())
+		{
+			$locations = $this->so->read($data);
 
-		function read($start_date='',$end_date='', $external='',$dry_run = '', $download = '')
+			$this->total_records = $this->so->total_records;
+			$this->uicols = $this->so->uicols;
+
+			return $locations;
+		}
+
+		function readold($start_date='',$end_date='', $external='',$dry_run = '', $download = '')
 		{
 			static $category_name = array();
 			static $account = array();
