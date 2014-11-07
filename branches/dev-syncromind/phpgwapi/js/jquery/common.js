@@ -32,7 +32,19 @@ JqueryPortico.searchLink = function(key, oData) {
 
 	return '<a id="' + link + '" onclick="filterData(this.id);">' + name + '</a>';
 };
-			
+
+JqueryPortico.formatCheck = function(key, oData) {
+	var checked = '';
+	var hidden = '';
+	if(oData['responsible_item'])
+	{
+		checked = "checked = 'checked'";
+		hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig][]\" value=\""+oData['responsible_contact_id']+"_"+oData['responsible_item']+"_"+oData['location_code']+"\"/>";
+	}
+
+	return hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oData['location_code']+"\"/></center>";
+};
+	
 JqueryPortico.FormatterAmount0 = function(key, oData) {
 //	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 	//FIXME...
