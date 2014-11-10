@@ -1,7 +1,4 @@
 <?php
-
-//test
-
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
