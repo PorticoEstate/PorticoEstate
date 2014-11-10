@@ -533,6 +533,27 @@ toolbar
 																					oTable.fnDraw();
 
 																			}
+																			else if (target == 'custom')
+																			{
+																					var assign = [];
+																					var assign_orig = [];
+																					
+																						
+																					$('.mychecks:checked').each(function () {
+																							assign.push($(this).val());
+																					});	
+																						
+																					$('.orig_check').each(function () {
+																							assign_orig.push($(this).val());
+																					});	
+																						
+																					var data = {"assign": assign, "assign_orig": assign_orig, "user_id": $("#user_id").val(), "role_id": $("#role_id").val()};
+																					execute_ajax(action, 'POST', '', data, function(result){
+																						document.getElementById("message").innerHTML += '<br/>' + result;
+																						oTable.fnDraw();
+																					});		
+																					
+																			}
 																			else
 																			{
 																				window.open(action,target);
