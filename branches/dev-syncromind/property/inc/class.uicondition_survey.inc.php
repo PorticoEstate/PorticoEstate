@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -26,10 +27,10 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
 
-	class property_uicondition_survey extends phpgwapi_uicommon
+	class property_uicondition_survey extends phpgwapi_uicommon_jquery
 	{
 
 		private $bo;
@@ -119,13 +120,14 @@
 				return $this->query();
 			}
 
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
+			//self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 	//		phpgwapi_yui::load_widget('datatable');
 	//		phpgwapi_yui::load_widget('paginator');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			$categories = $this->_get_categories();
-
-
+                        
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),
 				'form' => array(
@@ -136,53 +138,35 @@
 								'text' => lang('category') . ':',
 								'list' => $categories,
 							),
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
 							array(
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
 								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('download'),
-								'href' => 'javascript:window.open("'. self::link(array('menuaction' => 'property.uicondition_survey.download', 'export' => true, 'allrows' => true)) . '","window")',
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['allrows'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'allrows' => true))
-							),
-
+							)
 						),
 					),
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'phpgw_return_as' => 'json')),
-					'editor_action' => 'property.uicondition_survey.edit_survey_title',
+					'download'	=> self::link(array('menuaction' => 'property.uicondition_survey.download', 'export' => true, 'allrows' => true)),
+					'allrows'	=> true,
+					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
 					'field' => array(
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
-		/*				array(
+						array(
 							'key' => 'title',
 							'label' => lang('title'),
 							'sortable' => true,
-							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})'
+							//FIXME: to be implemented: http://jquery-datatables-editable.googlecode.com/svn/trunk/inline-edit.html
+							'editor' => true
 						),
-						array(
+/*						array(
 							'key' => 'descr',
 							'label' => lang('description'),
 							'sortable' => false,
@@ -214,7 +198,9 @@
 						),
 						array(
 							'key' => 'link',
-							'hidden' => true
+							'label' => 'dummy',
+							'sortable' => false,
+							'hidden' => true,
 						)
 					)
 				),
@@ -296,7 +282,7 @@
 					);
 			}
 
-			self::render_template_xsl('datatable_common', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 
@@ -306,14 +292,19 @@
 		 */
 		public function query()
 		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			
+
 			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', 0),
-				'query' => phpgw::get_var('query'),
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('allrows', 'bool')
+				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
 			$result_objects = array();
@@ -328,13 +319,14 @@
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['start'] = $params['start'];
-			$result_data['sort'] = $params['sort'];
-			$result_data['dir'] = $params['dir'];
+//			$result_data['start'] = $params['start'];
+//			$result_data['sort'] = $params['sort'];
+//			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
 
-			array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
+			array_walk(	$result_data['results'], array($this, '_add_links'), array('menuaction' => 'property.uicondition_survey.view') );
 
-			return $this->yui_results($result_data);
+			return $this->jquery_results($result_data);
 		}
 
 
@@ -391,24 +383,28 @@
 
 			phpgwapi_cache::session_clear('property.request','session_data');
 
-			phpgwapi_yui::tabview_setup('survey_edit_tabview');
+			//phpgwapi_jquery::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
-			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
-			$tabs['request']	= array('label' => lang('request'), 'link' => null);
-			$tabs['summation']	= array('label' => lang('summation'), 'link' => null);
-			$tabs['import']		= array('label' => lang('import'), 'link' => null);
+			$tabs['documents']	= array('label' => lang('documents'), 'link' => "#documents", 'disable' => 1);
+			$tabs['request']	= array('label' => lang('request'), 'link' => "#request", 'disable' => 1);
+			$tabs['summation']	= array('label' => lang('summation'), 'link' => "#summation", 'disable' => 1);
+			$tabs['import']		= array('label' => lang('import'), 'link' => "#import", 'disable' => 1);
 
 			if ($id)
 			{
 				if($mode == 'edit')
 				{
 					$tabs['import']['link'] = '#import';
+					$tabs['import']['disable'] = 0;
 				}
 				$tabs['documents']['link'] = '#documents';
+				$tabs['documents']['disable'] = 0;
 				$tabs['request']['link'] = '#request';
+				$tabs['request']['disable'] = 0;
 				$tabs['summation']['link'] = '#summation';
+				$tabs['summation']['disable'] = 0;
 
 				if (!$values)
 				{
@@ -462,10 +458,10 @@
 //				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'condition_degree','label'=>lang('condition degree'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'score','label'=>lang('score'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'amount_investment','label'=>lang('investment'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'amount_operation','label'=>lang('operation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'amount_potential_grants','label'=>lang('potential grants'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-//				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'amount_investment','label'=>lang('investment'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'amount_operation','label'=>lang('operation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'amount_potential_grants','label'=>lang('potential grants'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+//				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 				array('key' => 'recommended_year','label'=>lang('recommended year'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'planned_year','label'=>lang('planned year'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'related','label'=>lang('related'),'sortable'=>false,'resizeable'=>true),
@@ -482,13 +478,13 @@
 			(
 				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'category','label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 			);
 
 			$datatable_def[] = array
@@ -511,9 +507,12 @@
 				'categories'					=> array('options' => $categories),
 				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 						=> $mode == 'edit',
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'multiple_uploader'				=> $mode == 'edit' ? true : '',
+                'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
+			
+			//print_r($data['tabs']); die;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
@@ -522,9 +521,9 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 				phpgwapi_jquery::load_widget('core');
 				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
-				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-				self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-formvalidator/gallery-formvalidator-min.js');
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
+				//self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+				//self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-formvalidator/gallery-formvalidator-min.js');
+				//$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
 			}
 
 			self::add_javascript('property', 'portico', 'condition_survey.js');
@@ -637,7 +636,7 @@
 
 //------ Start pagination
 
-			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$total_records = count($files);
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
@@ -669,7 +668,8 @@
 					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}
-
+/*
+ * yui-result
 			$data = array(
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $total_records,
@@ -682,12 +682,19 @@
 				)
 			);
 			return $data;
-
+*/
+			//Jquery result
+			return array(
+				'recordsTotal'		=> $total_records,
+				'recordsFiltered'	=> $total_records,
+				'draw'				=> phpgw::get_var('draw', 'int'),
+				'data'				=> $values,
+			);
 		}
 
 		function get_summation()
 		{
-			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+			/*$id 	= phpgw::get_var('id', 'int', 'REQUEST');
 			$year 	= phpgw::get_var('year', 'int', 'REQUEST');
 
 			if( !$this->acl_read)
@@ -728,7 +735,44 @@
 					'activePage' => floor($start / $num_rows) + 1
 				)
 			);
-			return $data;
+			return $data;*/
+			
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+			$year 	= phpgw::get_var('year', 'int', 'REQUEST');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+
+			$values = $this->bo->get_summation($id, $year);
+
+			$total_records = count($values);
+			
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+
+			$allrows = true;
+			$num_rows = $total_records;
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+			
+			return array(
+				'recordsTotal'		=> $total_records,
+				'recordsFiltered'	=> $total_records,
+				'draw'				=> phpgw::get_var('draw', 'int'),
+				'data'				=> $out
+			);
+			
 		}
 
 
@@ -742,7 +786,7 @@
 			}
 
 			$borequest	= CreateObject('property.borequest');
-			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$sortKey = phpgw::get_var('sort', 'string', 'REQUEST', 'request_id');
 			$sortDir = phpgw::get_var('dir', 'string', 'REQUEST', 'ASC');
 
@@ -764,6 +808,7 @@
 			}
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+/* yui-data
 			$data = array(
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $total_records,
@@ -776,6 +821,14 @@
 				)
 			);
 			return $data;
+ *
+ */
+			return array(
+				'recordsTotal'		=> $total_records,
+				'recordsFiltered'	=> $total_records,
+				'draw'				=> phpgw::get_var('draw', 'int'),
+				'data'				=> $values,
+			);
 		}
 
 
@@ -1303,7 +1356,7 @@
 
 		public function edit_survey_title()
 		{
-			$id = phpgw::get_var('id', 'int', 'GET');
+			$id = phpgw::get_var('id', 'int', 'POST');
 
 			if(!$this->acl_edit)
 			{
@@ -1324,10 +1377,12 @@
 				{
 					if ( $e )
 					{
-						return $e->getMessage(); 
+						echo $e->getMessage(); 
 					}
 				}
-				return 'OK';
+				echo true;
+			} else {
+				echo "ERROR";
 			}
 		}
 
@@ -1460,13 +1515,13 @@
 			(
 				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 			);
 
 			$datatable_def = array();
