@@ -777,6 +777,7 @@
 					'lang_default_vendor_category_statustext'=> lang('Select default vendor category'),
 					'lang_no_cat'					=> lang('No category'),
 
+					'select_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.contact_info')),
 
 					'lang_user_statustext'			=> lang('Select the user to edit email'),
 					'select_user_name'				=> 'user_id',

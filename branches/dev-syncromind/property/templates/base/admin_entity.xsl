@@ -434,6 +434,10 @@
 	<!-- add / edit  -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form name="form" method="post" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -444,10 +448,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form name="form" method="post" action="{$form_action}">
 					<tr>
 						<td class="th_text" align="left">
 							<xsl:value-of select="lang_entity"/>
@@ -910,7 +910,9 @@
 							</input>
 						</td>
 					</tr>
+				</table>
 				</form>
+				<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
@@ -1269,6 +1271,11 @@
 	<!-- add attribute group / edit attribute group -->
 	<xsl:template match="edit_attrib_group" xmlns:php="http://php.net/xsl">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" action="{$form_action}">
+
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -1279,10 +1286,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td class="th_text" align="left">
 							<xsl:value-of select="lang_entity"/>
@@ -1386,7 +1389,9 @@
 							</input>
 						</td>
 					</tr>
+				</table>
 				</form>
+				<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
@@ -1413,6 +1418,11 @@
 	<!-- add attribute / edit attribute -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_attrib">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" action="{$form_action}">
+
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -1423,10 +1433,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td class="th_text" align="left">
 							<xsl:value-of select="php:function('lang', 'entity')"/>
@@ -1772,7 +1778,9 @@
 							</input>
 						</td>
 					</tr>
+					</table>
 				</form>
+				<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
@@ -1950,6 +1958,10 @@
 	<!-- add custom_function / edit custom_function -->
 	<xsl:template match="edit_custom_function" xmlns:php="http://php.net/xsl">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -1960,10 +1972,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td class="th_text" align="left">
 							<xsl:value-of select="lang_entity"/>
@@ -2081,7 +2089,9 @@
 							</input>
 						</td>
 					</tr>
+				</table>
 				</form>
+				<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">

@@ -245,6 +245,11 @@
 	<!-- edit_config  -->
 	<xsl:template match="edit_config">
 		<div align="left">
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
+		<form method="post" action="{$form_action}">
+
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -255,10 +260,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<xsl:for-each select="location_list">
 						<tr>
 							<td class="th_text" align="left">
@@ -298,7 +299,9 @@
 							</input>
 						</td>
 					</tr>
-				</form>
+				</table>
+			</form>
+			<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
@@ -359,6 +362,11 @@
 	<!-- add / edit  -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+
+			<form method="post" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -369,10 +377,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td valign="top">
 							<xsl:choose>
@@ -482,7 +486,9 @@
 							</input>
 						</td>
 					</tr>
+			</table>
 				</form>
+				<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
@@ -658,6 +664,10 @@
 	<!-- add attribute / edit attribute -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_attrib">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -668,10 +678,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td valign="top">
 							<xsl:choose>
@@ -907,7 +913,9 @@
 							</input>
 						</td>
 					</tr>
-				</form>
+				</table>
+			</form>
+			<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
