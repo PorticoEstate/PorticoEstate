@@ -39,6 +39,7 @@
 	class property_uilocation extends phpgwapi_uicommon_jquery
 	{
 		protected $appname = 'property';
+		private $receipt = array();
 		var $grants;
 		var $cat_id;
 		var $start;
@@ -54,6 +55,7 @@
 		var $public_functions = array
 			(
 				'query'				    => true,
+				'responsiblility_role_save' => true,
 				'get_part_of_town'      => true,
 				'download'  			=> true,
 				'index'  				=> true,
@@ -194,6 +196,8 @@
 			$type_id	= $this->type_id;
 			$lookup 	= $this->lookup;
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
+			$role_id = phpgw::get_var('role_id', 'int');
 			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -217,7 +221,9 @@
 				'status' => phpgw::get_var('status'),
 				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
 				'location_code' => phpgw::get_var('location_code'),
-				'filter'		=> phpgw::get_var('filter', 'int')
+				'filter'		=> phpgw::get_var('filter', 'int'),
+				'user_id' => $user_id,
+				'role_id' => $role_id
 			);
 
 			$values = $this->bo->get_responsible($params);
@@ -228,6 +234,48 @@
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
+		}
+		
+
+		public function responsiblility_role_save()
+		{
+			$values = phpgw::get_var('values');
+			//$values_assign = $_POST['values_assign'];
+			$assign_orig = phpgw::get_var('assign_orig');
+			$assign = phpgw::get_var('assign');
+
+			$role_id = phpgw::get_var('role_id', 'int');
+			//$receipt = array();
+			$_role = CreateObject('property.sogeneric');
+			$_role->get_location_info('responsibility_role','');
+
+			//$this->save_sessiondata();
+
+			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
+
+			if($assign && $this->acl_edit)
+			{
+				//$values_assign = phpgw::clean_value(json_decode(stripslashes($values_assign),true)); //json_decode has issues with magic_quotes_gpc
+				$user_id = abs($user_id);
+				$account = $GLOBALS['phpgw']->accounts->get($user_id);
+				$contact_id = $account->person_id;
+				if(!$role_id)
+				{
+					$result = array('msg'=> lang('missing role'));
+				}
+				else
+				{
+					$role = $_role->read_single($data=array('id' => $role_id));
+					$values['contact_id']			= $contact_id;
+					$values['responsibility_id']	= $role['responsibility_id'];
+					$values['assign']				= $assign;
+					$values['assign_orig']			= $assign_orig;
+					$boresponsible = CreateObject('property.boresponsible');
+					$result = $boresponsible->update_role_assignment($values);
+				}
+			}
+			
+			return $result;
 		}
 		
 		
@@ -966,6 +1014,8 @@
 
 		function responsiblility_role()
 		{
+			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
+			$role_id = phpgw::get_var('role_id', 'int');
 			$type_id = phpgw::get_var('type_id', 'int');
 
 			if(!$type_id)
@@ -986,39 +1036,6 @@
 			{
 				$this->bocommon->no_access();
 				return;
-			}
-
-			$values = phpgw::get_var('values');
-			$values_assign = $_POST['values_assign'];
-			$role_id = phpgw::get_var('role_id', 'int');
-			$receipt = array();
-			$_role = CreateObject('property.sogeneric');
-			$_role->get_location_info('responsibility_role','');
-
-			$this->save_sessiondata();
-
-			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
-
-			if($values_assign && $this->acl_edit)
-			{
-				$values_assign = phpgw::clean_value(json_decode(stripslashes($values_assign),true)); //json_decode has issues with magic_quotes_gpc
-				$user_id = abs($user_id);
-				$account = $GLOBALS['phpgw']->accounts->get($user_id);
-				$contact_id = $account->person_id;
-				if(!$role_id)
-				{
-					$receipt['error'][] = array('msg'=> lang('missing role'));
-				}
-				else
-				{
-					$role = $_role->read_single($data=array('id' => $role_id));
-					$values['contact_id']			= $contact_id;
-					$values['responsibility_id']	= $role['responsibility_id'];
-					$values['assign']				= $values_assign['assign'];
-					$values['assign_orig']			= $values_assign['assign_orig'];
-					$boresponsible = CreateObject('property.boresponsible');
-					$receipt = $boresponsible->update_role_assignment($values);
-				}
 			}
 
 			$second_display = phpgw::get_var('second_display', 'bool');
@@ -1078,7 +1095,6 @@
 				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 	
-			
 			$uicols['name'][]		= 'responsible_contact';
 			$uicols['descr'][]		= lang('responsible');
 			$uicols['sortable'][]	= false;
@@ -1153,7 +1169,7 @@
 						'text' 			=> lang('save'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uilocation.responsiblility_role',
+							'menuaction'	=> 'property.uilocation.responsiblility_role_save',
 							'type_id' 			=> $type_id,
 							'cat_id'        	=> $this->cat_id,
 							'district_id'       => $this->district_id,
@@ -1161,9 +1177,10 @@
 							'second_display'    => 1,
 							'status'            => $this->status,
 							'location_code'     => $this->location_code,
-							'entity_id'			=> $this->entity_id
+							'entity_id'			=> $this->entity_id,
+							'phpgw_return_as' => 'json'
 						)),
-						'target'		=> 'ajax'
+						'target'		=> 'custom'
 					);
 			}
 			
