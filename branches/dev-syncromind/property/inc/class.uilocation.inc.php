@@ -106,7 +106,7 @@
 			parent::__construct();
 			
 			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			//$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -236,7 +236,34 @@
 			return $this->jquery_results($result_data);
 		}
 		
+		public function query_summary()
+		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1
+			);
 
+			$values = $this->bo->read_summary($params);
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
+		}
+		
+		
 		public function responsiblility_role_save()
 		{
 			$values = phpgw::get_var('values');
@@ -253,15 +280,15 @@
 
 			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
 
-			if($assign && $this->acl_edit)
+			if(($assign || $assign_orig) && $this->acl_edit)
 			{
 				//$values_assign = phpgw::clean_value(json_decode(stripslashes($values_assign),true)); //json_decode has issues with magic_quotes_gpc
 				$user_id = abs($user_id);
 				$account = $GLOBALS['phpgw']->accounts->get($user_id);
 				$contact_id = $account->person_id;
-				if(!$role_id)
+				if(empty($role_id))
 				{
-					$result = array('msg'=> lang('missing role'));
+					$result = lang('missing role');
 				}
 				else
 				{
@@ -1011,7 +1038,6 @@
 		}
 
 
-
 		function responsiblility_role()
 		{
 			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
@@ -1163,9 +1189,30 @@
 
 			if($this->acl_edit)
 			{
+				$code = '
+					var assign = [];
+					var assign_orig = [];
+
+					$(".mychecks:checked").each(function () {
+							assign.push($(this).val());
+					});	
+
+					$(".orig_check").each(function () {
+							assign_orig.push($(this).val());
+					});	
+
+					var data = {"assign": assign, "assign_orig": assign_orig, "user_id": $("#user_id").val(), "role_id": $("#role_id").val()};
+					execute_ajax(action, "POST", "", data, function(result){
+						document.getElementById("message").innerHTML += "<br/>" + result;
+						oTable.fnDraw();
+					});					
+					'; 
+			
 				$data['datatable']['actions'][] = array
 					(
 						'my_name'		=> 'save',
+						'type'			=> 'custom',
+						'custom_code' => $code,
 						'text' 			=> lang('save'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
@@ -1179,8 +1226,7 @@
 							'location_code'     => $this->location_code,
 							'entity_id'			=> $this->entity_id,
 							'phpgw_return_as' => 'json'
-						)),
-						'target'		=> 'custom'
+						))
 					);
 			}
 			
@@ -2345,294 +2391,125 @@
 				$this->bocommon->no_access();
 				return;
 			}
-
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				$datatable['menu']					= $this->bocommon->get_menu();
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'		=> 'property.uilocation.summary',
-						'district_id'		=>$this->district_id,
-						'part_of_town_id'	=>$this->part_of_town_id,
-						'filter'			=>$this->filter,
-						'summary'			=>true
-					));
+				return $this->query_summary();
+			}
 
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.summary',"
-					."district_id:'{$this->district_id}',"
-					."part_of_town_id:'{$this->part_of_town_id}',"
-					."filter: '{$this->filter}',"
-					."summary: true";
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-				$datatable['config']['allow_allrows'] = true;
+			$this->bo->read_summary();
 
-				$link_data = array
-					(
-						'menuaction'		=> 'property.uilocation.summary',
-						'district_id'		=>$this->district_id,
-						'part_of_town_id'	=>$this->part_of_town_id,
-						'filter'			=>$this->filter,
-						'summary'			=>true
-					);
-
-				$link_download = array
-					(
-						'menuaction'		=> 'property.uilocation.download',
-						'district_id'		=>$this->district_id,
-						'part_of_town_id'	=>$this->part_of_town_id,
-						'filter'			=>$this->filter,
-						'summary'			=>true
-					);
-
-				$values_combo_box[0] = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=> lang('no district'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('no part of town'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
-				{
-					$owner_list = $this->bo->get_owner_list('filter', $this->filter);
-				}
-				else
-				{
-					$owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
-				}
-
-				$values_combo_box[2]  = $owner_list;
-				$default_value = array ('id'=>'','name'=>lang('show all'));
-				array_unshift ($values_combo_box[2],$default_value);
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction'		=> 'property.uilocation.summary',
-								'district_id'		=>$this->district_id,
-								'part_of_town_id'	=>$this->part_of_town_id,
-								'filter'			=>$this->filter,
-								'summary'			=>true
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //boton 	CATEGORY
-									'id' => 'btn_district_id',
-									'name' => 'district_id',
-									'value'	=> lang('district'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //boton 	STATUS
-									'id' => 'btn_part_of_town_id',
-									'name' => 'part_of_town_id',
-									'value'	=> lang('part of town'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 2
-								),
-								array
-								( //boton 	HOUR CATEGORY
-									'id' => 'btn_owner_id',
-									'name' => 'owner_id',
-									'value'	=> lang('owner'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 3
-								),
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_export',
-									'value'	=> lang('download'),
-									'tab_index' => 4
-								)
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								),
-								array
-								( //div values  combo_box_2
-									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2])
-								)
-							)
-						)
+			$uicols = $this->bo->uicols;
+			
+			$appname = lang('location');
+			$function_msg = lang('role');
+			
+			$data = array(
+				'datatable_name'	=> $appname . ': ' . $function_msg,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array()
 					)
-				);
-
-//				$dry_run = true;
-			}
-
-			$summary_list= $this->bo->read_summary();
-
-			$uicols	= $this->bo->uicols;
-			$j = 0;
-			$count_uicols_name = count($uicols['name']);
-
-			if (isset($summary_list) AND is_array($summary_list))
-			{
-				foreach($summary_list as $summary_entry)
-				{
-					for ($k=0;$k<$count_uicols_name;$k++)
-					{
-						if($uicols['input_type'][$k]!='hidden')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']			= $summary_entry[$uicols['name'][$k]];
-						}
-					}
-					$j++;
-				}
-			}
-
-			$datatable['rowactions']['action'] = array();
-
-			for ($i=0;$i<$count_uicols_name;$i++)
-			{
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-				}
-			}
-
-			//path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($summary_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			$appname		= lang('Summary');
-			$function_msg		= lang('List') . ' ' . lang($this->role);
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
-			{
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='{$column['link']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='{$column['link']}'>{$column['value']}</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// 'part of town' depended on the selected 'district'
-			$opt_cb_depend =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-			$default_value = array ('id'=>'','name'=>'!no part of town');
-			array_unshift ($opt_cb_depend,$default_value);
-
-			$json['hidden']['dependent'][] = array ( 'id' => $this->part_of_town_id,
-				'value' => $this->bocommon->select2String($opt_cb_depend)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+								'menuaction' 		=> 'property.uilocation.summary',
+								'district_id'		=> $this->district_id,
+								'part_of_town_id'	=> $this->part_of_town_id,
+								'filter'			=> $this->filter,
+								'summary'			=> true,
+								'phpgw_return_as' => 'json'
+					)),
+					'download'	=> self::link(array('menuaction' => 'property.uilocation.download',
+									'district_id'		=> $this->district_id,
+									'part_of_town_id'	=> $this->part_of_town_id,
+									'filter'			=> $this->filter,
+									'summary'			=> true,
+									'export'     => true,
+									'allrows'    => true)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array()
+				)
 			);
-
-
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				
+			$filters = $this->_get_categories_role();
+			
+			foreach ($filters as $filter) 
 			{
-				$json ['rights'] = $datatable['rowactions']['action'];
+				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			$this->bo->read_summary();
+			
+			$count_uicols_name = count($uicols['name']);
+			
+			$searc_levels = array();
+			for($i=1; $i<$type_id; $i++)
 			{
-				return $json;
+				$searc_levels[] = "loc{$i}";
+			}
+			
+			for($k=0;$k<$count_uicols_name;$k++)
+			{
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'sortable' => false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
+					
+					array_push ($data['datatable']['field'], $params);
 			}
 
-			$datatable['json_data'] = json_encode($json);
-
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			if($this->acl_edit)
 			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+				$code = '
+					var assign = [];
+					var assign_orig = [];
+
+					$(".mychecks:checked").each(function () {
+							assign.push($(this).val());
+					});	
+
+					$(".orig_check").each(function () {
+							assign_orig.push($(this).val());
+					});	
+
+					var data = {"assign": assign, "assign_orig": assign_orig, "user_id": $("#user_id").val(), "role_id": $("#role_id").val()};
+					execute_ajax(action, "POST", "", data, function(result){
+						document.getElementById("message").innerHTML += "<br/>" + result;
+						oTable.fnDraw();
+					});					
+					'; 
+			
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'save',
+						'type'			=> 'custom',
+						'custom_code' => $code,
+						'text' 			=> lang('save'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uilocation.responsiblility_role_save',
+							'type_id' 			=> $type_id,
+							'cat_id'        	=> $this->cat_id,
+							'district_id'       => $this->district_id,
+							'part_of_town_id'   => $this->part_of_town_id,
+							'second_display'    => 1,
+							'status'            => $this->status,
+							'location_code'     => $this->location_code,
+							'entity_id'			=> $this->entity_id,
+							'phpgw_return_as' => 'json'
+						))
+					);
 			}
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.summary', 'property' );
+			
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 	}
