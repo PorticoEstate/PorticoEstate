@@ -98,7 +98,8 @@ class phpgwapi_jquery {
 				$load = array
 					(
 					"js/jquery-2.1.1{$_type}",
-					"tabs/jquery.responsiveTabs{$_type}",
+				//	"tabs/jquery.responsiveTabs{$_type}",
+					"tabs/jquery.responsiveTabs",
 					'common'
 				);
 

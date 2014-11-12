@@ -159,6 +159,7 @@
 
 			//$values = $this->bo->read($params);
 			$values = $this->bo->read($params);
+			_debug_array($values);
 			if ( phpgw::get_var('export', 'bool'))
 			{
 				return $values;
