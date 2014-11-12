@@ -70,7 +70,7 @@
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
+			$this->sort				= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
@@ -143,14 +143,11 @@
                 }
 		function index()
 		{       
-                        //$template_list	= $this->bo->read();
-
 			$workorder_id   = phpgw::get_var('workorder_id'); // in case of bigint
 			$lookup 	= phpgw::get_var('lookup', 'bool');
                         
 			if(phpgw::get_var('phpgw_return_as') == 'json' )
 			{       
-                               
                                 return $this->query();
 			} 
                         
@@ -186,7 +183,38 @@
 					)),
 					'allrows'	=> true,
 					'editor_action' => '',
-					'field' => array()
+					'field' => array(
+						array(
+							'key' => 'template_id',
+							'label' => lang('ID'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'name',
+							'label' => lang('Name'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'descr',
+							'label' => lang('Description'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'chapter',
+							'label' => lang('Chapter'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'owner',
+							'label' => lang('owner'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'entry_date',
+							'label' => lang('Entry Date'),
+							'sortable' => false
+						)
+					)
 				)
 			);
                                 
@@ -196,12 +224,11 @@
                             array_unshift($data['form']['toolbar']['item'], $filter);
                         }
                         
-			$template_list	= $this->bo->read();
-			$uicols = array();
+			//$template_list	= $this->bo->read();
+			/*$uicols = array();
 
 			$uicols['name'][0]['name'] = 'ID';
 			$uicols['name'][0]['value'] = 'template_id';
-                        
                         $uicols['name'][0]['sortable'] = true;
 
 			$uicols['name'][1]['name'] = 'Name';
@@ -219,8 +246,7 @@
 
 			$uicols['name'][5]['name'] = 'Entry Date';
 			$uicols['name'][5]['value'] = 'entry_date';
-
-
+                        
 			$count_uicols_name = count($uicols['name']);
                         
                         for($k=0; $k<$count_uicols_name;$k++)
@@ -233,7 +259,7 @@
                                             );
 					array_push ($data['datatable']['field'], $params);
                         }
-                        
+                        */
                         if(!empty($lookup))
 			{       
                                  $params2 = array(
@@ -254,7 +280,7 @@
                                             (
                                                 array
                                                 (
-                                                   'name'		=> 'template_id',
+                                                   'name'	=> 'template_id',
                                                    'source'	=> 'template_id'
                                                 ),
                                             )
@@ -266,7 +292,7 @@
                                         (
                                             array
                                             (
-                                                    'name'		=> 'id',
+                                                    'name'	=> 'id',
                                                     'source'	=> 'template_id'
                                             ),
                                         )
@@ -317,7 +343,7 @@
 				unset($parameters);
 				unset($parameters2);
 			}
-                        
+
                         self::render_template_xsl('datatable_jquery', $data);
 		}
                 public function add()
@@ -329,28 +355,33 @@
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
 
 			$params = array(
+                                'filter' => $this->filter,
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'dir' => $order[0]['dir'],
-				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				//'order' => $columns[$order[0]['column']]['data'],
+				//'sort' => $order[0]['dir'],
+				//'dir' => $order[0]['dir'],
+                                'order' => '',
+                                'sort' => phpgw::get_var('sort'),
+				//'dir' => phpgw::get_var('dir'),
+                                'chapter_id' => $this->chapter_id,
+				//'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
-
+                        
 			$result_objects = array();
 			$result_count = 0;
                         
-			$values = $this->bo->read();
+			$values = $this->bo->read($params);
+                        
 			if ( phpgw::get_var('export', 'bool'))
 			{
 				return $values;
 			}
-
+                        
 			$result_data = array('results' => $values);
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
