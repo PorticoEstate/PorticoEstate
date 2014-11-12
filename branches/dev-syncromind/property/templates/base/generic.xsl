@@ -1,13 +1,10 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
-		<xsl:choose>
-			<xsl:when test="edit">
-				<xsl:apply-templates select="edit"/>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:template>
+<xsl:template match="data">
+	<xsl:apply-templates select="edit" />
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+</xsl:template>
 
-	<!-- add / edit  -->
+<!-- add / edit  -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
 		<script type="text/javascript">
 			self.name="first_Window";
