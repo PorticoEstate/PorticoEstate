@@ -37,25 +37,36 @@
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->join			= & $this->db->join;
+			$this->db               = & $GLOBALS['phpgw']->db;
+			$this->join		= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
-			$this->like			= & $this->db->like;
+			$this->like		= & $this->db->like;
 		}
 
 		function read($data)
-		{
-			if(is_array($data))
+		{       
+                        //echo '<pre>'; print_r($data); echo '</pre>';
+ 			if(is_array($data))
 			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
 				$filter			= isset($data['filter']) ? $data['filter']:'';
 				$query 			= isset($data['query']) ? $data['query']:'';
 				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 				$order 			= isset($data['order']) ? $data['order']:'';
-				$chapter_id 	= isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id']:0;
+				$chapter_id             = isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id']:0;
 				$allrows 		= isset($data['allrows']) ? $data['allrows']:'';
+                                $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
 			}
-
+                        /*
+    [filter] => 1020
+    [start] => 0
+    [results] => 10
+    [query] => 
+    [order] => 
+    [sort] => 
+    [chapter_id] => 
+    [allrows] => 
+                        */
 			$filtermethod = '';
 
 			if ($order)
@@ -93,19 +104,21 @@
 			$sql = "SELECT fm_template.id,fm_template.descr,fm_template.name,fm_template.owner,fm_template.entry_date,"
 				. " fm_chapter.descr as chapter FROM fm_template $this->left_join fm_chapter  on fm_template.chapter_id=fm_chapter.id"
 				. " $filtermethod $querymethod";
-
+                        
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-
+                        //echo '<pre>'; print_r($sql); echo '</pre>';
+                        //echo '<pre>'; print_r($this->total_records); echo '</pre>';
+                        
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
-
+                        $template_list = array();
 			while ($this->db->next_record())
 			{
 				$template_list[] = array
