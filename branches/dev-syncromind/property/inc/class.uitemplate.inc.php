@@ -32,11 +32,13 @@
 	 * @package property
 	 */
 
-	phpgw::import_class('phpgwapi.yui');
+	//phpgw::import_class('phpgwapi.yui');
+        phpgw::import_class('phpgwapi.uicommon_jquery');
+        phpgw::import_class('phpgwapi.jquery');
 
-	class property_uitemplate
+	class property_uitemplate extends phpgwapi_uicommon_jquery
 	{
-		var $grants;
+                var $grants;
 		var $cat_id;
 		var $start;
 		var $query;
@@ -46,16 +48,37 @@
 		var $currentapp;
 
 		var $public_functions = array
-			(
+			(       
+                                'query'                 => true,
 				'index'			=> true,
 				'view'			=> true,
-				'edit_template'	=> true,
+				'edit_template' 	=> true,
 				'edit_hour'		=> true,
 				'delete'		=> true,
-				'hour'			=> true
+				'hour'			=> true,
+                                'columns'               => true
 			);
+                function __construct() {
+                    parent::__construct();
+                                        
+                        $GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::template';
 
-		function property_uitemplate()
+			$this->bo					= CreateObject('property.botemplate',true);
+			$this->bowo_hour			= CreateObject('property.bowo_hour');
+			$this->bocommon				= CreateObject('property.bocommon');
+
+			$this->start				= $this->bo->start;
+			$this->query				= $this->bo->query;
+			$this->sort					= $this->bo->sort;
+			$this->order				= $this->bo->order;
+			$this->filter				= $this->bo->filter;
+			$this->cat_id				= $this->bo->cat_id;
+			$this->chapter_id			= $this->bo->chapter_id;
+			$this->allrows				= $this->bo->allrows;
+                }
+                
+		/*function property_uitemplate()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::template';
@@ -72,7 +95,7 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->chapter_id			= $this->bo->chapter_id;
 			$this->allrows				= $this->bo->allrows;
-		}
+		}*/
 
 		function save_sessiondata()
 		{
@@ -84,180 +107,107 @@
 					'order'				=> $this->order,
 					'filter'			=> $this->filter,
 					'cat_id'			=> $this->cat_id,
-					'chapter_id'		=> $this->chapter_id,
+					'chapter_id'                    => $this->chapter_id,
 					'allrows'			=> $this->allrows
 				);
 			$this->bo->save_sessiondata($data);
 		}
-
+              
+                private function _get_Filters(){
+                    
+                    $values_combo_box = array();
+                    $combos = array();
+                    
+                    $values_combo_box[0]  = $this->bowo_hour->get_chapter_list('filter',$this->chapter_id);
+                    array_unshift ($values_combo_box[0], array ('id'=>'','name'=> lang('select chapter')));
+                    $combos[] = array('type' => 'filter',
+                                            'name' => 'chapter_id',
+                                            'text' => lang('select chapter'),
+                                            'list' => $values_combo_box[0]
+                                    );
+                    
+                    $values_combo_box[1]  =  $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+                    foreach ($values_combo_box[1] as &$valor)
+                    {   
+                        $valor['id'] = $valor['user_id'];
+                        unset($valor['user_id']);
+                    }
+                    array_unshift ($values_combo_box[1], array('id'=>'', 'name'=>lang('no user')));
+                    $combos[] = array('type' => 'filter',
+                                            'name' => 'filter',
+                                            'text' => lang('no user'),
+                                            'list' => $values_combo_box[1]
+                                    );
+                   
+                    return $combos;
+                }
 		function index()
-		{
-			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
+		{       
+                        //$template_list	= $this->bo->read();
+
+			$workorder_id   = phpgw::get_var('workorder_id'); // in case of bigint
 			$lookup 	= phpgw::get_var('lookup', 'bool');
-
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-
-				$datatable['menu']					= $this->bocommon->get_menu();
-
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'			=> 'property.uitemplate.index',
-						'query'            		=> $this->query,
-						'chapter_id'			=> $this->chapter_id,
-						'order'					=> $this->order
-					));
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uitemplate.index',"
-					."sort: '{$this->sort}',"
-					."order: '{$this->order}',"
-					."status: '{$this->status}',"
-					."workorder_id:'{$workorder_id}',"
-					."lookup:'{$lookup}',"
-					."query: '{$this->query}'";
-
-				$values_combo_box[0] = $this->bowo_hour->get_chapter_list('filter',$this->chapter_id);
-				$default_value = array ('id'=>'','name'=> lang('select chapter'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
-				$default_value = array ('user_id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' 		=> 'property.uitemplate.index',
-								'query'            		=> $this->query,
-								'chapter_id'			=> $this->chapter_id
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //Chapter button
-									'id' => 'btn_chap_id',
-									'name' => 'chap_id',
-									'value'	=> lang('Chapter'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //User button
-									'id' => 'btn_user_id',
-									'name' => 'user_id',
-									'value'	=> lang('User'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 2
-								),						                            				                                        
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_done',
-									'value'	=> lang('done'),
-									'tab_index' => 7
-								),				                                        
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_select',
-									'value'	=> lang('Select'),
-									'tab_index' => 6
-								),				                                        
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_new',
-									'value'	=> lang('add'),
-									'tab_index' => 5
-								),
-								array
-								( //boton     SEARCH
-									'id' => 'btn_search',
-									'name' => 'search',
-									'value'    => lang('search'),
-									'type' => 'button',
-									'tab_index' => 4
-								),
-								array
-								( // TEXT INPUT
-									'name'     => 'query',
-									'id'     => 'txt_query',
-									'value'    => '',//$query,
-									'type' => 'text',
-									'onkeypress' => 'return pulsar(event)',
-									'size'    => 28,
-									'tab_index' => 3
-								),
-								array
-								( //hidden 
-									'type'	=> 'hidden',
-									'name'     => 'workorder_id',
-									'id'	=> 'workorder_id',
-									'value'	=> 0,
-									'style' => 'filter'
-								),
-								array
-								( //hidden 
-									'type'	=> 'hidden',
-									'name'     => 'template_id',
-									'id'	=> 'template_id',
-									'value'	=> 0,
-									'style' => 'filter'
-								)				                                        
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1],'user_id')
-								)
+                        
+			if(phpgw::get_var('phpgw_return_as') == 'json' )
+			{       
+                               
+                                return $this->query();
+			} 
+                        
+                        self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+                        
+                        $appname				= lang('template');
+			$function_msg				= lang('list template');
+                        
+                        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+                        
+                                $data = array(
+				'datatable_name'	=> $appname,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array(
+									'menuaction' => 'property.uitemplate.edit_template'								
+									)),
+								'class' => 'new_item'
 							)
 						)
 					)
-				);
-
-				if($lookup)
-				{
-					unset($datatable['actions']['form'][0]['fields']['field'][4]);
-				} 
-				if(!$lookup) {
-					unset($datatable['actions']['form'][0]['fields']['field'][3]);
-					unset($datatable['actions']['form'][0]['fields']['field'][2]);
-				}
-
-//				$dry_run = true;
-			}
-
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction'            => 'property.uitemplate.index', 
+						'chapter_id'		=> $this->chapter_id,
+						'phpgw_return_as'       => 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array()
+				)
+			);
+                                
+                        $filters = $this->_get_Filters();
+                        foreach ($filters as $filter)
+                        {
+                            array_unshift($data['form']['toolbar']['item'], $filter);
+                        }
+                        
 			$template_list	= $this->bo->read();
-
 			$uicols = array();
 
 			$uicols['name'][0]['name'] = 'ID';
 			$uicols['name'][0]['value'] = 'template_id';
+                        
+                        $uicols['name'][0]['sortable'] = true;
 
 			$uicols['name'][1]['name'] = 'Name';
 			$uicols['name'][1]['value'] = 'name';
-
+                        $uicols['name'][1]['sortable'] = true;
+                        
 			$uicols['name'][2]['name'] = 'Description';
 			$uicols['name'][2]['value'] = 'descr';
 
@@ -272,264 +222,141 @@
 
 
 			$count_uicols_name = count($uicols['name']);
-
-			$j = 0;
-			if (isset($template_list) AND is_array($template_list))
-			{
-				foreach($template_list as $template_entry)
-				{
-					for ($k=0;$k<$count_uicols_name;$k++)
-					{
-						$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k]['value'];
-						$datatable['rows']['row'][$j]['column'][$k]['value']	= $template_entry[$uicols['name'][$k]['value']];
-					}
-					if($lookup)
-					{
-						$datatable['rows']['row'][$j]['column'][$k + 1]['name'] 	= 'select';
-						$datatable['rows']['row'][$j]['column'][$k + 1]['value']	= '<input type="radio" name="rad_template" value="'.$template_entry['template_id'].'" class="myValuesForPHP"">';
-					}
-					$j++;
-				}
+                        
+                        for($k=0; $k<$count_uicols_name;$k++)
+                        {
+                            $params = array(
+                                                'key' => $uicols['name'][$k],
+                                                'label' => $uicols['descr'][$k],
+                                                'sortable' => ($uicols['sortable'][$k]) ? true : false,
+                                                'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+                                            );
+					array_push ($data['datatable']['field'], $params);
+                        }
+                        
+                        if(!empty($lookup))
+			{       
+                                 $params2 = array(
+                                                'name' => 'select',
+                                                'text' => lang('select'),
+                                                'visible' => true,
+                                                'sortable' => false,
+                                                'format' => '',
+                                                'visible' => true,
+                                                'formatter' => '""'
+                                            );
+				array_push ($data['datatable']['field'][], $params2);
 			}
+                        
+                        $parameters = array
+                                        (
+                                            'parameter' => array
+                                            (
+                                                array
+                                                (
+                                                   'name'		=> 'template_id',
+                                                   'source'	=> 'template_id'
+                                                ),
+                                            )
+                                        );
 
-			$datatable['rowactions']['action'] = array();
+                        $parameters2 = array
+                                    (
+                                        'parameter' => array
+                                        (
+                                            array
+                                            (
+                                                    'name'		=> 'id',
+                                                    'source'	=> 'template_id'
+                                            ),
+                                        )
+                                    );
 
 			if(!$lookup) 
 			{
-				$parameters = array
+				$data['datatable']['actions'][] = array
 					(
-						'parameter' => array
-						(
-							array
-							(
-								'name'		=> 'template_id',
-								'source'	=> 'template_id'
-							),
-						)
-					);
-
-				$parameters2 = array
-					(
-						'parameter' => array
-						(
-							array
-							(
-								'name'		=> 'id',
-								'source'	=> 'template_id'
-							),
-						)
-					);
-
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name' 			=> 'view',
+						'my_name' 	=> 'view',
 						'statustext' 	=> lang('view the claim'),
-						'text'			=> lang('view'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						'text'		=> lang('view'),
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uitemplate.hour'
+                                                    'menuaction'	=> 'property.uitemplate.hour'
 						)
 					),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-				$datatable['rowactions']['action'][] = array
+				$data['datatable']['actions'][] = array
 					(
-						'my_name' 			=> 'edit',
-						'statustext' 			=> lang('edit the claim'),
+						'my_name' 	=> 'edit',
+						'statustext' 	=> lang('edit the claim'),
 						'text'		=> lang('edit'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uitemplate.edit_template'
+						    'menuaction'	=> 'property.uitemplate.edit_template'
 						)
 					),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-				$datatable['rowactions']['action'][] = array
+				$data['datatable']['actions'][] = array
 					(
-						'my_name' 			=> 'delete',
-						'statustext' 			=> lang('delete the claim'),
+						'my_name' 	=> 'delete',
+						'statustext' 	=> lang('delete the claim'),
 						'text'		=> lang('delete'),
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uitemplate.delete'
+						    'menuaction'	=> 'property.uitemplate.delete'
 						)
 					),
-					'parameters'	=> $parameters2
-				);
-
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name' 		=> 'add',
-						'text' 			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uitemplate.edit_template'
-						)
-					)
+					'parameters'	=> json_encode($parameters2)
 				);
 
 				unset($parameters);
 				unset($parameters2);
 			}
-
-			for ($i=0;$i<$count_uicols_name;$i++)
-			{
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i]['value'];
-					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]['name']);
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-				}
-
-				if($uicols['name'][$i]['value']=='name')
-				{
-					$datatable['headers']['header'][$i]['sortable']			= true;
-					$datatable['headers']['header'][$i]['sort_field']   	= $uicols['name'][$i]['value'];
-				}
-
-				if($uicols['name'][$i]['value']=='template_id')
-				{
-					$datatable['headers']['header'][$i]['sortable']			= true;
-					$datatable['headers']['header'][$i]['sort_field']   	= "fm_template.id";
-				}
-			}
-
-			if($lookup)
-			{
-				$i++;
-				$datatable['headers']['header'][$i]['name'] 			= 'select';
-				$datatable['headers']['header'][$i]['text'] 			= lang('select');
-				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['sortable']			= false;
-				$datatable['headers']['header'][$i]['format'] 			= '';
-				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['formatter']		= '""';
-
-			}
-
-			//path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($template_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-
-			$appname					= lang('template');
-			$function_msg				= lang('list template');
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= 'template_id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-
-			//-------------------- JSON CODE ----------------------
-
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'template.index', 'property' );
-
-			$this->save_sessiondata();
+                        
+                        self::render_template_xsl('datatable_jquery', $data);
 		}
+                public function add()
+                {
+                    $this->edit_template();
+                }
+                public function query()
+		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1
+			);
+
+			$result_objects = array();
+			$result_count = 0;
+                        
+			$values = $this->bo->read();
+			if ( phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
+		}
 		function hour()
 		{
 			$delete = phpgw::get_var('delete', 'bool');
