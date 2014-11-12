@@ -3562,5 +3562,15 @@
 			}
 			return $path;
 		}
-	}
 
+		public function edit_field($data=  array())
+		{
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
+			{
+				return false;
+			}
+			
+			$value_set	= $this->_db->validate_update(array($data['field_name'] => $data['value']));
+			return $this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$data['id']}'",__LINE__,__FILE__);
+		}
+	}

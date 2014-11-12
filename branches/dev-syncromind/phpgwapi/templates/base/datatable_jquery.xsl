@@ -206,9 +206,14 @@ toolbar
 				</xsl:when>
 				<xsl:when test="type = 'link'">
 					<td valign="top">
-					<a href="{href}"><xsl:value-of select="value"/></a>
-
-
+						<a href="{href}">
+							<xsl:if test="onclick">
+								<xsl:attribute name="onclick">
+									<xsl:value-of select="onclick"/>
+								</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="value"/>
+						</a>
 					</td>
 				</xsl:when>
 				<xsl:otherwise>

@@ -336,4 +336,10 @@
 			}
 			return array('ResultSet'=> array('Result'=>$values));
 		}
+
+		public function edit_field($data=  array())
+		{
+			return $this->so->edit_field($data);
+		}
+
 	}

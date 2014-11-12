@@ -57,7 +57,8 @@
 				'delete'			=> true,
 				'download'			=> true,
 				'columns'			=> true,
-				'attrib_history'	=> true
+				'attrib_history'	=> true,
+				'edit_field'		=> true
 			);
 
 		function __construct()
@@ -237,9 +238,7 @@
 
 		function columns()
 		{
-
-			//cramirez: necesary for windows.open . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -317,12 +316,19 @@
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array(
-									'menuaction' => 'property.uigeneric.add', 
-									'appname'    => $this->appname,
+									'menuaction' => 'property.uigeneric.add',
+									'appname'    => $this->bo->appname,
 									'type'       => $this->type,
-									'type_id'    => $this->type_id								
+									'type_id'    => $this->type_id
 									)),
 								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick'=> "choose_columns({menuaction:'property.uigeneric.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'})"
 							)
 						)
 					)
@@ -342,7 +348,10 @@
 									'export'     => true,
 									'allrows'    => true)),
 					'allrows'	=> true,
-					'editor_action' => '',
+					'editor_action' => self::link(array('menuaction' => 'property.uigeneric.edit_field',
+									'appname'    => $this->appname,
+									'type'       => $this->type,
+									'type_id'    => $this->type_id)),
 					'field' => array()
 				)
 			);
@@ -367,9 +376,20 @@
 									'sortable' => ($uicols['sortable'][$k]) ? true : false,
 									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 								);
-					if ($uicols['name'][$k] == 'id') {
+					if ($uicols['name'][$k] == 'id')
+					{
 						$params['formatter'] = 'JqueryPortico.formatLink';
 					}
+					switch ($uicols['datatype'][$k])
+					{
+						case 'email':
+						case 'varchar':
+						case 'I':
+						case 'V':
+						$params['editor'] = true;
+						break;
+					}
+
 					array_push ($data['datatable']['field'], $params);
 			}
 
@@ -455,7 +475,11 @@
 						))
 					);
 			}
-			
+
+			self::add_javascript('property', 'portico', 'generic.index.js');
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+		
 			self::render_template_xsl('datatable_jquery', $data);
 
 		}
@@ -1012,6 +1036,46 @@
 										'appname'		=> $this->appname,
 										'type'			=> $this->type,
 										'type_id'		=> $this->type_id));
+			}
+		}
+
+		public function edit_field()
+		{
+			$id = phpgw::get_var('id', 'int', 'POST');
+			$field_name = phpgw::get_var('field_name', 'string');
+
+			if(!$this->acl_edit)
+			{
+				return lang('no access');
+			}
+
+			if ($id && $field_name)
+			{
+
+				$data = array
+				(
+					'id'			=> $id,
+					'field_name'	=> $field_name,
+					'value'			=> phpgw::get_var('value')
+				);
+
+				try
+				{
+					$this->bo->edit_field($data);
+				}
+
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						echo $e->getMessage();
+					}
+				}
+				echo true;
+			}
+			else
+			{
+				echo "ERROR";
 			}
 		}
 	}
