@@ -125,7 +125,7 @@
 			$this->start		= $data['start'];
 			$this->query		= $data['query'];
 			$this->filter		= $data['filter'];
-			$this->sort			= $data['sort'];
+			$this->sort		= $data['sort'];
 			$this->order		= $data['order'];
 			$this->cat_id		= $data['cat_id'];
 			$this->allrows		= $data['allrows'];
@@ -133,21 +133,35 @@
 		}
 
 
-		function read()
-		{
+		function read($data = array())
+		{       
+                        /*  
 			$template = $this->so->read(array('filter' => $this->filter,'start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows));
+                        
 			$this->total_records = $this->so->total_records;
-
-			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+                        
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			for ($i=0; $i<count($template); $i++)
 			{
 				$template[$i]['owner'] = $GLOBALS['phpgw']->accounts->id2name($template[$i]['owner']);
-				$template[$i]['entry_date']		= $GLOBALS['phpgw']->common->show_date($template[$i]['entry_date'],$dateformat);
+				$template[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($template[$i]['entry_date'],$dateformat);
 			}
 
 			return $template;
+                        */
+                        $values = $this->so->read($data);
+			$this->total_records = $this->so->total_records;
+                        $dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			for ($i=0; $i<count($values); $i++)
+			{
+				$values[$i]['owner'] = $GLOBALS['phpgw']->accounts->id2name($values[$i]['owner']);
+				$values[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['entry_date'],$dateformat);
+			}
+			return $values;
+                        
 		}
 
 		function read_template_hour($template_id)
