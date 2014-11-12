@@ -263,15 +263,14 @@
                         if(!empty($lookup))
 			{       
                                  $params2 = array(
-                                                'name' => 'select',
-                                                'text' => lang('select'),
-                                                'visible' => true,
+                                                'key' => 'template_id',
+                                                'label' => lang('Select'),
                                                 'sortable' => false,
-                                                'format' => '',
-                                                'visible' => true,
-                                                'formatter' => '""'
+                                                'hidden' => false,
+                                                'formatter' => 'JqueryPortico.formatRadio'
                                             );
-				array_push ($data['datatable']['field'][], $params2);
+				array_push ($data['datatable']['field'], $params2);
+                               
 			}
                         
                         $parameters = array
@@ -343,7 +342,6 @@
 				unset($parameters);
 				unset($parameters2);
 			}
-
                         self::render_template_xsl('datatable_jquery', $data);
 		}
                 public function add()
