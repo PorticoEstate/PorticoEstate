@@ -48,7 +48,7 @@
 						<li>
 							<a href="{$logout_url}">{$logout_text}</a>
 						</li>
-					</ul
+					</ul>
 				</li>
 				<li>
 					<a href="{$print_url}"  target="_blank">{$print_text}</a>
