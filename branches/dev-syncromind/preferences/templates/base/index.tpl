@@ -1,12 +1,24 @@
 <!-- BEGIN list -->
 <div id="preferences-index">
-	{tabs}
-	{rows}
+	<div id="tab-content">
+		{tabs}
+		<div id="user">
+				{rows}
+		</div>
+		<div id="default">
+				{rows}
+		</div>
+		<div id="forced">
+				{rows}
+		</div>
+
+	</div>
 </div>
 <!-- END list -->
 
 <!-- BEGIN app_row -->
 	<h2><a name="{a_name}"></a><img src="{app_icon}" alt="{app_name}"> {app_name}</h2>
+	<ul>
 <!-- END app_row -->
 
 <!-- BEGIN app_row_noicon -->

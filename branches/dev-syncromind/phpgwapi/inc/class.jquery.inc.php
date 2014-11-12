@@ -190,7 +190,7 @@ HTML;
 			if($tab['link'] && !preg_match('/(^#)/i', $tab['link']))
 			{
 				  $_function =  " onclick=\"javascript: window.location = '{$tab['link']}';\"";
-				  $tab['link'] = "#";
+				  $tab['link'] = "#{$id}";
 			}
 			
 			$output .= <<<HTML

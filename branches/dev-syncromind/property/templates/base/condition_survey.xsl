@@ -50,7 +50,7 @@
 					
                 <xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				
-                <div id="generic" class="content-wrp">
+                <div id="generic">
 
                     <fieldset>
                         <xsl:choose>
@@ -244,14 +244,11 @@
 
                     <xsl:call-template name="datasource-definition" />
 
-                    <dl class="proplist-col">
+						<div class="pure-control-group">
 
-                        <dt>
                             <label>
                                 <xsl:value-of select="php:function('lang', 'files')"/>
                             </label>
-                        </dt>
-                        <dd>
                             <!--div style="clear:both;" id="datatable-container_0"></div-->
 							<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_0'">
@@ -262,14 +259,12 @@
 										</xsl:call-template>
 									</xsl:if>
 							</xsl:for-each>
-						</dd>
-
                         <xsl:choose>
                             <xsl:when test="editable = 1">
                                 <xsl:call-template name="file_upload"/>
                             </xsl:when>
                         </xsl:choose>
-                    </dl>
+                    </div>
                 </div>
                 <div id="request">
                     <dl class="proplist-col">
@@ -342,27 +337,22 @@
                 <div id="import">
                     <xsl:choose>
                         <xsl:when test="editable = 1">
-                            <dl class="proplist-col">
-                                <dt>
+							<div class="pure-control-group">
                                     <label>
                                         <xsl:value-of select="php:function('lang', 'upload file')"/>
                                     </label>
-                                </dt>
-                                <dd>
                                     <input type="file" name="import_file" size="40">
                                         <xsl:attribute name="title">
                                             <xsl:value-of select="php:function('lang', 'Select file to upload')"/>
                                         </xsl:attribute>
                                     </input>
-                                </dd>
-                            </dl>
+                            </div>
                         </xsl:when>
                     </xsl:choose>
                 </div>
             </div>
-            <dl class="proplist-col">
-                <div class="form-buttons">
-                    <xsl:variable name="lang_cancel">
+				<div class="proplist-col">
+					 <xsl:variable name="lang_cancel">
                         <xsl:value-of select="php:function('lang', 'cancel')" />
                     </xsl:variable>
                     <xsl:choose>
@@ -385,11 +375,7 @@
                             <input class="pure-button pure-button-primary" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                </div>
-
-
-            </dl>
-                            
+				</div>
         </form>
     </div>
 

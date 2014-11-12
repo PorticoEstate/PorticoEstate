@@ -1,13 +1,17 @@
 <div class="error_message">{messages}</div>
 
 <!-- BEGIN form -->
+<div id="tab-content">
 {tabs}
 {select_user}
 <form method="POST" action="{action_url}" class="pure-form pure-form-aligned">
 {account_id}
 	<!-- BEGIN list -->
-			{list_header}
-			{rows}
+	{pre_div}
+		{list_header}
+		{rows}
+	{post_div}
+	
 	<!-- END list -->
 
 	<div class="button_group">
@@ -16,6 +20,7 @@
 		{help_button}
 	</div>
 </form>
+</div>
 <!-- END form -->
 
 <!-- BEGIN row -->

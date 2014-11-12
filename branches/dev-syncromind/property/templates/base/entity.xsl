@@ -39,7 +39,7 @@
 				<xsl:value-of select="php:function('lang', 'inventory')" />
 		</xsl:variable>
 
-		<form name="form" id="edit_inventory" action="{$action_url}" method="post">
+		<form name="form" id="edit_inventory" action="{$action_url}" method="post" class= "pure-form-aligned">
 
 	 <fieldset>
 		<legend>
@@ -430,7 +430,7 @@
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form id="form" name="form" action="{$form_action}" method="post" ENCTYPE="multipart/form-data">
+			<form id="form" name="form" action="{$form_action}" method="post" ENCTYPE="multipart/form-data" class= "pure-form-aligned">
 				<input type="hidden" name="active_tab" value="{active_tab}"/>
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<xsl:choose>

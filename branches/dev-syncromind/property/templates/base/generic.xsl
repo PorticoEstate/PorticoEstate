@@ -22,7 +22,7 @@
 			
 			<xsl:value-of select="validator"/>
 	
-			<form method="post" action="{$form_action}">
+			<form method="post" action="{$form_action}" class="pure-form-aligned">
 				<dl>
 					<xsl:choose>
 						<xsl:when test="msgbox_data != ''">
@@ -169,10 +169,9 @@
 									
 								</div>
 							</xsl:for-each>
+							<xsl:call-template name="attributes_values"/>
 						</fieldset>
 					</div>
-					
-					<xsl:call-template name="attributes_values"/>
 					
 					<div class="form-buttons">
 						<input type="submit" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">

@@ -8,10 +8,9 @@
 		<xsl:for-each select="location">
 			<xsl:choose>
 				<xsl:when test="value !=''">
-					<dt>
-						<label><xsl:value-of select="name"/></label>
-					</dt>
-					<dd align="left">
+					<div class="pure-control-group">
+						<label><xsl:value-of select="name"/>
+						</label>
 						<xsl:choose>
 							<xsl:when test="input_type !='hidden'">
 								<xsl:choose>
@@ -35,7 +34,7 @@
 								</xsl:when>
 							</xsl:choose>
 						</xsl:for-each>
-					</dd>
+					</div>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:for-each>

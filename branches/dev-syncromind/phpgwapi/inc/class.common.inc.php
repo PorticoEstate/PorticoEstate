@@ -511,9 +511,8 @@ HTML;
 
 			$html = phpgwapi_jquery::tabview_generate($tabs, $selection);
 			$output = <<<HTML
-			<div id="tab-content">
-				{$html}
-			</div>
+
+			{$html}
 
 HTML;
 			return $output;

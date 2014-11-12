@@ -1,4 +1,4 @@
-	<xsl:template name="jquery_phpgw_i18n" xmlns:php="http://php.net/xsl">
+	<xsl:template name="jquery_phpgw_i18n">
 		<xsl:if test="jquery_phpgw_i18n">
 			<script type="text/javascript">
 				JqueryPortico.i18n = {

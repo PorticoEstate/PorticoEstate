@@ -497,6 +497,8 @@
 	{
 		global $t,$list_shown;
 
+		$tab_id = $GLOBALS['type'];
+		$t->set_var('tab_id',$tab_id);
 		$t->set_var('list_header',$header);
 		$t->parse('lists','list',$list_shown);
 
@@ -670,15 +672,15 @@
 	}
 	if (is_admin())
 	{
-		$tabs[] = array(
+		$tabs['user'] = array(
 			'label' => lang('Your preferences'),
 			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'user'))
 		);
-		$tabs[] = array(
+		$tabs['default'] = array(
 			'label' => lang('Default preferences'),
 			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'default'))
 		);
-		$tabs[] = array(
+		$tabs['forced'] = array(
 			'label' => lang('Forced preferences'),
 			'link'  => $GLOBALS['phpgw']->link('/preferences/preferences.php',array('appname'=> $appname, 'type'=> 'forced'))
 		);
@@ -739,16 +741,23 @@
 					$t->set_var('account_id', "<input type='hidden' name='account_id' value='{$account_id}'>");
 				}
 
+				$pre_div = '<div id="user">';
+				$post_div ='</div><div id="default"></div><div id="forced"></div>';
 			    break;
-
 			case 'default':
-				$selected = 1;
+				$pre_div = '<div id="user"></div><div id="default">';
+				$post_div ='</div><div id="forced"></div>';
 				break;
-			case 'forced':
-				$selected = 2;
+			case 'forced';
+				$pre_div = '<div id="user"></div><div id="default"></div><div id="forced">';
+				$post_div ='</div>';
 				break;
+
 		}
-		$t->set_var('tabs',$GLOBALS['phpgw']->common->create_tabs($tabs,$selected));
+		$t->set_var('pre_div',$pre_div);
+		$t->set_var('post_div',$post_div);
+
+		$t->set_var('tabs',$GLOBALS['phpgw']->common->create_tabs($tabs,$GLOBALS['type']));
 
 	}
 	$t->set_var('lang_submit', lang('save'));

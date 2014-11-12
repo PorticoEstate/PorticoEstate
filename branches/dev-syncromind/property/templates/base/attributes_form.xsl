@@ -6,11 +6,7 @@
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
 		<xsl:for-each select="attributes_group">
-			<div class="content-wrp">
-				<fieldset>
-					<xsl:apply-templates select="attributes"/>
-				</fieldset>
-			</div>
+			<xsl:apply-templates select="attributes"/>
 		</xsl:for-each>
 	</xsl:template>
 
