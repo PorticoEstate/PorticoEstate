@@ -238,27 +238,12 @@
 		
 		public function query_summary()
 		{
-			$search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
-			
-			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'dir' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1
-			);
-
-			$values = $this->bo->read_summary($params);
+			$values = $this->bo->read_summary();
 
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['draw'] = $draw;
+			$result_data['total_records'] = count($values);
+			$result_data['draw'] = 0;
 
 			return $this->jquery_results($result_data);
 		}
@@ -579,6 +564,69 @@
 						'extra' => '',
 						'text' => lang('user'),
 						'list' => $values_combo_box[5]
+					);
+					
+			return $combos;
+		}
+		
+
+		private function _get_categories_summary()
+		{
+			$values_combo_box = array();
+			$combos = array();
+			
+			$link = self::link(array(
+					'menuaction' => 'property.uilocation.get_part_of_town', 
+					'type_id' =>  $this->type_id,			
+					'phpgw_return_as' => 'json'
+					));
+			
+			$code = '
+				var link = "'.$link.'";
+				var data = {"district_id": $(this).val()};
+				execute_ajax(link, "GET", "json", data, 
+					function(result){
+						var $el = $("#part_of_town_id");
+						$el.empty();
+						$.each(result, function(key, value) {
+						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
+						});	
+					}
+				);					
+				'; 
+			
+			$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
+			array_unshift ($values_combo_box[0], array('id'=>'', 'name'=>lang('no district')));
+			$combos[] = array('type' => 'filter',
+						'name' => 'district_id',
+						'extra' => $code,
+						'text' => lang('district'),
+						'list' => $values_combo_box[0]
+					);
+			
+			$values_combo_box[1] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+			array_unshift ($values_combo_box[1], array('id'=>'', 'name'=>lang('no part of town')));
+			$combos[] = array('type' => 'filter',
+						'name' => 'part_of_town_id',
+						'extra' => '',
+						'text' => lang('part of town'),
+						'list' => $values_combo_box[1]
+					);
+			
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+			{
+				$values_combo_box[2] = $this->bo->get_owner_list('filter', $this->filter);
+			}
+			else
+			{
+				$values_combo_box[2] = $this->bo->get_owner_type_list('filter', $this->filter);
+			}
+			array_unshift ($values_combo_box[2], array('id'=>'', 'name'=>lang('show all')));
+			$combos[] = array('type' => 'filter',
+						'name' => 'filter',
+						'extra' => '',
+						'text' => lang('filter'),
+						'list' => $values_combo_box[2]
 					);
 					
 			return $combos;
@@ -2404,8 +2452,8 @@
 
 			$uicols = $this->bo->uicols;
 			
-			$appname = lang('location');
-			$function_msg = lang('role');
+			$appname = lang('Summary');
+			$function_msg = lang('List') . ' ' . lang($this->role);
 			
 			$data = array(
 				'datatable_name'	=> $appname . ': ' . $function_msg,
@@ -2436,7 +2484,7 @@
 				)
 			);
 				
-			$filters = $this->_get_categories_role();
+			$filters = $this->_get_categories_summary();
 			
 			foreach ($filters as $filter) 
 			{
@@ -2446,12 +2494,6 @@
 			$this->bo->read_summary();
 			
 			$count_uicols_name = count($uicols['name']);
-			
-			$searc_levels = array();
-			for($i=1; $i<$type_id; $i++)
-			{
-				$searc_levels[] = "loc{$i}";
-			}
 			
 			for($k=0;$k<$count_uicols_name;$k++)
 			{
@@ -2464,52 +2506,11 @@
 					
 					array_push ($data['datatable']['field'], $params);
 			}
-
-			if($this->acl_edit)
-			{
-				$code = '
-					var assign = [];
-					var assign_orig = [];
-
-					$(".mychecks:checked").each(function () {
-							assign.push($(this).val());
-					});	
-
-					$(".orig_check").each(function () {
-							assign_orig.push($(this).val());
-					});	
-
-					var data = {"assign": assign, "assign_orig": assign_orig, "user_id": $("#user_id").val(), "role_id": $("#role_id").val()};
-					execute_ajax(action, "POST", "", data, function(result){
-						document.getElementById("message").innerHTML += "<br/>" + result;
-						oTable.fnDraw();
-					});					
-					'; 
 			
-				$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'save',
-						'type'			=> 'custom',
-						'custom_code' => $code,
-						'text' 			=> lang('save'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uilocation.responsiblility_role_save',
-							'type_id' 			=> $type_id,
-							'cat_id'        	=> $this->cat_id,
-							'district_id'       => $this->district_id,
-							'part_of_town_id'   => $this->part_of_town_id,
-							'second_display'    => 1,
-							'status'            => $this->status,
-							'location_code'     => $this->location_code,
-							'entity_id'			=> $this->entity_id,
-							'phpgw_return_as' => 'json'
-						))
-					);
-			}
-			
+			$data['datatable']['actions'][] = array();
+				
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			
+			//print_r($data); die;
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 	}
