@@ -1,3 +1,4 @@
+
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -44,7 +45,13 @@ JqueryPortico.formatCheck = function(key, oData) {
 
 	return hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oData['location_code']+"\"/></center>";
 };
-	
+
+JqueryPortico.formatRadio = function(key, oData){
+        var checked = '';
+	var hidden = '';
+        return hidden + "<center><input type=\"radio\" name=\"rad_template\" class=\"myValuesForPHP\" value=\""+oData['template_id']+"\" /></center>";
+};
+
 JqueryPortico.FormatterAmount0 = function(key, oData) {
 //	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 	//FIXME...
