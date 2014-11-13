@@ -145,7 +145,7 @@
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'allrows' => phpgw::get_var('length', 'int') == -1/*,
 				
 				'type_id' => $type_id,
 				'lookup_tenant' => $lookup_tenant,
@@ -154,10 +154,11 @@
 				'status' => phpgw::get_var('status'),
 				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
 				'location_code' => phpgw::get_var('location_code'),
-				'filter'		=> phpgw::get_var('filter', 'int')
+				'filter'		=> phpgw::get_var('filter', 'int')*/
 			);
 
 			//$values = $this->bo->read($params);
+			//fill data
 			$values = $this->bo->read($params);
 			if ( phpgw::get_var('export', 'bool'))
 			{
@@ -557,23 +558,23 @@
 							'sortable' => true
 						),
 						array(
-							'key' => 'vendor',
-							'label' => lang('vendor'),
+							'key' => 'loc1_name',
+							'label' => lang('object'),
 							'sortable' => true
 						),
 						array(
-							'key' => 'year',
-							'label' => lang('year'),
+							'key' => 'entry_date',
+							'label' => lang('Entry Date'),
 							'sortable' => true,
 						),
 						array(
-							'key' => 'multiplier',
-							'label' => lang('multiplier'),
+							'key' => 'location_code',
+							'label' => lang('location_code'),
 							'sortable' => false,
 						),
 						array(
-							'key' => 'cnt',
-							'label' => lang('count'),
+							'key' => 'assignedto',
+							'label' => lang('assignedto'),
 							'sortable' => false,
 						),
 						array(
