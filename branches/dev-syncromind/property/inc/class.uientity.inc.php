@@ -31,15 +31,10 @@
 	 * Description
 	 * @package property
 	 */
-	phpgw::import_class('phpgwapi.yui');
-
-	/**
-	* Import the jQuery class
-	*/
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
 
-
-	class property_uientity
+	class property_uientity extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -55,6 +50,7 @@
 		var $public_functions = array
 			(
 				'columns'			=> true,
+				'query'			    => true,
 				'download'			=> true,
 				'view'	 			=> true,
 				'edit'	 			=> true,
@@ -72,8 +68,10 @@
 				'inventory_calendar'=> true
 			);
 
-		function property_uientity()
+		function __construct()
 		{
+			parent::__construct();
+			
 		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
@@ -127,7 +125,9 @@
 
 		}
 
-
+		public function query()
+		{
+		}
 
 		function save_sessiondata()
 		{
@@ -455,7 +455,7 @@
 			$dry_run = false;
 			$second_display = phpgw::get_var('second_display', 'bool');
 
-			$this->save_sessiondata();
+			//$this->save_sessiondata();
 
 			//Preferencias sets
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'] == 'yes')
@@ -475,7 +475,217 @@
 				$this->bo->district_id	= $default_district;
 				$this->district_id		= $default_district;
 			}
+			
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+			
+			$_integration_set = array();
+			$arr_filter_hide = array();
+			
+			if($this->cat_id)
+			{
+				//this validation comes to previous versions
+				if (isset($category['location_level']) && $category['location_level']>0)
+				{
+					$values_combo_box[1]	= $this->bocommon->select_district_list($group_filters,$this->district_id);
+					if(count($values_combo_box[1]))
+					{
+						$default_value = array ('id'=>'','name'=>lang('no district'));
+						array_unshift ($values_combo_box[1],$default_value);
+						$arr_filter_hide[1] = 0;
+					}
+					else
+					{
+						$arr_filter_hide[1] = 1;
+					}
+				}
+				else
+				{
+					$values_combo_box[1] = array();
+					$arr_filter_hide[1] = 1;
+				}
+			}
+				
+			/*
+			$data = array(
+				'datatable_name'	=> $appname,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array(
+									'menuaction'	=> 'property.uientity.add',
+									'entity_id'		=> $this->entity_id,
+									'cat_id'		=> $this->cat_id,
+									'type'			=> $this->type
+								)),
+								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uientity.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
+							)
+						)
+					)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+							'menuaction'	 => 'property.uientity.index',
+							'second_display' => $second_display,
+							'entity_id'      => $this->entity_id,
+							'cat_id'         => $this->cat_id,
+							'type'			 => $this->type,
+							'district_id'	 => $this->district_id,
+							'p_num'			 => $this->p_num,
+							'phpgw_return_as' => 'json'
+					)),
+					'download'	=> self::link(array(
+								'menuaction' => 'property.uigeneric.download',
+								'second_display' => $second_display,
+								'entity_id'      => $this->entity_id,
+								'cat_id'         => $this->cat_id,
+								'type'			 => $this->type,
+								'district_id'	 => $this->district_id,
+								'p_num'			 => $this->p_num,
+								'export'     => true,
+								'allrows'    => true
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array()
+				)
+			);
+	
+			$filters = $this->_get_categories();
+			
+			foreach ($filters as $filter) 
+			{
+				array_unshift ($data['form']['toolbar']['item'], $filter);
+			}
+			
+			$this->bo->read();
+			$uicols = $this->bo->uicols;
 
+			$count_uicols_name = count($uicols['name']);
+
+			for($k=0;$k<$count_uicols_name;$k++)
+			{
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'sortable' => ($uicols['sortable'][$k]) ? true : false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
+					if ($uicols['name'][$k] == 'id')
+					{
+						$params['formatter'] = 'JqueryPortico.formatLink';
+					}
+					switch ($uicols['datatype'][$k])
+					{
+						case 'email':
+						case 'varchar':
+						case 'I':
+						case 'V':
+						$params['editor'] = true;
+						break;
+					}
+
+					array_push ($data['datatable']['field'], $params);
+			}
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			if($this->acl_edit)
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'edit',
+						'statustext' 	=> lang('edit the actor'),
+						'text' 			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'edit',
+						'statustext' 	=> lang('edit the actor'),
+						'text' 			=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'target'		=> '_blank',
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+
+			if($this->acl_delete)
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name' 		=> 'delete',
+						'statustext' 	=> lang('delete the actor'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uigeneric.delete',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+			unset($parameters);
+			
+			if($this->acl_add)
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name' 			=> 'add',
+						'statustext' 	=> lang('add'),
+						'text'			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.add',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						))
+					);
+			}
+			 * */
+			 
+			
+			
 			$datatable = array();
 			$values_combo_box = array();
 
@@ -487,32 +697,9 @@
 			// 	enters the first time
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
-
-
-///// integration
-/*
-			integration_tab
-			integration_height
-			integration_url
-			integration_parametres
-			integration_action
-			integration_action_view
-			integration_action_edit
-			integration_auth_key_name
-			integration_auth_url
-			integration_auth_hash_name
-			integration_auth_hash_value
-			integration_location_data
- */
-
-
-
-
-			$_integration_set = array();
-
-///// integration
-
-
+				
+				$_integration_set = array();
+			
 				$datatable['menu']						=	$this->bocommon->get_menu($this->type_app[$this->type]);
 
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
@@ -537,19 +724,6 @@
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
 
-				////// ---- CATEGORY filter----------------------
-/*				$values_combo_box[0]  = $this->bo->select_category_list($group_filters,$this->cat_id);
-				if(count($values_combo_box[0]))
-				{
-					$default_value = array ('id'=>'','name'=> lang('no category'));
-					array_unshift ($values_combo_box[0],$default_value);
-					$arr_filter_hide[0] = 1;
-				}
-				else
-				{
-					$arr_filter_hide[0] = 1;
-				}
- */
 				//// ---- DISTRICT filter----------------------
 				if($this->cat_id)
 				{
@@ -940,7 +1114,6 @@ JS;
 			$remote_image_in_table = false;
 			foreach ($_config as $_config_section => $_config_section_data)
 			{
-
 				if($_config_section_data['image_in_table'])
 				{
 			
