@@ -32,9 +32,11 @@
 	 * @package property
 	 */
 
-	phpgw::import_class('phpgwapi.yui');
+	#phpgw::import_class('phpgwapi.yui');
+        phpgw::import_class('phpgwapi.uicommon_jquery');
+        phpgw::import_class('phpgwapi.jquery');
 
-	class property_uitenant_claim
+	class property_uitenant_claim extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -46,6 +48,7 @@
 
 		var $public_functions = array
 			(
+                                'query'         => true,
 				'index'		=> true,
 				'check'		=> true,
 				'view'		=> true,
@@ -54,15 +57,18 @@
 				'view_file'	=> true
 			);
 
-		function property_uitenant_claim()
+		function __construct()
 		{
+                        parent::__construct();
+                        
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::claim';
+                        
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject('property.botenant_claim',true);
+			$this->bo		= CreateObject('property.botenant_claim',true);
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->acl			= & $GLOBALS['phpgw']->acl;
+			$this->acl		= & $GLOBALS['phpgw']->acl;
 			$this->acl_location	= '.tenant_claim';
 
 			$this->acl_read 	= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
@@ -73,7 +79,7 @@
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
-			$this->sort			= $this->bo->sort;
+			$this->sort		= $this->bo->sort;
 			$this->order		= $this->bo->order;
 			$this->user_id		= $this->bo->user_id;
 			$this->status		= $this->bo->status;
@@ -108,7 +114,45 @@
 			$bofiles	= CreateObject('property.bofiles');
 			$bofiles->view_file('tenant_claim');
 		}
+                private function _get_filter_tenant(){
+                    $values_combo_box = array();
+                    $combos = array();       
+                    
+                    $values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'tenant_claim','order'=>'descr'));
+                    array_unshift ($values_combo_box[0], array ('id'=>'','name'=> lang('no category')));
+                    $combos[] = array('type' => 'filter',
+                                            'name' => 'cat_id',
+                                            'text' => lang('no category'),
+                                            'list' => $values_combo_box[0]
+                                    );
+                    
+                    $values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+                    array_unshift ($values_combo_box[1], array ('id'=>'','name'=> lang('no district')));
+                    $combos[] = array('type' => 'filter',
+                                            'name' => 'district_id',
+                                            'text' => lang('no district'),
+                                            'list' => $values_combo_box[1]
+                                    );
+                    
+                    $values_combo_box[2]  = $this->bo->get_status_list(array('format' => 'filter', 'selected' => $this->status,'default' => 'open'));
+                    array_unshift($values_combo_box[2], array ('id'=>'','name'=>lang('open')));
+                    $combos[] = array('type' => 'filter',
+                                            'name' => 'status',
+                                            'text' => lang('open'),
+                                            'list' => $values_combo_box[2]
+                                     );
 
+		    $values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+		    array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tickets')));
+                    array_unshift ($values_combo_box[3],array('id'=>'','name'=>lang('no user')));
+                    $combos[] = array('type' => 'filter',
+                                            'name' => 'user_id',
+                                            'text' => lang('User'),
+                                            'list' => $values_combo_box[3]
+                                     );
+                    
+                    return $combos;
+                }
 		function index($project_id='')
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim',
@@ -121,35 +165,122 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_READ, 'acl_location'=> $this->acl_location));
 			}
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt');
-			$GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt','');
+			#$receipt = $GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt');
+			#$GLOBALS['phpgw']->session->appsession('session_data','tenant_claim_receipt','');
 
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-				$datatable['menu']					= $this->bocommon->get_menu();
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'			=> 'property.uitenant_claim.index',
-						'query'            		=> $this->query,
-						'cat_id'				=> $this->cat_id,
-						'order'					=> $this->order,
-						'user_id'				=> $this->user_id,
-						'district_id'			=> $this->district_id
-					));
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uitenant_claim.index',"
-					."sort: '{$this->sort}',"
-					."order: '{$this->order}',"
-					."status: '{$this->status}',"
-					."project_id: '{$this->project_id}',"
-					."user_id: '{$this->user_id}',"
-					."district_id: '{$this->district_id}',"
-					."query: '{$this->query}'";
-
-				$datatable['config']['allow_allrows'] = true;
-
+			#$datatable = array();
+                        if( phpgw::get_var('phpgw_return_as') == 'json' ){
+                              return $this->query(array('project_id' => $project_id));
+                        }
+                        
+                        self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+                        
+                        $appname	= lang('Tenant claim');
+			$function_msg	= lang('list claim');
+                        
+                        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+                        
+                        $data = array(
+				'datatable_name'	=> $appname,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array(
+									'menuaction' => 'property.uitenant_claim.index'								
+									)),
+								'class' => 'new_item'
+							)
+						)
+					)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction'            => 'property.uitenant_claim.index', 
+						'phpgw_return_as'       => 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+						array(
+							'key' => 'claim_id',
+							'label' => lang('claim_id'),
+							'sortable' => TRUE
+						),
+						array(
+							'key' => 'district_id',
+							'label' => lang('district_id'),
+							'sortable' => TRUE
+						),
+						array(
+							'key' => 'location_code',
+							'label' => lang('location'),
+							'sortable' => FALSE
+						),
+						array(
+							'key' => 'loc1_name',
+							'label' => lang('loc1_name'),
+							'sortable' => FALSE
+						),
+						array(
+							'key' => 'address',
+							'label' => lang('address'),
+							'sortable' => FALSE
+						),
+						array(
+							'key' => 'loc_category',
+							'label' => lang('category'),
+							'sortable' => FALSE
+						),
+                                                array(
+                                                        'key' => 'project_id',
+                                                        'label' => lang('Project'),
+                                                        'sortable' => TRUE
+                                                ),
+                                                array(
+                                                        'key' => 'name',
+                                                        'label' => lang('name'),
+                                                        'sortable' => TRUE
+                                                ),
+                                                array(
+                                                        'key' => 'entry_date',
+                                                        'label' => lang('entry_date'),
+                                                        'sortable' => TRUE
+                                                ),
+                                                array(
+                                                        'key' => 'user',
+                                                        'label' => lang('user'),
+                                                        'sortable' => FALSE
+                                                ),
+                                                array(
+                                                        'key' => 'claim_category',
+                                                        'label' => lang('category'),
+                                                        'sortable' => FALSE
+                                                ),
+                                                array(
+                                                        'key' => 'status',
+                                                        'label' => lang('Status'),
+                                                        'sortable' => FALSE
+                                                ),
+                                                array(
+                                                        'key' => 'tenant_id',
+                                                        'label' => lang('tenant_id'),
+                                                        'sortable' => FALSE,
+                                                        'hidden' => true
+                                                )
+					)
+				)
+			);
+                        
+                        $filters = $this->_get_filter_tenant();
+                        foreach ($filters as $filter)
+                        {
+                            array_unshift($data['form']['toolbar']['item'], $filter);
+                        }
+                                       
 				$link_data = array
 					(
 						'menuaction'	=> 'property.uitenant_claim.index',
@@ -158,28 +289,11 @@
 						'cat_id'	=> $this->cat_id,
 						'user_id'	=> $this->user_id,
 						'status_id'	=> $this->status_id,
-						'project_id'=> $this->project_id,
+						'project_id'    => $this->project_id,
 						'query'		=> $this->query
 					);
 
-				$values_combo_box[0] = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'tenant_claim','order'=>'descr'));
-				$default_value = array ('id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				$values_combo_box[2]  = $this->bo->get_status_list(array('format' => 'filter', 'selected' => $this->status,'default' => 'open'));
-				$default_value = array ('id'=>'','name'=>lang('open'));
-				array_unshift ($values_combo_box[2],$default_value);
-
-				$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
-				array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tickets')));
-				$default_value = array ('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[3],$default_value);
-
-				$datatable['actions']['form'] = array
+                                        /*$datatable['actions']['form'] = array
 					(
 						array
 						(
@@ -286,311 +400,141 @@
 							)
 						)
 					)
-				);
-
-			}
-
-
-			$claim_list = $this->bo->read(array('project_id' => $project_id));
-
-			$uicols = array();
-			$uicols['name'][0]['name'] = 'claim id';
-			$uicols['name'][0]['value'] = 'claim_id';
-
-			$uicols['name'][1]['name'] = 'district_id';
-			$uicols['name'][1]['value'] = 'district_id';
-
-			$uicols['name'][2]['name'] = 'location';
-			$uicols['name'][2]['value'] = 'location_code';
-
-			$uicols['name'][3]['name'] = 'loc1_name';
-			$uicols['name'][3]['value'] = 'loc1_name';
-
-			$uicols['name'][4]['name'] = 'address';
-			$uicols['name'][4]['value'] = 'address';
-
-			$uicols['name'][5]['name'] = 'category';
-			$uicols['name'][5]['value'] = 'loc_category';
-
-			$uicols['name'][6]['name'] = 'Project';
-			$uicols['name'][6]['value'] = 'project_id';
-
-			$uicols['name'][7]['name'] = 'name';
-			$uicols['name'][7]['value'] = 'name';
-
-			$uicols['name'][8]['name'] = 'entry date';
-			$uicols['name'][8]['value'] = 'entry_date';
-
-			$uicols['name'][9]['name'] = 'user';
-			$uicols['name'][9]['value'] = 'user';
-
-			$uicols['name'][10]['name'] = 'category';
-			$uicols['name'][10]['value'] = 'claim_category';
-
-			$uicols['name'][11]['name'] = 'Status';
-			$uicols['name'][11]['value'] = 'status';
-
-			$uicols['name'][12]['name'] = 'tenant_id';
-			$uicols['name'][12]['value'] = 'tenant_id';
-
-			$count_uicols_name = count($uicols['name']);
-
-			$j = 0;
-			if (isset($claim_list) AND is_array($claim_list))
-			{
-				foreach($claim_list as $claim_entry)
-				{
-					for ($k=0;$k<$count_uicols_name;$k++)
-					{
-						$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k]['value'];
-						$datatable['rows']['row'][$j]['column'][$k]['value']	= $claim_entry[$uicols['name'][$k]['value']];
-
-					}
-					$j++;
-				}
-			}
+				);*/
 
 			$parameters = array
 				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'claim_id',
-							'source'	=> 'claim_id'
-						),
-					)
+                                    'parameter' => array
+                                    (
+                                        array
+                                        (
+                                            'name'	=> 'claim_id',
+                                            'source'	=> 'claim_id'
+                                        ),
+                                    )
 				);
 
 			if($this->acl_read)
 			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name' 		=> 'view',
-						'statustext' 	=> lang('view the claim'),
-						'text'			=> lang('view'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uitenant_claim.view'
-						)
-					),
-					'parameters'	=> $parameters
-				);
+                            $data['datatable']['actions'][] = array
+                                (
+                                    'my_name' 		=> 'view',
+                                    'statustext' 	=> lang('view the claim'),
+                                    'text'		=> lang('view'),
+                                    'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                    (
+                                        'menuaction'	=> 'property.uitenant_claim.view'
+                                    )
+                                ),
+                                    'parameters'	=> json_encode($parameters)
+                            );
 			}
 
 			if ($this->acl_edit)
 			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name' 			=> 'edit',
-						'statustext' 		=> lang('edit the claim'),
-						'text'				=> lang('edit'),
-						'action'			=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uitenant_claim.edit'
-						)
-					),
-					'parameters'	=> $parameters
-				);
+                            $data['datatable']['actions'][] = array
+                                (
+                                    'my_name' 		=> 'edit',
+                                    'statustext' 	=> lang('edit the claim'),
+                                    'text'		=> lang('edit'),
+                                    'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                    (
+                                        'menuaction'	=> 'property.uitenant_claim.edit'
+                                    )
+                                ),
+                                    'parameters'	=> json_encode($parameters)
+                            );
 			}
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
 			foreach ($jasper as $report)
 			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name'		=> 'edit',
-						'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uijasper.view',
-							'jasper_id'			=> $report['id'],
-							'target'		=> '_blank'
-						)),
-						'parameters'			=> $parameters
-					);
+                            $data['datatable']['actions'][] = array
+                                (
+                                    'my_name'		=> 'edit',
+                                    'text'	 	=> lang('open JasperReport %1 in new window', $report['title']),
+                                    'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                    (
+                                        'menuaction'	=> 'property.uijasper.view',
+                                        'jasper_id'	=> $report['id'],
+                                        'target'	=> '_blank'
+                                    )),
+                                    'parameters'	=> json_encode($parameters)
+                                );
 			}
 
 			if ($this->acl_delete)
 			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name' 			=> 'delete',
-						'statustext' 		=> lang('delete the claim'),
-						'text'				=> lang('delete'),
-						'confirm_msg'		=> lang('do you really want to delete this entry'),
-						'action'			=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uitenant_claim.delete'
-						)
-					),
-					'parameters'	=> $parameters
-				);
+                            $data['datatable']['actions'][] = array
+                                (
+                                    'my_name' 		=> 'delete',
+                                    'statustext' 	=> lang('delete the claim'),
+                                    'text'		=> lang('delete'),
+                                    'confirm_msg'	=> lang('do you really want to delete this entry'),
+                                    'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                                    (
+                                        'menuaction'	=> 'property.uitenant_claim.delete'
+                                    )
+                                ),
+                                    'parameters'	=> json_encode($parameters)
+                            );
 			}
-			$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 		=> 'add',
-					'text' 			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'	=> 'property.uiproject.index',
-						'lookup'		=>	1,
-						'from'			=>  'tenant_claim'
-					)));
 
 			unset($parameters);
-
-			for ($i=0;$i<$count_uicols_name;$i++)
-			{
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i]['value'];
-					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]['name']);
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-				}
-
-				if($uicols['name'][$i]['value']=='claim_id'
-					|| $uicols['name'][$i]['value']=='project_id'
-					|| $uicols['name'][$i]['value']=='name'
-					|| $uicols['name'][$i]['value']=='district_id'
-					|| $uicols['name'][$i]['value']=='entry_date'
-				)
-				{
-					$datatable['headers']['header'][$i]['sortable']		= true;
-					$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i]['value'];
-				}
-
-				if($uicols['name'][$i]['value']=='category')
-				{
-					$datatable['headers']['header'][$i]['sortable']		= true;
-					$datatable['headers']['header'][$i]['sort_field']   = 'descr';
-				}
-
-				if($uicols['name'][$i]['value']=='tenant_id')
-				{
-					$datatable['headers']['header'][$i]['visible'] 		= false;
-					$datatable['headers']['header'][$i]['format'] 		= 'hidden';
-				}
-			}
-
-			//path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($claim_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-
-			$appname					= lang('Tenant claim');
-			$function_msg				= lang('list claim');
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= 'claim_id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tenant_claim.index', 'property' );
-			$this->save_sessiondata();
+                        
+                        self::render_template_xsl('datatable_jquery', $data);
 		}
+                public function query($data = array())
+                {
+                        $search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+                        $district_id = phpgw::get_var('district_id', 'int');
+			$columns = phpgw::get_var('columns');
+                        
+                        $project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
+                        
+			$params = array(                  
+                                'start' => $this->start,
+                                'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+                                'query' => $search['value'],
+                                'sort' => $order[0]['dir'],
+                                'order' => $columns[$order[0]['column']]['data'],
+				'user_id' => $this->user_id,
+                                'status' => $this->status,
+                                'cat_id' => $this->cat_id,
+				'allrows'=>phpgw::get_var('length', 'int') == -1,
+                                'project_id' => $project_id, 
+                                'district_id' => $district_id
+			);
+                        
+			$result_objects = array();
+			$result_count = 0;
+                        //
+                        $values = $this->bo->read($params);
+			if ( phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
 
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+			
+			$link_data = array
+			(
+				'menuaction' => 'property.uigeneric.edit',
+				'appname'	 => $this->appname,
+				'type'		 => $this->type,
+				'type_id'	 => $this->type_id
+			);
+			
+			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+
+			return $this->jquery_results($result_data);
+                }
 		function check()
 		{
 			$project_id	= phpgw::get_var('project_id', 'int');
