@@ -198,10 +198,10 @@
 			return $this->bocommon->select_multi_list( $selected, $list );
 		}
 
-		function read()
-		{
-			$entity = $this->so->read( array('start'		 => $this->start, 'query'		 => $this->query, 'sort'		 => $this->sort, 'order'		 => $this->order, 'allrows'	 => $this->allrows) );
-
+		function read($data = array())
+		{       
+			#$entity = $this->so->read( array('start'=> $this->start, 'query'=> $this->query, 'sort'=> $this->sort, 'order'=> $this->order, 'allrows'=> $this->allrows));
+                        $entity = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 			return $entity;
 		}
