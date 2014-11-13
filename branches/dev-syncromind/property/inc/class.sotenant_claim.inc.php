@@ -44,7 +44,7 @@
 		}
 
 		function read($data)
-		{
+		{                    
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$user_id		= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : '0';
 			$status			= isset($data['status']) && $data['status'] ? $data['status'] : 'open';
@@ -54,7 +54,8 @@
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$project_id		= isset($data['project_id']) ? $data['project_id'] : '';
-			$district_id	= isset($data['district_id']) ? (int)$data['district_id'] : 0;
+			$district_id            = isset($data['district_id']) ? (int)$data['district_id'] : 0;
+                        $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
 
 			if ($order)
 			{
@@ -122,13 +123,13 @@
 				. " $this->join fm_location1 ON fm_project.loc1=fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 				. " $filtermethod $querymethod";
-
+                        
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE_,$results);
 			}
 			else
 			{
