@@ -328,7 +328,7 @@
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
-								'onclick'=> "choose_columns({menuaction:'property.uigeneric.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'})"
+								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uigeneric.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
 							)
 						)
 					)
@@ -476,10 +476,6 @@
 					);
 			}
 
-			self::add_javascript('property', 'portico', 'generic.index.js');
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
-		
 			self::render_template_xsl('datatable_jquery', $data);
 
 		}

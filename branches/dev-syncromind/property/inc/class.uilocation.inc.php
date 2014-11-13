@@ -333,7 +333,7 @@
 
 		function columns()
 		{
-			//			phpgwapi_yui::load_widget('tabview');
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
@@ -821,6 +821,13 @@
 									'parent' =>  $this->location_code							
 									)),
 								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uilocation.columns', type_id:'{$type_id}',parent:'{$this->location_code}'}, {closeAction:'reload'})"
 							)
 						)
 					)
@@ -1290,6 +1297,9 @@
 
 		function edit($view = '')
 		{
+			
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
