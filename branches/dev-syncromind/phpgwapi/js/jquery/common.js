@@ -47,9 +47,9 @@ JqueryPortico.formatCheck = function(key, oData) {
 };
 
 JqueryPortico.formatRadio = function(key, oData){
-        var checked = '';
+	var checked = '';
 	var hidden = '';
-        return hidden + "<center><input type=\"radio\" name=\"rad_template\" class=\"myValuesForPHP\" value=\""+oData['template_id']+"\" /></center>";
+	return hidden + "<center><input type=\"radio\" name=\"rad_template\" class=\"myValuesForPHP\" value=\""+oData['template_id']+"\" /></center>";
 };
 
 JqueryPortico.FormatterAmount0 = function(key, oData) {
@@ -147,3 +147,23 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 
 
 };	
+
+	JqueryPortico.openPopup = function(oArgs,options)
+	{
+		options = options || {};
+		var width = options['width'] || 750;
+		var height = options['height'] || 450;
+		var closeAction = options['closeAction'] || false;
+
+
+		var requestUrl = phpGWLink('index.php', oArgs);
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:width,height:height,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){JqueryPortico.onPopupClose(closeAction);}});
+	};
+
+	JqueryPortico.onPopupClose =function(closeAction)
+	{
+		if(closeAction=='reload')
+		{
+			location.reload();
+		}
+	}
