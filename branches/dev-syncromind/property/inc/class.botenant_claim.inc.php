@@ -177,12 +177,14 @@
 		}
 
 		function read($data = array())
-		{
-			$project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
+		{        
+                        #$project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
 
-			$claims = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'user_id' => $this->user_id,'status' => $this->status,'cat_id' => $this->cat_id,
-				'allrows'=>$this->allrows,'project_id' => $project_id, 'district_id' => $this->district_id,));
+			#$claims = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			#	'user_id' => $this->user_id,'status' => $this->status,'cat_id' => $this->cat_id,
+			#	'allrows'=>$this->allrows,'project_id' => $project_id, 'district_id' => $this->district_id,));
+                        
+                        $claims = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 
 			foreach ($claims as &$entry)
