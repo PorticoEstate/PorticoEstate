@@ -618,7 +618,7 @@ toolbar
 				deferRender:	true,
 				ajax:			{
 					url: ajax_url,
-					data: { cat_id: '' },
+					data: {},
 					type: 'GET'
 				},
 				fnDrawCallback: function () {
