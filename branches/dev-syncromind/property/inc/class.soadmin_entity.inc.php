@@ -75,6 +75,7 @@
 				$order		= isset($data['order']) ? $data['order'] : '';
 				$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+                                $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
 			}
 
 			if ($order)
@@ -103,7 +104,7 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
@@ -135,6 +136,7 @@
 			$entity_id	= isset($data['entity_id'])? (int)$data['entity_id']:0;
 			$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 			$required	= isset($data['required'])?$data['required']:'';
+                        $results        = isset($data['results'])  ? (int) $data['results'] : 0;
 
 			if ($order)
 			{
@@ -161,7 +163,7 @@
 
 			if(!$allrows)
 			{
-				$this->db2->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db2->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
