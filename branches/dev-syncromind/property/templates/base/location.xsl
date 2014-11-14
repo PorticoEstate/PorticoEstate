@@ -1,5 +1,6 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
+
+	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
@@ -20,6 +21,7 @@
 				<xsl:apply-templates select="list"/>
 			</xsl:otherwise>
 		</xsl:choose>
+		<xsl:call-template name="jquery_phpgw_i18n"/>
 	</xsl:template>
 
 	<!-- New template-->
