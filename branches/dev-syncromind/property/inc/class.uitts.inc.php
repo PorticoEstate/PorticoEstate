@@ -476,21 +476,158 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 		}
 
-		private function _get_categories($selected = 0)
+		private function _get_filters()
 		{
-			$cats	= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
-			$cats->supress_info	= true;
-			$categories = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $selected,'globals' => true,'use_acl' => $this->_category_acl));
-			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-			array_unshift ($categories['cat_list'],$default_value);
+			$values_combo_box = array();
+			$combos = array();
 
-			foreach ($categories['cat_list'] as & $_category)
+			$values_combo_box[3]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O'));
+
+			if(isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
 			{
-				$_category['id'] = $_category['cat_id'];
+				array_unshift ($values_combo_box[3],array ('id'=>'O2','name'=>$this->bo->config->config_data['tts_lang_open']));
+			}
+			$default_value = array ('id'=>'','name'=>lang('Open'));
+			array_unshift ($values_combo_box[3],$default_value);
+
+			$combos[] = array('type' => 'filter',
+						'name' => 'status_id',
+						'extra' => $code,
+						'text' => lang('status'),
+						'list' => $values_combo_box[3]
+					);
+
+	//		if(!$this->simple)
+			{
+				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => true,'use_acl' => $this->_category_acl));
+				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
+
+				$_categories = array();
+				foreach($values_combo_box[0]['cat_list'] as $_category)
+				{
+					$_categories[] = array('id' => $_category['cat_id'], 'name' => $_category['name']);
+				}
+
+				$combos[] = array('type' => 'filter',
+						'name' => 'cat_id',
+						'extra' => '',
+						'text' => lang('category'),
+						'list' => $_categories
+					);
+
+				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no district'));
+				array_unshift ($values_combo_box[1],$default_value);
+				$link = self::link(array(
+						'menuaction' => 'property.uilocation.get_part_of_town',
+						'district_id' =>  $this->district_id,
+						'part_of_town_id' =>  $this->part_of_town_id,
+						'phpgw_return_as' => 'json'
+						));
+
+				$code = '
+					var link = "'.$link.'";
+					var data = {"district_id": $(this).val()};
+					execute_ajax(link, "GET", "json", data,
+						function(result){
+							var $el = $("#part_of_town_id");
+							$el.empty();
+							$.each(result, function(key, value) {
+							  $el.append($("<option></option>").attr("value", value.id).text(value.name));
+							});
+						}
+					);
+					';
+
+				$combos[] = array('type' => 'filter',
+							'name' => 'district_id',
+							'extra' => $code,
+							'text' => lang('district'),
+							'list' => $values_combo_box[1]
+						);
+
+				$values_combo_box[2] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no part of town'));
+				array_unshift ($values_combo_box[2],$default_value);
+				$combos[] = array('type' => 'filter',
+							'name' => 'part_of_town_id',
+							'extra' => '',
+							'text' => lang('part of town'),
+							'list' => $values_combo_box[2]
+						);
+
+				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,$this->acl_location);
+				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my assigned tickets')));
+				$_my_negative_self = (-1 * $GLOBALS['phpgw_info']['user']['account_id']);
+				$combos[] = array('type' => 'filter',
+							'name' => 'user_id',
+							'extra' => '',
+							'text' => lang('user'),
+							'list' => $values_combo_box[4]
+						);
 			}
 
-			return $categories['cat_list'];
+	//		if($order_read)
+			{
+				$combos[] = array('type' => 'filter',
+							'name' => 'vendor_id',
+							'extra' => '',
+							'text' => lang('vendor'),
+							'list' => $this->bo->get_vendors($this->vendor_id)
+						);
+				$combos[] = array('type' => 'filter',
+							'name' => 'ecodimb',
+							'extra' => '',
+							'text' => lang('dimb'),
+							'list' => $this->bo->get_ecodimb($this->ecodimb)
+						);
+
+				$combos[] = array('type' => 'filter',
+							'name' => 'b_account',
+							'extra' => '',
+							'text' => lang('budget account'),
+							'list' => $this->bo->get_b_account($this->b_account)
+						);
+
+				$_filter_buildingpart = array();
+				$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
+
+				if($filter_key = array_search('.b_account', $filter_buildingpart))
+				{
+					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+				}
+
+				$combos[] = array('type' => 'filter',
+							'name' => 'building_part',
+							'extra' => '',
+							'text' => lang('building part'),
+							'list'	=> $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))
+						);
+
+				if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1)
+				{
+					$combos[] = array('type' => 'filter',
+							'name' => 'branch_id',
+							'extra' => '',
+							'text' => lang('branch'),
+							'list' => $this->bo->get_branch($this->branch_id)
+						);
+
+				}
+
+				$combos[] = array('type' => 'filter',
+						'name' => 'order_dim1',
+						'extra' => '',
+						'text' => lang('order_dim1'),
+						'list' => $this->bo->get_order_dim1($this->order_dim1)
+					);
+
+			}
+
+			return $combos;
 		}
+
 		
 		function index()
 		{
@@ -511,24 +648,25 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$categories = $this->_get_categories();
-                        
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter',
-								'name' => 'cat_id',
-								'text' => lang('category') . ':',
-								'list' => $categories,
-							),
 							array(
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array('menuaction' => 'property.uitts.add')),
 								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload'})"
 							)
+
 						),
 					),
 				),
@@ -543,8 +681,7 @@
 							'key' => 'priority',
 							'label' => lang('priority'),
 							'sortable' => true,
-							//FIXME: to be implemented: http://jquery-datatables-editable.googlecode.com/svn/trunk/inline-edit.html
-							'editor' => true
+							'editor' => false
 						),
 						array(
 							'key' => 'id',
@@ -587,6 +724,13 @@
 				),
 			);
 
+			$filters = $this->_get_filters();
+
+			foreach ($filters as $filter)
+			{
+				array_unshift ($data['form']['toolbar']['item'], $filter);
+			}
+
 			$parameters = array
 				(
 					'parameter' => array
@@ -611,50 +755,45 @@
 					);
 
 			$data['datatable']['actions'][] = array
+				(
+					'my_name' 			=> 'print',
+					'statustext' 	=> lang('print the ticket'),
+					'text'			=> lang('print view'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'my_name'		=> 'edit_survey',
-						'text' 			=> lang('edit'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uitts.edit'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
-
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'import_survey',
-						'text' 			=> lang('import'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uitts.import'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
+						'menuaction'	=> 'property.uitts._print',
+						'target'		=> '_blank'
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
 
 
-			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+			foreach ($jasper as $report)
 			{
 				$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'delete_imported_records',
-						'text' 			=> lang('delete imported records'),
-						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uitts.delete_imported_records'
+							'menuaction'	=> 'property.uijasper.view',
+							'jasper_id'			=> $report['id'],
+							'target'		=> '_blank'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
 			}
 
-			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			if($this->acl_delete)
 			{
 				$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'delete_survey',
-						'text' 			=> lang('delete'),
-						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'my_name' 			=> 'delete',
+						'statustext' 	=> lang('delete the ticket'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this ticket'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uitts.delete'
@@ -662,6 +801,73 @@
 						'parameters'	=> json_encode($parameters)
 					);
 			}
+
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
+				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes'
+				&& $this->acl_edit)
+			{
+
+				unset($status['C']);
+				foreach ($status as $status_code => $status_info)
+				{
+					$data['datatable']['actions'][] = array
+						(
+							'my_name' 		=> 'status',
+							'statustext' 	=> $status_info['status'],
+							'text' 			=> lang('change to') . ' status:  ' .$status_info['status'],
+							'confirm_msg'	=> lang('do you really want to change the status to %1',$status_info['status']),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'		=> 'property.uitts.edit_status',
+								'edit_status'		=> true,
+								'new_status'		=> $status_code,
+								'second_display'	=> true,
+								'sort'				=> $this->sort,
+								'order'				=> $this->order,
+								'cat_id'			=> $this->cat_id,
+								'filter'			=> $this->filter,
+								'user_filter'		=> $this->user_filter,
+								'query'				=> $this->query,
+								'district_id'		=> $this->district_id,
+								'allrows'			=> $this->allrows,
+								'delete'			=> 'dummy'// FIXME to trigger the json in property.js.
+							)),
+							'parameters'	=> json_encode($parameters)
+						);
+				}
+
+				$_priorities = $this->bo->get_priority_list();
+				foreach ($_priorities as $_priority => $_priority_info)
+				{
+					$data['datatable']['actions'][] = array
+					(
+						'my_name' 		=> 'priority',
+						'statustext' 	=> $_priority_info['name'],
+						'text' 			=> lang('change to') . ' ' . lang('priority') .':  ' .$_priority_info['name'],
+						'confirm_msg'	=> lang('do you really want to change the priority to %1',$_priority_info['name']),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'property.uitts.edit_priority',
+							'edit_status'		=> true,
+							'new_priority'		=> $_priority,
+							'second_display'	=> true,
+							'sort'				=> $this->sort,
+							'order'				=> $this->order,
+							'cat_id'			=> $this->cat_id,
+							'filter'			=> $this->filter,
+							'user_filter'		=> $this->user_filter,
+							'query'				=> $this->query,
+							'district_id'		=> $this->district_id,
+							'allrows'			=> $this->allrows,
+							'delete'			=> 'dummy'// FIXME to trigger the json in property.js.
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+				}
+			}
+
+
+
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
