@@ -172,11 +172,11 @@
 			
 			$link_data = array
 			(
-				'menuaction' => 'property.uitts.index',
+				'menuaction' => 'property.uitts.view',
 				'type_id'	 => $type_id
 			);
 			
-			//array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
 
 			return $this->jquery_results($result_data);
 		}
@@ -476,6 +476,99 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 		}
 
+		private function _get_fields()
+		{
+			$this->bo->read(array('dry_run'=>true));
+			$this->bo->get_origin_entity_type();
+			$uicols_related = $this->bo->uicols_related;
+
+			$uicols = array();
+
+			$uicols['name'][] = 'priority';
+			$uicols['descr'][]	= lang('priority');
+			$uicols['name'][] = 'id';
+			$uicols['descr'][]	= lang('id');
+			$uicols['name'][] = 'subject';
+			$uicols['descr'][]	= lang('subject');
+
+			$location_types = execMethod('property.soadmin_location.select_location_type');
+			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
+
+			static $location_cache = array();
+
+			foreach ( $location_types as $dummy => $level)
+			{
+				if ( in_array($level['id'], $level_assigned))
+				{
+					$uicols['name'][] = "loc{$level['id']}_name";
+					$uicols['descr'][]	= $level['name'];
+				}
+			}
+
+			$uicols['name'][] = 'entry_date';
+			$uicols['descr'][]	= lang('entry date');
+
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+			$columns = $this->bo->get_columns();
+
+			foreach ($custom_cols as $col)
+			{
+				$uicols['name'][]		= $col;
+				$uicols['descr'][]		= $columns[$col]['name'];
+			}
+
+
+			$uicols['name'][] = 'child_date';
+			$uicols['descr'][]	= lang('child date');
+			$uicols['name'][] = 'link_view';
+			$uicols['descr'][]	= lang('link view');
+			$uicols['name'][] = 'lang_view_statustext';
+			$uicols['descr'][]	= lang('lang view statustext');
+			$uicols['name'][] = 'text_view';
+			$uicols['descr'][]	= lang('text view');
+
+			$count_uicols_name = count($uicols['name']);
+
+			$fields = array();
+			for($k=0;$k<$count_uicols_name;$k++)
+			{
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'sortable' => false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
+
+					if ($uicols['datatype'][$k] == 'link')
+					{
+						$params['formatter'] = 'JqueryPortico.formatLinkGeneric';
+					}
+
+					if($uicols['name'][$k]=='id')
+					{
+							$params['formatter'] = 'JqueryPortico.formatLink';
+					}
+
+					if($uicols['name'][$k]=='address' || $uicols['name'][$k]=='id' || $uicols['name'][$k]=='priority')
+					{
+						$params['sortable']	= true;
+					}
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto'
+					 || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date'
+					 || $uicols['name'][$i]=='order_id'|| $uicols['name'][$i]=='modified_date')
+					{
+						$params['sortable']	= true;
+					}
+					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext' || $uicols['name'][$i]=='hidden_id')
+					{
+						$params['hidden']	= false;
+					}
+
+					$fields[] = $params;
+			}
+			return $fields;
+		}
+		
 		private function _get_filters()
 		{
 			$values_combo_box = array();
@@ -675,7 +768,9 @@
 					'download'	=> self::link(array('menuaction' => 'property.uitts.download', 'export' => true, 'allrows' => true)),
 					'allrows'	=> true,
 					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
-					'field' => array(
+					'field' => $this->_get_fields(),
+/*
+							array(
 						
 						array(
 							'key' => 'priority',
@@ -720,8 +815,8 @@
 							'sortable' => false,
 							'hidden' => true,
 						)
-					)
-				),
+					)*/
+				)
 			);
 
 			$filters = $this->_get_filters();
