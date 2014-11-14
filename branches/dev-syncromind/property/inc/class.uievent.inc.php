@@ -27,14 +27,14 @@
  	* @version $Id$
 	*/
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('property.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_uievent extends property_uicommon
+	class property_uievent extends phpgwapi_uicommon
 	{
 		var $grants;
 		var $start;
@@ -639,6 +639,11 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'event.index', 'property' );
+		}
+
+		public function query()
+		{
+
 		}
 
 		function edit()
