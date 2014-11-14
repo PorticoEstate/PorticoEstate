@@ -200,17 +200,32 @@
 
 		function read($data = array())
 		{       
-			#$entity = $this->so->read( array('start'=> $this->start, 'query'=> $this->query, 'sort'=> $this->sort, 'order'=> $this->order, 'allrows'=> $this->allrows));
+			#$entity = $this->so->read(array
+                        #            (
+                        #                'start'=> $this->start, 
+                        #                'query'=> $this->query, 
+                        #                'sort'=> $this->sort, 
+                        #                'order'=> $this->order, 
+                        #                'allrows'=> $this->allrows
+                        #            ));
                         $entity = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 			return $entity;
 		}
 
-		function read_category( $entity_id )
+		function read_category($data = array())
 		{
-			$category = $this->so->read_category( array('start'		 => $this->start, 'query'		 => $this->query, 'sort'		 => $this->sort,
-				'order'		 => $this->order, 'allrows'	 => $this->allrows, 'entity_id'	 => $entity_id) );
-
+			/*$category = $this->so->read_category( array
+                                    (
+                                        'start' => $this->start, 
+                                        'query' => $this->query, 
+                                        'sort' => $this->sort,
+                                        'order' => $this->order, 
+                                        'allrows' => $this->allrows, 
+                                        'entity_id' => $entity_id
+                                    ));
+                         */
+                        $category = $this->so->read_category($data);
 			$this->total_records = $this->so->total_records;
 
 			return $category;
@@ -414,19 +429,25 @@
 			return $attrib;
 		}
 
-		function read_attrib( $entity_id = '', $cat_id = '', $allrows = '' )
+		function read_attrib($data = array())
 		{
-			if ( $allrows )
+			if ($data['allrows'])
 			{
 				$this->allrows = $allrows;
 			}
 
-			$attrib = $this->custom->find( $this->type_app[$this->type],
-								  ".{$this->type}.{$entity_id}.{$cat_id}", $this->start, $this->query,
-								  $this->sort, $this->order, $this->allrows );
+			$attrib = $this->custom->find(
+                                                        $this->type_app[$this->type],
+                                                        ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", 
+                                                        $data['start'],
+                                                        $data['results'],
+                                                        $data['query'], 
+                                                        $data['sort'],
+                                                        $data['order'],
+                                                        $this->allrows 
+                                                     );
 
 			$this->total_records = $this->custom->total_records;
-
 			return $attrib;
 		}
 
