@@ -233,7 +233,6 @@ toolbar
 		  </tr>
 			<xsl:if test="item/text and normalize-space(item/text)">
 				<thead>
-					<tr>
 						<xsl:for-each select="item">
 							<td>
 								<xsl:if test="name">
@@ -244,7 +243,6 @@ toolbar
 								</xsl:if>
 							</td>
 						</xsl:for-each>
-					</tr>
 				</thead>
 			</xsl:if>
 		</table>
@@ -274,19 +272,19 @@ toolbar
 	</form>
 </xsl:template>
 <xsl:template match="form">
-	<form id="queryForm">
-		<xsl:attribute name="method">
+	<div id="queryForm">
+		<!--xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
 		</xsl:attribute>
 
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
-		</xsl:attribute>
+		</xsl:attribute-->
 		<xsl:apply-templates select="toolbar"/>
-	</form>
+	</div>
 
-	<form id="update_table_dummy" method='POST' action='' >
-	</form>
+	<!--form id="update_table_dummy" method='POST' action='' >
+	</form-->
 
 </xsl:template>
 
@@ -300,7 +298,6 @@ toolbar
 
 	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
-			<tr>
 				<xsl:for-each select="//datatable/field">
 					<xsl:choose>
 						<xsl:when test="hidden">
@@ -317,7 +314,6 @@ toolbar
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
-			</tr>
 		</thead>
 	</table>
 	<script>
