@@ -88,17 +88,38 @@
 
 	<input class="toggle-box" id="header1" type="checkbox" />
 	<label for="header1">
-toolbar
-		<!--xsl:value-of select="php:function('lang', 'toolbar')"/-->
+		<xsl:value-of select="php:function('lang', 'toolbar')"/>
 	</label>
 
 	<div id="toolbar">
-		  <table >
+	 <!--xsl:if test="item/text and normalize-space(item/text)"-->
+	<xsl:if test="item">
+	  <table id="toolbar_table" class="pure-table">
+				<thead>
+					<tr>
+						<th>
+							<xsl:value-of select="php:function('lang', 'name')"/>
+						</th>
+						<th>
+							<xsl:value-of select="php:function('lang', 'item')"/>
+						</th>
+					</tr>
+				</thead>
+			<tbody>
+
+			<xsl:for-each select="item">
 			<tr>
-		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 			<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 			<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
+			<td>
+				<xsl:if test="name">
+					<label>
+						<xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+						<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+					</label>
+				</xsl:if>
+			</td>
 		
 			<xsl:choose>
 				<xsl:when test="type = 'date-picker'">
@@ -229,23 +250,11 @@ toolbar
 					</td>
 				</xsl:otherwise>
 			</xsl:choose>
-		</xsl:for-each>
 		  </tr>
-			<xsl:if test="item/text and normalize-space(item/text)">
-				<thead>
-						<xsl:for-each select="item">
-							<td>
-								<xsl:if test="name">
-									<label>
-										<xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
-										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-									</label>
-								</xsl:if>
-							</td>
-						</xsl:for-each>
-				</thead>
-			</xsl:if>
+			</xsl:for-each>
+		  </tbody>
 		</table>
+		</xsl:if>
 	</div>
 </xsl:template>
 
