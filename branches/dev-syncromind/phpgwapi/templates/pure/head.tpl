@@ -21,6 +21,24 @@
         <!-- END stylesheet -->
 		<link href="{webserver_url}/phpgwapi/js/jquery/mmenu/src/css/extensions/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
 
+		
+		
+		<style>
+			.priority1
+			{
+				background-color: #da7a7a !important;
+			}
+
+			.priority2
+			{
+				background-color: #dababa !important;
+			}
+
+			.priority3
+			{
+				background-color: #dadada !important;
+			}
+		</style>
 
 		{css}
 
