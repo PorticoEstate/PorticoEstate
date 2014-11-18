@@ -52,6 +52,19 @@ JqueryPortico.formatRadio = function(key, oData){
 	return hidden + "<center><input type=\"radio\" name=\"rad_template\" class=\"myValuesForPHP\" value=\""+oData['template_id']+"\" /></center>";
 };
 
+JqueryPortico.showPicture = function(key, oData)
+{
+	var link = ""
+	if(oData['img_id'])
+	{
+		var img_name = oData['file_name'];
+		var img_id	 = oData['img_id'];
+		var img_url  = phpGWLink('index.php', oData['img_url_args']);
+		link = "<a href=\""+img_url+"\" title=\""+img_name+"\" id=\""+img_id+"\" target=\"_blank\"><img src=\""+img_url+"&thumb=1\" alt=\""+img_name+"\" /></a>";
+	} 
+	return link;
+};
+	
 JqueryPortico.FormatterAmount0 = function(key, oData) {
 //	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 	//FIXME...
