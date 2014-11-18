@@ -83,7 +83,7 @@
 .toggle-box:checked + label:before {
   content: "\2212";
 } 
-	
+		
 	</style>
 
 	<input class="toggle-box" id="header1" type="checkbox" />
@@ -332,22 +332,11 @@
 				{
 					data:			"<xsl:value-of select="key"/>",
 					fnCreatedCell: function(nTd, sData, oData, iRow, iCol){
-						var priority = oData['priority'];
-						if(iCol == 0)
+						if(typeof(oData['priority']) != undefined)
 						{
-							if(priority == 1)
+							if(iCol == 0)
 							{
-								$(nTd).css('background-color', '#da7a7a');
-							}
-							
-							if(priority == 2)
-							{
-								$(nTd).css('background-color', '#dababa');
-							}
-					
-							if(priority == 3)
-							{
-								$(nTd).css('background-color', '#dadada');
+								$(nTd).addClass('priority' + oData['priority']);
 							}
 						}
 					},
