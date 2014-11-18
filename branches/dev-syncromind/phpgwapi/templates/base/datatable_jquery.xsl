@@ -331,6 +331,26 @@
 			<xsl:for-each select="//datatable/field">
 				{
 					data:			"<xsl:value-of select="key"/>",
+					fnCreatedCell: function(nTd, sData, oData, iRow, iCol){
+						var priority = oData['priority'];
+						if(iCol == 0)
+						{
+							if(priority == 1)
+							{
+								$(nTd).css('background-color', '#da7a7a');
+							}
+							
+							if(priority == 2)
+							{
+								$(nTd).css('background-color', '#dababa');
+							}
+					
+							if(priority == 3)
+							{
+								$(nTd).css('background-color', '#dadada');
+							}
+						}
+					},
 					class:			"<xsl:value-of select="className"/>",
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
