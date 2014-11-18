@@ -166,7 +166,7 @@
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[$count],$default_value);
 				$combos[] = array('type' => 'filter',
-							'name' => 'user_id',
+							'name' => 'filter',
 							'extra' => '',
 							'text' => lang('user'),
 							'list' => $values_combo_box[$count]
@@ -213,7 +213,7 @@
 						}
 						
 						$combos[] = array('type' => 'filter',
-									'name' => "{$attrib['column_name']}_id",
+									'name' => $attrib['column_name'],
 									'extra' => '',
 									'text' => lang($attrib['column_name']),
 									'list' => $values_combo_box[$count]
@@ -230,9 +230,8 @@
 		
 		public function query()
 		{
-			$type_id	= $this->type_id;
-			$lookup 	= $this->lookup;
-			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+			$start_date	= urldecode($this->start_date);
+			$end_date = urldecode($this->end_date);
 			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -245,18 +244,9 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
-				'dir' => $order[0]['dir'],
-				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1,
-				
-				'type_id' => $type_id,
-				'lookup_tenant' => $lookup_tenant,
-				'lookup' => $lookup,
-				'district_id' => phpgw::get_var('district_id', 'int'),
-				'status' => phpgw::get_var('status'),
-				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
-				'location_code' => phpgw::get_var('location_code'),
-				'filter'		=> phpgw::get_var('filter', 'int')
+				'start_date' => $start_date,
+				'end_date' => $end_date
 			);
 
 			$values = $this->bo->read($params);
@@ -264,12 +254,79 @@
 			{
 				return $values;
 			}
+			
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$custom_config	= CreateObject('admin.soconfig',$location_id);
+			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 
+			$remote_image_in_table = false;
+			foreach ($_config as $_config_section => $_config_section_data)
+			{
+				if($_config_section_data['image_in_table'])
+				{
+					$remote_image_in_table = true;
+					break;
+				}
+			}
+			
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$img_types = array
+			(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+				
+			foreach($values as &$entity_entry)
+			{
+				$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
+
+				if($remote_image_in_table)
+				{
+					$entity_entry['file_name']		= $entity_entry[$_config_section_data['img_key_local']];
+					$entity_entry['img_id']			= $entity_entry[$_config_section_data['img_key_local']];
+					$entity_entry['img_url_args']	= $_config_section_data['url'].'&'.$_config_section_data['img_key_remote'].'='.$entity_entry['img_id'];
+					$entity_entry['thumbnail_flag']	= $_config_section_data['thumbnail_flag'];
+				}
+				else
+				{
+					$_files = $vfs->ls(array(
+						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+						'relatives' => array(RELATIVE_NONE)));
+
+					if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+					{
+						$entity_entry['file_name']	= urlencode($_files[0]['name']);
+						$entity_entry['img_id']		= $_files[0]['file_id'];
+						$entity_entry['directory']	= urlencode($_files[0]['directory']);
+						$entity_entry['img_url_args']	= array(
+														'menuaction' => 'property.uigallery.view_file',
+														'file'		 => $entity_entry['directory'].'/'.$entity_entry['file_name']
+													);
+						$entity_entry['thumbnail_flag']	= 'thumb=1';
+					}
+				}
+				
+				
+			}
+			
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
 
+			$link_data = array
+			(
+				'menuaction' => 'property.uientity.edit',
+				'entity_id'      => $this->entity_id,
+				'cat_id'         => $this->cat_id,
+				'type'			 => $this->type
+			);
+			
+			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+			
 			return $this->jquery_results($result_data);
 		}
 
@@ -594,9 +651,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$start_date	= urldecode($this->start_date);
-			$end_date 	= urldecode($this->end_date);
-			$dry_run = false;
 			$second_display = phpgw::get_var('second_display', 'bool');
 
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
@@ -610,6 +664,11 @@
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
+			}
+			
+			if($this->cat_id)
+			{
+				$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 			}
 			
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
@@ -649,7 +708,7 @@
 								'type'	=> 'hidden',
 								'id'	=> 'org_unit_id',
 								'name'	=> 'org_unit_id',
-								'value'	=> $org_unit_id
+								'value'	=> ''
 							),
 							array
 							(//for link "Org unit",
@@ -675,14 +734,14 @@
 								'type'	=> 'hidden',
 								'id'	=> 'end_date',
 								'name'	=> 'end_date',
-								'value'	=> $end_date
+								'value'	=> ''
 							),
 							array
 							( //hidden start_date
 								'type'	=> 'hidden',
 								'id'	=> 'start_date',
 								'name'	=> 'start_date',
-								'value'	=> $start_date
+								'value'	=> ''
 							),
 							array
 							(//for link "Date search",
@@ -732,8 +791,7 @@
 				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 			
-			$values = $this->bo->read();
-
+			$this->bo->read(array('dry_run'=>true));
 			$uicols = $this->bo->uicols;
 
 			$uicols['name'][]		= 'img_id';
@@ -765,58 +823,8 @@
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= 'JqueryPortico.showPicture';
 			$uicols['input_type'][]	= '';
-			
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-			$custom_config	= CreateObject('admin.soconfig',$location_id);
-			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
-
-			$remote_image_in_table = false;
-			foreach ($_config as $_config_section => $_config_section_data)
-			{
-
-				if($_config_section_data['image_in_table'])
-				{
-			
-					$remote_image_in_table = true;
-					$js = <<<JS
-	var show_picture_remote = function(elCell, oRecord, oColumn, oData)
-	{
-		if(oRecord.getData('img_id'))
-		{
-			sUrl = '{$_config_section_data['url']}';
-			sUrl += '&{$_config_section_data['img_key_remote']}=' + oRecord.getData('img_id');
-			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('file_name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\" target=\"_blank\"><img src=\""+sUrl+"&{$_config_section_data['thumbnail_flag']}\" alt=\""+oRecord.getData('file_name')+"\" /></a>";
-		}
-	}
-JS;
-					$GLOBALS['phpgw']->js->add_code('', $js);
-
-					break;
-				}
-			}
-
-
-			if(!$remote_image_in_table)
-			{
-
-				$uicols['formatter'][]	= 'show_picture';
-
-				$vfs = CreateObject('phpgwapi.vfs');
-				$vfs->override_acl = 1;
-
-				$img_types = array
-				(
-					'image/jpeg',
-					'image/png',
-					'image/gif'
-				);
-			}
-			else
-			{
-				$uicols['formatter'][]	= 'show_picture_remote';			
-			}
-			
 			
 			$count_uicols_name = count($uicols['name']);
 			
@@ -828,35 +836,40 @@ JS;
 	
 			for($k=0;$k<$count_uicols_name;$k++)
 			{						
-					$params = array(
-									'key' => $uicols['name'][$k],
-									'label' => $uicols['descr'][$k],
-									'sortable' => ($uicols['sortable'][$k]) ? true : false,
-									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
-								);
-					
-					if(in_array($uicols['name'][$k], $searc_levels))
-					{
-						$params['formatter'] = 'JqueryPortico.searchLink';
-					}
-					
-					if ($uicols['name'][$k] == 'id')
-					{
-						$params['formatter'] = 'JqueryPortico.formatLink';
-						$params['hidden'] = false;
-					}
-					
-					$denied = array('merknad');
-					if(in_array ($uicols['name'][$k], $denied))
-					{
-						$params['sortable']		= false;
-					}
-					else if(isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k]!='T' || $uicols['cols_return_extra'][$k]!='CH'))
-					{
-						$params['sortable']		= true;
-					}
+				$params = array(
+								'key' => $uicols['name'][$k],
+								'label' => $uicols['descr'][$k],
+								'sortable' => ($uicols['sortable'][$k]) ? true : false,
+								'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+							);
 
-					array_push ($data['datatable']['field'], $params);
+				if(!empty($uicols['formatter'][$k]))
+				{
+					$params['formatter'] = $uicols['formatter'][$k];
+				}
+				
+				if(in_array($uicols['name'][$k], $searc_levels))
+				{
+					$params['formatter'] = 'JqueryPortico.searchLink';
+				}
+
+				if($uicols['name'][$k] == 'num')
+				{
+					$params['formatter'] = 'JqueryPortico.formatLink';
+					$params['hidden'] = false;
+				}
+
+				$denied = array('merknad');
+				if(in_array ($uicols['name'][$k], $denied))
+				{
+					$params['sortable']		= false;
+				}
+				else if(isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k]!='T' || $uicols['cols_return_extra'][$k]!='CH'))
+				{
+					$params['sortable']		= true;
+				}
+
+				array_push ($data['datatable']['field'], $params);
 			}
 
 			$parameters = array
