@@ -331,15 +331,16 @@
 			<xsl:for-each select="//datatable/field">
 				{
 					data:			"<xsl:value-of select="key"/>",
-					fnCreatedCell: function(nTd, sData, oData, iRow, iCol){
-						if(typeof(oData['priority']) != undefined)
-						{
-							if(iCol == 0)
-							{
-								$(nTd).addClass('priority' + oData['priority']);
-							}
-						}
-					},
+//Sigurd: move the addclass to the entire row (fnRowCallback).
+//					fnCreatedCell: function(nTd, sData, oData, iRow, iCol){
+//						if(typeof(oData['priority']) != undefined)
+//						{
+//							if(iCol == 0)
+//							{
+//								$(nTd).addClass('priority' + oData['priority']);
+//							}
+//						}
+//					},
 					class:			"<xsl:value-of select="className"/>",
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
@@ -639,6 +640,12 @@
 					data: {},
 					type: 'GET'
 				},
+				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+								if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
+								{
+									$('td', nRow).addClass('priority' + aData['priority']);
+								}
+                },
 				fnDrawCallback: function () {
 					oTable.makeEditable({
 							sUpdateURL: editor_action,
