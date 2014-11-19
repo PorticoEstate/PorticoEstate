@@ -75,8 +75,9 @@ JqueryPortico.showPicture = function(key, oData)
 	{
 		var img_name = oData['file_name'];
 		var img_id	 = oData['img_id'];
-		var img_url  = phpGWLink('index.php', oData['img_url_args']);
-		link = "<a href=\""+img_url+"\" title=\""+img_name+"\" id=\""+img_id+"\" target=\"_blank\"><img src=\""+img_url+"&thumb=1\" alt=\""+img_name+"\" /></a>";
+		var img_url  = oData['img_url'];
+		var thumbnail_flag = oData['thumbnail_flag'];
+		link = "<a href='"+ img_url +"' title='"+ img_name +"' id='"+ img_id +"' target='_blank'><img src='"+ img_url +"&"+ thumbnail_flag +"' alt='"+ img_name +"' /></a>";
 	} 
 	return link;
 };
