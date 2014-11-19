@@ -279,44 +279,6 @@
 				'image/gif'
 			);
 				
-			foreach($values as &$entity_entry)
-			{
-				$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
-
-				if($remote_image_in_table)
-				{
-					$entity_entry['file_name']		= $entity_entry[$_config_section_data['img_key_local']];
-					$entity_entry['img_id']			= $entity_entry[$_config_section_data['img_key_local']];
-					$entity_entry['img_url_args']	= $_config_section_data['url'].'&'.$_config_section_data['img_key_remote'].'='.$entity_entry['img_id'];
-					$entity_entry['thumbnail_flag']	= $_config_section_data['thumbnail_flag'];
-				}
-				else
-				{
-					$_files = $vfs->ls(array(
-						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
-						'relatives' => array(RELATIVE_NONE)));
-
-					if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
-					{
-						$entity_entry['file_name']	= urlencode($_files[0]['name']);
-						$entity_entry['img_id']		= $_files[0]['file_id'];
-						$entity_entry['directory']	= urlencode($_files[0]['directory']);
-						$entity_entry['img_url_args']	= array(
-														'menuaction' => 'property.uigallery.view_file',
-														'file'		 => $entity_entry['directory'].'/'.$entity_entry['file_name']
-													);
-						$entity_entry['thumbnail_flag']	= 'thumb=1';
-					}
-				}
-				
-				
-			}
-			
-			$result_data = array('results' => $values);
-
-			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['draw'] = $draw;
-
 			$link_data = array
 			(
 				'menuaction' => 'property.uientity.edit',
@@ -325,7 +287,45 @@
 				'type'			 => $this->type
 			);
 			
-			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+			foreach($values as &$entity_entry)
+			{
+				$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
+
+				if($remote_image_in_table)
+				{
+					$entity_entry['file_name']		= $entity_entry[$_config_section_data['img_key_local']];
+					$entity_entry['img_id']			= $entity_entry[$_config_section_data['img_key_local']];
+					$entity_entry['img_url']		= $_config_section_data['url'].'&'.$_config_section_data['img_key_remote'].'='.$entity_entry['img_id'];
+					$entity_entry['thumbnail_flag']	= $_config_section_data['thumbnail_flag'];
+				}
+				else
+				{
+					$_files = $vfs->ls(array(
+						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+						'relatives' => array(RELATIVE_NONE)));
+						
+					$mime_in_array = in_array($_files[0]['mime_type'], $img_types);
+					if(!empty($_files[0]) && $mime_in_array)
+					{
+						$entity_entry['file_name']	= $_files[0]['name'];
+						$entity_entry['img_id']		= $_files[0]['file_id'];
+						$entity_entry['directory']	= $_files[0]['directory'];
+						$entity_entry['img_url']	= self::link(array(
+														'menuaction' => 'property.uigallery.view_file',
+														'file'		 => $entity_entry['directory'].'/'.$entity_entry['file_name']
+													));
+						$entity_entry['thumbnail_flag']	= 'thumb=1';
+					}
+				}
+
+				$link_data['id'] = $entity_entry['id'];
+				$entity_entry['link'] = self::link($link_data);
+			}
+			
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
 			
 			return $this->jquery_results($result_data);
 		}
@@ -674,6 +674,10 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
+				
 			$_integration_set = array();
 			
 			$data = array(
@@ -726,32 +730,18 @@
 								'value' => lang('department')
 							),
 							array
-							(//for link "None",
-								'type'=> 'label_date'
-							),
-							array
-							( //hidden end_date
-								'type'	=> 'hidden',
+							(
+								'type'	=> 'date-picker',
 								'id'	=> 'end_date',
 								'name'	=> 'end_date',
 								'value'	=> ''
 							),
 							array
-							( //hidden start_date
-								'type'	=> 'hidden',
+							(
+								'type'	=> 'date-picker',
 								'id'	=> 'start_date',
 								'name'	=> 'start_date',
 								'value'	=> ''
-							),
-							array
-							(//for link "Date search",
-								'type'=> 'link',
-								'id'  => 'btn_data_search',
-								'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-								array
-								(
-									'menuaction' => 'property.uiproject.date_search'))."','link','width=350,height=250')",
-									'value' => lang('Date search')
 							)
 						)
 					)
