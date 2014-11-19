@@ -429,24 +429,27 @@
 			return $attrib;
 		}
 
-		function read_attrib($data = array())
-		{
-			if ($data['allrows'])
+		function read_attrib( $data =array() )
+		{       
+                    #$entity_id = '', $cat_id = '', $allrows = '' 
+                        if ( $data['allrows'] )
 			{
-				$this->allrows = $allrows;
+				$this->allrows = $data['allrows'];
 			}
-
+			#$attrib = $this->custom->find( $this->type_app[$this->type],
+			#					  ".{$this->type}.{$entity_id}.{$cat_id}", $this->start, $this->query,
+			#					  $this->sort, $this->order, $this->allrows );
+                        #
+                        #,                                                        $data['results']
 			$attrib = $this->custom->find(
                                                         $this->type_app[$this->type],
-                                                        ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", 
+                                                       ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", 
                                                         $data['start'],
-                                                        $data['results'],
                                                         $data['query'], 
                                                         $data['sort'],
                                                         $data['order'],
-                                                        $this->allrows 
+                                                        $this->allrows
                                                      );
-
 			$this->total_records = $this->custom->total_records;
 			return $attrib;
 		}
