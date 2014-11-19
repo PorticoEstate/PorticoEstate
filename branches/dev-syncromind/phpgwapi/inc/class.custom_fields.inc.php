@@ -1009,7 +1009,7 @@
 		 */
 		public function find($appname, $location, $start = 0, $query = '', $sort = 'ASC',
 				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
-		{
+		{        
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			return $this->find2($location_id, $start, $query, $sort, $order, $allrows, $inc_choices, $filter);
 		}
@@ -1031,7 +1031,7 @@
 
 		public function find2($location_id, $start = 0, $query = '', $sort = 'ASC',
 				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
-		{
+		{                
 			$location_id	= (int) $location_id;
 			$start			= (int) $start;
 			$query			= $this->_db->db_addslashes($query);
@@ -1090,7 +1090,7 @@
 			$sql = "FROM phpgw_cust_attribute "
 				. " WHERE location_id = {$location_id}"
 					. " AND custom = 1 $querymethod $filtermethod";
-
+                        
 			$this->_total_records = 0;
 			$this->_db->query("SELECT COUNT(*) AS cnt_rec {$sql}",__LINE__,__FILE__);
 			if ( !$this->_db->next_record() )
@@ -1101,7 +1101,6 @@
 			$this->_total_records = $this->_db->f('cnt_rec');
 
 			$sql = "SELECT * {$sql} {$ordermethod}";
-
 			if ( $allrows )
 			{
 				$this->_db->query($sql, __LINE__, __FILE__);
@@ -1165,7 +1164,6 @@
 					}
 				}
 			}
-
 			return $attribs;
 		}
 
