@@ -124,11 +124,9 @@
 			<xsl:choose>
 				<xsl:when test="type = 'date-picker'">
 					<td valign="top">
-					<div class="date-picker">
-					<input id="filter_{name}" name="filter_{name}" type="text">
-							<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/></xsl:attribute>
-						</input>
-				</div>
+					<div>
+						<input id="filter_{name}" name="filter_{name}" type="text"></input>
+					</div>
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
