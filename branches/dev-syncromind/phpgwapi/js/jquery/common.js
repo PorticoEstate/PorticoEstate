@@ -12,6 +12,7 @@ JqueryPortico.inlineTablesDefined = 0;
 JqueryPortico.inlineTablesRendered = 0;
 
 JqueryPortico.formatLink = function(key, oData) {
+
 	var name = oData[key];
 	var link = oData['link'];
 	return '<a href="' + link + '">' + name + '</a>';
@@ -25,6 +26,21 @@ JqueryPortico.formatLinkGeneric = function(key, oData) {
 	var name = 'Link';
 	var link = oData[key];
 	return '<a href="' + link + '">' + name + '</a>';
+};
+JqueryPortico.formatLinkGenericLlistAttribute = function(key, oData) {
+        
+	var link = oData['link'];
+        var resort = '';
+        if(key == 'up')
+        {
+            resort = 'up';
+        }
+        else
+        {
+            resort = 'down';
+        }
+        var url = "'"+ link +'&resort='+ resort +"'";
+	return '<a href="#" onclick="move_record('+ url+')">' + key + '</a>';
 };
 
 JqueryPortico.searchLink = function(key, oData) {
