@@ -254,11 +254,12 @@
 		}
                 public function query($data = array())
                 {       
+                        
                         $search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-
+                        
                         switch ($data['method']) {
                             case 'category':
                                 $entity_id = $data['entity_id'];break;
@@ -284,22 +285,40 @@
                         
                         switch ($data['method']){
                             case 'category':
-                                     $values = $this->bo->read_category($params);break;
+                                    $values = $this->bo->read_category($params);break;
                             case 'list_attribute':
-                                     $values = $this->bo->read_attrib($params);break;
-                            default: $values = $this->bo->read($params);break;
+                                    $values = $this->bo->read_attrib($params);break;
+                            default: 
+                                    $values = $this->bo->read($params);break;
+                        }
+                        
+                        $new_values = array();
+                        foreach($values as $value) {
+                            $new_values[] = $value;
                         }
                         
 			if ( phpgw::get_var('export', 'bool'))
 			{
-				return $values;
-			}
+				return $new_values;
+			}                   
                         
-			$result_data = array('results' => $values);
+			$result_data = array('results' => $new_values);
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
-
-			return $this->jquery_results($result_data);
+                        switch ($data['method']){
+                             case 'list_attribute':
+                                 $variable = array(
+                                                    'menuaction'=> 'property.uiadmin_entity.list_attribute', 
+                                                    'entity_id'=> $entity_id, 
+                                                    'cat_id'=> $cat_id, 
+                                                    'allrows'=> $this->allrows, 
+                                                    'type' => $this->type
+                                                  );
+                                 array_walk($result_data['results'], array($this, '_add_links'), $variable);
+                                 break;
+                         }
+                        return $this->jquery_results($result_data);
+                        
                 }
                 
 		function category()
@@ -1551,14 +1570,14 @@
                                                 array(
 							'key' => 'up',
 							'label' => lang('up'),
-							'sortable' => FALSE
-                                                        #'formatter' => 'JqueryPortico.formatLink'
+							'sortable' => FALSE,
+                                                        'formatter' => 'JqueryPortico.formatLinkGenericLlistAttribute'
 						),
                                                 array(
 							'key' => 'down',
 							'label' => lang('down'),
-							'sortable' => FALSE
-                                                        #'formatter' => 'JqueryPortico.formatLink'
+							'sortable' => FALSE,
+                                                        'formatter' => 'JqueryPortico.formatLinkGenericLlistAttribute'
 						),
                                                 array(
                                                         'key' => 'search',
@@ -1581,7 +1600,7 @@
 			);
 
 
-			//$attrib_list = $this->bo->read_attrib($entity_id,$cat_id);
+			#$attrib_list = $this->bo->read_attrib($entity_id,$cat_id);
  
 			/*if (isset($attrib_list) AND is_array($attrib_list))
 			{
