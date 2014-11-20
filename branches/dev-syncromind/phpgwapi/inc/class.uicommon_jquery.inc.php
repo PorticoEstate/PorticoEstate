@@ -482,21 +482,22 @@
 		}
 
 		// Build a jquery result style array
-		public function jquery_results($results)
+		public function jquery_results($result=array())
 		{
-			if (!$results)
+			if (!$result)
 			{
-				$results['total_records'] = 0;
-				$results['recordsFiltered'] = 0;
-				$result['data'] = array();
+				$result['recordsTotal']	= 0;
+				$result['recordsFiltered']	= 0;
+				$result['data']				= array();
 			}
-	//		_debug_array($result);
-			return array(
-				'recordsTotal'		=> $results['total_records'],
-				'recordsFiltered'	=> $results['total_records'],
-				'draw'				=> $results['draw'],
-				'data'				=> $results['results']
-			);
+
+			$result['recordsTotal']		= $result['total_records'];
+			$result['recordsFiltered']	= $result['recordsTotal'];
+			$result['data']				= $result['results'];
+			unset($result['results']);
+			unset($result['total_records']);
+
+			return $result;
 		}
 
 		public function use_yui_editor($targets)

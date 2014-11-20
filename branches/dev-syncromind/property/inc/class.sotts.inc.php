@@ -660,15 +660,20 @@
 				$entity[$i]['entity_id']=$this->db->f('entity_id');
 				$entity[$i]['cat_id']=$this->db->f('cat_id');
 				$entity[$i]['type']=".entity.{$this->db->f('entity_id')}.{$this->db->f('cat_id')}";
-				$uicols[]	=  str_replace(' ', '_', $this->db->f('name',true));
+
+				$name	=  str_replace(' ', '_', $this->db->f('name',true));
+				$entity[$i]['name'] = $name;
+				$uicols[]	=  $name;
 				$i++;
 			}
 
 			$entity[$i]['type']='.project';
+			$entity[$i]['name']='project';
 			$uicols[]	= 'project';
 			$i++;
 
 			$entity[$i]['type']='.project.workorder';
+			$entity[$i]['name']='workorder';
 			$uicols[]	= 'workorder';
 
 

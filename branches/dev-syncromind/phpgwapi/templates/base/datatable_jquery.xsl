@@ -322,6 +322,24 @@
 					</xsl:choose>
 				</xsl:for-each>
 		</thead>
+		<tfoot>
+			<tr>
+				<xsl:for-each select="//datatable/field">
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								<th>
+								</th>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<th>
+							</th>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
+		</tfoot>
 	</table>
 	<script>
 
@@ -329,16 +347,6 @@
 			<xsl:for-each select="//datatable/field">
 				{
 					data:			"<xsl:value-of select="key"/>",
-//Sigurd: move the addclass to the entire row (fnRowCallback).
-//					fnCreatedCell: function(nTd, sData, oData, iRow, iCol){
-//						if(typeof(oData['priority']) != undefined)
-//						{
-//							if(iCol == 0)
-//							{
-//								$(nTd).addClass('priority' + oData['priority']);
-//							}
-//						}
-//					},
 					class:			"<xsl:value-of select="className"/>",
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
@@ -627,6 +635,8 @@
 					editor_cols.push(null);
 				}
 			}
+
+		$(document).ready(function() {
 			
 			oTable = $('#datatable-container').dataTable( {
 				processing:		true,
@@ -665,7 +675,17 @@
 						    sSuccessResponse: "IGNORE",
 							fnShowError: function(){ return; }		
 					});
+					if(typeof(addFooterDatatable) == 'function')
+					{
+						addFooterDatatable(oTable);
+					}
 				},
+				fnFooterCallback: function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+					if(typeof(addFooterDatatable2) == 'function')
+					{
+						addFooterDatatable2(nRow, aaData, iStart, iEnd, aiDisplay,oTable);
+					}
+				},//alternative
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 				language:		JqueryPortico.i18n.datatable(),
 				columns:		JqueryPortico.columns,
@@ -678,6 +698,8 @@
 				tabIndex:		1,
 				oTableTools: JqueryPortico.TableTools
 			} );
+
+});
 
 	]]>
 

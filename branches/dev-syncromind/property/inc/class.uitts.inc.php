@@ -160,6 +160,28 @@
 			//$values = $this->bo->read($params);
 			//fill data
 			$values = $this->bo->read($params);
+
+			if($values)
+			{
+				$status = array();
+				$status['X'] =lang('closed');
+				$status['O'] =  isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
+				$status['C'] =  lang('closed');
+
+				$custom_status	= $this->bo->get_custom_status();
+
+				foreach($custom_status as $custom)
+				{
+					$status["C{$custom['id']}"] =  $custom['name'];
+				}
+
+				foreach($values as &$entry)
+				{
+					$entry['status'] = $status[$entry['status']];
+				}
+
+			}
+
 			if ( phpgw::get_var('export', 'bool'))
 			{
 				return $values;
@@ -167,8 +189,11 @@
 
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['draw'] = $draw;
+			$result_data['total_records']		= $this->bo->total_records;
+			$result_data['sum_budget']			= $this->bo->sum_budget;
+			$result_data['sum_actual_cost']		= $this->bo->sum_actual_cost;
+			$result_data['sum_difference']		= $this->bo->sum_difference;
+			$result_data['draw']				= $draw;
 			
 			$link_data = array
 			(
@@ -517,9 +542,6 @@
 				$uicols['descr'][]		= $columns[$col]['name'];
 			}
 
-
-			$uicols['name'][] = 'child_date';
-			$uicols['descr'][]	= lang('child date');
 			$uicols['name'][] = 'link_view';
 			$uicols['descr'][]	= lang('link view');
 			$uicols['name'][] = 'lang_view_statustext';
@@ -539,6 +561,11 @@
 									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 								);
 
+					if(isset($uicols_related) && in_array($uicols['name'][$k], $uicols_related))
+					{
+						$params['formatter'] = 'JqueryPortico.formatLinkRelated';						
+					}
+
 					if ($uicols['datatype'][$k] == 'link')
 					{
 						$params['formatter'] = 'JqueryPortico.formatLinkGeneric';
@@ -553,15 +580,15 @@
 					{
 						$params['sortable']	= true;
 					}
-					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto'
-					 || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date'
-					 || $uicols['name'][$i]=='order_id'|| $uicols['name'][$i]=='modified_date')
+					if($uicols['name'][$k]=='priority' || $uicols['name'][$k]=='id' || $uicols['name'][$k]=='assignedto'
+					 || $uicols['name'][$k]=='finnish_date'|| $uicols['name'][$k]=='user'|| $uicols['name'][$k]=='entry_date'
+					 || $uicols['name'][$k]=='order_id'|| $uicols['name'][$k]=='modified_date')
 					{
 						$params['sortable']	= true;
 					}
-					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext' || $uicols['name'][$i]=='hidden_id')
+					if($uicols['name'][$k]=='text_view' || $uicols['name'][$k]=='bgcolor' || $uicols['name'][$k]== 'link_view' || $uicols['name'][$k]=='lang_view_statustext' || $uicols['name'][$k]=='hidden_id')
 					{
-						$params['hidden']	= false;
+						$params['hidden']	= true;
 					}
 
 					$fields[] = $params;
@@ -740,6 +767,7 @@
 	//		phpgwapi_yui::load_widget('paginator');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			self::add_javascript('property', 'portico', 'tts.index.js');
 
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),

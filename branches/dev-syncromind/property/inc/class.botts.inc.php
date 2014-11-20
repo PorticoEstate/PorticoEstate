@@ -537,6 +537,8 @@
 			else
 			{
 				$entity[0]['type']='.project';
+				$entity[0]['name']='project';
+
 				$this->uicols_related	= array('project');
 			}
 
@@ -633,15 +635,16 @@
 				{
 					$ticket['new_ticket'] = '*';
 				}
-
+//				_debug_array($this->uicols_related);
+//				_debug_array($entity);
 				if(isset($entity) && is_array($entity))
 				{
 					for ($j=0;$j<count($entity);$j++)
 					{
-						$ticket['child_date'][$j] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
-						if($ticket['child_date'][$j]['date_info'] && !$download)
+						$ticket['child_date'][$entity[$j]['name']] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
+						if($ticket['child_date'][$entity[$j]['name']]['date_info'] && !$download)
 						{
-							$ticket['child_date'][$j]['statustext'] = $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$j]['date_info'][0]['target_id']);
+							$ticket['child_date'][$entity[$j]['name']]['statustext'] =  $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$entity[$j]['name']]['date_info'][0]['target_id']);
 						}
 					}
 				}
