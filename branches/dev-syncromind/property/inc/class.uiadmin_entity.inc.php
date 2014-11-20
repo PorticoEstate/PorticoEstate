@@ -26,7 +26,7 @@
 	* @subpackage admin
  	* @version $Id$
 	*/
-	phpgw::import_class('phpgwapi.yui');
+	#phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description
@@ -116,8 +116,6 @@
 			}
 
 			$this->bocommon->reset_fm_cache();
-
-			$datatable = array();
                         
                         if( phpgw::get_var('phpgw_return_as') == 'json' )
                         {
@@ -1599,43 +1597,6 @@
 					)
 				)
 			);
-
-
-			#$attrib_list = $this->bo->read_attrib($entity_id,$cat_id);
- 
-			/*if (isset($attrib_list) AND is_array($attrib_list))
-			{
-				foreach($attrib_list as $attrib_entry)
-				{
-					for ($k=0;$k<$count_uicols_name;$k++)
-					{
-						if($uicols['input_type'][$k]!='hidden')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']			= $attrib_entry[$uicols['name'][$k]];
-						}
-
-						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'up';//$uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $attrib_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
-							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
-						}
-
-						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'down')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'down';//$uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $attrib_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
-							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
-						}
-					}
-					$j++;
-				}
-			}*/
 
 			/*$current_Consult = array ();
 			for($i=0;$i<2;$i++)
