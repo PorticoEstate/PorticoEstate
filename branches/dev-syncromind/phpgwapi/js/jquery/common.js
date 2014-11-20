@@ -40,9 +40,15 @@ JqueryPortico.formatLinkGenericLlistAttribute = function(key, oData) {
             resort = 'down';
         }
         var url = "'"+ link +'&resort='+ resort +"'";
-	return '<a href="#" onclick="move_record('+ url+')">' + key + '</a>';
+	return '<a href="#" onclick="JqueryPortico.move_record('+ url+')">' + key + '</a>';
 };
-
+JqueryPortico.move_record = function(sUrl)
+{   
+    var baseUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
+     $.post( baseUrl, function( data ) {
+        oTable.fnDraw();
+     });
+}
 JqueryPortico.searchLink = function(key, oData) {
 	var name = oData[key];
 	var link = oData['query_location'][key];
