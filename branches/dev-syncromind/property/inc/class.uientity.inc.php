@@ -697,11 +697,11 @@
 								'class' => 'new_item'
 							),
 							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uientity.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
+								'type'	=> 'link',
+								'value'	=> lang('columns'),
+								'href'	=> '#',
+								'class'	=> '',
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uientity.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
 							),
 							array
 							(//for link "None",
@@ -716,18 +716,11 @@
 							),
 							array
 							(//for link "Org unit",
-								'type'=> 'link',
-								'id'  => 'btn_org_unit_search',
-								'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									array
-									(
-										'menuaction'				=> 'property.uilookup.custom',
-										'column'					=> 'org_unit',
-										'type'						=> 'org_unit',
-									//	'get_list_function_input'	=> urlencode(serialize(array('type' => 'org_unit')))
-									)
-								)."','link','width=640,height=600')",
-								'value' => lang('department')
+								'type'	=> 'link',
+								'value' => lang('department'),
+								'href'	=> '#',
+								'class'	=> '',
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uilookup.custom', column:'org_unit', type:'org_unit'}, {closeAction:'reload'})"
 							),
 							array
 							(
