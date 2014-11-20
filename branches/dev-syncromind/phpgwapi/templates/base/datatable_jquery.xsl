@@ -706,24 +706,22 @@
 			/**
 			* Add left click action..
 			*/
-			<xsl:if test="left_click_action != ''">
+			<xsl:if test="//left_click_action != ''">
 				$("#datatable-container").on("click", "tr", function() {
 					var iPos = oTable.fnGetPosition( this );
 					var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
 					try {
-						<xsl:value-of select="left_click_action"/>(aData);
+						<xsl:value-of select="//left_click_action"/>(aData);
 					}
 					catch(err) {
 					    document.getElementById("message").innerHTML = err.message;
 					}
-
 				});
 			</xsl:if>
 
 			/**
 			* Add dbl click action..
 			*/
-
 			<xsl:if test="dbl_click_action != ''">
 				$("#datatable-container").on("dblclick", "tr", function() {
 					var iPos = oTable.fnGetPosition( this );
@@ -734,19 +732,32 @@
 					catch(err) {
 					    document.getElementById("message").innerHTML = err.message;
 					}
-
 				});
 			</xsl:if>
 
-				<xsl:for-each select="//form/toolbar/item">
-					<xsl:if test="type = 'filter'">
-						$('select#<xsl:value-of select="name"/>').change( function() {
+			<xsl:for-each select="//form/toolbar/item">
+				<xsl:if test="type = 'filter'">
+					$('select#<xsl:value-of select="name"/>').change( function() 
+					{
 						oTable.dataTableSettings[0]['ajax']['data']['<xsl:value-of select="name"/>'] = $(this).val();
 						oTable.fnDraw();
 						<xsl:value-of select="extra"/>
-					} );
-					</xsl:if>
-				</xsl:for-each>
+					});
+				</xsl:if>
+				<xsl:if test="type = 'date-picker'">
+					var previous_<xsl:value-of select="id"/>;
+					$("#filter_<xsl:value-of select="id"/>").on('keyup change', function ()
+					{
+						if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) ) 
+						{
+							oTable.dataTableSettings[0]['ajax']['data']['<xsl:value-of select="id"/>'] = $(this).val();
+							oTable.fnDraw();
+							previous_<xsl:value-of select="id"/> = $(this).val();
+						}
+					});
+				</xsl:if>
+			</xsl:for-each>
+
 <![CDATA[
 
 			function fnGetSelected( )
@@ -806,11 +817,11 @@
 
 		} );
 
-			function filterData(query)
-			{
-				var api = oTable.api();
-				api.search( query ).draw();
-			}
+		function filterData(query)
+		{
+			var api = oTable.api();
+			api.search( query ).draw();
+		}
 ]]>
 	</script>
 
