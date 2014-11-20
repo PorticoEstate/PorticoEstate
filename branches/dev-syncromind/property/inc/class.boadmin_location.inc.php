@@ -93,17 +93,16 @@
 
 			$this->start = $data['start'];
 			$this->query = $data['query'];
-			$this->sort	 = $data['sort'];
+			$this->sort  = $data['sort'];
 			$this->order = $data['order'];
 		}
 
-		function read()
-		{
-			$standard = $this->so->read( array('start'	 => $this->start, 'query'	 => $this->query, 'sort'	 => $this->sort, 'order'	 => $this->order) );
-
+		function read($data = array())
+		{       
+                        # $data = array()
+                        #array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort, 'order' => $this->order)
+			$standard = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
-
-
 			return $standard;
 		}
 
