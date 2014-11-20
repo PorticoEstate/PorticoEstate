@@ -48,11 +48,13 @@
 		}
 
 		function read($data)
-		{
-			$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query	= isset($data['query'])?$data['query']:'';
-			$sort	= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order	= isset($data['order'])?$data['order']:'';
+		{                               
+			$start      = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query      = isset($data['query'])?$data['query']:'';
+			$sort       = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order      = isset($data['order'])?$data['order']:'';
+                        $allrows    = isset($data['allrows']) ? $data['allrows']:'';
+                        $results    = isset($data['results'])  ? (int) $data['results'] : 0;
 
 			if ($order)
 			{
@@ -75,10 +77,19 @@
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
-
+                        
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+                        
+                        if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+			#$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			$standard = array();
 			while ($this->db->next_record())
