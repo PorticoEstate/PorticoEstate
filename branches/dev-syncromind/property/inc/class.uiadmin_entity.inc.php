@@ -293,7 +293,8 @@
                         }
                         
                         $new_values = array();
-                        foreach($values as $value) {
+                        foreach($values as $value)
+                        {
                             $new_values[] = $value;
                         }
                         
