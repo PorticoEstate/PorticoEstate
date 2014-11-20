@@ -429,7 +429,7 @@
 			return $attrib;
 		}
 
-		function read_attrib( $data =array() )
+		function read_attrib( $data = array() )
 		{       
                     #$entity_id = '', $cat_id = '', $allrows = '' 
                         if ( $data['allrows'] )
@@ -439,7 +439,7 @@
 			#$attrib = $this->custom->find( $this->type_app[$this->type],
 			#					  ".{$this->type}.{$entity_id}.{$cat_id}", $this->start, $this->query,
 			#					  $this->sort, $this->order, $this->allrows );
-                        #
+                        
                         #,                                                        $data['results']
 			$attrib = $this->custom->find(
                                                         $this->type_app[$this->type],
@@ -473,7 +473,7 @@
 		}
 
 		function resort_attrib( $id, $resort )
-		{
+		{       
 			$this->custom->resort( $id, $resort, $this->type_app[$this->type],
 						  ".{$this->type}.{$this->entity_id}.{$this->cat_id}" );
 		}
