@@ -113,13 +113,17 @@
 
                         if( phpgw::get_var('phpgw_return_as') == 'json' )
                         {
-                            return $this->query();
+                            return $this->query(array
+                                                    (
+                                                        'method'=>'index',
+                                                    )
+                                                );
                         }
                         
                         self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
                         
-                        $appname		= lang('entity');
+                        $appname        = lang('entity');
 			$function_msg	= lang('list entity type');
                         
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
@@ -179,12 +183,6 @@
                                         )
                             )
                         );
-
-			#$standard_list = $this->bo->read();
-			#foreach ($standard_list as &$entry)
-			#{
-			#	$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$entry['id']}");
-			#}			
 
 			$parameters = array
 				(
@@ -298,12 +296,19 @@
                         self::render_template_xsl('datatable_jquery',$data);
 		}
                 
-                public function query()
+                public function query($data = array())
                 {
                         $search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+                        $type_id = phpgw::get_var('type_id', 'int');
+                        
+                        switch ($data['method']) {
+                            case 'list_attribute':
+                                $id_type = $type_id;break;
+                            default:$id_type = '';break;
+                        }
 
                         $params = array(
                             'start'     => $this->start, 
@@ -311,26 +316,49 @@
                             'query'	=> $search['value'], 
                             'sort'	=> $order[0]['dir'], 
                             'order'	=> $columns[$order[0]['column']]['data'],
-                            'allrows'   => phpgw::get_var('length', 'int') == -1
+                            'allrows'   => phpgw::get_var('length', 'int') == -1,
+                            'type_id'   => $id_type
                         );
                         
                         $result_objects = array();
                         $result_count = 0;
                         
-                        $values = $this->bo->read($params);
-                        foreach ($values as &$entry)
-			{
-				$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$entry['id']}");
-			}
-                        if(phpgw::get_var('export', 'bool'))
+                         switch ($data['method']){
+                            case 'list_attribute':
+                                    $values = $this->bo->read_attrib($params);break;
+                            default: 
+                                    $values = $this->bo->read($params);
+                                    foreach ($values as &$entry)
+                                    {
+                                            $entry['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$entry['id']}");
+                                    }
+                                break;
+                        }
+                        $new_values = array();
+                        foreach($values as $value)
                         {
-                            return $values;
+                            $new_values[] = $value;
                         }
                         
-                        $result_data = array('results' => $values);
+                        if(phpgw::get_var('export', 'bool'))
+                        {
+                            return $new_values;
+                        }
+                        
+                        $result_data = array('results' => $new_values);
                         $result_data['total_records'] = $this->bo->total_records;
                         $result_data['draw'] = $draw;
-                        
+                        switch ($data['method']){
+                             case 'list_attribute':
+                                 $variable = array(
+                                                    'menuaction'=> 'property.uiadmin_location.list_attribute', 
+                                                    'id'=> $entity_id, 
+                                                    'allrows'=> $this->allrows, 
+                                                    'type_id' => $type_id
+                                                  );
+                                 array_walk($result_data['results'], array($this, '_add_links'), $variable);
+                                 break;
+                         }
                         return $this->jquery_results($result_data);
                 }
                 
@@ -993,118 +1021,102 @@
 
 			$type = $this->bo->read_single($type_id);
 
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-				$datatable['menu']               = $this->bocommon->get_menu();
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'	=> 'property.uiadmin_location.list_attribute',
-						'sort'		=> $this->sort,
-						'order'		=> $this->order,
-						'query'		=> $this->query,
-						'type_id'	=> $type_id,
-						'allrows'	=> $this->allrows
-					));
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uiadmin_location.list_attribute',"
-					."sort:'{$this->sort}',"
-					."order:'{$this->order}',"
-					."query:'{$this->query}',"
-					."type_id:'{$type_id}',"
-					."allrows:'{$this->allrows}'";
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$link_data = array
-					(
-						'menuaction'	=> 'property.uiadmin_location.list_attribute',
-						'sort'		=> $this->sort,
-						'order'		=> $this->order,
-						'query'		=> $this->query,
-						'type_id'	=> $type_id
-					);
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-						array(
-							'menuaction'	=> 'property.uiadmin_location.list_attribute',
-							'sort'		=> $this->sort,
-							'order'		=> $this->order,
-							'query'		=> $this->query,
-							'type_id'	=> $type_id
-						)
-					),
-					'fields'	=> array(
-						'field' => array(
-							array(
-								'type'	=> 'button',
-								'id'	=> 'btn_done',
-								'value'	=> lang('done'),
-								'tab_index' => 1
-							),
-							array(
-								'type'	=> 'button',
-								'id'	=> 'btn_new',
-								'value'	=> lang('add'),
-								'tab_index' => 2
-							),
-							array( //boton     SEARCH
-								'id' => 'btn_search',
-								'name' => 'search',
-								'value'    => lang('search'),
-								'type' => 'button',
-								'tab_index' => 3
-							),
-							array( // TEXT INPUT
-								'name'     => 'query',
-								'id'     => 'txt_query',
-								'value'    => '',//$query,
-								'type' => 'text',
-								'onkeypress' => 'return pulsar(event)',
-								'size'    => 28,
-								'tab_index' => 4
-							),
-							array(
-								'id' => 'txtcategory',
-								'name' => 'search',
-								'value'    => 'Location type: '.$type['name'],
-								'type' => 'label',
-								'style' => 'filter'
-							)
-						),
-						'hidden_value' => array(
-
-							)
-						)
-					)
-				);
-
-				$dry_run = true;
-			}
-
-			$attrib_list = $this->bo->read_attrib($type_id);
-			$uicols['name'][0]	= 'column_name';
-			$uicols['descr'][0]	= lang('Name');
-			$uicols['name'][1]	= 'input_text';
-			$uicols['descr'][1]	= lang('Descr');
-			$uicols['name'][2]	= 'trans_datatype';
-			$uicols['descr'][2]	= lang('Datatype');
-			$uicols['name'][3]	= 'group_id';
-			$uicols['descr'][3]	= lang('group');
-			$uicols['name'][4]	= 'attrib_sort';
-			$uicols['descr'][4]	= lang('sorting');
-			$uicols['name'][5]	= 'up';
-			$uicols['descr'][5]	= lang('up');
-			$uicols['name'][6]	= 'down';
-			$uicols['descr'][6]	= lang('down');
-			$uicols['name'][7]	= 'id';
-			$uicols['descr'][7]	= lang('id');
-			$j = 0;
-			$count_uicols_name = count($uicols['name']);
-
+                        if( phpgw::get_var('phpgw_return_as') == 'json'){
+                                return $this->query(array
+                                                    (
+                                                        'method'=>'list_attribute'
+                                                    ));
+                        }
+                        
+                        self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+                        
+                        $appname	= lang('attribute');
+			$function_msg	= lang('list entity attribute');
+                        
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+                        
+                        $data = array(
+                            'datatable_name'        => $appname,
+                            'form'  => array(
+                                    'toolbar'   => array(
+                                                'item'  => array(
+                                                        array(
+                                                            'type'  => 'link',
+                                                            'value' => lang('new'),
+                                                            'href'  => self::link(array(
+                                                                        'menuaction'	=> 'property.uiadmin_location.edit_attrib',
+                                                                        'type_id'	=> $type_id
+                                                                    )),
+                                                            'class' => 'new_item'
+                                                        ),
+                                                        array(
+                                                            'type'  => 'link',
+                                                            'value' => lang('cancel'),
+                                                            'href'  => self::link(array(
+                                                                        'menuaction'    => 'property.uiadmin_location.index'
+                                                                    )),
+                                                            'class' => 'new_item'
+                                                        )
+                                                )
+                                    )
+                            ),
+                            'datatable' => array(
+                                        'source'    => self::link(array(
+                                                            'menuaction'	=> 'property.uiadmin_location.list_attribute',
+                                                            'type_id'   	=> $type_id,
+                                                            'phpgw_return_as'   => 'json'
+                                                                        )),
+                                        'allrows'   => true,
+                                        'editor_action' => '',
+                                        'field' => array(
+                                                array(
+                                                    'key'   => 'column_name',
+                                                    'label' => lang('Name'),
+                                                    'sortable'  => TRUE
+                                                ),
+                                                array(
+                                                    'key'   => 'input_text',
+                                                    'label' => lang('Descr'),
+                                                    'sortable'  => FALSE
+                                                ),
+                                                array(
+                                                    'key'   => 'trans_datatype',
+                                                    'label' => lang('Datatype'),
+                                                    'sortable'  => FALSE
+                                                ),
+                                                array(
+                                                    'key'   => 'group_id',
+                                                    'label' => lang('group'),
+                                                    'sortable'  => FALSE
+                                                ),
+                                                array(
+                                                    'key'   => 'attrib_sort',
+                                                    'label' => lang('sorting'),
+                                                    'sortable'  => TRUE
+                                                ),
+                                                array(
+                                                    'key'   => 'up',
+                                                    'label' => lang('up'),
+                                                    'sortable'  => FALSE,
+                                                    'formatter' => 'JqueryPortico.formatLinkGenericLlistAttribute'
+                                                ),
+                                                array(
+                                                    'key'   => 'down',
+                                                    'label' => lang('down'),
+                                                    'sortable'  => FALSE,
+                                                    'formatter' => 'JqueryPortico.formatLinkGenericLlistAttribute'
+                                                ),
+                                                array(
+                                                    'key'   => 'id',
+                                                    'label' => lang('id'),
+                                                    'hidden' => TRUE
+                                                )
+                                        )
+                            )
+                        );
+			
+                        /*
 			if (isset($attrib_list) AND is_array($attrib_list))
 			{
 				foreach($attrib_list as $attrib_entry)
@@ -1137,9 +1149,8 @@
 					}
 					$j++;
 				}
-			}
+			}*/
 
-			$datatable['rowactions']['action'] = array();
 
 			$parameters = array
 				(
@@ -1153,7 +1164,7 @@
 					)
 				);
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 		=> 'edit',
 					'statustext' 	=> lang('Edit'),
@@ -1166,10 +1177,10 @@
 							'type_id' 			=> $type_id
 						)
 					),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 		=> 'delete',
 					'statustext' 	=> lang('Delete'),
@@ -1184,164 +1195,11 @@
 							'attrib' 			=> true
 						)
 					),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
-
-			$datatable['rowactions']['action'][] = array(
-				'my_name' 		=> 'add',
-				'statustext' 	=> lang('add'),
-				'text'			=> lang('add'),
-				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-				(
-					'menuaction'	=> 'property.uiadmin_location.edit_attrib',
-					'type_id'		=> $type_id,
-				))
-			);
-
+                        
 			unset($parameters);
-
-
-			for ($i=0;$i<$count_uicols_name;$i++)
-			{
-				//				if($uicols['input_type'][$i]!='hidden')
-			{
-				$datatable['headers']['header'][$i]['formatter'] 		= (!isset($uicols['formatter'][$i]) || !$uicols['formatter'][$i]?  '""' : $uicols['formatter'][$i]);
-				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['sortable']			= false;
-				if($uicols['name'][$i]=='column_name')
-				{
-					$datatable['headers']['header'][$i]['sortable']		= true;
-					$datatable['headers']['header'][$i]['sort_field']	= 'column_name';
-				}
-				if($uicols['name'][$i]=='id')
-				{
-					$datatable['headers']['header'][$i]['visible'] 		= false;
-				}
-				if($uicols['name'][$i]=='attrib_sort')
-				{
-					$datatable['headers']['header'][$i]['sortable']		= true;
-					$datatable['headers']['header'][$i]['sort_field']	= 'attrib_sort';
-				}
-			}
-			}
-
-			//path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($attrib_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			$appname	= lang('attribute');
-			$function_msg	= lang('list entity attribute');
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= 'attrib_sort'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && isset($column['java_link']) && $column['java_link']==true)
-						{
-							//$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							//$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-							$json_row[$column['name']] = "<a href='#' onclick='".$column['link']."'>" .$column['value']."</a>";
-							//$json_row[$column['name']] = '<a href="#" onclick="delete_record("/index.php?menuaction=property.uiasync.delete")">' .$column['value'].'</a>';
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_location.attribute', 'property' );
-
-			//			$this->save_sessiondata();
+                        self::render_template_xsl('datatable_jquery',$data);
 		}
 
 		function edit_attrib()
