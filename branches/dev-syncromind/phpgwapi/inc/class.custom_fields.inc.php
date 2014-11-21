@@ -1031,7 +1031,8 @@
 
 		public function find2($location_id, $start = 0, $query = '', $sort = 'ASC',
 				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
-		{                
+		{         
+                        
 			$location_id	= (int) $location_id;
 			$start			= (int) $start;
 			$query			= $this->_db->db_addslashes($query);
