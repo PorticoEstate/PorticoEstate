@@ -48,14 +48,17 @@
 		}
 
 		function read($data)
-		{                               
-			$start      = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+		{                   
+			$data['order']=($data['order'] == 'location_id')?'id':$data['order'];
+                    
+                        $start      = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query      = isset($data['query'])?$data['query']:'';
 			$sort       = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order      = isset($data['order'])?$data['order']:'';
                         $allrows    = isset($data['allrows']) ? $data['allrows']:'';
                         $results    = isset($data['results'])  ? (int) $data['results'] : 0;
-
+                        
+                        
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
