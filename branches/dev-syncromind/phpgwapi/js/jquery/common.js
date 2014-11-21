@@ -66,7 +66,7 @@ JqueryPortico.searchLink = function(key, oData) {
 	var name = oData[key];
 	var link = oData['query_location'][key];
 
-	return '<a id="' + link + '" onclick="filterData(this.id);">' + name + '</a>';
+	return '<a id="' + link + '" onclick="searchData(this.id);">' + name + '</a>';
 };
 
 JqueryPortico.formatCheck = function(key, oData) {
@@ -214,5 +214,9 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		if(closeAction=='reload')
 		{
 			location.reload();
+		}
+		if(closeAction=='close')
+		{
+			TINY.box.hide();
 		}
 	}
