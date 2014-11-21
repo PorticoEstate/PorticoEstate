@@ -705,7 +705,8 @@
 							),
 							array
 							(//for link "None",
-								'type'=> 'label_org_unit'
+								'type'	=> 'label',
+								'id'	=> 'label_org_unit_id'
 							),
 							array
 							( //hidden org_unit_id
@@ -720,7 +721,7 @@
 								'value' => lang('department'),
 								'href'	=> '#',
 								'class'	=> '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uilookup.custom', column:'org_unit', type:'org_unit'}, {closeAction:'reload'})"
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uilookup.custom', column:'org_unit_id', type:'org_unit'})"
 							),
 							array
 							(
@@ -836,12 +837,17 @@
 					$params['formatter'] = 'JqueryPortico.searchLink';
 				}
 
+				if($uicols['name'][$k] == 'nhk_link')
+				{
+					$params['formatter'] = 'JqueryPortico.formatLinkGeneric';
+				}
+				
 				if($uicols['name'][$k] == 'num')
 				{
 					$params['formatter'] = 'JqueryPortico.formatLink';
 					$params['hidden'] = false;
 				}
-
+				
 				$denied = array('merknad');
 				if(in_array ($uicols['name'][$k], $denied))
 				{
