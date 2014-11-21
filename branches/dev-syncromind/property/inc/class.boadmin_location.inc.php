@@ -268,7 +268,27 @@
 			}
 		}
 
-		function read_attrib( $type_id, $allrows = '' )
+		function read_attrib($data = array())
+		{   
+			if ( $data['allrows'] || phpgw::get_var( 'allrows' ) == 1 )
+			{
+				$data['allrows'] = true;
+			}
+
+			$attrib = $this->custom->find( 
+                                                        'property', 
+                                                        '.location.' . $data['type_id'],
+							$data['start'], 
+                                                        $data['query'], 
+                                                        $data['sort'], 
+                                                        $data['order'], 
+                                                        $data['allrows'] 
+                                                    );
+			$this->total_records = $this->custom->total_records;
+
+			return $attrib;
+		}
+                function read_attrib_old( $type_id, $allrows = '' )
 		{
 			if ( $allrows || phpgw::get_var( 'allrows' ) == 1 )
 			{
