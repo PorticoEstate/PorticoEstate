@@ -235,6 +235,21 @@
 						</a>
 					</td>
 				</xsl:when>
+				<xsl:when test="type = 'hidden'">
+					<td valign="top">
+						<input>
+							<xsl:attribute name="type"><xsl:value-of select="phpgw:conditional(not(type), '', type)"/></xsl:attribute>
+							<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+							<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
+						</input>
+					</td>
+				</xsl:when>
+				<xsl:when test="type = 'label'">
+					<td valign="top">
+						<label><xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute></label>
+					</td>
+				</xsl:when>
 				<xsl:otherwise>
 					<td valign="top">
 					<input id="innertoolbar">
@@ -711,7 +726,7 @@
 					var iPos = oTable.fnGetPosition( this );
 					var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
 					try {
-						<xsl:value-of select="//left_click_action"/>(aData);
+						<xsl:value-of select="//left_click_action"/>
 					}
 					catch(err) {
 					    document.getElementById("message").innerHTML = err.message;
@@ -739,8 +754,7 @@
 				<xsl:if test="type = 'filter'">
 					$('select#<xsl:value-of select="name"/>').change( function() 
 					{
-						oTable.dataTableSettings[0]['ajax']['data']['<xsl:value-of select="name"/>'] = $(this).val();
-						oTable.fnDraw();
+						filterData('<xsl:value-of select="name"/>', $(this).val());
 						<xsl:value-of select="extra"/>
 					});
 				</xsl:if>
@@ -750,8 +764,7 @@
 					{
 						if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) ) 
 						{
-							oTable.dataTableSettings[0]['ajax']['data']['<xsl:value-of select="id"/>'] = $(this).val();
-							oTable.fnDraw();
+							filterData('<xsl:value-of select="id"/>', $(this).val());
 							previous_<xsl:value-of select="id"/> = $(this).val();
 						}
 					});
@@ -817,10 +830,16 @@
 
 		} );
 
-		function filterData(query)
+		function searchData(query)
 		{
 			var api = oTable.api();
 			api.search( query ).draw();
+		}
+
+		function filterData(param, value)
+		{
+			oTable.dataTableSettings[0]['ajax']['data'][param] = value;
+			oTable.fnDraw();
 		}
 ]]>
 	</script>
