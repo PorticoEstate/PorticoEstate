@@ -3494,9 +3494,20 @@ JS;
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			
+			$custom_id		= $column;
+			$custom_name	= "label_{$column}";
+
+			$action = '';
+			$action .= 'window.parent.document.getElementById("'.$custom_id.'").value = "";'."\r";
+			$action .= 'window.parent.document.getElementById("'.$custom_name.'").innerHTML = "";'."\r";
+			$action .= 'window.parent.document.getElementById("'.$custom_id.'").value = aData["id"];'."\r";
+			$action .= 'window.parent.document.getElementById("'.$custom_name.'").innerHTML = aData["name"];'."\r";
+			$action .= 'window.parent.JqueryPortico.onPopupClose("close");'."\r";
+			$action .= 'window.parent.filterData("'.$custom_id.'", aData["id"]);';
+			
 			$data = array(
-				'left_click_action'	=> 'parent.buscar',
-				'datatable_name'	=> $appname,
+				'left_click_action'	=> $action,
+				'datatable_name'	=> '',
 				'form' => array(
 					'toolbar' => array(
 						'item' => array()
