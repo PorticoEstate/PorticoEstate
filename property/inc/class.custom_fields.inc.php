@@ -538,15 +538,8 @@ JS;
 							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $_value : '';
 						break;
 						case 'D':
-							$ts = phpgwapi_datetime::date_to_timestamp($entry['value']) - phpgwapi_datetime::user_timezone();
-							$_value = date($this->_dateformat, $ts);
-							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $_value : '';
-							break;
 						case 'DT':
-							$date_array	= phpgwapi_datetime::date_array($attrib['value']['date']);
-							$ts = mktime ((int)$attrib['value']['hour'], (int)$attrib['value']['min'], 0, $date_array['month'], $date_array['day'], $date_array['year']) - phpgwapi_datetime::user_timezone();
-							$_value = date($this->_datetimeformat, $ts);
-							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $_value : '';
+							$data['value_set'][$entry['name']]	= isset($entry['value']) && $entry['value'] ? $entry['value'] : '';
 							break;
 						case 'pwd':
 							if($entry['value'] && $entry['value2'])
