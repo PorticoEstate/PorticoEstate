@@ -199,14 +199,14 @@
 					</xsl:when>
 				</xsl:choose>
 			</table>
+			<xsl:variable name="add_action">
+				<xsl:value-of select="add_action"/>
+			</xsl:variable>
+			<xsl:variable name="lang_add">
+				<xsl:value-of select="lang_add"/>
+			</xsl:variable>
+			<form method="post" action="{$add_action}">
 			<table width="50%" cellpadding="2" cellspacing="2" align="center">
-				<xsl:variable name="add_action">
-					<xsl:value-of select="add_action"/>
-				</xsl:variable>
-				<xsl:variable name="lang_add">
-					<xsl:value-of select="lang_add"/>
-				</xsl:variable>
-				<form method="post" action="{$add_action}">
 					<tr height="50">
 						<td>
 							<xsl:value-of select="lang_name"/>
@@ -249,7 +249,10 @@
 							</input>
 						</td>
 					</tr>
+			</table>
+
 				</form>
+			<table>
 				<tr height="50">
 					<td>
 					</td>
@@ -2193,6 +2196,10 @@
 			}
 		</script>
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" name="form" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -2203,10 +2210,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" name="form" action="{$form_action}">
 					<xsl:choose>
 						<xsl:when test="value_hour_id !=''">
 							<xsl:choose>
@@ -2486,7 +2489,9 @@
 							</input>
 						</td>
 					</tr>
+			</table>
 				</form>
+			<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
@@ -2513,6 +2518,10 @@
 	<!-- add_deviation / edit_deviation  -->
 	<xsl:template match="edit_deviation">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -2523,10 +2532,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td class="th_text" align="left">
 							<xsl:value-of select="lang_workorder"/>
@@ -2609,7 +2614,9 @@
 							</input>
 						</td>
 					</tr>
+					</table>
 				</form>
+				<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
