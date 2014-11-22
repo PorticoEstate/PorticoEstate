@@ -57,12 +57,17 @@
 			$matches = array();
 			preg_match_all($header_regular_expression,$headers[$header_key], $matches);
 			$fodsels_nr = $matches[1][0];
+			$uid = $headers['uid'];
 
 			if($this->debug)
 			{
 				echo 'fødselsnr:<br>';
 				_debug_array($fodsels_nr);
+				echo 'uid:<br>';
+				_debug_array($uid);
 			}
+
+			$fodsels_nr = $uid ? $uid : $fodsels_nr;
 
 			$request =
 			"<soapenv:Envelope

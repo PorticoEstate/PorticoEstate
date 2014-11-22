@@ -496,7 +496,7 @@
 				'Art/konto inntektsside' => $account_in,
 				'Art/konto utgiftsside'	=> $account_out,//FIXME
 				'client_ref'			 => $client_ref,
-				'header'				 => utf8_decode($header),
+				'header'				 => $header,
 				'bill_year'				 => $bill_year,
 				'bill_month'			 => $bill_month,
 				'Ansvar'				 => $responsibility_id,//FIXME
@@ -505,7 +505,7 @@
 				'name'					 => $party_name,
 				'amount'				 => $this->get_formatted_amount_excel($product_item['amount']),
 //				'amount' => $this->get_formatted_amount($product_items[0]['amount']),
-				'article description'	 => utf8_decode($product_item['article_description']),
+				'article description'	 => $product_item['article_description'],
 				'article_code'			 => $product_item['article_code'],
 				'batch_id'				 => "BKBPE{$this->date_str}",
 				'client'				 => 'BY',
@@ -518,7 +518,7 @@
 				'batch_id'				 => "BKBPE{$this->date_str}",
 				'client'				 => 'BY',
 				'item_counter'			 => $item_counter,
-				'text'					 => utf8_decode($text),
+				'text'					 => $text,
 				'Kommentar'				=> 'Kommentar',//FIXME
 			);
 

@@ -4177,35 +4177,6 @@
 				$this->cat_id = $ticket['cat_id'];
 			}
 
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-			case 'M':
-				$dateformat_validate= "javascript:vDateType='1'";
-				$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-				$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-				break;
-			case 'y':
-				$dateformat_validate="javascript:vDateType='2'";
-				$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-				$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-				break;
-			case 'D':
-				$dateformat_validate="javascript:vDateType='3'";
-				$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-				$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-				break;
-			}
-
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			if (isset($ticket['origin']) AND is_array($ticket['origin']))
@@ -4234,15 +4205,9 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
-
 			$data = array
 				(
 					'value_origin'					=> (isset($ticket['origin'])?$ticket['origin']:''),
-					'lang_dateformat' 				=> strtolower($dateformat),
-					'dateformat_validate'			=> $dateformat_validate,
-					'onKeyUp'						=> $onKeyUp,
-					'onBlur'						=> $onBlur,
 					'lang_finnish_date'				=> lang('finnish date'),
 					'value_finnish_date'			=> $ticket['finnish_date'],
 
