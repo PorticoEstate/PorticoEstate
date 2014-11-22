@@ -11,13 +11,16 @@
 	phpgwapi_yui::load_widget('button');
 	phpgwapi_yui::load_widget('container');
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
-	$javascripts[] = "/phpgwapi/js/yui3/yui/yui-min.js";
-	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu/gallery-sm-menu-min.js";
-	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-base/gallery-sm-menu-base-min.js";
-	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-item/gallery-sm-menu-item-min.js";
-	$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
-	$javascripts[] = "/phpgwapi/js/jquery/mmenu/src/js/jquery.mmenu.min.all.js";
-	$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
+	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
+	{
+		$javascripts[] = "/phpgwapi/js/yui3/yui/yui-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu/gallery-sm-menu-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-base/gallery-sm-menu-base-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-item/gallery-sm-menu-item-min.js";
+		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
+		$javascripts[] = "/phpgwapi/js/jquery/mmenu/src/js/jquery.mmenu.min.all.js";
+		$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
+	}
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
@@ -32,9 +35,6 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
-	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
-	{
-	}
 	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";

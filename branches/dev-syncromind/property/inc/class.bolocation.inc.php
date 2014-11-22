@@ -735,7 +735,12 @@ JS;
 				'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id'],
 				'results' => $data['results'],'control_registered' => $data['control_registered'],
 					 'control_id' => $data['control_id']));*/
-			
+
+			if($data['lookup'] && $data['location_code'])
+			{
+				$data['query'] = $data['query'] ? $data['query'] : $data['location_code'];
+			}
+//			_debug_array($data);
 			$locations = $this->so->read($data);
 
 			$this->total_records = $this->so->total_records;

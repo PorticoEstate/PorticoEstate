@@ -628,7 +628,9 @@
 
 				</xsl:when>
 				<xsl:otherwise>
-					JqueryPortico.TableTools = {};
+					JqueryPortico.TableTools = {
+						"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+					};
 				</xsl:otherwise>
 			</xsl:choose>
 <![CDATA[
