@@ -93,3 +93,16 @@ JqueryPortico.formatLinkRelated = function(key, oData) {
 
 	return '<a href="' + link + '" title="' + title + '">' + name + '</a>';
 };
+
+JqueryPortico.formatTtsIdLink = function(key, oData) {
+
+	var name = oData[key]+oData['new_ticket'];
+	var link = oData['link'];
+	return '<a href="' + link + '">' + name + '</a>';
+};
+
+JqueryPortico.searchLinkTts = function(key, oData) {
+
+	var name = oData[key];
+	return '<a id="' + name + '" onclick="searchData(this.id);">' + name + '</a>';
+};

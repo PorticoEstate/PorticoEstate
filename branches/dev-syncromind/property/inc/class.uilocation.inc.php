@@ -922,6 +922,7 @@ JS;
 
 			$count_uicols_name = count($uicols['name']);
 
+			$searc_levels = array();
 			for($i=1; $i<$type_id; $i++)
 			{
 				$searc_levels[] = "loc{$i}";

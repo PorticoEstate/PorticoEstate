@@ -80,7 +80,6 @@
 
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->bo					= CreateObject('property.botts',true);
 			$this->bocommon 			= & $this->bo->bocommon;
 			$this->cats					= & $this->bo->cats;
@@ -120,42 +119,36 @@
 		 */
 		public function query()
 		{
-			$type_id	= $this->type_id;
-			$lookup 	= $this->lookup;
-			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
-
-			if(!$type_id)
-			{
-				$type_id = 1;
-			}
-			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 			
 			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'dir' => $order[0]['dir'],
-				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1/*,
-				
-				'type_id' => $type_id,
-				'lookup_tenant' => $lookup_tenant,
-				'lookup' => $lookup,
-				'district_id' => phpgw::get_var('district_id', 'int'),
-				'status' => phpgw::get_var('status'),
-				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
-				'location_code' => phpgw::get_var('location_code'),
-				'filter'		=> phpgw::get_var('filter', 'int')*/
-			);
+				'start'				=> phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'			=> phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'				=> $search['value'],
+				'order'				=> $columns[$order[0]['column']]['data'],
+				'sort'				=> $order[0]['dir'],
+				'dir'				=> $order[0]['dir'],
+				'cat_id'			=> phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows'			=> phpgw::get_var('length', 'int') == -1,
+				'status_id'			=> $this->bo->status_id,
+				'user_id'			=> $this->bo->user_id,
+				'reported_by'		=> $this->bo->reported_by,
+				'cat_id'			=> $this->bo->cat_id,
+				'vendor_id'			=> $this->bo->vendor_id,
+				'district_id'		=> $this->bo->district_id,
+				'part_of_town_id'	=> $this->bo->part_of_town_id,
+				'allrows'			=> $this->bo->allrows,
+				'start_date'		=> $this->bo->start_date,
+				'end_date'			=> $this->bo->end_date,
+				'location_code'		=> $this->bo->location_code,
+				'p_num'				=> $this->bo->p_num,
+				'branch_id'			=> phpgw::get_var('branch_id'),
+				'order_dim1'			=> phpgw::get_var('order_dim1'),
+				);
 
-			//$values = $this->bo->read($params);
-			//fill data
 			$values = $this->bo->read($params);
 
 			if($values)
@@ -183,7 +176,7 @@
 			{
 				return $values;
 			}
-
+//_debug_array($values);
 			$result_data = array('results' => $values);
 
 			$result_data['total_records']		= $this->bo->total_records;
@@ -195,11 +188,10 @@
 			$link_data = array
 			(
 				'menuaction' => 'property.uitts.view',
-				'type_id'	 => $type_id
 			);
 			
 			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
-
+//			_debug_array($result_data);
 			return $this->jquery_results($result_data);
 		}
 		
@@ -506,10 +498,10 @@
 
 			$uicols = array();
 
-			$uicols['name'][] = 'priority';
-			$uicols['descr'][]	= lang('priority');
 			$uicols['name'][] = 'id';
 			$uicols['descr'][]	= lang('id');
+			$uicols['name'][] = 'priority';
+			$uicols['descr'][]	= lang('priority');
 			$uicols['name'][] = 'subject';
 			$uicols['descr'][]	= lang('subject');
 
@@ -570,7 +562,17 @@
 
 					if($uicols['name'][$k]=='id')
 					{
+							$params['formatter'] = 'JqueryPortico.formatTtsIdLink';
+					}
+
+					if($uicols['name'][$k]=='entry_date')
+					{
 							$params['formatter'] = 'JqueryPortico.formatLink';
+					}
+
+					if($uicols['name'][$k]=='location_code')
+					{
+						$params['formatter'] = 'JqueryPortico.searchLinkTts';
 					}
 
 					if($uicols['name'][$k]=='address' || $uicols['name'][$k]=='id' || $uicols['name'][$k]=='priority')
@@ -676,13 +678,24 @@
 
 				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,$this->acl_location);
 				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my assigned tickets')));
-				$_my_negative_self = (-1 * $GLOBALS['phpgw_info']['user']['account_id']);
+				array_unshift ($values_combo_box[4],array('id'=>'','name'=>lang('assigned to')));
 				$combos[] = array('type' => 'filter',
 							'name' => 'user_id',
 							'extra' => '',
 							'text' => lang('user'),
 							'list' => $values_combo_box[4]
 						);
+
+				$values_combo_box[5]  = $this->bo->get_reported_by($this->reported_by);
+				array_unshift ($values_combo_box[5],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my submitted tickets')));
+				array_unshift ($values_combo_box[5],array('id'=>'','name'=>lang('reported by')));
+				$combos[] = array('type' => 'filter',
+							'name' => 'reported_by',
+							'extra' => '',
+							'text' => lang('reported by'),
+							'list' => $values_combo_box[5]
+						);
+
 			}
 
 	//		if($order_read)
@@ -793,54 +806,7 @@
 					'download'	=> self::link(array('menuaction' => 'property.uitts.download', 'export' => true, 'allrows' => true)),
 					'allrows'	=> true,
 					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
-					'field' => $this->_get_fields(),
-/*
-							array(
-						
-						array(
-							'key' => 'priority',
-							'label' => lang('priority'),
-							'sortable' => true,
-							'editor' => false
-						),
-						array(
-							'key' => 'id',
-							'label' => lang('ID'),
-							'sortable' => true,
-							'formatter' => 'JqueryPortico.formatLink'
-						),
-						array(
-							'key' => 'subject',
-							'label' => lang('subject'),
-							'sortable' => true
-						),
-						array(
-							'key' => 'loc1_name',
-							'label' => lang('object'),
-							'sortable' => true
-						),
-						array(
-							'key' => 'entry_date',
-							'label' => lang('Entry Date'),
-							'sortable' => true,
-						),
-						array(
-							'key' => 'location_code',
-							'label' => lang('location_code'),
-							'sortable' => false,
-						),
-						array(
-							'key' => 'assignedto',
-							'label' => lang('assignedto'),
-							'sortable' => false,
-						),
-						array(
-							'key' => 'link',
-							'label' => 'dummy',
-							'sortable' => false,
-							'hidden' => true,
-						)
-					)*/
+					'field' => $this->_get_fields()
 				)
 			);
 
@@ -2256,7 +2222,7 @@
 				'type_id'	=> -1, // calculated from location_types
 				'no_link'	=> false, // disable lookup links for location type less than type_id
 				'tenant'	=> true,
-				'lookup_type'	=> 'form',
+				'lookup_type'	=> 'form2',
 				'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
 				'entity_data'	=> (isset($values['p'])?$values['p']:'')
 			));
@@ -2313,7 +2279,7 @@
 					'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
 
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'location_data'					=> $location_data,
+					'location_data2'				=> $location_data,
 					'lang_no_user'					=> lang('Select user'),
 					'lang_user_statustext'			=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 					'select_user_name'				=> 'values[assignedto]',
@@ -2729,12 +2695,12 @@
 
 			if($ticket['origin'] || $ticket['target'])
 			{
-				$lookup_type	= 'view';
+				$lookup_type	= 'view2';
 				$type_id		= count(explode('-',$ticket['location_data']['location_code']));
 			}
 			else
 			{
-				$lookup_type	= 'form';
+				$lookup_type	= 'form2';
 				$type_id		= -1;
 			}
 
@@ -3484,7 +3450,7 @@
 					'link_entity'					=> $link_entity,
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
-					'location_data'					=> $location_data,
+					'location_data2'				=> $location_data,
 
 					'value_status'					=> $ticket['status'],
 					'status_list'					=> array('options' => $this->bo->get_status_list($ticket['status'])),
@@ -3621,9 +3587,7 @@
 				$tabs['history']	= array('label' => lang('history'), 'link' => '#history');
 			}
 
-			phpgwapi_yui::tabview_setup('ticket_tabview');
-
-			return  phpgwapi_yui::tabview_generate($tabs, $tab);
+			return phpgwapi_jquery::tabview_generate($tabs, $tab,'ticket_tabview');
 		}
 
 

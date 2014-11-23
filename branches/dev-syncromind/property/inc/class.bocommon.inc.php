@@ -70,7 +70,7 @@
 			$this->left_join	= $this->socommon->left_join;
 			$this->like			= $this->socommon->like;
 
-			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
+			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 		}
 
 		function check_perms($rights, $required)
