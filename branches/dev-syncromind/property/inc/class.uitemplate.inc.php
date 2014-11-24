@@ -701,21 +701,19 @@
 			$template_id 	= phpgw::get_var('template_id', 'int');
 			$values		= phpgw::get_var('values');
 			$receipt = array();
-
+                        
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
 
 			if ($values['save'])
 			{
-				$values['template_id'] = $template_id;
-
+                                $values['template_id'] = $template_id;   
 				if(!isset($receipt['error']) || !$receipt['error'])
 				{
 					$receipt = $this->bo->save_template($values);
-
 					$template_id=$receipt['template_id'];
 				}
 			}
-
+                        
 			if ($template_id)
 			{
 				$values = $this->bo->read_single_template($template_id);
@@ -775,7 +773,29 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_template' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-
+                
+                public function save()
+                {
+                    
+                        $template_id 	= phpgw::get_var('template_id', 'int');
+			$values		= phpgw::get_var('values');
+                        
+                        if ($template_id)
+			{
+				$values = $this->bo->read_single_template($template_id);
+				$function_msg = lang('Edit template');
+			}
+			else
+			{       
+                                $data = $this->bo->read_single_template();
+				$function_msg = lang('Add template');
+			}
+                        /*
+			* Overrides with incoming data from POST
+			*/
+                        
+                }
+                
 		function edit_hour()
 		{
 			$template_id 		= phpgw::get_var('template_id', 'int');
