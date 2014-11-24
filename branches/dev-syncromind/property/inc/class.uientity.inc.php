@@ -126,18 +126,83 @@
 		}
 
 		
-		private function _get_filters($selected = 0)
+		/*
+		* Overrides with incoming data from POST
+		*/
+		private function _populate($data = array())
 		{
-			if($this->cat_id)
+			//$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
+			
+			$id_name = $this->location_info['id']['name'];
+			
+			$id	= phpgw::get_var($id_name);
+			$values	= phpgw::get_var('values');
+			$values_attribute  = phpgw::get_var('values_attribute');
+			
+			if(!$id && !$values[$id_name] && $this->location_info['id']['type'] !='auto')
 			{
-				$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$this->receipt['error'][]=array('msg'=>lang('missing value for %1', lang('id')));									
+			}
+
+			if($values[$id_name] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values[$id_name]))
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please enter an integer !'));
+				unset($values[$id_name]);
 			}
 			
+			if($values[$id_name])
+			{
+				$data[$id_name] = $values[$id_name];
+			}
+					
+			foreach ( $this->location_info['fields'] as $_field )
+			{
+				$data[$_field['name']] = $values[$_field['name']];
+				$data[$_field['name']] =  phpgw::clean_value($data[$_field['name']], $_field['type']);
+				
+				if (isset($_field['nullable']) && $_field['nullable'] != true)
+				{
+					if(empty($data[$_field['name']]))
+					{
+						$this->receipt['error'][] = array('msg'=>lang('missing value for %1', $_field['name']));									
+					}
+				}
+			}
+
+			/*
+			* Extra data from custom fields
+			*/
+
+			if (isset($values_attribute) && is_array($values_attribute))
+			{
+				foreach ($values_attribute as $attribute )
+				{
+					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+					{
+						$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+					}
+
+					if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+					{
+						$this->receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
+					}
+				}
+				
+				$data = $this->custom->preserve_attribute_values($data,$values_attribute);
+			}
+
+			return $data;
+		}
+		
+		private function _get_filters($selected = 0)
+		{
 			$values_combo_box = array();
 			$combos = array();
 			
 			if($this->cat_id)
 			{
+				$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				
 				//this validation comes to previous versions
 				if (isset($category['location_level']) && $category['location_level']>0)
 				{
@@ -330,6 +395,74 @@
 			return $this->jquery_results($result_data);
 		}
 
+		
+		/**
+		* Saves an entry to the database for new/edit - redirects to view
+		*
+		* @param int  $id  entity id - no id means 'new'
+		*
+		* @return void
+		*/
+
+		public function save()
+		{
+			$id = phpgw::get_var($this->location_info['id']['name']);
+			$values	= phpgw::get_var('values');
+
+			if ($id)
+			{
+				$data = $this->bo->read_single( array('id' => $id) );
+				$action = 'edit';
+			}
+			else
+			{
+				$data = $this->bo->read_single();
+				$action = 'add';
+			}
+
+			/*
+			* Overrides with incoming data from POST
+			*/
+			$data = $this->_populate($data);
+
+			if( $this->receipt['error'] )
+			{
+				$this->edit( $data );
+			}
+			else
+			{
+				try
+				{
+					$fields = $data;
+					$attributes = $data['attributes'];
+					unset($fields['attributes']);
+					
+					$receipt = $this->bo->save($fields, $action, $attributes);
+				}
+
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						$this->edit( $data );
+						return;
+					}
+				}
+
+				phpgwapi_cache::message_set($receipt, 'message'); 
+				if ($values['apply']) {
+					$this->edit();
+					return;
+				}
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index',
+										'appname'		=> $this->appname,
+										'type'			=> $this->type,
+										'type_id'		=> $this->type_id));
+			}
+		}
+		
+		
 		function save_sessiondata()
 		{
 			$data = array
@@ -677,11 +810,19 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
-				
-			$_integration_set = array();
+
+			if($this->entity_id && $this->cat_id)
+			{
+				$entity	   = $this->soadmin_entity->read_single($this->entity_id,false);
+				$appname	  = $entity['name'];
+				//$category	 = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$function_msg = 'list ' . $category['name'];
+			}
+			
+			//$_integration_set = array();
 			
 			$data = array(
-				'datatable_name'	=> $appname,
+				'datatable_name'	=> $appname . ': ' . $function_msg,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -704,19 +845,7 @@
 								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uientity.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
 							),
 							array
-							(//for link "None",
-								'type'	=> 'label',
-								'id'	=> 'label_org_unit_id'
-							),
-							array
-							( //hidden org_unit_id
-								'type'	=> 'hidden',
-								'id'	=> 'org_unit_id',
-								'name'	=> 'org_unit_id',
-								'value'	=> ''
-							),
-							array
-							(//for link "Org unit",
+							(
 								'type'	=> 'link',
 								'value' => lang('department'),
 								'href'	=> '#',
@@ -725,9 +854,14 @@
 							),
 							array
 							(
-								'type'	=> 'date-picker',
-								'id'	=> 'end_date',
-								'name'	=> 'end_date',
+								'type'	=> 'label',
+								'id'	=> 'label_org_unit_id'
+							),
+							array
+							(
+								'type'	=> 'hidden',
+								'id'	=> 'org_unit_id',
+								'name'	=> 'org_unit_id',
 								'value'	=> ''
 							),
 							array
@@ -735,7 +869,16 @@
 								'type'	=> 'date-picker',
 								'id'	=> 'start_date',
 								'name'	=> 'start_date',
-								'value'	=> ''
+								'value'	=> '',
+								'text' => lang('from')
+							),
+							array
+							(
+								'type'	=> 'date-picker',
+								'id'	=> 'end_date',
+								'name'	=> 'end_date',
+								'value'	=> '',
+								'text' => lang('to')
 							)
 						)
 					)
@@ -752,15 +895,15 @@
 							'phpgw_return_as' => 'json'
 					)),
 					'download'	=> self::link(array(
-								'menuaction' => 'property.uientity.download',
-								'second_display' => $second_display,
-								'entity_id'      => $this->entity_id,
-								'cat_id'         => $this->cat_id,
-								'type'			 => $this->type,
-								'district_id'	 => $this->district_id,
-								'p_num'			 => $this->p_num,
-								'export'     => true,
-								'allrows'    => true
+							'menuaction'	=> 'property.uientity.download',
+							'second_display' => $second_display,
+							'entity_id'      => $this->entity_id,
+							'cat_id'         => $this->cat_id,
+							'type'			 => $this->type,
+							'district_id'	 => $this->district_id,
+							'p_num'			 => $this->p_num,
+							'export'     => true,
+							'allrows'    => true
 					)),
 					'allrows'	=> true,
 					'editor_action' => '',
@@ -769,7 +912,7 @@
 			);
 	
 			$filters = $this->_get_filters();
-			
+			krsort($filters);
 			foreach ($filters as $filter) 
 			{
 				array_unshift ($data['form']['toolbar']['item'], $filter);
@@ -1028,23 +1171,14 @@
 						))
 					);
 			}
-			 
-			if($this->entity_id && $this->cat_id)
-			{
-				$entity	   = $this->soadmin_entity->read_single($this->entity_id,false);
-				$appname	  = $entity['name'];
-				$category	 = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
-				$function_msg = 'list ' . $category['name'];
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			
 			self::render_template_xsl('datatable_jquery', $data);
 			
 		}
 
-		function edit($mode = 'edit')
+		function edit($values = array(), $mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
 			$_lean = phpgw::get_var('lean', 'bool');
@@ -2038,6 +2172,7 @@
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
+			//$category['org_unit'] =1;
 
 			if($category['org_unit'] && $mode == 'edit')
 			{
@@ -2304,7 +2439,7 @@ JS;
 				$this->bocommon->no_access();
 				return;
 			}
-			$this->edit($mode = 'view');
+			$this->edit(null, $mode = 'view');
 		}
 
 		function attrib_history()
