@@ -426,11 +426,14 @@
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
 		</script>
-		<div class="yui-navset" id="entity_edit_tabview">
+		
+		<div id="entity_edit_tabview">
+			
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form id="form" name="form" action="{$form_action}" method="post" ENCTYPE="multipart/form-data" class= "pure-form-aligned">
+			
+			<form id="form" name="form" action="{$form_action}" method="post" ENCTYPE="multipart/form-data" class= "pure-form pure-form-aligned">
 				<input type="hidden" name="active_tab" value="{active_tab}"/>
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<xsl:choose>
@@ -579,11 +582,13 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</table>
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div class="yui-content">
+				
+				<div id="tab-content">
+					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 					<xsl:choose>
 						<xsl:when test="location_data!=''">
 							<div id="location">
+								<fieldset>
 								<table>
 									<xsl:choose>
 										<xsl:when test="mode='edit'">
@@ -621,16 +626,19 @@
 									</xsl:choose>
 									<xsl:apply-templates select="attributes_general/attributes"/>
 								</table>
+								<xsl:call-template name="attributes_values"/>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:call-template name="attributes_values"/>
+					
 					<xsl:choose>
 						<xsl:when test="files!='' or fileupload = 1">
 							<div id="files">
 								<script type="text/javascript">
 									var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
 								</script>
+								<fieldset>
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<!-- <xsl:call-template name="file_list"/> -->
 									<tr>
@@ -647,6 +655,7 @@
 										</xsl:when>
 									</xsl:choose>
 								</table>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -684,6 +693,7 @@
 								<script type="text/javascript">
 									var documents = <xsl:value-of select="documents"/>;
 								</script>
+								<fieldset>
 								<!-- markup for expand/contract links -->
 								<div id="expandcontractdiv">
 									<a id="expand" href="#">
@@ -695,6 +705,7 @@
 									</a>
 								</div>
 								<div id="treeDiv1"/>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -702,6 +713,7 @@
 					<xsl:choose>
 						<xsl:when test="value_id !='' and enable_bulk = ''">
 							<div id="related">
+								<fieldset>
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
 										<td valign='top'>
@@ -720,6 +732,7 @@
 										</td>
 									</tr>
 								</table>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -727,6 +740,7 @@
 					<xsl:choose>
 						<xsl:when test="enable_bulk = 1">
 							<div id="inventory">
+								<fieldset>
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
 										<td align="left" valign="top">
@@ -747,6 +761,7 @@
 										</xsl:when>
 									</xsl:choose>
 								</table>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -754,15 +769,9 @@
 				</div>
 				<xsl:choose>
 					<xsl:when test="mode = 'edit'">
-						<table cellpadding="2" cellspacing="2" width="80%" align="center">
-							<tr height="50">
-								<td colspan="2" align="center">
-									<xsl:call-template name="table_apply">
-										<xsl:with-param	name="lean" select="lean"/>
-									</xsl:call-template>
-								</td>
-							</tr>
-						</table>
+						<xsl:call-template name="table_apply">
+							<xsl:with-param	name="lean" select="lean"/>
+						</xsl:call-template>
 					</xsl:when>
 				</xsl:choose>
 			</form>
@@ -839,7 +848,8 @@
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="table_apply">
 		<xsl:param name="lean" />
-
+		
+		<div class="proplist-col">
 		<table>
 			<tr>
 				<xsl:choose>
@@ -848,7 +858,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:variable>
-							<input type="submit" name="values[save]" value="{$lang_save}">
+							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'save values and exit')"/>
 								</xsl:attribute>
@@ -860,7 +870,7 @@
 					<xsl:variable name="lang_apply">
 						<xsl:value-of select="php:function('lang', 'apply')"/>
 					</xsl:variable>
-					<input type="submit" name="values[apply]" value="{$lang_apply}">
+					<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'save and stay in form')"/>
 						</xsl:attribute>
@@ -872,7 +882,7 @@
 							<xsl:variable name="lang_cancel">
 								<xsl:value-of select="php:function('lang', 'cancel')"/>
 							</xsl:variable>
-							<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+							<input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Back to the list')"/>
 								</xsl:attribute>
@@ -882,6 +892,7 @@
 				</xsl:choose>
 			</tr>
 		</table>
+		</div>
 	</xsl:template>
 
 	<!-- emtpy -->
