@@ -592,7 +592,9 @@
 				);
 						
 			$tabs = array();
-
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
 				foreach ($values['attributes'] as & $attribute)
@@ -704,7 +706,7 @@
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, 'general'),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'id_name'						=> $this->location_info['id']['name'],
 					'id_type'						=> $this->location_info['id']['type'],
 					'fields'						=> $this->location_info['fields']
