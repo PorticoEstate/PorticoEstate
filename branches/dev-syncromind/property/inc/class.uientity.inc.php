@@ -1691,7 +1691,7 @@
 				
 				if($category['location_level'] > 0)
 				{
-					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')");
+					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'disable' => 0, 'function' => "set_tab('location')");
 					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
@@ -1709,7 +1709,7 @@
 						{
 							$_tab_name = str_replace(' ', '_', $group['name']);
 							$active_tab = $active_tab ? $active_tab : $_tab_name;
-							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}", 'function' => "set_tab('{$_tab_name}')");
+							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}", 'disable' => 0, 'function' => "set_tab('{$_tab_name}')");
 							$group['link'] = $_tab_name;
 							$attributes[] = $group;
 							$i ++;
@@ -1736,7 +1736,7 @@
 
 				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
 				{
-					$tabs['files']	= array('label' => lang('files'), 'link' => '#files', 'function' => "set_tab('files')");
+					$tabs['files']	= array('label' => lang('files'), 'link' => '#files', 'disable' => 0, 'function' => "set_tab('files')");
 				}
 /*
 				if($category['jasperupload'])
@@ -1886,7 +1886,7 @@
 					$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
 					//_debug_array($values);
 					//_debug_array($integration_src);die();
-					$tabs[$_config_section]	= array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section}", 'function' => "document.getElementById('{$_config_section}_content').src = '{$integration_src}';");
+					$tabs[$_config_section]	= array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section}", 'disable' => 0, 'function' => "document.getElementById('{$_config_section}_content').src = '{$integration_src}';");
 				}
 			}
 
@@ -1939,33 +1939,7 @@
 
 //_Debug_Array($datavalues);
 //die();
-/*
-			$link_file_data['jasper']		= true;
-			$content_jasperfiles = array();
-			for($z=0; $z<count($values['jasperfiles']); $z++)
-			{
-				$link_file_data['file_name']	= $values['jasperfiles'][$z]['name'];
-				$content_jasperfiles[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'" target="_blank" title="'.lang('click to view file').'">'.$values['jasperfiles'][$z]['name'].'</a>';			
-				$content_jasperfiles[$z]['delete_file'] = '<input type="checkbox" name="values[file_jasperaction][]" value="'.$values['jasperfiles'][$z]['name'].'" title="'.lang('Check to delete file').'">';
-			}									
-
-			$datavalues[1] = array
-			(
-					'name'					=> "1",
-					'values' 				=> json_encode($content_jasperfiles),
-					'total_records'			=> count($content_jasperfiles),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-			);
-
-			$myColumnDefs[1] = array
-			(
-				'name'		=> "1",
-				'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-													array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-			);
- */			
+	
 			if ($id)
 			{
 				$get_docs = false;
@@ -1986,14 +1960,14 @@
 
 					if($documents)
 					{
-						$tabs['document']	= array('label' => lang('document'), 'link' => '#document', 'function' => "set_tab('document')");
+						$tabs['document']	= array('label' => lang('document'), 'link' => '#document', 'disable' => 0, 'function' => "set_tab('document')");
 						$documents = json_encode($documents);				
 					}
 				}
 
 				if (!$category['enable_bulk'])
 				{
-					$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
+					$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'disable' => 0, 'function' => "set_tab('related')");
 				}
 				$_target = array();
 				if(isset($values['target']) && $values['target'])
@@ -2126,7 +2100,7 @@
 
 				if($category['enable_bulk'])
 				{
-					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory', 'function' => "set_tab('inventory')");
+					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory',  'disable' => 0, 'function' => "set_tab('inventory')");
 
 					$_inventory = $this->get_inventory($id);
 
@@ -2261,7 +2235,7 @@ JS;
 					'lang_date'						=> lang('date'),
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'active_tab'					=> $active_tab,
 					'integration'					=> $integration,
 				//	'value_integration_src'			=> $integration_src,
