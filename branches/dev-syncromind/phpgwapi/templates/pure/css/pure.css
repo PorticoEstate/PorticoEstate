@@ -1164,6 +1164,10 @@ since IE8 won't execute CSS that contains a CSS3 selector.
 .pure-form-aligned .pure-controls {
     margin: 1.5em 0 0 10em;
 }
+.pure-form-aligned .pure-custom {
+	display: inline-block;
+	vertical-align: top;
+}
 
 /* Rounded Inputs */
 .pure-form input.pure-input-rounded,
