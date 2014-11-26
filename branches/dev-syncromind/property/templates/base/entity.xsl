@@ -589,16 +589,15 @@
 						<xsl:when test="location_data!=''">
 							<div id="location">
 								<fieldset>
-								<table>
 									<xsl:choose>
 										<xsl:when test="mode='edit'">
 											<xsl:choose>
 												<xsl:when test="org_unit='1'">
-													<tr>
-														<td>
+													<div class="pure-control-group">
+														<label>
 															<xsl:value-of select="php:function('lang', 'department')"/>
-														</td>
-														<td>
+														</label>
+														<div class="pure-custom">
 															<div class="autocomplete">
 																<input id="org_unit_id" name="org_unit_id" type="hidden" value="{value_org_unit_id}">
 																</input>
@@ -613,11 +612,10 @@
 																</input>
 																<div id="org_unit_container"/>
 															</div>
-														</td>
-													</tr>
+														</div>
+													</div>
 												</xsl:when>
 											</xsl:choose>
-
 											<xsl:call-template name="location_form"/>
 										</xsl:when>
 										<xsl:otherwise>
@@ -625,12 +623,12 @@
 										</xsl:otherwise>
 									</xsl:choose>
 									<xsl:apply-templates select="attributes_general/attributes"/>
-								</table>
-								<xsl:call-template name="attributes_values"/>
 								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
+					
+					<xsl:call-template name="attributes_values"/>
 					
 					<xsl:choose>
 						<xsl:when test="files!='' or fileupload = 1">
