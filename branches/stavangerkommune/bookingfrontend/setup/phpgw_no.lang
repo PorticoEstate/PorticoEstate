@@ -113,6 +113,7 @@ log off	bookingfrontend	no	Logg ut
 login	common	no	Logg inn
 logout	common	no	Logg ut
 SSN not registred	common	no	Du er ikke registert i Frivillighetsregisteret eller organisasjonen din mangler organisasjonesnummer i AktivBy
+No valid identification returned from login	common	no	Ingen gyldig identifikasjon returnert fra innlogging.
 male	bookingfrontend	no	Mann
 mar	bookingfrontend	no	mars
 may	bookingfrontend	no	mai

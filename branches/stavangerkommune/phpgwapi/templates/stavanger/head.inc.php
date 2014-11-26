@@ -217,13 +217,17 @@ JS;
             $tpl_vars['login_text_org'] = lang('SSN not registred');
             $tpl_vars['login_text'] = lang('Logout');
             $tpl_vars['org_url'] = '#';
+        } elseif ( $bouser->orgname == '000000001') {
+            $tpl_vars['login_text_org'] = lang('No valid identification returned from login');
+            $tpl_vars['login_text'] = lang('Logout');
+            $tpl_vars['org_url'] = '#';
         } else {
         	$tpl_vars['login_text_org'] = $bouser->orgname;
             $tpl_vars['login_text'] = lang('Logout');
             $tpl_vars['org_url'] = "/bookingfrontend/?menuaction=bookingfrontend.uiorganization.show&id=".$orgid;
         }
-#        $tpl_vars['login_url'] = 'logout.php'; #dev
-        $tpl_vars['login_url'] = '/logout.php';
+        $tpl_vars['login_url'] = 'logout.php'; #dev
+#        $tpl_vars['login_url'] = '/logout.php';
 	}
 	else
 	{
