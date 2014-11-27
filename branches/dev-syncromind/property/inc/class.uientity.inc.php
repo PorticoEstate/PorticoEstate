@@ -1917,7 +1917,7 @@
 					$content_files[$z]['delete_file'] = '';
 				}
 			}									
-
+			/*
 			$datavalues[0] = array
 				(
 					'name'					=> "0",
@@ -1933,9 +1933,21 @@
 				'name'		=> "0",
 				'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+			);*/
+
+			$file_def = array
+			(
+				array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)
 			);
 
-
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> $file_def
+			);
 
 //_Debug_Array($datavalues);
 //die();
@@ -2053,7 +2065,7 @@
 						}
 					}
 				}
-				
+				/*
 				$datavalues[1] = array
 				(
 					'name'					=> "1",
@@ -2076,8 +2088,25 @@
 						array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
 						)
 					)
+				);*/
+
+				$target_def = array
+				(
+					array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true)
 				);
 
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_1',
+					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_request', 'id' => $id,'phpgw_return_as'=>'json'))),
+					'ColumnDefs'	=> $target_def
+				);
+				/*
 				$datavalues[2] = array
 				(
 					'name'					=> "2",
@@ -2095,15 +2124,26 @@
 						array('key' => 'url','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
 						)
 					)
+				);*/
+
+				$related_def = array
+				(
+					array('key' => 'url','label'=>lang('where'),'sortable'=>false,'resizeable'=>true)
 				);
 
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_2',
+					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
+					'ColumnDefs'	=> $related_def
+				);
 
 				if($category['enable_bulk'])
 				{
 					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory',  'disable' => 0, 'function' => "set_tab('inventory')");
 
 					$_inventory = $this->get_inventory($id);
-
+					/*
 					$datavalues[3] = array
 					(
 						'name'					=> "3",
@@ -2133,6 +2173,28 @@
 								array('key' => 'inventory_id','hidden'=>true),
 							)
 						)
+					);*/
+
+					$inventory_def = array
+					(
+						array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
+						array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+						array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+						array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
+						array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCalendar'),
+						array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'location_id','hidden'=>true),
+						array('key' => 'id','hidden'=>true),
+						array('key' => 'inventory_id','hidden'=>true)
+					);
+
+					$datatable_def[] = array
+					(
+						'container'		=> 'datatable-container_3',
+						'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
+						'ColumnDefs'	=> $inventory_def
 					);
 				
 				}
@@ -2168,8 +2230,9 @@ JS;
 			$data = array
 			(
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
-					'datatable'						=> $datavalues,
-					'myColumnDefs'					=> $myColumnDefs,	
+					//'datatable'						=> $datavalues,
+					//'myColumnDefs'					=> $myColumnDefs,
+					'datatable_def'					=> $datatable_def,
 					'enable_bulk'					=> $category['enable_bulk'],
 					'org_unit'					=> $category['org_unit'],
 					'value_org_unit_id'			=> $values['org_unit_id'],
