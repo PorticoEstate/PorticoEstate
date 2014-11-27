@@ -27,14 +27,17 @@
  	* @version $Id$
 	*/
 
-	phpgw::import_class('phpgwapi.yui');
+	//phpgw::import_class('phpgwapi.yui');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.jquery');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_uirequest
+	class property_uirequest extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -49,17 +52,53 @@
 		var $nonavbar;
 
 		var $public_functions = array
-			(
-				'index' 		=> true,
-				'view'  		=> true,
-				'edit'  		=> true,
-				'delete'		=> true,
-				'priority_key'	=> true,
-				'view_file'		=> true,
-				'download'		=> true,
-				'columns'		=> true,
-				'get_related'	=> true
-			);
+		(
+			'index' 		=> true,
+			'view'  		=> true,
+			'edit'  		=> true,
+			'delete'		=> true,
+			'priority_key'	=> true,
+			'view_file'		=> true,
+			'download'		=> true,
+			'columns'		=> true,
+			'get_related'	=> true
+		);
+		
+		public function __construct()
+		{
+			parent::__construct();
+			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bo					= CreateObject('property.borequest',true);
+			//$this->bo->get_location_info();
+			$this->bocommon				= & $this->bo->bocommon;
+			$this->custom				= & $this->bo->custom;
+
+			$this->location_info		= $this->bo->location_info;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->acl_location			= $this->location_info['acl_location'];
+			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->location_info['acl_app']);
+			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->location_info['acl_app']);
+			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->location_info['acl_app']);
+			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->location_info['acl_app']);
+			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, $this->location_info['acl_app']);
+
+			$this->start				= $this->bo->start;
+			$this->query				= $this->bo->query;
+			$this->sort					= $this->bo->sort;
+			$this->order				= $this->bo->order;
+			$this->allrows				= $this->bo->allrows;
+
+			$this->type 		= $this->bo->type;
+			$this->type_id 		= $this->bo->type_id;
+
+			if($appname == $this->bo->appname)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$this->appname = $appname;
+			}
+		}
 
 		function property_uirequest()
 		{
@@ -109,6 +148,63 @@
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 			}
+		}
+		
+		/**
+		 * Fetch data from $this->bo based on parametres
+		 * @return array
+		 */
+		public function query()
+		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('length', 'int') == -1
+			);
+
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
+				}
+			}
+
+			$result_objects = array();
+			$result_count = 0;
+
+			$values = $this->bo->read($params);
+			if ( phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+			
+			$link_data = array
+			(
+				'menuaction' => 'property.uirequest.edit',
+				'appname'	 => $this->appname,
+				'type'		 => $this->type,
+				'type_id'	 => $this->type_id
+			);
+			
+			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
+
+			return $this->jquery_results($result_data);
 		}
 
 		function save_sessiondata()
@@ -201,12 +297,256 @@
 			$uicols			= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
+		
+		private function _get_categories($selected = 0)
+		{
+			$values_combo_box = array();
+			$combos = array();
+			$i = 0;
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (!empty($field['filter']) && empty($field['hidden']))
+				{
+					if($field['values_def']['valueset'])
+					{
+						$values_combo_box[] = $field['values_def']['valueset'];
+						// TODO find selected value
+					}
+					else if(isset($field['values_def']['method']))
+					{
+						foreach($field['values_def']['method_input'] as $_argument => $_argument_value)
+						{
+							if(preg_match('/^##/', $_argument_value))
+							{
+								$_argument_value_name = trim($_argument_value,'#');
+								$_argument_value = $values[$_argument_value_name];
+							}
+							if(preg_match('/^\$this->/', $_argument_value))
+							{
+								$_argument_value_name = ltrim($_argument_value,'$this->');
+								$_argument_value = $this->$_argument_value_name;
+							}								
+							$method_input[$_argument] = $_argument_value;
+						}
+						$values_combo_box[] = execMethod($field['values_def']['method'],$method_input);
+					}
+					$default_value = array ('id'=>'','name'=> lang('select') . ' ' . $field['descr']);
+					array_unshift ($values_combo_box[$i],$default_value);
+					
+					$combos[$i] = array('type' => 'filter',
+								'name' => $field['name'],
+								'text' => lang($field['descr']) . ':',
+								'list' => $values_combo_box[$i]
+							);
+					$i++;
+				}
+			}
 
+			return $combos;
+		}
+		
 		function index()
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				//$this->bocommon->no_access();
+				//return;
+			}
+
+			//$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
+			//$this->save_sessiondata();
+
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+
+			$appname			=  $this->location_info['name'];
+			$function_msg		= lang('list %1', $appname);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
+			
+			$data = array(
+				'datatable_name'	=> $appname,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('new'),
+								'href' => self::link(array(
+									'menuaction' => 'property.uirequest.add',
+									'appname'    => $this->bo->appname,
+									'type'       => $this->type,
+									'type_id'    => $this->type_id
+									)),
+								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uirequest.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
+							)
+						)
+					)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uirequest.index', 
+						'appname'		=> $this->appname,
+						'type'			=> $this->type,
+						'type_id'		=> $this->type_id,
+						'phpgw_return_as' => 'json'
+					)),
+					'download'	=> self::link(array('menuaction' => 'property.uirequest.download',
+									'appname'    => $this->appname,
+									'type'       => $this->type,
+									'type_id'    => $this->type_id,
+									'export'     => true,
+									'allrows'    => true)),
+					'allrows'	=> true,
+					'editor_action' => self::link(array('menuaction' => 'property.uirequest.edit_field',
+									'appname'    => $this->appname,
+									'type'       => $this->type,
+									'type_id'    => $this->type_id)),
+					'field' => array()
+				)
+			);
+	
+			$filters = $this->_get_categories();
+			
+			foreach ($filters as $filter) 
+			{
+				array_unshift ($data['form']['toolbar']['item'], $filter);
+			}
+			
+			$this->bo->read();
+			$uicols = $this->bo->uicols;
+
+			$count_uicols_name = count($uicols['name']);
+
+			for($k=0;$k<$count_uicols_name;$k++)
+			{
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'sortable' => ($uicols['sortable'][$k]) ? true : false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
+					if ($uicols['name'][$k] == 'id')
+					{
+						$params['formatter'] = 'JqueryPortico.formatLink';
+					}
+					switch ($uicols['datatype'][$k])
+					{
+						case 'email':
+						case 'varchar':
+						case 'I':
+						case 'V':
+						$params['editor'] = true;
+						break;
+					}
+
+					array_push ($data['datatable']['field'], $params);
+			}
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			if($this->acl_edit)
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'edit',
+						'statustext' 	=> lang('edit the actor'),
+						'text' 			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'edit',
+						'statustext' 	=> lang('edit the actor'),
+						'text' 			=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'target'		=> '_blank',
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+
+			if($this->acl_delete)
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name' 		=> 'delete',
+						'statustext' 	=> lang('delete the actor'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uirequest.delete',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+			unset($parameters);
+			
+			if($this->acl_add)
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name' 			=> 'add',
+						'statustext' 	=> lang('add'),
+						'text'			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.add',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						))
+					);
+			}
+
+			self::render_template_xsl('datatable_jquery', $data);
+		}
+		
+		function index2()
+		{
+			if(!$this->acl_read)
+			{
+				//$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$datatable = array();
