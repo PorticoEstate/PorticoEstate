@@ -12,10 +12,28 @@ JqueryPortico.inlineTablesDefined = 0;
 JqueryPortico.inlineTablesRendered = 0;
 
 JqueryPortico.formatLink = function(key, oData) {
-
+        
 	var name = oData[key];
 	var link = oData['link'];
 	return '<a href="' + link + '">' + name + '</a>';
+};
+
+JqueryPortico.formatLinktwo = function(key, oData) {
+        
+        var id = '';
+        if(key == 'project_id')
+        {
+           id = oData['project_id'];
+        }
+        else if(key == 'workorder_id')
+        {
+            id = oData['workorder_id'];
+        }
+        
+	var name = oData[key];
+	var link = oData['link'];
+
+	return '<a href="' + link + '&id='+ id +'">' + name + '</a>';
 };
 
 JqueryPortico.formatLinkGeneric = function(key, oData) {
