@@ -37,6 +37,7 @@
 
 	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/src/css/jquery.mmenu.all.css";
 
