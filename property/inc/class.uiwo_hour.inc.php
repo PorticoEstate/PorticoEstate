@@ -1362,6 +1362,12 @@
 				$sms_data['status_code_text'] = lang('status code');
 				$sms_data['example'] = 'status ' . $workorder_id . ' 1';
 				$sms_data['lang_example'] = lang('Example');
+
+				phpgw::import_class('phpgwapi.phpqrcode');
+				$code_text = "SMSTO:{$config_sms->config_data['common']['gateway_number']}: STATUS {$workorder_id} ";
+				$filename = $GLOBALS['phpgw_info']['server']['temp_dir'].'/'.md5($code_text).'.png';
+				QRcode::png($code_text,$filename);
+				$sms_data['encoded_text'] = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 			}
 
 			$action_params = array
@@ -2118,6 +2124,35 @@ HTML;
 						,lang('descr')=>array('width'=>120))
 					));
 			}
+
+			$sms_location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+			$config_sms	= CreateObject('admin.soconfig',$sms_location_id);
+			phpgw::import_class('phpgwapi.phpqrcode');
+			$code_text = "SMSTO:{$config_sms->config_data['common']['gateway_number']}: STATUS {$workorder_id} ";
+			$filename = $GLOBALS['phpgw_info']['server']['temp_dir'].'/'.md5($code_text).'.png';
+			QRcode::png($code_text,$filename);
+			$pdf->ezSetDy(-20);
+			$pdf->ezImage($filename,$pad = 0,$width = 0,$resize = '',$just = 'left',$border = '');
+			$pdf->ezText(lang('status code') .': 1 => ' . lang('performed'). ', 2 => ' . lang('No access') . ', 3 => I arbeid',10);
+
+		/* TODO: Library has to be updated..http://sourceforge.net/projects/pdf-php/?source=directory
+			$data = array(
+				array('col1'=>"<C:showimage:{$filename} 90>"),
+				array('col1'=>'','col2'=>lang('status code') .': 1 => ' . lang('performed'). ', 2 => ' . lang('No access') . ', 3 => I arbeid')
+			);
+
+
+				$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
+				,'xOrientation'=>'right','width'=>500,'showLines'=> 2
+				,'cols'=>array
+				(
+					'col1'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+					'col2'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+				)
+
+			));
+*/
 
 			if(isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
 			{
