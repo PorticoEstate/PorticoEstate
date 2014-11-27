@@ -115,6 +115,10 @@
 			preg_match_all($header_regular_expression,$headers[$header_key], $matches);
 			$fodsels_nr = $matches[1][0];
 
+			$uid = $headers['uid'];
+
+			$fodsels_nr = $uid ? $uid : $fodsels_nr;
+
 			$sql = "SELECT BRUKERNAVN FROM V_AD_PERSON WHERE FODSELSNR ='{$fodsels_nr}'";
 			$db->query($sql,__LINE__,__FILE__);
 			$db->next_record();
