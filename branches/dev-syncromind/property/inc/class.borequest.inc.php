@@ -463,8 +463,8 @@
 			$this->total_records	= $this->so->total_records;
 			return $values;
 		}
-
-		function read($data)
+		
+		function read($data = array())
 		{
 			$custom	= createObject('phpgwapi.custom_fields');
 			$attrib_data = $custom->find('property', $this->acl_location, 0, '','','',true, true);
@@ -491,13 +491,14 @@
 				}
 			}
 
-			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/*$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
 				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id,
-				'responsible_unit' => $this->responsible_unit, 'recommended_year' => $this->recommended_year));
+				'responsible_unit' => $this->responsible_unit, 'recommended_year' => $this->recommended_year));*/
+			$values = $this->so->read($data);
 
 			$this->total_records			= $this->so->total_records;
 			$this->sum_investment			= $this->so->sum_investment;
@@ -509,22 +510,22 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			for ($i=0; $i<count($request); $i++)
+			for ($i=0; $i<count($values); $i++)
 			{
-				$request[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($request[$i]['coordinator']);
-				$request[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['start_date'],$dateformat);
-				$request[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['entry_date'],$dateformat);
-				$request[$i]['planned_year'] = $request[$i]['planned_year'] ? date('Y',$request[$i]['planned_year']) : '';
-				$request[$i]['closed_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['closed_date'],$dateformat);
-				$request[$i]['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['in_progress_date'],$dateformat);
-				$request[$i]['delivered_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['delivered_date'],$dateformat);
+				$values[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($values[$i]['coordinator']);
+				$values[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['start_date'],$dateformat);
+				$values[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['entry_date'],$dateformat);
+				$values[$i]['planned_year'] = $request[$i]['planned_year'] ? date('Y',$values[$i]['planned_year']) : '';
+				$values[$i]['closed_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['closed_date'],$dateformat);
+				$values[$i]['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['in_progress_date'],$dateformat);
+				$values[$i]['delivered_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['delivered_date'],$dateformat);
 
 				if($cols_extra)
 				{
-					$location_data=$this->solocation->read_single($request[$i]['location_code']);
+					$location_data=$this->solocation->read_single($values[$i]['location_code']);
 					for ($j=0;$j<count($cols_extra);$j++)
 					{
-						$request[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+						$values[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 					}
 				}
 			}
@@ -545,7 +546,7 @@
 				$this->uicols['classname'][] 	= '';
 			}
 
-			return $request;
+			return $values;
 		}
 
 		function read_single($request_id = 0, $values = array(),$view = false)
