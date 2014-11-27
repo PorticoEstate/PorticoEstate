@@ -2689,6 +2689,12 @@
 				<xsl:value-of select="example"/>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<img src="{encoded_text}"/>
+			</td>
+		</tr>
+
 	</xsl:template>
 
 	<!-- New template-->
