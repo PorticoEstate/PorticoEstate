@@ -3699,7 +3699,7 @@ JS;
 				);
 
 			$pdf->ezTable($content_heading,'','',
-				array('xPos'=>70,'xOrientation'=>'right','width'=>400,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>0,'showHeadings'=>0
+				array('xPos'=>70,'xOrientation'=>'right','width'=>400,0,'shaded'=>0,'fontSize' => 8,'gridlines'	=> 0,'titleFontSize' => 12,'outerLineThickness'=>0,'showHeadings'=>0
 				,'cols'=>array('text'=>array('justification'=>'left','width'=>100),
 					'value'=>array('justification'=>'left','width'=>200))
 				)
@@ -3722,7 +3722,7 @@ JS;
 			if(is_array($values))
 			{
 				$pdf->ezTable($content,'','',
-					array('xPos'=>70,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
+					array('xPos'=>70,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'gridlines'	=> EZ_GRIDLINE_ALL,'titleFontSize' => 12,'outerLineThickness'=>2
 					,'cols'=>$table_header
 				)
 			);

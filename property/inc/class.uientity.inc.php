@@ -3049,7 +3049,7 @@ JS;
 			$pdf->ezStartPageNumbers(500,28,10,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
 
 			$pdf->ezTable($content_heading,'','',
-				array('xPos'=>220,'xOrientation'=>'right','width'=>300,0,'shaded'=>0,'fontSize' => 10,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>0,'showHeadings'=>0
+				array('xPos'=>220,'xOrientation'=>'right','width'=>300,0,'shaded'=>0,'fontSize' => 10, 'gridlines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>0,'showHeadings'=>0
 				,'cols'=>array('text'=>array('justification'=>'left','width'=>100),
 					'value'=>array('justification'=>'left','width'=>200))
 				)
@@ -3140,7 +3140,7 @@ JS;
 					}
 				}
 				$pdf->ezTable($content,'','',
-					array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'showLines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
+					array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'gridlines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
 					,'cols'=>$table_header
 				)
 			);
