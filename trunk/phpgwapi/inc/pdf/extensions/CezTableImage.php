@@ -691,7 +691,8 @@ class pdf extends pdf_ {
 		$height = 0;
 		$matches = $this->getImagesFromText($text);
 		for ($key=0; $key<count($matches[0]); $key++) {
-	  		$params = & CezShowimageParameter::create($matches[1][$key]);
+			$CezShowimageParameter = new CezShowimageParameter();
+			$params = $CezShowimageParameter->create($matches[1][$key]);
 			if ($params->getHeight()>0) {
 				$height = $height + $params->getHeight();
 			} else {
@@ -707,9 +708,12 @@ class pdf extends pdf_ {
 	 * @param CezShowimageParameter $params image parameter
 	 * @param float $x horizontal position
 	 * @param float $y vertical position
+     * @param $w width
+     * @param $h height
+     * @param $quality image quality
 	 * @access protected
 	 */
-	function addImage(& $params, $x = 0, $y = 0,$w=0,$h=0,$quality=75) {
+	function addImage(& $params, $x = 0, $y = 0, $w=0,$h=0,$quality=75) {
 		if ($params->isUrl()) {
 			if (function_exists('imagecreatefrompng')) {
 				switch($params->getImageType()) {
@@ -753,7 +757,8 @@ class pdf extends pdf_ {
 	 */
 	function showimage($info) {
 		if ($info['status']=='start') {
-			$params = & CezShowimageParameter::create($info['p']);
+			$CezShowimageParameter = new CezShowimageParameter();
+			$params =  $CezShowimageParameter->create($info['p']);
 			if ($params->isReadable()) {
 				$y = ($params->getPositionY()>0) ? $params->getPositionY() : $info['y'];
 				$this->addImage($params, $info['x'], $y);
@@ -776,7 +781,9 @@ class pdf extends pdf_ {
 	function parseImages(&$text, $maxwidth = 0, $maxheight = 0, $currenty = 0) {
 		$matches = $this->getImagesFromText($text);
 		for ($key=0; $key<count($matches[0]); $key++) {
-			$params = & CezShowimageParameter::create($matches[1][$key]);
+			$CezShowimageParameter = new CezShowimageParameter();
+			$params =  $CezShowimageParameter->create($matches[1][$key]);
+
 			if ($params->isReadable()) {
 				$width = $params->getWidth();
 				$height = $params->getHeight();
@@ -819,7 +826,8 @@ class pdf extends pdf_ {
 		$mx = 0;
 		$matches = $this->getImagesFromText($text);
 		for ($key=0; $key<count($matches[0]); $key++) {
-			$params = & CezShowimageParameter::create($matches[1][$key]);
+			$CezShowimageParameter = new CezShowimageParameter();
+			$params =  $CezShowimageParameter->create($matches[1][$key]);
 	    	if ($params->getWidth()>$mx) {
 	    		$mx = $params->getWidth();
 	    	} elseif ($params->getOriginalWidth()>$mx) {
@@ -968,7 +976,7 @@ class CezShowimageParameter {
 	 * @return CezShowimageParameter parameter object
 	 * @access public
 	 */
-	function & create($param = '') {
+	function  create($param = '') {
 
 		$obj = new CezShowimageParameter();
 		$obj->_parse($param);
