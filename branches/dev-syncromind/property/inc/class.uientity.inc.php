@@ -62,6 +62,8 @@
 				'index'				=> true,
 				'addfiles'			=> true,
 				'get_files'			=> true,
+				'get_target'		=> true,
+				'get_related'		=> true,
 				'get_inventory'		=> true,
 				'add_inventory'		=> true,
 				'edit_inventory'	=> true,
@@ -554,12 +556,68 @@
 		*/
 		function get_related()
 		{
-			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$draw = phpgw::get_var('draw', 'int');
+			$allrows = phpgw::get_var('length', 'int') == -1;
+		
+			$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
 
-			if( !$this->acl_read)
+			$values = array();
+			if(isset($related['related']))
 			{
-				return;
+				foreach($related as $related_key => $related_data)
+				{
+					foreach($related_data as $entry)
+					{
+						$values[] = array
+						(
+							'url'		=> "<a href=\"{$entry['entity_link']}\" > {$entry['name']}</a>",
+						);
+					}
+				}
 			}
+
+			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			$total_records = count($values);
+
+			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				if ($total_records > $num_rows)
+				{
+					$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+					$values_part = array_chunk($values, $num_rows);
+					$out = $values_part[$page];
+				}
+				else 
+				{
+					$out = $values;
+				}
+			}
+
+			$result_data = array('results' => $out);
+
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
+			
+			return $this->jquery_results($result_data);
+		}
+
+		
+		/**
+		* Function to get related via Ajax-call using api-version of yui
+		*
+		*/
+		function get_target()
+		{
+			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$draw = phpgw::get_var('draw', 'int');
+			$allrows = phpgw::get_var('length', 'int') == -1;
 		
 			$interlink 	= CreateObject('property.interlink');
 			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
@@ -584,22 +642,11 @@
 					}
 				}
 			}
-
-/*
-			if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
-			{
-				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-				$socase 			= CreateObject('controller.socase');
-				$controller_cases	= $socase->get_cases_by_message($location_id, $id);
-			}
-*/
-
-//------ Start pagination
-
-			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$total_records = count($values);
 
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
 
 			if($allrows)
 			{
@@ -607,37 +654,32 @@
 			}
 			else
 			{
-				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
-				$values_part = array_chunk($values, $num_rows);
-				$out = $values_part[$page];
+				if ($total_records > $num_rows)
+				{
+					$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+					$values_part = array_chunk($values, $num_rows);
+					$out = $values_part[$page];
+				}
+				else 
+				{
+					$out = $values;
+				}
 			}
 
-//------ End pagination
+			$result_data = array('results' => $out);
 
-
-			$data = array(
-				 'ResultSet' => array(
-					'totalResultsAvailable' => $total_records,
-					'startIndex' => $start,
-					'sortKey' => 'type', 
-					'sortDir' => "ASC", 
-					'Result' => $out,
-					'pageSize' => $num_rows,
-					'activePage' => floor($start / $num_rows) + 1
-				)
-			);
-			return $data;
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
+			
+			return $this->jquery_results($result_data);
 		}
-
-
+		
+		
 		function get_files()
 		{
-			$id 	= phpgw::get_var('id', 'int');
-
-			if( !$this->acl_read)
-			{
-				return;
-			}
+			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$draw = phpgw::get_var('draw', 'int');
+			$allrows = phpgw::get_var('length', 'int') == -1;
 
 			$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
 
@@ -660,7 +702,6 @@
 				}
 			}
 
-
 			$content_files = array();
 			foreach($values['files'] as $_entry )
 			{
@@ -671,19 +712,35 @@
 					);
 			}
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
+			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			$total_records = count($content_files);
 
-				if(count($content_files))
+			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
+
+			if($allrows)
+			{
+				$out = $content_files;
+			}
+			else
+			{
+				if ($total_records > $num_rows)
 				{
-					return json_encode($content_files);
+					$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+					$values_part = array_chunk($content_files, $num_rows);
+					$out = $values_part[$page];
 				}
-				else
+				else 
 				{
-					return "";
+					$out = $content_files;
 				}
 			}
-			return $content_files;
+
+			$result_data = array('results' => $out);
+
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
+			
+			return $this->jquery_results($result_data);
 		}
 
 
@@ -1488,7 +1545,6 @@
 				{
 					$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id),$values);
 				}
-
 			}
 
 			/* Preserve attribute values from post */
@@ -1749,22 +1805,7 @@
 
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
 			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
-//_debug_array($custom_config->config_data);die();
-			// required settings:
-/*
-			integration_tab
-			integration_height
-			integration_url
-			integration_parametres
-			integration_action
-			integration_action_view
-			integration_action_edit
-			integration_auth_key_name
-			integration_auth_url
-			integration_auth_hash_name
-			integration_auth_hash_value
-			integration_location_data
- */
+
 			$integration = array();
 			foreach ($_config as $_config_section => $_config_section_data)
 			{
@@ -1945,7 +1986,7 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uientity.get_files', 'entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'id' => $id,'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $file_def
 			);
 
@@ -2049,7 +2090,7 @@
 					unset($_link);
 				}
 
-				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+				//$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
 
 				$_related = array();
 				if(isset($related['related']))
@@ -2103,7 +2144,7 @@
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_1',
-					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_request', 'id' => $id,'phpgw_return_as'=>'json'))),
+					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uientity.get_target', 'id' => $id,'phpgw_return_as'=>'json'))),
 					'ColumnDefs'	=> $target_def
 				);
 				/*
@@ -2134,7 +2175,7 @@
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_2',
-					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
+					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uientity.get_related', 'entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'id' => $id,'phpgw_return_as'=>'json'))),
 					'ColumnDefs'	=> $related_def
 				);
 
