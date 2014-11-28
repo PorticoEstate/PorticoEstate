@@ -1851,15 +1851,13 @@ HTML;
 																	'show_details'	=> $show_details,
 																	'print'			=> true
 																	)) . "','1000','1200')",
-					'pdf_action'						=> "javascript:openwindow('"
-															. $GLOBALS['phpgw']->link('/index.php', array
+					'pdf_action'						=> $GLOBALS['phpgw']->link('/index.php', array
 																(
 																	'menuaction'	=> 'property.uiwo_hour.pdf_order',
 																	'workorder_id'	=> $workorder_id,
 																	'show_cost'		=> $show_cost,
 																	'show_details'	=> $show_details,
-																	'preview'		=> true,
-																	)) . "','100','100')",
+																	'preview'		=> true)),
 					'mail_recipients' 					=> isset($workorder['mail_recipients']) && is_array($workorder['mail_recipients']) ? implode(';', $workorder['mail_recipients']) : ''
 				);
 
@@ -1954,8 +1952,6 @@ HTML;
 
 		function pdf_order($workorder_id = '', $show_cost = false)
 		{
-			$pdf					= CreateObject('phpgwapi.pdf');
-
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
@@ -2010,8 +2006,9 @@ HTML;
 			$date = $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
 
 			set_time_limit(1800);
-			$pdf -> ezSetMargins(50,70,50,50);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+
+			$pdf= CreateObject('phpgwapi.pdf');
+			$pdf->ezSetMargins(50,70,50,50);
 
 			// put a line top and bottom on all the pages
 			$all = $pdf->openObject();
@@ -2031,15 +2028,16 @@ HTML;
 			//	$pdf->addText(50,823,6,lang('order'));
 			$pdf->addText(50,28,6,$this->config->config_data['org_name']);
 			$pdf->addText(300,28,6,$date);
-
-
 			$pdf->restoreState();
 			$pdf->closeObject();
 			// note that object can be told to appear on just odd or even pages by changing 'all' to 'odd'
 			// or 'even'.
 			$pdf->addObject($all,'all');
 
-			//			$pdf->ezSetDy(-100);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+
+//			$pdf->ezSetDy(-100);
+			$pdf->openHere('Fit');
 
 			$pdf->ezStartPageNumbers(500,28,6,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
 
@@ -2048,14 +2046,18 @@ HTML;
 					array('col1'=>"{$this->config->config_data['org_name']}\n\nOrg.nr: {$this->config->config_data['org_unit_id']}",'col2'=>lang('Order'),'col3'=>lang('order id') . "\n\n{$workorder_id}")
 				);		
 
-			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),''
-				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
-				,'xOrientation'=>'right','width'=>500
-				,'cols'=>array
+			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),'',
+				array('showHeadings'=>0,'shaded'=>0,'xPos'=>0,
+				'xOrientation'=>'right','width'=>500,
+				'gridlines'	=> EZ_GRIDLINE_ALL,
+				//'outerLineThickness'=>1,
+				//'innerLineThickness'=> 1,
+				//	'showLines'	=> 0,
+				'cols'=>array
 				(
-					'col1'=>array('justification'=>'right','width'=>200, 'justification'=>'left'),
-					'col2'=>array('justification'=>'right','width'=>100, 'justification'=>'center'),
-					'col3'=>array('justification'=>'right','width'=>200),
+					'col1'=>array('width'=>200, 'justification'=>'left'),
+					'col2'=>array('width'=>100, 'justification'=>'center'),
+					'col3'=>array('width'=>200,'justification'=>'right'),
 				)
 
 			));
@@ -2094,9 +2096,9 @@ HTML;
 				);		
 
 			$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
-				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
-				,'xOrientation'=>'right','width'=>500,'showLines'=> 2
-				,'cols'=>array
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0,
+				'xOrientation'=>'right','width'=>500,'gridlines'=> EZ_GRIDLINE_ALL,
+				'cols'=>array
 				(
 					'col1'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
 					'col2'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
@@ -2115,8 +2117,9 @@ HTML;
 			{
 				$pdf->ezSetDy(-20);
 				$pdf->ezTable($content,'',lang('details'),
-					array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
-					,'cols'=>array(
+					array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,
+						'gridlines'	=> EZ_GRIDLINE_ALL,
+						'titleFontSize' => 12,'outerLineThickness'=>1,'cols'=>array(
 						lang('bill per unit')=>array('justification'=>'right','width'=>50)
 						,lang('quantity')=>array('justification'=>'right','width'=>50)
 						,lang('cost')=>array('justification'=>'right','width'=>50)
@@ -2132,27 +2135,26 @@ HTML;
 			$filename = $GLOBALS['phpgw_info']['server']['temp_dir'].'/'.md5($code_text).'.png';
 			QRcode::png($code_text,$filename);
 			$pdf->ezSetDy(-20);
-			$pdf->ezImage($filename,$pad = 0,$width = 0,$resize = '',$just = 'left',$border = '');
-			$pdf->ezText(lang('status code') .': 1 => ' . lang('performed'). ', 2 => ' . lang('No access') . ', 3 => I arbeid',10);
+	//		$pdf->ezImage($filename,$pad = 0,$width = 0,$resize = '',$just = 'left',$border = '');
+	//		$pdf->ezText(lang('status code') .': 1 => ' . lang('performed'). ', 2 => ' . lang('No access') . ', 3 => I arbeid',10);
 
-		/* TODO: Library has to be updated..http://sourceforge.net/projects/pdf-php/?source=directory
 			$data = array(
-				array('col1'=>"<C:showimage:{$filename} 90>"),
-				array('col1'=>'','col2'=>lang('status code') .': 1 => ' . lang('performed'). ', 2 => ' . lang('No access') . ', 3 => I arbeid')
+				array('col1'=>"<C:showimage:{$filename} 90>", 'col2'=>"\n".lang('status code') .":\n\n 1 => " . lang('performed'). "\n 2 => " . lang('No access') . "\n 3 => I arbeid")
 			);
 
 
-				$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
-				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
-				,'xOrientation'=>'right','width'=>500,'showLines'=> 2
-				,'cols'=>array
+				$pdf->ezTable($data,array('col1'=>'','col2'=>''),'',
+				array('showHeadings'=>0,'shaded'=>0,'xPos'=>0,
+				'xOrientation'=>'right','width'=>500,
+				'gridlines'	=> EZ_GRIDLINE_ALL,
+				'cols'=>array
 				(
-					'col1'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
-					'col2'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+					'col1'=>array('width'=>150, 'justification'=>'left'),
+					'col2'=>array('width'=>350, 'justification'=>'left'),
 				)
 
 			));
-*/
+
 
 			if(isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
 			{
@@ -2164,14 +2166,14 @@ HTML;
 				$pdf->ezText($this->config->config_data['order_footer'],10);
 			}
 
-			$document= $pdf->ezOutput();
 			if($preview)
 			{
-				$pdf->print_pdf($document,'order');
+			//	$pdf->print_pdf($document,'order');
+				$pdf->ezStream();
 			}
 			else
 			{
-				return $document;
+				return $pdf->ezOutput();
 			}
 		}
 
@@ -2243,8 +2245,9 @@ HTML;
 			{
 				$pdf->ezNewPage();
 				$pdf->ezTable($content,'',$project['name'],
-					array('xPos'=>70,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
-					,'cols'=>array(
+					array('xPos'=>70,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,
+					'gridlines'	=> EZ_GRIDLINE_ALL,'titleFontSize' => 12,'outerLineThickness'=>2,
+					'cols'=>array(
 						lang('bill per unit')=>array('justification'=>'right','width'=>50)
 						,lang('quantity')=>array('justification'=>'right','width'=>50)
 						,lang('cost')=>array('justification'=>'right','width'=>50)
