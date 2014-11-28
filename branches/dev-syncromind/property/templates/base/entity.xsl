@@ -654,22 +654,23 @@
 									var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
 								</script>
 								<fieldset>
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<!-- <xsl:call-template name="file_list"/> -->
-									<tr>
-										<td align="left" valign="top">
-											<xsl:value-of select="//lang_files"/>
-										</td>
-										<td>
-											<div id="datatable-container_0"/>
-										</td>
-									</tr>
+									<div class="pure-control-group">
+										<xsl:value-of select="//lang_files"/>
+										<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_0'">
+													<xsl:call-template name="table_setup">
+													  <xsl:with-param name="container" select ='container'/>
+													  <xsl:with-param name="requestUrl" select ='requestUrl' />
+													  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+													</xsl:call-template>
+												</xsl:if>
+										</xsl:for-each>
+									</div>
 									<xsl:choose>
 										<xsl:when test="cat_list='' and fileupload = 1 and mode = 'edit'">
 											<xsl:call-template name="file_upload"/>
 										</xsl:when>
 									</xsl:choose>
-								</table>
 								</fieldset>
 							</div>
 						</xsl:when>
@@ -732,6 +733,17 @@
 									<div class="pure-control-group">
 										<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_1'">
+													<xsl:call-template name="table_setup">
+													  <xsl:with-param name="container" select ='container'/>
+													  <xsl:with-param name="requestUrl" select ='requestUrl' />
+													  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+													</xsl:call-template>
+												</xsl:if>
+										</xsl:for-each>
+									</div>
+									<div class="pure-control-group">
+										<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_2'">
 													<xsl:call-template name="table_setup">
 													  <xsl:with-param name="container" select ='container'/>
 													  <xsl:with-param name="requestUrl" select ='requestUrl' />
