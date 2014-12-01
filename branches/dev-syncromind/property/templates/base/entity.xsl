@@ -761,15 +761,17 @@
 						<xsl:when test="enable_bulk = 1">
 							<div id="inventory">
 								<fieldset>
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<tr>
-										<td align="left" valign="top">
-											<xsl:value-of select="php:function('lang', 'inventory')"/>
-										</td>
-										<td>
-											<div id="datatable-container_3"/>
-										</td>
-									</tr>
+									<div class="pure-control-group">
+										<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_3'">
+													<xsl:call-template name="table_setup">
+													  <xsl:with-param name="container" select ='container'/>
+													  <xsl:with-param name="requestUrl" select ='requestUrl' />
+													  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+													</xsl:call-template>
+												</xsl:if>
+										</xsl:for-each>
+									</div>
 									<xsl:choose>
 										<xsl:when test="value_id!='' and mode = 'edit'">
 											<xsl:variable name="lang_add_inventory">
@@ -780,7 +782,6 @@
 											</a>
 										</xsl:when>
 									</xsl:choose>
-								</table>
 								</fieldset>
 							</div>
 						</xsl:when>
