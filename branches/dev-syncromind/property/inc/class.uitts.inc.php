@@ -3697,10 +3697,10 @@
 				array('col1'=>"{$this->bo->config->config_data['org_name']}\n\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",'col2'=>lang('Order'),'col3'=>lang('order id') . "\n\n{$ticket['order_id']}")
 			);		
 
-			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),''
-				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
-				,'xOrientation'=>'right','width'=>500
-				,'cols'=>array
+			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),'',
+				array('showHeadings'=>0,'shaded'=>0,'xPos'=>0,
+				'xOrientation'=>'right','width'=>500, 'gridlines'=> EZ_GRIDLINE_ALL,
+				'cols'=>array
 				(
 					'col1'=>array('justification'=>'right','width'=>200, 'justification'=>'left'),
 					'col2'=>array('justification'=>'right','width'=>100, 'justification'=>'center'),
@@ -3779,10 +3779,10 @@
 				array('col1'=>$from,'col2'=>$invoice_address)
 			);		
 
-			$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
-				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
-				,'xOrientation'=>'right','width'=>500,'showLines'=> 2
-				,'cols'=>array
+			$pdf->ezTable($data,array('col1'=>'','col2'=>''),'',
+				array('showHeadings'=>0,'shaded'=>0,'xPos'=>0,
+				'xOrientation'=>'right','width'=>500,'gridlines'=> EZ_GRIDLINE_ALL,
+				'cols'=>array
 				(
 					'col1'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
 					'col2'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
@@ -3832,7 +3832,7 @@
 			{
 				$pdf->ezSetDy(-20);
 				$pdf->ezTable($content,'',lang('details'),
-					array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
+					array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'gridlines'=> EZ_GRIDLINE_ALL,'titleFontSize' => 12,'outerLineThickness'=>2
 					,'cols'=>array(
 						lang('bill per unit')=>array('justification'=>'right','width'=>50)
 						,lang('quantity')=>array('justification'=>'right','width'=>50)

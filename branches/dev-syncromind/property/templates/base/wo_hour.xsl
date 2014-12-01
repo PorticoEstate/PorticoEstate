@@ -405,7 +405,7 @@
 									</tr>
 									<tr>
 										<td class="th_text" align="left">
-											<a href="{pdf_action}">
+											<a href="{pdf_action}" target="_blank">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'preview pdf')"/>
 												</xsl:attribute>
@@ -2689,6 +2689,12 @@
 				<xsl:value-of select="example"/>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<img src="{encoded_text}"/>
+			</td>
+		</tr>
+
 	</xsl:template>
 
 	<!-- New template-->

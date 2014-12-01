@@ -115,7 +115,7 @@
 
 			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),''
 				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
-				,'xOrientation'=>'right','width'=>500
+				,'xOrientation'=>'right','width'=>500,'gridlines'=> EZ_GRIDLINE_ALL
 				,'cols'=>array
 				(
 					'col1'=>array('justification'=>'right','width'=>200, 'justification'=>'left'),
@@ -206,7 +206,7 @@ TXT;
 
 			$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
 				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
-				,'xOrientation'=>'right','width'=>500,'showLines'=> 0
+				,'xOrientation'=>'right','width'=>500,'gridlines'=> 0
 				,'cols'=>array
 				(
 					'col1' =>array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
