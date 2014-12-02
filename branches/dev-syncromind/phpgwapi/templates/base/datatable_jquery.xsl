@@ -590,7 +590,7 @@
 																					
 																					// look for the word "DELETE" in URL
 																					if(substr_count(action,'delete')>0)
-																					{
+																					{               
 																							action += "&amp;confirm=yes&amp;phpgw_return_as=json";
 																							execute_ajax(action, function(result){
 																								document.getElementById("message").innerHTML += '<br/>' + result;
@@ -789,12 +789,12 @@
 				 return aReturn;
 			}
 
-			function execute_ajax(requestUrl, type, dataType, data, callback)
-			{
+			function execute_ajax(requestUrl, callback, data,type, dataType)
+			{                                       
 				type = typeof type !== 'undefined' ? type : 'POST';
 				dataType = typeof dataType !== 'undefined' ? dataType : 'html';
 				data = typeof data !== 'undefined' ? data : {};
-   
+                                
 				$.ajax({
 					type: type,
 					dataType: dataType,
