@@ -501,7 +501,7 @@
 			$this->db->query("UPDATE fm_template set $value_set WHERE id='" . $values['template_id'] . "'",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
-			$receipt['message'][]=array('msg'=>lang('template has been edited'));
+			$receipt['message'][]=array('msg'=>lang('template has been edited'),'OK'=>'Is save Successfully');
 			return $receipt;
 		}
 
