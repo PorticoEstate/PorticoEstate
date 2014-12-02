@@ -134,9 +134,6 @@
 		*/
 		private function _populate($data = array())
 		{
-			//$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
-
-			$bolocation	= CreateObject('property.bolocation');
 
 			$values				= phpgw::get_var('values');
 			$values_attribute	= phpgw::get_var('values_attribute');
@@ -148,8 +145,13 @@
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
 			$values['date']				= phpgw::get_var('date');
 			
-			$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
-			$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,$this->type_app[$this->type]);
+			if(!$this->cat_id)
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select entity type !'));
+			}
+			
+			$insert_record 	= $GLOBALS['phpgw']->session->appsession('insert_record','property');
+			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,$this->type_app[$this->type]);
 
 			if(is_array($insert_record_entity))
 			{
@@ -203,13 +205,6 @@
 			if(!$values['location'] && isset($category['location_level']) && $category['location_level'])
 			{
 				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
-				$error_id=true;
-			}
-
-			if(!$this->cat_id)
-			{
-				$this->receipt['error'][]=array('msg'=>lang('Please select entity type !'));
-				$error_id=true;
 			}
 
 			if(isset($values_attribute) && is_array($values_attribute))
@@ -450,13 +445,16 @@
 
 			if ($id)
 			{
-				$data = $this->bo->read_single( array('id' => $id) );
+				$data	= $this->bo->read_single(array('entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'id'=>$id));
 				$action = 'edit';
 			}
 			else
 			{
-				$data = $this->bo->read_single();
-				$action = 'add';
+				if($this->cat_id)
+				{
+					$data	= $this->bo->read_single(array('entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id), $values);
+					$action = 'add';
+				}
 			}
 
 			/*
@@ -971,7 +969,7 @@
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array(
-									'menuaction'	=> 'property.uientity.add',
+									'menuaction'	=> 'property.uientity.edit',
 									'entity_id'		=> $this->entity_id,
 									'cat_id'		=> $this->cat_id,
 									'type'			=> $this->type
