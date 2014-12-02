@@ -58,6 +58,7 @@
 				'edit_attrib' 		=> true,
 				'list_attribute_group'	=> true,
 				'edit_attrib_group'	=> true,
+                                'save'                  => true
 			);
 
 		function __construct()
@@ -369,8 +370,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$id			= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
+			$id	= (int)phpgw::get_var('id');
+			$values	= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_location'));
 
@@ -400,9 +401,9 @@
 
 			if ($id)
 			{
-				$values = $this->bo->read_single($id);
-				$function_msg = lang('edit standard');
-				$action='edit';
+                            $values = $this->bo->read_single($id);
+                            $function_msg = lang('edit standard');
+                            $action='edit';
 			}
 			else
 			{
@@ -422,26 +423,26 @@
 
 			$data = array
 				(
-					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'lang_name_standardtext'		=> lang('Enter a name of the standard'),
-					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
-					'lang_id'						=> lang('standard ID'),
-					'lang_name'						=> lang('Name'),
-					'lang_descr'					=> lang('Descr'),
-					'lang_save'						=> lang('save'),
-					'lang_done'						=> lang('done'),
-					'value_id'						=> (isset($id)?$id:''),
-					'value_name'					=> (isset($values['name'])?$values['name']:''),
+					'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
+					'lang_id'				=> lang('standard ID'),
+					'lang_name'				=> lang('Name'),
+					'lang_descr'				=> lang('Descr'),
+					'lang_save'				=> lang('save'),
+					'lang_done'				=> lang('done'),
+					'value_id'				=> (isset($id)?$id:''),
+					'value_name'				=> (isset($values['name'])?$values['name']:''),
 					'lang_id_standardtext'			=> lang('Enter the standard ID'),
 					'lang_descr_standardtext'		=> lang('Enter a description of the standard'),
 					'lang_done_standardtext'		=> lang('Back to the list'),
 					'lang_save_standardtext'		=> lang('Save the standard'),
-					'value_descr'					=> (isset($values['descr'])?$values['descr']:''),
-					'lang_list_info'				=> lang('list info'),
-					'lang_select'					=> lang('select'),
-					'value_list_info'				=> $this->bo->get_list_info((isset($id)?$id:''),$values['list_info']),
-					'lang_location'					=> lang('location'),
+					'value_descr'				=> (isset($values['descr'])?$values['descr']:''),
+					'lang_list_info'			=> lang('list info'),
+					'lang_select'				=> lang('select'),
+					'value_list_info'			=> $this->bo->get_list_info((isset($id)?$id:''),$values['list_info']),
+					'lang_location'				=> lang('location'),
 					'lang_list_info_statustext'		=> lang('Names of levels to list at this level'),
 					'value_list_address'			=> isset($values['list_address'])?$values['list_address']:'',
 					'value_list_documents'			=> isset($values['list_documents'])?$values['list_documents']:''
