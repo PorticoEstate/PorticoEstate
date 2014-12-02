@@ -392,14 +392,14 @@
 			$code = '
 				var link = "'.$link.'";
 				var data = {"district_id": $(this).val()};
-				execute_ajax(link, "GET", "json", data,
+				execute_ajax(link,
 					function(result){
 						var $el = $("#part_of_town_id");
 						$el.empty();
 						$.each(result, function(key, value) {
 						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 						});
-					}
+					}, data, "GET", "json"
 				);
 				';
 
@@ -471,14 +471,14 @@
 			$code = '
 				var link = "'.$link.'";
 				var data = {"district_id": $(this).val()};
-				execute_ajax(link, "GET", "json", data,
+				execute_ajax(link,
 					function(result){
 						var $el = $("#part_of_town_id");
 						$el.empty();
 						$.each(result, function(key, value) {
 						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 						});
-					}
+					}, data, "GET", "json"
 				);
 				';
 
@@ -584,14 +584,14 @@
 			$code = '
 				var link = "'.$link.'";
 				var data = {"district_id": $(this).val()};
-				execute_ajax(link, "GET", "json", data,
+				execute_ajax(link,
 					function(result){
 						var $el = $("#part_of_town_id");
 						$el.empty();
 						$.each(result, function(key, value) {
 						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 						});
-					}
+					}, data, "GET", "json"
 				);
 				';
 
@@ -1304,10 +1304,10 @@ JS;
 					});
 
 					var data = {"assign": assign, "assign_orig": assign_orig, "user_id": $("#user_id").val(), "role_id": $("#role_id").val()};
-					execute_ajax(action, "POST", "", data, function(result){
+					execute_ajax(action, function(result){
 						document.getElementById("message").innerHTML += "<br/>" + result;
 						oTable.fnDraw();
-					});
+					}, data, "POST");
 					';
 
 				$data['datatable']['actions'][] = array
