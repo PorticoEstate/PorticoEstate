@@ -56,7 +56,8 @@
 				'edit_hour'		=> true,
 				'delete'		=> true,
 				'hour'			=> true,
-                                'columns'               => true
+                                'columns'               => true,
+                                'save'                  => true
 			);
                 function __construct() {
                     parent::__construct();
@@ -224,42 +225,6 @@
                             array_unshift($data['form']['toolbar']['item'], $filter);
                         }
                         
-			//$template_list	= $this->bo->read();
-			/*$uicols = array();
-
-			$uicols['name'][0]['name'] = 'ID';
-			$uicols['name'][0]['value'] = 'template_id';
-                        $uicols['name'][0]['sortable'] = true;
-
-			$uicols['name'][1]['name'] = 'Name';
-			$uicols['name'][1]['value'] = 'name';
-                        $uicols['name'][1]['sortable'] = true;
-                        
-			$uicols['name'][2]['name'] = 'Description';
-			$uicols['name'][2]['value'] = 'descr';
-
-			$uicols['name'][3]['name'] = 'Chapter';
-			$uicols['name'][3]['value'] = 'chapter';
-
-			$uicols['name'][4]['name'] = 'owner';
-			$uicols['name'][4]['value'] = 'owner';
-
-			$uicols['name'][5]['name'] = 'Entry Date';
-			$uicols['name'][5]['value'] = 'entry_date';
-                        
-			$count_uicols_name = count($uicols['name']);
-                        
-                        for($k=0; $k<$count_uicols_name;$k++)
-                        {
-                            $params = array(
-                                                'key' => $uicols['name'][$k],
-                                                'label' => $uicols['descr'][$k],
-                                                'sortable' => ($uicols['sortable'][$k]) ? true : false,
-                                                'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
-                                            );
-					array_push ($data['datatable']['field'], $params);
-                        }
-                        */
                         if(!empty($lookup))
 			{       
                                  $params2 = array(
@@ -292,7 +257,7 @@
                                             array
                                             (
                                                     'name'	=> 'id',
-                                                    'source'	=> 'template_id'
+                                                    'source'	=> 'template_id' 
                                             ),
                                         )
                                     );
@@ -330,7 +295,7 @@
 						'my_name' 	=> 'delete',
 						'statustext' 	=> lang('delete the claim'),
 						'text'		=> lang('delete'),
-						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						#'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 						    'menuaction'	=> 'property.uitemplate.delete'
@@ -701,19 +666,8 @@
 			$template_id 	= phpgw::get_var('template_id', 'int');
 			$values		= phpgw::get_var('values');
 			$receipt = array();
-                        
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
-
-			if ($values['save'])
-			{
-                                $values['template_id'] = $template_id;   
-				if(!isset($receipt['error']) || !$receipt['error'])
-				{
-					$receipt = $this->bo->save_template($values);
-					$template_id=$receipt['template_id'];
-				}
-			}
-                        
+                       
 			if ($template_id)
 			{
 				$values = $this->bo->read_single_template($template_id);
@@ -723,15 +677,15 @@
 			{
 				$function_msg = lang('Add template');
 			}
-
+                        
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uitemplate.edit_template',
+					'menuaction'	=> 'property.uitemplate.save',
 					'template_id'	=> $template_id
 				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
+                        
 			$data = array
 				(
 					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -741,58 +695,74 @@
 					'lang_template_id'			=> lang('Template ID'),
 					'value_template_id'			=> $template_id,
 
-					'lang_name'					=> lang('Name'),
+					'lang_name'				=> lang('Name'),
 					'value_name'				=> $values['name'],
 
-					'lang_save'					=> lang('save'),
-					'lang_done'					=> lang('done'),
+					'lang_save'				=> lang('save'),
+					'lang_done'				=> lang('done'),
 					'lang_descr'				=> lang('description'),
 					'value_descr'				=> $values['descr'],
-					'lang_descr_statustext'		=> lang('Enter the description for this template'),
-					'lang_done_statustext'		=> lang('Back to the list'),
-					'lang_save_statustext'		=> lang('Save the building'),
+					'lang_descr_statustext'                 => lang('Enter the description for this template'),
+					'lang_done_statustext'                  => lang('Back to the list'),
+					'lang_save_statustext'                  => lang('Save the building'),
 
 					'lang_remark'				=> lang('Remark'),
 					'value_remark'				=> isset($values['remark']) ? $values['remark'] : '',
-					'lang_remark_statustext'	=> lang('Enter additional remarks to the description - if any'),
+					'lang_remark_statustext'                => lang('Enter additional remarks to the description - if any'),
 
 					'lang_chapter'				=> lang('chapter'),
 					'chapter_list'				=> $this->bowo_hour->get_chapter_list('select',$values['chapter_id']),
 					'select_chapter'			=> 'values[chapter_id]',
 					'lang_no_chapter'			=> lang('Select chapter'),
-					'lang_chapter_statustext'	=> lang('Select the chapter (for tender) for this activity.'),
-					'lang_add'					=> lang('add a hour'),
-					'lang_add_statustext'		=> lang('add a hour to this template'),
+					'lang_chapter_statustext'               => lang('Select the chapter (for tender) for this activity.'),
+					'lang_add'				=> lang('add a hour'),
+					'lang_add_statustext'                   => lang('add a hour to this template'),
 					'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour', 'template_id'=> $template_id))
 				);
-
+                        
 			$appname	= lang('Workorder template');
 			$function_msg	= lang('view ticket detail');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_template' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			// $GLOBALS['phpgw']->xslttpl->pp();
 		}
                 
                 public function save()
                 {
-                    
-                        $template_id 	= phpgw::get_var('template_id', 'int');
+                        $template_id 	= (int)phpgw::get_var('template_id');
 			$values		= phpgw::get_var('values');
-                        
-                        if ($template_id)
-			{
-				$values = $this->bo->read_single_template($template_id);
-				$function_msg = lang('Edit template');
-			}
-			else
-			{       
-                                $data = $this->bo->read_single_template();
-				$function_msg = lang('Add template');
-			}
-                        /*
-			* Overrides with incoming data from POST
-			*/
+                        $receipt = array();
+
+                        $values['template_id'] = $template_id; 
+                        if(!isset($receipt['error']) || !$receipt['error'])
+                        {
+                            try
+                            {   
+                                $receipt = $this->bo->save_template($values);
+                                $template_id=$receipt['template_id'];   
+                                $msgbox_data = $this->bocommon->msgbox_data($receipt);
+                                
+                                
+                            } catch (Exception $e) {
+                                 if ( $e )
+                                 {
+                                     phpgwapi_cache::message_set($e->getMessage(), 'error');
+                                     $this->edit_template($values);
+                                     return;
+                                 }
+                            }
+                            
+                            $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                            
+                            phpgwapi_cache::message_set($message[0]['msgbox_text'] , 'message');
+                            $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uitemplate.edit_template', 'template_id' => $template_id));
+                             
+                        }
+                        else
+                        {
+                            $this->edit_template();
+                        }
                         
                 }
                 
@@ -964,9 +934,9 @@
 		}
 
 		function delete()
-		{
-			$id	= phpgw::get_var('id', 'int');
-
+		{       
+			$id = (int)phpgw::get_var('id');
+                        
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($id);
