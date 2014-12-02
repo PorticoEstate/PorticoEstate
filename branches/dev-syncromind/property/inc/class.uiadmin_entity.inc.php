@@ -61,7 +61,9 @@
 				'list_custom_function'      => true,
 				'edit_custom_function'      => true,
 				'get_template_attributes'   => true,
-				'convert_to_eav'            => true
+				'convert_to_eav'            => true,
+                                'save'                      => true,
+                                'save_category'             => true
 			);
 
 		function __construct()
@@ -586,68 +588,87 @@
                         
                         self::render_template_xsl('datatable_jquery', $data);
 		}
+                public function save()
+                {
+                    $id         = (int)phpgw::get_var('id');
+                    $values	= phpgw::get_var('values');
+                    $config     = CreateObject('phpgwapi.config', $this->type_app[$this->type]);
 
+                            if (!$values['name'])
+                            {
+                                    $receipt['error'][] = array('msg'=>lang('Name not entered!'));
+                            }
+
+                            if($id)
+                            {
+                                    $values['id']=$id;
+                                    $action='edit';
+                            }
+
+                            if (!$receipt['error'])
+                            {
+                                    try
+                                    {   
+                                        
+                                        $receipt = $this->bo->save($values,$action);
+                                        $msgbox_data = $this->bocommon->msgbox_data($receipt);
+                                        
+                                        if(!$id)
+                                        {
+                                            $id=$receipt['id'];
+                                        }
+
+                                        $config->read();
+
+                                        if(!is_array($config->config_data['location_form']))
+                                        {
+                                                $config->config_data['location_form'] = array();
+                                        }
+
+                                        if($values['location_form'])
+                                        {
+
+                                                $config->config_data['location_form']['entity_' . $id] = 'entity_' . $id;
+
+                                        }
+                                        else
+                                        {
+                                                unset($config->config_data['location_form']['entity_' . $id]);
+                                        }
+
+                                        $config->save_repository();
+
+
+                                    } catch (Exception $e) {
+                                         if ( $e )
+                                         {
+                                             phpgwapi_cache::message_set($e->getMessage(), 'error');
+                                             $this->edit($values);
+                                             return;
+                                         }
+                                    }
+                                    
+                                    $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                                    phpgwapi_cache::message_set($message[0]['msgbox_text'] , 'message');
+                                    $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiadmin_entity.edit', 'type'=> $this->type,'id'=> $id));
+                            }
+                            else
+                            {
+                                    $receipt['error'][] = array('msg'=> lang('Entity has NOT been saved'));
+                            }
+                            
+                }
 		function edit()
-		{
+		{       
 			if(!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
-
-			$id	= phpgw::get_var('id', 'int');
-			$values			= phpgw::get_var('values');
+			$id	= (int)phpgw::get_var('id');
+			$values	= phpgw::get_var('values');
 			$config = CreateObject('phpgwapi.config', $this->type_app[$this->type]);
-
+                        
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
-
-			if ($values['save'])
-			{
-				if (!$values['name'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Name not entered!'));
-				}
-
-				if($id)
-				{
-					$values['id']=$id;
-					$action='edit';
-				}
-
-				if (!$receipt['error'])
-				{
-
-					$receipt = $this->bo->save($values,$action);
-					if(!$id)
-					{
-						$id=$receipt['id'];
-					}
-					$config->read();
-
-					if(!is_array($config->config_data['location_form']))
-					{
-						$config->config_data['location_form'] = array();
-					}
-
-					if($values['location_form'])
-					{
-
-						$config->config_data['location_form']['entity_' . $id] = 'entity_' . $id;
-
-					}
-					else
-					{
-						unset($config->config_data['location_form']['entity_' . $id]);
-					}
-
-					$config->save_repository();
-				}
-				else
-				{
-					$receipt['error'][] = array('msg'=> lang('Entity has NOT been saved'));
-				}
-
-			}
-
 
 			if ($id)
 			{
@@ -667,7 +688,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiadmin_entity.edit',
+					'menuaction'	=> 'property.uiadmin_entity.save',
 					'id'		=> $id,
 					'type'		=> $this->type
 				);
@@ -718,58 +739,84 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
+                public function save_category()
+                {
+                    $entity_id	= (int)phpgw::get_var('entity_id');
+                    $id		= (int)phpgw::get_var('id');
+                    $values	= phpgw::get_var('values');
 
-		function edit_category()
+                    $values['entity_id']	= $entity_id;
+
+                    if (!$values['name'])
+                    {
+                            $receipt['error'][] = array('msg'=>lang('Name not entered!'));
+                    }
+                    if (!$values['entity_id'])
+                    {
+                            $receipt['error'][] = array('msg'=>lang('Entity not chosen'));
+                    }
+
+                    if($id)
+                    {
+                            $values['id']=$id;
+                            $action='edit';
+                    }
+
+                    if (!$receipt['error'])
+                    {
+                        try
+                        {
+                            $receipt = $this->bo->save_category($values,$action);
+                            if(!$id)
+                            {
+                                $id=$receipt['id'];
+                            }
+                            $msgbox_data = $this->bocommon->msgbox_data($receipt);
+                            
+                        } catch (Exception $e) {
+                            if ( $e )
+                            {
+                                phpgwapi_cache::message_set($e->getMessage(), 'error');
+                                $this->edit_category($values);
+                                return;
+                            }
+                        }
+                        
+                        $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                            
+                        phpgwapi_cache::message_set($message[0]['msgbox_text'] , 'message');
+                        $GLOBALS['phpgw']->redirect_link('/index.php', array
+                                                            (
+                                                                'menuaction'=> 'property.uiadmin_entity.edit_category', 
+                                                                'type'=> $this->type,
+                                                                'id'=>$id,
+                                                                'entity_id'=>$entity_id
+                                                            )
+                                                        );
+                    }
+                    else
+                    {
+                            $receipt['error'][] = array('msg'=> lang('Category has NOT been saved'));
+                    }
+                }
+                function edit_category()
 		{
 			if(!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$entity_id			= phpgw::get_var('entity_id', 'int');
-			$id					= phpgw::get_var('id', 'int');
-			$values				= phpgw::get_var('values');
+			$entity_id		= phpgw::get_var('entity_id', 'int');
+			$id			= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 			$template_attrib	= phpgw::get_var('template_attrib');
+                        
 			if($template_attrib)
 			{
 				$values['template_attrib'] = array_values(explode(',', $template_attrib));
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
-
-			if ($values['save'])
-			{
-				$values['entity_id']	= $entity_id;
-
-				if (!$values['name'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Name not entered!'));
-				}
-				if (!$values['entity_id'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Entity not chosen'));
-				}
-
-				if($id)
-				{
-					$values['id']=$id;
-					$action='edit';
-				}
-
-				if (!$receipt['error'])
-				{
-					$receipt = $this->bo->save_category($values,$action);
-					if(!$id)
-					{
-						$id=$receipt['id'];
-					}
-				}
-				else
-				{
-					$receipt['error'][] = array('msg'=> lang('Category has NOT been saved'));
-				}
-
-			}
 
 			if ($id)
 			{
@@ -786,7 +833,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiadmin_entity.edit_category',
+					'menuaction'	=> 'property.uiadmin_entity.save_category',
 					'entity_id'		=> $entity_id,
 					'id'			=> $id,
 					'type'			=> $this->type
@@ -865,60 +912,60 @@
 
 			$data = array
 				(
-					'td_count'							=> 3,
-					'base_java_url'						=> "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
-					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-					'datatable'							=> $datavalues,
-					'myColumnDefs'						=> $myColumnDefs,
+					'td_count'				=> 3,
+					'base_java_url'				=> "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
+					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+					'datatable'				=> $datavalues,
+					'myColumnDefs'				=> $myColumnDefs,
 
-					'lang_entity'						=> lang('entity'),
-					'entity_name'						=> $id ? $entity['name'] . ' :: ' . implode(' >> ',$this->bo->get_path($entity_id,$id)) : $entity['name'],
-					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'lang_prefix_standardtext'			=> lang('Enter a standard prefix for the id'),
-					'lang_name_standardtext'			=> lang('Enter a name of the standard'),
+					'lang_entity'				=> lang('entity'),
+					'entity_name'				=> $id ? $entity['name'] . ' :: ' . implode(' >> ',$this->bo->get_path($entity_id,$id)) : $entity['name'],
+					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'lang_prefix_standardtext'		=> lang('Enter a standard prefix for the id'),
+					'lang_name_standardtext'		=> lang('Enter a name of the standard'),
 
-					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id,'type' => $this->type)),
-					'lang_save'							=> lang('save'),
-					'lang_done'							=> lang('done'),
-					'value_id'							=> $id,
-					'value_name'						=> $values['name'],
-					'value_prefix'						=> $values['prefix'],
-					'edit_prefix'						=> true,
-					'lang_id_standardtext'				=> lang('Enter the standard ID'),
-					'lang_descr_standardtext'			=> lang('Enter a description of the standard'),
-					'lang_done_standardtext'			=> lang('Back to the list'),
-					'lang_save_standardtext'			=> lang('Save the standard'),
-					'type_id'							=> $values['type_id'],
-					'value_descr'						=> $values['descr'],
-					'lookup_tenant'						=> true,
-					'value_lookup_tenant'				=> $values['lookup_tenant'],
-					'lang_location_level'				=> lang('location level'),
-					'location_level_list'				=> array('options' => $this->bo->get_location_level_list($values['location_level'])),
+					'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id,'type' => $this->type)),
+					'lang_save'				=> lang('save'),
+					'lang_done'				=> lang('done'),
+					'value_id'				=> $id,
+					'value_name'				=> $values['name'],
+					'value_prefix'				=> $values['prefix'],
+					'edit_prefix'				=> true,
+					'lang_id_standardtext'			=> lang('Enter the standard ID'),
+					'lang_descr_standardtext'		=> lang('Enter a description of the standard'),
+					'lang_done_standardtext'		=> lang('Back to the list'),
+					'lang_save_standardtext'		=> lang('Save the standard'),
+					'type_id'				=> $values['type_id'],
+					'value_descr'				=> $values['descr'],
+					'lookup_tenant'				=> true,
+					'value_lookup_tenant'			=> $values['lookup_tenant'],
+					'lang_location_level'			=> lang('location level'),
+					'location_level_list'			=> array('options' => $this->bo->get_location_level_list($values['location_level'])),
 					'lang_location_level_statustext'	=> lang('select location level'),
-					'lang_no_location_level'			=> lang('None'),
-					'lang_location_link_level'				=> lang('location link level'),
-					'location_link_level_list'				=> array('options' => $this->bo->get_location_level_list($values['location_link_level'])),
+					'lang_no_location_level'		=> lang('None'),
+					'lang_location_link_level'		=> lang('location link level'),
+					'location_link_level_list'		=> array('options' => $this->bo->get_location_level_list($values['location_link_level'])),
 					'lang_location_link_level_statustext'	=> lang('select location level'),
-					'lang_no_location_link_level'			=> lang('None'),
-					'tracking'							=> true,
-					'value_tracking'					=> $values['tracking'],
-					'org_unit'							=> true,
-					'value_org_unit'					=> $values['org_unit'],
- 					'fileupload'						=> true,
-					'value_fileupload'					=> $values['fileupload'],
-					'value_jasperupload'				=> $values['jasperupload'],
-					'loc_link'							=> true,
-					'value_loc_link'					=> $values['loc_link'],
-					'start_project'						=> true,
-					'value_start_project'				=> $values['start_project'],
-					'start_ticket'						=> true,
-					'value_start_ticket'				=> $values['start_ticket'],
-					'value_is_eav'						=> $values['is_eav'],
-					'value_enable_bulk'					=> $values['enable_bulk'],
-					'jasperupload'						=> true,
-					'category_list'						=> $category_list,
-					'parent_list'						=> $parent_list
+					'lang_no_location_link_level'		=> lang('None'),
+					'tracking'				=> true,
+					'value_tracking'			=> $values['tracking'],
+					'org_unit'				=> true,
+					'value_org_unit'			=> $values['org_unit'],
+ 					'fileupload'				=> true,
+					'value_fileupload'			=> $values['fileupload'],
+					'value_jasperupload'			=> $values['jasperupload'],
+					'loc_link'				=> true,
+					'value_loc_link'			=> $values['loc_link'],
+					'start_project'				=> true,
+					'value_start_project'			=> $values['start_project'],
+					'start_ticket'				=> true,
+					'value_start_ticket'			=> $values['start_ticket'],
+					'value_is_eav'				=> $values['is_eav'],
+					'value_enable_bulk'			=> $values['enable_bulk'],
+					'jasperupload'				=> true,
+					'category_list'				=> $category_list,
+					'parent_list'				=> $parent_list
 				);
 
 			$appname = lang('entity');
