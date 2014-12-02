@@ -648,14 +648,14 @@
 				$code = '
 					var link = "'.$link.'";
 					var data = {"district_id": $(this).val()};
-					execute_ajax(link, "GET", "json", data,
+					execute_ajax(link,
 						function(result){
 							var $el = $("#part_of_town_id");
 							$el.empty();
 							$.each(result, function(key, value) {
 							  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 							});
-						}
+						}, data, "GET", "json"
 					);
 					';
 
