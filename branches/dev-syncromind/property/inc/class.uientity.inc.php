@@ -55,6 +55,7 @@
 				'download'			=> true,
 				'view'	 			=> true,
 				'edit'	 			=> true,
+				'add'				=> true,
 				'delete' 			=> true,
 				'view_file'			=> true,
 				'attrib_history'	=> true,
@@ -132,23 +133,14 @@
 		/*
 		* Overrides with incoming data from POST
 		*/
-		private function _populate($data = array())
+		private function _populate()
 		{
-
 			$values				= phpgw::get_var('values');
 			$values_attribute	= phpgw::get_var('values_attribute');
-			$bypass 			= phpgw::get_var('bypass', 'bool');
-			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
-			$tenant_id 			= phpgw::get_var('tenant_id', 'int');
 
 			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
 			$values['date']				= phpgw::get_var('date');
-			
-			if(!$this->cat_id)
-			{
-				$this->receipt['error'][]=array('msg'=>lang('Please select entity type !'));
-			}
 			
 			$insert_record 	= $GLOBALS['phpgw']->session->appsession('insert_record','property');
 			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,$this->type_app[$this->type]);
@@ -161,7 +153,7 @@
 				}
 			}
 
-			$values = $this->bocommon->collect_locationdata($values,$insert_record);
+			$values = $this->bocommon->collect_locationdata($values, $insert_record);
 				
 			if(isset($values['origin']) && $values['origin'])
 			{
@@ -183,15 +175,7 @@
 				);
 			}
 
-			if(isset($tenant_id) && $tenant_id)
-			{
-				$lookup_tenant=true;
-			}
-
-			if($this->cat_id)
-			{
-				$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
-			}
+			$category = $this->soadmin_entity->read_single_category($this->entity_id, $this->cat_id);
 			
 			if($category['org_unit'])
 			{
@@ -223,10 +207,28 @@
 				}
 			}
 			
+			if ($this->receipt['error']) 
+			{
+				if($values['location'])
+				{
+					$location_code=implode("-", $values['location']);
+					$values['extra']['view'] = true;
+					$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
+				}
+				if($values['extra']['p_num'])
+				{
+					$values['p'][$values['extra']['p_entity_id']]['p_num']=$values['extra']['p_num'];
+					$values['p'][$values['extra']['p_entity_id']]['p_entity_id']=$values['extra']['p_entity_id'];
+					$values['p'][$values['extra']['p_entity_id']]['p_cat_id']=$values['extra']['p_cat_id'];
+					$values['p'][$values['extra']['p_entity_id']]['p_cat_name']=phpgw::get_var('entity_cat_name_'.$values['extra']['p_entity_id']);
+				}	
+			}
+			
 			$values['attributes'] = $values_attribute;
 
 			return $values;
 		}
+		
 		
 		private function _get_filters($selected = 0)
 		{
@@ -441,40 +443,37 @@
 		public function save()
 		{
 			$id = phpgw::get_var('id', 'int');
-			$values	= phpgw::get_var('values');
 
 			if ($id)
 			{
-				$data	= $this->bo->read_single(array('entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'id'=>$id));
 				$action = 'edit';
 			}
 			else
 			{
-				if($this->cat_id)
-				{
-					$data	= $this->bo->read_single(array('entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id), $values);
-					$action = 'add';
-				}
+				$action = 'add';
 			}
-
+			
+			if(!$this->cat_id)
+			{
+				$this->receipt['error'][] = array('msg'=>lang('Please select entity type !'));
+			}
 			/*
 			* Overrides with incoming data from POST
 			*/
-			$data = $this->_populate($data);
+			$data = $this->_populate();
 
 			if( $this->receipt['error'] )
 			{
-				$this->edit( $data );
+				$this->edit();
 			}
 			else
 			{
 				try
 				{
-					$fields = $data;
+					$values = $data;
 					$attributes = $data['attributes'];
-					unset($fields['attributes']);
-					
-					$receipt = $this->bo->save($fields, $action, $attributes);
+					unset($values['attributes']);
+					$receipt = $this->bo->save($values, $attributes, $action, $this->entity_id, $this->cat_id);
 				}
 
 				catch(Exception $e)
@@ -482,7 +481,7 @@
 					if ( $e )
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
-						$this->edit( $data );
+						$this->edit();
 						return;
 					}
 				}
@@ -492,10 +491,7 @@
 					$this->edit();
 					return;
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index',
-										'appname'		=> $this->appname,
-										'type'			=> $this->type,
-										'type_id'		=> $this->type_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id,'type' => $this->type));
 			}
 		}
 		
@@ -1490,7 +1486,7 @@
 						}
 					}
 				}
-
+				$receipt['error'] = 1;
 				if(isset($id) && $id)
 				{
 					$values['id']=$id;
@@ -1616,7 +1612,7 @@
 					}
 				}
 			}
-
+//print_r($values); die;
 			if ($id)
 			{
 				$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
@@ -1625,7 +1621,7 @@
 			{
 				if($this->cat_id)
 				{
-					$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id),$values);
+					$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
 				}
 			}
 
@@ -3205,6 +3201,11 @@ JS;
 		
 		}
 
+		public function add()
+		{
+			$this->edit();
+		}
+		
 		public function add_inventory()
 		{
 			$location_id	= phpgw::get_var('location_id', 'int');
