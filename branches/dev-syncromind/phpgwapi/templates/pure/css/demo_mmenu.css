@@ -3,13 +3,18 @@ html, body
 	padding: 0;
 	margin: 0;
 }
-body
+html
 {
+	height: 100%;
+}
+
+body {
 	background-color: #fff;
 	font-family: Arial, Helvetica, Verdana;
 	font-size: 14px;
 	line-height: 22px;
 	color: #666;
+	min-height: 100%;
 	position: relative;
 	-webkit-text-size-adjust: none;
 }
@@ -37,7 +42,7 @@ p
 }
 a, a:link, a:active, a:visited, a:hover
 {
-	color: inherit;
+	color: #333;
 	text-decoration: underline;
 }
 
@@ -60,13 +65,28 @@ nav:not(.mm-menu)
 	color: #fff;
 	line-height: 40px;
 
-
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	box-sizing: border-box;	
+	box-sizing: border-box;
 	width: 100%;
 	height: 40px;
 	padding: 0 50px;
 }
+
+.header.mm-fixed-top
+{
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+#horizontal-menu
+{
+	position: absolute;
+	top: 40px;
+    right: 0px;
+}
+
 .header a
 {
 	background: center center no-repeat transparent;
@@ -80,15 +100,12 @@ nav:not(.mm-menu)
 }
 .content
 {
-	padding: 80px 50px 50px 50px;
-	text-align: left;
-
+	padding: 100px 50px 50px 10px;
 }
 
 /*
 	LAYOUT
 */
-
 #hamburger
 {
 	display: block;
@@ -101,10 +118,10 @@ nav:not(.mm-menu)
 	z-index: 2;
 }
 #hamburger:before,
-#hamburger:after/*,
-#hamburger span*/
+#hamburger:after,
+#hamburger span
 {
-	/*background: #fff;*/
+	background: #fff;
 	content: '';
 	display: block;
 	width: 30px;
@@ -120,13 +137,12 @@ nav:not(.mm-menu)
 {
 	bottom: 5px;
 }
-/*
 #hamburger span
 {
 	top: 50%;
 	margin-top: -3px;
 }
-*/
+ 
 @media all and (min-width: 1430px)
 {
 	#hamburger {
@@ -135,8 +151,6 @@ nav:not(.mm-menu)
 }
 
 /* Hamburger animation */
-/*Sigurd: Don't work in IE - even for 10 +'*/
-/*
 #hamburger:before,
 #hamburger:after,
 #hamburger span
@@ -159,4 +173,3 @@ html.mm-opening #hamburger:after
 	transform: rotate( -45deg );
 	bottom: 15px;
 }
-*/

@@ -1,5 +1,5 @@
 /*	
- * jQuery mmenu v4.5.7
+ * jQuery mmenu v4.7.4
  * @requires jQuery 1.7.0 or later
  *
  * mmenu.frebsite.nl
@@ -15,7 +15,7 @@
 (function( $ ) {
 
 	var _PLUGIN_	= 'mmenu',
-		_VERSION_	= '4.5.7';
+		_VERSION_	= '4.7.4';
 
 
 	//	Plugin already excists
@@ -52,7 +52,22 @@
 		}
 
 		this._initMenu();
-		this._init( this.$menu.children( this.conf.panelNodetype ) );
+		this._initAnchors();
+		this._initEvents();
+
+		var $panels = this.$menu.children( this.conf.panelNodetype );
+
+		for ( var a in $[ _PLUGIN_ ].addons )
+		{
+			//	Add add-ons to plugin
+			$[ _PLUGIN_ ].addons[ a ]._add.call( this );
+			$[ _PLUGIN_ ].addons[ a ]._add = function() {};
+
+			//	Setup adds-on for menu
+			$[ _PLUGIN_ ].addons[ a ]._setup.call( this );
+		}
+
+		this._init( $panels );
 
 		if ( typeof this.___debug == 'function' )
 		{
@@ -64,7 +79,7 @@
 
 	$[ _PLUGIN_ ].version = _VERSION_;
 
-	$[ _PLUGIN_ ].addons = [];
+	$[ _PLUGIN_ ].addons = {};
 
 	$[ _PLUGIN_ ].uniqueId = 0;
 	
@@ -96,15 +111,10 @@
 		{
 			$panels = $panels.not( '.' + _c.nopanel );
 			$panels = this._initPanels( $panels );
-			$panels = this._initLinks( $panels );
-			$panels = this._bindCustomEvents( $panels );
 
-			for ( var a = 0; a < $[ _PLUGIN_ ].addons.length; a++ )
+			for ( var a in $[ _PLUGIN_ ].addons )
 			{
-				if ( typeof this[ '_init_' + $[ _PLUGIN_ ].addons[ a ] ] == 'function' )
-				{
-					this[ '_init_' + $[ _PLUGIN_ ].addons[ a ] ]( $panels );
-				}
+				$[ _PLUGIN_ ].addons[ a ]._init.call( this, $panels );
 			}
 			this._update();
 		},
@@ -181,7 +191,7 @@
 					function( e, selected )
 					{
 						e.stopPropagation();
-	
+
 						$lis.removeClass( _c.selected );
 						if ( typeof selected != 'boolean' )
 						{
@@ -225,10 +235,10 @@
 						var $t = $(this),
 							$u = $t.is( 'ul, ol' ) ? $t : $t.find( 'ul ,ol' ).first(),
 							$l = $t.parent(),
-							$a = $l.find( '> a, > span' ),
+							$a = $l.children( 'a, span' ),
 							$p = $l.closest( '.' + _c.panel );
 
-						if ( $l.parent().is( '.' + _c.list ) )
+						if ( $l.parent().is( '.' + _c.list ) && !$t.data( _d.parent) )
 						{
 							$t.data( _d.parent, $l );
 
@@ -244,28 +254,6 @@
 						}
 					}
 				);
-
-			//	Link anchors to panels
-			var evt = this.opts.slidingSubmenus ? _e.open : _e.toggle;
-
-			$allpanels
-				.each(
-					function( i )
-					{
-						var $opening = $(this),
-							id = $opening.attr( 'id' );
-
-						$('a[href="#' + id + '"]', $allpanels)
-							.off( _e.click )
-							.on( _e.click,
-								function( e )
-								{
-									e.preventDefault();
-									$opening.trigger( evt );
-								}
-							);
-					}
-			);
 
 			if ( this.opts.slidingSubmenus )
 			{
@@ -330,60 +318,99 @@
 			return $curpanels;
 		},
 
-		_initLinks: function( $panels )
+		_initAnchors: function()
 		{
 			var that = this;
 
-			this.__findAddBack( $panels, '.' + _c.list )
-				.find( '> li > a' )
-				.not( '.' + _c.subopen )
-				.not( '.' + _c.subclose )
-				.not( '[rel="external"]' )
-				.not( '[target="_blank"]' )
-				.off( _e.click )
+			glbl.$body
 				.on( _e.click,
+					'a',
 					function( e )
 					{
 						var $t = $(this),
-							href = $t.attr( 'href' ) || '';
+							fired 	= false,
+							inMenu 	= that.$menu.find( $t ).length;
 
-						//	Set selected item
-						if ( that.__valueOrFn( that.opts.onClick.setSelected, $t ) )
+
+						//	Find behavior for addons
+						for ( var a in $[ _PLUGIN_ ].addons )
 						{
-							$t.parent().trigger( _e.setSelected );
+							if ( $[ _PLUGIN_ ].addons[ a ]._clickAnchor &&
+								( fired = $[ _PLUGIN_ ].addons[ a ]._clickAnchor.call( that, $t, inMenu ) )
+							) {
+								break;
+							}
 						}
 
-						//	Prevent default / don't follow link. Default: false
-						var preventDefault = that.__valueOrFn( that.opts.onClick.preventDefault, $t, href.slice( 0, 1 ) == '#' );
-						if ( preventDefault )
+						//	Open/Close panel
+						if ( !fired && inMenu )
+						{
+							var _h = $t.attr( 'href' ) || '';
+							if ( _h.slice( 0, 1 ) == '#' )
+							{
+								try
+								{
+									if ( $(_h, that.$menu).is( '.' + _c.panel ) )
+									{
+										fired = true;
+										$(_h).trigger( that.opts.slidingSubmenus ? _e.open : _e.toggle );
+									}
+							    }
+								catch( error ) {}
+							}
+						}
+
+						if ( fired )
 						{
 							e.preventDefault();
 						}
 
-						//	Block UI. Default: false if preventDefault, true otherwise
-						if ( that.__valueOrFn( that.opts.onClick.blockUI, $t, !preventDefault ) )
-						{
-							glbl.$html.addClass( _c.blocking );
-						}
 
-						//	Close menu. Default: true if preventDefault, false otherwise
-						if ( that.__valueOrFn( that.opts.onClick.close, $t, preventDefault ) )
+						//	All other anchors in lists
+						if ( !fired && inMenu )
 						{
-							that.$menu.triggerHandler( _e.close );
+							if ( $t.is( '.' + _c.list + ' > li > a' )
+								&& !$t.is( '[rel="external"]' ) 
+								&& !$t.is( '[target="_blank"]' ) )
+							{
+
+								//	Set selected item
+								if ( that.__valueOrFn( that.opts.onClick.setSelected, $t ) )
+								{
+									$t.parent().trigger( _e.setSelected );
+								}
+	
+								//	Prevent default / don't follow link. Default: false
+								var preventDefault = that.__valueOrFn( that.opts.onClick.preventDefault, $t, _h.slice( 0, 1 ) == '#' );
+								if ( preventDefault )
+								{
+									e.preventDefault();
+								}
+		
+								//	Block UI. Default: false if preventDefault, true otherwise
+								if ( that.__valueOrFn( that.opts.onClick.blockUI, $t, !preventDefault ) )
+								{
+									glbl.$html.addClass( _c.blocking );
+								}
+		
+								//	Close menu. Default: true if preventDefault, false otherwise
+								if ( that.__valueOrFn( that.opts.onClick.close, $t, preventDefault ) )
+								{
+									that.$menu.trigger( _e.close );
+								}
+							}
 						}
 					}
 				);
-			
-			return $panels;
 		},
-		
-		_bindCustomEvents: function( $panels )
+
+		_initEvents: function()
 		{
 			var that = this;
 
-			$panels
-				.off( _e.toggle + ' ' + _e.open + ' ' + _e.close )
+			this.$menu
 				.on( _e.toggle + ' ' + _e.open + ' ' + _e.close,
+					'.' + _c.panel,
 					function( e )
 					{
 						e.stopPropagation();
@@ -392,8 +419,9 @@
 
 			if ( this.opts.slidingSubmenus )
 			{
-				$panels
+				this.$menu
 					.on( _e.open,
+						'.' + _c.panel,
 						function( e )
 						{
 							return that._openSubmenuHorizontal( $(this) );
@@ -402,31 +430,30 @@
 			}
 			else
 			{
-				$panels
+				this.$menu
 					.on( _e.toggle,
+						'.' + _c.panel,
 						function( e )
 						{
 							var $t = $(this);
-							return $t.triggerHandler( $t.parent().hasClass( _c.opened ) ? _e.close : _e.open );
+							$t.trigger( $t.parent().hasClass( _c.opened ) ? _e.close : _e.open );
 						}
 					)
 					.on( _e.open,
+						'.' + _c.panel,
 						function( e )
 						{
 							$(this).parent().addClass( _c.opened );
-							return 'open';
 						}
 					)
 					.on( _e.close,
+						'.' + _c.panel,
 						function( e )
 						{
 							$(this).parent().removeClass( _c.opened );
-							return 'close';
 						}
 					);
 			}
-
-			return $panels;
 		},
 
 		_openSubmenuHorizontal: function( $opening )
@@ -513,9 +540,7 @@
 		
 		__refactorClass: function( $e, o, c )
 		{
-			$e.filter( '.' + o )
-				.removeClass( o )
-				.addClass( _c[ c ] );
+			return $e.filter( '.' + o ).removeClass( o ).addClass( _c[ c ] );
 		},
 
 		__findAddBack: function( $e, s )
