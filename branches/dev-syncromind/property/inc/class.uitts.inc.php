@@ -2325,7 +2325,9 @@
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('add ticket');
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.add', 'property' );
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.add', 'property' );
+			self::add_javascript('property', 'portico', 'tts.add.js');
+
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files','attributes_form'));
@@ -3177,7 +3179,7 @@
 
 			if($access_order)
 			{
-				$note_def[] = array('key' => 'order_text','label'=>lang('order text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+				$note_def[] = array('key' => 'order_text','label'=>lang('order text'),'sortable'=>false,'resizeable'=>true, 'formatter'=>'FormatterCenter');
 				foreach($additional_notes as &$note)
 				{
 					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.$note['value_note'].'" title="'.lang('Check to add text to order').'">';
@@ -3186,7 +3188,7 @@
 
 			if($GLOBALS['phpgw_info']['apps']['frontend']['enabled'])
 			{
-				$note_def[] = array('key' => 'publish_note','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');			
+				$note_def[] = array('key' => 'publish_note','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true, 'formatter'=>'FormatterCenter');
 				foreach($additional_notes as &$note)
 				{
 					$_checked = $note['value_publish'] ? 'checked' : '';
@@ -3199,6 +3201,15 @@
 				$note['value_note'] = nl2br($note['value_note']);
 			}
 
+			$datatable_def = array();
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uitts.get_note', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> $note_def,
+				'data'			=> json_encode($additional_notes)
+			);
 
 			//_debug_Array($additional_notes);die();
 			//---datatable settings---------------------------------------------------	
@@ -3411,6 +3422,7 @@
 
 			$data = array
 				(
+					'datatable_def'					=> $datatable_def,
 					'custom_attributes'				=> array('attributes' => $ticket['attributes']),
 					'lookup_functions'				=> isset($ticket['lookup_functions'])?$ticket['lookup_functions']:'',
 					'send_response'					=> isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
@@ -3545,7 +3557,9 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.view', 'property' );
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.view', 'property' );
+			self::add_javascript('property', 'portico', 'tts.view.js');
+
 			$this->_insert_custom_js();
 			//-----------------------datatable settings---
 

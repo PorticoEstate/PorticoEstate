@@ -87,7 +87,7 @@ JqueryPortico.searchLink = function(key, oData) {
 	return '<a id="' + link + '" onclick="searchData(this.id);">' + name + '</a>';
 };
 
-JqueryPortico.formatCheck = function(key, oData) {
+JqueryPortico.formatCheck = function(key, oDakta) {
 	var checked = '';
 	var hidden = '';
 	if(oData['responsible_item'])
@@ -126,19 +126,37 @@ JqueryPortico.FormatterAmount0 = function(key, oData) {
 	return "<div class='nowrap' align=\"right\">"+amount+"</div>";
 };
 
-JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options, disablePagination) {
+JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options, data) {
+
+	options = options || {};
+	var disablePagination	= options['disablePagination'] || false;
+	var disableFilter		= options['disableFilter'] || false;
+
+	data = data || {};
+
+	if (Object.keys(data).length == 0)
+	{
+		var ajax_def = {url: ajax_url,type: 'GET'};
+		var serverSide_def = true;
+	}
+	else
+	{
+		var ajax_def = false;
+		var serverSide_def = false;
+	}
 
 	$(document).ready(function ()
 	{
 		oTable = $("#" + container).DataTable({
+			paginate:		disablePagination ? false : true,
+			filter:			disableFilter ? false : true,
+			info:			disableFilter ? false : true,
 			processing:		true,
-			serverSide:		true,
+			serverSide:		serverSide_def,
 			responsive:		true,
 			deferRender:	true,
-			ajax: {
-				url: ajax_url,
-				type: 'GET'
-			},
+			data:			data,
+			ajax:			ajax_def,
 			fnInitComplete: function (oSettings, json)
 			{
 				JqueryPortico.inlineTablesRendered += 1;
@@ -237,4 +255,11 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		{
 			TINY.box.hide();
 		}
+	}
+
+	JqueryPortico.lightboxlogin = function()
+	{
+		var oArgs = {lightbox:1};
+		var strURL = phpGWLink('login.php', oArgs);
+		TINY.box.show({iframe:strURL, boxid:'frameless',width:$(window).width(),height:400,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: false,closejs:false});
 	}

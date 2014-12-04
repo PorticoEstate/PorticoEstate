@@ -442,7 +442,14 @@
 			{
 				$onload = <<<JS
 					<script language="javascript" type="text/javascript">
-						parent.lightbox_login.hide();
+						if(typeof(parent.lightbox_login) != 'undefined')
+						{
+							parent.lightbox_login.hide();
+						}
+						else
+						{
+							parent.TINY.box.hide();
+						}
 					</script>
 JS;
 			}
