@@ -796,6 +796,10 @@
 					</xsl:when>
 				</xsl:choose>
 			</form>
+			<xsl:variable name="cancel_url">
+				<xsl:value-of select="cancel_url"/>
+			</xsl:variable>
+			<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 			<xsl:choose>
 				<xsl:when test="value_id!='' and lean !=1">
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -903,7 +907,7 @@
 							<xsl:variable name="lang_cancel">
 								<xsl:value-of select="php:function('lang', 'cancel')"/>
 							</xsl:variable>
-							<input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}">
+							<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Back to the list')"/>
 								</xsl:attribute>
@@ -1054,8 +1058,8 @@
 				}
 			}
 	]]>
-
-			JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns);
+			var options = {disablePagination:true, disableFilter:true};
+			JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options);
 
 		</script>
 	</xsl:template>
