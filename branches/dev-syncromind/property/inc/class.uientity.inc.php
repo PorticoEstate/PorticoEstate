@@ -1966,7 +1966,7 @@
 					'ColumnDefs'	=> $related_def
 				);
 				
-				//$category['enable_bulk'] = 1;
+				$category['enable_bulk'] = 1;
 				if($category['enable_bulk'])
 				{
 					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory',  'disable' => 0, 'function' => "set_tab('inventory')");
@@ -1995,7 +1995,6 @@
 				}
 			}
 			
-		
 			$property_js = "/property/js/yahoo/property2.js";
 
 			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
@@ -2978,6 +2977,10 @@ JS;
 				'entity_data'	=> isset($values['p'])?$values['p']:''
 			));
 
+			$tabs = array();
+			$tabs['inventory']	= array('label' => lang('add inventory'), 'link' => '#inventory');
+			$active_tab = 'inventory';
+			
 			$data = array
 			(
 				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -2993,6 +2996,7 @@ JS;
 				'value_active_from'	=> $values['active_from'],
 				'value_active_to'	=> $values['active_to'],
 				'value_remark'		=> $values['remark'],
+				'tabs'				=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
 
