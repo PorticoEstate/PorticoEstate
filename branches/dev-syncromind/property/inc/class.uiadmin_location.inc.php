@@ -58,7 +58,8 @@
 				'edit_attrib' 		=> true,
 				'list_attribute_group'	=> true,
 				'edit_attrib_group'	=> true,
-                                'save'                  => true
+                                'save'                  => true,
+                                'save_attrib'           => true
 			);
 
 		function __construct()
@@ -362,7 +363,49 @@
                          }
                         return $this->jquery_results($result_data);
                 }
-                
+                public function save()
+                {
+                    $id	= (int)phpgw::get_var('id');
+                    $values	= phpgw::get_var('values');
+                    
+                    if (!isset($values['name']) || !$values['name'])
+                    {
+                            $receipt['error'][] = array('msg'=>lang('Name not entered!'));
+                    }
+                    if($id)
+                    {
+                            $values['id']=$id;
+                    }
+                    
+                    if (!isset($receipt['error']))
+                    {
+                        try
+                        {
+                            $receipt = $this->bo->save($values);
+                            $id=$receipt['id'];
+                            $msgbox_data = $this->bocommon->msgbox_data($receipt);
+                            
+                        } catch (Exception $e) {
+                            
+                            if ( $e )
+                            {
+                                phpgwapi_cache::message_set($e->getMessage(), 'error');
+                                $this->edit($values);
+                                return;
+                            }
+
+                        }
+                        
+                        $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                        phpgwapi_cache::message_set($message[0]['msgbox_text'] , 'message');
+                        $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiadmin_location.edit', 'id' => $id));
+                    }
+                    else
+                    {
+                        $receipt['error'][] = array('msg'=> lang('Table has NOT been saved'));
+                    }
+                   
+                }
 		function edit()
 		{
 			if(!$this->acl_add)
@@ -374,30 +417,6 @@
 			$values	= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_location'));
-
-			if (isset($values['save']))
-			{
-				if (!isset($values['name']) || !$values['name'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Name not entered!'));
-				}
-
-				if($id)
-				{
-					$values['id']=$id;
-				}
-
-				if (!isset($receipt['error']))
-				{
-					$receipt = $this->bo->save($values);
-					$id=$receipt['id'];
-				}
-				else
-				{
-					$receipt['error'][] = array('msg'=> lang('Table has NOT been saved'));
-				}
-
-			}
 
 			if ($id)
 			{
@@ -414,13 +433,13 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiadmin_location.edit',
+					'menuaction'	=> 'property.uiadmin_location.save',
 					'id'		=> $id
 				);
 			//_debug_array($values);
 
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
-
+                        
 			$data = array
 				(
 					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -442,7 +461,7 @@
 					'lang_list_info'			=> lang('list info'),
 					'lang_select'				=> lang('select'),
 					'value_list_info'			=> $this->bo->get_list_info((isset($id)?$id:''),$values['list_info']),
-					'lang_location'				=> lang('location'),
+					'lang_location'                         => lang('location'),
 					'lang_list_info_statustext'		=> lang('Names of levels to list at this level'),
 					'value_list_address'			=> isset($values['list_address'])?$values['list_address']:'',
 					'value_list_documents'			=> isset($values['list_documents'])?$values['list_documents']:''
@@ -453,7 +472,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
-
+                
 		function delete()
 		{
 			if(!$this->acl_delete)
@@ -1202,7 +1221,93 @@
 			unset($parameters);
                         self::render_template_xsl('datatable_jquery',$data);
 		}
+                public function save_attrib()
+                {
+                    $type_id	= (int)phpgw::get_var('type_id');
+                    $id		= (int)phpgw::get_var('id');
+                    $values	= phpgw::get_var('values');
+                    
+                    if($id)
+                    {
+                            $values['id']=$id;
+                            $action='edit';
+                    }
+                    $type_id    = $values['type_id'];
 
+                    if (!$values['column_name'])
+                    {
+                        $receipt['error'][] = array('msg'=>lang('Column name not entered!'));
+                    }
+
+                    if(!preg_match('/^[a-z0-9_]+$/i',$values['column_name']))
+                    {
+                        $receipt['error'][] = array('msg'=>lang('Column name %1 contains illegal character', $values['column_name']));
+                    }
+
+                    if (!$values['input_text'])
+                    {
+                        $receipt['error'][] = array('msg'=>lang('Input text not entered!'));
+                    }
+                    if (!$values['statustext'])
+                    {
+                        $receipt['error'][] = array('msg'=>lang('Statustext not entered!'));
+                    }
+
+                    if (!$values['type_id'])
+                    {
+                        $receipt['error'][] = array('msg'=>lang('Location type not chosen!'));
+                    }
+
+                    if (!$values['column_info']['type'])
+                    {
+                        $receipt['error'][] = array('msg'=>lang('Datatype type not chosen!'));
+                    }
+
+                    if(!ctype_digit($values['column_info']['precision']) && $values['column_info']['precision'])
+                    {
+                        $receipt['error'][]=array('msg'=>lang('Please enter precision as integer !'));
+                            unset($values['column_info']['precision']);
+                    }
+
+                    if($values['column_info']['scale'] && !ctype_digit($values['column_info']['scale']))
+                    {
+                        $receipt['error'][]=array('msg'=>lang('Please enter scale as integer !'));
+                            unset($values['column_info']['scale']);
+                    }
+
+                    if (!$values['column_info']['nullable'])
+                    {
+                        $receipt['error'][] = array('msg'=>lang('Nullable not chosen!'));
+                    }
+                    
+                    if (!$receipt['error'])
+                    {
+                            try
+                            {
+                                $receipt = $this->bo->save_attrib($values,$action);
+                                if(!$id)
+                                {
+                                   $id=$receipt['id'];
+                                }
+                                $msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+                            } catch (Exception $e) {
+                                phpgwapi_cache::message_set($e->getMessage(), 'error');
+                                $this->edit_attrib($values);
+                                return;
+                            }
+                            
+                            $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                            
+                            phpgwapi_cache::message_set($message[0]['msgbox_text'] , 'message');
+                            $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiadmin_location.edit_attrib', 'id' => $id, 'type_id' => $type_id));
+                    }
+                    else
+                    {
+                            $receipt['error'][] = array('msg'	=> lang('Attribute has NOT been saved'));
+                    }
+                    
+                }
 		function edit_attrib()
 		{
 			if(!$this->acl_add)
@@ -1224,14 +1329,14 @@
 			//_debug_array($values);
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_location'));
 
-			if (isset($values['save']) && $values['save'])
+			/*if (isset($values['save']) && $values['save'])
 			{
 				if($id)
 				{
 					$values['id']=$id;
 					$action='edit';
 				}
-				$type_id			= $values['type_id'];
+				$type_id    = $values['type_id'];
 
 				if (!$values['column_name'])
 				{
@@ -1295,7 +1400,7 @@
 					$receipt['error'][] = array('msg'	=> lang('Attribute has NOT been saved'));
 				}
 
-			}
+			}*/
 
 			if ($id)
 			{
@@ -1312,7 +1417,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiadmin_location.edit_attrib',
+					'menuaction'	=> 'property.uiadmin_location.save_attrib',
 					'id'		=> $id
 				);
 			//_debug_array($values);
@@ -1328,57 +1433,57 @@
 
 			$data = array
 				(
-					'lang_choice'					=> lang('Choice'),
-					'lang_new_value'				=> lang('New value'),
+					'lang_choice'				=> lang('Choice'),
+					'lang_new_value'			=> lang('New value'),
 					'lang_new_value_statustext'		=> lang('New value for multiple choice'),
-					'multiple_choice'				=> $multiple_choice,
-					'value_choice'					=> (isset($values['choice'])?$values['choice']:''),
-					'lang_delete_value'				=> lang('Delete value'),
-					'lang_value'					=> lang('value'),
-					'lang_delete_choice_statustext'	=> lang('Delete this value from the list of multiple choice'),
+					'multiple_choice'			=> $multiple_choice,
+					'value_choice'				=> (isset($values['choice'])?$values['choice']:''),
+					'lang_delete_value'			=> lang('Delete value'),
+					'lang_value'				=> lang('value'),
+					'lang_delete_choice_statustext'         => lang('Delete this value from the list of multiple choice'),
 
-					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'type_id'=> $type_id)),
-					'lang_id'						=> lang('Attribute ID'),
+					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.list_attribute', 'type_id'=> $type_id)),
+					'lang_id'				=> lang('Attribute ID'),
 					'lang_location_type'			=> lang('Type'),
 					'lang_no_location_type'			=> lang('No entity type'),
-					'lang_save'						=> lang('save'),
-					'lang_done'						=> lang('done'),
-					'value_id'						=> $id,
+					'lang_save'				=> lang('save'),
+					'lang_done'				=> lang('done'),
+					'value_id'				=> $id,
 
-					'lang_column_name'				=> lang('Column name'),
-					'value_column_name'				=> $values['column_name'],
-					'lang_column_name_statustext'	=> lang('enter the name for the column'),
+					'lang_column_name'			=> lang('Column name'),
+					'value_column_name'			=> $values['column_name'],
+					'lang_column_name_statustext'           => lang('enter the name for the column'),
 
-					'lang_input_text'				=> lang('input text'),
-					'value_input_text'				=> $values['input_text'],
-					'lang_input_name_statustext'	=> lang('enter the input text for records'),
+					'lang_input_text'			=> lang('input text'),
+					'value_input_text'			=> $values['input_text'],
+					'lang_input_name_statustext'            => lang('enter the input text for records'),
 
 					'lang_id_attribtext'			=> lang('Enter the attribute ID'),
 					'lang_entity_statustext'		=> lang('Select a entity type'),
 
-					'lang_statustext'				=> lang('Statustext'),
-					'lang_statustext_attribtext'	=> lang('Enter a statustext for the inputfield in forms'),
-					'value_statustext'				=> $values['statustext'],
+					'lang_statustext'			=> lang('Statustext'),
+					'lang_statustext_attribtext'            => lang('Enter a statustext for the inputfield in forms'),
+					'value_statustext'			=> $values['statustext'],
 
 					'lang_done_attribtext'			=> lang('Back to the list'),
 					'lang_save_attribtext'			=> lang('Save the attribute'),
-					'type_id'						=> $values['type_id'],
-					'entity_list'					=> $this->bo->select_location_type($type_id),
+					'type_id'				=> $values['type_id'],
+					'entity_list'				=> $this->bo->select_location_type($type_id),
 					'select_location_type'			=> 'values[type_id]',
 
-					'datatype_list'					=> $this->bocommon->select_datatype($values['column_info']['type']),
-					'value_search'					=> $values['search'],
+					'datatype_list'				=> $this->bocommon->select_datatype($values['column_info']['type']),
+					'value_search'				=> $values['search'],
 
-					'attrib_group_list'				=> $this->bo->get_attrib_group_list($type_id, $values['group_id']),
+					'attrib_group_list'			=> $this->bo->get_attrib_group_list($type_id, $values['group_id']),
 
-					'value_precision'				=> $values['column_info']['precision'],
-					'value_scale'					=> $values['column_info']['scale'],
-					'value_default'					=> $values['column_info']['default'],
-					'nullable_list'					=> $this->bocommon->select_nullable($values['column_info']['nullable']),
-					'value_lookup_form'				=> $values['lookup_form'],
-					'value_list'					=> $values['list'],
+					'value_precision'			=> $values['column_info']['precision'],
+					'value_scale'				=> $values['column_info']['scale'],
+					'value_default'				=> $values['column_info']['default'],
+					'nullable_list'				=> $this->bocommon->select_nullable($values['column_info']['nullable']),
+					'value_lookup_form'			=> $values['lookup_form'],
+					'value_list'				=> $values['list'],
 				);
 			//_debug_array($data);
 
