@@ -73,7 +73,7 @@
 			//$this->bo->get_location_info();
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->custom				= & $this->bo->custom;
-
+			$this->cats					= & $this->bo->cats;
 			$this->location_info		= $this->bo->location_info;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
@@ -298,50 +298,124 @@
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 		
-		private function _get_categories($selected = 0)
+		private function _get_filters()
 		{
 			$values_combo_box = array();
 			$combos = array();
-			$i = 0;
-			foreach ( $this->location_info['fields'] as $field )
+
+			$values_combo_box[0]  = $this->bocommon->select_category_list(array
+			(
+				'format'=>'filter',
+				'type' =>'location',
+				'type_id' =>1,
+				'order'=>'descr'
+			));
+                    
+			if(count($values_combo_box[0]))
+            {
+				$default_value = array ('id'=>'','name'=>lang('no type'));
+				array_unshift ($values_combo_box[0],$default_value);
+				$combos[] = array
+					(
+						'type'  => 'filter',
+						'name'  => 'property_cat_id',
+						'extra' => '',
+						'text'  => lang('no type'),
+						'list'  => $values_combo_box[0]
+					);
+			}
+			else
 			{
-				if (!empty($field['filter']) && empty($field['hidden']))
-				{
-					if($field['values_def']['valueset'])
-					{
-						$values_combo_box[] = $field['values_def']['valueset'];
-						// TODO find selected value
-					}
-					else if(isset($field['values_def']['method']))
-					{
-						foreach($field['values_def']['method_input'] as $_argument => $_argument_value)
-						{
-							if(preg_match('/^##/', $_argument_value))
-							{
-								$_argument_value_name = trim($_argument_value,'#');
-								$_argument_value = $values[$_argument_value_name];
-							}
-							if(preg_match('/^\$this->/', $_argument_value))
-							{
-								$_argument_value_name = ltrim($_argument_value,'$this->');
-								$_argument_value = $this->$_argument_value_name;
-							}								
-							$method_input[$_argument] = $_argument_value;
-						}
-						$values_combo_box[] = execMethod($field['values_def']['method'],$method_input);
-					}
-					$default_value = array ('id'=>'','name'=> lang('select') . ' ' . $field['descr']);
-					array_unshift ($values_combo_box[$i],$default_value);
-					
-					$combos[$i] = array('type' => 'filter',
-								'name' => $field['name'],
-								'text' => lang($field['descr']) . ':',
-								'list' => $values_combo_box[$i]
-							);
-					$i++;
-				}
+				unset($values_combo_box[0]);
+			}
+                    
+			$count = count($values_combo_box);
+			$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+			$default_value = array ('id'=>'','name'=>lang('no district'));
+			array_unshift ($values_combo_box[1],$default_value);
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'district_id',
+							'extra' =>  '',
+							'text'  =>  lang('no district'),
+							'list'  =>  $values_combo_box[1]  
+						);
+                    
+			$count = count($values_combo_box);
+			$values_combo_box[$count] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
+			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+			array_unshift ($values_combo_box[$count]['cat_list'],$default_value);
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'cat_id',
+							'extra' =>  '',
+							'text'  =>  lang('no category'),
+							'list'  =>  $values_combo_box[$count]  
+						);
+                    
+			$count  = count($values_combo_box);
+			$values_combo_box[$count]  = $this->bo->select_status_list('filter',$this->status_id);
+			array_unshift ($values_combo_box[$count],array ('id'=>'all','name'=> lang('all')));
+			array_unshift ($values_combo_box[$count],array ('id'=>'open','name'=> lang('open')));
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'status_id',
+							'extra' =>  '',
+							'text'  =>  lang('open'),
+							'list'  =>  $values_combo_box[$count]
+						);
+                    
+			$count = count($values_combo_box);
+			$values_combo_box[$count]  = $this->bo->select_degree_list();
+			foreach($values_combo_box[$count] as &$_degree)
+			{
+					$_degree['id']++;
+			}
+			array_unshift ($values_combo_box[$count],array ('id'=>'','name'=> lang('condition degree')));
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'degree_id',
+							'extra' =>  '',
+							'text'  =>  lang('condition degree'),
+							'list'  =>  $values_combo_box[$count]
+						);
+                    
+			$count = count($values_combo_box);
+			$values_combo_box[$count]  = $this->bo->get_user_list();
+			array_unshift ($values_combo_box[$count],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
+			$default_value = array ('user_id'=>'','name'=>lang('no user'));
+			array_unshift ($values_combo_box[$count],$default_value);
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'filter',
+							'extra' =>  '',
+							'text'  =>  lang('no user'),
+							'list'  =>  $values_combo_box[$count]
+						);
+                    
+			/*$count = count($values_combo_box);
+			$responsible_unit_list[$count] = $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
+			array_unshift ($responsible_unit_list[$count],array ('id'=>'0','name'=> lang('responsible unit')));
+
+
+			$recommended_year_list	= $this->bo->get_recommended_year_list($this->recommended_year);
+			array_unshift ($recommended_year_list,array ('id'=>'0','name'=> lang('recommended year')));
+
+			$_filter_buildingpart = array();
+			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
+
+			if($filter_key = array_search('.project.request', $filter_buildingpart))
+			{
+					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
+			$building_part_list = $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart));
+			array_unshift ($building_part_list, array ('id'=>'','name'=> lang('building part')));*/
 			return $combos;
 		}
 		
@@ -419,8 +493,9 @@
 				)
 			);
 	
-			$filters = $this->_get_categories();
+			$filters = $this->_get_filters();
 			
+			ksort($filters);
 			foreach ($filters as $filter) 
 			{
 				array_unshift ($data['form']['toolbar']['item'], $filter);
