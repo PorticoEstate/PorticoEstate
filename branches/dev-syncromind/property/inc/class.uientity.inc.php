@@ -440,7 +440,7 @@
 
 			return $combos;
 		}
-		
+
 		
 		public function query()
 		{
@@ -1907,6 +1907,8 @@
 				'ColumnDefs'	=> $file_def
 			);
 	
+			$category['enable_bulk'] = 1;
+			
 			if ($id)
 			{
 				$get_docs = false;
@@ -1966,7 +1968,6 @@
 					'ColumnDefs'	=> $related_def
 				);
 				
-				$category['enable_bulk'] = 1;
 				if($category['enable_bulk'])
 				{
 					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory',  'disable' => 0, 'function' => "set_tab('inventory')");
@@ -2102,7 +2103,7 @@ JS;
 					'documents'						=> $documents,
 					'lean'							=> $_lean ? 1 : 0
 				);
-			
+
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('menu');
