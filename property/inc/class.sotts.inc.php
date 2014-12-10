@@ -403,7 +403,7 @@
 				{
 					$end_period	= date('Ym', $end_date);
 					$start_period	= date('Ym', $start_date);
-					$date_join = " LEFT OUTER JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
+					$date_join = "JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
 					$actual_cost_field = 'SUM(fm_tts_payments.amount) AS actual_cost';
 					$actual_cost_group_field = '';
 				}
