@@ -39,10 +39,10 @@ function validate_submit()
 
 	switch(category_id)
 	{
-		case 154: //Brann &amp; sikkerhet
-		case 21: //Feilmelding
-		case 74: // Garanti
-		case 176: // title="Periodisk vedlikehold
+		case '154': //Brann &amp; sikkerhet
+		case '21': //Feilmelding
+		case '74': // Garanti
+		case '176': // title="Periodisk vedlikehold
 			if (!feiltype_id && status_id == 'X')
 			{
 				error = true;
