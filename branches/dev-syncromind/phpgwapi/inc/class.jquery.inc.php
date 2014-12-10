@@ -118,6 +118,19 @@ class phpgwapi_jquery {
 
 				break;
 
+			case 'treeview':
+				$load = array
+					(
+					"js/jquery-2.1.1{$_type}",
+					"treeview/jquery.treeview",
+					"treeview/jquery.treeview.edit",
+					"treeview/jquery.treeview.async"
+				);
+
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/treeview/css/jquery.treeview.css");
+
+				break;
+			
 			default:
 				$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
 				trigger_error(lang($err, $widget), E_USER_WARNING);
