@@ -20,7 +20,7 @@ this.addFooterDatatable = function(paginator,datatable)
 
 	if(typeof(tableYUI)=='undefined')
 	{
-		tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[2].parentNode;
+		tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
 		tableYUI.setAttribute("id","tableYUI");
 	}
 	else

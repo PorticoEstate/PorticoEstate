@@ -148,14 +148,14 @@
 			if(!isset($data['count']))
 			{
 				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");
-			}	
+			}
 
 			$content = array();
 
 			if(isset($data['location_id']) && isset($data['location_item_id']))
 			{
 				$content = $this->read($data);
-			}	
+			}
 
 			$count = (int)$data['count'];
 			$datavalues = array
@@ -258,6 +258,160 @@ JS;
 			return array('datavalues' => $datavalues, 'column_defs' => $column_defs, 'buttons' => $buttons);
 		}
 
+		/**
+		 * Get definition for an inline jquery table
+		 *
+		 * @param array $data location and the number of preceding tables in the same page
+		 * @return array table def data and prepared content.
+		 */
+
+		public function get_jquery_table_def($data = array())
+		{
+			if(!isset($data['count']))
+			{
+				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");
+			}
+
+			if(!isset($data['requestUrl']) || !$requestUrl = $data['requestUrl'])
+			{
+				throw new Exception("property_notify::get_yui_table_def() - Missing requestUrl in input");
+			}
+
+			$requestUrl = str_replace('&amp;', '&', $requestUrl);
+
+			$content = array();
+
+			if(isset($data['location_id']) && isset($data['location_item_id']))
+			{
+				$content = $this->read($data);
+			}
+
+			$count = (int)$data['count'];
+			$datavalues = array
+			(
+				'name'					=> "{$count}",
+				'values' 				=> json_encode($content),
+				'total_records'			=> count($content),
+				'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'addressbook.uiaddressbook.view_person'))),
+				'is_paginator'			=> 1,
+				'footer'				=> 0
+			);
+
+			$column_defs = array
+			(
+				'name'		=> "{$count}",
+				'values'	=>	array(	array('key' => 'id','hidden' => true),
+													array('key' => 'contact_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'formatLink_notify'),
+													array('key' => 'first_name','label'=>lang('first name'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'last_name','label'=>lang('last name'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'email','label'=>lang('email'),'sortable'=>false,'resizeable'=>true),
+													array('key' => 'sms','label'=>'SMS','sortable'=>false,'resizeable'=>true),
+													array('key' => 'notification_method','label'=>lang('method'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'is_active_text','label'=>lang('active'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'entry_date','label'=>lang('entry_date'),'sortable'=>true,'resizeable'=>true)
+													)
+			);
+
+			$buttons = array
+			(
+				array('id' =>'email','type'=>'buttons', 'value'=>'email', 'label'=> lang('email'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+				array('id' =>'sms','type'=>'buttons', 'value'=>'sms', 'label'=> 'SMS', 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+				array('id' =>'enable','type'=>'buttons', 'value'=>'enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+				array('id' =>'disable','type'=>'buttons', 'value'=>'disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+				array('id' =>'delete','type'=>'buttons', 'value'=>'delete', 'label'=> lang('Delete'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+			);
+			$tabletools = <<<JS
+
+			{
+				sSwfPath: "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+				sRowSelect: "multi",
+				aButtons: [
+								"select_all",
+								"select_none"
+JS;
+
+			foreach($buttons as $entry)
+			{
+			$tabletools .= <<<JS
+			,
+			{
+				sExtends: "select",
+				sButtonText: "{$entry['value']}",
+				fnClick:	function (nButton, oConfig, oFlash) {
+
+					var oTT = TableTools.fnGetInstance( 'datatable-container_{$count}' );
+					var selected = oTT.fnGetSelectedData();
+
+					var numSelected = 	selected.length;
+
+					if (numSelected ==0){
+						alert('None selected');
+						return false;
+					}
+					var ids = [];
+					for ( var n = 0; n < selected.length; ++n )
+					{
+						var aData = selected[n];
+						ids.push(aData['id']);
+					}
+					{$entry['funct']}('{$entry['id']}', ids);
+					JqueryPortico.updateinlineTableHelper(oTable{$count}, {$requestUrl});
+			   }
+			}
+
+JS;
+			}
+
+			$tabletools .= <<<JS
+
+				]
+			}
+JS;
+
+			$GLOBALS['phpgw']->js->validate_file( 'portico', 'notify', 'property' );
+
+			$lang_view = lang('view');
+			$code = <<<JS
+
+	var notify_lang_view = "{$lang_view}";
+	var notify_lang_alert = "Posten må lagres før kontakter kan tilordnes";
+
+	this.refresh_notify_contact=function(contact_id)
+	{
+		requestUrl = $requestUrl + '&contact_id='+ contact_id + '&action=refresh_notify_contact';
+		JqueryPortico.updateinlineTableHelper(oTable{$count}, requestUrl);
+
+		if(document.getElementById('notify_contact').value != notify_contact)
+		{
+			notify_contact = document.getElementById('notify_contact').value;
+		}
+	}
+
+	this.onActionsClick_notify=function(type, ids)
+	{
+//		console.log(ids);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: $requestUrl,
+			data:{ids:ids,type:type,notify:true},
+			success: function(data) {
+				if( data != null)
+				{
+
+				}
+			}
+			});
+
+	}
+JS;
+			$GLOBALS['phpgw']->js->add_code($namespace, $code);
+
+			return array('datavalues' => $datavalues, 'column_defs' => $column_defs, 'tabletools' => $tabletools);
+		}
+
+
 		public function update_data()
 		{
 			$action = phpgw::get_var('action', 'string', 'GET');
@@ -284,37 +438,41 @@ JS;
 			}
 
 			$update = false;
+			$type = phpgw::get_var('type');
 			if($notify = phpgw::get_var('notify'))
 			{
 				$ids = $notify['ids'];
+				$ids = phpgw::get_var('ids');
+//				_debug_array($ids);
 				if($ids)
 				{
 					$value_set = array();
 
-					if($notify['email'])
+					switch($type)
 					{
-						$value_set['notification_method'] = 'email';
-					}	
-					else if($notify['sms'])
-					{
-						$value_set['notification_method'] = 'sms';
-					}	
-					else if($notify['enable'])
-					{
-						$value_set['is_active'] = 1;
-					}	
-					else if($notify['disable'])
-					{
-						$value_set['is_active'] = '';
-					}	
-					else if($notify['delete'])
-					{
-						$sql = "DELETE FROM phpgw_notification WHERE id IN (". implode(',', $ids) . ')';
-					}	
-					
+						case 'email':
+							$value_set['notification_method'] = 'email';
+							break;
+						case 'sms':
+							$value_set['notification_method'] = 'sms';
+							break;
+						case 'enable':
+							$value_set['is_active'] = 1;
+							break;
+						case 'disable':
+							$value_set['is_active'] = '';
+							break;
+						case 'delete':
+							$sql = "DELETE FROM phpgw_notification WHERE id IN (". implode(',', $ids) . ')';
+							break;
+						default:
+							break;
+					}
+
 					if($value_set)
 					{
 						$value_set	= $this->_db->validate_update($value_set);
+//						_debug_array("UPDATE phpgw_notification SET {$value_set} WHERE id IN (". implode(',', $ids) . ')');
 						$sql = "UPDATE phpgw_notification SET {$value_set} WHERE id IN (". implode(',', $ids) . ')';
 					}
 					$this->_db->query($sql,__LINE__,__FILE__);			
@@ -348,15 +506,16 @@ JS;
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
+				$result_data = array
+				(
+					'data'				=> $content,
+					'total_records'		=> $total_records,
+					'draw'				=> phpgw::get_var('draw', 'int'),
+					'recordsTotal'		=> $total_records,
+					'recordsFiltered'	=>$total_records
+				);
 
-				if(count($content))
-				{
-					return json_encode($content);
-				}
-				else
-				{
-					return "";
-				}
+				return $result_data;
 			}
 			return $content;
 		}

@@ -131,10 +131,12 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 	options = options || {};
 	var disablePagination	= options['disablePagination'] || false;
 	var disableFilter		= options['disableFilter'] || false;
-
+	var TableTools_def		= options['TableTools'] || false;
+//console.log(options);
 	data = data || {};
 
-	if (Object.keys(data).length == 0)
+//	if (Object.keys(data).length == 0)
+	if(ajax_url)
 	{
 		var ajax_def = {url: ajax_url,type: 'GET'};
 		var serverSide_def = true;
@@ -144,10 +146,17 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 		var ajax_def = false;
 		var serverSide_def = false;
 	}
-
-	$(document).ready(function ()
+	if(TableTools_def)
 	{
-		oTable = $("#" + container).DataTable({
+		var sDom_def = 'T<"clear">lfrtip';
+	}
+	else
+	{
+		var sDom_def = '<"clear">lfrtip';
+	}
+//	$(document).ready(function ()
+//	{
+		var oTable = $("#" + container).DataTable({
 			paginate:		disablePagination ? false : true,
 			filter:			disableFilter ? false : true,
 			info:			disableFilter ? false : true,
@@ -175,7 +184,7 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 			},
 		//	lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 		//	language:		JqueryPortico.i18n.datatable(),
-			columns: columns
+			columns: columns,
 		//	colVis: {
 		//					exclude: exclude_colvis
 		//	},
@@ -183,10 +192,19 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 		//	stateSave:		true,
 		//	stateDuration: -1, //sessionstorage
 		//	tabIndex:		1,
-		//	oTableTools: JqueryPortico.TableTools
+			fnDrawCallback: function () {
+				if(typeof(local_DrawCallback) == 'function')
+				{
+					DrawCallback(oTable);
+				}
+			},
+			sDom: sDom_def,
+			oTableTools: TableTools_def
 		});
 
-	});
+
+//	});
+	return oTable;
 };
 
 JqueryPortico.updateinlineTableHelper = function(oTable, requestUrl)
@@ -263,3 +281,48 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		var strURL = phpGWLink('login.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:'frameless',width:$(window).width(),height:400,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: false,closejs:false});
 	}
+/*
+ *
+ * {
+				sSwfPath: "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+				sRowSelect: "multi",
+				aButtons: [
+								"select_all",
+								"select_none",
+								{
+									sExtends: "select",
+									sButtonText: "email",
+									fnClick:	function (nButton, oConfig, oFlash) {
+
+									    var oTT = TableTools.fnGetInstance( container );
+										var selected = oTT.fnGetSelectedData();
+
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											console.log(aData);
+
+										}
+										oTable.fnDraw();
+
+								   }
+								},
+								{
+									sExtends: "select",
+									sButtonText: "SMS",
+									fnClick:	function (nButton, oConfig, oFlash) {}
+								},
+								{
+									sExtends: "select",
+									sButtonText: "delete",
+									fnClick:	function (nButton, oConfig, oFlash) {}
+								}
+							]
+			}
+ */

@@ -386,8 +386,8 @@
 								<div class = 'pure-u-md-1-2'>
 									<!--  DATATABLE 0-->
 									<td>
-										<div id="paging_0"/>
-										<!--div class="pure-table" id="datatable-container_0"/-->
+										<!--div id="paging_0"/>
+										<div class="pure-table" id="datatable-container_0"/-->
 									</td>
 										<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_0'">
@@ -543,7 +543,18 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'files')"/>
 								</label>
-								<div class="pure-table pure-u-md-1-2" id="datatable-container_2"/>
+								<div class="pure-table pure-u-md-1-2" >
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_2'">
+											<xsl:call-template name="table_setup">
+											  <xsl:with-param name="container" select ='container'/>
+											  <xsl:with-param name="requestUrl" select ='requestUrl' />
+											  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											  <xsl:with-param name="data" select ='data' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -561,7 +572,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'notify client by sms')"/>
 								</label>
-								<table>
+									<table class="pure-table pure-u-md-1-2">
 									<tr>
 										<td>
 											<input type="checkbox" name="notify_client_by_sms" value="true">
@@ -593,7 +604,6 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'response')"/>
 									</xsl:attribute>
-									<xsl:value-of select="value_order_descr"/>
 								</textarea>
 							</div>
 							<div class="pure-control-group">
@@ -752,8 +762,19 @@
 										</label>
 												
 										<div class = 'pure-u-md-1-3'>
-											<div  id="paging_4"> </div>
-											<div class="pure-table" id="datatable-container_4"/>
+											<!--div  id="paging_4"> </div>
+											<div class="pure-table" id="datatable-container_4"/-->
+											<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_4'">
+													<xsl:call-template name="table_setup">
+													  <xsl:with-param name="container" select ='container'/>
+													  <xsl:with-param name="requestUrl" select ='requestUrl' />
+													  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+													  <xsl:with-param name="data" select ='data' />
+													</xsl:call-template>
+												</xsl:if>
+											</xsl:for-each>
+
 										</div>
 									</div>
 									<div class="pure-control-group">
@@ -830,8 +851,18 @@
 													</select>
 												</td>
 												<td>
-													<div id="paging_3"/>
-													<div class="pure-table" id="datatable-container_3"/>
+													<!--div id="paging_3"/>
+													<div class="pure-table" id="datatable-container_3"/-->
+													<xsl:for-each select="datatable_def">
+														<xsl:if test="container = 'datatable-container_3'">
+															<xsl:call-template name="table_setup">
+															  <xsl:with-param name="container" select ='container'/>
+															  <xsl:with-param name="requestUrl" select ='requestUrl' />
+															  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+															  <xsl:with-param name="data" select ='data' />
+															</xsl:call-template>
+														</xsl:if>
+													</xsl:for-each>
 												</td>
 											</tr>
 											<tr>
@@ -903,15 +934,37 @@
 							<xsl:value-of select="php:function('lang', 'notify')"/>
 						</label>
 					
-						<div id="paging_5"> </div>
+						<!--div id="paging_5"> </div>
 						<div class="pure-table" id="datatable-container_5"/>
-						<div id="datatable-buttons_5"/>
+						<div id="datatable-buttons_5"/-->
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_5'">
+								<xsl:call-template name="table_setup">
+								  <xsl:with-param name="container" select ='container'/>
+								  <xsl:with-param name="requestUrl" select ='requestUrl' />
+								  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+								  <xsl:with-param name="data" select ='data' />
+								  <xsl:with-param name="tabletools" select ='tabletools' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
 					</div>
 				</fieldset>
 			</div>
 			<div id="history">
-				<div id="paging_1"/>
-				<div class="pure-table" id="datatable-container_1"/>
+				<!--div id="paging_1"/>
+				<div class="pure-table" id="datatable-container_1"/-->
+				<xsl:for-each select="datatable_def">
+						<xsl:if test="container = 'datatable-container_1'">
+							<xsl:call-template name="table_setup">
+							  <xsl:with-param name="container" select ='container'/>
+							  <xsl:with-param name="requestUrl" select ='requestUrl' />
+							  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+							  <xsl:with-param name="data" select ='data' />
+							</xsl:call-template>
+						</xsl:if>
+				</xsl:for-each>
+
 			</div>
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<tr height="50">
@@ -1044,25 +1097,6 @@
 		var myColumnDefs = new Array();
 		var myButtons = new Array();
 		var td_count = <xsl:value-of select="td_count"/>;
-
-		<xsl:for-each select="datatable">
-			datatable[<xsl:value-of select="name"/>] = [
-			{
-			values:<xsl:value-of select="values"/>,
-			total_records: <xsl:value-of select="total_records"/>,
-			is_paginator:  <xsl:value-of select="is_paginator"/>,
-			edit_action:  <xsl:value-of select="edit_action"/>,
-			<!--permission:<xsl:value-of select="permission"/>, -->
-			footer:<xsl:value-of select="footer"/>
-			}
-			]
-		</xsl:for-each>
-		<xsl:for-each select="myColumnDefs">
-			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-		</xsl:for-each>
-		<xsl:for-each select="myButtons">
-			myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-		</xsl:for-each>
 	</script>
 </xsl:template>
 
@@ -1196,6 +1230,7 @@
 		<xsl:param name="requestUrl" />
 		<xsl:param name="ColumnDefs" />
 		<xsl:param name="data" />
+		<xsl:param name="tabletools" />
 		<table id="{$container}" class="display cell-border compact responsive no-wrap" width="100%">
 			<thead>
 				<tr>
@@ -1268,9 +1303,15 @@
 			}
 	]]>
 			var options = {disablePagination:true, disableFilter:true};
+			<xsl:if test="$tabletools != ''">
+				options.TableTools = <xsl:value-of disable-output-escaping="yes" select="$tabletools"/>;
+			</xsl:if>
 
-			JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options, <xsl:value-of select="$data"/>);
-
+			<xsl:variable name="num">
+				<xsl:number count="*"/>
+			</xsl:variable>
+			var oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options, <xsl:value-of select="$data"/>);
+ 
 		</script>
 
 	</xsl:template>

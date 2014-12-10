@@ -318,7 +318,7 @@
 			//trigger ajax-call
 			$function_exchange_values .= "opener.document.getElementsByName('{$contact_id}')[0].setAttribute('{$contact_id}','{$contact_id}',0);\r\n";
 			//Reset - waiting for next change
-			$function_exchange_values .= "opener.document.getElementsByName('{$contact_id}')[0].removeAttribute('{$contact_id}');\r\n";
+//			$function_exchange_values .= "opener.document.getElementsByName('{$contact_id}')[0].removeAttribute('{$contact_id}');\r\n";
 
 			$function_exchange_values .= 'window.close()';
 

@@ -3206,46 +3206,25 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uitts.get_note', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'requestUrl'	=> "''",
 				'ColumnDefs'	=> $note_def,
 				'data'			=> json_encode($additional_notes)
 			);
 
 			//_debug_Array($additional_notes);die();
-			//---datatable settings---------------------------------------------------	
-			$datavalues[0] = array
-				(
-					'name'					=> "0",
-					'values' 				=> json_encode($additional_notes),
-					'total_records'			=> count($additional_notes),
-					'is_paginator'			=> 0,
-					'edit_action'			=> "''",
-					'footer'				=> 0
-				);					
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode($note_def)
-				);		
-			$datavalues[1] = array
-				(
-					'name'					=> "1",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'is_paginator'			=> 0,
-					'edit_action'			=> "''",
-					'footer'				=> 0
-				);					
-			$myColumnDefs[1] = array
-				(
-					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'value_date',	'label'=>lang('Date'),	'sortable'=>true,'resizeable'=>true),
+			//---datatable settings---------------------------------------------------
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> array(array('key' => 'value_date',	'label'=>lang('Date'),	'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_user',	'label'=>lang('User'),	'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_action',	'label'=>lang('Action'),	'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label'=>lang('New value'),'sortable'=>true,'resizeable'=>true)))
-				);	
-
+														array('key' => 'value_new_value','label'=>lang('New value'),'sortable'=>true,'resizeable'=>true)),
+				'data'			=> json_encode($record_history)
+			);
 
 			$link_to_files = (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'');
 
@@ -3265,16 +3244,6 @@
 				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="'.$ticket['files'][$z]['name'].'" title="'.lang('Check to attach file').'">';
 			}							
 
-			$datavalues[2] = array
-				(
-					'name'					=> "2",
-					'values' 				=> json_encode($content_files),
-					'total_records'			=> count($content_files),
-					'permission'   			=> "''",
-					'is_paginator'			=> 0,
-					'edit_action'			=> "''",
-					'footer'				=> 0
-				);
 
 			$attach_file_def = array
 				(
@@ -3287,69 +3256,56 @@
 				$attach_file_def[] = array('key' => 'attach_file','label'=>lang('attach file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
 			}
 
-			$myColumnDefs[2] = array
-				(
-					'name'		=> "2",
-					'values'	=>	json_encode($attach_file_def)
-				);
-
-
-			$myColumnDefs[3] = array
-				(
-					'name'		=> "3",
-					'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
-				);	
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> $attach_file_def,
+				'data'			=> json_encode($content_files)
+			);
 
 
 			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id'])?$ticket['vendor_id']:0);
 
-			$datavalues[3] = array
-				(
-					'name'					=> "3",
-					'values' 				=> json_encode($content_email),
-					'total_records'			=> count($content_email),
-					'permission'   			=> "''",
-					'is_paginator'			=> 0,
-					'edit_action'			=> "''",
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[4] = array
-				(
-					'name'		=> "4",
-					'values'	=>	json_encode(array(	array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter'=> 'FormatterAmount2'),
-														array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true)))
-				);
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_3',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> array(array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
+										array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)),
+				'data'			=> json_encode($content_email)
+			);
 
 			$payments = $this->bo->get_payments($id);
 
-			$datavalues[4] = array
-				(
-					'name'					=> "4",
-					'values' 				=> json_encode($payments),
-					'total_records'			=> count($payments),
-					'permission'   			=> "''",
-					'is_paginator'			=> 1,
-					'edit_action'			=> "''",
-					'footer'				=> 0
-				);
-
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_4',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> array(array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter'=> 'FormatterAmount2'),
+														array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true)),
+				'data'			=> json_encode($payments)
+			);
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-			$notify_info = execMethod('property.notify.get_yui_table_def',array
+			$notify_info = execMethod('property.notify.get_jquery_table_def',array
 								(
 									'location_id'		=> $location_id,
 									'location_item_id'	=> $id,
-									'count'				=> count($myColumnDefs)
+									'count'				=> count($datatable_def),
+									'requestUrl'		=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
 								)
 							);
-			
-			$datavalues[] 	= $notify_info['datavalues'];
-			$myColumnDefs[]	= $notify_info['column_defs'];
-			$myButtons		= array();
-			$myButtons[]	= $notify_info['buttons'];
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_5',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> $notify_info['column_defs']['values'],
+				'data'			=> json_encode(array()),
+				'tabletools'	=> $notify_info['tabletools']
+			);
 
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
@@ -3452,9 +3408,6 @@
 					'base_java_url'					=> "{menuaction:'property.uitts.update_data',id:{$id}}",
 					'base_java_notify_url'			=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
-					'datatable'						=> $datavalues,
-					'myColumnDefs'					=> $myColumnDefs,
-					'myButtons'						=> $myButtons,
 					'value_origin'					=> $ticket['origin'],
 					'value_target'					=> $ticket['target'],
 					'value_finnish_date'			=> $ticket['finnish_date'],
