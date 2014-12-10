@@ -72,7 +72,7 @@
 		),
 		'fm_bim_item_inventory' => array(
 			'fd' => array(
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
 				'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'item_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'p_location_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
