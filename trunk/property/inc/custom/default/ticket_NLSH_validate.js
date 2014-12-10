@@ -12,12 +12,14 @@ $(document).ready(function()
 
 function show_feiltyper()
 {
-	switch($("#global_category_id").val())
+	var category_id = $("#global_category_id").val();
+
+	switch(category_id)
 	{
-		case 154: //Brann &amp; sikkerhet
-		case 21: //Feilmelding
-		case 74: // Garanti
-		case 176: // title="Periodisk vedlikehold
+		case '154': //Brann &amp; sikkerhet
+		case '21': //Feilmelding
+		case '74': // Garanti
+		case '176': // title="Periodisk vedlikehold
 			document.getElementById('label_feiltyper').style.display = 'block';
 			document.getElementById('id_feiltyper').style.display = 'block';
 			break;
