@@ -26,7 +26,7 @@
 	* @subpackage project
  	* @version $Id$
 	*/
-
+     phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.yui');
 
 	/**
@@ -39,7 +39,7 @@
 	 * @package property
 	 */
 
-	class property_uiproject
+	class property_uiproject extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -58,6 +58,7 @@
 
 		var $public_functions = array
 			(
+				'query'							=> true,
 				'download'						=> true,
 				'index'							=> true,
 				'view'							=> true,
@@ -73,8 +74,10 @@
 				'check_missing_project_budget'	=> true
 			);
 
-		function property_uiproject()
+		function __construct()
 		{
+			parent::__construct();
+
 		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project';
@@ -231,6 +234,7 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['menu']					= $this->bocommon->get_menu();
+
 
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
@@ -972,6 +976,11 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.index', 'property' );
 		}
 
+
+        public function query()
+        {
+        }
+ 
 		function date_search()
 		{
 			//cramirez: necesary for windows.open . Avoid error JS
@@ -2067,6 +2076,31 @@
 			{
 				$myButtons[3]	= $notify_info['buttons'];
 			}
+
+			/*
+			* start new notify-table
+			* Sigurd: this one is for the new notify-table
+			*/
+
+			$notify_info = execMethod('property.notify.get_jquery_table_def',array
+								(
+									'location_id'		=> $location_id,
+									'location_item_id'	=> $id,
+									'count'				=> count($datatable_def),//3
+									'requestUrl'		=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
+								)
+							);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_3',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> $notify_info['column_defs']['values'],
+				'data'			=> json_encode(array()),
+				'tabletools'	=> $mode == 'edit' ? $notify_info['tabletools'] : ''
+			);
+			
+			/* end new notify-table */
 
 			$datavalues[4] = array
 				(
