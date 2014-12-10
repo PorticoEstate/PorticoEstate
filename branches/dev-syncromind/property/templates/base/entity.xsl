@@ -657,19 +657,16 @@
 								</style>
 								<script type="text/javascript">
 									var documents = <xsl:value-of select="documents"/>;
+									var requestUrlDoc = <xsl:value-of select="requestUrlDoc"/>;
 								</script>
 								<fieldset>
 								<!-- markup for expand/contract links -->
-								<div id="expandcontractdiv">
-									<a id="expand" href="#">
-										<xsl:value-of select="php:function('lang', 'expand all')"/>
-									</a>
-									<xsl:text> </xsl:text>
-									<a id="collapse" href="#">
-										<xsl:value-of select="php:function('lang', 'collapse all')"/>
-									</a>
+								<div id="treecontrol">
+									<a id="collapse" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
+									<xsl:text> | </xsl:text>
+									<a id="expand" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
 								</div>
-								<div id="treeDiv1"/>
+								<ul id="treeDiv1" class="filetree"></ul>
 								</fieldset>
 							</div>
 						</xsl:when>
