@@ -1,48 +1,58 @@
 
 $(document).ready(function()
 {
-	show_feilkoder();
+	show_feiltyper();
 
 	$("#global_category_id").change(function()
 	{
-		show_feilkoder();
+		show_feiltyper();
 	});
 
 });
 
-function show_feilkoder()
+function show_feiltyper()
 {
-	if ($("#global_category_id").val() == 20)
+	switch($("#global_category_id").val())
 	{
-		document.getElementById('label_feilkoder').style.display = 'block';
-		document.getElementById('id_feilkoder').style.display = 'block';
+		case 154: //Brann &amp; sikkerhet
+		case 21: //Feilmelding
+		case 74: // Garanti
+		case 176: // title="Periodisk vedlikehold
+			document.getElementById('label_feiltyper').style.display = 'block';
+			document.getElementById('id_feiltyper').style.display = 'block';
+			break;
+		default:
+			document.getElementById('label_feiltyper').style.display = 'none';
+			document.getElementById('id_feiltyper').style.display = 'none';
 	}
-	else
-	{
-		document.getElementById('label_feilkoder').style.display = 'none';
-		document.getElementById('id_feilkoder').style.display = 'none';
-	}
-
 }
+
 function validate_submit()
 {
 	var error = false;
-	var feilkode_id = $("#id_feilkoder").val();
+	var feiltype_id = $("#id_feiltyper").val();
 	var category_id = $("#global_category_id").val();
-	var group_id = $("#global_category_id").val();
+//	var group_id = $("#global_category_id").val();
 	var status_id = $("#status_id").val();
 
-	if (category_id == 20)
+	switch(category_id)
 	{
-		if (!feilkode_id && status_id == 'X')
-		{
-			error = true;
-		}
+		case 154: //Brann &amp; sikkerhet
+		case 21: //Feilmelding
+		case 74: // Garanti
+		case 176: // title="Periodisk vedlikehold
+			if (!feiltype_id && status_id == 'X')
+			{
+				error = true;
+			}
+			break;
+		default:
 	}
+
 
 	if (error)
 	{
-		alert('Feilkode må velges før meldingen kan avsluttes');
+		alert('Feiltype må velges før meldingen kan avsluttes');
 	}
 	else
 	{
