@@ -64,6 +64,7 @@
 				'print_pdf'			=> true,
 				'index'				=> true,
 				'addfiles'			=> true,
+				'get_documents'		=> true,
 				'get_files'			=> true,
 				'get_target'		=> true,
 				'get_related'		=> true,
@@ -441,6 +442,55 @@
 			return $combos;
 		}
 
+		
+		private function _customize_documents(&$documents)
+		{
+			foreach ($documents as &$document)
+			{	
+				if ($document['link'])
+				{
+					$document['text'] = '<a href="'.$document['link'].'" target="_blank">'.$document['text'].'</a>';
+				}
+
+				if($document['children'])
+				{
+					$document['classes'] = "folder";
+					
+					$this->_customize_documents($document['children']);
+				} 
+				else 
+				{
+					$document['classes'] = "file";
+				}
+			}
+		}
+		
+		public function get_documents()
+		{
+			$entity_id = phpgw::get_var('entity_id', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
+			$num = phpgw::get_var('num', 'int');
+			
+			$document = CreateObject('property.sodocument');
+			$documents = $document->get_files_at_location(array('entity_id'=>$entity_id,'cat_id'=>$cat_id,'num'=>$num));
+
+			foreach ($documents as &$document)
+			{
+				$document['classes'] = "folder";
+				
+				if ($document['link'])
+				{
+					$document['text'] = '<a href="'.$document['link'].'" target="_blank">'.$document['text'].'</a>';
+				}
+
+				if($document['children'])
+				{
+					$this->_customize_documents($document['children']);
+				}
+			}
+
+			return $documents;				
+		}
 		
 		public function query()
 		{
@@ -1924,14 +1974,9 @@
 
 				if($get_docs)
 				{
-					$document = CreateObject('property.sodocument');
-					$documents = $document->get_files_at_location(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'num'=>$values['num']));
-
-					if($documents)
-					{
-						$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0, 'function' => "set_tab('document')");
-						$documents = json_encode($documents);				
-					}
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0, 'function' => "set_tab('document')");				
+					$requestUrlDoc	= json_encode(self::link(array('menuaction'=>'property.uientity.get_documents', 'entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'num'=>$values['num'], 'phpgw_return_as'=>'json')));
+					$documents = 1;
 				}
 
 				if (!$category['enable_bulk'])
@@ -2101,6 +2146,7 @@ JS;
 														"cat_id:'{$this->cat_id}',".
 														"type:'{$this->type}'}",
 					'documents'						=> $documents,
+					'requestUrlDoc'					=> $requestUrlDoc,
 					'lean'							=> $_lean ? 1 : 0
 				);
 
@@ -2138,7 +2184,7 @@ JS;
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			phpgw::import_class('phpgwapi.jquery');
-			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('treeview');
 
 
 			$criteria = array
