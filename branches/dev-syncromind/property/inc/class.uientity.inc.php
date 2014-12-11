@@ -454,13 +454,11 @@
 
 				if($document['children'])
 				{
-					$document['classes'] = "folder";
-					
 					$this->_customize_documents($document['children']);
 				} 
 				else 
 				{
-					$document['classes'] = "file";
+					$document['type'] = "file";
 				}
 			}
 		}
@@ -476,8 +474,6 @@
 
 			foreach ($documents as &$document)
 			{
-				$document['classes'] = "folder";
-				
 				if ($document['link'])
 				{
 					$document['text'] = '<a href="'.$document['link'].'" target="_blank">'.$document['text'].'</a>';
