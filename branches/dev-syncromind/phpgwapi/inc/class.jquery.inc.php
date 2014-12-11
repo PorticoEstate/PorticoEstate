@@ -122,12 +122,10 @@ class phpgwapi_jquery {
 				$load = array
 					(
 					"js/jquery-2.1.1{$_type}",
-					"treeview/jquery.treeview",
-					"treeview/jquery.treeview.edit",
-					"treeview/jquery.treeview.async"
+					"treeview/jstree{$_type}"
 				);
 
-				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/treeview/css/jquery.treeview.css");
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/treeview/themes/default/style.min.css");
 
 				break;
 			
