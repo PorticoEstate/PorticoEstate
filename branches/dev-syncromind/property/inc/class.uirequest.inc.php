@@ -169,6 +169,9 @@
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'district_id' => phpgw::get_var('district_id', 'int'),
+				'property_cat_id' => phpgw::get_var('property_cat_id'),
+				'status_id' => phpgw::get_var('status_id'),
 				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
@@ -368,7 +371,7 @@
 							'list'  =>  $values_combo_box[$count]
 						);
                     
-			$count = count($values_combo_box);
+			/*$count = count($values_combo_box);
 			$values_combo_box[$count]  = $this->bo->select_degree_list();
 			foreach($values_combo_box[$count] as &$_degree)
 			{
@@ -396,7 +399,7 @@
 							'extra' =>  '',
 							'text'  =>  lang('no user'),
 							'list'  =>  $values_combo_box[$count]
-						);
+						);*/
                     
 			/*$count = count($values_combo_box);
 			$responsible_unit_list[$count] = $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
@@ -496,6 +499,9 @@
 			$filters = $this->_get_filters();
 			
 			ksort($filters);
+			//print_r($filters);die;
+			
+			
 			foreach ($filters as $filter) 
 			{
 				array_unshift ($data['form']['toolbar']['item'], $filter);
