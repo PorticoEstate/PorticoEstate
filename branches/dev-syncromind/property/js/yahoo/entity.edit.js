@@ -170,14 +170,15 @@ YAHOO.util.Event.addListener(window, "load", function()
 
 // jquery
 $(document).ready(function(){
-
-	$("#treeDiv1").treeview({
-		collapsed: true,
-		animated: "fast",
-		control: "#treecontrol",
-		url: requestUrlDoc,
-		persist: "location"
-	})
+	
+	$("#treeDiv1").jstree({
+		"core" : {
+			"themes" : { "stripes" : true },
+			"data" : {
+				"url" : requestUrlDoc
+			}
+		}
+	});
 	
 	$("#edit_inventory").on("submit", function(e){
 
