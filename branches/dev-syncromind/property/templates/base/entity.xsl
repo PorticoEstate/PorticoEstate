@@ -666,7 +666,7 @@
 									<xsl:text> | </xsl:text>
 									<a id="expand" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
 								</div>
-								<ul id="treeDiv1" class="filetree"></ul>
+								<div id="treeDiv1"></div>
 								</fieldset>
 							</div>
 						</xsl:when>
