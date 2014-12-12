@@ -858,13 +858,43 @@
 
 			}
 
+			$data = array(
+				'datatable_name'	=> $appname,
+				'form' => array(),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'property.uiwo_hour.index', 
+						'appname'		=> $this->appname,
+						'type'			=> $this->type,
+						'type_id'		=> $this->type_id,
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array()
+				)
+			);
+								
 			$uicols = array (
 				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
-				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
-				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
+				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent'))
 			);
 
+			$count_uicols_name = count($uicols['name']);
+
+			for($k=0;$k<$count_uicols_name;$k++)
+			{
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'sortable' => ($uicols['sortable'][$k]) ? true : false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
+
+					array_push ($data['datatable']['field'], $params);
+			}
+			
 			$wo_hour_list = array();
 			$wo_hour_list = $common_data['content'];
 
@@ -1192,7 +1222,7 @@
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour.index'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
