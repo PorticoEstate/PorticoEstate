@@ -20,8 +20,11 @@ function show_feiltyper()
 		case '21': //Feilmelding
 		case '74': // Garanti
 		case '176': // title="Periodisk vedlikehold
-			document.getElementById('label_feiltyper').style.display = 'block';
-			document.getElementById('id_feiltyper').style.display = 'block';
+			if(my_groups[15] ) // forvalter
+			{
+				document.getElementById('label_feiltyper').style.display = 'block';
+				document.getElementById('id_feiltyper').style.display = 'block';
+			}
 			break;
 		default:
 			document.getElementById('label_feiltyper').style.display = 'none';
@@ -43,9 +46,12 @@ function validate_submit()
 		case '21': //Feilmelding
 		case '74': // Garanti
 		case '176': // title="Periodisk vedlikehold
-			if (!feiltype_id && status_id == 'X')
+			if(my_groups[15] ) // forvalter
 			{
-				error = true;
+				if (!feiltype_id && status_id == 'X')
+				{
+					error = true;
+				}
 			}
 			break;
 		default:

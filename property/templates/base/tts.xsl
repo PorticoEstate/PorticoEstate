@@ -22,6 +22,9 @@
 		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
+
+			var my_groups = <xsl:value-of select="my_groups"/>;
+
 		</script>
 
 		<xsl:choose>
@@ -415,6 +418,8 @@
 				var strURL = phpGWLink('index.php', oArgs);
 				Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
+
+			var my_groups = <xsl:value-of select="my_groups"/>;
 
 		</script>
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
