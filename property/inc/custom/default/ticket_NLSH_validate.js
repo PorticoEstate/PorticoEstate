@@ -12,6 +12,9 @@ $(document).ready(function()
 
 function show_feiltyper()
 {
+	document.getElementById('label_feiltyper').style.display = 'none';
+	document.getElementById('id_feiltyper').style.display = 'none';
+
 	var category_id = $("#global_category_id").val();
 
 	switch(category_id)
@@ -27,8 +30,6 @@ function show_feiltyper()
 			}
 			break;
 		default:
-			document.getElementById('label_feiltyper').style.display = 'none';
-			document.getElementById('id_feiltyper').style.display = 'none';
 	}
 }
 
