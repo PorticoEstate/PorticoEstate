@@ -1,7 +1,7 @@
 <?php
 /*
 
-  version V5.18 3 Sep 2012 (c) 2000-2012 John Lim. All rights reserved.
+  version V5.19  23-Apr-2014  (c) 2000-2014 John Lim. All rights reserved.
 
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
@@ -30,8 +30,8 @@ For Oracle the default is dd-mon-yy or dd-mon-yyyy, and for SQL-92 the default i
 yy-mm-dd or yyyy-mm-dd.
 
 Using 'RR' in the format forces two-digit years less than or equal to 49 to be
-interpreted as years in the 21st century (2000–2049), and years over 50 as years in
-the 20th century (1950–1999). Setting the RR format as the default for all two-digit
+interpreted as years in the 21st century (2000-2049), and years over 50 as years in
+the 20th century (1950-1999). Setting the RR format as the default for all two-digit
 year entries allows you to become year-2000 compliant. For example:
 NLS_DATE_FORMAT='RR-MM-DD'
 
@@ -165,41 +165,33 @@ END;
 		return false;
 	}
  
-/*
-
-  Multiple modes of connection are supported:
-  
-  a. Local Database
-    $conn->Connect(false,'scott','tiger');
-  
-  b. From tnsnames.ora
-    $conn->Connect(false,'scott','tiger',$tnsname); 
-    $conn->Connect($tnsname,'scott','tiger'); 
-  
-  c. Server + service name
-    $conn->Connect($serveraddress,'scott,'tiger',$service_name);
-  
-  d. Server + SID
-  	$conn->connectSID = true;
-	$conn->Connect($serveraddress,'scott,'tiger',$SID);
-
-
-Example TNSName:
----------------
-NATSOFT.DOMAIN =
-  (DESCRIPTION =
-	(ADDRESS_LIST =
-	  (ADDRESS = (PROTOCOL = TCP)(HOST = kermit)(PORT = 1523))
-	)
-	(CONNECT_DATA =
-	  (SERVICE_NAME = natsoft.domain)
-	)
-  )
-  
-  There are 3 connection modes, 0 = non-persistent, 1 = persistent, 2 = force new connection
-	
-*/
-	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename,$mode=0)
+	/**
+	 * Multiple modes of connection are supported:
+	 *
+	 * a. Local Database
+	 *    $conn->Connect(false,'scott','tiger');
+	 *
+	 * b. From tnsnames.ora
+	 *    $conn->Connect($tnsname,'scott','tiger');
+	 *    $conn->Connect(false,'scott','tiger',$tnsname);
+	 *
+	 * c. Server + service name
+	 *    $conn->Connect($serveraddress,'scott,'tiger',$service_name);
+	 *
+	 * d. Server + SID
+	 *    $conn->connectSID = true;
+	 *    $conn->Connect($serveraddress,'scott,'tiger',$SID);
+	 *
+	 * @param string|false $argHostname DB server hostname or TNS name
+	 * @param string $argUsername
+	 * @param string $argPassword
+	 * @param string $argDatabasename Service name, SID (defaults to null)
+	 * @param int $mode Connection mode, defaults to 0
+	 *                  (0 = non-persistent, 1 = persistent, 2 = force new connection)
+	 *
+	 * @return bool
+	 */
+	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename=null, $mode=0)
 	{
 		if (!function_exists('oci_pconnect')) return null;
 		#adodb_backtrace(); 
@@ -234,25 +226,23 @@ NATSOFT.DOMAIN =
 				
  		//if ($argHostname) print "<p>Connect: 1st argument should be left blank for $this->databaseType</p>";
 		if ($mode==1) {
-			$this->_connectionID = ($this->charSet) ? 
-				oci_pconnect($argUsername,$argPassword, $argDatabasename,$this->charSet)
-				:
-				oci_pconnect($argUsername,$argPassword, $argDatabasename)
-				;
+			$this->_connectionID = ($this->charSet)
+				? oci_pconnect($argUsername,$argPassword, $argDatabasename,$this->charSet)
+				: oci_pconnect($argUsername,$argPassword, $argDatabasename);
 			if ($this->_connectionID && $this->autoRollback)  oci_rollback($this->_connectionID);
 		} else if ($mode==2) {
-			$this->_connectionID = ($this->charSet) ? 
-				oci_new_connect($argUsername,$argPassword, $argDatabasename,$this->charSet)
-				:
-				oci_new_connect($argUsername,$argPassword, $argDatabasename);
-				
+			$this->_connectionID = ($this->charSet)
+				? oci_new_connect($argUsername,$argPassword, $argDatabasename,$this->charSet)
+				: oci_new_connect($argUsername,$argPassword, $argDatabasename);
 		} else {
-			$this->_connectionID = ($this->charSet) ? 
-				oci_connect($argUsername,$argPassword, $argDatabasename,$this->charSet)
-				:
-				oci_connect($argUsername,$argPassword, $argDatabasename);
+			$this->_connectionID = ($this->charSet)
+				? oci_connect($argUsername,$argPassword, $argDatabasename,$this->charSet)
+				: oci_connect($argUsername,$argPassword, $argDatabasename);
 		}
-		if (!$this->_connectionID) return false;
+		if (!$this->_connectionID) {
+			return false;
+		}
+
 		if ($this->_initdate) {
 			$this->Execute("ALTER SESSION SET NLS_DATE_FORMAT='".$this->NLS_DATE_FORMAT."'");
 		}
@@ -512,7 +502,9 @@ NATSOFT.DOMAIN =
 		return $arr['code'];
 	}
 	
-	// Format date column in sql string given an input format that understands Y M D
+	/**
+	 * Format date column in sql string given an input format that understands Y M D
+	 */
 	function SQLDate($fmt, $col=false)
 	{	
 		if (!$col) $col = $this->sysTimeStamp;
@@ -597,20 +589,21 @@ NATSOFT.DOMAIN =
 		return $this->GetRow($sql,$arr);
 	}
 	
-	/*
-	This algorithm makes use of
-	
-	a. FIRST_ROWS hint
-	The FIRST_ROWS hint explicitly chooses the approach to optimize response time, 
-	that is, minimum resource usage to return the first row. Results will be returned 
-	as soon as they are identified. 
-
-	b. Uses rownum tricks to obtain only the required rows from a given offset.
-	 As this uses complicated sql statements, we only use this if the $offset >= 100. 
-	 This idea by Tomas V V Cox.
-	 
-	 This implementation does not appear to work with oracle 8.0.5 or earlier. Comment
-	 out this function then, and the slower SelectLimit() in the base class will be used.
+	/**
+	 * This algorithm makes use of
+	 *
+	 * a. FIRST_ROWS hint
+	 * The FIRST_ROWS hint explicitly chooses the approach to optimize response
+	 * time, that is, minimum resource usage to return the first row. Results
+	 * will be returned as soon as they are identified.
+	 *
+	 * b. Uses rownum tricks to obtain only the required rows from a given offset.
+	 * As this uses complicated sql statements, we only use this if $offset >= 100.
+	 * This idea by Tomas V V Cox.
+	 *
+	 * This implementation does not appear to work with oracle 8.0.5 or earlier.
+	 * Comment out this function then, and the slower SelectLimit() in the base
+	 * class will be used.
 	*/
 	function SelectLimit($sql,$nrows=-1,$offset=-1, $inputarr=false,$secs2cache=0)
 	{
@@ -623,7 +616,9 @@ NATSOFT.DOMAIN =
 				$sql = str_replace('/*+ ',"/*+$hint ",$sql);
 			else
 				$sql = preg_replace('/^[ \t\n]*select/i',"SELECT /*+$hint*/",$sql);
-		}
+			$hint = "/*+ $hint */";
+		} else
+			$hint = '';
 		
 		if ($offset == -1 || ($offset < $this->selectOffsetAlg1 && 0 < $nrows && $nrows < 1000)) {
 			if ($nrows > 0) {	
@@ -668,7 +663,6 @@ NATSOFT.DOMAIN =
 							$bindarr[$k] = $v;
 						} else { 				// dynamic sql, so rebind every time
 							oci_bind_by_name($stmt,":$k",$inputarr[$k],$len);
-							
 						}
 					}
 				}
@@ -692,12 +686,12 @@ NATSOFT.DOMAIN =
 			 $offset += 1; // in Oracle rownum starts at 1
 			
 			if ($this->databaseType == 'oci8po') {
-					 $sql = "SELECT /*+ FIRST_ROWS */ $fields FROM".
+					$sql = "SELECT $hint $fields FROM".
 					  "(SELECT rownum as adodb_rownum, $fields FROM".
 					  " ($sql) WHERE rownum <= ?".
 					  ") WHERE adodb_rownum >= ?";
 				} else {
-					 $sql = "SELECT /*+ FIRST_ROWS */ $fields FROM".
+					$sql = "SELECT $hint $fields FROM".
 					  "(SELECT rownum as adodb_rownum, $fields FROM".
 					  " ($sql) WHERE rownum <= :adodb_nrows".
 					  ") WHERE adodb_rownum >= :adodb_offset";
@@ -709,7 +703,6 @@ NATSOFT.DOMAIN =
 			else $rs = $this->Execute($sql,$inputarr);
 			return $rs;
 		}
-	
 	}
 	
 	/**
@@ -717,7 +710,6 @@ NATSOFT.DOMAIN =
 	* Store BLOBs and CLOBs
 	*
 	* Example: to store $var in a blob
-	*
 	*	$conn->Execute('insert into TABLE (id,ablob) values(12,empty_blob())');
 	*	$conn->UpdateBlob('TABLE', 'ablob', $varHoldingBlob, 'ID=12', 'BLOB');
 	*	
@@ -731,7 +723,6 @@ NATSOFT.DOMAIN =
 	*	 $db->Execute('ALTER SESSION SET CURSOR_SHARING=EXACT');
 	* before UpdateBlob() then...
 	*/
-
 	function UpdateBlob($table,$column,$val,$where,$blobtype='BLOB')
 	{
 		
@@ -806,8 +797,8 @@ NATSOFT.DOMAIN =
 			$ret = $fn($this,$sql,$inputarr);
 			if (isset($ret)) return $ret;
 		}
-		if ($inputarr) {
-			#if (!is_array($inputarr)) $inputarr = array($inputarr);
+		if ($inputarr !== false) {
+			if (!is_array($inputarr)) $inputarr = array($inputarr);
 			
 			$element0 = reset($inputarr); 
 			$array2d =  $this->bulkBind && is_array($element0) && !is_object(reset($element0));
@@ -872,9 +863,8 @@ NATSOFT.DOMAIN =
 	}
 	
 	/*
-		Example of usage:
-		
-		$stmt = $this->Prepare('insert into emp (empno, ename) values (:empno, :ename)');
+	 * Example of usage:
+	 *    $stmt = $this->Prepare('insert into emp (empno, ename) values (:empno, :ename)');
 	*/
 	function Prepare($sql,$cursor=false)
 	{
@@ -941,35 +931,34 @@ NATSOFT.DOMAIN =
 		return $rs;
 	}
 	
-	/*
-		Bind a variable -- very, very fast for executing repeated statements in oracle. 
-		Better than using
-			for ($i = 0; $i < $max; $i++) {	
-				$p1 = ?; $p2 = ?; $p3 = ?;
-				$this->Execute("insert into table (col0, col1, col2) values (:0, :1, :2)", 
-					array($p1,$p2,$p3));
-			}
-		
-		Usage:
-			$stmt = $DB->Prepare("insert into table (col0, col1, col2) values (:0, :1, :2)");
-			$DB->Bind($stmt, $p1);
-			$DB->Bind($stmt, $p2);
-			$DB->Bind($stmt, $p3);
-			for ($i = 0; $i < $max; $i++) {	
-				$p1 = ?; $p2 = ?; $p3 = ?;
-				$DB->Execute($stmt);
-			}
-			
-		Some timings:		
-			** Test table has 3 cols, and 1 index. Test to insert 1000 records
-			Time 0.6081s (1644.60 inserts/sec) with direct oci_parse/oci_execute
-			Time 0.6341s (1577.16 inserts/sec) with ADOdb Prepare/Bind/Execute
-			Time 1.5533s ( 643.77 inserts/sec) with pure SQL using Execute
-			
-		Now if PHP only had batch/bulk updating like Java or PL/SQL...
-	
-		Note that the order of parameters differs from oci_bind_by_name,
-		because we default the names to :0, :1, :2
+	/**
+	 * Bind a variable -- very, very fast for executing repeated statements in oracle.
+	 *
+	 * Better than using
+	 *    for ($i = 0; $i < $max; $i++) {
+	 *        $p1 = ?; $p2 = ?; $p3 = ?;
+	 *        $this->Execute("insert into table (col0, col1, col2) values (:0, :1, :2)", array($p1,$p2,$p3));
+	 *    }
+	 *
+	 * Usage:
+	 *    $stmt = $DB->Prepare("insert into table (col0, col1, col2) values (:0, :1, :2)");
+	 *    $DB->Bind($stmt, $p1);
+	 *    $DB->Bind($stmt, $p2);
+	 *    $DB->Bind($stmt, $p3);
+	 *    for ($i = 0; $i < $max; $i++) {
+	 *        $p1 = ?; $p2 = ?; $p3 = ?;
+	 *        $DB->Execute($stmt);
+	 *    }
+	 *
+	 * Some timings to insert 1000 records, test table has 3 cols, and 1 index.
+	 * - Time 0.6081s (1644.60 inserts/sec) with direct oci_parse/oci_execute
+	 * - Time 0.6341s (1577.16 inserts/sec) with ADOdb Prepare/Bind/Execute
+	 * - Time 1.5533s ( 643.77 inserts/sec) with pure SQL using Execute
+	 *
+	 * Now if PHP only had batch/bulk updating like Java or PL/SQL...
+	 *
+	 * Note that the order of parameters differs from oci_bind_by_name,
+	 * because we default the names to :0, :1, :2
 	*/
 	function Bind(&$stmt,&$var,$size=4000,$type=false,$name=false,$isOutput=false)
 	{
@@ -1027,21 +1016,21 @@ NATSOFT.DOMAIN =
 		return ':'.$name;
 	}
 	
-	/* 
-	Usage:
-		$stmt = $db->Prepare('select * from table where id =:myid and group=:group');
-		$db->Parameter($stmt,$id,'myid');
-		$db->Parameter($stmt,$group,'group');
-		$db->Execute($stmt);
-		
-		@param $stmt Statement returned by Prepare() or PrepareSP().
-		@param $var PHP variable to bind to
-		@param $name Name of stored procedure variable name to bind to.
-		@param [$isOutput] Indicates direction of parameter 0/false=IN  1=OUT  2= IN/OUT. This is ignored in oci8.
-		@param [$maxLen] Holds an maximum length of the variable.
-		@param [$type] The data type of $var. Legal values depend on driver.
-		
-		See oci_bind_by_name documentation at php.net.
+	/**
+	 * Usage:
+	 *    $stmt = $db->Prepare('select * from table where id =:myid and group=:group');
+	 *    $db->Parameter($stmt,$id,'myid');
+	 *    $db->Parameter($stmt,$group,'group');
+	 *    $db->Execute($stmt);
+	 *
+	 * @param $stmt Statement returned by Prepare() or PrepareSP().
+	 * @param $var PHP variable to bind to
+	 * @param $name Name of stored procedure variable name to bind to.
+	 * @param [$isOutput] Indicates direction of parameter 0/false=IN  1=OUT  2= IN/OUT. This is ignored in oci8.
+	 * @param [$maxLen] Holds an maximum length of the variable.
+	 * @param [$type] The data type of $var. Legal values depend on driver.
+	 *
+	 * @link http://php.net/oci_bind_by_name
 	*/
 	function Parameter(&$stmt,&$var,$name,$isOutput=false,$maxLen=4000,$type=false)
 	{
@@ -1053,20 +1042,20 @@ NATSOFT.DOMAIN =
 			return $this->Bind($stmt,$var,$maxLen,$type,$name,$isOutput);
 	}
 	
-	/*
-	returns query ID if successful, otherwise false
-	this version supports:
-	
-	   1. $db->execute('select * from table');
-	   
-	   2. $db->prepare('insert into table (a,b,c) values (:0,:1,:2)');
-		  $db->execute($prepared_statement, array(1,2,3));
-		  
-	   3. $db->execute('insert into table (a,b,c) values (:a,:b,:c)',array('a'=>1,'b'=>2,'c'=>3));
-	   
-	   4. $db->prepare('insert into table (a,b,c) values (:0,:1,:2)');
-		  $db->bind($stmt,1); $db->bind($stmt,2); $db->bind($stmt,3); 
-		  $db->execute($stmt);
+	/**
+	 * returns query ID if successful, otherwise false
+	 * this version supports:
+	 *
+	 * 1. $db->execute('select * from table');
+	 *
+	 * 2. $db->prepare('insert into table (a,b,c) values (:0,:1,:2)');
+	 *    $db->execute($prepared_statement, array(1,2,3));
+	 *
+	 * 3. $db->execute('insert into table (a,b,c) values (:a,:b,:c)',array('a'=>1,'b'=>2,'c'=>3));
+	 *
+	 * 4. $db->prepare('insert into table (a,b,c) values (:0,:1,:2)');
+	 *    $db->bind($stmt,1); $db->bind($stmt,2); $db->bind($stmt,3);
+	 *    $db->execute($stmt);
 	*/ 
 	function _query($sql,$inputarr=false)
 	{
@@ -1258,8 +1247,17 @@ SELECT /*+ RULE */ distinct b.column_name
 		else return false;
 	}
 	
-	// http://gis.mit.edu/classes/11.521/sqlnotes/referential_integrity.html
-	function MetaForeignKeys($table, $owner=false)
+	/**
+	 * returns assoc array where keys are tables, and values are foreign keys
+	 *
+	 * @param	str		$table
+	 * @param	str		$owner	[optional][default=NULL]
+	 * @param	bool	$upper	[optional][discarded]
+	 * @return	mixed[]			Array of foreign key information
+	 *
+	 * @link http://gis.mit.edu/classes/11.521/sqlnotes/referential_integrity.html
+	 */
+	function MetaForeignKeys($table, $owner=false, $upper=false)
 	{
 	global $ADODB_FETCH_MODE;
 	
@@ -1313,11 +1311,11 @@ SELECT /*+ RULE */ distinct b.column_name
 	 * Quotes a string.
 	 * An example is  $db->qstr("Don't bother",magic_quotes_runtime());
 	 * 
-	 * @param s			the string to quote
-	 * @param [magic_quotes]	if $s is GET/POST var, set to get_magic_quotes_gpc().
+	 * @param string $s the string to quote
+	 * @param bool $magic_quotes if $s is GET/POST var, set to get_magic_quotes_gpc().
 	 *				This undoes the stupidity of magic quotes for GPC.
 	 *
-	 * @return  quoted string to be sent back to database
+	 * @return string quoted string to be sent back to database
 	 */
 	function qstr($s,$magic_quotes=false)
 	{	
@@ -1418,11 +1416,14 @@ class ADORecordset_oci8 extends ADORecordSet {
 		}
 	}
 
-	  /*		Returns: an object containing field information.
-			  Get column information in the Recordset object. fetchField() can be used in order to obtain information about
-			  fields in a certain query result. If the field offset isn't specified, the next field that wasn't yet retrieved by
-			  fetchField() is retrieved.		*/
-
+	/**
+	 * Get column information in the Recordset object.
+	 * fetchField() can be used in order to obtain information about fields
+	 * in a certain query result. If the field offset isn't specified, the next
+	 * field that wasn't yet retrieved by fetchField() is retrieved
+	 *
+	 * @return object containing field information
+	 */
 	function _FetchField($fieldOffset = -1)
 	{
 		$fld = new ADOFieldObject;
@@ -1430,6 +1431,7 @@ class ADORecordset_oci8 extends ADORecordSet {
 		$fld->name =oci_field_name($this->_queryID, $fieldOffset);
 		$fld->type = oci_field_type($this->_queryID, $fieldOffset);
 		$fld->max_length = oci_field_size($this->_queryID, $fieldOffset);
+
 	 	switch($fld->type) {
 		case 'NUMBER':
 	 		$p = oci_field_precision($this->_queryID, $fieldOffset);
@@ -1454,7 +1456,7 @@ class ADORecordset_oci8 extends ADORecordSet {
 	}
 	
 	
-	/*
+/*
 	// 10% speedup to move MoveNext to child class
 	function _MoveNext() 
 	{
@@ -1468,7 +1470,8 @@ class ADORecordset_oci8 extends ADORecordSet {
 		$this->EOF = true;
 		
 		return false;
-	}	*/
+	}
+*/
 	
 	
 	function MoveNext()
@@ -1484,7 +1487,7 @@ class ADORecordset_oci8 extends ADORecordSet {
 		return false;
 	}
 	
-	/*
+/*
 	# does not work as first record is retrieved in _initrs(), so is not included in GetArray()
 	function GetArray($nRows = -1) 
 	{
@@ -1516,9 +1519,10 @@ class ADORecordset_oci8 extends ADORecordSet {
 		$results = ADORecordSet::GetArray($nRows);
 		return $results;
 		
-	} */
+	}
+*/
 	
-	/* Optimize SelectLimit() by using oci_fetch() */
+	// Optimize SelectLimit() by using oci_fetch()
 	function GetArrayLimit($nrows,$offset=-1) 
 	{
 		if ($offset <= 0) {
@@ -1541,7 +1545,7 @@ class ADORecordset_oci8 extends ADORecordSet {
 	}
 
 	
-	/* Use associative array to get fields array */
+	// Use associative array to get fields array
 	function Fields($colname)
 	{
 		if (!$this->bind) {
@@ -1567,9 +1571,11 @@ class ADORecordset_oci8 extends ADORecordSet {
 		return $this->fields = @oci_fetch_array($this->_queryID,$this->fetchMode);
 	}
 
-	/*		close() only needs to be called if you are worried about using too much memory while your script
-			is running. All associated result memory for the specified result identifier will automatically be freed.		*/
-
+	/**
+	 * close() only needs to be called if you are worried about using too much
+	 * memory while your script is running. All associated result memory for the
+	 * specified result identifier will automatically be freed.
+	 */
 	function _close() 
 	{
 		if ($this->connection->_stmt === $this->_queryID) $this->connection->_stmt = false;
@@ -1579,16 +1585,25 @@ class ADORecordset_oci8 extends ADORecordSet {
 		}
 		@oci_free_statement($this->_queryID);
  		$this->_queryID = false;
-		
 	}
 
-	function MetaType($t,$len=-1)
+	/**
+	 * not the fastest implementation - quick and dirty - jlim
+	 * for best performance, use the actual $rs->MetaType().
+	 *
+	 * @param	mixed	$t
+	 * @param	int		$len		[optional] Length of blobsize
+	 * @param	bool	$fieldobj	[optional][discarded]
+	 * @return	str					The metatype of the field
+	 */
+	function MetaType($t, $len=-1, $fieldobj=false)
 	{
 		if (is_object($t)) {
 			$fieldobj = $t;
 			$t = $fieldobj->type;
 			$len = $fieldobj->max_length;
 		}
+
 		switch (strtoupper($t)) {
 	 	case 'VARCHAR':
 	 	case 'VARCHAR2':
@@ -1622,7 +1637,8 @@ class ADORecordset_oci8 extends ADORecordSet {
 		case 'INTEGER': 
 			return 'I';
 			
-		default: return 'N';
+		default:
+			return 'N';
 		}
 	}
 }
@@ -1651,4 +1667,3 @@ class ADORecordSet_ext_oci8 extends ADORecordSet_oci8 {
 		return adodb_movenext($this);
 	}
 }
-?>
