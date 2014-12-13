@@ -2267,8 +2267,18 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
+			
+			$membership = $GLOBALS['phpgw']->accounts->membership($this->account);
+			$my_groups = array();
+			foreach($membership as $group_id => $group)
+			{
+				$my_groups[$group_id] = $group->firstname;
+
+			}
+
 			$data = array
 			(
+					'my_groups'						=> json_encode($my_groups),
 					'custom_attributes'				=> array('attributes' => $values['attributes']),
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'contact_data'					=> $contact_data,
@@ -3376,8 +3386,17 @@
 				$year++;
 			}
 
+			$membership = $GLOBALS['phpgw']->accounts->membership($this->account);
+			$my_groups = array();
+			foreach($membership as $group_id => $group)
+			{
+				$my_groups[$group_id] = $group->firstname;
+
+			}
+
 			$data = array
-				(
+			(
+					'my_groups'						=> json_encode($my_groups),
 					'datatable_def'					=> $datatable_def,
 					'custom_attributes'				=> array('attributes' => $ticket['attributes']),
 					'lookup_functions'				=> isset($ticket['lookup_functions'])?$ticket['lookup_functions']:'',

@@ -34,6 +34,9 @@
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
+
+		var my_groups = <xsl:value-of select="my_groups"/>;
+
 	</script>
 
 	<xsl:choose>
@@ -246,47 +249,50 @@
 		<xsl:value-of select="lookup_functions"/>
 		function generate_order()
 		{
-		Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
+			Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
 		}
 
 		function generate_request()
 		{
-		Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
+			Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
 		}
 
 		function template_lookup()
 		{
-		var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
+			var strURL = phpGWLink('index.php', oArgs);
+			Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 		}
 
 		function response_lookup()
 		{
-		var oArgs = {menuaction:'property.uilookup.response_template',type:'response_template'};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			var oArgs = {menuaction:'property.uilookup.response_template',type:'response_template'};
+			var strURL = phpGWLink('index.php', oArgs);
+			Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 		}
 			
 		function preview_html(id)
 		{
 
-		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
+			var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
 
-		var oArgs = {menuaction:'property.uitts.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			var oArgs = {menuaction:'property.uitts.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
+			var strURL = phpGWLink('index.php', oArgs);
+			Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 
 		}
 
 		function preview_pdf(id)
 		{
-		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
+			var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
 
-		var oArgs = {menuaction:'property.uitts.view',id:id, preview_pdf:true, on_behalf_of_assigned: on_behalf_of_assigned};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			var oArgs = {menuaction:'property.uitts.view',id:id, preview_pdf:true, on_behalf_of_assigned: on_behalf_of_assigned};
+			var strURL = phpGWLink('index.php', oArgs);
+			Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 		}
+
+		var my_groups = <xsl:value-of select="my_groups"/>;
+
 
 	</script>
 	<table cellpadding="2" cellspacing="2" width="95%" align="center">
