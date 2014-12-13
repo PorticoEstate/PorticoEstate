@@ -1,6 +1,6 @@
 <?php
 /* 
-V4.80 8 Mar 2006  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
+V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -125,11 +125,14 @@ FROM `nuke_stories` `t1`, `nuke_authors` `t2`, `nuke_stories_cat` `t3`, `nuke_to
 	$phpv = phpversion();
 	if (defined('ADODB_EXTENSION')) $ext = ' &nbsp; Extension '.ADODB_EXTENSION.' installed';
 	else $ext = '';
-	print "<h3>ADODB Version: $ADODB_vers Host: <i>$db->host</i> &nbsp; Database: <i>$db->database</i> &nbsp; PHP: $phpv $ext</h3>";
+	print "<h3>ADODB Version: $ADODB_vers";
+	print "<p>Host: <i>$db->host</i>";
+	print "<br>Database: <i>$db->database</i>";
+	print "<br>PHP: <i>$phpv $ext</i></h3>";
 	
 	flush();
 
-	if (function_exists('date_default_timezone_set')) date_default_timezone_set('Asia/Kuala_Lumpur');
+	print "Current timezone: " . date_default_timezone_get() . "<p>";
 	
 	$arr = $db->ServerInfo();
 	print_r($arr);
@@ -1363,7 +1366,12 @@ END Adodb;
 	if (!$rs) Err("SQLDate query returned no recordset");
 	else if ($d != $rs->fields[0]) Err("SQLDate 1 failed expected: <br>act:$d <br>sql:".$rs->fields[0]);
 	
-	$date = $db->SQLDate('d-m-M-Y-\QQ h:i:s A',$db->DBDate("1974-02-25"));
+	$dbdate = $db->DBDate("1974-02-25");
+	if (substr($db->dataProvider, 0, 8) == 'postgres') {
+		$dbdate .= "::TIMESTAMP";
+	}
+
+	$date = $db->SQLDate('d-m-M-Y-\QQ h:i:s A', $dbdate);
 	$sql = "SELECT $date from ADOXYZ";
 	print "<p>Test SQLDate: ".htmlspecialchars($sql)."</p>";
 	$db->debug=1;
@@ -1763,6 +1771,6 @@ echo "<br>vers=",ADOConnection::Version();
 
 
 ?>
-<p><i>ADODB Database Library  (c) 2000-2012 John Lim. All rights reserved. Released under BSD and LGPL, PHP <?php echo PHP_VERSION ?>.</i></p>
+<p><i>ADODB Database Library  (c) 2000-2014 John Lim. All rights reserved. Released under BSD and LGPL, PHP <?php echo PHP_VERSION ?>.</i></p>
 </body>
 </html>

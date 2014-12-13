@@ -1,6 +1,6 @@
 <?php
 /*
- V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
+ V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -74,19 +74,22 @@ class ADODB_postgres64 extends ADOConnection{
 	var $metaColumnsSQL = "SELECT a.attname,t.typname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,a.attnum 
 		FROM pg_class c, pg_attribute a,pg_type t 
 		WHERE relkind in ('r','v') AND (c.relname='%s' or c.relname = lower('%s')) and a.attname not like '....%%'
-AND a.attnum > 0 AND a.atttypid = t.oid AND a.attrelid = c.oid ORDER BY a.attnum";
+		AND a.attnum > 0 AND a.atttypid = t.oid AND a.attrelid = c.oid ORDER BY a.attnum";
 
 	// used when schema defined
 	var $metaColumnsSQL1 = "SELECT a.attname, t.typname, a.attlen, a.atttypmod, a.attnotnull, a.atthasdef, a.attnum 
-FROM pg_class c, pg_attribute a, pg_type t, pg_namespace n 
-WHERE relkind in ('r','v') AND (c.relname='%s' or c.relname = lower('%s'))
+		FROM pg_class c, pg_attribute a, pg_type t, pg_namespace n
+		WHERE relkind in ('r','v') AND (c.relname='%s' or c.relname = lower('%s'))
  and c.relnamespace=n.oid and n.nspname='%s' 
 	and a.attname not like '....%%' AND a.attnum > 0 
 	AND a.atttypid = t.oid AND a.attrelid = c.oid ORDER BY a.attnum";
 	
 	// get primary key etc -- from Freek Dijkstra
 	var $metaKeySQL = "SELECT ic.relname AS index_name, a.attname AS column_name,i.indisunique AS unique_key, i.indisprimary AS primary_key 
-	FROM pg_class bc, pg_class ic, pg_index i, pg_attribute a WHERE bc.oid = i.indrelid AND ic.oid = i.indexrelid AND (i.indkey[0] = a.attnum OR i.indkey[1] = a.attnum OR i.indkey[2] = a.attnum OR i.indkey[3] = a.attnum OR i.indkey[4] = a.attnum OR i.indkey[5] = a.attnum OR i.indkey[6] = a.attnum OR i.indkey[7] = a.attnum) AND a.attrelid = bc.oid AND bc.relname = '%s'";
+		FROM pg_class bc, pg_class ic, pg_index i, pg_attribute a
+		WHERE bc.oid = i.indrelid AND ic.oid = i.indexrelid
+		AND (i.indkey[0] = a.attnum OR i.indkey[1] = a.attnum OR i.indkey[2] = a.attnum OR i.indkey[3] = a.attnum OR i.indkey[4] = a.attnum OR i.indkey[5] = a.attnum OR i.indkey[6] = a.attnum OR i.indkey[7] = a.attnum)
+		AND a.attrelid = bc.oid AND bc.relname = '%s'";
 	
 	var $hasAffectedRows = true;
 	var $hasLimit = false;	// set to true for pgsql 7 only. support pgsql/mysql SELECT * FROM TABLE LIMIT 10
@@ -119,7 +122,7 @@ WHERE relkind in ('r','v') AND (c.relname='%s' or c.relname = lower('%s'))
 	// to know what the concequences are. The other values are correct (wheren't in 0.94)
 	// -- Freek Dijkstra 
 
-	function ADODB_postgres64() 
+	function __construct()
 	{
 	// changes the metaColumnsSQL, adds columns: attnum[6]
 	}
@@ -208,7 +211,8 @@ a different OID if a database must be reloaded. */
 	{
 		$info = $this->ServerInfo();
 		if ($info['version'] >= 7.3) {
-		$this->metaTablesSQL = "select table_name,'T' from information_schema.tables where table_schema not in ( 'pg_catalog','information_schema')
+		$this->metaTablesSQL = "
+			select table_name,'T' from information_schema.tables where table_schema not in ( 'pg_catalog','information_schema')
 			union
 		       select table_name,'V' from information_schema.views where table_schema not in ( 'pg_catalog','information_schema') ";
 		}
@@ -216,14 +220,15 @@ a different OID if a database must be reloaded. */
 			$save = $this->metaTablesSQL;
 			$mask = $this->qstr(strtolower($mask));
 			if ($info['version']>=7.3)
-				$this->metaTablesSQL = "select table_name,'T' from information_schema.tables where table_name like $mask and table_schema not in ( 'pg_catalog','information_schema')
+				$this->metaTablesSQL = "
+					select table_name,'T' from information_schema.tables where table_name like $mask and table_schema not in ( 'pg_catalog','information_schema')
 			union
 		       select table_name,'V' from information_schema.views where table_name like $mask and table_schema not in ( 'pg_catalog','information_schema') ";
 			else
 				$this->metaTablesSQL = "
-select tablename,'T' from pg_tables where tablename like $mask 
+					select tablename,'T' from pg_tables where tablename like $mask
  union 
-select viewname,'V' from pg_views where viewname like $mask";
+					select viewname,'V' from pg_views where viewname like $mask";
 		}
 		$ret = ADOConnection::MetaTables($ttype,$showSchema);
 		
@@ -585,7 +590,12 @@ select viewname,'V' from pg_views where viewname like $mask";
 	
 	function Param($name,$type='C')
 	{
+		if ($name) {
 		$this->_pnum += 1;
+		} else {
+			// Reset param num if $name is false
+			$this->_pnum = 1;
+		}
 		return '$'.$this->_pnum;
 	}
 	
@@ -598,19 +608,22 @@ select viewname,'V' from pg_views where viewname like $mask";
 
 				if ($schema) { // requires pgsql 7.3+ - pg_namespace used.
 					$sql = '
-SELECT c.relname as "Name", i.indisunique as "Unique", i.indkey as "Columns" 
-FROM pg_catalog.pg_class c 
-JOIN pg_catalog.pg_index i ON i.indexrelid=c.oid 
-JOIN pg_catalog.pg_class c2 ON c2.oid=i.indrelid
+				SELECT c.relname as "Name", i.indisunique as "Unique", i.indkey as "Columns"
+				FROM pg_catalog.pg_class c
+				JOIN pg_catalog.pg_index i ON i.indexrelid=c.oid
+				JOIN pg_catalog.pg_class c2 ON c2.oid=i.indrelid
 	,pg_namespace n 
-WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\')) and c.relnamespace=c2.relnamespace and c.relnamespace=n.oid and n.nspname=\'%s\'';
+				WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))
+				and c.relnamespace=c2.relnamespace
+				and c.relnamespace=n.oid
+				and n.nspname=\'%s\'';
 				} else {
 	                $sql = '
-SELECT c.relname as "Name", i.indisunique as "Unique", i.indkey as "Columns"
-FROM pg_catalog.pg_class c
-JOIN pg_catalog.pg_index i ON i.indexrelid=c.oid
-JOIN pg_catalog.pg_class c2 ON c2.oid=i.indrelid
-WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
+				SELECT c.relname as "Name", i.indisunique as "Unique", i.indkey as "Columns"
+				FROM pg_catalog.pg_class c
+				JOIN pg_catalog.pg_index i ON i.indexrelid=c.oid
+				JOIN pg_catalog.pg_class c2 ON c2.oid=i.indrelid
+				WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
     			}
 				            
                 if ($primary == FALSE) {
@@ -659,7 +672,6 @@ WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
 	// 	$db->Connect('host1','user1','secret');
 	function _connect($str,$user='',$pwd='',$db='',$ctype=0)
 	{
-		
 		if (!function_exists('pg_connect')) return null;
 		
 		$this->_errorMsg = false;
@@ -704,6 +716,15 @@ WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
 		if ($this->pgVersion >= 7.1) { // good till version 999
 			$this->_nestedSQL = true;
 		}
+
+		# PostgreSQL 9.0 changed the default output for bytea from 'escape' to 'hex'
+		# PHP does not handle 'hex' properly ('x74657374' is returned as 't657374')
+		# https://bugs.php.net/bug.php?id=59831 states this is in fact not a bug,
+		# so we manually set bytea_output
+		if (version_compare($info['version'], '9.0', '>=')) {
+			$this->Execute('set bytea_output=escape');
+		}
+
 		return true;
 	}
 	
@@ -879,7 +900,8 @@ class ADORecordSet_postgres64 extends ADORecordSet{
 	var $_blobArr;
 	var $databaseType = "postgres64";
 	var $canSeek = true;
-	function ADORecordSet_postgres64($queryID,$mode=false) 
+
+	function __construct($queryID, $mode=false)
 	{
 		if ($mode === false) { 
 			global $ADODB_FETCH_MODE;
@@ -895,6 +917,8 @@ class ADORecordSet_postgres64 extends ADORecordSet{
 		default: $this->fetchMode = PGSQL_BOTH; break;
 		}
 		$this->adodbFetchMode = $mode;
+
+		// Parent's constructor
 		$this->ADORecordSet($queryID);
 	}
 	
@@ -1075,4 +1099,3 @@ class ADORecordSet_postgres64 extends ADORecordSet{
 	}
 
 }
-?>
