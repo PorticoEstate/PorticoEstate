@@ -1,7 +1,7 @@
 <?php
 
 /**
-  V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
+  V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -199,52 +199,63 @@ class ADODB2_postgres extends ADODB_DataDict {
 	         // explicitly ask a column to be null using $flds
 	        else if ($set_null = preg_match('/NULL/i',$v)) {
 	            // if they didn't specify not null, see if they explicitely asked for null
-	            $v = preg_replace('/\sNULL/i','',$v);
+					// Lookbehind pattern covers the case 'fieldname NULL datatype DEFAULT NULL'
+					// only the first NULL should be removed, not the one specifying
+					// the default value
+					$v = preg_replace('/(?<!DEFAULT)\sNULL/i','',$v);
 	        }
 	         
 			if (preg_match('/^([^ ]+) .*DEFAULT (\'[^\']+\'|\"[^\"]+\"|[^ ]+)/',$v,$matches)) {
 				$existing = $this->MetaColumns($tabname);
 				list(,$colname,$default) = $matches;
-				if ($this->connection) $old_coltype = $this->connection->MetaType($existing[strtoupper($colname)]);
-				else $old_coltype = $t;
+					$alter .= $colname;
+					if ($this->connection) {
+						$old_coltype = $this->connection->MetaType($existing[strtoupper($colname)]);
+					}
+					else {
+						$old_coltype = $t;
+					}
 				$v = preg_replace('/^' . preg_quote($colname) . '\s/', '', $v);
 				$t = trim(str_replace('DEFAULT '.$default,'',$v));
 
 				// Type change from bool to int
 				if ( $old_coltype == 'L' && $t == 'INTEGER' ) {
-					$sql[] = $alter . $colname . ' DROP DEFAULT';
-					$sql[] = $alter . $colname . " TYPE $t USING ($colname::BOOL)::INT";
-					$sql[] = $alter . $colname . " SET DEFAULT $default";
+						$sql[] = $alter . ' DROP DEFAULT';
+						$sql[] = $alter . " TYPE $t USING ($colname::BOOL)::INT";
+						$sql[] = $alter . " SET DEFAULT $default";
 				}
 				// Type change from int to bool
 				else if ( $old_coltype == 'I' && $t == 'BOOLEAN' ) {
-					$sql[] = $alter . $colname . ' DROP DEFAULT';
-					$sql[] = $alter . $colname . " TYPE $t USING CASE WHEN $colname = 0 THEN false ELSE true END";
-					$sql[] = $alter . $colname . " SET DEFAULT " . $this->connection->qstr($default);
+						if( strcasecmp('NULL', trim($default)) != 0 ) {
+							$default = $this->connection->qstr($default);
+						}
+						$sql[] = $alter . ' DROP DEFAULT';
+						$sql[] = $alter . " TYPE $t USING CASE WHEN $colname = 0 THEN false ELSE true END";
+						$sql[] = $alter . " SET DEFAULT $default";
 				}
 				// Any other column types conversion
 				else {
-					$sql[] = $alter . $colname . " TYPE $t";
-					$sql[] = $alter . $colname . " SET DEFAULT $default";
+						$sql[] = $alter . " TYPE $t";
+						$sql[] = $alter . " SET DEFAULT $default";
 				}
-			 
 			 
 	         } 
 	         else {
 	            // drop default?
 	            preg_match ('/^\s*(\S+)\s+(.*)$/',$v,$matches);
 	            list (,$colname,$rest) = $matches;
-	            $sql[] = $alter . $colname . ' TYPE ' . $rest;
+					$alter .= $colname;
+					$sql[] = $alter . ' TYPE ' . $rest;
 	         }
 	
 #	         list($colname) = explode(' ',$v);
 	         if ($not_null) {
 	            // this does not error out if the column is already not null
-				$sql[] = $alter . $colname . ' SET NOT NULL';
+					$sql[] = $alter . ' SET NOT NULL';
 	         }
 	         if ($set_null) {
 	            // this does not error out if the column is already null
-	            $sql[] = $alter . $colname . ' DROP NOT NULL';
+					$sql[] = $alter . ' DROP NOT NULL';
 	         }
 	      }
 	      return $sql;
@@ -469,4 +480,3 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 		return $ftype;
 	}
 }
-?>
