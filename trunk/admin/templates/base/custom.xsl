@@ -858,13 +858,16 @@
 						<td class="th_text" width="5%" align="left">
 							<xsl:value-of select="php:function('lang', 'id')" />
 						</td>
-						<td class="th_text" width="85%" align="left">
+						<td class="th_text" width="40%" align="left">
 							<xsl:value-of select="php:function('lang', 'value')" />
 						</td>
-						<td class="th_text" width="85%" align="left">
+						<td class="th_text" width="40%" align="left">
+							<xsl:value-of select="php:function('lang', 'title')" />
+						</td>
+						<td class="th_text" width="5%" align="left">
 							<xsl:value-of select="php:function('lang', 'order')" />
 						</td>
-						<td class="th_text" width="15%" align="center">
+						<td class="th_text" width="10%" align="center">
 							<xsl:value-of select="lang_delete_value"/>
 						</td>
 					</tr>
@@ -893,6 +896,13 @@
 							</xsl:attribute>
 						</input>
 					</td>
+					<td align="left">
+						<input type="textbox" name="values[title_choice][{id}]" value="{title}" size='15'>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'value')" />
+							</xsl:attribute>
+						</input>
+					</td>
 					<td align="center">
 						<input type="textbox" name="values[order_choice][{id}]" value="{order}" size='4'>
 							<xsl:attribute name="title">
@@ -901,7 +911,7 @@
 						</input>
 					</td>
 					<td align="center">
-						<input type="checkbox" name="values[delete_choice][]" value="{id}"  onMouseout="window.status='';return true;">
+						<input type="checkbox" name="values[delete_choice][]" value="{id}">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="//lang_delete_choice_statustext"/>

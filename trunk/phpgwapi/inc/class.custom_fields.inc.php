@@ -948,7 +948,8 @@
 				{
 					$choice_id = (int) $choice_id;
 					$value = $this->_db->db_addslashes($value);
-					$sql = "UPDATE phpgw_cust_choice SET value = '{$value}'"
+					$title = $this->_db->db_addslashes($attrib['title_choice'][$choice_id]);
+					$sql = "UPDATE phpgw_cust_choice SET value = '{$value}', title ='{$title}'"
 						. " WHERE location_id = {$location_id}"
 							. " AND attrib_id = {$attrib_id}"
 							. " AND id = {$choice_id}";
@@ -1763,6 +1764,7 @@
 				(
 					'id'	=> $this->_db->f('id'),
 					'value'	=> $this->_db->f('value', true),
+					'title'	=> $this->_db->f('title', true),
 					'order'	=> $this->_db->f('choice_sort')
 				);
 			}
