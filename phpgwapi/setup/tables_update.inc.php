@@ -3255,3 +3255,26 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.546';
+	/**
+	* Add tooltip (title) to multiple values within listbox
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_546()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_choice','title',array(
+			'type' => 'text',
+			'nullable' => True
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.547';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
