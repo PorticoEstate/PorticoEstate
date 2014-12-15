@@ -39,11 +39,11 @@
 
 <xsl:template match="datatable">
 	<xsl:choose>
-		<xsl:when test="datatable/actions/form/fields/field!=''">
+		<xsl:when test="//top-toolbar/fields/field!=''">
 			<div class="toolbar-container">
 				<div class="toolbar">
 					<form>
-						<xsl:apply-templates select="datatable/actions/form/fields/field" />
+						<xsl:apply-templates select="//top-toolbar/fields/field" />
 					</form>
 				</div>
 			</div>
@@ -51,11 +51,11 @@
 	</xsl:choose>
   	<xsl:call-template name="datasource-definition" />
 	<xsl:choose>
-		<xsl:when test="datatable/actions/down-toolbar/fields/field!=''">
+		<xsl:when test="//down-toolbar/fields/field!=''">
 			<div class="toolbar-container">
 				<div class="toolbar">
 					<form>
-						<xsl:apply-templates select="datatable/actions/down-toolbar/fields/field" />
+						<xsl:apply-templates select="//down-toolbar/fields/field" />
 					</form>
 				</div>
 			</div>
@@ -482,43 +482,26 @@
 				});
 			</xsl:if>
 
-			/**
-			* Add dbl click action..
-			*/
-			<xsl:if test="dbl_click_action != ''">
-				$("#datatable-container").on("dblclick", "tr", function() {
-					var iPos = oTable.fnGetPosition( this );
-					var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
-					try {
-						<xsl:value-of select="dbl_click_action"/>(aData);
-					}
-					catch(err) {
-					    document.getElementById("message").innerHTML = err.message;
-					}
-				});
-			</xsl:if>
-
-			<xsl:for-each select="//form/toolbar/item">
-				<xsl:if test="type = 'filter'">
-					$('select#<xsl:value-of select="name"/>').change( function() 
+			<xsl:for-each select="//top-toolbar/fields/field">
+				<xsl:if test="type = 'button'">
+					$('#<xsl:value-of select="id"/>').click( function() 
 					{
-						filterData('<xsl:value-of select="name"/>', $(this).val());
-						<xsl:value-of select="extra"/>
-					});
-				</xsl:if>
-				<xsl:if test="type = 'date-picker'">
-					var previous_<xsl:value-of select="id"/>;
-					$("#filter_<xsl:value-of select="id"/>").on('keyup change', function ()
-					{
-						if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) ) 
-						{
-							filterData('<xsl:value-of select="id"/>', $(this).val());
-							previous_<xsl:value-of select="id"/> = $(this).val();
-						}
+						var sUrl = '<xsl:value-of select="url"/>';
+						window.open(sUrl,'_self');
 					});
 				</xsl:if>
 			</xsl:for-each>
 
+			<xsl:for-each select="//down-toolbar/fields/field">
+				<xsl:if test="type = 'button'">
+					$('#<xsl:value-of select="id"/>').click( function() 
+					{
+						var sUrl = '<xsl:value-of select="url"/>';
+						window.open(sUrl,'_self');
+					});
+				</xsl:if>
+			</xsl:for-each>
+			
 <![CDATA[
 
 			function fnGetSelected( )
@@ -672,6 +655,7 @@
 					<xsl:if test="onkeypress">
 						<xsl:attribute name="onkeypress"><xsl:value-of select="onkeypress"/></xsl:attribute>
 					</xsl:if>
+					
 					<xsl:if test="class">
 						<xsl:attribute name="class"><xsl:value-of select="class"/></xsl:attribute>
 					</xsl:if>
