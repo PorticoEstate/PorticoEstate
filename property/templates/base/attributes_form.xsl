@@ -114,11 +114,17 @@
 										<xsl:choose>
 											<xsl:when test="checked='checked'">
 												<option value="{$id}" selected="selected">
+													<xsl:attribute name="title">
+														<xsl:value-of disable-output-escaping="yes" select="title"/>
+													</xsl:attribute>
 													<xsl:value-of disable-output-escaping="yes" select="value"/>
 												</option>
 											</xsl:when>
 											<xsl:otherwise>
 												<option value="{$id}">
+													<xsl:attribute name="title">
+														<xsl:value-of disable-output-escaping="yes" select="title"/>
+													</xsl:attribute>
 													<xsl:value-of disable-output-escaping="yes" select="value"/>
 												</option>
 											</xsl:otherwise>
