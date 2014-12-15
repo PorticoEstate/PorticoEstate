@@ -631,14 +631,14 @@
 					{
 						if($custom_value = $this->db->f($custom_col['column_name'],true))
 						{
-							$custom_value = $this->custom->get_translated_value(array('value' =>$custom_value, 'attrib_id' => $custom_col['attrib_id'], 'datatype' => $custom_col['datatype'] ), $location_id);
+							$custom_value = $this->custom->get_translated_value(array('value' =>$custom_value, 'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype'] ), $location_id);
 						}
 						$tickets[$i][$custom_col['column_name']] = $custom_value;
 					}
 					$i ++;
 				}
 			}
-
+			_debug_array($tickets);
 			$this->db->set_fetch_single(false);
 
 			return $tickets;
