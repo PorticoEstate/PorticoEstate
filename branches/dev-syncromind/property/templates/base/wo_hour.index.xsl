@@ -64,6 +64,7 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition">
+	<xsl:param name="content" />
 	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
 				<xsl:for-each select="//datatable/field">
@@ -107,7 +108,7 @@
 		var columns = [
 			<xsl:for-each select="//datatable/field">
 				{
-					data:			"<xsl:value-of select="key"/>",
+					title:			"<xsl:value-of select="label"/>",
 					class:			"<xsl:value-of select="className"/>",
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
@@ -178,43 +179,6 @@
 			var editor_cols = [];
 			var editor_action = '<xsl:value-of select="editor_action"/>';
 			
-<![CDATA[
-			TableTools.BUTTONS.download = {
-				"sAction": "text",
-				"sTag": "default",
-				"sFieldBoundary": "",
-				"sFieldSeperator": "\t",
-				"sNewLine": "<br>",
-				"sToolTip": "",
-				"sButtonClass": "DTTT_button_text",
-				"sButtonClassHover": "DTTT_button_text_hover",
-				"sButtonText": "Download",
-				"mColumns": "all",
-				"bHeader": true,
-				"bFooter": true,
-				"sDiv": "",
-				"fnMouseover": null,
-				"fnMouseout": null,
-				"fnClick": function( nButton, oConfig ) {
-					var oParams = this.s.dt.oApi._fnAjaxParameters( this.s.dt );
-					oParams.length = -1;
-					oParams.columns = null;
-					oParams.start = null;
-					oParams.draw = null;
-					var iframe = document.createElement('iframe');
-					iframe.style.height = "0px";
-					iframe.style.width = "0px";
-					iframe.src = oConfig.sUrl+"?"+$.param(oParams) + "&export=1";
-					if(confirm("This will take some time..."))
-					{
-						document.body.appendChild( iframe );
-					}
-				},
-				"fnSelect": null,
-				"fnComplete": null,
-				"fnInit": null
-			};
-	]]>
 		<xsl:choose>
 				<xsl:when test="//datatable/actions">
 						JqueryPortico.TableTools = 	{
@@ -370,8 +334,6 @@
                                         ]
 								};
 
-
-
 				</xsl:when>
 				<xsl:otherwise>
 					JqueryPortico.TableTools = {
@@ -379,92 +341,6 @@
 					};
 				</xsl:otherwise>
 			</xsl:choose>
-<![CDATA[
-
-			for(i=0;i < JqueryPortico.columns.length;i++)
-			{
-				if (JqueryPortico.columns[i]['visible'] != 'undefined' && JqueryPortico.columns[i]['visible'] == false)
-				{
-					exclude_colvis.push(i);
-				}
-			}
-
-			for(i=0;i < JqueryPortico.columns.length;i++)
-			{
-				if (JqueryPortico.columns[i]['editor'] === true)
-				{
-					editor_cols.push({sUpdateURL:editor_action + '&field_name=' + JqueryPortico.columns[i]['data']});
-				} else {
-					editor_cols.push(null);
-				}
-			}
-
-		$(document).ready(function() {
-			
-			oTable = $('#datatable-container').dataTable( {
-				processing:		true,
-				serverSide:		true,
-				responsive:		true,
-				deferRender:	true,
-				ajax:			{
-					url: ajax_url,
-					data: {},
-					type: 'GET'
-				},
-				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-								if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
-								{
-									$('td', nRow).addClass('priority' + aData['priority']);
-								}
-                },
-				fnDrawCallback: function () {
-					oTable.makeEditable({
-							sUpdateURL: editor_action,
-							fnOnEditing: function(input){  
-								cell = input.parents("td");
-								id = input.parents("tr")
-										   .children("td:first")
-										   .text();
-								return true;
-							},
-							fnOnEdited: function(status, sOldValue, sNewCellDisplayValue, aPos0, aPos1, aPos2)
-							{ 	
-								document.getElementById("message").innerHTML += '<br/>' + status;
-							},
-							oUpdateParameters: { 
-								"id": function(){ return id; }
-							},
-							aoColumns: editor_cols,		
-						    sSuccessResponse: "IGNORE",
-							fnShowError: function(){ return; }		
-					});
-					if(typeof(addFooterDatatable) == 'function')
-					{
-						addFooterDatatable(oTable);
-					}
-				},
-				fnFooterCallback: function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
-					if(typeof(addFooterDatatable2) == 'function')
-					{
-						addFooterDatatable2(nRow, aaData, iStart, iEnd, aiDisplay,oTable);
-					}
-				},//alternative
-				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
-				language:		JqueryPortico.i18n.datatable(),
-				columns:		JqueryPortico.columns,
-				colVis: {
-								exclude: exclude_colvis
-				},
-				dom:			'lCT<"clear">f<"top"ip>rt<"bottom"><"clear">',
-				stateSave:		true,
-				stateDuration: -1, //sessionstorage
-				tabIndex:		1,
-				oTableTools: JqueryPortico.TableTools
-			} );
-
-});
-
-	]]>
 
 			/**
 			* Add left click action..
@@ -501,6 +377,12 @@
 					});
 				</xsl:if>
 			</xsl:for-each>
+			
+			var options = {disablePagination:true, disableFilter:true};
+			options.TableTools = JqueryPortico.TableTools;
+			var data = <xsl:value-of select="data"/>;
+
+			oTable = JqueryPortico.inlineTableHelper('datatable-container', '', columns, options, data );
 			
 <![CDATA[
 
@@ -561,17 +443,6 @@
 
 		} );
 
-		function searchData(query)
-		{
-			var api = oTable.api();
-			api.search( query ).draw();
-		}
-
-		function filterData(param, value)
-		{
-			oTable.dataTableSettings[0]['ajax']['data'][param] = value;
-			oTable.fnDraw();
-		}
 ]]>
 	</script>
 
@@ -633,8 +504,11 @@
  		     		</xsl:for-each>
 				</select>			
 			</xsl:when>
+			<xsl:when test="type='button'">
+				<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
+			</xsl:when>
 			<xsl:otherwise>
-				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}">
+				<input id="{$id}" type="{type}" name="{name}" value="{value}">
 					<xsl:if test="size">
 						<xsl:attribute name="size"><xsl:value-of select="size"/></xsl:attribute>
 					</xsl:if>
