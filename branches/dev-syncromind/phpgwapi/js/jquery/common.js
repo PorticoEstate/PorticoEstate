@@ -156,7 +156,7 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 	}
 //	$(document).ready(function ()
 //	{
-		var oTable = $("#" + container).DataTable({
+		var oTable = $("#" + container).dataTable({
 			paginate:		disablePagination ? false : true,
 			filter:			disableFilter ? false : true,
 			info:			disableFilter ? false : true,
@@ -209,7 +209,8 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 
 JqueryPortico.updateinlineTableHelper = function(oTable, requestUrl)
 {	
-	oTable.ajax.url( requestUrl ).load();
+	var api = oTable.api();
+	api.ajax.url( requestUrl ).load();
 };
 
 JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, label_attr) {
