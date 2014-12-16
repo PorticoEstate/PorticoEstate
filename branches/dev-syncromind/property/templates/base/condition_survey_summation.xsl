@@ -110,7 +110,6 @@
 		</tfoot>
 	</table>
 	<script>
-		var oTable = null;
 		var PreColumns = [
 				<xsl:for-each select="$ColumnDefs">
 				{
@@ -160,17 +159,19 @@
 					}
 				}
 		]]>
-
-		JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns);
+		
+		var options = {disableFilter:true};
+		var oTable = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options);
 		
 		$(document).ready(function ()
 		{		
-			oTable.on( 'draw', sum_columns );
+			var api = oTable.api();
+			api.on( 'draw', sum_columns );
 		});
 
 		function sum_columns()
 		{
-			var api = oTable;
+			var api = oTable.api();
 			// Remove the formatting to get integer data for summation
 			var intVal = function ( i ) {
 				return typeof i === 'string' ?
