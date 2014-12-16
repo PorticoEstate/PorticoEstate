@@ -702,9 +702,6 @@
 				return $this->query();
 			}
 			
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			
 			$appname	= lang('Workorder');
 			$function_msg	= lang('list hours');
 			
@@ -897,9 +894,9 @@
 			);
 								
 			$uicols = array (
-				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
-				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
-				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent'))
+				'name'			=>	array('post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'input_type'	=>	array('text','text','text','text','text','text','text','text','text','text','text'),
+				'descr'			=>	array(lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent'))
 			);
 
 			$count_uicols_name = count($uicols['name']);
@@ -996,6 +993,21 @@
 
 			unset($parameters);				
 
+			$common_data = $this->common_data($workorder_id);
+			$content = $common_data['content'];
+			$values = array();
+			$k = 0;
+			foreach ($content as $row)
+			{
+				foreach ($uicols['name'] as $name) 
+				{
+					$values[$k][] = $row[$name];
+				}
+				$k ++;
+			}
+
+			$data['datatable']['data'] = json_encode($values);
+		
 			self::render_template_xsl('wo_hour.index', $data);
 
 			//Title of Page
