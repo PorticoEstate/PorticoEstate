@@ -696,17 +696,12 @@
 				$receipt = $this->bo->delete($hour_id,$workorder_id);
 				return "hour_id ".$hour_id." ".lang("has been deleted");
 			}
-
-			if (phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				return $this->query();
-			}
 			
 			$appname	= lang('Workorder');
 			$function_msg	= lang('list hours');
 			
 			$data = array(
-				'datatable_name' => $appname,
+				'datatable_name' => $appname . ': ' . $function_msg,
 				'form' => array(),
 				'datatable' => array
 				(
@@ -894,9 +889,10 @@
 			);
 								
 			$uicols = array (
-				'name'			=>	array('post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
-				'input_type'	=>	array('text','text','text','text','text','text','text','text','text','text','text'),
-				'descr'			=>	array(lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent'))
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
+				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
+				'className'		=> 	array('','','','','','right','right','right','right','right','','right')
 			);
 
 			$count_uicols_name = count($uicols['name']);
@@ -906,6 +902,7 @@
 					$params = array(
 									'key' => $uicols['name'][$k],
 									'label' => $uicols['descr'][$k],
+									'className' => $uicols['className'][$k],
 									'sortable' => ($uicols['sortable'][$k]) ? true : false,
 									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 								);
@@ -1001,13 +998,30 @@
 			{
 				foreach ($uicols['name'] as $name) 
 				{
-					$values[$k][] = $row[$name];
+					if ($name == 'deviation')
+					{
+						if (is_numeric($row[$name])) 
+						{
+							$values[$k][$name] = $row[$name];
+						}
+						else 
+						{
+							$values[$k][$name] = '';
+						}
+					}
+					else
+					{
+						$values[$k][$name] = $row[$name];
+					}
 				}
 				$k ++;
 			}
 
 			$data['datatable']['data'] = json_encode($values);
-		
+			$data['datatable']['table_sum']	= $common_data['table_sum'][0];
+			$data['datatable']['workorder_data']	= $common_data['workorder_data'];
+			$data['datatable']['total_hours_records']	= $common_data['total_hours_records'];
+			
 			self::render_template_xsl('wo_hour.index', $data);
 
 			//Title of Page
@@ -1024,46 +1038,6 @@
 		 */
 		public function query()
 		{
-			$draw = phpgw::get_var('draw', 'int');
-			$allrows = phpgw::get_var('length', 'int') == -1;
-			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
-			
-			$common_data = $this->common_data($workorder_id);
-			$values = array();
-			$values = $common_data['content'];
-
-			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
-			$total_records = count($values);
-			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
-
-			if($allrows)
-			{
-				$out = $values;
-			}
-			else
-			{
-				if ($total_records > $num_rows)
-				{
-					$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
-					$values_part = array_chunk($values, $num_rows);
-					$out = $values_part[$page];
-				}
-				else 
-				{
-					$out = $values;
-				}
-			}
-
-			$result_data = array('results' => $out);
-
-			$result_data['total_records'] = $total_records;
-			$result_data['draw'] = $draw;
-			$result_data['table_sum']	= $common_data['table_sum'][0];
-			$result_data['workorder_data']	= $common_data['workorder_data'];
-			$result_data['total_hours_records']	= $common_data['total_hours_records'];
-			$result_data['lang_total_records']	= lang('Total records');
-							
-			return $this->jquery_results($result_data);
 		}
 		
 		function view()
