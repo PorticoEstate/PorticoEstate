@@ -235,6 +235,7 @@
 						$invoice->get_header(),
 						$invoice->get_party()->get_identifier(),
 						$party_name,
+						$serialized_party['address'],
 						$invoice->get_id(),
 						$this->billing_job->get_year(),
 						$this->billing_job->get_month(),
@@ -444,7 +445,7 @@
 		 * Builds one single order of the excel file.
 		 * 
 		 */
-		protected function get_order_excel_bk($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
+		protected function get_order_excel_bk($header, $party_id, $party_name,$party_address, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -484,7 +485,7 @@
 			return str_replace(array("\n", "\r"), '', $order);
 		}
 
-		protected function get_order_excel_nlsh($header, $party_id, $party_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
+		protected function get_order_excel_nlsh($header, $party_id, $party_name,$party_address, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
 		{
 
 //_debug_array(func_get_args());
@@ -503,8 +504,8 @@
 //				'Ansvar2'				 => 'BKBPE',//FIXME
 				'Party'					 => $party_id,
 				'name'					 => $party_name,
+				'address'				=> $party_address,
 				'amount'				 => $this->get_formatted_amount_excel($product_item['amount']),
-//				'amount' => $this->get_formatted_amount($product_items[0]['amount']),
 				'article description'	 => $product_item['article_description'],
 				'article_code'			 => $product_item['article_code'],
 				'batch_id'				 => "BKBPE{$this->date_str}",
