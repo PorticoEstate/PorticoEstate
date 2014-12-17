@@ -3396,8 +3396,8 @@
 
 			$data = array
 			(
-					'my_groups'						=> json_encode($my_groups),
 					'datatable_def'					=> $datatable_def,
+					'my_groups'						=> json_encode($my_groups),
 					'custom_attributes'				=> array('attributes' => $ticket['attributes']),
 					'lookup_functions'				=> isset($ticket['lookup_functions'])?$ticket['lookup_functions']:'',
 					'send_response'					=> isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
