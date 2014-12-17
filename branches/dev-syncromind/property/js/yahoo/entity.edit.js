@@ -184,7 +184,7 @@ $(document).ready(function(){
 
         var count = 0;
         $("#treeDiv1").bind("select_node.jstree", function (event, data) {
-            count = eval(count + 1);
+            count += 1;
                 var divd = data.instance.get_node(data.selected[0]).original['link']; 
             if(count > 1)
             {
