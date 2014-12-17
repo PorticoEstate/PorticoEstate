@@ -23,7 +23,7 @@
 			</h3>
 		</xsl:when>
 	</xsl:choose>
-	  <xsl:call-template name="datatable" />
+	<xsl:call-template name="datatable" />
 </xsl:template>
 
 
@@ -43,6 +43,7 @@
 			<div class="toolbar-container">
 				<div class="toolbar">
 					<form>
+						<xsl:apply-templates select="//datatable/workorder_data" />
 						<xsl:apply-templates select="//top-toolbar/fields/field" />
 					</form>
 				</div>
@@ -63,8 +64,40 @@
 	</xsl:choose>
 </xsl:template>
 
+<xsl:template match="workorder_data">
+	<div style="float:left" class="field">
+		<table>
+			<tbody>
+				<tr>
+					<td><xsl:value-of select="lang_project_id"/></td>
+					<td>&nbsp;:&nbsp;</td>
+					<td>
+						<a href="{link_project}"><xsl:value-of select="project_id"/></a>
+					</td>
+				</tr>
+				<tr>
+					<td><xsl:value-of select="lang_workorder_id"/></td>
+					<td>&nbsp;:&nbsp;</td>
+					<td>
+						<a href="{link_workorder}"><xsl:value-of select="workorder_id"/></a>
+					</td>
+				</tr>
+				<tr>
+					<td><xsl:value-of select="lang_workorder_title"/></td>
+					<td>&nbsp;:&nbsp;</td>
+					<td><xsl:value-of select="workorder_title"/></td>
+				</tr>
+				<tr>
+					<td><xsl:value-of select="lang_vendor_name"/></td>
+					<td>&nbsp;:&nbsp;</td>
+					<td><xsl:value-of select="vendor_name"/></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</xsl:template>
+
 <xsl:template name="datasource-definition">
-	<xsl:param name="content" />
 	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
 				<xsl:for-each select="//datatable/field">
@@ -86,20 +119,41 @@
 		</thead>
 		<tfoot>
 			<tr>
-				<xsl:for-each select="//datatable/field">
-					<xsl:choose>
-						<xsl:when test="hidden">
-							<xsl:if test="hidden =0">
-								<th>
-								</th>
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-							<th>
-							</th>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
+				<td colspan="2"><xsl:value-of select="//table_sum/lang_sum_calculation"/></td>
+				<td colspan="4"></td>
+				<td><xsl:value-of select="//table_sum/value_sum_calculation"/></td>
+				<td><xsl:value-of select="//table_sum/sum_deviation"/></td>
+				<td><xsl:value-of select="//table_sum/sum_result"/></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2"><xsl:value-of select="//table_sum/lang_addition_rs"/></td>
+				<td colspan="6"></td>
+				<td><xsl:value-of select="//table_sum/value_addition_rs"/></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2"><xsl:value-of select="//table_sum/lang_addition_percentage"/></td>
+				<td colspan="6"></td>
+				<td><xsl:value-of select="//table_sum/value_addition_percentage"/></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2"><xsl:value-of select="//table_sum/lang_sum_tax"/></td>
+				<td colspan="6"></td>
+				<td><xsl:value-of select="//table_sum/value_sum_tax"/></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th colspan="2"><xsl:value-of select="//table_sum/lang_total_sum"/></th>
+				<th colspan="6"></th>
+				<th><xsl:value-of select="//table_sum/value_total_sum"/></th>
+				<th></th>
+				<th></th>
 			</tr>
 		</tfoot>
 	</table>
@@ -108,7 +162,7 @@
 		var columns = [
 			<xsl:for-each select="//datatable/field">
 				{
-					title:			"<xsl:value-of select="label"/>",
+					data:			"<xsl:value-of select="key"/>",
 					class:			"<xsl:value-of select="className"/>",
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
@@ -164,13 +218,11 @@
 				JqueryPortico.columns.push(columns[i]);
 			}
 		}
-//		console.log(JqueryPortico.columns);
 ]]>
 	</script>
 
 	<script type="text/javascript" class="init">
 		
-		var oTable = null;
 		$(document).ready(function() {
 
 			var ajax_url = '<xsl:value-of select="source"/>';
@@ -179,7 +231,7 @@
 			var editor_cols = [];
 			var editor_action = '<xsl:value-of select="editor_action"/>';
 			
-		<xsl:choose>
+			<xsl:choose>
 				<xsl:when test="//datatable/actions">
 						JqueryPortico.TableTools = 	{
 								"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
@@ -382,7 +434,7 @@
 			options.TableTools = JqueryPortico.TableTools;
 			var data = <xsl:value-of select="data"/>;
 
-			oTable = JqueryPortico.inlineTableHelper('datatable-container', '', columns, options, data );
+			var oTable = JqueryPortico.inlineTableHelper('datatable-container', '', JqueryPortico.columns, options, data );
 			
 <![CDATA[
 
@@ -441,7 +493,7 @@
 			}
 
 
-		} );
+		});
 
 ]]>
 	</script>
