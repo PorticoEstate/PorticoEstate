@@ -38,62 +38,68 @@
 
 
 <xsl:template match="datatable">
-	<xsl:choose>
-		<xsl:when test="//top-toolbar/fields/field!=''">
-			<div class="toolbar-container">
-				<div class="toolbar">
-					<form>
-						<xsl:apply-templates select="//datatable/workorder_data" />
-						<xsl:apply-templates select="//top-toolbar/fields/field" />
-					</form>
-				</div>
-			</div>
-		</xsl:when>
-	</xsl:choose>
+	<xsl:call-template name="top-toolbar" />
   	<xsl:call-template name="datasource-definition" />
-	<xsl:choose>
-		<xsl:when test="//down-toolbar/fields/field!=''">
-			<div class="toolbar-container">
-				<div class="toolbar">
-					<form>
-						<xsl:apply-templates select="//down-toolbar/fields/field" />
-					</form>
+	<xsl:call-template name="down-toolbar" />
+</xsl:template>
+
+<xsl:template name="top-toolbar">
+	<div class="toolbar-container">
+		<div class="toolbar">
+			<form class="pure-form pure-form-stacked">
+				<div class="pure-g">
+					<div class="pure-u-1-3">
+						<xsl:apply-templates select="//datatable/workorder_data" />
+					</div>
+					<div class="pure-u-2-3">
+						<xsl:for-each select="//top-toolbar/fields/field">
+							<xsl:choose>
+								<xsl:when test="type='button'">
+									<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
+								</xsl:when>
+							</xsl:choose>									
+						</xsl:for-each>
+					</div>
 				</div>
-			</div>
-		</xsl:when>
-	</xsl:choose>
+			</form>
+		</div>
+	</div>
 </xsl:template>
 
 <xsl:template match="workorder_data">
-	<div style="float:left" class="field">
-		<table>
-			<tbody>
-				<tr>
-					<td><xsl:value-of select="lang_project_id"/></td>
-					<td>&nbsp;:&nbsp;</td>
-					<td>
-						<a href="{link_project}"><xsl:value-of select="project_id"/></a>
-					</td>
-				</tr>
-				<tr>
-					<td><xsl:value-of select="lang_workorder_id"/></td>
-					<td>&nbsp;:&nbsp;</td>
-					<td>
-						<a href="{link_workorder}"><xsl:value-of select="workorder_id"/></a>
-					</td>
-				</tr>
-				<tr>
-					<td><xsl:value-of select="lang_workorder_title"/></td>
-					<td>&nbsp;:&nbsp;</td>
-					<td><xsl:value-of select="workorder_title"/></td>
-				</tr>
-				<tr>
-					<td><xsl:value-of select="lang_vendor_name"/></td>
-					<td>&nbsp;:&nbsp;</td>
-					<td><xsl:value-of select="vendor_name"/></td>
-				</tr>
-			</tbody>
-		</table>
+	<div><xsl:value-of select="lang_project_id"/>:<a href="{link_project}"><xsl:value-of select="project_id"/></a></div>
+	<div><xsl:value-of select="lang_workorder_id"/>:<a href="{link_workorder}"><xsl:value-of select="workorder_id"/></a></div>
+	<div><xsl:value-of select="lang_workorder_title"/>:<xsl:value-of select="workorder_title"/></div>
+	<div><xsl:value-of select="lang_vendor_name"/>:<xsl:value-of select="vendor_name"/></div>
+</xsl:template>
+
+<xsl:template name="down-toolbar">
+	<div class="toolbar-container">
+		<div class="toolbar">
+			<form class="pure-form pure-form-stacked">
+				<div class="pure-g">
+					<div class="pure-u-1">
+						<xsl:for-each select="//down-toolbar/fields/field">
+							<xsl:choose>
+								<xsl:when test="type='button'">
+									<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
+								</xsl:when>
+								<xsl:when test="type='label'">
+									<xsl:value-of select="value"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input id="{id}" type="{type}" name="{name}" value="{value}">
+										<xsl:if test="type = 'checkbox' and checked = '1'">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 </xsl:template>
 
@@ -119,39 +125,39 @@
 		</thead>
 		<tfoot>
 			<tr>
-				<td colspan="2"><xsl:value-of select="//table_sum/lang_sum_calculation"/></td>
-				<td colspan="4"></td>
-				<td><xsl:value-of select="//table_sum/value_sum_calculation"/></td>
-				<td><xsl:value-of select="//table_sum/sum_deviation"/></td>
-				<td><xsl:value-of select="//table_sum/sum_result"/></td>
-				<td></td>
-				<td></td>
+				<th colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_sum_calculation"/></th>
+				<th colspan="4"></th>
+				<th class="dt-right"><xsl:value-of select="//table_sum/value_sum_calculation"/></th>
+				<th class="dt-right"><xsl:value-of select="//table_sum/sum_deviation"/></th>
+				<th class="dt-right"><xsl:value-of select="//table_sum/sum_result"/></th>
+				<th></th>
+				<th></th>
 			</tr>
 			<tr>
-				<td colspan="2"><xsl:value-of select="//table_sum/lang_addition_rs"/></td>
+				<td colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_addition_rs"/></td>
 				<td colspan="6"></td>
-				<td><xsl:value-of select="//table_sum/value_addition_rs"/></td>
+				<td class="dt-right"><xsl:value-of select="//table_sum/value_addition_rs"/></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2"><xsl:value-of select="//table_sum/lang_addition_percentage"/></td>
+				<td colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_addition_percentage"/></td>
 				<td colspan="6"></td>
-				<td><xsl:value-of select="//table_sum/value_addition_percentage"/></td>
+				<td class="dt-right"><xsl:value-of select="//table_sum/value_addition_percentage"/></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2"><xsl:value-of select="//table_sum/lang_sum_tax"/></td>
+				<td colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_sum_tax"/></td>
 				<td colspan="6"></td>
-				<td><xsl:value-of select="//table_sum/value_sum_tax"/></td>
+				<td class="dt-right"><xsl:value-of select="//table_sum/value_sum_tax"/></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<th colspan="2"><xsl:value-of select="//table_sum/lang_total_sum"/></th>
+				<th colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_total_sum"/></th>
 				<th colspan="6"></th>
-				<th><xsl:value-of select="//table_sum/value_total_sum"/></th>
+				<th class="dt-right"><xsl:value-of select="//table_sum/value_total_sum"/></th>
 				<th></th>
 				<th></th>
 			</tr>
@@ -506,89 +512,4 @@
 		</xsl:choose>
 	</script>
 
-</xsl:template>
-
-
-<xsl:template match="field">
-	<xsl:variable name="id" select="phpgw:conditional(id, id, generate-id())"/>
-	<xsl:variable name="align">
-		<xsl:choose>
-			<xsl:when test="style='filter'">float:left</xsl:when>
-			<xsl:otherwise>float:right</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	<div style="{$align}" class="field">
-		<xsl:if test="text">
-			<label for="{$id}">
-				<xsl:value-of select="text"/>
-				<xsl:text> </xsl:text>
-			</label>
-		</xsl:if>
-
-		<xsl:choose>
-			<xsl:when test="type='link'">
-				<a id="{id}" href="#" onclick="{url}" tabindex="{tab_index}"><xsl:value-of select="value"/></a>
-			</xsl:when>
-			<xsl:when test="type='label_org_unit'">
-				<table><tbody><tr><td><span id="txt_org_unit"></span></td></tr></tbody></table>
-			</xsl:when>
-			<xsl:when test="type='label_date'">
-				<table><tbody><tr><td><span id="txt_start_date"></span></td></tr><tr><td><span id="txt_end_date"></span></td></tr></tbody></table>
-			</xsl:when>
-			<xsl:when test="type='label'">
-				<xsl:value-of select="value"/>
-			</xsl:when>
-			<xsl:when test="type='img'">
-				<img id="{id}" src="{src}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}" />
-			</xsl:when>
-			<xsl:when test="type='select'">
-				<select id="{id}" name="{name}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}">
-					<xsl:if test="onchange">
-						<xsl:attribute name="onchange"><xsl:value-of select="onchange"/></xsl:attribute>
-					</xsl:if>
- 		     		<xsl:for-each select="values">
-						<option value="{id}">
-							<xsl:if test="selected != 0">
-								<xsl:attribute name="selected" value="selected" />
-							</xsl:if>
-							<xsl:value-of disable-output-escaping="yes" select="name"/>
-						</option>
- 		     		</xsl:for-each>
-				</select>			
-			</xsl:when>
-			<xsl:when test="type='button'">
-				<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
-			</xsl:when>
-			<xsl:otherwise>
-				<input id="{$id}" type="{type}" name="{name}" value="{value}">
-					<xsl:if test="size">
-						<xsl:attribute name="size"><xsl:value-of select="size"/></xsl:attribute>
-					</xsl:if>
-
-					<xsl:if test="tab_index">
-						<xsl:attribute name="tabindex"><xsl:value-of select="tab_index"/></xsl:attribute>
-					</xsl:if>
-
-					<xsl:if test="type = 'checkbox' and checked = '1'">
-						<xsl:attribute name="checked">checked</xsl:attribute>
-					</xsl:if>
-
-					<xsl:if test="readonly">
-						<xsl:attribute name="readonly">'readonly'</xsl:attribute>
-						<xsl:attribute name="onMouseout">window.status='';return true;</xsl:attribute>
-					</xsl:if>
-
-					<xsl:if test="onkeypress">
-						<xsl:attribute name="onkeypress"><xsl:value-of select="onkeypress"/></xsl:attribute>
-					</xsl:if>
-					
-					<xsl:if test="class">
-						<xsl:attribute name="class"><xsl:value-of select="class"/></xsl:attribute>
-					</xsl:if>
-
-				</input>
-			</xsl:otherwise>
-		</xsl:choose>
-
-	</div>
 </xsl:template>
