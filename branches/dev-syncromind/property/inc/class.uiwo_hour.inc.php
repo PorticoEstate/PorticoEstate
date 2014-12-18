@@ -806,6 +806,7 @@
 								'value'	=> lang('Print view'),
 								'tab_index' => 5,
 								'style' => 'filter',
+								'group' => '1',
 								'url' => self::link(array
 								(
 									'menuaction'	=> 'property.uiwo_hour.view',
@@ -818,7 +819,8 @@
 								'type' => 'label',
 								'id' => 'lbl_check_details',
 								'value' => lang('Show details'),
-								'style' => 'filter'												
+								'style' => 'filter',
+								'group' => '1'
 							),
 							array
 							( 
@@ -827,14 +829,16 @@
 								'type' => 'checkbox',
 								'checked'	=> 1,
 								'tab_index' => 6,
-								'style' => 'filter'			                                            
+								'style' => 'filter',
+								'group' => '1'
 							),
 							array
 							( // check label
 								'type' => 'label',
 								'id' => 'lbl_check_cost',
 								'value' => lang('Show calculated cost'),
-								'style' => 'filter'													
+								'style' => 'filter',
+								'group' => '1'
 							),
 							array
 							( 
@@ -842,49 +846,55 @@
 								'value'	=> 0,
 								'type' => 'checkbox',
 								'tab_index' => 7,
-								'style' => 'filter'			                                            
+								'style' => 'filter',
+								'group' => '1'
 							),
-							array
-							( 		                                       
-								'id'	=> 'check_mark_draft',
-								'value'	=> 0,
-								'type' => 'checkbox',
-								'tab_index' => 10			                                            
-							),														
-							array
-							( // check label
-								'type' => 'label',
-								'id' => 'lbl_check_mark',
-								'value' => lang('Mark as DRAFT')														
-							),			                                        		
-							array
-							( 
-								'id'	=> 'check_calculated_cost_tender',
-								'value'	=> 0,
-								'type' => 'checkbox',
-								'tab_index' => 9			                                        
-							),													
-							array
-							( // check label
-								'type' => 'label',
-								'id' => 'lbl_check_cost_tender',
-								'value' => lang('Show calculated cost')													
-							),			                                        		
 							array
 							( 
 								'type' => 'button',
 								'id'	=> 'btn_view_tender',
 								'value'	=> lang('View tender'),
 								'tab_index' => 8,
+								'group' => '2',
 								'url'	=> self::link(array
 								(
 									'menuaction'	=> 'property.uiwo_hour.tender',
 									'from'=> 'index',
 									'workorder_id'	=> $workorder_id
 								))
+							),
+							array
+							( // check label
+								'type' => 'label',
+								'id' => 'lbl_check_cost_tender',
+								'value' => lang('Show calculated cost'),
+								'group' => '2'
+							),
+							array
+							(
+								'id'	=> 'check_calculated_cost_tender',
+								'value'	=> 0,
+								'type' => 'checkbox',
+								'tab_index' => 9,
+								'group' => '2'								
+							),
+							array
+							( // check label
+								'type' => 'label',
+								'id' => 'lbl_check_mark',
+								'value' => lang('Mark as DRAFT'),
+								'group' => '2'
+							),
+							array
+							( 		                                       
+								'id'	=> 'check_mark_draft',
+								'value'	=> 0,
+								'type' => 'checkbox',
+								'tab_index' => 10,
+								'group' => '2'
 							)
 						)
-					)					
+					)
 				)
 			);
 								
@@ -892,7 +902,7 @@
 				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
-				'className'		=> 	array('','','','','','right','right','right','right','right','','right')
+				'className'		=> 	array('','','','','','dt-right','dt-right','dt-right','dt-right','dt-right','','dt-right')
 			);
 
 			$count_uicols_name = count($uicols['name']);
