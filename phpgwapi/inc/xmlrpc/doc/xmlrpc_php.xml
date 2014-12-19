@@ -4,15 +4,14 @@
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <!--
 PHP-XMLRPC User manual
-$Id: xmlrpc_php.xml,v 1.27 2008/09/19 18:35:33 ggiunta Exp $
 -->
 <book lang="en">
   <title>XML-RPC for PHP</title>
 
-  <subtitle>version 3.0.0 beta</subtitle>
+  <subtitle>version 3.0.0</subtitle>
 
   <bookinfo>
-    <date>Sep 5, 2009</date>
+    <date>June 15, 2014</date>
 
     <authorgroup>
       <author>
@@ -114,7 +113,8 @@ $Id: xmlrpc_php.xml,v 1.27 2008/09/19 18:35:33 ggiunta Exp $
     url="http://usefulinc.com/">Useful Information Company</ulink>. As of the
     1.0 stable release, the project was opened to wider involvement and moved
     to <ulink
-    url="http://phpxmlrpc.sourceforge.net/">SourceForge</ulink>.</para>
+    url="http://phpxmlrpc.sourceforge.net/">SourceForge</ulink>; later, to <ulink
+    url="https://github.com/">Github</ulink></para>
 
     <para>A list of XML-RPC implementations for other languages such as Perl
     and Python can be found on the <ulink
@@ -211,6 +211,33 @@ $Id: xmlrpc_php.xml,v 1.27 2008/09/19 18:35:33 ggiunta Exp $
     chapter in the manual. To find a more detailed description of new
     functions and methods please take a look at the source code of the
     library, which is quite thoroughly commented in javadoc-like form.</para>
+
+    <sect1>
+      <title>3.0.0</title>
+
+      <para><emphasis>Note:</emphasis> this is the last release of the library that will support PHP 5.1 and up.
+      Future releases will target php 5.3 as minimum supported version.</para>
+
+      <para><itemizedlist>
+      <listitem>
+        <para>when using curl and keepalive, reset curl handle if we did not get back an http 200 response (eg a 302)</para>
+      </listitem>
+
+      <listitem>
+        <para>omit port on http 'Host' header if it is 80</para>
+      </listitem>
+
+      <listitem>
+        <para>test suite allows interrogating https servers ignoring their certs</para>
+      </listitem>
+
+      <listitem>
+        <para>method setAcceptedCompression was failing to disable reception of compressed responses if the
+         client supported them</para>
+      </listitem>
+
+      </itemizedlist></para>
+    </sect1>
 
     <sect1>
       <title>3.0.0 beta</title>
@@ -855,11 +882,7 @@ $Id: xmlrpc_php.xml,v 1.27 2008/09/19 18:35:33 ggiunta Exp $
     configuration.</para>
 
     <para>The <emphasis>minimum supported</emphasis> PHP version is
-    5.0.</para>
-
-    <para>Automatic generation of xml-rpc methods from php functions is only
-    supported with PHP version 5.0.3 and later (note that the lib will
-    generate some warnings with PHP 5 in strict error reporting mode).</para>
+    5.1.</para>
 
     <para>If you wish to use SSL or HTTP 1.1 to communicate with remote
     servers, you need the "curl" extension compiled into your PHP
@@ -1115,9 +1138,9 @@ $Id: xmlrpc_php.xml,v 1.27 2008/09/19 18:35:33 ggiunta Exp $
         <listitem>
           <para>The <emphasis>XML-RPC for PHP</emphasis> development is hosted
           on <ulink
-          url="http://phpxmlrpc.sourceforge.net">phpxmlrpc.sourceforge.net</ulink>.
+          url="https://github.com/gggeek/phpxmlrpc">github.com/gggeek/phpxmlrpc</ulink>.
           Bugs, feature requests and patches can be posted to the <ulink
-          url="http://sourceforge.net/projects/phpxmlrpc">project's
+          url="https://github.com/gggeek/phpxmlrpc/issues">project's
           website</ulink>.</para>
         </listitem>
 
@@ -2388,7 +2411,7 @@ $client = new xmlrpc_client("/RPC2", "betty.userland.com", 80);
           <para>Example usage:</para>
 
           <programlisting language="php">
-$client = new xmlrpc_client("phpxmlrpc.sourceforge.net/server");
+$client = new xmlrpc_client("phpxmlrpc.sourceforge.net/server.php");
 $client-&gt;return_type = 'phpvals';
 $message = new xmlrpcmsg("examples.getStateName", array(new xmlrpcval(23, "int")));
 $resp = $client-&gt;send($message);
@@ -3642,7 +3665,7 @@ else {
         transparently carried out by the lib, while datetime vals are passed
         around as strings).</para>
 
-        <para>Known limitations: requires PHP 5.0.3 +; only works for
+        <para>Known limitations: only works for
         user-defined functions, not for PHP internal functions (reflection
         does not support retrieving number/type of params for those); the
         wrapped php function will not be able to programmatically return an
@@ -4074,7 +4097,7 @@ if (!$resp-&gt;faultCode())
       <para>PHP-XMLRPC only supports the ISO 8859-1 and UTF8 character sets.
       The net result of this situation is that those extra characters will not
       be properly encoded, and will be received at the other end of the
-      XML-RPC tranmission as "garbled data". Unfortunately the library cannot
+      XML-RPC transmission as "garbled data". Unfortunately the library cannot
       provide real support for CP1252 because of limitations in the PHP 4 xml
       parser. Luckily, we tried our best to support this character set anyway,
       and, since version 2.2.1, there is some form of support, left commented
@@ -4085,7 +4108,7 @@ if (!$resp-&gt;faultCode())
       <filename>xmlrpc.inc</filename> (you can search for the string "1252"),
       then set <code>$GLOBALS['xmlrpc_internalencoding']='CP1252';</code>
       Please note that all incoming data will then be fed to your application
-      as UTF-8 to avoid any potentail data loss.</para>
+      as UTF-8 to avoid any potential data loss.</para>
     </sect1>
 
     <sect1>

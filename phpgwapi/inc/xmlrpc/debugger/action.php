@@ -1,8 +1,7 @@
 <?php
 /**
- * @version $Id$
  * @author Gaetano Giunta
- * @copyright (C) 2005-2009 G. Giunta
+ * @copyright (C) 2005-2014 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt
  *
  * @todo switch params for http compression from 0,1,2 to values to be used directly
@@ -37,7 +36,7 @@ td form {margin: 0;}
 <body>
 <?php
 
-  include(getcwd().'/common.php');
+  include(dirname(__FILE__).'/common.php');
   if ($action)
   {
 

@@ -1,3 +1,22 @@
+XML-RPC for PHP version 3.0.1 - 201X/Y/Z
+
+Taking baby steps to modern-world php, this release is now tested using Travis ( https://travis-ci.org/ ).
+
+Improved: no need to call anymore $client->setSSLVerifyHost(2) to silence a curl warning when using https with recent curl builds
+
+
+XML-RPC for PHP version 3.0.0 - 2014/6/15
+
+This release corrects all bugs that have been reported and successfully reproduced since
+version 3.0.0 beta.
+
+The requirements have increased to php 5.1.0 - which is still way older than what you should be running for any serious purpose, really.
+
+It also is the first release to be installable via composer.
+
+See the Changelog file or the pdf docs for a complete list of changes.
+
+
 XML-RPC for PHP version 3.0.0 beta - 2009/09/05
 
 This is the first release of the library to only support PHP 5.
@@ -28,6 +47,7 @@ version 2.2.1.
 Regardless of the intimidating message about dropping PHP 4 support, it still does
 support that ancient, broken and insecure platform.
 
+
 * fixed: php warning when receiving 'false' in a bool value
 * fixed: improve robustness of the debugger when parsing weird results from non-compliant servers
 * fixed: format floating point values using the correct decimal separator even when php locale is set to one that uses comma
@@ -44,7 +64,7 @@ XML-RPC for PHP version 2.2.1 - 2008/03/06
 This release corrects all bugs that have been reported and sucesfully reproduced.
 It is the last release of the library that will support PHP 4.
 
-* fixed: work aroung bug in php 5.2.2 which broke support of HTTP_RAW_POST_DATA
+* fixed: work around bug in php 5.2.2 which broke support of HTTP_RAW_POST_DATA
 * fixed: is_dir parameter of setCaCertificate() method is reversed
 * fixed: a php warning in xmlrpc_client creator method
 * fixed: parsing of '1e+1' as valid float
@@ -78,7 +98,7 @@ There is a minor security enhancement and overall speedup too.
 It has been tested with PHP 4.0.5 up to 4.4.4 and 5.1.5.
 Please note that 404pl1 is NOT supported, and has not been since 2.0.
 
-*** PLASE READ CAREFULLY BELOW ***
+*** PLEASE READ CAREFULLY BELOW ***
 
 CHANGES THAT MIGHT AFFECT DEPLOYED APPLICATIONS:
 
