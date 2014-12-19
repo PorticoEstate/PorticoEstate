@@ -1,7 +1,7 @@
 <?php
-// $Id$
-	include("../../lib/xmlrpc.inc");
-	include("../../lib/xmlrpcs.inc");
+
+	include("xmlrpc.inc");
+	include("xmlrpcs.inc");
 
 	$addcomment_sig=array(array($xmlrpcInt, $xmlrpcString, $xmlrpcString, $xmlrpcString));
 

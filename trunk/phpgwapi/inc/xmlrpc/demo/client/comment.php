@@ -1,5 +1,5 @@
 <?php
-include("../../lib/xmlrpc.inc");
+include("xmlrpc.inc");
 
 $mydir="/demo";
 
@@ -180,6 +180,6 @@ if (@$_GET["comment"] &&
 	src="http://meerkat.oreillynet.com/icons/meerkat-powered.jpg"
 	height="31" width="88" alt="Meerkat powered, yeah!"
 	border="0" hspace="8" /></a>
-<em>$Id$</em></p>
+</p>
 </body>
 </html>
