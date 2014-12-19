@@ -171,7 +171,12 @@
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'district_id' => phpgw::get_var('district_id', 'int'),
 				'property_cat_id' => phpgw::get_var('property_cat_id'),
+				'degree_id' => phpgw::get_var('degree_id'),
 				'status_id' => phpgw::get_var('status_id'),
+				'filter' => phpgw::get_var('filter'),
+				'building_part' => phpgw::get_var('building_part'),
+				'responsible_unit' => phpgw::get_var('responsible_unit'),
+				'recommended_year' => phpgw::get_var('recommended_year'),
 				'allrows' => phpgw::get_var('length', 'int') == -1
 			);
 
@@ -333,7 +338,7 @@
 			}
                     
 			$count = count($values_combo_box);
-			$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+			$values_combo_box[1] = $this->bocommon->select_district_list('filter',$this->district_id);
 			$default_value = array ('id'=>'','name'=>lang('no district'));
 			array_unshift ($values_combo_box[1],$default_value);
 			$combos[] = array
@@ -346,16 +351,22 @@
 						);
                     
 			$count = count($values_combo_box);
-			$values_combo_box[$count] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
+			$categories = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
 			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-			array_unshift ($values_combo_box[$count]['cat_list'],$default_value);
+			array_unshift ($categories['cat_list'],$default_value);
+			foreach ($categories['cat_list'] as & $_category)
+			{
+				$_category['id'] = $_category['cat_id'];
+			}
+			$values_combo_box[$count] = $categories['cat_list'];
+			
 			$combos[] = array
 						(
 							'type'  =>  'filter',
 							'name'  =>  'cat_id',
 							'extra' =>  '',
 							'text'  =>  lang('no category'),
-							'list'  =>  $values_combo_box[$count]  
+							'list'  =>  $values_combo_box[$count]
 						);
                     
 			$count  = count($values_combo_box);
@@ -371,11 +382,11 @@
 							'list'  =>  $values_combo_box[$count]
 						);
                     
-			/*$count = count($values_combo_box);
+			$count = count($values_combo_box);
 			$values_combo_box[$count]  = $this->bo->select_degree_list();
 			foreach($values_combo_box[$count] as &$_degree)
 			{
-					$_degree['id']++;
+				$_degree['id']++;
 			}
 			array_unshift ($values_combo_box[$count],array ('id'=>'','name'=> lang('condition degree')));
 			$combos[] = array
@@ -389,8 +400,13 @@
                     
 			$count = count($values_combo_box);
 			$values_combo_box[$count]  = $this->bo->get_user_list();
-			array_unshift ($values_combo_box[$count],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
-			$default_value = array ('user_id'=>'','name'=>lang('no user'));
+			foreach ($values_combo_box[$count] as &$valor)
+			{   
+				$valor['id'] = $valor['user_id'];
+				unset($valor['user_id']);
+			}
+			array_unshift ($values_combo_box[$count],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
+			$default_value = array ('id'=>'','name'=>lang('no user'));
 			array_unshift ($values_combo_box[$count],$default_value);
 			$combos[] = array
 						(
@@ -399,26 +415,57 @@
 							'extra' =>  '',
 							'text'  =>  lang('no user'),
 							'list'  =>  $values_combo_box[$count]
-						);*/
+						);
                     
-			/*$count = count($values_combo_box);
-			$responsible_unit_list[$count] = $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
-			array_unshift ($responsible_unit_list[$count],array ('id'=>'0','name'=> lang('responsible unit')));
+			$count = count($values_combo_box);
+			$responsible_unit_list = $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
+			array_unshift ($responsible_unit_list,array ('id'=>'0','name'=> lang('responsible unit')));
+			$values_combo_box[$count] = $responsible_unit_list;
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'responsible_unit',
+							'extra' =>  '',
+							'text'  =>  lang('responsible unit'),
+							'list'  =>  $values_combo_box[$count]
+						);
 
-
-			$recommended_year_list	= $this->bo->get_recommended_year_list($this->recommended_year);
+			$count = count($values_combo_box);
+			$recommended_year_list = $this->bo->get_recommended_year_list($this->recommended_year);
 			array_unshift ($recommended_year_list,array ('id'=>'0','name'=> lang('recommended year')));
+			$values_combo_box[$count] = $recommended_year_list;
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'recommended_year',
+							'extra' =>  '',
+							'text'  =>  lang('recommended year'),
+							'list'  =>  $values_combo_box[$count]
+						);
 
+			$count = count($values_combo_box);
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
 
 			if($filter_key = array_search('.project.request', $filter_buildingpart))
 			{
-					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
 			$building_part_list = $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart));
-			array_unshift ($building_part_list, array ('id'=>'','name'=> lang('building part')));*/
+			array_unshift ($building_part_list, array ('id'=>'','name'=> lang('building part')));
+			$values_combo_box[$count] = $building_part_list;
+			
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'building_part',
+							'extra' =>  '',
+							'text'  =>  lang('building part'),
+							'list'  =>  $values_combo_box[$count]
+						);
+			
+			
 			return $combos;
 		}
 		
@@ -498,7 +545,7 @@
 	
 			$filters = $this->_get_filters();
 			
-			ksort($filters);
+			//ksort($filters);
 			//print_r($filters);die;
 			
 			
