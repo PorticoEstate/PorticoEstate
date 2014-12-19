@@ -467,7 +467,7 @@
 		{
 			$entity_id = phpgw::get_var('entity_id', 'int');
 			$cat_id = phpgw::get_var('cat_id', 'int');
-			$num = phpgw::get_var('num', 'int');
+			$num = phpgw::get_var('num');
 			
 			$document = CreateObject('property.sodocument');
 			$documents = $document->get_files_at_location(array('entity_id'=>$entity_id,'cat_id'=>$cat_id,'num'=>$num));
@@ -1757,7 +1757,7 @@
 				
 				if($category['location_level'] > 0)
 				{
-					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'disable' => 0, 'function' => "set_tab('location')");
+					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'disable' => 0);
 					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
@@ -1775,7 +1775,7 @@
 						{
 							$_tab_name = str_replace(' ', '_', $group['name']);
 							$active_tab = $active_tab ? $active_tab : $_tab_name;
-							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}", 'disable' => 0, 'function' => "set_tab('{$_tab_name}')");
+							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}", 'disable' => 0);
 							$group['link'] = $_tab_name;
 							$attributes[] = $group;
 							$i ++;
@@ -1802,7 +1802,7 @@
 
 				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
 				{
-					$tabs['files']	= array('label' => lang('files'), 'link' => '#files', 'disable' => 0, 'function' => "set_tab('files')");
+					$tabs['files']	= array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
 				}
 /*
 				if($category['jasperupload'])
@@ -1970,14 +1970,14 @@
 
 				if($get_docs)
 				{
-					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0, 'function' => "set_tab('document')");				
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);				
 					$requestUrlDoc	= json_encode(self::link(array('menuaction'=>'property.uientity.get_documents', 'entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'num'=>$values['num'], 'phpgw_return_as'=>'json')));
 					$documents = 1;
 				}
 
 				if (!$category['enable_bulk'])
 				{
-					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0, 'function' => "set_tab('related')");
+					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0);
 				}
 
 				$target_def = array
@@ -2011,7 +2011,7 @@
 				
 				if($category['enable_bulk'])
 				{
-					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory',  'disable' => 0, 'function' => "set_tab('inventory')");
+					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory',  'disable' => 0);
 
 					$inventory_def = array
 					(
@@ -2037,14 +2037,6 @@
 				}
 			}
 			
-			$property_js = "/property/js/yahoo/property2.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-			
 			//$category['org_unit'] =1;
 			if($category['org_unit'] && $mode == 'edit')
 			{
@@ -2064,7 +2056,7 @@ JS;
 
 			$data = array
 			(
-					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+					//'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable_def'					=> $datatable_def,
 					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'enable_bulk'					=> $category['enable_bulk'],
@@ -2146,42 +2138,16 @@ JS;
 					'lean'							=> $_lean ? 1 : 0
 				);
 
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'common', 'phpgwapi' );
-
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
-			phpgwapi_yui::load_widget('treeview');
 			$appname	= $entity['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
 			
 			self::render_template_xsl(array('entity', 'attributes_form', 'files'), array('edit' => $data));
 
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
-
-			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
-
 			phpgw::import_class('phpgwapi.jquery');
 			phpgwapi_jquery::load_widget('treeview');
-
 
 			$criteria = array
 				(
@@ -3019,10 +2985,6 @@ JS;
 				'lookup_entity'	=> $lookup_entity,
 				'entity_data'	=> isset($values['p'])?$values['p']:''
 			));
-
-			$tabs = array();
-			$tabs['inventory']	= array('label' => lang('add inventory'), 'link' => '#inventory');
-			$active_tab = 'inventory';
 			
 			$data = array
 			(
@@ -3038,10 +3000,8 @@ JS;
 				'bookable'			=> $values['bookable'],
 				'value_active_from'	=> $values['active_from'],
 				'value_active_to'	=> $values['active_to'],
-				'value_remark'		=> $values['remark'],
-				'tabs'				=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'value_remark'		=> $values['remark']
 			);
-
 
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
