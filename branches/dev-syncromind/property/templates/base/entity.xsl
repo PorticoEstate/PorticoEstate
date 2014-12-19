@@ -228,24 +228,22 @@
 	<!-- add inventory -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="add_inventory">
 
-	<div id="inventory_edit_tabview">
-		<xsl:variable name="action_url">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uientity.add_inventory')" />
-		</xsl:variable>
+		<fieldset>
+			<xsl:variable name="action_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uientity.add_inventory')" />
+			</xsl:variable>
 
-		<form name="form" id="form" action="{$action_url}" method="post">
-			<dl>
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<dt>
-							<xsl:call-template name="msgbox"/>
-						</dt>
-					</xsl:when>
-				</xsl:choose>
-			</dl>
-			<div id="tab-content">
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="inventory">
+			<form name="form" id="form" action="{$action_url}" method="post" class="pure-form pure-form-aligned">
+				<dl>
+					<xsl:choose>
+						<xsl:when test="msgbox_data != ''">
+							<dt>
+								<xsl:call-template name="msgbox"/>
+							</dt>
+						</xsl:when>
+					</xsl:choose>
+				</dl>
+				<div>
 					<fieldset>
 						<xsl:call-template name="location_form"/>
 						<div class="pure-control-group">
@@ -316,34 +314,28 @@
 							</textarea>			
 						</div>
 					</fieldset>
-					<table>
-						<tr>
-							<td valign="bottom">
-								<xsl:variable name="lang_save">
-									<xsl:value-of select="php:function('lang', 'save')"/>
-								</xsl:variable>
-								<input type="submit" name="values[save]" value="{$lang_save}">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'save values and exit')"/>
-									</xsl:attribute>
-								</input>
-							</td>
-							<td align="right" valign="bottom">
-								<xsl:variable name="lang_cancel">
-									<xsl:value-of select="php:function('lang', 'cancel')"/>
-								</xsl:variable>
-								<input type="button" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'Back to the list')"/>
-									</xsl:attribute>
-								</input>
-							</td>
-						</tr>
-					</table>
 				</div>
-			</div>
-		</form>
-	</div>
+				<div class="proplist-col">
+					<xsl:variable name="lang_save">
+						<xsl:value-of select="php:function('lang', 'save')"/>
+					</xsl:variable>
+					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'save values and exit')"/>
+						</xsl:attribute>
+					</input>
+					<xsl:variable name="lang_cancel">
+						<xsl:value-of select="php:function('lang', 'cancel')"/>
+					</xsl:variable>
+					<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Back to the list')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+			</form>
+		</fieldset>
+
 	</xsl:template>
 
 	<xsl:template match="options">
@@ -366,31 +358,7 @@
 			</xsl:when>
 		</xsl:choose>
 		<script type="text/javascript">
-			function set_tab(active_tab)
-			{
-				document.form.active_tab.value = active_tab;			
-			}
-
-			var property_js = <xsl:value-of select="property_js"/>;
 			var base_java_url = <xsl:value-of select="base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						edit_action:  <xsl:value-of select="edit_action"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
 		</script>
 		
 		<div id="entity_edit_tabview">
@@ -631,22 +599,7 @@
 							</iframe>
 						</div>
 					</xsl:for-each>
-					<!--
-<xsl:choose>
-<xsl:when test="integration!=''">
-<div id="integration">
-<iframe id = "integration_content" width="100%" height="500">
-<p>Your browser does not support iframes.</p>
-</iframe>
-</div>
 
-<div id="test" >
-<div class="hd" style="background-color:#000000;color:#FFFFFF; border:0; text-align:center"> Kart </div>
-<div class="bd" style="text-align:center;"> </div>
-</div>
-</xsl:when>
-</xsl:choose>
--->
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
@@ -1004,8 +957,11 @@
 				}
 			}
 	]]>
+			<xsl:variable name="num">
+				<xsl:number count="*"/>
+			</xsl:variable>
 			var options = {disablePagination:true, disableFilter:true};
-			JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options);
+			var oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options);
 
 		</script>
 	</xsl:template>
