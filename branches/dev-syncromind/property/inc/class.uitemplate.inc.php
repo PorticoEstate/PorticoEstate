@@ -153,27 +153,18 @@
 			} 
                         
                         self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+                        self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
                         
                         $appname				= lang('template');
 			$function_msg				= lang('list template');
                         
                         $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
                         
-                                $data = array(
+                $data = array(
 				'datatable_name'	=> $appname,
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'href' => self::link(array(
-									'menuaction' => 'property.uitemplate.edit_template'								
-									)),
-								'class' => 'new_item'
-							)
-						)
+						'item' => array()
 					)
 				),
 				'datatable' => array(
@@ -219,24 +210,47 @@
 				)
 			);
                                 
-                        $filters = $this->_get_Filters();
-                        foreach ($filters as $filter)
-                        {
-                            array_unshift($data['form']['toolbar']['item'], $filter);
-                        }
+            $filters = $this->_get_Filters();
+            foreach ($filters as $filter)
+            {
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
                         
-                        if(!empty($lookup))
+            if(!empty($lookup))
 			{       
-                                 $params2 = array(
-                                                'key' => 'template_id',
-                                                'label' => lang('Select'),
-                                                'sortable' => false,
-                                                'hidden' => false,
-                                                'formatter' => 'JqueryPortico.formatRadio'
-                                            );
+                $params2 = array(
+                               'key' => 'template_id',
+                               'label' => lang('Select'),
+                               'sortable' => false,
+                               'hidden' => false,
+                               'formatter' => 'JqueryPortico.formatRadio'
+                           );
+                
+                $params3 =  array(
+                                    'type' => 'link',
+                                    'value' => lang('cancel'),
+                                    'href' => self::link(array(
+                                        'menuaction' => 'property.uiwo_hour.index',
+                                        'workorder_id'		=> $workorder_id
+                                        )),
+                                    'class' => 'new_item'
+                                );
+                
+                array_push ($data['form']['toolbar']['item'], $params3);
 				array_push ($data['datatable']['field'], $params2);
-                               
 			}
+            else
+            {
+                    $params1 =  array(
+                                    'type' => 'link',
+                                    'value' => lang('new'),
+                                    'href' => self::link(array(
+                                        'menuaction' => 'property.uitemplate.edit_template'								
+                                        )),
+                                    'class' => 'new_item'
+                                );
+                array_push ($data['form']['toolbar']['item'], $params1);
+            }
                         
                         $parameters = array
                                         (
@@ -264,6 +278,8 @@
 
 			if(!$lookup) 
 			{
+                
+                
 				$data['datatable']['actions'][] = array
 					(
 						'my_name' 	=> 'view',
@@ -295,10 +311,10 @@
 						'my_name' 	=> 'delete',
 						'statustext' 	=> lang('delete the claim'),
 						'text'		=> lang('delete'),
-						#'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 						    'menuaction'	=> 'property.uitemplate.delete'
+                            
 						)
 					),
 					'parameters'	=> json_encode($parameters2)
@@ -307,7 +323,25 @@
 				unset($parameters);
 				unset($parameters2);
 			}
-                        self::render_template_xsl('datatable_jquery', $data);
+            else
+            {
+                $data['datatable']['actions'][] = array
+					(
+						'my_name' 	=> 'Select',
+						'statustext' 	=> lang('select'),
+						'text'		=> lang('select'),
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+						    'menuaction'	=> 'property.uiwo_hour.template',
+                            'workorder_id'		=> $workorder_id
+						)
+					),
+					'parameters'	=> json_encode($parameters)
+				); 
+                unset($parameters);
+            }
+            
+            self::render_template_xsl('datatable_jquery', $data);
 		}
                 public function add()
                 {
