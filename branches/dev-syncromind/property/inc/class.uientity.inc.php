@@ -2016,12 +2016,12 @@
 					$inventory_def = array
 					(
 						array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
-						array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
+						array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
-						array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
-						array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
-						array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
-						array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCalendar'),
+						array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'className' => 'dt-right'),
+						array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'className' => 'dt-right'),
+						array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'className' => 'dt-right'),
+						array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'location_id','hidden'=>true),
 						array('key' => 'id','hidden'=>true),
@@ -2751,6 +2751,14 @@ JS;
 
 			$values = $this->bo->get_inventory(array('id' => $id, 'location_id' => $location_id));
 
+			foreach ($values as &$value) 
+			{
+				$value['edit'] = '<a href="javascript:showlightbox_edit_inventory('.$value['location_id'].','.$value['id'].','.$value['inventory_id'].')">Edit</a>';
+				$value['calendar'] = '<a href="javascript:showlightbox_show_calendar('.$value['location_id'].','.$value['id'].','.$value['inventory_id'].')">Calendar</a>';
+				$value['inventory'] = number_format($value['inventory'], 0, ',', ' ');
+				$value['allocated'] = number_format($value['allocated'], 0, ',', ' ');
+			}
+			
 			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$total_records = count($values);
 
