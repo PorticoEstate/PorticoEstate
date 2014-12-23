@@ -241,11 +241,12 @@ class controller_sodocument extends controller_socommon
 		$results = array();
 		while($this->db->next_record())
 		{
-			$result[] = $this->db->f('id');
-			$result[] = $this->db->f('title', true);
-			$results[] = $result;
+			$results[] = array
+			(
+				'id'	=> $this->db->f('id'),
+				'title'	=> $this->db->f('title', true)
+			);
 		}
-		//$document_type_list = $results;
 		return $results;
 		
 	}

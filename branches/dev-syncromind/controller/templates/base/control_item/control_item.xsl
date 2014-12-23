@@ -3,7 +3,6 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
-<xsl:call-template name="yui_phpgw_i18n"/>
 
 <div id="main_content">
 

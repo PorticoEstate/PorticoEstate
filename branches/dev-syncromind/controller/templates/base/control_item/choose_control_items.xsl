@@ -1,8 +1,6 @@
 <!-- $Id$ -->
 <xsl:template name="control_items" xmlns:php="http://php.net/xsl">
 
-<div class="yui-content tab_content">
-	<div>
 	   <!-- ===========================  CHOOSE CONTROL ITEMS  =============================== -->	
 	   <h2>Velg dine kontrollpunkt</h2>
 	   
@@ -52,7 +50,5 @@
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 				<input type="submit" name="save_control_items" value="{$lang_save}" title = "{$lang_save}" />
 			</div>
-		</form>					
-	</div>
-</div>
+		</form>	
 </xsl:template>

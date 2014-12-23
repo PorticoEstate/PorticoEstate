@@ -8,9 +8,7 @@
 <xsl:variable name="control_role"><xsl:value-of select="control/responsibility_id"/></xsl:variable>
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
-<div class="yui-content">
-	<div id="control_details">
-		
+	
 		<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol.save_control_details')" />
 			</xsl:variable>
@@ -241,6 +239,5 @@
 				</xsl:choose>
 			</div>
 		</form>					
-	</div>
-</div>
+
 </xsl:template>
