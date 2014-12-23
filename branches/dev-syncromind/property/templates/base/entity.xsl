@@ -162,26 +162,27 @@
 							<xsl:value-of select="value_remark"/>
 						</textarea>
 					</div>
+					
+					<div class="pure-g">
+						<xsl:variable name="lang_save">
+							<xsl:value-of select="php:function('lang', 'save')"/>
+						</xsl:variable>
+						<input type="hidden" name="values[save]" value="1"/>
+						<input type="submit" name="send" class="pure-button pure-button-primary" value="{$lang_save}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'save values and exit')"/>
+							</xsl:attribute>
+						</input>
+						<xsl:variable name="lang_cancel">
+							<xsl:value-of select="php:function('lang', 'cancel')"/>
+						</xsl:variable>
+						<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'Back to the list')"/>
+							</xsl:attribute>
+						</input>
+					</div>
 				</fieldset>
-				<div class="proplist-col">
-					<xsl:variable name="lang_save">
-						<xsl:value-of select="php:function('lang', 'save')"/>
-					</xsl:variable>
-					<input type="hidden" name="values[save]" value="1"/>
-					<input type="submit" name="send" value="{$lang_save}" class="pure-button pure-button-primary">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'save values and exit')"/>
-						</xsl:attribute>
-					</input>
-					<xsl:variable name="lang_cancel">
-						<xsl:value-of select="php:function('lang', 'cancel')"/>
-					</xsl:variable>
-					<input type="button" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();" class="pure-button pure-button-primary">
-						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_cancel"/>
-						</xsl:attribute>
-					</input>
-				</div>
 			</form>
 		</fieldset>
 	</xsl:template>
@@ -204,96 +205,95 @@
 						</xsl:when>
 					</xsl:choose>
 				</dl>
-				<div>
-					<fieldset>
-						<xsl:call-template name="location_form"/>
-						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'id')" /></label>
-							<xsl:value-of select="item_id"/>
-							<input type="hidden" name="location_id" value="{location_id}"/>
-							<input type="hidden" name="id" value="{item_id}"/>					
-						</div>
+				<fieldset>
+					<xsl:call-template name="location_form"/>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'id')" /></label>
+						<xsl:value-of select="item_id"/>
+						<input type="hidden" name="location_id" value="{location_id}"/>
+						<input type="hidden" name="id" value="{item_id}"/>					
+					</div>
 
-						<div class="pure-control-group">
-							<label for="unit_id"><xsl:value-of select="php:function('lang', 'unit')" /></label>
-							<select id = 'unit_id' name="values[unit_id]" class="forms">
-								<xsl:if test="lock_unit = 1">
-									<xsl:attribute name="disabled" value="disabled"/>
-								</xsl:if>
-								<xsl:apply-templates select="unit_list/options"/>
-							</select>				
-						</div>
+					<div class="pure-control-group">
+						<label for="unit_id"><xsl:value-of select="php:function('lang', 'unit')" /></label>
+						<select id = 'unit_id' name="values[unit_id]" class="forms">
+							<xsl:if test="lock_unit = 1">
+								<xsl:attribute name="disabled" value="disabled"/>
+							</xsl:if>
+							<xsl:apply-templates select="unit_list/options"/>
+						</select>				
+					</div>
 
-						<div class="pure-control-group">
-							<label for="inventory"><xsl:value-of select="php:function('lang', 'inventory')" /></label>
-							<input type="text" id = 'inventory' name="values[inventory]" value="{value_inventory}" size="12">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_inventory_statustext"/>
+					<div class="pure-control-group">
+						<label for="inventory"><xsl:value-of select="php:function('lang', 'inventory')" /></label>
+						<input type="text" id = 'inventory' name="values[inventory]" value="{value_inventory}" size="12">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_inventory_statustext"/>
+							</xsl:attribute>
+						</input>				
+					</div>
+
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'bookable')" /></label>
+						<input type="checkbox" name="values[bookable]" value="1">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'bookable')"/>
+							</xsl:attribute>
+							<xsl:if test="bookable = '1'">
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
 								</xsl:attribute>
-							</input>				
-						</div>
+							</xsl:if>
+						</input>				
+					</div>
 
-						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'bookable')" /></label>
-							<input type="checkbox" name="values[bookable]" value="1">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'bookable')"/>
-								</xsl:attribute>
-								<xsl:if test="bookable = '1'">
-									<xsl:attribute name="checked">
-										<xsl:text>checked</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
-							</input>				
-						</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'active from')"/></label>
+						<input type="text" id="active_from" name="values[active_from]" size="10" value="{value_active_from}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_active_from_statustext"/>
+							</xsl:attribute>
+						</input>				
+					</div>
 
-						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'active from')"/></label>
-							<input type="text" id="active_from" name="values[active_from]" size="10" value="{value_active_from}" readonly="readonly">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_active_from_statustext"/>
-								</xsl:attribute>
-							</input>				
-						</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'active to')"/></label>
+						<input type="text" id="active_to" name="values[active_to]" size="10" value="{value_active_to}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_active_to_statustext"/>
+							</xsl:attribute>
+						</input>			
+					</div>
 
-						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'active to')"/></label>
-							<input type="text" id="active_to" name="values[active_to]" size="10" value="{value_active_to}" readonly="readonly">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_active_to_statustext"/>
-								</xsl:attribute>
-							</input>			
-						</div>
-
-						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'remark')" /></label>
-							<textarea cols="60" rows="4" name="values[remark]">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'remark')"/>
-								</xsl:attribute>
-								<xsl:value-of select="value_remark"/>
-							</textarea>			
-						</div>
-					</fieldset>
-				</div>
-				<div class="proplist-col">
-					<xsl:variable name="lang_save">
-						<xsl:value-of select="php:function('lang', 'save')"/>
-					</xsl:variable>
-					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'save values and exit')"/>
-						</xsl:attribute>
-					</input>
-					<xsl:variable name="lang_cancel">
-						<xsl:value-of select="php:function('lang', 'cancel')"/>
-					</xsl:variable>
-					<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'Back to the list')"/>
-						</xsl:attribute>
-					</input>
-				</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'remark')" /></label>
+						<textarea cols="60" rows="4" name="values[remark]">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'remark')"/>
+							</xsl:attribute>
+							<xsl:value-of select="value_remark"/>
+						</textarea>			
+					</div>
+					
+					<div class="pure-g">
+						<xsl:variable name="lang_save">
+							<xsl:value-of select="php:function('lang', 'save')"/>
+						</xsl:variable>
+						<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'save values')"/>
+							</xsl:attribute>
+						</input>
+						<xsl:variable name="lang_cancel">
+							<xsl:value-of select="php:function('lang', 'cancel')"/>
+						</xsl:variable>
+						<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'Back to the list')"/>
+							</xsl:attribute>
+						</input>
+					</div>
+				</fieldset>
 			</form>
 		</fieldset>
 	</xsl:template>
@@ -661,63 +661,56 @@
 			<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 			<xsl:choose>
 				<xsl:when test="value_id!='' and lean !=1">
-					<table cellpadding="2" cellspacing="2" width="80%" align="center">
-						<tr>
-							<xsl:choose>
-								<xsl:when test="start_ticket!=''">
-									<td valign="top">
-										<xsl:variable name="ticket_link">
-											<xsl:value-of select="ticket_link"/>
-										</xsl:variable>
-										<form method="post" action="{$ticket_link}">
-											<xsl:variable name="lang_start_ticket">
-												<xsl:value-of select="lang_start_ticket"/>
-											</xsl:variable>
-											<input type="submit" name="location" value="{$lang_start_ticket}">
-												<xsl:attribute name="title">
-													<xsl:value-of select="lang_start_ticket_statustext"/>
-												</xsl:attribute>
-											</input>
-										</form>
-									</td>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:choose>
-								<xsl:when test="start_project!=''">
-									<td valign="top">
-										<xsl:variable name="project_link">
-											<xsl:value-of select="project_link"/>
-										</xsl:variable>
-										<form method="post" action="{$project_link}">
-											<xsl:variable name="lang_start_project">
-												<xsl:value-of select="php:function('lang', 'generate new project')"/>
-											</xsl:variable>
-											<input type="submit" name="location" value="{$lang_start_project}">
-												<xsl:attribute name="title">
-													<xsl:value-of select="php:function('lang', 'click this to generate a project with this information')"/>
-												</xsl:attribute>
-											</input>
-										</form>
-									</td>
-									<td valign="top">
-										<xsl:variable name="add_to_project_link">
-											<xsl:value-of select="add_to_project_link"/>
-										</xsl:variable>
-										<form method="post" action="{$add_to_project_link}">
-											<xsl:variable name="lang_add_to_project">
-												<xsl:value-of select="php:function('lang', 'add to project')"/>
-											</xsl:variable>
-											<input type="submit" name="location" value="{$lang_add_to_project}" onMouseout="window.status='';return true;">
-												<xsl:attribute name="title">
-													<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
-												</xsl:attribute>
-											</input>
-										</form>
-									</td>
-								</xsl:when>
-							</xsl:choose>
-						</tr>
-					</table>
+					<div class="pure-g">
+						<xsl:choose>
+							<xsl:when test="start_ticket!=''">
+								<xsl:variable name="ticket_link">
+									<xsl:value-of select="ticket_link"/>
+								</xsl:variable>
+								<form method="post" action="{$ticket_link}">
+									<xsl:variable name="lang_start_ticket">
+										<xsl:value-of select="lang_start_ticket"/>
+									</xsl:variable>
+									<input type="submit" name="location" class="pure-button pure-button-primary" value="{$lang_start_ticket}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_start_ticket_statustext"/>
+										</xsl:attribute>º
+									</input>
+								</form>
+							</xsl:when>
+						</xsl:choose>
+						<xsl:choose>
+							<xsl:when test="start_project!=''">
+								<xsl:variable name="project_link">
+									<xsl:value-of select="project_link"/>
+								</xsl:variable>
+								<form method="post" action="{$project_link}">
+									<xsl:variable name="lang_start_project">
+										<xsl:value-of select="php:function('lang', 'generate new project')"/>
+									</xsl:variable>
+									<input type="submit" name="location" class="pure-button pure-button-primary" value="{$lang_start_project}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'click this to generate a project with this information')"/>
+										</xsl:attribute>
+									</input>
+								</form>
+
+								<xsl:variable name="add_to_project_link">
+									<xsl:value-of select="add_to_project_link"/>
+								</xsl:variable>
+								<form method="post" action="{$add_to_project_link}">
+									<xsl:variable name="lang_add_to_project">
+										<xsl:value-of select="php:function('lang', 'add to project')"/>
+									</xsl:variable>
+									<input type="submit" name="location" class="pure-button pure-button-primary" value="{$lang_add_to_project}" onMouseout="window.status='';return true;">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
+										</xsl:attribute>
+									</input>
+								</form>
+							</xsl:when>
+						</xsl:choose>
+					</div>
 				</xsl:when>
 			</xsl:choose>
 		</div>
