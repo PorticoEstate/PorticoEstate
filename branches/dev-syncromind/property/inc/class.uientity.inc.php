@@ -2017,6 +2017,7 @@
 					(
 						array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true),
+						//array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'className' => 'dt-right'),
 						array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'className' => 'dt-right'),
