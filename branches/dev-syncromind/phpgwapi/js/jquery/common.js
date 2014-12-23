@@ -41,8 +41,21 @@ JqueryPortico.formatLinkGeneric = function(key, oData) {
 	{
 		return '';
 	}
-	var name = 'Link';
-	var link = oData[key];
+	var data = oData[key];
+
+	if ( typeof(data) == 'object')
+	{
+		var link = data['href'];
+		var name = data['label'];
+
+	}
+	else
+	{
+		var name = 'Link';
+		var link = data;
+
+	}
+
 	return '<a href="' + link + '">' + name + '</a>';
 };
 

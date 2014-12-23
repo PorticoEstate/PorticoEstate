@@ -244,7 +244,7 @@ HTML;
 
 				});
 
-				$('#tab-content').responsiveTabs('activate', {$selected});
+				$('#{$tab_set}').responsiveTabs('activate', {$selected});
 
 			};
 JS;

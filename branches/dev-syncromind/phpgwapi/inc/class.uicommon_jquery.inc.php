@@ -31,6 +31,7 @@
 
 	//phpgw::import_class('phpgwapi.yui');
 
+	phpgw::import_class('phpgwapi.jquery');
 
 	abstract class phpgwapi_uicommon_jquery
 	{
@@ -96,6 +97,8 @@
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/media/css/jquery.dataTables.css');
@@ -429,7 +432,8 @@
 		}
 
 		// Add link key to a result array
-		public function _add_links(&$value, $key, $link_data)
+		// Add link key to a result array
+		public function _add_links(&$value, $key, $data)
 		{
 			$unset = 0;
 			// FIXME: Fugly workaround
@@ -440,10 +444,19 @@
 				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
 				$unset = 1;
 			}
-			
-			$link_data['id'] = $value['id'];
 
-			$value['link'] = self::link($link_data);
+			if(is_array($data))
+			{
+				$link_array = $data;
+				$link_array['id'] = $value['id'];
+
+			}
+			else
+			{
+				$link_array = array('menuaction' => $data, 'id' => $value['id']);
+			}
+
+			$value['link'] = self::link($link_array);
 
 			// FIXME: Fugly workaround
 			// I kid you not my friend. There is something very wonky going on
@@ -493,7 +506,7 @@
 
 			$result['recordsTotal']		= $result['total_records'];
 			$result['recordsFiltered']	= $result['recordsTotal'];
-			$result['data']				= $result['results'];
+			$result['data']				= (array)$result['results'];
 			unset($result['results']);
 			unset($result['total_records']);
 
