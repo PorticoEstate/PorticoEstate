@@ -616,6 +616,9 @@
 					case 'planned_year':
 						$ordermethod = " ORDER BY planned_year $sort";
 						break;
+					case 'loc1_name':
+						$ordermethod = " ORDER BY fm_location1.loc1_name $sort";
+						break;
 					default:
 						$ordermethod = " order by $order $sort";					
 				}
