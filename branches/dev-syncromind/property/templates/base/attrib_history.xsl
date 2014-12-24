@@ -1,40 +1,40 @@
   <!-- $Id$ -->
 	<!-- attrib_history -->
+	<func:function name="phpgw:conditional">
+	   <xsl:param name="test"/>
+	   <xsl:param name="true"/>
+	   <xsl:param name="false"/>
+
+	   <func:result>
+		   <xsl:choose>
+			   <xsl:when test="$test">
+				   <xsl:value-of select="$true"/>
+			   </xsl:when>
+			   <xsl:otherwise>
+				   <xsl:value-of select="$false"/>
+			   </xsl:otherwise>
+		   </xsl:choose>
+	   </func:result>
+   </func:function>
+   
 	<xsl:template match="attrib_history">
-		<div>
-			<br/>
+		<div id="tab-content">
+			<div>
+				<fieldset>
+					<div class="pure-control-group">
+						<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+									  <xsl:with-param name="container" select ='container'/>
+									  <xsl:with-param name="requestUrl" select ='requestUrl' />
+									  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									</xsl:call-template>
+								</xsl:if>
+						</xsl:for-each>
+					</div>
+				</fieldset>
+			</div>
 		</div>
-		<!--  DATATABLE -->
-		<div align="left" id="paging_0"> </div>
-		<div id="datatable-container_0"/>
-		<div id="contextmenu_0"/>
-		<div>
-			<br/>
-		</div>
-		<!--  DATATABLE DEFINITIONS-->
-		<script type="text/javascript">
-			var property_js = <xsl:value-of select="property_js"/>;
-			var base_java_url = <xsl:value-of select="base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						permission  : <xsl:value-of select="permission"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-
-		</script>
 	</xsl:template>
 
 	<xsl:template name="table_setup">
@@ -115,7 +115,7 @@
 			<xsl:variable name="num">
 				<xsl:number count="*"/>
 			</xsl:variable>
-			var options = {disablePagination:true, disableFilter:true};
+			var options = {disableFilter:true};
 			var oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options);
 
 		</script>
