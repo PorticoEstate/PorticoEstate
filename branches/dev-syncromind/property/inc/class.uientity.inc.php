@@ -1950,10 +1950,14 @@
 			(
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uientity.get_files', 'entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'id' => $id,'phpgw_return_as'=>'json'))),
-				'ColumnDefs'	=> $file_def
+				'ColumnDefs'	=> $file_def,
+				'config'		=> array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
 			);
 	
-			$category['enable_bulk'] = 1;
+			//$category['enable_bulk'] = 1;
 			
 			if ($id)
 			{
@@ -1994,7 +1998,11 @@
 				(
 					'container'		=> 'datatable-container_1',
 					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uientity.get_target', 'id' => $id,'phpgw_return_as'=>'json'))),
-					'ColumnDefs'	=> $target_def
+					'ColumnDefs'	=> $target_def,
+					'config'		=> array(
+						array('disableFilter' => true),
+						array('disablePagination' => true)
+					)
 				);
 
 				$related_def = array
@@ -2006,7 +2014,11 @@
 				(
 					'container'		=> 'datatable-container_2',
 					'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uientity.get_related', 'entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'id' => $id,'phpgw_return_as'=>'json'))),
-					'ColumnDefs'	=> $related_def
+					'ColumnDefs'	=> $related_def,
+					'config'		=> array(
+						array('disableFilter'	=> true),
+						array('disablePagination'	=> true)
+					)
 				);
 				
 				if($category['enable_bulk'])
@@ -2033,7 +2045,11 @@
 					(
 						'container'		=> 'datatable-container_3',
 						'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uientity.get_inventory', 'id'=>$id, 'entity_id'=>$this->entity_id, 'cat_id'=>$this->cat_id, 'type'=>$this->type, 'phpgw_return_as'=>'json'))),
-						'ColumnDefs'	=> $inventory_def
+						'ColumnDefs'	=> $inventory_def,
+						'config'		=> array(
+							array('disableFilter' => true),
+							array('disablePagination' => true)
+						)	
 					);
 				}
 			}
@@ -2145,7 +2161,7 @@ JS;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
 			
-			self::render_template_xsl(array('entity', 'attributes_form', 'files'), array('edit' => $data));
+			self::render_template_xsl(array('entity', 'datatable_inline', 'attributes_form', 'files'), array('edit' => $data));
 
 			phpgw::import_class('phpgwapi.jquery');
 			phpgwapi_jquery::load_widget('treeview');
@@ -2283,7 +2299,6 @@ JS;
 
 		function attrib_history()
 		{	
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$acl_location 	= phpgw::get_var('acl_location', 'string');
@@ -2291,12 +2306,12 @@ JS;
 			$attrib_id 		= phpgw::get_var('attrib_id', 'int');
 			$detail_id 		= phpgw::get_var('detail_id', 'int');
 
-			$data_lookup= array
+			$data_lookup = array
 				(
 					'acl_location'	=> $acl_location,
 					'id'			=> $id,
 					'attrib_id' 	=> $attrib_id,
-					'detail_id' 	=> $detail_id,
+					'detail_id' 	=> $detail_id
 				);
 
 			$delete = phpgw::get_var('delete', 'bool');
@@ -2305,9 +2320,9 @@ JS;
 			if ($delete)
 			{
 				$data_lookup['history_id'] = phpgw::get_var('history_id', 'int');
-				$res = $this->bo->delete_history_item($data_lookup);
+				$this->bo->delete_history_item($data_lookup);
 				
-				return $res;
+				return 'ok';
 			}
 
 			$link_data = array
@@ -2315,11 +2330,11 @@ JS;
 					'menuaction'		=> 'property.uientity.attrib_history',
 					'acl_location'		=> $acl_location,
 					'id'				=> $id,
-					'attrib_id'			=> $data_lookup['attrib_id'],
-					'detail_id'			=> $data_lookup['detail_id'],
+					'attrib_id'			=> $attrib_id,
+					'detail_id'			=> $detail_id,
 					'edit'				=> $edit,
 					'type'				=> $this->type,
-					'phpgw_return_as'	=>'json'
+					'phpgw_return_as'	=> 'json'
 				);
 			
 
@@ -2331,34 +2346,12 @@ JS;
 				$content = array();
 				while (is_array($values) && list(,$entry) = each($values))
 				{
-					$link_delete_history_data = array
-						(
-							'menuaction'	=> 'property.uigeneric.attrib_history',
-							'acl_location'	=> $acl_location,
-							'id'			=> $data_lookup['id'],
-							'attrib_id'		=> $data_lookup['attrib_id'],
-							'detail_id' 	=> $data_lookup['detail_id'],
-							'history_id'	=> $entry['id'],
-							'delete'		=> true,
-							'edit'			=> true,
-							'type'			=> $this->type
-						);
-					
-					if($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
-					{
-						$text_delete	= lang('delete');
-						$link_delete	= $GLOBALS['phpgw']->link('/index.php',$link_delete_history_data);
-					}
-
 					$content[] = array
 						(
 							'id'				=> $entry['id'],
 							'value'				=> $entry['new_value'],
 							'user'				=> $entry['owner'],
-							'time_created'		=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],"{$dateformat} G:i:s"),
-							'link_delete'		=> $link_delete,
-							'lang_delete_statustext'	=> lang('delete the item'),
-							'delete'			=> $text_delete,
+							'time_created'		=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],"{$dateformat} G:i:s")
 						);
 				}
 				
@@ -2395,25 +2388,48 @@ JS;
 			
 				return $this->jquery_results($result_data);
 
-			}		
-
+			}
+			
+			$tabletools = array();
 			if($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
 			{
-				$permissions['rowactions'][] = array
+				$parameters = array
 					(
-						'text'    	=> lang('delete'),
-						'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uientity.attrib_history' )),
-						'confirm_msg'=> lang('do you really want to delete this entry'),
-						'parameters'=> $parameters['delete']
+						'parameter' => array
+						(
+							array
+							(
+								'name'		=> 'history_id',
+								'source'	=> 'id'
+							)
+						)
 					);
+			
+				$tabletools[] = array
+				(
+					'my_name'		=> 'delete',
+					'text' 			=> lang('delete'),
+					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'property.uientity.attrib_history',
+						'acl_location'	=> $acl_location,
+						'id'			=> $id,
+						'attrib_id'		=> $attrib_id,
+						'detail_id' 	=> $detail_id,
+						'delete'		=> true,
+						'edit'			=> true,
+						'type'			=> $this->type
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
 			}
-
+				
 			$history_def = array
 			(
-				array('key'=>'value', 'label'=>lang('value'), 'sortable'=>true),
-				array('key'=>'time_created', 'label'=>lang('time created'), 'sortable'=>true),
-				array('key'=>'user', 'label'=>lang('user'), 'sortable'=>true),
-				array('key'=>'delete', 'label'=>lang('delete'), 'sortable'=>false),
+				array('key'=>'value', 'label'=>lang('value'), 'sortable'=>false),
+				array('key'=>'time_created', 'label'=>lang('time created'), 'sortable'=>false),
+				array('key'=>'user', 'label'=>lang('user'), 'sortable'=>false),
 				array('key'=>'id', 'hidden'=>true)
 			);
 
@@ -2422,21 +2438,19 @@ JS;
 			(
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> json_encode(self::link($link_data)),
-				'ColumnDefs'	=> $history_def
+				'ColumnDefs'	=> $history_def,
+				'tabletools'	=> $tabletools,
+				'config'		=> array(
+					array('disableFilter' => true)
+				)	
 			);			
 
 			$data = array
 			(
 				'base_java_url'		=> json_encode(array(menuaction => "property.uientity.attrib_history")),
 				'datatable_def'		=> $datatable_def,
-				'allow_allrows'		=> false,
-				'start_record'		=> $this->start,
-				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'num_records'		=> count($values),
-				'all_records'		=> $this->bo->total_records,
 				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'values' 			=> $content
+				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default')
 			);
 
 			$custom			= createObject('phpgwapi.custom_fields');
@@ -2445,9 +2459,8 @@ JS;
 			$function_msg	= lang('history');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-			//_debug_array($GLOBALS['phpgw_info']['flags']['app_header']);
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
-			self::render_template_xsl('attrib_history', array('attrib_history' => $data));
+
+			self::render_template_xsl(array('attrib_history', 'datatable_inline'), array('attrib_history' => $data));
 		}
 
 
