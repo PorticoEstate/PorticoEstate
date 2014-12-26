@@ -226,6 +226,63 @@ JqueryPortico.updateinlineTableHelper = function(oTable, requestUrl)
 	api.ajax.url( requestUrl ).load();
 };
 
+JqueryPortico.fnGetSelected = function(oTable)
+{
+	var aReturn = new Array();
+	var aTrs = oTable.fnGetNodes();
+	for ( var i=0 ; i < aTrs.length ; i++ )
+	{
+		if ( $(aTrs[i]).hasClass('selected') )
+		{
+			aReturn.push( i );
+		}
+	}
+	return aReturn;
+};
+
+JqueryPortico.execute_ajax = function(requestUrl, callback, data,type, dataType)
+{                                       
+	type = typeof type !== 'undefined' ? type : 'POST';
+	dataType = typeof dataType !== 'undefined' ? dataType : 'html';
+	data = typeof data !== 'undefined' ? data : {};
+
+	$.ajax({
+		type: type,
+		dataType: dataType,
+		data: data,
+		url: requestUrl,
+		success: function(result) 
+		{
+			callback(result);
+		}
+	});
+};
+
+JqueryPortico.substr_count = function(haystack, needle, offset, length)
+{
+	var pos = 0, cnt = 0;
+
+	haystack += '';
+	needle += '';
+	if(isNaN(offset)) offset = 0;
+	if(isNaN(length)) length = 0;
+	offset--;
+
+	while( (offset = haystack.indexOf(needle, offset+1)) != -1 )
+	{
+		if(length > 0 && (offset+needle.length) > length)
+		{
+			return false;
+		} 
+		else
+		{
+			cnt++;
+		}
+	}
+	return cnt;
+};
+		
+		
 JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, label_attr) {
 	$(document).ready(function () 
 	{
