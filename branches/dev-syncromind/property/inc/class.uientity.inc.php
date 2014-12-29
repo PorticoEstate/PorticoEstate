@@ -1448,22 +1448,6 @@
 						'parameters'	=> json_encode($parameters)
 					);
 			}
-			
-			if($this->acl_add)
-			{
-				$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'add',
-						'text' 			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uientity.edit',
-							'entity_id'		=> $this->entity_id,
-							'cat_id'		=> $this->cat_id,
-							'type'			=> $this->type
-						))
-					);
-			}
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			
@@ -2073,7 +2057,6 @@ JS;
 
 			$data = array
 			(
-					//'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable_def'					=> $datatable_def,
 					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'enable_bulk'					=> $category['enable_bulk'],
@@ -2107,8 +2090,6 @@ JS;
 					'value_origin_type'				=> isset($origin)?$origin:'',
 					'value_origin_id'				=> isset($origin_id)?$origin_id:'',
 
-			//		'value_target'					=> isset($values['target'])?$values['target']:'',
-			//		'lang_target'					=> lang('target'),
 					'lang_no_cat'					=> lang('no category'),
 					'lang_cat_statustext'			=> lang('Select the category. To do not use a category select NO CATEGORY'),
 					'select_name'					=> 'cat_id',
@@ -2144,14 +2125,8 @@ JS;
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'active_tab'					=> $active_tab,
 					'integration'					=> $integration,
-				//	'value_integration_src'			=> $integration_src,
-					'base_java_url'					=>	"{menuaction:'property.uientity.get_files',".
-														"id:'{$id}',".
-														"entity_id:'{$this->entity_id}',".
-														"cat_id:'{$this->cat_id}',".
-														"type:'{$this->type}'}",
 					'documents'						=> $documents,
-					'requestUrlDoc'					=> $requestUrlDoc,
+					'requestUrlDoc'					=> $requestUrlDoc ? $requestUrlDoc : '',
 					'lean'							=> $_lean ? 1 : 0
 				);
 
@@ -2159,11 +2134,10 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
+			self::add_javascript('property', 'portico', 'entity.edit.js');
 			
 			self::render_template_xsl(array('entity', 'datatable_inline', 'attributes_form', 'files'), array('edit' => $data));
 
-			phpgw::import_class('phpgwapi.jquery');
 			phpgwapi_jquery::load_widget('treeview');
 
 			$criteria = array
@@ -2652,8 +2626,8 @@ JS;
 				$pdf->ezTable($content,'','',
 					array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'gridlines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
 					,'cols'=>$table_header
-				)
-			);
+					)
+				);
 			}
 
 			$document = $pdf->ezOutput();
@@ -2684,8 +2658,8 @@ JS;
 
 			foreach ($values as &$value) 
 			{
-				$value['edit'] = '<a href="javascript:showlightbox_edit_inventory('.$value['location_id'].','.$value['id'].','.$value['inventory_id'].')">Edit</a>';
-				$value['calendar'] = '<a href="javascript:showlightbox_show_calendar('.$value['location_id'].','.$value['id'].','.$value['inventory_id'].')">Calendar</a>';
+				$value['edit'] = '<a href="javascript:showlightbox_edit_inventory('.$value['location_id'].','.$value['id'].','.$value['inventory_id'].')">'.lang('edit').'</a>';
+				$value['calendar'] = '<a href="javascript:showlightbox_show_calendar('.$value['location_id'].','.$value['id'].','.$value['inventory_id'].')">'.lang('calendar').'</a>';
 				$value['inventory'] = number_format($value['inventory'], 0, ',', ' ');
 				$value['allocated'] = number_format($value['allocated'], 0, ',', ' ');
 			}
@@ -2830,18 +2804,16 @@ JS;
 
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
-			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			
+			self::add_javascript('property', 'portico', 'entity.edit_inventory.js');
+			
+			self::render_template_xsl(array('entity','attributes_form', 'files'), array('edit_inventory' => $data));
+			
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-
-			phpgwapi_jquery::load_widget('core');
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit_inventory', 'property' );
 
 			$function_msg	= lang('add inventory');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_inventory' => $data));
-		
 		}
 
 		public function add()
@@ -2944,15 +2916,14 @@ JS;
 
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
-			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			
+			self::render_template_xsl(array('entity','attributes_form','files'), array('add_inventory' => $data)); 
+			
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.add_inventory', 'property' );
 
 			$function_msg	= lang('add inventory');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_inventory' => $data));
 
 		}
 
