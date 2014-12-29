@@ -645,18 +645,18 @@
 			$bolocation		= CreateObject('property.bolocation');
 			$config			= CreateObject('phpgwapi.config','property');
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-            
-            $project_id 				= (int)phpgw::get_var('project_id');
+                        
+            $project_id 				= phpgw::get_var('project_id', 'int');
             $values						= phpgw::get_var('values');
             $values['ecodimb']			= phpgw::get_var('ecodimb');
-            $values['vendor_id']		= (int)phpgw::get_var('vendor_id');
+            $values['vendor_id']		= phpgw::get_var('vendor_id', 'int');
             $values['vendor_name']		= phpgw::get_var('vendor_name', 'string');
-            $values['b_account_id']		= (int)phpgw::get_var('b_account_id');
+            $values['b_account_id']		= phpgw::get_var('b_account_id', 'int');
             $values['b_account_name']	= phpgw::get_var('b_account_name', 'string');
-            $values['event_id']			= (int)phpgw::get_var('event_id');
+            $values['event_id']			= phpgw::get_var('event_id', 'int');
             $origin						= phpgw::get_var('origin');
-            $origin_id					= (int)phpgw::get_var('origin_id');
-            
+            $origin_id					= phpgw::get_var('origin_id', 'int');
+                      
             if($project_id && !isset($values['project_id']))
 			{
 				$values['project_id']=$project_id;
@@ -734,7 +734,9 @@
 				}
 				else 
 				{
+                    
 					$_b_account = execMethod('property.bogeneric.read_single', array('id' => $values['b_account_id'], 'location_info' => array('type' => 'budget_account')));
+
 					if(!$_b_account || !$_b_account['active'])
 					{
 						$values['b_account_id'] = '';
@@ -786,6 +788,7 @@
 					$action='edit';
 				}
                 
+                //echo '<pre>'; print_r($receipt); echo '</pre>';exit('1');
 				if(!$receipt['error'])
 				{   
                    
@@ -796,6 +799,7 @@
 					{
 						$action='add';
 					}
+                    
 					$receipt = $this->bo->save($values,$action);
                     $msgbox_data = $this->bocommon->msgbox_data($receipt);
                     
@@ -992,10 +996,12 @@
                    
 				}
                 else
-                {
-                    $this->edit();
+                {   
+                    $msgbox_data = $this->bocommon->msgbox_data($receipt);
+                    $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                    phpgwapi_cache::message_set($message[0]['msgbox_text'] , 'message');
+                    $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'property.uiworkorder.edit', 'id'=>$id));
                 }
-
 
 				if( phpgw::get_var('send_workorder', 'bool') && !$receipt['error'])
 				{
