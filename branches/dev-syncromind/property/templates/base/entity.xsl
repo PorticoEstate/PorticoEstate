@@ -20,17 +20,6 @@
 
 	<!-- edit inventory -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_inventory">
-		<script type="text/javascript">
-			function edit_inventory()
-			{
-				var location_id = '<xsl:value-of select="location_id"/>';
-				var item_id = '<xsl:value-of select="item_id"/>';
-				document.form.submit();
-		//		parent.refresh_inventory(location_id, item_id);
-				parent.TINY.box.hide();
-			}
-		</script>
-
 		<fieldset>
 			<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uientity.edit_inventory')" />
@@ -300,9 +289,6 @@
 				</script>
 			</xsl:when>
 		</xsl:choose>
-		<script type="text/javascript">
-			var base_java_url = <xsl:value-of select="base_java_url"/>;
-		</script>
 		
 		<div id="entity_edit_tabview">
 			
@@ -554,8 +540,8 @@
 									#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
 								</style>
 								<script type="text/javascript">
-									var documents = <xsl:value-of select="documents"/>;
-									var requestUrlDoc = <xsl:value-of select="requestUrlDoc"/>;
+									documents = <xsl:value-of select="documents"/>;
+									requestUrlDoc = <xsl:value-of select="requestUrlDoc"/>;
 								</script>
 								<fieldset>
 								<!-- markup for expand/contract links -->
