@@ -56,7 +56,7 @@
 		
 	<xsl:choose>
 			<xsl:when test="$tabletools">
-					JqueryPortico.TableTools = 	{
+					JqueryPortico.TableTools<xsl:number value="($num - 1)"/> = 	{
 							"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 							"sRowSelect": "multi",
 							"aButtons":
@@ -260,20 +260,20 @@
 		}
 ]]>
 
-		var options = {};
+		var options<xsl:number value="($num - 1)"/> = {};
 		<xsl:for-each select="$config">
 			<xsl:if test="disableFilter">
-				options.disableFilter = true;
+				options<xsl:number value="($num - 1)"/>.disableFilter = true;
 			</xsl:if>
 			<xsl:if test="disablePagination">
-				options.disablePagination = true;
+				options<xsl:number value="($num - 1)"/>.disablePagination = true;
 			</xsl:if>
 		</xsl:for-each>
-		if (JqueryPortico.TableTools)
+		if (JqueryPortico.TableTools<xsl:number value="($num - 1)"/>)
 		{
-			options.TableTools = JqueryPortico.TableTools;
+			options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.TableTools<xsl:number value="($num - 1)"/>;
 		}
-		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options);
+		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/>);
 
 	</script>
 </xsl:template>
