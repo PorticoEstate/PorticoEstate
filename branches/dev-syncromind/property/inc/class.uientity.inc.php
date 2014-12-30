@@ -983,7 +983,7 @@
 		function columns()
 		{
 			//cramirez: necesary for windows.open . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -1135,7 +1135,7 @@
 								'value'	=> lang('columns'),
 								'href'	=> '#',
 								'class'	=> '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uientity.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uientity.columns', entity_id:'{$this->entity_id}', cat_id:'{$this->cat_id}', type:'{$this->type}'}, {closeAction:'reload'})"
 							),
 							array
 							(
@@ -2127,7 +2127,8 @@ JS;
 					'integration'					=> $integration,
 					'documents'						=> $documents,
 					'requestUrlDoc'					=> $requestUrlDoc ? $requestUrlDoc : '',
-					'lean'							=> $_lean ? 1 : 0
+					'lean'							=> $_lean ? 1 : 0,
+					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 
 			$appname	= $entity['name'];
