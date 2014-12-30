@@ -126,7 +126,7 @@
 			$this->type_id				= $this->bo->type_id;
 			$this->lookup				= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
-			//$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
 			//$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
 
 //			$this->start				= $this->bo->start;
