@@ -252,7 +252,7 @@
 								<xsl:value-of select="name"/>
 								<xsl:text>();</xsl:text>
 							</xsl:variable>
-							<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+							<input type="text" id="{name}" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
 								<xsl:choose>
 									<xsl:when test="disabled!=''">
 										<xsl:attribute name="disabled">
@@ -261,7 +261,7 @@
 									</xsl:when>
 								</xsl:choose>
 							</input>
-							<input size="30" type="text" name="{$vendor_name}" value="{vendor_name}" onClick="{$lookup_function}" readonly="readonly">
+							<input size="30" type="text" id="{$vendor_name}" name="{$vendor_name}" value="{vendor_name}" onClick="{$lookup_function}" readonly="readonly">
 								<xsl:choose>
 									<xsl:when test="disabled!=''">
 										<xsl:attribute name="disabled">
