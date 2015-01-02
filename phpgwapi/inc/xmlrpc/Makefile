@@ -1,5 +1,4 @@
 # Makefile for phpxmlrpc library
-# $Id: Makefile,v 1.37 2008/03/06 22:37:19 ggiunta Exp $
 
 ### USER EDITABLE VARS ###
 
@@ -70,7 +69,7 @@ DEBUGGERFILES=debugger/index.php \
 all: install
 
 install:
-	cd lib && cp ${LIBFILES} ${PHPINCLUDEDIR}
+	cp ${LIBFILES} ${PHPINCLUDEDIR}
 	@echo Lib files have been copied to ${PHPINCLUDEDIR}
 	cd doc && $(MAKE) install
 
@@ -109,7 +108,7 @@ xmlrpc-${VERSION}.zip xmlrpc-${VERSION}.tar.gz: ${LIBFILES} ${DEBUGGERFILES} ${I
 	cp ${INFOFILES} xmlrpc-${VERSION}
 	cd doc && $(MAKE) dist
 #   on unix shells last char should be \;
-	${FIND} xmlrpc-${VERSION} -type f ! -name "*.fttb" ! -name "*.pdf" ! -name "*.gif" -exec dos2unix {} ;
+	${FIND} xmlrpc-${VERSION} -type f ! -name "*.fttb" ! -name "*.pdf" ! -name "*.gif" -exec dos2unix "{}" \;
 	-rm xmlrpc-${VERSION}.zip xmlrpc-${VERSION}.tar.gz
 	tar -cvf xmlrpc-${VERSION}.tar xmlrpc-${VERSION}
 	gzip xmlrpc-${VERSION}.tar

@@ -8,7 +8,6 @@
  *
  * Please do not copy this file verbatim into your production server.
  *
- * @version $Id$
  **/
 
 // give user a chance to see the source for this server instead of running the services
@@ -18,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST' && isset($_GET['showSource']))
 	die();
 }
 
-	include("../../lib/xmlrpc.inc");
-	include("../../lib/xmlrpcs.inc");
-	include("../../lib/xmlrpc_wrappers.inc");
+	include("xmlrpc.inc");
+	include("xmlrpcs.inc");
+	include("xmlrpc_wrappers.inc");
 
 	/**
 	* Used to test usage of object methods in dispatch maps and in wrapper code
