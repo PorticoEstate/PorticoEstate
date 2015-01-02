@@ -268,15 +268,16 @@
 			return $persons;
 		}
 
-		function read_vendor($filter = array())
+		function read_vendor($data = array())
 		{
 			$sogeneric 	= CreateObject('property.sogeneric');
 
 			$location_info = $sogeneric->get_location_info('vendor');
 			
-			$this->order = $this->order ? $this->order : 'org_name';
-			$this->sort = $this->sort ? $this->sort : 'ASC';
-
+			$data['order'] = $data['order'] ? $data['order'] : 'org_name';
+			$data['sort'] = $data['sort'] ? $data['sort'] : 'ASC';
+			
+			$filter = $data['filter'];
 			if (! $filter )
 			{
 				foreach ( $location_info['fields'] as $field )
@@ -295,8 +296,7 @@
 				}
 			}
 
-			$values = $sogeneric->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows),$filter);
+			$values = $sogeneric->read($data,$filter);
 
 			$this->total_records = $sogeneric->total_records;
 
