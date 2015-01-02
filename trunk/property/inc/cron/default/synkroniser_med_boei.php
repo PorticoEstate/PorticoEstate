@@ -675,7 +675,7 @@ SQL;
 						'value'	=> (int)$this->db_boei->f('hemmeligAdresse'),
 						'type'	=> PDO::PARAM_INT
 					),
-					3	=> array
+					9	=> array
 					(
 						'value'	=> utf8_encode($this->db_boei->f('OBSKode')),
 						'type'	=> PDO::PARAM_STR
