@@ -8,12 +8,10 @@
 2) wrapping of remote methods into php functions
 </h3>
 <?php
-	include("../../lib/xmlrpc.inc");
-	include("../../lib/xmlrpc_wrappers.inc");
+	include("xmlrpc.inc");
+	include("xmlrpc_wrappers.inc");
 
-	$server =  substr($_SERVER['PHP_SELF'], 0, -strlen('/client/wrap.php')) . '/server/server.php';
-	$c = new xmlrpc_client($server, $_SERVER['HTTP_HOST'], 80);
-//	$c = new xmlrpc_client("/server.php", "phpxmlrpc.sourceforge.net", 80);
+	$c = new xmlrpc_client("/server.php", "phpxmlrpc.sourceforge.net", 80);
 	$c->return_type = 'phpvals'; // let client give us back php values instead of xmlrpcvals
 	$r =& $c->send(new xmlrpcmsg('system.listMethods'));
 	if($r->faultCode())
@@ -54,7 +52,5 @@
 		}
 	}
 ?>
-<hr/>
-<em>$Id$</em>
 </body>
 </html>

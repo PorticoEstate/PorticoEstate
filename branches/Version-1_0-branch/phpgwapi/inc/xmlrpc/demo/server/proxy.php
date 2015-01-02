@@ -4,14 +4,13 @@
  * (useful e.g. for ajax-originated calls that can only connect back to
  * the originating server)
  *
- * @version $Id$
  * @author Gaetano Giunta
- * @copyright (C) 2006-2009 G. Giunta
+ * @copyright (C) 2006-2014 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt
  */
 
-	include("../../lib/xmlrpc.inc");
-	include("../../lib/xmlrpcs.inc");
+	include("xmlrpc.inc");
+	include("xmlrpcs.inc");
 
 	/**
 	* Forward an xmlrpc request to another server, and return to client the response received.

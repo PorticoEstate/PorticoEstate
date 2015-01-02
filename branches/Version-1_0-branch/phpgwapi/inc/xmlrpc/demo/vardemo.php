@@ -2,7 +2,7 @@
 <head><title>xmlrpc</title></head>
 <body>
 <?php
-	include("../lib/xmlrpc.inc");
+	include("xmlrpc.inc");
 
 	$f = new xmlrpcmsg('examples.getStateName');
 
@@ -87,7 +87,5 @@ And turned it into nylon", "base64"
 
 	print "</pre>\n";
 ?>
-<hr/>
-<em>$Id$</em>
 </body>
 </html>
