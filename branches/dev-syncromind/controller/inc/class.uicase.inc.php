@@ -33,8 +33,7 @@
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('controller.socase');
 	phpgw::import_class('controller.socheck_list');
 	phpgw::import_class('controller.socheck_item');
@@ -46,7 +45,7 @@
 	include_class('controller', 'component', 'inc/model/');
     include_class('controller', 'location_finder', 'inc/helper/');
 			
-	class controller_uicase extends phpgwapi_uicommon
+	class controller_uicase extends phpgwapi_uicommon_jquery
 	{
 		private $so;
 		
@@ -112,6 +111,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
  		}	
 		
 		private function _get_case_data()

@@ -1,28 +1,25 @@
 <?php
-	/* $Id$ */
 
-	include(getcwd().'/parse_args.php');
+include(dirname(__FILE__).'/parse_args.php');
 
-	require_once('xmlrpc.inc');
-	require_once('xmlrpcs.inc');
-	require_once('xmlrpc_wrappers.inc');
+require_once('xmlrpc.inc');
+require_once('xmlrpcs.inc');
+require_once('xmlrpc_wrappers.inc');
 
-	require_once 'phpunit.php';
-	//require_once 'PHPUnit/TestDecorator.php';
+require_once 'phpunit.php';
+//require_once 'PHPUnit/TestDecorator.php';
 
-	// let testuite run for the needed time
-	if ((int)ini_get('max_execution_time') < 180)
+// let testuite run for the needed time
+if ((int)ini_get('max_execution_time') < 180)
 		ini_set('max_execution_time', 180);
 
-	ini_set('max_execution_time', 180);
+$suite = new PHPUnit_TestSuite();
 
-	$suite = new PHPUnit_TestSuite();
+// array with list of failed tests
+$failed_tests = array();
 
-	// array with list of failed tests
-	$failed_tests = array();
-
-	class LocalhostTests extends PHPUnit_TestCase
-	{
+class LocalhostTests extends PHPUnit_TestCase
+{
 		var $client = null;
 		var $method = 'http';
 		var $timeout = 10;
@@ -93,7 +90,7 @@
 
 		function testString()
 		{
-			$sendstring="here are 3 \"entities\": < > &" .
+        $sendstring="here are 3 \"entities\": < > & " .
 				"and here's a dollar sign: \$pretendvarname and a backslash too: " . chr(92) .
 				" - isn't that great? \\\"hackery\\\" at it's best " .
 				" also don't want to miss out on \$item[0]. ".
@@ -101,7 +98,7 @@
 				"a simple CR here".chr(13).
 				"a simple LF here".chr(10).
 				"and then LFCR".chr(10).chr(13).
-				"last but not least weird names: Günter, Elène, and an xml comment closing tag: -->";
+            "last but not least weird names: G".chr(252)."nter, El".chr(232)."ne, and an xml comment closing tag: -->";
 			$f=new xmlrpcmsg('examples.stringecho', array(
 				new xmlrpcval($sendstring, 'string')
 			));
@@ -121,7 +118,7 @@
 
 		function testAddingDoubles()
 		{
-			// note that rounding errors mean i
+        // note that rounding errors mean we
 			// keep precision to sensible levels here ;-)
 			$a=12.13; $b=-23.98;
 			$f=new xmlrpcmsg('examples.addtwodouble',array(
@@ -231,10 +228,14 @@ And turned it into nylon';
             if (class_exists('DateTime'))
             {
                 $datetime = new DateTime();
+            // skip this test for php 5.2. It is a bit harder there to build a DateTime from unix timestamp with proper TZ info
+            if(is_callable(array($datetime,'setTimestamp')))
+            {
                 $t3 = new xmlrpcval($datetime->setTimestamp($time), 'dateTime.iso8601');
                 $this->assertEquals($t1->serialize(), $t3->serialize());
             }
         }
+    }
 
 		function testCountEntities()
 		{
@@ -533,7 +534,8 @@ And turned it into nylon';
 
 		function testAutoRegisteredMethod()
 		{
-			$func=wrap_xmlrpc_method($this->client, 'examples.getStateName');
+        // make a 'deep client copy' as the original one might have many properties set
+        $func=wrap_xmlrpc_method($this->client, 'examples.getStateName', array('simple_client_copy' => 1));
 			if($func == '')
 			{
 				$this->fail('Registration of examples.getStateName failed');
@@ -541,6 +543,11 @@ And turned it into nylon';
 			else
 			{
 				$v=$func(23);
+            // work around bug in current version of phpunit
+            if(is_object($v))
+            {
+                $v = var_export($v, true);
+            }
 				$this->assertEquals('Michigan', $v);
 			}
 		}
@@ -564,6 +571,10 @@ And turned it into nylon';
 				$this->assertEquals(1, $v->scalarval());
 				// now check if we decoded the cookies as we had set them
 				$rcookies = $r->cookies();
+            // remove extra cookies which might have been set by proxies
+            foreach($rcookies as $c => $v)
+                if(!in_array($c, array('c2', 'c3', 'c4', 'c5')))
+                    unset($rcookies[$c]);
 				foreach($cookies as $c => $v)
 				// format for date string in cookies: 'Mon, 31 Oct 2005 13:50:56 GMT'
 				// but PHP versions differ on that, some use 'Mon, 31-Oct-2005 13:50:56 GMT'...
@@ -621,10 +632,10 @@ And turned it into nylon';
 				$this->assertEquals($v2, $v1);
 			}
 		}
-	}
+}
 
-	class LocalHostMultiTests extends LocalhostTests
-	{
+class LocalHostMultiTests extends LocalhostTests
+{
 		function _runtests()
 		{
 			global $failed_tests;
@@ -633,8 +644,10 @@ And turned it into nylon';
 				if(strpos($meth, 'test') === 0 && $meth != 'testHttps' && $meth != 'testCatchExceptions')
 				{
 					if (!isset($failed_tests[$meth]))
+                {
 						$this->$meth();
 				}
+            }
 				if ($this->_failed)
 				{
 					break;
@@ -680,13 +693,14 @@ And turned it into nylon';
 
 		function testProxy()
 		{
-			global $PROXYSERVER, $PROXYPORT;
+        global $PROXYSERVER, $PROXYPORT, $NOPROXY;
             if ($PROXYSERVER)
             {
 				$this->client->setProxy($PROXYSERVER, $PROXYPORT);
 				$this->_runtests();
             }
             else
+            if (!$NOPROXY)
             	$this->fail('PROXY definition missing: cannot test proxy');
 		}
 
@@ -737,7 +751,7 @@ And turned it into nylon';
 
 		function testHttp11Proxy()
 		{
-			global $PROXYSERVER, $PROXYPORT;
+        global $PROXYSERVER, $PROXYPORT, $NOPROXY;
 			if(!function_exists('curl_init'))
 			{
 				$this->fail('CURL missing: cannot test http 1.1 w. proxy');
@@ -745,6 +759,7 @@ And turned it into nylon';
 			}
             else if ($PROXYSERVER == '')
             {
+            if (!$NOPROXY)
             	$this->fail('PROXY definition missing: cannot test proxy w. http 1.1');
                 return;
             }
@@ -759,7 +774,7 @@ And turned it into nylon';
 
 		function testHttps()
 		{
-			global $HTTPSSERVER, $HTTPSURI;
+        global $HTTPSSERVER, $HTTPSURI, $HTTPSIGNOREPEER;
 			if(!function_exists('curl_init'))
 			{
 				$this->fail('CURL missing: cannot test https functionality');
@@ -769,12 +784,15 @@ And turned it into nylon';
 			$this->method = 'https';
 			$this->client->method = 'https';
 			$this->client->path = $HTTPSURI;
+        $this->client->setSSLVerifyPeer( !$HTTPSIGNOREPEER );
+        // silence warning with newish php versions
+        $this->client->setSSLVerifyHost(2);
 			$this->_runtests();
 		}
 
 		function testHttpsProxy()
 		{
-			global $HTTPSSERVER, $HTTPSURI, $PROXYSERVER, $PROXYPORT;;
+        global $HTTPSSERVER, $HTTPSURI, $PROXYSERVER, $PROXYPORT, $NOPROXY;
 			if(!function_exists('curl_init'))
 			{
 				$this->fail('CURL missing: cannot test https functionality');
@@ -782,6 +800,7 @@ And turned it into nylon';
 			}
             else if ($PROXYSERVER == '')
             {
+            if (!$NOPROXY)
             	$this->fail('PROXY definition missing: cannot test proxy w. http 1.1');
                 return;
             }
@@ -820,10 +839,10 @@ And turned it into nylon';
 			$this->client->request_charset_encoding = 'ISO-8859-1';
 			$this->_runtests();
 		}
-	}
+}
 
-	class ParsingBugsTests extends PHPUnit_TestCase
-	{
+class ParsingBugsTests extends PHPUnit_TestCase
+{
 		function testMinusOneString()
 		{
 			$v=new xmlrpcval('-1');
@@ -832,13 +851,14 @@ And turned it into nylon';
 		}
 
 		function testUnicodeInMemberName(){
-			$v = array('Günter, Elène' => new xmlrpcval(1));
+        $str = "G".chr(252)."nter, El".chr(232)."ne";
+        $v = array($str => new xmlrpcval(1));
 			$r = new xmlrpcresp(new xmlrpcval($v, 'struct'));
 			$r = $r->serialize();
 			$m = new xmlrpcmsg('dummy');
 			$r = $m->parseResponse($r);
 			$v = $r->value();
-			$this->assertEquals($v->structmemexists('Günter, Elène'), true);
+        $this->assertEquals($v->structmemexists($str), true);
 		}
 
 		function testUnicodeInErrorString()
@@ -847,8 +867,8 @@ And turned it into nylon';
 '<?xml version="1.0"?>
 <!-- $Id -->
 <!-- found by G. giunta, covers what happens when lib receives
-  UTF8 chars in reponse text and comments -->
-<!-- àüè&#224;&#252;&#232; -->
+  UTF8 chars in response text and comments -->
+<!-- ï¿½ï¿½ï¿½&#224;&#252;&#232; -->
 <methodResponse>
 <fault>
 <value>
@@ -859,7 +879,7 @@ And turned it into nylon';
 </member>
 <member>
 <name>faultString</name>
-<value><string>àüè&#224;&#252;&#232;</string></value>
+<value><string>ï¿½ï¿½ï¿½&#224;&#252;&#232;</string></value>
 </member>
 </struct>
 </value>
@@ -868,7 +888,7 @@ And turned it into nylon';
 			$m=new xmlrpcmsg('dummy');
 			$r=$m->parseResponse($response);
 			$v=$r->faultString();
-			$this->assertEquals('àüèàüè', $v);
+        $this->assertEquals('ï¿½ï¿½ï¿½àüè', $v);
 		}
 
 		function testValidNumbers()
@@ -962,7 +982,7 @@ And turned it into nylon';
 		function testBrokenRequests()
 		{
 			$s = new xmlrpc_server();
-// omitting the 'params' tag: not tolerated by the lib anymore
+        // omitting the 'params' tag: not tolerated by the lib anymore
 $f = '<?xml version="1.0"?>
 <methodCall>
 <methodName>system.methodHelp</methodName>
@@ -972,7 +992,7 @@ $f = '<?xml version="1.0"?>
 </methodCall>';
 			$r = $s->parserequest($f);
 			$this->assertEquals(15, $r->faultCode());
-// omitting a 'param' tag
+        // omitting a 'param' tag
 $f = '<?xml version="1.0"?>
 <methodCall>
 <methodName>system.methodHelp</methodName>
@@ -982,7 +1002,7 @@ $f = '<?xml version="1.0"?>
 </methodCall>';
 			$r = $s->parserequest($f);
 			$this->assertEquals(15, $r->faultCode());
-// omitting a 'value' tag
+        // omitting a 'value' tag
 $f = '<?xml version="1.0"?>
 <methodCall>
 <methodName>system.methodHelp</methodName>
@@ -998,7 +1018,7 @@ $f = '<?xml version="1.0"?>
 		{
 			$m=new xmlrpcmsg('dummy');
 			//$m->debug = 1;
-// omitting the 'params' tag: no more tolerated by the lib...
+        // omitting the 'params' tag: no more tolerated by the lib...
 $f = '<?xml version="1.0"?>
 <methodResponse>
 <param>
@@ -1007,7 +1027,7 @@ $f = '<?xml version="1.0"?>
 </methodResponse>';
 			$r = $m->parseResponse($f);
 			$this->assertEquals(2, $r->faultCode());
-// omitting the 'param' tag: no more tolerated by the lib...
+        // omitting the 'param' tag: no more tolerated by the lib...
 $f = '<?xml version="1.0"?>
 <methodResponse>
 <params>
@@ -1016,7 +1036,7 @@ $f = '<?xml version="1.0"?>
 </methodResponse>';
 			$r = $m->parseResponse($f);
 			$this->assertEquals(2, $r->faultCode());
-// omitting a 'value' tag: KO
+        // omitting a 'value' tag: KO
 $f = '<?xml version="1.0"?>
 <methodResponse>
 <params>
@@ -1216,19 +1236,19 @@ and there they were.</value></member><member><name>postid</name><value>7414222</
 		{
 			$s = new xmlrpcmsg('dummy');
 $f = "HTTP/1.1 200 OK\r\nContent-type: text/xml; charset=UTF-8\r\n\r\n".'<?xml version="1.0"?><methodResponse><params><param><value><struct><member><name>userid</name><value>311127</value></member>
-<member><name>dateCreated</name><value><dateTime.iso8601>20011126T09:17:52</dateTime.iso8601></value></member><member><name>content</name><value>'.utf8_encode('àüèàüè').'</value></member><member><name>postid</name><value>7414222</value></member></struct></value></param></params></methodResponse>
+<member><name>dateCreated</name><value><dateTime.iso8601>20011126T09:17:52</dateTime.iso8601></value></member><member><name>content</name><value>'.utf8_encode('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½').'</value></member><member><name>postid</name><value>7414222</value></member></struct></value></param></params></methodResponse>
 ';
 			$r = $s->parseResponse($f, false, 'phpvals');
 			$v = $r->value();
 			$v = $v['content'];
-			$this->assertEquals("àüèàüè", $v);
+        $this->assertEquals("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", $v);
 $f = '<?xml version="1.0" encoding="utf-8"?><methodResponse><params><param><value><struct><member><name>userid</name><value>311127</value></member>
-<member><name>dateCreated</name><value><dateTime.iso8601>20011126T09:17:52</dateTime.iso8601></value></member><member><name>content</name><value>'.utf8_encode('àüèàüè').'</value></member><member><name>postid</name><value>7414222</value></member></struct></value></param></params></methodResponse>
+<member><name>dateCreated</name><value><dateTime.iso8601>20011126T09:17:52</dateTime.iso8601></value></member><member><name>content</name><value>'.utf8_encode('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½').'</value></member><member><name>postid</name><value>7414222</value></member></struct></value></param></params></methodResponse>
 ';
 			$r = $s->parseResponse($f, false, 'phpvals');
 			$v = $r->value();
 			$v = $v['content'];
-			$this->assertEquals("àüèàüè", $v);
+        $this->assertEquals("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", $v);
 		}
 
 		function testUTF8IntString()
@@ -1287,20 +1307,23 @@ $f = '<?xml version="1.0" encoding="utf-8"?><methodResponse><params><param><valu
 
 		function TestLocale()
         {
-            $locale = setlocale(LC_NUMERIC,0);
-            if ( setlocale(LC_NUMERIC,'deu', 'de_DE@euro', 'de_DE', 'de', 'ge') !== false )
+        $locale = setlocale(LC_NUMERIC, 0);
+        /// @todo on php 5.3/win setting locale to german does not seem to set decimal separator to comma...
+        if (setlocale(LC_NUMERIC,'deu', 'de_DE@euro', 'de_DE', 'de', 'ge') !== false)
+        {
+            $v = new xmlrpcval(1.1, 'double');
+            if (strpos($v->scalarval(), ',') == 1)
             {
-    			$v = new xmlrpcval(1.1,'double');
     			$r = $v->serialize();
-    			$this->assertequals(false, strpos($r,','));
-    			$this->assertequals(1, strpos($v->scalarval(),','));
-    			setlocale(LC_NUMERIC,$locale);
+                $this->assertequals(false, strpos($r, ','));
     		}
+            setlocale(LC_NUMERIC, $locale);
 		}
 	}
+}
 
-	class InvalidHostTests extends PHPUnit_TestCase
-	{
+class InvalidHostTests extends PHPUnit_TestCase
+{
 		var $client = null;
 
 		function setUp()
@@ -1347,7 +1370,8 @@ $f = '<?xml version="1.0" encoding="utf-8"?><methodResponse><params><param><valu
 			$this->client->server .= 'XXX';
 			$this->client->keepalive = true;
 			$r = $this->client->send($f, 5, 'http11');
-			$this->assertEquals(8, $r->faultCode());
+        // in case we have a "universal dns resolver" getting in the way, we might get a 302 instead of a 404
+        $this->assertTrue($r->faultCode() === 8 || $r->faultCode() == 5);
 
 			// now test a successful connection
 			$server = explode(':', $LOCALSERVER);
@@ -1359,137 +1383,138 @@ $f = '<?xml version="1.0" encoding="utf-8"?><methodResponse><params><param><valu
 			$this->client->path = $URI;
 
 			$r = $this->client->send($f, 5, 'http11');
+        $this->assertEquals(0, $r->faultCode());
 			$ro = $r->value();
-			$this->assertEquals('hello', $ro->scalarVal());
-		}
+        is_object( $ro ) && $this->assertEquals('hello', $ro->scalarVal());
 	}
+}
 
 
-	$suite->addTest(new LocalhostTests('testString'));
-	$suite->addTest(new LocalhostTests('testAdding'));
-	$suite->addTest(new LocalhostTests('testAddingDoubles'));
-	$suite->addTest(new LocalhostTests('testInvalidNumber'));
-	$suite->addTest(new LocalhostTests('testBoolean'));
-	$suite->addTest(new LocalhostTests('testCountEntities'));
-	$suite->addTest(new LocalhostTests('testBase64'));
-	$suite->addTest(new LocalhostTests('testDateTime'));
-	$suite->addTest(new LocalhostTests('testServerMulticall'));
-	$suite->addTest(new LocalhostTests('testClientMulticall1'));
-	$suite->addTest(new LocalhostTests('testClientMulticall2'));
-	$suite->addTest(new LocalhostTests('testClientMulticall3'));
-	$suite->addTest(new LocalhostTests('testCatchWarnings'));
-	$suite->addTest(new LocalhostTests('testCatchExceptions'));
-	$suite->addTest(new LocalhostTests('testZeroParams'));
-	$suite->addTest(new LocalhostTests('testCodeInjectionServerSide'));
-	$suite->addTest(new LocalhostTests('testAutoRegisteredFunction'));
-	$suite->addTest(new LocalhostTests('testAutoRegisteredMethod'));
-	$suite->addTest(new LocalhostTests('testSetCookies'));
-	$suite->addTest(new LocalhostTests('testGetCookies'));
-	$suite->addTest(new LocalhostTests('testSendTwiceSameMsg'));
+$suite->addTest(new LocalhostTests('testString'));
+$suite->addTest(new LocalhostTests('testAdding'));
+$suite->addTest(new LocalhostTests('testAddingDoubles'));
+$suite->addTest(new LocalhostTests('testInvalidNumber'));
+$suite->addTest(new LocalhostTests('testBoolean'));
+$suite->addTest(new LocalhostTests('testCountEntities'));
+$suite->addTest(new LocalhostTests('testBase64'));
+$suite->addTest(new LocalhostTests('testDateTime'));
+$suite->addTest(new LocalhostTests('testServerMulticall'));
+$suite->addTest(new LocalhostTests('testClientMulticall1'));
+$suite->addTest(new LocalhostTests('testClientMulticall2'));
+$suite->addTest(new LocalhostTests('testClientMulticall3'));
+$suite->addTest(new LocalhostTests('testCatchWarnings'));
+$suite->addTest(new LocalhostTests('testCatchExceptions'));
+$suite->addTest(new LocalhostTests('testZeroParams'));
+$suite->addTest(new LocalhostTests('testCodeInjectionServerSide'));
+$suite->addTest(new LocalhostTests('testAutoRegisteredFunction'));
+$suite->addTest(new LocalhostTests('testAutoRegisteredMethod'));
+$suite->addTest(new LocalhostTests('testSetCookies'));
+$suite->addTest(new LocalhostTests('testGetCookies'));
+$suite->addTest(new LocalhostTests('testSendTwiceSameMsg'));
 
-	$suite->addTest(new LocalhostMultiTests('testUTF8Requests'));
-	$suite->addTest(new LocalhostMultiTests('testUTF8Responses'));
-	$suite->addTest(new LocalhostMultiTests('testISORequests'));
-	$suite->addTest(new LocalhostMultiTests('testISOResponses'));
-	$suite->addTest(new LocalhostMultiTests('testGzip'));
-	$suite->addTest(new LocalhostMultiTests('testDeflate'));
-	$suite->addTest(new LocalhostMultiTests('testProxy'));
-	$suite->addTest(new LocalhostMultiTests('testHttp11'));
-	$suite->addTest(new LocalhostMultiTests('testHttp11Gzip'));
-	$suite->addTest(new LocalhostMultiTests('testHttp11Deflate'));
-	$suite->addTest(new LocalhostMultiTests('testKeepAlives'));
-	$suite->addTest(new LocalhostMultiTests('testHttp11Proxy'));
-	$suite->addTest(new LocalhostMultiTests('testHttps'));
-	$suite->addTest(new LocalhostMultiTests('testHttpsProxy'));
+$suite->addTest(new LocalhostMultiTests('testUTF8Requests'));
+$suite->addTest(new LocalhostMultiTests('testUTF8Responses'));
+$suite->addTest(new LocalhostMultiTests('testISORequests'));
+$suite->addTest(new LocalhostMultiTests('testISOResponses'));
+$suite->addTest(new LocalhostMultiTests('testGzip'));
+$suite->addTest(new LocalhostMultiTests('testDeflate'));
+$suite->addTest(new LocalhostMultiTests('testProxy'));
+$suite->addTest(new LocalhostMultiTests('testHttp11'));
+$suite->addTest(new LocalhostMultiTests('testHttp11Gzip'));
+$suite->addTest(new LocalhostMultiTests('testHttp11Deflate'));
+$suite->addTest(new LocalhostMultiTests('testKeepAlives'));
+$suite->addTest(new LocalhostMultiTests('testHttp11Proxy'));
+$suite->addTest(new LocalhostMultiTests('testHttps'));
+$suite->addTest(new LocalhostMultiTests('testHttpsProxy'));
 
-	$suite->addTest(new InvalidHostTests('test404'));
-	//$suite->addTest(new InvalidHostTests('testSrvNotFound'));
-	$suite->addTest(new InvalidHostTests('testCurlKAErr'));
+$suite->addTest(new InvalidHostTests('test404'));
+//$suite->addTest(new InvalidHostTests('testSrvNotFound'));
+$suite->addTest(new InvalidHostTests('testCurlKAErr'));
 
-	$suite->addTest(new ParsingBugsTests('testMinusOneString'));
-	$suite->addTest(new ParsingBugsTests('testUnicodeInMemberName'));
-	$suite->addTest(new ParsingBugsTests('testUnicodeInErrorString'));
-	$suite->addTest(new ParsingBugsTests('testValidNumbers'));
-	$suite->addTest(new ParsingBugsTests('testAddScalarToStruct'));
-	$suite->addTest(new ParsingBugsTests('testAddStructToStruct'));
-	$suite->addTest(new ParsingBugsTests('testAddArrayToArray'));
-	$suite->addTest(new ParsingBugsTests('testEncodeArray'));
-	$suite->addTest(new ParsingBugsTests('testEncodeRecursive'));
-	$suite->addTest(new ParsingBugsTests('testBrokenrequests'));
-	$suite->addTest(new ParsingBugsTests('testBrokenresponses'));
-	$suite->addTest(new ParsingBugsTests('testBuggyHttp'));
-	$suite->addTest(new ParsingBugsTests('testStringBug'));
-	$suite->addTest(new ParsingBugsTests('testWhiteSpace'));
-	$suite->addTest(new ParsingBugsTests('testAutodecodeResponse'));
-	$suite->addTest(new ParsingBugsTests('testNoDecodeResponse'));
-	$suite->addTest(new ParsingBugsTests('testAutoCoDec'));
-	$suite->addTest(new ParsingBugsTests('testUTF8Response'));
-	$suite->addTest(new ParsingBugsTests('testUTF8Request'));
-	$suite->addTest(new ParsingBugsTests('testUTF8IntString'));
-	$suite->addTest(new ParsingBugsTests('testStringInt'));
-	$suite->addTest(new ParsingBugsTests('testStructMemExists'));
-	$suite->addTest(new ParsingBugsTests('testDoubleDataInArrayTag'));
-	$suite->addTest(new ParsingBugsTests('testDoubleStuffInValueTag'));
-	$suite->addTest(new ParsingBugsTests('testNilValue'));
-	$suite->addTest(new ParsingBugsTests('testLocale'));
+$suite->addTest(new ParsingBugsTests('testMinusOneString'));
+$suite->addTest(new ParsingBugsTests('testUnicodeInMemberName'));
+$suite->addTest(new ParsingBugsTests('testUnicodeInErrorString'));
+$suite->addTest(new ParsingBugsTests('testValidNumbers'));
+$suite->addTest(new ParsingBugsTests('testAddScalarToStruct'));
+$suite->addTest(new ParsingBugsTests('testAddStructToStruct'));
+$suite->addTest(new ParsingBugsTests('testAddArrayToArray'));
+$suite->addTest(new ParsingBugsTests('testEncodeArray'));
+$suite->addTest(new ParsingBugsTests('testEncodeRecursive'));
+$suite->addTest(new ParsingBugsTests('testBrokenrequests'));
+$suite->addTest(new ParsingBugsTests('testBrokenresponses'));
+$suite->addTest(new ParsingBugsTests('testBuggyHttp'));
+$suite->addTest(new ParsingBugsTests('testStringBug'));
+$suite->addTest(new ParsingBugsTests('testWhiteSpace'));
+$suite->addTest(new ParsingBugsTests('testAutodecodeResponse'));
+$suite->addTest(new ParsingBugsTests('testNoDecodeResponse'));
+$suite->addTest(new ParsingBugsTests('testAutoCoDec'));
+$suite->addTest(new ParsingBugsTests('testUTF8Response'));
+$suite->addTest(new ParsingBugsTests('testUTF8Request'));
+$suite->addTest(new ParsingBugsTests('testUTF8IntString'));
+$suite->addTest(new ParsingBugsTests('testStringInt'));
+$suite->addTest(new ParsingBugsTests('testStructMemExists'));
+$suite->addTest(new ParsingBugsTests('testDoubleDataInArrayTag'));
+$suite->addTest(new ParsingBugsTests('testDoubleStuffInValueTag'));
+$suite->addTest(new ParsingBugsTests('testNilValue'));
+$suite->addTest(new ParsingBugsTests('testLocale'));
 
-	$title = 'XML-RPC Unit Tests';
+$title = 'XML-RPC Unit Tests';
 
-	if(isset($only))
-	{
+if(isset($only))
+{
 		$suite = new PHPUnit_TestSuite($only);
-	}
+}
 
-	if(isset($_SERVER['REQUEST_METHOD']))
-	{
+if(isset($_SERVER['REQUEST_METHOD']))
+{
 		echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n<head>\n<title>$title</title>\n</head>\n<body>\n<h1>$title</h1>\n";
-	}
-	else
-	{
+}
+else
+{
 		echo "$title\n\n";
-	}
+}
 
-	if(isset($_SERVER['REQUEST_METHOD']))
-	{
+if(isset($_SERVER['REQUEST_METHOD']))
+{
 		echo "<h3>Using lib version: $xmlrpcVersion on PHP version: ".phpversion()."</h3>\n";
 		echo '<h3>Running '.$suite->testCount().' tests (some of which are multiple) against servers: http://'.htmlspecialchars($LOCALSERVER.$URI).' and https://'.htmlspecialchars($HTTPSSERVER.$HTTPSURI)."\n ...</h3>\n";
 		flush();
 	    @ob_flush();
-	}
-	else
-	{
+}
+else
+{
 		echo "Using lib version: $xmlrpcVersion on PHP version: ".phpversion()."\n";
 		echo 'Running '.$suite->testCount().' tests (some of which are multiple) against servers: http://'.$LOCALSERVER.$URI.' and https://'.$HTTPSSERVER.$HTTPSURI."\n\n";
-	}
+}
 
-	// do some basic timing measurement
-	list($micro, $sec) = explode(' ', microtime());
-	$start_time = $sec + $micro;
+// do some basic timing measurement
+list($micro, $sec) = explode(' ', microtime());
+$start_time = $sec + $micro;
 
-	$PHPUnit = new PHPUnit;
-	$result = $PHPUnit->run($suite, ($DEBUG == 0 ? '.' : '<hr/>'));
+$PHPUnit = new PHPUnit;
+$result = $PHPUnit->run($suite, ($DEBUG == 0 ? '.' : '<hr/>'));
 
-	list($micro, $sec) = explode(' ', microtime());
-	$end_time = $sec + $micro;
+list($micro, $sec) = explode(' ', microtime());
+$end_time = $sec + $micro;
 
-	if(!isset($_SERVER['REQUEST_METHOD']))
-	{
+if(!isset($_SERVER['REQUEST_METHOD']))
+{
 		echo $result->toString()."\n";
-	}
+}
 
-	if(isset($_SERVER['REQUEST_METHOD']))
-	{
+if(isset($_SERVER['REQUEST_METHOD']))
+{
 		echo '<h3>'.$result->failureCount()." test failures</h3>\n";
 		printf("Time spent: %.2f secs<br/>\n", $end_time - $start_time);
-	}
-	else
-	{
+}
+else
+{
 		echo $result->failureCount()." test failures\n";
 		printf("Time spent: %.2f secs\n", $end_time - $start_time);
-	}
+}
 
-	if($result->failureCount() && !$DEBUG)
-	{
+if($result->failureCount() && !$DEBUG)
+{
 		$target = strpos($_SERVER['PHP_SELF'], '?') ? $_SERVER['PHP_SELF'].'&amp;DEBUG=1' : $_SERVER['PHP_SELF'].'?DEBUG=1';
 		$t2 = strpos($_SERVER['PHP_SELF'], '?') ? $_SERVER['PHP_SELF'].'&amp;DEBUG=2' : $_SERVER['PHP_SELF'].'?DEBUG=2';
 		if(isset($_SERVER['REQUEST_METHOD']))
@@ -1500,20 +1525,25 @@ $f = '<?xml version="1.0" encoding="utf-8"?><methodResponse><params><param><valu
 		{
 			echo "Run testsuite with DEBUG=1 (or 2) to have more detail about tests results\n";
 		}
-	}
+}
 
-	if(isset($_SERVER['REQUEST_METHOD']))
-	{
+if(isset($_SERVER['REQUEST_METHOD']))
+{
 ?>
 <a href="#" onclick="if (document.getElementById('opts').style.display == 'block') document.getElementById('opts').style.display = 'none'; else document.getElementById('opts').style.display = 'block';">More options...</a>
 <div id="opts" style="display: none;">
 <form method="GET" style="border: 1px solid silver; margin: 5px; padding: 5px; font-family: monospace;">
 HTTP Server:&nbsp;&nbsp;<input name="LOCALSERVER" size="30" value="<?php echo htmlspecialchars($LOCALSERVER); ?>"/> Path: <input name="URI"  size="30" value="<?php echo htmlspecialchars($URI); ?>"/><br/>
-HTTPS Server: <input name="HTTPSSERVER" size="30" value="<?php echo htmlspecialchars($HTTPSSERVER); ?>"/> Path: <input name="HTTPSURI"  size="30" value="<?php echo htmlspecialchars($HTTPSURI); ?>"/><br/>
+HTTPS Server: <input name="HTTPSSERVER" size="30" value="<?php echo htmlspecialchars($HTTPSSERVER); ?>"/> Path: <input name="HTTPSURI"  size="30" value="<?php echo htmlspecialchars($HTTPSURI); ?>"/> Do not verify cert: <input name="HTTPSIGNOREPEER" value="true" type="checkbox" <?php if ($HTTPSIGNOREPEER) echo 'checked="checked"'; ?>/><br/>
+
 Proxy Server: <input name="PROXY" size="30" value="<?php echo isset($PROXY) ? htmlspecialchars($PROXY) : ''; ?>"/> <input type="submit" value="Run Testsuite"/>
 </form>
 </div>
 <?php
 		echo $result->toHTML()."\n</body>\n</html>\n";
-	}
+}
+else
+{
+    exit($result->failureCount());
+}
 ?>

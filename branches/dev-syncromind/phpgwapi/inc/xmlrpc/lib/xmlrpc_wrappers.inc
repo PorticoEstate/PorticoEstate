@@ -3,9 +3,8 @@
  * PHP-XMLRPC "wrapper" functions
  * Generate stubs to transparently access xmlrpc methods as php functions and viceversa
  *
- * @version $Id: xmlrpc_wrappers.inc,v 1.13 2008/09/20 01:23:47 ggiunta Exp $
  * @author Gaetano Giunta
- * @copyright (C) 2006-2009 G. Giunta
+ * @copyright (C) 2006-2014 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt
  *
  * @todo separate introspection from code generation for func-2-method wrapping
@@ -106,7 +105,6 @@
 	* carried out by the lib, while datetime vals are passed around as strings)
 	*
 	* Known limitations:
-	* - requires PHP 5.0.3 +
 	* - only works for user-defined functions, not for PHP internal functions
 	*   (reflection does not support retrieving number/type of params for those)
 	* - functions returning php objects will generate special xmlrpc responses:
@@ -150,13 +148,6 @@
 		$decode_php_objects = isset($extra_options['decode_php_objs']) ? (bool)$extra_options['decode_php_objs'] : false;
 		$catch_warnings = isset($extra_options['suppress_warnings']) && $extra_options['suppress_warnings'] ? '@' : '';
 
-		if(version_compare(phpversion(), '5.0.3') == -1)
-		{
-			// up to php 5.0.3 some useful reflection methods were missing
-			error_log('XML-RPC: cannot not wrap php functions unless running php version bigger than 5.0.3');
-			return false;
-		}
-
         $exists = false;
 	    if (is_string($funcname) && strpos($funcname, '::') !== false)
 	    {
@@ -178,11 +169,6 @@
                 $plainfuncname = get_class($funcname[0]) . '->' . $funcname[1];
             }
             $exists = method_exists($funcname[0], $funcname[1]);
-            if (!$exists && version_compare(phpversion(), '5.1') < 0)
-            {
-               // workaround for php 5.0: static class methods are not seen by method_exists
-               $exists = is_callable( $funcname );
-            }
         }
         else
         {
@@ -240,8 +226,7 @@
     				error_log('XML-RPC: method to be wrapped is the constructor: '.$plainfuncname);
     				return false;
     			}
-			    // php 503 always says isdestructor = true...
-                if( version_compare(phpversion(), '5.0.3') != 0 && $func->isDestructor())
+                if($func->isDestructor())
     			{
     				error_log('XML-RPC: method to be wrapped is the destructor: '.$plainfuncname);
     				return false;
@@ -501,13 +486,6 @@
 		$methodfilter = isset($extra_options['method_filter']) ? $extra_options['method_filter'] : '';
 		$methodtype = isset($extra_options['method_type']) ? $extra_options['method_type'] : 'auto';
 
-        if(version_compare(phpversion(), '5.0.3') == -1)
-		{
-			// up to php 5.0.3 some useful reflection methods were missing
-			error_log('XML-RPC: cannot not wrap php functions unless running php version bigger than 5.0.3');
-			return false;
-		}
-
         $result = array();
 		$mlist = get_class_methods($classname);
 		foreach($mlist as $mname)
@@ -537,12 +515,12 @@
 	* Given an xmlrpc client and a method name, register a php wrapper function
 	* that will call it and return results using native php types for both
 	* params and results. The generated php function will return an xmlrpcresp
-	* oject for failed xmlrpc calls
+	* object for failed xmlrpc calls
 	*
 	* Known limitations:
 	* - server must support system.methodsignature for the wanted xmlrpc method
 	* - for methods that expose many signatures, only one can be picked (we
-	*   could in priciple check if signatures differ only by number of params
+	*   could in principle check if signatures differ only by number of params
 	*   and not by type, but it would be more complication than we can spare time)
 	* - nested xmlrpc params: the caller of the generated php function has to
 	*   encode on its own the params passed to the php function if these are structs
@@ -558,11 +536,11 @@
 	*
 	* @param xmlrpc_client $client     an xmlrpc client set up correctly to communicate with target server
 	* @param string        $methodname the xmlrpc method to be mapped to a php function
-	* @param array         $extra_options array of options that specify conversion details. valid ptions include
+	* @param array         $extra_options array of options that specify conversion details. valid options include
 	*        integer       signum      the index of the method signature to use in mapping (if method exposes many sigs)
 	*        integer       timeout     timeout (in secs) to be used when executing function/calling remote method
 	*        string        protocol    'http' (default), 'http11' or 'https'
-	*        string        new_function_name the name of php function to create. If unsepcified, lib will pick an appropriate name
+	*        string        new_function_name the name of php function to create. If unspecified, lib will pick an appropriate name
 	*        string        return_source if true return php code w. function definition instead fo function name
 	*        bool          encode_php_objs let php objects be sent to server using the 'improved' xmlrpc notation, so server can deserialize them as php objects
 	*        bool          decode_php_objs --- WARNING !!! possible security hazard. only use it with trusted servers ---
@@ -592,6 +570,7 @@
 
 		$encode_php_objects = isset($extra_options['encode_php_objs']) ? (bool)$extra_options['encode_php_objs'] : false;
 		$decode_php_objects = isset($extra_options['decode_php_objs']) ? (bool)$extra_options['decode_php_objs'] : false;
+		// it seems like the meaning of 'simple_client_copy' here is swapped wrt client_copy_mode later on...
 		$simple_client_copy = isset($extra_options['simple_client_copy']) ? (int)($extra_options['simple_client_copy']) : 0;
 		$buildit = isset($extra_options['return_source']) ? !($extra_options['return_source']) : true;
 		$prefix = isset($extra_options['prefix']) ? $extra_options['prefix'] : 'xmlrpc';

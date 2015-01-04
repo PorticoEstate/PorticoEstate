@@ -405,7 +405,6 @@
 
 			$search_for = $params['query'];
 
-			// YUI variables for paging and sorting
 			$start_index	 = $params['start'];
 			$num_of_objects	 = $params['results'] > 0 ? $params['results'] : null;
 			$sort_field		 = $params['order'];

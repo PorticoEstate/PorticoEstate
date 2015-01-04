@@ -90,6 +90,7 @@
 			$this->location_code		= $this->bo->location_code;
 			
 			self::set_active_menu('controller::control::location_for_check_list');
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}	
 	
 

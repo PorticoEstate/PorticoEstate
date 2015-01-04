@@ -33,7 +33,7 @@
 	 */
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('controller.socheck_list');
 
 	include_class('controller', 'check_list', 'inc/model/');
@@ -46,7 +46,7 @@
 	include_class('controller', 'year_calendar_agg', 'inc/component/');
 	include_class('controller', 'month_calendar', 'inc/component/');
 
-	class controller_uicalendar extends phpgwapi_uicommon
+	class controller_uicalendar extends phpgwapi_uicommon_jquery
 	{
 
 		private $so;
@@ -98,6 +98,8 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+
 		}
 
 		public function view_calendar_for_month()
@@ -1043,4 +1045,3 @@
 		}
 
 	}
-

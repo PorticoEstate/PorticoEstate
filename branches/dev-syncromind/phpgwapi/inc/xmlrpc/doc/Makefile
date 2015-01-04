@@ -1,4 +1,3 @@
-# $Id: Makefile,v 1.13 2008/03/07 13:01:55 ggiunta Exp $
 
 ### USER EDITABLE VARS ###
 
@@ -61,7 +60,8 @@ javadoc-out/index.html: ../lib/xmlrpc.inc ../lib/xmlrpcs.inc ../lib/xmlrpc_wrapp
 #	doxygen phpxmlrpc.dox
 #
 #	generate docs out of javadoc via phpdocumentor
-	${PHPDOC} -f ../lib/xmlrpc.inc,../lib/xmlrpcs.inc,../lib/xmlrpc_wrappers.inc -t javadoc-out -ti PHP-XMLRPC -o HTML:frames:default -s
+	${PHP} ${PHPDOC} -f ../lib/xmlrpc.inc,../lib/xmlrpcs.inc,../lib/xmlrpc_wrappers.inc -t javadoc-out --title PHP-XMLRPC
+	-rm -rf javadoc-out/phpdoc-cache-*
 
 dist: doc
 	${MKDIR} -p ../xmlrpc-${VERSION}/doc

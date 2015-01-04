@@ -615,6 +615,7 @@
 				'attrib_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'value' => array('type' => 'text','nullable' => false),
+				'title' => array('type' => 'text','nullable' => true),
 				'choice_sort' => array('type' => 'int','precision' => 4,'nullable' => false, 'default' => 0)
 			),
 			'pk' => array('location_id', 'attrib_id', 'id'),

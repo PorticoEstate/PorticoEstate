@@ -9,8 +9,7 @@
  * @param string  HTTPSSURI
  * @param string  PROXY
  *
- * @version $Id$
- * @copyright (C) 2007-2009 G. Giunta
+ * @copyright (C) 2007-20013 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt
  **/
 
@@ -80,6 +79,10 @@
 	{
 		$HTTPSURI = '/server.php';
 	}
+	if(!isset($HTTPSIGNOREPEER))
+	{
+		$HTTPSIGNOREPEER = false;
+	}
 	if(!isset($PROXY))
 	{
 		$PROXYSERVER = null;
@@ -97,6 +100,11 @@
 			$PROXYPORT = 8080;
 		}
 	}
+    // used to silence testsuite warnings about proxy code not being tested
+    if(!isset($NOPROXY))
+    {
+        $NOPROXY = false;
+    }
 	if(!isset($URI))
 	{
 		// GUESTIMATE the url of local demo server

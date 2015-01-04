@@ -33,11 +33,7 @@
 	 */
 	phpgw::import_class('phpgwapi.jquery');
 
-	/**
-	 * Import the yui class
-	 */
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('controller.socheck_list');
 	phpgw::import_class('phpgwapi.datetime');
 
@@ -47,7 +43,7 @@
 	include_class('controller', 'date_converter', 'inc/helper/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 
-	class controller_uicheck_list extends phpgwapi_uicommon
+	class controller_uicheck_list extends phpgwapi_uicommon_jquery
 	{
 		protected $so;
 		protected $so_control;
@@ -112,6 +108,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		/**
@@ -126,9 +123,6 @@
 			{
 				return $this->query();
 			}
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 
 			$data = array(
 				'datatable_name' => 'Sjekkliste (Ikke i bruk)',
@@ -180,7 +174,7 @@
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'title',
@@ -210,7 +204,7 @@
 				),
 			);
 
-			self::render_template_xsl('datatable_common', $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		/**
