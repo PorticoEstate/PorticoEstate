@@ -1196,6 +1196,11 @@
 				return $location[$location_code];
 			}
 
+			if(!isset($values['attributes']) || ! $values['attributes'])
+			{
+				$values['attributes'] = $this->custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+			}
+
 			$cols = "fm_location{$type_id}.category as cat_id";
 			$cols .= ",fm_location{$type_id}_category.descr as category_name";
 			$cols_return[] 	= 'cat_id';
@@ -1257,6 +1262,10 @@
 					foreach ( $values['attributes'] as &$attr )
 					{
 						$attr['value'] 	= $this->db->f($attr['column_name']);
+						if($attr['lookup_form'])
+						{
+							$values[$attr['column_name']] = $attr['value'];
+						}
 					}
 				}
 			}

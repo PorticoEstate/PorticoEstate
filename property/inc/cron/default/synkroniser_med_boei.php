@@ -675,7 +675,7 @@ SQL;
 						'value'	=> (int)$this->db_boei->f('hemmeligAdresse'),
 						'type'	=> PDO::PARAM_INT
 					),
-					3	=> array
+					9	=> array
 					(
 						'value'	=> utf8_encode($this->db_boei->f('OBSKode')),
 						'type'	=> PDO::PARAM_STR
@@ -1144,11 +1144,11 @@ SQL;
 
 		function update_obskode()
 		{
-			$sql = "SELECT boei_leietaker.leietaker_id, boei_leietaker.obskode FROM boei_leietaker"
+			$sql = "SELECT DISTINCT boei_leietaker.leietaker_id as tenant_id, boei_leietaker.obskode FROM boei_leietaker"
 			. " JOIN fm_location4 ON boei_leietaker.leietaker_id = fm_location4.tenant_id"
-			. " WHERE boei_leietaker.obskode != fm_location4.obskode OR"
+			. " WHERE fm_location4.tenant_id > 0 AND (boei_leietaker.obskode != fm_location4.obskode OR"
 			. " (boei_leietaker.obskode IS NULL AND fm_location4.obskode IS NOT NULL) OR"
-			. " (boei_leietaker.obskode IS NOT NULL AND fm_location4.obskode IS NULL)";
+			. " (boei_leietaker.obskode IS NOT NULL AND fm_location4.obskode IS NULL))";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -1157,15 +1157,15 @@ SQL;
 			{
 				$obskoder[] = array
 				(
-					'tenant_id' => (int)$this->db->f('leietaker_id'),
+					'tenant_id' => (int)$this->db->f('tenant_id'),
 					'obskode'	=> $this->db->f('obskode')
 				);
 			}
-
 			foreach($obskoder as $entry)
 			{
-				$sql2 = "UPDATE fm_location4 SET obskode = '{$entry['obskode']}"
-				. " WHERE tenant_id = {$entry['leietaker_id']}";
+				$sql2 = "UPDATE fm_location4 SET obskode = '{$entry['obskode']}'"
+				. " WHERE tenant_id = {$entry['tenant_id']}";
+
 				$this->db2->query($sql2,__LINE__,__FILE__);
 			}
 
