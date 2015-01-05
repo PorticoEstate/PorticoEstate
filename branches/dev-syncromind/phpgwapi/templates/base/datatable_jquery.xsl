@@ -628,9 +628,7 @@
 
 				</xsl:when>
 				<xsl:otherwise>
-					JqueryPortico.TableTools = {
-						"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-					};
+					JqueryPortico.TableTools = false;
 				</xsl:otherwise>
 			</xsl:choose>
 <![CDATA[
@@ -653,6 +651,15 @@
 				}
 			}
 
+			if(JqueryPortico.TableTools)
+			{
+				var sDom_def = 'lCT<"clear">f<"top"ip>rt<"bottom"><"clear">';
+			}
+			else
+			{
+				var sDom_def = '<"clear">lfrtip';
+			}
+	
 		$(document).ready(function() {
 			
 			oTable = $('#datatable-container').dataTable( {
@@ -709,7 +716,7 @@
 				colVis: {
 								exclude: exclude_colvis
 				},
-				dom:			'lCT<"clear">f<"top"ip>rt<"bottom"><"clear">',
+				dom:			sDom_def,
 				stateSave:		true,
 				stateDuration: -1, //sessionstorage
 				tabIndex:		1,
