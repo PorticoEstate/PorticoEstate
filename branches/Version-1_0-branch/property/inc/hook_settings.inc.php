@@ -249,6 +249,7 @@
 
 	$default_project_filter_year =array
 	(
+		(date('Y') -1)	=> (date('Y')-1),
 		'current_year'	=> lang('current year'),
 		'all' 			=> lang('all'),
 	);
