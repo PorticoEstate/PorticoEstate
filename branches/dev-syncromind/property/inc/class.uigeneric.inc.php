@@ -91,7 +91,7 @@
 			$this->type 		= $this->bo->type;
 			$this->type_id 		= $this->bo->type_id;
 
-			if($appname == $this->bo->appname)
+			if($appname = $this->bo->appname)
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$this->appname = $appname;
@@ -167,7 +167,7 @@
 		}
 		
 		
-		private function _get_categories($selected = 0)
+		private function _get_filters($selected = 0)
 		{
 			$values_combo_box = array();
 			$combos = array();
@@ -308,7 +308,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			
 			$data = array(
-				'datatable_name'	=> $appname,
+				'datatable_name'	=> $appname. ': ' . $function_msg,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -356,7 +356,7 @@
 				)
 			);
 	
-			$filters = $this->_get_categories();
+			$filters = $this->_get_filters();
 			
 			foreach ($filters as $filter) 
 			{
@@ -458,23 +458,6 @@
 					);
 			}
 			unset($parameters);
-			
-			if($this->acl_add)
-			{
-				$data['datatable']['actions'][] = array
-					(
-						'my_name' 			=> 'add',
-						'statustext' 	=> lang('add'),
-						'text'			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.add',
-							'appname'		=> $this->appname,
-							'type'			=> $this->type,
-							'type_id'		=> $this->type_id
-						))
-					);
-			}
 
 			self::render_template_xsl('datatable_jquery', $data);
 
