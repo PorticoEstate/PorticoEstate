@@ -295,8 +295,9 @@
 					}
 				}
 			}
+			$data['filter'] = $filter;
 
-			$values = $sogeneric->read($data,$filter);
+			$values = $sogeneric->read($data);
 
 			$this->total_records = $sogeneric->total_records;
 
@@ -340,10 +341,9 @@
 			return $ns3420;
 		}
 
-		function read_phpgw_user()
+		function read_phpgw_user($data = array())
 		{
-			$phpgw_user = $this->so->read_phpgw_user(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id));
+			$phpgw_user = $this->so->read_phpgw_user($data);
 			$this->total_records = $this->so->total_records;
 
 			return $phpgw_user;
