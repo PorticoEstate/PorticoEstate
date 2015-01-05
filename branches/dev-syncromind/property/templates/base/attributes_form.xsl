@@ -372,7 +372,7 @@
 								<xsl:value-of select="name"/>
 								<xsl:text>();</xsl:text>
 							</xsl:variable>
-							<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+							<input type="text" id="{name}" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
 								<xsl:choose>
 									<xsl:when test="disabled!=''">
 										<xsl:attribute name="disabled">
@@ -381,7 +381,7 @@
 									</xsl:when>
 								</xsl:choose>
 							</input>
-							<input size="30" type="text" name="{$user_name}" value="{user_name}" onClick="{$lookup_function}" readonly="readonly">
+							<input size="30" type="text" id="{$user_name}" name="{$user_name}" value="{user_name}" onClick="{$lookup_function}" readonly="readonly">
 								<xsl:choose>
 									<xsl:when test="disabled!=''">
 										<xsl:attribute name="disabled">
@@ -500,34 +500,24 @@
 							</textarea>
 						</xsl:when>
 						<xsl:when test="datatype='pwd'">
-							<table>
-								<tr>
-									<td>
-										<input type="password" name="values_attribute[{counter}][value]" size="30">
-											<xsl:choose>
-												<xsl:when test="disabled!=''">
-													<xsl:attribute name="disabled">
-														<xsl:text> disabled</xsl:text>
-													</xsl:attribute>
-												</xsl:when>
-											</xsl:choose>
-										</input>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<input type="password" name="values_attribute[{counter}][value2]" size="30">
-											<xsl:choose>
-												<xsl:when test="disabled!=''">
-													<xsl:attribute name="disabled">
-														<xsl:text> disabled</xsl:text>
-													</xsl:attribute>
-												</xsl:when>
-											</xsl:choose>
-										</input>
-									</td>
-								</tr>
-							</table>
+							<input type="password" name="values_attribute[{counter}][value]" size="30">
+								<xsl:choose>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+								</xsl:choose>
+							</input>
+							<input type="password" name="values_attribute[{counter}][value2]" size="30">
+								<xsl:choose>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+								</xsl:choose>
+							</input>
 						</xsl:when>
 						<xsl:when test="datatype='bolean'">
 							<input id="id_{name}" type="checkbox" name="values_attribute[{counter}][value]" value="1">
