@@ -180,6 +180,11 @@
 
 	<xsl:template match="edit_attrib" xmlns:php="http://php.net/xsl">
 		<div align="left">
+
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" action="{$form_action}">
 		
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -192,8 +197,6 @@
 				</xsl:when>
 			</xsl:choose>
 			
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form method="post" action="{$form_action}">
 
 			<tr>
 				<td class="th_text" align="left">
@@ -475,8 +478,9 @@
 					</input>
 				</td>
 			</tr>
-
+		</table>
 			</form>
+			<table>
 			<tr>
 				<td>
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
