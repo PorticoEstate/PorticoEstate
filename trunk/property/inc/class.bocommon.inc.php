@@ -478,28 +478,31 @@
 
 			$user_list = array();
 
-			while (is_array($users) && list(,$user) = each($users))
+			$selected_found = false;
+			foreach ($users as $user)
 			{
 				$name = (isset($user['account_lastname'])?$user['account_lastname'].' ':'').$user['account_firstname'];
-				if ($user['account_id']==$selected)
+				$user_list[] = array
+				(
+					'id'		=> $user['account_id'],
+					'name'		=> $name,
+					'selected'	=> $user['account_id'] == $selected ? 1 : 0
+				);
+
+				if(!$selected_found)
 				{
-					$user_list[] = array
-						(
-							//'user_id'	=> $user['account_id'],
-							'id'	=> $user['account_id'],
-							'name'		=> $name,
-							'selected'	=> 'selected'
-						);
+					$selected_found = $user['account_id'] == $selected ? true : false;
 				}
-				else
-				{
-					$user_list[] = array
-						(
-							//'user_id'	=> $user['account_id'],
-							'id'	=> $user['account_id'],
-							'name'		=> $name
-						);
-				}
+			}
+
+			if($selected && !$selected_found)
+			{
+				$user_list[] = array
+				(
+					'id'		=> $selected,
+					'name'		=> $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected'	=> 1
+				);
 			}
 
 			return $user_list;
