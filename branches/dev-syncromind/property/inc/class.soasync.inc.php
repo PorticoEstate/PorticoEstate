@@ -51,6 +51,7 @@
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order		= isset($data['order']) ? $data['order'] : '';
 				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+                $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
 			}
 
 			if ($order)
@@ -78,7 +79,7 @@
 
 			if(!$allrows)
 			{
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
