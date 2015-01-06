@@ -99,10 +99,11 @@
 		}
 
 
-		function read()
+		function read($data = array())
 		{
-			$method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows' => $this->allrows));
+			/*$method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+				'allrows' => $this->allrows));*/
+            $method = $this->so->read($data);
 
 			$this->total_records = $this->so->total_records;
 
