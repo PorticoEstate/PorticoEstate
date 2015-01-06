@@ -388,6 +388,7 @@
 			}
 
 			$user_list = array();
+			$selected_found = false;
 
 			foreach ($users as $user)
 			{
@@ -410,12 +411,36 @@
 							'lastname'		=> $user['account_lastname'],
 						);
 				}
+
+				if(!$selected_found)
+				{
+					$selected_found = $user['account_lid'] == $selected ? true : false;
+				}
+
 			}
 
 			foreach ($user_list as &$user)
 			{
 				$user['id'] = $user['lid'];
 				$user['name'] = ltrim("{$user['lastname']}, {$user['firstname']}",', ');
+			}
+			unset($user);
+
+			if($selected && !$selected_found)
+			{
+				$user_id = $GLOBALS['phpgw']->accounts->name2id($selected);
+
+				$_user = $GLOBALS['phpgw']->accounts->get($user_id);
+
+				$user_list[] = array
+				(
+					'lid'		=> $_user->lid,
+					'firstname'	=> $_user->firstname,
+					'lastname'	=> $_user->lastname,
+					'id'		=> $selected,
+					'name'		=> $_user->__toString(),
+					'selected'	=> 'selected'
+				);
 			}
 
 			return $user_list;
