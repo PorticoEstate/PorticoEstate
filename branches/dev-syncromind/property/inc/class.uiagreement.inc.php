@@ -31,8 +31,11 @@
 	 * Description
 	 * @package property
 	 */
-	phpgw::import_class('phpgwapi.yui');
-	class property_uiagreement
+	//phpgw::import_class('phpgwapi.yui');
+    phpgw::import_class('phpgwapi.uicommon_jquery');
+        phpgw::import_class('phpgwapi.jquery');
+
+	class property_uiagreement extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -44,6 +47,7 @@
 
 		var $public_functions = array
 			(
+                'query'         => true,
 				'index'  		=> true,
 				'view'   		=> true,
 				'edit'   		=> true,
@@ -53,11 +57,14 @@
 				'view_item'		=> true,
 				'view_file'		=> true,
 				'download'		=> true,
-				'add_activity'	=> true
+				'add_activity'	=> true,
+                'save'          => true
 			);
 
-		function property_uiagreement()
+		function __construct()
 		{
+            parent::__construct();
+            
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -165,7 +172,76 @@
 			$bofiles	= CreateObject('property.bofiles');
 			$bofiles->view_file('agreement');
 		}
+        
+        private function _get_Filters()
+        {
+            $values_combo_box = array();
+            $combos = array();
+            $link_data = array
+					(
+						'menuaction'	=> 'property.uiagreement.index',
+						'sort'		=>$this->sort,
+						'order'		=>$this->order,
+						'cat_id'	=>$this->cat_id,
+						'filter'	=>$this->filter,
+						'query'		=>$this->query,
+						'role'		=> $this->role,
+						'member_id'	=> $this->member_id,
+						'status_id'		=> $this->status_id
+					);
+            
+            $values_combo_box[0] = $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,'link_data' =>$link_data));
 
+            $default_value = array ('id'=>'','name'=> lang('no member'));
+            foreach ($values_combo_box[0]['cat_list'] as &$list){
+                
+                $list['id'] = $list['cat_id'];
+            }
+            array_unshift ($values_combo_box[0]['cat_list'],$default_value);
+            $combos[] = array
+                            (
+                                'type'   => 'filter',
+                                'name'   => 'member_id',
+                                'text'   => lang('Member'),
+                                'list'   => $values_combo_box[0]['cat_list']
+                            );
+            
+            $values_combo_box[1]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'branch','order'=>'descr'));
+            $default_value = array ('id'=>'','name'=>lang('no category'));
+            array_unshift ($values_combo_box[1],$default_value);
+            $combos[] = array
+                            (
+                                'type'   => 'filter',
+                                'name'   => 'cat_id',
+                                'text'   => lang('Category'),
+                                'list'   => $values_combo_box[1]
+                            );
+
+            $values_combo_box[2]  = $this->bo->select_vendor_list('filter',$this->vendor_id);
+            $default_value = array ('id'=>'','name'=>lang('no vendor'));
+            array_unshift ($values_combo_box[2],$default_value);
+            $combos[] = array
+                            (
+                                'type'   => 'filter',
+                                'name'   => 'vendor_id',
+                                'text'   => lang('Vendor'),
+                                'list'   => $values_combo_box[2]
+                            );
+
+            $values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
+            $default_value = array ('id'=>'','name'=>lang('no status'));
+            array_unshift ($values_combo_box[3],$default_value);
+            $combos[] = array
+                            (
+                                'type'   => 'filter',
+                                'name'   => 'status_id',
+                                'text'   => lang('Status'),
+                                'list'   => $values_combo_box[3]
+                            );
+            
+                return $combos;
+        }
+        
 		function index()
 		{
 			if(!$this->acl_read)
@@ -178,10 +254,70 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::agreement';
 
-			$datatable = array();
-			$this->save_sessiondata();
+            if(phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+                return $this->query();
+            }
+            
+            self::add_javascript('phpgwapi','jquery','editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi','jquery','editable/jquery.dataTables.editable.js');
+            
+            $appname		= lang('agreement');
+			$function_msg	= lang('List') . ' ' . lang($this->role);
+            
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+                        
+            $data  = array(
+                'datatable_name'    => $appname,
+                'form'  =>  array(
+                               'toolbar'  => array(
+                                   'item'   => array(
+                                       array(
+                                           'type' => 'link',
+                                           'value' => lang('new'),
+                                           'href' => self::link(array(
+                                                'menuaction'	=> 'property.uiagreement.edit',
+                                                'role'			=> $this->role
+                                           )),
+                                           'class'  => 'new_item'
+                                       ),
+                                       array(
+                                           'type'   => 'link',
+                                           'value'  => lang('columns'),
+                                           'href'   => '#',
+                                           'class'  => '',
+                                           'onclick'    => "JqueryPortico.openPopup({menuaction:'property.uiagreement.columns', role:'{$this->role}'},{closeAction:'reload'})"
+                                       )
+                                   )
+                               )
+                            ),
+                'datatable' => array(
+                    'source' => self::link(array(
+                        'menuaction'	=> 'property.uiagreement.index',
+                        'sort'			=>$this->sort,
+                        'order'			=>$this->order,
+                        'cat_id'		=>$this->cat_id,
+                        'filter'		=>$this->filter,
+                        'query'			=>$this->query,
+                        'role'			=> $this->role,
+                        'member_id'		=> $this->member_id,
+                        'status_id'		=> $this->status_id,
+                        'phpgw_return_as'   => 'json'
+                    )),
+                    'download'  => self::link(array(
+                        'menuaction'    => 'property.uiagreement.download',
+                        'status_id'     => $this->status_id,
+                        'allrows'   => true
+                    )),
+                    'allrows'   => true,
+                    'editor_action' => '',
+                    'field' => array()
+                )         
+            );
+			//$datatable = array();
+			//$this->save_sessiondata();
 
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			/*if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['menu']					= $this->bocommon->get_menu();
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
@@ -230,8 +366,6 @@
 				$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
 				$default_value = array ('id'=>'','name'=>lang('no status'));
 				array_unshift ($values_combo_box[3],$default_value);
-
-				//_debug_array($values_combo_box[0]);die;
 
 				$datatable['actions']['form'] = array(
 					array(
@@ -347,15 +481,29 @@
 			);
 
 				$dry_run = true;
-			}
-
-			$list = $this->bo->read();
-
+			}*/
+            $filters = $this->_get_Filters();
+            foreach ($filters as $filter) {
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
+            
+			$list = $this->bo->read(array('dry_run' => true));
 			$uicols	= $this->bo->uicols;
-			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
-			if (isset($list) AND is_array($list))
+            for ($k = 0; $k < $count_uicols_name; $k++) 
+            {
+                $params = array
+                            (
+                                'key'   =>  $uicols['name'][$k],
+                                'label' =>  $uicols['descr'][$k],
+                                'sortable'  =>  ($uicols['sortable'][$k])?false:true,
+                                'hidden'    =>  ($uicols['input_type'][$k] == 'hidden')?true:false
+                            );
+                
+                array_push($data['datatable']['field'], $params);
+            }
+			/*if (isset($list) AND is_array($list))
 			{
 				foreach($list as $list_entry)
 				{
@@ -369,9 +517,7 @@
 					}
 					$j++;
 				}
-			}
-
-			$datatable['rowactions']['action'] = array();
+			}*/
 
 			$parameters = array
 				(
@@ -399,7 +545,7 @@
 
 			if($this->acl_read)
 			{
-				$datatable['rowactions']['action'][] = array(
+				$data['datatable']['actions'][] = array(
 					'my_name' 			=> 'view',
 					'statustext' 	=> lang('view this entity'),
 					'text'			=> lang('view'),
@@ -408,13 +554,14 @@
 						'menuaction'	=> 'property.uiagreement.view',
 						'role'			=> $this->role
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
+                
 				$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
 				foreach ($jasper as $report)
 				{
-					$datatable['rowactions']['action'][] = array(
+					$data['datatable']['actions'][] = array(
 						'my_name'		=> 'edit',
 						'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -423,14 +570,14 @@
 							'jasper_id'		=> $report['id'],
 							'target'		=> '_blank'
 						)),
-						'parameters'			=> $parameters
+						'parameters'			=> json_encode($parameters)
 					);
 				}
 			}
 
 			if($this->acl_edit)
 			{
-				$datatable['rowactions']['action'][] = array(
+				$data['datatable']['actions'][] = array(
 					'my_name' 		=> 'edit',
 					'statustext' 	=> lang('edit this entity'),
 					'text'			=> lang('edit'),
@@ -439,13 +586,13 @@
 						'menuaction'	=> 'property.uiagreement.edit',
 						'role'			=> $this->role
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 			}
 
 			if($this->acl_delete)
 			{
-				$datatable['rowactions']['action'][] = array(
+				$data['datatable']['actions'][] = array(
 					'my_name' 		=> 'delete',
 					'statustext' 	=> lang('delete this entity'),
 					'text'			=> lang('delete'),
@@ -455,13 +602,13 @@
 						'menuaction'	=> 'property.uiagreement.delete',
 						'role'			=> $this->role
 					)),
-					'parameters'	=> $parameters2
+					'parameters'	=> json_encode($parameters2)
 				);
 			}
 
-			if($this->acl_add)
+			/*if($this->acl_add)
 			{
-				$datatable['rowactions']['action'][] = array(
+				$data['datatable']['actions'][] = array(
 					'my_name' 		=> 'add',
 					'statustext' 	=> lang('add an entity'),
 					'text'			=> lang('add'),
@@ -471,12 +618,12 @@
 						'role'			=> $this->role
 					))
 				);
-			}
+			}*/
 
 			unset($parameters);
 			unset($parameters2);
 
-			for ($i=0;$i<$count_uicols_name;$i++)
+			/*for ($i=0;$i<$count_uicols_name;$i++)
 			{
 				if($uicols['input_type'][$i]!='hidden')
 				{
@@ -490,18 +637,11 @@
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
-/*
-					if($uicols['name'][$i]=='category')
-					{
-						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= 'org_name';
-					}
-*/
 				}
-			}
+			}*/
 
 			//path for property.js
-			$property_js = "/property/js/yahoo/property.js";
+			/*$property_js = "/property/js/yahoo/property.js";
 
 			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
@@ -517,8 +657,8 @@
 			$datatable['pagination']['records_returned']= count($list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$appname					= lang('agreement');
-			$function_msg		= lang('List') . ' ' . lang($this->role);
+			$appname		= lang('agreement');
+			$function_msg	= lang('List') . ' ' . lang($this->role);
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
@@ -608,12 +748,52 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.index', 'property' );*/
+            //echo '<pre>'; print_r($data); echo '</pre>'; exit('readd');
+            self::render_template_xsl('datatable_jquery',$data);
 		}
-
-		function list_content($list,$uicols,$edit_item='',$view_only='')
+        
+        public function query()
+        {
+            $search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+            
+            $params = array(
+                'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+                'filter' => $this->filter, 
+                'cat_id' => $this->cat_id, 
+                'member_id' => $this->member_id,
+                'vendor_id' => $this->vendor_id, 
+                'status_id' => $this->status_id
+            );
+                        
+            $result_objects = array();
+            $result_count = 0;
+            
+            $values = $this->bo->read($params);
+            
+            if( phpgw::get_var('export','bool'))
+            {
+                return $values;
+            }
+            
+            $result_data = array('results'  => $values);
+            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['draw'] = $draw;
+            
+            return $this->jquery_results($result_data);
+            
+        }
+        
+        function list_content($list,$uicols,$edit_item='',$view_only='')
 		{
 			$j=0;
 			//_debug_array($list);
