@@ -731,7 +731,7 @@
 			* Add left click action..
 			*/
 			<xsl:if test="//left_click_action != ''">
-				$("#datatable-container").on("click", "tr", function() {
+				$("#datatable-container").on("click", "tbody tr", function() {
 					var iPos = oTable.fnGetPosition( this );
 					var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
 					try {
