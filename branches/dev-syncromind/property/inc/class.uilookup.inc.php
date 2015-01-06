@@ -756,16 +756,16 @@
 			}
 
 			$action = '';
-			$action .= 'window.parent.document.getElementById("'.$contact_id.'").value = "";'."\r";
-			$action .= 'window.parent.document.getElementById("'.$org_name.'").value = "";'."\r";
-			$action .= 'window.parent.document.getElementById("'.$contact_id.'").value = aData["id"];'."\r";
-			$action .= 'window.parent.document.getElementById("'.$org_name.'").value = aData["org_name"];'."\r";
+			$action .= 'parent.document.getElementsByName("'.$contact_id.'")[0].value = "";'."\r";
+			$action .= 'parent.document.getElementsByName("'.$org_name.'")[0].value = "";'."\r";
+			$action .= 'parent.document.getElementsByName("'.$contact_id.'")[0].value = aData["id"];'."\r";
+			$action .= 'parent.document.getElementsByName("'.$org_name.'")[0].value = aData["org_name"];'."\r";
 			if($contact_id	== 'vendor_id')
 			{
-				$action .= 'window.parent.document.getElementById("'.$contact_id.'").setAttribute("vendor_id","'.$contact_id.'",0);'."\r";
-				$action .= 'window.parent.document.getElementById("'.$contact_id.'").removeAttribute("vendor_id");'."\r";
+				$action .= 'parent.document.getElementsByName("'.$contact_id.'")[0].setAttribute("vendor_id","'.$contact_id.'",0);'."\r";
+				$action .= 'parent.document.getElementsByName("'.$contact_id.'")[0].removeAttribute("vendor_id");'."\r";
 			}
-			$action .= 'window.parent.JqueryPortico.onPopupClose("close");'."\r";
+			$action .= 'parent.JqueryPortico.onPopupClose("close");'."\r";
 			
 			$data = array(
 				'left_click_action'	=> $action,
