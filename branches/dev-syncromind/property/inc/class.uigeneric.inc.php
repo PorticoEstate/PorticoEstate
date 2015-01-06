@@ -141,6 +141,22 @@
 				}
 			}
 
+			$insert_record_attributes = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",$this->location_info['acl_app']);
+
+			if(is_array($insert_record_attributes))
+			{
+				foreach ($insert_record_attributes as $attribute)
+				{
+					foreach ($values_attribute as &$attr)
+					{
+						if($attr['name'] ==  $attribute)
+						{
+							$attr['value'] = phpgw::get_var($attribute, 'string', 'POST');
+						}
+					}
+				}
+			}
+				
 			/*
 			* Extra data from custom fields
 			*/
@@ -159,8 +175,8 @@
 						$this->receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
 					}
 				}
-				
-				$data = $this->custom->preserve_attribute_values($data,$values_attribute);
+				$data['attributes'] = $values_attribute;
+				//$data = $this->custom->preserve_attribute_values($data,$values_attribute);
 			}
 
 			return $data;
