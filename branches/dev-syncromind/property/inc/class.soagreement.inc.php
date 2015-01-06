@@ -77,6 +77,7 @@
 			$member_id		= isset($data['member_id']) ? (int)$data['member_id']:0;
 			$agreement_id	= isset($data['agreement_id'])? (int) $data['agreement_id']:'';
 			$status_id 		= isset($data['status_id']) ? $data['status_id'] : '';
+            $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
 
 			$filtermethod = '';
 			$querymethod = '';
@@ -292,7 +293,7 @@
 			$this->total_records = $this->db2->num_rows();
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
