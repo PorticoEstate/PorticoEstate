@@ -2211,12 +2211,26 @@ JS;
 				$order = phpgw::get_var('order');
 				$draw = phpgw::get_var('draw', 'int');
 				$columns = phpgw::get_var('columns');
-
+				
+				switch ($columns[$order[0]['column']]['data'])
+				{
+					case 'id':
+						$ordering = 'account_id';
+						break;
+					case 'first_name':
+						$ordering = 'account_firstname';
+						break;
+					case 'last_name':
+						$ordering = 'account_lastname';
+						break;
+					default:
+						$ordering =  "";
+				}
 				$params = array(
 					'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 					'query' => $search['value'],
-					'order' => $columns[$order[0]['column']]['data'],
+					'order' => $ordering,
 					'sort' => $order[0]['dir'],
 					'dir' => $order[0]['dir'],
 					'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
@@ -2251,7 +2265,7 @@ JS;
 			$action .= 'window.parent.document.getElementById("'.$user_id.'").value = "";'."\r";
 			$action .= 'window.parent.document.getElementById("'.$user_name.'").value = "";'."\r";
 			$action .= 'window.parent.document.getElementById("'.$user_id.'").value = aData["id"];'."\r";
-			$action .= 'window.parent.document.getElementById("'.$user_name.'").value = aData["first_name"];'."\r";
+			$action .= 'window.parent.document.getElementById("'.$user_name.'").value = aData["first_name"] + " " + aData["last_name"];'."\r";
 			$action .= 'window.parent.JqueryPortico.onPopupClose("close");'."\r";
 			
 			$data = array(
@@ -2292,8 +2306,8 @@ JS;
 				$params = array(
 								'key' => $uicols['name'][$k],
 								'label' => $uicols['descr'][$k],
-								'sortable' => false,
-								'hidden' => false
+								'sortable' => true,
+								'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 							);
 				
 				array_push ($data['datatable']['field'], $params);
@@ -2306,7 +2320,6 @@ JS;
 			
 			self::render_template_xsl('datatable_jquery', $data);
 		}
-		
 
 		function project_group()
 		{
