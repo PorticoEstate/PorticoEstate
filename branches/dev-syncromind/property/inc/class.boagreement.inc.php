@@ -152,13 +152,15 @@
 			return $vendor_list;
 		}
 
-		function read()
+		function read($data = array())
 		{
-			$agreements = $this->so->read( array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort, 'order' => $this->order,
+			/*$agreements = $this->so->read( array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort, 'order' => $this->order,
 				'filter' => $this->filter, 'cat_id' => $this->cat_id, 'allrows' => $this->allrows, 'member_id' => $this->member_id,
-				'vendor_id' => $this->vendor_id, 'status_id' => $this->status_id) );
-			$this->total_records = $this->so->total_records;
-
+				'vendor_id' => $this->vendor_id, 'status_id' => $this->status_id) );*/
+			
+            $agreements = $this->so->read($data);
+            
+            $this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
 
 			foreach ( $agreements as &$agreement )
