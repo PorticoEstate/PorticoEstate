@@ -2318,24 +2318,24 @@
 			foreach($vendor_email as $_entry )
 			{				
 				$content_email[] = array
-					(
-
-						'value_email'		=> $_entry['email'],
-						'value_select'		=> "<input type='checkbox' name='values[vendor_email][]' value='{$_entry['email']}' title='{$title}'>"
-					);
+				(
+					'value_email'		=> $_entry['email'],
+					'value_select'		=> "<input type='checkbox' name='values[vendor_email][]' value='{$_entry['email']}' title='{$title}'>"
+				);
 			}
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-
-				if(count($content_email))
-				{
-					return json_encode($content_email);
-				}
-				else
-				{
-					return "";
-				}
+				$total_records = count($content_email);
+				
+				return  array
+				(
+					'data'				=> $content_email,
+					'total_records'		=> $total_records,
+					'draw'				=> phpgw::get_var('draw', 'int'),
+					'recordsTotal'		=> $total_records,
+					'recordsFiltered'	=> $total_records
+				);
 			}
 			return $content_email;
 		}
