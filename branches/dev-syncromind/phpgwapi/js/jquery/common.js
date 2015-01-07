@@ -169,6 +169,8 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 	}
 //	$(document).ready(function ()
 //	{
+		JqueryPortico.inlineTablesRendered += 1;
+
 		var oTable = $("#" + container).dataTable({
 			paginate:		disablePagination ? false : true,
 			filter:			disableFilter ? false : true,
@@ -181,7 +183,6 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 			ajax:			ajax_def,
 			fnInitComplete: function (oSettings, json)
 			{
-				JqueryPortico.inlineTablesRendered += 1;
 				if(JqueryPortico.inlineTablesRendered == JqueryPortico.inlineTablesDefined)
 				{
 					if(typeof(JqueryPortico.render_tabs) == 'function')
@@ -206,10 +207,14 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 		//	stateDuration: -1, //sessionstorage
 		//	tabIndex:		1,
 			fnDrawCallback: function () {
-				if(typeof(local_DrawCallback) == 'function')
-				{
-					DrawCallback(oTable);
-				}
+					try
+					{
+						window['local_DrawCallback' + JqueryPortico.inlineTablesRendered](oTable);
+					}
+					catch(err)
+					{
+						//nothing
+					}
 			},
 			sDom: sDom_def,
 			oTableTools: TableTools_def
@@ -313,8 +318,9 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 			},
 			minLength: 1,
 			select: function( event, ui ) {
-				$("#" + hidden).val(ui.item.value); 
-				chooseLocation( ui.item.label, ui.item.value);
+				$("#" + hidden).val(ui.item.value);
+				// have to wait to set the value
+				setTimeout(function() { $("#" + field).val(ui.item.label); }, 1);
 			}
         });
 	});
