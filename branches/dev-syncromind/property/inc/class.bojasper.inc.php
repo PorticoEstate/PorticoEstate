@@ -96,10 +96,12 @@
 			$this->app			= isset($data['app']) && $data['app'] ? $data['app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
-		public function read()
+		public function read($data = array())
 		{
-			$jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'app' => $this->app,'allrows' => $this->allrows));
+			/*$jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+				'app' => $this->app,'allrows' => $this->allrows));*/
+            $jasper = $this->so->read($data);
+            
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
