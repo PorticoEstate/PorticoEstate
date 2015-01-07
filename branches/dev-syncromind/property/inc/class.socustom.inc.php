@@ -44,6 +44,7 @@
 
 		function read($data)
 		{
+
 			if(is_array($data))
 			{
 				$start	= (isset($data['start'])?$data['start']:0);
@@ -52,9 +53,12 @@
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
 				$order = (isset($data['order'])?$data['order']:'');
 				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
+				$allrows = (isset($data['allrows'])?$data['allrows']:'');
+                $results = (isset($data['results'])?$data['results'] : 0);
 			}
-
+            
+            $order = ($order == 'custom_id')?'id':$order;
+            
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -84,7 +88,7 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
