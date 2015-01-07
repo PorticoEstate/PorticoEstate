@@ -7,10 +7,9 @@
 <!-- New template-->
 <xsl:template match="ecodimb_data">
 	<script type="text/javascript">
-		self.name="first_Window";
 		function ecodimb_lookup()
 		{
-		Window1=window.open('<xsl:value-of select="ecodimb_url"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			TINY.box.show({iframe:'<xsl:value-of select="ecodimb_url"/>', boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 	</script>
 	<xsl:choose>
