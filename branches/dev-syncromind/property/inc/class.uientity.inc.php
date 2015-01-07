@@ -224,6 +224,7 @@
 			{
 				if($values['location'])
 				{
+					$bolocation	= CreateObject('property.bolocation');
 					$location_code=implode("-", $values['location']);
 					$values['extra']['view'] = true;
 					$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
