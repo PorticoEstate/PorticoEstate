@@ -103,8 +103,6 @@
 		*/
 		private function _populate($data = array())
 		{
-			//$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
-			
 			$id_name = $this->location_info['id']['name'];
 			
 			$id	= phpgw::get_var($id_name);
@@ -175,8 +173,8 @@
 						$this->receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
 					}
 				}
+
 				$data['attributes'] = $values_attribute;
-				//$data = $this->custom->preserve_attribute_values($data,$values_attribute);
 			}
 
 			return $data;
@@ -305,9 +303,6 @@
 				$this->bocommon->no_access();
 				return;
 			}
-
-			//$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
-			//$this->save_sessiondata();
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
 
@@ -551,28 +546,37 @@
 			}
 
 			$id			= phpgw::get_var($this->location_info['id']['name']);
+			$values_attribute  = phpgw::get_var('values_attribute');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
 			if ($id)
 			{
-				if (!$values)
-				{
-					$values = $this->bo->read_single(array('id' => $id));
-					$function_msg = $this->location_info['edit_msg'];
-					$action='edit';
-				}
+				$values = $this->bo->read_single(array('id' => $id));
+				$function_msg = $this->location_info['edit_msg'];
+				$action='edit';
 			}
 			else
 			{
-				if (!$values)
-				{
-					$values = $this->bo->read_single();
-					$function_msg = $this->location_info['add_msg'];
-					$action='add';
-				}
+				$values = $this->bo->read_single();
+				$function_msg = $this->location_info['add_msg'];
+				$action='add';
 			}
 
+			/* Preserve attribute values from post */
+			if($this->receipt['error'])
+			{
+				foreach ( $this->location_info['fields'] as $field )
+				{
+					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']]);
+				}
+
+				if(isset( $values_attribute) && is_array( $values_attribute))
+				{
+					$values = $this->custom->preserve_attribute_values($values,$values_attribute);
+				}
+			}
+			
 			$link_save = array
 				(
 					'menuaction'	=> 'property.uigeneric.save',
@@ -1001,7 +1005,7 @@
 
 			if( $this->receipt['error'] )
 			{
-				$this->edit( $data );
+				$this->edit();
 			}
 			else
 			{
@@ -1019,7 +1023,7 @@
 					if ( $e )
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
-						$this->edit( $data );
+						$this->edit();
 						return;
 					}
 				}
