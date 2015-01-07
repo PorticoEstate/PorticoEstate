@@ -306,16 +306,12 @@ JS;
 
 					$_autocomplete = <<<JS
 
-					YAHOO.util.Event.addListener(window, "load", function()
-					{
-						var oArgs = {menuaction:'{$attributes['get_list_function']}'};
-						var strURL = phpGWLink('index.php', oArgs, true);
-						strURL += '{$_append_url}';
+					var oArgs = {menuaction:'{$attributes['get_list_function']}'};
+					var strURL = phpGWLink('index.php', oArgs, true);
+					strURL += '{$_append_url}';
 
-					    YAHOO.portico.autocompleteHelper(strURL, 
-                               '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
+					JqueryPortico.autocompleteHelper(strURL, '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
 
-					});
 JS;
 					if(!$view_only)
 					{
