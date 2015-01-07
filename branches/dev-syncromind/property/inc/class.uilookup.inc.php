@@ -2011,7 +2011,6 @@ JS;
 			}
 			else
 			{
-
 				$uicols['name'][] 	= 'num';
 				$uicols['descr'][] 	= 'ID';
 				$uicols['input_type'][] 	= 'text';
@@ -2199,7 +2198,7 @@ JS;
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.entity.index', 'property' );
 
 			$this->save_sessiondata();
-		}
+		}	
 
 		function phpgw_user()
 		{
@@ -2262,10 +2261,10 @@ JS;
 			}
 
 			$action = '';
-			$action .= 'window.parent.document.getElementById("'.$user_id.'").value = "";'."\r";
-			$action .= 'window.parent.document.getElementById("'.$user_name.'").value = "";'."\r";
-			$action .= 'window.parent.document.getElementById("'.$user_id.'").value = aData["id"];'."\r";
-			$action .= 'window.parent.document.getElementById("'.$user_name.'").value = aData["first_name"] + " " + aData["last_name"];'."\r";
+			$action .= 'parent.document.getElementsByName("'.$user_id.'")[0].value = "";'."\r";
+			$action .= 'parent.document.getElementsByName("'.$user_name.'")[0].value = "";'."\r";
+			$action .= 'parent.document.getElementsByName("'.$user_id.'")[0].value = aData["id"];'."\r";
+			$action .= 'parent.document.getElementsByName("'.$user_name.'")[0].value = aData["first_name"] + " " + aData["last_name"];'."\r";
 			$action .= 'window.parent.JqueryPortico.onPopupClose("close");'."\r";
 			
 			$data = array(
