@@ -1096,9 +1096,7 @@
 	</div>
 	<!--  DATATABLE DEFINITIONS-->
 	<script type="text/javascript">
-		var property_js = <xsl:value-of select="property_js"/>;
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
-		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 		var datatable = new Array();
 		var myColumnDefs = new Array();
 		var myButtons = new Array();
@@ -1258,6 +1256,24 @@
 					</xsl:for-each>
 				</tr>
 			</thead>
+			<tfoot>
+				<tr>
+					<xsl:for-each select="$ColumnDefs">
+						<xsl:choose>
+							<xsl:when test="hidden">
+								<xsl:if test="hidden =0">
+									<th>
+									</th>
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+								<th>
+								</th>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</tr>
+			</tfoot>
 		</table>
 		<script>
 			JqueryPortico.inlineTablesDefined += 1;

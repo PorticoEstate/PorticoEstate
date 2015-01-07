@@ -2286,7 +2286,6 @@
 			);
 
 			$payments = $this->bo->get_payments($id);
-
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_4',
@@ -2364,14 +2363,6 @@
 			$this->cats->set_appname('property','.project');
 			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));
 
-			$property_js = "/property/js/yahoo/property2.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
 			$year	= date('Y') -1;
 			$limit	= $year + 3;
 
@@ -2415,7 +2406,6 @@
 
 					'need_approval'					=> $need_approval,
 					'value_approval_mail_address'	=> $supervisor_email,
-	//				'vendor_email'					=> $vendor_email,
 
 					'contact_data'					=> $contact_data,
 					'lookup_type'					=> $lookup_type,
@@ -2424,8 +2414,6 @@
 					'tabs'							=> self::_generate_tabs(true),
 					'td_count'						=> '""',
 					'base_java_url'					=> "{menuaction:'property.uitts.update_data',id:{$id}}",
-					'base_java_notify_url'			=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
-	//				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'value_origin'					=> $ticket['origin'],
 					'value_target'					=> $ticket['target'],
 					'value_finnish_date'			=> $ticket['finnish_date'],
@@ -2511,14 +2499,6 @@
 
 				);
 
-/*
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
- */
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
