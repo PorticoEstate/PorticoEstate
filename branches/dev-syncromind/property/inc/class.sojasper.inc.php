@@ -53,6 +53,7 @@
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$app			= isset($data['app']) ? $data['app'] : '';
+            $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
 
 			$grants	= & $this->grants;
 
@@ -107,7 +108,7 @@
 				$this->db->query("SELECT count(*) as cnt FROM {$table} {$app_filter} {$filtermethod} {$querymethod}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
