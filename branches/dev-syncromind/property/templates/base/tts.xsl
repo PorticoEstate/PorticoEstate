@@ -293,6 +293,8 @@
 
 		var my_groups = <xsl:value-of select="my_groups"/>;
 
+		var base_java_url = <xsl:value-of select="base_java_url"/>;
+		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 
 	</script>
 	<table cellpadding="2" cellspacing="2" width="95%" align="center">
@@ -1088,20 +1090,6 @@
 		</tr>
 	</table>
 	<hr noshade="noshade" width="100%" align="center" size="1"/>
-	<div id="lightbox-placeholder" style="background-color:#000000;color:#FFFFFF;display:none">
-		<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center">
-			<xsl:value-of select="php:function('lang', 'fileuploader')"/>
-		</div>
-		<div class="bd" style="text-align:center;"> </div>
-	</div>
-	<!--  DATATABLE DEFINITIONS-->
-	<script type="text/javascript">
-		var base_java_url = <xsl:value-of select="base_java_url"/>;
-		var datatable = new Array();
-		var myColumnDefs = new Array();
-		var myButtons = new Array();
-		var td_count = <xsl:value-of select="td_count"/>;
-	</script>
 </xsl:template>
 
 

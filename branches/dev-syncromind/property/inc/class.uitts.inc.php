@@ -2414,6 +2414,7 @@
 					'tabs'							=> self::_generate_tabs(true),
 					'td_count'						=> '""',
 					'base_java_url'					=> "{menuaction:'property.uitts.update_data',id:{$id}}",
+					'base_java_notify_url'			=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
 					'value_origin'					=> $ticket['origin'],
 					'value_target'					=> $ticket['target'],
 					'value_finnish_date'			=> $ticket['finnish_date'],
