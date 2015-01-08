@@ -22,8 +22,8 @@ var notify_contact = 0;
 		}	
 		var oArgs = {menuaction:'property.uilookup.addressbook',column:'notify_contact'};
 		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-	}		
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+	};
 
 /* This one is added dynamically from php-class property_notify::get_jquery_table_def()
 	this.refresh_notify_contact=function()

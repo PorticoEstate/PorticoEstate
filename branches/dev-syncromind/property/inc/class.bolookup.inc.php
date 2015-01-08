@@ -102,7 +102,7 @@
 		 * @return array of contacts
 		 */
 
-		function read_addressbook()
+		function read_addressbook($data = array())
 		{
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -114,7 +114,7 @@
 				$limit = 15;
 			}
 
-			$limit		= $this->allrows ? 0 : $limit;
+			$limit		= $data['allrows'] ? 0 : $limit;
 
 			$fields = array
 				(
@@ -135,10 +135,10 @@
 
 			$addressbook	= CreateObject('addressbook.boaddressbook');
 
-			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $this->query, $fields_search);
+			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $data['query'], $fields_search);
 			$this->total_records = $addressbook->get_count_persons($criteria);
 
-			$contacts = $addressbook->get_persons($fields, $this->start, $limit, $this->order, $this->sort, '', $criteria);
+			$contacts = $addressbook->get_persons($fields, $data['start'], $limit, $data['order'], $data['dir'], '', $criteria);
 
 			$accounts = $GLOBALS['phpgw']->accounts->get_list();
 			$user_contacts = array();
@@ -159,6 +159,7 @@
 			foreach($contacts as &$contact)
 			{
 				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
+				$contact['contact_name'] = "{$contact['per_last_name']}, {$contact['per_first_name']}";
 
 				if ( is_array($comms) && count($comms) )
 				{

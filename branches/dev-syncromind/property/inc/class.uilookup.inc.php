@@ -131,11 +131,45 @@
 
 		function addressbook()
 		{
-			$bocommon	= CreateObject('property.bocommon');
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$search = phpgw::get_var('search');
+				$order = phpgw::get_var('order');
+				$draw = phpgw::get_var('draw', 'int');
+				$columns = phpgw::get_var('columns');
+
+				$params = array(
+					'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'query' => $search['value'],
+					'order' => $columns[$order[0]['column']]['data'],
+					'sort' => $order[0]['dir'],
+					'dir' => $order[0]['dir'],
+					'allrows' => phpgw::get_var('length', 'int') == -1,
+					'filter' => ''
+				);
+
+				$values = $this->bo->read_addressbook($params);
+				/**
+				 * Sigurd: For some reason - this one starts on 1 - not 0 as it is supposed to.
+				 */
+				$results = array();
+				foreach($values as $entry)
+				{
+					$results[] = $entry;
+				}
+				$result_data = array('results' => $results);
+
+				$result_data['total_records'] = $this->bo->total_records;
+				$result_data['draw'] = $draw;
+
+				$ret = $this->jquery_results($result_data);
+				return $ret;
+			}
+
 			$this->cats		= CreateObject('phpgwapi.categories', -1,  'addressbook');
 			$this->cats->supress_info	= true;
 
-			$second_display = phpgw::get_var('second_display', 'bool');
 			$column = phpgw::get_var('column');
 
 			$default_category = $GLOBALS['phpgw_info']['user']['preferences']['addressbook']['default_category'];
@@ -146,156 +180,8 @@
 				$this->cat_id		= $default_category;
 			}
 
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-
-				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'			=> 'property.uilookup.addressbook',
-						'second_display'	=> true,
-						'cat_id'			=> $this->cat_id,
-						'query'				=> $this->query,
-						'filter'			=> $this->filter,
-						'column'			=> $column
-
-					));
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.addressbook',"
-					."second_display:true,"
-					."cat_id:'{$this->cat_id}',"
-					."query:'{$this->query}',"
-					."filter:'{$this->filter}',"
-					."column:'{$column}'";
-
-				$values_combo_box[0]	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true));;
-				$default_value = array ('cat_id'=>'','name'=>lang('no category'));
-				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' 		=> 'property.uilookup.addressbook',
-								'second_display'	=> true,
-								'cat_id'			=> $this->cat_id,
-								'query'				=> $this->query,
-								'filter'			=> $this->filter,
-								'column'			=> $column
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //boton 	CATEGORY
-									'id' => 'btn_cat_id',
-									'name' => 'cat_id',
-									'value'	=> lang('Category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //boton  SEARCH
-									'id' => 'btn_search',
-									'name' => 'search',
-									'value'    => lang('search'),
-									'type' => 'button',
-									'tab_index' => 2
-								),
-								array
-								( // TEXT IMPUT
-									'name'     => 'query',
-									'id'     => 'txt_query',
-									'value'    => '',//'',//$query,
-									'type' => 'text',
-									'size'    => 28,
-									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 3
-								),
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_new',
-									'value'	=> lang('add'),
-									'tab_index' => 4
-								),
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-								)
-							)
-						)
-					)
-				);
-			}
-
-			$uicols = array (
-				'input_type'	=>	array('text','text','text','text','text','text'),
-				'name'			=>	array('contact_id','contact_name','email','wphone','mobile','is_user'),
-				'sort_field'	=>	array('person_id','last_name','','','',''),
-				'sortable'		=>	array(true,true,false,false,false,false),
-				'formatter'		=>	array('','','','','',''),
-				'descr'			=>	array(lang('ID'),lang('Name'),lang('email'),lang('phone'),lang('mobile'), lang('is user'))
-			);
-
-			$addressbook_list = array();
-			$addressbook_list = $this->bo->read_addressbook();
-
-			$content = array();
-			$j=0;
-			if (isset($addressbook_list) && is_array($addressbook_list))
-			{
-				foreach($addressbook_list as $addressbook_entry)
-				{
-					for ($i=0;$i<count($uicols['name']);$i++)
-					{
-						if ($uicols['name'][$i] == 'contact_name')
-						{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $addressbook_entry['per_last_name'] . ', ' . $addressbook_entry['per_first_name'];
-						}
-						else
-						{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $addressbook_entry[$uicols['name'][$i]];
-						}
-						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
-					}
-					$j++;
-				}
-			}
-
-			$uicols_count	= count($uicols['descr']);
-			$datatable['rowactions']['action'] = array();
-			for ($i=0;$i<$uicols_count;$i++)
-			{
-				//all colums should be have formatter
-				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
-				$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['sort_field'][$i];
-			}
-			$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 		=> 'add',
-					'text' 			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
-						'nonavbar'		=> true
-					))
-				);
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			if($column)
 			{
@@ -308,121 +194,85 @@
 				$contact_name	='contact_name';
 			}
 
-			$function_exchange_values = '';
-
-			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = "";' ."\r\n";
-			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_name.'")[0].value = "";' ."\r\n";
-
-			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("contact_id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_name.'")[0].value = data.getData("contact_name");' ."\r\n";
+			$action = '';
+			$action .= 'parent.document.getElementsByName("'.$contact_id.'")[0].value = "";' ."\r\n";
+			$action .= 'parent.document.getElementsByName("'.$contact_name.'")[0].value = "";' ."\r\n";
+			$action .= 'parent.document.getElementsByName("'.$contact_id.'")[0].value = aData["contact_id"];' ."\r\n";
+			$action .= 'parent.document.getElementsByName("'.$contact_name.'")[0].value = aData["contact_name"];' ."\r\n";
 			//trigger ajax-call
-			$function_exchange_values .= "opener.document.getElementsByName('{$contact_id}')[0].setAttribute('{$contact_id}','{$contact_id}',0);\r\n";
-			//Reset - waiting for next change
-//			$function_exchange_values .= "opener.document.getElementsByName('{$contact_id}')[0].removeAttribute('{$contact_id}');\r\n";
+			$action .= "parent.document.getElementsByName('{$contact_id}')[0].setAttribute('{$contact_id}','{$contact_id}',0);\r\n";
 
-			$function_exchange_values .= 'window.close()';
+			$action .= 'parent.JqueryPortico.onPopupClose("close");'."\r";
 
-			$datatable['exchange_values'] = $function_exchange_values;
-			$datatable['valida'] = '';
+			$data = array(
+				'left_click_action'	=> $action,
+				'datatable_name'	=> '',
+				'form' => array(
+					'toolbar' => array(
+						'item' => array()
+					)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+							'menuaction'		=> 'property.uilookup.addressbook',
+							'query'				=> $this->query,
+							'filter'			=> $this->filter,
+							'cat_id'			=> $this->cat_id,
+							'column'			=> $column,
+							'phpgw_return_as'	=> 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array()
+				)
+			);
 
-			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			$values_combo_box = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true));
+			foreach ($values_combo_box['cat_list'] as &$val)
 			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+				$val['id'] = $val['cat_id'];
 			}
+			$default_value = array ('id'=>'', 'name'=>lang('no category'));
+			array_unshift ($values_combo_box['cat_list'], $default_value);
 
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
+			$filter = array('type' => 'filter',
+						'name' => 'cat_id',
+						'text' => lang('Category'),
+						'list' => $values_combo_box['cat_list']
+					);
 
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($addressbook_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+			array_unshift ($data['form']['toolbar']['item'], $filter);
 
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			$uicols = array (
+				'name'			=>	array('contact_id','contact_name','email','wphone','mobile','is_user'),
+				'sort_field'	=>	array('person_id','last_name','','','',''),
+				'sortable'		=>	array(true,true,false,false,false,false),
+				'formatter'		=>	array('','','','','',''),
+				'descr'			=>	array(lang('ID'),lang('Name'),lang('email'),lang('phone'),lang('mobile'), lang('is user'))
+			);
+
+			$count_uicols_name = count($uicols['name']);
+
+			for($k=0;$k<$count_uicols_name;$k++)
 			{
-				$datatable['sorting']['order'] 			= 'contact_id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+				$params = array(
+								'key' => $uicols['name'][$k],
+								'label' => $uicols['descr'][$k],
+								'sortable' => $uicols['sortable'][$k],
+								'hidden' => false
+							);
+
+				array_push ($data['datatable']['field'], $params);
 			}
 
 			$appname						= lang('addressbook');
-			$function_msg					= lang('list vendors');
+			$function_msg					= lang('list contacts');
 
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.vendor.index', 'property' );
-
-			$this->save_sessiondata();
+			self::render_template_xsl('datatable_jquery', $data);
 		}
+
 
 		function organisation()
 		{
@@ -738,7 +588,10 @@
 				$result_data['total_records'] = $this->bo->total_records;
 				$result_data['draw'] = $draw;
 
-				return $this->jquery_results($result_data);
+				$ret = $this->jquery_results($result_data);
+//				print_r($ret);
+
+				return $ret;
 			}
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
