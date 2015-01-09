@@ -162,8 +162,14 @@
 		 * @return array of types
 		 */
 
-		public function read_type()
+		public function read_type($data = array())
 		{
+            //$data = array()
+            
+                #$values = array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
+				#'order' => $this->order, 'appname' => $this->appname,'location' => $this->location, 'allrows'=>$this->allrows,
+				#'filter' => $filter);
+            
 			$categories = $this->cats->return_array('', 0, false);
 			$filter = array();
 			if($categories)
@@ -177,10 +183,15 @@
 			{
 				$filter[] = 0;
 			}
+            
+            array_unshift($data['filter'],$filter);
 
-			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
-				'order' => $this->order, 'appname' => $this->appname,'location' => $this->location, 'allrows'=>$this->allrows,
-				'filter' => $filter));
+            
+			#$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
+			#	'order' => $this->order, 'appname' => $this->appname,'location' => $this->location, 'allrows'=>$this->allrows,
+			#	'filter' => $filter));
+            
+            $values = $this->so->read_type($data);
 			$this->total_records = $this->so->total_records;
 
 			foreach($values as & $value)
