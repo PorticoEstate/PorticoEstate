@@ -18,7 +18,7 @@
 	{
 		var oArgs = {menuaction:'property.uicondition_survey.get_files', id:survey_id};
 		var strURL = phpGWLink('index.php', oArgs, true);
-		YAHOO.portico.updateinlineTableHelper('datatable-container_0', strURL);
+		JqueryPortico.updateinlineTableHelper(oTable0, strURL);
 	}
 	
 	function lightbox_hide()

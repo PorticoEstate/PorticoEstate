@@ -149,13 +149,15 @@ var FormatterAmount2 = function(key, oData)
 	this.fileuploader = function()
 	{
 		var sUrl = phpGWLink('index.php', fileuploader_action);
-		TINY.box.show({iframe:sUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true,closejs:function(){location.reload();}});
+		TINY.box.show({iframe:sUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true}); //refresh_files is called after upload
 	};
 
 	this.refresh_files = function()
 	{
 		base_java_url['action'] = 'get_files';
-		execute_async(myDataTable_2);
+		var oArgs = base_java_url;
+		var strURL = phpGWLink('index.php', oArgs, true);
+		JqueryPortico.updateinlineTableHelper(oTable2, strURL);
 	};
 
 	window.addEventListener("load", function()

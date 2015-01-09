@@ -2,22 +2,12 @@
 	this.fileuploader = function()
 	{
 		var sUrl = phpGWLink('index.php', fileuploader_action);
-		var onDialogShow = function(e, args, o)
-		{
-			var frame = document.createElement('iframe');
-			frame.src = sUrl;
-			frame.width = "100%";
-			frame.height = "400";
-			o.setBody(frame);
-		};
-		lightbox.showEvent.subscribe(onDialogShow, lightbox);
-		lightbox.show();
-	}
+		TINY.box.show({iframe:sUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true}); //refresh_files is called after upload
+	};
 
 	this.refresh_files = function()
 	{
-		base_java_url['action'] = 'get_files';
-		execute_async(myDataTable_0);
+		oTable0.fnDraw();
 	}
 
 	this.showlightbox_add_inventory = function(location_id, id)

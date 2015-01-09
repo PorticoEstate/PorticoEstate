@@ -447,7 +447,10 @@
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $file_def,
-
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 			$related_def = array
@@ -491,7 +494,11 @@
 			(
 				'container'		=> 'datatable-container_2',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
-				'ColumnDefs'	=> $summation_def
+				'ColumnDefs'	=> $summation_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 			$this->config				= CreateObject('phpgwapi.config','property');
@@ -531,9 +538,7 @@
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
-//			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
-
-			self::render_template_xsl(array('condition_survey'), $data);
+			self::render_template_xsl(array('condition_survey','datatable_inline'), $data);
 		}
 
 

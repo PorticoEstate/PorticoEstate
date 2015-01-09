@@ -1396,14 +1396,16 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 
-				if(count($content_files))
-				{
-					return json_encode($content_files);
-				}
-				else
-				{
-					return "";
-				}
+				$total_records = count($content_files);
+
+				return  array
+				(
+					'data'				=> $content_files,
+					'draw'				=> phpgw::get_var('draw', 'int'),
+					'recordsTotal'		=> $total_records,
+					'recordsFiltered'	=> $total_records
+				);
+
 			}
 			return $content_files;
 		}
