@@ -348,13 +348,7 @@
                     $result_data    =   array('results' =>  $values);
                     $result_data['total_records']   = $this->bo->total_records;
                     $result_data['draw']    = $draw;
-                    
-                     $variable = array(
-                                        'menuaction'=> 'property.uiproject.edit'
-                                        
-                                      );
-                                 array_walk($result_data['results'], array($this, '_add_links'), $variable);
-                    
+ 
                     return $this->jquery_results($result_data);
                 }
 		function index()
@@ -390,7 +384,8 @@
                         
                         self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			
+			self::add_javascript('property', 'portico', 'workorder.index.js');
+
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
@@ -500,15 +495,20 @@
                             #    $params['formatter'] = $uicols['formatter'][$k];
                             #}
                             
-                            if($uicols['name'][$k] == 'project_id' || $uicols['name'][$k] == 'workorder_id' )
-                            {
-                               $params['formatter'] =  'JqueryPortico.formatLinktwo';
-                            }
-                            
-                            if($uicols['name'][$k] == 'loc1')
-                            {
-                                $params['formatter'] = 'JqueryPortico.searchLink';
-                            }
+                            switch($uicols['name'][$k])
+							{
+								case 'project_id':
+									$params['formatter'] =  'linktToProject';
+									break;
+								case 'workorder_id':
+									$params['formatter'] =  'linktToOrder';
+									break;
+								case 'loc1':
+									$params['formatter'] =  'JqueryPortico.searchLink';
+									break;
+								default:
+									break;
+							}
                             
                             array_push($data['datatable']['field'], $params);
                         }
@@ -634,7 +634,7 @@
                             }
 				unset($parameters);
 			}
-                        ;
+
                         self::render_template_xsl('datatable_jquery', $data);
 		}
         public function save()
