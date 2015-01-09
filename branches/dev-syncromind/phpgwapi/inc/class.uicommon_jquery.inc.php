@@ -111,6 +111,13 @@
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
+			if(phpgw::get_var('nonavbar'))
+			{
+			//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			//	$GLOBALS['phpgw_info']['flags']['headonly']=true;
+			}
+
 		}
 
 		private function get_ui_session_key()
