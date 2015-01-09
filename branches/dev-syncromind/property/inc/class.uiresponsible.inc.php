@@ -35,91 +35,98 @@
 	 * @category core
 	 */
 	 
-	phpgw::import_class('phpgwapi.yui');
+	//phpgw::import_class('phpgwapi.yui');
+
+    phpgw::import_class('phpgwapi.uicommon_jquery');
+    phpgw::import_class('phpgwapi.jquery');
 	
-	class property_uiresponsible
+	class property_uiresponsible extends phpgwapi_uicommon_jquery
 	{
 
 		/**
 		* @var integer $start for pagination
 		*/
-		protected $start = 0;
+		var $start = 0;
 
 		/**
 		 * @var string $sort how to sort the queries - ASC/DESC
 		 */
-		protected $sort;
+		var $sort;
 
 		/**
 		 * @var string $order field to order by in queries
 		 */
-		protected $order;
+		var $order;
 
 		/**
 		 * @var object $nextmatchs paging handler
 		 */
-		private $nextmatchs;
+		var $nextmatchs;
 
 		/**
 		 * @var object $bo business logic
 		 */
-		protected $bo;
+		var $bo;
 
 		/**
 		 * @var object $acl reference to global access control list manager
 		 */
-		protected $acl;
+		var $acl;
 
 		/**
 		 * @var string $acl_location the access control location
 		 */
-		protected $acl_location;
+		var $acl_location;
 
 		/**
 		 * @var string $appname the application name
 		 */
-		protected $appname;
+		var $appname;
 
 		/**
 		 * @var bool $acl_read does the current user have read access to the current location
 		 */
-		protected $acl_read;
+		var $acl_read;
 
 		/**
 		 * @var bool $acl_add does the current user have add access to the current location
 		 */
-		protected $acl_add;
+		var $acl_add;
 
 		/**
 		 * @var bool $acl_edit does the current user have edit access to the current location
 		 */
-		protected $acl_edit;
+		var $acl_edit;
 
 		/**
 		 * @var bool $allrows display all rows of result set?
 		 */
-		protected $allrows;
-
+		var $allrows;
+        var $query;
 		/**
 		 * @var array $public_functions publicly available methods of the class
 		 */
-		public $public_functions = array
+		var $public_functions = array
 			(
+                'query'         => true,
 				'index' 		=> true,
 				'contact' 		=> true,
 				'edit' 			=> true,
 				'edit_role'		=> true,
 				'edit_contact' 	=> true,
 				'no_access'		=> true,
-				'delete_type'	=> true
+				'delete_type'	=> true,
+                'view'          => true
 			);
 
 		/**
 		 * Constructor
 		 */
 
-		public function __construct()
+		function __construct()
 		{
+            parent::__construct();
+            
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$this->bo					= CreateObject('property.boresponsible', true);
@@ -171,8 +178,9 @@
 		 * @return void
 		 */
 
-		public function index()
+		function index()
 		{
+            
 			$bocommon	= CreateObject('property.bocommon');
 
 			if(!$this->acl_read)
@@ -188,12 +196,113 @@
 				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 				$GLOBALS['phpgw_info']['flags']['headonly']		= true;
 			}
+            
+            if( phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+                 return $this->query();
+            }
+            
+            self::add_javascript('phpgwapi','jquery','editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi','jquery','editable/jquery.dataTables.editable.js');
+            
+            
+            $function_msg= lang('list available responsible types');
 
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . ":: {$function_msg}";
+            
+            $data = array(
+                'datatable_name'    => 'responsible',
+                'form'  => array(
+                               'toolbar'    => array(
+                                   'item'   => array(
+                                       array(
+                                           'type'   => 'link',
+                                           'value'  => lang('new'),
+                                           'href'   => self::link(array(
+                                               'menuaction'	=> 'property.uiresponsible.edit',
+                                               'appname'		=> $this->appname,
+                                               'location'		=> $this->location
+                                           )),
+                                           'class'  => 'new_item'
+                                       ) 
+                                   )
+                               )
+                            ),
+                'datatable' => array(
+                    'source'    => self::link(array(
+                        'menuaction'=> 'property.uiresponsible.index',
+						'location'	=> $this->location,
+						'lookup'	=> $lookup,
+						'appname'	=> $this->appname,
+                        'phpgw_return_as'   => 'json'
+                    )),
+                    'allrows'   => true,
+                    'editor_action' => '',
+                    'field' => array(
+                        array(
+                            'key'   => 'id',
+                            'label' => lang('id'),
+                            'sortable'  => true
+                        ),
+                        array(
+                            'key'   => 'name',
+                            'label' => lang('name'),
+                            'sortable'  => true
+                        ),
+                        array(
+                            'key'   => 'descr',
+                            'label' => lang('descr'),
+                            'sortable'  => false
+                        ),
+                        array(
+                            'key'   => 'category',
+                            'label' => lang('category'),
+                            'sortable'  => false,
+                            'hidden' => true
+                        ),
+                        array(
+                            'key'   => 'created_by',
+                            'label' => lang('user'),
+                            'sortable'  => false,
+                            'hidden' => true
+                        ),
+                        array(
+                            'key'   => 'created_on',
+                            'label' => lang(''),
+                            'sortable'  => false,
+                            'hidden' => true
+                        ),
+                        array(
+                            'key'   => 'appname',
+                            'label' => lang('application'),
+                            'sortable'  => false
+                        ),
+                        array(
+                            'key'   => 'active',
+                            'label' => lang('active'),
+                            'sortable'  => false,
+                            'hidden' => true
+                        ),
+                        array(
+                            'key'   => 'loc',
+                            'label' => lang(''),
+                            'sortable'  => false,
+                            'hidden' => true
+                        ),
+                        array(
+                            'key'   => 'location',
+                            'label' => lang(''),
+                            'sortable'  => false,
+                            'hidden' => true
+                        )
+                    )
+                    
+                )
+            );
+
+			/*if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
-
-
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+    			$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'=> 'property.uiresponsible.index',
 						'query'		=> $this->query,
@@ -292,12 +401,12 @@
 						)
 					)
 				);
-			}
+			}*/
 
-			$responsible_info = array();
-			$responsible_info = $this->bo->read_type();
+			//$responsible_info = array();
+			//$responsible_info = $this->bo->read_type();
 
-			$uicols = array (
+			/*$uicols = array (
 				'input_type'	=>	array('text','text','text','hidden','hidden','hidden','text','hidden','hidden','hidden'),
 				'name'			=>	array('id','name','descr','category','created_by','created_on','appname','active','loc','location'),
 				'formatter'		=>	array('','','','','','','','','',''),
@@ -327,10 +436,10 @@
 					}
 					$j++;
 				}
-			}
+			}*/
 
 
-			$uicols_count	= count($uicols['descr']);
+			/*$uicols_count	= count($uicols['descr']);
 
 			for ($i=0;$i<$uicols_count;$i++)
 			{
@@ -363,9 +472,9 @@
 					$datatable['headers']['header'][$i]['sortable']			= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
-			}				
+			}*/			
 
-			$datatable['rowactions']['action'] = array();
+			//$datatable['rowactions']['action'] = array();
 
 			if(!$lookup)
 			{
@@ -417,7 +526,7 @@
 
 				if($this->acl_edit)
 				{
-					$datatable['rowactions']['action'][] = array
+					$data['datatable']['actions'][] = array
 						(
 							'my_name'		=> 'edit',
 							'text' 			=> lang('edit'),
@@ -427,13 +536,13 @@
 								'appname'	=> $this->appname
 //								'location'		=> $this->location
 							)),
-							'parameters'	=> $parameters3
+							'parameters'	=> json_encode($parameters3)
 						);
 				}
 
 				if($this->acl_delete)
 				{
-					$datatable['rowactions']['action'][] = array
+					$data['datatable']['actions'][] = array
 						(
 							'my_name'		=> 'delete',
 							'text' 			=> lang('delete'),
@@ -443,11 +552,11 @@
 								'menuaction'	=> 'property.uiresponsible.delete_type',
 								'appname'	=> $this->appname
 							)),
-							'parameters'	=> $parameters
+							'parameters'	=> json_encode($parameters)
 						);
 				}
 
-				$datatable['rowactions']['action'][] = array
+				$data['datatable']['actions'][] = array
 					(
 						'my_name'		=> 'contacts',
 						'text' 			=> lang('contacts'),
@@ -456,12 +565,12 @@
 							'menuaction'	=> 'property.uiresponsible.contact',
 							'appname'	=> $this->appname
 						)),
-						'parameters'	=> $parameters2
+						'parameters'	=> json_encode($parameters2)
 					);
 
 				if($this->acl_add)
 				{
-					$datatable['rowactions']['action'][] = array
+					$data['datatable']['actions'][] = array
 						(
 							'my_name'			=> 'add',
 							'text' 			=> lang('add'),
@@ -496,7 +605,7 @@
 			}																																																													
 
 			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
+			/*$property_js = "/property/js/yahoo/property.js";
 
 			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
@@ -615,9 +724,46 @@
 			// Prepare YUI Library
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'responsible.index', 'property' );
 
-			$this->_save_sessiondata();
+			$this->_save_sessiondata();*/
+            
+            self::render_template_xsl('datatable_jquery', $data);
 		}
 
+        public function query()
+        {
+            
+            $search = phpgw::get_var('search');
+            $order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int'); 
+            $columns = phpgw::get_var('columns');
+            
+            $params = array(
+                'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+                'appname' => $this->appname,
+                'location' => $this->location
+            );
+            
+            $result_objects = array();
+            $result_count = 0;
+            
+            $values = $this->bo->read_type($params);
+            
+            if( phpgw::get_var('export','bool'))
+            {
+                return $values;
+            }
+            
+            $result_data = array('results' => $values);
+            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['draw'] = $draw;
+            
+            return $this->jquery_results($result_data);
+        }
 
 		function edit()
 		{
