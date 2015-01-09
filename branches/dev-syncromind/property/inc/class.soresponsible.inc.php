@@ -82,6 +82,7 @@
 				$filter		= $data['filter'] ? $data['filter'] : '';
 				$location	= isset($data['location']) ? $data['location'] : '';
 				$appname	= isset($data['appname'])  && $data['appname'] ? $data['appname'] : 'property';
+                $results = (isset($data['results'])?$data['results'] : 0);
 			}
 
 			if ($order)
@@ -127,7 +128,7 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{
