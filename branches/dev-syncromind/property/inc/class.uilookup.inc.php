@@ -1695,34 +1695,6 @@ JS;
 				$this->district_id		= $default_district;
 			}
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$search = phpgw::get_var('search');
-				$order = phpgw::get_var('order');
-				$draw = phpgw::get_var('draw', 'int');
-				$columns = phpgw::get_var('columns');
-
-				$params = array(
-					'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-					'query' => $search['value'],
-					'order' => $columns[$order[0]['column']]['data'],
-					'sort' => $order[0]['dir'],
-					'allrows' => phpgw::get_var('length', 'int') == -1
-				);
-
-				$values = $boentity->read($params);
-
-				$result_data = array('results' => $values);
-
-				$result_data['total_records'] = $boentity->total_records;
-				$result_data['draw'] = $draw;
-
-				return $this->jquery_results($result_data);
-			}
-
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			
 			$input_name			= phpgwapi_cache::session_get('property', 'lookup_fields');
 			$input_name_entity	= phpgwapi_cache::session_get('property', 'lookup_fields_entity');
@@ -1742,6 +1714,111 @@ JS;
 			}
 			$action .= 'parent.JqueryPortico.onPopupClose("close");'."\r";
 			
+			$values = $boentity->read(array('lookup'=>true, 'dry_run'=>true));
+			$uicols	= $boentity->uicols;
+			
+			if (count($uicols['name']) > 0)
+			{
+				for ($m = 0; $m<count($input_name); $m++)
+				{
+					if (!array_search($input_name[$m],$uicols['name']))
+					{
+						$uicols['name'][] = $input_name[$m];
+						$uicols['descr'][] = '';
+						$uicols['input_type'][] = 'hidden';
+					}
+				}
+			}
+			else
+			{
+				$uicols['name'][] = 'num';
+				$uicols['descr'][] = 'ID';
+				$uicols['input_type'][] = 'text';
+			}
+			
+			
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				if (phpgw::get_var('head'))
+				{
+					$entity_def = array();
+					$head = '<thead>';
+					$count_uicols_name = count($uicols['name']);
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{						
+						$params = array(
+										'key' => $uicols['name'][$k],
+										'label' => $uicols['descr'][$k],
+										'sortable' => ($uicols['sortable'][$k]) ? true : false,
+										'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+									);
+						array_push ($entity_def, $params);
+
+						if ($uicols['input_type'][$k] != 'hidden')
+						{
+							$head .= '<th>'.$uicols['descr'][$k].'</th>';
+						}
+					}
+					$head .= '</thead>';
+
+					$datatable_def[] = array
+					(
+						'container'		=> 'datatable-container',
+						'requestUrl'	=> self::link(array(
+												'menuaction'		=> 'property.uilookup.entity',
+												'second_display'	=> $second_display,
+												'cat_id'			=> $this->cat_id,
+												'entity_id'			=> $this->entity_id,
+												'district_id'		=> $this->district_id,
+												'criteria_id'		=> $this->criteria_id,
+												'phpgw_return_as'	=> 'json'
+											)),
+						'ColumnDefs'	=> $entity_def,
+						'config'		=> array(
+							array('disableFilter' => true),
+							array('disablePagination' => true)
+						)
+					);
+
+					$data = array
+					(
+							'datatable_def'		=> $datatable_def,
+							'datatable_head'	=> $head,
+					);
+
+					return $data;
+				
+				}
+				else {
+					$search = phpgw::get_var('search');
+					$order = phpgw::get_var('order');
+					$draw = phpgw::get_var('draw', 'int');
+					$columns = phpgw::get_var('columns');
+
+					$params = array(
+						'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+						'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+						'query' => $search['value'],
+						'order' => $columns[$order[0]['column']]['data'],
+						'sort' => $order[0]['dir'],
+						'allrows' => phpgw::get_var('length', 'int') == -1
+					);
+
+					$values = $boentity->read($params);
+
+					$result_data = array('results' => $values);
+
+					$result_data['total_records'] = $boentity->total_records;
+					$result_data['draw'] = $draw;
+
+					return $this->jquery_results($result_data);				
+				}
+				
+			}
+
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			
 			$data = array(
 				'left_click_action'	=> $action,
 				'datatable_name'	=> '',
@@ -1755,7 +1832,6 @@ JS;
 							'menuaction'		=> 'property.uilookup.entity',
 							'second_display'	=> $second_display,
 							'entity_id'			=> $this->entity_id,
-							'cat_id'			=> $this->cat_id,
 							'district_id'		=> $this->district_id,
 							'criteria_id'		=> $this->criteria_id,
 							'phpgw_return_as'	=> 'json'
@@ -1774,7 +1850,7 @@ JS;
 			
 			$values_combo_box[0] = $boentity->select_category_list('filter', $this->cat_id);
 			array_unshift ($values_combo_box[0], array('id'=>'', 'name'=>lang('no category')));
-			$filters[0] = array('type' => 'filter',
+			$filters[0] = array('type' => 'filter-category',
 						'name' => 'cat_id',
 						'extra' => $code,
 						'text' => lang('category'),
@@ -1802,28 +1878,7 @@ JS;
 				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 			
-			$values = $boentity->read(array('lookup'=>true, 'dry_run'=>true));
-			$uicols	= $boentity->uicols;
-			
-			if (count($uicols['name']) > 0)
-			{
-				for ($m = 0; $m<count($input_name); $m++)
-				{
-					if (!array_search($input_name[$m],$uicols['name']))
-					{
-						$uicols['name'][] = $input_name[$m];
-						$uicols['descr'][] = '';
-						$uicols['input_type'][] = 'hidden';
-					}
-				}
-			}
-			else
-			{
-				$uicols['name'][] = 'num';
-				$uicols['descr'][] = 'ID';
-				$uicols['input_type'][] = 'text';
-			} 
-			
+
 			$count_uicols_name = count($uicols['name']);
 	
 			for($k=0;$k<$count_uicols_name;$k++)
@@ -1851,7 +1906,7 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			
-			self::render_template_xsl(array('lookup.entity', 'datatable_inline'), $data);
+			self::render_template_xsl('lookup.entity', $data);
 		}	
 
 		
