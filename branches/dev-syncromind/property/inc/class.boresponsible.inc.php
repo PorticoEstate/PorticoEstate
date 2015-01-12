@@ -187,7 +187,7 @@
             array_unshift($data['filter'],$filter);
 
             
-			#$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
+			#   $values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
 			#	'order' => $this->order, 'appname' => $this->appname,'location' => $this->location, 'allrows'=>$this->allrows,
 			#	'filter' => $filter));
             
