@@ -174,13 +174,15 @@
 			return $status_list;
 		}
 
-		function read()
+		function read($data = array())
 		{
-			$s_agreements = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-				'vendor_id'=>$this->vendor_id, 'p_num' => $this->p_num, 'status_id'=>$this->status_id, 'location_code' => $this->location_code));
+            
+            $s_agreements = $this->so->read($data);
+            
+			#$s_agreements = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			#	'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
+			#	'vendor_id'=>$this->vendor_id, 'p_num' => $this->p_num, 'status_id'=>$this->status_id, 'location_code' => $this->location_code));
 			$this->total_records = $this->so->total_records;
-
 			$this->uicols	= $this->so->uicols;
 
 			foreach ($s_agreements as &$s_agreement)
