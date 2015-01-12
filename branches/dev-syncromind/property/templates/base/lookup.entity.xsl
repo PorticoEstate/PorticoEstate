@@ -39,7 +39,51 @@
 
 
 <xsl:template match="toolbar">
+	<style id='toggle-box-css' type='text/css' scoped='scoped'>
+.toggle-box {
+  display: none;
+}
 
+.toggle-box + label {
+  cursor: pointer;
+  display: block;
+  font-weight: bold;
+  line-height: 21px;
+  margin-bottom: 5px;
+}
+
+.toggle-box + label + div {
+  display: none;
+  margin-bottom: 10px;
+}
+
+.toggle-box:checked + label + div {
+  display: block;
+}
+
+.toggle-box + label:before {
+  background-color: #4F5150;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  color: #FFFFFF;
+  content: "+";
+  display: block;
+  float: left;
+  font-weight: bold;
+  height: 20px;
+  line-height: 20px;
+  margin-right: 5px;
+  text-align: center;
+  width: 20px;
+}
+
+.toggle-box:checked + label:before {
+  content: "\2212";
+} 
+		
+	</style>
+	
 	<input class="toggle-box" id="header1" type="checkbox" />
 	<label for="header1">
 		<xsl:value-of select="php:function('lang', 'toolbar')"/>
@@ -174,19 +218,8 @@
 
 <xsl:template match="form">
 	<div id="queryForm">
-		<!--xsl:attribute name="method">
-			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
-		</xsl:attribute>
-
-		<xsl:attribute name="action">
-			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
-		</xsl:attribute-->
 		<xsl:apply-templates select="toolbar"/>
 	</div>
-
-	<!--form id="update_table_dummy" method='POST' action='' >
-	</form-->
-
 </xsl:template>
 
 <xsl:template match="datatable">
@@ -312,67 +345,55 @@
 			</xsl:for-each>
 
 <![CDATA[
-
-			function fnGetSelected( )
-			{
-				var aReturn = new Array();
-				 var aTrs = oTable.fnGetNodes();
-				 for ( var i=0 ; i < aTrs.length ; i++ )
-				 {
-					 if ( $(aTrs[i]).hasClass('selected') )
-					 {
-						 aReturn.push( i );
-					 }
-				 }
-				 return aReturn;
-			}
-
-			function substr_count( haystack, needle, offset, length )
-			{
-				var pos = 0, cnt = 0;
-
-				haystack += '';
-				needle += '';
-				if(isNaN(offset)) offset = 0;
-				if(isNaN(length)) length = 0;
-				offset--;
-
-				while( (offset = haystack.indexOf(needle, offset+1)) != -1 )
-				{
-					if(length > 0 && (offset+needle.length) > length)
-					{
-						return false;
-					} else
-					{
-						cnt++;
-					}
-				}
-				return cnt;
-			}
 			
+			function searchData(query)
+			{
+				var api = oTable.api();
+				api.search( query ).draw();
+			}
+
+			function filterData(param, value)
+			{
+				if (oTable.dataTableSettings[0]['ajax'])
+				{
+					oTable.dataTableSettings[0]['ajax']['data'][param] = value;
+					oTable.fnDraw();
+				}
+			}
 		});
 		
-		function searchData(query)
-		{
-			var api = oTable.api();
-			api.search( query ).draw();
-		}
+			function filterByCategory()
+			{
+				var data = {"head": 1};
+]]>			
+				<xsl:for-each select="//form/toolbar/item">
+					data['<xsl:value-of select="name"/>'] = $('#<xsl:value-of select="name"/>').val();
+				</xsl:for-each>
 
-		function filterData(param, value)
-		{
-			oTable.dataTableSettings[0]['ajax']['data'][param] = value;
-			oTable.fnDraw();
-		}
-		
-		function filterByCategory()
-		{
-			var data = {"cat_id": $('#cat_id').val(), "head": 1};
-			JqueryPortico.execute_ajax(ajax_url,
-				function(result){
-					alert('mensaje');
-				}, data, "GET", "json"
-			);
-		}
+<![CDATA[			
+				JqueryPortico.execute_ajax(ajax_url,
+					function(result)
+					{
+						api = oTable.api();
+						api.destroy();
+						$('#datatable-container').empty();
+						$('#datatable-container').append(result.datatable_head);
+						
+						var columns = [];
+						var PreColumns = result.datatable_def.ColumnDefs;
+						for (i=0;i<result.datatable_def.ColumnDefs.length;i++)
+						{
+							if (PreColumns[i].hidden == false)
+							{
+								columns.push({"data":PreColumns[i].key, "class":PreColumns[i].className});
+							}
+						}																							
+						var requestUrl = $('<div/>').html(result.datatable_def.requestUrl).text();
+						oTable = JqueryPortico.inlineTableHelper("datatable-container", requestUrl, columns);
+					}, data, "GET", "json"
+				);
+			}
+			
 ]]>
 	</script>
 
