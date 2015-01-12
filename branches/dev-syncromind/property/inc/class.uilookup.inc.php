@@ -1706,11 +1706,11 @@ JS;
 			$action = '';
 			for ($i=0;$i<count($input_name);$i++)
 			{
-				$action .= "parent.document.getElementsByName('{$input_name[$i]}')[0].value = '';\r\n";
+				$action .= "parent.document.getElementsByName('{$input_name[$i]}')[0].value = ''; \r\n";
 			}
 			for ($i=0;$i<count($input_name);$i++)
 			{
-				$action .= "parent.document.getElementsByName('{$input_name[$i]}')[0].value = aData['{$input_name[$i]}'];\r\n";
+				$action .= "if (typeof aData['{$input_name[$i]}'] !== 'undefined'){ parent.document.getElementsByName('{$input_name[$i]}')[0].value = aData['{$input_name[$i]}']; } \r\n";
 			}
 			$action .= 'parent.JqueryPortico.onPopupClose("close");'."\r";
 			
@@ -1761,7 +1761,7 @@ JS;
 					}
 					$head .= '</thead>';
 
-					$datatable_def[] = array
+					$datatable_def = array
 					(
 						'container'		=> 'datatable-container',
 						'requestUrl'	=> self::link(array(
@@ -1773,11 +1773,7 @@ JS;
 												'criteria_id'		=> $this->criteria_id,
 												'phpgw_return_as'	=> 'json'
 											)),
-						'ColumnDefs'	=> $entity_def,
-						'config'		=> array(
-							array('disableFilter' => true),
-							array('disablePagination' => true)
-						)
+						'ColumnDefs'	=> $entity_def
 					);
 
 					$data = array
@@ -1801,7 +1797,8 @@ JS;
 						'query' => $search['value'],
 						'order' => $columns[$order[0]['column']]['data'],
 						'sort' => $order[0]['dir'],
-						'allrows' => phpgw::get_var('length', 'int') == -1
+						'allrows' => phpgw::get_var('length', 'int') == -1,
+						'lookup' => true
 					);
 
 					$values = $boentity->read($params);
@@ -1830,10 +1827,8 @@ JS;
 				'datatable' => array(
 					'source' => self::link(array(
 							'menuaction'		=> 'property.uilookup.entity',
-							'second_display'	=> $second_display,
+							'second_display'	=> 1,
 							'entity_id'			=> $this->entity_id,
-							'district_id'		=> $this->district_id,
-							'criteria_id'		=> $this->criteria_id,
 							'phpgw_return_as'	=> 'json'
 					)),
 					'allrows'	=> true,
@@ -1842,17 +1837,10 @@ JS;
 				)
 			);
 			
-			$code = "
-						var api = oTable.api();
-				        api.destroy();
-						$('#datatable-container').empty();
-				";
-			
 			$values_combo_box[0] = $boentity->select_category_list('filter', $this->cat_id);
 			array_unshift ($values_combo_box[0], array('id'=>'', 'name'=>lang('no category')));
 			$filters[0] = array('type' => 'filter-category',
 						'name' => 'cat_id',
-						'extra' => $code,
 						'text' => lang('category'),
 						'list' => $values_combo_box[0]
 					);
