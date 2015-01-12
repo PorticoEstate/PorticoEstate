@@ -68,6 +68,7 @@
 
 		function read($data)
 		{
+            //echo '<pre>'; print_r($data); echo '</pre>';
 			if(is_array($data))
 			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
@@ -84,6 +85,7 @@
 				$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 				$status_id		= isset($data['status_id']) && $data['status_id'] ? (int)$data['status_id']:0;
 				$location_code	= isset($data['location_code'])?$data['location_code']:'';
+                $results = (isset($data['results'])?$data['results'] : 0);
 			}
 
 			$choice_table = 'phpgw_cust_choice';
@@ -515,7 +517,7 @@
 			$this->total_records = $this->db2->num_rows();
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
