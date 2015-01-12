@@ -8,7 +8,11 @@ h1 {
 
 h2 {
 	text-align: center;
-	x font-size: 25px;
+	font-size: 25px;
+}
+
+h3 {
+	text-align: center;
 }
 
 p {
