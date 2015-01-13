@@ -353,7 +353,7 @@
 								<xsl:value-of select="name"/>
 								<xsl:text>_container</xsl:text>
 							</xsl:variable>
-
+							
 							<input id="{$custom_id}" name="values_attribute[{counter}][value]" type="hidden" value="{value}">
 							</input>
 							<input id="{$custom_name}" name="{$custom_name}" type="text" value="{custom_name}">
@@ -397,7 +397,7 @@
 							</input>
 						</xsl:when>
 						<xsl:when test="datatype='D'">
-							<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}" size="12" maxlength="12">
+							<input data-validation="date" data-validation-format="dd/mm/yyyy" type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}" size="12" maxlength="12">
 								<xsl:attribute name="readonly">
 									<xsl:text> readonly</xsl:text>
 								</xsl:attribute>
@@ -405,6 +405,11 @@
 									<xsl:when test="disabled!=''">
 										<xsl:attribute name="disabled">
 											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:when test="nullable='1'">
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
 										</xsl:attribute>
 									</xsl:when>
 								</xsl:choose>
@@ -606,12 +611,49 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
+						<xsl:when test="datatype='I'">
+							<input data-validation="number" id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+								<xsl:choose>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:when test="nullable='1'">
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+								</xsl:choose>
+							</input>
+						</xsl:when>
+						<xsl:when test="datatype='N'">
+							<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+								<xsl:choose>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:when test="nullable='1'">
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+								</xsl:choose>
+							</input>
+						</xsl:when>
 						<xsl:otherwise>
 							<input id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
 								<xsl:choose>
 									<xsl:when test="disabled!=''">
 										<xsl:attribute name="disabled">
 											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:when test="nullable='1'">
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
 										</xsl:attribute>
 									</xsl:when>
 								</xsl:choose>
