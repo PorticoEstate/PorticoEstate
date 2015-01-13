@@ -154,16 +154,20 @@
 								<select id="{$name}" name="{$name}" onchange="filterByCategory()">
 									<xsl:for-each select="list">
 										<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-										<xsl:if test="id = 'NEW'">
-											<option value="{$id}" selected="selected">
-												<xsl:value-of select="name"/>
-											</option>
-										</xsl:if>
-										<xsl:if test="id != 'NEW'">
-											<option value="{$id}">
-												<xsl:value-of select="name"/>
-											</option>
-										</xsl:if>
+										<xsl:choose>
+											<xsl:when test="selected">
+												<xsl:if test="selected != ''">
+													<option value="{$id}" selected="selected">
+														<xsl:value-of select="name"/>
+													</option>
+												</xsl:if>
+											</xsl:when>
+											<xsl:otherwise>
+												<option value="{$id}">
+													<xsl:value-of select="name"/>
+												</option>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:for-each>
 								</select>
 							</td>
@@ -311,13 +315,13 @@
 				JqueryPortico.columns.push(columns[i]);
 			}
 		}
-//		console.log(JqueryPortico.columns);
-]]>
 
-	$(document).ready(function() {
+
+		$(document).ready(function() 
+		{
 		
-		oTable = JqueryPortico.inlineTableHelper("datatable-container", '', JqueryPortico.columns);
-
+			oTable = JqueryPortico.inlineTableHelper("datatable-container", ajax_url, JqueryPortico.columns);
+]]>
 			/**
 			* Add left click action..
 			*/
@@ -354,45 +358,42 @@
 
 			function filterData(param, value)
 			{
-				if (oTable.dataTableSettings[0]['ajax'])
-				{
-					oTable.dataTableSettings[0]['ajax']['data'][param] = value;
-					oTable.fnDraw();
-				}
+				oTable.dataTableSettings[0]['ajax']['data'][param] = value;
+				oTable.fnDraw();
 			}
 		});
 		
-			function filterByCategory()
-			{
-				var data = {"head": 1};
+		function filterByCategory()
+		{
+			var data = {"head": 1};
 ]]>			
-				<xsl:for-each select="//form/toolbar/item">
-					data['<xsl:value-of select="name"/>'] = $('#<xsl:value-of select="name"/>').val();
-				</xsl:for-each>
+			<xsl:for-each select="//form/toolbar/item">
+				data['<xsl:value-of select="name"/>'] = $('#<xsl:value-of select="name"/>').val();
+			</xsl:for-each>
 
 <![CDATA[			
-				JqueryPortico.execute_ajax(ajax_url,
-					function(result)
+			JqueryPortico.execute_ajax(ajax_url,
+				function(result)
+				{
+					api = oTable.api();
+					api.destroy();
+					$('#' + result.datatable_def.container).empty();
+					$('#' + result.datatable_def.container).append(result.datatable_head);
+
+					var columns = [];
+					var PreColumns = result.datatable_def.ColumnDefs;
+					for (i=0;i<PreColumns.length;i++)
 					{
-						api = oTable.api();
-						api.destroy();
-						$('#datatable-container').empty();
-						$('#datatable-container').append(result.datatable_head);
-						
-						var columns = [];
-						var PreColumns = result.datatable_def.ColumnDefs;
-						for (i=0;i<result.datatable_def.ColumnDefs.length;i++)
+						if (PreColumns[i].hidden == false)
 						{
-							if (PreColumns[i].hidden == false)
-							{
-								columns.push({"data":PreColumns[i].key, "class":PreColumns[i].className});
-							}
-						}																							
-						var requestUrl = $('<div/>').html(result.datatable_def.requestUrl).text();
-						oTable = JqueryPortico.inlineTableHelper("datatable-container", requestUrl, columns);
-					}, data, "GET", "json"
-				);
-			}
+							columns.push({"data":PreColumns[i].key, "class":PreColumns[i].className, "orderable":PreColumns[i].sortable});
+						}
+					}																							
+					var requestUrl = $('<div/>').html(result.datatable_def.requestUrl).text();
+					oTable = JqueryPortico.inlineTableHelper(result.datatable_def.container, requestUrl, columns);
+				}, data, "GET", "json"
+			);
+		}
 			
 ]]>
 	</script>
