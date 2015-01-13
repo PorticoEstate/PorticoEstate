@@ -17,7 +17,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 </style>
 <div class="contract">
 <img src="http://www.nordlandssykehuset.no/getfile.php/NLSH_bilde%20og%20filarkiv/Internett/NLSH_logo_siste.jpg%20%28352x58%29.jpg" alt="Nordlanssykehuset logo" />
-<h1>Melding om inn/utflytting - Hybler</h1>
+<h1>Korttidskontrakt</h1>
 
 
 <form action="" method="post">
