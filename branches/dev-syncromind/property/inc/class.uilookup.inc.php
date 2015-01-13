@@ -1749,9 +1749,15 @@ JS;
 						$params = array(
 										'key' => $uicols['name'][$k],
 										'label' => $uicols['descr'][$k],
-										'sortable' => ($uicols['sortable'][$k]) ? true : false,
+										'sortable' => false,
 										'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 									);
+						
+						if ($uicols['name'][$k]=='loc1' || $uicols['name'][$k]=='num')
+						{
+							$params['sortable']	= true;
+						}
+				
 						array_push ($entity_def, $params);
 
 						if ($uicols['input_type'][$k] != 'hidden')
@@ -1829,6 +1835,7 @@ JS;
 							'menuaction'		=> 'property.uilookup.entity',
 							'second_display'	=> 1,
 							'entity_id'			=> $this->entity_id,
+							'cat_id'			=> $this->cat_id,
 							'phpgw_return_as'	=> 'json'
 					)),
 					'allrows'	=> true,
@@ -1874,10 +1881,15 @@ JS;
 				$params = array(
 								'key' => $uicols['name'][$k],
 								'label' => $uicols['descr'][$k],
-								'sortable' => ($uicols['sortable'][$k]) ? true : false,
+								'sortable' => false,
 								'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 							);
-
+				
+				if ($uicols['name'][$k]=='loc1' || $uicols['name'][$k]=='num')
+				{
+					$params['sortable']	= true;
+				}
+						
 				array_push ($data['datatable']['field'], $params);
 			}
 
