@@ -2128,8 +2128,8 @@ JS;
 					'integration'					=> $integration,
 					'documents'						=> $documents,
 					'requestUrlDoc'					=> $requestUrlDoc ? $requestUrlDoc : '',
-					'lean'							=> $_lean ? 1 : 0
-					//'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
+					'lean'							=> $_lean ? 1 : 0,
+					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 
 			$appname	= $entity['name'];
