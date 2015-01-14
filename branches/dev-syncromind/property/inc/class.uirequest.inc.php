@@ -591,22 +591,53 @@
 			}
 
 			$parameters = array
+			(
+				'parameter' => array
 				(
-					'parameter' => array
+					array
 					(
-						array
-						(
-							'name'		=> 'id',
-							'source'	=> 'id'
-						),
-					)
-				);
-			
+						'name'		=> 'id',
+						'source'	=> 'request_id'
+					),
+				)
+			);
+
 			if(!$lookup)
 			{
 				if($this->acl_read)
 				{
-					
+					$data['datatable']['actions'][] = array
+						(
+							'my_name'		=> 'view',
+							'statustext' 	=> lang('edit the actor'),
+							'text' 			=> lang('view'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'	=> 'property.uirequest.view',
+								'appname'		=> $this->appname,
+								'type'			=> $this->type,
+								'type_id'		=> $this->type_id
+							)),
+							'parameters'	=> $parameters
+						);
+					/*$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+					foreach ($jasper as $report)
+					{
+						$data['datatable']['actions'][] = array
+							(
+								'my_name'		=> 'edit',
+								'statustext' 	=> lang('edit the actor'),
+								'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uijasper.view',
+									'jasper_id'			=> $report['id'],
+									'target'		=> '_blank'
+								)),
+								'parameters'			=> $parameters
+							);
+					}*/
 				}
 				
 				if($this->acl_edit)
@@ -1208,6 +1239,8 @@
 
 				if($this->acl_read)
 				{
+					die;
+				
 					$datatable['rowactions']['action'][] = array
 						(
 							'my_name'		=> 'view',
