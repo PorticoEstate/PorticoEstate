@@ -288,7 +288,7 @@
 				$values_combo_box[1] = array();
 				foreach($_cats as $_cat)
 				{
-					if($_cat['level'] == 0 )
+					if($_cat['level'] == 0 && !$_cat['active'] == 2)
 					{
 						$values_combo_box[1][] = $_cat;
 					}
@@ -2029,12 +2029,19 @@
 				}
 			}
 
-			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
+			$_cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
 
-
-			foreach ($cat_sub as &$entry)
+			$selected_cat = $values['cat_id'] ? $values['cat_id']: $project['cat_id'];
+			$cat_sub = array();
+			foreach ($_cat_sub as $entry)
 			{
+				if($entry['active'] == 2 && !$entry['id'] == $selected_cat)//hidden
+				{
+					continue;
+				}
 				$entry['name'] = str_repeat (' . ' , (int)$entry['level'] ) . $entry['name'];
+				$entry['title'] = $entry['description'];
+				$cat_sub[] = $entry;
 			}
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
@@ -2187,7 +2194,7 @@
 				'lang_save_statustext'					=> lang('Save the workorder'),
 
 				'lang_cat_sub'							=> lang('category'),
-				'cat_sub_list'							=> $this->bocommon->select_list($values['cat_id'] ? $values['cat_id']: $project['cat_id'], $cat_sub),
+				'cat_sub_list'							=> $this->bocommon->select_list($selected_cat, $cat_sub),
 				'cat_sub_name'							=> 'values[cat_id]',
 				'lang_cat_sub_statustext'				=> lang('select sub category'),
 

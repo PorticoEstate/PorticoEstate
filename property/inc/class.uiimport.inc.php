@@ -60,10 +60,11 @@
 				'fm_ecodimb'					=> array('name' => 'fm_ecodimb (' . lang('dimb') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_budget'						=> array('name' => 'fm_budget (' . lang('budget') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_org_unit'					=> array('name' => 'fm_org_unit (' . lang('department') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_project_group'				=> array('name' => 'fm_project_group', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_eco_periodization_outline'	=> array('name' => 'fm_eco_periodization_outline (' . lang('periodization outline') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_eco_periodization'			=> array('name' => 'fm_eco_periodization (' . lang('periodization') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_ecodimd'					=> array('name' => 'fm_ecodimd', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'phpgw_categories'				=> array('name' => 'phpgw_categories (' . lang('categories') . ')', 'permission' => PHPGW_ACL_READ),
+				'phpgw_categories'				=> array('name' => 'phpgw_categories (' . lang('categories') . ')', 'permission'  => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');

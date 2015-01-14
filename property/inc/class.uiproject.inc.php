@@ -290,11 +290,11 @@
 
 				$_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
 				//$this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
-				
+
 				$values_combo_box[2] = array();
 				foreach($_cats as $_cat)
 				{
-					if($_cat['level'] == 0 )
+					if($_cat['level'] == 0 && !$_cat['active'] == 2)
 					{
 						$values_combo_box[2][] = $_cat;
 					}
