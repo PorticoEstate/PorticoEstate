@@ -18,12 +18,12 @@
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$id}" selected="selected">
+				<option value="{$id}" selected="selected" title="{title}">
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$id}">
+				<option value="{$id}"  title="{title}">
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</option>
 			</xsl:otherwise>
