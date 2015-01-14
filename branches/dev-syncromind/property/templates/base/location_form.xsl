@@ -19,22 +19,23 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</label>
-				<xsl:choose>
-					<xsl:when test="readonly=1">
-						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
-							<xsl:attribute name="title">
-								<xsl:value-of select="statustext"/>
+				<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
+					<xsl:attribute name="title">
+						<xsl:value-of select="statustext"/>
+					</xsl:attribute>
+					<xsl:choose>
+						<xsl:when test="readonly=1">
+							<xsl:attribute name="readonly">
+								<xsl:text> readonly</xsl:text>
 							</xsl:attribute>
-						</input>
-					</xsl:when>
-					<xsl:otherwise>
-						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
-							<xsl:attribute name="title">
-								<xsl:value-of select="statustext"/>
+						</xsl:when>
+						<xsl:when test="required='1'">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
 							</xsl:attribute>
-						</input>
-					</xsl:otherwise>
-				</xsl:choose>
+						</xsl:when>
+					</xsl:choose>
+				</input>
 				<xsl:for-each select="extra">
 					<xsl:choose>
 						<xsl:when test="readonly=1">
