@@ -712,7 +712,8 @@
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'id_name'						=> $this->location_info['id']['name'],
 					'id_type'						=> $this->location_info['id']['type'],
-					'fields'						=> $this->location_info['fields']
+					'fields'						=> $this->location_info['fields'],
+					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 
 			$appname	=  $this->location_info['name'];
