@@ -691,6 +691,10 @@
 			$cat_list = array();
 			while (is_array($cats) && list(,$cat) = each($cats))
 			{
+				if($cat['active'] == 2 && !in_array($cat['id'],$selected))//hidden
+				{
+					continue;
+				}
 				$sel_cat = '';
 				if (in_array($cat['id'],$selected))
 				{
