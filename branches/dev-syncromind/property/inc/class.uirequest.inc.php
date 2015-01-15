@@ -67,6 +67,10 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			$this->bolocation			= CreateObject('property.bolocation',true);
+			$this->boproject			= CreateObject('property.boproject');
+			
 			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.borequest',true);
@@ -106,7 +110,7 @@
 			}
 		}
 
-		function property_uirequest()
+		/*function property_uirequest()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::request';
@@ -154,7 +158,7 @@
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 			}
-		}
+		}*/
 		
 		/**
 		 * Fetch data from $this->bo based on parametres
@@ -606,7 +610,7 @@
 			{
 				if($this->acl_read)
 				{
-					$data['datatable']['actions'][] = array
+					/*$data['datatable']['actions'][] = array
 						(
 							'my_name'		=> 'view',
 							'statustext' 	=> lang('edit the actor'),
@@ -619,7 +623,22 @@
 								'type_id'		=> $this->type_id
 							)),
 							'parameters'	=> $parameters
+						);*/
+					
+					$data['datatable']['actions'][] = array
+						(
+							'my_name'		=> 'view',
+							'text' 			=> lang('view'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'	=> 'property.uirequest.view',
+								'appname'		=> $this->appname,
+								'type'			=> $this->type,
+								'type_id'		=> $this->type_id
+							)),
+							'parameters'	=> json_encode($parameters)
 						);
+					
 					/*$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
 					foreach ($jasper as $report)
@@ -1943,7 +1962,7 @@
 			}
 
 			$lookup_type = $mode == 'edit' ? 'form2' : 'view2';
-
+			
 			$location_data=$this->bolocation->initiate_ui_location(array(
 					'values'		=> $values['location_data'],
 					'type_id'		=> isset($this->config->config_data['request_location_level']) && $this->config->config_data['request_location_level'] ? $this->config->config_data['request_location_level'] : -1,
@@ -1954,6 +1973,7 @@
 					'entity_data'	=> $values['p']
 				)
 			);
+			
 
 
 			if($values['contact_phone'])
