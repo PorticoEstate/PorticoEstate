@@ -70,7 +70,24 @@
 				$this->use_session = true;
 			}
 
-			$default_filter_year 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'] == 'current_year' ? date('Y') : 'all';
+			$default_filter_year=  'all';
+
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']))
+			{
+				$_last_year = date('Y') -1;
+				switch($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'])
+				{
+					case 'current_year':
+						 $default_filter_year = date('Y');
+						break;
+					case "{$_last_year}":
+						 $default_filter_year = $_last_year;
+						break;
+					default:
+						 $default_filter_year = 'all';
+						break;
+				}
+			}
 
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');

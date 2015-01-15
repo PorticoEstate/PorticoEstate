@@ -23,7 +23,7 @@
 			<xsl:value-of select="id"/>
 		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="selected">
+			<xsl:when test="selected = 1">
 				<option value="{$user_id}{$id}" selected="selected">
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</option>

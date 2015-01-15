@@ -184,3 +184,31 @@ HTML;
 		}
 		return $out;
 	}
+
+	/**
+	* Get HTML checkbox with contract_types that are valid for new contracts
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function contract_types($config)
+	{
+		phpgw::import_class('rental.socontract');
+		$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+		$types_assigned = isset($config['contract_types']) ? $config['contract_types'] : array();
+		$out = '';
+		foreach ( $types as $type => $_label)
+		{
+			$label = $GLOBALS['phpgw']->translation->translate($_label, array(), false, 'rental');
+			$checked = '';
+			if ( in_array($type, $types_assigned))
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[contract_types][]" value="{$type}" {$checked}><label>{$label}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
