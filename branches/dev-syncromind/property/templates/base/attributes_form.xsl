@@ -132,127 +132,99 @@
 							</select>
 						</xsl:when>
 						<xsl:when test="datatype='AB'">
-							<table>
-								<tr>
-									<td>
-										<xsl:variable name="contact_name">
-											<xsl:value-of select="name"/>
-											<xsl:text>_name</xsl:text>
-										</xsl:variable>
-										<xsl:variable name="lookup_function">
-											<xsl:text>lookup_</xsl:text>
-											<xsl:value-of select="name"/>
-											<xsl:text>();</xsl:text>
-										</xsl:variable>
-										<xsl:variable name="clear_function">
-											<xsl:text>clear_</xsl:text>
-											<xsl:value-of select="name"/>
-											<xsl:text>();</xsl:text>
-										</xsl:variable>
-										<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
-											<xsl:choose>
-												<xsl:when test="disabled!=''">
-													<xsl:attribute name="disabled">
-														<xsl:text> disabled</xsl:text>
-													</xsl:attribute>
-												</xsl:when>
-											</xsl:choose>
-										</input>
-										<input size="30" type="text" name="{$contact_name}" value="{contact_name}" onClick="{$lookup_function}" readonly="readonly">
-											<xsl:choose>
-												<xsl:when test="disabled!=''">
-													<xsl:attribute name="disabled">
-														<xsl:text> disabled</xsl:text>
-													</xsl:attribute>
-												</xsl:when>
-											</xsl:choose>
-										</input>
-										<input type="checkbox" name="clear_{name}_box" onClick="{$clear_function}">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'delete')"/>
-											</xsl:attribute>
-											<xsl:attribute name="readonly">
-												<xsl:text>readonly</xsl:text>
-											</xsl:attribute>
-										</input>
-									</td>
-								</tr>
+							<xsl:variable name="contact_name">
+								<xsl:value-of select="name"/>
+								<xsl:text>_name</xsl:text>
+							</xsl:variable>
+							<xsl:variable name="lookup_function">
+								<xsl:text>lookup_</xsl:text>
+								<xsl:value-of select="name"/>
+								<xsl:text>();</xsl:text>
+							</xsl:variable>
+							<xsl:variable name="clear_function">
+								<xsl:text>clear_</xsl:text>
+								<xsl:value-of select="name"/>
+								<xsl:text>();</xsl:text>
+							</xsl:variable>
+							<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
 								<xsl:choose>
-									<xsl:when test="contact_tel!=''">
-										<tr>
-											<td>
-												<xsl:value-of select="contact_tel"/>
-											</td>
-										</tr>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
 									</xsl:when>
 								</xsl:choose>
+							</input>
+							<input size="30" type="text" name="{$contact_name}" value="{contact_name}" onClick="{$lookup_function}" readonly="readonly">
 								<xsl:choose>
-									<xsl:when test="contact_email!=''">
-										<tr>
-											<td>
-												<a href="mailto:{contact_email}">
-													<xsl:value-of select="contact_email"/>
-												</a>
-											</td>
-										</tr>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
 									</xsl:when>
 								</xsl:choose>
-							</table>
+							</input>
+							<input type="checkbox" name="clear_{name}_box" onClick="{$clear_function}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'delete')"/>
+								</xsl:attribute>
+								<xsl:attribute name="readonly">
+									<xsl:text>readonly</xsl:text>
+								</xsl:attribute>
+							</input>
+							<xsl:choose>
+								<xsl:when test="contact_tel!=''">
+									<xsl:value-of select="contact_tel"/>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="contact_email!=''">
+									<a href="mailto:{contact_email}">
+										<xsl:value-of select="contact_email"/>
+									</a>
+								</xsl:when>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:when test="datatype='ABO'">
-							<table>
-								<tr>
-									<td>
-										<xsl:variable name="org_name">
-											<xsl:value-of select="name"/>
-											<xsl:text>_name</xsl:text>
-										</xsl:variable>
-										<xsl:variable name="lookup_function">
-											<xsl:text>lookup_</xsl:text>
-											<xsl:value-of select="name"/>
-											<xsl:text>();</xsl:text>
-										</xsl:variable>
-										<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
-											<xsl:choose>
-												<xsl:when test="disabled!=''">
-													<xsl:attribute name="disabled">
-														<xsl:text> disabled</xsl:text>
-													</xsl:attribute>
-												</xsl:when>
-											</xsl:choose>
-										</input>
-										<input size="30" type="text" name="{$org_name}" value="{org_name}" onClick="{$lookup_function}" readonly="readonly">
-											<xsl:choose>
-												<xsl:when test="disabled!=''">
-													<xsl:attribute name="disabled">
-														<xsl:text> disabled</xsl:text>
-													</xsl:attribute>
-												</xsl:when>
-											</xsl:choose>
-										</input>
-									</td>
-								</tr>
+							<xsl:variable name="org_name">
+								<xsl:value-of select="name"/>
+								<xsl:text>_name</xsl:text>
+							</xsl:variable>
+							<xsl:variable name="lookup_function">
+								<xsl:text>lookup_</xsl:text>
+								<xsl:value-of select="name"/>
+								<xsl:text>();</xsl:text>
+							</xsl:variable>
+							<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
 								<xsl:choose>
-									<xsl:when test="org_tel!=''">
-										<tr>
-											<td>
-												<xsl:value-of select="org_tel"/>
-											</td>
-										</tr>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
 									</xsl:when>
 								</xsl:choose>
+							</input>
+							<input size="30" type="text" name="{$org_name}" value="{org_name}" onClick="{$lookup_function}" readonly="readonly">
 								<xsl:choose>
-									<xsl:when test="org_email!=''">
-										<tr>
-											<td>
-												<a href="mailto:{org_email}">
-													<xsl:value-of select="org_email"/>
-												</a>
-											</td>
-										</tr>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
 									</xsl:when>
 								</xsl:choose>
-							</table>
+							</input>
+							<xsl:choose>
+								<xsl:when test="org_tel!=''">
+									<xsl:value-of select="org_tel"/>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="org_email!=''">
+									<a href="mailto:{org_email}">
+										<xsl:value-of select="org_email"/>
+									</a>
+								</xsl:when>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:when test="datatype='VENDOR'">
 							<xsl:variable name="vendor_name">
