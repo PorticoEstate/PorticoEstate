@@ -62,10 +62,10 @@
 												<xsl:value-of select="value_id"/>
 											</xsl:when>
 											<xsl:otherwise>
-												<input type="text" name="values[{id_name}]" value="{value_id}">
+												<input data-validation="number" type="text" name="values[{id_name}]" value="{value_id}">
 													<xsl:attribute name="title">
 														<xsl:value-of select="php:function('lang', 'Enter the ID')"/>
-													</xsl:attribute>
+													</xsl:attribute>								
 												</input>
 											</xsl:otherwise>
 										</xsl:choose>
@@ -108,11 +108,46 @@
 												<xsl:value-of select="value"/>
 											</textarea>
 										</xsl:when>
-										<xsl:when test="type='varchar' or type='integer' or type='int' or type='numeric'">
+										<xsl:when test="type='varchar'">
 											<input type="text" name="values[{name}]" value="{value}" size="{size}">
 												<xsl:attribute name="title">
 													<xsl:value-of select="descr"/>
 												</xsl:attribute>
+												<xsl:choose>
+													<xsl:when test="nullable!='1'">
+														<xsl:attribute name="data-validation">
+															<xsl:text>required</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
+											</input>
+										</xsl:when>
+										<xsl:when test="type='integer' or type='int'">
+											<input data-validation="number" type="text" name="values[{name}]" value="{value}" size="{size}">
+												<xsl:attribute name="title">
+													<xsl:value-of select="descr"/>
+												</xsl:attribute>
+												<xsl:choose>
+													<xsl:when test="nullable='1'">
+														<xsl:attribute name="data-validation-optional">
+															<xsl:text>true</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
+											</input>
+										</xsl:when>
+										<xsl:when test="type='numeric'">
+											<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" name="values[{name}]" value="{value}" size="{size}">
+												<xsl:attribute name="title">
+													<xsl:value-of select="descr"/>
+												</xsl:attribute>
+												<xsl:choose>
+													<xsl:when test="nullable='1'">
+														<xsl:attribute name="data-validation-optional">
+															<xsl:text>true</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
 											</input>
 										</xsl:when>
 										<xsl:when test="type='checkbox'">
@@ -135,6 +170,13 @@
 										</xsl:when>
 										<xsl:when test="type='select'">
 											<select name="values[{name}]">
+												<xsl:choose>
+													<xsl:when test="nullable!='1'">
+														<xsl:attribute name="data-validation">
+															<xsl:text>required</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
 												<option value="">
 													<xsl:value-of select="php:function('lang', 'select value')"/>
 												</option>
@@ -150,6 +192,13 @@
 										</xsl:when>
 										<xsl:when test="type='multiple_select'">
 											<select name="values[{name}][]" multiple="multiple">
+												<xsl:choose>
+													<xsl:when test="nullable!='1'">
+														<xsl:attribute name="data-validation">
+															<xsl:text>required</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
 												<xsl:for-each select="valueset">
 													<option value="{id}">
 														<xsl:if test="selected != 0">
@@ -166,6 +215,11 @@
 													<xsl:when test="disabled!=''">
 														<xsl:attribute name="disabled">
 															<xsl:text> disabled</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+													<xsl:when test="nullable!='1'">
+														<xsl:attribute name="data-validation">
+															<xsl:text>required</xsl:text>
 														</xsl:attribute>
 													</xsl:when>
 												</xsl:choose>
