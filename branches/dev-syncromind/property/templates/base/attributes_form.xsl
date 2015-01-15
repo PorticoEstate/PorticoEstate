@@ -700,6 +700,22 @@
 								</xsl:choose>
 							</input>
 						</xsl:when>
+						<xsl:when test="datatype='email'">
+							<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+								<xsl:choose>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:when test="nullable='1'">
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+								</xsl:choose>
+							</input>
+						</xsl:when>
 						<xsl:otherwise>
 							<input id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
 								<xsl:choose>
