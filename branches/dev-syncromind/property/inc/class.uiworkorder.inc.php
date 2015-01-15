@@ -1174,7 +1174,7 @@
 
 			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
 
-			/*if (isset($values['save']))
+			if (isset($values['save']))
 			{
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
@@ -1532,7 +1532,6 @@
 				}
 
 			}
-            */
 
 			if(!isset($receipt['error']))
 			{
@@ -2270,7 +2269,7 @@
 				'datatable'								=> $datavalues,
 				'myColumnDefs'							=> $myColumnDefs,
 				'myButtons'								=> $myButtons,
-				'tabs'									=> self::_generate_tabs(array(),array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
+				'tabs'									=> self::_generate_tabs(array(),array('documents' => $id?false:true, 'history' => $id?false:true)),
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'						=> isset($origin)?$origin:'',
@@ -2466,6 +2465,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 		}
 
+		
 		function add()
 		{
 			if(!$this->acl_edit)
@@ -2883,9 +2883,7 @@
 				}
 			}
 
-			phpgwapi_yui::tabview_setup('workorder_tabview');
-
-			return phpgwapi_yui::tabview_generate($tabs, $selected);
+			return phpgwapi_jquery::tabview_generate($tabs, $selected);
 		}
 
 	}
