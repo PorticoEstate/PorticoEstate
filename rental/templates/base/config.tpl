@@ -159,6 +159,16 @@
 			<td>{lang_path_to_wkhtmltopdf}:</td>
 			<td><input name="newsettings[path_to_wkhtmltopdf]" value="{value_path_to_wkhtmltopdf}"></td>
 		</tr>
+		<tr class="row_off">
+			<td valign = 'top'>{lang_contract_types}:</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[contract_types][]" value="">
+				<table>
+					{hook_contract_types}
+				</table>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
