@@ -290,7 +290,7 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 							return {
 								label: item.name,
 								value: item.id
-							}
+							};
 						}));
 					}
 				});
@@ -333,11 +333,11 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		{
 			TINY.box.hide();
 		}
-	}
+	};
 
 	JqueryPortico.lightboxlogin = function()
 	{
 		var oArgs = {lightbox:1};
 		var strURL = phpGWLink('login.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:'frameless',width:$(window).width(),height:400,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: false,closejs:false});
-	}
+	};
