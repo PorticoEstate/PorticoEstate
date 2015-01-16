@@ -229,7 +229,6 @@ HTML;
 
 			JqueryPortico.render_tabs = function ()
 			{
-
 				$('#{$tab_set}').responsiveTabs({
 					startCollapsed: 'accordion',
 					collapsible: 'accordion',
@@ -248,7 +247,7 @@ HTML;
 
 			};
 JS;
-		$GLOBALS['phpgw']->js->add_code('', $js, true);
+		$GLOBALS['phpgw']->js->add_code('', $js);
 		return $output;
 	}
 
