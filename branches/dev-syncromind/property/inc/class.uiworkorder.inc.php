@@ -1887,7 +1887,28 @@
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $project['cat_id']));
 
-			$datavalues[0] = array
+			$history_def = array
+			(
+				array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
+				array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
+				array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> '',
+				'data'			=> $record_history,
+				'ColumnDefs'	=> $history_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+				
+			/*$datavalues[0] = array
 				(
 					'name'					=> "0",
 					'values' 				=> json_encode($record_history),
@@ -1905,12 +1926,13 @@
 														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
-				);
+				);*/
 
 			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
-
+			
+			$content_files = array();
 			for($z=0; $z<count($values['files']); $z++)
 			{
 				if ($link_to_files)
@@ -1924,7 +1946,25 @@
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}
 
-			$datavalues[1] = array
+			$files_def = array
+			(
+				array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> '',
+				'data'			=> $content_files,
+				'ColumnDefs'	=> $files_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+			
+			/*$datavalues[1] = array
 				(
 					'name'					=> "1",
 					'values' 				=> json_encode($content_files),
@@ -1939,7 +1979,7 @@
 					'name'		=> "1",
 					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
 					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
-				);
+				);*/
 
 			$invoices = array();
 			if ($id)
@@ -1977,8 +2017,44 @@
 					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 				);
 			}
-//_debug_array($content_invoice);
-			$datavalues[2] = array
+			
+			$_formatter_voucher_link	= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
+			if($_lean)
+			{
+				$_formatter_voucher_link = '""';
+			}
+			
+			$invoice_def = array
+			(
+				array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=> $_formatter_voucher_link),
+				array('key' => 'voucher_out_id','hidden'=>true),
+				array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+				array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+				array('key' => 'period','label'=>lang('period'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'periodization','label'=>lang('periodization'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'periodization_start','label'=>lang('periodization start'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'type','label'=>lang('type'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true)
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> '',
+				'data'			=> $content_invoice,
+				'ColumnDefs'	=> $invoice_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+
+			/*$datavalues[2] = array
 				(
 					'name'					=> "2",
 					'values' 				=> json_encode($content_invoice),
@@ -1987,14 +2063,6 @@
 					'is_paginator'			=> 1,
 					'footer'				=> 0
 				);
-
-
-			$_formatter_voucher_link	= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
-
-			if($_lean)
-			{
-				$_formatter_voucher_link = '""';
-			}
 
 			$myColumnDefs[2] = array
 				(
@@ -2014,9 +2082,9 @@
 														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),
 														))
-				);
+				);*/
 
-			$notify_info = execMethod('property.notify.get_yui_table_def',array
+			/*$notify_info = execMethod('property.notify.get_yui_table_def',array
 								(
 									'location_id'		=> $location_id,
 									'location_item_id'	=> $id,
@@ -2030,7 +2098,7 @@
 			if($mode == 'edit')
 			{
 				$myButtons[]	= $notify_info['buttons'];
-			}
+			}*/
 
 			/*
 			* start new notify-table
@@ -2057,12 +2125,12 @@
 			
 			/* end new notify-table */
 
-			$myColumnDefs[] = array
+			/*$myColumnDefs[] = array
 				(
 					'name'		=> "4",
 					'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
-				);
+				);*/
 
 
 			$content_email =  execMethod('property.bocommon.get_vendor_email', isset($values['vendor_id']) ? $values['vendor_id'] : 0 );
@@ -2081,7 +2149,25 @@
 				$value_extra_mail_address = implode(',', array_diff($values['mail_recipients'], $_recipients_found));
 			}
 
-			$datavalues[] = array
+			$email_def = array
+			(
+				array('key' => 'value_email', 'label'=>lang('email'), 'sortable'=>true, 'resizeable'=>true),
+				array('key' => 'value_select', 'label'=>lang('select'), 'sortable'=>false, 'resizeable'=>true)
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_4',
+				'requestUrl'	=> '',
+				'data'			=> $content_email,
+				'ColumnDefs'	=> $email_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+			
+			/*$datavalues[] = array
 				(
 					'name'					=> "4",
 					'values' 				=> json_encode($content_email),
@@ -2090,7 +2176,7 @@
 					'is_paginator'			=> 0,
 					'edit_action'			=> "''",
 					'footer'				=> 0
-				);
+				);*/
 
 
 
@@ -2146,8 +2232,40 @@
 			}
 			unset($b_entry);
 
+			$budget_def = array
+			(
+				array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+				array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+				array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+				array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+				array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+				array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+				array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+				array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+				array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+				array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+				//~ array('key' => 'closed_orig','hidden' => true),
+				array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+				array('key' => 'active_orig','hidden' => true),
+				array('key' => 'flag_active','hidden' => true),
+				array('key' => 'delete_period','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
+			);
 
-			$datavalues[] = array
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_5',
+				'requestUrl'	=> '',
+				'data'			=> $content_budget,
+				'ColumnDefs'	=> $budget_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+			
+			/*$datavalues[] = array
 				(
 					'name'					=> "5",
 					'values' 				=> json_encode($content_budget),
@@ -2162,7 +2280,8 @@
 			$myColumnDefs[] = array
 				(
 					'name'		=> "5",
-					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+					'values'	=>	json_encode(array(	
+														array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
@@ -2182,7 +2301,7 @@
 													)
 												)
 
-				);
+				);*/
 
 //---------
 
@@ -2257,6 +2376,7 @@
 			$data = array
 			(
 				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'datatable_def'							=> $datatable_def,
 				'periodization_data'					=> $periodization_data,
 				'year_list'								=> array('options' => $year_list),
 				'mode'									=> $mode,
@@ -2433,7 +2553,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','files','cat_sub_select'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','datatable_inline','files','cat_sub_select'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 
 			phpgwapi_yui::load_widget('dragdrop');
