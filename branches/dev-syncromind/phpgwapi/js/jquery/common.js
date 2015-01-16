@@ -17,7 +17,12 @@ JqueryPortico.formatLink = function(key, oData) {
 	var link = oData['link'];
 	return '<a href="' + link + '">' + name + '</a>';
 };
-
+ JqueryPortico.formatLinkGallery = function(key, oData){
+     
+        var name = 'Link';
+	var link = oData[key];
+	return '<a href="' + link + '" target="_blank">' + name + '</a>'; 
+ }
 
 JqueryPortico.formatLinkGeneric = function(key, oData) {
 	if(!oData[key])
