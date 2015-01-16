@@ -116,17 +116,24 @@
 			$this->user_id		= $data['user_id'];
 		}
 
-		public function read($dry_run='')
-		{
-			$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
-			$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
+		public function read($data = array())
+		{            
+            //$dry_run=''
+            //$data = array()
+			//$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
+			//$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
 
-			$valid_locations = $this->get_gallery_location();
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id,
-				'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
-				'cat_id' => $this->cat_id, 'valid_locations' => $valid_locations, 'dry_run'=>$dry_run));
+			//$valid_locations = $this->get_gallery_location();
+            //echo '<pre>'; print_r($valid_locations);echo '</pre>';
+            //array_unshift($data['valid_locations'],$valid_locations);
+            
+            
+//			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//			'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id,
+//			'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
+//			'cat_id' => $this->cat_id, 'valid_locations' => $valid_locations, 'dry_run'=>$dry_run));
 
+            $values = $this->so->read($data);
 
 			$img_types = array
 				(
