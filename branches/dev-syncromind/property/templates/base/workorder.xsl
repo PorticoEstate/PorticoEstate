@@ -96,6 +96,7 @@
 			}
 
 		</script>
+		<div id="workorder_edit_tabview">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -167,15 +168,15 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" method="post" id='workorder_edit' name="form" action="{$form_action}">
+		<form ENCTYPE="multipart/form-data" method="post" id='workorder_edit' name="form" action="{$form_action}" class= "pure-form pure-form-aligned">
 			<input type="hidden" name="send_workorder" value=""/>
 			<input type="hidden" name='calculate_workorder'  value=""/>
 
 			<input type="hidden" name="tab" value=""/>
-			<div class="yui-navset" id="workorder_tabview">
+			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div class="yui-content">
 					<div id="general">
+						<fieldset>
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<xsl:choose>
 								<xsl:when test="value_project_id!=''">
@@ -472,8 +473,10 @@
 								</td>
 							</tr>
 						</table>
+						</fieldset>
 					</div>
 					<div id="budget">
+						<fieldset>
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<tr>
 								<td valign="top">
@@ -570,8 +573,19 @@
 											<xsl:value-of select="php:function('lang', 'send order')"/>
 										</td>
 										<td>
-											<div id="paging_4"/>
-											<div id="datatable-container_4"/>
+											<div class="pure-control-group">
+												<xsl:for-each select="datatable_def">
+														<xsl:if test="container = 'datatable-container_4'">
+															<xsl:call-template name="table_setup">
+																<xsl:with-param name="container" select ='container'/>
+																<xsl:with-param name="requestUrl" select ='requestUrl' />
+																<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+																<xsl:with-param name="tabletools" select ='tabletools' />
+																<xsl:with-param name="config" select ='config' />
+															</xsl:call-template>
+														</xsl:if>
+												</xsl:for-each>
+											</div>
 										</td>
 										<tr>
 											<td valign="top">
@@ -756,8 +770,19 @@
 									<xsl:value-of select="php:function('lang', 'budget')"/>
 								</td>
 								<td>
-									<div id="paging_5"/>
-									<div id="datatable-container_5"/>
+									<div class="pure-control-group">
+										<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_5'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl' />
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="config" select ='config' />
+													</xsl:call-template>
+												</xsl:if>
+										</xsl:for-each>
+									</div>
 								</td>
 							</tr>
 							<tr>
@@ -835,13 +860,26 @@
 									</xsl:choose>
 								</td>
 								<td>
-									<div id="paging_2"> </div>
-									<div id="datatable-container_2"/>
+									<div class="pure-control-group">
+										<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_2'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl' />
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="config" select ='config' />
+													</xsl:call-template>
+												</xsl:if>
+										</xsl:for-each>
+									</div>
 								</td>
 							</tr>
 						</table>
+						</fieldset>
 					</div>
 					<div id="coordination">
+						<fieldset>
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
@@ -872,9 +910,19 @@
 									<xsl:value-of select="php:function('lang', 'notify')"/>
 								</td>
 								<td>
-									<div id="paging_3"> </div>
-									<div id="datatable-container_3"/>
-									<div id="datatable-buttons_3"/>
+									<div class="pure-control-group">
+										<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_3'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl' />
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="config" select ='config' />
+													</xsl:call-template>
+												</xsl:if>
+										</xsl:for-each>
+									</div>
 								</td>
 							</tr>
 							<xsl:choose>
@@ -928,25 +976,53 @@
 								</xsl:when>
 							</xsl:choose>
 						</table>
+						</fieldset>
 					</div>
 					<xsl:choose>
 						<xsl:when test="value_workorder_id!=''">
 							<div id="documents">
+								<fieldset>
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
 										<td align="left" valign="top">
 											<xsl:value-of select="//lang_files"/>
 										</td>
 										<td>
-											<div id="datatable-container_1"/>
+											<div class="pure-control-group">
+												<xsl:for-each select="datatable_def">
+														<xsl:if test="container = 'datatable-container_1'">
+															<xsl:call-template name="table_setup">
+																<xsl:with-param name="container" select ='container'/>
+																<xsl:with-param name="requestUrl" select ='requestUrl' />
+																<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+																<xsl:with-param name="tabletools" select ='tabletools' />
+																<xsl:with-param name="config" select ='config' />
+															</xsl:call-template>
+														</xsl:if>
+												</xsl:for-each>
+											</div>
 										</td>
 									</tr>
 									<xsl:call-template name="file_upload"/>
 								</table>
+								</fieldset>
 							</div>
 							<div id="history">
-								<div id="paging_0"> </div>
-								<div id="datatable-container_0"/>
+								<fieldset>
+									<div class="pure-control-group">
+										<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_0'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl' />
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="config" select ='config' />
+													</xsl:call-template>
+												</xsl:if>
+										</xsl:for-each>
+									</div>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -957,33 +1033,7 @@
 						var datatable = new Array();
 						var myColumnDefs = new Array();
 						var myButtons = new Array();
-
-						<xsl:for-each select="datatable">
-							datatable[<xsl:value-of select="name"/>] = [
-								{
-									values:<xsl:value-of select="values"/>,
-									total_records: <xsl:value-of select="total_records"/>,
-									edit_action:  <xsl:value-of select="edit_action"/>,
-									is_paginator:  <xsl:value-of select="is_paginator"/>,
-									<xsl:if test="rows_per_page">
-										rows_per_page: "<xsl:value-of select="rows_per_page"/>",
-									</xsl:if>
-									<xsl:if test="initial_page">
-										initial_page: "<xsl:value-of select="initial_page"/>",
-									</xsl:if>
-									footer:<xsl:value-of select="footer"/>
-								}
-							]
-						</xsl:for-each>
-
-						<xsl:for-each select="myColumnDefs">
-							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-						</xsl:for-each>
-						<xsl:for-each select="myButtons">
-							myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-						</xsl:for-each>
 					</script>
-				</div>
 			</div>
 			<xsl:choose>
 				<xsl:when test="mode='edit'">
@@ -1034,6 +1084,7 @@
 				</xsl:choose>
 			</tr>
 		</table>
+		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 	</xsl:template>
 
