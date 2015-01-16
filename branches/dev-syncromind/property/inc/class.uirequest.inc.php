@@ -2043,28 +2043,26 @@
 				$values['files'][$i]['file_name']=urlencode($values['files'][$i]['name']);
 			}
 
-			$datavalues[0] = array
-				(
-					'name'					=> "0",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> array( array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_user','label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_action','label'=>lang('Action'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label'=>lang('New Value'),'sortable'=>true,'resizeable'=>true)))
-				);
-
+														array('key' => 'value_new_value','label'=>lang('New Value'),'sortable'=>true,'resizeable'=>true)),
+				'data'			=> json_encode($record_history),
+				'config'		=> array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+
+			$content_files = array();
 
 			for($z=0; $z<count($values['files']); $z++)
 			{
@@ -2079,23 +2077,18 @@
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" >';
 			}
 
-			$datavalues[1] = array
-				(
-					'name'					=> "1",
-					'values' 				=> json_encode($content_files),
-					'total_records'			=> count($content_files),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[1] = array
-				(
-					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-				);
-
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> array(array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+										array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')),
+				'data'			=> json_encode($content_files),
+				'config'		=> array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
 
 			$_consume_amount = 0;
 			$_planning_amount = 0;
@@ -2127,29 +2120,23 @@
 
 			$related = $this->get_related($id);
 
-			$datavalues[2] = array
-				(
-					'name'					=> "2",
-					'values' 				=> json_encode($related),
-					'total_records'			=> count($related),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-
-
-			$myColumnDefs[2] = array
-				(
-					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>false),
-														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false, 'formatter' => 'FormatterRight')))
-				);
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> array(array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>false),
+											array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+											array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+											array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+											array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
+											array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
+											array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false, 'formatter' => 'FormatterRight')),
+				'data'			=> json_encode($related),
+				'config'		=> array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -2194,15 +2181,13 @@
 
 			$data = array
 				(
+					'datatable_def'						=> $datatable_def,
 					'mode'								=> $mode,
 					'ticket_link'						=> $GLOBALS['phpgw']->link('/index.php',$ticket_link_data),
 					'value_authorities_demands' 		=> isset($this->config->config_data['authorities_demands']) &&  $this->config->config_data['authorities_demands'] ? $this->config->config_data['authorities_demands'] : 0,
 					'suppressmeter'						=> isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
 					'show_dates'						=> $show_dates,
 					'custom_attributes'					=> array('attributes' => $values['attributes']),
-					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-					'datatable'							=> $datavalues,
-					'myColumnDefs'						=> $myColumnDefs,
 					'tabs'								=> self::_generate_tabs(),
 					'fileupload'						=> true,
 					'link_view_file'					=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
@@ -2335,29 +2320,12 @@
 					'value_multiplier'					=> $values['multiplier'],
 					'value_total_cost_estimate'			=> $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']) , 0, ',', ' ') : ''
 				);
-//_debug_array($data);die();
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
 			$appname	= lang('request');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('request', 'files','attributes_form'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'request.edit', 'property' );
+			self::add_javascript('property', 'portico', 'request.edit.js');
+			self::render_template_xsl(array('request', 'datatable_inline', 'files','attributes_form'), array('edit' => $data));
 		}
 
 		function delete()
@@ -2517,16 +2485,14 @@
 
 		protected function _generate_tabs()
 		{
+			$active_tab = 'general';
 			$tabs = array
 				(
 					'general'		=> array('label' => lang('general'), 'link' => '#general'),
 					'budget'		=> array('label' => lang('documents'), 'link' => '#documents'),
 					'history'		=> array('label' => lang('history'), 'link' => '#history')
 				);
-
-			phpgwapi_yui::tabview_setup('project_tabview');
-
-			return  phpgwapi_yui::tabview_generate($tabs, 'general');
+			return phpgwapi_jquery::tabview_generate($tabs, $active_tab,'request_tabview');
 		}
 	}
 

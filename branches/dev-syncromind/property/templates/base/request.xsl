@@ -1,5 +1,5 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
+	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
@@ -11,6 +11,8 @@
 				<xsl:apply-templates select="priority_form"/>
 			</xsl:when>
 		</xsl:choose>
+		<xsl:call-template name="jquery_phpgw_i18n"/>
+
 	</xsl:template>
 
 	<!-- New template-->
@@ -187,10 +189,9 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
-			<div class="yui-navset yui-navset-top" id="project_tabview">
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div class="yui-content">
-					<div id="general" class="content-wrp requirement">
+		<div id="request_tabview">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="general">
 						<div class="requirement-responsibility-left">
 							<h2><xsl:value-of select="php:function('lang', 'request')"/></h2>
 							<span class="messages">
@@ -605,7 +606,20 @@
 							<h3><!-- xsl:value-of select="php:function('lang', 'related')"/-->
 								<xsl:value-of select="php:function('lang', 'economy and progress')"/>
 							</h3>
-							<div id="datatable-container_2"/>
+							<!--div id="datatable-container_2"/-->
+							<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_2'">
+										<xsl:call-template name="table_setup">
+										  <xsl:with-param name="container" select ='container'/>
+										  <xsl:with-param name="requestUrl" select ='requestUrl' />
+										  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="config" select ='config' />
+										  <xsl:with-param name="data" select ='data' />
+										</xsl:call-template>
+									</xsl:if>
+							</xsl:for-each>
+
 						</div>
 					</div>
 					<div id="documents">
@@ -618,7 +632,20 @@
 											<xsl:value-of select="//lang_files"/>
 										</td>
 										<td>
-											<div id="datatable-container_1"/>
+											<!--div id="datatable-container_1"/-->
+											<xsl:for-each select="datatable_def">
+													<xsl:if test="container = 'datatable-container_1'">
+														<xsl:call-template name="table_setup">
+														  <xsl:with-param name="container" select ='container'/>
+														  <xsl:with-param name="requestUrl" select ='requestUrl' />
+														  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+															<xsl:with-param name="tabletools" select ='tabletools' />
+															<xsl:with-param name="config" select ='config' />
+														  <xsl:with-param name="data" select ='data' />
+														</xsl:call-template>
+													</xsl:if>
+											</xsl:for-each>
+
 										</td>
 									</tr>
 								</xsl:when>
@@ -631,9 +658,22 @@
 						</table>
 					</div>
 					<div id="history">
-						<div id="paging_0"> </div>
+						<!--div id="paging_0"> </div>
 						<div id="datatable-container_0"/>
-						<div id="contextmenu_0"/>
+						<div id="contextmenu_0"/-->
+							<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+										  <xsl:with-param name="container" select ='container'/>
+										  <xsl:with-param name="requestUrl" select ='requestUrl' />
+										  <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="config" select ='config' />
+										  <xsl:with-param name="data" select ='data' />
+										</xsl:call-template>
+									</xsl:if>
+							</xsl:for-each>
+
 						<script type="text/javascript">
 							var property_js = <xsl:value-of select="property_js"/>;
 							var datatable = new Array();
@@ -656,7 +696,6 @@
 							</xsl:for-each>
 						</script>
 					</div>
-				</div>
 			</div>
 			<div class="controlButton">
 				<table>
