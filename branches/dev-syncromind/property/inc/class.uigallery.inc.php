@@ -26,14 +26,15 @@
 	* @subpackage admin
  	* @version $Id$
 	*/
-	phpgw::import_class('phpgwapi.yui');
-
+	//phpgw::import_class('phpgwapi.yui');
+    phpgw::import_class('phpgwapi.uicommon_jquery');
+    phpgw::import_class('phpgwapi.jquery');
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_uigallery
+	class property_uigallery extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $start;
@@ -46,12 +47,15 @@
 
 		var $public_functions = array
 			(
+                'query'     => true,
 				'index'		=> true,
 				'view_file'	=> true
 			);
 
 		function __construct()
 		{
+            parent::__construct();
+            
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bogallery',true);
@@ -248,9 +252,50 @@
 			}
 		}
 
+        private function _get_Filters()
+        {
+            $values_combo_box = array();
+            $combos = array();
+            
+				$values_combo_box[0]  = $this->bo->get_filetypes();
+				$default_value = array ('id'=> '', 'name'=>lang('no filetype'));
+				array_unshift ($values_combo_box[0],$default_value);
+                $combos[] = array
+                                (
+                                    'type'   => 'filter',
+                                    'name'   => 'mime_type',
+                                    'text'   => lang('Filetype'),
+                                    'list'   => $values_combo_box[0]
+                                );
+
+				$values_combo_box[1]  = $this->bo->get_gallery_location();
+				$default_value = array ('id'=> '', 'name'=>lang('no category'));
+				array_unshift ($values_combo_box[1],$default_value);
+                 $combos[] = array
+                                (
+                                    'type'   => 'filter',
+                                    'name'   => 'cat_id',
+                                    'text'   => lang('Category'),
+                                    'list'   => $values_combo_box[1]
+                                );
+
+				$values_combo_box[2]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+				array_unshift ($values_combo_box[2],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine documents')));
+				$default_value = array('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[2],$default_value);
+                $combos[] = array
+                                (
+                                    'type'   => 'filter',
+                                    'name'   => 'user_id',
+                                    'text'   => lang('User'),
+                                    'list'   => $values_combo_box[2]
+                                );
+                
+                return $combos;
+        }
+                
 		function index()
 		{
-			//_debug_array($_REQUEST);
 			$this->acl_location = '.document';
 			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property') )
 			{
@@ -264,12 +309,125 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::gallery";
+            
+            if( phpgw::get_var('phpgw_return_as') == 'json')
+            {
+                return $this->query();
+            }
+            
+            self::add_javascript('phpgwapi','jquery','editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi','jquery','editable/jquery.dataTables.editable.js');
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
+            
+            $appname			= lang('gallery');
+			$function_msg		= lang('list pictures');
+            
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
+            
+            $data = array(
+                'datatable_name'    => $appname,
+                'form'  => array(
+                               'toolbar'    => array(
+                                   'item'   => array(
+                                       array
+                                            (
+                                                'type'	=> 'date-picker',
+                                                'id'	=> 'start_date',
+                                                'name'	=> 'start_date',
+                                                'value'	=> '',
+                                                'text' => lang('from')
+                                            ),
+                                            array
+                                            (
+                                                'type'	=> 'date-picker',
+                                                'id'	=> 'end_date',
+                                                'name'	=> 'end_date',
+                                                'value'	=> '',
+                                                'text' => lang('to')
+                                            )
+                                   )
+                               )
+                            ),
+                'datatable' => array(
+                    'source'    => self::link(array(
+                        'menuaction'	=> 'property.uigallery.index',
+						'mime_type'		=> $this->mime_type,
+						'cat_id'		=> $this->cat_id,
+						'user_id'		=> $this->user_id,
+                        'phpgw_return_as'   =>  'json'
+                    )),
+                    'allrows'   => true,
+                    'editor_action' => '',
+                    'field' => array(
+                        array(
+                            'key'   => 'img_id',
+                            'label' => lang('dummy'),
+                            'sortable'   => true,
+                            'hidden'    => true
+                        ),
+                        array(
+                            'key'   => 'directory',
+                            'label' => lang('directory'),
+                            'sortable'   => false
+                        ),
+                        array(
+                            'key'   => 'id',
+                            'label' => lang('id'),
+                            'sortable'   => true
+                        ),
+                        array(
+                            'key'   => 'date',
+                            'label' => lang('date'),
+                            'sortable'   => true
+                        ),
+                        array(
+                            'key'   => 'name',
+                            'label' => lang('name'),
+                            'sortable'   => false
+                        ),
+                        array(
+                            'key'   => 'size',
+                            'label' => lang('size'),
+                            'sortable'   => true
+                        ),
+                        array(
+                            'key'   => 'location_name',
+                            'label' => lang('location name'),
+                            'sortable'   => false
+                        ),
+                        array(
+                            'key'   => 'url',
+                            'label' => lang('url'),
+                            'sortable'   => false,
+                            'formatter' => 'JqueryPortico.formatLinkGallery' 
+                        ),
+                        array(
+                            'key'   => 'document_url',
+                            'label' => lang('document'),
+                            'sortable'   => false,
+                            'formatter' => 'JqueryPortico.formatLinkGallery'
+                        ),
+                        array(
+                            'key'   => 'user',
+                            'label' => lang('user'),
+                            'sortable'   => false
+                        ),
+                        array(
+                            'key'   => 'picture',
+                            'label' => lang('picture'),
+                            'sortable'   => false,
+                            'formatter' => 'JqueryPortico.showPicture'
+                        )
+                    )
+                )
+            );
+			//$this->save_sessiondata();
+			//$datatable = array();
 
-			$this->save_sessiondata();
-
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			/*if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
@@ -348,16 +506,6 @@
 									'style' => 'filter',
 									'tab_index' => 3
 								),
-/*
-								array
-								( // boton SAVE
-									'id'	=> 'btn_save',
-									//'name' => 'save',
-									'value'	=> lang('save'),
-									'tab_index' => 7,
-									'type'	=> 'button'
-									),
- */
 								array
 								( //hidden start_date
 									'type' => 'hidden',
@@ -431,10 +579,15 @@
 						)
 					);				
 				$dry_run = true;
-			}
-
-			$values = $this->bo->read($dry_run);
-			$uicols = array();$this->bo->uicols;
+			}*/
+            $filters = $this->_get_Filters();
+            foreach ($filters as $filter) {
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
+            
+			$values = $this->bo->read(array('dry_run' => true));
+			/*$uicols = array();
+            $this->bo->uicols;
 
 			$uicols['name'][]		= 'img_id';
 			$uicols['descr'][]		= 'dummy';
@@ -524,15 +677,6 @@
 			$uicols['formatter'][]	= 'show_picture';
 			$uicols['input_type'][]	= '';
 
-/*
-			$uicols['name'][]		= 'select';
-			$uicols['descr'][]		= lang('select');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'myFormatterCheck';
-			$uicols['input_type'][]	= '';
- */
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -553,7 +697,7 @@
 				$j++;
 			}
 
-			$datatable['rowactions']['action'] = array();
+			//$datatable['rowactions']['action'] = array();
 /*
 			$parameters = array
 			(
@@ -622,7 +766,7 @@
 
 			if($this->acl_add)
 			{
-				$datatable['rowactions']['action'][] = array
+				$data['datatable']['actions'][] = array
 					(
 						'my_name' 			=> 'add',
 						'statustext' 	=> lang('add'),
@@ -636,7 +780,7 @@
 					);
 			}
 
-			for ($i=0;$i<$count_uicols_name;$i++)
+			/*for ($i=0;$i<$count_uicols_name;$i++)
 			{
 				$datatable['headers']['header'][$i]['formatter'] 		= $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
 				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -672,9 +816,6 @@
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			$appname			= lang('gallery');
-			$function_msg		= lang('list pictures');
 
 			if ( ($this->start == 0) && (!$this->order))
 			{
@@ -769,14 +910,52 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );
-
-			//FIXME: have a look at this one: http://thecodecentral.com/2008/01/01/yui-based-lightbox-final
-			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
-			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
-			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
+            
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );*/
+            self::render_template_xsl('datatable_jquery',$data);
 		}
+        
+        public function query()
+        {
+            
+            $start_date	= urldecode($this->start_date);
+			$end_date = urldecode($this->end_date);
+            
+            $search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+            
+            $params = array(
+                'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+                'location_id' => $this->location_id, 
+                'user_id' => $this->user_id,
+				'mime_type' => $this->mime_type,
+                'cat_id' => $this->cat_id,
+                'start_date' => $start_date,
+				'end_date' => $end_date
+            );
+                        
+            $result_objects = array();
+            $result_count = 0;
+            
+            $values = $this->bo->read($params);
+            
+            if( phpgw::get_var('export','bool'))
+            {
+                return $values;
+            }
+            
+            $result_data = array('results'  => $values);
+            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['draw'] = $draw;
+            
+            return $this->jquery_results($result_data);
+        }
+        
 	}
