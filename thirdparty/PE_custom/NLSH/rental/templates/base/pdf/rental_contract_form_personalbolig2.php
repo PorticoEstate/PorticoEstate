@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $template_name = "Leie av personalbolig";
 if(!$get_template_config){
@@ -14,7 +14,9 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 <?php include "css/contract.css"?>
 </style>
 <div class="contract">
-<img src="http://portico.nlsh.no/portico/logovariant1.png" alt="Nordlanssykehuset logo" />
+<img src="http://portico.nlsh.no/portico/logovariant1.png" alt="Nordlanssykehuset logo" height="52" width="500" />
+<!--<img src="http://www.nordlandssykehuset.no/getfile.php/NLSH_bilde%20og%20filarkiv/Internett/NLSH_logo_siste.jpg%20%28352x58%29.jpg" alt="Nordlanssykehuset logo" />-->
+
 <h1>LEIEKONTRAKT</h1>
 <h2>FOR PERSONALBOLIG</h2>
 <h3>Kontraktsnummer: <?php echo $contract->get_old_contract_id();?></h3>
@@ -109,7 +111,7 @@ $termin_name = str_replace("vis", "", $termin_name);
 					break;
 			}
 			echo $epost;
-			
+
 			?>
 		</td>
 		<td bgcolor="#C0C0C0">Arbeidssted:</td>
@@ -123,14 +125,14 @@ $termin_name = str_replace("vis", "", $termin_name);
 		<td></td>
 		<td bgcolor="#C0C0C0">Adresse:</td>
 		<td>
-			<?php 
-				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){ 
+			<?php
+				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){
 					echo $_POST['address']?>
-					<input type="hidden" name="address" value="<?php echo $_POST['address']?>" /> 
+					<input type="hidden" name="address" value="<?php echo $_POST['address']?>" />
 			<?php
 				}else{
-			?> 
-					<input type="text" name="address" value="<?php echo $contract_party->get_address_1().", ".$contract_party->get_address_2();?>" /> 
+			?>
+					<input type="text" name="address" value="<?php echo $contract_party->get_address_1().", ".$contract_party->get_address_2();?>" />
 			<?php
 				}
 			?>
@@ -140,14 +142,14 @@ $termin_name = str_replace("vis", "", $termin_name);
 		<td></td>
 		<td bgcolor="#C0C0C0">Postnr/Sted:</td>
 		<td>
-			<?php 
-				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){ 
+			<?php
+				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){
 					echo $_POST['postal_code']?>
-					<input type="hidden" name="postal_code" value="<?php echo $_POST['postal_code']?>" /> 
+					<input type="hidden" name="postal_code" value="<?php echo $_POST['postal_code']?>" />
 			<?php
 				}else{
-			?> 
-					<input type="text" name="postal_code" value="<?php echo $contract_party->get_postal_code()." ".$contract_party->get_place();?>" /> 
+			?>
+					<input type="text" name="postal_code" value="<?php echo $contract_party->get_postal_code()." ".$contract_party->get_place();?>" />
 			<?php
 				}
 			?>
@@ -166,9 +168,9 @@ $termin_name = str_replace("vis", "", $termin_name);
 	<dt>
 	</dt>
 	<?php
-	
+
 	foreach ($units as $unit){
-	
+
 	$gb = preg_split('/ /', $unit->get_location()->get_gab_id(), -1);
 	if(!($gb[0]=="")){
 	?><dt></dt>
@@ -196,7 +198,7 @@ else
 {
 	?> <textarea rows="3" cols="" name="limitations"><?php echo $_POST['limitations']?></textarea> <?php
 }
-?> 
+?>
 	</dd>
 
 </dl>
@@ -425,19 +427,19 @@ foreach ($price_items as $item)
 	</tr>
 </table>
 </div>
-<?php if (isset($_POST['preview'])  ){ 
+<?php if (isset($_POST['preview'])  ){
 $HtmlCode= ob_get_contents();
 ob_end_flush();
 
 $_SESSION['contract_html'] = $HtmlCode;
-	
+
 	?>
 
-<input type="submit" value="Rediger" name="edit"> 
+<input type="submit" value="Rediger" name="edit">
 </form>
 
 <form action="<?php echo(html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.makePDF', 'id' => $contract->get_id(), 'initial_load' => 'no'))));?>" method="post">
-<input type="submit" value="Lagre som PDF" name="make_PDF" /> 
+<input type="submit" value="Lagre som PDF" name="make_PDF" />
 
 </form>
 
