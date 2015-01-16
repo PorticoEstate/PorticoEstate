@@ -292,7 +292,18 @@
 		{
 			options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.TableTools<xsl:number value="($num - 1)"/>;
 		}
-		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$data"/>);
 
+		<xsl:variable name="dataset">
+		   <xsl:choose>
+			 <xsl:when test="$data !=''">
+			   <xsl:value-of select="$data" />
+			 </xsl:when>
+			  <xsl:otherwise>
+				   <xsl:text>[]</xsl:text>
+			  </xsl:otherwise>
+		   </xsl:choose>
+		 </xsl:variable>
+
+		 oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
 	</script>
 </xsl:template>
