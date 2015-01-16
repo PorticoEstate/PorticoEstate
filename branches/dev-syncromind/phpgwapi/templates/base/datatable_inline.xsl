@@ -21,6 +21,7 @@
 	<xsl:param name="ColumnDefs" />
 	<xsl:param name="tabletools" />
 	<xsl:param name="config" />
+	<xsl:param name="data" />
 	
 	<div id="message" class='message'/>
 	
@@ -45,6 +46,24 @@
 				</xsl:for-each>
 			</tr>
 		</thead>
+		<tfoot>
+			<tr>
+				<xsl:for-each select="$ColumnDefs">
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								<th>
+								</th>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<th>
+							</th>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
+		</tfoot>
 	</table>
 	
 	<script>
@@ -273,7 +292,7 @@
 		{
 			options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.TableTools<xsl:number value="($num - 1)"/>;
 		}
-		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/>);
+		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$data"/>);
 
 	</script>
 </xsl:template>
