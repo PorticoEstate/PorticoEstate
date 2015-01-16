@@ -51,6 +51,8 @@
 
 		function read($data)
 		{
+            $valid_locations_data = $this->get_gallery_location();
+            
 			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query				= isset($data['query']) ? $data['query'] : '';
 			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort']:'ASC';
@@ -62,7 +64,8 @@
 			$start_date			= isset($data['start_date'])?$data['start_date']:0;
 			$end_date			= isset($data['end_date'])?$data['end_date']:0;
 			$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
-			$valid_locations	= isset($data['valid_locations']) && $data['valid_locations'] ? $data['valid_locations'] : array();
+			$valid_locations	= isset($valid_locations_data) && $valid_locations_data ? $valid_locations_data : array();
+            $results            = (isset($data['results'])?$data['results'] : 0);
 
 			if ($order)
 			{
@@ -142,7 +145,7 @@
 			{
 				if(!$allrows)
 				{
-					$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 				}
 				else
 				{
