@@ -2120,7 +2120,11 @@
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $notify_info['column_defs']['values'],
 				'data'			=> json_encode(array()),
-				'tabletools'	=> $mode == 'edit' ? $notify_info['tabletools'] : ''
+				'tabletools'	=> $mode == 'edit' ? $notify_info['tabletools'] : '',
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 			
 			/* end new notify-table */
@@ -2375,8 +2379,8 @@
 
 			$data = array
 			(
-				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'datatable_def'							=> $datatable_def,
+				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'periodization_data'					=> $periodization_data,
 				'year_list'								=> array('options' => $year_list),
 				'mode'									=> $mode,
