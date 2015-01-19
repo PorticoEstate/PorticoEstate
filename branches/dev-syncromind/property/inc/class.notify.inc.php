@@ -320,6 +320,37 @@ JS;
 				array('id' =>'disable','type'=>'buttons', 'value'=>'disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 				array('id' =>'delete','type'=>'buttons', 'value'=>'delete', 'label'=> lang('Delete'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 			);
+			
+			$tabletools = array();
+			foreach($buttons as $entry)
+			{
+				$tabletools[] = array
+				(
+					'my_name'		=> $entry['value'],
+					'text' 			=> lang($entry['value']),
+					'type'			=> 'custom',
+					'custom_code' => "
+										var oTT = TableTools.fnGetInstance( 'datatable-container_{$count}' );
+										var selected = oTT.fnGetSelectedData();
+
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										var ids = [];
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											ids.push(aData['id']);
+										}
+										{$entry['funct']}('{$entry['id']}', ids);
+										JqueryPortico.updateinlineTableHelper(oTable{$count}, {$requestUrl});"
+				);
+			}
+			
+			/*
 			$tabletools = <<<JS
 
 			{
@@ -367,7 +398,8 @@ JS;
 				]
 			}
 JS;
-
+			*/
+			
 			$GLOBALS['phpgw']->js->validate_file( 'portico', 'notify', 'property' );
 
 			$lang_view = lang('view');
