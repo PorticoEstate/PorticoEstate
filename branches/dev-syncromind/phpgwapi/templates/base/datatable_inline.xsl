@@ -293,6 +293,10 @@
 			options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.TableTools<xsl:number value="($num - 1)"/>;
 		}
 
+		<xsl:if test="$tabletools != ''">
+			options<xsl:number value="($num - 1)"/>.TableTools = <xsl:value-of disable-output-escaping="yes" select="$tabletools"/>;
+		</xsl:if>
+
 		<xsl:variable name="dataset">
 		   <xsl:choose>
 			 <xsl:when test="$data !=''">
