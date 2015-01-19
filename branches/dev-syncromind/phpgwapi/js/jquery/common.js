@@ -17,6 +17,13 @@ JqueryPortico.formatLink = function(key, oData) {
 	var link = oData['link'];
 	return '<a href="' + link + '">' + name + '</a>';
 };
+
+JqueryPortico.formatProject = function(key, oData){
+	var name = oData[key];
+	var link = oData['link'];
+	return '<a href="' + link + '&id='+name+'">' + name + '</a>';
+}
+
  JqueryPortico.formatLinkGallery = function(key, oData){
      
         var name = 'Link';
