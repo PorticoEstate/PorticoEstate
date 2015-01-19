@@ -106,11 +106,12 @@
 
 		function read($data)
 		{
+
 			$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter			 = $data['filter'] ? (int) $data['filter'] : 0;
 			$query			 = isset($data['query']) ? $data['query'] : '';
 			$sort			 = isset($data['sort']) ? $data['sort'] : 'DESC';
-			$order			 = isset($data['order']) ? $data['order'] : '';
+			$order			 = isset($data['order']) ? $data['order'] : 'project_id';
 			$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			$status_id		 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$start_date		 = isset($data['start_date']) && $data['start_date'] ? (int) $data['start_date'] : 0;
@@ -122,6 +123,7 @@
 			$criteria		 = isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
 			$project_type_id = $data['project_type_id'] ? (int) $data['project_type_id'] : 0;
 			$filter_year	 = isset($data['filter_year']) ? $data['filter_year'] : '';
+            $results            = (isset($data['results'])?$data['results'] : 0);
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -650,7 +652,7 @@
 			{
 				if(!$allrows)
 				{
-					$this->db->limit_query($sql_end, $start, __LINE__, __FILE__);
+					$this->db->limit_query($sql_end, $start, __LINE__, __FILE__,$results);
 				}
 				else
 				{
