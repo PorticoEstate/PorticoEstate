@@ -581,6 +581,7 @@
 																<xsl:with-param name="requestUrl" select ='requestUrl' />
 																<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 																<xsl:with-param name="tabletools" select ='tabletools' />
+																<xsl:with-param name="data" select ='data' />
 																<xsl:with-param name="config" select ='config' />
 															</xsl:call-template>
 														</xsl:if>
@@ -778,6 +779,7 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
@@ -868,6 +870,7 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
@@ -918,6 +921,7 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
@@ -996,6 +1000,7 @@
 																<xsl:with-param name="requestUrl" select ='requestUrl' />
 																<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 																<xsl:with-param name="tabletools" select ='tabletools' />
+																<xsl:with-param name="data" select ='data' />
 																<xsl:with-param name="config" select ='config' />
 															</xsl:call-template>
 														</xsl:if>
@@ -1017,6 +1022,7 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
