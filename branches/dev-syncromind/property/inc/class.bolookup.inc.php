@@ -186,7 +186,7 @@
 		 * @return array of contacts
 		 */
 
-		function read_organisation()
+		function read_organisation($data = array())
 		{
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -198,7 +198,7 @@
 				$limit = 15;
 			}
 
-			$limit		= $this->allrows ? 0 : $limit;
+			$limit		= $data['allrows'] ? 0 : $limit;
 
 			$fields = array
 				(
@@ -220,11 +220,11 @@
 			$qfield = 'org';
 
 			$criteria		= $addressbook->criteria_contacts(PHPGW_CONTACTS_ALL,PHPGW_CONTACTS_CATEGORIES_ALL,array(),'',$fields);
-			$token_criteria	= $addressbook->criteria_contacts($access = 1, $category_filter, $qfield, $this->query, $fields);
+			$token_criteria	= $addressbook->criteria_contacts($access = 1, $category_filter, $qfield, $data['query'], $fields);
 
-			$orgs = $addressbook->get_orgs($fields, $this->start, $limit, $orderby='org_name', $sort='ASC', $criteria='', $token_criteria);
+			$orgs = $addressbook->get_orgs($fields,$data['start'], $limit, $orderby='org_name', $sort='ASC', $criteria='', $token_criteria);
 
-			$this->total = $addressbook->total;
+			$this->total_records = $addressbook->total;
 
 			foreach($orgs as &$contact)
 			{
@@ -307,8 +307,8 @@
 
 		function read_b_account($data)
 		{
-			$b_account = $this->so->read_b_account(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
+			$b_account = $this->so->read_b_account(array('start' => $data['start'],'query' => $data['query'],'sort' => $data['sort'],'order' => $data['order'],
+				'filter' => $data['filter'],'cat_id' => $this->cat_id, 'allrows' => $data['allrows'],
 				'role' => $data['role'], 'parent' => $data['parent']));
 			$this->total_records = $this->so->total_records;
 
@@ -361,7 +361,7 @@
 
 			return $values;
 		}
-		function read_ecodimb()
+		function read_ecodimb($data = array())
 		{
 			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
@@ -374,8 +374,8 @@
 
 			$ecodimb	= CreateObject('property.sogeneric');
 			$ecodimb->get_location_info('dimb',false);
-			$values = $ecodimb->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows, 'custom_criteria' => $custom_criteria));
+			$values = $ecodimb->read(array('start' => $data['start'],'query' => $data['query'],'sort' => $data['sort'],'order' => $data['order'],
+				'allrows'=>$data['allrows'], 'custom_criteria' => $custom_criteria));
 
 			$this->total_records = $ecodimb->total_records;
 
