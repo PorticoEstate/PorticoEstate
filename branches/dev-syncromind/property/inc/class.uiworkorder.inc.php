@@ -1899,8 +1899,8 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> '',
-				'data'			=> $record_history,
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($record_history),
 				'ColumnDefs'	=> $history_def,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -1955,8 +1955,8 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_1',
-				'requestUrl'	=> '',
-				'data'			=> $content_files,
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_files),
 				'ColumnDefs'	=> $files_def,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -2045,8 +2045,8 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_2',
-				'requestUrl'	=> '',
-				'data'			=> $content_invoice,
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_invoice),
 				'ColumnDefs'	=> $invoice_def,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -2162,8 +2162,8 @@
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_4',
-				'requestUrl'	=> '',
-				'data'			=> $content_email,
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_email),
 				'ColumnDefs'	=> $email_def,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -2240,28 +2240,28 @@
 			(
 				array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-				array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-				array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-				array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-				array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-				array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-				array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-				array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-				array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-				array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+				array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'className' => 'dt-center'),
 				//~ array('key' => 'closed_orig','hidden' => true),
-				array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+				array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'className' => 'dt-center'),
 				array('key' => 'active_orig','hidden' => true),
 				array('key' => 'flag_active','hidden' => true),
-				array('key' => 'delete_period','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
+				array('key' => 'delete_period','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'className' => 'dt-center')
 			);
 
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_5',
-				'requestUrl'	=> '',
-				'data'			=> $content_budget,
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_budget),
 				'ColumnDefs'	=> $budget_def,
 				'config'		=> array(
 					array('disableFilter'	=> true),
