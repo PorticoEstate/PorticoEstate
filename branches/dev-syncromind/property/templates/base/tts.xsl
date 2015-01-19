@@ -1264,6 +1264,151 @@
 			</tfoot>
 		</table>
 		<script>
+
+	<xsl:variable name="num">
+		<xsl:number count="*"/>
+	</xsl:variable>
+	var oTable<xsl:number value="($num - 1)"/> = null;
+	
+	<xsl:choose>
+			<xsl:when test="$tabletools">
+					JqueryPortico.TableTools<xsl:number value="($num - 1)"/> = 	{
+							"sSwfPath": "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+							"sRowSelect": "multi",
+							"aButtons":
+								[
+									"select_all",
+									"select_none",
+									<xsl:choose>
+										<xsl:when test="download">
+										{
+											"sExtends": "download",
+											"sButtonText": "Download",
+											"sUrl": '<xsl:value-of select="download"/>'
+										},
+										</xsl:when>
+									</xsl:choose>
+									<xsl:for-each select="$tabletools">
+										<xsl:choose>
+											<xsl:when test="type = 'custom'">
+												{
+													sExtends:		"select",
+													sButtonText:	"<xsl:value-of select="text"/>",
+													fnClick:		function (nButton, oConfig, oFlash) {
+
+																	<xsl:if test="confirm_msg">
+																		var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+																		var r = confirm(confirm_msg);
+																		if (r != true) {
+																			return false;
+																		}
+																	</xsl:if>
+
+																	var action = "<xsl:value-of select="action"/>";
+
+																	<xsl:if test="parameters">
+																		var parameters = <xsl:value-of select="parameters"/>;
+																		var i = 0;
+																		len = parameters.parameter.length;
+																		for (; i &lt; len; ) {
+																			action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+																			i++;
+																		}
+																	</xsl:if>
+
+																	<xsl:value-of select="custom_code"/>	
+															}
+
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+											</xsl:when>
+											<xsl:otherwise>
+												{
+													sExtends:		"select",
+													sButtonText:	"<xsl:value-of select="text"/>",
+													fnClick:		function (nButton, oConfig, oFlash) {
+																	var receiptmsg = [];
+																	var selected = JqueryPortico.fnGetSelected(oTable<xsl:number value="($num - 1)"/>);
+																	var numSelected = 	selected.length;
+
+																	if (numSelected ==0){
+																		alert('None selected');
+																		return false;
+																	}
+
+																	<xsl:if test="confirm_msg">
+																		var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+																		var r = confirm(confirm_msg);
+																		if (r != true) {
+																			return false;
+																		}
+																	</xsl:if>
+
+																	var target = "<xsl:value-of select="target"/>";
+																	if(!target)
+																	{
+																		target = '_self';
+																	}
+
+																	if (numSelected &gt; 1){
+																		target = '_blank';
+																	}
+
+																	var n = 0;
+																	for (; n &lt; numSelected; ) {
+
+														//				console.log(selected[n]);
+																		var aData = oTable<xsl:number value="($num - 1)"/>.fnGetData( selected[n] ); //complete dataset from json returned from server
+														//				console.log(aData);
+
+																		//delete stuff comes here
+																		var action = "<xsl:value-of select="action"/>";
+
+																		<xsl:if test="parameters">
+																			var parameters = <xsl:value-of select="parameters"/>;
+														//						console.log(parameters.parameter);
+																			var i = 0;
+																			len = parameters.parameter.length;
+																			for (; i &lt; len; ) {
+																				action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+																				i++;
+																			}
+																		</xsl:if>
+
+																		// look for the word "DELETE" in URL
+																		if(JqueryPortico.substr_count(action,'delete')>0)
+																		{               
+																				action += "&amp;confirm=yes&amp;phpgw_return_as=json";
+																				JqueryPortico.execute_ajax(action, function(result){
+																					document.getElementById("message").innerHTML += '<br/>' + result;
+																				});
+																				oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																		}
+																		else if (target == 'ajax')
+																		{
+																				action += "&amp;phpgw_return_as=json";
+																				JqueryPortico.execute_ajax(action, function(result){
+																					document.getElementById("message").innerHTML += '<br/>' + result;
+																				});
+																				oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																		}
+																		else
+																		{
+																			window.open(action,target);
+																		}
+
+																		n++;
+																	}
+															}
+
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:for-each>
+								]
+						};
+			</xsl:when>
+	</xsl:choose>
+	
 			JqueryPortico.inlineTablesDefined += 1;
 			var PreColumns = [
 					<xsl:for-each select="$ColumnDefs">
@@ -1312,15 +1457,13 @@
 				}
 			}
 	]]>
-			var options = {disablePagination:true, disableFilter:true};
-			<xsl:if test="$tabletools != ''">
-				options.TableTools = <xsl:value-of disable-output-escaping="yes" select="$tabletools"/>;
-			</xsl:if>
+			var options<xsl:number value="($num - 1)"/> = {disablePagination:true, disableFilter:true};
+			if (JqueryPortico.TableTools<xsl:number value="($num - 1)"/>)
+			{
+				options<xsl:number value="($num - 1)"/>.TableTools = JqueryPortico.TableTools<xsl:number value="($num - 1)"/>;
+			}
 
-			<xsl:variable name="num">
-				<xsl:number count="*"/>
-			</xsl:variable>
-			var oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options, <xsl:value-of select="$data"/>);
+			oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/>, <xsl:value-of select="$data"/>);
  
 		</script>
 
