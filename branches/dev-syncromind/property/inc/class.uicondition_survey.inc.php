@@ -1518,15 +1518,15 @@
 
 			$summation_def = array
 			(
-				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false),
+				array('key' => 'category','label'=>lang('category'),'sortable'=>false),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
 			);
 
 			$datatable_def = array();
@@ -1543,7 +1543,9 @@
 				'surveys'				=> array('options' => $surveys),
 				'years'					=> array('options' => $years),
 			);
-
+			
+			phpgwapi_jquery::load_widget('numberformat');
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
 			self::render_template_xsl(array('condition_survey_summation'), $data);
