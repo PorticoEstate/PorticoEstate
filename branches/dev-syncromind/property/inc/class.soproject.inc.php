@@ -106,7 +106,6 @@
 
 		function read($data)
 		{
-
 			$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter			 = $data['filter'] ? (int) $data['filter'] : 0;
 			$query			 = isset($data['query']) ? $data['query'] : '';
