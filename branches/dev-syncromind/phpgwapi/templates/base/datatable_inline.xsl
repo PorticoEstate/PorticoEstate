@@ -58,6 +58,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<th>
+								<xsl:value-of select="value_footer"/>
 							</th>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -217,7 +218,21 @@
 			<xsl:for-each select="$ColumnDefs">
 				{
 					data:			"<xsl:value-of select="key"/>",
-					class:			"<xsl:value-of select="className"/>",
+					<xsl:if test="className">
+						<xsl:choose>
+							<xsl:when test="className">
+								<xsl:if test="className ='right'">
+									class:	'dt-right',
+								</xsl:if>
+								<xsl:if test="className ='center'">
+									class:	'dt-center',
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+									class:	'dt-left',
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
 						<xsl:when test="hidden">
@@ -276,16 +291,16 @@
 		}
 
 		<xsl:variable name="dataset">
-		   <xsl:choose>
+			<xsl:choose>
 			 <xsl:when test="$data !=''">
-			   <xsl:value-of select="$data" />
+					<xsl:value-of select="$data" />
 			 </xsl:when>
-			  <xsl:otherwise>
+			 <xsl:otherwise>
 				   <xsl:text>[]</xsl:text>
-			  </xsl:otherwise>
-		   </xsl:choose>
-		 </xsl:variable>
+			 </xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
-		 oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
+		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
 	</script>
 </xsl:template>
