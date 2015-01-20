@@ -350,56 +350,6 @@ JS;
 				);
 			}
 			
-			/*
-			$tabletools = <<<JS
-
-			{
-				sSwfPath: "phpgwapi/js/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-				sRowSelect: "multi",
-				aButtons: [
-								"select_all",
-								"select_none"
-JS;
-
-			foreach($buttons as $entry)
-			{
-			$tabletools .= <<<JS
-			,
-			{
-				sExtends: "select",
-				sButtonText: "{$entry['value']}",
-				fnClick:	function (nButton, oConfig, oFlash) {
-
-					var oTT = TableTools.fnGetInstance( 'datatable-container_{$count}' );
-					var selected = oTT.fnGetSelectedData();
-
-					var numSelected = 	selected.length;
-
-					if (numSelected ==0){
-						alert('None selected');
-						return false;
-					}
-					var ids = [];
-					for ( var n = 0; n < selected.length; ++n )
-					{
-						var aData = selected[n];
-						ids.push(aData['id']);
-					}
-					{$entry['funct']}('{$entry['id']}', ids);
-					JqueryPortico.updateinlineTableHelper(oTable{$count}, {$requestUrl});
-			   }
-			}
-
-JS;
-			}
-
-			$tabletools .= <<<JS
-
-				]
-			}
-JS;
-			*/
-			
 			$GLOBALS['phpgw']->js->validate_file( 'portico', 'notify', 'property' );
 
 			$lang_view = lang('view');

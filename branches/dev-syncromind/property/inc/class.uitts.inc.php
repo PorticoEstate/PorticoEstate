@@ -1444,7 +1444,7 @@
 				$receipt = array();
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form', 'datatable_inline'));
 
 			$historylog	= CreateObject('property.historylog','tts');
 
@@ -2219,7 +2219,11 @@
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> "''",
 				'ColumnDefs'	=> $note_def,
-				'data'			=> json_encode($additional_notes)
+				'data'			=> json_encode($additional_notes),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 			//_debug_Array($additional_notes);die();
@@ -2234,7 +2238,11 @@
 														array('key' => 'value_action',	'label'=>lang('Action'),	'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_new_value','label'=>lang('New value'),'sortable'=>true,'resizeable'=>true)),
-				'data'			=> json_encode($record_history)
+				'data'			=> json_encode($record_history),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 			$link_to_files = (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'');
@@ -2272,7 +2280,11 @@
 				'container'		=> 'datatable-container_2',
 				'requestUrl'	=> "''",
 				'ColumnDefs'	=> $attach_file_def,
-				'data'			=> json_encode($content_files)
+				'data'			=> json_encode($content_files),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 
@@ -2284,7 +2296,11 @@
 				'requestUrl'	=> "''",
 				'ColumnDefs'	=> array(array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
 										array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)),
-				'data'			=> json_encode($content_email)
+				'data'			=> json_encode($content_email),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 			$payments = $this->bo->get_payments($id);
@@ -2295,7 +2311,11 @@
 				'ColumnDefs'	=> array(array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter'=> 'FormatterAmount2'),
 														array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true)),
-				'data'			=> json_encode($payments)
+				'data'			=> json_encode($payments),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
@@ -2314,7 +2334,11 @@
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $notify_info['column_defs']['values'],
 				'data'			=> json_encode(array()),
-				'tabletools'	=> $notify_info['tabletools']
+				'tabletools'	=> $notify_info['tabletools'],
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 			$_filter_buildingpart = array();
@@ -2383,7 +2407,6 @@
 			foreach($membership as $group_id => $group)
 			{
 				$my_groups[$group_id] = $group->firstname;
-
 			}
 
 			$data = array
