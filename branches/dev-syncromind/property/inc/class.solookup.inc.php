@@ -248,63 +248,6 @@
 			return $street;
 		}
 
-		function read_tenant($data)
-		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter'])?$data['filter']:'none';
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
-				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-			}
-
-			if ($order)
-			{
-				$ordermethod = " order by $order $sort";
-			}
-			else
-			{
-				$ordermethod = ' order by last_name DESC';
-			}
-
-			if($query)
-			{
-				$query = $this->db->db_addslashes($query);
-
-				$querymethod = " where ( last_name $this->like '%$query%' or first_name $this->like '%$query%')";
-			}
-
-			$sql = "SELECT * FROM fm_tenant $querymethod  ";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
-
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			$tenant = array();
-			while ($this->db->next_record())
-			{
-				$tenant[] = array
-					(
-						'id'			=> $this->db->f('id'),
-						'last_name'		=> $this->db->f('last_name',true),
-						'first_name'	=> $this->db->f('first_name',true)
-					);
-			}
-
-			return $tenant;
-		}
-
 		function read_ns3420($data)
 		{
 			if(is_array($data))

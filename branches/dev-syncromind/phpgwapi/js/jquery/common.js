@@ -134,6 +134,10 @@ JqueryPortico.FormatterAmount0 = function(key, oData) {
 	return "<div class='nowrap' align=\"right\">"+amount+"</div>";
 };
 
+JqueryPortico.FormatterRight = function(key, oData) {
+	return "<div align=\"right\">"+oData[key]+"</div>";
+};
+
 JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options, data) {
 
 	options = options || {};
