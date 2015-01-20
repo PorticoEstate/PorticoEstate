@@ -367,7 +367,7 @@
                                            'value'  => lang('columns'),
                                            'href'   => '#',
                                            'class'  => '',
-                                           'onclick'    => "JqueryPortico.openPopup({menuaction:'property.uiproject.columns},{closeAction:'reload'})"
+                                           'onclick'    => "JqueryPortico.openPopup({menuaction:'property.uiproject.columns'},{closeAction:'reload'})"
                                        ),
                                        array
                                         (
@@ -400,289 +400,7 @@
                     'field' =>  array()
                 )
             );
-			//$this->save_sessiondata();
-			//$datatable = array();
-
-			/*if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-				$datatable['menu']					= $this->bocommon->get_menu();
-
-
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'			=> 'property.uiproject.index',
-						'lookup'        		=> $lookup
-					));
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.index',"
-					."district_id: '{$this->district_id}',"
-					."part_of_town_id:'{$this->part_of_town_id}',"
-					."lookup:'{$lookup}',"
-					."cat_id:'{$this->cat_id}',"
-					."user_id:'{$this->user_id}',"
-					."criteria_id:'{$this->criteria_id}',"
-					."project_type_id:'{$this->project_type_id}',"
-					."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
-					."second_display:1,"
-					."status_id:'{$this->status_id}',"
-					."filter_year:'{$this->filter_year}'";
-
-				$datatable['config']['allow_allrows'] = false;
-
-				$values_combo_box[0]  = $this->bo->get_project_types($this->project_type_id);
-				array_unshift ($values_combo_box[0],array ('id'=>'','name'=> lang('project type')));
-
-				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				$_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
-				$values_combo_box[2] = array();
-				foreach($_cats as $_cat)
-				{
-					if($_cat['level'] == 0 && !$_cat['active'] == 2)
-					{
-						$values_combo_box[2][] = $_cat;
-					}
-				}
-				
-				$default_value = array ('id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[2],$default_value);
-
-				$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
-				array_unshift ($values_combo_box[3],array ('id'=>'all','name'=> lang('all')));
-				array_unshift ($values_combo_box[3],array ('id'=>'open','name'=> lang('open')));
-
-				$values_combo_box[4]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-				$default_value = array ('id'=>'','name'=>lang('no hour category'));
-				array_unshift ($values_combo_box[4],$default_value);
-
-				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
-				$default_value = array ('id'=>'','name'=>lang('no criteria'));
-				array_unshift ($values_combo_box[5],$default_value);
-
-				$values_combo_box[6]  = $this->bo->get_filter_year_list($this->filter_year);
-				array_unshift ($values_combo_box[6],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
-
-				$values_combo_box[7]  = $this->bo->get_user_list($this->filter);
-				array_unshift ($values_combo_box[7],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
-				$default_value = array ('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[7],$default_value);
-
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' 		=> 'property.uiproject.index',
-								'district_id'       => $this->district_id,
-								'part_of_town_id'   => $this->part_of_town_id,
-								'lookup'        	=> $lookup,
-								'cat_id'        	=> $this->cat_id,
-								'filter_year'		=> $this->filter_year
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //boton 	DISTRICT
-									'id' => 'btn_project_type',
-									'name' => 'project_type_id',
-									'value'	=> lang('project type'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //boton 	DISTRICT
-									'id' => 'btn_district_id',
-									'name' => 'district_id',
-									'value'	=> lang('district'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 2
-								),
-								array
-								( //boton 	CATEGORY
-									'id' => 'btn_cat_id',
-									'name' => 'cat_id',
-									'value'	=> lang('Category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 3
-								),
-								array
-								( //boton 	STATUS
-									'id' => 'btn_status_id',
-									'name' => 'status_id',
-									'value'	=> lang('Status'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 4
-								),
-								array
-								( //boton 	HOUR CATEGORY
-									'id' => 'btn_hour_category_id',
-									'name' => 'wo_hour_cat_id',
-									'value'	=> lang('Hour category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 5
-								),
-								array
-								( //boton 	search criteria
-									'id' => 'btn_criteria_id',
-									'name' => 'criteria_id',
-									'value'	=> lang('search criteria'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 6
-								),
-								array
-								( //boton 	filter_year
-									'id' => 'btn_filter_year',
-									'name' => 'filter_year',
-									'value'	=> lang('year'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 7
-								),
-								array
-								(
-									'id' => 'sel_filter',
-									'name' => 'filter',
-									'value'	=> lang('User'),
-									'type' => 'select',
-									'style' => 'filter',
-									'values' => $values_combo_box[7],
-									'onchange'=> 'onChangeSelect("filter");',
-									'tab_index' => 8
-								),
-								//for link "columns", next to Export button
-								array
-								(
-									'type' => 'link',
-									'id' => 'btn_columns',
-									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									array
-									(
-										'menuaction' => 'property.uiproject.columns'
-									))."','','width=300,height=600,scrollbars=1')",
-									'value' => lang('columns'),
-									'tab_index' => 14
-								),
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_export',
-									'value'	=> lang('download'),
-									'tab_index' => 13
-								),
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_new',
-									'value'	=> lang('add'),
-									'tab_index' => 12
-								),
-								array
-								( //hidden start_date
-									'type' => 'hidden',
-									'id' => 'start_date',
-									'value' => $start_date
-								),
-								array
-								( //hidden end_date
-									'type' => 'hidden',
-									'id' => 'end_date',
-									'value' => $end_date
-								),
-								array
-								(//for link "None",
-									'type'=> 'label_date'
-								),
-								array
-								(//for link "Date search",
-									'type'=> 'link',
-									'id'  => 'btn_data_search',
-									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									array
-									(
-										'menuaction' => 'property.uiproject.date_search')
-									)."','','width=350,height=250')",
-									'value' => lang('Date search'),
-									'tab_index' => 11
-								),
-								// FIXME test on lightbox for date search
-								array
-								( //boton     SEARCH
-									'id' => 'btn_search',
-									'name' => 'search',
-									'value'    => lang('search'),
-									'type' => 'button',
-									'tab_index' => 10
-								),
-								array
-								( // TEXT INPUT
-									'name'     => 'query',
-									'id'     => 'txt_query',
-									'value'    => $this->query,//'',//$query,
-									'type' => 'text',
-									'onkeypress' => 'return pulsar(event)',
-									'size'    => 28,
-									'tab_index' => 9
-								),
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								),
-								array
-								( //div values  combo_box_2
-									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2])
-									//'value'	=> $this->bocommon->select2String($values_combo_box[2]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-								),
-								array
-								( //div values  combo_box_3
-									'id' => 'values_combo_box_3',
-									'value'	=> $this->bocommon->select2String($values_combo_box[3])
-								),
-								array
-								( //div values  combo_box_4
-									'id' => 'values_combo_box_4',
-									'value'	=> $this->bocommon->select2String($values_combo_box[4])
-								),
-								array
-								( //div values  combo_box_5
-									'id' => 'values_combo_box_5',
-									'value'	=> $this->bocommon->select2String($values_combo_box[5])
-								),
-								array
-								( //div values  combo_box_6
-									'id' => 'values_combo_box_6',
-									'value'	=> $this->bocommon->select2String($values_combo_box[6])
-								)
-							)
-						)
-					)
-				);
-				$dry_run = true;
-			}*/
-            
+			            
             $filters = $this->_get_Filters();
             foreach($filters as $filter){
                 array_unshift($data['form']['toolbar']['item'], $filter);
@@ -709,64 +427,12 @@
                 if($uicols['name'][$k] == 'loc1')
 				{
                     # Aca debe ser el Onclick
-					$params['formatter'] = 'JqueryPortico.formatLink';
+					$params['formatter'] = 'JqueryPortico.searchLink';
 				}
                 
                 
                 array_push($data['datatable']['field'], $params);
             }
-			/*$content = array();
-			$j = 0;
-			if (isset($project_list) AND is_array($project_list))
-			{
-				$lang_search = lang('search');
-				foreach($project_list as $project_entry)
-				{
-					for ($k=0;$k<$count_uicols_name;$k++)
-					{
-						if($uicols['input_type'][$k]=='text')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= isset($project_entry[$uicols['name'][$k]])  ? $project_entry[$uicols['name'][$k]] : '';
-
-							if(isset($project_entry['query_location'][$uicols['name'][$k]]) && $project_entry['query_location'][$uicols['name'][$k]])
-							{
-								$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-								$datatable['rows']['row'][$j]['column'][$k]['statustext']		= $lang_search;
-								$datatable['rows']['row'][$j]['column'][$k]['value']			= $project_entry[$uicols['name'][$k]];
-								$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
-								$datatable['rows']['row'][$j]['column'][$k]['java_link']		= true;
-								$datatable['rows']['row'][$j]['column'][$k]['link']				= $project_entry['query_location'][$uicols['name'][$k]];
-								$uicols['formatter'][$k] = "'myCustom'";
-							}
-							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && isset($project_entry[$uicols['name'][$k]]) && $project_entry[$uicols['name'][$k]])
-							{
-								$datatable['rows']['row'][$j]['column'][$k]['value']		= $project_entry[$uicols['name'][$k]]['text'];
-								$datatable['rows']['row'][$j]['column'][$k]['link']			= $project_entry[$uicols['name'][$k]]['url'];
-								$datatable['rows']['row'][$j]['column'][$k]['target']		= '_blank';
-								$datatable['rows']['row'][$j]['column'][$k]['format'] 		= 'link';
-								$datatable['rows']['row'][$j]['column'][$k]['statustext']	= $project_entry[$uicols['name'][$k]]['statustext'];
-
-							}
-						}
-						else
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']			= $project_entry[$uicols['name'][$k]];
-						}
-
-
-						if($lookup && $k==($count_uicols_name-1))
-						{
-							$content[$j]['row'][]= array(
-								'lookup_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui' . $from . '.edit', 'project_id'=> $project_entry['project_id']))
-							);
-						}
-					}
-
-					$j++;
-				}
-			}*/
             
 			if(!$lookup)
 			{
@@ -907,44 +573,7 @@
 			}
 
 			unset($parameters);
-			//$count_uicols_descr = count($uicols['descr']);
-            
-			/*for ($i=0;$i<$count_uicols_descr;$i++)
-			{
 
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$datatable['headers']['header'][$i]['formatter'] 		= isset($uicols['formatter'][$i]) && $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
-
-					$datatable['headers']['header'][$i]['className']		= isset($uicols['classname'][$i]) && $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
-					$datatable['headers']['header'][$i]['sortable']			= false;
-
-					if(isset($uicols['sortable'][$i]) && $uicols['sortable'][$i])
-					{
-						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
-					}
-					if($uicols['name'][$i]=='loc1')
-					{
-						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= 'location_code';
-					}
-				}
-				else
-				{
-					$datatable['headers']['header'][$i]['formatter'] 		= '""';
-					$datatable['headers']['header'][$i]['className']		= '';
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-					$datatable['headers']['header'][$i]['format'] 			= '';
-				}
-			}*/
 
 			$function_exchange_values = '';
 			if($lookup)
@@ -1014,7 +643,6 @@
                 'status_id' => $this->status_id,
                 'wo_hour_cat_id' => $this->wo_hour_cat_id,
                 'district_id' => $this->district_id, 
-                'criteria' => $this->criteria_id,
 				'project_type_id' => $this->project_type_id,
                 'filter_year' => $this->filter_year
             );
