@@ -233,46 +233,46 @@
 		<xsl:value-of select="lookup_functions"/>
 		function generate_order()
 		{
-			Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
+		Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
 		}
 
 		function generate_request()
 		{
-			Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
+		Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
 		}
 
 		function template_lookup()
 		{
-			var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
-			var strURL = phpGWLink('index.php', oArgs);
-			TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
+		var strURL = phpGWLink('index.php', oArgs);
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		function response_lookup()
 		{
-			var oArgs = {menuaction:'property.uilookup.response_template',type:'response_template'};
-			var strURL = phpGWLink('index.php', oArgs);
-			TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		var oArgs = {menuaction:'property.uilookup.response_template',type:'response_template'};
+		var strURL = phpGWLink('index.php', oArgs);
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 			
 		function preview_html(id)
 		{
 
-			var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
+		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
 
-			var oArgs = {menuaction:'property.uitts.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
-			var strURL = phpGWLink('index.php', oArgs);
-			Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+		var oArgs = {menuaction:'property.uitts.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
+		var strURL = phpGWLink('index.php', oArgs);
+		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 
 		}
 
 		function preview_pdf(id)
 		{
-			var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
+		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
 
-			var oArgs = {menuaction:'property.uitts.view',id:id, preview_pdf:true, on_behalf_of_assigned: on_behalf_of_assigned};
-			var strURL = phpGWLink('index.php', oArgs);
-			Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+		var oArgs = {menuaction:'property.uitts.view',id:id, preview_pdf:true, on_behalf_of_assigned: on_behalf_of_assigned};
+		var strURL = phpGWLink('index.php', oArgs);
+		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 		}
 
 		var my_groups = <xsl:value-of select="my_groups"/>;
@@ -381,17 +381,17 @@
 										<!--div id="paging_0"/>
 										<div class="pure-table" id="datatable-container_0"/-->
 									</td>
-										<xsl:for-each select="datatable_def">
-												<xsl:if test="container = 'datatable-container_0'">
-													<xsl:call-template name="table_setup">
-													  <xsl:with-param name="container" select ='container'/>
-													  <xsl:with-param name="requestUrl" select ='requestUrl'/>
-													  <xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-													  <xsl:with-param name="data" select ='data'/>
-														<xsl:with-param name="config" select ='config'/>
-													</xsl:call-template>
-												</xsl:if>
-										</xsl:for-each>
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_0'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="config" select ='config'/>
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
 								</div>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -540,10 +540,10 @@
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_2'">
 											<xsl:call-template name="table_setup">
-											  <xsl:with-param name="container" select ='container'/>
-											  <xsl:with-param name="requestUrl" select ='requestUrl'/>
-											  <xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-											  <xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
 												<xsl:with-param name="tabletools" select ='tabletools' />
 												<xsl:with-param name="config" select ='config'/>
 											</xsl:call-template>
@@ -567,7 +567,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'notify client by sms')"/>
 								</label>
-									<table class="pure-table pure-u-md-1-2">
+								<table class="pure-table pure-u-md-1-2">
 									<tr>
 										<td>
 											<input type="checkbox" name="notify_client_by_sms" value="true">
@@ -762,10 +762,10 @@
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_4'">
 													<xsl:call-template name="table_setup">
-													  <xsl:with-param name="container" select ='container'/>
-													  <xsl:with-param name="requestUrl" select ='requestUrl'/>
-													  <xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-													  <xsl:with-param name="data" select ='data'/>
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl'/>
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+														<xsl:with-param name="data" select ='data'/>
 														<xsl:with-param name="tabletools" select ='tabletools' />
 														<xsl:with-param name="config" select ='config'/>
 													</xsl:call-template>
@@ -853,10 +853,10 @@
 													<xsl:for-each select="datatable_def">
 														<xsl:if test="container = 'datatable-container_3'">
 															<xsl:call-template name="table_setup">
-															  <xsl:with-param name="container" select ='container'/>
-															  <xsl:with-param name="requestUrl" select ='requestUrl'/>
-															  <xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-															  <xsl:with-param name="data" select ='data'/>
+																<xsl:with-param name="container" select ='container'/>
+																<xsl:with-param name="requestUrl" select ='requestUrl'/>
+																<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+																<xsl:with-param name="data" select ='data'/>
 																<xsl:with-param name="tabletools" select ='tabletools' />
 																<xsl:with-param name="config" select ='config'/>
 															</xsl:call-template>
@@ -939,12 +939,12 @@
 						<xsl:for-each select="datatable_def">
 							<xsl:if test="container = 'datatable-container_5'">
 								<xsl:call-template name="table_setup">
-								  <xsl:with-param name="container" select ='container'/>
-								  <xsl:with-param name="requestUrl" select ='requestUrl'/>
-								  <xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-								  <xsl:with-param name="data" select ='data'/>
-								  <xsl:with-param name="tabletools" select ='tabletools'/>
-								<xsl:with-param name="config" select ='config'/>
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl'/>
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+									<xsl:with-param name="data" select ='data'/>
+									<xsl:with-param name="tabletools" select ='tabletools'/>
+									<xsl:with-param name="config" select ='config'/>
 								</xsl:call-template>
 							</xsl:if>
 						</xsl:for-each>
@@ -955,16 +955,16 @@
 				<!--div id="paging_1"/>
 				<div class="pure-table" id="datatable-container_1"/-->
 				<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'datatable-container_1'">
-							<xsl:call-template name="table_setup">
-							  <xsl:with-param name="container" select ='container'/>
-							  <xsl:with-param name="requestUrl" select ='requestUrl'/>
-							  <xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-							  <xsl:with-param name="data" select ='data'/>
-								<xsl:with-param name="tabletools" select ='tabletools' />
-								<xsl:with-param name="config" select ='config'/>
-							</xsl:call-template>
-						</xsl:if>
+					<xsl:if test="container = 'datatable-container_1'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl'/>
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+							<xsl:with-param name="data" select ='data'/>
+							<xsl:with-param name="tabletools" select ='tabletools' />
+							<xsl:with-param name="config" select ='config'/>
+						</xsl:call-template>
+					</xsl:if>
 				</xsl:for-each>
 
 			</div>
