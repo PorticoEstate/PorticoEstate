@@ -128,12 +128,17 @@ JqueryPortico.showPicture = function(key, oData)
 };
 	
 JqueryPortico.FormatterAmount0 = function(key, oData) {
-//	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
-	//FIXME...
-	var amount = parseInt(oData[key]);
-	return "<div class='nowrap' align=\"right\">"+amount+"</div>";
+
+	var amount = $.number( oData[key], 0, ',', ' ' );
+	return amount;
 };
 
+JqueryPortico.FormatterAmount2 = function(key, oData) {
+
+	var amount = $.number( oData[key], 2, ',', ' ' );
+	return amount;
+};
+	
 JqueryPortico.FormatterRight = function(key, oData) {
 	return "<div align=\"right\">"+oData[key]+"</div>";
 };
