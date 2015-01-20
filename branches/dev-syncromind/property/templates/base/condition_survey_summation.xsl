@@ -114,7 +114,21 @@
 				<xsl:for-each select="$ColumnDefs">
 				{
 					data:			"<xsl:value-of select="key"/>",
-					class:			"<xsl:value-of select="className"/>",
+					<xsl:if test="className">
+						<xsl:choose>
+							<xsl:when test="className">
+								<xsl:if test="className ='right'">
+									class:	'dt-right',
+								</xsl:if>
+								<xsl:if test="className ='center'">
+									class:	'dt-center',
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+									class:	'dt-left',
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
 						<xsl:when test="hidden">
@@ -189,7 +203,8 @@
 					data.reduce(function (a, b){
 							return intVal(a) + intVal(b);
 					}) : 0;
-
+				
+				pageTotal = $.number( pageTotal, 0, ',', ' ' );
 				$(api.column(col).footer()).html(pageTotal);	
 			});	
 		}
