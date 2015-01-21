@@ -1719,7 +1719,6 @@
 				}
 			}
 
-
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id'		=> $values['vendor_id'],
 				'vendor_name'	=> $values['vendor_name'],
@@ -1907,26 +1906,6 @@
 					array('disablePagination'	=> true)
 				)
 			);
-				
-			/*$datavalues[0] = array
-				(
-					'name'					=> "0",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
-														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
-				);*/
 
 			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
 
@@ -1964,23 +1943,6 @@
 				)
 			);
 			
-			/*$datavalues[1] = array
-				(
-					'name'					=> "1",
-					'values' 				=> json_encode($content_files),
-					'total_records'			=> count($content_files),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[1] = array
-				(
-					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
-				);*/
-
 			$invoices = array();
 			if ($id)
 			{
@@ -1988,15 +1950,66 @@
 				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('order_id' => $id, 'paid' => true));
 				$invoices = array_merge($active_invoices,$historical_invoices);
 			}
-
+			
+			$link_data_invoice1 = array
+			(
+				'menuaction' => 'property.uiinvoice.index',
+				'user_lid' => 'all'
+			);
+			$link_data_invoice2 = array
+			(
+				'menuaction' => 'property.uiinvoice2.index'
+			);			
+		
 			$content_invoice = array();
 			$amount = 0;
 			$approved_amount = 0;
 			foreach($invoices as $entry)
 			{
+				$entry['voucher_id'] = $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'];
+				if($entry['voucher_out_id'])
+				{
+					$voucher_out_id = $entry['voucher_out_id'];
+				}
+				else
+				{
+					$voucher_out_id = abs($entry['voucher_id']);
+				}
+				
+				if ($config->config_data['invoicehandler'] == 2)
+				{
+					if($entry['voucher_id'] > 0)
+					{
+						$link_data_invoice2['voucher_id'] = $entry['voucher_id'];
+						$url = $GLOBALS['phpgw']->link('/index.php',$link_data_invoice2);
+					}
+					else
+					{
+						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
+						$link_data_invoice1['paid'] = 'true';
+						$url = $GLOBALS['phpgw']->link('/index.php',$link_data_invoice1);
+					}
+				}
+				else
+				{
+					if($entry['voucher_id'] > 0)
+					{
+						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
+						$link_data_invoice1['query'] = $entry['voucher_id'];
+						$url = $GLOBALS['phpgw']->link('/index.php',$link_data_invoice1);
+					}
+					else
+					{
+						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
+						$link_data_invoice1['paid'] = 'true';
+						$url = $GLOBALS['phpgw']->link('/index.php',$link_data_invoice1);
+					}					
+				}
+				$link_voucher_id = "<a href='".$url."'>" . $voucher_out_id . "</a>";
+				
 				$content_invoice[] = array
 				(
-					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_id'			=> ($_lean) ? $entry['voucher_id'] : $link_voucher_id,
 					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'status'				=> $entry['status'],
 					'period'				=> $entry['period'],
@@ -2011,26 +2024,20 @@
 					'amount'				=> $entry['amount'],
 					'approved_amount'		=> $entry['approved_amount'],
 					'vendor'				=> $entry['vendor'],
-		//			'paid_percent'			=> $entry['paid_percent'],
 					'project_group'			=> $entry['project_id'],
 					'currency'				=> $entry['currency'],
 					'budget_responsible'	=> $entry['budget_responsible'],
 					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 				);
+				
 				$amount += $entry['amount'];
 				$approved_amount += $entry['approved_amount'];
 			}
-			
-			$_formatter_voucher_link	= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
-			if($_lean)
-			{
-				$_formatter_voucher_link = '""';
-			}
-			
+
 			$invoice_def = array
 			(
-				array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'formatter'=> $_formatter_voucher_link,'value_footer'=>lang('Sum')),
+				array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'value_footer'=>lang('Sum')),
 				array('key' => 'voucher_out_id','hidden'=>true),
 				array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false),
 				array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false),
@@ -2058,52 +2065,6 @@
 				)
 			);
 
-			/*$datavalues[2] = array
-				(
-					'name'					=> "2",
-					'values' 				=> json_encode($content_invoice),
-					'total_records'			=> count($content_invoice),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'))),
-					'is_paginator'			=> 1,
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[2] = array
-				(
-					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=> $_formatter_voucher_link),
-														array('key' => 'voucher_out_id','hidden'=>true),
-														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'period','label'=>lang('period'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'periodization','label'=>lang('periodization'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'periodization_start','label'=>lang('periodization start'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'type','label'=>lang('type'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),
-														))
-				);*/
-
-			/*$notify_info = execMethod('property.notify.get_yui_table_def',array
-								(
-									'location_id'		=> $location_id,
-									'location_item_id'	=> $id,
-									'count'				=> count($myColumnDefs)
-								)
-							);
-
-			$datavalues[] 	= $notify_info['datavalues'];
-			$myColumnDefs[]	= $notify_info['column_defs'];
-			$myButtons		= array();
-			if($mode == 'edit')
-			{
-				$myButtons[]	= $notify_info['buttons'];
-			}*/
-
 			/*
 			* start new notify-table
 			* Sigurd: this one is for the new notify-table
@@ -2130,16 +2091,6 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			
-			/* end new notify-table */
-
-			/*$myColumnDefs[] = array
-				(
-					'name'		=> "4",
-					'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
-				);*/
-
 
 			$content_email =  execMethod('property.bocommon.get_vendor_email', isset($values['vendor_id']) ? $values['vendor_id'] : 0 );
 
@@ -2174,21 +2125,7 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			
-			/*$datavalues[] = array
-				(
-					'name'					=> "4",
-					'values' 				=> json_encode($content_email),
-					'total_records'			=> count($content_email),
-					'permission'   			=> "''",
-					'is_paginator'			=> 0,
-					'edit_action'			=> "''",
-					'footer'				=> 0
-				);*/
 
-
-
-//---------
 			$content_budget = $this->bo->get_budget($id);
 
 			$lang_delete = lang('Check to delete period');
@@ -2281,46 +2218,6 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			
-			/*$datavalues[] = array
-				(
-					'name'					=> "5",
-					'values' 				=> json_encode($content_budget),
-					'total_records'			=> count($content_budget),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 1,
-					'rows_per_page'			=> $rows_per_page,
-					'initial_page'			=> $initial_page,
-					'footer'				=> 0
-				);
-
-			$myColumnDefs[] = array
-				(
-					'name'		=> "5",
-					'values'	=>	json_encode(array(	
-														array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-														array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-														array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
-														//~ array('key' => 'closed_orig','hidden' => true),
-														array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
-														array('key' => 'active_orig','hidden' => true),
-														array('key' => 'flag_active','hidden' => true),
-														array('key' => 'delete_period','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
-													)
-												)
-
-				);*/
-
-//---------
 
 			$link_claim = '';
 			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
