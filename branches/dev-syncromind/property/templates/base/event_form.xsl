@@ -19,26 +19,25 @@
 				Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
 		</script>
-		<tr>
-			<td valign="top">
+		<div class="pure-control-group">
+			<label for="name">
 				<xsl:value-of select="event_name"/>
-				<!--<a href="javascript:event_lookup_{name}()" title="{lang_select_event_help}"><xsl:value-of select="event_name"/></a> -->
-			</td>
-			<td>
-				<xsl:choose>
-					<xsl:when test="warning!=''">
-						<xsl:value-of select="warning"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="event_descr">
-							<xsl:value-of select="name"/>
-							<xsl:text>_descr</xsl:text>
-						</xsl:variable>
-						<xsl:variable name="lookup_function">
-							<xsl:text>event_lookup_</xsl:text>
-							<xsl:value-of select="name"/>
-							<xsl:text>();</xsl:text>
-						</xsl:variable>
+			</label>
+			<xsl:choose>
+				<xsl:when test="warning!=''">
+					<xsl:value-of select="warning"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="event_descr">
+						<xsl:value-of select="name"/>
+						<xsl:text>_descr</xsl:text>
+					</xsl:variable>
+					<xsl:variable name="lookup_function">
+						<xsl:text>event_lookup_</xsl:text>
+						<xsl:value-of select="name"/>
+						<xsl:text>();</xsl:text>
+					</xsl:variable>
+					<div class="pure-custom">
 						<table>
 							<tr>
 								<td>
@@ -87,8 +86,8 @@
 								</xsl:when>
 							</xsl:choose>
 						</table>
-					</xsl:otherwise>
-				</xsl:choose>
-			</td>
-		</tr>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</xsl:template>
