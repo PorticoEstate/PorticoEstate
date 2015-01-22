@@ -5,20 +5,20 @@
 
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
-		<tr>
-			<td valign="top">
+		<div class="pure-control-group">
+			<label for="name">
 				<xsl:value-of select="event_name"/>
-			</td>
-			<td>
-				<xsl:choose>
-					<xsl:when test="warning!=''">
-						<xsl:value-of select="warning"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="event_descr">
-							<xsl:value-of select="name"/>
-							<xsl:text>_descr</xsl:text>
-						</xsl:variable>
+			</label>
+			<xsl:choose>
+				<xsl:when test="warning!=''">
+					<xsl:value-of select="warning"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="event_descr">
+						<xsl:value-of select="name"/>
+						<xsl:text>_descr</xsl:text>
+					</xsl:variable>
+					<div class="pure-custom">
 						<table>
 							<tr>
 								<td>
@@ -67,8 +67,8 @@
 								</xsl:when>
 							</xsl:choose>
 						</table>
-					</xsl:otherwise>
-				</xsl:choose>
-			</td>
-		</tr>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</xsl:template>
