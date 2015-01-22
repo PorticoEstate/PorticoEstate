@@ -5,14 +5,12 @@
 
 	<!-- New template-->
 	<xsl:template match="vendor_data">
-		<tr>
-			<td valign="top">
+		<div class="pure-control-group">
+			<label for="name">
 				<xsl:value-of select="lang_vendor"/>
-			</td>
-			<td>
-				<xsl:value-of select="value_vendor_id"/>
-				<xsl:text> - </xsl:text>
-				<xsl:value-of select="value_vendor_name"/>
-			</td>
-		</tr>
+			</label>
+			<xsl:value-of select="value_vendor_id"/>
+			<xsl:text> - </xsl:text>
+			<xsl:value-of select="value_vendor_name"/>
+		</div>
 	</xsl:template>
