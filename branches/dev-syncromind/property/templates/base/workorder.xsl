@@ -920,12 +920,8 @@
 						</xsl:when>
 					</xsl:choose>
 					<script type="text/javascript">
-						var property_js = <xsl:value-of select="property_js"/>;
 						var base_java_url = <xsl:value-of select="base_java_url"/>;
 						var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
-						var datatable = new Array();
-						var myColumnDefs = new Array();
-						var myButtons = new Array();
 					</script>
 			</div>
 			<xsl:choose>
