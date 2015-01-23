@@ -109,6 +109,10 @@
 			foreach($result_objects as $result) {
 				if(isset($result))
 				{
+					if(!$result->is_active())
+					{
+						$result->set_status('Ikke i drift');
+					}
 					$rows[] = $result->serialize();
 				}
 			}
