@@ -663,6 +663,24 @@
 				{
 					$data['datatable']['actions'][] = array
 						(
+							'my_name'			=> 'edit',
+							'statustext' 	=> lang('edit the actor'),
+							'text' 			=> lang('edit'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'	=> 'property.uirequest.edit',
+								'appname'		=> $this->appname,
+								'type'			=> $this->type,
+								'type_id'		=> $this->type_id
+							)),
+							'parameters'	=> json_encode($parameters)
+						);
+				}
+				
+				/*if($this->acl_edit)
+				{
+					$data['datatable']['actions'][] = array
+						(
 							'my_name'		=> 'edit',
 							'statustext' 	=> lang('edit the actor'),
 							'text' 			=> lang('edit'),
@@ -691,7 +709,7 @@
 							'target'		=> '_blank',
 							'parameters'	=> json_encode($parameters)
 						);
-				}
+				}*/
 				
 				if($this->acl_delete)
 				{
