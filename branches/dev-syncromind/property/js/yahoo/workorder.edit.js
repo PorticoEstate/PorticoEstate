@@ -1,4 +1,5 @@
 
+	var vendor_id;
 
 	this.showlightbox_manual_invoide = function(workorder_id)
 	{
@@ -29,7 +30,7 @@
 
 	this.onDOMAttrModified = function(e)
 	{
-		var attr = e.attrName || e.propertyName
+		var attr = e.attrName || e.propertyName;
 		var target = e.target || e.srcElement;
 		if (attr.toLowerCase() == 'vendor_id')
 		{
