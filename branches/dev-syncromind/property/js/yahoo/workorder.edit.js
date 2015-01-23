@@ -13,8 +13,6 @@
 
 	this.fetch_vendor_email=function()
 	{
-//		formObject = document.body.getElementsByTagName('form');
-//		YAHOO.util.Connect.setForm(formObject[0]);//First form
 		if(document.getElementById('vendor_id').value)
 		{
 			base_java_url['vendor_id'] = document.getElementById('vendor_id').value;
@@ -22,11 +20,12 @@
 
 		if(document.getElementById('vendor_id').value != vendor_id)
 		{
-			//execute_async(myDataTable_4);
+			var oArgs = base_java_url;
+			var strURL = phpGWLink('index.php', oArgs, true);
+			JqueryPortico.updateinlineTableHelper(oTable4, strURL);
 			vendor_id = document.getElementById('vendor_id').value;
 		}
-	}
-
+	};
 
 	this.onDOMAttrModified = function(e)
 	{
@@ -38,20 +37,18 @@
 		}
 	}
 
-
-YAHOO.util.Event.addListener(window, "load", function()
-{
-	d = document.getElementById('vendor_id');
-	if(d)
+	window.addEventListener("load", function()
 	{
-		if (d.attachEvent)
+		d = document.getElementById('vendor_id');
+		if(d)
 		{
-			d.attachEvent('onpropertychange', onDOMAttrModified, false);
+			if (d.attachEvent)
+			{
+				d.attachEvent('onpropertychange', onDOMAttrModified, false);
+			}
+			else
+			{
+				d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+			}
 		}
-		else
-		{
-			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
-		}
-	}
-});
-
+	});
