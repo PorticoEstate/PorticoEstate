@@ -2000,7 +2000,8 @@
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
 					'myButtons'							=> $myButtons,
-					'tabs'								=> self::_generate_tabs($tabs,array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
+					//'tabs'								=> self::_generate_tabs($tabs,array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
+					'tabs'								=> self::_generate_tabs($tabs, array('documents' => $id?false:true, 'history' => $id?false:true)),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'					=> isset($origin)?$origin:'',
@@ -2784,8 +2785,33 @@
 				'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.edit', 'id' => $id)),
 			);
 		}
+		
+		protected function _generate_tabs($tabs_ = array(), $suppress = array())
+		{
+			$active_tab = 'general';
+			$tabs = array
+				(
+					'general'		=> array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
+					'location'		=> array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
+					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
+					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
+					'documents'		=> array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
+					'history'		=> array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')")
+				);
+			
+			$tabs = array_merge($tabs, $tabs_);
+			foreach($suppress as $tab => $remove)
+			{
+				if($remove)
+				{
+					unset($tabs[$tab]);
+				}
+			}
+			
+			return phpgwapi_jquery::tabview_generate($tabs, $active_tab,'project_tabview');
+		}
 
-		protected function _generate_tabs($tabs_ = array(), $suppress = array(), $selected = 'general')
+		protected function _generate_tabs2($tabs_ = array(), $suppress = array(), $selected = 'general')
 		{
 			$tabs = array
 				(
