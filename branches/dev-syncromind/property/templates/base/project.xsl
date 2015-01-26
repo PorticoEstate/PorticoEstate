@@ -74,11 +74,11 @@ Returns mixed
 	</xsl:choose>
     </table>
     <form ENCTYPE="multipart/form-data" method="post" name="form" action="{form_action}">
-	<input type="hidden" name="tab" value=""/>
-	<div class="yui-navset" id="project_tabview">
+	<div id="project_tabview">
+		<!--input type="hidden" name="tab" value=""/-->
+		<!--div class="yui-navset" id="project_tabview"-->
 	    <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-	    <div class="yui-content">
-		<div id="general">
+	    <div id="general">
 		    <table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 			    <xsl:when test="value_project_id &gt; 0">
@@ -237,7 +237,10 @@ Returns mixed
 				<xsl:call-template name="user_id_select"/>
 			    </td>
 			</tr>
-			<xsl:call-template name="contact_form"/>
+			<tr>
+				<td>fff</td>
+			</tr>
+			<!--xsl:call-template name="contact_form"/-->
 			<tr>
 			    <td>
 				<xsl:value-of select="lang_category"/>
@@ -651,38 +654,7 @@ Returns mixed
 
 		    </table>
 		    <!--  DATATABLE DEFINITIONS-->
-		    <script type="text/javascript">
-			var property_js = <xsl:value-of select="property_js"/>;
-			var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-			var myButtons = new Array();
-
-			<xsl:for-each select="datatable">
-			    datatable[<xsl:value-of select="name"/>] = [
-			    {
-			    values:<xsl:value-of select="values"/>,
-			    total_records: <xsl:value-of select="total_records"/>,
-			    edit_action:  <xsl:value-of select="edit_action"/>,
-			    is_paginator:  <xsl:value-of select="is_paginator"/>,
-			    <xsl:if test="rows_per_page">
-				rows_per_page: "<xsl:value-of select="rows_per_page"/>",
-			    </xsl:if>
-			    <xsl:if test="initial_page">
-				initial_page: "<xsl:value-of select="initial_page"/>",
-			    </xsl:if>
-			    footer:<xsl:value-of select="footer"/>
-			    }
-			    ]
-			</xsl:for-each>
-
-			<xsl:for-each select="myColumnDefs">
-			    myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-			<xsl:for-each select="myButtons">
-			    myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-		    </script>
+		    
 		</div>
 		<div id="coordination">
 		    <table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -821,7 +793,7 @@ Returns mixed
 
 		<xsl:call-template name="attributes_values"/>
 	    </div>
-	</div>
+	<!--/div-->
 	<xsl:choose>
 	    <xsl:when test="mode='edit'">
 		<table>
