@@ -654,6 +654,8 @@
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read();
 			
+			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
+			
 			if($GLOBALS['phpgw']->session->is_repost())
 			{
 				$this->receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
@@ -821,33 +823,16 @@
 		
         public function save()
         {
+
 			$id = phpgw::get_var('id', 'int');
+			$config	= CreateObject('phpgwapi.config','property');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$config->read();
 			
 			if($id)
 			{
 				$action='edit';
-			}
-			
-
-			if($id)
-			{
-				$values['id']=$id;
-				$action='edit';
-			}
-
-			if(!$receipt['error'])
-			{
-				if($values['copy_workorder'])
-				{
-					$action='add';
-				}
-				$receipt = $this->bo->save($values,$action);
-
-				if (! $receipt['error'])
-				{
-					$id = $receipt['id'];
-				}
-
+				$values['id']= $id;
 			}
 			
 			/*
@@ -870,6 +855,8 @@
 				{
 					$receipt = $this->bo->save($values, $action);
 					$values['id'] = $receipt['id'];
+					$id = $receipt['id'];
+					
 				}
 
 				catch(Exception $e)
@@ -882,7 +869,189 @@
 					}
 				}
 				
+				$historylog	= CreateObject('property.historylog','workorder');
+				
 				$this->_handle_files($values);
+				
+				if ($values['approval'] && $values['mail_address'] && $config->config_data['workorder_approval'])
+				{
+					$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
+					$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+					$subject = lang('Approval').": ". $id;
+					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $id),false,true).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
+
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					{
+						if (!is_object($GLOBALS['phpgw']->send))
+						{
+							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+						}
+
+						$action_params = array
+							(
+								'appname'			=> 'property',
+								'location'			=> '.project.workorder',
+								'id'				=> $id,
+								'responsible'		=> '',
+								'responsible_type'  => 'user',
+								'action'			=> 'approval',
+								'remark'			=> '',
+								'deadline'			=> ''
+
+							);
+						$bcc = '';//$coordinator_email;
+						foreach ($values['mail_address'] as $_account_id => $_address)
+						{
+							if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
+							{
+								$action_params['responsible'] = $_account_id;
+								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+								if($rcpt)
+								{
+									$historylog->add('AP', $id, lang('%1 is notified',$_address));
+									$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+								}
+
+								execMethod('property.sopending_action.set_pending_action', $action_params);
+							}
+						}
+					}
+					else
+					{
+						$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
+					}
+				}
+				$toarray = array();
+				$toarray_sms = array();
+
+				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
+					&& $config->config_data['mailnotification'])
+//						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
+				{
+					if(!$this->account==$project['coordinator'] && $config->config_data['notify_project_owner'])
+					{
+						$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
+						if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
+						{
+							$toarray[] = $prefs_coordinator['email'];
+						}
+					}
+				}
+
+				$notify_list = execMethod('property.notify.read', array
+					(
+						'location_id'		=> $location_id,
+						'location_item_id'	=> $id
+					)
+				);
+
+				$subject=lang('workorder %1 has been edited',$id);
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
+				{
+					$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+					$sms	= CreateObject('sms.sms');
+
+					foreach($notify_list as $entry)
+					{
+						if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+						{
+							$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+							$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+							$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+						}
+					}
+					unset($entry);
+
+					if($toarray_sms)
+					{
+						$historylog->add('MS',$id,implode(',',$toarray_sms));
+					}
+				}
+
+				reset($notify_list);
+				foreach($notify_list as $entry)
+				{
+					if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+					{
+						$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+					}
+				}
+				unset($entry);
+
+				if ($toarray)
+				{
+					$to = implode(';',$toarray);
+					$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+					$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id),false,true).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
+					foreach($receipt['notice_owner'] as $notice)
+					{
+						$body .= $notice . "\n";
+					}
+					$body .= lang('Altered by') . ': ' . $from_name . "\n";
+					$body .= lang('remark') . ': ' . $values['remark'] . "\n";
+					$body = nl2br($body);
+
+					if (!is_object($GLOBALS['phpgw']->send))
+					{
+						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+					}
+
+					$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+
+					if (!$returncode)	// not nice, but better than failing silently
+					{
+						$receipt['error'][]=array('msg'=>"uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
+						$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+					}
+					else
+					{
+						$historylog->add('ON', $id, lang('%1 is notified',$to));
+						$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
+					}
+				}
+					
+				if( phpgw::get_var('send_workorder', 'bool') && !$receipt['error'])
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=>'property.uiwo_hour.view',
+						'workorder_id'	=> $id,
+						'from'			=>'index'
+						)
+					);
+				}
+
+				if( phpgw::get_var('calculate_workorder', 'bool') && !$receipt['error'])
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=>'property.uiwo_hour.index',
+						'workorder_id'	=> $id,
+						)
+					);
+				}
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+
+					if(!$receipt['error'])
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+					$result['receipt'] = $receipt;
+
+					return $result;
+				}
 				
 				phpgwapi_cache::message_set($receipt, 'message'); 
 				if ($values['apply']) {
@@ -1019,6 +1188,7 @@
 
 			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
 
+			/*
 			if (isset($values['save']))
 			{
 				/*if($GLOBALS['phpgw']->session->is_repost())
@@ -1135,14 +1305,15 @@
 					{
 						$values['status'] = $config->config_data['workorder_approval_status'];
 					}
-				}*/
+				}
 
 				if($id)
 				{
 					$values['id']=$id;
 					$action='edit';
 				}
-
+				
+				
 				if(!$receipt['error'])
 				{
 					if($values['copy_workorder'])
@@ -1192,7 +1363,7 @@
 							}
 							$bofiles->vfs->override_acl = 0;
 						}
-					}*/
+					}
 					//-----------
 					if ($values['approval'] && $values['mail_address'] && $config->config_data['workorder_approval'])
 					{
@@ -1376,9 +1547,9 @@
 					return $result;
 				}
 
-			}
+			}*/
 
-			if(!isset($receipt['error']))
+			if(!$this->receipt['error'])
 			{
 				if($id)
 				{
@@ -2131,6 +2302,8 @@
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
 			}
+			
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 			(
