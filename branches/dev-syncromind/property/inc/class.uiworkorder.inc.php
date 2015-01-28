@@ -649,10 +649,82 @@
 		private function _populate()
 		{
 			$id = phpgw::get_var('id');
-			$values	= phpgw::get_var('values');
 			$boproject	= CreateObject('property.boproject');
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read();
+			
+			$project_id 				= phpgw::get_var('project_id', 'int');
+			$values						= phpgw::get_var('values');
+			$values['ecodimb']			= phpgw::get_var('ecodimb');
+			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int');
+			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string');
+			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int');
+			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string');
+			$values['event_id']			= phpgw::get_var('event_id', 'int');
+			$origin						= phpgw::get_var('origin');
+			$origin_id					= phpgw::get_var('origin_id', 'int');
+
+			if($origin == '.ticket' && $origin_id && !$values['descr'])
+			{
+				$boticket= CreateObject('property.botts');
+				$ticket = $boticket->read_single($origin_id);
+				$values['descr'] = $ticket['details'];
+				$values['title'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+				$ticket_notes = $boticket->read_additional_notes($origin_id);
+				$i = count($ticket_notes)-1;
+				if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+				{
+					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+				}
+
+				$values['location_data'] = $ticket['location_data'];
+			}
+			else if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
+			{
+				$_origin = explode('.', $origin);
+				$_boentity= CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
+				$_entity = $_boentity->read_single(array('entity_id'=> $_origin[2],'cat_id'=>$_origin[3],'id'=>$origin_id, 'view' => true));
+				$values['location_data'] = $_entity['location_data'];
+				unset($_origin);
+				unset($_boentity);
+				unset($_entity);
+			}
+			else if ( $origin == '.project.request' && $origin_id )
+			{
+				$_borequest	= CreateObject('property.borequest', false);
+				$_request = $_borequest->read_single($origin_id, array(),true);
+				$values['descr'] = $_request['descr'];
+				$values['title'] = $_request['title'];
+				$values['location_data'] = $_request['location_data'];
+				unset($_origin);
+				unset($_borequest);
+				unset($_request);
+			}
+
+			if(isset($values['origin']) && $values['origin'])
+			{
+				$origin		= $values['origin'];
+				$origin_id	= $values['origin_id'];
+			}
+
+			$interlink 	= & $this->bo->interlink;
+			if(isset($origin) && $origin)
+			{
+				unset($values['origin']);
+				unset($values['origin_id']);
+				$values['origin'][0]['location']= $origin;
+				$values['origin'][0]['descr']= $interlink->get_location_name($origin);
+				$values['origin'][0]['data'][]= array
+				(
+					'id'	=> $origin_id,
+					'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
+				);
+			}
+				
+			if($project_id && !isset($values['project_id']))
+			{
+				$values['project_id']=$project_id;
+			}
 			
 			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
 			
@@ -823,23 +895,22 @@
 		
         public function save()
         {
-
 			$id = phpgw::get_var('id', 'int');
 			$config	= CreateObject('phpgwapi.config','property');
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config->read();
-			
+						
+			/*
+			* Overrides with incoming data from POST
+			*/
+			$values = $this->_populate();
+
 			if($id)
 			{
 				$action='edit';
 				$values['id']= $id;
 			}
 			
-			/*
-			* Overrides with incoming data from POST
-			*/
-			$values = $this->_populate();
-
 			if($values['copy_workorder'])
 			{
 				$action='add';
@@ -870,7 +941,7 @@
 				}
 				
 				$historylog	= CreateObject('property.historylog','workorder');
-				
+		
 				$this->_handle_files($values);
 				
 				if ($values['approval'] && $values['mail_address'] && $config->config_data['workorder_approval'])
@@ -919,7 +990,7 @@
 					}
 					else
 					{
-						$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
+						$this->receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 					}
 				}
 				$toarray = array();
@@ -1002,8 +1073,8 @@
 
 					if (!$returncode)	// not nice, but better than failing silently
 					{
-						$receipt['error'][]=array('msg'=>"uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
-						$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+						$this->receipt['error'][]=array('msg'=>"uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
+						$this->receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
 					}
 					else
 					{
@@ -1012,7 +1083,7 @@
 					}
 				}
 					
-				if( phpgw::get_var('send_workorder', 'bool') && !$receipt['error'])
+				if( phpgw::get_var('send_workorder', 'bool') && !$this->receipt['error'])
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array(
 						'menuaction'	=>'property.uiwo_hour.view',
@@ -1022,7 +1093,7 @@
 					);
 				}
 
-				if( phpgw::get_var('calculate_workorder', 'bool') && !$receipt['error'])
+				if( phpgw::get_var('calculate_workorder', 'bool') && !$this->receipt['error'])
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array(
 						'menuaction'	=>'property.uiwo_hour.index',
@@ -1034,7 +1105,7 @@
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
 
-					if(!$receipt['error'])
+					if(!$this->receipt['error'])
 					{
 						$result =  array
 						(
@@ -1054,11 +1125,9 @@
 				}
 				
 				phpgwapi_cache::message_set($receipt, 'message'); 
-				if ($values['apply']) {
-					$this->edit($values);
-					return;
-				}
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'property.uiworkorder.index'));
+				$this->edit($values);
+				
+				return;
 			}
         }
 		
@@ -1109,7 +1178,11 @@
 			$config						= CreateObject('phpgwapi.config','property');
 			$location_id				= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config->read();
-
+			$project_id 				= phpgw::get_var('project_id', 'int');
+			$origin						= phpgw::get_var('origin');
+			$origin_id					= phpgw::get_var('origin_id', 'int');
+			
+			/*
 			if($mode == 'edit')
 			{
 				$project_id 				= phpgw::get_var('project_id', 'int');
@@ -1179,7 +1252,7 @@
 						'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
 					);
 				}
-			}
+			}*/
 
 			if($project_id && !isset($values['project_id']))
 			{
@@ -1573,8 +1646,8 @@
 				$acl_required = $mode == 'edit' ? PHPGW_ACL_EDIT : PHPGW_ACL_READ;
 				if (!$this->bocommon->check_perms($project['grants'],$acl_required))
 				{
-					$receipt['error'][]=array('msg'=>lang('You have no edit right for this project'));
-					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
+					$this->receipt['error'][]=array('msg'=>lang('You have no edit right for this project'));
+					$GLOBALS['phpgw']->session->appsession('receipt','property',$this->receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=>$id));
 				}
 
@@ -1885,14 +1958,14 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('values_tender_received');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_inspection_on_completion');
 
-			if( isset($receipt) && is_array($receipt))
+			/*if( isset($receipt) && is_array($receipt))
 			{
 				$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			}
 			else
 			{
 				$msgbox_data = '';
-			}
+			}*/
 
 			$link_file_data = array
 				(
@@ -2286,7 +2359,7 @@
 				$year++;
 			}
 
-			if(isset($receipt['error']) && $receipt['error'])
+			if(isset($this->receipt['error']) && $this->receipt['error'])
 			{
 				$year_list = $this->bocommon->select_list( $_POST['values']['budget_year'], $year_list );
 			}
@@ -2295,20 +2368,20 @@
 			$sogeneric->get_location_info('periodization',false);
 			$periodization_data	= $sogeneric->read_single(array('id' => (int)$project['periodization_id']),array());
 
-			$property_js = "/property/js/yahoo/property2.js";
+			/*$property_js = "/property/js/yahoo/property2.js";
 
 			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
+			}*/
 			
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 			(
 				'datatable_def'							=> $datatable_def,
-				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				//'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'periodization_data'					=> $periodization_data,
 				'year_list'								=> array('options' => $year_list),
 				'mode'									=> $mode,
@@ -2318,9 +2391,6 @@
 				'lang_claim'							=> lang('claim'),
 				'suppressmeter'							=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 				'suppresscoordination'					=> $suppresscoordination,
-				'datatable'								=> $datavalues,
-				'myColumnDefs'							=> $myColumnDefs,
-				'myButtons'								=> $myButtons,
 				'tabs'									=> self::_generate_tabs(array(),array('documents' => $id?false:true, 'history' => $id?false:true)),
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
@@ -2369,7 +2439,7 @@
 				'value_addition_percentage'				=> (isset($values['addition_percentage'])?$values['addition_percentage']:''),
 
 				'lang_budget'							=> lang('Budget'),
-				'value_budget'							=> isset($receipt['error']) && $receipt['error'] ? $_POST['values']['budget'] : '',
+				'value_budget'							=> isset($this->receipt['error']) && $this->receipt['error'] ? $_POST['values']['budget'] : '',
 				'lang_budget_statustext'				=> lang('Enter the budget'),
 
 				'lang_incl_tax'							=> lang('incl tax'),
@@ -2377,7 +2447,7 @@
 				'value_calculation'						=> (isset($values['calculation'])?$values['calculation']:''),
 				'value_sum_estimated_cost'				=> $sum_estimated_cost,
 
-				'value_contract_sum'					=> isset($receipt['error']) && $receipt['error'] ? $_POST['values']['contract_sum'] : '',
+				'value_contract_sum'					=> isset($this->receipt['error']) && $this->receipt['error'] ? $_POST['values']['contract_sum'] : '',
 
 				'ecodimb_data'							=> $ecodimb_data,
 				'vendor_data'							=> $vendor_data,
@@ -2485,17 +2555,17 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','datatable_inline','files','cat_sub_select'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','datatable_inline','files','cat_sub_select'));
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 
-			phpgwapi_yui::load_widget('dragdrop');
+			/*phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
+			phpgwapi_yui::load_widget('animation');*/
 
 //			phpgwapi_yui::load_widget('container');
 //			phpgwapi_yui::load_widget('button');
@@ -2504,7 +2574,11 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			$GLOBALS['phpgw']->css->validate_file('datatable');
+			self::add_javascript('property', 'portico', 'workorder.edit.js');
+			
+			self::render_template_xsl(array('workorder','datatable_inline','files','cat_sub_select'), array('edit' => $data));
+			
+			/*$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
@@ -2515,7 +2589,7 @@
 			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_workorder_edit', 'property' );
 
 			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');*/
 		}
 
 		
@@ -2614,7 +2688,7 @@
 				$this->bocommon->no_access();
 				return;
 			}
-			$this->edit('view');
+			$this->edit(null, $mode = 'view');
 		}
 
 		function add_invoice()
