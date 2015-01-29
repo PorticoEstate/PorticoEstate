@@ -1498,6 +1498,85 @@
 						'menu_selection'	=> 'admin::property::document_status'
 					);
 				break;
+			case 'ns3420':
+				$info = array
+					(
+						'table' 			=> 'fm_ns3420',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name'			=> 'parent_id',
+								'descr'			=> lang('parent'),
+								'type'			=> 'select',
+								'sortable'		=> true,
+								'nullable'		=> true,
+								'filter'		=> false,
+								'role'			=> 'parent',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'ns3420', 'role' => 'parent', 'selected' => '##parent_id##',
+														'id_in_name'=> 'num', 'mapping' => array('name' => 'tekst1')
+													)
+								)
+							),
+							array
+							(
+								'name' => 'num',
+								'descr' => lang('num'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name' => 'tekst1',
+								'descr' => 'tekst1',
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'tekst2',
+								'descr' => 'tekst2',
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'tekst3',
+								'descr' => 'tekst3',
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'tekst4',
+								'descr' => 'tekst4',
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'tekst5',
+								'descr' => 'tekst5',
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'tekst6',
+								'descr' => 'tekst6',
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('ns3420'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::ns3420',
+						'check_grant'		=> false
+					);
+				break;
 			case 'unit':
 				$info = array
 					(

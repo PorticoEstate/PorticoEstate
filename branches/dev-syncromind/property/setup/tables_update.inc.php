@@ -8169,7 +8169,7 @@
 
 	/**
 	* Update property version from 0.9.17.685 to 0.9.17.686
-	* Convert id from character ti integer for fm_vendor_category::id
+	* Convert id from character to integer for fm_vendor_category::id
 	*/
 	$test[] = '0.9.17.685';
 	function property_upgrade0_9_17_685()
@@ -8231,6 +8231,77 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.686';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.686 to 0.9.17.687
+	* Convert ns3420 table
+	*/
+	$test[] = '0.9.17.686';
+	function property_upgrade0_9_17_686()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_ns3420 ORDER BY id");
+
+		$ns3420 = array();
+		$id = 1;
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$ns3420[]=array
+			(
+				'id' => $id,
+				'num' => $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'enhet' => $GLOBALS['phpgw_setup']->oProc->f('enhet'),
+				'tekst1' => $GLOBALS['phpgw_setup']->oProc->f('tekst1'),
+				'tekst2' => $GLOBALS['phpgw_setup']->oProc->f('tekst2'),
+				'tekst3' => $GLOBALS['phpgw_setup']->oProc->f('tekst3'),
+				'tekst4' => $GLOBALS['phpgw_setup']->oProc->f('tekst4'),
+				'tekst5' => $GLOBALS['phpgw_setup']->oProc->f('tekst5'),
+				'tekst6' => $GLOBALS['phpgw_setup']->oProc->f('tekst6'),
+			);
+			$id ++;
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_ns3420');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_ns3420', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'num' => array('type' => 'varchar','precision' => '20','nullable' => False),
+					'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
+					'enhet' => array('type' => 'varchar','precision' => '6','nullable' => True),
+					'tekst1' => array('type' => 'varchar','precision' => '50','nullable' => True),
+					'tekst2' => array('type' => 'varchar','precision' => '50','nullable' => True),
+					'tekst3' => array('type' => 'varchar','precision' => '50','nullable' => True),
+					'tekst4' => array('type' => 'varchar','precision' => '50','nullable' => True),
+					'tekst5' => array('type' => 'varchar','precision' => '50','nullable' => True),
+					'tekst6' => array('type' => 'varchar','precision' => '50','nullable' => True),
+					'type' => array('type' => 'varchar','precision' => '20','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('num')
+			)
+		);
+
+		foreach ($ns3420 as $value_set)
+		{
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO fm_ns3420 ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+	
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.687';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

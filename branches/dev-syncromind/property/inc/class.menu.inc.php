@@ -586,6 +586,11 @@
 							'text'	=> lang('Unit'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'unit') )
 						),
+						'ns3420'	=> array
+						(
+							'text'	=> lang('ns3420'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ns3420') )
+						),
 						'key_location'	=> array
 						(
 							'text'	=> lang('Key location'),
