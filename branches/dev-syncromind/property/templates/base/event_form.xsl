@@ -16,7 +16,7 @@
 				}
 
 				var strURL = phpGWLink('index.php', oArgs);
-				Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+				TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 			}
 		</script>
 		<div class="pure-control-group">
