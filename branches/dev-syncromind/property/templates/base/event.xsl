@@ -17,163 +17,105 @@
 				<xsl:call-template name="msgbox"/>
 			</xsl:when>
 		</xsl:choose>
-		<div class="yui-navset" id="general_edit_tabview" align="left">
+		<div id="event_edit_tabview">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form method="post" action="{$form_action}">
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div class="yui-content">
+			<form method="post" action="{$form_action}" class= "pure-form pure-form-aligned">
+				<input type="hidden" name="active_tab" value="{active_tab}"/>
+				<div id="tab-content">
+					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 					<div id="general">
-						<table cellpadding="2" cellspacing="2" width="79%" align="center">
+						<fieldset>
+							<xsl:call-template name="contact_form"/>
 							<xsl:choose>
 								<xsl:when test="value_id != ''">
-									<tr>
-										<td valign="top">
-											<xsl:value-of select="lang_id"/>
-										</td>
-										<td>
-											<xsl:value-of select="value_id"/>
-										</td>
-									</tr>
+									<div class="pure-control-group">
+										<label><xsl:value-of select="lang_id"/></label>
+										<div><xsl:value-of select="value_id"/></div>
+									</div>
 								</xsl:when>
 							</xsl:choose>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_descr"/>
-								</td>
-								<td>
-									<textarea cols="{textareacols}" rows="{textarearows}" name="values[descr]">
-										<xsl:value-of select="value_descr"/>
-									</textarea>
-								</td>
-							</tr>
-							<xsl:call-template name="contact_form"/>
-							<!--
-<tr>
-<td valign="top">
-<xsl:value-of select="lang_responsible"/>
-</td>
-<td>
-<xsl:value-of disable-output-escaping="yes" select="responsible"/>
-</td>
-</tr>
--->
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_action"/>
-								</td>
-								<td>
-									<xsl:value-of disable-output-escaping="yes" select="action"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_enabled"/>
-								</td>
-								<td>
-									<xsl:choose>
-										<xsl:when test="value_enabled = '1'">
-											<input type="checkbox" name="values[enabled]" value="1" checked="checked" onMouseout="window.status='';return true;">
-												<xsl:attribute name="title">
-													<xsl:value-of select="lang_enabled_on_statustext"/>
-												</xsl:attribute>
-											</input>
-										</xsl:when>
-										<xsl:otherwise>
-											<input type="checkbox" name="values[enabled]" value="1" onMouseout="window.status='';return true;">
-												<xsl:attribute name="title">
-													<xsl:value-of select="lang_enabled_off_statustext"/>
-												</xsl:attribute>
-											</input>
-										</xsl:otherwise>
-									</xsl:choose>
-								</td>
-							</tr>
-						</table>
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_descr"/></label>
+								<textarea cols="{textareacols}" rows="{textarearows}" name="values[descr]">
+									<xsl:value-of select="value_descr"/>
+								</textarea>
+							</div>
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_action"/></label>
+								<xsl:value-of disable-output-escaping="yes" select="action"/>
+							</div>	
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_enabled"/></label>
+								<xsl:choose>
+									<xsl:when test="value_enabled = '1'">
+										<input type="checkbox" name="values[enabled]" value="1" checked="checked" onMouseout="window.status='';return true;">
+											<xsl:attribute name="title">
+												<xsl:value-of select="lang_enabled_on_statustext"/>
+											</xsl:attribute>
+										</input>
+									</xsl:when>
+									<xsl:otherwise>
+										<input type="checkbox" name="values[enabled]" value="1" onMouseout="window.status='';return true;">
+											<xsl:attribute name="title">
+												<xsl:value-of select="lang_enabled_off_statustext"/>
+											</xsl:attribute>
+										</input>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+						</fieldset>
 					</div>
 					<div id="repeat">
-						<table cellpadding="2" cellspacing="2" width="79%" align="center">
+						<fieldset>
 							<xsl:choose>
 								<xsl:when test="value_id != ''">
-									<tr>
-										<td valign="top">
-											<xsl:value-of select="lang_next_run"/>
-										</td>
-										<td>
-											<xsl:value-of select="value_next_run"/>
-										</td>
-									</tr>
+									<div class="pure-control-group">
+										<label><xsl:value-of select="lang_next_run"/></label>
+										<div><xsl:value-of select="value_next_run"/></div>
+									</div>
 								</xsl:when>
 							</xsl:choose>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_start_date"/>
-								</td>
-								<td>
-									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_start_date_statustext"/>
-										</xsl:attribute>
-									</input>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_end_date"/>
-								</td>
-								<td>
-									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_end_date_statustext"/>
-										</xsl:attribute>
-									</input>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_repeat_type"/>
-								</td>
-								<td>
-									<xsl:value-of disable-output-escaping="yes" select="repeat_type"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_repeat_day"/>
-								</td>
-								<td>
-									<xsl:value-of disable-output-escaping="yes" select="repeat_day"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_repeat_interval"/>
-								</td>
-								<td>
-									<input type="text" id="values_repeat_interval" name="values[repeat_interval]" size="4" value="{value_repeat_interval}">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_repeat_interval_statustext"/>
-										</xsl:attribute>
-									</input>
-								</td>
-							</tr>
-							<!--
-<tr>
-<td valign="top">
-<a>
-<xsl:attribute name="href"><xsl:value-of select="link_schedule"/></xsl:attribute>
-<xsl:value-of select="php:function('lang', 'plan')" />
-</a>
-</td>
-</tr>
--->
-						</table>
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_start_date"/></label>
+								<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_start_date_statustext"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_end_date"/></label>
+								<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_end_date_statustext"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_repeat_type"/></label>
+								<xsl:value-of disable-output-escaping="yes" select="repeat_type"/>
+							</div>
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_repeat_day"/></label>
+								<xsl:value-of disable-output-escaping="yes" select="repeat_day"/>
+							</div>
+							<div class="pure-control-group">
+								<label><xsl:value-of select="lang_repeat_interval"/></label>
+								<input type="text" id="values_repeat_interval" name="values[repeat_interval]" size="4" value="{value_repeat_interval}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_repeat_interval_statustext"/>
+									</xsl:attribute>
+								</input>
+							</div>
+						</fieldset>
 					</div>
 					<xsl:variable name="edit_url">
 						<xsl:value-of select="edit_url"/>
 					</xsl:variable>
 					<div id="plan">
+						<fieldset>
 						<input type="hidden" name="values[location_id]" value="{value_location_id}"/>
 						<input type="hidden" name="values[location_item_id]" value="{value_location_item_id}"/>
 						<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
@@ -195,6 +137,7 @@
 							</tr>
 							<!-- <xsl:call-template name="alarm_form"/>  -->
 						</table>
+						</fieldset>
 					</div>
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
 						<tr height="50">
