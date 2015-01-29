@@ -123,10 +123,29 @@
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
 			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+			$valid_contract_types = array();
+			if(isset($config->config_data['contract_types']) && is_array($config->config_data['contract_types']))
+			{
+				foreach ($config->config_data['contract_types'] as $_key => $_value)
+				{
+					if($_value)
+					{
+						$valid_contract_types[] = $_value;
+					}
+				}
+			}
+
 			
 			$create_types = array();
 			foreach($contract_types as $id => $label)
 			{
+				if($valid_contract_types && !in_array($id,$valid_contract_types))
+				{
+					continue;
+				}
 	
 				$names = $this->locations->get_name($id);
 				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
