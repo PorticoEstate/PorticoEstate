@@ -26,15 +26,15 @@
 	* @subpackage admin
  	* @version $Id$
 	*/
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.jquery');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_uievent extends phpgwapi_uicommon
+	class property_uievent extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $start;
@@ -58,6 +58,8 @@
 
 		function __construct()
 		{
+			parent::__construct();
+			
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.boevent',true);
@@ -717,13 +719,13 @@
 					{
 						$receipt = $this->bo->save($values,$action);
 
-						$js = "opener.document.form.{$field_name}.value = '{$receipt['id']}';\n";
-						$js .= "opener.document.form.{$field_name}_descr.value = '{$values['descr']}';\n";
-						$js .= "opener.document.form.submit();\n";
+						$js = "parent.document.getElementsByName('".$field_name."')[0].value = '{$receipt['id']}';\n";
+						$js .= "parent.document.getElementsByName('".$field_name."_descr')[0].value = '{$values['descr']}';\n";
+						//$js .= "parent.document.form.submit();\n";
 
 						if (isset($values['save']) && $values['save'])
 						{
-							$js .= "window.close();";
+							$js .= "TINY.box.hide();";
 						}
 						$GLOBALS['phpgw']->js->add_event('load', $js);
 						$id = $receipt['id'];
@@ -738,8 +740,8 @@
 				else if ((isset($values['delete']) && $values['delete']))
 				{
 					$attrib = $this->custom->get('property', $location, $attrib_id);
-					$js = "opener.document.form.{$field_name}.value = '';\n";
-					$js .= "opener.document.form.{$field_name}_descr.value = '';\n";
+					$js = "parent.document.getElementsByName('".$field_name."')[0].value = '';\n";
+					$js .= "parent.document.getElementsByName('".$field_name."_descr')[0].value = '';\n";
 					if($this->delete($id))
 					{
 						$GLOBALS['phpgw']->js->add_event('load', $js);
@@ -749,7 +751,7 @@
 				}
 				else if ((isset($values['cancel']) && $values['cancel']))
 				{
-					$GLOBALS['phpgw']->js->add_event('load', "window.close();");
+					$GLOBALS['phpgw']->js->add_event('load', "TINY.box.hide();");
 				}
 				unset($js);
 				unset($attrib);
@@ -787,8 +789,9 @@
 			//_debug_array($link_data);
 
 			$tabs = array();
+			$active_tab = 'general';
 
-			phpgwapi_yui::tabview_setup('general_edit_tabview');
+			//phpgwapi_yui::tabview_setup('general_edit_tabview');
 			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 			$tabs['repeat']		= array('label' => lang('repeat'), 'link' => '#repeat');
 			if ($id)
@@ -861,7 +864,9 @@
 
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+					//'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+					'active_tab'					=> $active_tab,
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
 			$schedule = array();
