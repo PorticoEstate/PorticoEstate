@@ -73,7 +73,7 @@ Returns mixed
 	    </xsl:when>
 	</xsl:choose>
     </table>
-    <form ENCTYPE="multipart/form-data" method="post" name="form" action="{form_action}">
+    <form ENCTYPE="multipart/form-data" method="post" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
 	<div id="project_tabview">
 		<!--input type="hidden" name="tab" value=""/-->
 		<!--div class="yui-navset" id="project_tabview"-->
@@ -237,9 +237,6 @@ Returns mixed
 				<xsl:call-template name="user_id_select"/>
 			    </td>
 			</tr>
-			<tr>
-				<td>fff</td>
-			</tr>
 			<!--xsl:call-template name="contact_form"/-->
 			<tr>
 			    <td>
@@ -324,15 +321,14 @@ Returns mixed
 		    </table>
 		</div>
 		<div id="location">
-		    <table cellpadding="2" cellspacing="2" width="80%" align="center">
+		    <fieldset>
 			<xsl:choose>
 			    <xsl:when test="mode='edit'">
 
-				<tr>
-				    <td valign="top">
-					<xsl:value-of select="php:function('lang', 'inherit location')"/>
-				    </td>
-				    <td>
+				<div class="pure-control-group">
+				    <label>
+						<xsl:value-of select="php:function('lang', 'inherit location')"/>
+					</label>
 					<input type="checkbox" name="values[inherit_location]" value="1">
 					    <xsl:if test="inherit_location = 1">
 						<xsl:attribute name="checked" value="checked"/>
@@ -341,8 +337,7 @@ Returns mixed
 						<xsl:value-of select="php:function('lang', 'inherit location')"/>
 					    </xsl:attribute>
 					</input>
-				    </td>
-				</tr>
+				</div>
 				<xsl:call-template name="location_form"/>
 			    </xsl:when>
 			    <xsl:otherwise>
@@ -365,7 +360,7 @@ Returns mixed
 				</tr>
 			    </xsl:when>
 			</xsl:choose>
-		    </table>
+		    </fieldset>
 		</div>
 		<div id="budget">
 		    <table cellpadding="2" cellspacing="2" width="80%" align="center">
