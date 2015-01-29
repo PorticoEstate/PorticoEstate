@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 $template_name = "Leie av personalbolig";
 if(!$get_template_config){
@@ -14,14 +14,23 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 <?php include "css/contract.css"?>
 </style>
 <div class="contract">
-<img src="http://portico.nlsh.no/portico/logovariant1.png" alt="Nordlanssykehuset logo" height="52" width="500" />
 <!--<img src="http://www.nordlandssykehuset.no/getfile.php/NLSH_bilde%20og%20filarkiv/Internett/NLSH_logo_siste.jpg%20%28352x58%29.jpg" alt="Nordlanssykehuset logo" />-->
 
-<h1>LEIEKONTRAKT</h1>
-<h2>FOR PERSONALBOLIG</h2>
-<h3>Kontraktsnummer: <?php echo $contract->get_old_contract_id();?></h3>
-
-
+<table>
+	<tr>
+		<td>
+			<h1>LEIEKONTRAKT FOR PERSONALBOLIG</h1>
+		</td>
+		<td align ='right'>
+			<img src="http://portico.nlsh.no/portico/logovariant1.png" alt="Nordlanssykehuset logo" height="39" width="375" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<h3>Kontraktsnummer: <?php echo $contract->get_old_contract_id();?></h3>
+		</td>
+	</tr>
+</table>
 <form action="" method="post">
 <?php
 $disabled="";
@@ -45,11 +54,10 @@ if(isset($_POST['checkb_duration'])){?><input type="hidden" name="checkb_duratio
 if(isset($_POST['checkb_type'])){?><input type="hidden" name="checkb_type_hidden"  /><?php }
 if(isset($_POST['checkb_termination'])){?><input type="hidden" name="checkb_termination_hidden"  /><?php }
 if(isset($_POST['checkb_termination2'])){?><input type="hidden" name="checkb_termination2_hidden"  /><?php }
-if(isset($_POST['checkb_electricity'])){?><input type="hidden" name="checkb_electricity_hidden"  /><?php }
+if(isset($_POST['checkb_electricity'])){?><input type="hidden" name="checkb_electricity_hidden" value ="<?php echo $_POST['checkb_electricity'] ?>"/><?php }
 if(isset($_POST['checkb_sublease_allowed'])){?><input type="hidden" name="checkb_sublease_allowed_hidden"  /><?php }
 if(isset($_POST['checkb_sublease_disallowed'])){?><input type="hidden" name="checkb_sublease_disallowed_hidden"  /><?php }
-if(isset($_POST['checkb_animals_allowed'])){?><input type="hidden" name="checkb_animals_allowed_hidden"  /><?php }
-if(isset($_POST['checkb_animals_disallowed'])){?><input type="hidden" name="checkb_animals_disallowed_hidden"  /><?php }
+if(isset($_POST['checkb_animals'])){?><input type="hidden" name="checkb_animals_hidden" value ="<?php echo $_POST['checkb_animals'] ?>"/><?php }
 if(isset($_POST['checkb_remarks1'])){?><input type="hidden" name="checkb_remarks1_hidden"  /><?php }
 if(isset($_POST['checkb_remarks2'])){?><input type="hidden" name="checkb_remarks2_hidden"  /><?php }
 if(isset($_POST['checkb_remarks3'])){?><input type="hidden" name="checkb_remarks3_hidden"  /><?php }
@@ -59,10 +67,7 @@ if(isset($_POST['checkb_pay2'])){?><input type="hidden" name="checkb_pay2_hidden
 
 $termin_name = str_replace("lig", "", $contract->get_term_id_title());
 $termin_name = str_replace("vis", "", $termin_name);
-
-
 ?>
-
 
 <table class="header">
 	<tr>
@@ -111,7 +116,7 @@ $termin_name = str_replace("vis", "", $termin_name);
 					break;
 			}
 			echo $epost;
-
+			
 			?>
 		</td>
 		<td bgcolor="#C0C0C0">Arbeidssted:</td>
@@ -125,14 +130,14 @@ $termin_name = str_replace("vis", "", $termin_name);
 		<td></td>
 		<td bgcolor="#C0C0C0">Adresse:</td>
 		<td>
-			<?php
-				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){
+			<?php 
+				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){ 
 					echo $_POST['address']?>
-					<input type="hidden" name="address" value="<?php echo $_POST['address']?>" />
+					<input type="hidden" name="address" value="<?php echo $_POST['address']?>" /> 
 			<?php
 				}else{
-			?>
-					<input type="text" name="address" value="<?php echo $contract_party->get_address_1().", ".$contract_party->get_address_2();?>" />
+			?> 
+					<input type="text" name="address" value="<?php echo $contract_party->get_address_1().", ".$contract_party->get_address_2();?>" /> 
 			<?php
 				}
 			?>
@@ -142,14 +147,14 @@ $termin_name = str_replace("vis", "", $termin_name);
 		<td></td>
 		<td bgcolor="#C0C0C0">Postnr/Sted:</td>
 		<td>
-			<?php
-				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){
+			<?php 
+				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){ 
 					echo $_POST['postal_code']?>
-					<input type="hidden" name="postal_code" value="<?php echo $_POST['postal_code']?>" />
+					<input type="hidden" name="postal_code" value="<?php echo $_POST['postal_code']?>" /> 
 			<?php
 				}else{
-			?>
-					<input type="text" name="postal_code" value="<?php echo $contract_party->get_postal_code()." ".$contract_party->get_place();?>" />
+			?> 
+					<input type="text" name="postal_code" value="<?php echo $contract_party->get_postal_code()." ".$contract_party->get_place();?>" /> 
 			<?php
 				}
 			?>
@@ -168,9 +173,9 @@ $termin_name = str_replace("vis", "", $termin_name);
 	<dt>
 	</dt>
 	<?php
-
+	
 	foreach ($units as $unit){
-
+	
 	$gb = preg_split('/ /', $unit->get_location()->get_gab_id(), -1);
 	if(!($gb[0]=="")){
 	?><dt></dt>
@@ -198,45 +203,40 @@ else
 {
 	?> <textarea rows="3" cols="" name="limitations"><?php echo $_POST['limitations']?></textarea> <?php
 }
-?>
+?> 
 	</dd>
 
 </dl>
 </div>
+
+
 <div class="section">
 <dl class="section_header">
 	<dt>3.</dt>
 	<dd>Kontrakten art og varighet</dd>
 </dl>
-<dl class="checkbox_list">
-	<dt></dt>
-	<dd>
 
 	<p>
 		Leieavtalen gjelder bolig i anledning ansettelse ved Nordlandssykehuset HF.<br/>
 		Leieforholdet er inngått i forståelse mellom partene om å være et midlertidig tilbud
 		knyttet til tiltredelse av stilling ved Nordlandssykehuset HF.<br/>
-		Leieforholdet kan forlenges ved særskilt skriftlig avtale mellom partene.<br />
+		Leieforholdet kan forlenges ved særskilt skriftlig avtale mellom partene.</br>
 	</p>
-	</br>
-	<p>Leieforholdet er tidsbestemt og starter å løpe ved signering av denne avtale<br/>
+	
+	<p> Leieforholdet er tidsbestemt og starter den <?php echo date($date_format, $contract_dates->get_start_date());?> 
 		og opphører uten oppsigelse den <?php echo date($date_format, $contract_dates->get_end_date());?> kl. 1200<br />
 		<i>
 			Leieavtalen kan uavhengig av gjeldende frist sies opp av begge parter ved en av partenes vesentlige mislighold av avtalen.
 			Med vesentlig mislighold forstås samme vilkår som nevnt i Husleieloven § 9-9.
 		</i>
 	</p>
-	</dd>
-</dl>
 </div>
 <div class="section">
 <dl class="section_header">
 	<dt>4.</dt>
 	<dd>Leiesum</dd>
 </dl>
-<dl class="checkbox_list">
-	<dt></dt>
-	<dd>
+
 <?php
 foreach ($price_items as $item)
 {
@@ -246,23 +246,29 @@ foreach ($price_items as $item)
 		<?php
 	}
 }?>
-		Leiesummen skal betales forskuddsvis hver mnd.<br/>
+		<p>Leiesummen skal betales forskuddsvis hver mnd.<br/>
 		Ved forsinket betaling skal det betales forsinkelsesrente etter lov om forsinket betaling av 17.des. 1976 nr. 100.<br/>
 		Ved mislighold av leiebetaling samtykker leietaker i at utleier kan foreta direkte trekk av tilgodehavende husleie direkte av leietakers lønn.<br/>
-		Husleie skal reguleres i takt med konsumprisindeksen hvert år. I tillegg kan utleier justere leie til enhver tid markedsleie for denne type bolig.
-	</dd>
-</dl>
+		Husleie skal reguleres i takt med konsumprisindeksen hvert år. I tillegg kan utleier justere leie til enhver tid markedsleie for denne type bolig.</p>
 
 </div>
 
 <div class="section">
-
 <dl class="section_header">
 	<dt>5.</dt>
-	<dd>Strøm og brensel</dd>
+	<dd>trøm og brensel</dd>
 </dl>
-<p>I tillegg til den avtalte månedlige husleie er leietaker personlig ansvarlig for strøm,	forsikring, oppvarming og avtalt vedlikehold av boligen/boligrommet.</p>
+
+<dl class="checkbox_list">
+	<dt><input type="radio" name="checkb_electricity" value = "included" <?php echo $disabled; if($_POST['checkb_electricity'] == "included"  || $_POST['checkb_electricity_hidden'] == "included") {echo 'checked';}?>  /></dt>
+	<dd>Leien er <i>inklusiv</i> strøm.<br />
+
+	<dt><input type="radio" name="checkb_electricity" value = "excluded" <?php echo $disabled; if((isset($_POST['checkb_electricity']) && $_POST['checkb_electricity'] == "excluded" ) || (isset($_POST['checkb_electricity_hidden']) && $_POST['checkb_electricity_hidden'] == "excluded")) {echo 'checked';}?>  /></dt>
+	<dd>I tillegg til den avtalte månedlige husleie er leietaker personlig ansvarlig for strøm,	forsikring, oppvarming og avtalt vedlikehold av boligen/boligrommet.</dd>
+</dl>
+
 </div>
+
 <div class="section">
 <dl class="section_header">
 	<dt>6.</dt>
@@ -329,9 +335,9 @@ foreach ($price_items as $item)
 	<dd>Dyrehold</dd>
 </dl>
 <dl class="checkbox_list">
-	<dt><input type="checkbox" name="checkb_animals_disallowed" <?php echo $disabled; if(isset($_POST['checkb_animals_disallowed']) || isset($_POST['checkb_animals_disallowed_hidden'])) {echo 'checked="checked"';}?>  /></dt>
+	<dt><input type="radio" name="checkb_animals" value = "disallowed" <?php echo $disabled; if((isset($_POST['checkb_animals']) && $_POST['checkb_animals'] == "disallowed" ) || (isset($_POST['checkb_animals_hidden']) && $_POST['checkb_animals_hidden'] == "disallowed")) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Dyrehold er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
-	<dt><input type="checkbox" name="checkb_animals_allowed" <?php echo $disabled; if(isset($_POST['checkb_animals_allowed']) || isset($_POST['checkb_animals_allowed_hidden'])) {echo 'checked="checked"';}?>  /></dt>
+	<dt><input type="radio" name="checkb_animals"  value = "allowed" <?php echo $disabled; if((isset($_POST['checkb_animals']) && $_POST['checkb_animals'] == "allowed" ) || (isset($_POST['checkb_animals_hidden']) && $_POST['checkb_animals_hidden'] == "allowed")) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Dyrehold er særskilt avtalt, ved at leier kan ha: <?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
 	{
 		?> <?php echo $_POST['animals']?> <input type="hidden" name="animals" value="<?php echo $_POST['animals']?>" /> <?php
@@ -427,19 +433,19 @@ foreach ($price_items as $item)
 	</tr>
 </table>
 </div>
-<?php if (isset($_POST['preview'])  ){
+<?php if (isset($_POST['preview'])  ){ 
 $HtmlCode= ob_get_contents();
 ob_end_flush();
 
 $_SESSION['contract_html'] = $HtmlCode;
-
+	
 	?>
 
-<input type="submit" value="Rediger" name="edit">
+<input type="submit" value="Rediger" name="edit"> 
 </form>
 
 <form action="<?php echo(html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.makePDF', 'id' => $contract->get_id(), 'initial_load' => 'no'))));?>" method="post">
-<input type="submit" value="Lagre som PDF" name="make_PDF" />
+<input type="submit" value="Lagre som PDF" name="make_PDF" /> 
 
 </form>
 
