@@ -34,82 +34,16 @@
 
 	class property_solookup
 	{
-		var $grants;
+		private $db;
+		private $join;
+		private $like;
 
 		function __construct()
 		{
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 		}
-
-		function read_addressbook($data)
-		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter'])?$data['filter']:'none';
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
-				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-			}
-
-			if ($order)
-			{
-				$ordermethod = " order by $order $sort";
-			}
-			else
-			{
-				$ordermethod = ' order by last_name DESC';
-			}
-
-
-			$where= 'WHERE';
-
-			if ($cat_id > 0)
-			{
-				$filtermethod .= " $where cat_id $this->like '%,$cat_id,%' ";
-				$where= 'AND';
-			}
-
-			if($query)
-			{
-				$query = $this->db->db_addslashes($query);
-
-				$querymethod = " $where org_name $this->like '%$query%'";
-			}
-
-			$sql = "SELECT person_id,first_name,last_name FROM phpgw_contact_person $filtermethod $querymethod";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
-
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);			
-			}
-
-			$contact = array();
-			while ($this->db->next_record())
-			{
-				$contact[] = array
-					(
-						'id'			=> $this->db->f('person_id'),
-						'contact_name'	=> $this->db->f('last_name',true) . ', ' . $this->db->f('first_name',true),
-					);
-			}
-			//_debug_array($vendor);
-
-			return $contact;
-		}
-
 
 		function read_b_account($data)
 		{
@@ -192,108 +126,6 @@
 			return $b_account;
 		}
 
-
-		function read_street($data)
-		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter'])?$data['filter']:'none';
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
-				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-			}
-
-			if ($order)
-			{
-				$ordermethod = " order by $order $sort";
-			}
-			else
-			{
-				$ordermethod = ' order by fm_streetaddress.descr DESC';
-			}
-
-			if($query)
-			{
-				$query = $this->db->db_addslashes($query);
-
-				$querymethod = " where ( descr $this->like '%$query%')";
-			}
-
-			$sql = "SELECT * FROM fm_streetaddress $querymethod  ";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			$street = array();
-			while ($this->db->next_record())
-			{
-				$street[] = array
-					(
-						'id'			=> $this->db->f('id'),
-						'street_name'	=> $this->db->f('descr',true)
-					);
-			}
-
-			return $street;
-		}
-
-		function read_ns3420($data)
-		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter'])?$data['filter']:'none';
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
-			}
-
-			if ($order)
-			{
-				$ordermethod = " order by $order $sort";
-			}
-			else
-			{
-				$ordermethod = ' order by tekst1 DESC';
-			}
-
-			if($query)
-			{
-				$query = $this->db->db_addslashes($query);
-
-				$querymethod = " where ( tekst1 $this->like '%$query%' or tekst2 $this->like '%$query%' or tekst3 $this->like '%$query%' or tekst4 $this->like '%$query%' or tekst5 $this->like '%$query%' or tekst6 $this->like '%$query%')";
-			}
-
-			$sql = "SELECT * FROM fm_ns3420  $querymethod  ";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-
-			$ns3420 = array();
-			while ($this->db->next_record())
-			{
-				$ns3420[] = array
-					(
-						'id'			=> $this->db->f('id'),
-						'ns3420_descr'	=> $this->db->f('tekst1',true) . ' ' .$this->db->f('tekst2',true) . ' ' .$this->db->f('tekst3',true) . ' ' .$this->db->f('tekst4',true) . ' ' .$this->db->f('tekst5',true) . ' ' .$this->db->f('tekst6',true)
-					);
-			}
-
-			return $ns3420;
-		}
 
 		function read_phpgw_user($data)
 		{

@@ -2189,10 +2189,9 @@
 	<!-- add / edit -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_hour">
 		<script type="text/javascript">
-			self.name="first_Window";
 			function ns3420_lookup()
 			{
-				Window1=window.open('<xsl:value-of select="ns3420_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+				TINY.box.show({iframe:'<xsl:value-of select="ns3420_link"/>', boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 			}
 		</script>
 		<div align="left">

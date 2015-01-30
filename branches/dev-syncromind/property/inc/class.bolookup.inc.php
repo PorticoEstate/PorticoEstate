@@ -42,7 +42,7 @@
 		public $cat_id;
 		public $total_records = 0;
 
-		function property_bolookup($session=false)
+		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.solookup');
 			$this->solocation	= CreateObject('property.solocation');
@@ -239,36 +239,6 @@
 			return $orgs;
 		}
 
-		/**
-		 * Get the the person data what you want
-		 *
-		 * @param array $fields The fields that you can see from person
-		 * @param integer $limit Limit of records that you want
-		 * @param integer $ofset Ofset of record that you want start
-		 * @param string $orderby The field which you want order
-		 * @param string $sort ASC | DESC depending what you want
-		 * @param mixed $criteria All criterias what you want
-		 * @param mixed $criteria_token same like $criteria but builded<br>with sql_criteria class, more powerfull
-		 * @return array with records
-		 */
-		function get_persons($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $token_criteria='')
-		{
-			$entries =  $this->so->get_persons($fields, $start, $limit, $orderby, $sort, $criteria, $token_criteria);
-			if(is_array($entries))
-			{
-				foreach($entries as $data)
-				{
-					$persons[$data['contact_id']] = $data;
-				}
-			}
-			else
-			{
-				$persons = array();
-			}
-			$this->total = $this->so->contacts->total_records;
-			return $persons;
-		}
-
 		function read_vendor($data = array())
 		{
 			$sogeneric 	= CreateObject('property.sogeneric');
@@ -315,23 +285,6 @@
 			return $b_account;
 		}
 
-		function read_street()
-		{
-			$street = $this->so->read_street(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
-			$this->total_records = $this->so->total_records;
-
-			return $street;
-		}
-
-		function read_ns3420()
-		{
-			$ns3420 = $this->so->read_ns3420(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id));
-			$this->total_records = $this->so->total_records;
-
-			return $ns3420;
-		}
 
 		function read_phpgw_user($data = array())
 		{
