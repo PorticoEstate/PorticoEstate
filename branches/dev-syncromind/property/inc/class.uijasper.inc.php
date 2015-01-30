@@ -53,7 +53,8 @@
 				'delete' 	=> true,
 				'download'	=> true,
 				'view'		=> true,
-				'get_file'	=> true
+				'get_file'	=> true,
+                'save'      => true
 			);
 
 		function __construct()
@@ -483,6 +484,126 @@
             return $this->jquery_results($result_data);
         }
         
+        public function save()
+        {
+            $id			= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');    
+            
+			if($GLOBALS['phpgw']->session->is_repost())
+            {
+//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+            }
+
+
+            if(!isset($values['location']) || !$values['location'])
+            {
+                $receipt['error'][]=array('msg'=>lang('Please select a location!'));
+            }
+
+            if(!isset($values['title']) || !$values['title'])
+            {
+                $receipt['error'][]=array('msg'=>lang('Please enter a title!'));
+            }
+
+            if($id)
+            {
+                $values['id']=$id;
+            }
+            else
+            {
+                $id = $values['id'];
+            }
+
+				if(!$receipt['error'])
+				{
+                    try
+                    {
+                        $receipt = $this->bo->save($values);
+                        $id = $receipt['id'];
+                        $msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+                        //-------------start files
+                        $bofiles	= CreateObject('property.bofiles');
+                        $file = array();
+                        if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
+                        {
+                            $file_name = str_replace (' ','_',$_FILES['file']['name']);
+                            $values['file_name'] = $file_name;
+
+                            $to_file	= "{$bofiles->fakebase}/jasper/{$id}/{$file_name}";
+
+                            if ($old_file = $bofiles->vfs->ls(array(
+                                'string' => "{$bofiles->fakebase}/jasper/{$id}",
+                                'relatives' => Array(RELATIVE_NONE)
+                            )))
+                            {
+                                $bofiles->vfs->rm(array(
+                                    'string' => "{$bofiles->fakebase}/jasper/{$id}/{$old_file[0]['name']}",
+                                    'relatives' => Array(RELATIVE_NONE)
+                                ));
+                                $receipt['message'][]=array('msg'=>lang('old file %1 removed',$old_file[0]['name']));
+                            }
+
+
+                            $file = array
+                                (
+                                    'from_file'	=> $_FILES['file']['tmp_name'],
+                                    'to_file'	=> $to_file
+                                );
+
+
+                            unset($to_file);
+
+
+                            if ($file)
+                            {
+                                $bofiles->create_document_dir("jasper/{$id}");
+                                $bofiles->vfs->override_acl = 1;
+
+                                if($bofiles->vfs->cp (array (
+                                    'from'	=> $file['from_file'],
+                                    'to'	=> $file['to_file'],
+                                    'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+                                {
+                                    $receipt['message'][]=array('msg'=>lang('file %1 uploaded', $file_name));
+                                }
+                                else
+                                {
+                                    $receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+                                }
+                                $bofiles->vfs->override_acl = 0;
+                            }
+                            unset($file);
+                            unset($file_name);
+                        }
+                        //-------------end files
+
+                        if (isset($values['save']) && $values['save'])
+                        {
+                            $GLOBALS['phpgw']->session->appsession('session_data','jasper_receipt',$receipt);
+                            $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index', 'app' => $this->app));
+                        }
+                        
+                    } catch (Exception $e){
+                        if ( $e )
+                        {
+                            phpgwapi_cache::message_set($e->getMessage(), 'error');
+                            $this->edit($values);
+                            return;
+                        }
+                    }
+                    
+                    $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                    
+                    phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+                    $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uijasper.edit', 'id' => $id));
+
+				}
+                else
+                {
+                    $this->edit();
+                }
+        }
         
 		function edit()
 		{
@@ -496,7 +617,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
 
-			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			/*if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
@@ -590,7 +711,7 @@
 						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index', 'app' => $this->app));
 					}
 				}
-			}
+			}*/
 
 			if (isset($values['cancel']) && $values['cancel'])
 			{
@@ -616,7 +737,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uijasper.edit',
+					'menuaction'	=> 'property.uijasper.save',
 					'id'		=> $id,
 					'app'		=> $this->app
 				);
