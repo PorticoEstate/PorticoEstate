@@ -52,7 +52,8 @@
 				'index'  => true,
 				'view'   => true,
 				'edit'   => true,
-				'delete' => true
+				'delete' => true,
+                'save'  => true
 			);
 
 		function __construct()
@@ -320,6 +321,62 @@
             return $this->jquery_results($result_data);
         }
         
+        public function save()
+        {
+            $id	= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
+            
+
+				if($id)
+				{
+					$values['id']=$id;
+					$action='edit';
+				}
+				else
+				{
+					$id =	$values['id'];
+				}
+
+				$data = str_replace(' ' ,'',stripslashes($values['data']));
+				$data = stripslashes($values['data']);
+
+				$data= explode(",", $data);
+
+				if(is_array($data))
+				{
+					foreach($data as $set)
+					{
+						$set= explode("=", $set);
+						$data_set[$set[0]]=$set[1];
+					}
+				}
+
+				if($values['data'])
+				{
+					$values['data']=serialize($data_set);
+				}
+                
+                try{
+                    
+                    $receipt = $this->bo->save($values,$action);
+                    $id = $receipt['id'];
+                    $msgbox_data = $this->bocommon->msgbox_data($receipt);
+                    
+                } catch (Exception $e) {
+                    if( $e )
+                    {
+                        phpgwapi_cache::message_set($e->getMessage(), 'error');
+                        $this->edit();
+                        return;
+                    }
+                }    
+                
+                $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                
+                phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+                $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'property.uiasync.edit','id'=>$id));
+        }
+        
 		function edit()
 		{
 			$id	= phpgw::get_var('id', 'int');
@@ -327,7 +384,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('async'));
 
-			if ($values['save'])
+			/*if ($values['save'])
 			{
 				if($id)
 				{
@@ -360,7 +417,7 @@
 
 				$receipt = $this->bo->save($values,$action);
 				$id = $receipt['id'];
-			}
+			}*/
 
 			if ($id)
 			{
@@ -384,7 +441,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiasync.edit',
+					'menuaction'	=> 'property.uiasync.save',
 					'id'		=> $id
 				);
 
