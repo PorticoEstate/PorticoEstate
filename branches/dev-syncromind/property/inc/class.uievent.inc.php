@@ -873,6 +873,68 @@
 
 			if ($id)
 			{
+				/*$link_shedule2 = $GLOBALS['phpgw']->link('/index.php',array('menuaction' =>'property.uievent.schedule2', 'id'=>$id, 'phpgw_return_as'=>'json'));
+				
+				$buttons = array
+				(
+					array('id' =>'values[set_receipt]','type'=>'buttons', 'value'=>'Receipt', 'label'=> lang('Receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'values[delete_receipt]','type'=>'buttons', 'value'=>'Delete Receipt', 'label'=> lang('Delete receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>"")
+				);
+			
+				$tabletools = array();
+				foreach($buttons as $entry)
+				{
+					$tabletools[] = array
+					(
+						'my_name'		=> $entry['value'],
+						'text' 			=> lang($entry['value']),
+						'type'			=> 'custom',
+						'custom_code' => "
+											var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+											var selected = oTT.fnGetSelectedData();
+
+											var numSelected = 	selected.length;
+
+											if (numSelected ==0){
+												alert('None selected');
+												return false;
+											}
+											var ids = [];
+											for ( var n = 0; n < selected.length; ++n )
+											{
+												var aData = selected[n];
+												ids.push(aData['id']);
+											}
+											{$entry['funct']}('{$entry['id']}', ids);
+											JqueryPortico.updateinlineTableHelper(oTable0, {$link_shedule2});"
+					);
+				}
+				
+				$plan_def = array
+				(
+					array('key' => 'number', 'label'=>'#', 'sortable'=>true),
+					array('key' => 'time', 'label'=>lang('plan'), 'sortable'=>true),
+					array('key' => 'performed', 'label'=>lang('performed'), 'sortable'=>true),
+					array('key' => 'user', 'label'=>lang('user'), 'sortable'=>true),
+					array('key' => 'remark', 'label'=>lang('remark'), 'sortable'=>true),
+					array('key' => 'enabled','label'=> lang('enabled'),'sortable'=>true,'className'=>'center'),
+					array('key' => 'alarm_id','label'=> lang('alarm_id'),'sortable'=>true)
+				);
+			
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_0',
+					'requestUrl'	=> json_encode($link_shedule2),
+					'ColumnDefs'	=> $plan_def,
+					'data'			=> json_encode(array()),
+					'tabletools'	=> $tabletools,
+					'config'		=> array(
+						array('disableFilter'	=> true),
+						array('disablePagination'	=> true)
+					)
+				);*/
 				$schedule = $this->schedule2($id);
 			}
 			else
@@ -1098,6 +1160,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'event.schedule', 'property' );
+			
 			return $data;
 		}
 
