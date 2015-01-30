@@ -131,7 +131,7 @@
 									<input type="hidden" name="p_num" value="{p_num}"/>
 									<input type="hidden" name="p_entity_id" value="{p_entity_id}"/>
 									<input type="hidden" name="p_cat_id" value="{p_cat_id}"/>
-									<input type="submit" class="forms" name="generate_project" value="{$lang_generate_project}">
+									<input type="submit" class="pure-button pure-button-primary" name="generate_project" value="{$lang_generate_project}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_generate_project_statustext"/>
 										</xsl:attribute>
@@ -148,7 +148,7 @@
 									</xsl:variable>
 									<input type="hidden" name="origin_id" value="{value_request_id}"/>
 									<input type="hidden" name="query" value="{loc1}"/>
-									<input type="submit" name="location" value="{$lang_add_to_project}">
+									<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_add_to_project}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
 										</xsl:attribute>
@@ -162,7 +162,7 @@
 								<form method="post" action="{$add_to_project_link2}">
 									<input type="hidden" name="origin_id" value="{value_request_id}"/>
 									<input type="hidden" name="query" value="{loc1}"/>
-									<input type="submit" name="location" value="{php:function('lang', 'add to project as relation')}">
+									<input type="submit" class="pure-button pure-button-primary" name="location" value="{php:function('lang', 'add to project as relation')}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'click this to link this request to an existing project')"/>
 										</xsl:attribute>
@@ -176,7 +176,7 @@
 									</xsl:variable>
 									<input type="hidden" name="values[subject]" value="{value_title}"/>
 									<input type="hidden" name="values[details]" value="{value_descr}"/>
-									<input type="submit" name="start_ticket" value="{$lang_start_ticket}">
+									<input type="submit" class="pure-button pure-button-primary" name="start_ticket" value="{$lang_start_ticket}">
 									</input>
 								</form>
 							</td>
@@ -188,7 +188,7 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
+		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}" class= "pure-form pure-form-aligned">
 		<div id="request_tabview">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="general">
@@ -684,7 +684,7 @@
 									<xsl:variable name="lang_save">
 										<xsl:value-of select="php:function('lang', 'save')"/>
 									</xsl:variable>
-									<input type="submit" name="values[save]" value="{$lang_save}">
+									<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_save_statustext"/>
 										</xsl:attribute>
@@ -694,7 +694,7 @@
 									<xsl:variable name="lang_save_new">
 										<xsl:value-of select="php:function('lang', 'save new')"/>
 									</xsl:variable>
-									<input type="submit" name="values[save_new]" value="{$lang_save_new}">
+									<input type="submit" class="pure-button pure-button-primary" name="values[save_new]" value="{$lang_save_new}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="$lang_save_new"/>
 										</xsl:attribute>
@@ -709,7 +709,7 @@
 							<xsl:variable name="lang_done">
 								<xsl:value-of select="php:function('lang', 'done')"/>
 							</xsl:variable>
-							<input type="button" name="done" value="{$lang_done}" onclick="location.href='{$done_action}'">
+							<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onclick="location.href='{$done_action}'">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_done_statustext"/>
 								</xsl:attribute>
