@@ -99,7 +99,7 @@
 							</div>
 							<div class="pure-control-group">
 								<label><xsl:value-of select="lang_repeat_day"/></label>
-								<xsl:value-of disable-output-escaping="yes" select="repeat_day"/>
+								<div class="pure-custom"><xsl:value-of disable-output-escaping="yes" select="repeat_day"/></div>
 							</div>
 							<div class="pure-control-group">
 								<label><xsl:value-of select="lang_repeat_interval"/></label>
