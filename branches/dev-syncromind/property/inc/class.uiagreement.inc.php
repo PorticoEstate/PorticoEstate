@@ -33,7 +33,7 @@
 	 */
 	//phpgw::import_class('phpgwapi.yui');
     phpgw::import_class('phpgwapi.uicommon_jquery');
-        phpgw::import_class('phpgwapi.jquery');
+    phpgw::import_class('phpgwapi.jquery');
 
 	class property_uiagreement extends phpgwapi_uicommon_jquery
 	{
@@ -963,7 +963,14 @@
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_activity' => $data));
 		}
-
+        
+        public function save()
+        {
+            $id				= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
+            
+        }
+        
 		function edit()
 		{
 
@@ -971,6 +978,7 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
+            
 			$id				= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
 			//return _debug_array($values);
@@ -988,6 +996,7 @@
 				$this->bo->delete_item($id,$activity_id);
 				$get_items = true;
 			}
+            
 			$values_attribute  = phpgw::get_var('values_attribute');
 			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement','property');
 
