@@ -26,7 +26,7 @@
 	* @subpackage custom
  	* @version $Id$
 	*/
-	phpgw::import_class('phpgwapi.yui');
+	//phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description
@@ -52,7 +52,8 @@
 				'view'   	=> true,
 				'edit'   	=> true,
 				'download'	=> true,
-				'delete'	=> true
+				'delete'	=> true,
+                'save'      => true
 			);
 
 		function __construct()
@@ -66,6 +67,7 @@
 
 			$this->bo			= CreateObject('property.bocustom',true);
 			$this->bocommon		= CreateObject('property.bocommon');
+            
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
 			$this->sort			= $this->bo->sort;
@@ -274,6 +276,58 @@
             return $this->jquery_results($result_data);
         }
         
+        public function save()
+        {
+            $custom_id	= phpgw::get_var('custom_id', 'int');
+            $values		= phpgw::get_var('values');
+			$values['sql_text'] = $_POST['values']['sql_text'];
+            
+				if(!$values['name'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
+				}
+
+				if(!$values['sql_text'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a sql query !'));
+				}
+
+				if(!$receipt['error'])
+				{
+                    try
+                    {
+                        $values['custom_id']	= $custom_id;
+                        $receipt = $this->bo->save($values);
+                        $custom_id = $receipt['custom_id'];
+                        $this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
+                        $msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+                        if ($values['save'])
+                        {
+                            $GLOBALS['phpgw']->session->appsession('session_data','custom_receipt',$receipt);
+                            $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uicustom.index'));
+                        }
+                        
+                    } catch (Exception $e) {
+                        if( $e )
+                        {
+                            phpgwapi_cache::message_set($e->getMessage(), 'error');
+                            $this->edit();
+                            return;
+                        }
+                    }
+                    
+                    $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                    phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+                    $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'property.uicustom.edit','custom_id'=>$custom_id));
+                    
+				}
+                else
+                {
+                    $this->edit();
+                }
+        }
+                
 		function edit()
 		{
 			if(!$this->acl_add && !$this->acl_edit)
@@ -293,7 +347,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
-			if ($values['save'] || $values['apply'])
+			/*if ($values['save'] || $values['apply'])
 			{
 				if(!$values['name'])
 				{
@@ -318,7 +372,7 @@
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uicustom.index'));
 					}
 				}
-			}
+			}*/
 
 			if ($values['cancel'])
 			{
