@@ -295,7 +295,7 @@
 				$dry_run = true;
 			}
 
-			$values = $this->bo->read($dry_run);
+			$values = $this->bo->read();
 			$uicols = array();$this->bo->uicols;
 
 			$uicols['name'][]		= 'schedule_time';
@@ -667,7 +667,7 @@
 
 			//			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
 			$receipt = array();
 
 			if (is_array($values))
@@ -811,6 +811,7 @@
 
 			$data = array
 				(
+					'datatable_def'					=> '',
 					'contact_data'					=> $contact_data,
 					'link_schedule'					=> $GLOBALS['phpgw']->link('/index.php',$link_schedule_data),
 
@@ -873,14 +874,14 @@
 
 			if ($id)
 			{
-				/*$link_shedule2 = $GLOBALS['phpgw']->link('/index.php',array('menuaction' =>'property.uievent.schedule2', 'id'=>$id, 'phpgw_return_as'=>'json'));
+				$link_shedule2 = $GLOBALS['phpgw']->link('/index.php',array('menuaction' =>'property.uievent.schedule2', 'id'=>$id, 'phpgw_return_as'=>'json'));
 				
 				$buttons = array
 				(
-					array('id' =>'values[set_receipt]','type'=>'buttons', 'value'=>'Receipt', 'label'=> lang('Receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[delete_receipt]','type'=>'buttons', 'value'=>'Delete Receipt', 'label'=> lang('Delete receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>"")
+					array('id' =>'set_receipt','type'=>'buttons', 'value'=>'Receipt', 'label'=> lang('Receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'delete_receipt','type'=>'buttons', 'value'=>'Delete Receipt', 'label'=> lang('Delete receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'enable_alarm','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'disable_alarm','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>"")
 				);
 			
 				$tabletools = array();
@@ -901,17 +902,42 @@
 												alert('None selected');
 												return false;
 											}
-											var ids = [];
+											var values = {'{$entry['id']}': 1, 'alarm': {}};
+												
 											for ( var n = 0; n < selected.length; ++n )
 											{
 												var aData = selected[n];
-												ids.push(aData['id']);
+												values['alarm'][aData['alarm_id']] = aData['alarm_id'];
 											}
-											{$entry['funct']}('{$entry['id']}', ids);
-											JqueryPortico.updateinlineTableHelper(oTable0, {$link_shedule2});"
+											{$entry['funct']}(values);
+											JqueryPortico.updateinlineTableHelper(oTable0, '$link_shedule2');"
 					);
 				}
 				
+				$link_shedule2 = str_replace('&amp;', '&', $link_shedule2);
+				
+			$code = <<<JS
+
+	this.onActionsClick=function(values)
+	{
+		//console.log(values);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: '$link_shedule2',
+			data:{values:values},
+			success: function(data) {
+				if( data != null)
+				{
+
+				}
+			}
+			});
+	}
+JS;
+				$GLOBALS['phpgw']->js->add_code($namespace, $code);
+			
 				$plan_def = array
 				(
 					array('key' => 'number', 'label'=>'#', 'sortable'=>true),
@@ -934,21 +960,24 @@
 						array('disableFilter'	=> true),
 						array('disablePagination'	=> true)
 					)
-				);*/
-				$schedule = $this->schedule2($id);
+				);
+				//$schedule = $this->schedule2($id);
+				$data['datatable_def'] = $datatable_def;
 			}
 			else
 			{
 				$data['td_count']		= '""';
 				$data['base_java_url']	= '""';
 				$data['property_js']	= '""';
+				unset($data['datatable_def']);
 			}
 
-			$data = array_merge($schedule, $data);
+			//$data = array_merge($schedule, $data);
 			$appname	=  lang('event');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			self::render_template_xsl(array('event','datatable_inline'), array('edit' => $data));
 		}
 
 		function delete($id)
@@ -1062,8 +1091,37 @@
 			{
 				if(count($values))
 				{
-//					_debug_array($values);
-					return json_encode($values);
+					$draw = phpgw::get_var('draw', 'int');
+					$allrows = phpgw::get_var('length', 'int') == -1;
+					$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+					$total_records = count($values);
+
+					$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
+
+					if($allrows)
+					{
+						$out = $values;
+					}
+					else
+					{
+						if ($total_records > $num_rows)
+						{
+							$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+							$values_part = array_chunk($values, $num_rows);
+							$out = $values_part[$page];
+						}
+						else 
+						{
+							$out = $values;
+						}
+					}
+
+					$result_data = array('results' => $out);
+
+					$result_data['total_records'] = $total_records;
+					$result_data['draw'] = $draw;
+					
+					return $this->jquery_results($result_data);
 				}
 				else
 				{
