@@ -116,7 +116,8 @@
 				'edit_contact' 	=> true,
 				'no_access'		=> true,
 				'delete_type'	=> true,
-                'view'          => true
+                'view'          => true,
+                'save'          => true
 			);
 
 		/**
@@ -131,6 +132,8 @@
 
 			$this->bo					= CreateObject('property.boresponsible', true);
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
+            $this->bocommon             = CreateObject('property.bocommon');
+            
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 		= $this->bo->get_acl_location();
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
@@ -177,7 +180,32 @@
 		 *
 		 * @return void
 		 */
+        private function _get_Filter()
+        {
+            $values_combo_box = array();
+            $combos = array();
+            
+            $locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->appname, false, false, true);
+				foreach ( $locations as $loc_id => $loc_descr )
+				{
+					$values_combo_box[0][] = array
+					(
+						'id'	=> $loc_id,
+						'name'	=> "{$loc_id} [{$loc_descr}]",
+					);
+				}
 
+				$default_value = array ('id'=>'','name'=>lang('No location'));
+				array_unshift ($values_combo_box[0],$default_value);
+                $combos[] = array
+                                (
+                                    'type'  => 'filter',
+                                    'name'  => 'loc_id',
+                                    'text'  => lang('location'),
+                                    'list'  => $values_combo_box[0]
+                                );
+                return $combos;
+        }
 		function index()
 		{
             
@@ -475,7 +503,12 @@
 			}*/			
 
 			//$datatable['rowactions']['action'] = array();
-
+             $filters = $this->_get_Filter();
+             #echo '<pre>'; print_r($filters); echo '</pre>';
+            foreach ($filters as $filter) {
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
+            
 			if(!$lookup)
 			{
 				$parameters = array
@@ -764,7 +797,73 @@
             
             return $this->jquery_results($result_data);
         }
+        
+        public function save()
+        {
+            $id			= phpgw::get_var('id', 'int');
+			$location	= phpgw::get_var('location', 'string');
+			$values		= phpgw::get_var('values');
 
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+	//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+				}
+
+				if(!isset($values['location']) || !$values['location'])
+				{
+//					$receipt['error'][]=array('msg'=>lang('Please select a location!'));
+				}
+
+				if(!isset($values['name']) || !$values['name'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a name!'));
+				}
+
+				if($id)
+				{
+					$values['id']=$id;
+				}
+				else
+				{
+					$id = $values['id'];
+				}
+
+				if(!$receipt['error'])
+				{
+                    try{
+                        
+                        $receipt = $this->bo->save_type($values);
+                        $id = $receipt['id'];
+                        $msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+                        if (isset($values['save']) && $values['save'])
+                        {
+                            $GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt',$receipt);
+                            $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'appname' => $this->appname));
+                        }
+                        
+                    } catch (Exception $e) {
+                        
+                        if( $e )
+                        {
+                            phpgwapi_cache::message_set($e->getMessage(), 'error');
+                            $this->edit();
+                            return;
+                        }
+                    }
+                    
+                    $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                    
+                    phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+                    $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'property.uiresponsible.edit','appname' => $this->appname,'id'=>$id));
+					
+				}
+                else
+                {
+                    $this->edit();
+                }
+        }
+        
 		function edit()
 		{
 			if(!$this->acl_add && !$this->acl_edit)
@@ -776,7 +875,7 @@
 			$location	= phpgw::get_var('location', 'string');
 			$values		= phpgw::get_var('values');
 
-			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			/*if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
@@ -813,7 +912,7 @@
 						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'appname' => $this->appname));
 					}
 				}
-			}
+			}*/
 
 			if (isset($values['cancel']) && $values['cancel'])
 			{
@@ -842,7 +941,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiresponsible.edit',
+					'menuaction'	=> 'property.uiresponsible.save',
 					'id'		=> $id,
 					'app'		=> $this->appname
 				);
