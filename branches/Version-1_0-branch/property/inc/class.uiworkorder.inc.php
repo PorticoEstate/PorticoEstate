@@ -288,7 +288,7 @@
 				$values_combo_box[1] = array();
 				foreach($_cats as $_cat)
 				{
-					if($_cat['level'] == 0 && !$_cat['active'] == 2)
+					if($_cat['level'] == 0 && $_cat['active'] != 2)
 					{
 						$values_combo_box[1][] = $_cat;
 					}
@@ -2035,7 +2035,7 @@
 			$cat_sub = array();
 			foreach ($_cat_sub as $entry)
 			{
-				if($entry['active'] == 2 && !$entry['id'] == $selected_cat)//hidden
+				if($entry['active'] == 2 && $entry['id'] != $selected_cat)//hidden
 				{
 					continue;
 				}
