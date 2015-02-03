@@ -968,12 +968,108 @@
         {
             $id				= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
+            $values_attribute  = phpgw::get_var('values_attribute');
             
+           if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+           {
+               
+                    $values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
+					$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
+
+					if(!$values['cat_id'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a category !'));
+					}
+
+					if($id)
+					{
+						$values['agreement_id']=$id;
+						$action='edit';
+					}
+					else
+					{
+						$values['agreement_id']=$this->bo->request_next_id();
+					}
+
+					$bofiles	= CreateObject('property.bofiles');
+					if(isset($id) && $id && isset($values['file_action']) && is_array($values['file_action']))
+					{
+						$bofiles->delete_file("/agreement/{$id}/", $values);
+					}
+
+					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
+					$to_file = "{$bofiles->fakebase}/agreement/{$values['agreement_id']}/{$values['file_name']}";
+
+					if(!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+					{
+						$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+					}
+
+
+					if(!$receipt['error'])
+					{
+                        try
+                        {
+
+                            $receipt = $this->bo->save($values,$values_attribute,$action);
+                            $id = $receipt['agreement_id'];
+                            $this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
+                            $msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+                            if($values['file_name'])
+                            {
+                                $bofiles->create_document_dir("agreement/{$id}");
+                                $bofiles->vfs->override_acl = 1;
+
+                                if(!$bofiles->vfs->cp (array (
+                                    'from'	=> $_FILES['file']['tmp_name'],
+                                    'to'	=> $to_file,
+                                    'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+                                {
+                                    $receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+                                }
+                                $bofiles->vfs->override_acl = 0;
+                            }
+
+
+                            if ($values['save'])
+                            {
+                                $GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt',$receipt);
+                                $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.index', 'role'=> $this->role));
+                            }
+                            
+                        } catch (Exception $e) {
+
+                            if( $e )
+                            {
+                                phpgwapi_cache::message_set($e->getMessage(), 'error');
+                                $this->edit();
+                                return;
+                            }
+                            
+                        }
+                            
+                        $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+                        phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+                        $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=>'property.uiagreement.edit','id'=>$id));
+					}
+                    else
+                    {
+                        $this->edit();
+                    }
+           }
+           else
+           {
+               $this->edit($values);
+           }
         }
         
 		function edit()
 		{
-
+            
 			if(!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
@@ -981,7 +1077,7 @@
             
 			$id				= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
-			//return _debug_array($values);
+
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
 			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
@@ -1026,7 +1122,7 @@
 
 				//_debug_array($values);
 
-				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+				/*if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
 					$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 					$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
@@ -1072,8 +1168,6 @@
 
 					if(!$receipt['error'])
 					{
-//						$values['agreement_id']	= $id;
-
 						$receipt = $this->bo->save($values,$values_attribute,$action);
 						$id = $receipt['agreement_id'];
 						$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
@@ -1101,7 +1195,8 @@
 						}
 					}
 				}
-				else if(isset($values['update']) && $values['update'])
+				else*/ 
+                if ( isset($values['update']) && $values['update'] )
 				{
 					if(!$values['date'])
 					{
@@ -1275,7 +1370,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uiagreement.edit',
+					'menuaction'	=> 'property.uiagreement.save',
 					'sort'		=>$this->sort,
 					'order'		=>$this->order,
 					'id'		=> $id,
