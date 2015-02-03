@@ -1,16 +1,17 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
+	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
 			</xsl:when>
-			<xsl:when test="add">
+				<xsl:when test="add">
 				<xsl:apply-templates select="add"/>
 			</xsl:when>
 			<xsl:when test="view">
 				<xsl:apply-templates select="view"/>
 			</xsl:when>
 		</xsl:choose>
+		<xsl:call-template name="jquery_phpgw_i18n"/>
 	</xsl:template>
 
 	<!-- New template-->
