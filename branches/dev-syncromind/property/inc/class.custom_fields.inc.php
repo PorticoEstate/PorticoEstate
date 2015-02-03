@@ -420,7 +420,7 @@ JS;
 					$lookup_functions[$m]['action'] .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
 					$lookup_functions[$m]['action'] .= "}\n";
 					$lookup_functions[$m]['action'] .= "var strURL = phpGWLink('index.php', oArgs);\n";
-					$lookup_functions[$m]['action']	.= 'Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action']	.= 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
