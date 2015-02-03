@@ -725,7 +725,7 @@
 
 						if (isset($values['save']) && $values['save'])
 						{
-							$js .= "TINY.box.hide();";
+							$js .= "parent.TINY.box.hide();";
 						}
 						$GLOBALS['phpgw']->js->add_event('load', $js);
 						$id = $receipt['id'];
@@ -748,10 +748,6 @@
 						unset($values);
 						unset($id);
 					}
-				}
-				else if ((isset($values['cancel']) && $values['cancel']))
-				{
-					$GLOBALS['phpgw']->js->add_event('load', "TINY.box.hide();");
 				}
 				unset($js);
 				unset($attrib);
