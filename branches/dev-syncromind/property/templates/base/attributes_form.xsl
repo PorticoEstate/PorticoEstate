@@ -603,40 +603,32 @@
 										<xsl:value-of select="name"/>
 										<xsl:text>();</xsl:text>
 									</xsl:variable>
-									<table>
-										<tr>
-											<td>
-												<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6"/>
-												<input size="30" type="text" name="{$event_descr}" value="{descr}" onClick="{$lookup_function}" readonly="readonly">
-													<xsl:choose>
-														<xsl:when test="disabled!=''">
-															<xsl:attribute name="disabled">
-																<xsl:text> disabled</xsl:text>
-															</xsl:attribute>
-														</xsl:when>
-													</xsl:choose>
-												</input>
-											</td>
-										</tr>
+									<div class="pure-custom">
+										<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6"/>
+										<input size="30" type="text" name="{$event_descr}" value="{descr}" onClick="{$lookup_function}" readonly="readonly">
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
 										<xsl:choose>
 											<xsl:when test="next!=''">
-												<tr>
-													<td>
-														<xsl:value-of select="lang_next_run"/>
-														<xsl:text>: </xsl:text>
-														<xsl:value-of select="next"/>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<xsl:value-of select="lang_enabled"/>
-														<xsl:text>: </xsl:text>
-														<xsl:value-of select="enabled"/>
-													</td>
-												</tr>
+												<div>
+													<xsl:value-of select="lang_next_run"/>
+													<xsl:text>: </xsl:text>
+													<xsl:value-of select="next"/>
+												</div>
+												<div>
+													<xsl:value-of select="lang_enabled"/>
+													<xsl:text>: </xsl:text>
+													<xsl:value-of select="enabled"/>
+												</div>
 											</xsl:when>
 										</xsl:choose>
-									</table>
+									</div>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
