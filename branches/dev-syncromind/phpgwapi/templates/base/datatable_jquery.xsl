@@ -209,16 +209,27 @@
 					<select id="{$name}" name="{$name}">
 						<xsl:for-each select="list">
 							<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-							<xsl:if test="id = 'NEW'">
-								<option value="{$id}" selected="selected">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:if>
-							<xsl:if test="id != 'NEW'">
-								<option value="{$id}">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="id = 'NEW'">
+									<option value="{$id}" selected="selected">
+										<xsl:value-of select="name"/>
+									</option>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<xsl:when test="selected = 'selected'">
+											<option value="{$id}" selected="selected">
+												<xsl:value-of select="name"/>
+											</option>
+										</xsl:when>
+										<xsl:otherwise>
+											<option value="{$id}">
+												<xsl:value-of select="name"/>
+											</option>										
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:for-each>
 					</select>
 					</td>
