@@ -27,15 +27,15 @@
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 					<div id="general">
 						<fieldset>
-							<xsl:call-template name="contact_form"/>
 							<xsl:choose>
 								<xsl:when test="value_id != ''">
 									<div class="pure-control-group">
 										<label><xsl:value-of select="lang_id"/></label>
-										<div><xsl:value-of select="value_id"/></div>
+										<div class="pure-custom"><xsl:value-of select="value_id"/></div>
 									</div>
 								</xsl:when>
 							</xsl:choose>
+							<xsl:call-template name="contact_form"/>
 							<div class="pure-control-group">
 								<label><xsl:value-of select="lang_descr"/></label>
 								<textarea cols="{textareacols}" rows="{textarearows}" name="values[descr]">
@@ -73,7 +73,7 @@
 								<xsl:when test="value_id != ''">
 									<div class="pure-control-group">
 										<label><xsl:value-of select="lang_next_run"/></label>
-										<div><xsl:value-of select="value_next_run"/></div>
+										<div class="pure-custom"><xsl:value-of select="value_next_run"/></div>
 									</div>
 								</xsl:when>
 							</xsl:choose>
@@ -141,42 +141,32 @@
 							</fieldset>
 						</div>
 					</xsl:if>
-					<table cellpadding="2" cellspacing="2" width="80%" align="center">
-						<tr height="50">
-							<td valign="bottom">
-								<input type="submit" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_save_statustext"/>
-									</xsl:attribute>
-								</input>
-							</td>
-							<td valign="bottom">
-								<input type="submit" name="values[apply]" value="{lang_apply}" onMouseout="window.status='';return true;">
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_apply_statustext"/>
-									</xsl:attribute>
-								</input>
-							</td>
-							<td align="right" valign="bottom">
-								<input type="submit" name="values[cancel]" value="{lang_cancel}" onMouseout="window.status='';return true;">
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_cancel_statustext"/>
-									</xsl:attribute>
-								</input>
-							</td>
-							<xsl:choose>
-								<xsl:when test="value_id != ''">
-									<td align="right" valign="bottom">
-										<input type="submit" name="values[delete]" value="{lang_delete}">
-											<xsl:attribute name="title">
-												<xsl:value-of select="lang_delete_statustext"/>
-											</xsl:attribute>
-										</input>
-									</td>
-								</xsl:when>
-							</xsl:choose>
-						</tr>
-					</table>
+				</div>
+				<div class="proplist-col">
+					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_save_statustext"/>
+						</xsl:attribute>
+					</input>
+					<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{lang_apply}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_apply_statustext"/>
+						</xsl:attribute>
+					</input>
+					<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{lang_cancel}" onClick="parent.TINY.box.hide();">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_cancel_statustext"/>
+						</xsl:attribute>
+					</input> 
+					<xsl:choose>
+						<xsl:when test="value_id != ''">
+							<input type="submit" class="pure-button pure-button-primary" name="values[delete]" value="{lang_delete}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_delete_statustext"/>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+					</xsl:choose>
 				</div>
 			</form>
 		</div>
