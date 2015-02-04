@@ -26,12 +26,11 @@
 	* @subpackage project
  	* @version $Id$
 	*/
-    phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.yui');
 
 	/**
 	* Import the jQuery class
 	*/
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
 
 	/**
@@ -205,105 +204,106 @@
             $values_combo_box = array();
             $combos = array();
             
-                $values_combo_box[0]  = $this->bo->get_project_types($this->project_type_id);
-				array_unshift ($values_combo_box[0],array ('id'=>'','name'=> lang('project type')));
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'project_type_id',
-                                    'text'   => lang('Project Type'),
-                                    'list'   => $values_combo_box[0]
-                                );
+			$values_combo_box[0]  = $this->bo->get_project_types($this->project_type_id);
+			array_unshift ($values_combo_box[0],array ('id'=>'','name'=> lang('project type')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'project_type_id',
+								'text'   => lang('Project Type'),
+								'list'   => $values_combo_box[0]
+							);
 
-				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[1],$default_value);
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'district_id',
-                                    'text'   => lang('District'),
-                                    'list'   => $values_combo_box[1]
-                                );
+			$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+			$default_value = array ('id'=>'','name'=>lang('no district'));
+			array_unshift ($values_combo_box[1],$default_value);
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'district_id',
+								'text'   => lang('District'),
+								'list'   => $values_combo_box[1]
+							);
 
-				$_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
-				$values_combo_box[2] = array();
-				foreach($_cats as $_cat)
+			$_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
+			$values_combo_box[2] = array();
+			foreach($_cats as $_cat)
+			{
+				if($_cat['level'] == 0 && !$_cat['active'] == 2)
 				{
-					if($_cat['level'] == 0 && !$_cat['active'] == 2)
-					{
-						$values_combo_box[2][] = $_cat;
-					}
+					$values_combo_box[2][] = $_cat;
 				}
-				
-				$default_value = array ('id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[2],$default_value);
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'cat_id',
-                                    'text'   => lang('Category'),
-                                    'list'   => $values_combo_box[2]
-                                );
+			}
 
-				$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
-				array_unshift ($values_combo_box[3],array ('id'=>'all','name'=> lang('all')));
-				array_unshift ($values_combo_box[3],array ('id'=>'open','name'=> lang('open')));
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'status_id',
-                                    'text'   => lang('Status'),
-                                    'list'   => $values_combo_box[3]
-                                );
+			$default_value = array ('id'=>'','name'=> lang('no category'));
+			array_unshift ($values_combo_box[2],$default_value);
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'cat_id',
+								'text'   => lang('Category'),
+								'list'   => $values_combo_box[2]
+							);
 
-				$values_combo_box[4]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-				$default_value = array ('id'=>'','name'=>lang('no hour category'));
-				array_unshift ($values_combo_box[4],$default_value);
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'wo_hour_cat_id',
-                                    'text'   => lang('Hour Category'),
-                                    'list'   => $values_combo_box[4]
-                                );
+			$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
+			array_unshift ($values_combo_box[3],array ('id'=>'all','name'=> lang('all')));
+			array_unshift ($values_combo_box[3],array ('id'=>'open','name'=> lang('open')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'status_id',
+								'text'   => lang('Status'),
+								'list'   => $values_combo_box[3]
+							);
 
-				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
-				$default_value = array ('id'=>'','name'=>lang('no criteria'));
-				array_unshift ($values_combo_box[5],$default_value);
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'criteria_id',
-                                    'text'   => lang('Criteria'),
-                                    'list'   => $values_combo_box[5]
-                                );
+			$values_combo_box[4]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+			$default_value = array ('id'=>'','name'=>lang('no hour category'));
+			array_unshift ($values_combo_box[4],$default_value);
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'wo_hour_cat_id',
+								'text'   => lang('Hour Category'),
+								'list'   => $values_combo_box[4]
+							);
 
-				$values_combo_box[6]  = $this->bo->get_filter_year_list($this->filter_year);
-				array_unshift ($values_combo_box[6],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'filter_year',
-                                    'text'   => lang('Year'),
-                                    'list'   => $values_combo_box[6]
-                                );
+			$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
+			$default_value = array ('id'=>'','name'=>lang('no criteria'));
+			array_unshift ($values_combo_box[5],$default_value);
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'criteria_id',
+								'text'   => lang('Criteria'),
+								'list'   => $values_combo_box[5]
+							);
 
-				$values_combo_box[7]  = $this->bo->get_user_list($this->filter);
-				array_unshift ($values_combo_box[7],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
-				$default_value = array ('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[7],$default_value);
-                $combos[] = array
-                                (
-                                    'type'   => 'filter',
-                                    'name'   => 'filter',
-                                    'text'   => lang('User'),
-                                    'list'   => $values_combo_box[7]
-                                );
+			$values_combo_box[6]  = $this->bo->get_filter_year_list($this->filter_year);			
+			array_unshift ($values_combo_box[6],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'filter_year',
+								'text'   => lang('Year'),
+								'list'   => $values_combo_box[6]
+							);
+
+			$values_combo_box[7]  = $this->bo->get_user_list($this->filter);
+			array_unshift ($values_combo_box[7],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
+			$default_value = array ('id'=>'','name'=>lang('no user'));
+			array_unshift ($values_combo_box[7],$default_value);
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'filter',
+								'text'   => lang('User'),
+								'list'   => $values_combo_box[7]
+							);
             
             return $combos;
         }
         
+		
 		function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
@@ -402,6 +402,7 @@
             );
 			            
             $filters = $this->_get_Filters();
+			krsort($filters);
             foreach($filters as $filter){
                 array_unshift($data['form']['toolbar']['item'], $filter);
             }
@@ -410,7 +411,8 @@
 			$uicols	= $this->bo->uicols;
 			$count_uicols_name=count($uicols['name']);
 
-            for ($k = 0; $k < $count_uicols_name; $k++) {
+            for ($k = 0; $k < $count_uicols_name; $k++) 
+			{
                 $params = array
                             (
                                 'key'   =>  $uicols['name'][$k],
@@ -428,8 +430,7 @@
 				{
                     # Aca debe ser el Onclick
 					$params['formatter'] = 'JqueryPortico.searchLink';
-				}
-                
+				}                
                 
                 array_push($data['datatable']['field'], $params);
             }
@@ -447,6 +448,7 @@
 							),
 						)
 					);
+				
 				$parameters2 = array
 					(
 						'parameter' => array
@@ -464,14 +466,15 @@
 					$data['datatable']['actions'][] = array
 						(
 							'my_name' 			=> 'view',
-							'statustext' 			=> lang('view the project'),
-							'text'		=> lang('view'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							'statustext' 		=> lang('view the project'),
+							'text'				=> lang('view'),
+							'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uiproject.view'
 							)),
-							'parameters'	=> json_encode($parameters)
+							'parameters'		=> json_encode($parameters)
 						);
+					
 					$data['datatable']['actions'][] = array
 						(
 							'my_name' 			=> 'view',
@@ -479,9 +482,9 @@
 							'text' 				=> lang('open view in new window'),
 							'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uiproject.view',
-								'target'		=> '_blank'
+								'menuaction'	=> 'property.uiproject.view'
 							)),
+							'target'		=> '_blank',
 							'parameters'	=> json_encode($parameters)
 						);
 
@@ -496,10 +499,10 @@
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
 									'menuaction'	=> 'property.uijasper.view',
-									'jasper_id'			=> $report['id'],
-									'target'		=> '_blank'
+									'jasper_id'		=> $report['id']
 								)),
-								'parameters'			=> json_encode($parameters)
+								'target'		=> '_blank',
+								'parameters'	=> json_encode($parameters)
 							);
 					}
 				}
@@ -517,6 +520,7 @@
 							)),
 							'parameters'	=> json_encode($parameters)
 						);
+					
 					$data['datatable']['actions'][] = array
 						(
 							'my_name' 			=> 'edit',
@@ -524,11 +528,12 @@
 							'text'	 			=> lang('open edit in new window'),
 							'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uiproject.edit',
-								'target'		=> '_blank'
+								'menuaction'	=> 'property.uiproject.edit'
 							)),
+							'target'		=> '_blank',
 							'parameters'	=> json_encode($parameters)
 						);
+					
 					$data['datatable']['actions'][] = array
 						(
 							'my_name' 			=> 'edit',
@@ -536,44 +541,29 @@
 							'text'	 			=> lang('Add a workorder to this project'),
 							'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uiworkorder.edit',
+								'menuaction'	=> 'property.uiworkorder.edit'
 							)),
 							'parameters'	=> json_encode($parameters2)
 						);
 				}
-
 
 				if($this->acl_delete)
 				{
 					$data['datatable']['actions'][] = array
 						(
 							'my_name' 			=> 'delete',
-							'text' 			=> lang('delete'),
-							'confirm_msg'	=> lang('do you really want to delete this entry'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							'text'				=> lang('delete'),
+							'confirm_msg'		=> lang('do you really want to delete this entry'),
+							'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uiproject.delete'
 							)),
 							'parameters'	=> json_encode($parameters2)
 						);
 				}
-
-				if($this->acl_add)
-				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name' 			=> 'add',
-							'text' 			=> lang('add'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> 'property.uiproject.edit'
-							))
-						);
-				}
 			}
 
 			unset($parameters);
-
 
 			$function_exchange_values = '';
 			if($lookup)
@@ -630,7 +620,9 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-         
+ 			$start_date 	= urldecode(phpgw::get_var('start_date'));
+			$end_date 		= urldecode(phpgw::get_var('end_date'));
+			
             $params = array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
@@ -644,9 +636,11 @@
                 'wo_hour_cat_id' => $this->wo_hour_cat_id,
                 'district_id' => $this->district_id, 
 				'project_type_id' => $this->project_type_id,
-                'filter_year' => $this->filter_year
+                'filter_year' => $this->filter_year,
+				'start_date' => $start_date,
+				'end_date' => $end_date
             );
-             
+			
             $result_objects = array();
             $result_count = 0;
             
@@ -2791,12 +2785,12 @@
 			$active_tab = 'general';
 			$tabs = array
 				(
-					'general'		=> array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
-					'location'		=> array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
-					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
-					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
-					'documents'		=> array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
-					'history'		=> array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')")
+					'general'		=> array('label' => lang('general'), 'link' => '#general'),
+					'location'		=> array('label' => lang('location'), 'link' => '#location'),
+					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
+					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
+					'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
+					'history'		=> array('label' => lang('history'), 'link' => '#history')
 				);
 			
 			$tabs = array_merge($tabs, $tabs_);
@@ -2810,17 +2804,17 @@
 			
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab,'project_tabview');
 		}
-
+		/*
 		protected function _generate_tabs2($tabs_ = array(), $suppress = array(), $selected = 'general')
 		{
 			$tabs = array
 				(
-					'general'		=> array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
-					'location'		=> array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
-					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
-					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
-					'documents'		=> array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
-					'history'		=> array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')")
+					'general'		=> array('label' => lang('general'), 'link' => '#general'),
+					'location'		=> array('label' => lang('location'), 'link' => '#location'),
+					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
+					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
+					'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
+					'history'		=> array('label' => lang('history'), 'link' => '#history')
 				);
 			$tabs = array_merge($tabs, $tabs_);
 			foreach($suppress as $tab => $remove)
@@ -2833,5 +2827,5 @@
 			phpgwapi_yui::tabview_setup('project_tabview');
 
 			return  phpgwapi_yui::tabview_generate($tabs, $selected);
-		}
+		}*/
 	}
