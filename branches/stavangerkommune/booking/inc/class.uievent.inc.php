@@ -482,8 +482,7 @@
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
-
-			if (strlen(trim($body)) == 0) 
+			if (strlen(trim($body)) == 0)
 			{
 				return false;
 			}
@@ -492,7 +491,7 @@
 			{
 				try
 				{
-					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, '', 'plain');
+					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, '', 'html');
 				}
 				catch (phpmailerException $e)
 				{
