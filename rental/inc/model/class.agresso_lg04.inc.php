@@ -188,6 +188,7 @@
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
 			// We need all invoices for this billing
 			$invoices			 = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array('billing_id' => $this->billing_job->get_id()));
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			foreach($invoices as $invoice) // Runs through all invoices
 			{
@@ -209,6 +210,12 @@
 				$current_contract_type_id	= $contract->get_contract_type_id();
 				$contract_type_label		= lang(rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id));
 				$contract_id				= $contract->get_old_contract_id();
+				$party_names				= explode('<br/>', rtrim($contract->get_party_name(), '<br/>'));
+				$start_date					= $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(),$dateformat);
+				$end_date					= $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(),$dateformat);
+				$billing_start_date			= $GLOBALS['phpgw']->common->show_date($contract->get_billing_start_date(),$dateformat);
+				$billing_end_date			= $GLOBALS['phpgw']->common->show_date($contract->get_billing_end_date(),$dateformat);
+
 				/**End contract type**/
 
 				$price_item_data	 = array();
@@ -230,12 +237,36 @@
 
 					$serialized_party	 = $invoice->get_party()->serialize();
 					$party_name			 = $serialized_party['name'];
+					$_party_names = array();
+
+					if(count($party_names) > 1)
+					{
+						foreach($party_names as $value)
+						{
+							if($party_name == $value)
+							{
+								continue;
+							}
+							$_party_names[] = $value;
+						}
+					}
+					else
+					{
+						$_party_names = $party_names;
+					}
+
+					$party_full_name = implode (', ', $_party_names);
 
 					$this->orders[] = $this->$get_order_excel(
+						$start_date,
+						$end_date,
+						$billing_start_date,
+						$billing_end_date,
 						$invoice->get_header(),
 						$invoice->get_party()->get_identifier(),
 						$party_name,
 						$serialized_party['address'],
+						$party_full_name,
 						$invoice->get_id(),
 						$this->billing_job->get_year(),
 						$this->billing_job->get_month(),
@@ -445,7 +476,32 @@
 		 * Builds one single order of the excel file.
 		 * 
 		 */
-		protected function get_order_excel_bk($header, $party_id, $party_name,$party_address, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
+		protected function get_order_excel_bk(
+			$start_date,
+			$end_date,
+			$billing_start_date,
+			$billing_end_date,
+			$header,
+			$party_id,
+			$party_name,
+			$party_address,
+			$party_full_name,
+			$order_id,
+			$bill_year,
+			$bill_month,
+			$account,
+			$product_item,
+			$responsibility,
+			$service,
+			$building,
+			$project,
+			$text,
+			$client_ref,
+			$counter,
+			$account_in,
+			$responsibility_id,
+			$contract_type_label,
+			$contract_id)
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -485,7 +541,31 @@
 			return str_replace(array("\n", "\r"), '', $order);
 		}
 
-		protected function get_order_excel_nlsh($header, $party_id, $party_name,$party_address, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter,$account_in,$responsibility_id, $contract_type_label, $contract_id)
+		protected function get_order_excel_nlsh(
+						$start_date,
+						$end_date,
+						$billing_start_date,
+						$billing_end_date,
+						$header,
+						$party_id,
+						$party_name,
+						$party_address,
+						$party_full_name,
+						$order_id, $bill_year,
+						$bill_month,
+						$account_out,
+						$product_item,
+						$responsibility,
+						$service,
+						$building,
+						$project,
+						$text,
+						$client_ref,
+						$counter,
+						$account_in,
+						$responsibility_id,
+						$contract_type_label,
+						$contract_id)
 		{
 
 //_debug_array(func_get_args());
@@ -493,6 +573,10 @@
 			$order			 = array
 			(
 				'contract_id'			=> $contract_id,
+				'date_start'			=> $start_date,
+				'date_end'				=> $end_date,
+				'billing_start'			=> $billing_start_date,
+				'billing_end'			=> $billing_end_date,
 				'Kontraktstype'			=> $contract_type_label,//FIXME
 				'Art/konto inntektsside' => $account_in,
 				'Art/konto utgiftsside'	=> $account_out,//FIXME
@@ -505,6 +589,7 @@
 				'Party'					 => $party_id,
 				'name'					 => $party_name,
 				'address'				=> $party_address,
+				'Leieboer'				=> $party_full_name,
 				'amount'				 => $this->get_formatted_amount_excel($product_item['amount']),
 				'article description'	 => $product_item['article_description'],
 				'article_code'			 => $product_item['article_code'],
