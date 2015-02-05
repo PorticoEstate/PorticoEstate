@@ -609,7 +609,7 @@
 							{
 								
                                 $subject = $config->config_data['event_conflict_mail_subject'];
-                                $body = "<p>".$config->config_data['event_mail_conflict_contact_active_collision']."\n".phpgw::get_var('mail', 'POST')."\n";
+                                $body = "<p>".$config->config_data['event_mail_conflict_contact_active_collision']."<br />\n".phpgw::get_var('mail', 'POST')."\n";
                                 $body .= '<br /><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].'</a></p>';
                                 $body .= "<p>".$config->config_data['application_mail_signature']."</p>";
 								$mail_sendt_to = '';
@@ -634,7 +634,7 @@
 							if(phpgw::get_var('sendtocontact', 'POST'))
 							{
                                 $subject = $config->config_data['event_change_mail_subject'];
-                                $body = "<p>".$config->config_data['event_change_mail']."\n".phpgw::get_var('mail', 'POST');
+                                $body = "<p>".$config->config_data['event_change_mail']."<br />\n".phpgw::get_var('mail', 'POST');
                                 $body .= '<br /><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].'</a></p>';
 								$this->send_mailnotification($event['contact_email'], $subject, $body);
 								$comment = $comment_text_log.'<br />Denne er sendt til '.$event['contact_email'];
