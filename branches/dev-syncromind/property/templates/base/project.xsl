@@ -1,28 +1,6 @@
   <!-- $Id$ -->
-	<!--
-Function
-phpgw:conditional( expression $test, mixed $true, mixed $false )
-Evaluates test expression and returns the contents in the true variable if
-the expression is true and the contents of the false variable if its false
 
-Returns mixed
--->
-<func:function name="phpgw:conditional">
-    <xsl:param name="test"/>
-    <xsl:param name="true"/>
-    <xsl:param name="false"/>
-    <func:result>
-	<xsl:choose>
-	    <xsl:when test="$test">
-		<xsl:value-of select="$true"/>
-	    </xsl:when>
-	    <xsl:otherwise>
-		<xsl:value-of select="$false"/>
-	    </xsl:otherwise>
-	</xsl:choose>
-    </func:result>
-</func:function>
-<xsl:template name="app_data">
+<xsl:template match="data">
     <xsl:choose>
 	<xsl:when test="edit">
 	    <xsl:apply-templates select="edit"/>
@@ -34,16 +12,17 @@ Returns mixed
 <!-- add / edit -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
     <script type="text/javascript">
-	self.name="first_Window";
-	<xsl:value-of select="lookup_functions"/>
-	function add_sub_entry()
-	{
-	document.add_sub_entry_form.submit();
-	}
-	var project_type_id = '<xsl:value-of select="project_type_id"/>';
-	var project_id = '<xsl:value-of select="value_project_id"/>';
-
-    </script>
+		self.name="first_Window";
+		<xsl:value-of select="lookup_functions"/>
+		function add_sub_entry()
+		{
+			document.add_sub_entry_form.submit();
+		}
+		var project_type_id = '<xsl:value-of select="project_type_id"/>';
+		var project_id = '<xsl:value-of select="value_project_id"/>';
+		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
+		var base_java_url = <xsl:value-of select="base_java_url"/>; 
+   </script>
     <table cellpadding="2" cellspacing="2" align="center">
 	<xsl:choose>
 	    <xsl:when test="msgbox_data != ''">
@@ -113,7 +92,20 @@ Returns mixed
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'related')"/>
 								</label>
-								<div id="datatable-container_6"/>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_6'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
 							</div>
 						</xsl:when>
 						<xsl:otherwise>
@@ -408,7 +400,22 @@ Returns mixed
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'budget')"/>
 						</label>
-						<div id="datatable-container_0"/>
+						<div class="pure-custom">
+							<div>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="value_project_id!='' and mode='edit'">
@@ -506,16 +513,33 @@ Returns mixed
 								<xsl:value-of select="lang_no_workorders"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<select id = "order_time_span" name="order_time_span">
-									<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'select')"/>
-									</xsl:attribute>
-									<option value="0">
-									<xsl:value-of select="php:function('lang', 'select')"/>
-									</option>
-									<xsl:apply-templates select="order_time_span/options"/>
-								</select>
-								<div id="datatable-container_1"/>
+								<div class="pure-custom">
+									<div>
+										<select id = "order_time_span" name="order_time_span">
+											<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+											</xsl:attribute>
+											<option value="0">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+											</option>
+											<xsl:apply-templates select="order_time_span/options"/>
+										</select>
+									</div>
+									<div>
+										<xsl:for-each select="datatable_def">
+											<xsl:if test="container = 'datatable-container_1'">
+												<xsl:call-template name="table_setup">
+													<xsl:with-param name="container" select ='container'/>
+													<xsl:with-param name="requestUrl" select ='requestUrl' />
+													<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+													<xsl:with-param name="tabletools" select ='tabletools' />
+													<xsl:with-param name="data" select ='data' />
+													<xsl:with-param name="config" select ='config' />
+												</xsl:call-template>
+											</xsl:if>
+										</xsl:for-each>
+									</div>
+								</div>
 							</xsl:otherwise>
 						</xsl:choose>
 					</div>
@@ -523,7 +547,20 @@ Returns mixed
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'invoice')"/>
 						</label>
-						<div id="datatable-container_2"/>
+						<div class="pure-custom">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_2'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
 					</div>
 				</fieldset>
 			</div>
@@ -546,7 +583,20 @@ Returns mixed
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'notify')"/>
 						</label>
-						<div id="datatable-container_3"></div>
+						<div class="pure-custom">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_3'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="suppresscoordination =''">
@@ -626,14 +676,40 @@ Returns mixed
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'files')"/>
 								</label>
-								<div id="datatable-container_5"/>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_5'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
 							</div>
 							<xsl:call-template name="file_upload"/>
 						</fieldset>
 					</div>
 					<div id="history">
 						<fieldset>
-							<div id="datatable-container_4"/>
+							<div class="pure-custom">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_4'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
 						</fieldset>
 					</div>
 				</xsl:when>
@@ -973,25 +1049,8 @@ Returns mixed
     </div>
     <!--  DATATABLE DEFINITIONS-->
     <script type="text/javascript">
-	var property_js = <xsl:value-of select="property_js"/>;
-	//var base_java_url = <xsl:value-of select="base_java_url"/>;
-	var datatable = new Array();
-	var myColumnDefs = new Array();
-	var td_count = <xsl:value-of select="td_count"/>;
-	<xsl:for-each select="datatable">
-	    datatable[<xsl:value-of select="name"/>] = [
-	    {
-	    values:<xsl:value-of select="values"/>,
-	    total_records: <xsl:value-of select="total_records"/>,
-	    edit_action:  <xsl:value-of select="edit_action"/>,
-	    is_paginator:  <xsl:value-of select="is_paginator"/>,
-	    footer:<xsl:value-of select="footer"/>
-	    }
-	    ]
-	</xsl:for-each>
-	<xsl:for-each select="myColumnDefs">
-	    myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-	</xsl:for-each>
+	var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
+	var base_java_url = <xsl:value-of select="base_java_url"/>;
     </script>
 </xsl:template>
 
