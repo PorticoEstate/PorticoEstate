@@ -1517,6 +1517,11 @@
 			$rows_per_page = 10;
 			$initial_page = 1;
 
+			$s_budget = 0;
+			$s_orders = 0;
+			$s_actual_cost = 0;
+			$s_diff = 0;
+			
 			if($id)
 			{
 				$content_budget = $this->bo->get_budget($id);
@@ -1536,20 +1541,6 @@
 					$initial_page = floor(count($content_budget)/$rows_per_page);
 				}
 
-/*
-				if($content_budget)
-				{
-					foreach ($content_budget as $key => $row)
-					{
-						$_year_arg[$key]  = $row['year'];
-						$_month_arg[$key] = $row['month'];
-					}
-
-					array_multisort($_year_arg, SORT_DESC, $_month_arg, SORT_ASC, $content_budget);
-
-					reset($content_budget);
-				}
-*/
 				foreach($content_budget as & $b_entry)
 				{
 					if($b_entry['active'])
@@ -1569,6 +1560,10 @@
 					$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
 					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
 
+					$s_budget += $b_entry['budget'];
+					$s_orders += $b_entry['sum_orders'];
+					$s_actual_cost += $b_entry['actual_cost'];
+					$s_diff += $b_entry['diff'];
 				}
 				unset($b_entry);
 			}
@@ -1583,7 +1578,7 @@
 			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
-			//print_r($value_remainder); die;
+
 			if (isset($values['project_type_id']) && $values['project_type_id']==3)
 			{
 				$rows_per_page = 10;
@@ -1611,12 +1606,12 @@
 			{
 				$budget_def = array
 				(
-					array('key' => 'year','label'=>lang('year'),'sortable'=>false),
+					array('key' => 'year','label'=>lang('year'),'sortable'=>false,'value_footer'=>lang('Sum')),
 					array('key' => 'month','label'=>lang('month'),'sortable'=>false),
-					array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-					array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-					array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-					array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+					array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_budget, 0, ',', ' ')),
+					array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_orders, 0, ',', ' ')),
+					array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_actual_cost, 0, ',', ' ')),
+					array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_diff, 0, ',', ' ')),
 					array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
 					array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
 					array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2'),
