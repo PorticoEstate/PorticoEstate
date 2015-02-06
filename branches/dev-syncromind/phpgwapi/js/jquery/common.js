@@ -95,7 +95,7 @@ JqueryPortico.searchLink = function(key, oData) {
 	return '<a id="' + link + '" onclick="searchData(this.id);">' + name + '</a>';
 };
 
-JqueryPortico.formatCheck = function(key, oDakta) {
+JqueryPortico.formatCheck = function(key, oData) {
 	var checked = '';
 	var hidden = '';
 	if(oData['responsible_item'])
@@ -362,3 +362,19 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		var strURL = phpGWLink('login.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:'frameless',width:$(window).width(),height:400,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: false,closejs:false});
 	};
+
+	JqueryPortico.checkAll = function(myclass)
+  	{
+		$("." + myclass).each(function()
+		{
+			if($(this).prop("checked"))
+			{
+				$(this).prop("checked", false);
+			}
+			else
+			{
+				$(this).prop("checked", true);
+			}
+		});
+	}
+
