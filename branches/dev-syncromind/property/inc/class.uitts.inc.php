@@ -1335,7 +1335,6 @@
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('add ticket');
 
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.add', 'property' );
 			self::add_javascript('property', 'portico', 'tts.add.js');
 
 			$this->_insert_custom_js();
