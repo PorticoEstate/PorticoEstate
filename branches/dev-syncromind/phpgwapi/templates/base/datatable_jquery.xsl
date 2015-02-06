@@ -492,8 +492,32 @@
 												"sButtonText": "Operation",
 												"aButtons": [
 													'copy',
-													"select_all",
-													"select_none"
+													        {
+															sExtends: 'select_all',
+															//sButtonText: 'Select All',
+															fnClick: function (nButton, oConfig, oFlash) {
+																TableTools.fnGetInstance('datatable-container').fnSelectAll();
+																//In case there are checkboxes
+																$(".mychecks").each(function()
+																{
+																	 $(this).prop("checked", true);
+																});
+
+															}
+														},
+													    {
+															sExtends: 'select_none',
+															//sButtonText: 'Select None',
+															fnClick: function (nButton, oConfig, oFlash) {
+																TableTools.fnGetInstance('datatable-container').fnSelectNone();
+																//In case there are checkboxes
+																$(".mychecks").each(function()
+																{
+																	 $(this).prop("checked", false);
+																});
+
+															}
+														}
 												<xsl:choose>
 														<xsl:when test="download">
 													,{
