@@ -1182,6 +1182,7 @@ JS;
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			self::add_javascript('property', 'portico', 'location.responsiblility_role.js');
 
 			$this->bo->get_responsible(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id, 'allrows'=>$this->allrows));
 
@@ -1248,7 +1249,7 @@ JS;
 			$uicols['descr'][]		= lang('select');
 			$uicols['sortable'][]	= false;
 			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= $this->acl_edit ? 'JqueryPortico.formatCheck' : '';
+			$uicols['formatter'][]	= $this->acl_edit ? 'myFormatterCheck' : '';
 			$uicols['input_type'][]	= '';
 
 			$count_uicols_name = count($uicols['name']);
@@ -1333,12 +1334,7 @@ JS;
 			}
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
 			self::render_template_xsl('datatable_jquery', $data);
-
-			// Prepare YUI Library
-			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.responsiblility_role', 'property' );
-
 		}
 
 
