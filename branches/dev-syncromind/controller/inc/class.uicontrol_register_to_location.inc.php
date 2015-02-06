@@ -36,9 +36,9 @@
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 		
-	class controller_uicontrol_register_to_location extends phpgwapi_uicommon
+	class controller_uicontrol_register_to_location extends phpgwapi_uicommon_jquery
 	{
 		var $cat_id;
 		var $start;
@@ -132,7 +132,20 @@
 			(
 				'name'		=> "0",
 				'values'	=>	json_encode(array())
-			);	
+			);
+
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode(array()),
+				'ColumnDefs'	=> array(),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
 
 			$GLOBALS['phpgw']->translation->add_app('property');
 
@@ -163,10 +176,11 @@
 
 			array_unshift ($control_area_list ,array ('id'=>'','name'=>lang('select')));
 
-			
+
 					
 			$data = array
 			(
+				'datatable_def'					=> $datatable_def,
 				'td_count'						=> '""',
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
@@ -190,7 +204,7 @@
 			self::add_javascript('controller', 'controller', 'ajax_control_to_location.js');
 			self::add_javascript('controller', 'yahoo', 'register_control.js');
 
-			self::render_template_xsl(array('control_location/register_control_to_location' ), $data);
+			self::render_template_xsl(array('control_location/register_control_to_location'), $data);
 		}
 
 		
@@ -269,35 +283,24 @@
 
 			$columndef = array();
 
-			/*This one has to defined - chokes otherwise*/
 			$columndef[] = array
 			(
-				'key'		=> 'id',
-				'label'		=> '',
-				'sortable'	=> false,
+				'data'		=> 'select',
+				'title'		=> lang('select'),
+				'orderable'	=> false,
 				'formatter'	=> false,
-				'hidden'	=> true,
-				'className' => false
+				'visible'	=> true,
+				'class' => ''
 			);
 
 			$columndef[] = array
 			(
-				'key'		=> 'select',
-				'label'		=> lang('select'),
-				'sortable'	=> false,
+				'data'		=> 'delete',
+				'title'		=> lang('delete'),
+				'orderable'	=> false,
 				'formatter'	=> false,
-				'hidden'	=> false,
-				'className' => ''
-			);
-
-			$columndef[] = array
-			(
-				'key'		=> 'delete',
-				'label'		=> lang('delete'),
-				'sortable'	=> false,
-				'formatter'	=> false,
-				'hidden'	=> false,
-				'className' => ''
+				'visible'	=> true,
+				'class' => ''
 			);
 
 			$count_fields = count($uicols['name']);
@@ -317,18 +320,36 @@
 				{
 					$columndef[] = array
 					(
-						'key'		=> $uicols['name'][$i],
-						'label'		=> $uicols['descr'][$i],
-						'sortable'	=> !!$uicols['sortable'][$i],
+						'data'		=> $uicols['name'][$i],
+						'title'		=> $uicols['descr'][$i],
+						'orderable'	=> !!$uicols['sortable'][$i],
 						'formatter'	=> $formatter,
-						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
-						'className'	=> $uicols['classname'][$i],
+						'visible'	=> $uicols['input_type'][$i] == 'hidden' ? false : true	,
+						'class'	=> $uicols['classname'][$i],
 					);
 				}
 			}
 
+			foreach($columndef as &$entry)
+			{
+				if($entry['formatter'])
+				{
+					$render = <<<JS
+					function (dummy1, dummy2, oData) {
+							try {
+								var ret = {$entry['formatter']}("{$entry['data']}", oData);
+							}
+							catch(err) {
+								return err.message;
+							}
+							return ret;
+                         }
+JS;
+						 $entry['render'] = $render;
 
-//_debug_array($columndef);
+				}
+				unset($entry['formatter']);
+			}
 			return $columndef;
 		}
 
@@ -354,32 +375,37 @@
 
 		public function query()
 		{
-			$type_id = phpgw::get_var('location_level', 'int', 'REQUEST', 1);
-			$district_id		= phpgw::get_var('district_id', 'int');
-			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
-			$control_id			= phpgw::get_var('control_id', 'int');
-			$results 			= phpgw::get_var('results', 'int');
-			$control_registered	= phpgw::get_var('control_registered', 'bool');
+			
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$control_id = phpgw::get_var('control_id', 'int');
 
-			$results = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : $results;
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'control_registered' => phpgw::get_var('control_registered', 'bool'),
+				'district_id' => phpgw::get_var('district_id', 'int'),
+				'cat_id' => phpgw::get_var('cat_id', 'int'),
+				'status' => phpgw::get_var('status'),
+				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
+				'location_code' => phpgw::get_var('location_code'),
+				'type_id' => phpgw::get_var('location_level', 'int', 'REQUEST', 1),
+				'control_id' => $control_id
+			);
 
-			$this->bo->results = $results;			
-            $this->bo->sort =  'ASC';
-            $this->bo->order =  'location_code';
-            $this->bo->start =  phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$values = $this->bo->read($params);
 
-			$values = $this->bo->read(array('control_registered' => $control_registered,
-					 'control_id' => $control_id,
-					 'type_id'=>$type_id,
-					 'allrows'=>$this->allrows,
-					 'results' => $results
-					)
-				);
-
-
-			if($control_id)
+			foreach($values as &$entry)
 			{
-				foreach($values as &$entry)
+				$entry['select'] = '';
+				$entry['delete'] = '';
+				if($control_id)
 				{
 					$checked = '';
 					if( $this->so_control->get_control_location($control_id, $entry['location_code']) )
@@ -390,20 +416,15 @@
 					$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_location][]\" value=\"{$control_id}_{$entry['location_code']}\">";
 				}
 			}
-			
-			$data = array(
-				 'ResultSet' => array(
-					'totalResultsAvailable' => $this->bo->total_records,
-					'startIndex' => $this->bo->start, 
-					'sortKey' => 'location_code', 
-					'sortDir' => "ASC", 
-					'Result' => $values,
-					'pageSize' => $results,
-					'activePage' => floor($this->bo->start / $results) + 1
-				)
+
+			$result_data = array
+			(
+				'results'		=> $values,
+				'total_records'	=> $this->bo->total_records,
+				'draw'			=> phpgw::get_var('draw', 'int')
 			);
 
-			return $data;
+			return $this->jquery_results($result_data);
 		}
 
 		public function edit_location()

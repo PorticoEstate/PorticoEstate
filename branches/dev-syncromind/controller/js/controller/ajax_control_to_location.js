@@ -1,3 +1,6 @@
+var myColumnDefs = new Array();
+var oTable = null;
+
 $(document).ready(function()
 {
 
@@ -53,7 +56,7 @@ $(document).ready(function()
 
 		get_table_def();
 
-		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_location_type_category', location_type: $(this).val()};
+		var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_location_type_category', location_type: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString  = "<option value=''>Velg</option>";
@@ -302,8 +305,8 @@ $(document).ready(function()
 	  			if(obj.status == "updated")
 	  			{
 		  			$(submitBnt).val("Lagret");
-
-					    YAHOO.portico.updateinlineTableHelper('datatable-container');
+					update_location_table();
+//					JqueryPortico.updateinlineTableHelper(oTable0);
 				}
 				else
 				{
@@ -437,11 +440,10 @@ function init_component_table()
 	var cat_id = $("#location_type_category").val() != null ? $("#location_type_category").val():'';
 
 	var control_registered = 0;
-	if (typeof($($("#control_registered")).attr("checked")) != 'undefined' && $($("#control_registered")).attr("checked") == 'checked')
+	if ($("#control_registered").prop("checked"))
 	{
 		control_registered = 1;
 	}
-
 
 	var location_code = '';
 
@@ -470,9 +472,15 @@ function init_component_table()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-    YAHOO.portico.inlineTableHelper('datatable-container', requestUrl, myColumnDefs);
-}
+	if(oTable)
+	{
+		api = oTable.api();
+		api.destroy();
+	}
+	$("#table_def").html( '<table cellpadding="0" cellspacing="0" border="0"  id="datatable-container_0"></table>' );
+	oTable = JqueryPortico.inlineTableHelper('datatable-container_0', requestUrl, myColumnDefs);
 
+}
 
 function update_location_table()
 {
