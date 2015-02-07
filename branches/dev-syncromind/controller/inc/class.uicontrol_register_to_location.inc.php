@@ -113,40 +113,6 @@
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			}
 
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 1,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
-
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array())
-			);
-
-			$datatable_def = array();
-			$datatable_def[] = array
-			(
-				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> "''",
-				'data'			=> json_encode(array()),
-				'ColumnDefs'	=> array(),
-				'config'		=> array(
-					array('disableFilter'	=> true),
-					array('disablePagination'	=> true)
-				)
-			);
-
 			$GLOBALS['phpgw']->translation->add_app('property');
 
 			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
@@ -180,12 +146,6 @@
 					
 			$data = array
 			(
-				'datatable_def'					=> $datatable_def,
-				'td_count'						=> '""',
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
-
 				'msgbox_data'					=> $msgbox_data,
 				'control_area_list'		=> array('options' => $control_area_list),
 				'filter_form' 					=> array
@@ -198,11 +158,7 @@
 				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_register_to_location.edit_location'))
 			);
 
-			phpgwapi_jquery::load_widget('core');
-			phpgwapi_jquery::load_widget('autocomplete');
-
 			self::add_javascript('controller', 'controller', 'ajax_control_to_location.js');
-			self::add_javascript('controller', 'yahoo', 'register_control.js');
 
 			self::render_template_xsl(array('control_location/register_control_to_location'), $data);
 		}
@@ -318,6 +274,10 @@
 				
 				if( $uicols['name'][$i])
 				{
+					if($uicols['input_type'][$i] == 'hidden')
+					{
+						continue;
+					}
 					$columndef[] = array
 					(
 						'data'		=> $uicols['name'][$i],

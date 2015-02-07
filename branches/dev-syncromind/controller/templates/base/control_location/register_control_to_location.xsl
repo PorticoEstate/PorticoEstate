@@ -40,7 +40,7 @@
 						<xsl:apply-templates select="filter_form" />
 					
 					  	<form action="{update_action}" name="acl_form" id="acl_form" method="post">
-								<xsl:apply-templates select="datatable"/>
+								<xsl:call-template name="datatable"/>
 						</form>
 					</div>
 				</div>
@@ -93,7 +93,7 @@
 </xsl:template>
 
 
-<xsl:template match="datatable" xmlns:php="http://php.net/xsl">
+<xsl:template name="datatable" xmlns:php="http://php.net/xsl">
 	<div id="table_def" class="pure-custom" width="80%"></div>
 	
 	<div id="receipt"></div>
@@ -116,4 +116,3 @@
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
 </xsl:template>
-

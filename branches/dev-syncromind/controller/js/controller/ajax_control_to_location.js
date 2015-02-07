@@ -99,39 +99,6 @@ $(document).ready(function()
 	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, true);
 	var location_type = 1;
-	$("#search-location-name").autocomplete({
-		source: function( request, response ) {
-			location_type = $("#location_type").val();
-			$.ajax({
-				url: baseUrl,
-				dataType: "json",
-				data: {
-					location_name: request.term,
-					level: location_type
-				},
-				success: function( data ) {
-					response( $.map( data, function( item ) {
-						return {
-							label: item.name,
-							value: item.location_code
-						}
-					}));
-				}
-			});
-		},
-		focus: function (event, ui) {
- 			$(event.target).val(ui.item.label);
-  			return false;
-		},
-		minLength: 1,
-		select: function( event, ui ) {
-//			console.log(ui.item);
-//			$("#search-location-name").val( ui.item.label );
-			$("#search-location_code").val( ui.item.value );
-			update_location_table();
-		}
-	});
-
 
 	//update part of town category based on district
 	$("#district_id").change(function () {
@@ -306,7 +273,6 @@ $(document).ready(function()
 	  			{
 		  			$(submitBnt).val("Lagret");
 					update_location_table();
-//					JqueryPortico.updateinlineTableHelper(oTable0);
 				}
 				else
 				{

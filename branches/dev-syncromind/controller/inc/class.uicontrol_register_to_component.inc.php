@@ -36,9 +36,9 @@
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 		
-	class controller_uicontrol_register_to_component extends phpgwapi_uicommon
+	class controller_uicontrol_register_to_component extends phpgwapi_uicommon_jquery
 	{
 		var $cat_id;
 		var $start;
@@ -111,27 +111,6 @@
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			}
 
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 1,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
-
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array())
-			);	
-
 			$GLOBALS['phpgw']->translation->add_app('property');
 			$entity			= CreateObject('property.soadmin_entity');
 			$entity_list 	= $entity->read(array('allrows' => true));
@@ -168,11 +147,6 @@
 					
 			$data = array
 			(
-				'td_count'						=> '""',
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
-
 				'msgbox_data'					=> $msgbox_data,
 				'control_area_list'		=> array('options' => $control_area_list),
 				'filter_form' 					=> array
@@ -186,11 +160,9 @@
 				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_register_to_component.edit_component'))
 			);
 
-			phpgwapi_jquery::load_widget('core');
-			phpgwapi_jquery::load_widget('autocomplete');
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
-			self::add_javascript('controller', 'yahoo', 'register_control.js');
+//			self::add_javascript('controller', 'yahoo', 'register_control.js');
 
 			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
 		}
@@ -238,27 +210,24 @@
 			$boentity->read(array('dry_run' => true));
 			$uicols = $boentity->uicols;
 			$columndef = array();
-
 			$columndef[] = array
 			(
-				'key'		=> 'select',
-				'label'		=> lang('select'),
-				'sortable'	=> false,
+				'data'		=> 'select',
+				'title'		=> lang('select'),
+				'orderable'	=> false,
 				'formatter'	=> false,
-				'hidden'	=> false,
-				'formatter' => '',
-				'className' => ''
+				'visible'	=> true,
+				'class' => ''
 			);
 
 			$columndef[] = array
 			(
-				'key'		=> 'delete',
-				'label'		=> lang('delete'),
-				'sortable'	=> false,
+				'data'		=> 'delete',
+				'title'		=> lang('delete'),
+				'orderable'	=> false,
 				'formatter'	=> false,
-				'hidden'	=> false,
-				'formatter' => '',
-				'className' => ''
+				'visible'	=> true,
+				'class' => ''
 			);
 
 			$count_fields = count($uicols['name']);
@@ -267,19 +236,40 @@
 			{
 				if( $uicols['name'][$i])
 				{
+					if($uicols['input_type'][$i] == 'hidden')
+					{
+						continue;
+					}
 					$columndef[] = array
 					(
-						'key'		=> $uicols['name'][$i],
-						'label'		=> $uicols['descr'][$i],
-						'sortable'	=> $uicols['sortable'][$i],
+						'data'		=> $uicols['name'][$i],
+						'title'		=> $uicols['descr'][$i],
+						'orderable'	=> $uicols['sortable'][$i],
 						'formatter'	=> $uicols['formatter'][$i],
-						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
-						'className'	=> $uicols['classname'][$i],
+						'class'	=> $uicols['classname'][$i],
 					);
 				}
 			}
+			foreach($columndef as &$entry)
+			{
+				if($entry['formatter'])
+				{
+					$render = <<<JS
+					function (dummy1, dummy2, oData) {
+							try {
+								var ret = {$entry['formatter']}("{$entry['data']}", oData);
+							}
+							catch(err) {
+								return err.message;
+							}
+							return ret;
+                         }
+JS;
+//						 $entry['render'] = $render;
 
-//_debug_array($columndef);
+				}
+				unset($entry['formatter']);
+			}
 			return $columndef;
 		}
 
@@ -289,13 +279,24 @@
 		{
 			$entity_id			= phpgw::get_var('entity_id', 'int');
 			$cat_id				= phpgw::get_var('cat_id', 'int');
-			$district_id		= phpgw::get_var('district_id', 'int');
-			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
-			$results 			= phpgw::get_var('results', 'int');
-			$control_registered	= phpgw::get_var('control_registered', 'bool');
+			$search				= phpgw::get_var('search');
+			$order				= phpgw::get_var('order');
+			$draw				= phpgw::get_var('draw', 'int');
+			$columns			= phpgw::get_var('columns');
 
-			$results = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : $results;
+
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'control_registered' => phpgw::get_var('control_registered', 'bool'),
+				'control_id' => $control_id
+			);
 
 			if(!$entity_id && !$cat_id)
 			{
@@ -305,18 +306,18 @@
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 				$boentity	= CreateObject('property.boentity',false, 'entity');
+				$boentity->district_id = phpgw::get_var('district_id', 'int');
+				$boentity->part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
+				$boentity->location_code = phpgw::get_var('location_code');
 
-    	        $boentity->sort =  phpgw::get_var('dir');
-    	        $boentity->order =  phpgw::get_var('sort');
-	            $boentity->start =  phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
-
-				$boentity->results = $results;
-				$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
+				$values = $boentity->read($params);
 			}		
 
-			if($control_id)
+			foreach($values as &$entry)
 			{
-				foreach($values as &$entry)
+				$entry['select'] = '';
+				$entry['delete'] = '';
+				if($control_id)
 				{
 					$checked = '';
 					if($this->so_control->check_control_component($control_id,$location_id,$entry['id']))
@@ -327,31 +328,15 @@
 					$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
 				}
 			}
-			
-			$data = array(
-				 'ResultSet' => array(
-					'totalResultsAvailable' => $boentity->total_records,
-					'startIndex' => $boentity->start, 
-					'sortKey' => 'location_code', 
-					'sortDir' => "ASC", 
-					'Result' => $values,
-					'pageSize' => $results,
-					'activePage' => floor($boentity->start / $results) + 1
-				)
+
+			$result_data = array
+			(
+				'results'		=> $values,
+				'total_records'	=> $boentity->total_records,
+				'draw'			=> $draw
 			);
 
-			return $data;
-
-			$return_data['recordsReturned'] = count($values);
-			$return_data['totalRecords'] = $boentity->total_records;
-			$return_data['startIndex'] = $this->start;
-			$return_data['sort'] = 'location_code';
-			$return_data['dir'] = "ASC";
-			$return_data['pageSize'] = $results;
-			$return_data['activePage'] = floor($this->start / $results) + 1;
-			$return_data['records'] = $values;
-
-			return $return_data;
+			return $this->jquery_results($result_data);
 		}
 
 		public function edit_component()

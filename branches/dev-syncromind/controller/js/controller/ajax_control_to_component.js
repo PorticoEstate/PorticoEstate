@@ -1,3 +1,6 @@
+var myColumnDefs = new Array();
+var oTable = null;
+
 $(document).ready(function()
 {
 
@@ -130,40 +133,6 @@ $(document).ready(function()
 	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, true);
 	var location_type = 1;
-
-	$("#search-location-name").autocomplete({
-		source: function( request, response ) {
-			location_type = $("#location_type").val();
-			$.ajax({
-				url: baseUrl,
-				dataType: "json",
-				data: {
-					location_name: request.term,
-					level: location_type
-				},
-				success: function( data ) {
-					response( $.map( data, function( item ) {
-						return {
-							label: item.name,
-							value: item.location_code
-						}
-					}));
-				}
-			});
-		},
-		focus: function (event, ui) {
- 			$(event.target).val(ui.item.label);
-  			return false;
-		},
-		minLength: 1,
-		select: function( event, ui ) {
-//			console.log(ui.item);
-//			$("#search-location-name").val( ui.item.label );
-			$("#search-location_code").val( ui.item.value );
-			update_component_table();
-		}
-	});
-
 
 	//update part of town category based on district
 	$("#district_id").change(function () {
@@ -343,8 +312,7 @@ $(document).ready(function()
 	  			if(obj.status == "updated")
 	  			{
 		  			$(submitBnt).val("Lagret");
-
-					    YAHOO.portico.updateinlineTableHelper('datatable-container');
+					update_component_table
 				}
 				else
 				{
@@ -510,7 +478,14 @@ function init_component_table()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-    YAHOO.portico.inlineTableHelper('datatable-container', requestUrl, myColumnDefs);
+	if(oTable)
+	{
+		api = oTable.api();
+		api.destroy();
+	}
+	$("#table_def").html( '<table cellpadding="0" cellspacing="0" border="0"  id="datatable-container_0"></table>' );
+	oTable = JqueryPortico.inlineTableHelper('datatable-container_0', requestUrl, myColumnDefs);
+
 }
 
 
@@ -519,3 +494,10 @@ function update_component_table()
 	init_component_table();
 }
 
+	var oArgs_entity = {menuaction:'property.uientity.edit'};
+	var sUrl_entity = phpGWLink('index.php', oArgs_entity);
+
+	linktToEntity = function(key, oData)
+	{
+	  	return "<a href="+sUrl_entity+"&entity_id="+oData['entity_id']+"&cat_id="+oData['cat_id']+"&id="+oData['id']+"&type="+oData['_type']+">" + oData + "</a>";
+	};
