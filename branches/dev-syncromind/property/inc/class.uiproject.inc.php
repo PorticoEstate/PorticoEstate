@@ -708,7 +708,7 @@
 		function edit($mode = 'edit')
 		{
 			$id = (int)phpgw::get_var('id', 'int');
-print_r($_REQUEST); die;
+
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $id));
