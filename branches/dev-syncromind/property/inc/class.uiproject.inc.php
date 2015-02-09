@@ -704,11 +704,11 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('date_search' => $data));
 		}
 
+		
 		function edit($mode = 'edit')
 		{
 			$id = (int)phpgw::get_var('id', 'int');
-
-
+print_r($_REQUEST); die;
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $id));
@@ -744,7 +744,6 @@
 
 			if($mode == 'edit')
 			{
-
 				$values						= phpgw::get_var('values');
 				$values_attribute			= phpgw::get_var('values_attribute');
 				$add_request				= phpgw::get_var('add_request');
@@ -770,7 +769,7 @@
 				}
 
 				$bypass = phpgw::get_var('bypass', 'bool');
-//_debug_array($_REQUEST);
+
 				if ( phpgw::get_var('origin') == '.project.request' &&  phpgw::get_var('origin_id', 'int') && !$bypass)
 				{
 					$id = phpgw::get_var('project_id', 'int');
@@ -1521,6 +1520,7 @@
 			$s_orders = 0;
 			$s_actual_cost = 0;
 			$s_diff = 0;
+			$s_deviation = 0;
 			
 			if($id)
 			{
@@ -1564,6 +1564,7 @@
 					$s_orders += $b_entry['sum_orders'];
 					$s_actual_cost += $b_entry['actual_cost'];
 					$s_diff += $b_entry['diff'];
+					$s_deviation += $b_entry['deviation_period'];
 				}
 				unset($b_entry);
 			}
@@ -1581,26 +1582,27 @@
 
 			if (isset($values['project_type_id']) && $values['project_type_id']==3)
 			{
-				$rows_per_page = 10;
-				$initial_page = 1;
-
-				$budget_def = array
-				(
-					array('key' => 'year','label'=>lang('year'),'sortable'=>false),
-					array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>true),
-					array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0'),
-					array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'className'=>'right','formatter'=>'project_link'),
-					array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0'),
-					array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'formatter'=>'project_link'),
-					array('key' => 'remark','label'=>lang('remark'),'sortable'=>true)
-				);
-
+				$s_amount_in = 0;
+				$s_amount_out = 0;
 				$content_budget = $this->bo->get_buffer_budget($id);
 				foreach($content_budget as & $b_entry)
 				{
 					$b_entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($b_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$s_amount_in += $b_entry['amount_in'];
+					$s_amount_out += $b_entry['amount_out'];					
 				}
 				unset($b_entry);
+				
+				$budget_def = array
+				(
+					array('key' => 'year','label'=>lang('year'),'sortable'=>false,'value_footer'=>lang('Sum')),
+					array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>true),
+					array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0','value_footer'=>number_format($s_amount_in, 0, ',', ' ')),
+					array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'className'=>'right','formatter'=>'project_link'),
+					array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0','value_footer'=>number_format($s_amount_out, 0, ',', ' ')),
+					array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'formatter'=>'project_link'),
+					array('key' => 'remark','label'=>lang('remark'),'sortable'=>true)
+				);
 			}
 			else
 			{
@@ -1612,7 +1614,7 @@
 					array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_orders, 0, ',', ' ')),
 					array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_actual_cost, 0, ',', ' ')),
 					array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_diff, 0, ',', ' ')),
-					array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+					array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_deviation, 0, ',', ' ')),
 					array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
 					array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2'),
 					array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2'),
@@ -1636,25 +1638,14 @@
 					array('disablePagination'	=> true)
 				)
 			);
-
-
-			$orders_def = array
-			(
-				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-				array('key' => 'title','label'=>lang('title'),'sortable'=>true),
-				array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'className'=>'right'),
-				array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'className'=>'right'),
-				array('key' => 'obligation','label'=>lang('sum orders'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true),
-				array('key' => 'status','label'=>lang('Status'),'sortable'=>true),
-				array('key' => 'send_order','label'=>lang('send workorder'),'sortable'=>false,'className'=>'center')
-			);
-				
-			$content_orders = $this->get_orders($id, date('Y'));
+							
+			$so_budget = 0;
+			$so_cost = 0;
+			$so_obligation = 0;
+			$so_actual_cost = 0;
+			$so_diff = 0;
+			
+			$content_orders = $this->get_orders($id, date('Y'));			
 			foreach($content_orders as & $_order_entry)
 			{
 				$_order_entry['send_order'] = '';
@@ -1663,7 +1654,29 @@
 					$_title = implode(';', $_order_entry['mail_recipients']);
 					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
 				}
+				
+				$so_budget += $_order_entry['budget'];
+				$so_cost += $_order_entry['cost'];
+				$so_obligation += $_order_entry['obligation'];
+				$so_actual_cost += $_order_entry['actual_cost'];
+				$so_diff += $_order_entry['diff'];
 			}
+			
+			$orders_def = array
+			(
+				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink','value_footer'=>lang('Sum')),
+				array('key' => 'title','label'=>lang('title'),'sortable'=>true),
+				array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'className'=>'right'),
+				array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_budget, 0, ',', ' ')),
+				array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_cost, 0, ',', ' ')),
+				array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'className'=>'right'),
+				array('key' => 'obligation','label'=>lang('sum orders'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_obligation, 0, ',', ' ')),
+				array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_actual_cost, 0, ',', ' ')),
+				array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_diff, 0, ',', ' ')),
+				array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true),
+				array('key' => 'status','label'=>lang('Status'),'sortable'=>true),
+				array('key' => 'send_order','label'=>lang('send workorder'),'sortable'=>false,'className'=>'center')
+			);
 			
 			$datatable_def[] = array
 			(
@@ -1676,52 +1689,33 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			
-			//FIXME: deviation from this one
-			/*$datavalues[1] = array
-				(
-					'name'					=> "1",
-					'values' 				=> json_encode($content_orders),
-					'total_records'			=> count($content_orders),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
-					'is_paginator'			=> 1,
-					'rows_per_page'			=> 10,
-					'initial_page'			=> 1,
-					'footer'				=> 0
-				);
-		
-			$myColumnDefs[1] = array
-				(
-					'name'		=> "1",
-					'values'	=>	json_encode(array(	
-														array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'obligation','label'=>lang('sum orders'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'send_order','label'=>lang('send workorder'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-				);*/
-
 
 			$invoices = array();
-			
-			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink_voucher';
+
+			$content_invoice = array();
+			if ($id)
+			{
+				$si_amount = 0;
+				$si_approved_amount = 0;
+				$content_invoice = $this->get_vouchers($id, date('Y'));
+				foreach($content_invoice as $_invoice_entry)
+				{
+					$si_amount += $_invoice_entry['amount'];
+					$si_approved_amount += $_invoice_entry['approved_amount'];
+				}
+			}
+
+			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : 'formatLink_voucher';
 			
 			$invoice_def = array
 			(
-				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink','value_footer'=>lang('Sum')),
 				array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>true,'formatter'=>$_formatter_voucher_link),
 				array('key' => 'voucher_out_id','hidden'=>true),
 				array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false),
 				array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false),
-				array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2'),
-				array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2'),
+				array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2','value_footer'=>number_format($si_amount, 2, ',', ' ')),
+				array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2','value_footer'=>number_format($si_approved_amount, 2, ',', ' ')),
 				array('key' => 'period','label'=>lang('period'),'sortable'=>true),
 				array('key' => 'periodization','label'=>lang('periodization'),'sortable'=>false),
 				array('key' => 'periodization_start','label'=>lang('periodization start'),'sortable'=>false),
@@ -1732,12 +1726,6 @@
 				array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>true)
 			);
 			
-			$content_invoice = array();
-			if ($id)
-			{
-				$content_invoice = $this->get_vouchers($id, date('Y'));
-			}
-
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_2',
@@ -1749,61 +1737,6 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			/*
-			$datavalues[2] = array
-				(
-					'name'					=> "2",
-					'values' 				=> json_encode($content_invoice),
-					'total_records'			=> count($content_invoice),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'))),
-					'is_paginator'			=> 1,
-					'rows_per_page'			=> 10,
-					'initial_page'			=> 1,
-					'footer'				=> 0
-				);
-
-
-			$_formatter_voucher_link			= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink_voucher';
-
-			$myColumnDefs[2] = array
-				(
-					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>true,'resizeable'=>true,'formatter'=>$_formatter_voucher_link),
-														array('key' => 'voucher_out_id','hidden'=>true),
-														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
-														array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'periodization','label'=>lang('periodization'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'periodization_start','label'=>lang('periodization start'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>true,'resizeable'=>true),
-														))
-
-				);*/
-
-			/*$notify_info = execMethod('property.notify.get_yui_table_def',array
-								(
-									'location_id'		=> $location_id,
-									'location_item_id'	=> $id,
-									'count'				=> count($myColumnDefs)
-								)
-							);
-
-			$datavalues[] = $notify_info['datavalues'];
-
-			$myColumnDefs[3] = $notify_info['column_defs'];
-
-			$myButtons	= array();
-			if($mode == 'edit')
-			{
-				$myButtons[3]	= $notify_info['buttons'];
-			}*/
 
 			/*
 			* start new notify-table
@@ -1832,15 +1765,6 @@
 				)
 			);
 			
-			/*$datatable_def[] = array
-			(
-				'container'		=> 'datatable-container_3',
-				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
-				'ColumnDefs'	=> $notify_info['column_defs']['values'],
-				'data'			=> json_encode(array()),
-				'tabletools'	=> $mode == 'edit' ? $notify_info['tabletools'] : ''
-			);*/
-			
 			/* end new notify-table */
 
 			$history_def = array
@@ -1863,29 +1787,6 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			/*
-			$datavalues[4] = array
-				(
-					'name'					=> "4",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-
-			$myColumnDefs[4] = array
-				(
-					'name'		=> "4",
-					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
-														array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
-				);*/
-
-
 
 //--------------files
 			$link_file_data = array
@@ -1935,25 +1836,6 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			/*
-			$datavalues[5] = array
-			(
-				'name'					=> "5",
-				'values' 				=> json_encode($content_files),
-				'total_records'			=> count($content_files),
-				'edit_action'			=> "''",
-				'is_paginator'			=> 1,
-				'rows_per_page'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'footer'				=> 0
-			);
-
-			$myColumnDefs[5] = array
-				(
-					'name'		=> "5",
-					'values'	=>	json_encode(array(	
-					array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
-				);*/
 
 //--------------files
 
@@ -2005,42 +1887,10 @@
 					array('disablePagination'	=> true)
 				)
 			);
-			
-			/*$datavalues[6] = array
-			(
-				'name'					=> "6",
-				'values' 				=> json_encode($_origin),
-				'total_records'			=> count($_origin),
-				'edit_action'			=> "''",
-				'is_paginator'			=> 1,
-				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'footer'				=> 0
-			);
-	
-			$myColumnDefs[6] = array
-			(
-				'name'		=> "6",
-				'values'	=>	json_encode(array(	
-					array('key' => 'url','label'=>lang('id'),'sortable'=>true,'resizeable'=>true),
-					array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
-					array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
-		//			array('key' => 'user','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
-		//			array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true),
-					)
-				)
-			);*/
 
-
-
-//	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------
 
-
-
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
-
 
 			$year	= date('Y') -1;
 			$limit	= $year + 8;
@@ -2084,7 +1934,6 @@
 				);
 			}
 
-			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
 
 			$data = array
@@ -2261,6 +2110,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 			
+			self::add_javascript('property', 'portico', 'project.edit.js');
 			self::render_template_xsl(array('project','datatable_inline','files','attributes_form'), array('edit' => $data));
 
 		}
