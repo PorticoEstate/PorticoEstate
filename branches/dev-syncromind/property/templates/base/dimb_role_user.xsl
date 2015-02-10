@@ -1,22 +1,5 @@
 <!-- $Id$ -->
 
-<func:function name="phpgw:conditional">
-	<xsl:param name="test"/>
-	<xsl:param name="true"/>
-	<xsl:param name="false"/>
-
-	<func:result>
-		<xsl:choose>
-			<xsl:when test="$test">
-				<xsl:value-of select="$true"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$false"/>
-			</xsl:otherwise>
-		</xsl:choose>
-  	</func:result>
-</func:function>
-
 <!-- separate tabs and  inline tables-->
 
 
@@ -70,11 +53,26 @@
 								<xsl:call-template name="role_fields" />
 								<tr>
 									<td colspan = '6'>
-										<xsl:apply-templates select="paging"/>
-										<xsl:apply-templates select="datatable"/>
+										<!--xsl:apply-templates select="paging"/>
+										<xsl:apply-templates select="datatable"/-->
+										<xsl:for-each select="datatable_def">
+											<xsl:if test="container = 'datatable-container_0'">
+												<xsl:call-template name="table_setup">
+													<xsl:with-param name="container" select ='container'/>
+													<xsl:with-param name="requestUrl" select ='requestUrl'/>
+													<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+													<xsl:with-param name="data" select ='data'/>
+													<xsl:with-param name="config" select ='config'/>
+												</xsl:call-template>
+											</xsl:if>
+										</xsl:for-each>
+
 									</td>
 								</tr>
 							</table>
+							<div id="receipt"></div>
+						  	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+							<div class="row_on"><input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/></div>
 						</form>
 					</div>
 				</div>

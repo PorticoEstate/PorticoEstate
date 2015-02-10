@@ -26,14 +26,9 @@
  	* @version $Id$
 	*/
 
-	phpgw::import_class('phpgwapi.yui');
-	/**
-	* Import the jQuery class
-	*/
-	phpgw::import_class('phpgwapi.jquery');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-
-	class property_uidimb_role_user
+	class property_uidimb_role_user extends phpgwapi_uicommon_jquery
 	{
 		var $cat_id;
 		var $start;
@@ -56,6 +51,8 @@
 
 		function __construct()
 		{
+			parent::__construct();
+
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account_id 			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bodimb_role_user');
@@ -116,8 +113,6 @@
 		}
 
 
-
-
 		function index()
 		{
 			$receipt = array();
@@ -135,22 +130,7 @@
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			}
 
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> $this->query(),//json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 0,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
-
-			$datatable = array
+			$myColumnDefs = array
 			(
 				array
 				(
@@ -168,13 +148,13 @@
 					'key' => 'ecodimb',
 					'label' => lang('dim b'),
 					'sortable' => false,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key'	=>	'role',
 					'label'	=>	lang('role'),
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 					'sortable'	=>	true
 				),
 				array
@@ -182,51 +162,57 @@
 					'key' => 'default_user',
 					'label' => lang('default'),
 					'sortable'	=> false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'active_from',
 					'label' => lang('date from'),
 					'sortable'	=> true,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'active_to',
 					'label' => lang('date to'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'add',
 					'label' => lang('add'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'delete',
 					'label' => lang('delete'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'alter_date',
 					'label' => lang('alter date'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 			);
 
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode($datatable)
-			);	
 
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uidimb_role_user.query','phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> $myColumnDefs,
+				'data'			=> '',
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
 
 
 			$user_list = $this->bocommon->get_user_list_right2('select', PHPGW_ACL_READ, $this->filter, '.invoice', array(), $this->account_id);
@@ -239,12 +225,7 @@
 
 			$data = array
 			(
-				'td_count'						=> '""',
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
-
+				'datatable_def'					=> $datatable_def,
 				'msgbox_data'					=> $msgbox_data,
 				'filter_form' 					=> array
 													(
@@ -260,24 +241,9 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			phpgwapi_jquery::load_widget('core');
-
 			self::add_javascript('property', 'portico', 'ajax_dimb_role_user.js');
-			self::add_javascript('property', 'yahoo', 'dimb_role_user.index.js');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('dimb_role_user'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('dimb_role_user', 'datatable_inline'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
 		}
 	
@@ -313,7 +279,17 @@
 				$results['results'][]= $entry;
 			}
 
-			return json_encode($values);
+			$result_data = array
+			(
+				'results' => $values,
+				'total_records' => count($values),
+				'draw' => phpgw::get_var('draw', 'int')
+			);
+
+
+			return $this->jquery_results($result_data);
+
+		//	return json_encode($values);
 		}
 
 		public function edit()

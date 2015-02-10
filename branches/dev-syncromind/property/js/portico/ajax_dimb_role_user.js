@@ -45,7 +45,8 @@ $(document).ready(function()
 	    			{
 		    			$(submitBnt).val("Lagret");
 						var oArgs = {menuaction:'property.uidimb_role_user.query', dimb_id:$("#dimb_id").val(), user_id:$("#user_id").val(),role_id:$("#role_id").val(),query_start:$("#query_start").val(),query_end:$("#query_end").val()};
-						execute_async(myDataTable_0,oArgs);
+						var requestUrl = phpGWLink('index.php', oArgs, true);
+						JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
 					}
 					else
 					{
@@ -90,7 +91,10 @@ $(document).ready(function()
 function update_dimb_role_user_table()
 {
 	var oArgs = {menuaction:'property.uidimb_role_user.query', dimb_id:$("#dimb_id").val(), user_id:$("#user_id").val(),role_id:$("#role_id").val(),query_start:$("#query_start").val(),query_end:$("#query_end").val()};
-	execute_async(myDataTable_0,  oArgs);
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
+//	execute_async(myDataTable_0,  oArgs);
 	$("#receipt").html('');
 }
 

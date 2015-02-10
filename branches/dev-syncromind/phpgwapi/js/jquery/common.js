@@ -143,6 +143,10 @@ JqueryPortico.FormatterRight = function(key, oData) {
 	return "<div align=\"right\">"+oData[key]+"</div>";
 };
 
+JqueryPortico.FormatterCenter = function(key, oData) {
+	return "<center>"+oData[key]+"</center>";
+};
+
 JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options, data) {
 
 	options = options || {};
