@@ -94,6 +94,7 @@
 	$location_url = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
 	$braarkiv_user =  $c->config_data[$section]['braarkiv_user'];
 	$braarkiv_pass =  $c->config_data[$section]['braarkiv_pass'];
+	$classname =  $c->config_data[$section]['arkd'];
 
 	$_POST['submitit'] = "";
 
@@ -179,7 +180,7 @@
 
 	$searchAndGetDocumentsWithVariants->secKey = $secKey;
 	$searchAndGetDocumentsWithVariants->baseclassname = 'Eiendomsarkiver';
-	$searchAndGetDocumentsWithVariants->classname = 'Byggesak';
+	$searchAndGetDocumentsWithVariants->classname = $classname;//'Byggesak';
 	$searchAndGetDocumentsWithVariants->where = "Byggnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
 	$searchAndGetDocumentsWithVariants->maxhits = '-1';
 
@@ -233,7 +234,12 @@ HTML;
 	$location_id	= phpgw::get_var('location_id', 'int');
 	$section	= phpgw::get_var('section', 'string');
 
-	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/braarkiv/soap.php',array('domain' => $_GET['domain'], 'location_id' => $location_id, 'section' => $section));
+	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/braarkiv/soap.php',array(
+			'domain' => $_GET['domain'],
+			'location_id' => $location_id,
+			'section' => $section
+		)
+	);
 
 	foreach($_result['ExtendedDocument'][0]->Attributes->Attribute as $attribute)
 	{
