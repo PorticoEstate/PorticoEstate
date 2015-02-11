@@ -601,3 +601,5 @@ Download Excel export	rental	no	Last ned eksportfil i Excel-format
 free_of_charge	rental	no	Vederlagsfritt
 extra_adjustment	rental	no	Ekstra regulering
 free_of_charge	rental	no	Vederlagsfritt
+select	rental	no	Velg
+district	rental	no	Område

@@ -31,16 +31,31 @@
 
 		}
 
+		private function _filesize($filename)
+		{
+			$a = fopen($filename, 'r');
+			fseek($a, 0, SEEK_END);
+			$filesize = ftell($a);
+			fclose($a);
+			return $filesize;
+		}
+
 		public function filesize($path_parts)
 		{
 			$path = $path_parts->real_full_path;
-			return filesize($path);
+
+			if(!$filesize = @filesize($path))
+			{
+				$filesize = $this->_filesize($path);
+			}
+			return $filesize;
 		}
 
 		public function read($path_parts)
 		{
 			$path = $path_parts->real_full_path;
-			$filesize = filesize($path);
+
+			$filesize = $this->_filesize($path);
 			$contents = false;
 			if( $filesize  > 0 && $fp = fopen($path, 'rb'))
 			{
