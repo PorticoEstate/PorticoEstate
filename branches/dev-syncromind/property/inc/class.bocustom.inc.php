@@ -139,6 +139,7 @@
 			/*$custom = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;*/
+            
             $custom = $this->so->read($data);
 
 			for ($i=0; $i<count($custom); $i++)
