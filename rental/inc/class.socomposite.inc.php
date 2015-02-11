@@ -145,6 +145,20 @@ class rental_socomposite extends rental_socommon
 			$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
 
+
+		$tables = "rental_composite";
+		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
+		$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
+		$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
+
+		if(isset($filters['district_id']) && $filters['district_id'])
+		{
+			$joins .= "	{$this->join} fm_locations ON (rental_unit.location_code = fm_locations.location_code)";
+			$joins .= "	{$this->join} fm_location1 ON (fm_location1.loc1 = fm_locations.loc1)";
+			$joins .= "	{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
+
+			$filter_clauses[] = "fm_part_of_town.district_id ="  . (int) $filters['district_id'];
+		}
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -152,11 +166,6 @@ class rental_socomposite extends rental_socommon
 
 		$condition =  join(' AND ', $clauses);
 
-		$tables = "rental_composite";
-		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
-		$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
-		$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
-		
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_composite.id)) AS count';
@@ -188,7 +197,7 @@ class rental_socomposite extends rental_socommon
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
-	    //var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");    
+//	    _debug_array("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 	    
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
