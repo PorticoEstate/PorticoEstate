@@ -1,5 +1,5 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
+	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
@@ -182,8 +182,44 @@
 								<td valign="top">
 									<xsl:value-of select="lang_columns"/>
 								</td>
-								<td align="right">
-									<xsl:call-template name="columns"/>
+								<td align="">
+									<!--xsl:call-template name="columns"/-->
+                                                                        <div class="pure-custom">
+                                                                            <xsl:for-each select="datatable_def">
+                                                                                    <xsl:if test="container = 'datatable-container_0'">
+                                                                                            <xsl:call-template name="table_setup">
+                                                                                                    <xsl:with-param name="container" select ='container'/>
+                                                                                                    <xsl:with-param name="requestUrl" select ='requestUrl' />
+                                                                                                    <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+                                                                                                    <xsl:with-param name="tabletools" select ='tabletools' />
+                                                                                                    <xsl:with-param name="data" select ='data' />
+                                                                                                    <xsl:with-param name="config" select ='config' />
+                                                                                            </xsl:call-template>
+                                                                                    </xsl:if>
+                                                                            </xsl:for-each>
+                                                                        </div>
+                                                                        
+                                                                        <div class="pure-control-group">
+                                                                            <label for="name">
+                                                                                    <xsl:value-of select="lang_name"/>
+                                                                            </label>
+                                                                            <input type="text" name="values[new_name]" onMouseout="window.status='';return true;">
+                                                                                <xsl:attribute name="title">
+                                                                                        <xsl:value-of select="lang_new_name_statustext"/>
+                                                                                </xsl:attribute>
+                                                                            </input>
+									</div>
+                                                                        
+                                                                        <div class="pure-control-group" align="right">
+                                                                            <label for="name">
+											<xsl:value-of select="lang_descr"/>
+									    </label>
+                                                                            <input type="text" name="values[new_descr]" onMouseout="window.status='';return true;">
+                                                                                    <xsl:attribute name="title">
+                                                                                            <xsl:value-of select="lang_new_descr_statustext"/>
+                                                                                    </xsl:attribute>
+                                                                            </input>
+                                                                        </div>
 								</td>
 							</tr>
 						</xsl:when>
@@ -270,7 +306,7 @@
 			</tr>
 		</table>
 	</xsl:template>
-
+        
 	<!-- New template-->
 	<xsl:template name="columns">
 		<xsl:variable name="lang_up_text">
