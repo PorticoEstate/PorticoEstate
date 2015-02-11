@@ -107,6 +107,23 @@ JqueryPortico.formatCheck = function(key, oData) {
 	return hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oData['location_code']+"\"/></center>";
 };
 
+JqueryPortico.formatCheckCustom = function(key, oData) {
+    
+        var checked = '';
+	var hidden = '';
+
+	return hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[delete][]\" value=\""+oData['id']+"\" onMouseout=\"window.status='';return true;\" /></center>";
+};
+
+JqueryPortico.formatUpDown = function(key, oData){
+    
+  var name = oData[key];
+  var linkUp = oData['link_up'];
+  var linkDown = oData['link_down'];
+  
+  return '<center>'+ name +'&nbsp;<a href="' + linkUp + '">up</a> | <a href="' + linkDown + '">down</a></center>';
+}; 
+
 JqueryPortico.formatRadio = function(key, oData){
 	var checked = '';
 	var hidden = '';
