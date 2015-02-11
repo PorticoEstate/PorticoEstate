@@ -109,7 +109,7 @@
 		}
 
 		function read_single($custom_id)
-		{
+		{  
 			$custom_id = (int) $custom_id;
 			$this->db->query("SELECT * from fm_custom where id={$custom_id}",__LINE__,__FILE__);
 
