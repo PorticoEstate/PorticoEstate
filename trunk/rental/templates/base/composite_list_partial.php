@@ -99,7 +99,7 @@ function checkAvailabitily()
 		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo isset($editable) && $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites','<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites','<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_district_id','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -122,6 +122,8 @@ function checkAvailabitily()
     function composite_export(compType) {
         var availabilityselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active_rental_composites');
         var availabilityoption = availabilityselect.options[availabilityselect.selectedIndex].value;
+       var districtselect = document.getElementById('<?php echo $list_id ?>_district_id');
+        var districtoption = districtselect.options[districtselect.selectedIndex].value;
 <?php
 	if(isset($config->config_data['contract_future_info']) && $config->config_data['contract_future_info'])
 	{
@@ -143,6 +145,7 @@ function checkAvailabitily()
             '&amp;type='+compType+
             '&amp;query='+query+
             '&amp;search_option='+sOption+
+            '&amp;district_id='+districtoption+
         	'&amp;export=true';
     }
 </script>
@@ -187,8 +190,8 @@ function checkAvailabitily()
 		<!-- Filters -->
 		<h3><?php echo lang('filters') ?></h3>
 		<?php
-                        if(isset($config->config_data['contract_furnished_status']) && $config->config_data['contract_furnished_status'])
-                        {
+                 if(isset($config->config_data['contract_furnished_status']) && $config->config_data['contract_furnished_status'])
+                 {
 
                 ?>
                     <!-- Møbleringsstatus -->
@@ -205,6 +208,18 @@ function checkAvailabitily()
                     </select>
                 <?php }
                 ?>
+                    <label for="district_id"><?php echo lang('district') ?></label>
+                    <select name="district_id" id="<?php echo $list_id ?>_district_id">
+                       <?php
+							$districts = execMethod('property.sogeneric.get_list',array('type' => 'district'));
+
+							echo "<option value=''>" . lang('select') . "</option>";
+							foreach($districts as $district)
+							{
+								echo "<option value='{$district['id']}'>{$district['name']}</option>";
+							}
+						?>
+                    </select>
 		<label for="ctrl_toggle_active_rental_composites"><?php echo lang('availability') ?></label>
 		<select name="is_active" id="<?php echo $list_id ?>_ctrl_toggle_active_rental_composites">
 			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
