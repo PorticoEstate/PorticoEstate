@@ -72,7 +72,7 @@
 			$this->query		= $this->bo->query;
 			$this->sort			= $this->bo->sort;
 			$this->order		= $this->bo->order;
-			$this->filter		= $this->bo->filter;
+			$this->filter		= $this->bo->filter; 
 			$this->cat_id		= $this->bo->cat_id;
 			$this->allrows		= $this->bo->allrows;
 
@@ -345,47 +345,18 @@
 				$this->bo->resort(array('custom_id'=>$custom_id,'id'=>$cols_id,'resort'=>$resort));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
-
-			/*if ($values['save'] || $values['apply'])
-			{
-				if(!$values['name'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
-				}
-
-				if(!$values['sql_text'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a sql query !'));
-				}
-
-				if(!$receipt['error'])
-				{
-					$values['custom_id']	= $custom_id;
-					$receipt = $this->bo->save($values);
-					$custom_id = $receipt['custom_id'];
-					$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
-
-					if ($values['save'])
-					{
-						$GLOBALS['phpgw']->session->appsession('session_data','custom_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uicustom.index'));
-					}
-				}
-			}*/
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
 			if ($values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uicustom.index'));
 			}
 
-
 			if ($custom_id)
 			{
 				$custom = $this->bo->read_single($custom_id);
 				$this->cat_id = ($custom['cat_id']?$custom['cat_id']:$this->cat_id);
 			}
-
 
 			$link_data = array
 				(
@@ -394,24 +365,48 @@
 				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			while (is_array($custom['cols']) && list(,$entry) = each($custom['cols']))
+            
+            
+            
+            $custom_def = array
+			(
+				array('key' => 'name', 'label'=>lang('Column name'), 'sortable'=>FALSE, 'resizeable'=>true),
+				array('key' => 'descr', 'label'=>lang('Column description'), 'sortable'=>FALSE, 'resizeable'=>true),
+                array('key' => 'sorting', 'label'=>lang('Sorting'), 'sortable'=>FALSE, 'resizeable'=>true,'formatter'=>'JqueryPortico.formatUpDown'),
+                array('key' => 'delete', 'label'=>lang('Delete column'), 'sortable'=>FALSE, 'resizeable'=>true,'formatter'=>'JqueryPortico.formatCheckCustom'),
+                array('key' => 'link_up', 'label'=>lang('Up'), 'sortable'=>FALSE, 'resizeable'=>true, 'hidden'=>TRUE),
+				array('key' => 'link_down', 'label'=>lang('Down'), 'sortable'=>FALSE, 'resizeable'=>true,'hidden'=>TRUE)
+			);
+            //formatLink formatCheck
+            while (is_array($custom['cols']) && list(,$entry) = each($custom['cols']))
 			{
 				$cols[] = array(
 					'id'		=> $entry['id'],
 					'name'		=> $entry['name'],
 					'descr'		=> $entry['descr'],
 					'sorting'	=> $entry['sorting'],
-					'text_up'	=> lang('Up'),
-					'text_down'	=> lang('Down'),
 					'link_up'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'up', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
 					'link_down'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'down', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
+                    'delete'    => $entry['id'],
 				);
 			}
-
-
+                         
+            
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($cols),
+				'ColumnDefs'	=> $custom_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+	                    
 			$data = array
 				(
+                    'datatable_def'					=> $datatable_def,
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'edit_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'lang_custom_id'				=> lang('ID'),
@@ -433,7 +428,7 @@
 					'lang_descr'					=> lang('descr'),
 					'lang_new_name_statustext'		=> lang('name'),
 					'lang_new_descr_statustext'		=> lang('descr'),
-					'cols'							=> $cols,
+					'cols'							=> $cols, 
 					'lang_col_name'					=> lang('Column name'),
 					'lang_col_descr'				=> lang('Column description'),
 					'lang_delete_column'			=> lang('Delete column'),
@@ -443,9 +438,15 @@
 					'lang_sorting'					=> lang('Sorting'),
 
 				);
+                        
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('custom') . ': ' . ($custom_id?lang('edit custom'):lang('add custom'));
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+            
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+			
+			self::render_template_xsl(array('custom','datatable_inline'), array('edit' => $data));
 		}
 
 
