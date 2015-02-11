@@ -36,7 +36,8 @@
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
-			else {
+			else
+			{
 				$user_rows_per_page = 10;
 			}
 			// YUI variables for paging and sorting
@@ -50,6 +51,7 @@
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
+			$district_id	= phpgw::get_var('district_id', 'int');
 			
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
@@ -88,7 +90,7 @@
 					phpgwapi_cache::session_set('rental', 'composite_furnished_status', phpgw::get_var('furnished_status'));
 					$filters = array('furnished_status' => phpgw::get_var('furnished_status'),'is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 
 									 'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from_hidden'), 
-									 'availability_date_to' => phpgw::get_var('availability_date_to_hidden'));
+									 'availability_date_to' => phpgw::get_var('availability_date_to_hidden'), 'district_id' => $district_id);
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
