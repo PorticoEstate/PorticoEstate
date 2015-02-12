@@ -666,7 +666,7 @@ activities that never should get mail	booking	no	Aktiviteter som det aldri skal 
 Who get cancelation mails	booking	no	Hvem får kanselerings e-poster.
 Users of current season or users the last 300 days	booking	no	Brukere denne sesongen eller bruker de siste 300 dager.
 Last 300 days	booking	no	Siste 300 dager
-Cancelation Email Addresses	booking	no	Hvem som skal få kanselerings e-post. (saksbehandeler)
+Cancelation Email Addresses	booking	no	Hvem som skal få saksbehander e-post.
 One e-mail pr. line.	booking	no	Bare en e-post adresse pr. linje.
 Application email settings	booking	no	Søknad epost innstillinger
 Application comment email settings	booking	no	Søknad kommentar epost innstillinger
