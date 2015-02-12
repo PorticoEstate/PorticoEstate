@@ -804,6 +804,8 @@
 			$location	= phpgw::get_var('location', 'string');
 			$values		= phpgw::get_var('values');
 
+           if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+           {
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
 	//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
@@ -862,6 +864,11 @@
                 {
                     $this->edit();
                 }
+           }
+           else
+           {
+               $this->edit($values);
+           }
         }
         
 		function edit()
@@ -874,45 +881,6 @@
 			$id			= phpgw::get_var('id', 'int');
 			$location	= phpgw::get_var('location', 'string');
 			$values		= phpgw::get_var('values');
-
-			/*if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
-			{
-				if($GLOBALS['phpgw']->session->is_repost())
-				{
-	//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
-				}
-
-				if(!isset($values['location']) || !$values['location'])
-				{
-//					$receipt['error'][]=array('msg'=>lang('Please select a location!'));
-				}
-
-				if(!isset($values['name']) || !$values['name'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a name!'));
-				}
-
-				if($id)
-				{
-					$values['id']=$id;
-				}
-				else
-				{
-					$id = $values['id'];
-				}
-
-				if(!$receipt['error'])
-				{
-					$receipt = $this->bo->save_type($values);
-					$id = $receipt['id'];
-
-					if (isset($values['save']) && $values['save'])
-					{
-						$GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'appname' => $this->appname));
-					}
-				}
-			}*/
 
 			if (isset($values['cancel']) && $values['cancel'])
 			{
