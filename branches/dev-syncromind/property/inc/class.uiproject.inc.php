@@ -866,7 +866,7 @@
 			$id = (int)$values['id'];
 			if(empty($id))
 			{
-				throw new Exception('uiworkorder::_handle_files() - missing id');
+				throw new Exception('uiproject::_handle_files() - missing id');
 			}
 						
 			$bofiles	= CreateObject('property.bofiles');
@@ -938,17 +938,17 @@
 					$receipt = $this->bo->save($values, $action, $values_attribute);
 					$values['id'] = $receipt['id'];
 					$id = $receipt['id'];
+					$this->receipt['error'] = $receipt['error'];
 				}
 				catch(Exception $e)
 				{
 					if ( $e )
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
-						$bypass_error = true;
 					}
 				}
 				
-				if (!isset($bypass_error))
+				if (!$this->receipt['error'])
 				{
 					$this->_handle_files($values);
 
@@ -1283,15 +1283,10 @@
 					);
 				}
 
-
-				//$save='';
-				//if (isset($values['save']))
-				//{
-					/*if($GLOBALS['phpgw']->session->is_repost())
-					{
-//						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
-					}
-
+				/*
+				$save='';
+				if (isset($values['save']))
+				{
 					$save=true;
 
 					if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
@@ -1438,14 +1433,14 @@
 						}
 
 						$receipt = $this->bo->save($values,$action,$values_attribute);
-
+						$receipt['error'][] = 'error';
 						if (! $receipt['error'])
 						{
 							$id = $receipt['id'];
 						}
 
 					//----------files
-						/*$bofiles	= CreateObject('property.bofiles');
+						$bofiles	= CreateObject('property.bofiles');
 						if(isset($values['file_action']) && is_array($values['file_action']))
 						{
 							$bofiles->delete_file("/project/{$id}/", $values);
@@ -1478,13 +1473,12 @@
 								}
 								$bofiles->vfs->override_acl = 0;
 							}
-						}*/
+						}
 					//-----------
 
-					/*
+					
 						if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
 							&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
-	//						&& $config->config_data['project_approval'] )
 						{
 							$historylog	= CreateObject('property.historylog','project');
 							if (!is_object($GLOBALS['phpgw']->send))
@@ -1543,7 +1537,6 @@
 							{
 								if($this->account!=$values['coordinator']
 									&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
-		//							 && $config->config_data['mailnotification']
 								)
 								{
 									$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
@@ -1646,8 +1639,9 @@
 							$values['p'][$values['extra']['p_entity_id']]['p_cat_id']=$values['extra']['p_cat_id'];
 							$values['p'][$values['extra']['p_entity_id']]['p_cat_name']=phpgw::get_var('entity_cat_name_'.$values['extra']['p_entity_id'], 'string', 'POST');
 						}
-					}*/
-				//}
+					}
+				}
+				 */
 			}
 
 			//$record_history = '';
