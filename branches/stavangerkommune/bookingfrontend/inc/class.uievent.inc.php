@@ -176,6 +176,8 @@
             $resources = $event['resources'];
             $activity=$this->organization_bo->so->get_resource_activity($resources);
             $mailadresses = $this->building_users($event['building_id'], $split, $activity);
+            $extra_mailadresses = $this->resource_users($resources);
+            $mailadresses = array_merge($mailadresses, $extra_mailadresses);
 
             if($_SERVER['REQUEST_METHOD'] == 'POST')
             {
@@ -215,6 +217,44 @@
         public function building_users($building_id, $type=false, $activities=array()) {
             $contacts = array();
             $organizations = $this->organization_bo->find_building_users($building_id, $type, $activities);
+            foreach($organizations['results'] as $key => $org)
+            {
+                if ($org['email'] != '' && strstr($org['email'], '@')) {
+                    if (!in_array($org['email'], $contacts)) {
+                        $contacts[] = $org['email'];
+                    }
+                }
+                if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@')) {
+                    if (!in_array($org['contacts'][0]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][0]['email'];
+                    }
+                }
+                if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@')) {
+                    if (!in_array($org['contacts'][1]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][1]['email'];
+                    }
+                }
+                $grp_con = $this->booking_bo->so->get_group_contacts_of_organization($org['id']);
+                foreach ($grp_con as $grp) {
+                    if (!in_array($grp['email'], $contacts) && strstr($grp['email'], '@')) {
+                        $contacts[] = $grp['email'];
+                    }
+                }
+            }
+            return $contacts;
+        }
+
+        public function resource_users($resources) {
+            $contacts = array();
+            $orglist = array();
+            foreach($resources as $res){
+                $cres = $this->resource_bo->read_single($res);
+                if($cres['organizations_ids'] != '') {
+                    $orglist .= $cres['organizations_ids'].',';
+                }
+            }
+            $orgs = explode(",", rtrim($orglist, ","));
+            $organizations = $this->organization_bo->so->read(array('filters'=>array('id'=>$orgs), 'sort'=>'name'));
             foreach($organizations['results'] as $key => $org)
             {
                 if ($org['email'] != '' && strstr($org['email'], '@')) {

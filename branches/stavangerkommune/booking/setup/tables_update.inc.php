@@ -2793,3 +2793,15 @@ function booking_upgrade0_2_16()
         return $GLOBALS['setup_info']['booking']['currentver'];
     }
 }
+
+$test[] = '0.2.17';
+function booking_upgrade0_2_17()
+{
+	$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+	$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN organizations_ids varchar(50) DEFAULT NULL");
+	if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+	{
+		$GLOBALS['setup_info']['booking']['currentver'] = '0.2.18';
+		return $GLOBALS['setup_info']['booking']['currentver'];
+	}
+}

@@ -18,6 +18,7 @@
 					'type'			=> array('type' => 'string', 'query' => true, 'required' => true),
 					'description'			=> array('type' => 'string', 'query' => true, 'required' => false),
 					'activity_id'			=> array('type' => 'int', 'required' => false),
+					'organizations_ids'		=> array('type' => 'string'),
 					'building_name'	=> array('type' => 'string',
 						  'query'		=> true,
 						  'join' 		=> array(

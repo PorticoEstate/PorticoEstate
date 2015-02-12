@@ -668,7 +668,9 @@ Users of current season or users the last 300 days	booking	no	Brukere denne seso
 Last 300 days	booking	no	Siste 300 dager
 Cancelation Email Addresses	booking	no	Hvem som skal få kanselerings e-post. (saksbehandeler)
 One e-mail pr. line.	booking	no	Bare en e-post adresse pr. linje.
-Application email settings  booking no  Søknad epost innstillinger
-Application comment email settings  booking no  Søknad kommentar epost innstillinger
-Subject caseofficer booking no  Emne Saksbehandler
-Mail text for comment added booking no  Ekstra epost tekst for kommentar
+Application email settings	booking	no	Søknad epost innstillinger
+Application comment email settings	booking	no	Søknad kommentar epost innstillinger
+Subject caseofficer	booking	no	Emne Saksbehandler
+Mail text for comment added	booking	no	Ekstra epost tekst for kommentar
+organzations_ids_description	booking	no	Her kan du legge inn en komma separert liste med organisasjons IDer som vil få epost viss noen avbestiller denne ressursen.
+organzations_ids	booking	no	Organisasjons IDer

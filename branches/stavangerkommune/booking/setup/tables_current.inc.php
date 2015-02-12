@@ -113,6 +113,7 @@
 				'description' => array('type' => 'text', 'nullable' => True),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'sort' => array('type' => 'int','precision' => '4','nullable' => False,'default' => 0),
+				'organizations_ids' => array('type' => 'varchar','precision' => '50','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
