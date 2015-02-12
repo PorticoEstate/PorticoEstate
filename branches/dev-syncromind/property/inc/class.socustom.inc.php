@@ -125,7 +125,7 @@
 						'cols'			=> $this->read_cols($custom_id)
 					);
 			}
-
+                
 			return $custom;
 		}
 
@@ -210,12 +210,12 @@
 			}
 
 
-			if($custom['delete_cols'])
+			if($custom['delete'])
 			{
-				for ($i=0;$i<count($custom['delete_cols']);$i++)
+				for ($i=0;$i<count($custom['delete']);$i++)
 				{
 
-					$sql = "SELECT sorting FROM fm_custom_cols where custom_id=" . $custom['custom_id'] . " AND id=" . $custom['delete_cols'][$i];
+					$sql = "SELECT sorting FROM fm_custom_cols where custom_id=" . $custom['custom_id'] . " AND id=" . $custom['delete'][$i];
 					$this->db->query($sql);
 					$this->db->next_record();
 					$sorting	= $this->db->f('sorting');
@@ -231,7 +231,7 @@
 					}
 
 
-					$this->db->query("DELETE FROM fm_custom_cols WHERE  custom_id=" . $custom['custom_id']  ." AND id=" . $custom['delete_cols'][$i]);
+					$this->db->query("DELETE FROM fm_custom_cols WHERE  custom_id=" . $custom['custom_id']  ." AND id=" . $custom['delete'][$i]);
 				}
 			}
 
