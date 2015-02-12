@@ -282,6 +282,9 @@
             $values		= phpgw::get_var('values');
 			$values['sql_text'] = $_POST['values']['sql_text'];
             
+
+            if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+            {
 				if(!$values['name'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
@@ -326,6 +329,11 @@
                 {
                     $this->edit();
                 }
+            }
+            else
+            {
+                $this->edit($values);
+            }
         }
                 
 		function edit()
@@ -360,7 +368,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uicustom.edit',
+					'menuaction'	=> 'property.uicustom.save',
 					'custom_id'	=> $custom_id
 				);
 
