@@ -1,5 +1,5 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
+	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
@@ -141,13 +141,27 @@
 											<xsl:value-of select="php:function('lang', 'details')"/>
 										</td>
 										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<!--  DATATABLE 0-->
+											<!--table width="100%" cellpadding="2" cellspacing="2" align="center">
 												<td>
 													<div id="paging_0"/>
 													<div id="datatable-container_0"/>
 												</td>
-											</table>
+											</table-->
+                                                                                        
+                                                                                        <div class="pure-custom">
+                                                                                            <xsl:for-each select="datatable_def">
+                                                                                                    <xsl:if test="container = 'datatable-container_0'">
+                                                                                                            <xsl:call-template name="table_setup">
+                                                                                                                    <xsl:with-param name="container" select ='container'/>
+                                                                                                                    <xsl:with-param name="requestUrl" select ='requestUrl' />
+                                                                                                                    <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+                                                                                                                    <xsl:with-param name="tabletools" select ='tabletools' />
+                                                                                                                    <xsl:with-param name="data" select ='data' />
+                                                                                                                    <xsl:with-param name="config" select ='config' />
+                                                                                                            </xsl:call-template>
+                                                                                                    </xsl:if>
+                                                                                            </xsl:for-each>
+                                                                                        </div>
 										</td>
 									</tr>
 									<tr>
@@ -261,7 +275,7 @@
 						values:<xsl:value-of select="values"/>,
 						total_records: <xsl:value-of select="total_records"/>,
 						is_paginator:  <xsl:value-of select="is_paginator"/>,
-					<!--permission:<xsl:value-of select="permission"/>, -->
+					<!--pdatatableermission:<xsl:value-of select="permission"/>, -->
 						footer:<xsl:value-of select="footer"/>
 					}
 				]
