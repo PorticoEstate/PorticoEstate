@@ -489,120 +489,126 @@
             $id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');    
             
-			if($GLOBALS['phpgw']->session->is_repost())
+            if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
             {
-//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
-            }
+                if($GLOBALS['phpgw']->session->is_repost())
+                {
+    //				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+                }
+
+                if(!isset($values['location']) || !$values['location'])
+                {
+                    $receipt['error'][]=array('msg'=>lang('Please select a location!'));
+                }
+
+                if(!isset($values['title']) || !$values['title'])
+                {
+                    $receipt['error'][]=array('msg'=>lang('Please enter a title!'));
+                }
+
+                if($id)
+                {
+                    $values['id']=$id;
+                }
+                else
+                {
+                    $id = $values['id'];
+                }
+
+                    if(!$receipt['error'])
+                    {
+                        try
+                        {
+                            $receipt = $this->bo->save($values);
+                            $id = $receipt['id'];
+                            $msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+                            //-------------start files
+                            $bofiles	= CreateObject('property.bofiles');
+                            $file = array();
+                            if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
+                            {
+                                $file_name = str_replace (' ','_',$_FILES['file']['name']);
+                                $values['file_name'] = $file_name;
+
+                                $to_file	= "{$bofiles->fakebase}/jasper/{$id}/{$file_name}";
+
+                                if ($old_file = $bofiles->vfs->ls(array(
+                                    'string' => "{$bofiles->fakebase}/jasper/{$id}",
+                                    'relatives' => Array(RELATIVE_NONE)
+                                )))
+                                {
+                                    $bofiles->vfs->rm(array(
+                                        'string' => "{$bofiles->fakebase}/jasper/{$id}/{$old_file[0]['name']}",
+                                        'relatives' => Array(RELATIVE_NONE)
+                                    ));
+                                    $receipt['message'][]=array('msg'=>lang('old file %1 removed',$old_file[0]['name']));
+                                }
 
 
-            if(!isset($values['location']) || !$values['location'])
-            {
-                $receipt['error'][]=array('msg'=>lang('Please select a location!'));
-            }
+                                $file = array
+                                    (
+                                        'from_file'	=> $_FILES['file']['tmp_name'],
+                                        'to_file'	=> $to_file
+                                    );
 
-            if(!isset($values['title']) || !$values['title'])
-            {
-                $receipt['error'][]=array('msg'=>lang('Please enter a title!'));
-            }
 
-            if($id)
-            {
-                $values['id']=$id;
+                                unset($to_file);
+
+
+                                if ($file)
+                                {
+                                    $bofiles->create_document_dir("jasper/{$id}");
+                                    $bofiles->vfs->override_acl = 1;
+
+                                    if($bofiles->vfs->cp (array (
+                                        'from'	=> $file['from_file'],
+                                        'to'	=> $file['to_file'],
+                                        'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+                                    {
+                                        $receipt['message'][]=array('msg'=>lang('file %1 uploaded', $file_name));
+                                    }
+                                    else
+                                    {
+                                        $receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+                                    }
+                                    $bofiles->vfs->override_acl = 0;
+                                }
+                                unset($file);
+                                unset($file_name);
+                            }
+                            //-------------end files
+
+                            if (isset($values['save']) && $values['save'])
+                            {
+                                $GLOBALS['phpgw']->session->appsession('session_data','jasper_receipt',$receipt);
+                                $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index', 'app' => $this->app));
+                            }
+
+                        } catch (Exception $e){
+                            if ( $e )
+                            {
+                                phpgwapi_cache::message_set($e->getMessage(), 'error');
+                                $this->edit($values);
+                                return;
+                            }
+                        }
+
+                        $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+
+                        phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+                        $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uijasper.edit', 'id' => $id));
+
+                    }
+                    else
+                    {
+                        $this->edit();
+                    }
             }
             else
             {
-                $id = $values['id'];
+                $this->edit($values);
             }
-
-				if(!$receipt['error'])
-				{
-                    try
-                    {
-                        $receipt = $this->bo->save($values);
-                        $id = $receipt['id'];
-                        $msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-                        //-------------start files
-                        $bofiles	= CreateObject('property.bofiles');
-                        $file = array();
-                        if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
-                        {
-                            $file_name = str_replace (' ','_',$_FILES['file']['name']);
-                            $values['file_name'] = $file_name;
-
-                            $to_file	= "{$bofiles->fakebase}/jasper/{$id}/{$file_name}";
-
-                            if ($old_file = $bofiles->vfs->ls(array(
-                                'string' => "{$bofiles->fakebase}/jasper/{$id}",
-                                'relatives' => Array(RELATIVE_NONE)
-                            )))
-                            {
-                                $bofiles->vfs->rm(array(
-                                    'string' => "{$bofiles->fakebase}/jasper/{$id}/{$old_file[0]['name']}",
-                                    'relatives' => Array(RELATIVE_NONE)
-                                ));
-                                $receipt['message'][]=array('msg'=>lang('old file %1 removed',$old_file[0]['name']));
-                            }
-
-
-                            $file = array
-                                (
-                                    'from_file'	=> $_FILES['file']['tmp_name'],
-                                    'to_file'	=> $to_file
-                                );
-
-
-                            unset($to_file);
-
-
-                            if ($file)
-                            {
-                                $bofiles->create_document_dir("jasper/{$id}");
-                                $bofiles->vfs->override_acl = 1;
-
-                                if($bofiles->vfs->cp (array (
-                                    'from'	=> $file['from_file'],
-                                    'to'	=> $file['to_file'],
-                                    'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
-                                {
-                                    $receipt['message'][]=array('msg'=>lang('file %1 uploaded', $file_name));
-                                }
-                                else
-                                {
-                                    $receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
-                                }
-                                $bofiles->vfs->override_acl = 0;
-                            }
-                            unset($file);
-                            unset($file_name);
-                        }
-                        //-------------end files
-
-                        if (isset($values['save']) && $values['save'])
-                        {
-                            $GLOBALS['phpgw']->session->appsession('session_data','jasper_receipt',$receipt);
-                            $GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index', 'app' => $this->app));
-                        }
-                        
-                    } catch (Exception $e){
-                        if ( $e )
-                        {
-                            phpgwapi_cache::message_set($e->getMessage(), 'error');
-                            $this->edit($values);
-                            return;
-                        }
-                    }
-                    
-                    $message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-                    
-                    phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
-                    $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uijasper.edit', 'id' => $id));
-
-				}
-                else
-                {
-                    $this->edit();
-                }
         }
         
 		function edit()
@@ -769,14 +775,14 @@
 					array('key' => 'counter',	'label'=>'#','sortable'=>true,'resizeable'=>true),
 					array('key' => 'type_name',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
 					array('key' => 'input_name','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
-					array('key' => 'is_id',	'label'=>lang('is id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
+					array('key' => 'is_id',	'label'=>lang('is id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter')
 				);
 
 			$inputs = isset($values['input']) && $values['input'] ? $values['input'] : array();
 
 			if($this->acl_edit)
 			{
-				$type_def[] = array('key' => 'delete_input','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+				$type_def[] = array('key' => 'delete_input','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter');
 				foreach($inputs as &$input)
 				{
 					$_checked = $input['is_id'] ? 'checked = "checked"' : '';
@@ -794,17 +800,32 @@
 					'is_paginator'			=> 0,
 					'footer'				=> 0
 				);					
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode($type_def)
-				);		
+//			$myColumnDefs[0] = array
+//				(
+//					'name'		=> "0",
+//					'values'	=>	json_encode($type_def)
+//				);		
 			//-----------------------------------------------
-
+            
+            $datatable_def[] = array
+            (
+               'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($inputs),
+				'ColumnDefs'	=> $type_def,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				) 
+            );
+            
+//            echo '<pre>'; print_r($datatable_def);echo '</pre>'; exit();
+            
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 				(
+                    'datatable_def'                 => $datatable_def,
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'value_app'						=> $this->app,
@@ -822,22 +843,28 @@
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,
-				);
+				); 
 
 			//---datatable settings--------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('loader');
-
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'jasper.edit', 'property' );
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('loader');
+//
+//			$GLOBALS['phpgw']->css->validate_file('property');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'jasper.edit', 'property' );
 			//-----------------------datatable settings---
 
 			$appname						= 'JasperReports';
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::$function_msg::".lang($this->app);
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+            
+            phpgwapi_jquery::load_widget('core');
+            phpgwapi_jquery::load_widget('numberformat');
+            
+            self::render_template_xsl(array('jasper','datatable_inline'),array('edit' => $data));
+            
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 		function view()
