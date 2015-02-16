@@ -543,6 +543,7 @@
 				'lang_submit'			 => lang('Submit'),
 				'lang_cancel'			 => lang('Cancel'),
 				'form_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'cancel_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index')),
 				'lang_save'				 => lang('save')
 			);
 
