@@ -293,7 +293,10 @@
 						</label>
 						<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
 							<xsl:attribute name="title">
-							<xsl:value-of select="lang_start_date_statustext"/>
+								<xsl:value-of select="lang_start_date_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
 							</xsl:attribute>
 						</input>
 					</div>
@@ -303,7 +306,10 @@
 						</label>
 						<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
 							<xsl:attribute name="title">
-							<xsl:value-of select="lang_end_date_statustext"/>
+								<xsl:value-of select="lang_end_date_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
 							</xsl:attribute>
 						</input>
 					</div>
@@ -331,9 +337,12 @@
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'move')"/>
 								</label>
-								<input type="text" name="values[new_project_id]" value="">
+								<input type="text" data-validation="number" name="values[new_project_id]" value="">
 									<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
+										<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
 									</xsl:attribute>
 								</input>
 							</div>
