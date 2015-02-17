@@ -1302,7 +1302,6 @@
 				
 				if($this->receipt['error'] && !$this->bypass_error)
 				{
-					print_r($this->receipt['error']); die;
 					if(isset($values['location']) && is_array($values['location']))
 					{
 						$location_code=implode("-", $values['location']);
@@ -2160,7 +2159,7 @@
 					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.edit', 'id' => $id)),
 					'lang_edit_statustext'				=> lang('Edit this entry '),
 					'lang_edit'							=> lang('Edit'),
-
+					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 			//_debug_array($data);die;
 
