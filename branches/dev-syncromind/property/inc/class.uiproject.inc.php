@@ -1295,10 +1295,7 @@
 			{
 				$mode = 'edit';
 				
-				if (!$id)
-				{
-					$id = $values['id'];
-				}
+				$id = $values['id'];
 				
 				if($this->receipt['error'] && !$this->bypass_error)
 				{
