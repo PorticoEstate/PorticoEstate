@@ -139,6 +139,40 @@
 								}
 							}
 							break;
+						case 'br_slokk_app_skiftet':
+							if($entry['value'])
+							{
+								$new_value = $entry['value'];
+								$this->db->query("SELECT skiftet, id FROM fm_entity_1_10 WHERE location_code ='{$values['location_code']}'",__LINE__,__FILE__);
+								$this->db->next_record();
+								$old_value = $this->db->f('skiftet');
+								$id = $this->db->f('id');
+								if($id)
+								{
+									$attrib_id = 2;
+									if(strtotime($new_value) != strtotime($old_value))
+									{
+										$historylog	= CreateObject('property.historylog','entity_1_10');
+										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
+										$this->db->query("UPDATE fm_entity_1_10 SET skiftet = '{$new_value}' WHERE location_code ='{$values['location_code']}'",__LINE__,__FILE__);
+									}
+								}
+								else
+								{
+									if ($values['street_name'])
+									{
+										$address = $this->db->db_addslashes($values['street_name'] . ' ' .$values['street_number']);
+									}
+									else
+									{
+										$address = $this->db->db_addslashes($values['location_name']);
+									}
+
+									$this->br_slokk_app($new_value, $values['location_code'], $address);
+								}
+							}
+							break;
+						default:
 					}
 				}
 			}
@@ -168,12 +202,44 @@
 			$value_set['location_code'] = $location_code;
 			$value_set['entry_date'] = time();
 			$value_set['user_id'] = $this->account;
-		
+
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->db->validate_insert(array_values($value_set));
 			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 			$historylog	= CreateObject('property.historylog','entity_1_14');
 			$historylog->add('SO', $value_set['id'], $beskrivelse, false, $attrib_id = 1, time());
+		}
+
+		private function br_slokk_app($date,$location_code,$address)
+		{
+			$table = 'fm_entity_1_10';
+			$location=explode('-',$location_code);
+			$value_set = array();
+
+			$i=1;
+			if (isset($location) AND is_array($location))
+			{
+				foreach($location as $location_entry)
+				{
+					$value_set["loc{$i}"] = $location_entry;
+
+					$i++;
+				}
+			}
+
+			$value_set['id'] = $this->bocommon->next_id($table);
+			$value_set['num'] = $value_set['id'];
+			$value_set['address'] = $address;
+			$value_set['skiftet'] = $date;
+			$value_set['location_code'] = $location_code;
+			$value_set['entry_date'] = time();
+			$value_set['user_id'] = $this->account;
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
+			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+			$historylog	= CreateObject('property.historylog','entity_1_10');
+			$historylog->add('SO', $value_set['id'], $date, false, $attrib_id = 2, time());
 		}
 	}
 
