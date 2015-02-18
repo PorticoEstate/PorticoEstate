@@ -1624,6 +1624,11 @@
 
 			if(!$this->receipt['error'])
 			{
+				if ($values['id'])
+				{
+					$id = $values['id'];
+				}
+				
 				if($id)
 				{
 					$values		= $this->bo->read_single($id);
