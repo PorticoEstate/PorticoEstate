@@ -1652,6 +1652,31 @@
 				))
 			);
 
+  
+//            $myColumnDefs0 = array
+//            (
+//               array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
+//               array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
+//               array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
+//               array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
+//               array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true),
+//               array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>60)
+//            );
+//  
+//            $datatable_def[] = array
+//			(
+//				'container'		=> 'datatable-container_0',
+//				'requestUrl'	=> "''",
+//				'data'			=> json_encode($alarm_data['values']),
+//				'ColumnDefs'	=> $myColumnDefs0,
+//				'config'		=> array(
+//					array('disableFilter'	=> true),
+//					array('disablePagination'	=> true)
+//				)
+//			);
+            
+            
+            
 			$myButtons[1] = array
 				(
 					'name'   => "1",
@@ -1663,14 +1688,6 @@
 				))
 			);
 
-/*
-_debug_array(array( array('id' =>'values[time][days]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
-													array('id' =>'values[time][hours]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
-													array('id' =>'values[time][mins]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
-													array('id' =>'values[user_id]',  'type'=>'menu',  'value'=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), 'label'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),'classname'=> 'actionsFilter', 'value_hidden'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
-													array('id' =>'values[add_alarm]',  'type'=>'buttons', 'value'=>'Add',  'label'=>$alarm_data['add_alarm']['lang_add'],   'funct'=> 'onAddClick' , 'classname'=> 'actionButton', 'value_hidden'=>"")));
-die();
-*/
 			//---------items------------------------------------
 			$datavalues[1] = array
 				(
@@ -1710,12 +1727,26 @@ die();
 					'resizeable'	=> true,
 					'formatter'		=> 'myFormatterCheckUpdate'
 				);
-			//_debug_array($ColumnDefs_data);
+            
+//            $datatable_def[] = array
+//			(
+//				'container'		=> 'datatable-container_1',
+//				'requestUrl'	=> "''",
+//				'data'			=> json_encode($content_values),
+//				'ColumnDefs'	=> $ColumnDefs_data,
+//				'config'		=> array(
+//					array('disableFilter'	=> true),
+//					array('disablePagination'	=> true)
+//				)
+//			);
+
 			$myColumnDefs[1] = array
 				(
 					'name'		=> "1",
 					'values'	=>	json_encode($ColumnDefs_data)
 				);
+            
+            
 			unset($ColumnDefs_data);
 
 			$myButtons[2] = array
@@ -1759,6 +1790,25 @@ die();
 														array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
 
+//            $myColumnDefs2 = array
+//            (
+//                array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+//				  array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter')
+//            );
+  
+//            $datatable_def[] = array
+//			(
+//				'container'		=> 'datatable-container_2',
+//				'requestUrl'	=> "''",
+//				'data'			=> json_encode($content_files),
+//				'ColumnDefs'	=> $myColumnDefs2,
+//				'config'		=> array(
+//					array('disableFilter'	=> true),
+//					array('disablePagination'	=> true)
+//				)
+//			);
+            
+            
 			if($id)
 			{
 				$content_budget = $this->bo->get_budget($id);
@@ -1791,7 +1841,30 @@ die();
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
-
+            
+//            $myColumnDefs3 = array
+//			(
+//				array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+//                array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+//                array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
+//                array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
+//                array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+//                array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true),
+//                array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter')
+//			);
+//            
+//            $datatable_def[] = array
+//			(
+//				'container'		=> 'datatable-container_3',
+//				'requestUrl'	=> "''",
+//				'data'			=> json_encode($content_budget),
+//				'ColumnDefs'	=> $myColumnDefs3,
+//				'config'		=> array(
+//					array('disableFilter'	=> true),
+//					array('disablePagination'	=> true)
+//				)
+//			);
+            echo '<pre>'; print_r($datatable_def); echo '</pre>';exit();
 			//--------------------------------------------JSON CODE------------
 
 			$this->cats->set_appname('property','.project');
