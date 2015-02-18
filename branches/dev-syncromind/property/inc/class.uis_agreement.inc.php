@@ -1864,7 +1864,7 @@
 //					array('disablePagination'	=> true)
 //				)
 //			);
-            echo '<pre>'; print_r($datatable_def); echo '</pre>';exit();
+//            echo '<pre>'; print_r($datatable_def); echo '</pre>';exit();
 			//--------------------------------------------JSON CODE------------
 
 			$this->cats->set_appname('property','.project');
