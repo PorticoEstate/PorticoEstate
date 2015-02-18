@@ -137,7 +137,7 @@
 		$_utflyttingsdato	 = $this->db->f('leie_opphore_fra_dato');
 		if($_utflyttingsdato)
 		{
-			$this->db->query("SELECT id, num, utflyttingsdato FROM fm_catch_3_1 WHERE kontraktsnummer = '{$_kontraktsnummer}'", __LINE__, __FILE__);
+			$this->db->query("SELECT id, num, utflyttingsdato FROM fm_catch_3_1 WHERE kontraktsnummer ilike '{$_kontraktsnummer}'", __LINE__, __FILE__);
 			if($this->db->next_record())
 			{
 				$_num_3_1				 = $this->db->f('num');
@@ -150,7 +150,7 @@
 			}
 			else
 			{
-				$body .= "</br></br>Fant ikke inneflyttemelding for kontraktsnummer {$_kontraktsnummer}";
+				$body .= "</br></br>Fant ikke innflyttemelding for kontraktsnummer {$_kontraktsnummer}";
 			}
 		}
 		else
