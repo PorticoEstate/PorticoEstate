@@ -69,7 +69,8 @@
 
 $(document).ready(function(){
 
-	$("#global_category_id").change(function(){
+	$("#global_category_id").change(function()
+	{
 		var oArgs = {menuaction:'property.boworkorder.get_category', cat_id:$(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -90,4 +91,18 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	$("#order_time_span").change(function()
+	{
+		var oArgs1 = {menuaction:'property.uiproject.get_orders', project_id:project_id, year:$(this).val()};
+		var requestUrl1 = phpGWLink('index.php', oArgs1, true);
+		JqueryPortico.updateinlineTableHelper(oTable1, requestUrl1);
+		//var api = oTable1.api();
+		//api.column( 3 ).data().sum();
+		
+		var oArgs2 = {menuaction:'property.uiproject.get_vouchers', project_id:project_id, year:$(this).val()};
+		var requestUrl2 = phpGWLink('index.php', oArgs2, true);
+		JqueryPortico.updateinlineTableHelper(oTable2, requestUrl2);
+	});
+	
 });
