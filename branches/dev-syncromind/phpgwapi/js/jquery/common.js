@@ -194,6 +194,13 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 	}
 //	$(document).ready(function ()
 //	{
+		/*jQuery.fn.dataTable.Api.register( 'sum()', function () 
+		{
+			return this.flatten().reduce( function ( a, b ) {
+				return (a*1) + (b*1); // cast values in-case they are strings
+			} );
+		});*/
+
 		JqueryPortico.inlineTablesRendered += 1;
 
 		var oTable = $("#" + container).dataTable({
@@ -303,7 +310,7 @@ JqueryPortico.substr_count = function(haystack, needle, offset, length)
 		if(length > 0 && (offset+needle.length) > length)
 		{
 			return false;
-		} 
+		}
 		else
 		{
 			cnt++;
