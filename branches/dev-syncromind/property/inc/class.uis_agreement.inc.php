@@ -1658,7 +1658,7 @@
 //               array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
 //               array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
 //               array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
-//               array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
+//               array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter','width'=>60),
 //               array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true),
 //               array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>60)
 //            );
@@ -1795,7 +1795,7 @@
 //                array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
 //				  array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter')
 //            );
-  
+//  
 //            $datatable_def[] = array
 //			(
 //				'container'		=> 'datatable-container_2',
@@ -1864,13 +1864,13 @@
 //					array('disablePagination'	=> true)
 //				)
 //			);
-//            echo '<pre>'; print_r($datatable_def); echo '</pre>';exit();
 			//--------------------------------------------JSON CODE------------
 
 			$this->cats->set_appname('property','.project');
 
 			$data = array
 				(
+//                    'datatable_def'							=> $datatable_def,
 					'td_count'							=> $td_count,
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'						=> json_encode(array('menuaction' => "property.uis_agreement.edit",'id'=>$id)),
@@ -1971,6 +1971,8 @@
 					'textarearows'						=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'tabs'								=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 				);
+            
+//            echo '<pre>'; print_r($data); echo '</pre>'; exit();
 
 			//_debug_array($data);die;
 
@@ -1986,6 +1988,10 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
 
+//            phpgwapi_jquery::load_widget('core');
+//			phpgwapi_jquery::load_widget('numberformat');
+//			self::render_template_xsl(array('s_agreement','datatable_inline','files','attributes_form'), array('edit' => $data));
+            
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
