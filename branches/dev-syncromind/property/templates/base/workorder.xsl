@@ -69,16 +69,12 @@
 	<!-- add / edit -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
 
-		<xsl:variable name="done_action">
-			<xsl:value-of select="done_action"/>
-		</xsl:variable>
 		<xsl:variable name="lang_done">
 			<xsl:value-of select="lang_done"/>
 		</xsl:variable>
 		<xsl:variable name="lang_save">
 			<xsl:value-of select="lang_save"/>
 		</xsl:variable>
-
 
 		<script type="text/javascript">
 			function calculate_workorder()
@@ -97,7 +93,6 @@
 			}
 
 		</script>
-		<div id="workorder_edit_tabview">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -117,14 +112,14 @@
 						<table>
 							<tr height="50">
 								<td>
-									<input type="button" name="save" value="{$lang_save}" onClick="document.form.submit();">
+									<input type="button" class="pure-button pure-button-primary" name="save" value="{$lang_save}" onClick="document.form.submit();">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_save_statustext"/>
 										</xsl:attribute>
 									</input>
 								</td>
 								<td>
-									<input type="button" name="done" value="{$lang_done}" onClick="document.workorder_cancel.submit();">
+									<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.done_form.submit();">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_done_statustext"/>
 										</xsl:attribute>
@@ -144,7 +139,7 @@
 									<xsl:variable name="lang_calculate">
 										<xsl:value-of select="lang_calculate"/>
 									</xsl:variable>
-									<input type="button" name="calculate" value="{$lang_calculate}" onClick="calculate_workorder()">
+									<input type="button" class="pure-button pure-button-primary" name="calculate" value="{$lang_calculate}" onClick="calculate_workorder()">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_calculate_statustext"/>
 										</xsl:attribute>
@@ -154,7 +149,7 @@
 									<xsl:variable name="lang_send">
 										<xsl:value-of select="lang_send"/>
 									</xsl:variable>
-									<input type="button" name="send" value="{$lang_send}" onClick="send_workorder()">
+									<input type="button" class="pure-button pure-button-primary" name="send" value="{$lang_send}" onClick="send_workorder()">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_send_statustext"/>
 										</xsl:attribute>
@@ -169,9 +164,12 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" method="post" id='workorder_edit' name="form" action="{$form_action}" class= "pure-form pure-form-aligned">
+		<form ENCTYPE="multipart/form-data" method="post" id='form' name="form" action="{$form_action}" class= "pure-form pure-form-aligned">
 			<input type="hidden" name="send_workorder" value=""/>
 			<input type="hidden" name='calculate_workorder'  value=""/>
+			<xsl:variable name="decimal_separator">
+				<xsl:value-of select="decimal_separator"/>
+			</xsl:variable>
 
 			<input type="hidden" name="tab" value=""/>
 			<div id="tab-content">
@@ -346,6 +344,9 @@
 								<input type="text" name="values[title]" value="{value_title}" size="60">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_title_statustext"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 								</input>
 							</div>
@@ -634,16 +635,23 @@
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'contract sum')"/>
 								</label>
-								<input type="text" name="values[contract_sum]" value="{value_contract_sum}"></input>
+								<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[contract_sum]" value="{value_contract_sum}">
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
+									</xsl:attribute>
+								</input>
 								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 							</div>
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="lang_addition_percentage"/>
 								</label>
-								<input type="text" name="values[addition_percentage]" value="{value_addition_percentage}" >
+								<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[addition_percentage]" value="{value_addition_percentage}" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_addition_percentage_statustext"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
 									</xsl:attribute>
 								</input>
 								<xsl:text> </xsl:text> [ % ]
@@ -652,13 +660,29 @@
 								<label for="name">
 									<xsl:value-of select="lang_budget"/>
 								</label>
-								<input type="text" name="values[budget]" value="{value_budget}"><xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[budget]" value="{value_budget}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_budget_statustext"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
+									</xsl:attribute>
+								</input>
+								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 							</div>
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="lang_addition_rs"/>
 								</label>
-								<input type="text" name="values[addition_rs]" value="{value_addition_rs}"><xsl:attribute name="title"><xsl:value-of select="lang_addition_rs_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[addition_rs]" value="{value_addition_rs}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_addition_rs_statustext"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
+									</xsl:attribute>
+								</input>
+								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 							</div>
 							<div class="pure-control-group">
 								<label for="name">
@@ -755,10 +779,13 @@
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'billable hours')"/>
 								</label>
-								<input type="text" id="values_billable_hour" name="values[billable_hours]" size="10" value="{value_billable_hours}">
+								<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="values_billable_hour" name="values[billable_hours]" size="10" value="{value_billable_hours}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'enter the billable hour for the task')"/>
 									</xsl:attribute>
+									<xsl:attribute name="data-validation-optional">
+										<xsl:text>true</xsl:text>
+									</xsl:attribute>		
 								</input>
 							</div>
 							<div class="pure-control-group">
@@ -925,57 +952,42 @@
 						var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 					</script>
 			</div>
-			<xsl:choose>
-				<xsl:when test="mode='edit'">
-					<table>
-						<tr height="50">
-							<td>
-								<input type="hidden" name="values[save]" value="1"/>
-								<input type="submit" name="save" value="{$lang_save}">
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_save_statustext"/>
-									</xsl:attribute>
-								</input>
-							</td>
-						</tr>
-					</table>
-				</xsl:when>
-			</xsl:choose>
-		</form>
-		<table>
-			<tr>
-				<td>
-					<form id="workorder_cancel" name="workorder_cancel" method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}">
+			<div class="proplist-col">
+				<xsl:choose>
+					<xsl:when test="mode='edit'">
+						<input type="hidden" name="values[save]" value="1"/>
+						<input type="submit" class="pure-button pure-button-primary" name="save" value="{$lang_save}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="title">
-								<xsl:value-of select="lang_done_statustext"/>
+								<xsl:value-of select="lang_save_statustext"/>
 							</xsl:attribute>
 						</input>
-					</form>
-				</td>
-				<xsl:choose>
+					</xsl:when>
 					<xsl:when test="mode='view'">
-						<td>
-							<xsl:variable name="edit_action">
-								<xsl:value-of select="edit_action"/>
-							</xsl:variable>
-							<xsl:variable name="lang_edit">
-								<xsl:value-of select="lang_edit"/>
-							</xsl:variable>
-							<form method="post" action="{$edit_action}">
-								<input type="submit" class="forms" name="edit" value="{$lang_edit}">
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_edit_statustext"/>
-									</xsl:attribute>
-								</input>
-							</form>
-						</td>
+						<input type="button" class="pure-button pure-button-primary" name="edit" value="{$lang_edit}" onClick="document.edit_form.submit();">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_edit_statustext"/>
+							</xsl:attribute>
+						</input>
 					</xsl:when>
 				</xsl:choose>
-			</tr>
-		</table>
-		</div>
-		<hr noshade="noshade" width="100%" align="center" size="1"/>
+				<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.done_form.submit();">
+					<xsl:attribute name="title">
+						<xsl:value-of select="lang_done_statustext"/>
+					</xsl:attribute>
+				</input>
+			</div>
+		</form>
+		
+		<xsl:variable name="done_action">
+			<xsl:value-of select="done_action"/>
+		</xsl:variable>
+		<form name="done_form" id="done_form" method="post" action="{$done_action}"></form>
+
+		<xsl:variable name="edit_action">
+			<xsl:value-of select="edit_action"/>
+		</xsl:variable>
+		<form name="edit_form" id="edit_form" method="post" action="{$edit_action}"></form>
+
 	</xsl:template>
 
 	<!-- New template-->
