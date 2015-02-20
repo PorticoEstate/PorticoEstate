@@ -1723,45 +1723,10 @@
 					array('disablePagination'	=> true)
 				)
 			);
-							
-			/*$so_budget = 0;
-			$so_cost = 0;
-			$so_obligation = 0;
-			$so_actual_cost = 0;
-			$so_diff = 0;
-			
-			$content_orders = $this->get_orders($id, date('Y'));			
-			foreach($content_orders as & $_order_entry)
-			{
-				$_order_entry['send_order'] = '';
-				if(isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
-				{
-					$_title = implode(';', $_order_entry['mail_recipients']);
-					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
-				}
-				
-				$so_budget += $_order_entry['budget'];
-				$so_cost += $_order_entry['cost'];
-				$so_obligation += $_order_entry['obligation'];
-				$so_actual_cost += $_order_entry['actual_cost'];
-				$so_diff += $_order_entry['diff'];
-			}*/
 			
 			$orders_def = array
 			(
-				/*array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink','value_footer'=>lang('Sum')),
-				array('key' => 'title','label'=>lang('title'),'sortable'=>true),
-				array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'className'=>'right'),
-				array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_budget, 0, ',', ' ')),
-				array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_cost, 0, ',', ' ')),
-				array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'className'=>'right'),
-				array('key' => 'obligation','label'=>lang('sum orders'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_obligation, 0, ',', ' ')),
-				array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_actual_cost, 0, ',', ' ')),
-				array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($so_diff, 0, ',', ' ')),
-				array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true),
-				array('key' => 'status','label'=>lang('Status'),'sortable'=>true),
-				array('key' => 'send_order','label'=>lang('send workorder'),'sortable'=>false,'className'=>'center')*/
-				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink'),
+				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink','value_footer'=>lang('Sum')),
 				array('key' => 'title','label'=>lang('title'),'sortable'=>true),
 				array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'className'=>'right'),
 				array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
@@ -1787,41 +1752,11 @@
 				)
 			);
 
-			/*$invoices = array();
-
-			$content_invoice = array();
-			if ($id)
-			{
-				$si_amount = 0;
-				$si_approved_amount = 0;
-				$content_invoice = $this->get_vouchers($id, date('Y'));
-				foreach($content_invoice as $_invoice_entry)
-				{
-					$si_amount += $_invoice_entry['amount'];
-					$si_approved_amount += $_invoice_entry['approved_amount'];
-				}
-			}*/
-
 			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : 'formatLink_voucher';
 			
 			$invoice_def = array
 			(
-				/*array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink','value_footer'=>lang('Sum')),
-				array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>true,'formatter'=>$_formatter_voucher_link),
-				array('key' => 'voucher_out_id','hidden'=>true),
-				array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false),
-				array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false),
-				array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2','value_footer'=>number_format($si_amount, 2, ',', ' ')),
-				array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2','value_footer'=>number_format($si_approved_amount, 2, ',', ' ')),
-				array('key' => 'period','label'=>lang('period'),'sortable'=>true),
-				array('key' => 'periodization','label'=>lang('periodization'),'sortable'=>false),
-				array('key' => 'periodization_start','label'=>lang('periodization start'),'sortable'=>false),
-				array('key' => 'currency','label'=>lang('currency'),'sortable'=>false),
-				array('key' => 'type','label'=>lang('type'),'sortable'=>true),
-				array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>true),
-				array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>true),
-				array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>true)*/
-				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink'),
+				array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'formatter'=>'formatLink','value_footer'=>lang('Sum')),
 				array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>true,'formatter'=>$_formatter_voucher_link),
 				array('key' => 'voucher_out_id','hidden'=>true),
 				array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false),
