@@ -114,7 +114,7 @@
 						return intVal(a) + intVal(b);
 				}) : 0;
 
-			pageTotal = $.number( pageTotal, 0, ',', ' ' );
+			pageTotal = $.number( pageTotal, 2, ',', ' ' );
 			$(api.column(col).footer()).html(pageTotal);	
 		});	
 	}
