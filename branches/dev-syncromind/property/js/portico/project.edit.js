@@ -67,6 +67,58 @@
 	  	}
 	};
 
+	function sum_columns_table_orders()
+	{
+		var api = oTable1.api();
+		// Remove the formatting to get integer data for summation
+		var intVal = function ( i ) {
+			return typeof i === 'string' ?
+				i.replace(/[\$,]/g, '')*1 :
+				typeof i === 'number' ?
+					i : 0;
+		};
+
+		var columns = ["3", "4", "6", "7", "8"];
+
+		columns.forEach(function(col) 
+		{
+			data = api.column( col, { page: 'current'} ).data();
+			pageTotal = data.length ?
+				data.reduce(function (a, b){
+						return intVal(a) + intVal(b);
+				}) : 0;
+
+			pageTotal = $.number( pageTotal, 0, ',', ' ' );
+			$(api.column(col).footer()).html(pageTotal);	
+		});	
+	}
+		
+	function sum_columns_table_invoice()
+	{
+		var api = oTable2.api();
+		// Remove the formatting to get integer data for summation
+		var intVal = function ( i ) {
+			return typeof i === 'string' ?
+				i.replace(/[\$,]/g, '')*1 :
+				typeof i === 'number' ?
+					i : 0;
+		};
+
+		var columns = ["4", "5"];
+
+		columns.forEach(function(col) 
+		{
+			data = api.column( col, { page: 'current'} ).data();
+			pageTotal = data.length ?
+				data.reduce(function (a, b){
+						return intVal(a) + intVal(b);
+				}) : 0;
+
+			pageTotal = $.number( pageTotal, 0, ',', ' ' );
+			$(api.column(col).footer()).html(pageTotal);	
+		});	
+	}
+	
 $(document).ready(function(){
 
 	$("#global_category_id").change(function()
@@ -97,12 +149,16 @@ $(document).ready(function(){
 		var oArgs1 = {menuaction:'property.uiproject.get_orders', project_id:project_id, year:$(this).val()};
 		var requestUrl1 = phpGWLink('index.php', oArgs1, true);
 		JqueryPortico.updateinlineTableHelper(oTable1, requestUrl1);
-		//var api = oTable1.api();
-		//api.column( 3 ).data().sum();
 		
 		var oArgs2 = {menuaction:'property.uiproject.get_vouchers', project_id:project_id, year:$(this).val()};
 		var requestUrl2 = phpGWLink('index.php', oArgs2, true);
 		JqueryPortico.updateinlineTableHelper(oTable2, requestUrl2);
 	});
+	
+	var api1 = oTable1.api();
+	api1.on( 'draw', sum_columns_table_orders );
+			
+	var api2 = oTable2.api();
+	api2.on( 'draw', sum_columns_table_invoice );
 	
 });
