@@ -111,6 +111,7 @@
 			$this->criteria_id		= $this->bo->criteria_id;
 			$this->project_type_id	= $this->bo->project_type_id;
 			$this->filter_year		= $this->bo->filter_year;
+			$this->decimal_separator	= ',';
 		}
 
 		function save_sessiondata()
@@ -1579,7 +1580,7 @@
 			if(isset($values['reserve']) && $values['reserve']!=0)
 			{
 				$reserve_remainder=$values['reserve']-$values['deviation'];
-				$remainder_percent= number_format(($reserve_remainder/$values['reserve'])*100, 2, ',', '');
+				$remainder_percent= number_format(($reserve_remainder/$values['reserve'])*100, 2, $this->decimal_separator, '');
 				$values['sum'] = $values['sum'] + $values['reserve'];
 			}
 
@@ -1657,13 +1658,13 @@
 			if(isset($values['reserve']) && $values['reserve']!=0)
 			{
 				$reserve_remainder=$values['reserve']-$values['deviation'];
-				$remainder_percent= number_format(($reserve_remainder/$values['reserve'])*100, 2, ',', '');
+				$remainder_percent= number_format(($reserve_remainder/$values['reserve'])*100, 2, $this->decimal_separator, '');
 				$values['sum'] = $values['sum'] + $values['reserve'];
 			}
 
 			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
-			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
-			$value_remainder = number_format($value_remainder, 0, ',', ' ');
+			$values['sum']  = number_format($values['sum'], 0, $this->decimal_separator, ' ');
+			$value_remainder = number_format($value_remainder, 0, $this->decimal_separator, ' ');
 
 			if (isset($values['project_type_id']) && $values['project_type_id']==3)
 			{
@@ -1682,9 +1683,9 @@
 				(
 					array('key' => 'year','label'=>lang('year'),'sortable'=>false,'value_footer'=>lang('Sum')),
 					array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>true),
-					array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0','value_footer'=>number_format($s_amount_in, 0, ',', ' ')),
+					array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0','value_footer'=>number_format($s_amount_in, 0, $this->decimal_separator, ' ')),
 					array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'className'=>'right','formatter'=>'project_link'),
-					array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0','value_footer'=>number_format($s_amount_out, 0, ',', ' ')),
+					array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'className'=>'right','formatter'=>'FormatterAmount0','value_footer'=>number_format($s_amount_out, 0, $this->decimal_separator, ' ')),
 					array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'formatter'=>'project_link'),
 					array('key' => 'remark','label'=>lang('remark'),'sortable'=>true)
 				);
@@ -1695,11 +1696,11 @@
 				(
 					array('key' => 'year','label'=>lang('year'),'sortable'=>false,'value_footer'=>lang('Sum')),
 					array('key' => 'month','label'=>lang('month'),'sortable'=>false),
-					array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_budget, 0, ',', ' ')),
-					array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_orders, 0, ',', ' ')),
-					array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_actual_cost, 0, ',', ' ')),
-					array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_diff, 0, ',', ' ')),
-					array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_deviation, 0, ',', ' ')),
+					array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_budget, 0, $this->decimal_separator, ' ')),
+					array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_orders, 0, $this->decimal_separator, ' ')),
+					array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_actual_cost, 0, $this->decimal_separator, ' ')),
+					array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_diff, 0, $this->decimal_separator, ' ')),
+					array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($s_deviation, 0, $this->decimal_separator, ' ')),
 					array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
 					array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2'),
 					array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount2'),
@@ -1986,7 +1987,6 @@
 			$data = array
 			(
 					'datatable_def'						=> $datatable_def,
-					//'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'project_types'						=> array('options' => $this->bo->get_project_types($project_type_id)),
 					'project_type_id'					=> $values['project_type_id'],
 					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
@@ -2118,9 +2118,9 @@
 					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.edit', 'id' => $id)),
 					'lang_edit_statustext'				=> lang('Edit this entry '),
 					'lang_edit'							=> lang('Edit'),
+					'decimal_separator'					=> $this->decimal_separator,
 					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
-			//_debug_array($data);die;
 
 			if( $auto_create )
 			{
@@ -2177,7 +2177,6 @@
 			
 			$year = phpgw::get_var('year', 'int');
 			$draw = phpgw::get_var('draw', 'int');
-			$allrows = phpgw::get_var('length', 'int') == -1;
 			
 			$values = $this->bo->get_orders(array('project_id'=> $project_id,'year'=> $year));
 			foreach($values as & $_order_entry)
@@ -2190,30 +2189,9 @@
 				}
 			}
 			
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$total_records = count($values);
 
-			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
-
-			if($allrows)
-			{
-				$out = $values;
-			}
-			else
-			{
-				if ($total_records > $num_rows)
-				{
-					$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
-					$values_part = array_chunk($values, $num_rows);
-					$out = $values_part[$page];
-				}
-				else 
-				{
-					$out = $values;
-				}
-			}
-
-			$result_data = array('results' => $out);
+			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $total_records;
 			$result_data['draw'] = $draw;
@@ -2249,7 +2227,6 @@
 			
 			$year = phpgw::get_var('year', 'int');
 			$draw = phpgw::get_var('draw', 'int');
-			$allrows = phpgw::get_var('length', 'int') == -1;
 
 			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $project_id, 'year' => $year));
 			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $project_id, 'year' => $year, 'paid' => true));
@@ -2283,30 +2260,9 @@
 				);
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$total_records = count($values);
 
-			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
-
-			if($allrows)
-			{
-				$out = $values;
-			}
-			else
-			{
-				if ($total_records > $num_rows)
-				{
-					$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
-					$values_part = array_chunk($values, $num_rows);
-					$out = $values_part[$page];
-				}
-				else 
-				{
-					$out = $values;
-				}
-			}
-
-			$result_data = array('results' => $out);
+			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $total_records;
 			$result_data['draw'] = $draw;
