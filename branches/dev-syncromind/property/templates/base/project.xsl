@@ -39,7 +39,7 @@
 		    <xsl:variable name="lang_add_sub_entry">
 			<xsl:value-of select="lang_add_sub_entry"/>
 		    </xsl:variable>
-		    <input type="button" name="add_sub_entry" value="{$lang_add_sub_entry}" onClick="add_sub_entry()">
+		    <input type="button" class="pure-button pure-button-primary" name="add_sub_entry" value="{$lang_add_sub_entry}" onClick="add_sub_entry()">
 			<xsl:attribute name="title">
 			    <xsl:value-of select="lang_add_sub_entry_statustext"/>
 			</xsl:attribute>
@@ -49,9 +49,12 @@
 	</xsl:choose>
     </table>
     <form ENCTYPE="multipart/form-data" method="post" id="form" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
-		<div id="project_tabview">
+		<div id="tab-content">
 			<!--input type="hidden" name="tab" value=""/-->
 			<!--div class="yui-navset" id="project_tabview"-->
+			<xsl:variable name="decimal_separator">
+				<xsl:value-of select="decimal_separator"/>
+			</xsl:variable>
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="general">
 				<fieldset>
@@ -337,7 +340,7 @@
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'move')"/>
 								</label>
-								<input type="text" data-validation="number" name="values[new_project_id]" value="">
+								<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[new_project_id]" value="">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
 									</xsl:attribute>
@@ -354,7 +357,7 @@
 						</label>
 						<div class="pure-custom">
 							<div>
-								<input data-validation="number" type="text" name="values[budget]" value="">
+								<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[budget]" value="">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 									</xsl:attribute>
@@ -488,7 +491,7 @@
 								<label for="name">
 									<xsl:value-of select="lang_reserve"/>
 								</label>
-								<input data-validation="number" type="text" name="values[reserve]" value="{value_reserve}">
+								<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[reserve]" value="{value_reserve}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_reserve_statustext"/>
 									</xsl:attribute>
