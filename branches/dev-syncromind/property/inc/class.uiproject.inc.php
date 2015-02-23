@@ -2311,6 +2311,7 @@
 			$start_date 	= phpgw::get_var('start_date');
 			$end_date 		= phpgw::get_var('end_date');
 			$get_list		= phpgw::get_var('get_list', 'bool', 'POST');
+			//print_r($_REQUEST); die;
 			$execute		= phpgw::get_var('execute', 'bool', 'POST');
 			$status_filter 	= phpgw::get_var('status_filter');
 			$status_new 	= phpgw::get_var('status_new');
@@ -2365,6 +2366,8 @@
 
 			if(($execute || $get_list) && $type)
 			{
+				//echo "start_date:".$start_date."<br>end_date:". $end_date."<br>status_filter:". $status_filter."<br>status_new:". $status_new."<br>execute:". $execute."<br>type:". $type."<br>user_id:". $user_id."<br>ids:".print_r($ids)."<br>paid:".$paid."<br>closed_orders:".$closed_orders."<br>ecodimb:".$ecodimb."<br>transfer_budget:".$transfer_budget."<br>new_budget:".print_r($new_budget)."<br>b_account_id:".$b_account_id;
+				//die;
 				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget,$b_account_id);
 			}
 
@@ -2556,17 +2559,21 @@
 				$year++;
 			}
 
-			$property_js = "/property/js/yahoo/property2.js";
+			/*$property_js = "/property/js/yahoo/property2.js";
 
 			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
+			}*/
 
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$data = array
 			(
-				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				//'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'year_list'				=> array('options' => $year_list),
 				'datatable'				=> $datavalues,
 				'myColumnDefs'			=> $myColumnDefs,
@@ -2586,6 +2593,7 @@
 				'check_closed_orders'	=> $type == 'project' ? 1 : 0,
 				'type'					=> $type,
 				'b_account_data'		=> $b_account_data,
+				'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'td_count'				=> $td_count
 			);
 
@@ -2595,7 +2603,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			phpgwapi_yui::load_widget('dragdrop');
+			/*phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('connection');
@@ -2609,13 +2617,14 @@
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');*/
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.bulk_update_status', 'property' );
+			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.bulk_update_status', 'property' );
 
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('bulk_update_status' => $data));
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
+			self::render_template_xsl(array('project'), array('bulk_update_status' => $data));
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('bulk_update_status' => $data));
 		}
 
 		function view()
@@ -2824,7 +2833,7 @@
 				}
 			}
 			
-			return phpgwapi_jquery::tabview_generate($tabs, $active_tab,'project_tabview');
+			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		}
 		/*
 		protected function _generate_tabs2($tabs_ = array(), $suppress = array(), $selected = 'general')
