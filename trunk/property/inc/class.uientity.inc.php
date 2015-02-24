@@ -69,7 +69,8 @@
 				'get_inventory'		=> true,
 				'add_inventory'		=> true,
 				'edit_inventory'	=> true,
-				'inventory_calendar'=> true
+				'inventory_calendar'=> true,
+			'get_controls_at_component'=>true
 			);
 
 		function property_uientity()
@@ -1955,6 +1956,13 @@ JS;
 					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
+				if(true)
+				{
+					$tabs['controller']	= array('label' => lang('controller'), 'link' => '#controller', 'function' => "set_tab('controller')");
+					$active_tab = $active_tab ? $active_tab : 'location';
+					$GLOBALS['phpgw']->jqcal->add_listener('control_start_date');
+				}
+
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
@@ -2384,7 +2392,7 @@ JS;
 				);
 
 
-				if($category['enable_bulk'])
+//				if($category['enable_bulk'])
 				{
 					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory', 'function' => "set_tab('inventory')");
 
@@ -2424,6 +2432,37 @@ JS;
 				}
 
 			}
+					$_controls = $this->get_controls_at_component($location_id, $id);
+
+					$datavalues[4] = array
+					(
+						'name'					=> "4",
+						'values' 				=> json_encode($_controls),
+						'total_records'			=> count($_controls),
+						'edit_action'			=> "''",
+						'is_paginator'			=> 0,
+						'footer'				=> 1
+					);
+
+					$myColumnDefs[4] = array
+					(
+						'name'		=> "4",
+						'values'	=>	json_encode(array(
+								array('key' => 'control_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'assigned_to_name','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
+		//						array('key' => 'enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'location_id','hidden'=>true),
+								array('key' => 'component_id','hidden'=>true),
+								array('key' => 'id','hidden'=>true),
+								array('key' => 'assigned_to','hidden'=>true),
+							)
+						)
+					);
+				
 
 			$property_js = "/property/js/yahoo/property2.js";
 
@@ -2452,6 +2491,7 @@ JS;
 
 			$data = array
 			(
+					'controller'					=> true,
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
@@ -3433,5 +3473,68 @@ JS;
 			}
 			echo "Planlagt: Visning av kalenderoppføringer for ressursen";
 			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function get_controls_at_component( $location_id = 0, $id = 0 )
+		{
+			if(!$location_id)
+			{
+				$entity_id				= phpgw::get_var('entity_id', 'int');
+				$cat_id					= phpgw::get_var('cat_id', 'int');
+				$type					= phpgw::get_var('type', 'string', 'REQUEST', 'entity');
+
+				$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$type], ".{$type}.{$entity_id}.{$cat_id}");
+			}
+
+			$id				= $id ? $id : phpgw::get_var('id', 'int');
+
+			if(!$this->acl_read)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$repeat_type_array = array
+				(
+					"0"=> lang('day'),
+					"1"=> lang('week'),
+					"2"=> lang('month'),
+					"3"=> lang('year')
+				);
+
+			$control_link_data = array
+				(
+					'menuaction'	=> 'controller.uicalendar.view_calendar_year_for_locations',
+					'control_id'	=> $entry['control_id'],
+					'location_id'	=> $location_id,
+					'component_id'	=> $id,
+				);
+
+			$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $id));
+			foreach($controls as &$entry)
+			{
+				$menuaction	= 'controller.uicalendar.view_calendar_year_for_locations';
+				if($entry['repeat_type'] < 2)
+				{
+					$menuaction	= 'controller.uicalendar.view_calendar_month_for_locations';
+				}
+
+				$control_link_data = array
+				(
+					'menuaction'	=> $menuaction,
+					'control_id'	=> $entry['control_id'],
+					'location_id'	=> $location_id,
+					'component_id'	=> $id,
+				);
+				$entry['title'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$control_link_data).'" target="_blank">'.$entry['title'].'</a>';
+
+				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
+			}
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+					return json_encode($controls);
+			}
+			return $controls;
 		}
 	}

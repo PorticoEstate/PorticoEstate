@@ -60,7 +60,8 @@
 				'read_single'	=> true,
 				'save'			=> true,
 				'delete'		=> true,
-				'check_perms'	=> true
+				'check_perms'	=> true,
+				'add_control'	=> true
 			);
 
 		var $type_app = array();
@@ -898,6 +899,125 @@ JS;
 			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
 			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
 			return $this->so->edit_inventory($values);
+		}
+
+		public function add_control()
+		{
+			$entity_id				= phpgw::get_var('entity_id', 'int');
+			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$id						= phpgw::get_var('id', 'int');
+			$type					= phpgw::get_var('type', 'string', 'REQUEST', 'entity');
+			$control_id				= phpgw::get_var('control_id', 'int');
+			$assigned_to			= phpgw::get_var('control_responsible', 'int');
+			$start_date				= phpgw::get_var('control_start_date', 'string');
+
+			$component_arr = $this->so->read_single(array('entity_id' => $entity_id, 'cat_id'=> $cat_id, 'id' => $id));
+
+			$location_code = $component_arr['location_code'];
+
+			if($start_date)
+			{
+				phpgw::import_class('phpgwapi.datetime');
+				$start_date = phpgwapi_datetime::date_to_timestamp($start_date);
+			}
+
+			$result =  array
+			(
+				'status_kode'=> 'error',
+				'status'	=> lang('error'),
+				'msg'		=> lang('Missing input')
+			);
+
+			if($control_id && $assigned_to && $id)
+			{
+				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
+				{
+					$receipt['error'][]=true;
+					$result =  array
+					(
+						'status_kode'=> 'error',
+						'status'	=> lang('error'),
+						'msg'		=> lang('you are not approved for this task')
+					);
+
+				}
+				if(!$receipt['error'])
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$type], ".{$type}.{$entity_id}.{$cat_id}");
+
+					$so_control	= CreateObject('controller.socontrol');
+					$values = array
+					(
+						'register_component'	=> array("{$control_id}_{$location_id}_{$id}"),
+						'assigned_to'			=> $assigned_to,
+						'start_date'			=> $start_date
+					);
+
+					if($so_control->register_control_to_component($values))
+					{
+						$this->add_check_list(array('location_id'=>$location_id, 'component_id' => $id, 'control_id' => $control_id, 'assigned_to' => $assigned_to, 'start_date' => $start_date, 'location_code' => $location_code));
+						$result =  array
+						(
+							'status_kode'=> 'ok',
+							'status'	=> 'Ok',
+							'msg'		=> lang('updated')
+
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status_kode'=> 'error',
+							'status'	=> lang('error'),
+							'msg'		=> 'Noe gikk galt'
+						);
+					}
+				}
+			}
+			return $result;
+		}
+
+		function add_check_list($data = array())
+		{
+			phpgw::import_class('controller.socheck_list');
+			include_class('controller', 'check_list', 'inc/model/');
+
+			$control_id = $data['control_id'];
+			$type = 'component';
+			$comment = '';
+			$assigned_to = $data['assigned_to'];
+			$billable_hours = phpgw::get_var('billable_hours', 'float');
+
+			$deadline_date_ts = $data['start_date'];
+			$planned_date_ts	= $deadline_date_ts;
+			$completed_date_ts	= 0;
+
+			$check_list = new controller_check_list();
+			$check_list->set_control_id($control_id);
+			$check_list->set_location_code($data['location_code']);
+			$check_list->set_location_id($data['location_id']);
+			$check_list->set_component_id($data['component_id']);
+
+			$status = controller_check_list::STATUS_NOT_DONE;
+			$check_list->set_status($status);
+			$check_list->set_comment($comment);
+			$check_list->set_deadline($deadline_date_ts);
+			$check_list->set_planned_date($planned_date_ts);
+			$check_list->set_completed_date($completed_date_ts);
+			$check_list->set_assigned_to($assigned_to);
+			$check_list->set_billable_hours($billable_hours);
+
+			$socheck_list = CreateObject('controller.socheck_list');
+
+			if($check_list->validate() && $check_list_id = $socheck_list->store($check_list))
+			{
+				return $check_list_id ;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 	}
