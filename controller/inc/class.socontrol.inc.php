@@ -137,7 +137,7 @@
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
 				. " {$this->join} controller_control_location_list ON controller_control_location_list.control_id = controller_control.id"
-				. " WHERE assigned_to = {$user_id} AND status = 0";
+				. " WHERE controller_check_list.assigned_to = {$user_id} AND status = 0";
 
 //_debug_array($sql);
 			if( $repeat_type )
@@ -219,7 +219,7 @@
 					. " ON (controller_control_component_list.control_id = controller_check_list.control_id"
 					. " AND controller_control_component_list.location_id = controller_check_list.location_id"
 					. " AND controller_control_component_list.component_id = controller_check_list.component_id)"
-				. " WHERE assigned_to = {$user_id} AND status = 0";
+				. " WHERE controller_check_list.assigned_to = {$user_id} AND status = 0";
 
 			if( $repeat_type )
 			{
