@@ -81,19 +81,43 @@
 							"sRowSelect": "multi",
 							"aButtons":
 								[
-									"select_all",
-									"select_none",
 									<xsl:choose>
 										<xsl:when test="download">
 										{
 											"sExtends": "download",
 											"sButtonText": "Download",
 											"sUrl": '<xsl:value-of select="download"/>'
-										},
+										}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 										</xsl:when>
 									</xsl:choose>
 									<xsl:for-each select="$tabletools">
 										<xsl:choose>
+											<xsl:when test="my_name = 'select_all'">
+												{
+													sExtends: 'select_all',
+													fnClick: function (nButton, oConfig, oFlash) {
+														TableTools.fnGetInstance('<xsl:value-of select="$container"/>').fnSelectAll();
+														//In case there are checkboxes
+														$(".mychecks").each(function()
+														{
+															 $(this).prop("checked", true);
+														});
+													}
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
+											</xsl:when>
+											<xsl:when test="my_name = 'select_none'">
+												{
+													sExtends: 'select_none',
+													fnClick: function (nButton, oConfig, oFlash) {
+														TableTools.fnGetInstance('<xsl:value-of select="$container"/>').fnSelectNone();
+														//In case there are checkboxes
+														$(".mychecks").each(function()
+														{
+															 $(this).prop("checked", false);
+														});
+													}
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
+											</xsl:when>
 											<xsl:when test="type = 'custom'">
 												{
 													sExtends:		"select",
