@@ -1022,12 +1022,12 @@
 					</xsl:choose>
 					<div class="pure-control-group">
 						<label for="name"></label>
-						<input type="submit" name="get_list">
+						<input type="submit" class="pure-button pure-button-primary" name="get_list">
 							<xsl:attribute name="value">
 								<xsl:value-of select="php:function('lang', 'get list')"/>
 							</xsl:attribute>
 						</input>
-						<input type="submit" name="execute" onClick="onActionsClick()">
+						<input type="submit" class="pure-button pure-button-primary" name="execute" onClick="onActionsClick()">
 							<xsl:attribute name="value">
 								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:attribute>
