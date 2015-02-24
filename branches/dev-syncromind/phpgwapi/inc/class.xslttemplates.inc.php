@@ -395,6 +395,7 @@ XSLT;
 			$xsl->loadXML($this->xsldata);
 
 			// Configure the transformer
+			libxml_use_internal_errors(true);
 			$proc = new XSLTProcessor;
 			$proc->registerPHPFunctions();
 			$proc->importStyleSheet($xsl); // attach the xsl rules
@@ -416,7 +417,10 @@ XSLT;
 					echo '<div class="error">';
 					echo $message;
 					echo '</div>';
-					_debug_array(libxml_get_last_error());
+					$errors = libxml_get_errors();
+					_debug_array($errors);
+					libxml_clear_errors();
+
 					echo "<h2>xml-data</h2>";
 					$this->list_lineno($this->xmldata, true);
 

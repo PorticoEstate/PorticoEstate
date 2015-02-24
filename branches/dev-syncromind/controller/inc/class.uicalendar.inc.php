@@ -682,8 +682,14 @@
 			static $_location_name = array();
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
-			$year = intval(phpgw::get_var('year'));
-			$month = intval(phpgw::get_var('month'));
+			if(!$year = intval(phpgw::get_var('year')))
+			{
+				$year = date('Y');
+			}
+			if(!$month = intval(phpgw::get_var('month')))
+			{
+				$month = date('m');
+			}
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
