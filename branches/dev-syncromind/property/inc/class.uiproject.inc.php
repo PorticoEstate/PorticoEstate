@@ -1768,7 +1768,7 @@
 				array('key' => 'periodization','label'=>lang('periodization'),'sortable'=>false),
 				array('key' => 'periodization_start','label'=>lang('periodization start'),'sortable'=>false),
 				array('key' => 'currency','label'=>lang('currency'),'sortable'=>false),
-				array('key' => 'type','label'=>lang('type'),'sortable'=>true),
+				array('key' => 'type','label'=>  \lang('type'),'sortable'=>true),
 				array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>true),
 				array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>true),
 				array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>true)
@@ -2366,8 +2366,8 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				//echo "start_date:".$start_date."<br>end_date:". $end_date."<br>status_filter:". $status_filter."<br>status_new:". $status_new."<br>execute:". $execute."<br>type:". $type."<br>user_id:". $user_id."<br>ids:".print_r($ids)."<br>paid:".$paid."<br>closed_orders:".$closed_orders."<br>ecodimb:".$ecodimb."<br>transfer_budget:".$transfer_budget."<br>new_budget:".print_r($new_budget)."<br>b_account_id:".$b_account_id;
-				//die;
+				echo "start_date:".$start_date."<br>end_date:". $end_date."<br>status_filter:". $status_filter."<br>status_new:". $status_new."<br>execute:". $execute."<br>type:". $type."<br>user_id:". $user_id."<br>ids:".print_r($ids)."<br>paid:".$paid."<br>closed_orders:".$closed_orders."<br>ecodimb:".$ecodimb."<br>transfer_budget:".$transfer_budget."<br>new_budget:".print_r($new_budget)."<br>b_account_id:".$b_account_id;
+				die;
 				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget,$b_account_id);
 			}
 
@@ -2422,10 +2422,12 @@
 				}
 
 				$entry['obligation'] = $_obligation;
+				
+				$entry['link'] = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>"property.ui{$type}.edit", 'id'=>$entry['id']));
 			}
 
 			$total_records	= count($list);
-			$datavalues[0] = array
+			/*$datavalues[0] = array
 			(
 				'name'					=> "0",
 				'values' 				=> json_encode($list),
@@ -2434,50 +2436,46 @@
 				'permission'   			=> "''",
 				'is_paginator'			=> 0,
 				'footer'				=> 1
-			);
-
+			);*/
+			
 			switch($type)
 			{
 				case 'project':
-					$myColumnDefs[0] = array
+					$myColumnDefs = array
 					(
-						'name'		=> "0",
-						'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
-														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
-														))
+						array('key' => 'id','label'=>lang('id'),'sortable'=>true,'formatter'=>'JqueryPortico.formatLink'),
+						array('key' => 'start_date','label'=>lang('date'),'sortable'=>false),
+						array('key' => 'title','label'=>lang('title'),'sortable'=>true),
+						array('key' => 'status','label'=>lang('status'),'sortable'=>true),
+						array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+						array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true),
+						array('key' => 'budget','label'=>lang('budget'),'sortable'=>false),
+						array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+						array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false),
+						array('key' => 'select','label'=> lang('select'),'sortable'=>false,'className'=>'center','formatter'=>'myFormatterCheck')
 					);
 					$b_account_data = array();
 					$td_count = 9;
 					break;
+				
 				case 'workorder':
 					$lang_actual_cost = $paid ? lang('actual cost') . ' ' . lang('total') : lang('actual cost') . ' ' . (date('Y')-1);
 					
-					$myColumnDefs[0] = array
+					$myColumnDefs = array
 					(
-						'name'		=> "0",
-						'values'	=>	json_encode(array(
-														array('key' => 'project_id','label'=>lang('project'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'b_account_id','label'=>lang('budget account'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'actual_cost','label'=>$lang_actual_cost,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
-														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
-														))
+						array('key' => 'project_id','label'=>lang('project'),'sortable'=>true),
+						array('key' => 'id','label'=>lang('id'),'sortable'=>true,'formatter'=>'JqueryPortico.formatLink'),
+						array('key' => 'start_date','label'=>lang('date'),'sortable'=>false),
+						array('key' => 'title','label'=>lang('title'),'sortable'=>true),
+						array('key' => 'status','label'=>lang('status'),'sortable'=>true),
+						array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true),
+						array('key' => 'b_account_id','label'=>lang('budget account'),'sortable'=>true),
+						array('key' => 'budget','label'=>lang('budget'),'sortable'=>false),
+						array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+						array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>true),
+						array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false),
+						array('key' => 'actual_cost','label'=>$lang_actual_cost,'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+						array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'className'=>'center','formatter'=>'myFormatterCheck')
 					);
 
 
@@ -2493,6 +2491,16 @@
 					break;
 			}
 
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($list),
+				'ColumnDefs'	=> $myColumnDefs,
+				'config'		=> array(
+					array('disableFilter'	=> true)
+				)
+			);
 
 			$user_list	= $this->bocommon->get_user_list('select', $user_id, $extra=false, $default = $user_id, $start=-1, $sort='ASC', $order='account_lastname',$query='',$offset=-1);
 			foreach ($user_list as &$entry)
@@ -2574,9 +2582,10 @@
 			$data = array
 			(
 				//'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'datatable_def'			=> $datatable_def,
 				'year_list'				=> array('options' => $year_list),
-				'datatable'				=> $datavalues,
-				'myColumnDefs'			=> $myColumnDefs,
+				//'datatable'				=> $datavalues,
+				//'myColumnDefs'			=> $myColumnDefs,
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'update_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.bulk_update_status')),
 				'status_list_filter'	=> array('options' => $status_list_filter),
@@ -2621,9 +2630,10 @@
 
 			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.bulk_update_status', 'property' );
 
-
+			phpgwapi_jquery::load_widget('numberformat');
 			//$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
-			self::render_template_xsl(array('project'), array('bulk_update_status' => $data));
+			self::add_javascript('property', 'portico', 'project.bulk_update_status.js');
+			self::render_template_xsl(array('project','datatable_inline'), array('bulk_update_status' => $data));
 			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('bulk_update_status' => $data));
 		}
 
