@@ -965,3 +965,29 @@
 		}
 	}
 
+	/**
+	* Assign responsible user to control at componant from date.
+	**/
+	$test[] = '0.1.48';
+	function controller_upgrade0_1_48()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','assigned_to',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','start_date',array(
+			'type' => 'int',
+			'precision' => '8',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.49';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}

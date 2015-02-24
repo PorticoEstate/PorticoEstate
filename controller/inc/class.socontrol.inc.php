@@ -132,7 +132,7 @@
 			$check_list_array = array();
 			
 			$sql  = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
-				. " procedure_id,requirement_id,costresponsibility_id,description, start_date, end_date,deadline,planned_date, completed_date,"
+				. " procedure_id,requirement_id,costresponsibility_id,description, controller_control.start_date, end_date,deadline,planned_date, completed_date,"
 				. " control_area_id, repeat_type,repeat_interval, title"
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
@@ -211,7 +211,7 @@
 
 		
 			$sql  = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
-				. " controller_control.description, start_date, end_date, deadline,planned_date, completed_date,"
+				. " controller_control.description, controller_control.start_date, end_date, deadline,planned_date, completed_date,"
 				. " control_area_id,controller_check_list.location_id,title,controller_check_list.component_id"
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
@@ -827,6 +827,8 @@
 		*/
 		function register_control_to_component($data)
 		{
+			$assigned_to	= isset($data['assigned_to']) && $data['assigned_to'] ? $data['assigned_to'] : null;
+			$start_date			= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : null;
 
 			$delete_component = array();
 			$add_component = array();
@@ -861,10 +863,17 @@
 			
 					if(!$this->db->next_record())
 					{
-						$sql =  "INSERT INTO controller_control_component_list (control_id, location_id, component_id) ";
-						$sql .= "VALUES ( {$control_id}, {$location_id}, {$component_id})";
-						
-						$this->db->query($sql);
+						$values_insert = array
+						(
+							'control_id'		=> $control_id,
+							'location_id'		=> $location_id,
+							'component_id'		=> $component_id,
+							'assigned_to'		=> $assigned_to,
+							'start_date'		=> $start_date
+						);
+
+						$this->db->query("INSERT INTO controller_control_component_list (" . implode(',',array_keys($values_insert)) . ') VALUES ('
+						 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
 					}
 				}
 			}
@@ -902,6 +911,64 @@
 		{
 			$sql =  "INSERT INTO controller_control_component_list (control_id, component_id) values($control_id, $component_id)";
 			$this->db->query($sql);
+		}
+
+		/**
+		 * Get all controls assosiated with a component
+		 * 
+		 * @param array $data location_id and component_id
+		 * @return array controls assosiated with a component
+		 * @throws Exception if missing valid input
+		 */
+		function get_controls_at_component($data)
+		{
+			if(!isset($data['location_id']) || !$data['location_id'])
+			{
+				throw new Exception("controller_socontrol::get_controls_at_component - Missing location_id in input");
+			}
+			if(!isset($data['component_id']) || !$data['component_id'])
+			{
+				throw new Exception("controller_socontrol::get_controls_at_component - Missing component_id in input");
+			}
+
+			static $users = array(); // cache result
+
+			$location_id = (int)$data['location_id'];
+			$component_id = (int)$data['component_id'];
+
+			$sql = "SELECT controller_control_component_list.* , controller_control.title, repeat_type, repeat_interval, enabled"
+			. "  FROM controller_control_component_list"
+			. " {$this->db->join} controller_control ON controller_control.id = controller_control_component_list.control_id WHERE location_id = {$location_id} AND component_id = {$component_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$controls = array();
+
+			while ($this->db->next_record())
+			{
+				$controls[] = array
+				(
+					'id'			=> $this->db->f('id'),
+					'control_id'	=> $this->db->f('control_id'),
+					'title'			=> $this->db->f('title',true),
+					'location_id'	=> $this->db->f('location_id'),
+					'component_id'	=> $this->db->f('component_id'),
+					'assigned_to'	=> $this->db->f('assigned_to'),
+					'start_date'	=> $this->db->f('start_date'),
+					'repeat_type'	=> $this->db->f('repeat_type'),
+					'repeat_interval'	=> $this->db->f('repeat_interval'),
+					'enabled'	=> $this->db->f('enabled'),
+				);
+			}
+
+			foreach($controls as &$entry)
+			{
+				if(!isset($users[$entry['assigned_to']]))
+				{
+					$users[$entry['assigned_to']] = $GLOBALS['phpgw']->accounts->get($entry['assigned_to'])->__toString();
+				}
+				$entry['assigned_to_name'] = $users[$entry['assigned_to']];
+			}
+			return $controls;
+
 		}
 
 		function get_id_field_name($extended_info = false)

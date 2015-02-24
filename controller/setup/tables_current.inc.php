@@ -143,10 +143,12 @@
 		),
 		'controller_control_component_list' => array(
 				'fd' => array(
-					'id' 						=> array('type' => 'auto', 'nullable' => false),
+					'id' 				=> array('type' => 'auto', 'nullable' => false),
 					'control_id' 		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'location_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'component_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false)
+					'location_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'component_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'assigned_to'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+					'start_date'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				),
 			'pk' => array('id'),
 			'fk' => array(),
