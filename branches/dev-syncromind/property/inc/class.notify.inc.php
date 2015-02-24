@@ -321,7 +321,12 @@ JS;
 				array('id' =>'delete','type'=>'buttons', 'value'=>'delete', 'label'=> lang('Delete'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 			);
 			
-			$tabletools = array();
+			$tabletools = array
+			(
+				array('my_name'	=> 'select_all'),
+				array('my_name'	=> 'select_none')
+			);
+			
 			foreach($buttons as $entry)
 			{
 				$tabletools[] = array
