@@ -2489,7 +2489,8 @@
 				'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs,
 				'config'		=> array(
-					array('disableFilter'	=> true)
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
 				)
 			);
 
