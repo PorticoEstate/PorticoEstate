@@ -2220,7 +2220,8 @@
 				'origin_id'			=> $id
 			);
 
-
+			$conditions = "";
+			
 			$data = array
 				(
 					'datatable_def'						=> $datatable_def,
@@ -2360,12 +2361,13 @@
 					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
 					'value_consume'						=> isset($receipt['error']) ? $values['consume_value'] : '',
 					'value_multiplier'					=> $values['multiplier'],
-					'value_total_cost_estimate'			=> $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']) , 0, ',', ' ') : ''
+					'value_total_cost_estimate'			=> $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']) , 0, ',', ' ') : '',
+					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 			$appname	= lang('request');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
+			
 			self::add_javascript('property', 'portico', 'request.edit.js');
 			self::render_template_xsl(array('request', 'datatable_inline', 'files','attributes_form'), array('edit' => $data));
 		}
