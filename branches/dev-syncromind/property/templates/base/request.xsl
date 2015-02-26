@@ -7,12 +7,10 @@
 			<xsl:when test="view">
 				<xsl:apply-templates select="view"/>
 			</xsl:when>
-			<xsl:when test="priority_key">
+			<xsl:when test="priority_form">
 				<xsl:apply-templates select="priority_form"/>
 			</xsl:when>
 		</xsl:choose>
-		<xsl:call-template name="jquery_phpgw_i18n"/>
-
 	</xsl:template>
 
 	<!-- New template-->
@@ -20,41 +18,42 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form name="form" id="form" method="post" action="{$form_action}"  class="pure-form pure-form-aligned">
-			<div align="left">
-				<table width="100%" cellpadding="2" cellspacing="2" align="center">
-					<xsl:choose>
-						<xsl:when test="msgbox_data != ''">
-							<tr>
-								<td align="left" colspan="3">
-									<xsl:call-template name="msgbox"/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:apply-templates select="priority_key"/>
-					<tr>
-						<td class="small_text" align="left">
-							<xsl:value-of select="php:function('lang', 'Authorities Demands')"/>
-						</td>
-						<td class="small_text" align="left">
+		<dl>
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</xsl:when>
+			</xsl:choose>
+		</dl>
+		<form name="form" id="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="generic">
+					<fieldset>
+						<xsl:apply-templates select="priority_key"/>
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="php:function('lang', 'Authorities Demands')"/>
+							</label>
 							<input type="text" size="5" name="values[authorities_demands]" value="{value_authorities_demands}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Authorities Demands')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr height="50">
-						<td>
+						</div>
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="php:function('lang', 'save')"/>
+							</label>
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:variable>
-							<input type="submit" name="values[update]" value="{$lang_save}">
-							</input>
-						</td>
-					</tr>
-				</table>
+							<input type="submit" name="values[update]" value="{$lang_save}"></input>
+						</div>
+					</fieldset>
+				</div>
 			</div>
 		</form>
 		<!-- to reload the table -->
@@ -69,33 +68,18 @@
 
 	<!-- New template-->
 	<xsl:template match="priority_key">
-		<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<td class="small_text" align="left">
+		<div class="pure-control-group">
+			<label for="name">
 				<xsl:value-of select="name"/>
 				<xsl:text>::</xsl:text>
 				<xsl:value-of select="descr"/>
-			</td>
-			<td class="small_text" align="left">
-				<input type="text" size="3" name="values[priority_key][{id}]" value="{priority_key}">
-					<xsl:attribute name="title">
-						<xsl:value-of select="lang_priority_key_statustext"/>
-					</xsl:attribute>
-				</input>
-			</td>
-		</tr>
+			</label>
+			<input type="text" size="3" name="values[priority_key][{id}]" value="{priority_key}">
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_priority_key_statustext"/>
+				</xsl:attribute>
+			</input>
+		</div>
 	</xsl:template>
 
 	<!-- add / edit -->
