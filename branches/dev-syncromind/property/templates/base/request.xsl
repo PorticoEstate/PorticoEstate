@@ -20,7 +20,7 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form method="post" action="{$form_action}">
+		<form name="form" id="form" method="post" action="{$form_action}"  class="pure-form pure-form-aligned">
 			<div align="left">
 				<table width="100%" cellpadding="2" cellspacing="2" align="center">
 					<xsl:choose>
@@ -188,7 +188,7 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}" class= "pure-form pure-form-aligned">
+		<form ENCTYPE="multipart/form-data" method="post" name="form" id="form" action="{$form_action}" class= "pure-form pure-form-aligned">
 		<div id="request_tabview">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="general">
@@ -297,7 +297,7 @@
 														<xsl:value-of select="php:function('lang', 'request status')"/>
 													</label>
 													<br/>
-													<select name="values[status]"  class='required' style="width:200px;">
+													<select name="values[status]" data-validation="required" style="width:200px;">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'Set the status of the request')"/>
 														</xsl:attribute>
@@ -392,7 +392,7 @@
 								<xsl:value-of select="php:function('lang', 'building part')"/>
 							</label>
 							<br/>
-							<select class='required' name="values[building_part]">
+							<select data-validation="required" name="values[building_part]">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'select building part')"/>
 								</xsl:attribute>
@@ -409,7 +409,7 @@
 								<xsl:value-of select="php:function('lang', 'request action title')"/>
 							</label>
 							<br/>
-							<input class='required' type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}">
+							<input data-validation="required" type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}">
 							</input>
 							<br/>
 							<xsl:variable name="lang_request_description">
@@ -724,7 +724,7 @@
 									<xsl:variable name="lang_edit">
 										<xsl:value-of select="php:function('lang', 'edit')"/>
 									</xsl:variable>
-									<input type="button" class="forms" name="edit" value="{$lang_edit}" onclick="location.href='{$edit_action}'">
+									<input type="button" class="pure-button pure-button-primary" name="edit" value="{$lang_edit}" onclick="location.href='{$edit_action}'">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'edit')"/>
 										</xsl:attribute>
