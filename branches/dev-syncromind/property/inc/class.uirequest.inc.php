@@ -81,6 +81,8 @@
 			$this->location_info		= $this->bo->location_info;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->config				= CreateObject('phpgwapi.config','property');
+			$this->config->read();
 			/*$this->acl_location			= $this->location_info['acl_location'];
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->location_info['acl_app']);
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->location_info['acl_app']);
@@ -491,8 +493,8 @@
 				return;
 			}
 
-			//$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
-			//$this->save_sessiondata();
+			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
+			$this->save_sessiondata();
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
 
@@ -536,21 +538,29 @@
 								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uirequest.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
 							),
 							array
-							 (
-								 'type'	=> 'date-picker',
-								 'id'	=> 'start_date',
-								 'name'	=> 'start_date',
-								 'value'	=> '',
-								 'text' => lang('from')
-							 ),
-							 array
-							 (
-								 'type'	=> 'date-picker',
-								 'id'	=> 'end_date',
-								 'name'	=> 'end_date',
-								 'value'	=> '',
-								 'text' => lang('to')
-							 )
+							(
+								'type'	=> 'link',
+								'value' => lang('Priority key'),
+								'href'	=> '#',
+								'class'	=> '',
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'})"
+							),
+							array
+							(
+								'type'	=> 'date-picker',
+								'id'	=> 'start_date',
+								'name'	=> 'start_date',
+								'value'	=> '',
+								'text' => lang('from')
+							),
+							array
+							(
+								'type'	=> 'date-picker',
+								'id'	=> 'end_date',
+								'name'	=> 'end_date',
+								'value'	=> '',
+								'text' => lang('to')
+							)
 						)
 					)
 				),
@@ -1604,10 +1614,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
-			//cramirez: necesary for windows.open . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('request'));
 			$GLOBALS['phpgw_info']['flags'][noheader] = true;
 			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -1622,6 +1628,10 @@
 				$this->config->save_repository();
 			}
 
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$function_msg	= lang('Edit priority key');
 			$link_data = array('menuaction' => 'property.uirequest.priority_key');
 
@@ -1632,7 +1642,7 @@
 			$function_exchange_values = '';
 			if ($receipt != '')
 			{
-				$function_exchange_values = "window.opener.myexecuteTEMP();";
+				$function_exchange_values = "window.parent.searchData('');";
 			}
 
 			$data = array
@@ -1644,11 +1654,11 @@
 					'lang_save'							=> lang('save'),
 					'priority_key'						=> $priority_key,
 					'exchange_values'  					=> $function_exchange_values,
-					'value_authorities_demands'			=> $values['authorities_demands']
+					'value_authorities_demands'			=> $values['authorities_demands'],
+					'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('priority_form' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			self::render_template_xsl('request', array('priority_form' => $data));
 		}
 
 
