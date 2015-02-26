@@ -170,7 +170,9 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-
+ 			$start_date = urldecode(phpgw::get_var('start_date'));
+			$end_date = urldecode(phpgw::get_var('end_date'));
+			
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
@@ -187,7 +189,9 @@
 				'building_part' => phpgw::get_var('building_part'),
 				'responsible_unit' => phpgw::get_var('responsible_unit'),
 				'recommended_year' => phpgw::get_var('recommended_year'),
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'start_date' => $start_date,
+				'end_date' => $end_date
 			);
 
 			foreach ( $this->location_info['fields'] as $field )
@@ -500,6 +504,10 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
+			
 			$appname			=  $this->location_info['name'];
 			$function_msg		= lang('list %1', $appname);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
@@ -526,7 +534,23 @@
 								'href' => '#',
 								'class' => '',
 								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uirequest.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
-							)
+							),
+							array
+							 (
+								 'type'	=> 'date-picker',
+								 'id'	=> 'start_date',
+								 'name'	=> 'start_date',
+								 'value'	=> '',
+								 'text' => lang('from')
+							 ),
+							 array
+							 (
+								 'type'	=> 'date-picker',
+								 'id'	=> 'end_date',
+								 'name'	=> 'end_date',
+								 'value'	=> '',
+								 'text' => lang('to')
+							 )
 						)
 					)
 				),
