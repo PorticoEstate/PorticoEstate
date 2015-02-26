@@ -1870,7 +1870,7 @@
 
 			$data = array
 				(
-                    'datatable_def'							=> $datatable_def,
+                    'datatable_def'					    => $datatable_def,
 					'td_count'							=> $td_count,
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'						=> json_encode(array('menuaction' => "property.uis_agreement.edit",'id'=>$id)),
@@ -1985,7 +1985,7 @@
 
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
-            $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
+            
             phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('s_agreement','datatable_inline','files','attributes_form'), array('edit' => $data));
@@ -1996,6 +1996,7 @@
 //			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 //			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 //			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
+            
 		}
 
 
