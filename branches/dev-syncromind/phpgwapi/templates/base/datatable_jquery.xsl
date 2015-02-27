@@ -355,11 +355,13 @@
 						<xsl:when test="hidden">
 							<xsl:if test="hidden =0">
 								<th>
+									<xsl:value-of select="value_footer"/>
 								</th>
 							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
 							<th>
+								<xsl:value-of select="value_footer"/>
 							</th>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -884,6 +886,12 @@
 		{
 			oTable.dataTableSettings[0]['ajax']['data'][param] = value;
 			oTable.fnDraw();
+		}
+		
+		function reloadData()
+		{
+			var api = oTable.api();
+			api.ajax.reload();
 		}
 ]]>
 	</script>
