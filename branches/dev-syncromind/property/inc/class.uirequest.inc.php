@@ -510,7 +510,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
 			
-			$appname			=  $this->location_info['name'];
+			$appname			= $this->location_info['name'];
 			$function_msg		= lang('list %1', $appname);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			
@@ -602,7 +602,7 @@
 			$uicols = $this->bo->uicols;
 
 			$count_uicols_name = count($uicols['name']);
-
+							
 			for($k=0;$k<$count_uicols_name;$k++)
 			{
 					$params = array(
@@ -615,16 +615,23 @@
 					{
 						$params['formatter'] = 'JqueryPortico.formatLink';
 					}
-					switch ($uicols['datatype'][$k])
+					
+					switch ($uicols['name'][$k])
 					{
-						case 'email':
-						case 'varchar':
-						case 'I':
-						case 'V':
-						$params['editor'] = true;
-						break;
+						case 'amount_investment':
+							$params['value_footer'] = number_format($this->bo->sum_investment, 0, ',', ' ');
+							break;
+						case 'amount_operation':
+							$params['value_footer'] = number_format($this->bo->sum_operation, 0, ',', ' ');
+							break;
+						case 'amount_potential_grants':
+							$params['value_footer'] = number_format($this->bo->sum_potential_grants, 0, ',', ' ');
+							break;
+						case 'consume':
+							$params['value_footer'] = number_format($this->bo->sum_consume, 0, ',', ' ');
+							break;
 					}
-
+					
 					array_push ($data['datatable']['field'], $params);
 			}
 
@@ -1642,7 +1649,7 @@
 			$function_exchange_values = '';
 			if ($receipt != '')
 			{
-				$function_exchange_values = "window.parent.searchData('');";
+				$function_exchange_values = "window.parent.reloadData();";
 			}
 
 			$data = array
