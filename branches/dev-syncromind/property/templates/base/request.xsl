@@ -44,13 +44,11 @@
 							</input>
 						</div>
 						<div class="pure-control-group">
-							<label for="name">
-								<xsl:value-of select="php:function('lang', 'save')"/>
-							</label>
+							<label for="name"></label>
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:variable>
-							<input type="submit" name="values[update]" value="{$lang_save}"></input>
+							<input type="submit" class="pure-button pure-button-primary" name="values[update]" value="{$lang_save}"></input>
 						</div>
 					</fieldset>
 				</div>
