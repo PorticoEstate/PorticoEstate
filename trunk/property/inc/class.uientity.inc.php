@@ -2283,53 +2283,6 @@ JS;
 					}
 				}
 
-				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
-				{
-
-					$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
-					$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-					$socase 			= CreateObject('controller.socase');
-					$controller_cases	= $socase->get_cases_by_component($location_id, $id);
-					
-					$_statustext = array();
-					$_statustext[0] = lang('open');
-					$_statustext[1] = lang('closed');
-					$_statustext[2] = lang('pending');
-				}
-				
-				foreach ($controller_cases as $case)
-				{
-					switch ($case['status'])
-					{
-						case 0:
-						case 2:
-							$_method = 'view_open_cases';
-							break;
-						case 1:
-							$_method = 'view_closed_cases';
-							break;
-						default:
-							$_method = 'view_open_cases';						
-					}
-
-					$_link = $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction' => "controller.uicase.{$_method}",
-						 	'check_list_id' => $case['check_list_id']
-						)
-					);
-					
-					$_target[] = array
-					(
-						'url'		=> "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
-						'type'		=> $lang_controller,
-						'title'		=> $case['descr'],
-						'status'	=> $_statustext[$case['status']],
-						'user'		=> $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
-						'entry_date'=> $GLOBALS['phpgw']->common->show_date($case['modified_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-					);
-					unset($_link);
-				}
 
 				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
 
@@ -2431,7 +2384,8 @@ JS;
 				
 				}
 
-			}
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+				{
 					$_controls = $this->get_controls_at_component($location_id, $id);
 
 					$datavalues[4] = array
@@ -2462,7 +2416,89 @@ JS;
 							)
 						)
 					);
-				
+
+					$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
+					$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+					$socase 			= CreateObject('controller.socase');
+					$controller_cases	= $socase->get_cases_by_component($location_id, $id);
+					$_statustext = array();
+					$_statustext[0] = lang('open');
+					$_statustext[1] = lang('closed');
+					$_statustext[2] = lang('pending');
+
+					$_cases = array();
+					foreach ($controller_cases as $case)
+					{
+						$socheck_list 	= CreateObject('controller.socheck_list');
+						$control_id	= $socheck_list->get_single($case['check_list_id'])->get_control_id();
+						foreach($_controls as $_control)
+						{
+							if($_control['control_id'] == $control_id)
+							{
+								$_control_name = $_control['title'];
+								break;
+							}
+						}
+//						_debug_array($check_list);die();
+
+						switch ($case['status'])
+						{
+							case 0:
+							case 2:
+								$_method = 'view_open_cases';
+								break;
+							case 1:
+								$_method = 'view_closed_cases';
+								break;
+							default:
+								$_method = 'view_open_cases';
+						}
+
+						$_link = $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction' => "controller.uicase.{$_method}",
+								'check_list_id' => $case['check_list_id']
+							)
+						);
+
+						$_cases[] = array
+						(
+							'url'		=> "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
+							'type'		=> $_control_name,
+							'title'		=> $case['descr'],
+							'status'	=> $_statustext[$case['status']],
+							'user'		=> $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
+							'entry_date'=> $GLOBALS['phpgw']->common->show_date($case['modified_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						);
+						unset($_link);
+					}
+
+					$datavalues[5] = array
+					(
+						'name'					=> "5",
+						'values' 				=> json_encode($_cases),
+						'total_records'			=> count($_cases),
+						'edit_action'			=> "''",
+						'is_paginator'			=> 1,
+						'footer'				=> 0
+					);
+
+					$myColumnDefs[5] = array
+					(
+						'name'		=> "5",
+						'values'	=>	json_encode(array(
+							array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+							array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+							array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+							)
+						)
+					);
+
+				}
+			}
 
 			$property_js = "/property/js/yahoo/property2.js";
 

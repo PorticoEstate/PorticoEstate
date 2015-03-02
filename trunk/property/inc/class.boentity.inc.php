@@ -953,9 +953,13 @@ JS;
 						'start_date'			=> $start_date
 					);
 
-					if($so_control->register_control_to_component($values))
+					if($add = $so_control->register_control_to_component($values))
 					{
-						$this->add_check_list(array('location_id'=>$location_id, 'component_id' => $id, 'control_id' => $control_id, 'assigned_to' => $assigned_to, 'start_date' => $start_date, 'location_code' => $location_code));
+						if($add == PHPGW_ACL_ADD)
+						{
+							$this->add_check_list(array('location_id'=>$location_id, 'component_id' => $id, 'control_id' => $control_id, 'assigned_to' => $assigned_to, 'start_date' => $start_date, 'location_code' => $location_code));
+						}
+
 						$result =  array
 						(
 							'status_kode'=> 'ok',
