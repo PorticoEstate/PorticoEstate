@@ -744,13 +744,37 @@
 								</input>
 
 							</fieldset>
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
+							<table>
+								<tr>
+									<td>
+									<xsl:value-of select="php:function('lang', 'controller')" />
+										
+									</td>
+									<td>
+									<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
 										<td>
 											<div id="datatable-container_4"/>
 										</td>
 									</tr>
 								</table>
+							</td>
+								</tr>
+								<tr>
+									<td>
+									<xsl:value-of select="php:function('lang', 'cases')" />
+									</td>
+									<td>
+								<table cellpadding="2" cellspacing="2" width="80%" align="center">
+									<tr>
+										<td>
+											<div id="datatable-container_5"/>
+										</td>
+									</tr>
+								</table>
+									</td>
+								</tr>
+							</table>
 
 							<xsl:call-template name="controller_integration">
 								<xsl:with-param name="controller" select ='controller'/>
