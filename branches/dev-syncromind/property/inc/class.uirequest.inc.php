@@ -56,6 +56,7 @@
 			'index' 		=> true,
 			'view'  		=> true,
 			'edit'  		=> true,
+			'add'			=> true,
 			'delete'		=> true,
 			'priority_key'	=> true,
 			'view_file'		=> true,
@@ -212,11 +213,15 @@
 			{
 				return $values;
 			}
-
+					
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['draw'] = $draw;
+			$result_data['amount_investment'] = number_format($this->bo->sum_investment, 0, ',', ' ');
+			$result_data['amount_operation'] = number_format($this->bo->sum_operation, 0, ',', ' ');
+			$result_data['amount_potential_grants'] = number_format($this->bo->sum_potential_grants, 0, ',', ' ');
+			$result_data['consume'] = number_format($this->bo->sum_consume, 0, ',', ' ');
 			
 			$link_data = array
 			(
@@ -523,10 +528,7 @@
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array(
-									'menuaction' => 'property.uirequest.add',
-									'appname'    => $this->bo->appname,
-									'type'       => $this->type,
-									'type_id'    => $this->type_id
+									'menuaction' => 'property.uirequest.add'
 									)),
 								'class' => 'new_item'
 							),
@@ -616,22 +618,6 @@
 						$params['formatter'] = 'JqueryPortico.formatLink';
 					}
 					
-					switch ($uicols['name'][$k])
-					{
-						case 'amount_investment':
-							$params['value_footer'] = number_format($this->bo->sum_investment, 0, ',', ' ');
-							break;
-						case 'amount_operation':
-							$params['value_footer'] = number_format($this->bo->sum_operation, 0, ',', ' ');
-							break;
-						case 'amount_potential_grants':
-							$params['value_footer'] = number_format($this->bo->sum_potential_grants, 0, ',', ' ');
-							break;
-						case 'consume':
-							$params['value_footer'] = number_format($this->bo->sum_consume, 0, ',', ' ');
-							break;
-					}
-					
 					array_push ($data['datatable']['field'], $params);
 			}
 
@@ -651,21 +637,6 @@
 			{
 				if($this->acl_read)
 				{
-					/*$data['datatable']['actions'][] = array
-						(
-							'my_name'		=> 'view',
-							'statustext' 	=> lang('edit the actor'),
-							'text' 			=> lang('view'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> 'property.uirequest.view',
-								'appname'		=> $this->appname,
-								'type'			=> $this->type,
-								'type_id'		=> $this->type_id
-							)),
-							'parameters'	=> $parameters
-						);*/
-					
 					$data['datatable']['actions'][] = array
 						(
 							'my_name'		=> 'view',
@@ -718,40 +689,6 @@
 						);
 				}
 				
-				/*if($this->acl_edit)
-				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name'		=> 'edit',
-							'statustext' 	=> lang('edit the actor'),
-							'text' 			=> lang('edit'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
-								'appname'		=> $this->appname,
-								'type'			=> $this->type,
-								'type_id'		=> $this->type_id
-							)),
-							'parameters'	=> json_encode($parameters)
-						);
-
-					$data['datatable']['actions'][] = array
-						(
-							'my_name'		=> 'edit',
-							'statustext' 	=> lang('edit the actor'),
-							'text' 			=> lang('open edit in new window'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
-								'appname'		=> $this->appname,
-								'type'			=> $this->type,
-								'type_id'		=> $this->type_id
-							)),
-							'target'		=> '_blank',
-							'parameters'	=> json_encode($parameters)
-						);
-				}*/
-				
 				if($this->acl_delete)
 				{
 					$data['datatable']['actions'][] = array
@@ -770,26 +707,10 @@
 							'parameters'	=> json_encode($parameters)
 						);
 				}
-				
-				if($this->acl_add)
-				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name' 			=> 'add',
-							'statustext' 	=> lang('add'),
-							'text'			=> lang('add'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.add',
-								'appname'		=> $this->appname,
-								'type'			=> $this->type,
-								'type_id'		=> $this->type_id
-							))
-						);
-				}
 				unset($parameters);
 			}
-
+			
+			self::add_javascript('property', 'portico', 'request.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 		
@@ -1668,7 +1589,12 @@
 			self::render_template_xsl('request', array('priority_form' => $data));
 		}
 
-
+		public function add()
+		{
+			$this->edit('edit');
+		}
+		
+		
 		function edit($mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
