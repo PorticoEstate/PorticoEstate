@@ -657,7 +657,7 @@
 		 * @param $control_id control id
 		 * @return array with arrays of component info  
 		 */
-		function get_components_for_control($control_id)
+		function get_components_for_control($control_id, $location_id = 0, $component_id = 0)
 		{
 			$control_id = (int) $control_id;
 
@@ -669,6 +669,11 @@
 			$sql .= "AND ccl.component_id = bim_item.id ";
 			$sql .= "AND ccl.location_id = bim_type.location_id ";
 			$sql .= "AND bim_type.id = bim_item.type";
+
+			if($location_id && $component_id)
+			{
+				$sql .= " AND ccl.location_id = {$location_id} AND ccl.component_id = {$component_id}";
+			}
 
 			$this->db->query($sql);
 
@@ -827,6 +832,7 @@
 		*/
 		function register_control_to_component($data)
 		{
+			$ret = 0;
 			$assigned_to	= isset($data['assigned_to']) && $data['assigned_to'] ? $data['assigned_to'] : null;
 			$start_date			= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : null;
 
@@ -874,6 +880,7 @@
 
 						$this->db->query("INSERT INTO controller_control_component_list (" . implode(',',array_keys($values_insert)) . ') VALUES ('
 						 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+						$ret = PHPGW_ACL_ADD; // Bit - add
 					}
 				}
 			}
@@ -895,9 +902,11 @@
 					$sql =  "DELETE FROM controller_control_component_list WHERE control_id = {$control_id} AND location_id = {$location_id} AND component_id = {$component_id}";
 					$this->db->query($sql);
 				}
+				$ret += PHPGW_ACL_DELETE; //bit - delete
 			}
-
-			return $this->db->transaction_commit();
+ 
+			$this->db->transaction_commit();
+			return $ret;
 		}
 
 		/**
