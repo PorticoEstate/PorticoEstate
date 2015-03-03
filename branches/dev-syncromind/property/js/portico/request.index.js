@@ -35,3 +35,17 @@ var addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTabl
 		} 
 	}
 };
+
+var oArgs_request = {menuaction: 'property.uirequest.edit'};
+var sUrl_request = phpGWLink('index.php', oArgs_request);
+
+var linkToRequest = function(key, oData)
+{
+	var id = oData[key];
+	return '<a href="' + sUrl_request + '&id=' + id + '">' + id + '</a>';
+};
+
+var formatRadio = function(key, oData)
+{
+	return  '<input name="add_request[request_id][]" id="add_request[request_id][]"  class="myValuesForPHP close_order" type="hidden" value=""/> <input type="checkbox" name="add_request[request_id_tmp][]" id="add_request[request_id_tmp][]" value="' + oData['request_id'] + '" class="mychecks">';
+};
