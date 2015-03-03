@@ -169,12 +169,19 @@
 		 */
 		public function query()
 		{
+			$project_id = phpgw::get_var('project_id', 'int');
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
  			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date = urldecode(phpgw::get_var('end_date'));
+			
+			$query = phpgw::get_var('query');
+			if (!empty($query))
+			{
+				$search['value'] = $query;
+			}
 			
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -183,6 +190,7 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
+				'project_id' => $project_id,
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'district_id' => phpgw::get_var('district_id', 'int'),
 				'property_cat_id' => phpgw::get_var('property_cat_id'),
@@ -222,16 +230,6 @@
 			$result_data['amount_operation'] = number_format($this->bo->sum_operation, 0, ',', ' ');
 			$result_data['amount_potential_grants'] = number_format($this->bo->sum_potential_grants, 0, ',', ' ');
 			$result_data['consume'] = number_format($this->bo->sum_consume, 0, ',', ' ');
-			
-			$link_data = array
-			(
-				'menuaction' => 'property.uirequest.edit',
-				'appname'	 => $this->appname,
-				'type'		 => $this->type,
-				'type_id'	 => $this->type_id
-			);
-			
-			array_walk(	$result_data['results'], array($this, '_add_links'), $link_data );
 
 			return $this->jquery_results($result_data);
 		}
@@ -262,6 +260,7 @@
 
 		function columns()
 		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
@@ -349,7 +348,7 @@
 						'type'  => 'filter',
 						'name'  => 'property_cat_id',
 						'extra' => '',
-						'text'  => lang('no type'),
+						'text'  => lang('property type'),
 						'list'  => $values_combo_box[0]
 					);
 			}
@@ -359,16 +358,16 @@
 			}
                     
 			$count = count($values_combo_box);
-			$values_combo_box[1] = $this->bocommon->select_district_list('filter',$this->district_id);
+			$values_combo_box[$count] = $this->bocommon->select_district_list('filter',$this->district_id);
 			$default_value = array ('id'=>'','name'=>lang('no district'));
-			array_unshift ($values_combo_box[1],$default_value);
+			array_unshift ($values_combo_box[$count],$default_value);
 			$combos[] = array
 						(
 							'type'  =>  'filter',
 							'name'  =>  'district_id',
 							'extra' =>  '',
-							'text'  =>  lang('no district'),
-							'list'  =>  $values_combo_box[1]  
+							'text'  =>  lang('district'),
+							'list'  =>  $values_combo_box[$count]  
 						);
                     
 			$count = count($values_combo_box);
@@ -386,7 +385,7 @@
 							'type'  =>  'filter',
 							'name'  =>  'cat_id',
 							'extra' =>  '',
-							'text'  =>  lang('no category'),
+							'text'  =>  lang('category'),
 							'list'  =>  $values_combo_box[$count]
 						);
                     
@@ -399,7 +398,7 @@
 							'type'  =>  'filter',
 							'name'  =>  'status_id',
 							'extra' =>  '',
-							'text'  =>  lang('open'),
+							'text'  =>  lang('Status'),
 							'list'  =>  $values_combo_box[$count]
 						);
                     
@@ -419,51 +418,6 @@
 							'list'  =>  $values_combo_box[$count]
 						);
                     
-			$count = count($values_combo_box);
-			$values_combo_box[$count]  = $this->bo->get_user_list();
-			foreach ($values_combo_box[$count] as &$valor)
-			{   
-				$valor['id'] = $valor['user_id'];
-				unset($valor['user_id']);
-			}
-			array_unshift ($values_combo_box[$count],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
-			$default_value = array ('id'=>'','name'=>lang('no user'));
-			array_unshift ($values_combo_box[$count],$default_value);
-			$combos[] = array
-						(
-							'type'  =>  'filter',
-							'name'  =>  'filter',
-							'extra' =>  '',
-							'text'  =>  lang('no user'),
-							'list'  =>  $values_combo_box[$count]
-						);
-                    
-			$count = count($values_combo_box);
-			$responsible_unit_list = $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
-			array_unshift ($responsible_unit_list,array ('id'=>'0','name'=> lang('responsible unit')));
-			$values_combo_box[$count] = $responsible_unit_list;
-			$combos[] = array
-						(
-							'type'  =>  'filter',
-							'name'  =>  'responsible_unit',
-							'extra' =>  '',
-							'text'  =>  lang('responsible unit'),
-							'list'  =>  $values_combo_box[$count]
-						);
-
-			$count = count($values_combo_box);
-			$recommended_year_list = $this->bo->get_recommended_year_list($this->recommended_year);
-			array_unshift ($recommended_year_list,array ('id'=>'0','name'=> lang('recommended year')));
-			$values_combo_box[$count] = $recommended_year_list;
-			$combos[] = array
-						(
-							'type'  =>  'filter',
-							'name'  =>  'recommended_year',
-							'extra' =>  '',
-							'text'  =>  lang('recommended year'),
-							'list'  =>  $values_combo_box[$count]
-						);
-
 			$count = count($values_combo_box);
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
@@ -486,9 +440,54 @@
 							'list'  =>  $values_combo_box[$count]
 						);
 			
+			$count = count($values_combo_box);
+			$responsible_unit_list = $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
+			array_unshift ($responsible_unit_list,array ('id'=>'0','name'=> lang('responsible unit')));
+			$values_combo_box[$count] = $responsible_unit_list;
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'responsible_unit',
+							'extra' =>  '',
+							'text'  =>  lang('responsible unit'),
+							'list'  =>  $values_combo_box[$count]
+						);
+			
+			$count = count($values_combo_box);
+			$recommended_year_list = $this->bo->get_recommended_year_list($this->recommended_year);
+			array_unshift ($recommended_year_list,array ('id'=>'0','name'=> lang('recommended year')));
+			$values_combo_box[$count] = $recommended_year_list;
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'recommended_year',
+							'extra' =>  '',
+							'text'  =>  lang('year'),
+							'list'  =>  $values_combo_box[$count]
+						);
+			
+			$count = count($values_combo_box);
+			$values_combo_box[$count]  = $this->bo->get_user_list();
+			foreach ($values_combo_box[$count] as &$valor)
+			{   
+				$valor['id'] = $valor['user_id'];
+				unset($valor['user_id']);
+			}
+			array_unshift ($values_combo_box[$count],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
+			$default_value = array ('id'=>'','name'=>lang('no user'));
+			array_unshift ($values_combo_box[$count],$default_value);
+			$combos[] = array
+						(
+							'type'  =>  'filter',
+							'name'  =>  'filter',
+							'extra' =>  '',
+							'text'  =>  lang('user'),
+							'list'  =>  $values_combo_box[$count]
+						);
 			
 			return $combos;
 		}
+		
 		
 		function index()
 		{
@@ -498,8 +497,8 @@
 				return;
 			}
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
-			$this->save_sessiondata();
+			//$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
+			//$this->save_sessiondata();
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
 
@@ -508,6 +507,14 @@
 				return $this->query();
 			}
 
+			$project_id = phpgw::get_var('project_id', 'int'); // lookup for maintenance planning
+			$query = phpgw::get_var('query');
+
+			if($project_id)
+			{
+				$lookup	= true;
+			}
+			
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -533,19 +540,19 @@
 								'class' => 'new_item'
 							),
 							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick'=> "JqueryPortico.openPopup({menuaction:'property.uirequest.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
+								'type'		=> 'link',
+								'value'		=> lang('columns'),
+								'href'		=> '#',
+								'class'		=> '',
+								'onclick'	=> "JqueryPortico.openPopup({menuaction:'property.uirequest.columns'}, {closeAction:'reload'})"
 							),
 							array
 							(
-								'type'	=> 'link',
-								'value' => lang('Priority key'),
-								'href'	=> '#',
-								'class'	=> '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'})"
+								'type'		=> 'link',
+								'value'		=> lang('Priority key'),
+								'href'		=> '#',
+								'class'		=> '',
+								'onclick'	=> "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'})"
 							),
 							array
 							(
@@ -553,7 +560,7 @@
 								'id'	=> 'start_date',
 								'name'	=> 'start_date',
 								'value'	=> '',
-								'text' => lang('from')
+								'text'  => lang('from')
 							),
 							array
 							(
@@ -561,50 +568,83 @@
 								'id'	=> 'end_date',
 								'name'	=> 'end_date',
 								'value'	=> '',
-								'text' => lang('to')
+								'text'  => lang('to')
 							)
 						)
 					)
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'property.uirequest.index', 
-						'appname'		=> $this->appname,
-						'type'			=> $this->type,
-						'type_id'		=> $this->type_id,
-						'phpgw_return_as' => 'json'
+						'menuaction'			=> 'property.uirequest.index', 
+						'lookup'				=> $lookup,
+						'project_id'			=> $project_id,
+						'query'					=> $query,
+						'condition_survey_id'	=> $this->condition_survey_id,
+						'nonavbar'				=> $this->nonavbar,
+						'p_num'					=> $this->p_num,
+						'phpgw_return_as'		=> 'json'
 					)),
 					'download'	=> self::link(array('menuaction' => 'property.uirequest.download',
-									'appname'    => $this->appname,
-									'type'       => $this->type,
-									'type_id'    => $this->type_id,
 									'export'     => true,
 									'allrows'    => true)),
 					'allrows'	=> true,
-					'editor_action' => self::link(array('menuaction' => 'property.uirequest.edit_field',
-									'appname'    => $this->appname,
-									'type'       => $this->type,
-									'type_id'    => $this->type_id)),
+					'editor_action' => array(),
 					'field' => array()
 				)
 			);
 	
 			$filters = $this->_get_filters();
-			
-			//ksort($filters);
-			//print_r($filters);die;
-			
-			
+
+			$custom	= createObject('phpgwapi.custom_fields');
+			$attrib_data = $custom->find('property', $this->acl_location, 0, '','','',true, true);
+			if($attrib_data)
+			{
+				foreach ( $attrib_data as $attrib )
+				{
+					if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+					{
+
+						$_values = array();
+						$_values[] = array('id' => '', 'name' => lang('select') . ' ' . $attrib['input_text']);
+						foreach($attrib['choice'] as $choice)
+						{
+							$_values[]  = array
+							(
+								'id' 	=> $choice['id'],
+								'name'	=> htmlspecialchars($choice['value'], ENT_QUOTES, 'UTF-8'),
+							);
+						}
+
+						$filters[] = array
+						(
+							'type'	=> 'filter',
+							'id'	=> "sel_{$attrib['column_name']}",
+							'name'	=> $attrib['column_name'],
+							'extra' =>  '',
+							'text'	=> lang($attrib['input_text']),
+							'list'	=> $_values
+						);
+					}
+				}
+			}
+				
+			krsort($filters);
 			foreach ($filters as $filter) 
 			{
 				array_unshift ($data['form']['toolbar']['item'], $filter);
 			}
 			
-			$this->bo->read();
+			$this->bo->read(array('project_id'=>$project_id, 'allrows'=>$this->allrows, 'dry_run'=>true));
 			$uicols = $this->bo->uicols;
 
 			$count_uicols_name = count($uicols['name']);
-							
+			
+			$type_id = 4;
+			for($i=1; $i<$type_id; $i++)
+			{
+				$searc_levels[] = "loc{$i}";
+			}
+			
 			for($k=0;$k<$count_uicols_name;$k++)
 			{
 					$params = array(
@@ -613,14 +653,32 @@
 									'sortable' => ($uicols['sortable'][$k]) ? true : false,
 									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 								);
-					if ($uicols['name'][$k] == 'id')
+					
+					if ($uicols['name'][$k] == 'request_id')
 					{
-						$params['formatter'] = 'JqueryPortico.formatLink';
+						$params['formatter'] = 'linkToRequest';
+					}
+					
+					if(in_array($uicols['name'][$k], $searc_levels))
+					{
+						$params['formatter'] = 'JqueryPortico.searchLink';
 					}
 					
 					array_push ($data['datatable']['field'], $params);
 			}
 
+			if (!empty($query))
+			{
+				$params = array(
+					'key' => 'select',
+					'label' => lang('Select'),
+					'sortable' => false,
+					'hidden' => false,
+					'formatter' => 'formatRadio'
+				);
+				array_push ($data['datatable']['field'], $params);
+			}
+			
 			$parameters = array
 			(
 				'parameter' => array
@@ -633,25 +691,25 @@
 				)
 			);
 
-			if(!$lookup)
+			if($this->acl_read)
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'view',
+						'text' 			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uirequest.view'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+				
+			if (!$lookup)
 			{
 				if($this->acl_read)
 				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name'		=> 'view',
-							'text' 			=> lang('view'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> 'property.uirequest.view',
-								'appname'		=> $this->appname,
-								'type'			=> $this->type,
-								'type_id'		=> $this->type_id
-							)),
-							'parameters'	=> json_encode($parameters)
-						);
-					
-					/*$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+					$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
 					foreach ($jasper as $report)
 					{
@@ -663,27 +721,24 @@
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
 									'menuaction'	=> 'property.uijasper.view',
-									'jasper_id'			=> $report['id'],
-									'target'		=> '_blank'
+									'jasper_id'		=> $report['id']
 								)),
-								'parameters'			=> $parameters
+								'target'		=> '_blank',
+								'parameters'	=> json_encode($parameters)
 							);
-					}*/
+					}
 				}
 				
 				if($this->acl_edit)
 				{
 					$data['datatable']['actions'][] = array
 						(
-							'my_name'			=> 'edit',
+							'my_name'		=> 'edit',
 							'statustext' 	=> lang('edit the actor'),
 							'text' 			=> lang('edit'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uirequest.edit',
-								'appname'		=> $this->appname,
-								'type'			=> $this->type,
-								'type_id'		=> $this->type_id
+								'menuaction'	=> 'property.uirequest.edit'
 							)),
 							'parameters'	=> json_encode($parameters)
 						);
@@ -699,10 +754,7 @@
 							'confirm_msg'	=> lang('do you really want to delete this entry'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uirequest.delete',
-								'appname'		=> $this->appname,
-								'type'			=> $this->type,
-								'type_id'		=> $this->type_id
+								'menuaction'	=> 'property.uirequest.delete'
 							)),
 							'parameters'	=> json_encode($parameters)
 						);
