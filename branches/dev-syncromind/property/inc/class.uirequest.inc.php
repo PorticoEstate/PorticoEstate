@@ -578,7 +578,6 @@
 						'menuaction'			=> 'property.uirequest.index', 
 						'lookup'				=> $lookup,
 						'project_id'			=> $project_id,
-						'query'					=> $query,
 						'condition_survey_id'	=> $this->condition_survey_id,
 						'nonavbar'				=> $this->nonavbar,
 						'p_num'					=> $this->p_num,
@@ -667,7 +666,7 @@
 					array_push ($data['datatable']['field'], $params);
 			}
 
-			if (!empty($query))
+			if ($lookup)
 			{
 				$params = array(
 					'key' => 'select',
@@ -760,6 +759,56 @@
 						);
 				}
 				unset($parameters);
+			} 
+			else 
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name' 		=> 'update_project',
+						'statustext' 	=> lang('Update project'),
+						'text'			=> lang('Update project'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+											var myChecks = $('.mychecks');
+											
+											if (myChecks.length == 0) {
+												alert('Any box selected');
+												return;
+											}
+
+											for(i=0;i<myChecks.length;i++)
+											{
+												if(myChecks[i].checked)
+												{			
+												   $('<input>').attr({
+													   type: 'hidden',
+													   id: 'add_request[request_id][]',
+													   name: 'add_request[request_id][]',
+													   value: myChecks[i].value
+												   }).appendTo('#custom_values_form');			 
+												}
+											}
+
+											var path_update = new Array();
+											path_update['menuaction'] = 'property.uiproject.edit';
+											path_update['id'] = '".$project_id."';
+
+											var sUrl = phpGWLink('index.php', path_update);
+											
+											$('#custom_values_form').attr('action', sUrl);
+											$('#custom_values_form').attr('method', 'POST');
+											$('#custom_values_form').submit();"
+					);				
+
+					$code =	<<<JS
+						function initCompleteDatatable(oSettings, json, oTable) 
+						{
+							var api = oTable.api();
+							api.search( '$query' );							
+						}
+JS;
+
+				$GLOBALS['phpgw']->js->add_code('', $code, true);
 			}
 			
 			self::add_javascript('property', 'portico', 'request.index.js');
