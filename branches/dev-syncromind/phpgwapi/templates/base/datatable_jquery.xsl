@@ -369,6 +369,7 @@
 			</tr>
 		</tfoot>
 	</table>
+	<form id="custom_values_form" name="custom_values_form"></form>
 	<script>
 
 		var columns = [
@@ -555,18 +556,6 @@
 																						}
 																					</xsl:if>
 
-																					var action = "<xsl:value-of select="action"/>";
-
-																					<xsl:if test="parameters">
-																						var parameters = <xsl:value-of select="parameters"/>;
-																						var i = 0;
-																						len = parameters.parameter.length;
-																						for (; i &lt; len; ) {
-																							action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-																							i++;
-																						}
-																					</xsl:if>
-
 																					<xsl:value-of select="custom_code"/>	
 																		}
 
@@ -747,6 +736,13 @@
 						addFooterDatatable2(nRow, aaData, iStart, iEnd, aiDisplay,oTable);
 					}
 				},//alternative
+				fnInitComplete: function (oSettings, json)
+				{
+					if(typeof(initCompleteDatatable) == 'function')
+					{
+						initCompleteDatatable(oSettings, json, oTable);
+					}
+				},
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 				language:		JqueryPortico.i18n.datatable(),
 				columns:		JqueryPortico.columns,
