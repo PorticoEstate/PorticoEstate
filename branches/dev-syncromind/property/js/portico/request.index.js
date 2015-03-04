@@ -32,7 +32,7 @@ var addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTabl
 					nCells[i].innerHTML = data.consume;
 				}
 				break;
-		} 
+		}
 	}
 };
 
@@ -47,5 +47,5 @@ var linkToRequest = function(key, oData)
 
 var formatRadio = function(key, oData)
 {
-	return  '<input name="add_request[request_id][]" id="add_request[request_id][]"  class="myValuesForPHP close_order" type="hidden" value=""/> <input type="checkbox" name="add_request[request_id_tmp][]" id="add_request[request_id_tmp][]" value="' + oData['request_id'] + '" class="mychecks">';
+	return  '<input type="checkbox" name="add_request[request_id_tmp][]" id="add_request[request_id_tmp][]" value="' + oData['request_id'] + '" class="mychecks">';
 };
