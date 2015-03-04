@@ -132,18 +132,6 @@
 																		}
 																	</xsl:if>
 
-																	var action = "<xsl:value-of select="action"/>";
-
-																	<xsl:if test="parameters">
-																		var parameters = <xsl:value-of select="parameters"/>;
-																		var i = 0;
-																		len = parameters.parameter.length;
-																		for (; i &lt; len; ) {
-																			action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-																			i++;
-																		}
-																	</xsl:if>
-
 																	<xsl:value-of select="custom_code"/>	
 															}
 
