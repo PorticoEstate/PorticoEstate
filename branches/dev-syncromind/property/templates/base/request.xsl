@@ -170,7 +170,7 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" method="post" name="form" id="form" action="{$form_action}" class= "pure-form pure-form-aligned">
+		<form ENCTYPE="multipart/form-data" method="post" name="form" id="form" action="{$form_action}" class= "pure-form  pure-form-aligned">
 		<div id="request_tabview">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="general">
@@ -250,160 +250,120 @@
 						<div class="clearBoth">&nbsp;</div>
 						<hr/>
 						<div>
-							<table>
-								<tr>
-									<td valign = 'top'>
-										<div class="requirement-responsibility-left">
-										<table>
-											<tr>
-												<td>
-													<div class="requirement-responsibility-left-sub">
-														<label>
-															<xsl:value-of select="php:function('lang', 'responsible unit')"/>
-														</label>
-														<br/>
-														<select name="values[responsible_unit]" class="forms" style="width:300px;">
-															<xsl:attribute name="title">
-																<xsl:value-of select="php:function('lang', 'Set responsible unit')"/>
-															</xsl:attribute>
-															<option value="0">
-																<xsl:value-of select="php:function('lang', 'select')"/>
-															</option>
-															<xsl:apply-templates select="responsible_unit_list/options"/>
-														</select>
-													</div>
-												</td>
-											<td>
-												<div class="requirement-responsibility-right">
-													<label>
-														<xsl:value-of select="php:function('lang', 'request status')"/>
-													</label>
-													<br/>
-													<select name="values[status]" data-validation="required" style="width:200px;">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'Set the status of the request')"/>
-														</xsl:attribute>
-														<option value="0">
-															<xsl:value-of select="php:function('lang', 'no status')"/>
-														</option>
-														<xsl:apply-templates select="status_list/options"/>
-													</select>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<div class="coordinator_select">
-													<dt>
-														<label>
-															<xsl:value-of select="lang_coordinator"/>
-														</label>
-													</dt>
-													<dd>
-														<xsl:call-template name="user_id_select"/>
-													</dd>
-												</div>
-											</td>
-										</tr>
-									</table>
+							<div class="pure-u-1-2">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'responsible unit')"/>
+									</label>
+									<select name="values[responsible_unit]" class="forms" style="width:300px;">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Set responsible unit')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+										</option>
+										<xsl:apply-templates select="responsible_unit_list/options"/>
+									</select>
 								</div>
-							</td>
-							<td>
-								<table>
-									<tr>
-										<td>
-											<div class="requirement-responsibility-right">
-												<!--<legend>
-														<xsl:value-of select="php:function('lang', 'location')"/>
-													</legend> -->
-												<dl class="proplist-col">
-													<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
-													<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
-													<xsl:choose>
-														<xsl:when test="mode ='edit'">
-															<xsl:call-template name="location_form2"/>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:call-template name="location_view2"/>
-															<xsl:choose>
-																<xsl:when test="contact_phone !=''">
-																	<dt>
-																		<label>
-																			<xsl:value-of select="lang_contact_phone"/>
-																		</label>
-																	</dt>
-																	<dd>
-																		<xsl:value-of select="contact_phone"/>
-																	</dd>
-																</xsl:when>
-															</xsl:choose>
-														</xsl:otherwise>
-													</xsl:choose>
-													<xsl:choose>
-														<xsl:when test="suppressmeter =''">
-															<dt>
-																<label>
-																	<xsl:value-of select="lang_power_meter"/>
-																</label>
-															</dt>
-															<dd>
-																<input type="text" name="values[power_meter]" value="{value_power_meter}" size="12">
-																	<xsl:attribute name="title">
-																		<xsl:value-of select="lang_power_meter_statustext"/>
-																	</xsl:attribute>
-																</input>
-															</dd>
-														</xsl:when>
-													</xsl:choose>
-												</dl>
-											</div>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						</table>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'request status')"/>
+									</label>
+									<select name="values[status]" data-validation="required" style="width:200px;">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Set the status of the request')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'no status')"/>
+										</option>
+										<xsl:apply-templates select="status_list/options"/>
+									</select>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="lang_coordinator"/>
+									</label>
+									<xsl:call-template name="user_id_select"/>
+								</div>
+							</div>
+							<div class="pure-u-1-2">
+								<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
+								<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
+								<xsl:choose>
+									<xsl:when test="mode ='edit'">
+										<xsl:call-template name="location_form2"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:call-template name="location_view2"/>
+										<xsl:choose>
+											<xsl:when test="contact_phone !=''">
+												<div class="pure-control-group">
+													<label>
+														<xsl:value-of select="lang_contact_phone"/>
+													</label>
+													<xsl:value-of select="contact_phone"/>
+												</div>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:otherwise>
+								</xsl:choose>
+								<xsl:choose>
+									<xsl:when test="suppressmeter =''">
+										<div class="pure-control-group">
+											<label>
+												<xsl:value-of select="lang_power_meter"/>
+											</label>
+											<input type="text" name="values[power_meter]" value="{value_power_meter}" size="12">
+												<xsl:attribute name="title">
+													<xsl:value-of select="lang_power_meter_statustext"/>
+												</xsl:attribute>
+											</input>
+										</div>
+									</xsl:when>
+								</xsl:choose>
+							</div>
 						</div>
+						
 						<div class="clearBoth">&nbsp;</div>
 						<hr/>
-						<div class="requirement-description">
+						<div class="pure-u-1">
 							<h3>
 								<xsl:value-of select="php:function('lang', 'description')"/>
 							</h3>
-							<label>
-								<xsl:value-of select="php:function('lang', 'building part')"/>
-							</label>
-							<br/>
-							<select data-validation="required" name="values[building_part]">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'select building part')"/>
-								</xsl:attribute>
-								<option value="0">
-									<xsl:value-of select="php:function('lang', 'select building part')"/>
-								</option>
-								<xsl:apply-templates select="building_part_list/options"/>
-							</select>
-							<br/>
-							<xsl:variable name="lang_request_title">
-								<xsl:value-of select="php:function('lang', 'request action mouseover title')"/>
-							</xsl:variable>
-							<label title="{$lang_request_title}">
-								<xsl:value-of select="php:function('lang', 'request action title')"/>
-							</label>
-							<br/>
-							<input data-validation="required" type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}">
-							</input>
-							<br/>
-							<xsl:variable name="lang_request_description">
-								<xsl:value-of select="php:function('lang', 'request condition mouseover description')"/>
-							</xsl:variable>
-							<label title="{$lang_request_description}">
-								<xsl:value-of select="php:function('lang', 'request condition description')"/>
-							</label>
-							<br/>
-							<textarea cols="120" rows="6" name="values[descr]" title="{$lang_request_description}">
-								<xsl:value-of select="value_descr"/>
-							</textarea>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'building part')"/>
+								</label>
+								<select data-validation="required" name="values[building_part]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'select building part')"/>
+									</xsl:attribute>
+									<option value="0">
+										<xsl:value-of select="php:function('lang', 'select building part')"/>
+									</option>
+									<xsl:apply-templates select="building_part_list/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<xsl:variable name="lang_request_title">
+									<xsl:value-of select="php:function('lang', 'request action mouseover title')"/>
+								</xsl:variable>
+								<label title="{$lang_request_title}">
+									<xsl:value-of select="php:function('lang', 'request action title')"/>
+								</label>
+								<input data-validation="required" type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}"></input>
+							</div>
+							<div class="pure-control-group">
+								<xsl:variable name="lang_request_description">
+									<xsl:value-of select="php:function('lang', 'request condition mouseover description')"/>
+								</xsl:variable>
+								<label title="{$lang_request_description}">
+									<xsl:value-of select="php:function('lang', 'request condition description')"/>
+								</label>
+								<textarea cols="120" rows="6" name="values[descr]" title="{$lang_request_description}">
+									<xsl:value-of select="value_descr"/>
+								</textarea>
+							</div>
 						</div>
 						<div class="clearBoth">&nbsp;</div>
 						<hr/>
@@ -911,11 +871,6 @@
 					</th>
 				</xsl:otherwise>
 			</xsl:choose>
-			<!--
-<th width="20%" align="left">
-<xsl:value-of select="php:function('lang', 'reference level')" />
-</th>
--->
 			<th width="20%" align="center">
 				<xsl:attribute name="title">
 					<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
