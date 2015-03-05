@@ -850,8 +850,8 @@
 				$sms_datetime = $this->datetime_now();
 			}
 
-			$message = utf8_encode($message);
-			$target_code = utf8_encode($target_code);
+//			$message = utf8_encode($message);
+//			$target_code = utf8_encode($target_code);
 			$ok = false;
 			switch ($target_code)
 			{
