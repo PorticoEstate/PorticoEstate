@@ -232,7 +232,7 @@
 					data:			"<xsl:value-of select="key"/>",
 					<xsl:if test="className">
 						<xsl:choose>
-							<xsl:when test="className">
+							<xsl:when test="className='right' or className='center'">
 								<xsl:if test="className ='right'">
 									class:	'dt-right',
 								</xsl:if>
@@ -241,7 +241,7 @@
 								</xsl:if>
 							</xsl:when>
 							<xsl:otherwise>
-									class:	'dt-left',
+									class:	"<xsl:value-of select="className"/>",
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
