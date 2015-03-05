@@ -84,13 +84,18 @@
 
 
 			$location_URL = isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : "http://wsm01e-t.usrv.ubergenkom.no:8888/gateway/services/AltinnReporteesService"; #A-test
-		
+
+			$soap_login = $this->config->config_data['soap_login'];
+			$soap_password = $this->config->config_data['soap_password'];
+
 			$client = new SoapClient(null, array(
 						'location' => $location_URL,
 						'uri'      => "",
 						'trace'    => 1,
+						'login'		=> $soap_login,
+						'password'	=> $soap_password
 						));
-	
+
 			try
 			{
 				$response = $client->__doRequest($request,$location_URL,$location_URL,1);

@@ -527,7 +527,7 @@
 								</td>
 								<td>
 									<xsl:value-of select="value_num"/>
-									<input type="hidden" name="location_code" value="{location_code}"/>
+									<input type="hidden" id="location_code" name="location_code" value="{location_code}"/>
 									<input type="hidden" name="lookup_tenant" value="{lookup_tenant}"/>
 									<input type="hidden" name="values[id]" value="{value_id}"/>
 									<input type="hidden" name="values[num]" value="{value_num}"/>
@@ -624,6 +624,163 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+					<xsl:if test="controller!=''">
+						<div id="controller">
+							<script type="text/javascript">
+							lookup_control_responsible = function()
+							{
+								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible'};
+								var requestUrl = phpGWLink('index.php', oArgs);
+								var Window1=window.open(requestUrl,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+							}
+
+							lookup_control = function()
+							{
+								var oArgs = {menuaction:'controller.uilookup.control'};
+								var requestUrl = phpGWLink('index.php', oArgs);
+								var Window1=window.open(requestUrl,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+							}
+<![CDATA[
+							function parseURL(url)
+							{
+								var parser = document.createElement('a'),
+									searchObject = {},
+									queries, split, i;
+								// Let the browser do the work
+								parser.href = url;
+								// Convert query string to object
+								queries = parser.search.replace(/^\?/, '').split('&');
+								for( i = 0; i < queries.length; i++ ) {
+									split = queries[i].split('=');
+									searchObject[split[0]] = split[1];
+								}
+								return {
+									protocol: parser.protocol,
+									host: parser.host,
+									hostname: parser.hostname,
+									port: parser.port,
+									pathname: parser.pathname,
+									search: parser.search,
+									searchObject: searchObject,
+									hash: parser.hash
+								};
+							}
+]]>
+							add_control = function()
+							{
+								var formUrl = $("#form").attr("action");
+								var Url = parseURL(formUrl);
+								oArgs  = Url.searchObject;
+								delete oArgs.click_history;
+								oArgs.menuaction = 'property.boentity.add_control';
+								oArgs.control_id = $("#control_id").val();
+								oArgs.control_responsible = $("#control_responsible").val();
+								oArgs.control_start_date = $("#control_start_date").val();
+
+								var requestUrl = phpGWLink('index.php', oArgs, true);
+//								alert(requestUrl);
+
+								$("#controller_receipt").html("");
+
+								$.ajax({
+									type: 'POST',
+									dataType: 'json',
+									url: requestUrl,
+									success: function(data) {
+										if( data != null)
+										{
+											$("#controller_receipt").html(data.status + '::' + data.msg);
+											if(data.status_kode == 'ok')
+											{
+												$("#control_id").val('');
+												$("#control_name").val('');
+												$("#control_responsible").val('');
+												$("#control_responsible_user_name").val('');
+												$("#control_start_date").val('');
+											}
+										}
+									}
+								});
+
+								var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
+								var requestUrl2 = phpGWLink('index.php', oArgs2, true);
+								execute_async(myDataTable_4, oArgs2);
+							};
+
+							</script>
+							<div id="controller_receipt"></div>
+							<fieldset>
+								<legend>
+									<xsl:value-of select="php:function('lang', 'new')" />
+								</legend>
+								<label>
+									<xsl:value-of select="php:function('lang', 'user')" />
+								</label>
+								<input type="text" name="control_responsible" id="control_responsible" value="" onClick="lookup_control_responsible();" readonly="readonly" size="6">
+								</input>
+								<input size="30" type="text" name="control_responsible_user_name" id="control_responsible_user_name" value="" onClick="lookup_control_responsible();" readonly="readonly">
+								</input>
+								<br/>
+								<label>
+									<xsl:value-of select="php:function('lang', 'controller')" />
+								</label>
+								<input type="text" name="control_id" id="control_id" value="" onClick="lookup_control();" readonly="readonly" size="6">
+								</input>
+								<input type="text" name="control_name" id="control_name" value="" onClick="lookup_control();" readonly="readonly" size="30">
+								</input>
+								<xsl:variable name="lang_add">
+									<xsl:value-of select="php:function('lang', 'add')"/>
+								</xsl:variable>
+								<br/>
+
+								<label>
+									<xsl:value-of select="php:function('lang', 'start date')" />
+								</label>
+								<input type="text" name="control_start_date" id="control_start_date" value=""  readonly="readonly" size="10">
+								</input>
+								<br/>
+
+								<input type="button" name="" value="{$lang_add}" title="{$lang_add}" onClick="add_control();">
+								</input>
+
+							</fieldset>
+							<table>
+								<tr>
+									<td>
+									<xsl:value-of select="php:function('lang', 'controller')" />
+										
+									</td>
+									<td>
+									<table cellpadding="2" cellspacing="2" width="80%" align="center">
+									<tr>
+										<td>
+											<div id="datatable-container_4"/>
+										</td>
+									</tr>
+								</table>
+							</td>
+								</tr>
+								<tr>
+									<td>
+									<xsl:value-of select="php:function('lang', 'cases')" />
+									</td>
+									<td>
+								<table cellpadding="2" cellspacing="2" width="80%" align="center">
+									<tr>
+										<td>
+											<div id="datatable-container_5"/>
+										</td>
+									</tr>
+								</table>
+									</td>
+								</tr>
+							</table>
+
+							<xsl:call-template name="controller_integration">
+								<xsl:with-param name="controller" select ='controller'/>
+							</xsl:call-template>
+						</div>
+					</xsl:if>
 					<xsl:call-template name="attributes_values"/>
 					<xsl:choose>
 						<xsl:when test="files!='' or fileupload = 1">
@@ -945,4 +1102,9 @@
 				</xsl:for-each>
 			</xsl:when>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="controller_integration">
+		<xsl:param name="controller" />
+		
 	</xsl:template>
