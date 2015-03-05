@@ -41,7 +41,6 @@
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$location_id 				= $GLOBALS['phpgw']->locations->get_id('sms', 'run');
@@ -74,6 +73,8 @@
 
 		function index()
 		{
+			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::inbox';
 			$acl_location = '.inbox';
 
@@ -246,6 +247,8 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
 			$acl_location = '.outbox';
+
+			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('sms','nextmatchs','menu',
 										'search_field'));
@@ -873,6 +876,7 @@
 			$sms->getsmsstatus();
 			if(isset($data['cron']))
 			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 				return;
 			}
 
