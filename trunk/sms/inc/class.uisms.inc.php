@@ -855,7 +855,11 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
-		function daemon_manual()
+		/**
+		 * @param mixed $data
+		 * If $data is an array - then the process is run as cron
+		 */
+		function daemon_manual($data=array())
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::sms::refresh';
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
@@ -864,11 +868,15 @@
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
-
 			$sms = CreateObject('sms.sms');
 			$sms->getsmsinbox(true);
 			$sms->getsmsstatus();
+			if(isset($data['cron']))
+			{
+				return;
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
 
 			$receipt['message'][]=array('msg'=>lang('Daemon refreshed'));
 
