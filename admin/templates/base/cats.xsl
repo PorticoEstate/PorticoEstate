@@ -15,21 +15,21 @@
 
 	<xsl:template match="cat_list">
 		<center>
-		<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered">
-			<tr>
-				<td colspan="5" width="100%">
-					<xsl:call-template name="nextmatchs"/>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="5" width="100%" align="right">
-					<xsl:call-template name="search_field"/>
-				</td>
-			</tr>
-				<xsl:apply-templates select="cat_header"/>
-				<xsl:apply-templates select="cat_data"/>
-				<xsl:apply-templates select="cat_add"/>
-		</table>
+			<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered">
+				<tr>
+					<td colspan="5" width="100%">
+						<xsl:call-template name="nextmatchs"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5" width="100%" align="right">
+						<xsl:call-template name="search_field"/>
+					</td>
+				</tr>
+					<xsl:apply-templates select="cat_header"/>
+					<xsl:apply-templates select="cat_data"/>
+			</table>
+			<xsl:apply-templates select="cat_add"/>
 		</center>
 	</xsl:template>
 
@@ -103,31 +103,29 @@
 <!-- BEGIN cat_add -->
 
 	<xsl:template match="cat_add">
-			<tr height="50" valign="bottom">
-			<xsl:variable name="action_url"><xsl:value-of select="action_url"/></xsl:variable>
-			<form method="post" action="{$action_url}">
-				<td colspan="2">
-				<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
-					<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+		<xsl:variable name="action_url"><xsl:value-of select="action_url"/></xsl:variable>
+		<form method="post" action="{$action_url}">
+			<table>
+				<tr height="50" valign="bottom">
+					<td colspan="2">
+					<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
+						<input type="submit" name="add" value="{$lang_add}">
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_add_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				<td colspan="3" align="right">
-				<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
-					<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_done_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-			</form>
-			</tr>
+							</xsl:attribute>
+						</input>
+					</td>
+					<td colspan="3" align="right">
+					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<input type="submit" name="done" value="{$lang_done}">
+							<xsl:attribute name="title">
+									<xsl:value-of select="lang_done_statustext"/>
+							</xsl:attribute>
+						</input>
+					</td>
+				</tr>
+			</table>
+		</form>
 	</xsl:template>
 
 <!-- END cat_list -->
@@ -135,14 +133,14 @@
 <!-- BEGIN cat_edit -->
 
 	<xsl:template match="cat_edit" xmlns:php="http://php.net/xsl">
+		<xsl:variable name="edit_url" select="edit_url"/>
+		<form method="post" action="{$edit_url}">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td colspan="3" align="center">
 					<xsl:value-of select="message"/>
 				</td>
 			</tr>
-			<xsl:variable name="edit_url" select="edit_url"/>
-			<form method="post" action="{$edit_url}">
 			<tr>
 				<td width="23%" colspan="2">
 					<xsl:value-of select="lang_parent"/>
@@ -194,37 +192,31 @@
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
 					<xsl:variable name="old_parent"><xsl:value-of select="old_parent"/></xsl:variable>
 					<input type="hidden" name="values[old_parent]" value="{$old_parent}"/>
-					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="values[save]" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
 				<td>
 				<xsl:variable name="lang_apply" select="lang_apply"/>
-					<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_apply_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="values[apply]" value="{$lang_apply}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_apply_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
 				<td align="right">
 				<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
-					<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_cancel_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_cancel_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
 			</tr>
-			</form>
 		</table>
+		</form>
 	</xsl:template>
 
 	<xsl:template match="options">

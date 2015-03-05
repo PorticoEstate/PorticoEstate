@@ -462,6 +462,8 @@
 			$control_id = phpgw::get_var('control_id', 'int');
 			$control = $this->so_control->get_single($control_id);
 			$year = phpgw::get_var('year', 'int');
+			$location_id = phpgw::get_var('location_id');
+			$component_id = phpgw::get_var('component_id');
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -482,7 +484,7 @@
 			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
-				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
+				$components_for_control_array = $this->so_control->get_components_for_control($control_id, $location_id, $component_id);
 				foreach ($locations_for_control_array as $location)
 				{
 					$locations_list[] = array
@@ -680,8 +682,17 @@
 			static $_location_name = array();
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
-			$year = intval(phpgw::get_var('year'));
-			$month = intval(phpgw::get_var('month'));
+			if(!$year = intval(phpgw::get_var('year')))
+			{
+				$year = date('Y');
+			}
+			if(!$month = intval(phpgw::get_var('month')))
+			{
+				$month = date('m');
+			}
+
+			$location_id = phpgw::get_var('location_id');
+			$component_id = phpgw::get_var('component_id');
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -700,7 +711,7 @@
 			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
-				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
+				$components_for_control_array = $this->so_control->get_components_for_control($control_id, $location_id, $component_id);
 				foreach ($locations_for_control_array as $location)
 				{
 					$locations_list[] = array
