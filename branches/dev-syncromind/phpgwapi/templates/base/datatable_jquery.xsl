@@ -376,7 +376,21 @@
 			<xsl:for-each select="//datatable/field">
 				{
 					data:			"<xsl:value-of select="key"/>",
-					class:			"<xsl:value-of select="className"/>",
+					<xsl:if test="className">
+						<xsl:choose>
+							<xsl:when test="className='right' or className='center'">
+								<xsl:if test="className ='right'">
+									class:	'dt-right',
+								</xsl:if>
+								<xsl:if test="className ='center'">
+									class:	'dt-center',
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+									class:	"<xsl:value-of select="className"/>",
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
 					orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 					<xsl:choose>
 						<xsl:when test="hidden">
