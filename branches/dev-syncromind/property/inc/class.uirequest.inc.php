@@ -258,74 +258,6 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-		function columns()
-		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$receipt = array();
-			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
-
-			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-
-			$values 		= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
-
-			if (isset($values['save']) && $values['save'])
-			{
-				$GLOBALS['phpgw']->preferences->add('property','request_columns', $values['columns'],'user');
-				$GLOBALS['phpgw']->preferences->save_repository();
-				$receipt['message'][] = array('msg' => lang('columns is updated'));
-			}
-
-			$function_msg	= lang('Select Column');
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uirequest.columns',
-			);
-
-			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
-
-			$data = array
-				(
-					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
-					'function_msg'		=> $function_msg,
-					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'lang_columns'		=> lang('columns'),
-					'lang_none'			=> lang('None'),
-					'lang_save'			=> lang('save'),
-				);
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
-		}
-
-
-		function view_file()
-		{
-			if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
-			}
-
-			$location_code 	= phpgw::get_var('location_code');
-
-			$bofiles	= CreateObject('property.bofiles');
-			$bofiles->view_file('request');
-		}
-
-		function download()
-		{
-			$start_date 	= urldecode($this->start_date);
-			$end_date 		= urldecode($this->end_date);
-			$list 			= $this->bo->read(array('start_date' =>$start_date, 'end_date' =>$end_date,'allrows'=>true,'list_descr' => true));
-			$uicols			= $this->bo->uicols;
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
-		}
-		
 		private function _get_filters()
 		{
 			$values_combo_box = array();
@@ -486,6 +418,179 @@
 						);
 			
 			return $combos;
+		}
+		
+		
+		private function _populate()
+		{
+			$id 	= phpgw::get_var('id', 'int');
+			$values				= phpgw::get_var('values');
+			$values_attribute	= phpgw::get_var('values_attribute');
+
+			$bypass 			= phpgw::get_var('bypass', 'bool');
+			
+			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+			$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
+
+			for ($j=0;$j<count($insert_record_entity);$j++)
+			{
+				$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+			}
+			$values = $this->bocommon->collect_locationdata($values,$insert_record);
+			
+			if(!$values['location'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a location !'));
+				$error_id=true;
+			}
+
+			if(!$values['title'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please enter a request TITLE !'));
+				$error_id=true;
+			}
+
+			if(!$values['cat_id'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a category !'));
+				$error_id=true;
+			}
+
+			if(!$values['status'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a status !'));
+			}
+
+			if(!$values['building_part'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a building part!'));
+			}
+
+			if($values['consume_value'] && !$values['consume_date'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a date !'));
+			}
+			if($values['planning_value'] && !$values['planning_date'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a date !'));
+			}
+
+			if(isset($values['amount_investment']) && $values['amount_investment'])
+			{
+				$values['amount_investment'] = str_replace(' ', '', $values['amount_investment']);
+				if( !ctype_digit($values['amount_investment']))
+				{
+					$receipt['error'][]=array('msg'=>lang('investment') . ': ' . lang('Please enter an integer !'));
+					$error_id=true;
+				}
+			}
+			if(isset($values['amount_operation']) && $values['amount_operation'])
+			{
+				$values['amount_operation'] = str_replace(' ', '', $values['amount_operation']);
+				if( !ctype_digit($values['amount_operation']))
+				{
+					$receipt['error'][]=array('msg'=>lang('operation') . ': ' . lang('Please enter an integer !'));
+					$error_id=true;
+				}
+			}
+			if(isset($values['amount_potential_grants']) && $values['amount_potential_grants'])
+			{
+				$values['amount_potential_grants'] = str_replace(' ', '', $values['amount_potential_grants']);
+				if( !ctype_digit($values['amount_potential_grants']))
+				{
+					$receipt['error'][]=array('msg'=>lang('potential grants') . ': ' . lang('Please enter an integer !'));
+					$error_id=true;
+				}
+			}
+
+			$_condition = array_keys($values['condition']);
+			$__condition = isset($_condition[0]) && $_condition[0] ? $_condition[0] : 0;
+
+			if(!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a condition!'));
+			}
+
+			if(is_array($values_attribute))
+			{
+				foreach ($values_attribute as $attribute )
+				{
+					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+					}
+				}
+			}
+					
+			return $values;
+		}
+		
+		function columns()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$receipt = array();
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$values 		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$GLOBALS['phpgw']->preferences->add('property','request_columns', $values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+			}
+
+			$function_msg	= lang('Select Column');
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uirequest.columns',
+			);
+
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+			$data = array
+				(
+					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+					'function_msg'		=> $function_msg,
+					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'lang_columns'		=> lang('columns'),
+					'lang_none'			=> lang('None'),
+					'lang_save'			=> lang('save'),
+				);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
+		}
+
+
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
+			$location_code 	= phpgw::get_var('location_code');
+
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('request');
+		}
+
+		function download()
+		{
+			$start_date 	= urldecode($this->start_date);
+			$end_date 		= urldecode($this->end_date);
+			$list 			= $this->bo->read(array('start_date' =>$start_date, 'end_date' =>$end_date,'allrows'=>true,'list_descr' => true));
+			$uicols			= $this->bo->uicols;
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 		
 		
@@ -871,13 +976,64 @@ JS;
 			self::render_template_xsl('request', array('priority_form' => $data));
 		}
 
+        public function save()
+        {
+			$id = phpgw::get_var('id', 'int');
+						
+			/*
+			* Overrides with incoming data from POST
+			*/
+			$values = $this->_populate();
+
+			if($id)
+			{
+				$action='edit';
+				$values['id']= $id;
+			}
+			
+			if($values['copy_request'])
+			{
+				$action='add';
+			}
+					
+			if( $this->receipt['error'] )
+			{
+				$this->edit($values);
+			}
+			else
+			{
+				try
+				{
+					$receipt = $this->bo->save($values, $action, $values_attribute);
+					$values['id'] = $receipt['id'];
+					$id = $receipt['id'];
+					
+				}
+
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						$this->edit($values);
+						return;
+					}
+				}
+				
+				phpgwapi_cache::message_set($receipt, 'message'); 
+				$this->edit($values);
+				
+				return;
+			}
+        }
+		
 		public function add()
 		{
 			$this->edit('edit');
 		}
 		
 		
-		function edit($mode = 'edit')
+		function edit($values = array(), $mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
 
@@ -908,8 +1064,9 @@ JS;
 
 			$bypass 			= phpgw::get_var('bypass', 'bool');
 
-			if($_POST && !$bypass)
+			/*if($_POST && !$bypass)
 			{
+
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
 
@@ -919,7 +1076,8 @@ JS;
 				}
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 			}
-			elseif ($mode == 'edit')
+			elseif ($mode == 'edit')*/
+			if ($mode == 'edit')
 			{
 				$location_code 	= phpgw::get_var('location_code');
 				$tenant_id 		= phpgw::get_var('tenant_id', 'int');
@@ -959,12 +1117,10 @@ JS;
 					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
 				}
 
-
 				if($location_code)
 				{
 					$values['location_data'] = $this->bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num, 'view' => true));
 				}
-
 			}
 
 			if($values['origin'])
@@ -988,12 +1144,11 @@ JS;
 			}
 
 
-
 //			_debug_array($values);die();
 
 			if (($values['save'] || $values['save_new']) && $mode == 'edit')
 			{
-				if(!$values['location'])
+				/*if(!$values['location'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
 					$error_id=true;
@@ -1075,7 +1230,7 @@ JS;
 							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 						}
 					}
-				}
+				}*/
 
 				if($id)
 				{
@@ -1597,6 +1752,7 @@ JS;
 			self::render_template_xsl(array('request', 'datatable_inline', 'files','attributes_form'), array('edit' => $data));
 		}
 
+		
 		function delete()
 		{
 			$id = phpgw::get_var('id', 'int');
