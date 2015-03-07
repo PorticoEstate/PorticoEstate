@@ -1,11 +1,11 @@
-/*! FixedColumns 3.0.2
+/*! FixedColumns 3.0.3
  * ©2010-2014 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     FixedColumns
  * @description Freeze columns in place on a scrolling DataTable
- * @version     3.0.2
+ * @version     3.0.3
  * @file        dataTables.fixedColumns.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -62,7 +62,7 @@ var FixedColumns = function ( dt, init ) {
 	var that = this;
 
 	/* Sanity check - you just know it will happen */
-	if ( ! this instanceof FixedColumns )
+	if ( ! ( this instanceof FixedColumns ) )
 	{
 		alert( "FixedColumns warning: FixedColumns must be initialised with the 'new' keyword." );
 		return;
@@ -75,8 +75,10 @@ var FixedColumns = function ( dt, init ) {
 
 	// Use the DataTables Hungarian notation mapping method, if it exists to
 	// provide forwards compatibility for camel case variables
-	if ( $.fn.dataTable.camelToHungarian ) {
-		$.fn.dataTable.camelToHungarian( FixedColumns.defaults, init );
+	var camelToHungarian = $.fn.dataTable.camelToHungarian;
+	if ( camelToHungarian ) {
+		camelToHungarian( FixedColumns.defaults, FixedColumns.defaults, true );
+		camelToHungarian( FixedColumns.defaults, init );
 	}
 
 	// v1.10 allows the settings object to be got form a number of sources
@@ -746,6 +748,18 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			iLeftWidth = this.s.iLeftWidth,
 			iRightWidth = this.s.iRightWidth,
 			iRight;
+		var scrollbarAdjust = function ( node, width ) {
+			if ( ! oOverflow.bar ) {
+				// If there is no scrollbar (Macs) we need to hide the auto scrollbar
+				node.style.width = (width+20)+"px";
+				node.style.paddingRight = "20px";
+				node.style.boxSizing = "border-box";
+			}
+			else {
+				// Otherwise just overflow by the scrollbar
+				node.style.width = (width+oOverflow.bar)+"px";
+			}
+		};
 
 		// When x scrolling - don't paint the fixed columns over the x scrollbar
 		if ( oOverflow.x )
@@ -764,7 +778,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				oGrid.left.foot.style.top = (oOverflow.x ? oOverflow.bar : 0)+"px"; // shift footer for scrollbar
 			}
 
-			oGrid.left.liner.style.width = (iLeftWidth+oOverflow.bar)+"px";
+			scrollbarAdjust( oGrid.left.liner, iLeftWidth );
 			oGrid.left.liner.style.height = iBodyHeight+"px";
 		}
 
@@ -784,7 +798,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				oGrid.right.foot.style.top = (oOverflow.x ? oOverflow.bar : 0)+"px";
 			}
 
-			oGrid.right.liner.style.width = (iRightWidth+oOverflow.bar)+"px";
+			scrollbarAdjust( oGrid.right.liner, iRightWidth );
 			oGrid.right.liner.style.height = iBodyHeight+"px";
 
 			oGrid.right.headBlock.style.display = oOverflow.y ? 'block' : 'none';
@@ -1089,9 +1103,10 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				n.removeAttribute('id');
 				var i = that.s.dt.oFeatures.bServerSide===false ?
 					that.s.dt.aiDisplay[ that.s.dt._iDisplayStart+z ] : z;
+				var aTds = $(this).children('td, th');
+
 				for ( iIndex=0 ; iIndex<aiColumns.length ; iIndex++ )
 				{
-					var aTds = that.s.dt.aoData[i].anCells || that.s.dt.oApi._fnGetTdNodes( that.s.dt, i );
 					iColumn = aiColumns[iIndex];
 
 					if ( aTds.length > 0 )
@@ -1352,7 +1367,7 @@ FixedColumns.defaults = /** @lends FixedColumns.defaults */{
  *  @default   See code
  *  @static
  */
-FixedColumns.version = "3.0.2";
+FixedColumns.version = "3.0.3";
 
 
 
