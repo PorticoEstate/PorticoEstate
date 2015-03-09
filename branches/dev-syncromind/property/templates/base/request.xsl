@@ -174,78 +174,75 @@
 		<div id="request_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="general">
-						<div class="requirement-responsibility-left">
+						<div class="pure-u-1">
 							<h2><xsl:value-of select="php:function('lang', 'request')"/></h2>
-							<span class="messages">
-								<xsl:choose>
-									<xsl:when test="value_request_id!=''">
+							<xsl:choose>
+								<xsl:when test="value_request_id!=''">
+									<div class="pure-control-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'id')"/>
 										</label>
-										<xsl:value-of select="value_request_id"/>
-										<br/>
-									</xsl:when>
-								</xsl:choose>
-							</span>
-							<span class="messages">
-								<xsl:choose>
-									<xsl:when test="value_request_id!=''">
-										<xsl:for-each select="value_origin">
+										<div class="pure-custom"><xsl:value-of select="value_request_id"/></div>
+									</div>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="value_request_id!=''">
+									<xsl:for-each select="value_origin">
+										<div class="pure-control-group">
 											<label for="msg_table" class="messages">
 												<xsl:value-of select="descr"/>
 											</label>
-											<table name="msg_table">
+											<div class="pure-custom">
 												<xsl:for-each select="data">
-													<td class="th_text" align="left">
+													<div>
 														<a href="{link}" title="{statustext}">
 															<xsl:value-of select="id"/>
 														</a>
 														<xsl:text> </xsl:text>
-													</td>
+													</div>
 												</xsl:for-each>
-											</table>
-										</xsl:for-each>
-										<xsl:choose>
-											<xsl:when test="value_target!=''">
-											<br/>			
-											</xsl:when>
-										</xsl:choose>
-										<xsl:for-each select="value_target">
+											</div>
+										</div>
+									</xsl:for-each>
+									<xsl:for-each select="value_target">
+										<div class="pure-control-group">
 											<label>
 												<xsl:value-of select="descr"/>
 											</label>
-											<table name="msg_table">
+											<div class="pure-custom">
 												<xsl:for-each select="data">
-													<td class="th_text" align="left">
+													<div>
 														<a href="{link}" title="{statustext}">
 															<xsl:value-of select="id"/>
 														</a>
 														<xsl:text> </xsl:text>
-													</td>
+													</div>
 												</xsl:for-each>
-											</table>
-										</xsl:for-each>
-
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:for-each select="value_origin">
-											<label class="messages">
+											</div>
+										</div>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:when test="value_origin!=''">
+									<xsl:for-each select="value_origin">
+										<div class="pure-control-group">
+											<label>
 												<xsl:value-of select="descr"/>
 											</label>
-											<table>
+											<div class="pure-custom">
 												<xsl:for-each select="data">
-													<td class="th_text" align="left">
+													<div>
 														<a href="{link}" title="{statustext}">
 															<xsl:value-of select="id"/>
 														</a>
 														<xsl:text> </xsl:text>
-													</td>
+													</div>
 												</xsl:for-each>
-											</table>
-										</xsl:for-each>
-									</xsl:otherwise>
-								</xsl:choose>
-							</span>
+											</div>
+										</div>
+									</xsl:for-each>
+								</xsl:when>
+							</xsl:choose>
 						</div>
 						<div class="clearBoth">&nbsp;</div>
 						<hr/>
