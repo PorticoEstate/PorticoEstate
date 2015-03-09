@@ -39,6 +39,7 @@
 
 	class property_uirequest extends phpgwapi_uicommon_jquery
 	{
+		private $receipt = array();
 		var $grants;
 		var $cat_id;
 		var $start;
@@ -57,6 +58,7 @@
 			'view'  		=> true,
 			'edit'  		=> true,
 			'add'			=> true,
+			'save'			=> true,
 			'delete'		=> true,
 			'priority_key'	=> true,
 			'view_file'		=> true,
@@ -440,39 +442,39 @@
 			
 			if(!$values['location'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a location !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
 				$error_id=true;
 			}
 
 			if(!$values['title'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please enter a request TITLE !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please enter a request TITLE !'));
 				$error_id=true;
 			}
 
 			if(!$values['cat_id'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a category !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a category !'));
 				$error_id=true;
 			}
 
 			if(!$values['status'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a status !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a status !'));
 			}
 
 			if(!$values['building_part'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a building part!'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a building part!'));
 			}
 
 			if($values['consume_value'] && !$values['consume_date'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a date !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a date !'));
 			}
 			if($values['planning_value'] && !$values['planning_date'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a date !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a date !'));
 			}
 
 			if(isset($values['amount_investment']) && $values['amount_investment'])
@@ -480,7 +482,7 @@
 				$values['amount_investment'] = str_replace(' ', '', $values['amount_investment']);
 				if( !ctype_digit($values['amount_investment']))
 				{
-					$receipt['error'][]=array('msg'=>lang('investment') . ': ' . lang('Please enter an integer !'));
+					$this->receipt['error'][]=array('msg'=>lang('investment') . ': ' . lang('Please enter an integer !'));
 					$error_id=true;
 				}
 			}
@@ -489,7 +491,7 @@
 				$values['amount_operation'] = str_replace(' ', '', $values['amount_operation']);
 				if( !ctype_digit($values['amount_operation']))
 				{
-					$receipt['error'][]=array('msg'=>lang('operation') . ': ' . lang('Please enter an integer !'));
+					$this->receipt['error'][]=array('msg'=>lang('operation') . ': ' . lang('Please enter an integer !'));
 					$error_id=true;
 				}
 			}
@@ -498,7 +500,7 @@
 				$values['amount_potential_grants'] = str_replace(' ', '', $values['amount_potential_grants']);
 				if( !ctype_digit($values['amount_potential_grants']))
 				{
-					$receipt['error'][]=array('msg'=>lang('potential grants') . ': ' . lang('Please enter an integer !'));
+					$this->receipt['error'][]=array('msg'=>lang('potential grants') . ': ' . lang('Please enter an integer !'));
 					$error_id=true;
 				}
 			}
@@ -508,7 +510,7 @@
 
 			if(!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a condition!'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a condition!'));
 			}
 
 			if(is_array($values_attribute))
@@ -517,13 +519,56 @@
 				{
 					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 					{
-						$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 					}
 				}
 			}
 					
 			return $values;
 		}
+		
+		
+		private function _handle_files($values)
+		{
+			$id = (int)$values['id'];
+			if(empty($id))
+			{
+				throw new Exception('uirequest::_handle_files() - missing id');
+			}
+						
+			$bofiles	= CreateObject('property.bofiles');
+			if(isset($values['file_action']) && is_array($values['file_action']))
+			{
+				$bofiles->delete_file("/request/{$id}/", $values);
+			}
+
+			$values['file_name']=str_replace(" ","_",$_FILES['file']['name']);
+			$to_file = "{$bofiles->fakebase}/request/{$id}/{$values['file_name']}";
+
+			if(!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
+				'string' => $to_file,
+				'relatives' => array(RELATIVE_NONE)
+			)))
+			{
+				$this->receipt['error'][]=array('msg'=>lang('This file already exists !'));
+			}
+
+			if($values['file_name'])
+			{
+				$bofiles->create_document_dir("request/{$id}");
+				$bofiles->vfs->override_acl = 1;
+
+				if(!$bofiles->vfs->cp (array (
+					'from'	=> $_FILES['file']['tmp_name'],
+					'to'	=> $to_file,
+					'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+				{
+					$this->receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+				}
+				$bofiles->vfs->override_acl = 0;
+			}
+		}
+		
 		
 		function columns()
 		{
@@ -979,10 +1024,8 @@ JS;
         public function save()
         {
 			$id = phpgw::get_var('id', 'int');
+			$values_attribute = phpgw::get_var('values_attribute');
 						
-			/*
-			* Overrides with incoming data from POST
-			*/
 			$values = $this->_populate();
 
 			if($id)
@@ -1007,9 +1050,7 @@ JS;
 					$receipt = $this->bo->save($values, $action, $values_attribute);
 					$values['id'] = $receipt['id'];
 					$id = $receipt['id'];
-					
 				}
-
 				catch(Exception $e)
 				{
 					if ( $e )
@@ -1020,7 +1061,58 @@ JS;
 					}
 				}
 				
+				$this->_handle_files($values);
+
+				if ($values['notify'])
+				{
+					$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
+					$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$headers = "Return-Path: <". $coordinator_email .">\r\n";
+					$headers .= "From: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
+					$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
+					$headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
+
+					$subject = lang(notify).": ". $id;
+					$message = lang(request) . " " . $id ." ". lang('is registered');
+
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					{
+						$bcc = $coordinator_email;
+						if (!is_object($GLOBALS['phpgw']->send))
+						{
+							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+						}
+
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['mail_address'], $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
+					}
+					else
+					{
+						$this->receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
+					}
+				}
+
+				if($rcpt)
+				{
+					$receipt['message'][]=array('msg'=>lang('%1 is notified',$values['mail_address']));
+				}
+					
 				phpgwapi_cache::message_set($receipt, 'message'); 
+				if ($values['save_new']) 
+				{
+					$values	= $this->bo->read_single($id);
+					$GLOBALS['phpgw']->redirect_link('/index.php',array
+						(
+							'menuaction'	=> 'property.uirequest.add',
+							'location_code' => $values['location_code'],
+							'p_entity_id'	=> $values['p_entity_id'],
+							'p_cat_id'		=> $values['p_cat_id'],
+							'p_num'			=> $values['p_num'],
+							'origin'		=> isset($values['origin'][0]) ? $values['origin'][0]['location'] : '',
+							'origin_id'		=>  isset($values['origin'][0]) ? $values['origin'][0]['data'][0]['id'] : ''
+						)
+					);
+				}
+
 				$this->edit($values);
 				
 				return;
@@ -1029,7 +1121,7 @@ JS;
 		
 		public function add()
 		{
-			$this->edit('edit');
+			$this->edit();
 		}
 		
 		
@@ -1058,25 +1150,9 @@ JS;
 					return;
 				}
 			}
-
-			$values				= phpgw::get_var('values');
-			$values_attribute	= phpgw::get_var('values_attribute');
-
+			
 			$bypass 			= phpgw::get_var('bypass', 'bool');
 
-			/*if($_POST && !$bypass)
-			{
-
-				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
-
-				for ($j=0;$j<count($insert_record_entity);$j++)
-				{
-					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-				}
-				$values = $this->bocommon->collect_locationdata($values,$insert_record);
-			}
-			elseif ($mode == 'edit')*/
 			if ($mode == 'edit')
 			{
 				$location_code 	= phpgw::get_var('location_code');
@@ -1123,7 +1199,7 @@ JS;
 				}
 			}
 
-			if($values['origin'])
+			if(!empty($values['origin']))
 			{
 				$origin		= $values['origin'];
 				$origin_id	= $values['origin_id'];
@@ -1143,183 +1219,14 @@ JS;
 				);
 			}
 
-
-//			_debug_array($values);die();
-
+			if (empty($id))
+			{
+				$id = $values['id'];
+			}
+			
 			if (($values['save'] || $values['save_new']) && $mode == 'edit')
 			{
-				/*if(!$values['location'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
-					$error_id=true;
-				}
-
-				if(!$values['title'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a request TITLE !'));
-					$error_id=true;
-				}
-
-				if(!$values['cat_id'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a category !'));
-					$error_id=true;
-				}
-
-				if(!$values['status'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a status !'));
-				}
-
-				if(!$values['building_part'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a building part!'));
-				}
-
-				if($values['consume_value'] && !$values['consume_date'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
-				}
-				if($values['planning_value'] && !$values['planning_date'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
-				}
-
-				if(isset($values['amount_investment']) && $values['amount_investment'])
-				{
-					$values['amount_investment'] = str_replace(' ', '', $values['amount_investment']);
-					if( !ctype_digit($values['amount_investment']))
-					{
-						$receipt['error'][]=array('msg'=>lang('investment') . ': ' . lang('Please enter an integer !'));
-						$error_id=true;
-					}
-				}
-				if(isset($values['amount_operation']) && $values['amount_operation'])
-				{
-					$values['amount_operation'] = str_replace(' ', '', $values['amount_operation']);
-					if( !ctype_digit($values['amount_operation']))
-					{
-						$receipt['error'][]=array('msg'=>lang('operation') . ': ' . lang('Please enter an integer !'));
-						$error_id=true;
-					}
-				}
-				if(isset($values['amount_potential_grants']) && $values['amount_potential_grants'])
-				{
-					$values['amount_potential_grants'] = str_replace(' ', '', $values['amount_potential_grants']);
-					if( !ctype_digit($values['amount_potential_grants']))
-					{
-						$receipt['error'][]=array('msg'=>lang('potential grants') . ': ' . lang('Please enter an integer !'));
-						$error_id=true;
-					}
-				}
-
-				$_condition = array_keys($values['condition']);
-				$__condition = isset($_condition[0]) && $_condition[0] ? $_condition[0] : 0;
-
- 				if(!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a condition!'));
-				}
-
-				if(is_array($values_attribute))
-				{
-					foreach ($values_attribute as $attribute )
-					{
-						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-						{
-							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
-						}
-					}
-				}*/
-
-				if($id)
-				{
-					$values['id']=$id;
-					$action='edit';
-				}
-
-				if(!$receipt['error'])
-				{
-					if($values['copy_request'])
-					{
-						$action='add';
-					}
-					$receipt = $this->bo->save($values,$action,$values_attribute);
-					if (! $receipt['error'])
-					{
-						$id = $receipt['id'];
-					}
-
-					//----------files
-					$bofiles	= CreateObject('property.bofiles');
-					if(isset($values['file_action']) && is_array($values['file_action']))
-					{
-						$bofiles->delete_file("/request/{$id}/", $values);
-					}
-
-					$values['file_name']=str_replace(" ","_",$_FILES['file']['name']);
-					$to_file = "{$bofiles->fakebase}/request/{$id}/{$values['file_name']}";
-
-					if(!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
-						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
-					)))
-					{
-						$receipt['error'][]=array('msg'=>lang('This file already exists !'));
-					}
-
-					if($values['file_name'])
-					{
-						$bofiles->create_document_dir("request/{$id}");
-						$bofiles->vfs->override_acl = 1;
-
-						if(!$bofiles->vfs->cp (array (
-							'from'	=> $_FILES['file']['tmp_name'],
-							'to'	=> $to_file,
-							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
-						{
-							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
-						}
-						$bofiles->vfs->override_acl = 0;
-					}
-					//---------end files
-
-					$function_msg = lang('Edit request');
-
-					if ($values['notify'])
-					{
-						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
-						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$headers = "Return-Path: <". $coordinator_email .">\r\n";
-						$headers .= "From: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
-						$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
-						$headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
-
-						$subject = lang(notify).": ". $id;
-						$message = lang(request) . " " . $id ." ". lang('is registered');
-
-						if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
-						{
-							$bcc = $coordinator_email;
-							if (!is_object($GLOBALS['phpgw']->send))
-							{
-								$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-							}
-
-							$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['mail_address'], $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
-						}
-						else
-						{
-							$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
-						}
-					}
-
-					if($rcpt)
-					{
-						$receipt['message'][]=array('msg'=>lang('%1 is notified',$values['mail_address']));
-					}
-				}
-				else
+				if($this->receipt['error'])
 				{
 					if($values['location'])
 					{
@@ -1336,25 +1243,9 @@ JS;
 						$values['p'][$values['extra']['p_entity_id']]['p_cat_name']=phpgw::get_var('entity_cat_name_'.$values['extra']['p_entity_id'], 'string', 'POST');
 					}
 				}
-
-				if(isset($values['save_new']) && $values['save_new'] && !$receipt['error'])
-				{
-					$values	= $this->bo->read_single($id);
-					$GLOBALS['phpgw']->redirect_link('/index.php',array
-						(
-							'menuaction'	=> 'property.uirequest.edit',
-							'location_code' => $values['location_code'],
-							'p_entity_id'	=> $values['p_entity_id'],
-							'p_cat_id'		=> $values['p_cat_id'],
-							'p_num'			=> $values['p_num'],
-							'origin'		=> isset($values['origin'][0]) ? $values['origin'][0]['location'] : '',
-							'origin_id'		=>  isset($values['origin'][0]) ? $values['origin'][0]['data'][0]['id'] : ''
-						)
-					);
-				}
 			}
-
-			if(!$receipt['error'] && !$bypass && $id)
+			
+			if(!$this->receipt['error'] && !$bypass && $id)
 			{
 				$values	= $this->bo->read_single($id);
 				$record_history = $this->bo->read_record_history($id);
@@ -1395,8 +1286,6 @@ JS;
 					'entity_data'	=> $values['p']
 				)
 			);
-			
-
 
 			if($values['contact_phone'])
 			{
@@ -1411,7 +1300,7 @@ JS;
 
 			$link_data = array
 				(
-					'menuaction'	=> "property.uirequest.{$mode}",
+					'menuaction'	=> "property.uirequest.save",
 					'id'			=> $id
 				);
 
@@ -1429,7 +1318,6 @@ JS;
 				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
 				$supervisor_email = $prefs['email'];
 			}
-
 
 			if($values['project_id'])
 			{
@@ -1471,10 +1359,10 @@ JS;
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> "''",
 				'ColumnDefs'	=> array( array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_user','label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_action','label'=>lang('Action'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label'=>lang('New Value'),'sortable'=>true,'resizeable'=>true)),
+											array('key' => 'value_user','label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
+											array('key' => 'value_action','label'=>lang('Action'),'sortable'=>true,'resizeable'=>true),
+											array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
+											array('key' => 'value_new_value','label'=>lang('New Value'),'sortable'=>true,'resizeable'=>true)),
 				'data'			=> json_encode($record_history),
 				'config'		=> array(
 					array('disableFilter' => true),
