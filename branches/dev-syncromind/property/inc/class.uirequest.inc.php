@@ -71,52 +71,6 @@
 		{
 			parent::__construct();
 			
-			$this->bolocation			= CreateObject('property.bolocation',true);
-			$this->boproject			= CreateObject('property.boproject');
-			
-			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.borequest',true);
-			//$this->bo->get_location_info();
-			$this->bocommon				= & $this->bo->bocommon;
-			$this->custom				= & $this->bo->custom;
-			$this->cats					= & $this->bo->cats;
-			$this->location_info		= $this->bo->location_info;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
-			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->config				= CreateObject('phpgwapi.config','property');
-			$this->config->read();
-			/*$this->acl_location			= $this->location_info['acl_location'];
-			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->location_info['acl_app']);
-			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->location_info['acl_app']);
-			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->location_info['acl_app']);
-			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->location_info['acl_app']);
-			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, $this->location_info['acl_app']);*/
-			$this->acl_location			= $this->bo->acl_location;
-			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
-
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->allrows				= $this->bo->allrows;
-
-			$this->type 		= $this->bo->type;
-			$this->type_id 		= $this->bo->type_id;
-
-			if($appname == $this->bo->appname)
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
-				$this->appname = $appname;
-			}
-		}
-
-		/*function property_uirequest()
-		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::request';
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -163,7 +117,7 @@
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 			}
-		}*/
+		}
 		
 		/**
 		 * Fetch data from $this->bo based on parametres
@@ -206,14 +160,6 @@
 				'start_date' => $start_date,
 				'end_date' => $end_date
 			);
-
-			foreach ( $this->location_info['fields'] as $field )
-			{
-				if (isset($field['filter']) && $field['filter'])
-				{
-					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
-				}
-			}
 
 			$result_objects = array();
 			$result_count = 0;
@@ -664,7 +610,7 @@
 			{
 				$lookup	= true;
 			}
-			
+				
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -672,9 +618,9 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
 			
-			$appname			= $this->location_info['name'];
-			$function_msg		= lang('list %1', $appname);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
+			$appname					= lang('request');
+			$function_msg				= lang('list request');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			
 			$data = array(
 				'datatable_name'	=> $appname,
@@ -1699,7 +1645,7 @@ JS;
 				$this->bocommon->no_access();
 				return;
 			}
-			$this->edit($mode = 'view');
+			$this->edit(array(), $mode = 'view');
 		}
 
 
