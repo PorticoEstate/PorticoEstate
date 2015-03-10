@@ -543,10 +543,27 @@
 									<xsl:value-of select="alarm_data/add_alarm/lang_user"/>
 								</td>
 							</tr>
-							<tr>
-								<td class="center" align="left" colspan="10">
-									<div id="datatable-buttons_1"/>
-								</td>
+							<tr>lang_user
+								<td width="10">
+									<!--div id="datatable-buttons_1"/-->
+                                                                    <select name="values[alarm_data/add_alarm/day_list]" class="form" title="{lang_days_statustext}">
+                                                                            <xsl:apply-templates select="alarm_data/add_alarm/day_list"/>
+                                                                    </select>
+                                                                    
+                                                                    <select name="values[alarm_data/add_alarm/hour_list]" class="form" title="{alarm_data/add_alarm/lang_hour_statustext}">
+									<xsl:apply-templates select="alarm_data/add_alarm/hour_list"/>
+                                                                    </select>
+                                                                    
+                                                                    <select name="values[alarm_data/add_alarm/minute_list]" class="form" title="{alarm_data/add_alarm/lang_minute_statustext}">
+									<xsl:apply-templates select="alarm_data/add_alarm/minute_list"/>
+                                                                    </select>
+                                                                    
+                                                                    <select name="values[alarm_data/add_alarm/user_list]" class="form" title="{alarm_data/add_alarm/lang_user}">
+									<xsl:apply-templates select="alarm_data/add_alarm/user_list"/>
+                                                                    </select>
+                                                                    
+                                                                </td>
+                     
 							</tr>
 							<!-- <xsl:call-template name="alarm_form"/>  -->
 						</table>
