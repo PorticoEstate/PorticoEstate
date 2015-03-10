@@ -311,6 +311,7 @@
 		function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
+			
 			if($this->cat_id)
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";
@@ -1136,6 +1137,8 @@
 		
 		function edit($values = array(), $mode = 'edit')
 		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
+			
 			$id = (int)phpgw::get_var('id', 'int');
 
 			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
@@ -1806,7 +1809,7 @@
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.notify.update_data', 'location_id'=>$location_id, 'location_item_id'=>$id,'action' =>'refresh_notify_contact','phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $notify_info['column_defs']['values'],
 				'data'			=> json_encode(array()),
-				'tabletools'	=> $mode == 'edit' ? $notify_info['tabletools'] : '',
+				'tabletools'	=> $mode == 'edit' ? $notify_info['tabletools'] : array(),
 				'config'		=> array(
 					array('disableFilter'	=> true),
 					array('disablePagination'	=> true)
@@ -2600,14 +2603,12 @@
 
 		function view()
 		{
-
-
 			if(!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
 			}
-			$this->edit('view');
+			$this->edit(array(), $mode = 'view');
 		}
 
 		function project_group()
