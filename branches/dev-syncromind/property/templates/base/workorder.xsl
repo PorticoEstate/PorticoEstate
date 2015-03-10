@@ -963,6 +963,9 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="mode='view'">
+						<xsl:variable name="lang_edit">
+							<xsl:value-of select="lang_edit"/>
+						</xsl:variable>
 						<input type="button" class="pure-button pure-button-primary" name="edit" value="{$lang_edit}" onClick="document.edit_form.submit();">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_edit_statustext"/>
