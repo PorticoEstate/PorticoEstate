@@ -1652,7 +1652,13 @@
 				))
 			);
 
-  
+            $tabletools = array
+            (
+                array('my_name'	=> 'enable_alarm','text' => lang($alarm_data[alter_alarm][0][lang_enable])),
+                array('my_name'	=> 'disable_alarm','text' => lang($alarm_data[alter_alarm][0][lang_disable])),
+                array('my_name'	=> 'delete_alarm','text' => lang($alarm_data[alter_alarm][0][lang_delete]))
+            );
+            
             $myColumnDefs0 = array
             (
                array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
@@ -1660,7 +1666,7 @@
                array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
                array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter','width'=>60),
                array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true),
-               array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>60)
+               array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'JqueryPortico.formatCheckUis_agremment','width'=>60)
             );
   
             $datatable_def[] = array
@@ -1668,6 +1674,7 @@
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> "''",
 				'data'			=> json_encode($alarm_data['values']),
+                'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs0,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -1675,8 +1682,7 @@
 				)
 			);
             
-            
-            
+           
 			$myButtons[1] = array
 				(
 					'name'   => "1",
@@ -1685,10 +1691,11 @@
 													array('id' =>'values[time][mins]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
 													array('id' =>'values[user_id]',  'type'=>'menu',  'value'=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), 'label'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),'classname'=> 'actionsFilter', 'value_hidden'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
 													array('id' =>'values[add_alarm]',  'type'=>'buttons', 'value'=>'Add',  'label'=>$alarm_data['add_alarm']['lang_add'],   'funct'=> 'onAddClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-				))
-			);
+                    ))
+                );
 
 			//---------items------------------------------------
+                        
 //			$datavalues[1] = array
 //				(
 //					'name'					=> "1",
@@ -1725,7 +1732,8 @@
 					'label'			=> lang('Update'),
 					'sortable'		=> true,
 					'resizeable'	=> true,
-					'formatter'		=> 'myFormatterCheckUpdate'
+//					'formatter'		=> 'myFormatterCheckUpdate'
+                    'formatter'     => 'JqueryPortico.FormatterCenter'
 				);
             
             $datatable_def[] = array
@@ -1765,10 +1773,12 @@
 				if ($link_to_files != '')
 				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$values['files'][$z]['directory'].'/'.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
+//                    $content_files[$z]['file_name'] = '';
 				}
 				else
 				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
+//                    $content_files[$z]['file_name'] = '';
 				}
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}
@@ -1793,7 +1803,7 @@
             $myColumnDefs2 = array
             (
                 array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-				  array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter')
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter')
             );
   
             $datatable_def[] = array
@@ -1942,7 +1952,9 @@
 					'lang_year'							=> lang('year'),
 					'lang_year_statustext'				=> lang('Budget year'),
 					'year'								=> $this->bocommon->select_list($values['year'],$this->bo->get_year_list($id)),
-
+                    
+                    'lang_days_statustext'              => lang('Days'),
+                
 					'b_account_data'					=> $b_account_data,
 					'ecodimb_data'						=> $ecodimb_data,
 					'lang_category'						=> lang('category'),
@@ -1973,6 +1985,7 @@
 				);
             
 // echo '<pre>'; print_r($data); echo '</pre>'; exit();
+
 
 //			phpgwapi_yui::load_widget('dragdrop');
 //			phpgwapi_yui::load_widget('datatable');
