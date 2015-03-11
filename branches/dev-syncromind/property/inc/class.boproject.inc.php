@@ -468,26 +468,32 @@
 			{ 
 				$data['allrows'] = true;
 			}
-
-			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
-			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
             
 //			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
 //				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>isset($data['allrows']) ? $data['allrows'] : '','dry_run' => $data['dry_run'],
 //				'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id),
 //				'project_type_id'	=> $this->project_type_id, 'filter_year' => $this->filter_year));
-            
-            $criteria = $this->get_criteria($this->criteria_id);
-//            echo '<pre>'; print_r($criteria); echo '</pre>';
-//            echo '<pre>'; print_r($data); echo '</pre>';
-//            exit('ssss1');
-            
-            $data['start_date'] = $start_date;
-            $data['end_date']= $end_date;
-            $data['criteria'] = $criteria;
   
-            $project = $this->so->read($data);
+            $project = $this->so->read(array(
+				'start' => $data['start'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'dry_run' => $data['dry_run'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'status_id' => $this->status_id,
+				'wo_hour_cat_id' => $this->wo_hour_cat_id,
+				'start_date' => $this->bocommon->date_to_timestamp($data['start_date']),
+				'end_date' => $this->bocommon->date_to_timestamp($data['end_date']),
+				'district_id' => $this->district_id, 
+				'criteria' => $this->get_criteria($this->criteria_id),
+				'project_type_id' => $this->project_type_id, 
+				'filter_year' => $this->filter_year
+			));
+			
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
