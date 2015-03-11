@@ -64,6 +64,7 @@
 				'index'							=> true,
 				'view'							=> true,
 				'edit'							=> true,
+				'add'							=> true,
 				'delete'						=> true,
 				'save'							=> true,
 				'date_search'					=> true,
@@ -136,10 +137,14 @@
 
 		function download()
 		{
-			$start_date = urldecode(phpgw::get_var('start_date'));
-			$end_date 	= urldecode(phpgw::get_var('end_date'));
-			$values 	= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
-			$uicols		= $this->bo->uicols;
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+			
+			$values = $this->query();
+			$uicols	= $this->bo->uicols;
 			$this->bocommon->download($values,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
@@ -324,9 +329,6 @@
 
 			$lookup 		= phpgw::get_var('lookup', 'bool');
 			$from 			= phpgw::get_var('from');
-			$start_date 	= urldecode(phpgw::get_var('start_date'));
-			$end_date 		= urldecode(phpgw::get_var('end_date'));
-			$dry_run		= false;
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
@@ -363,7 +365,7 @@
                                            'type'   => 'link',
                                            'value'  => lang('new'),
                                            'href'   => self::link(array(
-                                               'menuaction'	=> 'property.uiproject.edit'
+                                               'menuaction'	=> 'property.uiproject.add'
                                            )),
                                            'class'  => 'new_item'
                                        ),
@@ -397,9 +399,15 @@
                     'source'    => self::link(array(
                         'menuaction'		=> 'property.uiproject.index',
 						'lookup'        	=> $lookup,
+						'from'				=> $from,
                         'phpgw_return_as'   => 'json'
                     )),
-                    #falta el donwload
+					'download'	=> self::link(array(
+							'menuaction'	=> 'property.uiproject.download',
+							'export'		=> true,
+							'skip_origin'	=> true,
+							'allrows'		=> true
+					)),
                     'allrows'   => true,
                     'editor_action' => '',
                     'field' =>  array()
@@ -412,7 +420,7 @@
                 array_unshift($data['form']['toolbar']['item'], $filter);
             }
             
-			$project_list = $this->bo->read(array('dry_run' => true));
+			$this->bo->read(array('dry_run' => true));
 			$uicols	= $this->bo->uicols;
 			$count_uicols_name=count($uicols['name']);
 
@@ -594,26 +602,6 @@
 				$datatable['exchange_values'] = $function_exchange_values;
 				$datatable['valida'] = $function_detail;
 			}
-
-			$link_date_search = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.date_search'));
-
-			$link_download = array
-				(
-					'menuaction'	=> 'property.uiproject.download',
-					'sort'			=>$this->sort,
-					'order'			=>$this->order,
-					'cat_id'		=>$this->cat_id,
-					'district_id'	=>$this->district_id,
-					'filter'		=>$this->filter,
-					'status_id'		=>$this->status_id,
-					'lookup'		=>$lookup,
-					'from'			=>$from,
-					'query'			=>$this->query,
-					'start_date'	=>$start_date,
-					'end_date'		=>$end_date,
-					'start'			=>$this->start,
-					'wo_hour_cat_id'=>$this->wo_hour_cat_id
-				);
           
             self::render_template_xsl('datatable_jquery',$data);
 		}
@@ -621,12 +609,13 @@
 
         public function query()
         {
-            $search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
- 			$start_date 	= urldecode(phpgw::get_var('start_date'));
-			$end_date 		= urldecode(phpgw::get_var('end_date'));
+            $search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+ 			$start_date		= urldecode(phpgw::get_var('start_date'));
+			$end_date		= urldecode(phpgw::get_var('end_date'));
+			$skip_origin	= phpgw::get_var('skip_origin', 'bool');
 			
             $params = array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -635,20 +624,11 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
-                'filter' => $this->filter,
-                'cat_id' => $this->cat_id,
-                'status_id' => $this->status_id,
-                'wo_hour_cat_id' => $this->wo_hour_cat_id,
-                'district_id' => $this->district_id, 
-				'project_type_id' => $this->project_type_id,
-                'filter_year' => $this->filter_year,
 				'start_date' => $start_date,
-				'end_date' => $end_date
+				'end_date' => $end_date,
+				'skip_origin' => $skip_origin
             );
-			
-            $result_objects = array();
-            $result_count = 0;
-            
+
             $values = $this->bo->read($params);
             
             if( phpgw::get_var('export','bool'))
@@ -1133,7 +1113,10 @@
 			return;
         }
 		
-		
+		public function add()
+		{
+			$this->edit();
+		}
 		
 		function edit($values = array(), $mode = 'edit')
 		{
