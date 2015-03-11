@@ -134,11 +134,15 @@
 
 		function download()
 		{
-			$start_date 	= urldecode($this->start_date);
-			$end_date 		= urldecode($this->end_date);
-			$list 			= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true));
-			$uicols			= $this->bo->uicols;
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+			
+			$values = $this->query();
+			$uicols	= $this->bo->uicols;
+			$this->bocommon->download($values,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function view_file()
@@ -194,166 +198,142 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 		}
-                private function _get_filters($selected = 0)
-                {
-                    $values_combo_box = array();
-                    $combos = array();
-                    
-                    $values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
-                    if(count($values_combo_box[0]))
-                    {
-                        $default_value = array ('id'=>'','name'=>lang('no district'));
-                        array_unshift ($values_combo_box[0],$default_value);
-                        $combos[] = array
-                                        (
-                                            'type'  => 'filter',
-                                            'name'  => 'district_id',
-                                            'extra' => '',
-                                            'text'  => lang('district'),
-                                            'list'  => $values_combo_box[0]
-                                        );
-                    }
-                    else
-                    {
-                        unset($values_combo_box[0]);
-                    }
-                    
-                    $count = count($values_combo_box);
-                    $_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
-                    if(count($values_combo_box[$count]))
-                    {
-                        $values_combo_box[$count] = array();
-                        foreach($_cats as $_cat)
-                        {
-                            if($_cat['level'] == 0 && !$_cat['active'] == 2)
-                            {
-                               $values_combo_box[$count][] = $_cat;
-                            }
-                        }
-                        $default_value = array ('id'=>'','name'=> lang('no category'));
-                        array_unshift ($values_combo_box[$count],$default_value);
-                        $combos[] = array
-                                        (
-                                            'type'  =>  'filter',
-                                            'name'  =>  'cat_id',
-                                            'extra' =>  '',
-                                            'text'  => lang('Category'),
-                                            'list'  => $values_combo_box[$count]
-                                        );
-                    }
-                    else
-                    {
-                        unset($values_combo_box[$count]);
-                    }
-                    
-                    $count = count($values_combo_box);
-                    $values_combo_box[$count]  = $this->bo->select_status_list('filter',$this->status_id);
-                    array_unshift ($values_combo_box[$count],array ('id'=>'all','name'=> lang('all')));
-                    array_unshift ($values_combo_box[$count],array ('id'=>'open','name'=> lang('open')));
-                    $combos[] = array
-                                    (
-                                        'type'  =>  'filter',
-                                        'name'  =>  'status_id',
-                                        'extra' =>  '',
-                                        'text'  =>  lang('status'),
-                                        'list'  =>  $values_combo_box[$count]
-                                    );
-                    //
-                    $count = count($values_combo_box);
-                    $values_combo_box[$count] =  $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-                    $default_value = array ('id'=>'','name'=> lang('no hour category'));
-                    array_unshift ($values_combo_box[$count],$default_value);
-                    $combos[] = array
-                                    (
-                                        'type'  =>  'filter',
-                                        'name'  =>  'wo_hour_cat_id',
-                                        'extra' =>  '',
-                                        'text'  =>  lang('Hour Category'),
-                                        'list'  =>  $values_combo_box[$count]
-                                    );
-                    
-                    $count = count($values_combo_box);
-                    $values_combo_box[$count]  = $this->bo->get_criteria_list($this->criteria_id);
-                    $default_value = array ('id'=>'','name'=>lang('no criteria'));
-                    array_unshift ($values_combo_box[$count],$default_value);
-                    $combos[] = array
-                                    (
-                                        'type'  =>  'filter',
-                                        'name'  =>  'criteria_id',
-                                        'extra' =>  '',
-                                        'text'  =>  lang('Criteria'),
-                                        'list'  =>  $values_combo_box[$count]
-                                    );
-                    
-                    $count = count($values_combo_box);
-                    $values_combo_box[$count]  = execMethod('property.boproject.get_filter_year_list',$this->filter_year);
-                    array_unshift ($values_combo_box[$count],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
-                    $combos[] = array
-                                    (
-                                        'type'  =>  'filter',
-                                        'name'  =>  'filter_year',
-                                        'extra' =>  '',
-                                        'text'  =>  lang('Year'),
-                                        'list'  =>  $values_combo_box[$count]
-                                    );
-                    
-                    $count = count($values_combo_box);
-                    $values_combo_box[$count]  = $this->bo->get_user_list($this->filter);
-                    array_unshift ($values_combo_box[$count],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
-                    $default_value = array ('id'=>'','name'=>lang('no user'));
-                    array_unshift ($values_combo_box[$count],$default_value);
-                    $combos[] = array
-                                    (
-                                        'type'  =>  'filter',
-                                        'name'  =>  'filter',
-                                        'extra' =>  '',
-                                        'text'  =>  lang('User'),
-                                        'list'  =>  $values_combo_box[$count]
-                                    );
-                    return $combos;
-                                
-                }
-                public function query() {
-                    
-                    $start_date =   urldecode($this->start_date);
-                    $end_date   =   urldecode($this->end_date);
-                    
-                    $search     =   phpgw::get_var('search');
-                    $order      =   phpgw::get_var('order');
-                    $draw       =   phpgw::get_var('draw', 'int');
-                    $columns    =   phpgw::get_var('columns');
-                    
-                    $params = array
-                            (
-                                'start'         =>  phpgw::get_var('start', 'int', 'REQUEST', 0),
-                                'results'       =>  phpgw::get_var('length', 'int', 'REQUEST', 0),
-                                'query'         =>  $search['value'],
-                                'order'         =>  $columns[$order[0]['column']]['data'],
-                                'sort'          =>  $order[0]['dir'],
-                                'allrows'       =>  phpgw::get_var('length', 'int') == -1,
-                                'start_date'    =>  $start_date,
-                                'end_date'      =>  $end_date
-                            );
-                    /* $this->bo->read(
-                            array(
-                     *          'start_date' => $start_date, 
-                     *          'end_date' => $end_date, 
-                     *          'allrows' =>$allrows, 
-                     *          'dry_run' => $dry_run
-                     *          ));
-                     */
-                    //echo '<pre>';print_r($params); echo '</pre>'; die('saul');
-                    $values = $this->bo->read($params);
-                    if( phpgw::get_var('export', 'bool'))
-                    {
-                            return $values;
-                    }
-                    $result_data    =   array('results' =>  $values);
-                    $result_data['total_records']   = $this->bo->total_records;
-                    $result_data['draw']    = $draw;
- 
-                    return $this->jquery_results($result_data);
-                }
+		
+		private function _get_filters($selected = 0)
+		{
+			$values_combo_box = array();
+			$combos = array();
+
+			$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
+			$default_value = array('id'=>'','name'=>lang('no district'));
+			array_unshift ($values_combo_box[0],$default_value);
+			$combos[] = array
+							(
+								'type'  => 'filter',
+								'name'  => 'district_id',
+								'extra' => '',
+								'text'  => lang('district'),
+								'list'  => $values_combo_box[0]
+							);
+
+
+			$_cats = $this->cats->return_sorted_array(0,false,'','','',false, false);
+			$values_combo_box[1] = array();
+			foreach($_cats as $_cat)
+			{
+				if($_cat['level'] == 0)
+				{
+				   $values_combo_box[1][] = $_cat;
+				}
+			}
+			$default_value = array ('id'=>'','name'=> lang('no category'));
+			array_unshift ($values_combo_box[1],$default_value);
+			$combos[] = array
+							(
+								'type'  =>  'filter',
+								'name'  =>  'cat_id',
+								'extra' =>  '',
+								'text'  => lang('Category'),
+								'list'  => $values_combo_box[1]
+							);
+
+
+			$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
+			array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
+			array_unshift ($values_combo_box[2],array ('id'=>'open','name'=> lang('open')));
+			$combos[] = array
+							(
+								'type'  =>  'filter',
+								'name'  =>  'status_id',
+								'extra' =>  '',
+								'text'  =>  lang('status'),
+								'list'  =>  $values_combo_box[2]
+							);
+			//
+
+			$values_combo_box[3] =  $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+			$default_value = array ('id'=>'','name'=> lang('no hour category'));
+			array_unshift ($values_combo_box[3],$default_value);
+			$combos[] = array
+							(
+								'type'  =>  'filter',
+								'name'  =>  'wo_hour_cat_id',
+								'extra' =>  '',
+								'text'  =>  lang('Hour Category'),
+								'list'  =>  $values_combo_box[3]
+							);
+
+			$values_combo_box[4]  = $this->bo->get_criteria_list($this->criteria_id);
+			$default_value = array ('id'=>'','name'=>lang('no criteria'));
+			array_unshift ($values_combo_box[4],$default_value);
+			$combos[] = array
+							(
+								'type'  =>  'filter',
+								'name'  =>  'criteria_id',
+								'extra' =>  '',
+								'text'  =>  lang('Criteria'),
+								'list'  =>  $values_combo_box[4]
+							);
+
+			$values_combo_box[5]  = execMethod('property.boproject.get_filter_year_list',$this->filter_year);
+			array_unshift ($values_combo_box[5],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
+			$combos[] = array
+							(
+								'type'  =>  'filter',
+								'name'  =>  'filter_year',
+								'extra' =>  '',
+								'text'  =>  lang('Year'),
+								'list'  =>  $values_combo_box[5]
+							);
+
+			$values_combo_box[6]  = $this->bo->get_user_list($this->filter);
+			array_unshift ($values_combo_box[6],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
+			$default_value = array ('id'=>'','name'=>lang('no user'));
+			array_unshift ($values_combo_box[6],$default_value);
+			$combos[] = array
+							(
+								'type'  =>  'filter',
+								'name'  =>  'filter',
+								'extra' =>  '',
+								'text'  =>  lang('User'),
+								'list'  =>  $values_combo_box[6]
+							);
+			return $combos;
+
+		}
+				
+		public function query() 
+		{
+			$start_date = urldecode($this->start_date);
+			$end_date   = urldecode($this->end_date);
+			$search     = phpgw::get_var('search');
+			$order      = phpgw::get_var('order');
+			$draw       = phpgw::get_var('draw', 'int');
+			$columns    = phpgw::get_var('columns');
+
+			$params = array
+				(
+					'start'         => phpgw::get_var('start', 'int', 'REQUEST', 0),
+					'results'       => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'query'         => $search['value'],
+					'order'         => $columns[$order[0]['column']]['data'],
+					'sort'          => $order[0]['dir'],
+					'allrows'       => phpgw::get_var('length', 'int') == -1,
+					'start_date'    => $start_date,
+					'end_date'      => $end_date
+				);
+
+			$values = $this->bo->read($params);
+			if( phpgw::get_var('export', 'bool'))
+			{
+					return $values;
+			}
+			$result_data    =   array('results' =>  $values);
+			$result_data['total_records']   = $this->bo->total_records;
+			$result_data['draw']    = $draw;
+
+			return $this->jquery_results($result_data);
+		}
 				
 		function index()
 		{
@@ -362,13 +342,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$allrows  = phpgw::get_var('allrows', 'bool');
-			$dry_run = false;
-
 			$lookup = '';
-
-			$start_date 	= urldecode($this->start_date);
-			$end_date 	= urldecode($this->end_date);
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
@@ -381,12 +355,12 @@
 
 			$this->save_sessiondata();
                         
-                        if( phpgw::get_var('phpgw_return_as') == 'json' )
-                        {
-                            return $this->query();
-                        }
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $this->query();
+			}
                         
-                        self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('property', 'portico', 'workorder.index.js');
 
@@ -394,11 +368,11 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
                         
-                        $appname        = lang('Workorder');
+            $appname        = lang('Workorder');
 			$function_msg	= lang('list workorder');
-                        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
                         
-                        $data = array(
+            $data = array(
 				'datatable_name'	=> $appname . ': ' . $function_msg,
 				'form' => array(
 					'toolbar' => array(
@@ -417,18 +391,6 @@
 								'href'	=> '#',
 								'class'	=> '',
 								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uiworkorder.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
-							),
-							array
-							(
-								'type'	=> 'label',
-								'id'	=> 'label_org_unit_id'
-							),
-							array
-							(
-								'type'	=> 'hidden',
-								'id'	=> 'org_unit_id',
-								'name'	=> 'org_unit_id',
-								'value'	=> ''
 							),
 							array
 							(
@@ -451,20 +413,13 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-							'menuaction'	 => 'property.uiworkorder.index',
-                                                        'criteria_id'    => $this->criteria_id,
-                                                        'filter_year'    => $this->filter_year,
-							'second_display' => $second_display,
-							'phpgw_return_as' => 'json'
+							'menuaction'		=> 'property.uiworkorder.index',
+							'phpgw_return_as'	=> 'json'
 					)),
 					'download'	=> self::link(array(
 							'menuaction'	=> 'property.uiworkorder.download',
-							'second_display' => $second_display,
-							'cat_id'         => $this->cat_id,
-							'type'		 => $this->type,
-							'district_id'	 => $this->district_id,
-							'export'     => true,
-							'allrows'    => true
+							'export'		=> true,
+							'allrows'		=> true
 					)),
 					'allrows'	=> true,
 					'editor_action' => '',
@@ -472,7 +427,7 @@
 				)
 			);
                                                                 
-                        $filters = $this->_get_filters();
+            $filters = $this->_get_filters();
 			krsort($filters);
 			foreach ($filters as $filter) 
 			{
