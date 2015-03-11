@@ -126,12 +126,13 @@
 		public function query()
 		{
 			$project_id = phpgw::get_var('project_id', 'int');
-			$search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
+			$search		= phpgw::get_var('search');
+			$order		= phpgw::get_var('order');
+			$draw		= phpgw::get_var('draw', 'int');
+			$columns	= phpgw::get_var('columns');
  			$start_date = urldecode(phpgw::get_var('start_date'));
-			$end_date = urldecode(phpgw::get_var('end_date'));
+			$end_date	= urldecode(phpgw::get_var('end_date'));
+			$list_descr	= phpgw::get_var('list_descr', 'bool');
 			
 			$query = phpgw::get_var('query');
 			if (!empty($query))
@@ -146,23 +147,12 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
-				'project_id' => $project_id,
-				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'district_id' => phpgw::get_var('district_id', 'int'),
-				'property_cat_id' => phpgw::get_var('property_cat_id'),
-				'degree_id' => phpgw::get_var('degree_id'),
-				'status_id' => phpgw::get_var('status_id'),
-				'filter' => phpgw::get_var('filter'),
-				'building_part' => phpgw::get_var('building_part'),
-				'responsible_unit' => phpgw::get_var('responsible_unit'),
-				'recommended_year' => phpgw::get_var('recommended_year'),
 				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'project_id' => $project_id,
 				'start_date' => $start_date,
-				'end_date' => $end_date
+				'end_date' => $end_date,
+				'list_descr' => $list_descr
 			);
-
-			$result_objects = array();
-			$result_count = 0;
 
 			$values = $this->bo->read($params);
 			if ( phpgw::get_var('export', 'bool'))
@@ -577,11 +567,15 @@
 
 		function download()
 		{
-			$start_date 	= urldecode($this->start_date);
-			$end_date 		= urldecode($this->end_date);
-			$list 			= $this->bo->read(array('start_date' =>$start_date, 'end_date' =>$end_date,'allrows'=>true,'list_descr' => true));
-			$uicols			= $this->bo->uicols;
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+			
+			$values = $this->query();
+			$uicols	= $this->bo->uicols;
+			$this->bocommon->download($values,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 		
 		
@@ -671,17 +665,16 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction'			=> 'property.uirequest.index', 
-						'lookup'				=> $lookup,
-						'project_id'			=> $project_id,
-						'condition_survey_id'	=> $this->condition_survey_id,
-						'nonavbar'				=> $this->nonavbar,
-						'p_num'					=> $this->p_num,
-						'phpgw_return_as'		=> 'json'
+						'menuaction'		=> 'property.uirequest.index', 
+						'lookup'			=> $lookup,
+						'project_id'		=> $project_id,
+						'nonavbar'			=> $this->nonavbar,
+						'phpgw_return_as'	=> 'json'
 					)),
 					'download'	=> self::link(array('menuaction' => 'property.uirequest.download',
 									'export'     => true,
-									'allrows'    => true)),
+									'allrows'    => true,
+									'list_descr' => true)),
 					'allrows'	=> true,
 					'editor_action' => array(),
 					'field' => array()
