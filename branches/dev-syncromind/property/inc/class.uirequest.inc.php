@@ -886,7 +886,9 @@
 											$('#custom_values_form').attr('method', 'POST');
 											$('#custom_values_form').submit();"
 					);				
-
+				
+				if (!empty($query))
+				{
 					$code =	<<<JS
 						function initCompleteDatatable(oSettings, json, oTable) 
 						{ 
@@ -897,7 +899,8 @@
 						}
 JS;
 
-				$GLOBALS['phpgw']->js->add_code('', $code, true);
+					$GLOBALS['phpgw']->js->add_code('', $code, true);
+				}
 			}
 			
 			self::add_javascript('property', 'portico', 'request.index.js');
