@@ -601,6 +601,23 @@
 				}
 				$datatable['exchange_values'] = $function_exchange_values;
 				$datatable['valida'] = $function_detail;
+				
+				$query	= phpgw::get_var('query');
+				if (!empty($query))
+				{
+					$code =	<<<JS
+						function initCompleteDatatable(oSettings, json, oTable) 
+						{ 
+							setTimeout(function() {
+								var api = oTable.api();
+								api.search( '$query' ).draw();
+							}, 1);
+						}
+JS;
+
+					$GLOBALS['phpgw']->js->add_code('', $code, true);
+				}
+				
 			}
           
             self::render_template_xsl('datatable_jquery',$data);
@@ -1907,7 +1924,7 @@
 				array('key' => 'type','label'=>lang('type'),'sortable'=>true),
 				array('key' => 'title','label'=>lang('title'),'sortable'=>false),
 				array('key' => 'status','label'=>lang('status'),'sortable'=>false),
-				array('key' => 'select','label'=>lang('select'),'sortable'=>false)
+				array('key' => 'select','label'=>lang('select'),'className'=>'center','sortable'=>false)
 			);
 
 			$datatable_def[] = array
