@@ -893,8 +893,10 @@
 					$code =	<<<JS
 						function initCompleteDatatable(oSettings, json, oTable) 
 						{ 
-							var api = oTable.api();
-							api.search( '$query' ).draw();
+							setTimeout(function() {
+								var api = oTable.api();
+								api.search( '$query' ).draw();
+							}, 1);
 						}
 JS;
 
