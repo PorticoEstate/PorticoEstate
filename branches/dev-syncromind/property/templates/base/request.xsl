@@ -407,9 +407,12 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'recommended year')"/>
 									</label>
-									<input type="text" id="recommended_year" name="values[recommended_year]" size="10" value="{value_recommended_year}">
+									<input type="text" data-validation="number" id="recommended_year" name="values[recommended_year]" size="10" value="{value_recommended_year}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'year')"/>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-optional">
+											<xsl:text>true</xsl:text>
 										</xsl:attribute>
 									</input>
 								</div>
@@ -454,9 +457,12 @@
 										<label class="requirement-action-label">
 											<xsl:value-of select="php:function('lang', 'cost operation')"/>
 										</label>
-										<input type="text" name="values[amount_operation]" value="{value_amount_operation}">
+										<input type="text" data-validation="number" name="values[amount_operation]" value="{value_amount_operation}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="lang_budget_statustext"/>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-optional">
+												<xsl:text>true</xsl:text>
 											</xsl:attribute>
 										</input>
 										<xsl:text> </xsl:text>
@@ -465,9 +471,12 @@
 										<label class="requirement-action-label">
 											<xsl:value-of select="php:function('lang', 'cost investment')"/>
 										</label>
-										<input type="text" name="values[amount_investment]" value="{value_amount_investment}">
+										<input type="text" data-validation="number" name="values[amount_investment]" value="{value_amount_investment}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="lang_budget_statustext"/>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-optional">
+												<xsl:text>true</xsl:text>
 											</xsl:attribute>
 										</input>
 										<xsl:text> </xsl:text>
@@ -496,9 +505,12 @@
 										<label class="requirement-action-label-wide">
 											<xsl:value-of select="php:function('lang', 'potential grants')"/>
 										</label>
-										<input type="text" name="values[amount_potential_grants]" value="{value_amount_potential_grants}">
+										<input type="text" data-validation="number" name="values[amount_potential_grants]" value="{value_amount_potential_grants}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="lang_budget_statustext"/>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-optional">
+												<xsl:text>true</xsl:text>
 											</xsl:attribute>
 										</input>
 										<xsl:text> </xsl:text>
