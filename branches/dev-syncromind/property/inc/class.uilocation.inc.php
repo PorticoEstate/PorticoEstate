@@ -1439,7 +1439,7 @@ JS;
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_form'));
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_form'));
 
 			if ($values)
 			{
@@ -1786,7 +1786,7 @@ JS;
 				}
 			}
 
-			phpgwapi_yui::tabview_setup('location_edit_tabview');
+			//phpgwapi_yui::tabview_setup('location_edit_tabview');
 			$tabs = array();
 			$tabs['general']	= array('label' => $location_types[($type_id-1)]['name'], 'link' => '#general');
 
@@ -1954,13 +1954,13 @@ JS;
 
 				$related_link = $_related ? true : false;
 
-	//			if($_related)
+				if($_related)
 				{
 					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
 				}
 
 
-				$datavalues = array();
+				/*$datavalues = array();
 				$myColumnDefs = array();
 				$datavalues[0] = array
 				(
@@ -1980,9 +1980,25 @@ JS;
 						array('key' => 'url','label'=>lang('what'),'sortable'=>false,'resizeable'=>true),
 						)
 					)
+				);*/
+
+				$related_def = array
+				(
+					array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'url','label'=>lang('what'),'sortable'=>false,'resizeable'=>true)
 				);
 
-
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_0',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode($_related),
+					'ColumnDefs'	=> $related_def,
+					'config'		=> array(
+						array('disableFilter'	=> true),
+						array('disablePagination'	=> true)
+					)
+				);
 
 // ---- START INTEGRATION -------------------------
 
@@ -2162,20 +2178,21 @@ JS;
 
 			unset($values['attributes']);
 
-			$property_js = "/property/js/yahoo/property2.js";
+			/*$property_js = "/property/js/yahoo/property2.js";
 
 			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
+			}*/
 
 
 			$data = array
 			(
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				/*'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
+				'myColumnDefs'					=> $myColumnDefs,*/
+				'datatable_def'					=> $datatable_def,
 				'integration'					=> $integration,
 				'roles'							=> $roles,
 				'edit'							=> $view ? '' : true,
@@ -2242,36 +2259,23 @@ JS;
 				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, 'general'),
 				'documents'						=> $documents,
 				'file_tree'						=> $file_tree,
 				'lang_expand_all'				=> lang('expand all'),
 				'lang_collapse_all'				=> lang('collapse all')
 			);
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+			//$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+			//phpgwapi_yui::load_widget('treeview');
+			phpgwapi_jquery::load_widget('treeview');
 
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-
-			phpgwapi_yui::load_widget('treeview');
-
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.edit', 'property' );
+			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.edit', 'property' );
 			$appname	= lang('location');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			self::render_template_xsl(array('location', 'datatable_inline', 'attributes_form'), array('edit' => $data));
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 
