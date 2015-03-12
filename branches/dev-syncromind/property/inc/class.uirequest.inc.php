@@ -859,24 +859,21 @@
 						'text'			=> lang('Update project'),
 						'type'			=> 'custom',
 						'custom_code'	=> "
-											var myChecks = $('.mychecks');
 											
+											var myChecks = $('.mychecks:checked');
 											if (myChecks.length == 0) {
 												alert('Any box selected');
 												return;
 											}
-
+											
 											for(i=0;i<myChecks.length;i++)
-											{
-												if(myChecks[i].checked)
-												{			
+											{			
 												   $('<input>').attr({
 													   type: 'hidden',
 													   id: 'add_request[request_id][]',
 													   name: 'add_request[request_id][]',
 													   value: myChecks[i].value
 												   }).appendTo('#custom_values_form');			 
-												}
 											}
 
 											var path_update = new Array();
