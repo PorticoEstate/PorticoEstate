@@ -1,5 +1,4 @@
   <!-- $Id$ -->
-
 	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="edit">
@@ -21,7 +20,6 @@
 				<xsl:apply-templates select="list"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		<xsl:call-template name="jquery_phpgw_i18n"/>
 	</xsl:template>
 
 	<!-- New template-->
@@ -279,67 +277,42 @@ onMouseOut="nd()">
 			{
 				document.form.active_tab.value = active_tab;			
 			}
-
-			var property_js = <xsl:value-of select="property_js"/>;
-		//	var base_java_url = <xsl:value-of select="base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						edit_action:  <xsl:value-of select="edit_action"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
 		</script>
 
-		<div class="yui-navset" id="location_edit_tabview">
+		<div id="location_edit_tabview">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form method="post" name="form" action="{$form_action}">
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div class="yui-content">
+			<dl>
+				<xsl:choose>
+					<xsl:when test="msgbox_data != ''">
+						<dt>
+							<xsl:call-template name="msgbox"/>
+						</dt>
+					</xsl:when>
+				</xsl:choose>
+			</dl>
+			<form method="post" name="form" id="form" action="{$form_action}" class="pure-form pure-form-aligned">
+				<div id="tab-content">
+					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 					<div id="general">
-						<table cellpadding="2" cellspacing="2" width="100%" align="center">
-							<xsl:choose>
-								<xsl:when test="msgbox_data != ''">
-									<tr>
-										<td align="left" colspan="3">
-											<xsl:call-template name="msgbox"/>
-										</td>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
-						</table>
-						<table cellpadding="2" cellspacing="2" width="80%" align="center">
+						<fieldset>
 							<xsl:choose>
 								<xsl:when test="change_type_list != ''">
-									<tr>
-										<td valign="top">
+									<div class="pure-control-group">
+										<label for="name">
 											<xsl:value-of select="lang_change_type"/>
-										</td>
-										<td valign="top">
-											<xsl:variable name="lang_change_type_statustext">
-												<xsl:value-of select="lang_change_type_statustext"/>
-											</xsl:variable>
-											<select name="change_type" class="forms" onMouseover="window.status='{$lang_change_type_statustext}'; return true;" onMouseout="window.status='';return true;">
-												<option value="">
-													<xsl:value-of select="lang_no_change_type"/>
-												</option>
-												<xsl:apply-templates select="change_type_list"/>
-											</select>
-										</td>
-									</tr>
+										</label>
+										<xsl:variable name="lang_change_type_statustext">
+											<xsl:value-of select="lang_change_type_statustext"/>
+										</xsl:variable>
+										<select name="change_type" class="forms" onMouseover="window.status='{$lang_change_type_statustext}'; return true;" onMouseout="window.status='';return true;">
+											<option value="">
+												<xsl:value-of select="lang_no_change_type"/>
+											</option>
+											<xsl:apply-templates select="change_type_list"/>
+										</select>
+									</div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
@@ -351,253 +324,263 @@ onMouseOut="nd()">
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:for-each select="additional_fields">
-								<tr>
-									<td class="{class}" align="left" valign="top">
+								<div class="pure-control-group">
+									<label for="name">
 										<xsl:value-of select="input_text"/>
-									</td>
-									<td align="left">
-										<xsl:choose>
-											<xsl:when test="datatype ='text'">
-												<textarea cols="60" rows="4" name="{input_name}" onMouseout="window.status='';return true;">
-													<xsl:attribute name="onMouseover">
-														<xsl:text>window.status='</xsl:text>
-														<xsl:value-of select="statustext"/>
-														<xsl:text>'; return true;</xsl:text>
-													</xsl:attribute>
-													<xsl:value-of select="value"/>
-												</textarea>
-											</xsl:when>
-											<xsl:when test="datatype ='date'">
-												<input type="text" name="{input_name}" value="{value}" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10" onMouseout="window.status='';return true;">
-													<xsl:attribute name="onMouseover">
-														<xsl:text>window.status='</xsl:text>
-														<xsl:value-of select="descr"/>
-														<xsl:text>'; return true;</xsl:text>
-													</xsl:attribute>
-												</input>
-												<xsl:text>[</xsl:text>
-												<xsl:value-of select="//lang_dateformat"/>
-												<xsl:text>]</xsl:text>
-											</xsl:when>
-											<xsl:otherwise>
-												<input type="text" name="{input_name}" value="{value}" size="{size}" onMouseout="window.status='';return true;">
-													<xsl:attribute name="title">
-														<xsl:value-of select="statustext"/>
-													</xsl:attribute>
-												</input>
-											</xsl:otherwise>
-										</xsl:choose>
-									</td>
-								</tr>
+									</label>									
+									<xsl:choose>
+										<xsl:when test="datatype ='text'">
+											<textarea cols="60" rows="4" name="{input_name}" onMouseout="window.status='';return true;">
+												<xsl:attribute name="onMouseover">
+													<xsl:text>window.status='</xsl:text>
+													<xsl:value-of select="statustext"/>
+													<xsl:text>'; return true;</xsl:text>
+												</xsl:attribute>
+												<xsl:value-of select="value"/>
+											</textarea>
+										</xsl:when>
+										<xsl:when test="datatype ='date'">
+											<input type="text" name="{input_name}" value="{value}" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10" onMouseout="window.status='';return true;">
+												<xsl:attribute name="onMouseover">
+													<xsl:text>window.status='</xsl:text>
+													<xsl:value-of select="descr"/>
+													<xsl:text>'; return true;</xsl:text>
+												</xsl:attribute>
+											</input>
+											<xsl:text>[</xsl:text>
+											<xsl:value-of select="//lang_dateformat"/>
+											<xsl:text>]</xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<input type="text" name="{input_name}" value="{value}" size="{size}" onMouseout="window.status='';return true;">
+												<xsl:attribute name="title">
+													<xsl:value-of select="statustext"/>
+												</xsl:attribute>
+											</input>
+										</xsl:otherwise>
+									</xsl:choose>
+								</div>
 							</xsl:for-each>
-							<tr>
-								<td>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="lang_category"/>
-								</td>
-								<td>
-									<xsl:call-template name="cat_select"/>
-								</td>
-							</tr>
+								</label>
+								<xsl:call-template name="cat_select"/>
+							</div>
 							<xsl:choose>
 								<xsl:when test="edit_part_of_town = 1">
-									<tr>
-										<td>
+									<div class="pure-control-group">
+										<label>
 											<xsl:value-of select="lang_part_of_town"/>
-										</td>
-										<td>
-											<xsl:call-template name="select_part_of_town"/>
-										</td>
-									</tr>
+										</label>
+										<xsl:call-template name="select_part_of_town"/>
+									</div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="edit_owner = 1">
-									<tr>
-										<td>
+									<div class="pure-control-group">
+										<label>
 											<xsl:value-of select="lang_owner"/>
-										</td>
-										<td>
-											<xsl:variable name="lang_owner_statustext">
-												<xsl:value-of select="lang_owner_statustext"/>
-											</xsl:variable>
-											<select name="owner_id" class="forms" onMouseover="window.status='{$lang_owner_statustext}'; return true;" onMouseout="window.status='';return true;">
-												<option value="">
-													<xsl:value-of select="lang_select_owner"/>
-												</option>
-												<xsl:apply-templates select="owner_list"/>
-											</select>
-										</td>
-									</tr>
+										</label>
+										<xsl:variable name="lang_owner_statustext">
+											<xsl:value-of select="lang_owner_statustext"/>
+										</xsl:variable>
+										<select name="owner_id" class="forms" onMouseover="window.status='{$lang_owner_statustext}'; return true;" onMouseout="window.status='';return true;">
+											<option value="">
+												<xsl:value-of select="lang_select_owner"/>
+											</option>
+											<xsl:apply-templates select="owner_list"/>
+										</select>
+									</div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="edit_street = 1">
-									<tr>
-										<td>
+									<div class="pure-control-group">
+										<label>
 											<a href="javascript:street_lookup()" onMouseover="window.status='{lang_select_street_help}';return true;" onMouseout="window.status='';return true;">
 												<xsl:value-of select="lang_street"/>
 											</a>
-										</td>
-										<td>
-											<input type="hidden" name="street_id" value="{value_street_id}"/>
-											<input size="30" type="text" name="street_name" value="{value_street_name}" onClick="street_lookup();" readonly="readonly">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_select_street_help"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-											<input size="4" type="text" name="street_number" value="{value_street_number}">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_street_num_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</td>
-									</tr>
+										</label>
+										<input type="hidden" name="street_id" value="{value_street_id}"/>
+										<input size="30" type="text" name="street_name" value="{value_street_name}" onClick="street_lookup();" readonly="readonly">
+											<xsl:attribute name="onMouseover">
+												<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="lang_select_street_help"/>
+												<xsl:text>'; return true;</xsl:text>
+											</xsl:attribute>
+										</input>
+										<input size="4" type="text" name="street_number" value="{value_street_number}">
+											<xsl:attribute name="onMouseover">
+												<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="lang_street_num_statustext"/>
+												<xsl:text>'; return true;</xsl:text>
+											</xsl:attribute>
+										</input>
+									</div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="edit_tenant = 1">
-									<tr>
-										<td>
+									<div class="pure-control-group">
+										<label>
 											<a href="javascript:tenant_lookup()" onMouseover="window.status='{lang_tenant_statustext}';return true;" onMouseout="window.status='';return true;">
 												<xsl:value-of select="lang_tenant"/>
 											</a>
-										</td>
-										<td>
-											<input type="hidden" name="tenant_id" value="{value_tenant_id}"/>
-											<input size="{size_last_name}" type="text" name="last_name" value="{value_last_name}" onClick="tenant_lookup();" readonly="readonly">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_tenant_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-											<input size="{size_first_name}" type="text" name="first_name" value="{value_first_name}" onClick="tenant_lookup();" readonly="readonly">
-												<xsl:attribute name="title">
-													<xsl:value-of select="lang_tenant_statustext"/>
-												</xsl:attribute>
-											</input>
-										</td>
-									</tr>
+										</label>
+										<input type="hidden" name="tenant_id" value="{value_tenant_id}"/>
+										<input size="{size_last_name}" type="text" name="last_name" value="{value_last_name}" onClick="tenant_lookup();" readonly="readonly">
+											<xsl:attribute name="onMouseover">
+												<xsl:text>window.status='</xsl:text>
+												<xsl:value-of select="lang_tenant_statustext"/>
+												<xsl:text>'; return true;</xsl:text>
+											</xsl:attribute>
+										</input>
+										<input size="{size_first_name}" type="text" name="first_name" value="{value_first_name}" onClick="tenant_lookup();" readonly="readonly">
+											<xsl:attribute name="title">
+												<xsl:value-of select="lang_tenant_statustext"/>
+											</xsl:attribute>
+										</input>
+									</div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:apply-templates select="attributes_general/attributes"/>
 							<xsl:choose>
 								<xsl:when test="entities_link != ''">
-									<tr>
-										<td valign="top">
+									<div class="pure-control-group">
+										<label>
 											<xsl:value-of select="lang_related_info"/>
-										</td>
-										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<xsl:apply-templates select="entities_link"/>
-											</table>
-										</td>
-									</tr>
+										</label>
+										<div class="pure-custom">
+											<xsl:apply-templates select="entities_link"/>
+										</div>
+									</div>
 								</xsl:when>
 							</xsl:choose>
-						</table>
+						</fieldset>
 					</div>
 					<xsl:call-template name="attributes_values"/>
 					<xsl:choose>
 						<xsl:when test="roles != ''">
 							<div id="roles">
-								<table cellpadding="2" cellspacing="2" width="80%" align="left">
-									<tr class="th">
-										<td class="th_text">
-											<xsl:value-of select="php:function('lang', 'role')"/>
-										</td>
-										<td class="th_text">
-											<xsl:value-of select="php:function('lang', 'contact')"/>
-										</td>
-										<td class="th_text">
-											<xsl:value-of select="php:function('lang', 'responsibility')"/>
-										</td>
-									</tr>
-									<xsl:for-each select="roles">
-										<tr>
-											<td>
-												<xsl:value-of select="name"/>
-											</td>
-											<td>
-												<xsl:value-of select="responsibility_contact"/>
-											</td>
-											<td>
-												<xsl:value-of select="responsibility_name"/>
-											</td>
-										</tr>
-									</xsl:for-each>
-								</table>
+								<fieldset>
+									<table class="display cell-border compact responsive no-wrap dataTable dtr-inline">
+										<thead>
+											<tr role="row">
+												<td>
+													<xsl:value-of select="php:function('lang', 'role')"/>
+												</td>
+												<td>
+													<xsl:value-of select="php:function('lang', 'contact')"/>
+												</td>
+												<td>
+													<xsl:value-of select="php:function('lang', 'responsibility')"/>
+												</td>
+											</tr>
+										</thead>
+										<tbody>
+											<xsl:for-each select="roles">											
+												<tr class="odd">
+													<td>
+														<xsl:value-of select="name"/>
+													</td>
+													<td>
+														<xsl:value-of select="responsibility_contact"/>
+													</td>
+													<td>
+														<xsl:value-of select="responsibility_name"/>
+													</td>
+												</tr>
+											</xsl:for-each>
+										</tbody>
+										<tfoot>										
+											<tr>
+												<th></th>
+												<th></th>
+												<th></th>
+											</tr>
+										</tfoot>
+									</table>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
-								<!-- Some style for the expand/contract section-->
-								<style>
-									#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-									#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
-								</style>
-								<script type="text/javascript">
-									var documents = <xsl:value-of select="documents"/>;
-								</script>
-								<!-- markup for expand/contract links -->
-								<div id="expandcontractdiv">
-									<a id="expand" href="#">
-										<xsl:value-of select="lang_expand_all"/>
-									</a>
-									<xsl:text> </xsl:text>
-									<a id="collapse" href="#">
-										<xsl:value-of select="lang_collapse_all"/>
-									</a>
-								</div>
-								<div id="treeDiv1"/>
+								<fieldset>
+									<!-- Some style for the expand/contract section-->
+									<style>
+										#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
+										#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
+									</style>
+									<script type="text/javascript">
+										var documents = <xsl:value-of select="documents"/>;
+									</script>
+									<!-- markup for expand/contract links -->
+									<div id="treecontrol">
+										<a id="collapse" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
+										<xsl:text> | </xsl:text>
+										<a id="expand" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
+									</div>
+									<div id="treeDiv1"></div>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="file_tree != ''">
 							<div id="file_tree">
-								<!-- Some style for the expand/contract section-->
-								<style>
-									#expandcontractdiv2 {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-									#treeDiv2 { background: #fff; padding:1em; margin-top:1em; }
-								</style>
-								<script type="text/javascript">
-									var documents2 = <xsl:value-of select="file_tree"/>;
-								</script>
-								<!-- markup for expand/contract links -->
-								<div id="expandcontractdiv2">
-									<a id="expand2" href="#">
-										<xsl:value-of select="lang_expand_all"/>
-									</a>
-									<xsl:text> </xsl:text>
-									<a id="collapse2" href="#">
-										<xsl:value-of select="lang_collapse_all"/>
-									</a>
-								</div>
-								<div id="treeDiv2"/>
+								<fieldset>
+									<!-- Some style for the expand/contract section-->
+									<style>
+										#expandcontractdiv2 {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
+										#treeDiv2 { background: #fff; padding:1em; margin-top:1em; }
+									</style>
+									<script type="text/javascript">
+										var documents2 = <xsl:value-of select="file_tree"/>;
+									</script>
+									<!-- markup for expand/contract links -->
+									<div id="expandcontractdiv2">
+										<a id="expand2" href="#">
+											<xsl:value-of select="lang_expand_all"/>
+										</a>
+										<xsl:text> </xsl:text>
+										<a id="collapse2" href="#">
+											<xsl:value-of select="lang_collapse_all"/>
+										</a>
+									</div>
+									<div id="treeDiv2"/>
+								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
 						<div id="related">
-							<table cellpadding="2" cellspacing="2" width="80%" align="center">
-								<tr>
-									<td>
-										<div id="datatable-container_0"/>
-									</td>
-								</tr>
-							</table>
+							<fieldset>
+								<div class="pure-control-group">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_0'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</fieldset>
 						</div>
 					<xsl:for-each select="integration">
 						<div id="{section}">
-							<iframe id="{section}_content" width="100%" height="{height}">
-								<p>Your browser does not support iframes.</p>
-							</iframe>
+							<fieldset>
+								<iframe id="{section}_content" width="100%" height="{height}">
+									<p>Your browser does not support iframes.</p>
+								</iframe>
+							</fieldset>
 						</div>
 					</xsl:for-each>
 				</div>
@@ -760,13 +743,11 @@ onMouseOut="nd()">
 		<xsl:variable name="entity_link">
 			<xsl:value-of select="entity_link"/>
 		</xsl:variable>
-		<tr>
-			<td class="small_text" align="left">
-				<a href="{$entity_link}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;">
-					<xsl:value-of select="text_entity"/>
-				</a>
-			</td>
-		</tr>
+		<div>
+			<a href="{$entity_link}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;">
+				<xsl:value-of select="text_entity"/>
+			</a>
+		</div>
 	</xsl:template>
 
 	<!-- New template-->
@@ -906,21 +887,7 @@ onMouseOut="nd()">
 	</xsl:template>
 
 	<!-- New template-->
-	<func:function name="phpgw:conditional">
-		<xsl:param name="test"/>
-		<xsl:param name="true"/>
-		<xsl:param name="false"/>
-		<func:result>
-			<xsl:choose>
-				<xsl:when test="$test">
-					<xsl:value-of select="$true"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$false"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</func:result>
-	</func:function>
+
 	<xsl:template name="datatable-yui-definition">
 		<script type="text/javascript">
 			var myColumnDefs = [
