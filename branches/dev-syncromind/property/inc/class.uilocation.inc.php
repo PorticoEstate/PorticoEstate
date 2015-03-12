@@ -1995,8 +1995,7 @@ JS;
 					'data'			=> json_encode($_related),
 					'ColumnDefs'	=> $related_def,
 					'config'		=> array(
-						array('disableFilter'	=> true),
-						array('disablePagination'	=> true)
+						array('disableFilter'	=> true)
 					)
 				);
 
