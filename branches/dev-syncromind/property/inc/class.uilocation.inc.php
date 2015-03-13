@@ -631,8 +631,7 @@
 
 			return $combos;
 		}
-
-
+		
 		function get_part_of_town()
 		{
 			$district_id	= phpgw::get_var('district_id', 'int');
@@ -1337,7 +1336,18 @@ JS;
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		public function get_documents()
+		{
+			$entity_id = phpgw::get_var('entity_id', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
+			$num = phpgw::get_var('num');
+			
+			$document = CreateObject('property.sodocument');
+			$documents = $document->get_files_at_location(array('entity_id'=>$entity_id,'cat_id'=>$cat_id,'num'=>$num));
 
+			return $documents;				
+		}
+		
 		function edit($view = '')
 		{
 
@@ -1875,19 +1885,19 @@ JS;
 					$location_level = implode('-', $_location_level_arr);
 					$related[$location_level] = $this->bo->read_entity_to_link($location_level, $_exact);
 				}
-//_debug_array($related);die();
-
+				
 				$location_type_info =  $this->soadmin_location->read_single($type_id);
 				$documents = array();
+
 				if($location_type_info['list_documents'])
 				{
-					$document = CreateObject('property.sodocument');
-					$documents = $document->get_files_at_location( array('location_code' => $location_code) );
+					$objDocument = CreateObject('property.sodocument');
+					$documents = $objDocument->get_files_at_location( array('location_code' => $location_code) );
 				}
 
-				if($documents)
+				if(count($documents))
 				{
-					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
+					$tabs['document'] = array('label' => lang('document'), 'link' => '#document');
 					$documents = json_encode($documents);
 				}
 
@@ -1908,7 +1918,7 @@ JS;
 				if (isset($_config->config_data['external_files']) &&  $_config->config_data['external_files'])
 				{
 					$_dirname = $_config->config_data['external_files'];
-					$file_tree = $document->read_file_tree($_dirname,$_files_maxlevel,$_files_filterlevel, $_filter_info[0]);
+					$file_tree = $objDocument->read_file_tree($_dirname,$_files_maxlevel,$_files_filterlevel, $_filter_info[0]);
 				}
 
 				unset($_config);
@@ -1959,29 +1969,6 @@ JS;
 					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
 				}
 
-
-				/*$datavalues = array();
-				$myColumnDefs = array();
-				$datavalues[0] = array
-				(
-					'name'					=> "0",
-					'values' 				=> json_encode($_related),
-					'total_records'			=> count($_related),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-				$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(
-						array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
-						array('key' => 'url','label'=>lang('what'),'sortable'=>false,'resizeable'=>true),
-						)
-					)
-				);*/
-
 				$related_def = array
 				(
 					array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
@@ -2004,22 +1991,7 @@ JS;
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 				$custom_config	= CreateObject('admin.soconfig',$location_id);
 				$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
-//_debug_array($custom_config->config_data);die();
-			// required settings:
-/*
-				integration_tab
-				integration_height
-				integration_url
-				integration_parametres
-				integration_action
-				integration_action_view
-				integration_action_edit
-				integration_auth_key_name
-				integration_auth_url
-				integration_auth_hash_name
-				integration_auth_hash_value
-				integration_location_data
- */
+
 				foreach ($_config as $_config_section => $_config_section_data)
 				{
 					if(isset($_config_section_data['tab']))
@@ -2177,20 +2149,8 @@ JS;
 
 			unset($values['attributes']);
 
-			/*$property_js = "/property/js/yahoo/property2.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}*/
-
-
 			$data = array
 			(
-				/*'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,*/
 				'datatable_def'					=> $datatable_def,
 				'integration'					=> $integration,
 				'roles'							=> $roles,
@@ -2265,16 +2225,14 @@ JS;
 				'lang_collapse_all'				=> lang('collapse all')
 			);
 
-			//$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
-			//phpgwapi_yui::load_widget('treeview');
 			phpgwapi_jquery::load_widget('treeview');
 
-			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.edit', 'property' );
 			$appname	= lang('location');
 
+			self::add_javascript('property', 'portico', 'location.edit.js');
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			self::render_template_xsl(array('location', 'datatable_inline', 'attributes_form'), array('edit' => $data));
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 
