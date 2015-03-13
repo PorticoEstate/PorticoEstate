@@ -1086,7 +1086,7 @@
 			$config			= CreateObject('phpgwapi.config','property');
 			$boalarm		= CreateObject('property.boalarm');
 			$get_items = false;
-
+            
 			if($delete_item && $id && $item_id)
 			{
 				$this->bo->delete_item($id,$item_id);
@@ -1654,7 +1654,28 @@
 
             $tabletools = array
             (
-                array('my_name'	=> 'enable_alarm','text' => lang($alarm_data[alter_alarm][0][lang_enable])),
+                array(
+                    'my_name'	=> 'enable_alarm',
+                    'text' => lang($alarm_data[alter_alarm][0][lang_enable]),
+                    'type' => 'custom',
+                    'custom_code' => "
+										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+                                        var selected = oTT.fnGetSelectedData();
+                                        var url = 'hhhhhhh';
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										var ids = [];
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											ids.push(aData['id']);
+										}
+                                        JqueryPortico.updateinlineTableHelper('oTable0', url);"
+                    ),
                 array('my_name'	=> 'disable_alarm','text' => lang($alarm_data[alter_alarm][0][lang_disable])),
                 array('my_name'	=> 'delete_alarm','text' => lang($alarm_data[alter_alarm][0][lang_delete]))
             );
@@ -1665,8 +1686,8 @@
                array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
                array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
                array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter','width'=>60),
-               array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true),
-               array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'JqueryPortico.formatCheckUis_agremment','width'=>60)
+               array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true)
+               /*array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'JqueryPortico.formatCheckUis_agremment','width'=>60)*/
             );
   
             $datatable_def[] = array
@@ -1993,7 +2014,7 @@
 //			phpgwapi_yui::load_widget('connection');
 //			phpgwapi_yui::load_widget('loader');
 //			phpgwapi_yui::load_widget('tabview');
-//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widgetº('paginator');
 //			phpgwapi_yui::load_widget('animation');
 
 
