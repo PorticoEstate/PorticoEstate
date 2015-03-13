@@ -442,27 +442,6 @@
 
 			return $combos;
 		}
-
-		
-		private function _customize_documents(&$documents)
-		{
-			foreach ($documents as &$document)
-			{	
-				if ($document['link'])
-				{
-					$document['text'] = '<a href="'.$document['link'].'" target="_blank">'.$document['text'].'</a>';
-				}
-
-				if($document['children'])
-				{
-					$this->_customize_documents($document['children']);
-				} 
-				else 
-				{
-					$document['type'] = "file";
-				}
-			}
-		}
 		
 		public function get_documents()
 		{
@@ -472,19 +451,6 @@
 			
 			$document = CreateObject('property.sodocument');
 			$documents = $document->get_files_at_location(array('entity_id'=>$entity_id,'cat_id'=>$cat_id,'num'=>$num));
-
-			foreach ($documents as &$document)
-			{
-				if ($document['link'])
-				{
-					$document['text'] = '<a href="'.$document['link'].'" target="_blank">'.$document['text'].'</a>';
-				}
-
-				if($document['children'])
-				{
-					$this->_customize_documents($document['children']);
-				}
-			}
 
 			return $documents;				
 		}
