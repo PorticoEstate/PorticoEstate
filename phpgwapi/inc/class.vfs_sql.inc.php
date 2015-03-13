@@ -871,7 +871,7 @@
 			   If 'string' doesn't exist, touch() creates both the file and the database entry
 			   If 'string' does exist, touch() sets the modification time and modified by
 			*/
-			$this->touch(array(
+			$_document_id = $this->touch(array(
 					'string'	=> $p->fake_full_path,
 					'relatives'	=> array($p->mask)
 				)
@@ -887,8 +887,12 @@
 				if($this->file_actions)
 				{
 					$set_attributes_array = array(
-						'size'	=> strlen($data['content']),
+						'size'	=> strlen($data['content'])
 					);
+					if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+					{
+						$set_attributes_array['external_id'] = $_document_id;
+					}
 				}
 				else
 				{
@@ -927,7 +931,7 @@
 		/*
 		 * See vfs_shared
 		 */
-		function touch($data)
+		function touch($data,$p = array())
 		{
 			if(!is_array($data))
 			{
@@ -944,11 +948,14 @@
 			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-			$p = $this->path_parts(array(
-					'string'	=> $data['string'],
-					'relatives'	=> array($data['relatives'][0])
-				)
-			);
+			if(!$p)
+			{
+				$p = $this->path_parts(array(
+						'string'	=> $data['string'],
+						'relatives'	=> array($data['relatives'][0])
+					)
+				);
+			}
 
 			umask(000);
 
@@ -1008,8 +1015,23 @@
 					return false;
 				}
 
-				$query = $GLOBALS['phpgw']->db->query("INSERT INTO phpgw_vfs (owner_id, directory, name)"
-				 . " VALUES({$this->working_id},'{$p->fake_leading_dirs_clean}', '{$p->fake_name_clean}')", __LINE__, __FILE__);
+				$value_set = array
+				(
+					'owner_id'	=> $this->working_id,
+					'directory'	=> $p->fake_leading_dirs_clean,
+					'name'		=> $p->fake_name_clean
+				);
+
+				if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+				{
+					$value_set['external_id'] = $rr;
+				}
+
+				$cols = implode(',', array_keys($value_set));
+				$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
+				$sql = "INSERT INTO phpgw_vfs ({$cols}) VALUES ({$values})";
+
+				$query = $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 
 				$this->set_attributes(array(
 					'string'		=> $p->fake_full_path,
@@ -1039,6 +1061,10 @@
 
 			if($rr || $vr || $query)
 			{
+				if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+				{
+					return $rr;
+				}
 				return true;
 			}
 			else
@@ -1146,7 +1172,13 @@
 			{
 				if($this->file_actions)
 				{
-					if(!$this->fileoperation->copy($f, $t))
+//					if(!$this->fileoperation->touch($data, $t) && !$this->fileoperation->copy($f, $t))
+					if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+					{
+						$_document_id = $this->fileoperation->touch($data, $t);
+					}
+
+					if(!$this->fileoperation->copy($f, $t, $_document_id))
 					{
 						return false;
 					}
@@ -1223,7 +1255,7 @@
 				}
 				else
 				{
-					$this->touch(array(
+					$_document_id = $this->touch(array(
 							'string'	=> $t->fake_full_path,
 							'relatives'	=> array($t->mask)
 						)
@@ -1239,6 +1271,11 @@
 						'comment'		=> $record['comment'],
 						'app'			=> $record['app']
 					);
+
+					if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+					{
+						$set_attributes_array['external_id'] = $_document_id;
+					}
 
 					if(!$this->file_actions)
 					{
@@ -1492,7 +1529,7 @@
 				}
 				else
 				{
-					$this->touch(array(
+					$_document_id = $this->touch(array(
 							'string'	=> $t->fake_full_path,
 							'relatives'	=> array($t->mask)
 						)
@@ -1508,6 +1545,11 @@
 						'comment'			=> $record['comment'],
 						'app'				=> $record['app']
 					);
+
+					if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+					{
+						$set_attributes_array['external_id'] = $_document_id;
+					}
 
 					if(!$this->file_actions)
 					{
@@ -1741,7 +1783,7 @@
 						_debug_array($f);
 						$size = 1;
 					}
-					$this->touch(array(
+					$_document_id = $this->touch(array(
 							'string'	=> $t->fake_full_path,
 							'relatives'	=> array($t->mask)
 						)
@@ -1762,7 +1804,8 @@
 						'relatives'	=> array($t->mask),
 						'attributes'	=> array(
 									'modifiedby_id' => $account_id,
-									'modified' => $this->now
+									'modified' => $this->now,
+									'external_id'	=> isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref ? $_document_id : false
 								)
 					)
 				);
@@ -2762,11 +2805,16 @@
 						))
 					)
 					{
-						$this->touch(array(
+						$_document_id = $this->touch(array(
 								'string'	=> $p2->fake_full_path,
 								'relatives'	=> array(RELATIVE_NONE)
 							)
 						);
+
+						if(isset($this->fileoperation->external_ref) && $this->fileoperation->external_ref)
+						{
+							$set_attributes_array['external_id'] = $_document_id;
+						}
 
 						$this->set_attributes(array(
 								'string'	=> $p2->fake_full_path,

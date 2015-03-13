@@ -31,7 +31,7 @@
 
 	class phpgwapi_vfs_fileoperation_braArkiv
 	{
-		private $Services;
+		public  $external_ref = true;
 		private $secKey;
 		private $db;
 		private $meta_types = array ('journal', 'journal-deleted');
@@ -59,22 +59,25 @@
 				throw new Exception('braArkiv is not configured');
 			}
 
-			$options=array();
-			$options['soap_version']	= SOAP_1_2;
-			$options['location']		= $location_url;
-			$options['uri']				= $location_url;
-			$options['trace']			= false;
-			$options['encoding']		= 'UTF-8';
-
 			$wdsl = "{$location_url}?WSDL";
-			$Services = new Services($wdsl, $options);
-			$Login = new Login();
-			$Login->userName = $braarkiv_user;
-			$Login->password = $braarkiv_pass;
-			$LoginResponse = $Services->Login($Login);
-			$secKey = $LoginResponse->LoginResult;
-			$this->Services = $Services;
-			$this->secKey = $secKey;
+			$options = array();
+
+			$options[Bra5WsdlClass::WSDL_URL] = $wdsl;
+			$options[Bra5WsdlClass::WSDL_ENCODING] = 'UTF-8';
+			$options[Bra5WsdlClass::WSDL_TRACE] = false;
+			$options[Bra5WsdlClass::WSDL_SOAP_VERSION] = SOAP_1_2;
+
+			$wsdlObject = new Bra5WsdlClass($options);
+
+			$bra5ServiceLogin = new Bra5ServiceLogin();
+			if($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user,$braarkiv_pass)))
+			{
+				$this->secKey = $bra5ServiceLogin->getResult()->getLoginResult()->LoginResult;
+			}
+			else
+			{
+				throw new Exception('vfs_fileoperation_braArkiv::Login failed');
+			}
 		}
 
 
@@ -130,6 +133,7 @@
 		{
 			$sql = "SELECT external_id FROM phpgw_vfs WHERE  directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
 				. " AND ((mime_type != 'journal' AND mime_type != 'journal-deleted') OR mime_type IS NULL)";
+//	_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('external_id');
@@ -158,28 +162,21 @@
 
 			if($fileid)
 			{
-				$getAvailableFileVariants = new getAvailableFileVariants();
-				$getAvailableFileVariants->secKey = $this->secKey;
-				$getAvailableFileVariants->documentId = $fileid;
+				$bra5ServiceGet = new Bra5ServiceGet();
 
-				$getAvailableFileVariantsResponse = $this->Services->getAvailableFileVariants($getAvailableFileVariants);
-
-				$getFileAsByteArray = new getFileAsByteArray();
-				$getFileAsByteArray->secKey = $this->secKey;
-				$getFileAsByteArray->documentId = $fileid;
-				$getFileAsByteArray->variant = $getAvailableFileVariantsResponse->getAvailableFileVariantsResult->string[0];
-				$getFileAsByteArray->versjon = 1;
-
-				$getFileAsByteArrayResponse = $this->Services->getFileAsByteArray($getFileAsByteArray);
-
-				$getFileAsByteArrayResult = $getFileAsByteArrayResponse->getFileAsByteArrayResult;
-
-				if($getFileAsByteArrayResult)
+				if($bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($this->secKey, $fileid)))
 				{
-					$file = base64_decode($getFileAsByteArrayResult);
+//					_debug_array($bra5ServiceGet->getResult());
+					$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
+					$file = base64_decode($file_result->getFileAsByteArrayResult);
+				}
+				else
+				{
+					_debug_array($bra5ServiceGet->getLastError());
+					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 			}
-
+//die();
 			return $file;
 		}
 
@@ -188,9 +185,21 @@
 		* @param object $p path_parts
 		* @return boolean.  True if copy is ok, False otherwise.
 		*/
-		public function copy($from, $to)
+		public function copy($from, $to, $document_id = 0)
 		{
-			$document_id = $this->touch($to);//creates the document
+/*
+			//FIXME
+			//$filesize = filesize($from->real_full_path);
+			$content = $this->read($from);
+			$document_id = $this->get_file_id($from);
+
+			return $this->write($to, $content,$document_id);
+*/
+
+			if(!$document_id)
+			{
+				$document_id = $this->get_file_id($from);
+			}
 
 			$filesize = filesize($from->real_full_path);
 			$content = false;
@@ -201,6 +210,7 @@
 			}
 
 			return $this->write($to, $content,$document_id);
+
 
 		}
 
@@ -216,54 +226,41 @@
 			{
 				$fileid = $this->get_file_id($to); //this represent the document
 			}
-/*			
-			$putFileAsByteArray = new putFileAsByteArray();
-			$putFileAsByteArray->secKey = $this->secKey;
-			$putFileAsByteArray->documentId = $fileid;
-			$putFileAsByteArray->filename = $to->fake_name_clean;
-			$putFileAsByteArray->file = base64_encode($content);
-			$putFileAsByteArrayResponse = $this->Services->putFileAsByteArray($putFileAsByteArray);
-*/
-			$fileTransferSendChunkedInit = new fileTransferSendChunkedInit();
-			$fileTransferSendChunkedInit->secKey = $this->secKey;
-			$fileTransferSendChunkedInit->docid = $fileid;
-			$fileTransferSendChunkedInit->filename = $to->fake_name_clean;
 
-			$fileTransferSendChunkedInitResponse = $this->Services->fileTransferSendChunkedInit($fileTransferSendChunkedInit);
-			$transaction_id = $fileTransferSendChunkedInitResponse->fileTransferSendChunkedInitResult;
-//			_debug_array($transaction_id);die();
+			$bra5ServiceFile = new Bra5ServiceFile();
+			if($bra5ServiceFile->fileTransferSendChunkedInit(new Bra5StructFileTransferSendChunkedInit($this->secKey, $fileid, $to->fake_name_clean)))
+			{
+				$transaction_id = $bra5ServiceFile->getResult()->getfileTransferSendChunkedInitResult()->fileTransferSendChunkedInitResult;
+			}
+			else
+			{
+				_debug_array($bra5ServiceFile->getLastError());
+				die();
+			}
+
 			$new_string = chunk_split(base64_encode($content),1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
 
 			$content_arr = explode('\r\n', $new_string);
 
 			foreach($content_arr as $content_part)
 			{
-				$fileTransferSendChunk = new fileTransferSendChunk();
-				$fileTransferSendChunk->secKey = $this->secKey;
-				$fileTransferSendChunk->fileid = $transaction_id; //internal transcation id - not the file/document id
-				$fileTransferSendChunk->chunk = $content_part;
-				
-				$this->Services->fileTransferSendChunk($fileTransferSendChunk);
+				$bra5ServiceFile->fileTransferSendChunk(new Bra5StructFileTransferSendChunk($this->secKey, $transaction_id, $content_part));
 			}
+
 			
-			$fileTransferSendChunkedEnd = new fileTransferSendChunkedEnd();
-			$fileTransferSendChunkedEnd->secKey = $this->secKey;
-			$fileTransferSendChunkedEnd->fileid = $transaction_id;
+			$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
+/*
+			_debug_array($bra5ServiceFile->getResult());
+*/
+//			die();
 
-			try
+			if ( !$ok )
 			{
-				$fileTransferSendChunkedEndResponse = $this->Services->fileTransferSendChunkedEnd($fileTransferSendChunkedEnd);
+				_debug_array($bra5ServiceFile->getLastError());
 			}
 
-			catch(Exception $e)
-			{
-				if ( $e )
-				{
-					throw $e;
-				}
-			}
-
-			return true;
+//	_debug_array($fileid);
+			return $ok;
 		}
 
 
@@ -278,103 +275,198 @@
 			
 			if($check_document[$p>real_full_path])
 			{
-				return true;
+				return $check_document[$p>real_full_path];
 			}
 
-			$check_document[$p>real_full_path] = true;
 /*
 			$bt = debug_backtrace();
 			echo "<b>db::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
 			unset($bt);
 */
-			$document = new Document();
-			$document->BBRegTime = date('Y-m-d');
-			$document->BaseClassName = "Eiendomsarkiver";
-			$document->ClassName = "Byggesak";
+
+/*
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVLONGTEXT
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVINT
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVFLOAT
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVDATE
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVMATRIKKEL
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVADDRESS
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVPAIR
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVBOOLEAN
+     * @uses Bra5EnumBraArkivAttributeType::VALUE_UNKNOWN
+*/
+/*
+-	 * @param boolean $_bFDoubleSided
+-    * @param boolean $_bFSeparateKeySheet
+-    * @param boolean $_classified
+-    * @param int $_priority
+     * @param int $_productionLineID
+     * @param int $_docSplitTypeID
+     * @param Bra5StructArrayOfAttribute $_attributes
+     * @param string $_iD
+     * @param string $_bFDocKey
+     * @param string $_bFNoSheets
+     * @param string $_bBRegTime
+     * @param string $_name
+     * @param string $_className
+     * @param string $_baseClassName
+
+*/
+			$document = new Bra5StructDocument();
+			$document->setBFDoubleSided(false);
+			$document->setBFSeparateKeySheet(false);
+			$document->setClassified(false);
+			$document->setPriority(0);
+			$document->setProductionLineID(1);
+//			$document->setDocSplitTypeID(0);
+//			$document->setID('');
+//			$document->setBFDocKey('');
+//			$document->setBFNoSheets('');
+			$document->setBBRegTime(date('Y-m-d'));
+//			$document->setName('');
+			$document->setClassName("Byggesak");
+			$document->setBaseClassName("Eiendomsarkiver");
 
 			$attributter = array();
 
-			$att1 = new Attribute();
-			$att1->AttribType = 'braArkivDate';
-			$att1->Name = "Saksdato";
-//			$att1->Value = array(date('Y-m-d'));
-			$att1->Value = date('Y-m-d');
+			$att0 = new Bra5StructAttribute();
+			$att0->setUsesLookupValues(false);
+			$att0->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVADDRESS);
+			$att0->setName("Adresse");
+		//	$att0->setValue(new Bra5StructArrayOfAnyType());
+			$_gate = 'Lønborglien'; $_nummer = 285; $_bokstav = NULL;
+			$att0->setValue(new Bra5StructArrayOfAnyType(new Bra5StructAddress($_gate, $_nummer, $_bokstav)));
+			$attributter[] = $att0;
+
+
+			$att1 = new Bra5StructAttribute();
+			$att1->setUsesLookupValues(true);
+			$att1->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att1->setName("Sakstype");
+//			$att1->setValue(new Bra5StructArrayOfAnyType(100));
+			$att1->setValue(array('100'));
 			$attributter[] = $att1;
 
-			$att2 = new Attribute();
-			$att2->AttribType = 'braArkivString';
-			$att2->Name = "Tiltakstype";
-			$att2->Value = array("Testtittel");
-			$att2->Value = "Tiltakstype";
+			$att2 = new Bra5StructAttribute();
+			$att2->setUsesLookupValues(false);
+			$att2->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att2->setName("ASTA_Signatur");
+			$att2->setValue(new Bra5StructArrayOfAnyType("BBA/A-0430/H/Ha/L1002"));
 			$attributter[] = $att2;
 
-			$att3 = new Attribute();
-			$att3->AttribType = 'braArkivString';
-			$att3->Name = "Tiltaksart";
-//			$att3->Value = array("Testtittel");
-			$att3->Value = 'Tiltaksart';
+			$att3 = new Bra5StructAttribute();
+			$att3->setUsesLookupValues(false);
+			$att3->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVMATRIKKEL);
+			$att3->setName("Eiendom");
+			$_gNr = 164;
+			$_bNr = 1401;
+			$_fNr = 0;
+			$_sNr = 0;
+			$att3->setValue(new Bra5StructArrayOfAnyType(new Bra5StructMatrikkel($_gNr, $_bNr, $_fNr, $_sNr)));
 			$attributter[] = $att3;
 
-			$att4 = new Attribute();
-			$att4->AttribType = 'braArkivString';
-			$att4->Name = "ASTA_Signatur";
-			$att4->Value = array("1");
-			$att4->Value = "ASTA_Signatur";
+			$att4 = new Bra5StructAttribute();
+			$att4->setUsesLookupValues(false);
+			$att4->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att4->setName("Byggnr");
+		//	$att4->setValue(new Bra5StructArrayOfAnyType(array('139276655')));
+			$att4->setValue(array('139276655'));
+
+			//$att4->setValue("139276655");
 			$attributter[] = $att4;
 
-			$att5 = new Attribute();
-			$att5->AttribType = 'braArkivDate';
-			$att5->Name = "Dokumentdato";
-//			$att5->Value = array(date('Y-m-d'));
-			$att5->Value = date('Y-m-d');
-			$attributter[] = $att5;
+			$att5 = new Bra5StructAttribute();
+			$att5->setUsesLookupValues(false);
+			$att5->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att5->setName("Saksnr");
+			$att5->setValue(array(1));
 
-			$att6 = new Attribute();
-			$att6->AttribType = 'braArkivString';
-			$att6->Name = "BrukerID";
-//			$att6->Value = array("1");
-			$att6->Value = "BrukerID";
+			$attributter[] = $att5;
+/*
+			$att6 = new Bra5StructAttribute();
+			$att6->setUsesLookupValues(false);
+			$att6->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVDATE);
+			$att6->setName("Saksdato");
+			$att6->setValue(array(date('Y-m-d')));
 			$attributter[] = $att6;
 
-			$att7 = new Attribute();
-			$att7->AttribType = 'braArkivString';
-			$att7->Name = "Team";
-//			$att7->Value = array("Testtittel");
-			$att7->Value = "Team";
+			$att7 = new Bra5StructAttribute();
+			$att7->setUsesLookupValues(false);
+			$att7->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVDATE);
+			$att7->setName("Dokumentdato");
+			$att7->setValue(array(date('Y-m-d')));
 			$attributter[] = $att7;
-
-			$att8 = new Attribute();
-			$att8->AttribType = 'braArkivString';
-			$att8->Name = "Sakstype";
-//			$att8->Value = array("Testtittel");
-			$att8->Value = "Sakstype";
+*/
+			$att8 = new Bra5StructAttribute();
+			$att8->setUsesLookupValues(true);
+			$att8->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att8->setName("Tiltakstype");
+			$att8->setValue( array('BOL3'));
 			$attributter[] = $att8;
 
-			$att9 = new Attribute();
-			$att9->AttribType = 'braArkivString';
-			$att9->Name = "Dokumentkategori";
-//			$att9->Value = array("Testtittel");
-			$att9->Value = "Dokumentkategori";
+			$att9 = new Bra5StructAttribute();
+			$att9->setUsesLookupValues(true);
+			$att9->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att9->setName("Tiltaksart");
+			$att9->setValue(array('10'));
 			$attributter[] = $att9;
 
-			$att10 = new Attribute();
-			$att10->AttribType = 'braArkivString';
-			$att10->Name = "Dokumentstatus";
-			$att10->Value = array("Testtittel");
-			$att10->Value = "Dokumentstatus";
+			$att10 = new Bra5StructAttribute();
+			$att10->setUsesLookupValues(true);
+			$att10->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att10->setName("Dokumentstatus");
+			$att10->setValue( array('Gjeldende'));
 			$attributter[] = $att10;
-	
-			$document->Attributes = $attributter;
 
-			$createDocument = new createDocument();
-			$createDocument->secKey = $this->secKey;
-			$createDocument->assignDocKey = 0;
-			$createDocument->doc = $document;
+			$att11 = new Bra5StructAttribute();
+			$att11->setUsesLookupValues(true);
+			$att11->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att11->setName("Dokumentkategori");
+			$att11->setValue(array('Søknad'));
+			$attributter[] = $att11;
 
-//_debug_array($createDocument);//die();
+			$att12 = new Bra5StructAttribute();
+			$att12->setUsesLookupValues(true);
+			$att12->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att12->setName("Merknad");
+			$att12->setValue( array(''));
+			$attributter[] = $att12;
+/*
+			$att13 = new Bra5StructAttribute();
+			$att13->setUsesLookupValues(true);
+			$att13->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVINT);
+			$att13->setName("BrukerID");
+			$att13->setValue(array(13));
+			$attributter[] = $att13;
+*/
+			$att14 = new Bra5StructAttribute();
+			$att14->setUsesLookupValues(true);
+			$att14->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$att14->setName("Gradering");
+			$att14->setValue(array(''));
+			$attributter[] = $att14;
 
-			$createDocumentResponse = $this->Services->createDocument($createDocument);
-			$document_id =  $createDocumentResponse->createDocumentResult->ID;
+			$document->setAttributes($attributter);
+
+			$bra5ServiceCreate = new Bra5ServiceCreate();
+			$bra5ServiceCreateDocument = new Bra5StructCreateDocument($_assignDocKey = false, $this->secKey, $document);
+//			_debug_array($bra5ServiceCreateDocument);
+//			die();
+			if($bra5ServiceCreate->createDocument($bra5ServiceCreateDocument))
+			{
+//				_debug_array($bra5ServiceCreate->getResult());
+			}
+			else
+			{
+				_debug_array($bra5ServiceCreate->getLastError());
+			}
+
+			$document_id =  $bra5ServiceCreate->getResult()->getCreateDocumentResult()->getcreateDocumentResult()->ID;
+			$check_document[$p>real_full_path] = $document_id;
+
+//	_debug_array($document_id);
+//die();
 			return $document_id;
 
 		}
@@ -389,39 +481,25 @@
 		public function rename($from, $to)
 		{
 			$fileid = $this->get_file_id($from);
-			
-			$getDocument = new getDocument();
-			$getDocument->secKey = $this->secKey;
-			$getDocument->documentId = $fileid;
-			$getDocumentResponse = $this->Services->getDocument($getDocument);
-			
-			$document = $getDocumentResponse->getDocumentResult;
+
+			$bra5ServiceGet = new Bra5ServiceGet();
+			$bra5ServiceGet->getDocument(new Bra5StructGetDocument($this->secKey, $fileid));
+			$document = $bra5ServiceGet->getResult()->getGetDocumentResult();
 			
 			foreach($document->Attributes as & $Attribute)
 			{
-				if($Attribute->Name == 'Tittel')
+				if($Attribute->getName() == 'Tittel')
 				{
-					$Attribute->Value = $to->fake_name_clean;
+					$Attribute->setValue(array($to->fake_name_clean));
 				}
 			}
-			$updateDocument = new $updateDocument();
-			$updateDocument->secKey = $this->secKey;
-			$updateDocument->document = $document;
-
-			try
+			$bra5ServiceUpdate = new Bra5ServiceUpdate();
+			$ok = false;
+			if(!$ok = $bra5ServiceUpdate->updateDocument(new Bra5StructUpdateDocument($this->secKey, $document)))
 			{
-				$updateDocumentResponse = $this->Services->updateDocument($getDocument);
+				_debug_array($bra5ServiceUpdate->getResult());
 			}
-
-			catch(Exception $e)
-			{
-				if ( $e )
-				{
-					throw $e;
-				}
-			}
-
-			return true;
+			return $ok;
 		}
 
 		/**
@@ -432,24 +510,13 @@
 		public function unlink($p)
 		{
 			$fileid = $this->get_file_id($p);
-			$deleteDocument = new deleteDocument();
-			$deleteDocument->secKey = $this->secKey;
-			$deleteDocument->documentId = $fileid;
 
-			try
+			$bra5ServiceDelete = new bra5ServiceDelete();
+			
+			if($bra5ServiceDelete->deleteDocument(new Bra5StructDeleteDocument($this->secKey,$fileid)))
 			{
-				$deleteDocumentResponse = $this->Services->deleteDocument($deleteDocument);
+				return true;
 			}
-
-			catch(Exception $e)
-			{
-				if ( $e )
-				{
-					throw $e;
-				}
-			}
-
-			return true;
 		}
 
 
@@ -461,18 +528,13 @@
 		public function file_exists($p)
 		{
 			$fileid = $this->get_file_id($p);
+
 			if($fileid)
 			{
-				$getAvailableFileVariants = new getAvailableFileVariants();
-				$getAvailableFileVariants->secKey = $this->secKey;
-				$getAvailableFileVariants->documentId = $fileid;
-
-				$getAvailableFileVariantsResponse = $this->Services->getAvailableFileVariants($getAvailableFileVariants);
+				$bra5ServiceGet = new Bra5ServiceGet();
+				return !!$bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($this->secKey, $fileid));
 			}
-
-			return !!$getAvailableFileVariantsResponse->getAvailableFileVariantsResult->string[0];
 		}
-
 
 		/**
 		* Removes directory
