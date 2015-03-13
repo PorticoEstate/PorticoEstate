@@ -20,6 +20,7 @@
 				<xsl:apply-templates select="list"/>
 			</xsl:otherwise>
 		</xsl:choose>
+		<xsl:call-template name="jquery_phpgw_i18n"/>
 	</xsl:template>
 
 	<!-- New template-->
@@ -516,13 +517,13 @@ onMouseOut="nd()">
 										#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
 									</style>
 									<script type="text/javascript">
-										var documents = <xsl:value-of select="documents"/>;
+										documents = <xsl:value-of select="documents"/>;
 									</script>
 									<!-- markup for expand/contract links -->
 									<div id="treecontrol">
-										<a id="collapse" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
+										<a id="collapse1" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
 										<xsl:text> | </xsl:text>
-										<a id="expand" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
+										<a id="expand1" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
 									</div>
 									<div id="treeDiv1"></div>
 								</fieldset>
@@ -539,39 +540,33 @@ onMouseOut="nd()">
 										#treeDiv2 { background: #fff; padding:1em; margin-top:1em; }
 									</style>
 									<script type="text/javascript">
-										var documents2 = <xsl:value-of select="file_tree"/>;
+										documents2 = <xsl:value-of select="file_tree"/>;
 									</script>
 									<!-- markup for expand/contract links -->
-									<div id="expandcontractdiv2">
-										<a id="expand2" href="#">
-											<xsl:value-of select="lang_expand_all"/>
-										</a>
-										<xsl:text> </xsl:text>
-										<a id="collapse2" href="#">
-											<xsl:value-of select="lang_collapse_all"/>
-										</a>
+									<div id="treecontrol">
+										<a id="collapse2" title="Collapse the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'collapse all')"/></a>
+										<xsl:text> | </xsl:text>
+										<a id="expand2" title="Expand the entire tree below" href="#"><xsl:value-of select="php:function('lang', 'expand all')"/></a>
 									</div>
-									<div id="treeDiv2"/>
+									<div id="treeDiv2"></div>
 								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
 						<div id="related">
 							<fieldset>
-								<div class="pure-control-group">
-									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_0'">
-											<xsl:call-template name="table_setup">
-												<xsl:with-param name="container" select ='container'/>
-												<xsl:with-param name="requestUrl" select ='requestUrl' />
-												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-												<xsl:with-param name="tabletools" select ='tabletools' />
-												<xsl:with-param name="data" select ='data' />
-												<xsl:with-param name="config" select ='config' />
-											</xsl:call-template>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
 							</fieldset>
 						</div>
 					<xsl:for-each select="integration">
