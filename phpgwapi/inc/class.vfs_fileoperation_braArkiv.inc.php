@@ -67,7 +67,19 @@
 			$options[Bra5WsdlClass::WSDL_TRACE] = false;
 			$options[Bra5WsdlClass::WSDL_SOAP_VERSION] = SOAP_1_2;
 
-			$wsdlObject = new Bra5WsdlClass($options);
+			try
+			{
+				$wsdlObject = new Bra5WsdlClass($options);
+			}
+			catch(Exception $e)
+			{
+				if($e)
+				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+					return false;
+				}
+			}
+
 
 			$bra5ServiceLogin = new Bra5ServiceLogin();
 			if($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user,$braarkiv_pass)))

@@ -42,11 +42,16 @@
 		'T_login_main'		=> 'login_main.tpl',
 		'T_login_stage_header'	=> 'login_stage_header.tpl',
 		'T_setup_main'		=> 'setup_main.tpl',
-		'T_setup_db_blocks'	=> 'setup_db_blocks.tpl'
+		'T_setup_db_blocks'	=> 'setup_db_blocks.tpl',
+		'T_setup_svn_blocks'	=> 'setup_svn_blocks.tpl',
+
 	));
 
 	$setup_tpl->set_block('T_login_stage_header','B_multi_domain','V_multi_domain');
 	$setup_tpl->set_block('T_login_stage_header','B_single_domain','V_single_domain');
+
+	$setup_tpl->set_block('T_setup_svn_blocks','B_svn_stage_1','V_svn_stage_1');
+	$setup_tpl->set_block('T_setup_svn_blocks','B_svn_stage_2','V_svn_stage_2');
 
 	$setup_tpl->set_block('T_setup_db_blocks','B_db_stage_1','V_db_stage_1');
 	$setup_tpl->set_block('T_setup_db_blocks','B_db_stage_2','V_db_stage_2');
@@ -100,6 +105,29 @@
 	//$GLOBALS['phpgw_info']['setup']['stage']['db'] = 0;
 	//$action = 'Upgrade';
 	// end DEBUG code
+	/**
+	 * Update code  from SVN
+	 */
+	$subtitle = '';
+	$submsg = '';
+	$subaction = '';
+	$GLOBALS['phpgw_info']['setup']['stage']['svn'] = 1;//default
+
+	switch( phpgw::get_var('action_svn') )
+	{
+		case 'check_for_svn_update':
+			$subtitle = lang('check for update');
+			$submsg = lang('At your request, this script is going to attempt to check for updates from the svn server');
+			$GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] = 'check_for_svn_update';
+			$GLOBALS['phpgw_info']['setup']['stage']['svn'] = 2;
+			break;
+		case 'perform_svn_update':
+			$subtitle = lang('uppdating code');
+			$submsg = lang('At your request, this script is going to attempt updating the system from the svn server') . '.';
+			$GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] = 'perform_svn_update';
+			$GLOBALS['phpgw_info']['setup']['stage']['svn'] = 1; // alternate
+			break;
+	}
 
 	$subtitle = '';
 	$submsg = '';
@@ -167,7 +195,48 @@
 	$setup_tpl->set_var('img_incomplete', $incomplete);
 	$setup_tpl->set_var('img_completed', $completed);
 
+	$setup_tpl->set_var('svn_step_text',lang('Step 0 - check for updates'));
 	$setup_tpl->set_var('db_step_text',lang('Step 1 - Simple Application Management'));
+
+	switch($GLOBALS['phpgw_info']['setup']['stage']['svn'])
+	{
+		case 1:
+			$setup_tpl->set_var('dry_run',lang('show-updates'));
+			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn status'));
+			$setup_tpl->set_var('check_for_svn_update',lang('check update'));
+			$_svn_message = '';
+			if($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'perform_svn_update')
+			{
+				putenv('LANG=en_US.UTF-8');
+				exec('svn up ' . PHPGW_SERVER_ROOT . ' --config-dir /etc/subversion 2>&1', $output, $returnStatus);
+				$_svn_message = '<pre>' . print_r($output,true) . '</pre>';
+			}
+			$setup_tpl->set_var('svn_message',$_svn_message);
+			$setup_tpl->parse('V_svn_stage_1','B_svn_stage_1');
+			$svn_filled_block = $setup_tpl->get_var('V_svn_stage_1');
+			$setup_tpl->set_var('V_svn_filled_block',$svn_filled_block);
+
+			break;
+		case 2:
+			$setup_tpl->set_var('perform_svn_update',lang('perform svn update'));
+			$setup_tpl->set_var('execute',lang('execute'));
+			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn up'));
+			$_svn_message = '';
+			if($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'check_for_svn_update')
+			{
+				putenv('LANG=en_US.UTF-8');
+				exec('svn status -u ' . PHPGW_SERVER_ROOT . ' --config-dir /etc/subversion 2>&1', $output, $returnStatus);
+				$_svn_message = '<pre>' . print_r($output,true) . '</pre>';
+			}
+			$setup_tpl->set_var('svn_message',$_svn_message);
+			$setup_tpl->parse('V_svn_stage_2','B_svn_stage_2');
+			$svn_filled_block = $setup_tpl->get_var('V_svn_stage_2');
+			$setup_tpl->set_var('V_svn_filled_block',$svn_filled_block);
+
+			break;
+		default:
+			// 1 is default
+	}
 
 	switch($GLOBALS['phpgw_info']['setup']['stage']['db'])
 	{

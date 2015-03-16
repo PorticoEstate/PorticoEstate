@@ -736,8 +736,41 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'start date')" />
 								</label>
+
 								<input type="text" name="control_start_date" id="control_start_date" value=""  readonly="readonly" size="10">
 								</input>
+								<br/>
+
+								<label>
+									<xsl:value-of select="php:function('lang', 'repeat type')" />
+								</label>
+								<select id="repeat_type" name="repeat_type">
+									<option value=""><xsl:value-of select="php:function('lang', 'select')"/></option>
+									<xsl:apply-templates select="repeat_types/options"/>
+								</select>
+								<br/>
+
+								<label>
+									<xsl:value-of select="php:function('lang', 'interval')" />
+								</label>
+								<input type="text" name="repeat_interval" id="repeat_interval" value="1" size="2">
+								</input>
+
+								<br/>
+
+								<label>
+									<xsl:value-of select="php:function('lang', 'controle time')" />
+								</label>
+								<input type="text" name="controle_time" id="controle_time" value="" size="">
+								</input>
+								<br/>
+
+								<label>
+									<xsl:value-of select="php:function('lang', 'service time')" />
+								</label>
+								<input type="text" name="service_time" id="service_time" value="" size="">
+								</input>
+
 								<br/>
 
 								<input type="button" name="" value="{$lang_add}" title="{$lang_add}" onClick="add_control();">
