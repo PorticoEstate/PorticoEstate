@@ -1643,14 +1643,14 @@
 //													array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>60)))
 //				);
 
-			$myButtons[0] = array
-				(
-					'name'   => "0",
-					'values'  => json_encode(array( array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=>$alarm_data[alter_alarm][0][lang_enable], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-													array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>$alarm_data[alter_alarm][0][lang_disable], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-													array('id' =>'values[delete_alarm]','type'=>'buttons', 'value'=>'Delete', 'label'=>$alarm_data[alter_alarm][0][lang_delete], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-				))
-			);
+//			$myButtons[0] = array
+//				(
+//					'name'   => "0",
+//					'values'  => json_encode(array( array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=>$alarm_data[alter_alarm][0][lang_enable], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+//													array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>$alarm_data[alter_alarm][0][lang_disable], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+//													array('id' =>'values[delete_alarm]','type'=>'buttons', 'value'=>'Delete', 'label'=>$alarm_data[alter_alarm][0][lang_delete], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+//				))
+//			);
 
             $tabletools = array
             (
@@ -1676,8 +1676,51 @@
 										}
                                         JqueryPortico.updateinlineTableHelper('oTable0', url);"
                     ),
-                array('my_name'	=> 'disable_alarm','text' => lang($alarm_data[alter_alarm][0][lang_disable])),
-                array('my_name'	=> 'delete_alarm','text' => lang($alarm_data[alter_alarm][0][lang_delete]))
+                array(
+                    'my_name'	=> 'disable_alarm',
+                    'text' => lang($alarm_data[alter_alarm][0][lang_disable]),
+                    'type' => 'custom',
+                    'custom_code' => "  
+                                        var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+                                        var selected = oTT.fnGetSelectedData();
+                                        var url = 'hhhhhhh';
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										var ids = [];
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											ids.push(aData['id']);
+										}
+                                        JqueryPortico.updateinlineTableHelper('oTable0', url);"
+                    ),
+                array(
+                    'my_name'	=> 'delete_alarm',
+                    'text' => lang($alarm_data[alter_alarm][0][lang_delete]),
+                    'type' => 'custom',
+                    'custom_code' =>  "  
+                                        var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+                                        var selected = oTT.fnGetSelectedData();
+                                        var url = 'hhhhhhh';
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										var ids = [];
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											ids.push(aData['id']);
+										}
+                                        
+                                        JqueryPortico.updateinlineTableHelper('oTable0', url);"
+                    )
             );
             
             $myColumnDefs0 = array
