@@ -741,7 +741,26 @@ JS;
 				$data['query'] = $data['query'] ? $data['query'] : $data['location_code'];
 			}
 //			_debug_array($data);
-			$locations = $this->so->read($data);
+			$locations = $this->so->read(array(
+				'start' => $data['start'],
+				'results' => $data['results'],
+				'query' => $data['query'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
+				'dry_run' => $data['dry_run'],
+				'lookup_tenant' => $data['lookup_tenant'],
+				'filter_role_on_contact' => $data['filter_role_on_contact'], 
+				'role_id' => $data['role_id'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'type_id' => $this->type_id,
+				'lookup' => $this->lookup,
+				'district_id' => $this->district_id,
+				'status' => $this->status,
+				'part_of_town_id' => $this->part_of_town_id,
+				'location_code' => $this->location_code		
+			));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
