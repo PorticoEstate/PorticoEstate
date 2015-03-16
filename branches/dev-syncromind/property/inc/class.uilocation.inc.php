@@ -123,22 +123,26 @@
 			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
-			$this->type_id				= $this->bo->type_id;
-			$this->lookup				= $this->bo->lookup;
-			$this->location_code		= $this->bo->location_code;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
 			//$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
 
+			$this->query				= $this->bo->query;
+			$this->filter				= $this->bo->filter;
+			$this->cat_id				= $this->bo->cat_id;
+			$this->part_of_town_id		= $this->bo->part_of_town_id;
+			$this->district_id			= $this->bo->district_id;
+			$this->status				= $this->bo->status;
+			$this->lookup				= $this->bo->lookup;
+			$this->location_code		= $this->bo->location_code;
+			
 //			$this->start				= $this->bo->start;
 //			$this->query				= $this->bo->query;
 //			$this->sort					= $this->bo->sort;
 //			$this->order				= $this->bo->order;
 //			$this->allrows				= $this->bo->allrows;
 //
-//			$this->type 		= $this->bo->type;
-//			$this->type_id 		= $this->bo->type_id;
-
-
+			$this->type 		= $this->bo->type;
+			$this->type_id 		= $this->bo->type_id;
 		}
 
 		/**
@@ -147,8 +151,6 @@
 		 */
 		public function query()
 		{
-			$type_id	= $this->type_id;
-			$lookup 	= $this->lookup;
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 
 			$search = phpgw::get_var('search');
@@ -157,23 +159,23 @@
 			$columns = phpgw::get_var('columns');
 
 			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+                'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
-				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'lookup_tenant' => $lookup_tenant
 
+				/*'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'type_id' => $type_id,
-				'lookup_tenant' => $lookup_tenant,
 				'lookup' => $lookup,
 				'district_id' => phpgw::get_var('district_id', 'int'),
 				'status' => phpgw::get_var('status'),
 				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
 				'location_code' => phpgw::get_var('location_code'),
-				'filter'		=> phpgw::get_var('filter', 'int')
+				'filter'		=> phpgw::get_var('filter', 'int')*/
 			);
 
 			$values = $this->bo->read($params);
@@ -784,7 +786,7 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$this->bo->read(array('type_id'=> $type_id, 'lookup_tenant' => $lookup_tenant,'lookup' => $lookup,'dry_run' => true));
+			$this->bo->read(array('lookup_tenant' => $lookup_tenant,'lookup' => $lookup,'dry_run' => true));
 			$uicols = $this->bo->uicols;
 
 			$appname = lang('location');
@@ -879,15 +881,12 @@ JS;
 					'source' => self::link(array(
 								'menuaction' 		=> 'property.uilocation.index',
 								'type_id' 			=> $type_id,
-								'district_id'       => $this->district_id,
-								'part_of_town_id'   => $this->part_of_town_id,
 								'lookup'        	=> $lookup,
 								'lookup_tenant'     => $lookup_tenant,
 								'lookup_name'       => $lookup_name,
-								'cat_id'        	=> $this->cat_id,
 								'location_code'		=> $this->location_code,
 								'block_query'		=> $block_query,
-								'phpgw_return_as' => 'json'
+								'phpgw_return_as'	=> 'json'
 					)),
 					'download'	=> self::link(array('menuaction' => 'property.uilocation.download',
 									'type_id'		=> $type_id,
@@ -907,13 +906,12 @@ JS;
 					(
 						'type'	=> 'button',
 						'id'	=> 'btn_new',
-						'value'	=> lang('add'),
-						'tab_index' => 7
+						'value'	=> lang('add')
 					);
 			}
 
 			$filters = $this->_get_categories();
-
+			krsort($filters);
 			foreach ($filters as $filter)
 			{
 				array_unshift ($data['form']['toolbar']['item'], $filter);
@@ -1004,7 +1002,7 @@ JS;
 				{
 					$data['datatable']['actions'][] = array
 						(
-							'my_name'			=> 'view',
+							'my_name'		=> 'view',
 							'text' 			=> lang('contracts'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
@@ -1018,7 +1016,7 @@ JS;
 
 					$data['datatable']['actions'][] = array
 						(
-							'my_name'			=> 'view',
+							'my_name'		=> 'view',
 							'text' 			=> lang('composites'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
@@ -1051,9 +1049,9 @@ JS;
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uilocation.view',
-								'lookup_tenant'	=> $lookup_tenant,
-								'target'		=> '_blank'
+								'lookup_tenant'	=> $lookup_tenant
 							)),
+							'target'		=> '_blank',
 							'parameters'	=> json_encode($parameters)
 						);
 				}
@@ -1062,7 +1060,7 @@ JS;
 				{
 					$data['datatable']['actions'][] = array
 						(
-							'my_name'			=> 'edit',
+							'my_name'		=> 'edit',
 							'text' 			=> lang('add'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
@@ -1077,7 +1075,7 @@ JS;
 				{
 					$data['datatable']['actions'][] = array
 						(
-							'my_name'			=> 'edit',
+							'my_name'		=> 'edit',
 							'text' 			=> lang('edit'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
@@ -1089,14 +1087,14 @@ JS;
 
 					$data['datatable']['actions'][] = array
 						(
-							'my_name'			=> 'edit',
+							'my_name'		=> 'edit',
 							'text' 			=> lang('open edit in new window'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uilocation.edit',
-								'lookup_tenant'	=> $lookup_tenant,
-								'target'		=> '_blank'
+								'lookup_tenant'	=> $lookup_tenant
 							)),
+							'target'		=> '_blank',
 							'parameters'	=> json_encode($parameters)
 						);
 
@@ -1132,6 +1130,20 @@ JS;
 				unset($parameters);
 			}
 
+			$query	= phpgw::get_var('query');
+			if (!empty($query))
+			{
+				$code =	<<<JS
+					function initCompleteDatatable(oSettings, json, oTable) 
+					{ 
+						var api = oTable.api();
+						api.search( '$query' );
+					}
+JS;
+
+				$GLOBALS['phpgw']->js->add_code('', $code, true);
+			}
+				
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -1217,7 +1229,7 @@ JS;
 			);
 
 			$filters = $this->_get_categories_role();
-
+			krsort($filters);
 			foreach ($filters as $filter)
 			{
 				array_unshift ($data['form']['toolbar']['item'], $filter);
@@ -1963,11 +1975,8 @@ JS;
 				}
 
 				$related_link = $_related ? true : false;
-
-				if($_related)
-				{
-					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
-				}
+				
+				$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
 
 				$related_def = array
 				(
@@ -2479,26 +2488,23 @@ JS;
 				'datatable' => array(
 					'source' => self::link(array(
 								'menuaction' 		=> 'property.uilocation.summary',
-								'district_id'		=> $this->district_id,
-								'part_of_town_id'	=> $this->part_of_town_id,
-								'filter'			=> $this->filter,
 								'summary'			=> true,
 								'phpgw_return_as' => 'json'
 					)),
 					'download'	=> self::link(array('menuaction' => 'property.uilocation.download',
-									'district_id'		=> $this->district_id,
-									'part_of_town_id'	=> $this->part_of_town_id,
-									'filter'			=> $this->filter,
 									'summary'			=> true,
 									'export'     => true,
 									'allrows'    => true)),
 					'allrows'	=> true,
 					'editor_action' => '',
-					'field' => array()
+					'field' => array(),
+					'disablePagination' => true,
+					'actions' => ''
 				)
 			);
 
 			$filters = $this->_get_categories_summary();
+			krsort($filters);
 
 			foreach ($filters as $filter)
 			{
@@ -2520,8 +2526,6 @@ JS;
 
 					array_push ($data['datatable']['field'], $params);
 			}
-
-			$data['datatable']['actions'][] = array();
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			//print_r($data); die;
