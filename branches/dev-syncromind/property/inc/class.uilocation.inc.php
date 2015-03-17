@@ -195,8 +195,6 @@
 
 		public function query_role()
 		{
-			$type_id	= $this->type_id;
-			$lookup 	= $this->lookup;
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
 			$role_id = phpgw::get_var('role_id', 'int');
@@ -213,17 +211,8 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
-				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1,
-
-				'type_id' => $type_id,
 				'lookup_tenant' => $lookup_tenant,
-				'lookup' => $lookup,
-				'district_id' => phpgw::get_var('district_id', 'int'),
-				'status' => phpgw::get_var('status'),
-				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
-				'location_code' => phpgw::get_var('location_code'),
-				'filter'		=> phpgw::get_var('filter', 'int'),
 				'user_id' => $user_id,
 				'role_id' => $role_id
 			);
@@ -517,7 +506,6 @@
 						'list' => $values_combo_box[2]
 					);
 
-
 			$values_combo_box[3] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
 			array_unshift ($values_combo_box[3], array('id'=>'', 'name'=>lang('no part of town')));
 			$combos[] = array('type' => 'filter',
@@ -633,6 +621,136 @@
 
 			return $combos;
 		}
+		
+		private function _populate()
+		{
+			//$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
+			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
+			//$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
+			$location_code		= phpgw::get_var('location_code');
+			$values_attribute	= phpgw::get_var('values_attribute');
+			$location 			= explode('-',$location_code);
+			$error_id			= false;
+
+			$type_id	 	= $this->type_id;
+
+			if($location_code)
+			{
+				$type_id = count($location);
+			}
+
+			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+			$GLOBALS['phpgw']->session->appsession('insert_record','property','');
+
+			if(isset($insert_record['location']) && is_array($insert_record['location']))
+			{
+				for ($i=0; $i<count($insert_record['location']); $i++)
+				{
+					$values[$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
+				}
+			}
+
+			$insert_record_attributes	= $GLOBALS['phpgw']->session->appsession('insert_record_values' . '.location.' . $this->type_id,'property');
+
+			if(is_array($insert_record_attributes))
+			{
+				foreach ($insert_record_attributes as $attribute)
+				{
+					foreach ($values_attribute as &$attr)
+					{
+						if($attr['name'] ==  $attribute)
+						{
+							$attr['value'] = phpgw::get_var($attribute, 'string', 'POST');
+						}
+					}
+				}
+			}
+
+			if(isset($insert_record['extra']) && is_array($insert_record['extra']))
+			{
+				for ($i=0; $i<count($insert_record['extra']); $i++)
+				{
+					$values[$insert_record['extra'][$i]]= phpgw::get_var($insert_record['extra'][$i], 'string', 'POST');
+				}
+			}
+
+			for ($i=1; $i<($type_id+1); $i++)
+			{
+				if((!$values["loc{$i}"]  && (!isset($location[($i-1)])  || !$location[($i-1)])  ) || !$values["loc{$i}"])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a location %1 ID !',$i));
+					$error_id = true;
+				}
+
+				$values['location_code'][]= $values["loc{$i}"];
+
+				if($i<$type_id)
+				{
+					$location_parent[]= $values["loc{$i}"];
+				}
+			}
+
+			if(!$values['cat_id'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a category'));
+			}
+
+			if(isset($values_attribute) && is_array($values_attribute))
+			{
+				foreach ($values_attribute as $attribute )
+				{
+					if($attribute['nullable'] != 1 && !$attribute['value'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+					}
+
+					if($attribute['datatype'] == 'I' && isset($attribute['value']) && $attribute['value'] && !ctype_digit($attribute['value']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));
+					}
+				}
+			}
+
+			if (isset($insert_record['extra']) && array_search('street_id',$insert_record['extra']) && (!isset($values['street_id']) || !$values['street_id']))
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a street'));
+			}
+			if (isset($insert_record['extra']) && array_search('part_of_town_id',$insert_record['extra']) && (!isset($values['part_of_town_id']) || !$values['part_of_town_id']))
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a part of town'));
+			}
+			if (isset($insert_record['extra']) && array_search('owner_id',$insert_record['extra']) && (!isset($values['owner_id']) || !$values['owner_id']))
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select an owner'));
+			}
+
+			$values['location_code']=implode("-", $values['location_code']);
+
+			if($values['location_code'] && !$location_code)
+			{
+				if($this->bo->check_location($values['location_code'],$type_id))
+				{
+					$receipt['error'][]=array('msg'=>lang('This location is already registered!') . '[ '.$values['location_code'].' ]');
+					$error_location_id=true;
+					$error_id = true;
+				}
+			}
+
+			if($location_code)
+			{
+				$action='edit';
+				$values['change_type'] = $change_type;
+
+
+				if(!$values['change_type'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select change type'));
+				}
+			}
+					
+			return $values;
+		}
+		
 		
 		function get_part_of_town()
 		{
@@ -1195,8 +1313,8 @@ JS;
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('property', 'portico', 'location.responsiblility_role.js');
 
-			$this->bo->get_responsible(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id, 'allrows'=>$this->allrows));
-
+			$this->bo->get_responsible(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id, 'allrows'=>$this->allrows, 'dry_run' => true));
+			
 			$uicols = $this->bo->uicols;
 
 			$appname = lang('location');
@@ -1213,9 +1331,6 @@ JS;
 					'source' => self::link(array(
 								'menuaction' 		=> 'property.uilocation.responsiblility_role',
 								'type_id' 			=> $type_id,
-								'cat_id'        	=> $this->cat_id,
-								'district_id'       => $this->district_id,
-								'part_of_town_id'   => $this->part_of_town_id,
 								'second_display'    => 1,
 								'status'            => $this->status,
 								'location_code'     => $this->location_code,
@@ -1303,7 +1418,17 @@ JS;
 
 			if($this->acl_edit)
 			{
+				$link = self::link(array(
+							'menuaction'		=> 'property.uilocation.responsiblility_role_save',
+							'type_id' 			=> $type_id,
+							'second_display'    => 1,
+							'status'            => $this->status,
+							'location_code'     => $this->location_code,
+							'entity_id'			=> $this->entity_id
+						));
+				
 				$code = '
+					var link = "'.$link.'";
 					var assign = [];
 					var assign_orig = [];
 
@@ -1316,31 +1441,18 @@ JS;
 					});
 
 					var data = {"assign": assign, "assign_orig": assign_orig, "user_id": $("#user_id").val(), "role_id": $("#role_id").val()};
-					execute_ajax(action, function(result){
+					execute_ajax(link, function(result){
 						document.getElementById("message").innerHTML += "<br/>" + result;
 						oTable.fnDraw();
 					}, data, "POST");
-					';
+				';
 
 				$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'save',
-						'type'			=> 'custom',
+						'my_name'	  => 'save',
+						'type'		  => 'custom',
 						'custom_code' => $code,
-						'text' 			=> lang('save'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uilocation.responsiblility_role_save',
-							'type_id' 			=> $type_id,
-							'cat_id'        	=> $this->cat_id,
-							'district_id'       => $this->district_id,
-							'part_of_town_id'   => $this->part_of_town_id,
-							'second_display'    => 1,
-							'status'            => $this->status,
-							'location_code'     => $this->location_code,
-							'entity_id'			=> $this->entity_id,
-							'phpgw_return_as' => 'json'
-						))
+						'text'		  => lang('save')
 					);
 			}
 
@@ -2245,6 +2357,53 @@ JS;
 		}
 
 
+        public function save()
+        {
+			$id = phpgw::get_var('id', 'int');
+			$values_attribute = phpgw::get_var('values_attribute');
+			$config	= CreateObject('phpgwapi.config','property');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$config->read();
+
+			$values = $this->_populate();
+
+			if($id)
+			{
+				$action='edit';
+				$values['id']= $id;
+			}
+			
+			if($values['copy_project'])
+			{
+				$action='add';
+			}
+					
+			if( !$this->receipt['error'] )
+			{
+				try
+				{
+					$receipt = $this->bo->save($values, $action, $values_attribute);
+					$values['id'] = $receipt['id'];
+					$id = $receipt['id'];
+					$this->receipt['error'] = $receipt['error'];
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+					}
+				}
+			}
+			 
+			phpgwapi_cache::message_set($receipt, 'message');
+			
+			$this->edit($values);
+
+			return;
+        }
+		
+		
 		function delete()
 		{
 
