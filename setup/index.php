@@ -24,7 +24,7 @@
 		'noapi'			=> True,
 		'nocachecontrol'	=> True
 	);
-	
+
 	/**
 	 * Include setup functions
 	 */
@@ -183,9 +183,9 @@
 		$GLOBALS['phpgw_setup']->html->show_footer();
 		exit;
 	}
-	
+
 	// BEGIN setup page
-	
+
 	//$GLOBALS['phpgw_setup']->app_status();
 	$GLOBALS['phpgw_info']['server']['app_images'] = 'templates/base/images';
 	$GLOBALS['phpgw_info']['server']['api_images'] = '../phpgwapi/templates/base/images';
@@ -195,20 +195,30 @@
 	$setup_tpl->set_var('img_incomplete', $incomplete);
 	$setup_tpl->set_var('img_completed', $completed);
 
-	$setup_tpl->set_var('svn_step_text',lang('Step 0 - check for updates'));
+	$setup_tpl->set_var('svn_step_text',lang('Step 0 - check for updates. The user %1 has to be member of sudoers and have a password',getenv('APACHE_RUN_USER')));
 	$setup_tpl->set_var('db_step_text',lang('Step 1 - Simple Application Management'));
 
 	switch($GLOBALS['phpgw_info']['setup']['stage']['svn'])
 	{
 		case 1:
-			$setup_tpl->set_var('dry_run',lang('show-updates'));
-			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn status'));
+			$setup_tpl->set_var('sudo_user',lang('sudo user'));
+			$setup_tpl->set_var('sudo_password',lang('sudo password'));
+			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn status -u'));
 			$setup_tpl->set_var('check_for_svn_update',lang('check update'));
 			$_svn_message = '';
 			if($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'perform_svn_update')
 			{
+				$sudo_user		=  phpgw::get_var('sudo_user');
+				$sudo_password	=  phpgw::get_var('sudo_password');
+
+				$tmpfname = tempnam(sys_get_temp_dir(), "SVN");
+				$handle = fopen($tmpfname, "w+");
+				fwrite($handle, "{$sudo_password}\n");
+				fclose($handle);
 				putenv('LANG=en_US.UTF-8');
-				exec('svn up ' . PHPGW_SERVER_ROOT . ' --config-dir /etc/subversion 2>&1', $output, $returnStatus);
+				$_command = "sudo -u {$sudo_user} -S svn up " . PHPGW_SERVER_ROOT . " --config-dir /etc/subversion < {$tmpfname} 2>&1";
+				exec($_command, $output, $returnStatus);
+				unlink($tmpfname);
 				$_svn_message = '<pre>' . print_r($output,true) . '</pre>';
 			}
 			$setup_tpl->set_var('svn_message',$_svn_message);
@@ -218,14 +228,29 @@
 
 			break;
 		case 2:
+			$setup_tpl->set_var('sudo_user',lang('sudo user'));
+			$setup_tpl->set_var('value_sudo_user', phpgw::get_var('sudo_user'));
+			$setup_tpl->set_var('value_sudo_password', phpgw::get_var('sudo_password'));
+			$setup_tpl->set_var('sudo_password',lang('sudo password'));
 			$setup_tpl->set_var('perform_svn_update',lang('perform svn update'));
+			$setup_tpl->set_var('sudo_user',lang('sudo user'));
+			$setup_tpl->set_var('sudo_password',lang('sudo password'));
 			$setup_tpl->set_var('execute',lang('execute'));
 			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn up'));
 			$_svn_message = '';
 			if($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'check_for_svn_update')
 			{
+				$sudo_user		=  phpgw::get_var('sudo_user');
+				$sudo_password	=  phpgw::get_var('sudo_password');
+
+				$tmpfname = tempnam(sys_get_temp_dir(), "SVN");
+				$handle = fopen($tmpfname, "w+");
+				fwrite($handle, "{$sudo_password}\n");
+				fclose($handle);
 				putenv('LANG=en_US.UTF-8');
-				exec('svn status -u ' . PHPGW_SERVER_ROOT . ' --config-dir /etc/subversion 2>&1', $output, $returnStatus);
+				$_command = "sudo -u {$sudo_user} -S svn status -u " . PHPGW_SERVER_ROOT . " --config-dir /etc/subversion < {$tmpfname} 2>&1";
+				exec($_command, $output, $returnStatus);
+				unlink($tmpfname);
 				$_svn_message = '<pre>' . print_r($output,true) . '</pre>';
 			}
 			$setup_tpl->set_var('svn_message',$_svn_message);
@@ -310,7 +335,7 @@
 			$setup_tpl->set_var('tblchange',lang('Table Change Messages'));
 			$setup_tpl->parse('V_db_stage_6_pre','B_db_stage_6_pre');
 			$db_filled_block = $setup_tpl->get_var('V_db_stage_6_pre');
-			
+
 			flush();
 			//ob_start();
 			$GLOBALS['phpgw_setup']->db->Halt_On_Error = 'yes';

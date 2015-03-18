@@ -2,8 +2,7 @@
 <!-- begin the svn section -->
 <table border="0" width="100%" cellspacing="0" cellpadding="2" style="{border: 1px solid #000000;}">
 <tr class="th">
-	<td align="left">{svn_step_text}</td>
-	<td align="right">&nbsp;</td>
+	<td align="left" colspan="2">{svn_step_text}</td>
 </tr>
 
 {V_svn_filled_block}

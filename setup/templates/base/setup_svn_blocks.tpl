@@ -10,8 +10,25 @@
 	<td>
 		{check_for_svn_update}
 		<form method="POST" action="index.php">
-		{dry_run}:
-        <input type="hidden" name="action_svn" value="check_for_svn_update">
+		<input type="hidden" name="action_svn" value="check_for_svn_update">
+		<table>
+			<tr>
+				<td>
+					{sudo_user}:
+				</td>
+				<td>
+					<input type="text" name="sudo_user" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{sudo_password}:
+				</td>
+				<td>
+					<input type="password" name="sudo_password" value="">
+				</td>
+			</tr>
+		</table>
 		<input type="submit" name="label" value="{check_for_svn_update}"><br>({svnwarn})
 		</form>
 		{svn_message}
@@ -31,6 +48,25 @@
 		<form method="POST" action="index.php">
 		{execute}:
         <input type="hidden" name="action_svn" value="perform_svn_update">
+		<table>
+			<tr>
+				<td>
+					{sudo_user}:
+				</td>
+				<td>
+					<input type="text" name="sudo_user" value="{value_sudo_user}">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{sudo_password}:
+				</td>
+				<td>
+					<input type="password" name="sudo_password" value="{value_sudo_password}">
+				</td>
+			</tr>
+		</table>
+
 		<input type="submit" name="label" value="{perform_svn_update}"><br>({svnwarn})
 		</form>
 		{svn_message}
