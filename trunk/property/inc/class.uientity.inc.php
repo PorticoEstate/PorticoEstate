@@ -2408,6 +2408,9 @@ JS;
 								array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
 		//						array('key' => 'enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'location_id','hidden'=>true),
 								array('key' => 'component_id','hidden'=>true),
@@ -3573,6 +3576,7 @@ JS;
 
 				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
+				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
 			}
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{

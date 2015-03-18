@@ -910,6 +910,10 @@ JS;
 			$control_id				= phpgw::get_var('control_id', 'int');
 			$assigned_to			= phpgw::get_var('control_responsible', 'int');
 			$start_date				= phpgw::get_var('control_start_date', 'string');
+			$repeat_type			= phpgw::get_var('repeat_type', 'int');
+			$repeat_interval		= phpgw::get_var('repeat_interval', 'int');
+			$controle_time			= phpgw::get_var('controle_time', 'float');
+			$service_time			= phpgw::get_var('service_time', 'float');
 
 			$component_arr = $this->so->read_single(array('entity_id' => $entity_id, 'cat_id'=> $cat_id, 'id' => $id));
 
@@ -950,9 +954,13 @@ JS;
 					(
 						'register_component'	=> array("{$control_id}_{$location_id}_{$id}"),
 						'assigned_to'			=> $assigned_to,
-						'start_date'			=> $start_date
+						'start_date'			=> $start_date,
+						'repeat_type'			=> $repeat_type,
+						'repeat_interval'		=> $repeat_interval,
+						'controle_time'			=> $controle_time,
+						'service_time'			=> $service_time,
 					);
-
+					_debug_array($values);
 					if($add = $so_control->register_control_to_component($values))
 					{
 						if($add == PHPGW_ACL_ADD)
