@@ -676,7 +676,16 @@
 								oArgs.control_id = $("#control_id").val();
 								oArgs.control_responsible = $("#control_responsible").val();
 								oArgs.control_start_date = $("#control_start_date").val();
+								oArgs.repeat_type = $("#repeat_type").val();
+								if(!oArgs.repeat_type)
+								{
+									alert('velg type serie');
+									return;
+								}
 
+								oArgs.repeat_interval = $("#repeat_interval").val();
+								oArgs.controle_time = $("#controle_time").val();
+								oArgs.service_time = $("#service_time").val();
 								var requestUrl = phpGWLink('index.php', oArgs, true);
 //								alert(requestUrl);
 
