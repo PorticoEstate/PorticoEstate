@@ -61,6 +61,8 @@
 				'index'  				=> true,
 				'view'   				=> true,
 				'edit'   				=> true,
+				'add'   				=> true,
+				'save'   				=> true,
 				'delete' 				=> true,
 				'update_cat'			=> true,
 				'stop'					=> true,
@@ -624,15 +626,12 @@
 		
 		private function _populate()
 		{
-			//$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
-			//$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code		= phpgw::get_var('location_code');
 			$values_attribute	= phpgw::get_var('values_attribute');
 			$location 			= explode('-',$location_code);
 			$error_id			= false;
-
-			$type_id	 	= $this->type_id;
+			$type_id			= $this->type_id;
 
 			if($location_code)
 			{
@@ -678,7 +677,7 @@
 			{
 				if((!$values["loc{$i}"]  && (!isset($location[($i-1)])  || !$location[($i-1)])  ) || !$values["loc{$i}"])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select a location %1 ID !',$i));
+					$this->receipt['error'][]=array('msg'=>lang('Please select a location %1 ID !',$i));
 					$error_id = true;
 				}
 
@@ -692,7 +691,7 @@
 
 			if(!$values['cat_id'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a category'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a category'));
 			}
 
 			if(isset($values_attribute) && is_array($values_attribute))
@@ -701,27 +700,27 @@
 				{
 					if($attribute['nullable'] != 1 && !$attribute['value'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 					}
 
 					if($attribute['datatype'] == 'I' && isset($attribute['value']) && $attribute['value'] && !ctype_digit($attribute['value']))
 					{
-						$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));
+						$this->receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));
 					}
 				}
 			}
 
 			if (isset($insert_record['extra']) && array_search('street_id',$insert_record['extra']) && (!isset($values['street_id']) || !$values['street_id']))
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a street'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a street'));
 			}
 			if (isset($insert_record['extra']) && array_search('part_of_town_id',$insert_record['extra']) && (!isset($values['part_of_town_id']) || !$values['part_of_town_id']))
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a part of town'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a part of town'));
 			}
 			if (isset($insert_record['extra']) && array_search('owner_id',$insert_record['extra']) && (!isset($values['owner_id']) || !$values['owner_id']))
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select an owner'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select an owner'));
 			}
 
 			$values['location_code']=implode("-", $values['location_code']);
@@ -730,25 +729,23 @@
 			{
 				if($this->bo->check_location($values['location_code'],$type_id))
 				{
-					$receipt['error'][]=array('msg'=>lang('This location is already registered!') . '[ '.$values['location_code'].' ]');
-					$error_location_id=true;
+					$this->receipt['error'][]=array('msg'=>lang('This location is already registered!') . '[ '.$values['location_code'].' ]');
 					$error_id = true;
 				}
 			}
 
 			if($location_code)
 			{
-				$action='edit';
 				$values['change_type'] = $change_type;
-
 
 				if(!$values['change_type'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select change type'));
+					$this->receipt['error'][]=array('msg'=>lang('Please select change type'));
 				}
 			}
+			$values['error_id'] = $error_id;
 					
-			return $values;
+			return array('values'=>$values, 'type_id'=>$type_id, 'location_parent'=>(isset($location_parent)?$location_parent:''));
 		}
 		
 		
@@ -1472,13 +1469,18 @@ JS;
 			return $documents;				
 		}
 		
-		function edit($view = '')
+		public function add()
+		{
+			$this->edit();
+		}
+		
+		function edit($values = array(), $mode = 'edit')
 		{
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
-			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
+			//$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code		= phpgw::get_var('location_code');
 			$sibling			= phpgw::get_var('sibling');
@@ -1534,7 +1536,7 @@ JS;
 				$mode = 'edit';
 			}
 
-			$values = array();
+			/*$values = array();
 			if(isset($_POST['save']) && !$view)
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
@@ -1573,7 +1575,6 @@ JS;
 				}
 			}
 
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_form'));
 
 			if ($values)
 			{
@@ -1644,7 +1645,6 @@ JS;
 					$action='edit';
 					$values['change_type'] = $change_type;
 
-
 					if(!$values['change_type'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select change type'));
@@ -1667,7 +1667,7 @@ JS;
 						$values['attributes']	= $this->bo->find_attribute(".location.{$this->type_id}");
 						$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
 
-						/* restore date from posting */
+						
 						if(isset($insert_record['extra']) && is_array($insert_record['extra']))
 						{
 							for ($i=0; $i<count($insert_record['extra']); $i++)
@@ -1677,8 +1677,19 @@ JS;
 						}
 					}
 				}
-			}
+			}*/
 
+			if ($values['saved'])
+			{
+				$location_code = $values['location_code'];
+				$error_id = false;
+			}
+			
+			if ($values['error_id']) 
+			{
+				$error_id = $values['error_id'];
+			}
+			
 			if(!$error_id && $location_code)
 			{
 				$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup'));
@@ -1724,7 +1735,7 @@ JS;
 				}
 			}
 			/* Preserve attribute values from post */
-			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
+			if(isset($this->receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
 			{
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 				unset($values['location_code']);
@@ -1743,7 +1754,7 @@ JS;
 
 			$link_data = array
 				(
-					'menuaction'	=> $view ? 'property.uilocation.view' : 'property.uilocation.edit',
+					'menuaction'	=> $view ? 'property.uilocation.view' : 'property.uilocation.save',
 					'location_code'	=> $location_code,
 					'type_id'	=> $type_id,
 					'lookup_tenant'	=> $lookup_tenant
@@ -2359,33 +2370,37 @@ JS;
 
         public function save()
         {
-			$id = phpgw::get_var('id', 'int');
-			$values_attribute = phpgw::get_var('values_attribute');
-			$config	= CreateObject('phpgwapi.config','property');
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-			$config->read();
+			$location_code		= phpgw::get_var('location_code');
+			$values_attribute	= phpgw::get_var('values_attribute');
 
-			$values = $this->_populate();
+			$result = $this->_populate();
 
-			if($id)
+			if($location_code)
 			{
 				$action='edit';
-				$values['id']= $id;
 			}
 			
-			if($values['copy_project'])
-			{
-				$action='add';
-			}
-					
+			$values = $result['values'];
+			$location_parent = $result['location_parent'];
+			
 			if( !$this->receipt['error'] )
 			{
 				try
 				{
-					$receipt = $this->bo->save($values, $action, $values_attribute);
-					$values['id'] = $receipt['id'];
-					$id = $receipt['id'];
-					$this->receipt['error'] = $receipt['error'];
+					$receipt = $this->bo->save($values,$values_attribute,$action,$result['type_id'],$location_parent);
+					//$values['error_id'] = isset($receipt['location_code']) && $receipt['location_code'] ? false : true;
+					//$values['location_code'] = $receipt['location_code'];
+					if (!empty($receipt['location_code'])) 
+					{
+						$values['saved'] = true;
+						$values['error_id'] = false;
+						$values['location_code'] = $receipt['location_code'];
+					}
+					else 
+					{
+						$values['error_id'] = true;						
+					}
+				
 				}
 				catch(Exception $e)
 				{
@@ -2394,6 +2409,27 @@ JS;
 						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
 					}
 				}
+			} 
+			else 
+			{
+				if(isset($location_parent) && $location_parent)
+				{
+					$location_code_parent=implode('-', $location_parent);
+					$values = $this->bo->read_single($location_code_parent);
+
+					$values['attributes']	= $this->bo->find_attribute(".location.{$this->type_id}");
+					$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
+
+					/* restore date from posting */
+					$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+					if(isset($insert_record['extra']) && is_array($insert_record['extra']))
+					{
+						for ($i=0; $i<count($insert_record['extra']); $i++)
+						{
+							$values[$insert_record['extra'][$i]]= phpgw::get_var($insert_record['extra'][$i], 'string', 'POST');
+						}
+					}
+				}				
 			}
 			 
 			phpgwapi_cache::message_set($receipt, 'message');
