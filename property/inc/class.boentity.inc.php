@@ -959,6 +959,7 @@ JS;
 						'repeat_interval'		=> $repeat_interval,
 						'controle_time'			=> $controle_time,
 						'service_time'			=> $service_time,
+						'duplicate'				=> true
 					);
 					_debug_array($values);
 					if($add = $so_control->register_control_to_component($values))
