@@ -279,20 +279,19 @@ onMouseOut="nd()">
 				document.form.active_tab.value = active_tab;			
 			}
 		</script>
-
+		<dl>
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</xsl:when>
+			</xsl:choose>
+		</dl>
 		<div id="location_edit_tabview">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<dl>
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<dt>
-							<xsl:call-template name="msgbox"/>
-						</dt>
-					</xsl:when>
-				</xsl:choose>
-			</dl>
 			<form method="post" name="form" id="form" action="{$form_action}" class="pure-form pure-form-aligned">
 				<div id="tab-content">
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
@@ -579,58 +578,45 @@ onMouseOut="nd()">
 						</div>
 					</xsl:for-each>
 				</div>
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<tr height="50">
-						<xsl:choose>
-							<xsl:when test="edit != ''">
-								<td>
-									<xsl:variable name="lang_save">
-										<xsl:value-of select="lang_save"/>
-									</xsl:variable>
-									<input type="submit" name="save" value="{$lang_save}">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_save_statustext"/>
-										</xsl:attribute>
-									</input>
-								</td>
-							</xsl:when>
-						</xsl:choose>
-						<xsl:choose>
-							<xsl:when test="check_history != ''">
-								<td>
-									<xsl:variable name="lang_history">
-										<xsl:value-of select="lang_history"/>
-									</xsl:variable>
-									<input type="submit" name="get_history" value="{$lang_history}">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_history_statustext"/>
-										</xsl:attribute>
-									</input>
-								</td>
-							</xsl:when>
-						</xsl:choose>
-					</tr>
-				</table>
-			</form>
-			<table>
-				<tr>
-					<td>
-						<xsl:variable name="done_action">
-							<xsl:value-of select="done_action"/>
-						</xsl:variable>
-						<xsl:variable name="lang_done">
-							<xsl:value-of select="lang_done"/>
-						</xsl:variable>
-						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}">
+				<div class="proplist-col">
+					<xsl:choose>
+						<xsl:when test="edit != ''">
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
+							<input type="submit" class="pure-button pure-button-primary" name="save" value="{$lang_save}">
 								<xsl:attribute name="title">
-									<xsl:value-of select="lang_done_statustext"/>
+									<xsl:value-of select="lang_save_statustext"/>
 								</xsl:attribute>
 							</input>
-						</form>
-					</td>
-				</tr>
-			</table>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="check_history != ''">
+							<xsl:variable name="lang_history">
+								<xsl:value-of select="lang_history"/>
+							</xsl:variable>
+							<input type="submit" class="pure-button pure-button-primary" name="get_history" value="{$lang_history}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_history_statustext"/>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:variable name="lang_done">
+						<xsl:value-of select="lang_done"/>
+					</xsl:variable>
+					<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.done_form.submit();">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_done_statustext"/>
+						</xsl:attribute>
+					</input>
+				</div>
+			</form>
+			<xsl:variable name="done_action">
+				<xsl:value-of select="done_action"/>
+			</xsl:variable>
+			<form name="done_form" id="done_form" method="post" action="{$done_action}"></form>
 			<xsl:choose>
 				<xsl:when test="values != ''">
 					<table class="pure-table pure-table-bordered">
