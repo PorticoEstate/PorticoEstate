@@ -218,90 +218,94 @@ class booking_uievent extends booking_uicommon
 		);
 	}
 
-	protected function create_sendt_mail_notification_comment_text($event,$errors)
-	{
-		$data = array();
+    protected function create_sendt_mail_notification_comment_text($event,$errors)
+    {
+        $data = array();
 
-		foreach($errors['allocation'][0] as $e)
-		{
-			foreach($event['resources'] as $res)
-			{
-				$time = $this->bo->so->get_overlap_time_info($res,$e,'allocation');
+        foreach($errors['allocation'][0] as $e)
+        {
+            foreach($event['resources'] as $res)
+            {
+                $time = $this->bo->so->get_overlap_time_info($res,$e,'allocation');
 
-				$from_ = new DateTime($time['from']);
-				$to_ = new DateTime($time['to']);
-				$date = $from_->format('d-m-Y');
-				$start = $from_->format('H:i');
-				$end = $to_->format('H:i');
+                $from_ = new DateTime($time['from']);
+                $to_ = new DateTime($time['to']);
+                $date = $from_->format('d-m-Y');
+                $start = $from_->format('H:i');
+                $end = $to_->format('H:i');
 
-				$resource = $this->bo->so->get_resource_info($res);
-				$_mymail = $this->bo->so->get_contact_mail($e,'allocation');
+                if ($start == $end) continue;
 
-				$a = $_mymail[0];
-				if(array_key_exists($a,$data))
-				{
-					$data[$a][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
-				}
-				else
-				{
-					$data[$a] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
-				}
-				if ($_mymail[1])
-				{
-					$b = $_mymail[1];
-					if(array_key_exists($a,$data))
-					{
-						$data[$b][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
-					}
-					else
-					{
-						$data[$b] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
-					}
-				}
-			}
-		}
+                $resource = $this->bo->so->get_resource_info($res);
+                $_mymail = $this->bo->so->get_contact_mail($e,'allocation');
 
-		foreach($errors['booking'][0] as $e)
-		{
-			foreach($event['resources'] as $res)
-			{
-				$time = $this->bo->so->get_overlap_time_info($res,$e,'booking');
+                $a = $_mymail[0];
+                if(array_key_exists($a,$data))
+                {
+                    $data[$a][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
+                }
+                else
+                {
+                    $data[$a] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
+                }
+                if ($_mymail[1])
+                {
+                    $b = $_mymail[1];
+                    if(array_key_exists($a,$data))
+                    {
+                        $data[$b][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
+                    }
+                    else
+                    {
+                        $data[$b] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
+                    }
+                }
+            }
+        }
 
-				$from_ = new DateTime($time['from']);
-				$to_ = new DateTime($time['to']);
-				$date = $from_->format('d-m-Y');
-				$start = $from_->format('H:i');
-				$end = $to_->format('H:i');
+        foreach($errors['booking'][0] as $e)
+        {
+            foreach($event['resources'] as $res)
+            {
+                $time = $this->bo->so->get_overlap_time_info($res,$e,'booking');
 
-				$resource = $this->bo->so->get_resource_info($res);
-				$_mymail = $this->bo->so->get_contact_mail($e,'booking');
+                $from_ = new DateTime($time['from']);
+                $to_ = new DateTime($time['to']);
+                $date = $from_->format('d-m-Y');
+                $start = $from_->format('H:i');
+                $end = $to_->format('H:i');
 
-				$a = $_mymail[0];
-				if(array_key_exists($a,$data))
-				{
-					$data[$a][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
-				}
-				else
-				{
-					$data[$a] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
-				}
-				if ($_mymail[1])
-				{
-					$b = $_mymail[1];
-					if(array_key_exists($a,$data))
-					{
-						$data[$b][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
-					}
-					else
-					{
-						$data[$b] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
-					}
-				}
+                if ($start == $end) continue;
 
-			}
-		}
-		return $data;
-	}
+                $resource = $this->bo->so->get_resource_info($res);
+                $_mymail = $this->bo->so->get_contact_mail($e,'booking');
+
+                $a = $_mymail[0];
+                if(array_key_exists($a,$data))
+                {
+                    $data[$a][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
+                }
+                else
+                {
+                    $data[$a] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
+                }
+                if ($_mymail[1])
+                {
+                    $b = $_mymail[1];
+                    if(array_key_exists($a,$data))
+                    {
+                        $data[$b][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end );
+                    }
+                    else
+                    {
+                        $data[$b] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ));
+                    }
+                }
+
+            }
+        }
+        return $data;
+    }
 
 	public function add()
 	{
@@ -606,32 +610,37 @@ class booking_uievent extends booking_uicommon
 							$comment_text_log .= $event['building_name']." (".substr($resname,0,-2).") ".pretty_timestamp($event['from_'])." - ".pretty_timestamp($event['to_']);
 							$this->add_comment($event, $comment_text_log);
 						}
-						if(phpgw::get_var('sendtocollision', 'POST'))
-						{
+                        if (phpgw::get_var('sendtocollision', 'POST')) {
 
-							$subject = $config->config_data['event_conflict_mail_subject'];
-							$body = "<p>".$config->config_data['event_mail_conflict_contact_active_collision']."\n".phpgw::get_var('mail', 'POST')."\n";
-							$body .= '<br /><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].'</a></p>';
-							$body .= "<p>".$config->config_data['application_mail_signature']."</p>";
-							$mail_sendt_to = '';
-							foreach (array_keys($maildata) as $mail)
-							{
-								$mailbody = '';
-								$comment_text_log = "Reserverasjoner som har blitt overskrevet: \n";
-								$mail_sendt_to = $mail_sendt_to.' '.$mail;
-								foreach($maildata[$mail] as $data)
-								{
-									$comment_text_log .= $data['date'].', '.$data['building'].', '.$data['resource'].', Kl. '.$data['start'].' - '.$data['end']." \n";
-								}
-								$mailbody .= $body."<pre>".$comment_text_log."</pre>";
-								$this->send_mailnotification($mail, $subject, $mailbody);
-							}
-							if (strpos($mail_sendt_to,'@') !== False)
-							{
-								$comment = "<p>Melding om konflikt er sendt til".$mail_sendt_to."<br />\n".phpgw::get_var('mail', 'POST')."</p>";
-								$this->add_comment($event,$comment);
-							}
-						}
+                            $subject = $config->config_data['event_conflict_mail_subject'];
+                            $body = "<p>" . $config->config_data['event_mail_conflict_contact_active_collision'] . "<br />\n" . phpgw::get_var('mail', 'POST') . "\n";
+                            $body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
+                            $body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
+                            $mail_sendt_to = '';
+                            foreach (array_keys($maildata) as $mail) {
+                                if ($mail == '') continue;
+                                usort($maildata[$mail], function($a, $b) {
+                                    $adate = explode('-',$a['date']);
+                                    $bdate = explode('-',$b['date']);
+                                    $astart = $adate[2].$adate[1].$adate[0].str_replace(':','',$a['start']);
+                                    $bstart = $bdate[2].$bdate[1].$bdate[0].str_replace(':','',$b['start']);
+                                    return $astart - $bstart;
+                                });
+
+                                $mailbody  = '';
+                                $comment_text_log = "Reserverasjoner som har blitt overskrevet: \n";
+                                $mail_sendt_to = $mail_sendt_to . ' ' . $mail;
+                                foreach ($maildata[$mail] as $data) {
+                                    $comment_text_log .= $data['date'] . ', ' . $data['building'] . ', ' . $data['resource'] . ', Kl. ' . $data['start'] . ' - ' . $data['end'] . " \n";
+                                }
+                                $mailbody .= $body . "<pre>" . $comment_text_log . "</pre>";
+                                $this->send_mailnotification($mail, $subject, $mailbody);
+                            }
+                            if (strpos($mail_sendt_to, '@') !== False) {
+                                $comment = "<p>Melding om konflikt er sendt til" . $mail_sendt_to . "<br />\n" . phpgw::get_var('mail', 'POST') . "</p>";
+                                $this->add_comment($event, $comment);
+                            }
+                        }
 						if(phpgw::get_var('sendtocontact', 'POST'))
 						{
 							$subject = $config->config_data['event_change_mail_subject'];

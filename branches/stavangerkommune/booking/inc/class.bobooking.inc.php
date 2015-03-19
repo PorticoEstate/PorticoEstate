@@ -507,9 +507,10 @@ function array_minus($a, $b)
 			{
 				$from->modify('last monday');
 			}
-			$to = clone $from;
-			$to->modify('+7 days');
-            echo "<pre>";
+            $to = clone $from;
+            $to->modify('+7 days');
+            $to->modify('-1 minute');
+
             if ($res != False){
                 $resources = $this->so->get_screen_resources($building_id, $res);
                 if (count($resources) > 0)
