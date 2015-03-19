@@ -1035,7 +1035,7 @@ class rental_socontract extends rental_socommon
     	//queries for selecting composites, parties and price items for the contract to be copied
     	$q_composites = "SELECT composite_id FROM rental_contract_composite WHERE contract_id={$old_contract_id}";
     	$q_parties = "SELECT party_id, is_payer FROM rental_contract_party WHERE contract_id={$old_contract_id}";
-    	$q_price_items = "SELECT price_item_id, title, area, count, agresso_id, is_area, price, total_price, is_one_time FROM rental_contract_price_item WHERE contract_id={$old_contract_id}";
+    	$q_price_items = "SELECT price_item_id, title, area, count, agresso_id, is_area, price, total_price, is_one_time FROM rental_contract_price_item WHERE contract_id={$old_contract_id} AND is_one_time = false";
     	$success_composites = true;
     	$success_parties = true;
     	$success_price_items = true;

@@ -833,8 +833,13 @@
 		function register_control_to_component($data)
 		{
 			$ret = 0;
-			$assigned_to	= isset($data['assigned_to']) && $data['assigned_to'] ? $data['assigned_to'] : null;
+			$assigned_to		= isset($data['assigned_to']) && $data['assigned_to'] ? $data['assigned_to'] : null;
 			$start_date			= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : null;
+			$repeat_type		= isset($data['repeat_type']) && $data['repeat_type'] ? $data['repeat_type'] : null;
+			$repeat_interval	= isset($data['repeat_interval']) && $data['repeat_interval'] ? $data['repeat_interval'] : null;
+			$controle_time		= isset($data['controle_time']) && $data['controle_time'] ? $data['controle_time'] : null;
+			$service_time		= isset($data['service_time']) && $data['service_time'] ? $data['service_time'] : null;
+			$duplicate			= isset($data['duplicate']) && $data['duplicate'] ? $data['duplicate'] : null;
 
 			$delete_component = array();
 			$add_component = array();
@@ -867,7 +872,7 @@
 					
 					$this->db->query($sql, __LINE__, __FILE__);
 			
-					if(!$this->db->next_record())
+					if(!$this->db->next_record() || $duplicate)
 					{
 						$values_insert = array
 						(
@@ -875,7 +880,11 @@
 							'location_id'		=> $location_id,
 							'component_id'		=> $component_id,
 							'assigned_to'		=> $assigned_to,
-							'start_date'		=> $start_date
+							'start_date'		=> $start_date,
+							'repeat_type'		=> $repeat_type,
+							'repeat_interval'	=> $repeat_interval,
+							'controle_time'		=> $controle_time,
+							'service_time'		=> $service_time,
 						);
 
 						$this->db->query("INSERT INTO controller_control_component_list (" . implode(',',array_keys($values_insert)) . ') VALUES ('
@@ -945,7 +954,7 @@
 			$location_id = (int)$data['location_id'];
 			$component_id = (int)$data['component_id'];
 
-			$sql = "SELECT controller_control_component_list.* , controller_control.title, repeat_type, repeat_interval, enabled"
+			$sql = "SELECT controller_control_component_list.* , controller_control.title, enabled"
 			. "  FROM controller_control_component_list"
 			. " {$this->db->join} controller_control ON controller_control.id = controller_control_component_list.control_id WHERE location_id = {$location_id} AND component_id = {$component_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -955,16 +964,18 @@
 			{
 				$controls[] = array
 				(
-					'id'			=> $this->db->f('id'),
-					'control_id'	=> $this->db->f('control_id'),
-					'title'			=> $this->db->f('title',true),
-					'location_id'	=> $this->db->f('location_id'),
-					'component_id'	=> $this->db->f('component_id'),
-					'assigned_to'	=> $this->db->f('assigned_to'),
-					'start_date'	=> $this->db->f('start_date'),
-					'repeat_type'	=> $this->db->f('repeat_type'),
+					'id'				=> $this->db->f('id'),
+					'control_id'		=> $this->db->f('control_id'),
+					'title'				=> $this->db->f('title',true),
+					'location_id'		=> $this->db->f('location_id'),
+					'component_id'		=> $this->db->f('component_id'),
+					'assigned_to'		=> $this->db->f('assigned_to'),
+					'start_date'		=> $this->db->f('start_date'),
+					'repeat_type'		=> $this->db->f('repeat_type'),
 					'repeat_interval'	=> $this->db->f('repeat_interval'),
-					'enabled'	=> $this->db->f('enabled'),
+					'enabled'			=> $this->db->f('enabled'),
+					'service_time'		=> (float)$this->db->f('service_time'),
+					'controle_time'		=> (float)$this->db->f('controle_time'),
 				);
 			}
 

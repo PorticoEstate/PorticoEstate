@@ -202,7 +202,7 @@
 	{
 		case 1:
 			$setup_tpl->set_var('sudo_user',lang('sudo user'));
-			$setup_tpl->set_var('sudo_password',lang('sudo password'));
+			$setup_tpl->set_var('sudo_password',lang('password for %1', getenv('APACHE_RUN_USER')));
 			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn status -u'));
 			$setup_tpl->set_var('check_for_svn_update',lang('check update'));
 			$_svn_message = '';
@@ -231,7 +231,7 @@
 			$setup_tpl->set_var('sudo_user',lang('sudo user'));
 			$setup_tpl->set_var('value_sudo_user', phpgw::get_var('sudo_user'));
 			$setup_tpl->set_var('value_sudo_password', phpgw::get_var('sudo_password'));
-			$setup_tpl->set_var('sudo_password',lang('sudo password'));
+			$setup_tpl->set_var('sudo_password',lang('password for %1', getenv('APACHE_RUN_USER')));
 			$setup_tpl->set_var('perform_svn_update',lang('perform svn update'));
 			$setup_tpl->set_var('sudo_user',lang('sudo user'));
 			$setup_tpl->set_var('sudo_password',lang('sudo password'));
