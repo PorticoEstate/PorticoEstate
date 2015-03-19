@@ -33,13 +33,13 @@
 	<xsl:template match="cat_select">
 	<xsl:variable name="lang_cat_statustext"><xsl:value-of select="lang_cat_statustext"/></xsl:variable>
 	<xsl:variable name="select_name"><xsl:value-of select="select_name"/></xsl:variable>
-		<select id = "global_category_id" name="{$select_name}" class="{class}" title="{$lang_cat_statustext}">
+		<select id = "global_category_id" name="{$select_name}" class="{class}" title="{$lang_cat_statustext}" data-validation="required">
 				<xsl:if test="disabled = 1">
 					<xsl:attribute name="disabled">
 						<xsl:text>disabled</xsl:text>
 					</xsl:attribute>
 				</xsl:if>
-			<option value="0"><xsl:value-of select="lang_no_cat"/></option>
+			<option value=""><xsl:value-of select="lang_no_cat"/></option>
 				<xsl:apply-templates select="cat_list"/>
 		</select>
 		<xsl:if test="disabled = 1">
