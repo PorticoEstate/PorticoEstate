@@ -36,3 +36,6 @@ view access log	admin	no	Vis Access Log
 view sessions	admin	no	Vis sessions
 you must enter a password	admin	no	Du må skrive inn et passord
 you must select a file type	admin	no	Du må velge en filtype
+home screen message	admin	no	Melding på hjemmeskjerm
+title	admin	no	Overskrift
+important message	admin	no	Viktig informasjon
