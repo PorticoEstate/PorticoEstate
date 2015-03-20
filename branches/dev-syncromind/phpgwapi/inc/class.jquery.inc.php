@@ -80,7 +80,7 @@ class phpgwapi_jquery {
 				);
 				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/css/main.css");
 				break;
-
+			
 			case 'menu':
 			case 'autocomplete':
 				$load = array
@@ -161,14 +161,20 @@ class phpgwapi_jquery {
 	public static function formvalidator_generate($modules = array()) {
 		self::load_widget('validator');
 		$modules_js = '"' . implode(',', $modules) . '"';!
-
+		$div = "'".'#error-message-wrapper'."'";
+		$messages = '$'.'('.$div.')';
+		
 		$js = <<<JS
                             
 			$(document).ready(function () 
 			{
-                            $.validate({
+				            $.validate({
                                 modules : $modules_js,
-                                form: '#form'
+								errorMessagePosition : $messages,
+                                form: '#form',
+								validateOnBlur : false,
+								scrollToTopOnError : false,
+								errorMessagePosition : 'top'
                             });
 			});
 JS;
@@ -213,6 +219,7 @@ HTML;
 				  $_function =  " onclick=\"javascript: window.location = '{$tab['link']}';\"";
 				  $tab['link'] = "#{$id}";
 			}
+			
 			
 			$output .= <<<HTML
 				<li><a href="{$tab['link']}"{$_function}>{$label}</a></li>
