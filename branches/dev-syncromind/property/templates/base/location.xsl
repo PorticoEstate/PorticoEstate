@@ -552,22 +552,45 @@ onMouseOut="nd()">
 							</div>
 						</xsl:when>
 					</xsl:choose>
-						<div id="related">
-							<fieldset>
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_0'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl' />
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-											<xsl:with-param name="tabletools" select ='tabletools' />
-											<xsl:with-param name="data" select ='data' />
-											<xsl:with-param name="config" select ='config' />
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
-							</fieldset>
-						</div>
+					<div id="related">
+						<fieldset>
+							<script type="text/javascript">
+								link_history = <xsl:value-of select="link_history"/>;
+							</script>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</fieldset>
+					</div>
+					<xsl:choose>
+						<xsl:when test="check_history != ''">
+							<div id="history">
+								<fieldset>
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_1'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</fieldset>
+							</div>
+						</xsl:when>
+					</xsl:choose>
 					<xsl:for-each select="integration">
 						<div id="{section}">
 							<fieldset>
@@ -591,18 +614,6 @@ onMouseOut="nd()">
 							</input>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="check_history != ''">
-							<xsl:variable name="lang_history">
-								<xsl:value-of select="lang_history"/>
-							</xsl:variable>
-							<input type="submit" class="pure-button pure-button-primary" name="get_history" value="{$lang_history}">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_history_statustext"/>
-								</xsl:attribute>
-							</input>
-						</xsl:when>
-					</xsl:choose>
 					<xsl:variable name="lang_done">
 						<xsl:value-of select="lang_done"/>
 					</xsl:variable>
@@ -617,14 +628,6 @@ onMouseOut="nd()">
 				<xsl:value-of select="done_action"/>
 			</xsl:variable>
 			<form name="done_form" id="done_form" method="post" action="{$done_action}"></form>
-			<xsl:choose>
-				<xsl:when test="values != ''">
-					<table class="pure-table pure-table-bordered">
-						<xsl:call-template name="table_header_history"/>
-						<xsl:call-template name="values_history"/>
-					</table>
-				</xsl:when>
-			</xsl:choose>
 		</div>
 	</xsl:template>
 
@@ -808,63 +811,6 @@ onMouseOut="nd()">
 				</option>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
-
-	<!-- New template-->
-	<xsl:template name="table_header_history">
-		<tr class="th">
-			<xsl:for-each select="table_header">
-				<td class="th_text" width="{with}" align="{align}">
-					<xsl:choose>
-						<xsl:when test="sort_link!=''">
-							<a href="{sort}" onMouseover="window.status='{header}';return true;" onMouseout="window.status='';return true;">
-								<xsl:value-of select="header"/>
-							</a>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="header"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</td>
-			</xsl:for-each>
-		</tr>
-	</xsl:template>
-
-	<!-- New template-->
-	<xsl:template name="values_history">
-		<xsl:for-each select="values">
-			<tr>
-				<xsl:attribute name="class">
-					<xsl:choose>
-						<xsl:when test="@class">
-							<xsl:value-of select="@class"/>
-						</xsl:when>
-						<xsl:when test="position() mod 2 = 0">
-							<xsl:text>row_off</xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>row_on</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				<xsl:for-each select="row">
-					<xsl:choose>
-						<xsl:when test="link">
-							<td class="small_text" align="center">
-								<a href="{link}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;">
-									<xsl:value-of select="text"/>
-								</a>
-							</td>
-						</xsl:when>
-						<xsl:otherwise>
-							<td class="small_text" align="left">
-								<xsl:value-of select="value"/>
-							</td>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
-			</tr>
-		</xsl:for-each>
 	</xsl:template>
 
 	<!-- New template-->
