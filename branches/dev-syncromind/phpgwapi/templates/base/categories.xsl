@@ -33,7 +33,7 @@
 	<xsl:template match="cat_select">
 	<xsl:variable name="lang_cat_statustext"><xsl:value-of select="lang_cat_statustext"/></xsl:variable>
 	<xsl:variable name="select_name"><xsl:value-of select="select_name"/></xsl:variable>
-		<select id = "global_category_id" name="{$select_name}" class="{class}" title="{$lang_cat_statustext}" data-validation="required">
+		<select id = "global_category_id" name="{$select_name}" class="{class}" title="{$lang_cat_statustext}" data-validation="required" data-validation-error-msg="Please select a category !">
 				<xsl:if test="disabled = 1">
 					<xsl:attribute name="disabled">
 						<xsl:text>disabled</xsl:text>
