@@ -57,6 +57,7 @@
 				'query'				    => true,
 				'responsiblility_role_save' => true,
 				'get_part_of_town'      => true,
+				'get_history_data'		=> true,
 				'download'  			=> true,
 				'index'  				=> true,
 				'view'   				=> true,
@@ -1456,6 +1457,21 @@ JS;
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		public function get_history_data()
+		{
+			$draw = phpgw::get_var('draw', 'int');
+			$location_code = phpgw::get_var('location_code');
+			
+			$values = $this->bo->get_history($location_code);
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = count($values);
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);				
+		}
+		
 		public function get_documents()
 		{
 			$entity_id = phpgw::get_var('entity_id', 'int');
@@ -1477,7 +1493,7 @@ JS;
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
+			//$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code		= phpgw::get_var('location_code');
 			$sibling			= phpgw::get_var('sibling');
@@ -1547,7 +1563,7 @@ JS;
 				$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup'));
 
 				$check_history = $this->bo->check_history($location_code);
-				if($get_history)
+				/*if($get_history)
 				{
 					$history = $this->bo->get_history($location_code);
 					$uicols = $this->bo->uicols;
@@ -1584,7 +1600,7 @@ JS;
 							$table_header[$i]['align']		= 'center';
 						}
 					}
-				}
+				}*/
 			}
 			/* Preserve attribute values from post */
 			if(isset($this->receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
@@ -1947,8 +1963,8 @@ JS;
 
 				$related_link = $_related ? true : false;
 				
-				$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
-
+				$tabs['related'] = array('label' => lang('related'), 'link' => '#related');
+				
 				$related_def = array
 				(
 					array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
@@ -1966,6 +1982,40 @@ JS;
 					)
 				);
 
+				$link_history = '""';
+				if ($check_history) 
+				{
+					$tabs['history'] = array('label' => lang('history'), 'link' => '#history', 'function' => 'get_history_data()');
+					
+					$this->bo->get_history($location_code);
+					$uicols = $this->bo->uicols;
+
+					$history_def = array();
+					$uicols_count	= count($uicols['descr']);
+					for ($i=0;$i<$uicols_count;$i++)
+					{
+						if ($uicols['input_type'][$i]!='hidden')
+						{
+							$history_def[$i]['key'] 	= $uicols['name'][$i];
+							$history_def[$i]['label']	= $uicols['descr'][$i];
+						}
+					}
+
+					$datatable_def[] = array
+					(
+						'container'		=> 'datatable-container_1',
+						'requestUrl'	=> "''",
+						'data'			=> json_encode(array()),
+						'ColumnDefs'	=> $history_def,
+						'config'		=> array(
+							array('disableFilter'	=> true)
+						)
+					);
+					
+					$link_history = json_encode(self::link(array('menuaction'=>'property.uilocation.get_history_data', 'location_code'=>$location_code, 'phpgw_return_as'=>'json')));
+				}
+				
+				
 // ---- START INTEGRATION -------------------------
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
@@ -2142,13 +2192,14 @@ JS;
 				'check_history'					=> (isset($check_history)?$check_history:''),
 				'lang_history'					=> lang('History'),
 				'lang_history_statustext'		=> lang('Fetch the history for this item'),
-				'table_header'					=> (isset($table_header)?$table_header:''),
-				'values'						=> (isset($content)?$content:''),
+				//'table_header'					=> (isset($table_header)?$table_header:''),
+				//'values'						=> (isset($content)?$content:''),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'lang_related_info'				=> lang('related info'),
 				'entities_link'					=> (isset($entities_link)?$entities_link:''),
 				'related_link'					=> $related_link,
+				'link_history'					=> $link_history,
 				'edit_street'					=> (isset($edit_street)?$edit_street:''),
 				'edit_tenant'					=> (isset($edit_tenant)?$edit_tenant:''),
 				'edit_part_of_town'				=> (isset($edit_part_of_town)?$edit_part_of_town:''),
