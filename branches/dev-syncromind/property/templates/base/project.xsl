@@ -161,6 +161,9 @@
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:text>Please enter a project NAME !</xsl:text>
+							</xsl:attribute>
 						</input>
 					</div>
 					<div class="pure-control-group">
@@ -315,6 +318,9 @@
 							</xsl:attribute>
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:text>!please select an end date!</xsl:text>
 							</xsl:attribute>
 						</input>
 					</div>
