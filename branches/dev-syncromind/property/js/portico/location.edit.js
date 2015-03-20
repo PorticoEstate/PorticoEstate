@@ -1,5 +1,7 @@
 var documents = null;
 var documents2 = null;
+var link_history = null;
+var set_history_data = 0;
 
 $(document).ready(function(){
 	
@@ -64,4 +66,12 @@ $(document).ready(function(){
 		});
 	}
 	
+	get_history_data = function()
+	{
+		if (set_history_data  === 0)
+		{
+			JqueryPortico.updateinlineTableHelper(oTable1, link_history);
+			set_history_data = 1;
+		}
+	};
 });
