@@ -194,6 +194,10 @@
 	<!-- add / edit  -->
 	<xsl:template match="edit">
 		<div align="left">
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -204,10 +208,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td valign="top">
 							<xsl:choose>
@@ -285,7 +285,9 @@
 							</input>
 						</td>
 					</tr>
+				</table>
 				</form>
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
