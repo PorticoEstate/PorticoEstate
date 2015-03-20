@@ -13,7 +13,7 @@
  *  - cvv
  *
  * @website http://formvalidator.net/#security-validators
- * @version 2.2.beta.13
+ * @version 2.2.beta.58
  */
 (function($, window) {
 
@@ -55,31 +55,37 @@
         errorMessageKey: 'notConfirmed'
     });
 
+    var creditCards = {
+            'amex' : [15,15],
+            'diners_club' : [14,14],
+            'cjb' : [16,16],
+            'laser' : [16,19],
+            'visa' : [16,16],
+            'mastercard' : [16,16],
+            'maestro' : [12,19],
+            'discover' : [16,16]
+        },
+        checkOnlyAmex = false,
+        allowsAmex = false;
+
     /*
      * Credit card
      */
     $.formUtils.addValidator({
         name : 'creditcard',
         validatorFunction : function(value, $el, config, language, $form) {
-            var cards = {
-                'amex' : [15,15],
-                'diners_club' : [14,14],
-                'cjb' : [16,16],
-                'laser' : [16,19],
-                'visa' : [16,16],
-                'mastercard' : [16,16],
-                'maestro' : [12,19],
-                'discover' : [16,16]
-            },
-            allowing = $.split( $el.valAttr('allowing') || '' );
+            var allowing = $.split( $el.valAttr('allowing') || '' );
 
+            // Setup for cvv validation
+            allowsAmex = $.inArray('amex', allowing) > -1;
+            checkOnlyAmex = allowsAmex && allowing.length == 1;
 
             // Correct length
             if( allowing.length > 0 ) {
                 var hasValidLength = false;
                 $.each(allowing, function(i, cardName) {
-                    if( cardName in cards) {
-                        if( value.length >= cards[cardName][0] && value.length <= cards[cardName][1]) {
+                    if( cardName in creditCards) {
+                        if( value.length >= creditCards[cardName][0] && value.length <= creditCards[cardName][1]) {
                             hasValidLength = true;
                             return false;
                         }
@@ -126,7 +132,17 @@
     $.formUtils.addValidator({
         name : 'cvv',
         validatorFunction : function(val) {
-            return val.replace(/[0-9]/g, '') === '' && (val + '').length == 3;
+            if( val.replace(/[0-9]/g, '') === '' ) {
+                val = val + '';
+                if( checkOnlyAmex ) {
+                    return val.length == 4;
+                } else if( allowsAmex ) {
+                    return val.length == 3 || val.length == 4;
+                } else {
+                    return val.length == 3;
+                }
+            }
+            return false;
         },
         errorMessage : '',
         errorMessageKey: 'badCVV'
@@ -317,13 +333,21 @@
     });
 
     var requestServer = function(serverURL, $element, val, conf, callback) {
+        var reqParams = $element.valAttr('req-params');
+        if( !reqParams )
+            reqParams = {};
+        if( typeof reqParams == 'string' ) {
+            reqParams = $.parseJSON(reqParams);
+        }
+        reqParams[$element.valAttr('param-name') || $element.attr('name')] = val;
+
         $.ajax({
             url : serverURL,
             type : 'POST',
             cache : false,
-            data : $element.attr('name')+'='+val,
+            data : reqParams,
             dataType : 'json',
-            error : function(error) {
+            error : function(error, err) {
                 alert('Server validation failed due to: '+error.statusText);
                 if( window.JSON && window.JSON.stringify ) {
                     alert(window.JSON.stringify(error));
@@ -337,8 +361,6 @@
                     $element.valAttr('backend-invalid', 'true');
                     if(response.message)
                         $element.attr(conf.validationErrorMsgAttribute, response.message);
-                    else
-                        $element.removeAttr(conf.validationErrorMsgAttribute);
                 }
 
                 if( !$element.valAttr('has-keyup-event') ) {
@@ -348,8 +370,7 @@
                             if( evt.keyCode != 9 && evt.keyCode != 16 ) {
                                 $(this)
                                     .valAttr('backend-valid', false)
-                                    .valAttr('backend-invalid', false)
-                                    .removeAttr(conf.validationErrorMsgAttribute);
+                                    .valAttr('backend-invalid', false);
                             }
                         });
                 }
@@ -396,12 +417,14 @@
                 return null;
 
             if($.formUtils.isValidatingEntireForm) {
+
                 $form
                     .bind('submit', disableFormSubmit)
                     .addClass('validating-server-side')
                     .addClass('on-blur');
 
                 $el.addClass('validating-server-side');
+                $.formUtils.haltValidation = true;
 
                 requestServer(serverURL, $el, val, conf, function() {
                     $form
@@ -415,10 +438,10 @@
                     $el.valAttr('value-length', val.length);
 
                     // fire submission again!
+                    $.formUtils.haltValidation = false;
                     $form.trigger('submit');
                 });
 
-                $.formUtils.haltValidation = true;
                 return null;
 
             } else {
