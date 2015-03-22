@@ -1000,9 +1000,9 @@ JS;
 			return $this->so->check_history($location_code);
 		}
 
-		function get_history($location_code)
+		function get_history($location_code, $dry_run = false)
 		{
-			$history = $this->so->get_history($location_code);
+			$history = $this->so->get_history($location_code, $dry_run);
 			$this->uicols = $this->so->uicols;
 			return $history;
 		}

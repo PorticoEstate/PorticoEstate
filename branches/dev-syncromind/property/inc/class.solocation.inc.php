@@ -1762,7 +1762,13 @@
 			}
 		}
 
-		function get_history($location_code='')
+		/**
+		 * Get complete copies of older versions of the record
+		 * @param string $location_code
+		 * @param bool $dry_run
+		 * @return array $values
+		 */
+		function get_history($location_code, $dry_run = false)
 		{
 			$this->uicols = array();
 			$location_array = explode('-',$location_code);
@@ -1803,6 +1809,10 @@
 			$this->uicols['name'][] = 'exp_date';
 			$this->uicols['descr'][] = lang('exp date');
 
+			if($dry_run)
+			{
+				return;
+			}
 
 			$attrib[] = array
 				(

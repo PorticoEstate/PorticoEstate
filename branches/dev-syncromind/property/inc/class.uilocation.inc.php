@@ -1987,7 +1987,7 @@ JS;
 				{
 					$tabs['history'] = array('label' => lang('history'), 'link' => '#history', 'function' => 'get_history_data()');
 					
-					$this->bo->get_history($location_code);
+					$this->bo->get_history($location_code, true); //the second parameter is a 'dry_run' to only get headers.
 					$uicols = $this->bo->uicols;
 
 					$history_def = array();
