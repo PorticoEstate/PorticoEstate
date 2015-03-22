@@ -574,7 +574,6 @@ onMouseOut="nd()">
 					<xsl:choose>
 						<xsl:when test="check_history != ''">
 							<div id="history">
-								<fieldset>
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_1'">
 											<xsl:call-template name="table_setup">
@@ -587,7 +586,6 @@ onMouseOut="nd()">
 											</xsl:call-template>
 										</xsl:if>
 									</xsl:for-each>
-								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
