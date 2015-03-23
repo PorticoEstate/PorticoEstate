@@ -75,50 +75,15 @@
 
 		function __construct()
 		{
-//			parent::__construct();
-//
-//		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
-//			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-//			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
-//			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-//			$this->bo					= CreateObject('property.bolocation',true);
-//			$this->bocommon				= & $this->bo->bocommon;
-			$this->soadmin_location		= CreateObject('property.soadmin_location');
-//			$this->acl 					= & $GLOBALS['phpgw']->acl;
-//
-//			$this->type_id				= $this->bo->type_id;
-//
-//			$this->acl_location			= $this->bo->acl_location;
-//			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-//			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-//			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-//			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-//
-//			$this->start				= $this->bo->start;
-//			$this->query				= $this->bo->query;
-//			$this->sort					= $this->bo->sort;
-//			$this->order				= $this->bo->order;
-//			$this->filter				= $this->bo->filter;
-//			$this->cat_id				= $this->bo->cat_id;
-//			$this->part_of_town_id		= $this->bo->part_of_town_id;
-//			$this->district_id			= $this->bo->district_id;
-//			$this->status				= $this->bo->status;
-//			$this->allrows				= $this->bo->allrows;
-//			$this->lookup				= $this->bo->lookup;
-//			$this->location_code		= $this->bo->location_code;
 			parent::__construct();
 
-			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$this->soadmin_location		= CreateObject('property.soadmin_location');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			/*$this->acl_location			= $this->location_info['acl_location'];
-			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->location_info['acl_app']);
-			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->location_info['acl_app']);
-			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->location_info['acl_app']);
-			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->location_info['acl_app']);
-			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, $this->location_info['acl_app']);*/
+
 			$this->acl_location			= $this->bo->acl_location;
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
@@ -127,7 +92,6 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
-			//$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
 
 			$this->query				= $this->bo->query;
 			$this->filter				= $this->bo->filter;
@@ -137,15 +101,8 @@
 			$this->status				= $this->bo->status;
 			$this->lookup				= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
-			
-//			$this->start				= $this->bo->start;
-//			$this->query				= $this->bo->query;
-//			$this->sort					= $this->bo->sort;
-//			$this->order				= $this->bo->order;
-//			$this->allrows				= $this->bo->allrows;
-//
-			$this->type 		= $this->bo->type;
-			$this->type_id 		= $this->bo->type_id;
+			$this->type					= $this->bo->type;
+			$this->type_id				= $this->bo->type_id;
 		}
 
 		/**
@@ -170,15 +127,6 @@
 				'dir' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 				'lookup_tenant' => $lookup_tenant
-
-				/*'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'type_id' => $type_id,
-				'lookup' => $lookup,
-				'district_id' => phpgw::get_var('district_id', 'int'),
-				'status' => phpgw::get_var('status'),
-				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
-				'location_code' => phpgw::get_var('location_code'),
-				'filter'		=> phpgw::get_var('filter', 'int')*/
 			);
 
 			$values = $this->bo->read($params);
@@ -234,6 +182,11 @@
 		{
 			$values = $this->bo->read_summary();
 
+            if( phpgw::get_var('export','bool'))
+            {
+                return $values;
+            }
+			
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = count($values);
@@ -307,18 +260,14 @@
 		function download()
 		{
 			$summary		= phpgw::get_var('summary', 'bool', 'GET');
-			$type_id		= phpgw::get_var('type_id', 'int', 'GET');
-			$lookup 		= phpgw::get_var('lookup', 'bool');
-			//$lookup_name 	= phpgw::get_var('lookup_name');
-			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
 
 			if(!$summary)
 			{
-				$list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>true));
+				$list = $this->query();
 			}
 			else
 			{
-				$list= $this->bo->read_summary();
+				$list= $this->query_summary();
 			}
 
 			$uicols	= $this->bo->uicols;
@@ -1561,46 +1510,7 @@ JS;
 			if(!$error_id && $location_code)
 			{
 				$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup'));
-
 				$check_history = $this->bo->check_history($location_code);
-				/*if($get_history)
-				{
-					$history = $this->bo->get_history($location_code);
-					$uicols = $this->bo->uicols;
-
-					$j=0;
-					if (isSet($history) && is_array($history))
-					{
-						foreach($history as $entry)
-						{
-							$k=0;
-							for ($i=0;$i<count($uicols['name']);$i++)
-							{
-								if($uicols['input_type'][$i]!='hidden')
-								{
-									$content[$j]['row'][$k]['value'] 	= $entry[$uicols['name'][$i]];
-									$content[$j]['row'][$k]['name'] 	= $uicols['name'][$i];
-								}
-
-								$content[$j]['hidden'][$k]['value'] 	= $entry[$uicols['name'][$i]];
-								$content[$j]['hidden'][$k]['name'] 		= $uicols['name'][$i];
-								$k++;
-							}
-							$j++;
-						}
-					}
-
-					$uicols_count	= count($uicols['descr']);
-					for ($i=0;$i<$uicols_count;$i++)
-					{
-						if($uicols['input_type'][$i]!='hidden')
-						{
-							$table_header[$i]['header'] 	= $uicols['descr'][$i];
-							$table_header[$i]['width']		= '5%';
-							$table_header[$i]['align']		= 'center';
-						}
-					}
-				}*/
 			}
 			/* Preserve attribute values from post */
 			if(isset($this->receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
@@ -2192,8 +2102,6 @@ JS;
 				'check_history'					=> (isset($check_history)?$check_history:''),
 				'lang_history'					=> lang('History'),
 				'lang_history_statustext'		=> lang('Fetch the history for this item'),
-				//'table_header'					=> (isset($table_header)?$table_header:''),
-				//'values'						=> (isset($content)?$content:''),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
 				'lang_related_info'				=> lang('related info'),
