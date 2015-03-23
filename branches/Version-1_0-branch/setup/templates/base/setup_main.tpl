@@ -1,6 +1,14 @@
 <!-- begin setup_main.tpl -->
+<!-- begin the svn section -->
+<table border="0" width="100%" cellspacing="0" cellpadding="2" style="{border: 1px solid #000000;}">
+<tr class="th">
+	<td align="left" colspan="2">{svn_step_text}</td>
+</tr>
+
+{V_svn_filled_block}
+<!-- end the svn section -->
+
 <!-- begin the db section -->
-<table border="0" width="100%" cellspacing="0" cellpadding="2" style="{ border: 1px solid #000000; }">
 <tr class="th">
 	<td align="left">{db_step_text}</td>
 	<td align="right">&nbsp;</td>

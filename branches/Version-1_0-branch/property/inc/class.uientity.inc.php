@@ -1956,7 +1956,8 @@ JS;
 					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
-				if(true)
+				$_enable_controller = false;
+				if($_enable_controller)
 				{
 					$tabs['controller']	= array('label' => lang('controller'), 'link' => '#controller', 'function' => "set_tab('controller')");
 					$active_tab = $active_tab ? $active_tab : 'location';
@@ -2408,6 +2409,9 @@ JS;
 								array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
 		//						array('key' => 'enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'location_id','hidden'=>true),
 								array('key' => 'component_id','hidden'=>true),
@@ -2525,9 +2529,16 @@ JS;
 				$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
 			}
 
+			$repeat_types = array();
+			$repeat_types[] = array('id'=> -1, 'name' => lang('day'));
+			$repeat_types[] = array('id'=> 1, 'name' => lang('weekly'));
+			$repeat_types[] = array('id'=> 2, 'name' => lang('month'));
+			$repeat_types[] = array('id'=> 3, 'name' => lang('year'));
+
 			$data = array
 			(
-					'controller'					=> true,
+				'repeat_types'						=> array('options' => $repeat_types),
+				'controller'						=> $_enable_controller,
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
@@ -3566,6 +3577,7 @@ JS;
 
 				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
+				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
 			}
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{

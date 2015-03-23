@@ -991,3 +991,46 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	/**
+	* Assign responsible user to control at componant from date.
+	**/
+	$test[] = '0.1.49';
+	function controller_upgrade0_1_49()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','repeat_type',array(
+			'type' => 'int',
+			'precision' => '2',
+			'nullable' => true
+		));
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','repeat_interval',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','service_time',array(
+			'type' => 'decimal',
+			'precision' => 20,
+			'nullable' => true,
+			'scale' => '2',
+			'default' => '0.00'
+		));
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','controle_time',array(
+			'type' => 'decimal',
+			'precision' => 20,
+			'nullable' => true,
+			'scale' => '2',
+			'default' => '0.00'
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.50';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
