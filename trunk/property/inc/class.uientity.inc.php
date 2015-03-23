@@ -1956,7 +1956,8 @@ JS;
 					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
-				if(true)
+				$_enable_controller = false;
+				if($_enable_controller)
 				{
 					$tabs['controller']	= array('label' => lang('controller'), 'link' => '#controller', 'function' => "set_tab('controller')");
 					$active_tab = $active_tab ? $active_tab : 'location';
@@ -2537,7 +2538,7 @@ JS;
 			$data = array
 			(
 				'repeat_types'						=> array('options' => $repeat_types),
-				'controller'						=> true,
+				'controller'						=> $_enable_controller,
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
