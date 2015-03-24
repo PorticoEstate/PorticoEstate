@@ -3534,7 +3534,11 @@ JS;
 				$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$type], ".{$type}.{$entity_id}.{$cat_id}");
 			}
 
-			$id				= $id ? $id : phpgw::get_var('id', 'int');
+			$id	= $id ? $id : phpgw::get_var('id', 'int');
+			if(!$id)
+			{
+				return array();
+			}
 
 			if(!$this->acl_read)
 			{
