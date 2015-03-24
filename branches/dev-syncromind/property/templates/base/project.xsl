@@ -294,7 +294,7 @@
 			</div>
 
 			<div id="budget">
-				<fieldset>
+				<!--fieldset-->
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_start_date"/>
@@ -425,12 +425,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="pure-control-group">
+					<!--div class="pure-control-group"-->
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'budget')"/>
 						</label>
-						<div class="pure-custom">
-							<div>
+						<!--div class="pure-custom">
+							<div-->
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_0'">
 										<xsl:call-template name="table_setup">
@@ -443,9 +443,9 @@
 										</xsl:call-template>
 									</xsl:if>
 								</xsl:for-each>
-							</div>
-						</div>
-					</div>
+							<!--/div>
+						</div-->
+					<!--div-->
 					<xsl:choose>
 						<xsl:when test="value_project_id!='' and mode='edit'">
 							<div class="pure-control-group">
@@ -594,7 +594,7 @@
 							</xsl:for-each>
 						</div>
 					</div>
-				</fieldset>
+				<!--/fieldset-->
 			</div>
 
 			<div id="coordination">
