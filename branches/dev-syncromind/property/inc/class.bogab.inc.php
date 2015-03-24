@@ -130,17 +130,34 @@
 		}
 
 
-		function read($location_code='',$gaards_nr='',$bruksnr='',$feste_nr='',$seksjons_nr='',$address='',$check_payments = '',$allrows='')
+		function read($data)
 		{
 			if($allrows)
 			{
 				$this->allrows = true;
 			}
 
-			$gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
+			/*$gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
 				'cat_id' => $this->cat_id,'location_code' => $location_code,
 				'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,
-				'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments));
+				'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments));*/
+			
+			$gab = $this->so->read(array
+			(
+				'start' => $data['start'],
+				'sort' => $data['sort'],
+				'order' => $data['order'],
+				'allrows'=>$data['allrows'],
+				'cat_id' => $this->cat_id,
+				'location_code' => $data['location_code'],
+				'gaards_nr' => $data['gaards_nr'],
+				'bruksnr' => $data['bruksnr'],
+				'feste_nr' => $data['feste_nr'],
+				'seksjons_nr' => $data['seksjons_nr'],
+				'address' => $data['address'],
+				'check_payments' => $data['check_payments'])
+			);
+			
 /*
 			foreach ($gab as &$_gab)
 			{
