@@ -2346,163 +2346,164 @@ JS;
 				);
 
 
-//				if($category['enable_bulk'])
+				if($category['enable_bulk'])
 				{
 					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory', 'function' => "set_tab('inventory')");
-
-					$_inventory = $this->get_inventory($id);
-
-					$datavalues[3] = array
-					(
-						'name'					=> "3",
-						'values' 				=> json_encode($_inventory),
-						'total_records'			=> count($_inventory),
-						'edit_action'			=> "''",
-						'is_paginator'			=> 1,
-						'footer'				=> 1
-					);
-
-	
-					$myColumnDefs[3] = array
-					(
-						'name'		=> "3",
-						'values'	=>	json_encode(array(	
-								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
-							//	array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
-								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
-								array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
-								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
-								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCalendar'),
-								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'location_id','hidden'=>true),
-								array('key' => 'id','hidden'=>true),
-								array('key' => 'inventory_id','hidden'=>true),
-							)
-						)
-					);
-				
 				}
 
-				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
-				{
-					$_controls = $this->get_controls_at_component($location_id, $id);
+				$_inventory = $this->get_inventory($id);
 
-					$datavalues[4] = array
-					(
-						'name'					=> "4",
-						'values' 				=> json_encode($_controls),
-						'total_records'			=> count($_controls),
-						'edit_action'			=> "''",
-						'is_paginator'			=> 0,
-						'footer'				=> 1
-					);
+				$datavalues[3] = array
+				(
+					'name'					=> "3",
+					'values' 				=> json_encode($_inventory),
+					'total_records'			=> count($_inventory),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 1
+				);
 
-					$myColumnDefs[4] = array
-					(
-						'name'		=> "4",
-						'values'	=>	json_encode(array(
-								array('key' => 'control_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'assigned_to_name','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
-		//						array('key' => 'enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'location_id','hidden'=>true),
-								array('key' => 'component_id','hidden'=>true),
-								array('key' => 'id','hidden'=>true),
-								array('key' => 'assigned_to','hidden'=>true),
-							)
+
+				$myColumnDefs[3] = array
+				(
+					'name'		=> "3",
+					'values'	=>	json_encode(array(
+							array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
+						//	array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
+							array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+							array('key' => 'allocated','label'=>lang('allocated'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+							array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
+							array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCalendar'),
+							array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'location_id','hidden'=>true),
+							array('key' => 'id','hidden'=>true),
+							array('key' => 'inventory_id','hidden'=>true),
 						)
-					);
+					)
+				);
 
-					$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
-					$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-					$socase 			= CreateObject('controller.socase');
-					$controller_cases	= $socase->get_cases_by_component($location_id, $id);
-					$_statustext = array();
-					$_statustext[0] = lang('open');
-					$_statustext[1] = lang('closed');
-					$_statustext[2] = lang('pending');
+			}
 
-					$_cases = array();
-					foreach ($controller_cases as $case)
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+			{
+				$_controls = $this->get_controls_at_component($location_id, $id);
+
+				$datavalues[4] = array
+				(
+					'name'					=> "4",
+					'values' 				=> json_encode($_controls),
+					'total_records'			=> count($_controls),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 1
+				);
+
+				$myColumnDefs[4] = array
+				(
+					'name'		=> "4",
+					'values'	=>	json_encode(array(
+							array('key' => 'control_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'assigned_to_name','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
+	//						array('key' => 'enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'location_id','hidden'=>true),
+							array('key' => 'component_id','hidden'=>true),
+							array('key' => 'id','hidden'=>true),
+							array('key' => 'assigned_to','hidden'=>true),
+						)
+					)
+				);
+
+				$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
+				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+				$socase 			= CreateObject('controller.socase');
+				$controller_cases	= $socase->get_cases_by_component($location_id, $id);
+				$_statustext = array();
+				$_statustext[0] = lang('open');
+				$_statustext[1] = lang('closed');
+				$_statustext[2] = lang('pending');
+
+				$_cases = array();
+				foreach ($controller_cases as $case)
+				{
+					$socheck_list 	= CreateObject('controller.socheck_list');
+					$control_id	= $socheck_list->get_single($case['check_list_id'])->get_control_id();
+					foreach($_controls as $_control)
 					{
-						$socheck_list 	= CreateObject('controller.socheck_list');
-						$control_id	= $socheck_list->get_single($case['check_list_id'])->get_control_id();
-						foreach($_controls as $_control)
+						if($_control['control_id'] == $control_id)
 						{
-							if($_control['control_id'] == $control_id)
-							{
-								$_control_name = $_control['title'];
-								break;
-							}
+							$_control_name = $_control['title'];
+							break;
 						}
+					}
 //						_debug_array($check_list);die();
 
-						switch ($case['status'])
-						{
-							case 0:
-							case 2:
-								$_method = 'view_open_cases';
-								break;
-							case 1:
-								$_method = 'view_closed_cases';
-								break;
-							default:
-								$_method = 'view_open_cases';
-						}
-
-						$_link = $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction' => "controller.uicase.{$_method}",
-								'check_list_id' => $case['check_list_id']
-							)
-						);
-
-						$_cases[] = array
-						(
-							'url'		=> "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
-							'type'		=> $_control_name,
-							'title'		=> $case['descr'],
-							'status'	=> $_statustext[$case['status']],
-							'user'		=> $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
-							'entry_date'=> $GLOBALS['phpgw']->common->show_date($case['modified_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-						);
-						unset($_link);
+					switch ($case['status'])
+					{
+						case 0:
+						case 2:
+							$_method = 'view_open_cases';
+							break;
+						case 1:
+							$_method = 'view_closed_cases';
+							break;
+						default:
+							$_method = 'view_open_cases';
 					}
 
-					$datavalues[5] = array
-					(
-						'name'					=> "5",
-						'values' 				=> json_encode($_cases),
-						'total_records'			=> count($_cases),
-						'edit_action'			=> "''",
-						'is_paginator'			=> 1,
-						'footer'				=> 0
-					);
-
-					$myColumnDefs[5] = array
-					(
-						'name'		=> "5",
-						'values'	=>	json_encode(array(
-							array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
-							array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
-							array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
-							array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
-							array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
-							array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
-							)
+					$_link = $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction' => "controller.uicase.{$_method}",
+							'check_list_id' => $case['check_list_id']
 						)
 					);
 
+					$_cases[] = array
+					(
+						'url'		=> "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
+						'type'		=> $_control_name,
+						'title'		=> $case['descr'],
+						'status'	=> $_statustext[$case['status']],
+						'user'		=> $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
+						'entry_date'=> $GLOBALS['phpgw']->common->show_date($case['modified_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					);
+					unset($_link);
 				}
+
+				$datavalues[5] = array
+				(
+					'name'					=> "5",
+					'values' 				=> json_encode($_cases),
+					'total_records'			=> count($_cases),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+
+				$myColumnDefs[5] = array
+				(
+					'name'		=> "5",
+					'values'	=>	json_encode(array(
+						array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+						array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+						array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+						)
+					)
+				);
+
 			}
+			
 
 			$property_js = "/property/js/yahoo/property2.js";
 

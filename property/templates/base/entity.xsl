@@ -624,7 +624,7 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:if test="controller!=''">
+					<xsl:if test="controller=1">
 						<div id="controller">
 							<script type="text/javascript">
 							lookup_control_responsible = function()
