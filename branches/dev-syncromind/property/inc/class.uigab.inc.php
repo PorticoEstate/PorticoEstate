@@ -51,6 +51,7 @@
 			(
 				'index'  		=> true,
 				'list_detail'  	=> true,
+				'query'			=> true,
 				'view' 			=> true,
 				'edit'   		=> true,
 				'delete' 		=> true,
@@ -264,7 +265,7 @@
                 )
             );
 			
-			$gab_list = $this->bo->read();
+			/*$gab_list = $this->bo->read();
 
 			$config		= CreateObject('phpgwapi.config','property');
 
@@ -282,7 +283,7 @@
 			if($link_to_gab)
 			{
 				$text_gab=lang('GAB');
-			}
+			}*/
 
 			$payment_date = $this->bo->payment_date;
 
@@ -376,6 +377,194 @@
 
 		}
 
+        public function query()
+        {
+			$address 			= phpgw::get_var('address');
+			$check_payments 	= phpgw::get_var('check_payments', 'bool');
+			$location_code 		= phpgw::get_var('location_code');
+			$gaards_nr 			= phpgw::get_var('gaards_nr', 'int');
+			$bruksnr 			= phpgw::get_var('bruksnr', 'int');
+			$feste_nr 			= phpgw::get_var('feste_nr', 'int');
+			$seksjons_nr 		= phpgw::get_var('seksjons_nr', 'int');
+			
+            $search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+			
+            $params = array(
+                'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+				'location_code' => $location_code,
+				'gaards_nr' => $gaards_nr,
+				'bruksnr' => $bruksnr,
+				'feste_nr' => $feste_nr,
+				'seksjons_nr' => $seksjons_nr,
+				'address' => $address,
+				'check_payments' => $check_payments
+				
+            );
+
+            //$values = $this->bo->read($params);
+			
+			$gab_list = $this->bo->read($params);
+
+			$config		= CreateObject('phpgwapi.config','property');
+
+			$config->read_repository();
+
+			$link_to_map = (isset($config->config_data['map_url'])?$config->config_data['map_url']:'');
+			if($link_to_map)
+			{
+				$text_map=lang('Map');
+			}
+
+			$link_to_gab = isset($config->config_data['gab_url'])?$config->config_data['gab_url']:'';
+			$gab_url_paramtres = isset($config->config_data['gab_url_paramtres']) ? $config->config_data['gab_url_paramtres']:'type=eiendom&Gnr=__gaards_nr__&Bnr=__bruks_nr__&Fnr=__feste_nr__&Snr=__seksjons_nr__';
+
+			if($link_to_gab)
+			{
+				$text_gab=lang('GAB');
+			}
+
+			$payment_date = $this->bo->payment_date;
+
+			$uicols = array (
+				'input_type'	=>	array('hidden','text','text','text','text','hidden','text','text','text','link','link'),
+				'name'			=>	array('gab_id','gaards_nr','bruksnr','feste_nr','seksjons_nr','hits','owner','location_code','address','map','gab'),
+				'formatter'		=>	array('','','','','','','','','','',''),
+				'descr'			=>	array('dummy',lang('Gaards nr'),lang('Bruks nr'),lang('Feste nr'),lang('Seksjons nr'),lang('hits'),lang('Owner'),lang('Location'),lang('Address'),lang('Map'),lang('Gab')),
+				'className'		=> 	array('','','','','','','','','','','')
+			);
+
+			while (is_array($payment_date) && list(,$date) = each($payment_date))
+			{
+				$uicols['input_type'][] = 'date';
+				$uicols['name'][] = str_replace('/','_',$date);
+				$uicols['formatter'][] = '';
+				$uicols['descr'][] = $date;
+				$uicols['className'][] = 'rightClasss';
+			}
+
+			$content = array();
+			$values = array();
+			$j=0;
+			if (isset($gab_list) && is_array($gab_list))
+			{
+				foreach($gab_list as $gab)
+				{
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+
+							if ($uicols['name'][$i] == 'gaards_nr')
+							{
+								$value_gaards_nr	= substr($gab['gab_id'],4,5);
+								$value	= $value_gaards_nr;
+
+							}
+							else if ($uicols['name'][$i] == 'bruksnr')
+							{
+								$value_bruks_nr		= substr($gab['gab_id'],9,4);
+								$value	= $value_bruks_nr;
+
+							}
+							else if ($uicols['name'][$i] == 'feste_nr')
+							{
+								$value_feste_nr		= substr($gab['gab_id'],13,4);
+								$value	= $value_feste_nr;
+
+							}
+							else if ($uicols['name'][$i] == 'seksjons_nr')
+							{
+								$value_seksjons_nr	= substr($gab['gab_id'],17,3);
+								$value	= $value_seksjons_nr;
+
+							}
+							else
+							{
+								$value	= isset($gab[$uicols['name'][$i]]) ? $gab[$uicols['name'][$i]] : '';
+							}
+
+							//$values[$j][$uicols['name'][$i]] 			= $value;
+							//$values['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
+
+							if(isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i]=='link' && $uicols['name'][$i] == 'map' )
+							{
+								$value_gaards_nr	= substr($gab['gab_id'],4,5);
+								$value_bruks_nr		= substr($gab['gab_id'],9,4);
+								$value_feste_nr		= substr($gab['gab_id'],13,4);
+								$link = phpgw::safe_redirect($link_to_map . '?maptype=Eiendomskart&gnr=' . (int)$value_gaards_nr . '&bnr=' . (int)$value_bruks_nr . '&fnr=' . (int)$value_feste_nr);
+
+								/*$values['rows']['row'][$j]['column'][$i]['format'] 	= 'link';
+								$values['rows']['row'][$j]['column'][$i]['value']	= $text_map;
+								$values['rows']['row'][$j]['column'][$i]['link']		= $link;
+								$values['rows']['row'][$j]['column'][$i]['target']	= '_blank';*/
+								$value = $link;
+							}
+							if(isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i]=='link' && $uicols['name'][$i] == 'gab' )
+							{
+								$value_kommune_nr	= substr($gab['gab_id'],0,4);
+								$value_gaards_nr	= substr($gab['gab_id'],4,5);
+								$value_bruks_nr		= substr($gab['gab_id'],9,4);
+								$value_feste_nr		= substr($gab['gab_id'],13,4);
+								$value_seksjons_nr	= substr($gab['gab_id'],17,3);
+
+								$_param = str_replace(array
+									(
+										'__kommune_nr__',
+										'__gaards_nr__',
+										'__bruks_nr__',
+										'__feste_nr__',
+										'__seksjons_nr__'
+									),array
+									(
+										$value_kommune_nr,
+										(int)$value_gaards_nr,
+										(int)$value_bruks_nr,
+										(int)$value_feste_nr,
+										(int)$value_seksjons_nr
+									), $gab_url_paramtres);
+
+								$link = phpgw::safe_redirect("$link_to_gab?{$_param}");
+
+								/*$values['rows']['row'][$j]['column'][$i]['format'] 	= 'link';
+								$values['rows']['row'][$j]['column'][$i]['value']	= $text_gab;
+								$values['rows']['row'][$j]['column'][$i]['link']		= $link;
+								$values['rows']['row'][$j]['column'][$i]['target']	= '_blank';*/
+								$value = $link;
+							}
+
+							if (isset($uicols['input_type'][$i]) && $uicols['input_type'][$i]=='date')
+							{
+								$value = $gab['payment'][str_replace('_','/',$uicols['name'][$i])];
+							}
+							
+							$values[$j][$uicols['name'][$i]] 			= $value;
+
+					}
+
+					$j++;
+				}
+			}
+			
+            
+            if( phpgw::get_var('export','bool'))
+            {
+                return $values;
+            }
+            
+            $result_data = array('results'  => $values);
+            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['draw'] = $draw;
+            
+            return $this->jquery_results($result_data);
+        }
+		
+		
 		function list_detail()
 		{
 			if(!$this->acl_read)
