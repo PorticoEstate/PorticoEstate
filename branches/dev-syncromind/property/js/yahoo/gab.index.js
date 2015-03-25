@@ -151,8 +151,8 @@
 				//Insert JSON utility on the page
 
 			    loader.insert();
-
-				oCheckButton_0 = new YAHOO.widget.Button('txt_check', {label:"", value:"0",checked:false});
+				YAHOO.util.Dom.get("txt_check_payments").value = 1;
+				oCheckButton_0 = new YAHOO.widget.Button('txt_check', {label:"", value:"0",checked:true});
 				oCheckButton_0.on("click", eval('onPaymentsClick'));
 			});
 
