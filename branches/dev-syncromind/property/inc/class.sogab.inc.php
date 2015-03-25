@@ -72,15 +72,15 @@
 			}
 
 
-
-			if ($order)
+			/* temporarily disabled */
+			/*if ($order)
 			{
 				$ordermethod = " order by fm_gab_location.{$order} {$sort}";
 			}
 			else
 			{
 				$ordermethod = ' order by gab_id ASC';
-			}
+			}*/
 
 			$where = 'WHERE';
 			$filtermethod = '';
