@@ -71,14 +71,20 @@ class rental_socontract_price_item extends rental_socommon
 			$filter_clauses[] = "date_start < {$timestamp_end}";
 			$filter_clauses[] = "date_start >= {$timestamp_start}";
 		}
-		if(isset($filters['one_time'])){
+		if(isset($filters['one_time']) && $filters['include_billed'])
+		{
 			$filter_clauses[] = "is_one_time";
+		}
+		if(isset($filters['one_time']) && !$filters['include_billed'])
+		{
+			$filter_clauses[] = "is_one_time AND NOT is_billed";
 		}
 		else if($filters['include_billed'])
 		{
 			// Do not add filter on showing only price items that has not yet been billed
 		}
-		else{
+		else
+		{
 			$filter_clauses[] = "NOT is_billed";
 		}
 		
