@@ -236,14 +236,25 @@
 				</xsl:when>
 				<xsl:when test="type = 'link'">
 					<td valign="top">
-						<a href="{href}">
+						<input type="button" class="pure-button pure-button-primary">
+							<xsl:choose>
+								<xsl:when test="onclick">
+									<xsl:attribute name="onclick"><xsl:value-of select="onclick"/></xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="href"/>', "_self");</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:attribute name="value"><xsl:value-of select="value"/></xsl:attribute>
+						</input>
+						<!--a href="{href}">
 							<xsl:if test="onclick">
 								<xsl:attribute name="onclick">
 									<xsl:value-of select="onclick"/>
 								</xsl:attribute>
 							</xsl:if>
 							<xsl:value-of select="value"/>
-						</a>
+						</a-->
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'hidden'">
@@ -715,6 +726,8 @@
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 								if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
 								{
+									//nRow.addClass(''),
+									console.log(nRow),
 									$('td', nRow).addClass('priority' + aData['priority']);
 								}
                 },
