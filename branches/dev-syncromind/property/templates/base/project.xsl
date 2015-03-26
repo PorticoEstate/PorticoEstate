@@ -536,7 +536,7 @@
 						<xsl:otherwise>
 						</xsl:otherwise>
 					</xsl:choose>
-					<div class="pure-control-group">
+					<!--div class="pure-control-group"-->
 						<label for="name">
 							<xsl:value-of select="lang_workorder_id"/>
 						</label>
@@ -545,8 +545,8 @@
 								<xsl:value-of select="lang_no_workorders"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<div class="pure-custom">
-									<div>
+								<!--div class="pure-custom">
+									<div-->
 										<select id = "order_time_span" name="order_time_span">
 											<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'select')"/>
@@ -556,8 +556,8 @@
 											</option>
 											<xsl:apply-templates select="order_time_span/options"/>
 										</select>
-									</div>
-									<div>
+									<!--/div>
+									<div-->
 										<xsl:for-each select="datatable_def">
 											<xsl:if test="container = 'datatable-container_1'">
 												<xsl:call-template name="table_setup">
@@ -570,11 +570,11 @@
 												</xsl:call-template>
 											</xsl:if>
 										</xsl:for-each>
-									</div>
-								</div>
+									<!--/div>
+								</div-->
 							</xsl:otherwise>
 						</xsl:choose>
-					</div>
+					<!--/div-->
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'invoice')"/>
