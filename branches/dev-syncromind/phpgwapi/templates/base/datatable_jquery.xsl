@@ -251,7 +251,7 @@
 							<xsl:if test="onclick">
 								<xsl:attribute name="onclick">
 									<xsl:value-of select="onclick"/>
-								</xsl:attribute>
+								</xsl:attribute> 
 							</xsl:if>
 							<xsl:value-of select="value"/>
 						</a-->
