@@ -1545,6 +1545,16 @@
 					array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
 					array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
 				);
+            
+//            $myColumnDefs0 = array
+//				(
+//					array('key' => 'time', 'label' =>$alarm_data['header'][0]['lang_time'],	'sortable' => true, 'resizeable' => true, 'width' => 140),
+//					array('key' => 'text', 'label' =>$alarm_data['header'][0]['lang_text'],	'sortable' => true, 'resizeable' => true, 'width' => 340),
+//					array('key' => 'user', 'label' =>$alarm_data['header'][0]['lang_user'],	'sortable' => true, 'resizeable' => true, 'width' => 200),
+//					array('key' => 'enabled', 'label' =>$alarm_data['header'][0]['lang_enabled'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter', 'width' => 60),
+//					array('key' => 'alarm_id', 'label' =>"dummy", 'sortable' => true, 'resizeable' => true, 'hidden' => true),
+//					//array('key' => 'select', 'label' =>$alarm_data['header'][0]['lang_select'],	'sortable' => false, 'resizeable' => false, 'formatter'=>'myFormatterCheck', 'width' => 60)
+//				);
 
 			$myButtons[0] = array
 				(
@@ -1627,10 +1637,11 @@
 			$myColumnDefs[1] = array
 				(
 					'name'			=> "1",
-					'values'		=>	json_encode(array(	array(key => id,			label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
+					'values'		=>	json_encode(array(	
+                    array(key => id,			label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
 					array(key => num,			label=>$table_header[1]['header'],	sortable=>true,resizeable=>true),
 					array(key => descr,			label=>$table_header[2]['header'],	sortable=>true,resizeable=>true),
-					array(key => unit_name,			label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
+					array(key => unit_name,		label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
 					array(key => m_cost,		label=>$table_header[4]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
 					array(key => w_cost,		label=>$table_header[5]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
 					array(key => total_cost,	label=>$table_header[6]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
@@ -1641,7 +1652,24 @@
 					array(key => activity_id,	hidden=>true),
 					array(key => agreement_id,	hidden=>true)
 				)));
-
+                
+//            $myColumnDefs1 = array
+//            (
+//                array('key' => 'id', 'label' =>$table_header[0]['header'], 'sortable' => true, 'resizeable' => true),
+//                array('key' => 'num', 'label' =>$table_header[1]['header'], 'sortable' => true, 'resizeable' => true),
+//                array('key' => 'descr', 'label' =>$table_header[2]['header'], 'sortable' => true, 'resizeable' => true),
+//                array('key' => 'unit_name',	'label' =>$table_header[3]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
+//                array('key' => 'm_cost', 'label' =>$table_header[4]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+//                array('key' => 'w_cost', 'label' =>$table_header[5]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+//                array('key' => 'total_cost', 'label' =>$table_header[6]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+//                array('key' => 'this_index', 'label' =>$table_header[7]['header'], 'sortable' => true, 'resizeable' => true),
+//                array('key' => 'index_count', 'label' =>$table_header[8]['header'],	'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
+//                array('key' => 'index_date', 'label' =>$table_header[9]['header'], 'sortable' => true, 'resizeable' => true),
+////                $permission_update?array('key' => 'select',	'label' =>$table_header[13]['header'], 'sortable' => false, 'resizeable' => false, 'formatter'=>FormatterCheckItems):"",
+//                array('key' => 'activity_id', 'hidden' => true),
+//				array('key' => 'agreement_id', 'hidden' => true)
+//            );
+            
 
 			$myButtons[2] = array
 				(
@@ -1677,7 +1705,12 @@
 					array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
 				);
 
-
+//            $myColumnDefs2 = array
+//            (
+//                array('key' => 'file_name', 'label' =>lang('Filename'), 'sortable' => false, 'resizeable' => true),
+//				array('key' => 'delete_file', 'label' =>lang('Delete file'), 'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter')
+//            );
+              
 			//----------------------------------------------datatable settings--------
 
 			$data = array
@@ -1701,7 +1734,7 @@
 					'lang_alarm'							=> lang('Alarm'),
 					'lang_download'							=> 'download',
 					'link_download'							=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-					'lang_download_help'						=> lang('Download table to your browser'),
+					'lang_download_help'					=> lang('Download table to your browser'),
 
 					'fileupload'							=> true,
 					'link_view_file'						=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
@@ -1782,7 +1815,9 @@
 					'textarearows'							=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'tabs'									=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 				);
-			//_debug_array($data);die;
+            
+//          echo'<pre>';print_r($data); echo'</pre>'; exit();
+//			_debug_array($data);die;
 			//---datatable settings--------------------
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
