@@ -27,12 +27,14 @@
 						<xsl:value-of select="lang_add"/>
 					</xsl:variable>
 					<form method="post" action="{$add_action}">
-						<input type="submit" class="forms" name="add" value="{$lang_add}">
+						<input type="submit" class="pure-button pure-button-primary forms" name="add" value="{$lang_add}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_add_statustext"/>
 							</xsl:attribute>
 						</input>
 					</form>
+				</td>
+				<td>
 					<xsl:variable name="search_action">
 						<xsl:value-of select="search_action"/>
 					</xsl:variable>
@@ -40,12 +42,14 @@
 						<xsl:value-of select="lang_search"/>
 					</xsl:variable>
 					<form method="post" action="{$search_action}">
-						<input type="submit" class="forms" name="search" value="{$lang_search}">
+						<input type="submit" class="pure-button pure-button-primary forms" name="search" value="{$lang_search}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_search_statustext"/>
 							</xsl:attribute>
 						</input>
 					</form>
+				</td>
+				<td>
 					<xsl:variable name="done_action">
 						<xsl:value-of select="done_action"/>
 					</xsl:variable>
@@ -53,7 +57,7 @@
 						<xsl:value-of select="lang_done"/>
 					</xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" class="forms" name="done" value="{$lang_done}">
+						<input type="submit" class="pure-button pure-button-primary forms" name="done" value="{$lang_done}">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_done_statustext"/>
@@ -1292,7 +1296,7 @@
 							<xsl:variable name="lang_add">
 								<xsl:value-of select="php:function('lang', 'add')"/>
 							</xsl:variable>
-							<input type="submit" name="add" value="{$lang_add}" title='{$lang_add}'>
+							<input type="submit" class="pure-button pure-button-primary" name="add" value="{$lang_add}" title='{$lang_add}'>
 							</input>
 							<xsl:variable name="cancel_action">
 								<xsl:value-of select="cancel_action"/>
