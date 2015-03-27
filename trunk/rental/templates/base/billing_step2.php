@@ -201,6 +201,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 					<th><?php echo lang('composite_name') ?></th>
 					<th><?php echo lang('party_name') ?></th>
 					<th><?php echo lang('only_one_time') ?></th>
+					<th><?php echo lang('total_price') ?></th>
 	            </tr>
 	        </thead>
 	        <tbody>
@@ -240,6 +241,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 								}
 								?>
 							</td>
+							<td><?php echo number_format($contract->get_total_price(),2,',',' '); ?>
 						</tr>
 						<?php
 						}
