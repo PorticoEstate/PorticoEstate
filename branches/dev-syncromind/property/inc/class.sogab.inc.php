@@ -122,7 +122,7 @@
 			}
 			if ($bruksnr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,10,4) {$this->like} '%$bruksnr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,10,4) {$this->like} '%$bruksnr%' ";
 				$where = 'AND';
 			}
 			if ($feste_nr)
