@@ -187,6 +187,7 @@ class rental_uibilling extends rental_uicommon
 			}
 			else
 			{
+				$contracts_with_one_time = array();
 				//... and if not start retrieving contracts for billing
 			
 				$socontract_price_item = rental_socontract_price_item::get_instance();
@@ -199,10 +200,13 @@ class rental_uibilling extends rental_uicommon
 				$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
 				$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
 				
-				foreach($contract_price_items as $contract_price_item){
-					if(!array_key_exists($contract_price_item->get_contract_id(), $contracts)){
+				foreach($contract_price_items as $contract_price_item)
+				{
+					if(!array_key_exists($contract_price_item->get_contract_id(), $contracts))
+					{
 						$aditional_contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract_price_item->get_contract_id(), 'contract_type' => $contract_type));
-						if(count($aditional_contracts) == 1){
+						if(count($aditional_contracts) == 1)
+						{
 							$c = $aditional_contracts[$contract_price_item->get_contract_id()];
 							$c->set_bill_only_one_time();
 							//$contracts[$contract_price_item->get_contract_id()] = $c;
@@ -215,7 +219,14 @@ class rental_uibilling extends rental_uicommon
 						$contracts_with_one_time[$cid] = $contracts[$cid];
 					}
 				}
-		
+
+				foreach($contracts_with_one_time as $id => &$contract)
+				{
+					$total_price = $socontract_price_item->get_total_price_invoice($contract->get_id(), $billing_term, $month, $year);
+					$contract->set_total_price($total_price);
+
+				}
+				unset($contract);
 			
 				// Get the number of months in selected term for contract
 				$months = rental_socontract::get_instance()->get_months_in_term($billing_term);
