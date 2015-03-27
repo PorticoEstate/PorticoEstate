@@ -71,16 +71,14 @@
 				$check_payments	= isset($data['check_payments']) ? $data['check_payments'] : '';
 			}
 
-
-			/* temporarily disabled */
-			/*if ($order)
+			if ($order)
 			{
 				$ordermethod = " order by fm_gab_location.{$order} {$sort}";
 			}
 			else
 			{
 				$ordermethod = ' order by gab_id ASC';
-			}*/
+			}
 
 			$where = 'WHERE';
 			$filtermethod = '';
