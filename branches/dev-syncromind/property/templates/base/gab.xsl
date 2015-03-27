@@ -1,5 +1,5 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
+	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
@@ -349,80 +349,40 @@
 
 	<!-- New template-->
 	<xsl:template match="list_gab_detail">
-		<xsl:apply-templates select="menu"/>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<tr>
-				<td class="th_text" width="5%" align="left">
-					<table>
-						<tr>
-							<td class="th_text" align="left">
-								<xsl:value-of select="lang_gaards_nr"/>
-							</td>
-							<td align="left">
-								<xsl:text> : </xsl:text>
-								<xsl:value-of select="gaards_nr"/>
-							</td>
-						</tr>
-						<tr>
-							<td class="th_text" align="left">
-								<xsl:value-of select="lang_bruksnr"/>
-							</td>
-							<td align="left">
-								<xsl:text> : </xsl:text>
-								<xsl:value-of select="bruks_nr"/>
-							</td>
-						</tr>
-						<tr>
-							<td class="th_text" align="left">
-								<xsl:value-of select="lang_feste_nr"/>
-							</td>
-							<td align="left">
-								<xsl:text> : </xsl:text>
-								<xsl:value-of select="feste_nr"/>
-							</td>
-						</tr>
-						<tr>
-							<td class="th_text" align="left">
-								<xsl:value-of select="lang_seksjons_nr"/>
-							</td>
-							<td align="left">
-								<xsl:text> : </xsl:text>
-								<xsl:value-of select="seksjons_nr"/>
-							</td>
-						</tr>
-						<tr>
-							<td class="th_text" align="left">
-								<xsl:value-of select="lang_owner"/>
-							</td>
-							<td align="left">
-								<xsl:text> : </xsl:text>
-								<xsl:value-of select="value_owner"/>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="8" width="100%">
-					<xsl:call-template name="nextmatchs"/>
-				</td>
-			</tr>
-		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:call-template name="table_header"/>
-			<xsl:choose>
-				<xsl:when test="values">
-					<xsl:call-template name="values"/>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="table_add !=''">
-					<xsl:apply-templates select="table_add"/>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:apply-templates select="table_done"/>
-		</table>
+		<xsl:call-template name="top-toolbar" />
+		<div>
+			<xsl:for-each select="datatable_def">
+				<xsl:if test="container = 'datatable-container_0'">
+					<xsl:call-template name="table_setup">
+						<xsl:with-param name="container" select ='container'/>
+						<xsl:with-param name="requestUrl" select ='requestUrl' />
+						<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+						<xsl:with-param name="tabletools" select ='tabletools' />
+						<xsl:with-param name="data" select ='data' />
+						<xsl:with-param name="config" select ='config' />
+					</xsl:call-template>
+				</xsl:if>
+			</xsl:for-each>
+		</div>
 	</xsl:template>
+
+	<xsl:template name="top-toolbar">
+		<div class="toolbar-container">
+			<div class="pure-g">
+				<div class="pure-u-1-3">
+					<xsl:for-each select="info">
+						<div><xsl:value-of select="name"/>:<xsl:value-of select="value"/></div>
+					</xsl:for-each>
+				</div>
+				<div class="pure-u-2-3">
+					<xsl:for-each select="top_toolbar">
+						<a class="pure-button pure-button-primary" href="{url}"><xsl:value-of select="value"/></a>						
+					</xsl:for-each>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
+		
 
 	<!-- New template-->
 	<xsl:template match="table_add">
