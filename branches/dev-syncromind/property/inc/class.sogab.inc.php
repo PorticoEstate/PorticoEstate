@@ -71,13 +71,28 @@
 				$check_payments	= isset($data['check_payments']) ? $data['check_payments'] : '';
 			}
 
-			if ($order)
+			switch ($order)
 			{
-				$ordermethod = " order by fm_gab_location.{$order} {$sort}";
-			}
-			else
-			{
-				$ordermethod = ' order by gab_id ASC';
+				case 'gaards_nr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,5,5) {$sort}";				
+					break;
+				case 'bruksnr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,10,4) {$sort}";				
+					break;
+				case 'feste_nr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,14,4) {$sort}";				
+					break;
+				case 'seksjons_nr':
+					$ordermethod = " ORDER BY SUBSTRING(gab_id,18,3) {$sort}";				
+					break;
+				case 'location_code':
+					$ordermethod = " ORDER BY fm_gab_location.location_code {$sort}";				
+					break;
+				case 'address':
+					$ordermethod = " ORDER BY fm_gab_location.address {$sort}";				
+					break;
+				default:
+					$ordermethod = ' ORDER BY gab_id ASC';
 			}
 
 			$where = 'WHERE';

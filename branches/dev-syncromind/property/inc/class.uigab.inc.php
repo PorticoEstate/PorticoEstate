@@ -237,7 +237,7 @@
 				'input_type'	=>	array('hidden','text','text','text','text','hidden','text','text','text','link','link'),
 				'name'			=>	array('gab_id','gaards_nr','bruksnr','feste_nr','seksjons_nr','hits','owner','location_code','address','map','gab'),
 				'formatter'		=>	array('','','','','','','','','','linktToMap','linktToGab'),
-				'sortable'		=>	array('','true','','','','','','true','','',''),
+				'sortable'		=>	array('',true,true,true,true,'','',true,true,'',''),
 				'descr'			=>	array('dummy',lang('Gaards nr'),lang('Bruks nr'),lang('Feste nr'),lang('Seksjons nr'),lang('hits'),lang('Owner'),lang('Location'),lang('Address'),lang('Map'),lang('Gab')),
 				'className'		=> 	array('','','','','','','','center','','center','center')
 			);
