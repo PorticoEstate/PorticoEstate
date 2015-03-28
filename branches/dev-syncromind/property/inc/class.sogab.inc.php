@@ -130,7 +130,7 @@
 
 			if ($gaards_nr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,5,5) {$this->like} '%$gaards_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,5,5) {$this->like} '%$gaards_nr%' ";
 				$where = 'AND';
 			}
 			if ($bruksnr)
@@ -140,12 +140,12 @@
 			}
 			if ($feste_nr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,14,4) {$this->like} '%$feste_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,14,4) {$this->like} '%$feste_nr%' ";
 				$where = 'AND';
 			}
 			if ($seksjons_nr)
 			{
-				$filtermethod .= " {$where} SUBSTRING(gab_id,18,3) {{$this->like}} '%$seksjons_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,18,3) {$this->like} '%$seksjons_nr%' ";
 				$where = 'AND';
 			}
 
