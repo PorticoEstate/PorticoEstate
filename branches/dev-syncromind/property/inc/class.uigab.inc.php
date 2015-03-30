@@ -232,7 +232,8 @@
                                            'type'   => 'link',
                                            'value'  => lang('new'),
                                            'href'   => self::link(array(
-                                               'menuaction'	=> 'property.uigab.add'
+                                               //'menuaction'	=> 'property.uigab.add'
+                                               'menuaction'	=> 'property.uigab.edit'
                                            )),
                                            'class'  => 'new_item'
                                         ),
