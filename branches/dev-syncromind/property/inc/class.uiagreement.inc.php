@@ -1526,35 +1526,47 @@
 			//---datatable0 settings---------------------------------------------------
 
 
-			$datavalues[0] = array
+//			$datavalues[0] = array
+//				(
+//					'name'			=> "0",
+//					'values' 		=> json_encode($alarm_data['values']),
+//					'total_records'	=> count($alarm_data['values']),
+//					'permission'   	=> "''",
+//					'is_paginator'	=> 0,
+//					'footer'		=> 0
+//				);
+//			$myColumnDefs[0] = array
+//				(
+//					'name'			=> "0",
+//					'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true,width=>140),
+//					array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true,width=>340),
+//					array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true,width=>200),
+//					array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
+//					array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
+//					array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
+//				);
+            
+            $myColumnDefs0 = array
 				(
-					'name'			=> "0",
-					'values' 		=> json_encode($alarm_data['values']),
-					'total_records'	=> count($alarm_data['values']),
-					'permission'   	=> "''",
-					'is_paginator'	=> 0,
-					'footer'		=> 0
-				);
-			$myColumnDefs[0] = array
-				(
-					'name'			=> "0",
-					'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true,width=>140),
-					array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true,width=>340),
-					array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true,width=>200),
-					array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
-					array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-					array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
+					array('key' => 'time', 'label' =>$alarm_data['header'][0]['lang_time'],	'sortable' => true, 'resizeable' => true, 'width' => 140),
+					array('key' => 'text', 'label' =>$alarm_data['header'][0]['lang_text'],	'sortable' => true, 'resizeable' => true, 'width' => 340),
+					array('key' => 'user', 'label' =>$alarm_data['header'][0]['lang_user'],	'sortable' => true, 'resizeable' => true, 'width' => 200),
+					array('key' => 'enabled', 'label' =>$alarm_data['header'][0]['lang_enabled'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter', 'width' => 60),
+					array('key' => 'alarm_id', 'label' =>"dummy", 'sortable' => true, 'resizeable' => true, 'hidden' => true),
+					//array('key' => 'select', 'label' =>$alarm_data['header'][0]['lang_select'],	'sortable' => false, 'resizeable' => false, 'formatter'=>'myFormatterCheck', 'width' => 60)
 				);
             
-//            $myColumnDefs0 = array
-//				(
-//					array('key' => 'time', 'label' =>$alarm_data['header'][0]['lang_time'],	'sortable' => true, 'resizeable' => true, 'width' => 140),
-//					array('key' => 'text', 'label' =>$alarm_data['header'][0]['lang_text'],	'sortable' => true, 'resizeable' => true, 'width' => 340),
-//					array('key' => 'user', 'label' =>$alarm_data['header'][0]['lang_user'],	'sortable' => true, 'resizeable' => true, 'width' => 200),
-//					array('key' => 'enabled', 'label' =>$alarm_data['header'][0]['lang_enabled'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter', 'width' => 60),
-//					array('key' => 'alarm_id', 'label' =>"dummy", 'sortable' => true, 'resizeable' => true, 'hidden' => true),
-//					//array('key' => 'select', 'label' =>$alarm_data['header'][0]['lang_select'],	'sortable' => false, 'resizeable' => false, 'formatter'=>'myFormatterCheck', 'width' => 60)
-//				);
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($alarm_data['values']),
+				'ColumnDefs'	=> $myColumnDefs0,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
 
 			$myButtons[0] = array
 				(
@@ -1622,54 +1634,65 @@
 				$permission_update = true;
 			}
 
-			$datavalues[1] = array
-				(
-					'name'			=> "1",
-					'values' 		=> json_encode($content),
-					'total_records'	=> count($content),
-					'permission'   	=> json_encode($permissions['rowactions']),
-					'is_paginator'	=> 0,
-					'footer'		=> 1
-				);
-
-
-
-			$myColumnDefs[1] = array
-				(
-					'name'			=> "1",
-					'values'		=>	json_encode(array(	
-                    array(key => id,			label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
-					array(key => num,			label=>$table_header[1]['header'],	sortable=>true,resizeable=>true),
-					array(key => descr,			label=>$table_header[2]['header'],	sortable=>true,resizeable=>true),
-					array(key => unit_name,		label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
-					array(key => m_cost,		label=>$table_header[4]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-					array(key => w_cost,		label=>$table_header[5]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-					array(key => total_cost,	label=>$table_header[6]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-					array(key => this_index,	label=>$table_header[7]['header'],	sortable=>true,resizeable=>true),
-					array(key => index_count,	label=>$table_header[8]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
-					array(key => index_date,	label=>$table_header[9]['header'],	sortable=>true,resizeable=>true),
-					$permission_update?array(key => select,		label=>$table_header[13]['header'],	sortable=>false,resizeable=>false,formatter=>FormatterCheckItems):"",
-					array(key => activity_id,	hidden=>true),
-					array(key => agreement_id,	hidden=>true)
-				)));
+//			$datavalues[1] = array
+//				(
+//					'name'			=> "1",
+//					'values' 		=> json_encode($content),
+//					'total_records'	=> count($content),
+//					'permission'   	=> json_encode($permissions['rowactions']),
+//					'is_paginator'	=> 0,
+//					'footer'		=> 1
+//				);
+//
+//
+//
+//			$myColumnDefs[1] = array
+//				(
+//					'name'			=> "1",
+//					'values'		=>	json_encode(array(	
+//                    array(key => id,			label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
+//					array(key => num,			label=>$table_header[1]['header'],	sortable=>true,resizeable=>true),
+//					array(key => descr,			label=>$table_header[2]['header'],	sortable=>true,resizeable=>true),
+//					array(key => unit_name,		label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
+//					array(key => m_cost,		label=>$table_header[4]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
+//					array(key => w_cost,		label=>$table_header[5]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
+//					array(key => total_cost,	label=>$table_header[6]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
+//					array(key => this_index,	label=>$table_header[7]['header'],	sortable=>true,resizeable=>true),
+//					array(key => index_count,	label=>$table_header[8]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
+//					array(key => index_date,	label=>$table_header[9]['header'],	sortable=>true,resizeable=>true),
+//					$permission_update?array(key => select,		label=>$table_header[13]['header'],	sortable=>false,resizeable=>false,formatter=>FormatterCheckItems):"",
+//					array(key => activity_id,	hidden=>true),
+//					array(key => agreement_id,	hidden=>true)
+//				)));
                 
-//            $myColumnDefs1 = array
-//            (
-//                array('key' => 'id', 'label' =>$table_header[0]['header'], 'sortable' => true, 'resizeable' => true),
-//                array('key' => 'num', 'label' =>$table_header[1]['header'], 'sortable' => true, 'resizeable' => true),
-//                array('key' => 'descr', 'label' =>$table_header[2]['header'], 'sortable' => true, 'resizeable' => true),
-//                array('key' => 'unit_name',	'label' =>$table_header[3]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
-//                array('key' => 'm_cost', 'label' =>$table_header[4]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
-//                array('key' => 'w_cost', 'label' =>$table_header[5]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
-//                array('key' => 'total_cost', 'label' =>$table_header[6]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
-//                array('key' => 'this_index', 'label' =>$table_header[7]['header'], 'sortable' => true, 'resizeable' => true),
-//                array('key' => 'index_count', 'label' =>$table_header[8]['header'],	'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
-//                array('key' => 'index_date', 'label' =>$table_header[9]['header'], 'sortable' => true, 'resizeable' => true),
-////                $permission_update?array('key' => 'select',	'label' =>$table_header[13]['header'], 'sortable' => false, 'resizeable' => false, 'formatter'=>FormatterCheckItems):"",
-//                array('key' => 'activity_id', 'hidden' => true),
-//				array('key' => 'agreement_id', 'hidden' => true)
-//            );
+            $myColumnDefs1 = array
+            (
+                array('key' => 'id', 'label' =>$table_header[0]['header'], 'sortable' => true, 'resizeable' => true),
+                array('key' => 'num', 'label' =>$table_header[1]['header'], 'sortable' => true, 'resizeable' => true),
+                array('key' => 'descr', 'label' =>$table_header[2]['header'], 'sortable' => true, 'resizeable' => true),
+                array('key' => 'unit_name',	'label' =>$table_header[3]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
+                array('key' => 'm_cost', 'label' =>$table_header[4]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+                array('key' => 'w_cost', 'label' =>$table_header[5]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+                array('key' => 'total_cost', 'label' =>$table_header[6]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+                array('key' => 'this_index', 'label' =>$table_header[7]['header'], 'sortable' => true, 'resizeable' => true),
+                array('key' => 'index_count', 'label' =>$table_header[8]['header'],	'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
+                array('key' => 'index_date', 'label' =>$table_header[9]['header'], 'sortable' => true, 'resizeable' => true),
+//                $permission_update?array('key' => 'select',	'label' =>$table_header[13]['header'], 'sortable' => false, 'resizeable' => false, 'formatter'=>FormatterCheckItems):"",
+                array('key' => 'activity_id', 'hidden' => true),
+				array('key' => 'agreement_id', 'hidden' => true)
+            );
             
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content),
+				'ColumnDefs'	=> $myColumnDefs1,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
 
 			$myButtons[2] = array
 				(
@@ -1688,33 +1711,46 @@
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$agreement['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}
 
-			$datavalues[2] = array
-				(
-					'name'					=> "2",
-					'values' 				=> json_encode($content_files),
-					'total_records'			=> count($content_files),
-					'permission'   			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
+//			$datavalues[2] = array
+//				(
+//					'name'					=> "2",
+//					'values' 				=> json_encode($content_files),
+//					'total_records'			=> count($content_files),
+//					'permission'   			=> "''",
+//					'is_paginator'			=> 0,
+//					'footer'				=> 0
+//				);
+//
+//			$myColumnDefs[2] = array
+//				(
+//					'name'		=> "2",
+//					'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
+//					array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+//				);
 
-			$myColumnDefs[2] = array
-				(
-					'name'		=> "2",
-					'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
-					array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
-				);
-
-//            $myColumnDefs2 = array
-//            (
-//                array('key' => 'file_name', 'label' =>lang('Filename'), 'sortable' => false, 'resizeable' => true),
-//				array('key' => 'delete_file', 'label' =>lang('Delete file'), 'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter')
-//            );
+            $myColumnDefs2 = array
+            (
+                array('key' => 'file_name', 'label' =>lang('Filename'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'delete_file', 'label' =>lang('Delete file'), 'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter')
+            );
+            
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_files),
+				'ColumnDefs'	=> $myColumnDefs2,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
               
 			//----------------------------------------------datatable settings--------
 
 			$data = array
 				(
+                    'datatable_def'                         => $datatable_def,
 					'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'							=> json_encode(array(menuaction => "property.uiagreement.edit",id=>$id)),
 					'datatable'								=> $datavalues,
@@ -1816,29 +1852,33 @@
 					'tabs'									=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 				);
             
-//          echo'<pre>';print_r($data); echo'</pre>'; exit();
-//			_debug_array($data);die;
+//            echo'<pre>';print_r($data); echo'</pre>'; exit();
+
 			//---datatable settings--------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.edit', 'property' );
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('connection');
+//			phpgwapi_yui::load_widget('loader');
+//			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('animation');
+//
+//			$GLOBALS['phpgw']->css->validate_file('datatable');
+//			$GLOBALS['phpgw']->css->validate_file('property');
+//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.edit', 'property' );
 			//-----------------------datatable settings---
-
+//            $GLOBALS['phpgw']->xslttpl->add_file(array('agreement', 'nextmatchs', 'attributes_form', 'files'));
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+            
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+			self::render_template_xsl(array('agreement','datatable_inline','files','attributes_form','nextmatchs'), array('edit' => $data));
 		}
 
 		function download()
