@@ -36,6 +36,7 @@
 
 	class property_uigab extends phpgwapi_uicommon_jquery
 	{
+		private $receipt = array();
 		var $grants;
 		var $cat_id;
 		var $start;
@@ -52,8 +53,10 @@
 				'index'  		=> true,
 				'list_detail'  	=> true,
 				'query'			=> true,
+				'query_detail'  => true,
 				'view' 			=> true,
 				'edit'   		=> true,
+				'save'   		=> true,
 				'delete' 		=> true,
 				'download'  	=> true
 			);
@@ -89,6 +92,32 @@
 
 		}
 
+		private function _populate($data = array())
+		{
+			$gab_id 		= phpgw::get_var('gab_id');
+			$location_code 	= phpgw::get_var('location_code');	
+			$values	= phpgw::get_var('values');
+			
+			$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
+			$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
+			$values['gab_id'] = $gab_id;
+
+			$values['location_code'] = $location_code;
+
+			if(!$values['location_code'] && !$values['location'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
+			}
+
+			if((count($values['location']) < $this->gab_insert_level) && !$values['propagate'] && !$values['location_code'])
+			{
+				$this->receipt['error'][] = array('msg'=>lang('Either select propagate - or choose location level %1 !',$this->gab_insert_level));
+			}
+				
+			return $values;
+		}
+		
 		function save_sessiondata()
 		{
 			$data = array
@@ -509,6 +538,11 @@ JS;
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
+            if( phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+				return $this->query_detail();
+            }
+			
 			$gab_id = phpgw::get_var('gab_id');
 
 			$top_toolbar = array
@@ -638,14 +672,18 @@ JS;
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> "''",
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'property.uigab.list_detail', 'gab_id'=>$gab_id, 'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $detail_def,
-				'data'			=> json_encode($gab_list),
+				'data'			=> json_encode(array()),
 				'tabletools'	=> $tabletools,
 				'config'		=> array(
-					array('disableFilter'	=> true)
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
 				)
 			);
+			
+			$appname		= lang('gab');
+			$function_msg	= lang('list gab detail');
 			
 			$gaards_nr	= substr($gab_id,4,5);
 			$bruks_nr = substr($gab_id,9,4);
@@ -673,17 +711,38 @@ JS;
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			// Prepare YUI Library
-			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gab.list_detail', 'property' );
 			
 			self::render_template_xsl(array('gab', 'datatable_inline'), array('list_gab_detail' => $data));
 
 			$this->save_sessiondata();
 		}
 
+		public function query_detail()
+		{
+			$gab_id = phpgw::get_var('gab_id');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 
-		function edit()
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'gab_id' => $gab_id
+			);
+
+			$values = $this->bo->read_detail($params, true);
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
+		}
+		
+		function edit($values = array(), $mode = 'edit')
 		{
 			if(!$this->acl_add && !$this->acl_edit)
 			{
@@ -694,56 +753,28 @@ JS;
 			$new 			= phpgw::get_var('new', 'bool');
 			$gab_id 		= phpgw::get_var('gab_id');
 			$location_code 	= phpgw::get_var('location_code');
-			$values			= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('gab'));
 
 			if(!$values && $location_code)
 			{
 				$values['location_data'] = $this->bolocation->read_single($location_code,$values['extra']);
 			}
-
-			//_debug_array($values);
-
-			if ($values['save'])
+			
+			if ($values['gab_id']) 
 			{
-				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$values = $this->bocommon->collect_locationdata($values,$insert_record);
-
-				$values['gab_id'] = $gab_id;
-
-				$values['location_code'] = $location_code;
-
-				if(!$values['location_code'] && !$values['location'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
-				}
-
-				if((count($values['location']) < $this->gab_insert_level) && !$values['propagate'] && !$values['location_code'])
-				{
-					$receipt['error'][] = array('msg'=>lang('Either select propagate - or choose location level %1 !',$this->gab_insert_level));
-				}
-
-				//_debug_array($values);
-				if(!$receipt['error'])
-				{
-					$receipt 		= $this->bo->save($values);
-					$location_code	= $receipt['location_code'];
-					$gab_id 		= $receipt['gab_id'];
-					//_debug_array($receipt);
-				}
+				$gab_id = $values['gab_id'];
+				$location_code = $values['location_code'];
 			}
 
 			if ($gab_id && !$new)
 			{
 				$values = $this->bo->read_single($gab_id,$location_code);
 			}
+			
 			if ($values['location_code'])
 			{
 				$function_msg = lang('Edit gab');
 				$action='edit';
 				$lookup_type ='view';
-
 			}
 			else
 			{
@@ -756,7 +787,6 @@ JS;
 			{
 				$this->cat_id = $values['cat_id'];
 			}
-
 
 			if($values['location_data'])
 			{
@@ -776,13 +806,15 @@ JS;
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uigab.edit',
-					'gab_id'			=> $gab_id,
-					'location_code'		=> $location_code,
-					'from'				=> $from
+					'menuaction'	=> 'property.uigab.save',
+					'gab_id'		=> $gab_id,
+					'location_code'	=> $location_code,
+					'from'			=> $from
 				);
 
-
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
 
 			$done_data = array('menuaction'=> 'property.uigab.'.$from);
 			if($from=='list_detail')
@@ -797,7 +829,14 @@ JS;
 				$kommune_nr= $this->config->config_data['default_municipal'];
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			if(isset($this->receipt['error']) && is_array($this->receipt['error']))
+			{
+				$msgbox_data = $this->bocommon->msgbox_data($this->receipt['error']);
+			}
+			else
+			{
+				$msgbox_data ='';
+			}
 
 			$data = array
 				(
@@ -831,16 +870,50 @@ JS;
 					'lang_remark'					=> lang('remark'),
 					'value_remark'					=> $values['remark'],
 					'lang_done_statustext'			=> lang('Back to the list'),
-					'lang_save_statustext'			=> lang('Save the gab')
+					'lang_save_statustext'			=> lang('Save the gab'),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
 			$appname		= lang('gab');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+
+			self::render_template_xsl(array('gab'), array('edit' => $data));
 		}
 
+		public function save()
+		{
+			/*
+			* Overrides with incoming data from POST
+			*/
+			$data = $this->_populate();
+
+			if( $this->receipt['error'] )
+			{
+				$this->edit();
+			}
+			else
+			{
+				try
+				{
+					$receipt = $this->bo->save($data);
+					$values['location_code'] = $receipt['location_code'];
+					$values['gab_id'] = $receipt['gab_id'];
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+					}
+				}
+
+				phpgwapi_cache::message_set($receipt, 'message'); 
+				$this->edit($values);
+				return;
+			}
+		}
+		
 		function delete()
 		{
 			if(!$this->acl_delete)
@@ -924,7 +997,10 @@ JS;
 				'lookup_type'	=> 'view'
 			));
 
-
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$data = array
 				(
 					'kommune_nr'					=> substr($gab_id,0,4),
@@ -954,7 +1030,8 @@ JS;
 
 					'edit_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.edit', 'from'=>'list_detail', 'gab_id'=> $gab_id, 'location_code'=> $location_code)),
 					'lang_edit_statustext'			=> lang('Edit this entry'),
-					'lang_edit'						=> lang('Edit')
+					'lang_edit'						=> lang('Edit'),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
 			$appname		= lang('gab');
