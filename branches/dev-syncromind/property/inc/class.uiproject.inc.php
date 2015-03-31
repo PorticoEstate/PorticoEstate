@@ -1569,15 +1569,6 @@ JS;
 				$values['start_date'] = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
 
-			if(isset($this->receipt['error']) && is_array($this->receipt['error']))
-			{
-				$msgbox_data = $this->bocommon->msgbox_data($this->receipt['error']);
-			}
-			else
-			{
-				$msgbox_data ='';
-			}
-
 			$values['sum'] = isset($values['budget'])?$values['budget']:0;
 
 			if(isset($values['reserve']) && $values['reserve']!=0)
@@ -1984,6 +1975,8 @@ JS;
 					'origin_id'		=> $id
 				);
 			}
+			
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
 
