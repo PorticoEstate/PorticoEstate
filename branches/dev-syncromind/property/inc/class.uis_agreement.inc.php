@@ -1674,6 +1674,7 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
+                                        onActionsClick();
                                         JqueryPortico.updateinlineTableHelper('oTable0', url);"
                     ),
                 array(
@@ -1696,6 +1697,7 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
+                                        this.onActionsClick();
                                         JqueryPortico.updateinlineTableHelper('oTable0', url);"
                     ),
                 array(
@@ -1941,6 +1943,11 @@
 			//--------------------------------------------JSON CODE------------
 
 			$this->cats->set_appname('property','.project');
+            
+            $indice = array('id'=>'0');
+            array_unshift($alarm_data['add_alarm']['day_list'], $indice);
+            array_unshift($alarm_data['add_alarm']['hour_list'], $indice);
+            array_unshift($alarm_data['add_alarm']['minute_list'], $indice);
 
 			$data = array
 				(
