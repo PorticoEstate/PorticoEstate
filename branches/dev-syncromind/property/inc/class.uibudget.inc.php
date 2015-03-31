@@ -31,8 +31,10 @@
 	 * Description
 	 * @package property
 	 */
-	phpgw::import_class('phpgwapi.yui');
-	class property_uibudget
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.jquery');
+	
+	class property_uibudget extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -45,6 +47,7 @@
 		var $public_functions = array
 			(
 				'index'			=> true,
+				'query'			=> true,
 				'basis'			=> true,
 				'obligations'	=> true,
 				'view'			=> true,
@@ -54,8 +57,11 @@
 				'delete'		=> true,
 				'delete_basis'	=> true
 			);
-		function property_uibudget()
+		
+		function __construct()
 		{
+			parent::__construct();
+			
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';
 
@@ -103,6 +109,7 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+		
 		function index()
 		{
 			$acl_location	= '.budget';
@@ -117,14 +124,48 @@
 			$acl_edit		= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
 			$acl_delete 	= $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 
-			$revision_list	= $this->bo->get_revision_filter_list($this->revision); // reset year
-			$this->year		= $this->bo->year;
-			$this->revision = $this->bo->revision;
+			//$revision_list	= $this->bo->get_revision_filter_list($this->revision); // reset year
+			//$this->year		= $this->bo->year;
+			//$this->revision = $this->bo->revision;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::budget';
 
 			$datatable = array();
 			$values_combo_box = array();
 
+            $data   = array(
+                'datatable_name'    => $appname,
+                'form'  => array(
+                               'toolbar'    => array(
+                                   'item'   => array(								   
+                                        array(
+											'type'   => 'link',
+											'value'  => lang('new'),
+											'href'   => self::link(array(
+												'menuaction'	=> 'property.uigab.add',
+												'from'			=> 'index'
+											)),
+											'class'  => 'new_item'
+										)
+									)
+								)
+                            ),
+                'datatable' =>  array(
+                    'source'    => self::link(array(
+                        'menuaction'		=> 'property.uibudget.index',
+                        'phpgw_return_as'   => 'json'
+                    )),
+					'download'	=> self::link(array(
+							'menuaction'	=> 'property.uigab.download',
+							'export'		=> true,
+							'allrows'		=> true
+					)),
+                    'allrows'		=> true,
+                    'editor_action' => '',
+                    'field'			=>  array()
+                )
+            );
+			
+			
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
@@ -579,7 +620,13 @@
 			// Prepare YUI Library
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'budget.index', 'property' );
 		}
+		
 
+        public function query()
+        {
+			
+		}		
+		
 		function basis()
 		{
 			$acl_location	= '.budget';
