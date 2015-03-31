@@ -55,6 +55,7 @@
 				'query'			=> true,
 				'query_detail'  => true,
 				'view' 			=> true,
+				'add'   		=> true,
 				'edit'   		=> true,
 				'save'   		=> true,
 				'delete' 		=> true,
@@ -135,32 +136,43 @@
 
 		function download()
 		{
-			$address 		= phpgw::get_var('address');
-			$check_payments = phpgw::get_var('check_payments', 'bool');
-			$location_code 	= phpgw::get_var('location_code');
-			$gaards_nr 		= phpgw::get_var('gaards_nr', 'int');
-			$bruksnr 		= phpgw::get_var('bruksnr', 'int');
-			$feste_nr 		= phpgw::get_var('feste_nr', 'int');
-			$seksjons_nr 	= phpgw::get_var('seksjons_nr', 'int');
-
-
+			$address 			= phpgw::get_var('address');
+			$location_code 		= phpgw::get_var('location_code');
+			$gaards_nr 			= phpgw::get_var('gaards_nr', 'int');
+			$bruksnr 			= phpgw::get_var('bruksnr', 'int');
+			$feste_nr 			= phpgw::get_var('feste_nr', 'int');
+			$seksjons_nr 		= phpgw::get_var('seksjons_nr', 'int');
+			
+            $search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$columns		= phpgw::get_var('columns');
+			
+            $params = array(
+                'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => true,
+				'location_code' => $location_code,
+				'gaards_nr' => $gaards_nr,
+				'bruksnr' => $bruksnr,
+				'feste_nr' => $feste_nr,
+				'seksjons_nr' => $seksjons_nr,
+				'address' => $address
+            );
+			
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$gab_list = $this->bo->read($location_code,$gaards_nr,$bruksnr,$feste_nr,$seksjons_nr,$address,$check_payments,$allrows=true);
-
-			$payment_date = $this->bo->payment_date;
+			$gab_list = $this->bo->read($params);
 
 			$i=0;
 
 			while (is_array($gab_list) && list(,$gab) = each($gab_list))
 			{
-				if(is_array($payment_date))
-				{
-					reset($payment_date);
-				}
 				$value_gaards_nr	= substr($gab['gab_id'],4,5);
 				$value_bruks_nr		= substr($gab['gab_id'],9,4);
 				$value_feste_nr		= substr($gab['gab_id'],13,4);
@@ -178,28 +190,12 @@
 						'location_code'			=> $gab['location_code'],
 					);
 
-				while (is_array($payment_date) && list(,$date) = each($payment_date))
-				{
-					$content[$i][$date] = $gab['payment'][$date];
-				}
-
 				$i++;
 			}
 
 			//_debug_array($content);
 			$table_header['name'] = array('owner','hits','address','gaards_nr','bruks_nr','feste_nr','seksjons_nr','location_code');
 			$table_header['descr'] = array(lang('owner'),lang('hits'),lang('address'),'gaards_nr','bruks_nr','feste_nr','seksjons_nr','location_code');
-
-			if(is_array($payment_date))
-			{
-				reset($payment_date);
-			}
-
-			while (is_array($payment_date) && list(,$date) = each($payment_date))
-			{
-				$table_header['name'][] = $date;
-				$table_header['descr'][] = $date;
-			}
 
 			$this->bocommon->download($content,$table_header['name'],$table_header['descr'],array());
 		}
@@ -229,23 +225,16 @@
                                'toolbar'    => array(
                                    'item'   => array(								   
                                         array(
-                                           'type'   => 'link',
-                                           'value'  => lang('new'),
-                                           'href'   => self::link(array(
-                                               //'menuaction'	=> 'property.uigab.add'
-                                               'menuaction'	=> 'property.uigab.edit'
-                                           )),
-                                           'class'  => 'new_item'
-                                        ),
-                                        array(
-                                           'type'   => 'link',
-                                           'value'  => lang('columns'),
-                                           'href'   => '#',
-                                           'class'  => '',
-                                           'onclick'    => "JqueryPortico.openPopup({menuaction:'property.uigab.columns'},{closeAction:'reload'})"
-                                       )
-                                   )
-                               )
+											'type'   => 'link',
+											'value'  => lang('new'),
+											'href'   => self::link(array(
+												'menuaction'	=> 'property.uigab.add',
+												'from'			=> 'index'
+											)),
+											'class'  => 'new_item'
+										)
+									)
+								)
                             ),
                 'datatable' =>  array(
                     'source'    => self::link(array(
@@ -257,9 +246,9 @@
 							'export'		=> true,
 							'allrows'		=> true
 					)),
-                    'allrows'   => true,
+                    'allrows'		=> true,
                     'editor_action' => '',
-                    'field' =>  array()
+                    'field'			=>  array()
                 )
             );
 
@@ -319,7 +308,7 @@
 					);
 			}
 
-			if($this->acl_add)
+			/*if($this->acl_add)
 			{
 				$data['datatable']['actions'][] = array
 					(
@@ -331,7 +320,7 @@
 							'from'			=> 'index'
 						))
 					);
-			}
+			}*/
 			unset($parameters);
 			
 			$columns = array (
@@ -555,7 +544,7 @@ JS;
 					'value'	=> lang('Add'),
 					'url'	=> self::link(array
 					(
-						'menuaction'	=> 'property.uigab.edit',
+						'menuaction'	=> 'property.uigab.add',
 						'gab_id'		=>	$gab_id,
 						'from' 			=> 'list_detail',
 						'new'			=>	true	
@@ -573,7 +562,7 @@ JS;
 				)
 			);
 			
-			$gab_list = $this->bo->read_detail($gab_id, true);
+			$gab_list = $this->bo->read_detail(array('gab_id'=>$gab_id), true);
 
 			$uicols	= $this->bo->uicols;
 			
@@ -590,6 +579,16 @@ JS;
                                 'hidden'    =>  ($uicols['input_type'][$k] == 'hidden')?true:false
                             );
               
+				if($uicols['name'][$k]=='gab_id')
+				{
+					$params['sortable']		= true;
+				}
+				
+				if($uicols['name'][$k]=='address')
+				{
+					$params['sortable']		= true;
+				}
+					
                 array_push($detail_def, $params);
             }
 			
@@ -741,6 +740,11 @@ JS;
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
+		}
+		
+		public function add()
+		{
+			$this->edit();
 		}
 		
 		function edit($values = array(), $mode = 'edit')
