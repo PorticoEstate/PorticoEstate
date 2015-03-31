@@ -1546,6 +1546,23 @@
 //					array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
 //				);
             
+            $tabletools = array
+            (
+                array(
+                    'my_name'	=> 'enable_alarm',
+                    'text' => lang($alarm_data[alter_alarm][0][lang_enable])
+                    ),
+                array(
+                    'my_name'	=> 'disable_alarm',
+                    'text' => lang($alarm_data[alter_alarm][0][lang_disable])
+                    ),
+                array(
+                    'my_name'	=> 'delete_alarm',
+                    'text' => lang($alarm_data[alter_alarm][0][lang_delete])
+                    )
+            );
+            
+            
             $myColumnDefs0 = array
 				(
 					array('key' => 'time', 'label' =>$alarm_data['header'][0]['lang_time'],	'sortable' => true, 'resizeable' => true, 'width' => 140),
@@ -1561,6 +1578,7 @@
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> "''",
 				'data'			=> json_encode($alarm_data['values']),
+                'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs0,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -1664,7 +1682,15 @@
 //					array(key => activity_id,	hidden=>true),
 //					array(key => agreement_id,	hidden=>true)
 //				)));
-                
+            $tabletools = array
+			(
+                array('my_name' => 'view', 'text' =>lang('View')),
+                array('my_name' => 'edit','text' =>lang('Edit')),
+                array('my_name' => 'delete','text' =>lang('Delete')),
+				array('my_name'	=> 'select_all'),
+				array('my_name'	=> 'select_none')
+			);
+           
             $myColumnDefs1 = array
             (
                 array('key' => 'id', 'label' =>$table_header[0]['header'], 'sortable' => true, 'resizeable' => true),
@@ -1687,6 +1713,7 @@
 				'container'		=> 'datatable-container_1',
 				'requestUrl'	=> "''",
 				'data'			=> json_encode($content),
+                'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs1,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -1745,7 +1772,11 @@
 					array('disablePagination'	=> true)
 				)
 			);
-              
+            
+            $indice = array('id'=>'0');
+            array_unshift($alarm_data['add_alarm']['day_list'], $indice);
+            array_unshift($alarm_data['add_alarm']['hour_list'], $indice);
+            array_unshift($alarm_data['add_alarm']['minute_list'], $indice);
 			//----------------------------------------------datatable settings--------
 
 			$data = array
@@ -1851,6 +1882,7 @@
 					'textarearows'							=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'tabs'									=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 				);
+
             
 //            echo'<pre>';print_r($data); echo'</pre>'; exit();
 
