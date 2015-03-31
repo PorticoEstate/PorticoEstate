@@ -21,6 +21,7 @@
 			<input type="hidden" name="season_id" value="{allocation/season_id}"/>
 			<input type="hidden" name="field_building_id" value="{allocation/building_id}"/>
 			<input type="hidden" name="step" value="{step}" />
+			<input type="hidden" name="recurring" value="{recurring}" />
 			<input type="hidden" name="repeat_until" value="{repeat_until}" />
 			<input type="hidden" name="field_interval" value="{interval}" />
 			<input type="hidden" name="outseason" value="{outseason}" />

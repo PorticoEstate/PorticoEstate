@@ -205,16 +205,42 @@
 				$allocation['active'] = '1';
 				$allocation['completed'] = '0';
 
-				$from_date = $_POST['from_'];
-				$to_date = $_POST['to_'];
-				$weekday = $_POST['weekday'];
+				if (phpgw::get_var('weekday', 'str', 'GET') != '')
+				{
+					$from_date = phpgw::get_var('from_', 'str', 'GET');
+					$to_date = phpgw::get_var('to_', 'str', 'GET');
+					$weekday = phpgw::get_var('weekday', 'str', 'GET');
+					$datef = explode(' ',$from_date[0]);
+					$timef = $_POST['from_'];
+					$datet = explode(' ',$to_date[0]);
+					$timet = $_POST['to_'];
 
-				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_']));
-				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_']));
+					if (strlen($_POST['from_']) < 14)  {
+						$allocation['from_'] = $datef[0]." ".$timef;
+						$allocation['to_'] = $datet[0]." ".$timet;
+						$from_date = $allocation['from_'];
+						$to_date = $allocation['to_'];
+					} else {
+						$allocation['from_'] = $_POST['from_'];
+						$allocation['to_'] = $_POST['to_'];
+						$from_date = $allocation['from_'];
+						$to_date = $allocation['to_'];
+					}
+				} else {
+					$from_date = $_POST['from_'];
+					$to_date = $_POST['to_'];
+					$weekday = $_POST['weekday'];
 
-				if (($_POST['weekday'] != 'sunday' &&  date('w')  > date('w',strtotime($_POST['weekday']))) || (date('w') == 'sunday' &&  date('w') < date('w',strtotime($_POST['weekday'])))){
-					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_'])-60*60*24*7);
-					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_'])-60*60*24*7);
+					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_']));
+					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_']));
+				}
+
+
+				if (($_POST['weekday'] != 'sunday' &&  date('w')  > date('w',strtotime($_POST['weekday']))) || (date('w') == 'sunday' &&  date('w') < date('w',strtotime($_POST['weekday'])))) {
+					if(phpgw::get_var('weekday', 'str', 'GET') == ''){
+						$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_'])-60*60*24*7);
+						$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_'])-60*60*24*7);
+					}
 				} 
 				$_POST['from_'] = $allocation['from_'];
 				$_POST['to_'] = $allocation['to_'];
@@ -395,7 +421,6 @@
 
 		public function delete()
 		{
-			
 			$id = intval(phpgw::get_var('allocation_id', 'GET'));
 			$outseason = phpgw::get_var('outseason', 'GET');
 			$recurring = phpgw::get_var('recurring', 'GET');
@@ -409,6 +434,7 @@
 			$invalid_dates = array();
 			$valid_dates = array();
 
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$from_date = $_POST['from_'];
@@ -416,6 +442,7 @@
 
   				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
                 {
+
                     $err  = $this->bo->so->check_for_booking($id);
                     if ($err)
                     {
@@ -452,8 +479,8 @@
 						$allocation['from_'] = $fromdate;
 						$allocation['to_'] = $todate;
 
-                        $id = $this->bo->so->get_allocation_id($allocation);                
-						if ($id) 
+                        $id = $this->bo->so->get_allocation_id($allocation);
+						if ($id)
 						{
 						   $err  = $this->bo->so->check_for_booking($id);
 						}

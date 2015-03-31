@@ -9,6 +9,7 @@
 			 'edit'         =>  true,
 			 'index'        =>  true,
 			 'building_users' => true,
+             'get_orgid'    => true,
 			);
 		protected $module;
 
@@ -23,6 +24,9 @@
 			return parent::index_json();
 		}
 
+        public function get_orgid($orgnr) {
+            return $this->bo->so->get_orgid($orgnr);
+        }
 		public function edit()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));

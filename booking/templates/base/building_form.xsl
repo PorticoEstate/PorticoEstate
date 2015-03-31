@@ -76,6 +76,29 @@
 			</dl>
 			<div class="clr"/>
 			<dl class="form-col">
+				<dt><label for="field_tilsyn_name"><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></label></dt>
+				<dd><input name="tilsyn_name" type="text" value="{building/tilsyn_name}"/></dd>
+
+				<dt><label for="field_tilsyn_phone"><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></label></dt>
+				<dd><input id="field_tilsyn_phone" name="tilsyn_phone" type="text" value="{building/tilsyn_phone}"/></dd>
+
+				<dt><label for="field_tilsyn_email"><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></label></dt>
+				<dd><input id="field_tilsyn_email" name="tilsyn_email" type="text" value="{building/tilsyn_email}"/></dd>
+			</dl>
+			<dl class="form-col">
+
+				<dt><label for="field_tilsyn_name2"><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></label></dt>
+				<dd><input name="tilsyn_name2" type="text" value="{building/tilsyn_name2}"/></dd>
+
+				<dt><label for="field_tilsyn_phone2"><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></label></dt>
+				<dd><input id="field_tilsyn_phone2" name="tilsyn_phone2" type="text" value="{building/tilsyn_phone2}"/></dd>
+
+				<dt><label for="field_tilsyn_email2"><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></label></dt>
+				<dd><input id="field_tilsyn_email2" name="tilsyn_email2" type="text" value="{building/tilsyn_email2}"/></dd>
+			</dl>
+
+			<div class="clr"/>
+			<dl class="form-col">
 				<xsl:if test="not(new_form)">
 					<dt><label for="field_deactivate_application"><xsl:value-of select="php:function('lang', 'Deactivate application')"/></label></dt>
 					<dd>
@@ -117,6 +140,7 @@
 					</dd>
 				</xsl:if>
 			</dl>
+			<div class="clr"/>
 			<dl class="form-col">
 				<xsl:if test="not(new_form)">
 					<dt><label for="field_deactivate_sendmessage"><xsl:value-of select="php:function('lang', 'Deactivate send message')"/></label></dt>
@@ -138,6 +162,37 @@
 					</dd>
 				</xsl:if>
 			</dl>
+			<dl class="form-col">
+				<xsl:if test="not(new_form) and building/extra=1">
+					<dt><label for="field_extra_kalendar"><xsl:value-of select="php:function('lang', 'Extra kalendar for public opening times')"/></label></dt>
+
+					<dd>
+						<select id="for_extra_kalendar" name="extra_kalendar">
+							<option value="1">
+								<xsl:if test="building/extra_kalendar=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="building/extra_kalendar=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</dd>
+				</xsl:if>
+			</dl>
+			<div class="clr"/>
+
+			<dl class="form-col">
+				<dt><label for="field_calendar_text"><xsl:value-of select="php:function('lang', 'Calendar text')" /></label></dt>
+				<dd class="yui-skin-sam">
+					<textarea id="field_calendar_text" name="calendar_text" type="text"><xsl:value-of select="building/calendar_text"/></textarea>
+				</dd>
+			</dl>
+
 			<div class="clr"/>
 
 			<dl class="form-col">

@@ -10,12 +10,20 @@
 					'id' => array('type' => 'int'),
 					'name' => array('type' => 'string', 'query' => true, 'required' => true),
 					'homepage' => array('type' => 'string'),
+					'calendar_text' => array('type' => 'string'),
 					'description' => array('type' => 'string'),
 					'phone' => array('type' => 'string'),
 					'email' => array('type' => 'string'),
+					'tilsyn_name' => array('type' => 'string'),
+					'tilsyn_phone' => array('type' => 'string'),
+					'tilsyn_email' => array('type' => 'string'),
+					'tilsyn_name2' => array('type' => 'string'),
+					'tilsyn_phone2' => array('type' => 'string'),
+					'tilsyn_email2' => array('type' => 'string'),
 					'deactivate_calendar' => array('type' => 'int'),
 					'deactivate_application' => array('type' => 'int'),
 					'deactivate_sendmessage' => array('type' => 'int'),
+					'extra_kalendar' => array('type' => 'int'),
 					'location_code' =>array('type' => 'string', 'required' => false),
 					'street' 		=> array('type' => 'string', 'query' => true),
 					'zip_code' 		=> array('type' => 'string'),
@@ -24,6 +32,29 @@
 					'active' => array('type' => 'int')
 				)
 			);
+		}
+
+		function get_endofseason($id)
+		{
+			$this->db->limit_query("SELECT to_ FROM bb_season WHERE status = 'PUBLISHED' AND active=1 AND building_id =" . intval($id) . "ORDER BY to_ DESC", 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+                return false;        
+    		}
+			return $this->db->f('to_', false);
+		}
+
+		function get_metainfo($id)
+		{
+			$this->db->limit_query("SELECT name, district, city, description FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return array('name' => $this->db->f('name', false),
+						  'district' => $this->db->f('district', false),
+						  'city' => $this->db->f('city', false),
+						  'description' => $this->db->f('description', false));
 		}
 		
 		/**

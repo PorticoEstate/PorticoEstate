@@ -7,7 +7,10 @@
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 	<dl class="form">
-    	<dd><xsl:value-of select="php:function('lang', 'Booking Delete Information')"/></dd>
+    	<dd>
+            <xsl:value-of select="php:function('lang', 'Booking Delete Information')"/>
+            <xsl:value-of select="php:function('lang', 'Booking Delete Information3')"/>
+        </dd>
     	<dd><xsl:value-of select="php:function('lang', 'Booking Delete Information2')"/></dd>
 	</dl>
 

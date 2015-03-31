@@ -12,11 +12,10 @@
 		public function read_regulations() {
 			$params = $this->build_default_read_params();
 			!isset($params['filters']) AND $params['filters'] = array();
-			
-			$params['filters']['category'] = array(booking_sodocument::CATEGORY_REGULATION, booking_sodocument::CATEGORY_HMS_DOCUMENT);
-			
+			$params['filters']['category'] = array(booking_sodocument::CATEGORY_REGULATION,
+                booking_sodocument::CATEGORY_HMS_DOCUMENT,
+                booking_sodocument::CATEGORY_PRICE_LIST);
 			$where_filter = array();
-			
 			if ($owner_filters = phpgw::get_var('owner', 'string')) {
 				foreach($owner_filters as $filter) {
 					list($owner_type, $owner_id) = explode('::', $filter);
@@ -25,9 +24,7 @@
 					$where_filter[] = "(%%table%%.type=$owner_type AND %%table%%.owner_id = $owner_id)";
 				}
 			}
-			
 			$params['filters']['where'] = array('('.join($where_filter, ' OR ').')');
-			
 			return $this->so->read($params);
 		}
 	}

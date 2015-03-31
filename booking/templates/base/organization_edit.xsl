@@ -197,7 +197,7 @@
 		
 			<dl class="form-col" style='margin-top:0'>
 				<dt class='heading'><xsl:value-of select="php:function('lang', 'Admin 1')" /></dt>
-			
+
 				<dt><label for="field_admin_name_1"><xsl:value-of select="php:function('lang', 'Name')" /></label><br /></dt>
 				<dd><input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{organization/contacts[1]/name}'/></dd>
 			

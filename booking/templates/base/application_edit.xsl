@@ -46,6 +46,10 @@
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
+            <dt><label for="field_equipment"><xsl:value-of select="php:function('lang', 'Equipment')" /></label></dt>
+            <dd>
+                <textarea id="field_equipment" class="full-width" name="equipment"><xsl:value-of select="application/equipment"/></textarea>
+            </dd>
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
