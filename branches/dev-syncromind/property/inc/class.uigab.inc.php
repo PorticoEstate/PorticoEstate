@@ -834,9 +834,9 @@ JS;
 				$kommune_nr= $this->config->config_data['default_municipal'];
 			}
 
-			if(isset($this->receipt['error']) && is_array($this->receipt['error']))
+			if(isset($this->receipt) && is_array($this->receipt))
 			{
-				$msgbox_data = $this->bocommon->msgbox_data($this->receipt['error']);
+				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 			}
 			else
 			{
@@ -904,6 +904,7 @@ JS;
 					$receipt = $this->bo->save($data);
 					$values['location_code'] = $receipt['location_code'];
 					$values['gab_id'] = $receipt['gab_id'];
+					$this->receipt = $receipt;
 				}
 				catch(Exception $e)
 				{
@@ -913,7 +914,7 @@ JS;
 					}
 				}
 
-				phpgwapi_cache::message_set($receipt, 'message'); 
+				//phpgwapi_cache::message_set($receipt, 'message'); 
 				$this->edit($values);
 				return;
 			}
