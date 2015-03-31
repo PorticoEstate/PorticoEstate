@@ -543,7 +543,7 @@
 									<xsl:value-of select="alarm_data/add_alarm/lang_user"/>
 								</td>
 							</tr>
-							<tr>lang_user
+							<tr>
 								<td width="10">
 									<!--div id="datatable-buttons_1"/-->
                                                                     <select name="values[alarm_data/add_alarm/day_list]" class="form" title="{lang_days_statustext}">
@@ -562,6 +562,7 @@
 									<xsl:apply-templates select="alarm_data/add_alarm/user_list"/>
                                                                     </select>
                                                                     
+                                                                    <input type="button" name="" value="Add" id="values[add_alarm]" onClick="$(this).onAddClick();"/>
                                                                 </td>
                      
 							</tr>
