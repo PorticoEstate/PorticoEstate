@@ -23,7 +23,7 @@
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort');
+			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort', 'organizations_ids');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -94,6 +94,10 @@
 						array(
 							'key' => 'building_district',
 							'label' => lang('District')
+						),
+						array(
+							'key' => 'active',
+							'label' => lang('Active'),
 						),
 					)
 				)

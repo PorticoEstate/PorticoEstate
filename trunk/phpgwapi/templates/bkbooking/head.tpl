@@ -4,10 +4,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
-		<meta name="description" content="phpGroupWare">
-		<meta name="keywords" content="phpGroupWare">
-		<meta name="robots" content="none">
+		{metainfo_author}
+		{metainfo_description}
+		{metainfo_keywords}
+		{metainfo_robots}
 		<title>{site_title}</title>
 		<link rel="icon" href="{img_icon}" type="image/x-ico">
 		<link rel="shortcut icon" href="{img_icon}">
@@ -33,7 +33,8 @@
     <div id="wrapper">
     <div id="header">
 	<div id="login-bar">
-		<a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a href="{login_url}">{login_text}</a>
+		<!--a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a href="{login_url}">{login_text}</a-->
+		<a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a href="{org_url}">{login_text_org}</a><a href="{login_url}">{login_text}</a> <span id="change"></span>
 	</div>
         <a href="index.php?menuaction=bookingfrontend.uisearch.index"><div id="logo"></div></a>
 		<div id="centerimage"></div>
