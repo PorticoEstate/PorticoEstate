@@ -188,7 +188,7 @@
 			$gab = $this->so->read_detail(array(
 				'start' => $data['start'],
 				'sort' => $data['sort'],
-				
+				'order' => $data['order'],
 				'cat_id' => $this->cat_id,
 				'gab_id' => $data['gab_id'],
 				'allrows' => $allrows)
