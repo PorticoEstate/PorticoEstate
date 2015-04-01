@@ -185,9 +185,17 @@
 			return $agreements;
 		}
 
-		function read_details( $id )
-		{
-			$list = $this->so->read_details( array('start' => $this->start, 'query'	 => $this->query, 'sort' => $this->sort, 'order' => $this->order,
+		function read_details( $id , $params = '')
+		{            
+            if(!empty($params)){
+                $sort = $params['sort'] ;
+                $order = $params['order'] ;
+            }else{
+                $sort = $this->sort;
+                $order = $this->order;
+            }  
+            
+			$list = $this->so->read_details( array('start' => $this->start, 'query'	 => $this->query, 'sort' => $sort, 'order' => $order,
 				'filter' => $this->filter, 'cat_id' => $this->cat_id, 'allrows' => $this->allrows, 'member_id' => $this->member_id,
 				'agreement_id' => $id) );
 			$this->total_records = $this->so->total_records;
