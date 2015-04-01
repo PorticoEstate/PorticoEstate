@@ -876,7 +876,8 @@ JS;
 					'value_remark'					=> $values['remark'],
 					'lang_done_statustext'			=> lang('Back to the list'),
 					'lang_save_statustext'			=> lang('Save the gab'),
-					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 
 			$appname		= lang('gab');
