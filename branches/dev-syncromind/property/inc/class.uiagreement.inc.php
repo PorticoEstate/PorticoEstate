@@ -58,7 +58,9 @@
 				'view_file'		=> true,
 				'download'		=> true,
 				'add_activity'	=> true,
-                'save'          => true
+                'save'          => true,
+                'get_content'   => true,
+                'deleteitem'    => true,
 			);
 
 		function __construct()
@@ -1066,7 +1068,62 @@
                $this->edit($values);
            }
         }
-        
+        public function get_content()
+        {
+            
+            $agreement_id = phpgw::get_var('agreement_id', 'int');
+			if (empty($agreement_id)) 
+			{
+				$result_data = array('results' => array());
+				$result_data['total_records'] = 0;
+				$result_data['draw'] = 0;
+				
+				return $this->jquery_results($result_data);
+			}
+			
+			$year = phpgw::get_var('year', 'int');
+			$draw = phpgw::get_var('draw', 'int');
+            $order = phpgw::get_var('order');
+			$columns = phpgw::get_var('columns');
+                            
+                $params = array(
+                    'order' => $columns[$order[0]['column']]['data'],
+                    'sort' => $order[0]['dir']
+                );
+
+            $values = $this->bo->read_details($agreement_id, $params);
+
+			/*foreach($values as & $_order_entry)
+			{
+				$_order_entry['send_order'] = '';
+				if(isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
+				{
+					$_title = implode(';', $_order_entry['mail_recipients']);
+					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
+				}
+			}*/
+			
+			$total_records = count($values);
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
+			
+			return $this->jquery_results($result_data);   
+            
+        }
+        function deleteitem()
+        {
+            $activity_id	= phpgw::get_var('id', 'int');
+            $id             = phpgw::get_var('agreement_id', 'int');
+            
+            if($id && $activity_id)
+			{
+				$this->bo->delete_item($id,$activity_id);
+				$get_items = true;
+			}
+        }
 		function edit()
 		{
             
@@ -1087,11 +1144,11 @@
 			$receipt 		= array();
 			$get_items 		= false;
 
-			if($delete_item && $id && $activity_id)
-			{
-				$this->bo->delete_item($id,$activity_id);
-				$get_items = true;
-			}
+//			if($delete_item && $id && $activity_id)
+//			{
+//				$this->bo->delete_item($id,$activity_id);
+//				$get_items = true;
+//			}
             
 			$values_attribute  = phpgw::get_var('values_attribute');
 			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement','property');
@@ -1104,7 +1161,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement', 'nextmatchs', 'attributes_form', 'files'));
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('agreement', 'nextmatchs', 'attributes_form', 'files'));
 			$receipt = array();
 			if (is_array($values))
 			{
@@ -1446,23 +1503,6 @@
 			if (isset($agreement['attributes']) && is_array($agreement['attributes']))
 			{
 
-		/*		foreach ($values['attributes'] as & $attribute)
-				{
-					if($attribute['history'] == true)
-					{
-						$link_history_data = array
-						(
-							'menuaction'	=> 'property.uis_agreement.attrib_history',
-							'attrib_id'	=> $attribute['id'],
-							'id'		=> $id,
-							'edit'		=> true
-						);
-
-						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
-					}
-				}
-		 */
-
 				phpgwapi_yui::tabview_setup('edit_tabview');
 				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
@@ -1486,17 +1526,17 @@
 			//------JSON code-------------------
 
 			//---GET ITEMS
-			if( phpgw::get_var('phpgw_return_as') == 'json' &&  $get_items )
-			{
-				if(count($content))
-				{
-					return json_encode($content);
-				}
-				else
-				{
-					return "";
-				}
-			}
+//			if( phpgw::get_var('phpgw_return_as') == 'json' &&  $get_items )
+//			{
+//				if(count($content))
+//				{
+//					return json_encode($content);
+//				}
+//				else
+//				{
+//					return "";
+//				}
+//			}
 
 			//-- ALARMS ---
 			else if( phpgw::get_var('phpgw_return_as') == 'json' && !$get_items )
@@ -1525,26 +1565,6 @@
 
 			//---datatable0 settings---------------------------------------------------
 
-
-//			$datavalues[0] = array
-//				(
-//					'name'			=> "0",
-//					'values' 		=> json_encode($alarm_data['values']),
-//					'total_records'	=> count($alarm_data['values']),
-//					'permission'   	=> "''",
-//					'is_paginator'	=> 0,
-//					'footer'		=> 0
-//				);
-//			$myColumnDefs[0] = array
-//				(
-//					'name'			=> "0",
-//					'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true,width=>140),
-//					array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true,width=>340),
-//					array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true,width=>200),
-//					array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
-//					array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-//					array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
-//				);
             
             $tabletools = array
             (
@@ -1651,68 +1671,54 @@
 			{
 				$permission_update = true;
 			}
-
-//			$datavalues[1] = array
-//				(
-//					'name'			=> "1",
-//					'values' 		=> json_encode($content),
-//					'total_records'	=> count($content),
-//					'permission'   	=> json_encode($permissions['rowactions']),
-//					'is_paginator'	=> 0,
-//					'footer'		=> 1
-//				);
-//
-//
-//
-//			$myColumnDefs[1] = array
-//				(
-//					'name'			=> "1",
-//					'values'		=>	json_encode(array(	
-//                    array(key => id,			label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
-//					array(key => num,			label=>$table_header[1]['header'],	sortable=>true,resizeable=>true),
-//					array(key => descr,			label=>$table_header[2]['header'],	sortable=>true,resizeable=>true),
-//					array(key => unit_name,		label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
-//					array(key => m_cost,		label=>$table_header[4]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-//					array(key => w_cost,		label=>$table_header[5]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-//					array(key => total_cost,	label=>$table_header[6]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-//					array(key => this_index,	label=>$table_header[7]['header'],	sortable=>true,resizeable=>true),
-//					array(key => index_count,	label=>$table_header[8]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
-//					array(key => index_date,	label=>$table_header[9]['header'],	sortable=>true,resizeable=>true),
-//					$permission_update?array(key => select,		label=>$table_header[13]['header'],	sortable=>false,resizeable=>false,formatter=>FormatterCheckItems):"",
-//					array(key => activity_id,	hidden=>true),
-//					array(key => agreement_id,	hidden=>true)
-//				)));
+            
+                $parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'activity_id'
+						),
+					)
+				);
+            
             $tabletools = array
 			(
-                array('my_name' => 'view', 'text' =>lang('View')),
-                array('my_name' => 'edit','text' =>lang('Edit')),
-                array('my_name' => 'delete','text' =>lang('Delete')),
+                array('my_name' => 'view', 'text' =>lang('View'),
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.view_item','agreement_id'=>$id)),'parameters'	=> json_encode($parameters)),
+                array('my_name' => 'edit','text' =>lang('Edit'),
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.edit_item','agreement_id'=>$id)),'parameters'	=> json_encode($parameters)),
+                array('my_name' => 'delete','text' =>lang('Delete'),
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.deleteitem', 'agreement_id'=>$id)),'parameters'	=> json_encode($parameters)),
 				array('my_name'	=> 'select_all'),
 				array('my_name'	=> 'select_none')
 			);
            
             $myColumnDefs1 = array
             (
-                array('key' => 'id', 'label' =>$table_header[0]['header'], 'sortable' => true, 'resizeable' => true),
-                array('key' => 'num', 'label' =>$table_header[1]['header'], 'sortable' => true, 'resizeable' => true),
-                array('key' => 'descr', 'label' =>$table_header[2]['header'], 'sortable' => true, 'resizeable' => true),
-                array('key' => 'unit_name',	'label' =>$table_header[3]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
-                array('key' => 'm_cost', 'label' =>$table_header[4]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
-                array('key' => 'w_cost', 'label' =>$table_header[5]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
-                array('key' => 'total_cost', 'label' =>$table_header[6]['header'], 'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
-                array('key' => 'this_index', 'label' =>$table_header[7]['header'], 'sortable' => true, 'resizeable' => true),
-                array('key' => 'index_count', 'label' =>$table_header[8]['header'],	'sortable' => true, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
-                array('key' => 'index_date', 'label' =>$table_header[9]['header'], 'sortable' => true, 'resizeable' => true),
+                array('key' => 'id', 'label' =>$table_header[0]['header'], 'sortable' => false, 'resizeable' => true),
+                array('key' => 'num', 'label' =>$table_header[1]['header'], 'sortable' => false, 'resizeable' => true),
+                array('key' => 'descr', 'label' =>$table_header[2]['header'], 'sortable' => false, 'resizeable' => true),
+                array('key' => 'unit_name',	'label' =>$table_header[3]['header'], 'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
+                array('key' => 'm_cost', 'label' =>$table_header[4]['header'], 'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+                array('key' => 'w_cost', 'label' =>$table_header[5]['header'], 'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+                array('key' => 'total_cost', 'label' =>$table_header[6]['header'], 'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterRight'),
+                array('key' => 'this_index', 'label' =>$table_header[7]['header'], 'sortable' => false, 'resizeable' => true),
+                array('key' => 'index_count', 'label' =>$table_header[8]['header'],	'sortable' => false, 'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
+                array('key' => 'index_date', 'label' =>$table_header[9]['header'], 'sortable' => false, 'resizeable' => true),
 //                $permission_update?array('key' => 'select',	'label' =>$table_header[13]['header'], 'sortable' => false, 'resizeable' => false, 'formatter'=>FormatterCheckItems):"",
                 array('key' => 'activity_id', 'hidden' => true),
 				array('key' => 'agreement_id', 'hidden' => true)
             );
-            
+           
             $datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_1',
-				'requestUrl'	=> "''",
-				'data'			=> json_encode($content),
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'property.uiagreement.get_content', 'agreement_id'=>$id, 'phpgw_return_as'=>'json'))),
+				//'data'			=> json_encode($content),
+                'data'			=> json_encode(array()),
                 'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs1,
 				'config'		=> array(
@@ -2365,7 +2371,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_item' => $data));
 		}
-
+        
 		function delete()
 		{
 			if(!$this->acl_delete)
