@@ -50,6 +50,7 @@
 				'query'			=> true,
 				'basis'			=> true,
 				'obligations'	=> true,
+				'get_filters_dependent' => true,
 				'view'			=> true,
 				'edit'			=> true,
 				'edit_basis'	=> true,
@@ -109,6 +110,128 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+		private function _get_filters($selected = 0)
+		{
+			$link = self::link(array(
+					'menuaction' => 'property.uibudget.get_filters_dependent',
+					'phpgw_return_as' => 'json'
+					));
+
+			$code = '
+				var link = "'.$link.'";
+				var data = {"district_id": $(this).val()};
+				execute_ajax(link,
+					function(result){
+						var $el = $("#part_of_town_id");
+						$el.empty();
+						$.each(result, function(key, value) {
+						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
+						});
+					}, data, "GET", "json"
+				);
+				';
+			
+			$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year);
+			array_unshift ($values_combo_box[0], array('id'=>'','name'=>lang('no year')));
+			$combos[] = array
+							(
+								'type'  => 'filter',
+								'name'  => 'year',
+								'extra' => '',
+								'text'  => lang('year'),
+								'list'  => $values_combo_box[0]
+							);
+
+			$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision);
+			$default_value = array ('id'=>'','name'=>lang('no revision'));
+			if (count($values_combo_box[1]))
+			{
+				array_unshift ($values_combo_box[1],$default_value);
+			}
+			else
+			{
+				$values_combo_box[1][] = $default_value;
+			}
+			$combos[] = array
+							(
+								'type'  => 'filter',
+								'name'  => 'revision',
+								'extra' => '',
+								'text'  => lang('revision'),
+								'list'  => $values_combo_box[1]
+							);
+			
+			$values_combo_box[2]  = $this->bocommon->select_district_list('filter',$this->district_id);
+			array_unshift ($values_combo_box[2], array('id'=>'','name'=>lang('no district')));
+			$combos[] = array
+							(
+								'type'  => 'filter',
+								'name'  => 'district_id',
+								'extra' => '',
+								'text'  => lang('district'),
+								'list'  => $values_combo_box[2]
+							);
+
+
+			$values_combo_box[3] =  $this->bo->get_grouping_filter_list($this->grouping);
+			array_unshift ($values_combo_box[3], array('id'=>'','name'=>lang('no grouping')));
+			$combos[] = array
+							(
+								'type'  => 'filter',
+								'name'  => 'grouping',
+								'extra' => '',
+								'text'  => lang('grouping'),
+								'list'  => $values_combo_box[3]
+							);
+
+			$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
+			foreach($cat_filter['cat_list'] as $_cat)
+			{
+				$values_combo_box[4][] = array
+				(
+					'id' => $_cat['cat_id'],
+					'name' => $_cat['name'],
+					'selected' => $_cat['selected'] ? 1 : 0
+				);
+			}
+			array_unshift ($values_combo_box[4], array('id'=>'','name'=>lang('no category')));
+			$combos[] = array
+							(
+								'type'  => 'filter',
+								'name'  => 'cat_id',
+								'extra' => '',
+								'text'  => lang('Category'),
+								'list'  => $values_combo_box[4]
+							);
+			
+			$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+			foreach($values_combo_box[5] as & $_dimb)
+			{
+				$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
+			}
+			array_unshift ($values_combo_box[5], array('id'=>'','name'=>lang('no dimb')));
+			$combos[] = array
+							(
+								'type'  => 'filter',
+								'name'  => 'dimb_id',
+								'extra' => '',
+								'text'  => lang('dimb'),
+								'list'  => $values_combo_box[5]
+							);
+			
+			return $combos;
+		}
+		
+		function get_filters_dependent($selected = 0)
+		{
+			$revision  = $this->bo->get_revision_filter_list($this->revision);
+			array_unshift ($revision, array ('id'=>'','name'=>lang('no revision')));
+			
+			$grouping  = $this->bo->get_grouping_filter_list($this->grouping);
+			array_unshift ($grouping, array ('id'=>'','name'=>lang('no grouping')));
+			
+			return $result = array('revision'=>$revision, 'grouping'=>$grouping);
+		}
 		
 		function index()
 		{
@@ -404,26 +527,16 @@
 			$location_list = array();
 			$location_list = $this->bo->read();
 			$uicols = array (
-				array(
-					'visible'=>false,	'name'=>'budget_id',		'label'=>'dummy',				'className'=>'',			'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'year',			'label'=>lang('year'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'revision',		'label'=>lang('revision'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'b_account_id',	'label'=>lang('budget account'),'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'b_account_name',	'label'=>lang('name'),			'className'=>'leftClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'grouping',		'label'=>lang('grouping'),		'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'category',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'district_id',	'label'=>lang('district_id'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'district_id','formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'ecodimb',	'label'=>lang('dimb'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.ecodimb','formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'category',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'','formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>'myFormatDate'),
+				array('hidden'=>false,'key'=>'budget_id','label'=>'dummy','sortable'=>false),
+				array('hidden'=>true,'key'=>'year','label'=>lang('year'),'className'=>'center','sortable'=>false),
+				array('hidden'=>true,'key'=>'revision','label'=>lang('revision'),'className'=>'center','sortable'=>false),
+				array('hidden'=>true,'key'=>'b_account_id','label'=>lang('budget account'),'className'=>'right','sortable'=>false),
+				array('hidden'=>true,'key'=>'b_account_name','label'=>lang('name'),'sortable'=>false),
+				array('hidden'=>true,'key'=>'grouping','label'=>lang('grouping'),'className'=>'right','sortable'=>true),
+				array('hidden'=>true,'key'=>'district_id','label'=>lang('district_id'),'className'=>'right','sortable'=>true),
+				array('hidden'=>true,'key'=>'ecodimb','label'=>lang('dimb'),'className'=>'right', 'sortable'=>true),
+				array('hidden'=>true,'key'=>'category','label'=>lang('category'),'className'=>'right','sortable'=>false),
+				array('hidden'=>true,'key'=>'budget_cost','label'=>lang('budget_cost'),'className'=>'right','sortable'=>true,'formatter'=>'myFormatDate'),
 			);
 
 			$content = array();
