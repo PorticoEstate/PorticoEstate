@@ -585,6 +585,12 @@
 											<xsl:value-of select="lang_lookup_form_statustext"/>
 											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:text>Either select propagate - or choose location level</xsl:text>
+										</xsl:attribute>
 									</input>
 								</xsl:otherwise>
 							</xsl:choose>
