@@ -1526,8 +1526,6 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
-			$lookup_type = $mode == 'edit' ? 'form' : 'view';
-
 			$entity = $this->soadmin_entity->read_single($this->entity_id);
 
 			if ($id)
@@ -1545,6 +1543,7 @@
 			}
 
 			$lookup_entity = array();
+			
 			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
 			{	
 				foreach ($entity['lookup_entity'] as $lookup_id)
@@ -1580,6 +1579,8 @@
 			}
 
 			$location_data = array();
+			
+			$lookup_type = $mode == 'edit' ? 'form2' : 'view2';
 
 			if($entity['location_form'] && $category['location_level'] > 0)
 			{
@@ -2073,7 +2074,7 @@ JS;
 					'attributes_general'			=> array('attributes' => $attributes_general),
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'lang_none'						=> lang('None'),
-					'location_data'					=> $location_data,
+					'location_data2'				=> $location_data,
 					'lookup_type'					=> $lookup_type,
 					'mode'							=> $mode,
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -2097,6 +2098,8 @@ JS;
 					'lean'							=> $_lean ? 1 : 0,
 					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
+															
+			//print_r($data['location_data2']);die;
 
 			$appname	= $entity['name'];
 
