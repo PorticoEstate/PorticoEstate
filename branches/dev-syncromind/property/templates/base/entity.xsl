@@ -45,7 +45,7 @@
 						<xsl:value-of select="php:function('lang', 'edit inventory')" />
 					</legend>
 
-					<xsl:call-template name="location_view"/>
+					<xsl:call-template name="location_view2"/>
 
 					<xsl:choose>
 						<xsl:when test="msgbox_data != ''">
@@ -178,7 +178,7 @@
 					</xsl:choose>
 				</dl>
 				<fieldset>
-					<xsl:call-template name="location_form"/>
+					<xsl:call-template name="location_form2"/>
 					<div class="pure-control-group">
 						<label><xsl:value-of select="php:function('lang', 'id')" /></label>
 						<xsl:value-of select="item_id"/>
@@ -449,7 +449,7 @@
 				<div id="tab-content">
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 					<xsl:choose>
-						<xsl:when test="location_data!=''">
+						<xsl:when test="location_data2!=''">
 							<div id="location">
 								<fieldset>
 									<xsl:choose>
@@ -479,10 +479,10 @@
 													</div>
 												</xsl:when>
 											</xsl:choose>
-											<xsl:call-template name="location_form"/>
+											<xsl:call-template name="location_form2"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:call-template name="location_view"/>
+											<xsl:call-template name="location_view2"/>
 										</xsl:otherwise>
 									</xsl:choose>
 									<xsl:apply-templates select="attributes_general/attributes"/>
