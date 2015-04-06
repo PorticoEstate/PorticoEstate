@@ -45,6 +45,7 @@
 		protected $loc_1;
 		protected $address;
 		
+		protected $control_relation = array();
 		// Objects
 		protected $controls_array = array();
 		
@@ -129,8 +130,18 @@
 		{
 			$this->controls_array = $controls_array;
 		}
-		
+
 		public function get_controls_array() { return $this->controls_array; }
+
+		public function set_control_relation($control_relation)
+		{
+			$this->control_relation = $control_relation;
+		}
+
+		public function get_control_relation()
+		{
+			return $this->control_relation;
+		}
 		
 		public function serialize()
 		{
@@ -141,7 +152,8 @@
 				'xml' => $this->get_xml(),
 				'location_code' => $this->get_location_code(),
 				'loc_1' => $this->get_loc_1(),
-				'address' => $this->get_address()
+				'address' => $this->get_address(),
+				'control_relation'	=> $this->get_control_relation(),
 			);
 		}
 	}
