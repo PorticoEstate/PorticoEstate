@@ -96,7 +96,7 @@
 			phpgwapi_jquery::load_widget('core');
 
 
-			$component_type = phpgwapi_cache::session_get('controller', 'component_type');
+			$component_type = '';//phpgwapi_cache::session_get('controller', 'component_type');
 			if(!$component_type)
 			{
 				$this->soadmin_entity	= CreateObject('property.soadmin_entity');
@@ -120,7 +120,7 @@
 					}
 				}
 				array_unshift($component_type, array('id' => '', 'name' => lang('select value')));
-				phpgwapi_cache::session_set('controller', 'component_type', $component_type);
+//				phpgwapi_cache::session_set('controller', 'component_type', $component_type);
 			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.control');
