@@ -107,6 +107,14 @@ JqueryPortico.formatCheck = function(key, oData) {
 	return hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oData['location_code']+"\"/></center>";
 };
 
+JqueryPortico.formatCheckUis_agremment = function(key, oData) {
+    
+        var checked = '';
+	var hidden = '';
+        
+	return hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[alarm]["+oData['id']+"]\" value=\"\" /></center>";
+};
+
 JqueryPortico.formatCheckCustom = function(key, oData) {
     
         var checked = '';
