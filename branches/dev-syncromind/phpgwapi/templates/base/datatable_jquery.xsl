@@ -823,8 +823,8 @@
 				<xsl:if test="type = 'filter'">
 					$('select#<xsl:value-of select="name"/>').change( function() 
 					{
-						filterData('<xsl:value-of select="name"/>', $(this).val());
 						<xsl:value-of select="extra"/>
+						filterData('<xsl:value-of select="name"/>', $(this).val());
 					});
 				</xsl:if>
 				<xsl:if test="type = 'date-picker'">
@@ -909,6 +909,11 @@
 		{
 			oTable.dataTableSettings[0]['ajax']['data'][param] = value;
 			oTable.fnDraw();
+		}
+		
+		function clearFilterParam(param)
+		{
+			oTable.dataTableSettings[0]['ajax']['data'][param] = '';
 		}
 		
 		function reloadData()
