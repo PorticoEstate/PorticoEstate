@@ -13,26 +13,13 @@
 				<xsl:value-of select="$false"/>
 			</xsl:otherwise>
 		</xsl:choose>
-  	</func:result>
+	</func:result>
 </func:function>
 
 <xsl:template match="data">
-	
-	<div id="addedProperties">
-		<ul id="locations_for_control" name="locations_for_control">
-			<xsl:for-each select="locations_for_control">
-				<li>
-					<div><xsl:value-of select="id"/></div>
-					<div><xsl:value-of select="title"/></div>
-					<div><xsl:value-of select="location_code"/></div>
-				</li>			
-			</xsl:for-each>
-		</ul>
-	</div>
-	
-	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" ></iframe>
-	<input id="yui-history-field" type="hidden"/>
-	<xsl:call-template name="yui_phpgw_i18n"/>
+	<h2>
+		<xsl:value-of select="datatable_name"/>
+	</h2>
 	<xsl:apply-templates select="form" />
 	<xsl:apply-templates select="paging"/>
 	<div id="list_flash">
@@ -63,125 +50,78 @@
 
 <xsl:template match="toolbar">
 	<div id="toolbar">
-		  <table class='yui-skin-sam'>
+		<table>
 			<tr>
-		<xsl:for-each select="item">
-			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
-			<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
-			<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
+				<xsl:for-each select="item">
+					<xsl:variable name="filter_key" select="concat('filter_', name)"/>
+					<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
+					<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
 		
-			<xsl:choose>
-				<xsl:when test="type = 'date-picker'">
-					<td>
-					<div class="date-picker">
-					<input id="filter_{name}" name="filter_{name}" type="text">
-							<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/></xsl:attribute>
-						</input>
-				</div>
-					</td>
-				</xsl:when>
-				<xsl:when test="type = 'autocomplete'">
-					<td>
-						<div>
-							<input id="filter_{name}_name" name="filter_{name}_name" type="text">
-								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/></xsl:attribute>
-							</input>
-							<input id="filter_{name}_id" name="filter_{name}_id" type="hidden">
-								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_id]"/></xsl:attribute>
-							</input>
-							<div id="filter_{name}_container"/>
-						</div>
-						<script type="text/javascript">	
-						YAHOO.util.Event.onDOMReady(function() {
-						   var name = "<xsl:value-of select="name"/>";
-							var ui = "<xsl:value-of select="ui"/>";
-
-							var itemSelectCallback = false;
-							<xsl:if test="onItemSelect">
-								itemSelectCallback = <xsl:value-of select="onItemSelect"/>;
-							</xsl:if>
-
-							var onClearSelectionCallback = false;
-							<xsl:if test="onClearSelection">
-								onClearSelectionCallback = <xsl:value-of select="onClearSelection"/>;
-							</xsl:if>
-
-							var requestGenerator = false;
-							<xsl:if test="requestGenerator">
-								requestGenerator = <xsl:value-of select="requestGenerator"/>;
-							</xsl:if>
-
-							<![CDATA[
-							var oAC = YAHOO.portico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
-															 'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
-
-							if (requestGenerator) {
-								oAC.generateRequest = requestGenerator;
-							}
-
-							if (itemSelectCallback) {
-								oAC.itemSelectEvent.subscribe(itemSelectCallback);
-							}
-
-							YAHOO.util.Event.addBlurListener('filter_'+name+'_name', function()
-							{
-								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
-								{
-									YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
-									if (onClearSelectionCallback) {
-										onClearSelectionCallback();
-									}
-								}
-							});
-
-							YAHOO.portico.addPreSerializeQueryFormListener(function(form)
-							{
-								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
-								{
-									YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
-								} 
-							});
-							]]>
-						});
-						</script>
-					</td>
-				</xsl:when>
-				<xsl:when test="type = 'filter'">
-					<td>
-					<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+					<xsl:choose>
+						<xsl:when test="type = 'date-picker'">
+							<td>
+								<div class="date-picker">
+									<input id="filter_{name}" name="filter_{name}" type="text">
+										<xsl:attribute name="value">
+											<xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/>
+										</xsl:attribute>
+									</input>
+								</div>
+							</td>
+						</xsl:when>
+						<xsl:when test="type = 'filter'">
+							<td>
+								<xsl:variable name="name">
+									<xsl:value-of select="name"/>
+								</xsl:variable>
 					
-					<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
-						<xsl:for-each select="list">
-							<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-							<xsl:if test="id = 'NEW'">
-								<option value="{$id}" selected="selected">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:if>
-							<xsl:if test="id != 'NEW'">
-								<option value="{$id}">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:if>
-						</xsl:for-each>
-					</select>
-					</td>
-				</xsl:when>
-				<xsl:otherwise>
-					<td valign="top">
-					<input id="innertoolbar">
-						<xsl:attribute name="type"><xsl:value-of select="phpgw:conditional(not(type), '', type)"/></xsl:attribute>
-						<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
-						<xsl:attribute name="onclick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
-						<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
-						<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
-						<xsl:attribute name="class"><xsl:value-of select="phpgw:conditional(not(class), '', class)"/></xsl:attribute>
-					</input>
-					</td>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:for-each>
-		  </tr>
+								<select id="{$name}" name="{$name}">
+									<xsl:attribute name="onchange">
+										<xsl:value-of select="phpgw:conditional(not(onchange), '', onchange)"/>
+									</xsl:attribute>
+									<xsl:for-each select="list">
+										<xsl:variable name="id">
+											<xsl:value-of select="id"/>
+										</xsl:variable>
+										<option value="{$id}">
+											<xsl:if test="selected = '1'">
+												<xsl:attribute name="selected">
+													<xsl:text>selected</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</td>
+						</xsl:when>
+						<xsl:otherwise>
+							<td valign="top">
+								<input id="innertoolbar">
+									<xsl:attribute name="type">
+										<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
+									</xsl:attribute>
+									<xsl:attribute name="name">
+										<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
+									</xsl:attribute>
+									<xsl:attribute name="onclick">
+										<xsl:value-of select="phpgw:conditional(not(onclick), '', onclick)"/>
+									</xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:value-of select="phpgw:conditional(not(value), '', value)"/>
+									</xsl:attribute>
+									<xsl:attribute name="href">
+										<xsl:value-of select="phpgw:conditional(not(href), '', href)"/>
+									</xsl:attribute>
+									<xsl:attribute name="class">
+										<xsl:value-of select="phpgw:conditional(not(class), '', class)"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
 			<xsl:if test="item/text and normalize-space(item/text)">
 				<thead>
 					<tr>
@@ -189,7 +129,9 @@
 							<td>
 								<xsl:if test="name">
 									<label>
-										<xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+										<xsl:attribute name="for">
+											<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
+										</xsl:attribute>
 										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 									</label>
 								</xsl:if>
@@ -205,35 +147,44 @@
 <xsl:template match="datatable">
 	<div id="paginator"/>
 	<div id="datatable-container"/>
-  	<xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="datasource-definition" />
 </xsl:template>
 
 
 <xsl:template name="datasource-definition">
-	<script>
-		YAHOO.namespace('controller');
-	 
- 		YAHOO.controller.columnDefs = [
-				<xsl:for-each select="//datatable/field">
-					{
-						key: "<xsl:value-of select="key"/>",
-						<xsl:if test="label">
-						label: "<xsl:value-of select="label"/>",
-						</xsl:if>
-						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden">
-						hidden: true,
-						</xsl:if>
-						<xsl:if test="formatter">
-						formatter: <xsl:value-of select="formatter"/>,
-						</xsl:if>
-						className: "<xsl:value-of select="className"/>"
-					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-				</xsl:for-each>
-			];
+	<script type="text/javascript">
+<![CDATA[
+		update_table = function()
+		{
+			var requestUrl = $("#queryForm").attr("action");
+			requestUrl += '&phpgw_return_as=json' + "&" + $("#queryForm").serialize();
 
-		setDataSource('<xsl:value-of select="source"/>', YAHOO.controller.columnDefs, 'queryForm', ['building_types', 'cat_id', 'district_id', 'part-of_town_list', 'responsibility_roles_list'], 'datatable-container', '_form', '_paginator', null); 
-		
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: requestUrl,
+				success: function(data) {
+					if( data != null)
+					{
+						$("#tbody").html(data.tbody);
+					}
+				}
+			});
+
+		};
+]]>
 	</script>
+	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
+		<thead>
+			<tr>
+				<xsl:for-each select="//datatable/field">
+					<th>
+						<xsl:value-of select="label"/>
+					</th>
+				</xsl:for-each>
+			</tr>
+		</thead>
+		<tbody id="tbody"></tbody>
+	</table>
 	 
 </xsl:template>

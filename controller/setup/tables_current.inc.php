@@ -70,6 +70,7 @@
 				'planned_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'serie_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
 				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
@@ -147,12 +148,25 @@
 					'control_id' 		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 					'location_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 					'component_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'assigned_to'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
-					'start_date'		=> array('type' => 'int', 'precision' => '', 'nullable' => true),
-					'repeat_type'		=> array('type' => 'int', 'precision' => '2', 'nullable' => true),
+					'enabled'			=> array('type' => 'int', 'precision' => 2, 'nullable' => True)
+
+				),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'controller_control_serie' => array(
+				'fd' => array(
+					'id'					=> array('type' => 'auto', 'nullable' => false),
+					'control_relation_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'control_relation_type'	=> array('type' => 'varchar', 'precision' => '10', 'nullable' => false),
+					'assigned_to'			=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+					'start_date'			=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
+					'repeat_type'			=> array('type' => 'int', 'precision' => '2', 'nullable' => true),
 					'repeat_interval'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
-					'service_time' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
-					'controle_time' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'service_time'			=> array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'controle_time'			=> array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				),
 			'pk' => array('id'),
 			'fk' => array(),

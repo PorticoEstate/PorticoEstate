@@ -3,6 +3,8 @@
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
+	<xsl:variable name="serie_id"><xsl:value-of select="serie_id" /></xsl:variable>
+
 
 	<!-- ==================  ADD CHECKLIST  ========================= -->
 	<div id="main_content" class="medium">
@@ -23,6 +25,7 @@
 					<xsl:value-of select="control/id"/>
 				</xsl:variable>
 				<input type="hidden" name="control_id" value="{$control_id}" />
+				<input type="hidden" name="serie_id" value="{$serie_id}" />
 				<xsl:variable name="type">
 					<xsl:value-of select="type"/>
 				</xsl:variable>

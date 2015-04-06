@@ -226,6 +226,7 @@
 				$type = phpgw::get_var('type');
 				$control_id = phpgw::get_var('control_id');
 				$deadline_ts = phpgw::get_var('deadline_ts');
+				$serie_id = phpgw::get_var('serie_id', 'int');
 
 				$check_list = new controller_check_list();
 				$check_list->set_control_id($control_id);
@@ -333,7 +334,8 @@
 				'current_month_nr' => $month_nr,
 				'building_location_code' => $building_location_code,
 				'location_level' => $level,
-				'check_list_type' => 'add_check_list'
+				'check_list_type' => 'add_check_list',
+				'serie_id'			=> $serie_id
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -460,7 +462,8 @@
 				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 			}
 
-			$control_id = phpgw::get_var('control_id');
+			$control_id = phpgw::get_var('control_id', 'int');
+			$serie_id = phpgw::get_var('serie_id', 'int');
 			$status = (int) phpgw::get_var('status');
 			$type = phpgw::get_var('type');
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
@@ -517,6 +520,8 @@
 				$check_list->set_control_id($control_id);
 				$location_code = phpgw::get_var('location_code');
 				$check_list->set_location_code($location_code);
+				$check_list->set_serie_id($serie_id);
+
 
 				if($type == "component")
 				{
@@ -560,6 +565,127 @@
 					$this->add_check_list($check_list);
 				}
 			}
+		}
+
+		function get_files2($location_id, $data)
+		{
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+			$doc_types = isset($config->config_data['document_cat']) && $config->config_data['document_cat'] ? $config->config_data['document_cat'] : array();
+			$sodocument	= CreateObject('property.sodocument');
+
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$type_arr = explode('.',  $loc_arr['location']);
+			if(count($type_arr) != 4)
+			{
+				return array();
+			}
+
+			$type		= $type_arr[1];
+			$entity_id	= $type_arr[2];
+			$cat_id		= $type_arr[3];
+
+			$document_list = array();
+			foreach ($doc_types as $doc_type)
+			{
+				if($doc_type)
+				{
+					$document_list = array_merge($document_list, $sodocument->read_at_location(array(
+						'entity_id' => $entity_id,'cat_id' => $cat_id, 'id' =>$data['id'], 'doc_type' => $doc_type, 'allrows' => true)));
+				}
+			}
+		
+//			$valid_types = isset($config->config_data['document_valid_types']) && $config->config_data['document_valid_types'] ? str_replace ( ',' , '|' , $config->config_data['document_valid_types'] ) : '.pdf';
+
+			$values = array();
+//			if($valid_types)
+			{
+				$lang_view = lang('click to view file');
+				foreach($document_list as $entry)
+				{
+//					if ( !preg_match("/({$valid_types})$/i", $entry['document_name']) )
+//					{
+//						continue;
+//					}
+					$link_file_data = array
+					(
+						'menuaction'	=> 'property.uidocument.view_file',
+						'id'			=> $entry['document_id'],
+						'p_num'			=> $data['id'],
+						'cat_id'		=> $cat_id,
+						'entity_id'		=> $entity_id,
+					);
+
+					$values[] = array
+					(
+						'document_id'			=> $entry['document_id'],
+						'file_name'				=> $entry['document_name'],
+						'file_name'				=>'<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data)."\" target='_blank' title='{$lang_view}'>{$entry['document_name']}</a>",
+						'link'					=> $entry['link'],
+						'title'					=> $entry['title'],
+						'doc_type'				=> $entry['doc_type'],
+						'document_date'			=> $GLOBALS['phpgw']->common->show_date($entry['document_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					);
+				}
+			}
+			return $values;
+		}
+		function get_files($location_id, $data)
+		{
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$location_data = explode('-', $data['location_code']);
+			$loc1 = isset($location_data[0]) && $location_data[0] ? $location_data[0] : 'dummy';
+
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$type_arr = explode('.',  $loc_arr['location']);
+
+			if(count($type_arr) != 4)
+			{
+				return array();
+			}
+
+			$type = $type_arr[1];
+			$entity_id = $type_arr[2];
+			$cat_id = $type_arr[3];
+			$category_dir = "{$type}_{$entity_id}_{$cat_id}";
+
+			$files = $vfs->ls (array(
+				'string' => "/property/{$category_dir}/{$loc1}/{$data['id']}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$values		= array();
+			foreach ($files as $file)
+			{
+				$values[] = array
+				(
+					'name' 		=> $file['name'],
+					'directory'	=> $file['directory'],
+					'file_id'	=> $file['file_id'],
+					'mime_type'	=> $file['mime_type']
+				);
+			}
+
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uientity.view_file',
+				'loc1'			=> $loc1,
+				'id'			=> $data['id'],
+				'cat_id'		=> $cat_id,
+				'entity_id'		=> $entity_id,
+				'type'			=> $type
+			);
+
+			foreach($values as &$_entry )
+			{
+				$_entry['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.urlencode($_entry['name']).'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>';
+			}
+
+			return $values;
 		}
 
 		function view_control_info()
@@ -635,9 +761,25 @@
 
 			$control = $this->so_control->get_single($control_id);
 
+			$check_list_id = phpgw::get_var('check_list_id','int');
+
+			$check_list = $this->so->get_single($check_list_id);
+
+			$component_id = $check_list->get_component_id();
+			$files = array();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$files = $this->get_files2($location_id,$component_arr);
+			}
+
 			$data = array
 			(
-				'control' => $control,
+				'control'	=> $control,
+				'files'		=> $files
+
 			);
 
 			self::render_template_xsl('check_list/view_control_details', $data);
