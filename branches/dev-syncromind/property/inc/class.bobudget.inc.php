@@ -152,13 +152,33 @@
 		}
 
 
-		function read()
+		function read($data= array())
 		{
-			$budget = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/*$budget = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
 				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,
-				'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id));
+				'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id, 'org_unit_id' => $this->org_unit_id));*/
 
+			$budget = $this->so->read(array
+				(
+					'start'			=> $data['start'],
+					'query'			=> $data['query'],
+					'sort'			=> $data['sort'],
+					'order'			=> $data['order'],
+					'results'		=> $data['results'],
+					'filter'		=> $this->filter,
+					'cat_id'		=> $this->cat_id,
+					'allrows'		=> isset($data['allrows'])?$data['allrows']:'',
+					'district_id'	=> $this->district_id,
+					'year'			=> $this->year,
+					'grouping'		=> $this->grouping,
+					'revision'		=> $this->revision,
+					'cat_id'		=> $this->cat_id, 
+					'dimb_id'		=> $this->dimb_id, 
+					'org_unit_id'	=> $this->org_unit_id
+				)
+			);
+			
 			$this->total_records		= $this->so->total_records;
 			$this->sum_budget_cost		= $this->so->sum_budget_cost;
 			foreach ($budget as & $entry)
@@ -171,12 +191,29 @@
 			return $budget;
 		}
 
-		function read_basis()
+		function read_basis($data= array())
 		{
-			$budget = $this->so->read_basis(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			/*$budget = $this->so->read_basis(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
-				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,));
+				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,));*/
 
+			$budget = $this->so->read_basis(array
+				(
+					'start'		=> $data['start'],
+					'query'		=> $data['query'],
+					'sort'		=> $data['sort'],
+					'order'		=> $data['order'],
+					'results'	=> $data['results'],
+					'filter'	=> $this->filter,
+					'cat_id'	=> $this->cat_id,
+					'allrows'	=> isset($data['allrows'])?$data['allrows']:'',
+					'district_id' => $this->district_id,
+					'year'		=> $this->year,
+					'grouping'	=> $this->grouping,
+					'revision'	=> $this->revision
+				)
+			);
+			
 			$this->total_records = $this->so->total_records;
 
 			for ($i=0; $i<count($budget); $i++)
