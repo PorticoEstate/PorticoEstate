@@ -61,6 +61,8 @@
                 'save'          => true,
                 'get_content'   => true,
                 'deleteitem'    => true,
+                'get_contentalarm' => true,
+                'edit_alarm'    => true,
 			);
 
 		function __construct()
@@ -1092,16 +1094,6 @@
                 );
 
             $values = $this->bo->read_details($agreement_id, $params);
-
-			/*foreach($values as & $_order_entry)
-			{
-				$_order_entry['send_order'] = '';
-				if(isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
-				{
-					$_title = implode(';', $_order_entry['mail_recipients']);
-					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
-				}
-			}*/
 			
 			$total_records = count($values);
 
@@ -1112,6 +1104,48 @@
 			
 			return $this->jquery_results($result_data);   
             
+        }
+        
+        public function get_contentalarm()
+        {
+            $id = phpgw::get_var('id', 'int');
+            $acl_location = phpgw::get_var('acl_location');
+            $times = phpgw::get_var('times');
+            $method = phpgw::get_var('method');
+            $data		= phpgw::get_var('data');
+            $account_id = phpgw::get_var('account_id');
+            
+            if (empty(id)) 
+			{
+				$result_data = array('results' => array());
+				$result_data['total_records'] = 0;
+				$result_data['draw'] = 0;
+				
+				return $this->jquery_results($result_data);
+			}
+            
+            $params = array
+                          (
+                            'acl_location'  =>$acl_location,
+                            'alarm_type'    => 'agreement',
+                            'type'          => 'form',
+                            'text'          => 'Email notification',
+                            'times'         => $times,
+                            'id'            => $id,
+                            'method'        => $method,
+                            'data'          => $data,
+                            'account_id'    => $account_id
+                           );
+           
+            $values = $this->bocommon->initiate_ui_alarm($params);
+            $total_records = count($values['values']);
+
+			$result_data = array('results' => $values['values']);
+
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
+			
+			return $this->jquery_results($result_data);  
         }
         function deleteitem()
         {
@@ -1124,6 +1158,44 @@
 				$get_items = true;
 			}
         }
+        function edit_alarm()
+        {
+            $boalarm		= CreateObject('property.boalarm');
+            $idAgreement	= !empty($_POST['id'])?$_POST['id']:'';
+            $ids_alarm      = !empty($_POST['ids'])?$_POST['ids']:'';
+            $type_alarm     = !empty($_POST['type'])?$_POST['type']:'';
+            $day            = !empty($_POST['day'])?$_POST['day']:'';
+            $hour           = !empty($_POST['hour'])?$_POST['hour']:'';
+            $minute         = !empty($_POST['minute'])?$_POST['minute']:'';
+            $user_list      = !empty($_POST['user_list'])?$_POST['user_list']:'';
+
+            $receipt = array();
+               
+            if(!empty($type_alarm)){
+                
+				if($type_alarm == 'delete_alarm' && count($ids_alarm))
+				{
+					$boalarm->delete_alarm('agreement',$ids_alarm);
+				}
+				else if(($type_alarm == 'disable_alarm' || $type_alarm == 'enable_alarm' ) && count($ids_alarm))
+				{
+                    $type_alarm = ($type_alarm == 'enable_alarm')?$type_alarm:'';
+					$boalarm->enable_alarm('agreement',$ids_alarm,$type_alarm);
+				}
+				else if($type_alarm == 'add_alarm')
+				{
+					$time = intval($day)*24*3600 +
+						intval($hour)*3600 +
+						intval($minute)*60;
+
+					if ($time > 0)
+					{
+						$boalarm->add_alarm('agreement',$this->bo->read_event(array('agreement_id'=>$idAgreement)),$time,$user_list);
+					}
+				}
+             }
+        }
+        
 		function edit()
 		{
             
@@ -1134,7 +1206,7 @@
             
 			$id				= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
-
+            
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
 			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
@@ -1143,7 +1215,9 @@
 			$boalarm		= CreateObject('property.boalarm');
 			$receipt 		= array();
 			$get_items 		= false;
-
+                       
+            
+//            echo '<pre>'; print_r($type_alarm); echo '</pre>';
 //			if($delete_item && $id && $activity_id)
 //			{
 //				$this->bo->delete_item($id,$activity_id);
@@ -1253,6 +1327,7 @@
 					}
 				}
 				else*/ 
+                
                 if ( isset($values['update']) && $values['update'] )
 				{
 					if(!$values['date'])
@@ -1271,12 +1346,11 @@
 					}
 
 				}
-				else if(isset($values['delete_alarm']) && $values['delete_alarm'] && count($values['alarm']))
+				else if(!empty($type_alarm) && $type_alarm == 'delete' && count($ids_alarm))
 				{
-
 					if(!isset($receipt['error']) || !$receipt['error'])
 					{
-						$receipt = $boalarm->delete_alarm('agreement',$values['alarm']);
+						$receipt = $boalarm->delete_alarm('agreement',$ids_alarm);
 					}
 
 				}
@@ -1565,20 +1639,91 @@
 
 			//---datatable0 settings---------------------------------------------------
 
+//            JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl});"   
+            $requestUrl_Alarm =  json_encode(self::link(array(
+                                                        'menuaction'=>'property.uiagreement.get_contentalarm', 
+                                                        'id'        =>$id,
+                                                        'acl_location'=>$this->acl_location,
+                                                        'times'     => isset($times)?$times:'',
+                                                        'method'    => isset($method)?$method:'',
+                                                        'data'		=> isset($data)?$data:'',
+                                                        'account_id'=> isset($account_id)?$account_id:'',
+                                                        'phpgw_return_as'=>'json'
+                                                    )
+                                             )
+                                );
+            
             
             $tabletools = array
             (
                 array(
                     'my_name'	=> 'enable_alarm',
-                    'text' => lang($alarm_data[alter_alarm][0][lang_enable])
+                    'text' => lang($alarm_data[alter_alarm][0][lang_enable]),
+                     'type'			=> 'custom',
+					'custom_code' => "
+										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+										var selected = oTT.fnGetSelectedData();
+
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										var ids = [];
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											ids.push(aData['id']);
+										}
+										onActionsClick_notify('enable_alarm', ids);
+                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
                     ),
                 array(
                     'my_name'	=> 'disable_alarm',
-                    'text' => lang($alarm_data[alter_alarm][0][lang_disable])
+                    'text' => lang($alarm_data[alter_alarm][0][lang_disable]),
+                    'type'			=> 'custom',
+					'custom_code' => "
+										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+										var selected = oTT.fnGetSelectedData();
+
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										var ids = [];
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											ids.push(aData['id']);
+										}
+										onActionsClick_notify('disable_alarm', ids);
+                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
                     ),
                 array(
                     'my_name'	=> 'delete_alarm',
-                    'text' => lang($alarm_data[alter_alarm][0][lang_delete])
+                    'text' => lang($alarm_data[alter_alarm][0][lang_delete]),
+                    'type'			=> 'custom',
+					'custom_code' => "
+										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+										var selected = oTT.fnGetSelectedData();
+
+										var numSelected = 	selected.length;
+
+										if (numSelected ==0){
+											alert('None selected');
+											return false;
+										}
+										var ids = [];
+										for ( var n = 0; n < selected.length; ++n )
+										{
+											var aData = selected[n];
+											ids.push(aData['id']);
+										}
+										onActionsClick_notify('delete_alarm', ids);
+                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
                     )
             );
             
@@ -1592,12 +1737,12 @@
 					array('key' => 'alarm_id', 'label' =>"dummy", 'sortable' => true, 'resizeable' => true, 'hidden' => true),
 					//array('key' => 'select', 'label' =>$alarm_data['header'][0]['lang_select'],	'sortable' => false, 'resizeable' => false, 'formatter'=>'myFormatterCheck', 'width' => 60)
 				);
-            
+
             $datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> "''",
-				'data'			=> json_encode($alarm_data['values']),
+				'requestUrl'	=> $requestUrl_Alarm,
+                'data'			=> json_encode(array()),
                 'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs0,
 				'config'		=> array(
@@ -1609,7 +1754,7 @@
 			$myButtons[0] = array
 				(
 					'name'			=> "0",
-					'values'		=>	json_encode(array(	array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
+					'values'		=>	json_encode(array(array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
 					array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
 					array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
 				))
@@ -1916,6 +2061,8 @@
             
             phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
+            
+            self::add_javascript('property', 'portico', 'agreement.edit.js');
 			self::render_template_xsl(array('agreement','datatable_inline','files','attributes_form','nextmatchs'), array('edit' => $data));
 		}
 
