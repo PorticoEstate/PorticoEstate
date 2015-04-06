@@ -181,7 +181,7 @@
 			{
 				return false;
 			}
-
+            
 			$alarm			= $jobs[$id]['data'];	// text, enabled
 			$alarm['id']	= $id;
 			$alarm['time']	= $jobs[$id]['next'];
@@ -205,32 +205,49 @@
 		function enable_alarm($alarm_type,$alarms,$enable=true)
 		{
 			$enabled = 0;
-			foreach ($alarms as $id => $field)
-			{
-				$temp = explode(':',$id);
-				$alarm_type = $temp[0];
-
-				if (!($alarm = $this->read_alarm($alarm_type,$id)))
+            foreach ($alarms as $id)
+            {
+                $temp = explode(':',$id);
+                $alarm_type = $temp[0];
+                
+                if (!($alarm = $this->read_alarm($alarm_type,$id)))
 				{
 					return 0;	// alarm not found
 				}
+
 				if (!$alarm['enabled'] == !$enable)
 				{
 					continue;	// nothing to do
 				}
-/*				if ($enable && !$this->check_perms(PHPGW_ACL_SETALARM,$alarm['owner']) ||
-					!$enable && !$this->check_perms(PHPGW_ACL_DELETEALARM,$alarm['owner']))
-				{
-					return -1;
-				}
- */
-				$alarm['enabled'] = intval(!$alarm['enabled']);
+
+                $alarm['enabled'] = intval(!$alarm['enabled']);
 
 				if ($this->save_alarm($alarm_type,$alarm['event_id'],$alarm,$alarm['method']))
 				{
 					++$enabled;
 				}
-			}
+            }
+//			foreach ($alarms as $id => $field)
+//			{
+//       
+//				$temp = explode(':',$id);
+//				$alarm_type = $temp[0];
+//
+//				if (!($alarm = $this->read_alarm($alarm_type,$id)))
+//				{
+//					return 0;	// alarm not found
+//				}
+//				if (!$alarm['enabled'] == !$enable)
+//				{
+//					continue;	// nothing to do
+//				}
+//				$alarm['enabled'] = intval(!$alarm['enabled']);
+//
+//				if ($this->save_alarm($alarm_type,$alarm['event_id'],$alarm,$alarm['method']))
+//				{
+//					++$enabled;
+//				}
+//			}
 			return $enabled;
 		}
 
@@ -296,6 +313,11 @@
 				return false;
 			}
  */
+//            echo '<pre>'; print_r($alarm_type); echo '</pre>';
+//            echo '<pre>'; print_r($event); echo '</pre>';
+//            echo '<pre>'; print_r($time); echo '</pre>';
+//            echo '<pre>'; print_r($owner); echo '</pre>';
+//            exit('add_alarm');
 			if(!$owner>0)
 			{
 				$receipt['error'][]=array('msg'=>lang('No user selected'));
@@ -329,10 +351,10 @@
 		@note Not found alarms or insuficent perms stop the deleting of multiple alarms
 		 */
 		function delete_alarm($alarm_type,$alarms)
-		{
+		{            
 			$deleted = 0;
-			foreach ($alarms as $id => $field)
-			{
+			foreach ($alarms as $id)
+			{   
 				if (!($alarm = $this->read_alarm($alarm_type,$id)))
 				{
 					return 0;	// alarm not found
