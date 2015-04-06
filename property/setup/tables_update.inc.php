@@ -8166,3 +8166,26 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.685 to 0.9.17.686
+	* Add controller-flag to entities
+	*/
+	$test[] = '0.9.17.685';
+	function property_upgrade0_9_17_685()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','enable_controller',array(
+				'type' =>	'int',
+				'precision' => 2,
+				'nullable' => true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.686';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

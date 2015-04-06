@@ -73,7 +73,7 @@
 			'get_controls_at_component'=>true
 			);
 
-		function property_uientity()
+		function __construct()
 		{
 		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -1956,7 +1956,7 @@ JS;
 					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
-				$_enable_controller = false;
+				$_enable_controller = !!$category['enable_controller'];
 				if($_enable_controller)
 				{
 					$tabs['controller']	= array('label' => lang('controller'), 'link' => '#controller', 'function' => "set_tab('controller')");
@@ -2201,7 +2201,7 @@ JS;
 			(
 				'name'		=> "0",
 				'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true))) //,'formatter'=>'FormatterCenter')))
 			);
 
 
@@ -2388,6 +2388,7 @@ JS;
 
 			if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
 			{
+				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 				$_controls = $this->get_controls_at_component($location_id, $id);
 
 				$datavalues[4] = array
@@ -2404,7 +2405,9 @@ JS;
 				(
 					'name'		=> "4",
 					'values'	=>	json_encode(array(
-							array('key' => 'control_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+
+							array('key' => 'serie_id','label'=>'serie','sortable'=>false,'resizeable'=>true),
+							array('key' => 'control_id','label'=>lang('controller'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'assigned_to_name','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
@@ -2413,7 +2416,7 @@ JS;
 							array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
-	//						array('key' => 'enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'relation_enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'location_id','hidden'=>true),
 							array('key' => 'component_id','hidden'=>true),
 							array('key' => 'id','hidden'=>true),
@@ -2423,7 +2426,6 @@ JS;
 				);
 
 				$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
-				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 				$socase 			= CreateObject('controller.socase');
 				$controller_cases	= $socase->get_cases_by_component($location_id, $id);
 				$_statustext = array();
@@ -3554,14 +3556,6 @@ JS;
 					"3"=> lang('year')
 				);
 
-			$control_link_data = array
-				(
-					'menuaction'	=> 'controller.uicalendar.view_calendar_year_for_locations',
-					'control_id'	=> $entry['control_id'],
-					'location_id'	=> $location_id,
-					'component_id'	=> $id,
-				);
-
 			$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $id));
 			foreach($controls as &$entry)
 			{
@@ -3577,6 +3571,7 @@ JS;
 					'control_id'	=> $entry['control_id'],
 					'location_id'	=> $location_id,
 					'component_id'	=> $id,
+					'serie_id'		=> $entry['serie_id']
 				);
 				$entry['title'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$control_link_data).'" target="_blank">'.$entry['title'].'</a>';
 
