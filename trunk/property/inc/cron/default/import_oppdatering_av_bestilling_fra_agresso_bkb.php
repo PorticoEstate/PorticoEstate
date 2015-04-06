@@ -240,7 +240,11 @@
 				}
 				else if( preg_match('/^STATUS/i', $file_name) )
 				{
-					$ok = $this->update_status($data);
+					$ok = true;
+					if(trim($data[2]))//check for order_id
+					{
+						$ok = $this->update_status($data);
+					}
 				}
 			}
 

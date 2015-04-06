@@ -89,11 +89,7 @@
 			'get_category_list'	=> true,
 			'get_attrib_list'	=> true
 		);
-		var $type_app		 = array
-			(
-			'entity' => 'property',
-			'catch'	 => 'catch'
-		);
+		var $type_app;
 
 		function __construct( $session = false )
 		{
@@ -125,8 +121,8 @@
 			$this->allrows		 = phpgw::get_var( 'allrows', 'bool' );
 			$this->so			 = CreateObject( 'property.soadmin_entity', '', '',
 								$this->bocommon );
-			$this->so->type		 = $this->type;
-			$this->so->type_app	 = $this->type_app;
+			$this->so->type		= $this->type;
+			$this->type_app		= $this->so->get_type_app();
 		}
 
 		function save_sessiondata( $data )
