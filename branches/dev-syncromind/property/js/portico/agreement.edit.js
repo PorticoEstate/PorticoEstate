@@ -28,8 +28,7 @@ onAddClick_Alarm= function(type){
     var minute = $('#minute_list').val();
     var user = $('#user_list').val();
     var id = $('#agreementid').val();
-    
-    
+
     if(day != '0' && hour != '0' && minute != '0'){
         
         $.ajax({
@@ -38,15 +37,64 @@ onAddClick_Alarm= function(type){
             url: ""+ sUrl_agreement +"&phpgw_return_as=json",
             data:{day:day,hour:hour,minute:minute,user_list:user,type:type,id:id},
             success: function(data) {
-//                $('#datatable-container_0').fnDraw();
+                obj = JSON.parse(data);
+                var newstr = obj.replace("&amp;", "&","gi");
+                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
             }
         });
     }
     else
     {
         return false;
+    }   
+}
+
+onUpdateClickAlarm = function(type){
+
+    var oDate = $('#values_date').val();
+    var oIndex = $('#new_index').val();
+    var id = $('#agreementid').val();
+
+    var oTT = TableTools.fnGetInstance( 'datatable-container_1' );
+    var selected = oTT.fnGetSelectedData();
+    var numSelected = 	selected.length;
+
+    if (numSelected == '0'){
+        alert('None selected');
+        return false;
+    }else if(numSelected != '0' && oDate == '' && oIndex == ''){
+        alert('None index and date');
+        return false;
+    }else if(numSelected != '0' && oDate!='' && oIndex == ''){
+        alert('None Index');
+        return false;
+    }else if(numSelected != '0' && oDate=='' && oIndex != ''){
+        alert('None Date');
+        return false;
     }
-        
     
-    
+    var ids = [];
+    var mcost = {}; var wcost = {}; var tcost = {}; var icoun = {};
+    for ( var n = 0; n < selected.length; ++n )
+    {
+        var aData = selected[n];
+        ids.push(aData['id']);
+        mcost[aData['id']] = aData['m_cost'];
+        wcost[aData['id']] = aData['w_cost'];
+        tcost[aData['id']] = aData['total_cost'];
+        icoun[aData['id']] = aData['index_count'];
+    }
+    $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
+            data:{id:id,ids:ids,mcost:mcost,wcost:wcost,tcost:tcost,icoun:icoun,type:type,date:oDate,index:oIndex},
+            success: function(data) {
+                obj = JSON.parse(data);
+                var newstr = obj.replace("&amp;", "&","gi");
+                JqueryPortico.updateinlineTableHelper(oTable1, newstr);
+                $('#values_date').val('');
+                $('#new_index').val('');
+            }
+    });
 }
