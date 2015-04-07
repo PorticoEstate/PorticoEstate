@@ -1168,12 +1168,50 @@
             $hour           = !empty($_POST['hour'])?$_POST['hour']:'';
             $minute         = !empty($_POST['minute'])?$_POST['minute']:'';
             $user_list      = !empty($_POST['user_list'])?$_POST['user_list']:'';
-
+            $date           = !empty($_POST['date'])?$_POST['date']:'';
+            $index          = !empty($_POST['index'])?$_POST['index']:'';
+            
+            $mcosto      = !empty($_POST['mcost'])?$_POST['mcost']:'';
+            $wcosto      = !empty($_POST['wcost'])?$_POST['wcost']:'';
+            $tcosto      = !empty($_POST['tcost'])?$_POST['tcost']:'';
+            $icount      = !empty($_POST['icoun'])?$_POST['icoun']:'';
+            
+            
+            $requestUrl_Alarm =  json_encode(self::link(array(
+                                    'menuaction'    =>'property.uiagreement.get_contentalarm', 
+                                    'id'            => $idAgreement,
+                                    'acl_location'  => $this->acl_location,
+                                    'times'         => isset($times)?$times:'',
+                                    'method'        => isset($method)?$method:'',
+                                    'data'          => isset($data)?$data:'',
+                                    'account_id'    => isset($account_id)?$account_id:'',
+                                    'phpgw_return_as'=>'json'
+                                )
+                         )
+            );
+            
             $receipt = array();
                
             if(!empty($type_alarm)){
                 
-				if($type_alarm == 'delete_alarm' && count($ids_alarm))
+                if ($type_alarm == 'update')
+				{
+                    $values = array(
+                                    'select' => $ids_alarm,
+                                    'agreement_id'=>$idAgreement,
+                                    'id'=>$icount,
+                                    'new_index'=>$index,
+                                    'm_cost'=>$mcosto,
+                                    'w_cost'=>$wcosto,
+                                    'total_cost'=>$tcosto,
+                                    'date'=>$date,
+                                   );
+					$receipt = $this->bo->update($values);
+                    $requestUrl	= json_encode(self::link(array('menuaction'=>'property.uiagreement.get_content', 'agreement_id'=>$idAgreement, 'phpgw_return_as'=>'json')));
+                    return $requestUrl;
+
+				}
+				else if($type_alarm == 'delete_alarm' && count($ids_alarm))
 				{
 					$boalarm->delete_alarm('agreement',$ids_alarm);
 				}
@@ -1192,6 +1230,8 @@
 					{
 						$boalarm->add_alarm('agreement',$this->bo->read_event(array('agreement_id'=>$idAgreement)),$time,$user_list);
 					}
+                    
+                    return $requestUrl_Alarm;
 				}
              }
         }
@@ -1215,14 +1255,6 @@
 			$boalarm		= CreateObject('property.boalarm');
 			$receipt 		= array();
 			$get_items 		= false;
-                       
-            
-//            echo '<pre>'; print_r($type_alarm); echo '</pre>';
-//			if($delete_item && $id && $activity_id)
-//			{
-//				$this->bo->delete_item($id,$activity_id);
-//				$get_items = true;
-//			}
             
 			$values_attribute  = phpgw::get_var('values_attribute');
 			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement','property');
@@ -1235,7 +1267,6 @@
 				}
 			}
 
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('agreement', 'nextmatchs', 'attributes_form', 'files'));
 			$receipt = array();
 			if (is_array($values))
 			{
@@ -1252,82 +1283,7 @@
 				}
 
 				//_debug_array($values);
-
-				/*if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
-				{
-					$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
-					$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
-
-					if(!$values['cat_id'])
-					{
-						$receipt['error'][]=array('msg'=>lang('Please select a category !'));
-					}
-
-					if(!$values['last_name'])
-					{
-//						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
-					}
-
-
-					if($id)
-					{
-						$values['agreement_id']=$id;
-						$action='edit';
-					}
-					else
-					{
-						$values['agreement_id']=$this->bo->request_next_id();
-					}
-
-					$bofiles	= CreateObject('property.bofiles');
-					if(isset($id) && $id && isset($values['file_action']) && is_array($values['file_action']))
-					{
-						$bofiles->delete_file("/agreement/{$id}/", $values);
-					}
-
-					$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-					$to_file = "{$bofiles->fakebase}/agreement/{$values['agreement_id']}/{$values['file_name']}";
-
-					if(!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
-						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
-					)))
-					{
-						$receipt['error'][]=array('msg'=>lang('This file already exists !'));
-					}
-
-
-					if(!$receipt['error'])
-					{
-						$receipt = $this->bo->save($values,$values_attribute,$action);
-						$id = $receipt['agreement_id'];
-						$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
-
-						if($values['file_name'])
-						{
-							$bofiles->create_document_dir("agreement/{$id}");
-							$bofiles->vfs->override_acl = 1;
-
-							if(!$bofiles->vfs->cp (array (
-								'from'	=> $_FILES['file']['tmp_name'],
-								'to'	=> $to_file,
-								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
-							{
-								$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
-							}
-							$bofiles->vfs->override_acl = 0;
-						}
-
-
-						if ($values['save'])
-						{
-							$GLOBALS['phpgw']->session->appsession('session_data','agreement_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.index', 'role'=> $this->role));
-						}
-					}
-				}
-				else*/ 
-                
+               
                 if ( isset($values['update']) && $values['update'] )
 				{
 					if(!$values['date'])
@@ -1751,25 +1707,25 @@
 				)
 			);
 
-			$myButtons[0] = array
-				(
-					'name'			=> "0",
-					'values'		=>	json_encode(array(array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
-					array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
-					array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
-				))
-			);
-			$myButtons[1] = array
-				(
-					'name'			=> "1",
-					'values'		=>	json_encode(array(	array(id =>'values[time][days]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ),	label=>"0", classname=> actionsFilter, value_hidden=>"0"),
-					array(id =>'values[time][hours]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'),	label=>"0", classname=> actionsFilter, value_hidden=>"0"),
-					array(id =>'values[time][mins]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
-					array(id =>'values[user_id]',		type=>menu,		value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'),	label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),classname=> actionsFilter, value_hidden=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
-
-					array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton, value_hidden=>"")
-				))
-			);
+//			$myButtons[0] = array
+//				(
+//					'name'			=> "0",
+//					'values'		=>	json_encode(array(array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
+//					array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
+//					array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
+//				))
+//			);
+//			$myButtons[1] = array
+//				(
+//					'name'			=> "1",
+//					'values'		=>	json_encode(array(	array(id =>'values[time][days]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ),	label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+//					array(id =>'values[time][hours]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'),	label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+//					array(id =>'values[time][mins]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+//					array(id =>'values[user_id]',		type=>menu,		value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'),	label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),classname=> actionsFilter, value_hidden=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
+//
+//					array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton, value_hidden=>"")
+//				))
+//			);
 			//_debug_array($alarm_data['add_alarm']['user_list']);die;
 
 			//---datatable1 settings---------------------------------------------------
@@ -1862,7 +1818,6 @@
 			(
 				'container'		=> 'datatable-container_1',
 				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'property.uiagreement.get_content', 'agreement_id'=>$id, 'phpgw_return_as'=>'json'))),
-				//'data'			=> json_encode($content),
                 'data'			=> json_encode(array()),
                 'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs1,
@@ -2035,7 +1990,7 @@
 				);
 
             
-//            echo'<pre>';print_r($data); echo'</pre>'; exit();
+//           echo'<pre>';print_r($data); echo'</pre>'; exit();
 
 			//---datatable settings--------------------
 //			phpgwapi_yui::load_widget('dragdrop');
