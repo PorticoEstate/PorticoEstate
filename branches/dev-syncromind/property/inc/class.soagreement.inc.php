@@ -913,7 +913,6 @@
 			//_debug_array($values);
 			$values['new_index']=$this->floatval($values['new_index']);
 			$this->db->transaction_begin();
-
 			while (is_array($values['select']) && list(,$activity_id) = each($values['select']))
 			{
 
