@@ -353,7 +353,6 @@
 		function update( $values )
 		{
 			$values['date'] = $this->bocommon->date_to_timestamp( $values['date'] );
-
 			return $this->so->update( $values );
 		}
 
