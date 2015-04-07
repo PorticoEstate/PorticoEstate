@@ -313,11 +313,6 @@
 				return false;
 			}
  */
-//            echo '<pre>'; print_r($alarm_type); echo '</pre>';
-//            echo '<pre>'; print_r($event); echo '</pre>';
-//            echo '<pre>'; print_r($time); echo '</pre>';
-//            echo '<pre>'; print_r($owner); echo '</pre>';
-//            exit('add_alarm');
 			if(!$owner>0)
 			{
 				$receipt['error'][]=array('msg'=>lang('No user selected'));
