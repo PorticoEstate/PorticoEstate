@@ -323,36 +323,7 @@
 		private function _get_filters_obligations($selected = 0)
 		{
 			$basis = true;
-			
-			$link = self::link(array(
-					'menuaction' => 'property.uibudget.get_filters_dependent',
-					'phpgw_return_as' => 'json'
-					));
 
-			$code = '
-				var link = "'.$link.'";
-				var data = {"year": $(this).val(), "basis":1};
-				clearFilterParam("revision");
-				clearFilterParam("grouping");
-				
-				execute_ajax(link,
-					function(result){
-						var $el_revision = $("#revision");
-						$el_revision.empty();
-						$.each(result.revision, function(key, value) {
-						  $el_revision.append($("<option></option>").attr("value", value.id).text(value.name));
-						});
-						
-						var $el_grouping = $("#grouping");
-						$el_grouping.empty();
-						$.each(result.grouping, function(key, value) {
-						  $el_grouping.append($("<option></option>").attr("value", value.id).text(value.name));
-						});
-						
-					}, data, "GET", "json"
-				);
-				';
-			
 			$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year);
 			array_unshift ($values_combo_box[0], array('id'=>'','name'=>lang('no year')));
 			$combos[] = array
@@ -898,7 +869,7 @@
             {
                 return $location_list;
             }
-            
+
 			if (isset($location_list) && is_array($location_list))
 			{
 				//$details = $this->details ? false : true;
@@ -921,14 +892,16 @@
 							'budget_cost'		=> number_format($entry['budget_cost'], 0, ',', ' '),
 							'obligation_ex'		=> $entry['obligation'],
 							'obligation'		=> number_format($entry['obligation'], 0, ',', ' '),
-							'link_obligation'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$entry['b_account'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'status_id' => 'all', 'obligation' => true)),
+							'link_obligation'	=> urldecode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$entry['b_account'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'status_id' => 'all', 'obligation' => true))),
 							'actual_cost_ex'	=> $entry['actual_cost'],
 							'actual_cost_period'=> number_format($entry['actual_cost_period'], 0, ',', ' '),
 							'actual_cost'		=> number_format($entry['actual_cost'], 0, ',', ' '),
-							'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$entry['b_account'],  'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'submit_search'=>true)),
+							'link_actual_cost'	=> urldecode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$entry['b_account'],  'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'submit_search'=>true))),
 							'diff_ex'			=> $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
 							'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
-							'percent'			=> $entry['percent']
+							'percent'			=> $entry['percent'],
+							'year'				=> $this->year,
+							'month'				=> $this->month
 						);
 				}
 			}
