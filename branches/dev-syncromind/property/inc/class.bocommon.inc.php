@@ -919,8 +919,8 @@
 
 			$alarm['header'][] = array
 				(
-					'lang_time'		=> lang('Time'),
-					'lang_text'	=> lang('Text'),
+					'lang_time'         => lang('Time'),
+					'lang_text'         => lang('Text'),
 					'lang_user'			=> lang('User'),
 					'lang_enabled'		=> lang('Enabled'),
 					'lang_select'		=> lang('Select')
