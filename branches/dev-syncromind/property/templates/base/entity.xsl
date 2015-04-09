@@ -45,7 +45,7 @@
 						<xsl:value-of select="php:function('lang', 'edit inventory')" />
 					</legend>
 
-					<xsl:call-template name="location_view2"/>
+					<xsl:call-template name="location_view"/>
 
 					<xsl:choose>
 						<xsl:when test="msgbox_data != ''">
