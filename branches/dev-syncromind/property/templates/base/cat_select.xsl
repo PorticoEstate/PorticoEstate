@@ -7,6 +7,9 @@
 			<xsl:value-of select="select_name"/>
 		</xsl:variable>
 		<select name="{$select_name}" class="forms" title="{$lang_cat_statustext}">
+			<xsl:attribute name="data-validation">
+				<xsl:text>required</xsl:text>
+			</xsl:attribute>
 			<option value="">
 				<xsl:value-of select="lang_no_cat"/>
 			</option>
