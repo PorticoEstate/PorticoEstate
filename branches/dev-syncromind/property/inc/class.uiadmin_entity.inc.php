@@ -419,9 +419,15 @@
                                                     'sortable' => FALSE
                                                 ),
                                                 array
-                                                (   
+                                                (
                                                     'key' => 'enable_bulk',
                                                     'label' => lang('enable bulk'),
+                                                    'sortable' => FALSE
+                                                )
+                                                array
+                                                (
+                                                    'key' => 'enable_controller',
+                                                    'label' => lang('enable controller'),
                                                     'sortable' => FALSE
                                                 )
 					)
@@ -963,6 +969,7 @@
 					'value_start_ticket'			=> $values['start_ticket'],
 					'value_is_eav'				=> $values['is_eav'],
 					'value_enable_bulk'			=> $values['enable_bulk'],
+					'value_enable_controller'	=> $values['enable_controller'],
 					'jasperupload'				=> true,
 					'category_list'				=> $category_list,
 					'parent_list'				=> $parent_list
