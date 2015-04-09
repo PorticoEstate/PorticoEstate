@@ -499,7 +499,7 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
-		<div class="yui-navset" id="edit_tabview">
+		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div class="yui-content">
 				<div id="general">
@@ -509,7 +509,7 @@
 					<table cellpadding="2" cellspacing="2" align="center" width="79%">
 						<tr>
 							<td>
-								<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}">
+								<form ENCTYPE="multipart/form-data" class="pure-form pure-form-aligned" id="form" method="post" name="form" action="{$edit_url}">
 									<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
 										<xsl:choose>
 											<xsl:when test="msgbox_data != ''">
@@ -696,7 +696,7 @@
 												<xsl:variable name="lang_save">
 													<xsl:value-of select="lang_save"/>
 												</xsl:variable>
-												<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+												<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 													<xsl:attribute name="onMouseover">
 														<xsl:text>window.status='</xsl:text>
 														<xsl:value-of select="lang_save_statustext"/>
@@ -707,7 +707,7 @@
 												<xsl:variable name="lang_apply">
 													<xsl:value-of select="lang_apply"/>
 												</xsl:variable>
-												<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
+												<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
 													<xsl:attribute name="onMouseover">
 														<xsl:text>window.status='</xsl:text>
 														<xsl:value-of select="lang_apply_statustext"/>
@@ -718,7 +718,7 @@
 												<xsl:variable name="lang_cancel">
 													<xsl:value-of select="lang_cancel"/>
 												</xsl:variable>
-												<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
+												<input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 													<xsl:attribute name="onMouseover">
 														<xsl:text>window.status='</xsl:text>
 														<xsl:value-of select="lang_cancel_statustext"/>
