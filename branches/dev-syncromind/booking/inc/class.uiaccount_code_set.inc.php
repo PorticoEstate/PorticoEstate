@@ -85,14 +85,14 @@ phpgw::import_class('booking.uicommon');
 			$data['datatable']['field'][] = array('key' => 'name', 'label' => lang('Name'), 'formatter' => 'YAHOO.booking.formatLink');
 			if (isset($config->config_data['dim_3'])) $data['datatable']['field'][] = array('key' => 'object_number', 'label' => $config->config_data['dim_3']);
 			if (isset($config->config_data['dim_1'])) $data['datatable']['field'][] = array('key' => 'responsible_code', 'label' => $config->config_data['dim_1']);
-			$data['datatable']['field'][] = array('key' => 'article', 'label' => lang('Article'));
+			if (isset($config->config_data['article'])) $data['datatable']['field'][] = array('key' => 'article', 'label' => lang('Article'));
 			if (isset($config->config_data['dim_2'])) $data['datatable']['field'][] = array('key' => 'service', 'label' => $config->config_data['dim_2']);
 			if (isset($config->config_data['dim_4'])) $data['datatable']['field'][] = array('key' => 'dim_4', 'label' => $config->config_data['dim_4']);
 			if (isset($config->config_data['dim_5'])) $data['datatable']['field'][] = array('key' => 'project_number', 'label' => $config->config_data['dim_5']);
 			if (isset($config->config_data['dim_value_1'])) $data['datatable']['field'][] = array('key' => 'unit_number', 'label' => $config->config_data['dim_value_1']);
 			if (isset($config->config_data['dim_value_4'])) $data['datatable']['field'][] = array('key' => 'dim_value_4', 'label' => $config->config_data['dim_value_4']);
 			if (isset($config->config_data['dim_value_5'])) $data['datatable']['field'][] = array('key' => 'dim_value_5', 'label' => $config->config_data['dim_value_5']);
-			$data['datatable']['field'][] = array('key' => 'unit_prefix', 'label' => lang('Unit prefix'));
+			if ($config->config_data['external_format'] != 'KOMMFAKT') $data['datatable']['field'][] = array('key' => 'unit_prefix', 'label' => lang('Unit prefix'));
 			$data['datatable']['field'][] = array('key' => 'link', 'hidden' => true);
 			
 			if ($this->bo->allow_create()) {
@@ -169,6 +169,13 @@ phpgw::import_class('booking.uicommon');
 			{
 				$account_code_set = extract_values($_POST, $this->fields);
 				$account_code_set['active'] = '1';
+				if ($config->config_data['external_format'] == 'KOMMFAKT') {
+					$account_code_set['article'] = '1';
+					$account_code_set['service'] = '1';
+					$account_code_set['project_number'] = '1';
+					$account_code_set['unit_number'] = '1';
+					$account_code_set['unit_prefix'] = '1';
+				}
 				
 				$errors = $this->bo->validate($account_code_set);
 				if(!$errors)
@@ -182,7 +189,9 @@ phpgw::import_class('booking.uicommon');
 				}
 			}
 			$this->add_default_display_data($account_code_set);
-			$account_code_set['project_number'] = '9';
+			if ($config->config_data['external_format'] != 'KOMMFAKT') {
+				$account_code_set['project_number'] = '9';
+			}
 			$account_code_set['cancel_link'] = $this->link_to('index');
 			$this->flash_form_errors($errors);
 			self::render_template('account_code_set_form', array('new_form' => true, 'account_code_set' => $account_code_set , 'config_data' => $config->config_data));

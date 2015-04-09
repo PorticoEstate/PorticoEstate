@@ -187,7 +187,10 @@ phpgw::import_class('booking.uicommon');
 				)
             );
             }
-    		$data['filters'] = extract_values($_GET, array("filter_to"));
+
+			$filters_to = strtotime(extract_values($_GET, array("filter_to")));
+			$data['filters'] = date("Y-m-d",$filters_to);
+
 
 			$this->render_template('datatable', $data);
 		}

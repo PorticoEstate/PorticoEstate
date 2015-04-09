@@ -113,6 +113,16 @@
 								array('menuaction' => 'admin.uiaccounts.global_message'))
 				);
 			}
+                        
+                        if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$menus['admin']['home_screen_message'] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('home screen message', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',
+								array('menuaction' => 'admin.uiaccounts.home_screen_message'))
+				);
+			}
 
 			if (! $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::READ, 'admin'))
 			{

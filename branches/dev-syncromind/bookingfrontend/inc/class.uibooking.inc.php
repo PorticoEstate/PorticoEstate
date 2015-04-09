@@ -6,6 +6,7 @@
 		public $public_functions = array
 		(
 			'building_schedule' =>  true,
+			'building_extraschedule' =>  true,
 			'resource_schedule' =>  true,
 			'info'				=>	true,
 			'add' =>				true,
@@ -25,6 +26,7 @@
 			$this->season_bo = CreateObject('booking.boseason');
 			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->system_message_bo = CreateObject('booking.bosystem_message');
+			$this->organization_bo = CreateObject('booking.boorganization');
 		}
 
 		private function item_link(&$item, $key)
@@ -37,6 +39,25 @@
 		{
 		    $date = new DateTime(phpgw::get_var('date'));
 			$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $date);
+			foreach($bookings['results'] as &$row)
+			{
+				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $row['resource_id']));
+				array_walk($row, array($this, 'item_link'));
+			}
+			$data = array
+			(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $bookings['total_records'], 
+					"Result" => $bookings['results']
+				)
+			);
+			return $data;
+		}
+
+		public function building_extraschedule()
+		{
+		    $date = new DateTime(phpgw::get_var('date'));
+			$bookings = $this->bo->building_extraschedule(phpgw::get_var('building_id', 'int'), $date);
 			foreach($bookings['results'] as &$row)
 			{
 				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $row['resource_id']));
@@ -309,7 +330,7 @@
 			$booking = $this->bo->read_single($id);
 			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
 			$booking['building_name'] = $booking['building']['name'];
-			$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
+			$group = $this->group_bo->read_single($booking['group_id']);
 			$errors = array();
 			$update_count = 0;
 			$today = getdate();
@@ -351,6 +372,10 @@
 					if (!$errors)
 					{
 
+                        $max_dato = strtotime($_POST['to_']); // highest date from input
+
+                        $season = $this->season_bo->read_single($booking['season_id']);
+
 						if ($_POST['recurring'] == 'on') {
 							$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
 						} 
@@ -360,30 +385,30 @@
 							$_POST['repeat_until'] = $season['to_'];
 						} 
 
-						$max_dato = strtotime($_POST['to_']); // highest date from input
-	
-						$season = $this->season_bo->read_single($booking['season_id']);
-				
-						$where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d', strtotime($_POST['from_'])));
+						$where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d', strtotime($booking['from_'])));
 						if ($_POST['recurring'] == 'on') {
 							$where_clauses[] = sprintf("bb_booking.to_ < '%s 00:00:00'", date('Y-m-d', $repeat_until));
 						}
+                        $where_clauses[] = sprintf("EXTRACT(DOW FROM bb_booking.from_) in (%s)",date('w', strtotime($booking['from_'])));
+                        $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.from_) = %s",date('H', strtotime($booking['from_'])));
+                        $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.from_) = %s",date('i', strtotime($booking['from_'])));
+                        $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.to_) = %s",date('H', strtotime($booking['to_'])));
+                        $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.to_) = %s",date('i', strtotime($booking['to_'])));
+                        $params['sort'] = 'from_';
 						$params['filters']['where'] = $where_clauses;
 						$params['filters']['season_id'] = $booking['season_id'];
 						$params['filters']['group_id'] = $booking['group_id'];
-
-						$bookings = $this->bo->so->read($params);
+                        $bookings = $this->bo->so->read($params);
 
 						if ($step == 2)
 						{
-							
 							$_SESSION['audience'] = $_POST['audience'];
 							$_SESSION['male'] = $_POST['male'];
 							$_SESSION['female'] = $_POST['female'];
-						
+                            $_SESSION['from'] = mb_strcut($_POST['from_'],11,strlen($_POST['from_']));
+                            $_SESSION['to'] = mb_strcut($_POST['to_'],11,strlen($_POST['to_']));
 						}
-
-						if ($step == 3)
+                        if ($step == 3)
 						{
 							foreach($bookings['results'] as $b)
 							{
@@ -400,26 +425,25 @@
 										$i++;
 									}
 								}
-
 								$b['agegroups'] = $temp_agegroup;
 								$b['audience'] = $_SESSION['audience'];
 								$b['group_id'] =$_POST['group_id'];
 								$b['activity_id'] = $_POST['activity_id'];
-								$errors = $this->bo->validate($b);
+                                $b['from_'] = mb_strcut($b['from_'],0,11).$_SESSION['from'];
+                                $b['to_'] = mb_strcut($b['to_'],0,11).$_SESSION['to'];
+                                $errors = $this->bo->validate($b);
 								if(!$errors)
 								{
-
-									$receipt = $this->bo->update($b);
+                                    $receipt = $this->bo->update($b);
 									$update_count++;
-									
 								}
 							}
-							unset($_SESSION['female']);
+                            unset($_SESSION['female']);
 							unset($_SESSION['male']);
 							unset($_SESSION['audience']);
 
 						}
-					}
+                    }
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -486,9 +510,15 @@
 				$step++;
 
 				$season = $this->season_bo->read_single($booking['season_id']);
-				
-				$where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d'));
-				//$params['filters']['where'] = $where_clauses;
+
+                $where_clauses[] = sprintf("EXTRACT(DOW FROM bb_booking.from_) in (%s)",date('w', strtotime($booking['from_'])));
+                $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.from_) = %s",date('H', strtotime($booking['from_'])));
+                $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.from_) = %s",date('i', strtotime($booking['from_'])));
+                $where_clauses[] = sprintf("EXTRACT(HOUR FROM bb_booking.to_) = %s",date('H', strtotime($booking['to_'])));
+                $where_clauses[] = sprintf("EXTRACT(MINUTE FROM bb_booking.to_) = %s",date('i', strtotime($booking['to_'])));
+                $where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d'));
+                $params['sort'] = 'from_';
+				$params['filters']['where'] = $where_clauses;
 				$params['filters']['season_id'] = $booking['season_id'];
 				$params['filters']['group_id'] = $booking['group_id'];
 				$booking = $this->bo->so->read($params);
@@ -562,15 +592,101 @@
 					);
 		}
 
+		public function building_users($building_id, $group_id, $type=false, $activities=array()) {
+            $contacts = array();
+			$organizations = $this->organization_bo->find_building_users($building_id, $type, $activities);
+            foreach($organizations['results'] as $org)
+            {
+                if ($org['email'] != '' && strstr($org['email'], '@')) {
+                    if (!in_array($org['email'], $contacts)) {
+                        $contacts[] = $org['email'];
+                    }
+                }
+                if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@')) {
+                    if (!in_array($org['contacts'][0]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][0]['email']; 
+                    }
+                }
+                if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@')) {
+                    if (!in_array($org['contacts'][1]['email'], $contacts)) {
+                        $contacts[] = $org['contacts'][1]['email']; 
+                    }
+                }
+                $grp_con = $this->bo->so->get_group_contacts_of_organization($org['id']);
+                foreach ($grp_con as $grp) {
+                    if ($grp['email'] != '' && strstr($grp['email'], '@') && $grp['group_id'] != $group_id ) {
+                        if (!in_array($grp['email'], $contacts)) {
+                            $contacts[] = $grp['email'];
+                        }
+                    }
+                }
+            } 
+			return $contacts;
+		}
+
+		public function resource_users($resources, $group_id) {
+			$contacts = array();
+			$orglist = array();
+			foreach($resources as $res){
+				$cres = $this->resource_bo->read_single($res);
+				if($cres['organizations_ids'] != '') {
+					$orglist .= $cres['organizations_ids'].',';
+				}
+			}
+			$orgs = explode(",", rtrim($orglist, ","));
+
+
+			$organizations = $this->organization_bo->so->read(array('filters'=>array('id'=>$orgs), 'sort'=>'name'));
+			foreach($organizations['results'] as $org)
+			{
+				if ($org['email'] != '' && strstr($org['email'], '@')) {
+					if (!in_array($org['email'], $contacts)) {
+						$contacts[] = $org['email'];
+					}
+				}
+				if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@')) {
+					if (!in_array($org['contacts'][0]['email'], $contacts)) {
+						$contacts[] =  $org['contacts'][0]['email'];
+					}
+				}
+				if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@')) {
+					if (!in_array($org['contacts'][1]['email'], $contacts)) {
+						$contacts[] = $org['contacts'][1]['email'];
+					}
+				}
+				$grp_con = $this->bo->so->get_group_contacts_of_organization($org['id']);
+				foreach ($grp_con as $grp) {
+					if ($grp['email'] != '' && strstr($grp['email'], '@') && $grp['group_id'] != $group_id ) {
+						if (!in_array($grp['email'], $contacts)) {
+							$contacts[] =  $grp['email'];
+						}
+					}
+				}
+			}
+			return $contacts;
+		}
+
+		public function organization_users($group_id) {
+
+            $contacts = array();
+            $groups = $this->bo->so->get_all_group_of_organization_from_groupid($group_id);
+            foreach($groups as $grp) {
+                if ($grp['email'] != '' && strstr($grp['email'], '@') && $grp['group_id'] != $group_id ) {
+                    if (!in_array($grp['email'], $contacts)) {
+                        $contacts[] = $grp['email'];
+                    }
+                }
+            }
+			return $contacts;
+        }
 		public function cancel()
 		{
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 
-			if ($config->config_data['user_can_delete'] != 'yes') {
+			if ($config->config_data['user_can_delete_bookings'] != 'yes') {
 
 	        	$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
-	
 	   			$errors = array();
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 	            {
@@ -583,8 +699,16 @@
 	                $repeat_until = $_POST['repeat_until'];
 	                $field_interval = $_POST['field_interval'];
 	                $delete_allocation = $_POST['delete_allocation'];
-	
-					date_default_timezone_set("Europe/Oslo");
+                    $allocation = $this->allocation_bo->read_single($booking['allocation_id']);
+
+                    $maildata = array();
+                    $maildata['outseason'] = $outseason;
+                    $maildata['recurring'] = $recurring;
+                    $maildata['repeat_until'] = $repeat_until;
+                    $maildata['delete_allocation'] = $delete_allocation;
+
+
+                    date_default_timezone_set("Europe/Oslo");
 					$date = new DateTime(phpgw::get_var('date'));
 					$system_message = array();
 					$system_message['building_id'] = intval($booking['building_id']);
@@ -593,7 +717,7 @@
 					$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 	                $system_message['type'] = 'cancelation';
 					$system_message['status'] = 'NEW';
-					$system_message['name'] = ' ';
+					$system_message['name'] = $booking['group_name'];
 					$system_message['phone'] = ' ';
 					$system_message['email'] = ' ';
 					$system_message['title'] = lang('Cancelation of booking from')." ".$booking['group_name'];
@@ -601,6 +725,7 @@
 	                $link = self::link(array('menuaction' => 'booking.uibooking.delete','id' => $booking['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval, 'delete_allocation' => $delete_allocation));
 	                $link = mb_strcut($link,16,strlen($link));
 	                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel booking use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
+                    $this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
 
@@ -616,7 +741,7 @@
 				$id = intval(phpgw::get_var('id', 'GET'));
 				$outseason = phpgw::get_var('outseason', 'GET');
 				$recurring = phpgw::get_var('recurring', 'GET');
-				$repeat_untild = phpgw::get_var('repeat_until', 'GET');
+				$repeat_until = phpgw::get_var('repeat_until', 'GET');
 				$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
 				$delete_allocation = phpgw::get_var('delete_allocation', 'GET');
 				$booking = $this->bo->read_single($id);
@@ -629,7 +754,26 @@
 				$valid_dates = array();
 	            $allocation_delete = array();
 	            $allocation_keep = array();
-		
+
+                if ($config->config_data['split_pool'] == 'yes')
+                {
+                    $split = 1;
+                } else {
+                    $split = 0;
+                }
+                $resources = $booking['resources'];
+                $activity=$this->organization_bo->so->get_resource_activity($resources);
+                $mailadresses = $this->building_users($booking['building_id'],$booking['group_id'], $split, $activity);
+
+				$extra_mailadresses = $this->resource_users($resources, $booking['group_id']);
+				$mailadresses = array_merge($mailadresses, $extra_mailadresses);
+
+                $maildata = array();
+                $maildata['outseason'] = $outseason;		
+                $maildata['recurring'] = $recurring;		
+                $maildata['repeat_until'] = $repeat_until;
+                $maildata['delete_allocation'] = $delete_allocation;
+
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
 					$from_date = $_POST['from_'];
@@ -643,24 +787,27 @@
         	            if ($_POST['delete_allocation'] != 'on') {
 
 		            	    $inf_del = "Booking";
+                            $maildata['allocation'] = 0;                            
 						    $this->bo->so->delete_booking($id);
 	                    }
 	                    else
 	                    {
 	                        $allocation_id = $booking['allocation_id'];
-
 	                        $this->bo->so->delete_booking($id);
 	                        $err  = $this->allocation_bo->so->check_for_booking($allocation_id);
 	                        if ($err)
 	                        {
 			            	    $inf_del = "Booking";
+                                $maildata['allocation'] = 0;                            
 	                    	    $errors['booking'] = lang('Could not delete allocation due to a booking still use it');
 	                        }
 	                        else
 							{
 		            	    	$inf_del = "Booking and allocation";
+                                $maildata['allocation'] = 1;                            
 	                            $err = $this->allocation_bo->so->delete_allocation($allocation_id);
 	                        }
+
 	                    }
 
 						$res_names = '';
@@ -673,7 +820,7 @@
 						$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 		                $system_message['type'] = 'cancelation';
 						$system_message['status'] = 'NEW';
-						$system_message['name'] = ' ';
+						$system_message['name'] = $booking['group_name'];
 						$system_message['phone'] = ' ';
 						$system_message['email'] = ' ';
 						$system_message['title'] = lang("Cancelation of ".$inf_del." from")." ".$this->bo->so->get_organization($booking['group_id'])." - ".$booking['group_name'];
@@ -681,7 +828,8 @@
 							$res_names = $res_names.$this->bo->so->get_resource($res)." ";
 						}
 						$info_deleted = lang($inf_del." deleted on")." ".$system_message['building_name'].":<br />".$res_names." - ".pretty_timestamp($booking['from_'])." - ".pretty_timestamp($booking['to_']);
-
+                        $this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
+                        $this->bo->send_notification($booking, $allocation, $maildata, $mailadresses);
 			            $system_message['message'] = $system_message['message']."<br />".$info_deleted;
 						$receipt = $this->system_message_bo->add($system_message);
 
@@ -728,7 +876,7 @@
 								if ($step == 3)
 								{
 				            	    $inf_del = "Bookings";
-	                                $stat = $this->bo->so->delete_booking($id);                            
+	                                $stat = $this->bo->so->delete_booking($id);
 	                            }                            
 	                        }
 	                        if ($_POST['delete_allocation'] == 'on')                         {
@@ -744,7 +892,7 @@
 	    							if ($step == 3)
 	    							{
 				            	       $inf_del = "Bookings and allocations";
-	                                   $stat = $this->bo->so->delete_allocation($aid);                            
+	                                   $stat = $this->bo->so->delete_allocation($aid);
 	                                }                            
 	                            }
 	                        }
@@ -752,7 +900,15 @@
 	                    }
 						if ($step == 3) 
 						{
-							$res_names = '';
+                            $maildata = array();
+                            $maildata['outseason'] = phpgw::get_var('outseason','GET');
+                            $maildata['recurring'] = phpgw::get_var('recurring', 'GET');		
+                            $maildata['repeat_until'] = phpgw::get_var('repeat_until', 'GET');	
+                            $maildata['delete_allocation'] = phpgw::get_var('delete_allocation', 'GET');
+							$maildata['keep'] = $allocation_keep;
+							$maildata['delete'] = $allocation_delete;
+
+                            $res_names = '';
 							date_default_timezone_set("Europe/Oslo");
 							$date = new DateTime(phpgw::get_var('date'));
 							$system_message = array();
@@ -762,7 +918,7 @@
 							$system_message = array_merge($system_message, extract_values($_POST, array('message')));
 			                $system_message['type'] = 'cancelation';
 							$system_message['status'] = 'NEW';
-							$system_message['name'] = ' ';
+							$system_message['name'] = $booking['group_name'];
 							$system_message['phone'] = ' ';
 							$system_message['email'] = ' ';
 							$system_message['title'] = lang("Cancelation of ".$inf_del." from")." ".$this->bo->so->get_organization($booking['group_id'])." - ".$booking['group_name'];
@@ -774,6 +930,8 @@
 								$info_deleted = $info_deleted."<br />".$res_names." - ".pretty_timestamp($valid_date['from_'])." - ".pretty_timestamp($valid_date['to_']);
 							}
 				            $system_message['message'] = $system_message['message']."<br />".$info_deleted;
+                            $this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates);
+                            $this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
 							$receipt = $this->system_message_bo->add($system_message);
 							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$allocation['building_id']));
 						}
@@ -781,11 +939,18 @@
 				}
 	
 				$this->flash_form_errors($errors);
+				if ($config->config_data['user_can_delete_allocations'] != 'yes')
+				{
+					$user_can_delete_allocations = 0;
+				
+				} else {
+					$user_can_delete_allocations = 1;
+				}
 				self::add_javascript('booking', 'booking', 'booking.js');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
+#				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
+                $booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $booking['building_id'], 'date' => $booking['from_']));
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
-	
 				if ($step < 2) 
 	            {
 	    			self::render_template('booking_delete', array('booking' => $booking,
@@ -794,6 +959,7 @@
 						'interval' => $field_interval,
 						'repeat_until' => $repeat_until,
 	                    'delete_allocation' => $delete_allocation,
+						'user_can_delete_allocations' => $user_can_delete_allocations
 	                ));
 	            }
 				elseif ($step == 2) 
@@ -807,6 +973,7 @@
 						'from_date' => $from_date,
 						'to_date' => $to_date,
 	                    'delete_allocation' => $_POST['delete_allocation'],
+						'user_can_delete_allocations' => $user_can_delete_allocations,
 						'allocation_keep' => $allocation_keep,
 						'allocation_delete' => $allocation_delete,
 						'message' => $_POST['message'],
@@ -821,6 +988,15 @@
 
 		public function info()
 		{
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			if ($config->config_data['user_can_delete_bookings'] != 'yes')
+			{
+				$user_can_delete_bookings = 0;
+			
+			} else {
+				$user_can_delete_bookings = 1;
+			}
 			$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
 			$booking['group'] = $this->group_bo->read_single($booking['group_id']);
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
@@ -842,7 +1018,7 @@
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel', 'id' => $booking['id']));
             }
 			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);
-			self::render_template('booking_info', array('booking'=>$booking));
+			self::render_template('booking_info', array('booking'=>$booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 	}

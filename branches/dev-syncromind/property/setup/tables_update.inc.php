@@ -8221,7 +8221,7 @@
 				$sql = "INSERT INTO fm_vendor_category ({$cols}) VALUES ({$values})";
 				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
-				$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_vendor SET category = {$id} WHERE _category = '{$cat['descr']}'",__LINE__,__FILE__);
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_vendor SET category = {$id} WHERE _category = '{$cat['id']}'",__LINE__,__FILE__);
 
 				$id++;
 			}
@@ -8234,6 +8234,7 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
 
 	/**
 	* Update property version from 0.9.17.686 to 0.9.17.687
@@ -8297,11 +8298,34 @@
 			$sql = "INSERT INTO fm_ns3420 ({$cols}) VALUES ({$values})";
 			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 		}
-	
+
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.687';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.685 to 0.9.17.686
+	* Add controller-flag to entities
+	*/
+	$test[] = '0.9.17.687';
+	function property_upgrade0_9_17_687()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','enable_controller',array(
+				'type' =>	'int',
+				'precision' => 2,
+				'nullable' => true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.688';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

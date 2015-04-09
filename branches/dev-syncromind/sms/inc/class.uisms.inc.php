@@ -41,7 +41,6 @@
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$location_id 				= $GLOBALS['phpgw']->locations->get_id('sms', 'run');
@@ -74,6 +73,8 @@
 
 		function index()
 		{
+			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::inbox';
 			$acl_location = '.inbox';
 
@@ -246,6 +247,8 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
 			$acl_location = '.outbox';
+
+			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('sms','nextmatchs','menu',
 										'search_field'));
@@ -855,7 +858,11 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
-		function daemon_manual()
+		/**
+		 * @param mixed $data
+		 * If $data is an array - then the process is run as cron
+		 */
+		function daemon_manual($data=array())
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::sms::refresh';
 			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
@@ -864,11 +871,16 @@
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
-
 			$sms = CreateObject('sms.sms');
 			$sms->getsmsinbox(true);
 			$sms->getsmsstatus();
+			if(isset($data['cron']))
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				return;
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
 
 			$receipt['message'][]=array('msg'=>lang('Daemon refreshed'));
 

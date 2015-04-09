@@ -261,7 +261,7 @@
 		 * @param bool $bill_only_one_time	flag to indicate if the the invoice should only bil one time price elements
 		 * @return rental_invoice	the newly created invoice
 		 */
-		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time)
+		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false)
 		{
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 			
@@ -309,7 +309,10 @@
 			$invoice->set_project_id($contract->get_project_id());
 			$invoice->set_old_contract_id($contract->get_old_contract_id());
 			
-			rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
+			if(!$dry_run)
+			{
+				rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
+			}
 			
 			// Retrieve the contract price items: only one-time or all
 			if($bill_only_one_time)
@@ -435,12 +438,18 @@
 						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
 						// ... and set the contract price item as billed
 						$contract_price_item->set_is_billed(true);
-						rental_socontract_price_item::get_instance()->store($contract_price_item);
+						if(!$dry_run)
+						{
+							rental_socontract_price_item::get_instance()->store($contract_price_item);
+						}
 					}
 				}
 				
-				// Store the invoice price item
-				rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
+				if(!$dry_run)
+				{
+					// Store the invoice price item
+					rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
+				}
 				
 				// Add the price item to the invoice
 				$invoice->add_invoice_price_item($invoice_price_item);
@@ -453,8 +462,11 @@
 			// Set the total sum of the invoice rounded to the specified number of decimals
 			$invoice->set_total_sum(round($total_sum, $decimals));
 			
-			// ... and store the invoice
-			rental_soinvoice::get_instance()->store($invoice);
+			if(!$dry_run)
+			{
+				// ... and store the invoice
+				rental_soinvoice::get_instance()->store($invoice);
+			}
 			return $invoice;
 		}
 		

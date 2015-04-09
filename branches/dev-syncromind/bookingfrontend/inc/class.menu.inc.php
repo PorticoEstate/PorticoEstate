@@ -18,6 +18,11 @@
 						'text'	=> lang('Configuration'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'bookingfrontend') )
 					),
+					'metasettings'	=> array
+					(
+						'text'	=> lang('Metadata'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uimetasettings.index', 'appname' => 'booking') )
+					),
 				);
 			}
 

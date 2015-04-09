@@ -112,6 +112,28 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
+		<div class="row">
+			<table>
+				<tr>
+					<td valign='top'>
+						<label for="files">
+							<xsl:value-of select="php:function('lang', 'files')" />
+						</label>
+					</td>
+					<td>
+						<table>
+							<xsl:for-each select="files">
+								<tr>
+									<td>
+										<xsl:value-of select="file_name" disable-output-escaping="yes"/>
+									</td>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</fieldset>
 	
 </xsl:template>

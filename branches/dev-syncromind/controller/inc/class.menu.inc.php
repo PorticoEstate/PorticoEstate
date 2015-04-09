@@ -105,7 +105,13 @@
 						'text'	=> lang('Calendar_overview'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicalendar.view_calendar_for_year') ),
 						'image'	=> array('property', 'location_1'),
-					)
+					),
+					'status_components' => array
+					(
+						'text'	=> lang('status components'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicomponent.index') ),
+						'image'	=> array('property', 'location_1'),
+					),
 				);
 			}
 			

@@ -71,7 +71,9 @@
 			}
 			
 			if(!isset($_SESSION['showall'])) {
-				$filters['active'] = "1";
+				if(!isset($filters['application_id'])) {
+					$filters['active'] = "1";
+				}
 			}
 			
 			return array(

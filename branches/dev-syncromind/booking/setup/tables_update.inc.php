@@ -2661,7 +2661,7 @@
 	/**
 	* Update booking version from 0.2.10 to 0.2.11
 	* add description to bb_office
-	* 
+	*
 	*/
 	function booking_upgrade0_2_10()
 	{
@@ -2715,7 +2715,7 @@
 	/**
 	* Update booking version from 0.2.11 to 0.2.12
 	* alter lenght of name fields
-	* 
+	*
 	*/
 	function booking_upgrade0_2_11()
 	{
@@ -2838,6 +2838,164 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.12';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	$test[] = '0.2.12';
+	/**
+	* Update booking version from 0.2.12 to 0.2.13
+	* add description to bb_office
+	* 
+	*/
+	function booking_upgrade0_2_12()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_name varchar(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_email varchar(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_phone varchar(50)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.13';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.13';
+	/**
+	* Update booking version from 0.2.13 to 0.2.14
+	* 
+	* 
+	*/
+	function booking_upgrade0_2_13()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query(
+				"CREATE OR REPLACE VIEW bb_application_association AS ".
+				"SELECT 'booking' AS type, application_id, id, from_, to_, active FROM bb_booking WHERE application_id IS NOT NULL ".
+				"UNION ".
+				"SELECT 'allocation' AS type, application_id, id, from_, to_, active FROM bb_allocation  WHERE application_id IS NOT NULL ".
+				"UNION ".
+				"SELECT 'event' AS type, application_id, id, from_, to_, active FROM bb_event  WHERE application_id IS NOT NULL"
+		);
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.14';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.14';
+	/**
+	* Update booking version from 0.2.14 to 0.2.15
+	* add description to bb_office
+	* 
+	*/
+	function booking_upgrade0_2_14()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN calendar_text varchar(50)");
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.15';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.15';
+	/**
+	* Update booking version from 0.2.15 to 0.2.16
+	* add another tilsynsvakt to buidling
+	* 
+	*/
+	function booking_upgrade0_2_15()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_name2 varchar(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_email2 varchar(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_phone2 varchar(50)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.16';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.16';
+	/**
+	* Update booking version from 0.2.16 to 0.2.17
+	* add another tilsynsvakt to buidling
+	* 
+	*/
+	function booking_upgrade0_2_16()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN  extra_kalendar int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_building SET extra_kalendar = 0");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.17';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.17';
+	/**
+	 * Update booking version from 0.2.17 to 0.2.18
+	 * add another tilsynsvakt to buidling
+	 *
+	 */
+	function booking_upgrade0_2_17()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN equipment text DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_application SET equipment = NULL");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.18';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	$test[] = '0.2.18';
+	/**
+	 * Update booking version from 0.2.18 to 0.2.19
+	 * add another tilsynsvakt to buidling
+	 *
+	 */
+	function booking_upgrade0_2_18()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN building_id int DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_event SET building_id = br2.building_id FROM bb_resource br2 WHERE EXISTS (SELECT 1 FROM bb_event be, bb_event_resource ber, bb_resource br WHERE be.id = ber.event_id AND ber.resource_id = br.id AND br2.id = br.id AND bb_event.id=be.id )");
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.19';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.19';
+	/**
+	 * Update booking version from 0.2.19 to 0.2.20
+	 * add another tilsynsvakt to buidling
+	 *
+	 */
+	function booking_upgrade0_2_19()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN organizations_ids varchar(50) DEFAULT NULL");
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.20';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

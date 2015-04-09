@@ -2040,3 +2040,5 @@ tender received	property	no	Mottatt tilbud
 inspection on completion	property	no	Ferdigbefaring
 end date delay	property	no	Forsinket utførelse
 tender delay	property	no	Forsinket tilbud
+enable bulk	common	no	Aktiver bulk
+enable controller	common	no	Aktiver Kontroll

@@ -838,6 +838,29 @@
 							</input>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'enable controller')"/>
+						</td>
+						<td>
+							<input type="checkbox" name="values[enable_controller]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'This category is allowed to link to controller')"/>
+								</xsl:attribute>
+								<xsl:if test="value_enable_controller > '0'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="value_enable_controller > '1'">
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+
+							</input>
+						</td>
+					</tr>
 					<xsl:choose>
 						<xsl:when test="lang_location_level != ''">
 							<tr>

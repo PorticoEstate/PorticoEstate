@@ -177,16 +177,16 @@
 				Event.addListener(select_input, 'change', function(e) {
 					enableCustField(this[this.selectedIndex].value);
 				});
-				
+
 				// Wouldn't work in IE6:
 				// Dom.batch(items, function(opt) {
-				// 	Event.addListener(opt, 'click', function(e) { 
+				// 	Event.addListener(opt, 'click', function(e) {
 				// 		enableCustField(this.value);
 				// 	})
 				// });
 			})();
 JST;
-			
+
 			if (is_array($entity)) {
 				$this->add_current_identifier_info($entity);
 			}

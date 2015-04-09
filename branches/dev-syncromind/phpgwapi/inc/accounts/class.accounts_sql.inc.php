@@ -335,6 +335,13 @@
 		{
 			$id = (int) $id;
 			$account = null;
+			static $cache = array();
+
+
+			if(isset($cache[$id]))
+			{
+				return $cache[$id];
+			}
 
 			if ( $use_cache )
 			{
@@ -377,6 +384,7 @@
 
 				phpgwapi_cache::system_set('phpgwapi', "account_{$id}", $account);
 			}
+			$cache[$id] = $account;
 			return $account;
 		}
 

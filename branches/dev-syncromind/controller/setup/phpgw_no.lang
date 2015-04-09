@@ -373,3 +373,4 @@ Show message	controller	no	Vis melding
 Status not done	controller	no	Status: Ikke utført
 Status done controller	no	Status: Utført
 planned date	common	no	Planlagt Dato
+status components	controller	no	Status komponenter

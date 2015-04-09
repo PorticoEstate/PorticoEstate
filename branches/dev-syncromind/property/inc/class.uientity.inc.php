@@ -71,7 +71,9 @@
 				'get_inventory'		=> true,
 				'add_inventory'		=> true,
 				'edit_inventory'	=> true,
-				'inventory_calendar'=> true
+				'inventory_calendar'=> true,
+			'get_controls_at_component'=>true
+
 			);
 
 		function __construct()
@@ -1714,6 +1716,14 @@
 					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
+				$_enable_controller = !!$category['enable_controller'];
+				if($_enable_controller && $id)
+				{
+					$tabs['controller']	= array('label' => lang('controller'), 'link' => '#controller', 'function' => "set_tab('controller')");
+					$active_tab = $active_tab ? $active_tab : 'location';
+					$GLOBALS['phpgw']->jqcal->add_listener('control_start_date');
+				}
+
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
@@ -2005,7 +2015,123 @@
 						)	
 					);
 				}
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+			{
+				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+				$_controls = $this->get_controls_at_component($location_id, $id);
+
+				$controls_def = array
+				(
+					array('key' => 'serie_id','label'=>'serie','sortable'=>false,'resizeable'=>true),
+					array('key' => 'control_id','label'=>lang('controller'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'assigned_to_name','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'relation_enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'location_id','hidden'=>true),
+					array('key' => 'component_id','hidden'=>true),
+					array('key' => 'id','hidden'=>true),
+					array('key' => 'assigned_to','hidden'=>true),
+				);
+
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_4',
+					'requestUrl'	=> "''",
+					'ColumnDefs'	=> $controls_def,
+					'data'			=> json_encode($_controls),
+					'config'		=> array(
+						array('disableFilter'	=> true),
+						array('disablePagination'	=> true)
+					)
+				);
+
+
+				$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
+				$socase 			= CreateObject('controller.socase');
+				$controller_cases	= $socase->get_cases_by_component($location_id, $id);
+				$_statustext = array();
+				$_statustext[0] = lang('open');
+				$_statustext[1] = lang('closed');
+				$_statustext[2] = lang('pending');
+
+				$_cases = array();
+				foreach ($controller_cases as $case)
+				{
+					$socheck_list 	= CreateObject('controller.socheck_list');
+					$control_id	= $socheck_list->get_single($case['check_list_id'])->get_control_id();
+					foreach($_controls as $_control)
+					{
+						if($_control['control_id'] == $control_id)
+						{
+							$_control_name = $_control['title'];
+							break;
+						}
+					}
+//						_debug_array($check_list);die();
+
+					switch ($case['status'])
+					{
+						case 0:
+						case 2:
+							$_method = 'view_open_cases';
+							break;
+						case 1:
+							$_method = 'view_closed_cases';
+							break;
+						default:
+							$_method = 'view_open_cases';
+					}
+
+					$_link = $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction' => "controller.uicase.{$_method}",
+							'check_list_id' => $case['check_list_id']
+						)
+					);
+
+					$_cases[] = array
+					(
+						'url'		=> "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
+						'type'		=> $_control_name,
+						'title'		=> $case['descr'],
+						'status'	=> $_statustext[$case['status']],
+						'user'		=> $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
+						'entry_date'=> $GLOBALS['phpgw']->common->show_date($case['modified_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					);
+					unset($_link);
+				}
+
+				$_case_def = array
+				(
+					array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+					array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+				);
+
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_5',
+					'requestUrl'	=> "''",
+					'ColumnDefs'	=> $_case_def,
+					'data'			=> json_encode($_cases),
+					'config'		=> array(
+						array('disableFilter'	=> true),
+						array('disablePagination'	=> true)
+					)
+				);
+
 			}
+
+		}
 			
 			//$category['org_unit'] =1;
 			if($category['org_unit'] && $mode == 'edit')
@@ -2024,9 +2150,17 @@ JS;
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
+			$repeat_types = array();
+			$repeat_types[] = array('id'=> -1, 'name' => lang('day'));
+			$repeat_types[] = array('id'=> 1, 'name' => lang('weekly'));
+			$repeat_types[] = array('id'=> 2, 'name' => lang('month'));
+			$repeat_types[] = array('id'=> 3, 'name' => lang('year'));
+
 			$data = array
 			(
 					'datatable_def'					=> $datatable_def,
+					'repeat_types'					=> array('options' => $repeat_types),
+					'controller'					=> $_enable_controller,
 					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'enable_bulk'					=> $category['enable_bulk'],
 					'org_unit'						=> $category['org_unit'],
@@ -2916,5 +3050,66 @@ JS;
 			}
 			echo "Planlagt: Visning av kalenderoppføringer for ressursen";
 			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function get_controls_at_component( $location_id = 0, $id = 0 )
+		{
+			if(!$location_id)
+			{
+				$entity_id				= phpgw::get_var('entity_id', 'int');
+				$cat_id					= phpgw::get_var('cat_id', 'int');
+				$type					= phpgw::get_var('type', 'string', 'REQUEST', 'entity');
+
+				$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$type], ".{$type}.{$entity_id}.{$cat_id}");
+			}
+
+			$id	= $id ? $id : phpgw::get_var('id', 'int');
+			if(!$id)
+			{
+				return array();
+			}
+
+			if(!$this->acl_read)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$repeat_type_array = array
+				(
+					"0"=> lang('day'),
+					"1"=> lang('week'),
+					"2"=> lang('month'),
+					"3"=> lang('year')
+				);
+
+			$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $id));
+			foreach($controls as &$entry)
+			{
+				$menuaction	= 'controller.uicalendar.view_calendar_year_for_locations';
+				if($entry['repeat_type'] < 2)
+				{
+					$menuaction	= 'controller.uicalendar.view_calendar_month_for_locations';
+				}
+
+				$control_link_data = array
+				(
+					'menuaction'	=> $menuaction,
+					'control_id'	=> $entry['control_id'],
+					'location_id'	=> $location_id,
+					'component_id'	=> $id,
+					'serie_id'		=> $entry['serie_id']
+				);
+				$entry['title'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$control_link_data).'" target="_blank">'.$entry['title'].'</a>';
+
+				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
+				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
+			}
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+					return json_encode($controls);
+			}
+			return $controls;
 		}
 	}
