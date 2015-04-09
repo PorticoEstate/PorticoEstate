@@ -1258,6 +1258,11 @@
             
 			$values_attribute  = phpgw::get_var('values_attribute');
 			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement','property');
+			
+			$tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+			$tabs['items']	= array('label' => lang('items'), 'link' => "#items");
 
 			if(isset($insert_record_agreement) && is_array($insert_record_agreement))
 			{
@@ -1533,8 +1538,8 @@
 			if (isset($agreement['attributes']) && is_array($agreement['attributes']))
 			{
 
-				phpgwapi_yui::tabview_setup('edit_tabview');
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+				//phpgwapi_yui::tabview_setup('edit_tabview');
+				//$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
 				$location = $this->acl_location;
 				$attributes_groups = $this->bo->get_attribute_groups($location, $agreement['attributes']);
@@ -1550,7 +1555,7 @@
 				unset($attributes_groups);
 				unset($agreement['attributes']);
 
-				$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
+				//$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
 			}
 
 			//------JSON code-------------------
@@ -1986,7 +1991,9 @@
 					'lang_no_status'						=> lang('Select status'),
 					'textareacols'							=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'							=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-					'tabs'									=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
+					//'tabs'									=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
+					'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
             
