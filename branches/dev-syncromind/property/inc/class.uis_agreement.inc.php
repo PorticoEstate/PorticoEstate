@@ -59,7 +59,11 @@
 				'download'				=> true,
 				'import'				=> true,
 				'get_vendor_member_info'=> true,
-                'save'                  => true
+                'save'                  => true,
+                'get_contentalarm'      => true,
+                'edit_alarm'            => true,
+                'deleteitem'            => true,
+                'get_content'           => true,
 			);
 
 		function __construct()
@@ -1068,6 +1072,186 @@
             
         }
         
+        public function get_content()
+        {
+            $s_agreement_id = phpgw::get_var('s_agreement_id', 'int');
+            
+            if (empty($s_agreement_id)) 
+			{
+				$result_data = array('results' => array());
+				$result_data['total_records'] = 0;
+				$result_data['draw'] = 0;
+				
+				return $this->jquery_results($result_data);
+			}
+            
+            $year = phpgw::get_var('year', 'int');
+			$draw = phpgw::get_var('draw', 'int');
+            $order = phpgw::get_var('order');
+			$columns = phpgw::get_var('columns');
+            
+                
+                $list = $this->bo->read_details($s_agreement_id);
+				$uicols		= $this->bo->uicols;
+				$values		= $this->list_content($list,$uicols);
+                
+                $content_values = array();
+
+                for($y=0;$y<count($values['content']);$y++)
+                {
+                    for($z=0;$z<count($values['content'][$y]['row']);$z++)
+                    {
+                        if($values['content'][$y]['row'][$z+1]['name']!='')
+                        {
+                            $content_values[$y][$values['content'][$y]['row'][$z+1]['name']] = $values['content'][$y]['row'][$z+1]['value'];
+                        }
+                    }
+                }
+                
+                $total_records = count($content_values);
+
+			$result_data = array('results' => $content_values);
+
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
+			
+			return $this->jquery_results($result_data); 
+                
+        }
+        
+        public function get_contentalarm()
+        {
+            $id = phpgw::get_var('id', 'int');
+            $acl_location = phpgw::get_var('acl_location');
+            $times = phpgw::get_var('times');
+            $method = phpgw::get_var('method');
+            $data		= phpgw::get_var('data');
+            $account_id = phpgw::get_var('account_id');
+            
+            if (empty($id))
+            {
+                $result_data = array('results' => array());
+				$result_data['total_records'] = 0;
+				$result_data['draw'] = 0;
+				
+				return $this->jquery_results($result_data);
+            }
+            
+            $params = array
+                          (
+                            'acl_location'  =>$acl_location,
+                            'alarm_type'    => 's_agreement',
+                            'type'          => 'form',
+                            'text'          => 'Email notification',
+                            'times'         => $times,
+                            'id'            => $id,
+                            'method'        => $method,
+                            'data'          => $data,
+                            'account_id'    => $account_id
+                           );
+                
+            $values = $this->bocommon->initiate_ui_alarm($params);
+            $total_records = count($values['values']);
+
+			$result_data = array('results' => $values['values']);
+
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = $draw;
+			
+			return $this->jquery_results($result_data); 
+            
+        }
+        
+        function deleteitem()
+        {
+            $item_id	= phpgw::get_var('id', 'int');
+            $id             = phpgw::get_var('s_agreement_id', 'int');
+            
+            if($id && $item_id)
+			{
+				$this->bo->delete_item($id,$item_id);
+				$get_items = true;
+			}
+        }
+        
+        function edit_alarm()
+        {
+            $boalarm		= CreateObject('property.boalarm');
+            $ids_alarm      = !empty($_POST['ids'])?$_POST['ids']:'';
+            $type_alarm     = !empty($_POST['type'])?$_POST['type']:'';
+            
+            //Add Alarm
+            $idAgreement	= !empty($_POST['id'])?$_POST['id']:'';
+            $day            = !empty($_POST['day'])?$_POST['day']:'';
+            $hour           = !empty($_POST['hour'])?$_POST['hour']:'';
+            $minute         = !empty($_POST['minute'])?$_POST['minute']:'';
+            $user_list      = !empty($_POST['user_list'])?$_POST['user_list']:'';
+            
+            //Update Index and Date
+            $date           = !empty($_POST['date'])?$_POST['date']:'';
+            $index          = !empty($_POST['index'])?$_POST['index']:'';            
+            $mcosto      = !empty($_POST['mcost'])?$_POST['mcost']:'';
+            $icount      = !empty($_POST['icoun'])?$_POST['icoun']:'';
+            
+            $requestUrl_Alarm =  json_encode(self::link(array(
+                                    'menuaction'    =>'property.uis_agreement.get_contentalarm', 
+                                    'id'            => $idAgreement,
+                                    'alarm_type'    => 's_agreement',
+                                    'type'          => 'form',
+                                    'text'          => 'Email notification',
+                                    'acl_location'  => $this->acl_location,
+                                    'times'         => isset($times)?$times:'',
+                                    'method'        => isset($method)?$method:'',
+                                    'data'          => isset($data)?$data:'',
+                                    'account_id'    => isset($account_id)?$account_id:'',
+                                    'phpgw_return_as'=>'json'
+                                )
+                         )
+            );
+            
+            $receipt = array();
+            
+            if(!empty($type_alarm)){
+                
+                if ($type_alarm == 'update')
+                {
+                    $values = array(
+                                    'agreement_id'=>$idAgreement,
+                                    'select' => $mcosto,
+                                    'item_id' => $ids_alarm,
+                                    'id'=>$icount,
+                                    'date'=>$date,
+                                    'new_index'=>$index,
+                                    'update' => 'Update',
+                                   );
+                    $receipt = $this->bo->update($values);
+                    $requestUrl	= json_encode(self::link(array('menuaction'=>'property.uis_agreement.get_content', 's_agreement_id'=>$idAgreement, 'phpgw_return_as'=>'json')));
+                    return $requestUrl;
+                }
+                else if($type_alarm == 'delete_alarm' && count($ids_alarm))
+                {
+                    $boalarm->delete_alarm('s_agreement',$ids_alarm);
+                }          
+                else if(($type_alarm == 'disable_alarm' || $type_alarm == 'enable_alarm' ) && count($ids_alarm))
+                {
+                    $type_alarm = ($type_alarm == 'enable_alarm')?$type_alarm:'';
+                    $boalarm->enable_alarm('s_agreement',$ids_alarm,$type_alarm);
+                }
+                else if($type_alarm == 'add_alarm')
+                {
+                    $time = intval($day)*24*3600 +
+						intval($hour)*3600 +
+						intval($minute)*60;
+
+					if ($time > 0)
+					{
+						$receipt = $boalarm->add_alarm('s_agreement',$this->bo->read_event(array('s_agreement_id'=>$idAgreement)),$time,$user_list);
+					}
+                    return $requestUrl_Alarm;
+                }
+            }
+        }
+        
 		function edit()
 		{
 			$id				= phpgw::get_var('id'); // in case of bigint
@@ -1283,7 +1467,6 @@
 				$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 				$this->member_id = $values['member_of'] ? $values['member_of'] : $this->member_id;
 				$list = $this->bo->read_details($id);
-
 				$uicols		= $this->bo->uicols;
 				$list		= $this->list_content($list,$uicols);
 				$content	= $list['content'];
@@ -1391,23 +1574,6 @@
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
-
-		/*		foreach ($values['attributes'] as & $attribute)
-				{
-					if($attribute['history'] == true)
-					{
-						$link_history_data = array
-						(
-							'menuaction'	=> 'property.uis_agreement.attrib_history',
-							'attrib_id'	=> $attribute['id'],
-							'id'		=> $id,
-							'edit'		=> true
-						);
-
-						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
-					}
-				}
-		 */
 
 				phpgwapi_yui::tabview_setup('edit_tabview');
 				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
@@ -1651,7 +1817,22 @@
 //													array('id' =>'values[delete_alarm]','type'=>'buttons', 'value'=>'Delete', 'label'=>$alarm_data[alter_alarm][0][lang_delete], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 //				))
 //			);
-
+            $requestUrl_Alarm = json_encode(self::link(array(
+                                                            'menuaction' => 'property.uis_agreement.get_contentalarm',
+                                                            'acl_location'=>$this->acl_location,
+                                                            'alarm_type'=> 's_agreement',
+                                                            'type'		=> 'form',
+                                                            'text'		=> 'Email notification',
+                                                            'times'		=> isset($times)?$times:'',
+                                                            'id'		=> $id,
+                                                            'method'	=> isset($method)?$method:'',
+                                                            'data'		=> isset($data)?$data:'',
+                                                            'account_id'=> isset($account_id)?$account_id:'',
+                                                            'phpgw_return_as'=>'json'
+                                                            )
+                                                      )
+                                           );
+            
             $tabletools = array
             (
                 array(
@@ -1661,7 +1842,6 @@
                     'custom_code' => "
 										var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
                                         var selected = oTT.fnGetSelectedData();
-                                        var url = 'hhhhhhh';
 										var numSelected = 	selected.length;
 
 										if (numSelected ==0){
@@ -1674,8 +1854,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-                                        onActionsClick();
-                                        JqueryPortico.updateinlineTableHelper('oTable0', url);"
+                                        onActionsClick_notify('enable_alarm', ids);
+                                        JqueryPortico.updateinlineTableHelper(oTable0,{$requestUrl_Alarm});"
                     ),
                 array(
                     'my_name'	=> 'disable_alarm',
@@ -1684,7 +1864,6 @@
                     'custom_code' => "  
                                         var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
                                         var selected = oTT.fnGetSelectedData();
-                                        var url = 'hhhhhhh';
 										var numSelected = 	selected.length;
 
 										if (numSelected ==0){
@@ -1697,8 +1876,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-                                        this.onActionsClick();
-                                        JqueryPortico.updateinlineTableHelper('oTable0', url);"
+                                        onActionsClick_notify('disable_alarm', ids);
+                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
                     ),
                 array(
                     'my_name'	=> 'delete_alarm',
@@ -1707,7 +1886,6 @@
                     'custom_code' =>  "  
                                         var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
                                         var selected = oTT.fnGetSelectedData();
-                                        var url = 'hhhhhhh';
 										var numSelected = 	selected.length;
 
 										if (numSelected ==0){
@@ -1720,8 +1898,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-                                        
-                                        JqueryPortico.updateinlineTableHelper('oTable0', url);"
+                                        onActionsClick_notify('delete_alarm', ids);
+                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
                     )
             );
             
@@ -1732,14 +1910,13 @@
                array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
                array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter','width'=>60),
                array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true)
-               /*array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'JqueryPortico.formatCheckUis_agremment','width'=>60)*/
             );
   
             $datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> "''",
-				'data'			=> json_encode($alarm_data['values']),
+				'requestUrl'	=> $requestUrl_Alarm,
+				'data'			=> json_encode(array()),
                 'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $myColumnDefs0,
 				'config'		=> array(
@@ -1748,18 +1925,6 @@
 				)
 			);
             
-           
-			$myButtons[1] = array
-				(
-					'name'   => "1",
-					'values'  => json_encode(array( array('id' =>'values[time][days]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
-													array('id' =>'values[time][hours]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
-													array('id' =>'values[time][mins]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
-													array('id' =>'values[user_id]',  'type'=>'menu',  'value'=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), 'label'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),'classname'=> 'actionsFilter', 'value_hidden'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
-													array('id' =>'values[add_alarm]',  'type'=>'buttons', 'value'=>'Add',  'label'=>$alarm_data['add_alarm']['lang_add'],   'funct'=> 'onAddClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-                    ))
-                );
-
 			//---------items------------------------------------
                         
 //			$datavalues[1] = array
@@ -1792,21 +1957,50 @@
 				}
 			}
 
-			$ColumnDefs_data[] = array
+//			$ColumnDefs_data[] = array
+//				(
+//					'key'			=> 'update',
+//					'label'			=> lang('Update'),
+//					'sortable'		=> true,
+//					'resizeable'	=> true,
+//                    'formatter'     => 'JqueryPortico.FormatterCenter'
+//				);
+             $parameters = array
 				(
-					'key'			=> 'update',
-					'label'			=> lang('Update'),
-					'sortable'		=> true,
-					'resizeable'	=> true,
-//					'formatter'		=> 'myFormatterCheckUpdate'
-                    'formatter'     => 'JqueryPortico.FormatterCenter'
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'item_id'
+						),
+					)
 				);
             
+            $tabletools = array
+            (
+                array('my_name' => 'view', 'text' =>lang('View'),
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.view_item','s_agreement_id'=>$id,'from'=>$view_only?'view':'edit')),'parameters'	=> json_encode($parameters)),
+                array('my_name' => 'edit','text' =>lang('Edit'),
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.edit_item','s_agreement_id'=>$id)),'parameters'	=> json_encode($parameters)),
+                array('my_name' => 'delete','text' =>lang('Delete'),
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.deleteitem','s_agreement_id'=>$id)),'parameters'	=> json_encode($parameters)),
+				array('my_name'	=> 'select_all'),
+				array('my_name'	=> 'select_none')
+            );
+            
+//            $list		= $this->bo->read_details($id);
+//            $list	 	= $this->list_content($list,$uicols);
+//            $content	= $list['content'];
+        
             $datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_1',
-				'requestUrl'	=> "''",
-				'data'			=> json_encode($content_values),
+                'requestUrl'    => json_encode(self::link(array('menuaction'=>'property.uis_agreement.get_content','s_agreement_id'=>$id, 'phpgw_return_as'=>'json'))),
+                'data'          => json_encode(array()),
+//				'requestUrl'	=> "''",
+//				'data'			=> json_encode($content_values),
+                'tabletools'	=> $tabletools,
 				'ColumnDefs'	=> $ColumnDefs_data,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -2055,7 +2249,7 @@
 					'tabs'								=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 				);
             
-// echo '<pre>'; print_r($data); echo '</pre>'; exit();
+ //echo '<pre>'; print_r($data); echo '</pre>'; exit();
 
 
 //			phpgwapi_yui::load_widget('dragdrop');
@@ -2072,6 +2266,8 @@
             
             phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
+            
+            self::add_javascript('property', 'portico', 's_agreement.edit.js');
 			self::render_template_xsl(array('s_agreement','datatable_inline','files','attributes_form'), array('edit' => $data));
             
 //			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
