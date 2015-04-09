@@ -546,23 +546,23 @@
 							<tr>
 								<td width="10">
 									<!--div id="datatable-buttons_1"/-->
-                                                                    <select name="values[alarm_data/add_alarm/day_list]" class="form" title="{lang_days_statustext}">
+                                                                    <select name="values[alarm_data/add_alarm/day_list]" class="form" title="{lang_days_statustext}" id="day_list">
                                                                             <xsl:apply-templates select="alarm_data/add_alarm/day_list"/>
                                                                     </select>
                                                                     
-                                                                    <select name="values[alarm_data/add_alarm/hour_list]" class="form" title="{alarm_data/add_alarm/lang_hour_statustext}">
+                                                                    <select name="values[alarm_data/add_alarm/hour_list]" class="form" title="{alarm_data/add_alarm/lang_hour_statustext}" id="hour_list">
 									<xsl:apply-templates select="alarm_data/add_alarm/hour_list"/>
                                                                     </select>
                                                                     
-                                                                    <select name="values[alarm_data/add_alarm/minute_list]" class="form" title="{alarm_data/add_alarm/lang_minute_statustext}">
+                                                                    <select name="values[alarm_data/add_alarm/minute_list]" class="form" title="{alarm_data/add_alarm/lang_minute_statustext}" id="minute_list">
 									<xsl:apply-templates select="alarm_data/add_alarm/minute_list"/>
                                                                     </select>
                                                                     
-                                                                    <select name="values[alarm_data/add_alarm/user_list]" class="form" title="{alarm_data/add_alarm/lang_user}">
+                                                                    <select name="values[alarm_data/add_alarm/user_list]" class="form" title="{alarm_data/add_alarm/lang_user}" id="user_list">
 									<xsl:apply-templates select="alarm_data/add_alarm/user_list"/>
                                                                     </select>
-                                                                    
-                                                                    <input type="button" name="" value="Add" id="values[add_alarm]" onClick="$(this).onAddClick();"/>
+                                                                    <input type="hidden" id="agreementid" name="agreementid" value="{value_s_agreement_id}" />
+                                                                    <input type="button" name="" value="Add" id="values[add_alarm]" onClick="onAddClick_Alarm('add_alarm');"/>
                                                                 </td>
                      
 							</tr>
@@ -684,7 +684,10 @@
 											<xsl:value-of select="lang_date_statustext"/>
 										</xsl:attribute>
 									</input>
-									<div style="width:25px;height:15px;position:relative;float:left;"/>
+									<div style="width:25px;height:15px;position:relative;float:left;"></div>
+                                                                        <input id="new_index" class="mybottonsUpdates" type="inputText" name="values[new_index]" size="12"/>
+                                                                        <input id="hd_values[update]" class="" type="hidden" name="values[update]" value="Update"/>
+                                                                        <input type="button" name="" value="Update" id="values[update]" onClick="onUpdateClickAlarm('update');"/>
 								</div>
 								<style type="text/css">
 									.calendar-opt
