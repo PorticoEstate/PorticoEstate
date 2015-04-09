@@ -1588,6 +1588,7 @@
 					(
 						'values'	=> $values['location_data'],
 						'type_id'	=> (int)$category['location_level'],
+						'required_level' => 2,
 						'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
 						'lookup_type'	=> $lookup_type,
 						'tenant'	=> $lookup_tenant,
