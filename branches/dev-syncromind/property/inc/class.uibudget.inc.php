@@ -36,6 +36,7 @@
 	
 	class property_uibudget extends phpgwapi_uicommon_jquery
 	{
+		private $receipt = array();
 		var $grants;
 		var $cat_id;
 		var $start;
@@ -55,8 +56,10 @@
 				'view'			=> true,
 				'edit'			=> true,
 				'add'			=> true,
+				'save'			=> true,
 				'edit_basis'	=> true,
 				'add_basis'		=> true,
+				'save_basis'	=> true,
 				'download'		=> true,
 				'delete'		=> true,
 				'delete_basis'	=> true
@@ -322,9 +325,7 @@
 		
 		private function _get_filters_obligations($selected = 0)
 		{
-			$basis = true;
-
-			$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year);
+			$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year, $basis=false);
 			array_unshift ($values_combo_box[0], array('id'=>'','name'=>lang('no year')));
 			$combos[] = array
 							(
@@ -361,7 +362,7 @@
 							);
 
 
-			$values_combo_box[3] =  $this->bo->get_b_group_list($this->grouping, $basis);
+			$values_combo_box[3] =  $this->bo->get_b_group_list($this->grouping);
 			array_unshift ($values_combo_box[3], array('id'=>'','name'=>lang('no grouping')));
 			$combos[] = array
 							(
@@ -495,7 +496,8 @@
 					'download'	=> self::link(array(
 							'menuaction'	=> 'property.uibudget.download',
 							'export'		=> true,
-							'allrows'		=> true
+							'allrows'		=> true,
+							'download'		=> 'budget'
 					)),
                     'allrows'		=> true,
                     'editor_action' => '',
@@ -576,7 +578,7 @@
 			self::render_template_xsl('datatable_jquery',$data);
 		}
 
-        public function query_basis()
+        public function query()
         {
             $search			= phpgw::get_var('search');
 			$order			= phpgw::get_var('order');
@@ -592,7 +594,7 @@
 				'allrows' => phpgw::get_var('length', 'int') == -1
             );
 			
-			$values = $this->bo->read_basis($params);	
+			$values = $this->bo->read($params);	
 
             if( phpgw::get_var('export','bool'))
             {
@@ -602,7 +604,7 @@
             $result_data = array('results'  => $values);
             $result_data['total_records'] = $this->bo->total_records;
             $result_data['draw'] = $draw;
-			//$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
             
             return $this->jquery_results($result_data);
 		}		
@@ -627,9 +629,6 @@
 			$acl_edit		= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
 			$acl_delete 	= $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 
-			/*$revision_list	= $this->bo->get_revision_filter_list($this->revision,$basis=true); // reset year
-			$this->year		= $this->bo->year;
-			$this->revision = $this->bo->revision;*/
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::basis';
 
             $data   = array(
@@ -647,7 +646,8 @@
 					'download'	=> self::link(array(
 							'menuaction'	=> 'property.uibudget.download',
 							'export'		=> true,
-							'allrows'		=> true
+							'allrows'		=> true,
+							'download'		=> 'basis'
 					)),
                     'allrows'		=> true,
                     'editor_action' => '',
@@ -690,8 +690,6 @@
                 array_push($data['datatable']['field'], $col);
             }
 
-			//$datatable['rowactions']['action'] = array();
-
 			$parameters = array('parameter' => array(array('name'=> 'budget_id', 'source'=> 'budget_id')));
 
 			$data['datatable']['actions'][] = array(
@@ -727,10 +725,9 @@
 			self::add_javascript('property', 'portico', 'budget.basis.js');
 			
 			self::render_template_xsl('datatable_jquery',$data);
-		}
-
-
-        public function query()
+		}	
+		
+        public function query_basis()
         {
             $search			= phpgw::get_var('search');
 			$order			= phpgw::get_var('order');
@@ -746,7 +743,7 @@
 				'allrows' => phpgw::get_var('length', 'int') == -1
             );
 			
-			$values = $this->bo->read($params);	
+			$values = $this->bo->read_basis($params);	
 
             if( phpgw::get_var('export','bool'))
             {
@@ -756,15 +753,12 @@
             $result_data = array('results'  => $values);
             $result_data['total_records'] = $this->bo->total_records;
             $result_data['draw'] = $draw;
-			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
             
             return $this->jquery_results($result_data);
-		}	
-		
+		}
 		
 		function obligations()
 		{
-			//$this->allrows = 1;
 			$acl_location	= '.budget.obligations';
 			$acl_read 	= $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
@@ -777,10 +771,6 @@
             {
 				return $this->query_obligations();
             }
-			
-			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
-			$acl_edit 	= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
-			$acl_delete 	= $this->acl->check($acl_location, PHPGW_ACL_DELETE, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::obligations';
 
@@ -799,7 +789,8 @@
 					'download'	=> self::link(array(
 							'menuaction'	=> 'property.uibudget.download',
 							'export'		=> true,
-							'allrows'		=> true
+							'allrows'		=> true,
+							'download'		=> 'obligations'
 					)),
                     'allrows'		=> true,
                     'editor_action' => '',
@@ -838,6 +829,8 @@
                 array_push($data['datatable']['field'], $col);
             }
 
+			$data['datatable']['actions'][] = array();
+			
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . lang('list obligations');
 
@@ -909,12 +902,12 @@
             $result_data = array('results'  => $values);
             $result_data['total_records']	= $this->bo->total_records;
             $result_data['draw']			= $draw;
-			$result_data['sum_budget']		= $this->bo->sum_budget_cost;
-			$result_data['sum_obligation']	= $this->bo->sum_obligation_cost;
-			$result_data['sum_actual']		= $this->bo->sum_actual_cost;
-			$result_data['sum_actual_period']	= $this->bo->sum_actual_cost_period;
-			$result_data['sum_diff']			= $this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost;
-			$result_data['sum_hits']			= $this->bo->sum_hits;
+			$result_data['sum_budget']		= number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_obligation']	= number_format($this->bo->sum_obligation_cost, 0, ',', ' ');
+			$result_data['sum_actual']		= number_format($this->bo->sum_actual_cost, 0, ',', ' ');
+			$result_data['sum_actual_period']	= number_format($this->bo->sum_actual_cost_period, 0, ',', ' ');
+			$result_data['sum_diff']			= number_format(($this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost), 0, ',', ' ');
+			$result_data['sum_hits']			= number_format($this->bo->sum_hits, 0, ',', ' ');
             
             return $this->jquery_results($result_data);
 		}
@@ -925,7 +918,7 @@
 			$this->edit();
 		}
 		
-		function edit()
+		function edit($values = array())
 		{
 			$acl_location	= '.budget';
 			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
@@ -938,62 +931,10 @@
 
 			$budget_id	= phpgw::get_var('budget_id', 'int');
 
-			$values		= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
-
-			$receipt = array();
-			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			if ($values['budget_id'])
 			{
-				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
-				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
-				$values['ecodimb']			= phpgw::get_var('ecodimb');
-
-				if(!$values['b_account_id'] > 0)
-				{
-					$values['b_account_id']='';
-					$receipt['error'][]=array('msg'=>lang('Please select a budget account !'));
-				}
-
-				if(!$values['district_id'] && !$budget_id > 0)
-				{
-		//			$receipt['error'][]=array('msg'=>lang('Please select a district !'));
-				}
-
-				if(!$values['budget_cost'])
-				{
-//					$receipt['error'][]=array('msg'=>lang('Please enter a budget cost !'));
-				}
-
-				if(!isset($receipt['error']) || !$receipt['error'])
-				{
-					$values['budget_id']	= $budget_id;
-					$receipt = $this->bo->save($values);
-					$budget_id = $receipt['budget_id'];
-
-					if (isset($values['save']) && $values['save'])
-					{
-						$GLOBALS['phpgw']->session->appsession('session_data','budget_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.index'));
-					}
-				}
-				else
-				{
-					$year_selected = $values['year'];
-					$district_id = $values['district_id'];
-					$revision = $values['revision'];
-
-					$values['year'] ='';
-					$values['district_id'] = '';
-					$values['revision'] = '';
-				}
+				$budget_id = $values['budget_id'];
 			}
-
-			if (isset($values['cancel']) && $values['cancel'])
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.index'));
-			}
-
 
 			if ($budget_id)
 			{
@@ -1002,11 +943,12 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uibudget.edit',
+					'menuaction'=> 'property.uibudget.save',
 					'budget_id'	=> $budget_id
 				);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			//$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 				'b_account_id'		=> $values['b_account_id'],
@@ -1017,9 +959,13 @@
 				'ecodimb'			=> $values['ecodimb'],
 				'ecodimb_descr'		=> $values['ecodimb_descr']));
 
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$data = array
 				(
-					'ecodimb_data'					=>	$ecodimb_data,
+					'ecodimb_data'					=> $ecodimb_data,
 					'lang_category'					=> lang('category'),
 					'lang_no_cat'					=> lang('Select category'),
 					'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
@@ -1041,6 +987,7 @@
 
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'edit_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.index')),
 					'lang_budget_id'				=> lang('ID'),
 					'value_budget_id'				=> $budget_id,
 					'lang_budget_cost'				=> lang('budget cost'),
@@ -1055,24 +1002,75 @@
 					'lang_apply_statustext'			=> lang('Apply the values'),
 					'lang_cancel_statustext'		=> lang('Leave the budget untouched and return to the list'),
 					'lang_save_statustext'			=> lang('Save the budget and return to the list'),
-
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 
 				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id?lang('edit budget'):lang('add budget'));
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-
+			self::render_template_xsl(array('budget'), array('edit' => $data));
+			
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
+		public function save()
+		{
+			$budget_id	= phpgw::get_var('budget_id', 'int');
+			$values	= phpgw::get_var('values');
+
+			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
+			$values['ecodimb']			= phpgw::get_var('ecodimb');
+
+			if(!$values['b_account_id'] > 0)
+			{
+				$values['b_account_id'] = '';
+				$this->receipt['error'][] = array('msg'=>lang('Please select a budget account !'));
+			}
+			if ($budget_id)
+			{
+				$values['budget_id'] = $budget_id;
+			}
+
+			if( $this->receipt['error'] )
+			{
+				$this->edit();
+			}
+			else
+			{
+				try
+				{
+					$receipt = $this->bo->save($values);
+					$values['budget_id'] = $receipt['budget_id'];
+					$this->receipt = $receipt;
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						$this->edit();
+						return;
+					}
+				}
+
+				//phpgwapi_cache::message_set($receipt, 'message'); 
+				if ($values['apply']) {
+					$this->edit($values);
+					return;
+				}
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.index'));
+			}
+		}
+		
 		
 		public function add_basis()
 		{
 			$this->edit_basis();
 		}
 		
-		function edit_basis()
+		function edit_basis($values = array())
 		{
-
 			$acl_location	= '.budget';
 			$acl_add 	= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
 			$acl_edit 	= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
@@ -1084,87 +1082,54 @@
 
 			$budget_id	= phpgw::get_var('budget_id', 'int');
 
-			$values		= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
-
-			if ((isset($values['save']) && $values['save'])|| (isset($values['apply']) && $values['apply']))
+			if($this->receipt['error'])
 			{
-				$values['ecodimb']	= phpgw::get_var('ecodimb');
+				$year_selected = $values['year'];
+				$district_id = $values['district_id'];
+				$revision = $values['revision'];
+				$b_group = $values['b_group'];
 
-				if(!$values['b_group'] && !$budget_id)
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a budget group !'));
-				}
-
-
-				if(!$values['district_id'] && !$budget_id)
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a district !'));
-				}
-
-				if(!$values['budget_cost'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a budget cost !'));
-				}
-
-				if(!$receipt['error'])
-				{
-					$values['budget_id']	= $budget_id;
-					$receipt = $this->bo->save_basis($values);
-					$budget_id = $receipt['budget_id'];
-
-					if ($values['save'])
-					{
-						$GLOBALS['phpgw']->session->appsession('session_data','budget_basis_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.basis'));
-					}
-				}
-				else
-				{
-					$year_selected = $values['year'];
-					$district_id = $values['district_id'];
-					$revision = $values['revision'];
-					$b_group = $values['b_group'];
-
-					unset ($values['year']);
-					unset ($values['district_id']);
-					unset ($values['revision']);
-					unset ($values['b_group']);
-				}
+				unset ($values['year']);
+				unset ($values['district_id']);
+				unset ($values['revision']);
+				unset ($values['b_group']);							
 			}
-
-			if ($values['cancel'])
+				
+			if ($values['budget_id'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.basis'));
+				$budget_id = $values['budget_id'];
 			}
 
 			if ($budget_id)
 			{
+				unset($values);
 				$values = $this->bo->read_single_basis($budget_id);
 			}
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uibudget.edit_basis',
+					'menuaction'=> 'property.uibudget.save_basis',
 					'budget_id'	=> $budget_id
 				);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$year[0]['id'] = date(Y);
 			$year[1]['id'] = date(Y) +1;
 			$year[2]['id'] = date(Y) +2;
 			$year[3]['id'] = date(Y) +3;
 
-			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array(
 				'ecodimb'			=> $values['ecodimb'],
 				'ecodimb_descr'		=> $values['ecodimb_descr']));
 
-
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$data = array
 				(
-					'ecodimb_data'						=>	$ecodimb_data,
+					'ecodimb_data'						=> $ecodimb_data,
 					'lang_category'						=> lang('category'),
 					'lang_no_cat'						=> lang('Select category'),
 					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
@@ -1198,6 +1163,7 @@
 
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'edit_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.basis')),
 					'lang_budget_id'					=> lang('ID'),
 					'value_budget_id'					=> $budget_id,
 					'value_distribute_id'				=> $budget_id?$budget_id:'new',
@@ -1213,12 +1179,73 @@
 					'lang_apply_statustext'				=> lang('Apply the values'),
 					'lang_cancel_statustext'			=> lang('Leave the budget untouched and return to the list'),
 					'lang_save_statustext'				=> lang('Save the budget and return to the list'),
+					'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id?lang('edit budget'):lang('add budget'));
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_basis' => $data));
-
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_basis' => $data));
+			self::render_template_xsl(array('budget'), array('edit_basis' => $data));
 		}
+		
+		public function save_basis()
+		{
+			$budget_id	= phpgw::get_var('budget_id', 'int');
+			$values	= phpgw::get_var('values');
+			$values['ecodimb'] = phpgw::get_var('ecodimb');
+
+			if(!$values['b_group'] && !$budget_id)
+			{
+				$this->receipt['error'][] = array('msg'=>lang('Please select a budget group !'));
+			}
+
+			if(!$values['district_id'] && !$budget_id)
+			{
+				$this->receipt['error'][] = array('msg'=>lang('Please select a district !'));
+			}
+
+			if(!$values['budget_cost'])
+			{
+				$this->receipt['error'][] = array('msg'=>lang('Please enter a budget cost !'));
+			}
+			
+			if ($budget_id)
+			{
+				$values['budget_id'] = $budget_id;
+			}
+
+			if( $this->receipt['error'] )
+			{
+				$this->edit_basis($values);
+			}
+			else
+			{
+				try
+				{
+					$receipt = $this->bo->save_basis($values);
+					$values['budget_id'] = $receipt['budget_id'];
+					$this->receipt = $receipt;
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						$this->edit_basis($values);
+						return;
+					}
+				}
+
+				//phpgwapi_cache::message_set($receipt, 'message'); 
+				if ($values['apply']) {
+					$this->edit_basis($values);
+					return;
+				}
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uibudget.basis'));
+			}
+		}
+		
 		function delete()
 		{
 			$budget_id	= phpgw::get_var('budget_id', 'int');
@@ -1414,7 +1441,8 @@
 			switch (phpgw::get_var('download'))
 			{
 				case 'basis':
-					$list= $this->bo->read_basis();
+					//$list= $this->bo->read_basis();
+					$list = $this->query_basis();
 					$names = array
 					(
 						'year',
@@ -1437,7 +1465,8 @@
 					);
 					break;
 				case 'budget':
-					$list= $this->bo->read();
+					//$list= $this->bo->read();
+					$list = $this->query();
 					$names = array
 					(
 						'year',
@@ -1465,8 +1494,9 @@
 					break;
 				case 'obligations':
 
-					$gross_list= $this->bo->read_obligations();
-					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
+					//$gross_list= $this->bo->read_obligations();
+					$gross_list = $this->query_obligations();
+					//$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;
 					$list = array();
 					foreach($gross_list as $entry)
 					{
