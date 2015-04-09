@@ -60,6 +60,18 @@
 							</input>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="is_entity=1">
+							<input type="checkbox" name="clear_{input_name}_box" onClick="blank_entity_values()">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'delete')"/>
+								</xsl:attribute>
+								<xsl:attribute name="readonly">
+									<xsl:text>readonly</xsl:text>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+					</xsl:choose>
 				</xsl:for-each>
 			</div>
 		</xsl:for-each>
