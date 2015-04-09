@@ -982,21 +982,22 @@
 		),
 		'fm_ns3420' => array(
 			'fd' => array(
-				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'tekst1' => array('type' => 'varchar','precision' => '50','nullable' => True),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'num' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'enhet' => array('type' => 'varchar','precision' => '6','nullable' => True),
+				'tekst1' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'tekst2' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'tekst3' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'tekst4' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'tekst5' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'tekst6' => array('type' => 'varchar','precision' => '50','nullable' => True),
-				'parent' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'type' => array('type' => 'varchar','precision' => '20','nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('name')
 		),
 		'fm_tts_status' => array(
 			'fd' => array(
