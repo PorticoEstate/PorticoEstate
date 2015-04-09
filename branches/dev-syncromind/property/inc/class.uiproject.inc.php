@@ -2312,24 +2312,12 @@ JS;
 			$status_new 	= phpgw::get_var('status_new');
 			$type 			= phpgw::get_var('type','string', 'REQUEST' , 'project');
 			$ecodimb 		= phpgw::get_var('ecodimb');
-			$id_to_update	= phpgw::get_var('id_to_update');
+			$ids			= phpgw::get_var('ids');
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
 			$transfer_budget= phpgw::get_var('transfer_budget', 'integer');
-			$__new_budget 	= phpgw::get_var('new_budget');
 			$b_account_id	= phpgw::get_var('b_account_id', 'integer');
 			$b_account_name = phpgw::get_var('b_account_name');
-
-			$_new_budget = explode(',', trim($__new_budget, ','));
-
-			$new_budget = array();
-			foreach($_new_budget as $_entry)
-			{
-				$budget_arr = explode('::', $_entry);
-				$new_budget[$budget_arr[0]][$budget_arr[1]] = $budget_arr[2];
-			}
-			unset($_entry);
-			unset($budget_arr);
 
 			if(isset($_POST['user_id']))
 			{
@@ -2340,14 +2328,16 @@ JS;
 				$user_id 	= $this->account;
 			}
 
-			if($id_to_update)
-			{
-				$ids = array_values(explode(',',trim($id_to_update,',')));
-			}
+			$ids = $ids ? $ids : array();
 
-			else
+			$new_budget = array();
+
+			foreach($ids as $id)
 			{
-				$ids = array();
+				$new_budget[$id]['budget_amount']	= phpgw::get_var("{$id}::budget_amount");
+				$new_budget[$id]['obligation']		= phpgw::get_var("{$id}::obligation");
+				$new_budget[$id]['order_amount']	= phpgw::get_var("{$id}::order_amount");
+				$new_budget[$id]['latest_year']		= phpgw::get_var("{$id}::latest_year");
 			}
 
 			$link_data = array
@@ -2396,11 +2386,10 @@ JS;
 
 						$_obligation = round($_obligation);
 
-						$entry['new_budget'] = "<input type='text' class='myValuesForPHP' id='{$entry['id']}::budget_amount' name='{$entry['id']}::budget_amount' value='{$_obligation}' title=''></input>";
-						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::obligation' name='{$entry['id']}::obligation' value='{$_obligation}' ></input>";
-						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::order_amount' name='{$entry['id']}::order_amount' value='{$_order}'></input>";
-						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::latest_year' name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
-
+						$entry['new_budget'] = "<input type='text'     name='{$entry['id']}::budget_amount' value='{$_obligation}' title=''></input>";
+						$entry['new_budget'] .= "<input type='hidden'  name='{$entry['id']}::obligation' value='{$_obligation}' ></input>";
+						$entry['new_budget'] .= "<input type='hidden'  name='{$entry['id']}::order_amount' value='{$_order}'></input>";
+						$entry['new_budget'] .= "<input type='hidden'  name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
 					}
 				}
 				else if ($entry['project_type_id'] == 2)
