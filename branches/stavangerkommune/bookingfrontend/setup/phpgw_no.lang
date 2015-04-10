@@ -377,3 +377,5 @@ Check calendar	bookingfrontend	no	Sjekk kalender
 You can't cancel event that has started, for help contacts site admin	bookingfrontend	no	Du kan ikke slette arrangement som er over.
 You can't extend the event, for that contact administrator	bookingfrontend	no	Du kan ikke øke lengden på arrangementet, for det må du kontakte administrator
 You can't change resources to the event, for that contact administrator	bookingfrontend	no	Du kan ikke forandre på ressurser, for det må du kontakte administrator
+Cancelation of booking from	bookingfrontend	no	Avbestilling fra
+Deleted on	bookingfrontend	no	Avbestilling i

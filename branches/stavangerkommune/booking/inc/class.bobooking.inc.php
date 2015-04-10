@@ -168,7 +168,7 @@ function array_minus($a, $b)
             $external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
             $subject = $system_message['title'];
-            $body = '<b>Beksjed fra '.$system_message['name'].'</b><br />'.$system_message['message'].'<br /><br /><b>Epost som er sendt til brukere av Hallen:</b><br />';
+            $body = '<b>Beskjed fra '.$system_message['name'].'</b><br />'.$system_message['message'].'<br /><br /><b>Epost som er sendt til brukere av Hallen:</b><br />';
             $mailadresses = $config->config_data['emails'];
             $mailadresses = explode("\n",$mailadresses);
 
