@@ -827,7 +827,7 @@
 						foreach ($booking['resources'] as $res) {
 							$res_names = $res_names.$this->bo->so->get_resource($res)." ";
 						}
-						$info_deleted = lang($inf_del." deleted on")." ".$system_message['building_name'].":<br />".$res_names." - ".pretty_timestamp($booking['from_'])." - ".pretty_timestamp($booking['to_']);
+						$info_deleted = lang("Deleted on")." ".$system_message['building_name'].":<br />".$res_names." - ".pretty_timestamp($booking['from_'])." - ".pretty_timestamp($booking['to_']);
                         $this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
                         $this->bo->send_notification($booking, $allocation, $maildata, $mailadresses);
 			            $system_message['message'] = $system_message['message']."<br />".$info_deleted;
