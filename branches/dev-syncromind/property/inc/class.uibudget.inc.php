@@ -584,12 +584,25 @@
 			$order			= phpgw::get_var('order');
 			$draw			= phpgw::get_var('draw', 'int');
 			$columns		= phpgw::get_var('columns');
+			$order_field	= '';
 			
+			switch($columns[$order[0]['column']]['data'])
+			{
+				case 'ecodimb':
+					$order_field = 'fm_budget.ecodimb';
+					break;
+				case 'grouping':
+					$order_field = 'category';
+					break;
+				default:
+					$order_field = $columns[$order[0]['column']]['data'];
+			}
+
             $params = array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'order' => $order_field,
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1
             );
@@ -733,12 +746,25 @@
 			$order			= phpgw::get_var('order');
 			$draw			= phpgw::get_var('draw', 'int');
 			$columns		= phpgw::get_var('columns');
+			$order_field	= '';
+			
+			switch($columns[$order[0]['column']]['data'])
+			{
+				case 'ecodimb':
+					$order_field = 'fm_budget.ecodimb';
+					break;
+				case 'grouping':
+					$order_field = 'b_group';
+					break;
+				default:
+					$order_field = $columns[$order[0]['column']]['data'];
+			}
 			
             $params = array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'order' => $order_field,
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1
             );
@@ -1008,9 +1034,6 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id?lang('edit budget'):lang('add budget'));
 
 			self::render_template_xsl(array('budget'), array('edit' => $data));
-			
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 		public function save()
@@ -1184,8 +1207,6 @@
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id?lang('edit budget'):lang('add budget'));
 
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('budget'));
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_basis' => $data));
 			self::render_template_xsl(array('budget'), array('edit_basis' => $data));
 		}
 		
