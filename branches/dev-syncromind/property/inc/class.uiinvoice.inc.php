@@ -31,10 +31,12 @@
 	 * Description
 	 * @package property
 	 */
-	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('phpgwapi.datetime');
-	class property_uiinvoice
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.jquery');
+	
+	class property_uiinvoice extends phpgwapi_uicommon_jquery
 	{
+		private $receipt = array();
 		var $grants;
 		var $cat_id;
 		var $start;
@@ -64,8 +66,10 @@
 				'forward'		=> true
 			);
 
-		function property_uiinvoice()
+		function __construct()
 		{
+			parent::__construct();
+			
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -93,6 +97,49 @@
 
 		}
 
+        private function _get_Filters()
+        {
+			$b_account_class= phpgw::get_var('b_account_class', 'int');
+			
+            $values_combo_box = array();
+            $combos = array();
+            
+			$values_combo_box[0]  = $this->bo->select_category('',$this->cat_id);
+			array_unshift ($values_combo_box[0], array('id'=>'','name'=>lang('no category')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'cat_id',
+								'text'   => lang('Category'),
+								'list'   => $values_combo_box[0]
+							);
+			
+			
+			$values_combo_box[1]  = $this->bo->get_invoice_user_list('select',$this->user_lid,array('all'),$default='all');
+			array_unshift ($values_combo_box[1],array('lid'=> $GLOBALS['phpgw']->accounts->get($this->account)->lid, 'firstname'=>lang('mine vouchers')));
+			array_unshift ($values_combo_box[1], array('lid'=>'','firstname'=>lang('no user')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'user_lid',
+								'text'   => lang('User'),
+								'list'   => $values_combo_box[1]
+							);
+			
+			
+			/*$values_combo_box[2]  = $this->bo->select_account_class($b_account_class);
+			array_unshift ($values_combo_box[2], array ('id'=>'','name'=>lang('No account')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'filter',
+								'text'   => lang('User'),
+								'list'   => $values_combo_box[2]
+							);*/
+            
+            return $combos;
+        }
+		
 		function save_sessiondata()
 		{
 			$data = array
@@ -1685,6 +1732,12 @@ JS;
 
 		}
 
+        public function query()
+        {
+			
+		}
+		
+		
 		function list_sub()
 		{
 			$paid 		= phpgw::get_var('paid', 'bool');
