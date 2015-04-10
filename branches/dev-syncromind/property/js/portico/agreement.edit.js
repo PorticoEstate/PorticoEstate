@@ -98,3 +98,48 @@ onUpdateClickAlarm = function(type){
             }
     });
 }
+
+onUpdateClickItems = function(type){
+    
+    var oDate = $('#values_date').val();
+    var oIndex = $('#new_index').val();
+    var id = $('#agreementid').val();
+    
+    //obteniendo el ultimo registro de edit_item
+    var oSelid = $("#selidsul").val(); //1118
+    var otcost = $("#tcostul").val(); // 127.02
+    var owcost = $("#wcostul").val(); //0.00
+    var omcost = $("#mcostul").val(); //0.00
+    var oindex = $("#icountul").val();//3
+    
+    if(oDate == '' && oIndex == ''){
+        alert('None index and date');
+        return false;
+    }else if(oDate!='' && oIndex == ''){
+        alert('None Index');
+        return false;
+    }else if(oDate=='' && oIndex != ''){
+        alert('None Date');
+        return false;
+    }
+    var ids = []; var mcost = {}; var wcost = {}; var tcost = {}; var icoun = {};
+    
+        ids.push(oSelid);mcost[oSelid] = omcost; wcost[oSelid] = owcost; tcost[oSelid] = otcost; icoun[oSelid] = oindex;
+        
+         $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
+            data:{id:id,ids:ids,mcost:mcost,wcost:wcost,tcost:tcost,icoun:icoun,type:type,date:oDate,index:oIndex},
+            success: function(data) {
+                obj = JSON.parse(data);
+                var newstr = obj.replace("&amp;", "&","gi");
+                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+                $('#values_date').val('');
+                $('#new_index').val('');
+            }
+        });
+        
+        
+        
+}
