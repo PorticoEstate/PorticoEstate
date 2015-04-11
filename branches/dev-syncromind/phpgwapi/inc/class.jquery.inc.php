@@ -267,4 +267,31 @@ JS;
 		return $output;
 	}
 
+	public static function init_ckeditor($target)
+	{
+		self::load_widget('core');
+		$GLOBALS['phpgw']->js->validate_file('ckeditor', 'ckeditor');
+		$GLOBALS['phpgw']->js->validate_file('ckeditor', 'adapters/jquery');
+		$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
+		if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
+		{
+			$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+		}
+
+
+		$js = <<<JS
+
+		$( document ).ready( function() {
+			$( 'textarea#{$target}' ).ckeditor(
+				{
+					uiColor: '#9AB8F3',
+					language: '{$userlang}'
+				}
+			);
+		} );
+JS;
+		$GLOBALS['phpgw']->js->add_code('', $js);
+
+	}
+
 }

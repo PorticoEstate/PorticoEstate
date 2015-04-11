@@ -520,77 +520,30 @@
 			return $result;
 		}
 
-		public function use_yui_editor($targets)
+		/**
+		 * Initiate rich text editor for selected targets
+		 * @param array $targets
+		 */
+		public function rich_text_editor($targets)
 		{
-			/*
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
-			*/
 			if(!is_array($targets))
 			{
 				$targets = array($targets);
 			}
-
-			$lang_font_style = lang('Font Style');
-			$lang_lists = lang('Lists');
-			$lang_insert_item = lang('Insert Item');
-			$js = '';
 			foreach ( $targets as $target )
 			{
-				$js .= <<<SCRIPT
-			(function() {
-				var Dom = YAHOO.util.Dom,
-				Event = YAHOO.util.Event;
-
-				var editorConfig = {
-					toolbar:
-						{buttons: [
-	 						{ group: 'textstyle', label: '{$lang_font_style}',
-								buttons: [
-									{ type: 'push', label: 'Fet CTRL + SHIFT + B', value: 'bold' }
-								]
-							},
-							{ type: 'separator' },
-							{ group: 'indentlist', label: '{$lang_lists}',
-								buttons: [
-									{ type: 'push', label: 'Opprett punktliste', value: 'insertunorderedlist' },
-									{ type: 'push', label: 'Opprett nummerert liste', value: 'insertorderedlist' }
-								]
-							},
-							{ type: 'separator' },
-							{ group: 'insertitem', label: '{$lang_insert_item}',
-								buttons: [
-									{ type: 'push', label: 'HTML Lenke CTRL + SHIFT + L', value: 'createlink', disabled: true },
-									{ type: 'push', label: 'Sett inn bilde', value: 'insertimage' }
-								]
-							},
-							{ type: 'separator' },
-							{ group: 'undoredo', label: 'Angre/Gjenopprett',
-								buttons: [
-									{ type: 'push', label: 'Angre', value: 'undo' },
-									{ type: 'push', label: 'Gjenopprett', value: 'redo' }
-								]
-							}
-						]
-					},
-					height: '200px',
-					width: '700px',
-					animate: true,
-					dompath: true,
- 					handleSubmit: true
-				};
-
-				var editorWidget = new YAHOO.widget.Editor('{$target}', editorConfig);
-				editorWidget.render();
-			})();
-
-SCRIPT;
+				phpgwapi_jquery::init_ckeditor($target);
 			}
+		}
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/editor/assets/skins/sam/editor.css');
-			phpgw::import_class('phpgwapi.yui');
-			phpgwapi_yui::load_widget('editor');
-			$GLOBALS['phpgw']->js->add_event('load', $js);
+
+		/**
+		 * Initiate rich text editor for selected targets
+		 * @param array $targets
+		 */
+		public function use_yui_editor($targets)
+		{
+			$this->rich_text_editor($targets);
 		}
 
 		public function render($template,$local_variables = array())
