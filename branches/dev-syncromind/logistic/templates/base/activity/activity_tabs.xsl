@@ -2,8 +2,7 @@
 <!-- separate tabs and  inline tables-->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<div class="yui-navset yui-navset-top" id="activity-tabview">
-	<xsl:call-template name="yui_phpgw_i18n"/>
+<div id="activity-tabview">
 	<xsl:choose>
 		<xsl:when test="view = 'activity_details'">
 
@@ -28,9 +27,11 @@
 			
 			<!-- =========== BREADCRUMB ============== -->
 		 <xsl:call-template name="breadcrumb" />
-		 
+		 	<div id="tab-content">
+
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="activity_details" />
+			</div>
 		</xsl:when>
 		<xsl:when test="view = 'requirement_overview'">
 			
@@ -55,12 +56,14 @@
 			
 			<!-- =========== BREADCRUMB ============== -->
 		 	<xsl:call-template name="breadcrumb" />
-			
-			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="requirement_overview" />
+		 	<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+				<xsl:call-template name="requirement_overview" />
+			</div>
 		</xsl:when>
 	</xsl:choose>
 </div>
+<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
 <!-- =========== BREADCRUMB TEMPLATE  ============== -->
@@ -82,7 +85,7 @@
 			</xsl:choose>
 			<xsl:if test="not( position() = last() )">
       			<img src="logistic/images/arrow_right.png" />
-    			</xsl:if>
+    		</xsl:if>
       </xsl:for-each>
 	</div>
 </xsl:template>

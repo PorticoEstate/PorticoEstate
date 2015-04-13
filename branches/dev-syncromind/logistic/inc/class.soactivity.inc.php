@@ -215,7 +215,7 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $allrows)
+		public function get($start_index, $num_of_objects, $sort_field, $ascending, $search_for, $search_type, $filters, $allrows)
 		{
 			if($sort_field == null || $sort_field == 'id' || $sort_field == '')
 			{

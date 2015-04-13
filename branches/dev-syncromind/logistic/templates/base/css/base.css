@@ -298,10 +298,10 @@ div.allocation-list
 }
 #dt-dlg_c .underlay {overflow:hidden;}
 .inprogress {position:absolute;} /* transitional progressive enhancement state */
-}
+
 
 dl.controller-description {
-  width: 70%;
+  width: 100%;
 }
 
 dl.controller-description dt, dl.controller-description-edit {
@@ -746,7 +746,7 @@ ul.expand_list .expand_item {
 dl.proplist, dl.proplist-col {
     margin: 0;
     padding-left: 0;
-    width: 50%;
+    width: 100%;
 }
 
 #details .proplist dd, #details .proplist-col dd{

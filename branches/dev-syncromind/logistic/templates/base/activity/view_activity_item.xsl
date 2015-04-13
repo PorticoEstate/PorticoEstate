@@ -71,37 +71,23 @@
 				<h3 style="clear:left; float:left;margin: 0; padding: 10px 0 5px;">Underaktiviteter</h3>
 				<a id="add-sub-activity-btn" class="btn focus" href="{$add_sub_activity_url}"><xsl:value-of select="php:function('lang', 'Add sub activity')" /></a>
 				
-				<div style="clear:both;" id="sub-activities-container"></div>		
-				<xsl:call-template name="datasource-definition" />
+				<div style="clear:both;" id="sub-activities-container"></div>
+				<xsl:for-each select="datatable_def">
+						<xsl:if test="container = 'datatable-container_0'">
+							<xsl:call-template name="table_setup">
+								<xsl:with-param name="container" select ='container'/>
+								<xsl:with-param name="requestUrl" select ='requestUrl' />
+								<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+								<xsl:with-param name="tabletools" select ='tabletools' />
+								<xsl:with-param name="data" select ='data' />
+								<xsl:with-param name="config" select ='config' />
+							</xsl:call-template>
+						</xsl:if>
+				</xsl:for-each>
 			</div>
 		</div>
+		<div id="allocation">
+		</div>
+
 	</div>
-</xsl:template>
-
-<xsl:template name="datasource-definition">
-
-	<script>
-	YAHOO.util.Event.onDOMReady(function(){
-	 
-   var oArgs = {
-					menuaction:'logistic.uiactivity.index',
-					activity_id: '<xsl:value-of select='activity/id'/>',
-					type: 'children'
-				};
-			
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-			
-		var myColumnDefs = [ 
-	        {key:"id", label:'Id', sortable:false},
-	        {key:"name", label:'Aktivitetsnavn', sortable:false},
-	        {key:"start_date", label:'Startdato', sortable:false}, 
-	        {key:"end_date", label:'Sluttdato', sortable:false},
-	     		{key:"responsible_user_name", label:'Ansvarlig', sortable:false},
-	     		{key:"status", label:'Status', sortable:false}
-	    ]; 
-
-		YAHOO.portico.inlineTableHelper("sub-activities-container", requestUrl, myColumnDefs);
-		
-  	});
-  </script>
 </xsl:template>

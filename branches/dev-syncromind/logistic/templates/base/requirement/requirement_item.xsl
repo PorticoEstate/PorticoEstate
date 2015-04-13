@@ -12,7 +12,6 @@
 </xsl:variable>
 
 
-<div class="content-wrp">
 	<div id="details">
 		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value = "{requirement/id}" />
@@ -149,8 +148,10 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="edit_params">
-						<xsl:text>menuaction:logistic.uirequirement.edit, id:</xsl:text>
+							<xsl:text>menuaction:logistic.uirequirement.edit, id:</xsl:text>
 							<xsl:value-of select="requirement/id" />
+							<xsl:text>, nonavbar:</xsl:text>
+							<xsl:value-of select="nonavbar" />
 						</xsl:variable>
 						<xsl:variable name="edit_url">
 							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $edit_params )" />
@@ -168,7 +169,7 @@
 			</div>
 		</form>
 	</div>
-</div>
+	<div id='constraints'></div>
 </xsl:template>
 
 <xsl:template match="options">

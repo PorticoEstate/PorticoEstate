@@ -2,8 +2,7 @@
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 <xsl:variable name="datetime_format"><xsl:value-of select="$date_format"/><xsl:text> H:i</xsl:text></xsl:variable>
 
-<xsl:call-template name="yui_phpgw_i18n"/>
-<div class="yui-navset yui-navset-top">
+<div>
 
 	<xsl:choose>
 		<xsl:when test="project/id != '' or project/id != 0">
@@ -262,6 +261,7 @@
 <form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
 </form>
 
+<xsl:call-template name="jquery_phpgw_i18n"/>
 
 </xsl:template>
 

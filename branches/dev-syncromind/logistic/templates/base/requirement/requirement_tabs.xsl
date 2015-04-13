@@ -2,12 +2,11 @@
 <!-- separate tabs and  inline tables-->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<div class="yui-navset yui-navset-top" id="requirement_tabview">
+<div id="requirement_tabview">
 
 	<xsl:choose>
 		<xsl:when test="view = 'requirement_details'">
-			<xsl:call-template name="yui_phpgw_i18n"/>
-		
+
 			<xsl:choose>
 				<xsl:when test="requirement/id != '' or requirement/id != 0">
 					<h1 style="float:left;"> 
@@ -35,9 +34,10 @@
 					</h1>
 				</xsl:otherwise>
 			</xsl:choose>
-		
-			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="requirement_details" />
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+				<xsl:call-template name="requirement_details" />
+			</div>
 		</xsl:when>
 		<xsl:when test="view = 'requirement_values'">
 		
@@ -58,11 +58,11 @@
 					</h1>
 				</xsl:otherwise>
 			</xsl:choose>
-		
-			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="requirement_values" />
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+				<xsl:call-template name="requirement_values" />
+			</div>
 		</xsl:when>
 	</xsl:choose>
 </div>
-	
 </xsl:template>

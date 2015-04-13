@@ -1,14 +1,20 @@
 <xsl:template name="requirement_values" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
+<div id='details'></div>
 
-<div class="yui-content" style="padding: 20px;">
-		<h2><xsl:value-of select="php:function('lang', 'Criterias')" /></h2>
+		<div id='constraints'>
+
+	<h2>
+		<xsl:value-of select="php:function('lang', 'Criterias')" />
+	</h2>
 		
 		<xsl:variable name="action_url">
 			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.save_requirement_values')" />
 		</xsl:variable>
+
 		<form id="frm-requirement-values" action="{$action_url}" method="post">
 			<input type="hidden" name="requirement_id" value = "{requirement/id}" />
+			<input type="hidden" name="nonavbar" value = "{nonavbar}" />
 										
 			<dl class="proplist-col">
 			<dd>
@@ -179,7 +185,9 @@
 			
 				<xsl:variable name="view_resources_params">
 					<xsl:text>menuaction:logistic.uiactivity.view_resource_allocation, activity_id:</xsl:text>
-				  <xsl:value-of select="activity/id" />
+					<xsl:value-of select="activity/id" />
+					<xsl:text>, nonavbar:</xsl:text>
+					<xsl:value-of select="nonavbar" />
 				</xsl:variable>
 				<xsl:variable name="view_resources_url">
 				  <xsl:value-of select="php:function('get_phpgw_link', '/index.php', $view_resources_params )" />
@@ -199,6 +207,8 @@
 						<xsl:variable name="params">
 								<xsl:text>menuaction:logistic.uirequirement.add_requirement_values, requirement_id:</xsl:text>
 								<xsl:value-of select="requirement/id" />
+								<xsl:text>, nonavbar:</xsl:text>
+								<xsl:value-of select="nonavbar" />
 							</xsl:variable>
 							<xsl:variable name="edit_url">
 								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $params )" />
@@ -212,7 +222,7 @@
 				</xsl:choose>
 			</div>
 		</form>
-</div>
+	</div>
 </xsl:template>
 
 <xsl:template match="options">

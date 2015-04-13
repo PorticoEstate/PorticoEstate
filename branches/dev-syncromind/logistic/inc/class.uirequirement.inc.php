@@ -28,7 +28,7 @@
 	 * @version $Id $
 	 */
 
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('logistic.sorequirement');
 	phpgw::import_class('logistic.soactivity');
 	phpgw::import_class('logistic.soproject');
@@ -40,7 +40,7 @@
 	phpgw::import_class('phpgwapi.datetime');
 	phpgw::import_class('phpgwapi.jquery');
 
-	class logistic_uirequirement extends phpgwapi_uicommon
+	class logistic_uirequirement extends phpgwapi_uicommon_jquery
 	{
 		private $so;
 		private $so_requirement_value;
@@ -107,23 +107,18 @@
 			$this->delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8 
 			$this->manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
 
+			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
 
 		public function query()
 		{
-			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
-			);
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 
-			$activity_id = phpgw::get_var('activity_id');
-
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -131,13 +126,25 @@
 			{
 				$user_rows_per_page = 10;
 			}
-			// YUI variables for paging and sorting
-			$start_index = phpgw::get_var('startIndex', 'int');
-			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field = phpgw::get_var('sort');
-			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+			);
+
+			$start_index	 = $params['start'];
+			$num_of_objects	 = $params['results'] < 0 ? null : $params['results'];
+			$sort_field		 = $params['order'];
+			$sort_ascending	 = $params['sort'] == 'desc' ? false : true;
 			// Form variables
-			$search_for = phpgw::get_var('query');
+			$search_for		 = $params['query'];
+
+			$activity_id = phpgw::get_var('activity_id');
+
 			$search_type = phpgw::get_var('search_option');
 			// Create an empty result set
 			$result_objects = array();
@@ -256,7 +263,7 @@
 				}
 
 				//$href = self::link(array('menuaction' => 'logistic.uirequirement.edit', 'id' => $entry['id']));
-				$href = "javascript:load_requirement_edit_id({$entry['id']});";
+				$href = "javascript:load_requirement_edit_id({$entry['id']}, {$entry['activity_id']});";
 				$entry['edit_requirement_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Endre behov</a>";
 
 				$href = "javascript:load_requirement_delete_id({$entry['id']});";
@@ -270,6 +277,7 @@
 			$result_data['start'] = $params['start'];
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
@@ -278,7 +286,7 @@
 				//Add action column to each row in result table
 				array_walk($result_data['results'], array($this, '_add_links'), "logistic.uirequirement.view");
 			}
-			return $this->yui_results($result_data);
+			return $this->jquery_results($result_data);
 		}
 
 		public function index()
@@ -288,8 +296,6 @@
 				return $this->query();
 			}
 
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 			$activity_id = phpgw::get_var('activity_id');
 
 			$activity = $this->so_activity->get_single($activity_id);
@@ -300,17 +306,8 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-						),
-					),
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json')),
@@ -386,9 +383,9 @@
 
 		public function view()
 		{
-			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
 			{
-				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
@@ -414,11 +411,12 @@
 
 				$data = array
 				(
-					'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-					'view'				=> "requirement_details",
-					'requirement' => $requirement,
-					'activity' 	=> $activity,
+					'tabs'			=> $GLOBALS['phpgw']->common->create_tabs($tabs, 'details'),
+					'view'			=> "requirement_details",
+					'requirement'	=> $requirement,
+					'activity'		=> $activity,
 					'location' 		=> $location_info,
+					'nonavbar'		=> $this->nonavbar
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project') . '::' . lang('Requirement');
@@ -433,9 +431,9 @@
 
 		public function edit($requirement = null)
 		{
-			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
 			{
-				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
@@ -490,7 +488,8 @@
 
 			$attribute_requirement_array = array();
 
-			foreach($attribute_requirement_types as $attribute_requirement){
+			foreach($attribute_requirement_types as $attribute_requirement)
+			{
 				$location_id = $attribute_requirement->get_location_id();
 				$cust_attribute_id = $attribute_requirement->get_cust_attribute_id();
 
@@ -509,12 +508,12 @@
 
 			$data = array
 			(
-				'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 'details'),
 				'view'				=> "requirement_details",
 				'requirement' 		=> $requirement,
 				'distict_locations' => $distict_locations_array,
 				'editable'			=> true,
-				'nonavbar'			=> $nonavbar
+				'nonavbar'			=> $this->nonavbar
 			);
 
 			if($activity_id > 0)
@@ -538,16 +537,16 @@
 			$requirement_id = phpgw::get_var('id', 'int');
 			$new_location_id = phpgw::get_var('location_id');
 
-			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
 			{
-				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
 
 			if(!$this->read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $nonavbar));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $this->nonavbar));
 				return false; // in case redirect fail;
 			}
 
@@ -588,7 +587,7 @@
 //					$db_requirement->transaction_abort();
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $nonavbar));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $this->nonavbar));
 			}
 			else
 			{
@@ -634,6 +633,13 @@
 
 		public function add_requirement_values()
 		{
+			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
 			$requirement_id = phpgw::get_var('requirement_id');
 
 			if ($requirement_id && is_numeric($requirement_id))
@@ -722,12 +728,13 @@
 
 			$data = array
 			(
-				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 'constraints'),
 				'view'							=> "requirement_values",
 				'requirement' 					=> $requirement,
 				'requirement_attributes_array'	=> $requirement_attributes_array,
 				'distict_locations' 			=> $distict_locations_array,
 				'editable' 						=> true,
+				'nonavbar'						=> $this->nonavbar
 			);
 
 			if($activity_id > 0)
@@ -743,9 +750,9 @@
 
 		public function view_requirement_values()
 		{
-			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
 			{
-				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
 				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
@@ -823,11 +830,12 @@
 
 			$data = array
 			(
-				'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-				'view'													=> "requirement_values",
-				'requirement' 									=> $requirement,
-				'activity' 											=> $activity,
-				'requirement_attributes_array'	=> $requirement_attributes_array
+				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 'constraints'),
+				'view'							=> "requirement_values",
+				'requirement' 					=> $requirement,
+				'activity' 						=> $activity,
+				'requirement_attributes_array'	=> $requirement_attributes_array,
+				'nonavbar'		=> $this->nonavbar
 			);
 
 			self::render_template_xsl(array('requirement/requirement_tabs', 'requirement/requirement_values'), $data);
@@ -835,6 +843,8 @@
 
 		public function save_requirement_values()
 		{
+				$this->nonavbar	= phpgw::get_var('nonavbar', 'bool');
+
 				$requirement_id = phpgw::get_var('requirement_id');
 				$attributes_array = array();
 				$attributes_array = phpgw::get_var('cust_attributes');
@@ -1185,27 +1195,36 @@
 
 				$requirement = $this->so->get_single($requirement_id);
 
-				$tabs = array(
-						   array(
-							'label' => "1: " . lang('Requirement details'),
-						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view',
+				$tabs = array
+				(
+					'details'=> array
+					(
+						'label' => "1: " . lang('Requirement details'),
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view',
 																				   	 'id' => $requirement->get_id(),
 																				   	 'nonavbar' => $this->nonavbar))
-						), array(
-							'label' => "2: " . lang('Add constraints'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values',
+						),
+					'constraints'=> array
+					(
+						'label' => "2: " . lang('Add constraints'),
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values',
 																				   	'requirement_id' => $requirement->get_id(),
 																				   	 'nonavbar' => $this->nonavbar))
 						));
 			}
 			else
 			{
-				$tabs = array(
-						   array(
-							'label' => "1: " . lang('Requirement details')
-						), array(
-							'label' => "2: " . lang('Add constraints')
-				));
+				$tabs = array
+				(
+					'details'=> array
+					(
+						'label' => "1: " . lang('Requirement details')
+					),
+					'constraints'=> array
+					(
+						'label' => "2: " . lang('Add constraints')
+					)
+				);
 			}
 
 			return $tabs;

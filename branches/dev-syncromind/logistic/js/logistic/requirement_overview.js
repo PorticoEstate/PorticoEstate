@@ -5,11 +5,11 @@
 		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
 	}
 
-	function load_requirement_edit_id( id ){
+	function load_requirement_edit_id( id , activity_id){
 		var oArgs = {menuaction: 'logistic.uirequirement.edit', id:id, nonavbar: true, lean: true};
 		var requestUrl = phpGWLink('index.php', oArgs);
 
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local(activity_id)}});
 	}
 
 	function load_requirement_delete_id( id ){
@@ -84,14 +84,34 @@
 	}
 
 
-	function closeJS_local()
+	function closeJS_local(activity_id)
 	{
-		var reqUrl = datatable_source;
-		YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
+		if(typeof(activity_id) == 'undefied' || !activity_id)
+		{
+			return;
+		}
+		var oArgs = {
+				menuaction:'logistic.uirequirement.index',
+				activity_id: activity_id,
+			};
+
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
+
 	}
 
 
 	function closeJS_local_allocation(requirement_id)
 	{
-			YAHOO.portico.updateinlineTableHelper('allocation-container');
+		var oArgs = {
+				menuaction:'logistic.uirequirement_resource_allocation.index',
+				requirement_id: requirement_id,
+				type: "requirement_id"
+			};
+
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		JqueryPortico.updateinlineTableHelper(oTable1, requestUrl);
+
 	}

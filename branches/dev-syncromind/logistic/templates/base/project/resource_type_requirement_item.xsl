@@ -1,7 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_phpgw_i18n"/>
-<div class="yui-navset yui-navset-top">
+<div>
 	<div>
 		<h1><img src="{img_go_home}" />
 				<xsl:value-of select="php:function('lang', 'Administrate requirements')" />

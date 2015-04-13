@@ -32,13 +32,13 @@
 
 	phpgw::import_class('logistic.sorequirement');
 	phpgw::import_class('logistic.sorequirement_resource_allocation');
-	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('logistic.soactivity');
 	phpgw::import_class('phpgwapi.jquery');
 
 	include_class('logistic', 'actvity');
 
-	class logistic_uiactivity extends phpgwapi_uicommon
+	class logistic_uiactivity extends phpgwapi_uicommon_jquery
 	{
 		private $so;
 		private $so_project;
@@ -79,6 +79,7 @@
 			$this->acl_delete  = $GLOBALS['phpgw']->acl->check('.activity', PHPGW_ACL_DELETE, 'logistic');//8
 			$this->acl_manage  = $GLOBALS['phpgw']->acl->check('.activity', 16, 'logistic');//16
 
+			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
 		public function index()
@@ -87,10 +88,6 @@
 			{
 				return $this->query();
 			}
-
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 
 			$project_array = $this->so_project->get_projects();
 			$user_array = $this->get_user_array();
@@ -110,15 +107,6 @@
 								'text' => lang('Responsible user') . ':',
 								'list' => $user_array,
 							),
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
 							array(
 								'type' => 'link',
 								'value' => lang('Add activity'),
@@ -133,13 +121,9 @@
 					'field' => array(
 						array(
 							'key' => 'id',
-							'hidden' => true
-						),
-						array(
-							'key' => 'id_link',
 							'label' => lang('Id'),
 							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'name',
@@ -262,21 +246,17 @@
 					);
 
 
-			self::render_template_xsl(array('datatable_common'), $data);
+			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
 
 		public function query()
 		{
-			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
-			);
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
@@ -285,15 +265,22 @@
 				$user_rows_per_page = 10;
 			}
 
-			// YUI variables for paging and sorting
-			$start_index = phpgw::get_var('startIndex', 'int');
-			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field = phpgw::get_var('sort');
-			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
-
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+			);
+	
+			$start_index	 = $params['start'];
+			$num_of_objects	 = $params['results'] < 0 ? null : $params['results'];
+			$sort_field		 = $params['order'];
+			$sort_ascending	 = $params['sort'] == 'desc' ? false : true;
 			// Form variables
-			$search_for = phpgw::get_var('query');
-			$search_type = phpgw::get_var('search_option');
+			$search_for		 = $params['query'];
+			$search_type	 = phpgw::get_var('search_option');
 
 			// Create an empty result set
 			$result_objects = array();
@@ -398,23 +385,17 @@
 			$result_data['start'] = $params['start'];
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
+			$result_data['draw'] = $draw;
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 			if (!$export)
 			{
-
 				//Add action column to each row in result table
-/*
-				array_walk(
-								$result_data['results'],
-								array($this, '_add_links'),
-								"logistic.uiactivity.view"
-				);
-*/
+				array_walk(	$result_data['results'],array($this, '_add_links'),	"logistic.uiactivity.view");
 			}
 
-			return $this->yui_results($result_data);
+			return $this->jquery_results($result_data);
 		}
 
 		public function add()
@@ -508,7 +489,7 @@
 				$data['projects'] = $projects;
 			}
 
-			$this->use_yui_editor('description');
+			$this->rich_text_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
@@ -536,11 +517,33 @@
 				$breadcrumb = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view', 'id');
 			}
 
+			$datatable_def = array();
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'logistic.uiactivity.index', 'activity_id' => $activity_id, 'type' => 'children', 'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> array
+					(
+						array('key' => 'id', 'label'=>lang('id'), 'sortable'=>false),
+						array('key' => 'name',	'label'=>lang('name'), 'sortable'=>false),
+						array('key' => 'start_date',	'label'=>lang('start date'), 'sortable'=>false),
+						array('key' => 'end_date','label'=>lang('end date'), 'sortable'=>false),
+						array('key' => 'responsible_user_name','label'=>lang('responsible'), 'sortable'=>false),
+						array('key' => 'status','label'=>lang('status'), 'sortable'=>false)
+					),
+				'data'			=> json_encode(array()),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
 			$tabs = $this->make_tab_menu($activity_id);
 
 			$data = array
 			(
-				'tabs'			=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'datatable_def'	=> $datatable_def,
+				'tabs'			=> $GLOBALS['phpgw']->common->create_tabs($tabs, 'details'),
 				'view' 			=> 'activity_details',
 				'activity'		=> $activity,
 				'breadcrumb'	=> $breadcrumb
@@ -552,7 +555,7 @@
 				$data['parent_activity'] = $parent_activity;
 			}
 
-			self::render_template_xsl(array('activity/view_activity_item', 'activity/activity_tabs'), $data);
+			self::render_template_xsl(array('activity/view_activity_item', 'activity/activity_tabs', 'datatable_inline'), $data);
 		}
 
 		public function save()
@@ -578,7 +581,7 @@
 			}
 			else
 			{
-				$this->acl_edit($activity);
+				$this->edit($activity);
 			}
 		}
 
@@ -620,87 +623,22 @@
 			$activity_id = phpgw::get_var('activity_id');
 			$activity = $this->so->get_single($activity_id);
 
-			$data = array(
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(
-							array('type' => 'text',
-								'text' => lang('search'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-						),
-					),
-				),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json')),
-					'field' => array(
-						/*array(
-							'key' => 'select',
-							'label' => lang('select'),
-							'sortable' => false,
-						),*/
-						array(
-							'key' => 'id',
-							'label' => lang('Id'),
-							'sortable' => true,
-						),
-						array(
-							'key' => 'start_date',
-							'label' => lang('Start date'),
-							'sortable' => false
-						),
-						array(
-							'key' => 'end_date',
-							'label' => lang('End date'),
-							'sortable' => false
-						),
-						array(
-							'key' => 'no_of_items',
-							'label' => lang('Num required'),
-							'sortable' => false
-						),
-						array(
-							'key' => 'allocated',
-							'label' => lang('Num allocated'),
-							'sortable' => false
-						),
-						array(
-							'key' => 'location_label',
-							'label' => lang('Resource type'),
-							'sortable' => false
-						),
-						array(
-							'key' => 'criterias',
-							'label' => lang('Criterias'),
-							'sortable' => false
-						),
-						array(
-							'key' => 'link',
-							'hidden' => true
-						),
-						array(
-							'key' => 'id',
-							'className' => 'requirement_id',
-							'hidden' => true
-						),
-						array(
-							'key' => 'status',
-							'label' => lang('Status requirement'),
-							'sortable' => false,
-						),
-					)
-				),
-			);
 
+			$ColumnDefs0 = array
+				(
+					array('key' => 'id', 'label'=>lang('id'), 'sortable'=>true),
+					array('key' => 'start_date',	'label'=>lang('start date'), 'sortable'=>false),
+					array('key' => 'end_date','label'=>lang('end date'), 'sortable'=>false),
+					array('key' => 'no_of_items','label'=>lang('Num required'), 'sortable'=>false),
+					array('key' => 'allocated','label'=>lang('Num allocated'), 'sortable'=>false),
+					array('key' => 'location_label','label'=>lang('Resource type'), 'sortable'=>false),
+					array('key' => 'criterias','label'=>lang('criterias'), 'sortable'=>false),
+					array('key' => 'status','label'=>lang('Status requirement'), 'sortable'=>false)
+				);
 
 			if($this->acl_add)
 			{
-				$data['datatable']['field'][] = array
+				$ColumnDefs0[] = array
 				(
 					'key'		=> 'alloc_link',
 					'label'		=> lang('Allocate resources'),
@@ -709,7 +647,7 @@
 			}
 			if($this->acl_add)
 			{
-				$data['datatable']['field'][] = array
+				$ColumnDefs0[] = array
 				(
 					'key'		=> 'edit_requirement_link',
 					'label'		=> lang('Edit requirement'),
@@ -719,7 +657,7 @@
 
 			if($this->acl_delete)
 			{
-				$data['datatable']['field'][] = array
+				$ColumnDefs0[] = array
 				(
 					'key'		=> 'delete_requirement_link',
 					'label'		=> lang('Delete requirement'),
@@ -727,17 +665,57 @@
 				);
 			}
 
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_jquery::load_widget('core');
+			$datatable_def = array();
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json'))),
+				'ColumnDefs'	=> $ColumnDefs0,
+				'data'			=> json_encode(array()),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+
+			$ColumnDefs1 = array
+				(
+					array('key' => 'id', 'label'=>lang('id'), 'sortable'=>true),
+					array('key' => 'fm_bim_item_name',	'label'=>'Navn på ressurs', 'sortable'=>true),
+					array('key' => 'resource_type_descr', 'label'=>lang('resource type descr'), 'sortable'=>true),
+					array('key' => 'allocated_amount','label'=>lang('allocated amount'), 'sortable'=>false),
+					array('key' => 'location_code','label'=>lang('location code'), 'sortable'=>true),
+					array('key' => 'fm_bim_item_address','label'=>lang('address'), 'sortable'=>true),
+					array('key' => 'delete_link','label'=>lang('delete'), 'sortable'=>false),
+					array('key' => 'assign_job','label'=>lang('assign job'), 'sortable'=>false),
+					array('key' => 'related','label'=>lang('related'), 'sortable'=>false),
+					array('key' => 'status','label'=>lang('Status requirement'), 'sortable'=>false)
+				);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> "''",//json_encode(self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'requirement_id' => $requirement_id, 'type' => "requirement_id", 'phpgw_return_as' => 'json'))),
+				'ColumnDefs'	=> $ColumnDefs1,
+				'data'			=> json_encode(array()),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
 
 			$tabs = $this->make_tab_menu($activity_id);
 
-			$data['tabs']		= $GLOBALS['phpgw']->common->create_tabs($tabs, 1);
-			$data['view'] 	 	= 'requirement_overview';
-			$data['activity']	= $activity;
-			$data['breadcrumb'] = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id');
-			$data['acl_add'] 	= $this->acl_add;
+			$data = array
+			(
+				'datatable_def'	=> $datatable_def,
+				'tabs'			=> $GLOBALS['phpgw']->common->create_tabs($tabs, 'allocation'),
+				'view'			=> 'requirement_overview',
+				'activity'		=> $activity,
+				'breadcrumb'	=> $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id'),
+				'acl_add'		=> $this->acl_add
+			);
 
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
 			self::add_javascript('logistic', 'logistic', 'requirement_overview.js');
@@ -746,7 +724,7 @@
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
-			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview', 'activity/activity_tabs'), $data);
+			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview', 'activity/activity_tabs','datatable_inline'), $data);
 		}
 
 		private function get_user_array()
@@ -774,25 +752,35 @@
 
 				$activity = $this->so->get_single($activity_id);
 
-				$tabs = array(
-						   array(
-							'label' => "1: " . lang('Activity details'),
-						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view',
+				$tabs = array
+				(
+					'details'=> array
+					(
+						'label' => "1: " . lang('Activity details'),
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view',
 																				   		'id' => $activity->get_id()))
-						), array(
-							'label' => "2: " . lang('Requirement allocation'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation',
+					),
+					'allocation' => array
+					(
+						'label' => "2: " . lang('Requirement allocation'),
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation',
 																				   		 'activity_id' => $activity->get_id()))
-						));
+					)
+				);
 			}
 			else
 			{
-				$tabs = array(
-						   array(
-							'label' => "1: " . lang('Activity details')
-						), array(
-							'label' => "2: " . lang('Requirement allocation')
-				));
+				$tabs = array
+				(
+					'details'=>   array
+					(
+						'label' => "1: " . lang('Activity details')
+					),
+					'allocation' => array
+					(
+						'label' => "2: " . lang('Requirement allocation')
+					)
+				);
 			}
 
 			return $tabs;
