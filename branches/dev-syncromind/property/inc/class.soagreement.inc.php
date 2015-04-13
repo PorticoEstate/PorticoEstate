@@ -910,6 +910,7 @@
 
 		function update($values)
 		{
+//            echo '<pre>'; print_r($values);echo '</pre>'; exit('update saul');
 			//_debug_array($values);
 			$values['new_index']=$this->floatval($values['new_index']);
 			$this->db->transaction_begin();
