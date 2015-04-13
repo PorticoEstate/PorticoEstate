@@ -313,8 +313,76 @@
 			{
 				$receipt	= $this->bo->update_periodization_start($voucher_id_for_periodization_start,$periodization_start);
 			}
-
-
+			
+			/*
+            $data   = array(
+                'datatable_name'    => $appname,
+                'form'  => array(
+                               'toolbar'    => array(
+                                   'item'   => array(
+                                       array(
+                                           'type'   => 'link',
+                                           'value'  => lang('new'),
+                                           'href'   => self::link(array(
+                                               'menuaction'	=> 'property.uiinvoice.add'
+                                           )),
+                                           'class'  => 'new_item'
+                                       )
+                                   )
+                               )
+                            ),
+                'datatable' =>  array(
+                    'source'    => self::link(array(
+                        'menuaction'		=> 'property.uiinvoice.index',
+						'paid'				=> $paid,
+						'ecodimb'			=> $ecodimb,
+						'vendor_id'			=> $vendor_id,
+						'workorder_id'		=> $workorder_id,
+						'project_id'		=> $project_id,
+						'start_date'		=> $start_date,
+						'end_date'			=> $end_date,
+						'b_account_class'	=> $b_account_class,
+						'district_id'		=> $this->district_id,
+                        'phpgw_return_as'   => 'json'
+                    )),
+					'download'	=> self::link(array(
+							'menuaction'	=> 'property.uiinvoice.download',
+							'export'		=> true,
+							'skip_origin'	=> true,
+							'allrows'		=> true
+					)),
+                    'allrows'   => true,
+                    'editor_action' => '',
+                    'field' =>  array()
+                )
+            );
+			
+			if($paid)
+			{
+				$data['form']['toolbar']['item'][] = array
+					(
+						'type'	=> 'date-picker',
+						'id'	=> 'start_date',
+						'name'	=> 'start_date',
+						'value'	=> '',
+						'text'  => lang('from')
+					);
+				$data['form']['toolbar']['item'][] = array
+					(
+						'type'	=> 'date-picker',
+						'id'	=> 'end_date',
+						'name'	=> 'end_date',
+						'value'	=> '',
+						'text'  => lang('to')
+					);
+			}
+			
+            $filters = $this->_get_Filters();
+			krsort($filters);
+            foreach($filters as $filter){
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }*/
+			
 			$datatable = array();
 			$values_combo_box = array();
 
