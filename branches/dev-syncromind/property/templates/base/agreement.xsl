@@ -1212,6 +1212,7 @@
                                                                                 <input id="new_index" class="mybottonsUpdates" type="inputText" name="values[new_index]" size="12"/>
                                                                                 <input id="hd_values[update]" class="" type="hidden" name="values[update]" value="Update"/>
                                                                                 <input type="button" name="" value="Update" id="values[update]" onClick="onUpdateClickItems('update_item');"/>
+                                                                                <input type="button" name="" value="delete las index" id="values[delete]" onClick="onActionsClickDeleteLastIndex('delete_item');"/>
 									</div>
 								</td>
 							</tr>
