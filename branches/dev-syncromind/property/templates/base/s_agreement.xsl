@@ -233,19 +233,21 @@
 	</xsl:template>
 
 	<!-- add / edit -->
-	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
+	<!--xsl:template match="edit" xmlns:php="http://php.net/xsl"-->
+        <xsl:template match="edit">
 		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
-		<div class="yui-navset" id="edit_tabview">
+		<!--div class="yui-navset" id="edit_tabview"-->
+                <div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div class="yui-content">
 				<xsl:variable name="edit_url">
 					<xsl:value-of select="edit_url"/>
 				</xsl:variable>
 				<div id="general">
-					<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}">
+					<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}" class="pure-form pure-form-aligned">
 						<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 							<xsl:choose>
 								<xsl:when test="msgbox_data != ''">
@@ -460,7 +462,7 @@
 									<xsl:variable name="lang_save">
 										<xsl:value-of select="lang_save"/>
 									</xsl:variable>
-									<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+									<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_save_statustext"/>
@@ -472,7 +474,7 @@
 									<xsl:variable name="lang_apply">
 										<xsl:value-of select="lang_apply"/>
 									</xsl:variable>
-									<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
+									<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_apply_statustext"/>
@@ -484,7 +486,7 @@
 									<xsl:variable name="lang_cancel">
 										<xsl:value-of select="lang_cancel"/>
 									</xsl:variable>
-									<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
+									<input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_cancel_statustext"/>
@@ -657,7 +659,7 @@
 							<xsl:variable name="update_action">
 								<xsl:value-of select="update_action"/>
 							</xsl:variable>
-							<form method="post" name="form2" action="{$update_action}">
+							<form method="post" class="pure-form pure-form-aligned" name="form2" action="{$update_action}">
 								<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}"/>
 								<!-- DataTable 1 EDIT -->
 								<div id="paging_1"> </div>
@@ -685,9 +687,9 @@
 										</xsl:attribute>
 									</input>
 									<div style="width:25px;height:15px;position:relative;float:left;"></div>
-                                                                        <input id="new_index" class="mybottonsUpdates" type="inputText" name="values[new_index]" size="12"/>
+                                                                        <input id="new_index" class="mybottonsUpdates" type="text" name="values[new_index]" size="12"/>
                                                                         <input id="hd_values[update]" class="" type="hidden" name="values[update]" value="Update"/>
-                                                                        <input type="button" name="" value="Update" id="values[update]" onClick="onUpdateClickAlarm('update');"/>
+                                                                        <input type="button" class="pure-button pure-button-primary" name="" value="Update" id="values[update]" onClick="onUpdateClickAlarm('update');"/>
 								</div>
 								<style type="text/css">
 									.calendar-opt
@@ -828,7 +830,7 @@
 								<xsl:variable name="lang_save">
 									<xsl:value-of select="lang_save"/>
 								</xsl:variable>
-								<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+								<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_save_statustext"/>
@@ -840,7 +842,7 @@
 								<xsl:variable name="lang_apply">
 									<xsl:value-of select="lang_apply"/>
 								</xsl:variable>
-								<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
+								<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_apply_statustext"/>
@@ -852,7 +854,7 @@
 								<xsl:variable name="lang_cancel">
 									<xsl:value-of select="lang_cancel"/>
 								</xsl:variable>
-								<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
+								<input type="submit"  class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_cancel_statustext"/>
@@ -901,7 +903,21 @@
 								<div id="contextmenu_0"/>
 								<tr>
 									<td class="center" align="left" colspan="10">
-										<div id="datatable-container_0"/>
+										<!--div id="datatable-container_0"/></div-->
+                                                                                <div class="pure-custom">
+                                                                                    <xsl:for-each select="datatable_def">
+                                                                                            <xsl:if test="container = 'datatable-container_0'">
+                                                                                                    <xsl:call-template name="table_setup">
+                                                                                                            <xsl:with-param name="container" select ='container'/>
+                                                                                                            <xsl:with-param name="requestUrl" select ='requestUrl' />
+                                                                                                            <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+                                                                                                            <xsl:with-param name="tabletools" select ='tabletools' />
+                                                                                                            <xsl:with-param name="data" select ='data' />
+                                                                                                            <xsl:with-param name="config" select ='config' />
+                                                                                                    </xsl:call-template>
+                                                                                            </xsl:if>
+                                                                                    </xsl:for-each>
+                                                                                </div>
 									</td>
 								</tr>
 								<tr>
@@ -917,7 +933,11 @@
 													<xsl:value-of select="lang_date_statustext"/>
 												</xsl:attribute>
 											</input>
-											<div style="width:25px;height:15px;position:relative;float:left;"/>
+											<div style="width:25px;height:15px;position:relative;float:left;"></div>
+                                                                                        <input type="hidden" id="agreementid" name="agreementid" value="{value_s_agreement_id}" />
+                                                                                        <input id="new_index" class="mybottonsUpdates" type="inputText" name="values[new_index]" size="12"/>
+                                                                                        <input type="button" name="" value="Update" id="values[update]" onClick="onUpdateClickItems('update_item');"/>
+                                                                                <input type="button" name="" value="delete las index" id="values[delete]" onClick="onActionsClickDeleteLastIndex('delete_item');"/>
 										</div>
 									</td>
 								</tr>
@@ -1283,7 +1303,21 @@
 						<!--  DataTable 0 VIEW ITEM -->
 						<tr>
 							<td align="left" colspan="4">
-								<div id="datatable-container_0"/>
+								<!--div id="datatable-container_0"/-->
+                                                                <div class="pure-custom">
+                                                                    <xsl:for-each select="datatable_def">
+                                                                            <xsl:if test="container = 'datatable-container_0'">
+                                                                                    <xsl:call-template name="table_setup">
+                                                                                            <xsl:with-param name="container" select ='container'/>
+                                                                                            <xsl:with-param name="requestUrl" select ='requestUrl' />
+                                                                                            <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+                                                                                            <xsl:with-param name="tabletools" select ='tabletools' />
+                                                                                            <xsl:with-param name="data" select ='data' />
+                                                                                            <xsl:with-param name="config" select ='config' />
+                                                                                    </xsl:call-template>
+                                                                            </xsl:if>
+                                                                    </xsl:for-each>
+                                                                </div>
 								<div id="contextmenu_0"/>
 							</td>
 						</tr>
@@ -1304,7 +1338,7 @@
 							<xsl:variable name="lang_cancel">
 								<xsl:value-of select="lang_cancel"/>
 							</xsl:variable>
-							<input type="submit" name="cancel" value="{$lang_cancel}" onMouseout="window.status='';return true;">
+							<input type="submit" class="pure-button pure-button-primary" name="cancel" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_cancel_statustext"/>
