@@ -74,7 +74,7 @@ onUpdateClickAlarm = function(type){
     }
     
     var ids = [];
-    var mcost = {}; var wcost = {}; var tcost = {}; var icoun = {};
+    var mcost = {}; var icoun = {};
     for ( var n = 0; n < selected.length; ++n )
     {
         var aData = selected[n];
@@ -97,3 +97,63 @@ onUpdateClickAlarm = function(type){
     });
 }
 
+onUpdateClickItems = function(type){
+    var oDate = $('#values_date').val();
+    var oIndex = $('#new_index').val();
+    var id = $('#agreementid').val();
+    
+    //obteniendo el ultimo registro de edit_item
+    var oSelid = $("#selidsul").val(); //1118
+    var omcost = $("#mcostul").val(); //1118
+    var oindex = $("#icountul").val();//3
+    
+    if(oDate == '' && oIndex == ''){
+        alert('None index and date');
+        return false;
+    }else if(oDate!='' && oIndex == ''){
+        alert('None Index');
+        return false;
+    }else if(oDate=='' && oIndex != ''){
+        alert('None Date');
+        return false;
+    }
+    
+    var ids = []; var mcost = {}; var icoun = {};
+    ids.push(oSelid);mcost[oSelid] = omcost; icoun[oSelid] = oindex;
+    
+     $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
+            data:{id:id,ids:ids,mcost:mcost,icoun:icoun,type:type,date:oDate,index:oIndex},
+            success: function(data) {
+                obj = JSON.parse(data);
+                var newstr = obj.replace("&amp;", "&","gi");
+                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+                $('#values_date').val('');
+                $('#new_index').val('');
+            }
+        }); 
+}
+
+onActionsClickDeleteLastIndex=function(type){
+    
+    var id = $('#agreementid').val();
+    
+    //obteniendo el ultimo registro de edit_item
+    var oSelid = $("#selidsul").val(); //1118
+
+    $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
+            data:{ids:oSelid,type:type,id:id},
+            success: function(data) {
+                 obj = JSON.parse(data);
+                var newstr = obj.replace("&amp;", "&","gi");
+                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+                $('#values_date').val('');
+                $('#new_index').val('');
+            }
+    });
+}
