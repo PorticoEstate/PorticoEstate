@@ -68,7 +68,6 @@
 
 		function read($data)
 		{
-            //echo '<pre>'; print_r($data); echo '</pre>';
 			if(is_array($data))
 			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
