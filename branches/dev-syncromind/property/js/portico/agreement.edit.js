@@ -138,8 +138,28 @@ onUpdateClickItems = function(type){
                 $('#values_date').val('');
                 $('#new_index').val('');
             }
-        });
-        
-        
-        
+        });       
+}
+
+onActionsClickDeleteLastIndex=function(type){
+    
+    var id = $('#agreementid').val();
+    
+    //obteniendo el ultimo registro de edit_item
+    var oSelid = $("#selidsul").val(); //1118
+
+    $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
+            data:{ids:oSelid,type:type,id:id},
+            success: function(data) {
+                 obj = JSON.parse(data);
+                var newstr = obj.replace("&amp;", "&","gi");
+//                console.log(newstr);
+                JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+                $('#values_date').val('');
+                $('#new_index').val('');
+            }
+    });
 }
