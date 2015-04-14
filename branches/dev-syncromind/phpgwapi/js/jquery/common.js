@@ -259,9 +259,24 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 };
 
 JqueryPortico.updateinlineTableHelper = function(oTable, requestUrl)
-{	
-	var api = oTable.api();
-	api.ajax.url( requestUrl ).load();
+{
+	if(typeof(oTable) == 'string')
+	{
+		var _oTable = $("#" + oTable).dataTable();
+	}
+	else
+	{
+		var _oTable = oTable;
+	}
+	if(typeof(requestUrl) == 'undefined')
+	{
+		_oTable.fnDraw();
+	}
+	else
+	{
+		var api = _oTable.api();
+		api.ajax.url( requestUrl ).load();
+	}
 };
 
 JqueryPortico.fnGetSelected = function(oTable)
