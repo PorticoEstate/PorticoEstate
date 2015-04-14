@@ -517,9 +517,9 @@
                                             'text' 			=> lang('open view in new window'),
                                             'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                                             (
-                                                    'menuaction'	=> 'property.uiworkorder.view',
-                                                    'target'	=> '_blank'
+                                                    'menuaction'	=> 'property.uiworkorder.view'
                                             )),
+											'target'		=> '_blank',
                                             'parameters'	=> json_encode($parameters)
                                         );
 
@@ -534,9 +534,9 @@
                                                 'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                                                 (
                                                     'menuaction'	=> 'property.uijasper.view',
-                                                    'jasper_id'	=> $report['id'],
-                                                    'target'	=> '_blank'
+                                                    'jasper_id'	=> $report['id']                                                  
                                                 )),
+												'target'		=> '_blank',
                                                 'parameters'	=> json_encode($parameters)
                                             );
                                     }
@@ -560,9 +560,9 @@
                                         'text'	 		=> lang('open edit in new window'),
                                         'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                                         (
-                                                'menuaction'	=> 'property.uiworkorder.edit',
-                                                'target'	=> '_blank'
+                                                'menuaction'	=> 'property.uiworkorder.edit'                                           
                                         )),
+										'target'		=> '_blank',
                                         'parameters'	=> json_encode($parameters)
                                     );
 
