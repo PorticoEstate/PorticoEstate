@@ -11,7 +11,6 @@
 	<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $action_params )" />
 </xsl:variable>
 
-
 	<div id="details">
 		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value = "{requirement/id}" />

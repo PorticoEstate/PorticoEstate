@@ -283,7 +283,7 @@
 																	'phpgw_return_as' => 'json')
 																);
 
-					$delete_href = "javascript:load_delete_allocation({$allocation['id']});";
+					$delete_href = "javascript:load_delete_allocation({$allocation['requirement_id']},{$allocation['id']});";
 
 					$allocation['delete_link'] = "<a class=\"btn-sm \" href=\"{$delete_href}\">{$lang_delete}</a>";
 
@@ -606,11 +606,11 @@
 
 			if($status)
 			{
-				return json_encode( array( "status" => "deleted" ) );
+				return array( "status" => "deleted" );
 			}
 			else
 			{
-				return json_encode( array( "status" => "not_deleted" ) );
+				return array( "status" => "not_deleted" );
 			}
 		} 
 

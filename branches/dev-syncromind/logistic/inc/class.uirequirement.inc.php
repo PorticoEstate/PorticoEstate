@@ -1218,11 +1218,15 @@
 				(
 					'details'=> array
 					(
-						'label' => "1: " . lang('Requirement details')
+						'label' => "1: " . lang('Requirement details'),
+						'link' => '#details',
+						'disable' => 0
 					),
 					'constraints'=> array
 					(
-						'label' => "2: " . lang('Add constraints')
+						'label' => "2: " . lang('Add constraints'),
+						'link' => '#constraints',
+						'disable' => 1
 					)
 				);
 			}

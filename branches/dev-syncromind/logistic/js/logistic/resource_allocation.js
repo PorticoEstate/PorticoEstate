@@ -1,17 +1,15 @@
 $(document).ready(function(){
 
-	$("#requirement-container table tr").on("click", function(e){
-		var thisRow = $(this);
-		
-		var requirement_id = $(thisRow).find("td.requirement_id").find("div").text();
-		
+	$("#requirement-container").on("click", function(e){
+		var requirement_id = $('td', this).eq(0).text();
 		updateAllocationTable( requirement_id );
     });
-	
+/*
 	$("#allocation-container table .btn-sm.delete").on("click", function(e){
 		var thisRow = $(this).parents("tr");
 		
 		var requestUrl = $(this).attr("href");
+		alert(requestUrl);
 		
 		$.ajax({
 			  type: 'POST',
@@ -33,27 +31,23 @@ $(document).ready(function(){
 		
 		return false;
     });
+	*/
 });
 
-
-function updateAllocationTable( requirement_id ){
+function updateAllocationTable(requirement_id)
+{
+	if(!requirement_id)
+	{
+		return;
+	}
 
 	var oArgs = {
 			menuaction:'logistic.uirequirement_resource_allocation.index',
 			requirement_id: requirement_id,
-			type: 'requirement_id',
-			phpgw_return_as: 'json'
+			type: "requirement_id"
 		};
-		
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-	
-		var myColumnDefs = [ 
-	        {key:"id", sortable:true}, 
-	        {key:"requirement_id", sortable:true}, 
-	        {key:"location_id", sortable:true}, 
-	        {key:"resource_id", sortable:true} 
-	    ]; 
-	
-		YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);
-}
 
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		JqueryPortico.updateinlineTableHelper('allocation-container', requestUrl);
+}

@@ -25,9 +25,9 @@
 			</xsl:if>
 
 			<div style="clear:both;" id="paging"></div>
-			<div style="margin-bottom: 40px;" id="requirement-container">
+			<div style="margin-bottom: 40px;">
 				<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'datatable-container_0'">
+						<xsl:if test="container = 'requirement-container'">
 							<xsl:call-template name="table_setup">
 								<xsl:with-param name="container" select ='container'/>
 								<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -46,7 +46,7 @@
 				<!-- // Needed for case of only one checkbox in datatable-->
 				<input type='hidden' name='assign_requirement' value = '0'/>
 				<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'datatable-container_1'">
+						<xsl:if test="container = 'allocation-container'">
 							<xsl:call-template name="table_setup">
 								<xsl:with-param name="container" select ='container'/>
 								<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -59,39 +59,6 @@
 				</xsl:for-each>
 			</form>
 	</div>
-	<xsl:call-template name="datasource-def" />
 	</div>
 
-</xsl:template>
-
-<xsl:template name="datasource-def">
-
-	<script>
-  	
-		$(document).ready(function()
-		{
-			$('#datatable-container_0 tbody').on('click', 'tr', function () {
-				var requirement_id = $('td', this).eq(0).text();
-				updateAllocationTable( requirement_id );
-			} );
-
-		});
-		
-		function updateAllocationTable(requirement_id)
-		{
-			if(!requirement_id)
-			{
-				return;
-			}
-
-			var oArgs = {
-					menuaction:'logistic.uirequirement_resource_allocation.index',
-					requirement_id: requirement_id,
-					type: "requirement_id"
-				};
-				
-				var requestUrl = phpGWLink('index.php', oArgs, true);
-				JqueryPortico.updateinlineTableHelper(oTable1, requestUrl);			
-		}
-  </script>
 </xsl:template>

@@ -669,7 +669,7 @@
 
 			$datatable_def[] = array
 			(
-				'container'		=> 'datatable-container_0',
+				'container'		=> 'requirement-container',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json'))),
 				'ColumnDefs'	=> $ColumnDefs0,
 				'data'			=> json_encode(array()),
@@ -695,7 +695,7 @@
 
 			$datatable_def[] = array
 			(
-				'container'		=> 'datatable-container_1',
+				'container'		=> 'allocation-container',
 				'requestUrl'	=> "''",//json_encode(self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'requirement_id' => $requirement_id, 'type' => "requirement_id", 'phpgw_return_as' => 'json'))),
 				'ColumnDefs'	=> $ColumnDefs1,
 				'data'			=> json_encode(array()),
@@ -774,11 +774,16 @@
 				(
 					'details'=>   array
 					(
-						'label' => "1: " . lang('Activity details')
+						'label' => "1: " . lang('Activity details'),
+						'link' => '#details',
+						'disable' => 0
+
 					),
 					'allocation' => array
 					(
-						'label' => "2: " . lang('Requirement allocation')
+						'label' => "2: " . lang('Requirement allocation'),
+						'link' => '#allocation',
+						'disable' => 1
 					)
 				);
 			}

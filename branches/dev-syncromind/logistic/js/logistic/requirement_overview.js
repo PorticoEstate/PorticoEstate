@@ -2,7 +2,7 @@
 		var oArgs = {menuaction: 'logistic.uirequirement.edit', activity_id:activity_id, nonavbar: true, lean: true};
 		var requestUrl = phpGWLink('index.php', oArgs);
 
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local(activity_id)}});
 	}
 
 	function load_requirement_edit_id( id , activity_id){
@@ -19,36 +19,48 @@
 			var oArgs = {menuaction: 'logistic.uirequirement.delete', id:id};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
-			var callback =	{	success: function(o){
-								//	var message_delete = o.responseText.toString().replace("\"","").replace("\"","");
-									var reqUrl = datatable_source;
-									YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
-									},
-							failure: function(o){window.alert('failed')},
-							timeout: 10000
-						};
-			var request = YAHOO.util.Connect.asyncRequest('POST', requestUrl, callback);
+			var callback =	function(result)
+				{
+					JqueryPortico.updateinlineTableHelper('requirement-container');
+				};
+			JqueryPortico.execute_ajax(requestUrl, callback, {},'POST', 'json');
 		}
 	}
 
 
-	function load_delete_allocation( id ){
+	function load_delete_allocation( requirement_id, id )
+	{
 		confirm_msg = 'Slette allokering?';
 		if(confirm(confirm_msg))
 		{
 			var oArgs = {menuaction: 'logistic.uirequirement_resource_allocation.delete', id:id};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
-			var callback =	{	success: function(o){
-									//message_delete = YAHOO.lang.JSON.parse(o.responseText);
-									//console.log(message_delete);
-									YAHOO.portico.updateinlineTableHelper('requirement-container');
-									YAHOO.portico.updateinlineTableHelper('allocation-container');
-									},
-							failure: function(o){window.alert('failed')},
-							timeout: 10000
-						};
-			var request = YAHOO.util.Connect.asyncRequest('POST', requestUrl, callback);
+			$.ajax({
+				  type: 'POST',
+				  url: requestUrl,
+				  success: function(data) {
+					  var obj = data;
+					  if(obj.status == "deleted")
+					  {
+						var oArgs2 = {
+								menuaction:'logistic.uirequirement_resource_allocation.index',
+								requirement_id: requirement_id,
+								type: "requirement_id"
+							};
+
+						var requestUrl2 = phpGWLink('index.php', oArgs2, true);
+
+						 JqueryPortico.updateinlineTableHelper('allocation-container', requestUrl2);
+						 JqueryPortico.updateinlineTableHelper('requirement-container');
+					  }
+				  },
+				  error: function(XMLHttpRequest, textStatus, errorThrown) {
+					if (XMLHttpRequest.status === 401) {
+					  window.alert('failed');
+					}
+				  }
+			});
 		}
 	}
 
@@ -97,8 +109,7 @@
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-		JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
-
+		JqueryPortico.updateinlineTableHelper('requirement-container', requestUrl);
 	}
 
 
