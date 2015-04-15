@@ -3,7 +3,8 @@
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
 	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2011,2012,2013,2014,2015 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -121,13 +122,13 @@
 				case 'project_type':
 					phpgwapi_cache::session_set('logistic', 'project_type_query', $search_for);
 					$search_type	 = 'project_type';
-					$result_objects	 = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects	 = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count	 = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 				default: // ... all composites, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'project_query', $search_for);
 					$filters		 = array('project_type' => phpgw::get_var('project_type'));
-					$result_objects	 = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects	 = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count	 = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 			}

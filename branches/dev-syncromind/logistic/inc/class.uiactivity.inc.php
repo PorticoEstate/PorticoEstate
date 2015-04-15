@@ -6,7 +6,7 @@
 	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2011,2012,2013,2014,2015 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -118,6 +118,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json', 'filter' => phpgw::get_var('filter', 'int'))),
+					'allrows'	=> true,
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -303,7 +304,7 @@
 				case 'children':
 					$activity_id = phpgw::get_var('activity_id');
 					$filters = array('id' => $activity_id);
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count();
 					array_shift($result_objects);
 					if($result_objects)
@@ -314,13 +315,13 @@
 				case 'activity_id':
 					$activity_id = phpgw::get_var('activity_id');
 					$filters = array('id' => $activity_id);
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 				default: // ... all activities, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'activity_query', $search_for);
 					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'), 'activity' => phpgw::get_var('filter', 'int'));
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->total_records;
 					break;
 			}
@@ -496,10 +497,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 
 			self::add_javascript('logistic', 'logistic', 'activity.js');
-			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-formvalidator/gallery-formvalidator-min.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
-//_debug_array($data);die();
+			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'),'activity_form');
 			self::render_template_xsl('activity/add_activity_item', $data);
 		}
 

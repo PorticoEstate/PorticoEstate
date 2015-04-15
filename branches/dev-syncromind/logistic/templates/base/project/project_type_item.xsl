@@ -3,7 +3,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<div id="main_content" class="yui-content">
+<div id="main_content">
 	<h1>Prosjekttype</h1>
 		<div style="padding:20px;" class="content-wrp">
 			<form action="#" method="post">
