@@ -189,6 +189,7 @@
 								<xsl:value-of select="lang_save_statustext"/>
 							</xsl:attribute>
 						</input>
+                                                
 					</td>
 					<td valign="bottom">
 						<xsl:variable name="lang_apply">
