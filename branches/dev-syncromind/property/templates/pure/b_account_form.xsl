@@ -40,6 +40,9 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_select_b_account_help"/>
 					</xsl:attribute>
+					<xsl:attribute name="data-validation">
+						<xsl:text>required</xsl:text>
+					</xsl:attribute>
 				</input>
 			</div>
 		</xsl:otherwise>
