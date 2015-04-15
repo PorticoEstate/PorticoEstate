@@ -1028,7 +1028,8 @@
 					'lang_apply_statustext'			=> lang('Apply the values'),
 					'lang_cancel_statustext'		=> lang('Leave the budget untouched and return to the list'),
 					'lang_save_statustext'			=> lang('Save the budget and return to the list'),
-					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 
 				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id?lang('edit budget'):lang('add budget'));
