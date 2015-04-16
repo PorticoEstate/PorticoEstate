@@ -4,7 +4,7 @@
 	</xsl:template>
 
 	<!-- New template-->
-	<xsl:template match="vendor_data">
+	<xsl:template match="vendor_data" xmlns:php="http://php.net/xsl">
 		<script type="text/javascript">
 			function vendor_lookup()
 			{
@@ -22,6 +22,14 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_select_vendor_help"/>
 					</xsl:attribute>
+					<xsl:if test="required='1'">
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'no vendor')"/>
+						</xsl:attribute>
+					</xsl:if>
 				</input>
 				<input size="30" type="text" name="vendor_name" value="{value_vendor_name}" onClick="vendor_lookup();" readonly="readonly">
 					<xsl:attribute name="title">

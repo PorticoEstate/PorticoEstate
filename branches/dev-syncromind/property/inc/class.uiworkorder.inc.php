@@ -1339,7 +1339,9 @@
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id'		=> $values['vendor_id'],
 				'vendor_name'	=> $values['vendor_name'],
-				'type'			=> $mode));
+				'type'			=> $mode,
+				'required'		=> isset($config->config_data['workorder_require_vendor']) && $config->config_data['workorder_require_vendor'] == 1
+			));
 
 
 			$b_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
@@ -1352,7 +1354,9 @@
 				'b_account_name'	=> $values['b_account_name'],
 				'disabled'			=> '',
 				'parent'			=> $project['b_account_id'],
-				'type'				=> $mode));
+				'type'				=> $mode,
+				'required'			=> true
+			));
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 				(
@@ -2019,6 +2023,7 @@
 				'user_list'								=> array('options' => $user_list),
 				'status_list'							=> $this->bo->select_status_list('select',$values['status']),
 				'status_name'							=> 'values[status]',
+				'status_required'						=> true,
 				'lang_no_status'						=> lang('Select status'),
 				'lang_status'							=> lang('Status'),
 				'lang_status_statustext'				=> lang('What is the current status of this workorder ?'),

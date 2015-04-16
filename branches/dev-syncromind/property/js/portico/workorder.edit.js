@@ -1,6 +1,50 @@
 
 	var vendor_id;
 
+	this.validate_form = function()
+	{
+		conf = {
+				modules : 'location, date, security, file',
+				validateOnBlur : false,
+				scrollToTopOnError : true,
+				errorMessagePosition : 'top',
+				language : validateLanguage
+			};
+		return $('form').validateForm(validateLanguage, conf);
+	}
+
+	function submit_workorder()
+	{
+		if(!validate_form())
+		{
+			return;
+		}
+		document.form.submit();
+	}
+
+	function calculate_workorder()
+	{
+		if(!validate_form())
+		{
+			return;
+		}
+		document.getElementsByName("calculate_workorder")[0].value = 1;
+		document.form.submit();
+	}
+	function send_workorder()
+	{
+		if(!validate_form())
+		{
+			return;
+		}
+		document.getElementsByName("send_workorder")[0].value = 1;
+		document.form.submit();
+	}
+	function set_tab(tab)
+	{
+		document.form.tab.value = tab;
+	}
+
 	this.showlightbox_manual_invoide = function(workorder_id)
 	{
 		var oArgs = {menuaction:'property.uiworkorder.add_invoice', order_id:workorder_id};

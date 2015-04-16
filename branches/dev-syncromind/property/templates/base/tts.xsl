@@ -161,6 +161,13 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
 							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please enter a title !')"/>
+							</xsl:attribute>
+
 						</input>
 					</div>
 					<div class="pure-control-group">
@@ -171,6 +178,12 @@
 						<textarea cols="60" rows="10" name="values[details]" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please give som details !')"/>
 							</xsl:attribute>
 							<xsl:value-of select="value_details"/>
 						</textarea>
@@ -333,7 +346,7 @@
 						</div>
 					</xsl:for-each>
 					<xsl:choose>
-						<xsl:when test="lookup_type ='view'">
+						<xsl:when test="lookup_type ='view2'">
 							<xsl:call-template name="location_view2"/>
 						</xsl:when>
 						<xsl:otherwise>

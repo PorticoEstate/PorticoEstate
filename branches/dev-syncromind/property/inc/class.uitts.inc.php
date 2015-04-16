@@ -1326,7 +1326,7 @@
 					'lang_town_statustext'			=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 					'lang_part_of_town'				=> lang('Part of town'),
 					'lang_no_part_of_town'			=> lang('No part of town'),
-					'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl)),
+					'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl,'required' => true)),
 					'pref_send_mail'				=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
 					'fileupload'					=> (isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:''),
 				);
@@ -1336,7 +1336,7 @@
 			$function_msg					= lang('add ticket');
 
 			self::add_javascript('property', 'portico', 'tts.add.js');
-
+			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files','attributes_form'));
@@ -2351,7 +2351,7 @@
 			//----------------------------------------------datatable settings--------			
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl));
+			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl,'required' => true));
 			
 			$_ticket_cat_found = false;
 			if(isset($cat_select['cat_list']) && is_array($cat_select['cat_list']))
@@ -2385,8 +2385,8 @@
 			}
 
 
-			$this->cats->set_appname('property','.project');
-			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));
+//			$this->cats->set_appname('property','.project');
+//			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[order_cat_id]','selected' => $ticket['order_cat_id']));
 
 			$year	= date('Y') -1;
 			$limit	= $year + 3;
@@ -2407,6 +2407,8 @@
 			{
 				$my_groups[$group_id] = $group->firstname;
 			}
+
+			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 
 			$data = array
 			(
@@ -2515,7 +2517,7 @@
 					'lang_file_statustext'			=> lang('Select file to upload'),
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-					'order_cat_list'				=> $order_catetory,
+//					'order_cat_list'				=> $order_catetory,
 					'building_part_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
 					'order_dim1_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
 					'branch_list'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1 ? array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) :'',

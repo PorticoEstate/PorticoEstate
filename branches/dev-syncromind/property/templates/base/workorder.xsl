@@ -80,23 +80,6 @@
 			<xsl:value-of select="lang_save"/>
 		</xsl:variable>
 
-		<script type="text/javascript">
-			function calculate_workorder()
-			{
-				document.getElementsByName("calculate_workorder")[0].value = 1;
-				document.form.submit();
-			}
-			function send_workorder()
-			{
-				document.getElementsByName("send_workorder")[0].value = 1;
-				document.form.submit();
-			}
-			function set_tab(tab)
-			{
-				document.form.tab.value = tab;			
-			}
-
-		</script>
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -116,7 +99,7 @@
 						<table>
 							<tr height="50">
 								<td>
-									<input type="button" class="pure-button pure-button-primary" name="save" value="{$lang_save}" onClick="document.form.submit();">
+									<input type="button" class="pure-button pure-button-primary" name="save" value="{$lang_save}" onClick="submit_workorder();">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_save_statustext"/>
 										</xsl:attribute>

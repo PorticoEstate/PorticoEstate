@@ -1402,7 +1402,8 @@ JS;
 					'tenant'	=> true,
 					'lookup_type'	=> $lookup_type,
 					'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
-					'entity_data'	=> (isset($values['p'])?$values['p']:'')
+					'entity_data'	=> (isset($values['p'])?$values['p']:''),
+					'required_level' => 1
 				)
 			);
 
@@ -1975,7 +1976,6 @@ JS;
 					'origin_id'		=> $id
 				);
 			}
-			
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
@@ -2068,7 +2068,7 @@ JS;
 					'lang_save_statustext'				=> lang('Save the project'),
 					'lang_no_cat'						=> lang('Select category'),
 					'value_cat_id'						=> isset($values['cat_id'])?$values['cat_id']:'',
-					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
+					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'],'required' => isset($config->config_data['project_optional_category']) && $config->config_data['project_optional_category'] ? false : true)),
 					'lang_workorder_id'					=> lang('Workorder ID'),
 					'lang_sum'							=> lang('Sum'),
 					'value_remainder'					=> $value_remainder,
@@ -2080,6 +2080,7 @@ JS;
 					'user_list'							=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
 					'status_list'						=> $this->bo->select_status_list('select',$values['status']),
 					'status_name'						=> 'values[status]',
+					'status_required'					=> true,
 					'lang_no_status'					=> lang('Select status'),
 					'lang_status'						=> lang('Status'),
 					'lang_status_statustext'			=> lang('What is the current status of this project ?'),
@@ -2593,6 +2594,9 @@ JS;
 			$this->edit(array(), $mode = 'view');
 		}
 
+		/**
+		 * Not used?
+		 */
 		function project_group()
 		{
 			$id	= phpgw::get_var('id');

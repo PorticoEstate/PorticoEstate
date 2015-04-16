@@ -1534,7 +1534,7 @@ JS;
 					'lang_cat_statustext'				=> lang('Select the category the request belongs to. To do not use a category select NO CATEGORY'),
 					'value_cat_id'						=> $values['cat_id'],
 
-					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'], 'class' => 'required')),
+					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'], 'class' => 'required','required' =>true)),
 
 					'lang_coordinator'					=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('request coordinator'),
 

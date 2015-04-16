@@ -515,8 +515,7 @@
 				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 						=> $mode == 'edit',
 				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'multiple_uploader'				=> $mode == 'edit' ? true : '',
-                'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+				'multiple_uploader'				=> $mode == 'edit' ? true : ''
 			);
 			
 			//print_r($data['tabs']); die;
@@ -528,9 +527,7 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 				phpgwapi_jquery::load_widget('core');
 				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
-				//self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-				//self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-formvalidator/gallery-formvalidator-min.js');
-				//$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
+                phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 			}
 
 			self::add_javascript('property', 'portico', 'condition_survey.js');

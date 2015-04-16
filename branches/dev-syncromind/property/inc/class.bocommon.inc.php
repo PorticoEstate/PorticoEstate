@@ -576,6 +576,7 @@
 			$vendor['lang_vendor']			= lang('Vendor');
 			$vendor['lang_select_vendor_help']	= lang('click this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
+			$vendor['required']				= isset($data['required']) && $data['required'] ? true : false;
 			//_debug_array($vendor);
 			return $vendor;
 		}
@@ -720,6 +721,7 @@
 			}
 
 			$b_account['disabled']				= isset($data['disabled']) && $data['disabled'] ? true : false;
+			$b_account['required']				= isset($data['required']) && $data['required'] ? true : false;
 			return $b_account;
 		}
 
@@ -788,6 +790,7 @@
 				$ecodimb['value_ecodimb_descr']	= $ecodimb_data['descr'];
 			}
 			$ecodimb['disabled']				= isset($data['disabled']) && $data['disabled'] ? true : false;
+			$ecodimb['required']				= isset($data['required']) && $data['required'] ? true : false;
 
 			return $ecodimb;
 		}

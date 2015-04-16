@@ -979,7 +979,9 @@
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 				'b_account_id'		=> $values['b_account_id'],
 				'b_account_name'	=> isset($values['b_account_name'])?$values['b_account_name']:'',
-				'type'			=> isset($values['b_account_id']) && $values['b_account_id'] > 0 ?'view':'form'));
+				'type'			=> isset($values['b_account_id']) && $values['b_account_id'] > 0 ?'view':'form',
+				'required'		=> true
+				));
 
 			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
 				'ecodimb'			=> $values['ecodimb'],

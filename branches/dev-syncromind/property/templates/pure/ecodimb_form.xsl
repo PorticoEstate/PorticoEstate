@@ -5,7 +5,7 @@
 </xsl:template>
 
 <!-- New template-->
-<xsl:template match="ecodimb_data">
+<xsl:template match="ecodimb_data" xmlns:php="http://php.net/xsl">
 	<script type="text/javascript">
 		function ecodimb_lookup()
 		{
@@ -35,6 +35,14 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_select_ecodimb_help"/>
 					</xsl:attribute>
+					<xsl:if test="required='1'">
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Please select a value !')"/>
+						</xsl:attribute>
+					</xsl:if>
 				</input>
 				<input size="30" type="text" name="ecodimb_descr" value="{value_ecodimb_descr}" onClick="ecodimb_lookup();" readonly="readonly">
 					<xsl:attribute name="title">

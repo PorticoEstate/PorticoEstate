@@ -1,5 +1,21 @@
 	this.confirm_session = function(action)
 	{
+		if(action == 'save' || action == 'apply')
+		{
+			conf = {
+					modules : 'location, date, security, file',
+					validateOnBlur : false,
+					scrollToTopOnError : true,
+					errorMessagePosition : 'top',
+					language : validateLanguage
+				};
+			var test =  $('form').validateForm(validateLanguage, conf);
+			if(!test)
+			{
+				return;
+			}
+		}
+
 		var oArgs = {menuaction:'property.bocommon.confirm_session'};
 		var strURL = phpGWLink('index.php', oArgs, true);
 

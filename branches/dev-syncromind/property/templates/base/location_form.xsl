@@ -23,18 +23,19 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="statustext"/>
 					</xsl:attribute>
-					<xsl:choose>
-						<xsl:when test="readonly=1">
+						<xsl:if test="readonly=1">
 							<xsl:attribute name="readonly">
 								<xsl:text> readonly</xsl:text>
 							</xsl:attribute>
-						</xsl:when>
-						<xsl:when test="required='1'">
+						</xsl:if>
+						<xsl:if test="required='1'">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
-						</xsl:when>
-					</xsl:choose>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please select a location !')"/>
+							</xsl:attribute>
+						</xsl:if>
 				</input>
 				<xsl:for-each select="extra">
 					<xsl:choose>

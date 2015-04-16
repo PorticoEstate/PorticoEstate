@@ -654,6 +654,8 @@
 				$select_name	= isset($data['select_name']) && $data['select_name'] ? $data['select_name'] : 'cat_id';
 				$use_acl		= isset($data['use_acl']) ? $data['use_acl'] : '';
 				$class			= isset($data['class']) && $data['class'] ? $data['class'] : 'forms';
+				$required		= isset($data['required']) && $data['required'] ? true : false;
+				$disabled		= isset($data['disabled']) && $data['disabled'] ? true : false;
 			}
 			else
 			{
@@ -729,7 +731,9 @@
 				'select_url'			=> $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'select_name'			=> $select_name,
 				'lang_submit'			=> lang('submit'),
-				'class'				=> $class
+				'class'					=> $class,
+				'required'				=> $required,
+				'disabled'				=> $disabled
 			);
 			return $cat_data;
 		}

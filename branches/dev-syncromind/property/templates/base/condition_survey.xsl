@@ -68,9 +68,13 @@
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <input id="title" name='values[title]' type="text" value="{survey/title}"
-                                                                       data-validation="required"
-                                                                       placeholder="title">
+                                    <input id="title" name='values[title]' type="text" value="{survey/title}">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a title !')"/>
+										</xsl:attribute>
                                     </input>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -85,8 +89,14 @@
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-									<textarea id="descr" rows="6" style="width:40%; resize:none;" name="values[descr]" data-validation="required">
-										<xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
+									<textarea id="descr" rows="6" style="width:40%; resize:none;" name="values[descr]">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a description !')"/>
+										</xsl:attribute>
+ 										<xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
 									</textarea>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -101,7 +111,13 @@
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <select id="cat_id" name="values[cat_id]" data-validation="required">
+                                    <select id="cat_id" name="values[cat_id]">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a category !')"/>
+										</xsl:attribute>
                                         <xsl:apply-templates select="categories/options"/>
                                     </select>
                                 </xsl:when>
@@ -121,9 +137,18 @@
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <input id="multiplier" name='values[multiplier]' type="text" value="{survey/multiplier}"
-                                                                       data-validation="number" data-validation-allowing="float"/> 
-                                </xsl:when>
+                                    <input id="multiplier" name='values[multiplier]' type="text" value="{survey/multiplier}"> 
+										<xsl:attribute name="data-validation">
+											<xsl:text>number</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-allowing">
+											<xsl:text>float</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a multiplier !')"/>
+										</xsl:attribute>
+									</input>
+								</xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="survey/multiplier"/>
                                 </xsl:otherwise>
@@ -151,7 +176,13 @@
                             </label>
                             <xsl:choose>
                                 <xsl:when test="editable = 1">
-                                    <select id="status_id" name="values[status_id]" data-validation="required">
+                                    <select id="status_id" name="values[status_id]">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a status !')"/>
+										</xsl:attribute>
                                         <xsl:apply-templates select="status_list/options"/>
                                     </select>
                                 </xsl:when>

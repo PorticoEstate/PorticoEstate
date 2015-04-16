@@ -30,6 +30,9 @@
 								<xsl:attribute name="data-validation">
 									<xsl:text>number</xsl:text>
 								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please select a location !')"/>
+								</xsl:attribute>
 							</xsl:if>
 						</input>
 					</xsl:when>
