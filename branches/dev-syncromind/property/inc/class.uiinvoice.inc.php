@@ -261,11 +261,6 @@
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
 			$ecodimb 		= phpgw::get_var('ecodimb');
 			$this->save_sessiondata();
-
-            if( phpgw::get_var('phpgw_return_as') == 'json' )
-            {
-				return $this->query();
-            }
 			
 			//-- ubica focus del menu derecho
 			if ( $paid )
@@ -291,8 +286,7 @@
 			{
 				$values["save"]="Save";
 //			 	_debug_array($values);
-				$receipt = $this->bo->update_invoice($values);
-
+				return $this->bo->update_invoice($values);
 			}
 
 			// Edit Period
@@ -300,7 +294,7 @@
 			$voucher_id_for_period  = phpgw::get_var('voucher_id_for_period');
 			if( phpgw::get_var('phpgw_return_as') == 'json' &&  isset($period) &&  $period != '')
 			{
-				$receipt	= $this->bo->update_period($voucher_id_for_period,$period);
+				return $this->bo->update_period($voucher_id_for_period,$period);
 			}
 
 			// Edit Periodization
@@ -308,7 +302,7 @@
 			$voucher_id_for_periodization  = phpgw::get_var('voucher_id_for_periodization');
 			if( phpgw::get_var('phpgw_return_as') == 'json' &&  isset($periodization) &&  $periodization != '')
 			{
-				$receipt	= $this->bo->update_periodization($voucher_id_for_periodization,$periodization);
+				return	$this->bo->update_periodization($voucher_id_for_periodization,$periodization);
 			}
 
 			// Edit Periodization
@@ -316,8 +310,13 @@
 			$voucher_id_for_periodization_start  = phpgw::get_var('voucher_id_for_periodization_start');
 			if( phpgw::get_var('phpgw_return_as') == 'json' &&  isset($periodization_start) &&  $periodization_start != '')
 			{
-				$receipt	= $this->bo->update_periodization_start($voucher_id_for_periodization_start,$periodization_start);
+				return	$this->bo->update_periodization_start($voucher_id_for_periodization_start,$periodization_start);
 			}
+			
+            if( phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+				return $this->query();
+            }
 			
             $data   = array(
                 'datatable_name'    => $appname,
@@ -612,15 +611,15 @@
 										'',
 										'right',
 										'',
-										$paid?'center':'combo',
-										$paid?'center':'combo',
-										$paid?'center':'combo',
-										'center',
-										'center',
-										'',
-										'',
-										'center',
-										'center'
+										$paid?'center':'center',
+										$paid?'center':'center',
+										$paid?'center':'center',
+										'dt-center all',
+										'dt-center all',
+										'dt-center all',
+										'dt-center all',
+										'dt-center all',
+										'dt-center all'
 									)
 			);
 			
@@ -699,18 +698,13 @@
 						'parameters'	=> json_encode($parameters)
 					);
 
-				if($this->acl_add)
-				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name'	=> 'add',
-							'text' 		=> lang('add'),
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> 'property.uiinvoice.add'
-							))
-						);
-				}
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'	=> 'save',
+						'text' 		=> lang('save'),
+						'type'		=> 'custom',
+						'custom_code' => "onSave();"
+					);
 
 				unset($parameters);
 			}
@@ -728,7 +722,7 @@
 JS;
 			$jscode .= <<<JS
 					var tmp_count = oData['counter_num'];
-					var voucher_id = oData['voucher_id_num'];
+					var voucher_id_num = oData['voucher_id_num'];
 		            var menu = [
 
 JS;
@@ -744,11 +738,17 @@ JS;
 
 					var combo = $("<select></select>");
 
-					$.each(menu, function (key, value) {
-						combo.append($("<option></option>").attr("value", value.value).text(value.text));
+					$.each(menu, function (k, v) 
+					{
+						if (oData[key] == v.value)
+						{
+							combo.append($("<option selected></option>").attr("value", v.value).text(v.text));
+						} else {
+							combo.append($("<option></option>").attr("value", v.value).text(v.text));
+						}
 					});
 
-					return "<select id='cboPeriodization"+tmp_count+"' name='cboPeriodization"+tmp_count+"'>" + $(combo).html() + "<select>";
+					return "<select id='cboPeriodization"+tmp_count+"' onchange='onPeriodizationItemClick(this,"+voucher_id_num+")'>" + $(combo).html() + "</select>";
 				}
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $jscode, true);
@@ -1289,10 +1289,10 @@ JS;
 						}
 						else // for  hidden
 						{
-							if($column['type']== 'number') // for values for delete,edit.
-							{
+							/*if($column['type']== 'number') // for values for delete,edit.
+							{*/
 								$json_row[$column['name']] = $column['value'];
-							}
+							/*}
 							else if($column['name']== "sign_orig")
 							{
 								$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP sign_origClass'  type='hidden' value='".$column['value']."'/>";
@@ -1312,7 +1312,7 @@ JS;
 							else // for imput hiddens  (type == "")
 							{
 								$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP '  type='hidden' value='".$column['value']."'/>";
-							}
+							}*/
 						}
 					}
 					$values[] = $json_row;
