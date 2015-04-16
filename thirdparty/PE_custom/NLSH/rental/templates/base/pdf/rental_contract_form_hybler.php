@@ -17,8 +17,9 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 </style>
 <div class="contract">
 <img src="http://www.nordlandssykehuset.no/getfile.php/NLSH_bilde%20og%20filarkiv/Internett/NLSH_logo_siste.jpg%20%28352x58%29.jpg" alt="Nordlanssykehuset logo" />
-<h1>Korttidskontrakt</h1>
-
+<h1>Melding om inn/utflytting - Hybler</h1>
+<h3>Kontraktsnummer: <?php echo $contract->get_old_contract_id();?></h3>
+<h3>Type: <?php echo lang($contract->get_contract_type_title()).' / '.lang(rental_socontract::get_instance()->get_contract_type_label($contract->get_contract_type_id()));?></h3>
 
 <form action="" method="post">
 <?php
@@ -51,20 +52,62 @@ $termin_name = str_replace("vis", "", $termin_name);
 	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?> />&nbsp Innflytting</dt>
 	<dd>&nbsp</dd>
 	<dt>Navn:</dt>
-	<dd><?php echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?>&nbsp;</dd>
+	<dd><?php // echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?>
+		<?php echo $contract->get_party_name();?>
+	</dd>
 	<dt>Fnr.:</dt>
 	<dd><?php echo $contract_party->get_identifier();?>&nbsp;</dd>
 	<dt>Adresse:</dt>
-	<dd><?php echo $contract_party->get_address_1().", ";
+	<dd><?php echo $contract_party->get_address_1();
 	if($contract_party->get_address_2())
 	{
-		echo $contract_party->get_address_2().", ";
+		echo ", " .$contract_party->get_address_2().", ";
 	}
 	echo $contract_party->get_postal_code(). " ".$contract_party->get_place()  ;
 	?>
 	</dd>
 	<dt>Tildelt bolig:</dt>
-	<dd><?php echo $composite->get_name();?>&nbsp;</dd>
+	<dd>
+		<?php
+			$unit = $units[0];
+			$location_code = $unit->get_location()->get_location_code();
+			$location = explode('-', $location_code);
+			$loc1 = (int) $location[0];
+
+			if($loc1 > 8006 && $loc1 < 8100)
+			{
+				$municipal = "Bodø";
+			}
+			else if($loc1 > 8499 && $loc1 < 8600)
+			{
+				$municipal = "Hadsel";
+			}
+			else if($loc1 > 8599 && $loc1 < 8700)
+			{
+				$municipal = "Gravdal";
+			}
+
+			echo $unit->get_location()->get_location_code() . ' Adresse:' . $unit->get_location()->get_address_1() . "i {$municipal} kommune.";
+		?>&nbsp;</dd>
+	<dt>E-post.:</dt>
+	<dd>
+		<?php
+			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+			$party_email = array();
+			foreach($parties as $party)
+			{
+				if($party->get_email())
+				{
+					$party_email[] = $party->get_email();
+				}
+			}
+			if($party_email)
+			{
+				echo implode(", ", $party_email);
+			}
+		?>
+	</dd>
+
 </dl>
 
 

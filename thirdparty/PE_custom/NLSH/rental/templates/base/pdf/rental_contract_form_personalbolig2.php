@@ -27,9 +27,15 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 	</tr>
 	<tr>
 		<td colspan="2">
+			<h3>Type: <?php echo lang($contract->get_contract_type_title()).' / '.lang(rental_socontract::get_instance()->get_contract_type_label($contract->get_contract_type_id()));?></h3>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
 			<h3>Kontraktsnummer: <?php echo $contract->get_old_contract_id();?></h3>
 		</td>
 	</tr>
+
 </table>
 <form action="" method="post">
 <?php
@@ -77,7 +83,9 @@ $termin_name = str_replace("vis", "", $termin_name);
 	<tr>
 		<td>Nordlandssykehuset HF</td>
 		<td bgcolor="#C0C0C0" width="120px">Navn:</td>
-		<td><?php echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?></td>
+		<!--<td><?php // echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?></td>-->
+		<td><?php echo $contract->get_party_name();?></td>
+
 	</tr>
 	<tr>
 		<td>v/ Boligforvalter <?php echo $GLOBALS['phpgw']->accounts->get($contract->get_executive_officer_id())-> __toString();?></td>
@@ -135,7 +143,9 @@ $termin_name = str_replace("vis", "", $termin_name);
 					echo $_POST['address']?>
 					<input type="hidden" name="address" value="<?php echo $_POST['address']?>" /> 
 			<?php
-				}else{
+				}
+				else
+				{
 			?> 
 					<input type="text" name="address" value="<?php echo $contract_party->get_address_1().", ".$contract_party->get_address_2();?>" /> 
 			<?php
@@ -160,6 +170,26 @@ $termin_name = str_replace("vis", "", $termin_name);
 			?>
 		</td>
 	</tr>
+	<?php
+		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+		$party_email = array();
+		foreach($parties as $party)
+		{
+			if($party->get_email())
+			{
+				$party_email[] = $party->get_email();
+			}
+		}
+		if($party_email)
+		{
+			echo "<tr>
+					<td></td>
+					<td bgcolor='#C0C0C0'>E-post:</td>
+					<td>";
+			echo implode(", ", $party_email) . '</td></tr>';
+		}
+	?>
+
 </table>
 
 <div class="section">
@@ -177,9 +207,27 @@ $termin_name = str_replace("vis", "", $termin_name);
 	foreach ($units as $unit){
 	
 	$gb = preg_split('/ /', $unit->get_location()->get_gab_id(), -1);
+	$location_code = $unit->get_location()->get_location_code();
+	$location = explode('-', $location_code);
+	$loc1 = (int) $location[0];
+
+	if($loc1 > 8006 && $loc1 < 8100)
+	{
+		$municipal = "Bodø";
+	}
+	else if($loc1 > 8499 && $loc1 < 8600)
+	{
+		$municipal = "Hadsel";
+	}
+	else if($loc1 > 8599 && $loc1 < 8700)
+	{
+		$municipal = "Vestvågøy";
+	}
+
+
 	if(!($gb[0]=="")){
 	?><dt></dt>
-	<dd>Leieforholdet gjelder for eiendom: G.nr. <?php echo $gb[0];?>  B.nr.  <?php echo $gb[2];?>  i Bodø kommune.</dd>
+	<dd>Leieforholdet gjelder for leieobjekt: <?php echo $unit->get_location()->get_location_code();?>  , Adresse:  <?php echo $unit->get_location()->get_address_1() . "i {$municipal}";?>  kommune.</dd>
 <?php }}?>
 </dl>
 </div>
@@ -247,6 +295,7 @@ foreach ($price_items as $item)
 	}
 }?>
 		<p>Leiesummen skal betales forskuddsvis hver mnd.<br/>
+		Ved kontraktsinngåelse betales innværende og påfølgende mnd.<br/>
 		Ved forsinket betaling skal det betales forsinkelsesrente etter lov om forsinket betaling av 17.des. 1976 nr. 100.<br/>
 		Ved mislighold av leiebetaling samtykker leietaker i at utleier kan foreta direkte trekk av tilgodehavende husleie direkte av leietakers lønn.<br/>
 		Husleie skal reguleres i takt med konsumprisindeksen hvert år. I tillegg kan utleier justere leie til enhver tid markedsleie for denne type bolig.</p>
@@ -256,7 +305,7 @@ foreach ($price_items as $item)
 <div class="section">
 <dl class="section_header">
 	<dt>5.</dt>
-	<dd>trøm og brensel</dd>
+	<dd>Strøm og brensel</dd>
 </dl>
 
 <dl class="checkbox_list">
@@ -412,7 +461,7 @@ foreach ($price_items as $item)
 					$lokasjon = 'Bodø';
 					break;
 			}
-			echo "{$lokasjon} den" . date($date_format, time());?></i></td>
+			echo "{$municipal} den" . date($date_format, time());?></i></td>
 	</tr>
 	<tr>
 		<th>Utleier</th>
