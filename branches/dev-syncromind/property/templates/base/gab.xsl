@@ -585,19 +585,13 @@
 											<xsl:value-of select="lang_lookup_form_statustext"/>
 											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:text>Either select propagate - or choose location level</xsl:text>
-										</xsl:attribute>
 									</input>
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
 						<xsl:choose>
-							<xsl:when test="lookup_type='form'">
-								<xsl:call-template name="location_form"/>
+							<xsl:when test="lookup_type='form2'">
+								<xsl:call-template name="location_form2"/>
 								<div class="pure-control-group">
 									<label>
 										<xsl:value-of select="lang_propagate"/>
@@ -612,7 +606,7 @@
 								</div>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:call-template name="location_view"/>
+								<xsl:call-template name="location_view2"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</fieldset>
