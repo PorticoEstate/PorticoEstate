@@ -18,6 +18,13 @@ JqueryPortico.formatLink = function(key, oData) {
 	return '<a href="' + link + '">' + name + '</a>';
 };
 
+JqueryPortico.formatLinkEvent = function(key, oData){
+
+    var name = 'Link';
+    var link = oData['url'];
+    return '<a href="' + link + '">' + name + '</a>';
+}
+
 JqueryPortico.formatProject = function(key, oData){
 	var name = oData[key];
 	var link = oData['link'];
@@ -106,6 +113,13 @@ JqueryPortico.formatCheck = function(key, oData) {
 
 	return hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oData['location_code']+"\"/></center>";
 };
+
+JqueryPortico.formatCheckEvent = function(key, oData) {
+     
+        var hidden = '';
+        
+        return hidden + "<center><input type=\"checkbox\" class=\"mychecks\"  name=\"values[events]["+oData['id']+"_"+oData['schedule_time']+"]\" value=\""+oData['id']+"\"/></center>";
+}
 
 JqueryPortico.formatCheckUis_agremment = function(key, oData) {
     
