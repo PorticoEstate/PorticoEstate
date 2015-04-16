@@ -60,7 +60,8 @@
 			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : -1;
 			$user_id			= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
 			$status_id			= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
-
+            $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
+          
 			if ($order)
 			{
 				switch($order)
@@ -123,6 +124,7 @@
 				." {$this->_left_join} phpgw_accounts ON (fm_event.responsible_id = phpgw_accounts.person_id)"
 				." {$filtermethod} {$querymethod}";
 			//_debug_array($sql . $ordermethod);
+                
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -131,7 +133,7 @@
 			{
 				if(!$allrows)
 				{
-					$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 				}
 				else
 				{
@@ -757,6 +759,7 @@
 
 		public function update_receipt($data)
 		{
+            echo '<pre>'; print_r($data); echo '</pre>';exit('update');
 			$add_receipt = array();
 			$delete_receipt = array();
 			if($data['events_orig'])
