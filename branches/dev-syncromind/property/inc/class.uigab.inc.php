@@ -779,13 +779,13 @@ JS;
 			{
 				$function_msg = lang('Edit gab');
 				$action='edit';
-				$lookup_type ='view';
+				$lookup_type ='view2';
 			}
 			else
 			{
 				$function_msg = lang('Add gab');
 				$action='add';
-				$lookup_type ='form';
+				$lookup_type ='form2';
 			}
 
 			if ($values['cat_id'])
@@ -806,7 +806,8 @@ JS;
 				'type_id'		=> $type_id,
 				'no_link'		=> false, // disable lookup links for location type less than type_id
 				'tenant'		=> false,
-				'lookup_type'	=> $lookup_type
+				'lookup_type'	=> $lookup_type,
+				'required_level' => 3
 			));
 
 			$link_data = array
@@ -862,7 +863,7 @@ JS;
 
 					'action'						=> $action,
 					'lookup_type'					=> $lookup_type,
-					'location_data'					=> $location_data,
+					'location_data2'				=> $location_data,
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',$done_data),
 					'lang_save'						=> lang('save'),
