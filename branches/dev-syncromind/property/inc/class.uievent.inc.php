@@ -53,7 +53,8 @@
 				'delete'	=> true,
 				'schedule'	=> true,
 				'schedule2'	=> true,
-				'schedule_week'	=> true
+				'schedule_week'	=> true,
+                '_get_filters'  => true,
 			);
 
 		function __construct()
@@ -102,9 +103,55 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+        private function _get_filters()
+        {
+            $values_combo_box = array();
+            $combos = array();
+
+			$values_combo_box[0]  = $this->bo->get_event_location();
+			$default_value = array ('id'=> -1, 'name'=>lang('no category'));
+			array_unshift ($values_combo_box[0],$default_value);
+            $combos[] = array
+                            (
+                                'type' => 'filter',
+                                'name' => 'location_id',
+                                'extra'=> '',
+                                'text' => lang('Category'),
+                                'list' => $values_combo_box[0]
+                            );
+
+			$values_combo_box[1]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+			array_unshift ($values_combo_box[1],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tasks')));
+			$default_value = array('id'=>'','name'=>lang('no user'));
+			array_unshift ($values_combo_box[1],$default_value);
+            $combos[] = array
+                            (
+                                'type' => 'filter',
+                                'name' => 'user_id',
+                                'extra'=> '',
+                                'text' => lang('User'),
+                                'list' => $values_combo_box[1]
+                            );
+            
+            $values_combo_box[2]  = array();
+            array_unshift ($values_combo_box[2],array ('id'=>'exception','name'=> lang('exception')));
+            array_unshift ($values_combo_box[2],array ('id'=>'closed','name'=> lang('closed')));
+            array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
+            array_unshift ($values_combo_box[2],array ('id'=>'open','name'=> lang('open')));
+            $combos[] = array
+                            (
+                                'type' => 'filter',
+                                'name' => 'status_id',
+                                'extra'=> '',
+                                'text' => lang('Status'),
+                                'list' => $values_combo_box[2]
+                            );
+            
+                            return $combos;
+        }
+        
 		function index()
 		{
-			//_debug_array($_REQUEST);
 			$this->acl_location = '.scheduled_events';
 			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property') )
 			{
@@ -119,310 +166,157 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::scheduled_events";
 
-			$values = phpgw::get_var('values');
+			$values         = phpgw::get_var('values');
 			$start_date 	= urldecode(phpgw::get_var('start_date'));
 			$end_date 		= urldecode(phpgw::get_var('end_date'));
-
-
+                       
 			$receipt = array();
 			if($values && $this->acl_edit)
 			{
 				$receipt = $this->bo->update_receipt($values);
 			}
 			$this->save_sessiondata();
+            
+            if( phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+                return $this->query();
+            }
+            
+            self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$datatable = array();
 
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'	=> 'property.uievent.index',
-						'location_id'	=> $this->location_id,
-						'user_id'		=> $this->user_id
-					));
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uievent.index',"
-					."location_id:'{$this->location_id}',"
-					."user_id:'{$this->user_id}',"
-					."status_id:'{$this->status_id}'";
-
-				$values_combo_box = array();
-
-				$values_combo_box[0]  = $this->bo->get_event_location();
-
-				$default_value = array ('id'=> -1, 'name'=>lang('no category'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
-				array_unshift ($values_combo_box[1],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tasks')));
-				$default_value = array('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				$values_combo_box[2]  = array();
-				array_unshift ($values_combo_box[2],array ('id'=>'exception','name'=> lang('exception')));
-				array_unshift ($values_combo_box[2],array ('id'=>'closed','name'=> lang('closed')));
-				array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
-				array_unshift ($values_combo_box[2],array ('id'=>'open','name'=> lang('open')));
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction'	=> 'property.uievent.index',
-								'type'			=> $type,
-								'type_id'		=> $type_id
-							)
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
+            
+            $appname			= lang('scheduled events');
+			$function_msg		= lang('list %1', $appname);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
+            
+            $data = array(
+                'datatable_name' => $appname . ': ' . $function_msg,
+                'form' => array(
+                    'toolbar' => array(
+                        'item' => array(
+                            array(
+                                'type' => 'date-picker',
+                                'id'   => 'start_date',
+                                'name' => 'start_date',
+                                'value'=> '',
+                                'text' => lang('from')
+                            ),
+                            array(
+                                'type' => 'date-picker',
+                                'id'   => 'end_date',
+                                'name' => 'end_date',
+                                'value'=> '',
+                                'text' => lang('to')
+                            )
+                        )
+                    )
+                ),
+                'datatable' => array(
+                    'source' => self::link(array(
+                        'menuaction'	=> 'property.uievent.index',
+                        'type'			=> $type,
+                        'type_id'		=> $type_id,
+                        'phpgw_return_as' => 'json'
+                    )),
+                    'allrows' => true,
+                    'editor_action' => '',
+                    'field' => array(
+                        array(
+							'key' => 'schedule_time',
+							'label' => lang('dummy'),
+							'sortable' => FALSE,
+                            'hidden' => TRUE
 						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //boton 	CATEGORY
-									'id' => 'btn_location_id',
-									'name' => 'location_id',
-									'value'	=> lang('Category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //boton 	USER
-									'id' => 'btn_user_id',
-									'name' => 'user_id',
-									'value'	=> lang('User'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 2
-								),
-								array
-								( //boton 	STATUS
-									'id' => 'btn_status_id',
-									'name' => 'status_id',
-									'value'	=> lang('Status'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 3
-								),
-								array
-								( // boton SAVE
-									'id'	=> 'btn_save',
-									//'name' => 'save',
-									'value'	=> lang('save'),
-									'tab_index' => 6,
-									'type'	=> 'button'
-								),
-								array
-								( //hidden start_date
-									'type' => 'hidden',
-									'id' => 'start_date',
-									'value' => $start_date
-								),
-								array
-								( //hidden end_date
-									'type' => 'hidden',
-									'id' => 'end_date',
-									'value' => $end_date
-								),
-								array
-								(//for link "None",
-									'type'=> 'label_date'
-								),
-								array
-								(//for link "Date search",
-									'type'=> 'link',
-									'id'  => 'btn_data_search',
-									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									array
-									(
-										'menuaction' => 'property.uiproject.date_search')
-									)."','','width=350,height=250')",
-									'value' => lang('Date search'),
-									'tab_index' => 6
-								),
-								array
-								( //button     SEARCH
-									'id' => 'btn_search',
-									'name' => 'search',
-									'value'    => lang('search'),
-									'type' => 'button',
-									'tab_index' => 5
-								),
-								array
-								( // TEXT INPUT
-									'name'     => 'query',
-									'id'     => 'txt_query',
-									'value'    => $this->query,
-									'type' => 'text',
-									'onkeypress' => 'return pulsar(event)',
-									'size'    => 28,
-									'tab_index' => 4
-								),
-								array
-								( //place holder for selected events
-									'type'	=> 'hidden',
-									'id'	=> 'event',
-									'value'	=> ''
-								)
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								),
-								array
-								( //div values  combo_box_2
-									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2])
-								)
-							)
-						)
-					)
-				);
-				$dry_run = true;
-			}
-
-			$values = $this->bo->read();
-			$uicols = array();$this->bo->uicols;
-
-			$uicols['name'][]		= 'schedule_time';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'location';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'location_item_id';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'attrib_id';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'id';
-			$uicols['descr'][]		= lang('id');
-			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'id';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'date';
-			$uicols['descr'][]		= lang('date');
-			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'date';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'account_lid';
-			$uicols['descr'][]		= lang('account');
-			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'account_lid';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'descr';
-			$uicols['descr'][]		= lang('Descr');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'exception';
-			$uicols['descr'][]		= lang('exception');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'FormatterCenter';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'receipt_date';
-			$uicols['descr'][]		= lang('receipt date');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'location_name';
-			$uicols['descr'][]		= lang('location name');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'url';
-			$uicols['descr'][]		= lang('url');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= 'link';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'select';
-			$uicols['descr'][]		= lang('select');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'myFormatterCheck';
-			$uicols['input_type'][]	= '';
-
-			$j = 0;
-			$count_uicols_name = count($uicols['name']);
-
-			foreach($values as $entry)
-			{
-				for ($k=0;$k<$count_uicols_name;$k++)
-				{
-					$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-					$datatable['rows']['row'][$j]['column'][$k]['value']			= $entry[$uicols['name'][$k]];
-					if($uicols['format'][$k]=='link' &&  $entry[$uicols['name'][$k]])
-					{
-						$datatable['rows']['row'][$j]['column'][$k]['format'] 		= 'link';
-						$datatable['rows']['row'][$j]['column'][$k]['value']		= lang('link');
-						$datatable['rows']['row'][$j]['column'][$k]['link']			= $entry[$uicols['name'][$k]];
-						$datatable['rows']['row'][$j]['column'][$k]['target']	   = '_blank';
-					}
-				}
-				$j++;
-			}
-
-			$datatable['rowactions']['action'] = array();
+                        array(
+                            'key' => 'location',
+                            'label' => lang('dummy'),
+                            'sortable' => FALSE,
+                            'hidden' => TRUE
+                        ),
+                        array(
+                            'key' => 'location_item_id',
+                            'label' => lang('dummy'),
+                            'sortable' => FALSE,
+                            'hidden' => TRUE
+                        ),
+                        array(
+                            'key' => 'attrib_id',
+                            'label' => lang('dummy'),
+                            'sortable' => FALSE,
+                            'hidden' => TRUE
+                        ),
+                        array(
+                            'key' => 'id',
+                            'label' => lang('id'),
+                            'sortable' => TRUE,
+                            'hidden' => FALSE
+                        ),
+                        array(
+                            'key' => 'date',
+                            'label' => lang('Date'),
+                            'sortable' => TRUE,
+                            'hidden' => FALSE
+                        ),
+                        array(
+                            'key' => 'account_lid',
+                            'label' => lang('Account'),
+                            'sortable' => TRUE,
+                            'hidden' => FALSE
+                        ),
+                        array(
+                            'key' => 'descr',
+                            'label' => lang('Descr'),
+                            'sortable' => FALSE,
+                            'hidden' => FALSE
+                        ),
+                        array(
+                            'key' => 'exception',
+                            'label' => lang('Exception'),
+                            'sortable' => FALSE,
+                            'hidden' => FALSE,
+                            'formatter' => 'JqueryPortico.FormatterCenter'
+                        ),
+                        array(
+                            'key' => 'receipt_date',
+                            'label' => lang('receipt date'),
+                            'sortable' => FALSE,
+                            'hidden' => FALSE
+                        ),
+                        array(
+                            'key' => 'location_name',
+                            'label' => lang('location name'),
+                            'sortable' => FALSE,
+                            'hidden' => FALSE
+                        ),
+                        array(
+                            'key' => 'url',
+                            'label' => lang('url'),
+                            'sortable' => FALSE,
+                            'hidden' => FALSE,
+                            'formatter' => 'JqueryPortico.formatLinkEvent'
+                        ),
+                        array(
+                            'key' => 'select',
+                            'label' => lang('select'),
+                            'sortable' => FALSE,
+                            'hidden' => FALSE,
+                            'formatter' => 'JqueryPortico.formatCheckEvent'
+                        ),
+                    )
+                )
+            );
+            $dry_run = true;
+            
+            $filters = $this->_get_Filters();
+            foreach ($filters as $filter)
+            {
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
 
 			$parameters = array
 				(
@@ -453,199 +347,77 @@
 
 			if($this->acl_edit)
 			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name'		=> 'edit',
-						'text' 			=> lang('edit serie'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'		=> 'property.uievent.edit',
-							'type'				=> $type,
-							'type_id'			=> $type_id,
-							'target'			=> '_blank'
-						)),
-						'parameters'	=> $parameters
-					);
+				$data['datatable']['actions'][] = array
+                (
+                    'my_name'		=> 'edit',
+                    'text' 			=> lang('edit serie'),
+                    'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                    (
+                        'menuaction'		=> 'property.uievent.edit',
+                        'type'				=> $type,
+                        'type_id'			=> $type_id,
+                        'target'			=> '_blank'
+                    )),
+                    'parameters'	=> json_encode($parameters)
+                );
 			}
-
-/*
-			if($this->acl_delete)
-			{
-				$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 		=> 'delete',
-					'statustext' 	=> lang('delete the actor'),
-					'text'			=> lang('delete'),
-					'confirm_msg'	=> lang('do you really want to delete this entry'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uievent.delete',
-											'type'			=> $type,
-											'type_id'		=> $type_id
-										)),
-					'parameters'	=> $parameters
-				);
-			}
- */
+            
 			unset($parameters);
 
 			if($this->acl_add)
 			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name' 			=> 'add',
-						'statustext' 	=> lang('add'),
-						'text'			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uievent.edit',
-							'type'			=> $type,
-							'type_id'		=> $type_id
-						))
-					);
+				$data['datatable']['actions'][] = array
+                (
+                    'my_name' 			=> 'add',
+                    'statustext' 	=> lang('add'),
+                    'text'			=> lang('add'),
+                    'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                    (
+                        'menuaction'	=> 'property.uievent.edit',
+                        'type'			=> $type,
+                        'type_id'		=> $type_id
+                    ))
+                );
 			}
-
-			for ($i=0;$i<$count_uicols_name;$i++)
-			{
-				$datatable['headers']['header'][$i]['formatter'] 		= $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
-				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-				$datatable['headers']['header'][$i]['visible'] 			= $uicols['input_type'][$i]!='hidden';
-				$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
-				$datatable['headers']['header'][$i]['sort_field']   	= $uicols['sort_field'][$i];
-				$datatable['headers']['header'][$i]['format'] 			= $uicols['format'][$i];
-			}
-
-			//path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-
-			if($dry_run)
-			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$datatable['pagination']['records_returned']= count($values);
-			}
-
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			$appname			= lang('scheduled events');
-			$function_msg		= lang('list %1', $appname);
-
-			if ( ($this->start == 0) && (!$this->order))
-			{
-				$datatable['sorting']['order'] 			= 'date'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= $this->order; // name of column of Database
-				$datatable['sorting']['sort'] 			= $this->sort; // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
-			{
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if(isset($receipt) && is_array($receipt) && count($receipt))
-			{
-				$json['message'][] = $receipt;
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
-
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'event.index', 'property' );
+           
+            
+            self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		public function query()
 		{
+            $start_date = urldecode($this->start_date);
+			$end_date   = urldecode($this->end_date);
+			$search     = phpgw::get_var('search');
+			$order      = phpgw::get_var('order');
+			$draw       = phpgw::get_var('draw', 'int');
+			$columns    = phpgw::get_var('columns');
+            
+            $params = array
+				(
+					'start'         => phpgw::get_var('start', 'int', 'REQUEST', 0),
+					'results'       => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'query'         => $search['value'],
+					'order'         => $columns[$order[0]['column']]['data'],
+					'sort'          => $order[0]['dir'],
+					'allrows'       => phpgw::get_var('length', 'int') == -1,
+					'start_date'    => $start_date,
+					'end_date'      => $end_date,
+                    'location_id'   => $this->location_id, 
+                    'user_id'       => $this->user_id,
+                    'status_id'     => $this->status_id
+				);
+            
+            $values = $this->bo->read($params);
+            if( phpgw::get_var('export', 'bool'))
+			{
+					return $values;
+			}
+			$result_data    =   array('results' =>  $values);
+			$result_data['total_records']   = $this->bo->total_records;
+			$result_data['draw']    = $draw;
 
+			return $this->jquery_results($result_data);
 		}
 
 		function edit()
