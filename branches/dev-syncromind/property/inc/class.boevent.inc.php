@@ -162,13 +162,15 @@
 			$this->status_id	= $data['status_id'];
 		}
 
-		public function read($dry_run='')
-		{
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id, 'dry_run'=>$dry_run,
-				'status_id' => $this->status_id));
+		public function read($data = array())
+		{   
+//			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//			'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id, 'dry_run'=>$dry_run,
+//			'status_id' => $this->status_id));
+            
+            $values = $this->so->read($data);
 
-			static $locations = array();
+            static $locations = array();
 			static $urls = array();
 			$interlink	= CreateObject('property.interlink');
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
