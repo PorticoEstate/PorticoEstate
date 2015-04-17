@@ -287,10 +287,15 @@
 			$location_types	= $this->soadmin_location->select_location_type();
 			$this->location_types	= $location_types;
 
-			if(!$data['type_id'] === 0 || $data['type_id'] < 0)
+			if(!$data['type_id'] === 0 || $data['type_id'] == -1)
 			{
 				$data['type_id'] = count($location_types);
 			}
+			else if($data['type_id'] == -2)
+			{
+				$data['type_id'] = 0;
+			}
+
 			//_debug_array($data);die();
 			//_debug_array($location_types);
 			$fm_location_cols = array();

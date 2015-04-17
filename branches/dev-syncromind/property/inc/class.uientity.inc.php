@@ -1584,7 +1584,7 @@
 			
 			$lookup_type = $mode == 'edit' ? 'form2' : 'view2';
 
-			if($entity['location_form'] && $category['location_level'] > 0)
+			if($entity['location_form'] && $category['location_level'])
 			{
 				$location_data=$bolocation->initiate_ui_location(array
 					(
@@ -1710,7 +1710,7 @@
 		
 				$active_tab = phpgw::get_var('active_tab');
 				
-				if($category['location_level'] > 0)
+				if($category['location_level'])
 				{
 					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'disable' => 0);
 					$active_tab = $active_tab ? $active_tab : 'location';

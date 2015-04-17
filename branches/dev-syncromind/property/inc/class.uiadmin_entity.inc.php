@@ -941,6 +941,14 @@
 
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$location_level_list = $this->bo->get_location_level_list();
+
+			array_unshift ($location_level_list,array ('id'=> -2,'name'=>lang('no locations')));
+
+			foreach($location_level_list as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $values['location_level'];
+			}
 
 			$data = array
 				(
@@ -972,7 +980,7 @@
 				'lookup_tenant'							 => true,
 				'value_lookup_tenant'					 => $values['lookup_tenant'],
 				'lang_location_level'					 => lang('location level'),
-				'location_level_list'					 => array('options' => $this->bo->get_location_level_list($values['location_level'])),
+				'location_level_list'					 => array('options' => $location_level_list),
 				'lang_location_level_statustext'		 => lang('select location level'),
 				'lang_no_location_level'				 => lang('None'),
 				'lang_location_link_level'				 => lang('location link level'),
