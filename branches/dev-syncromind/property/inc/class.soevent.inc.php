@@ -124,7 +124,7 @@
 				." {$this->_left_join} phpgw_accounts ON (fm_event.responsible_id = phpgw_accounts.person_id)"
 				." {$filtermethod} {$querymethod}";
 			//_debug_array($sql . $ordermethod);
-                
+//                echo '<pre>'; print_r($sql); echo '</pre>';
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -759,7 +759,6 @@
 
 		public function update_receipt($data)
 		{
-            echo '<pre>'; print_r($data); echo '</pre>';exit('update');
 			$add_receipt = array();
 			$delete_receipt = array();
 			if($data['events_orig'])
