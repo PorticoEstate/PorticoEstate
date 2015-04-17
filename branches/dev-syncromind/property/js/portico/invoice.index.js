@@ -125,38 +125,78 @@
   	function onSave ()
   	{
 		var api = oTable.api();
-		//alert( 'There are'+ api.data().length +' row(s) of data in this table' );
 
 		var values = {};
 		
-		values['sign'] = [];
-		values['sign_orig'] = [];
+		values['sign'] = {};
+		values['sign_orig'] = {};
+		values['kreditnota'] = {};
+		values['transfer'] = {};
+		values['counter'] = {};
+		values['invoice_count'] = {};
+		values['num_days'] = {};
+		values['num_days_orig'] = {};
+		values['voucher_id'] = {};
+		values['timestamp_voucher_date'] = {};
 		
 		var sign = $('.signClass');
-
-		var janitor = $('.janitorClass');
-
+		//var janitor = $('.janitorClass');
 		var supervisor = $('.supervisorClass');
-
 		var budget_responsible = $('.budget_responsibleClass');
+		var kreditnota_tmp = $('.kreditnota_tmp');
+		var transfer_id = $('.transfer_idClass');
+		var num_days = $('.myValuesForPHP');
 				
-		var i = 0;
-		/*api.data().each( function (d) {
-			
+		var i = 0; 
+		api.data().each( function (d) {
+
+			values['counter'][i] = i;
+			values['invoice_count'][i] = d.invoice_count;
+			values['voucher_id'][i] = d.voucher_id;
+			values['timestamp_voucher_date'][i] = d.timestamp_voucher_date;
+			values['num_days_orig'][i] = d.num_days_orig;
+			values['num_days'][i] = num_days[i].value;
 			values['sign_orig'][i] = d.sign_orig;
-			if( (sign[i].value != d.sign_orig) && (sign[i].checked) )
+			
+			if( (sign[i].name != "") && (sign[i].value != d.sign_orig) && (sign[i].checked) )
 			{
 				values['sign'][i] = sign[i].value;
 			}
-			if( (sign[i].value != d.sign_orig) && (sign[i].checked) )
+			else if( (supervisor[i].name != "") && (supervisor[i].value != d.sign_orig) && (supervisor[i].checked) )
 			{
-				values['sign'][i] = sign[i].value;
+				values['sign'][i] = supervisor[i].value;
 			}
-			if( (sign[i].value != d.sign_orig) && (sign[i].checked) )
+			else if( (budget_responsible[i].name != "") && (budget_responsible[i].value != d.sign_orig) && (budget_responsible[i].checked) )
 			{
-				values['sign'][i] = sign[i].value;
+				values['sign'][i] = budget_responsible[i].value;
+			}
+			else {
+				values['sign'][i] = '';
+			}
+			
+			if( (kreditnota_tmp[i].checked) )
+			{
+				values['kreditnota'][i] = true;
+			} else {
+				values['kreditnota'][i] = '';
+			}
+			
+			if( (transfer_id[i].checked) )
+			{
+				values['transfer'][i] = true;
+			} else {
+				values['transfer'][i] = '';
 			}
 			
 			i++;
-		});*/
+		});
+		
+		var requestUrl = api.ajax.url();
+		
+		var data = {"values": values};
+		JqueryPortico.execute_ajax(requestUrl, function(result){
+			document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
+		}, data, "POST", "JSON");
+		
+		oTable.fnDraw();
 	}
