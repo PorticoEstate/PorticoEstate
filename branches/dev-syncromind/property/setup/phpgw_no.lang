@@ -204,6 +204,8 @@ at the disposal	property	no	Til disposisjon
 attach file	property	no	Legg til som vedlegg
 attachments	property	no	Vedlegg
 attribute	property	no	Verdier
+list entity attribute group	property	no	List Attributt grupper
+attribute group	property	no	Attributt grupper
 attribute has been edited	property	no	Attributt er rettet
 attribute has been saved	property	no	Attributt er lagret
 attribute has not been deleted	property	no	Attributt er IKKE slettet

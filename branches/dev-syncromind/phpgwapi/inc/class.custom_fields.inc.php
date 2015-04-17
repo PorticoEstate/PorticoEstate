@@ -1207,7 +1207,7 @@
 			$querymethod = '';
 			if ( $query )
 			{
-				$querymethod = "AND (phpgw_cust_attribute_group.name {$this->_like} '%{$query}%'";
+				$querymethod = "AND phpgw_cust_attribute_group.name {$this->_like} '%{$query}%'";
 			}
 
 			$sql = "SELECT * FROM phpgw_cust_attribute_group "
