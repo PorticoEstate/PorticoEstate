@@ -55,6 +55,7 @@
 				'schedule2'	=> true,
 				'schedule_week'	=> true,
                 '_get_filters'  => true,
+                'updatereceipt' => true,
 			);
 
 		function __construct()
@@ -150,6 +151,23 @@
                             return $combos;
         }
         
+        function updatereceipt(){
+            
+            $idevent    = !empty($_POST['ids'])?$_POST['ids']:'';
+            $idchecks	= !empty($_POST['mckec'])?$_POST['mckec']:'';
+            
+            $receipt = array();
+            if($idevent && $idchecks)
+			{
+                $values = array
+                                (
+                                    'events' => $idchecks,
+                                );
+                
+				$receipt = $this->bo->update_receipt($values);
+			}
+        }
+        
 		function index()
 		{
 			$this->acl_location = '.scheduled_events';
@@ -175,6 +193,7 @@
 			{
 				$receipt = $this->bo->update_receipt($values);
 			}
+            
 			$this->save_sessiondata();
             
             if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -300,13 +319,13 @@
                             'hidden' => FALSE,
                             'formatter' => 'JqueryPortico.formatLinkEvent'
                         ),
-                        array(
-                            'key' => 'select',
-                            'label' => lang('select'),
-                            'sortable' => FALSE,
-                            'hidden' => FALSE,
-                            'formatter' => 'JqueryPortico.formatCheckEvent'
-                        ),
+//                        array(
+//                            'key' => 'select',
+//                            'label' => lang('select'),
+//                            'sortable' => FALSE,
+//                            'hidden' => FALSE,
+//                            'formatter' => 'JqueryPortico.formatCheckEvent'
+//                        ),
                     )
                 )
             );
@@ -362,9 +381,17 @@
                 );
 			}
             
+            $data['datatable']['actions'][] = array
+            (
+                'my_name'	=> 'save',
+                'text' 		=> lang('save'),
+                'type'		=> 'custom',
+                'custom_code' => "onSave();"
+            );
+            
 			unset($parameters);
-
-			if($this->acl_add)
+            
+			/*if($this->acl_add)
 			{
 				$data['datatable']['actions'][] = array
                 (
@@ -378,9 +405,9 @@
                         'type_id'		=> $type_id
                     ))
                 );
-			}
+			}*/
            
-            
+            self::add_javascript('property', 'portico', 'event.index.js');
             self::render_template_xsl('datatable_jquery', $data);
 		}
 
