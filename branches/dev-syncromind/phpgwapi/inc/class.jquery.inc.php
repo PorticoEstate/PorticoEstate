@@ -137,22 +137,44 @@ class phpgwapi_jquery {
 				);
 
 				break;
+			case 'layout':
+				$load = array
+				(
+					"js/jquery-2.1.1{$_type}",
+					"js/jquery-ui-1.11.1{$_type}",
+					'layout'=> array("jquery.layout{$_type}", "plugins/jquery.layout.state")
+				);
+				break;
 			
 			default:
-				$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
+				$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
 				trigger_error(lang($err, $widget), E_USER_WARNING);
 				return '';
 		}
-
-		foreach ($load as $script)
+		foreach ($load as $key => $scripts)
 		{
-			$test = $GLOBALS['phpgw']->js->validate_file('jquery', $script);
 
-			if (!$test)
+			$package = 'jquery';
+
+			if(!$key == intval($key))
 			{
-				$err = "Unable to load jQuery script '%1' when attempting to load widget: '%2'";
-				trigger_error(lang($err, $script, $widget), E_USER_WARNING);
-				return '';
+				$package = $key;
+			}
+
+			if(!is_array($scripts))
+			{
+				$scripts = array($scripts);
+			}
+
+			foreach($scripts as $script)
+			{
+				$test = $GLOBALS['phpgw']->js->validate_file($package, $script);
+				if (!$test)
+				{
+					$err = "Unable to load jQuery script '%1' when attempting to load widget: '%2'";
+					trigger_error(lang($err, $script, $widget), E_USER_WARNING);
+					return '';
+				}
 			}
 		}
 		return "phpgroupware.{$widget}" . ++self::$counter;
