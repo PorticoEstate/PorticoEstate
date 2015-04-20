@@ -135,11 +135,12 @@
 			}
 		}
 
-		function read()
+		function read($data = array())
 		{
-
-			$investment = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'part_of_town_id' => $this->part_of_town_id,'allrows'=>$this->allrows));
+            
+            $investment = $this->so->read($data);
+//			$investment = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//            'filter' => $this->filter,'cat_id' => $this->cat_id,'part_of_town_id' => $this->part_of_town_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 
 	/*		for ($i=0; $i<count($investment); $i++)
