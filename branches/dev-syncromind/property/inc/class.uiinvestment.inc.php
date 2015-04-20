@@ -31,8 +31,12 @@
 	 * Description
 	 * @package property
 	 */
-	phpgw::import_class('phpgwapi.yui');
-	class property_uiinvestment
+//	phpgw::import_class('phpgwapi.yui');
+
+    phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.jquery');
+    
+	class property_uiinvestment extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -46,14 +50,18 @@
 
 		var $public_functions = array
 			(
+                'query'     => true,
 				'index'		=> true,
 				'history'	=> true,
 				'add'		=> true,
-				'delete'	=> true
+				'delete'	=> true,
+                '_get_filters' => true,
 			);
 
-		function property_uiinvestment()
+		function __construct()
 		{
+            parent::__construct();
+            
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::investment';
 
@@ -96,261 +104,70 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+        private function _get_filters()
+        {
+            $values_combo_box = array();
+            $combos = array();
+            
+            $values_combo_box[0] = $this->bo->select_category('select',$this->cat_id);				
+            $default_value = array ('id'=>'','name'=> lang('no category'));
+            array_unshift ($values_combo_box[0],$default_value);
+            $combos[] = array(
+                                'type' => 'filter',
+                                'name' => 'cat_id',
+                                'extra'=> '',
+                                'text' => lang('Category'),
+                                'list' => $values_combo_box[0]
+                             );
 
-		function index()
-		{
-			if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
-			}
+            $values_combo_box[1]  = $this->bocommon->select_part_of_town('',$this->part_of_town_id);
+            $default_value = array ('id'=>'','name'=>lang('Part of town'));
+            array_unshift ($values_combo_box[1],$default_value);
+            $combos[] = array(
+                                'type' => 'filter',
+                                'name' => 'part_of_town_id',
+                                'extra' => '',
+                                'text' => lang('Part of Town'),
+                                'list' => $values_combo_box[1]
+                             );
 
-			$preserve	= phpgw::get_var('preserve', 'bool');
-			$values		= phpgw::get_var('values');
-			$msgbox_data= "";
+            $values_combo_box[2]  = $this->bo->filter('select',$this->filter);
+            $default_value = array ('id'=>'','name'=>lang('Show all'));
+            array_unshift ($values_combo_box[2],$default_value);	
+            $combos[] = array(
+                                'type' => 'filter',
+                                'name' => 'filter',
+                                'extra' => '',
+                                'text' => lang('Filter'),
+                                'list' => $values_combo_box[2]
+                             );
+            
+            return $combos;
+        }
+        
+        public function query()
+        {
 
-			if($preserve)
-			{
-				$this->bo->read_sessiondata();
-
-				$this->start			= $this->bo->start;
-				$this->query			= $this->bo->query;
-				$this->sort				= $this->bo->sort;
-				$this->order			= $this->bo->order;
-				$this->filter			= $this->bo->filter;
-				$this->cat_id			= $this->bo->cat_id;
-				$this->part_of_town_id	= $this->bo->part_of_town_id;
-				$this->allrows			= $this->bo->allrows;
-			}
-
-			if($values && phpgw::get_var('phpgw_return_as') == 'json')
-			{
-//				_debug_array($values);
-				$receipt	=$this->update_investment($values);
-				$msgbox_data = $this->bocommon->msgbox_data($receipt);
-			}
-
-
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-				$datatable['menu']					= $this->bocommon->get_menu();
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'		=> 'property.uiinvestment.index',
-						'chapter_id'		=> $this->chapter_id,
-						'cat_id'			=> $this->cat_id,
-						'part_of_town_id'	=> $this->part_of_town_id,
-						'filter'			=> $this->filter 	               
-					)
-				);
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction	:'property.uiinvestment.index',"
-					."chapter_id: '{$this->chapter_id}',"
-					."cat_id: '{$this->chapter_id}',"
-					."part_of_town_id: '{$this->part_of_town_id}',"
-					."filter: '{$this->filter}'";
-
-				$values_combo_box[0] = $this->bo->select_category('select',$this->cat_id);				
-				$default_value = array ('id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->select_part_of_town('',$this->part_of_town_id);
-				//$values_combo_box[1] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('Part of town'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				$values_combo_box[2]  = $this->bo->filter('select',$this->filter);
-				$default_value = array ('id'=>'','name'=>lang('Show all'));
-				array_unshift ($values_combo_box[2],$default_value);	
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' 		=> 'property.uiinvestment.index'/*,
-								'query'            	=> $this->query,
-								'chapter_id'		=> $this->chapter_id*/
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //container of  control's Form
-									'type'	=> 'label',
-									'id'	=> 'controlsForm_container',
-									'value'	=> ''
-								),
-								array
-								( //category
-									'id' => 'btn_cat_id',
-									'name' => 'cat_id',
-									'value'	=> lang('Category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //User pafrt of town
-									'id' => 'btn_part_of_town_id',
-									'name' => 'part_of_town_id',
-									'value'	=> lang('Part of Town'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 2
-								),
-								array
-								( //User filter
-									'id' => 'btn_filter',
-									'name' => 'filter',
-									'value'	=> lang('Filter'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 3
-								),
-								array
-								( // boton ADD
-									'type'	=> 'button',//'submit',
-									'id'	=> 'btn_new',
-									'tab_index' => 4,
-									'value'	=> lang('add')
-								)
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								),
-								array
-								( //div values  combo_box_2
-									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2])
-								)
-							)
-						)
-					)
-				);
-				$datatable['actions']['down-toolbar'] = array
-					(
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( //container of  control's Form
-									'type'	=> 'label',
-									'id'	=> 'controlsForm_container',
-									'value'	=> ''
-								),array
-								( // Voucher link
-									'type' 	=> 'link',
-									'id' 	=> 'lnk_index',
-									'url' 	=> "",
-									'value' => lang('New index'),
-									'tab_index' => 5,
-									'style' => 'filter'
-								),
-								array
-								( // Voucher box
-									'name'	=> 'values[new_index]',
-									'id'	=> 'txt_index',
-									'value' => '',
-									'type'	=> 'text',
-									'size'	=> 8,
-									'tab_index' => 6,
-									'class' => 'myValuesForPHP down-toolbar_button',
-									'style' => 'filter'
-								),
-								array
-								( // imag calendar1
-									'type'	=> 'img',
-									'id'	=> 'start_date-trigger',
-									'src'	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-									'alt'	=> lang('Select date'),
-									'tab_index' => 7,
-									'style' => 'filter'
-								),
-								array
-								( // calendar1 start_date
-									'type'	=> 'text',
-									'name'	=> 'values[date]',
-									'id'	=> 'start_date',
-									'value' => '',
-									'size'  => 7,
-									'readonly' => 'readonly',
-									'tab_index' => 8,
-									'class' => 'myValuesForPHP down-toolbar_button',
-									'style' => 'filter'
-								),
-								array
-								( //boton   SEARCH
-									'id' => 'btn_update',
-									'name' => 'update',
-									'value'    => lang('Update'),
-									'tab_index' => 9,
-									'type' => 'button',
-									'style' => 'filter'
-								)
-							)
-						)
-					);
-			}	
-
-
-			$uicols = array (
-				array(
-					'visible'=>false,	'name'=>order_dummy,	'label'=>'',					'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>district_id,	'label'=>lang('District'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>part_of_town,	'label'=>lang('Part of town'),	'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>entity_id,		'label'=>lang('entity id'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>investment_id,	'label'=>lang('investment id'),	'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>descr,			'label'=>lang('Descr'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>entity_name,	'label'=>lang('Entity name'),	'className'=>'leftClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>false,	'name'=>initial_value_ex,'label'=>'',					'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>initial_value,	'label'=>lang('Initial value'),	'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>'myFormatCount2'),
-				array(
-					'visible'=>false,	'name'=>value_ex,		'label'=>'',					'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>value,			'label'=>lang('Value'),			'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>'myFormatCount2'),
-				array(
-					'visible'=>true,	'name'=>this_index,		'label'=>lang('Last index'),	'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>false,	'name'=>this_write_off_ex,'label'=>'',					'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>this_write_off,	'label'=>lang('Write off'),		'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>'myFormatCount2'),
-				array(
-					'visible'=>true,	'name'=>date,			'label'=>lang('Date'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>index_count,	'label'=>lang('Index count'),	'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>link_history,	'label'=>lang('History'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
-				array(
-					'visible'=>true,	'name'=>check,			'label'=>lang('Select'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>'')
-				);
-			$investment_list = $this->bo->read();
-
+			$search     = phpgw::get_var('search');
+			$order      = phpgw::get_var('order');
+			$draw       = phpgw::get_var('draw', 'int');
+			$columns    = phpgw::get_var('columns');
+            
+            $params = array
+                (
+                    'start'             => phpgw::get_var('start','int','REQUEST',0),
+                    'results'           => phpgw::get_var('length', 'int', 'REQUEST', 0),
+                    'query'             => $search['value'],
+                    'order'             => $columns[$order[0]['column']]['data'],
+                    'sort'              => $order[0]['dir'],
+                    'filter'            => $this->filter,
+                    'cat_id'            => $this->cat_id,
+                    'part_of_town_id'   => $this->part_of_town_id,
+                    'allrows'           => phpgw::get_var('length','int') == -1
+                );
+                
+			$investment_list = $this->bo->read($params);
+ 
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$sep = '/';
 			$dlarr[strpos($dateformat,'y')]	= 'Y';
@@ -403,168 +220,545 @@
 						'link_history'		=> $link_history,
 						'check'				=> $check
 					);
-
-				//$sum_initial_value	+= $investment['initial_value'];
-				//$sum_value			+= $investment['value'];
-				//$sum_this_write_off_ex			+= $investment['this_write_off'];
 				$counter++;
 			}	
-
-			$j=0;
-			if (isset($content) && is_array($content))
+            
+            if( phpgw::get_var('export','bool'))
+            {
+                return $content;
+            }
+            
+            $result_data = array('results'  => $content);
+            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['draw'] = $draw;
+			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+            
+            return $this->jquery_results($result_data);
+            
+        }
+                
+		function index()
+		{
+			if(!$this->acl_read)
 			{
-				foreach($content as $investment)
-				{
-					for ($i=0;$i<count($uicols);$i++)
-					{
-						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols[$i]['name'];
-						$datatable['rows']['row'][$j]['column'][$i]['value']		= $investment[$uicols[$i]['name']];
-					}
-					$j++;
-				}
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$datatable['rowactions']['action'] = array();
-			$datatable['rowactions']['action'][] = array(
-				'my_name'		=> 'add',
-				'text' 			=> lang('add'),
-				'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.add'))
-			);
+			$preserve	= phpgw::get_var('preserve', 'bool');
+			$values		= phpgw::get_var('values');
+			$msgbox_data= "";
 
-
-			for ($i=0;$i<count($uicols);$i++)
+			if($preserve)
 			{
-				$datatable['headers']['header'][$i]['name']			= $uicols[$i]['name'];
-				$datatable['headers']['header'][$i]['text'] 		= $uicols[$i]['label'];
-				$datatable['headers']['header'][$i]['visible'] 		= $uicols[$i]['visible'];
-				$datatable['headers']['header'][$i]['sortable']		= $uicols[$i]['sortable'];
-				$datatable['headers']['header'][$i]['sort_field']	= $uicols[$i]['sort_field'];
-				$datatable['headers']['header'][$i]['className']	= $uicols[$i]['className'];
-				$datatable['headers']['header'][$i]['formatter']	= ($uicols[$i]['formatter']==''?  '""' : $uicols[$i]['formatter']);
+				$this->bo->read_sessiondata();
+
+				$this->start			= $this->bo->start;
+				$this->query			= $this->bo->query;
+				$this->sort				= $this->bo->sort;
+				$this->order			= $this->bo->order;
+				$this->filter			= $this->bo->filter;
+				$this->cat_id			= $this->bo->cat_id;
+				$this->part_of_town_id	= $this->bo->part_of_town_id;
+				$this->allrows			= $this->bo->allrows;
 			}
+            
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+                return $this->query();
+//				$receipt	 = $this->update_investment($values);
+//				$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			}
+
+            self::add_javascript('phpgwapi','jquery','editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi','jquery','editable/jquery.dataTables.editable.js');
+            
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('investment') . ': ' . lang('list investment');
+            
+            $data = array(
+                'datatable_name' => lang('list investment'),
+                'form' => array(
+                    'toolbar' => array(
+                        'item' => array(
+                             array(
+                                    'type'   => 'link',
+                                    'value'  => lang('new'),
+                                    'href'   => self::link(array(
+                                        'menuaction'	=> 'property.uiinvestment.add'
+                                    )),
+                                    'class'  => 'new_item'
+                                  )
+                        )
+                    )
+                ),
+                'datatable' => array(
+                    'source' => self::link(array(
+						'menuaction' 		=> 'property.uiinvestment.index',
+						'phpgw_return_as'   => 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+                        array('key'=>'order_dummy','label'=>  lang('Order dummy'),'sortable'=>false,'hidden'=>TRUE),
+                        array('key'=>'district_id','label'=>lang('District'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'part_of_town','label'=>lang('Part of town'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'entity_id','label'=>lang('entity id'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'investment_id','label'=>lang('investment id'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'descr','label'=>lang('Descr'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'entity_name','label'=>lang('Entity name'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'initial_value_ex','label'=>lang('initial value ex'),'sortable'=>false,'hidden'=>TRUE),
+                        array('key'=>'initial_value','label'=>lang('Initial value'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterAmount0'),
+                        array('key'=>'value_ex','label'=>lang('value ex'),'sortable'=>false,'hidden'=>TRUE),
+                        array('key'=>'value','label'=>lang('Value'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterAmount0'),
+                        array('key'=>'this_index','label'=>lang('Last index'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'this_write_off_ex','label'=>lang('write off ex'),'sortable'=>false,'hidden'=>TRUE),
+                        array('key'=>'this_write_off','label'=>lang('Write off'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterAmount0',),
+                        array('key'=>'date','label'=>lang('Date'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'index_count','label'=>lang('Index count'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'link_history','label'=>lang('History'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'check','label'=>lang('Select'),'sortable'=>false,'hidden'=>FALSE),
+                    )
+                ),
+                'down-toolbar' => array(
+                    'fields' => array(
+                        'field' => array(
+                            array(
+                                'type' => 'label',
+                                'id' => 'lbl_input_index',
+                                'value' => lang('New Index'),
+                                'style' => 'filter',
+                                'group' => '1'
+                            )
+                        )
+                    )
+                )
+            );
+
+            $filters = $this->_get_filters();
+            foreach ($filters as $filter)
+            {
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
+            
+//          echo '<pre>'; print_r($data); echo '</pre>'; exit('uiinvestment');
+//			$datatable = array();
+//
+//			if( phpgw::get_var('phpgw_return_as') != 'json' )
+//			{
+//				$datatable['menu']					= $this->bocommon->get_menu();
+//				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+//					(
+//						'menuaction'		=> 'property.uiinvestment.index',
+//						'chapter_id'		=> $this->chapter_id,
+//						'cat_id'			=> $this->cat_id,
+//						'part_of_town_id'	=> $this->part_of_town_id,
+//						'filter'			=> $this->filter 	               
+//					)
+//				);
+//
+//				$datatable['config']['allow_allrows'] = true;
+//
+//				$datatable['config']['base_java_url'] = "menuaction	:'property.uiinvestment.index',"
+//					."chapter_id: '{$this->chapter_id}',"
+//					."cat_id: '{$this->chapter_id}',"
+//					."part_of_town_id: '{$this->part_of_town_id}',"
+//					."filter: '{$this->filter}'";
+//
+//				$values_combo_box[0] = $this->bo->select_category('select',$this->cat_id);				
+//				$default_value = array ('id'=>'','name'=> lang('no category'));
+//				array_unshift ($values_combo_box[0],$default_value);
+//
+//				$values_combo_box[1]  = $this->bocommon->select_part_of_town('',$this->part_of_town_id);
+//				//$values_combo_box[1] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+//				$default_value = array ('id'=>'','name'=>lang('Part of town'));
+//				array_unshift ($values_combo_box[1],$default_value);
+//
+//				$values_combo_box[2]  = $this->bo->filter('select',$this->filter);
+//				$default_value = array ('id'=>'','name'=>lang('Show all'));
+//				array_unshift ($values_combo_box[2],$default_value);	
+//
+//				$datatable['actions']['form'] = array
+//					(
+//						array
+//						(
+//							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+//							array
+//							(
+//								'menuaction' 		=> 'property.uiinvestment.index'/*,
+//								'query'            	=> $this->query,
+//								'chapter_id'		=> $this->chapter_id*/
+//							)
+//						),
+//						'fields'	=> array
+//						(
+//							'field' => array
+//							(
+//								array
+//								( //container of  control's Form
+//									'type'	=> 'label',
+//									'id'	=> 'controlsForm_container',
+//									'value'	=> ''
+//								),
+//								array
+//								( //category
+//									'id' => 'btn_cat_id',
+//									'name' => 'cat_id',
+//									'value'	=> lang('Category'),
+//									'type' => 'button',
+//									'style' => 'filter',
+//									'tab_index' => 1
+//								),
+//								array
+//								( //User pafrt of town
+//									'id' => 'btn_part_of_town_id',
+//									'name' => 'part_of_town_id',
+//									'value'	=> lang('Part of Town'),
+//									'type' => 'button',
+//									'style' => 'filter',
+//									'tab_index' => 2
+//								),
+//								array
+//								( //User filter
+//									'id' => 'btn_filter',
+//									'name' => 'filter',
+//									'value'	=> lang('Filter'),
+//									'type' => 'button',
+//									'style' => 'filter',
+//									'tab_index' => 3
+//								),
+//								array
+//								( // boton ADD
+//									'type'	=> 'button',//'submit',
+//									'id'	=> 'btn_new',
+//									'tab_index' => 4,
+//									'value'	=> lang('add')
+//								)
+//							),
+//							'hidden_value' => array
+//							(
+//								array
+//								( //div values  combo_box_0
+//									'id' => 'values_combo_box_0',
+//									'value'	=> $this->bocommon->select2String($values_combo_box[0])
+//								),
+//								array
+//								( //div values  combo_box_1
+//									'id' => 'values_combo_box_1',
+//									'value'	=> $this->bocommon->select2String($values_combo_box[1])
+//								),
+//								array
+//								( //div values  combo_box_2
+//									'id' => 'values_combo_box_2',
+//									'value'	=> $this->bocommon->select2String($values_combo_box[2])
+//								)
+//							)
+//						)
+//					)
+//				);
+//				$datatable['actions']['down-toolbar'] = array
+//					(
+//						'fields'	=> array
+//						(
+//							'field' => array
+//							(
+//								array
+//								( //container of  control's Form
+//									'type'	=> 'label',
+//									'id'	=> 'controlsForm_container',
+//									'value'	=> ''
+//								),array
+//								( // Voucher link
+//									'type' 	=> 'link',
+//									'id' 	=> 'lnk_index',
+//									'url' 	=> "",
+//									'value' => lang('New index'),
+//									'tab_index' => 5,
+//									'style' => 'filter'
+//								),
+//								array
+//								( // Voucher box
+//									'name'	=> 'values[new_index]',
+//									'id'	=> 'txt_index',
+//									'value' => '',
+//									'type'	=> 'text',
+//									'size'	=> 8,
+//									'tab_index' => 6,
+//									'class' => 'myValuesForPHP down-toolbar_button',
+//									'style' => 'filter'
+//								),
+//								array
+//								( // imag calendar1
+//									'type'	=> 'img',
+//									'id'	=> 'start_date-trigger',
+//									'src'	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+//									'alt'	=> lang('Select date'),
+//									'tab_index' => 7,
+//									'style' => 'filter'
+//								),
+//								array
+//								( // calendar1 start_date
+//									'type'	=> 'text',
+//									'name'	=> 'values[date]',
+//									'id'	=> 'start_date',
+//									'value' => '',
+//									'size'  => 7,
+//									'readonly' => 'readonly',
+//									'tab_index' => 8,
+//									'class' => 'myValuesForPHP down-toolbar_button',
+//									'style' => 'filter'
+//								),
+//								array
+//								( //boton   SEARCH
+//									'id' => 'btn_update',
+//									'name' => 'update',
+//									'value'    => lang('Update'),
+//									'tab_index' => 9,
+//									'type' => 'button',
+//									'style' => 'filter'
+//								)
+//							)
+//						)
+//					);
+//			}
+
+
+//			$uicols = array (
+//				array('hidden'=>false,'name'=>'order_dummy','label'=>'','className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'district_id','label'=>lang('District'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'part_of_town','label'=>lang('Part of town'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'entity_id','label'=>lang('entity id'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'investment_id','label'=>lang('investment id'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'descr','label'=>lang('Descr'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'entity_name','label'=>lang('Entity name'),'className'=>'leftClasss',	'sortable'=>false),
+//				array('hidden'=>false,'name'=>'initial_value_ex','label'=>'','className'=>'rightClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'initial_value','label'=>lang('Initial value'),'className'=>'rightClasss','sortable'=>false,'formatter'=>'myFormatCount2'),
+//				array('hidden'=>false,'name'=>'value_ex','label'=>'','className'=>'rightClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'value','label'=>lang('Value'),'className'=>'rightClasss',	'sortable'=>false,'formatter'=>'myFormatCount2'),
+//				array('hidden'=>true,'name'=>'this_index','label'=>lang('Last index'),'className'=>'rightClasss',	'sortable'=>false),
+//				array('hidden'=>false,'name'=>'this_write_off_ex','label'=>'','className'=>'rightClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'this_write_off','label'=>lang('Write off'),'className'=>'rightClasss','sortable'=>false,'formatter'=>'myFormatCount2'),
+//				array('hidden'=>true,'name'=>'date','label'=>lang('Date'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'index_count','label'=>lang('Index count'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'link_history','label'=>lang('History'),'className'=>'centerClasss','sortable'=>false),
+//				array('hidden'=>true,'name'=>'check','label'=>lang('Select'),'className'=>'centerClasss','sortable'=>false)
+//				);
+
+            
+//			$investment_list = $this->bo->read();
+// 
+//			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+//			$sep = '/';
+//			$dlarr[strpos($dateformat,'y')]	= 'Y';
+//			$dlarr[strpos($dateformat,'m')] = 'm';
+//			$dlarr[strpos($dateformat,'d')] = 'd';
+//			ksort($dlarr);
+//			$dateformat	= (implode($sep,$dlarr));
+//
+//			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+//			$counter = $sum_initial_value = $sum_value = 0;
+//
+//			while (is_array($investment_list) && list(,$investment) = each($investment_list))
+//			{
+//				$link_history = $check = "";
+//				if($this->admin_invoice)
+//				{
+//					$link_history = "<a href=\"".$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.history', 'entity_id'=> $investment['entity_id'], 'investment_id'=> $investment['investment_id'], 'entity_type'=> $this->cat_id))."\">".lang('History')."</a>";
+//					if($investment['value']!= 0)
+//					{
+//						$check = "<input type=\"hidden\" name=\"values[update][".$counter."]\" value=\"\" class=\"myValuesForPHP select_hidden\"  />";
+//						$check .= "<input type=\"checkbox\" name=\"values[update_tmp][".$counter."]\" value=\"".$counter."\" class=\"select_check\"  />";
+//					}
+//				}
+//
+//				$my_district = "";
+//				$my_district .= "<input type=\"hidden\" name=\"values[entity_id][".$counter."]\" value=\"".$investment['entity_id']."\" class=\"myValuesForPHP\"  />";
+//				$my_district .= "<input type=\"hidden\" name=\"values[investment_id][".$counter."]\" value=\"".$investment['investment_id']."\" class=\"myValuesForPHP\"  />";
+//				$my_district .= "<input type=\"hidden\" name=\"values[initial_value][".$counter."]\" value=\"".$investment['initial_value']."\" class=\"myValuesForPHP\"  />";
+//				$my_district .= "<input type=\"hidden\" name=\"values[value][".$counter."]\" value=\"".$investment['value']."\" class=\"myValuesForPHP\"  />";
+//				$my_district .= $investment['district_id'];
+//
+//				$content[] = array
+//					(
+//						'order_dummy'		=> $investment['part_of_town'],
+//						'district_id'		=> $my_district,	
+//						'part_of_town'		=> $investment['part_of_town'],			
+//						'entity_id'			=> $investment['entity_id'],
+//						'investment_id'		=> $investment['investment_id'],
+//						'descr'				=> $investment['descr'],
+//						'entity_name'		=> $investment['entity_name'],
+//						'initial_value_ex'	=> ($investment['initial_value']==""?0:$investment['initial_value']),
+//						'initial_value'		=> number_format($investment['initial_value'], 0, ',', ''), //to avoid error in YUI's sum
+//						'value_ex'			=> ($investment['value']==""?0:$investment['value']),
+//						'value'				=> number_format($investment['value'], 0, ',', ''),//to avoid error in YUI's sum
+//						'this_index'		=> $investment['this_index'],
+//						'this_write_off_ex'	=> $investment['this_write_off'],
+//						'this_write_off'	=> number_format($investment['this_write_off'], 0, ',', ''),
+//						'date'				=> date($dateformat,strtotime($investment['date'])),
+//						'index_count'		=> $investment['index_count'],
+//						'link_history'		=> $link_history,
+//						'check'				=> $check
+//					);
+//				$counter++;
+//			}	
+//            
+//			$j=0;
+//			if (isset($content) && is_array($content))
+//			{
+//				foreach($content as $investment)
+//				{
+//					for ($i=0;$i<count($uicols);$i++)
+//					{
+//						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols[$i]['name'];
+//						$datatable['rows']['row'][$j]['column'][$i]['value']		= $investment[$uicols[$i]['name']];
+//					}
+//					$j++;
+//				}
+//			}
+
+//			$datatable['rowactions']['action'] = array();
+//			$datatable['rowactions']['action'][] = array(
+//				'my_name'		=> 'add',
+//				'text' 			=> lang('add'),
+//				'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.add'))
+//			);
+
+
+//			for ($i=0;$i<count($uicols);$i++)
+//			{
+//				$datatable['headers']['header'][$i]['name']			= $uicols[$i]['name'];
+//				$datatable['headers']['header'][$i]['text'] 		= $uicols[$i]['label'];
+//				$datatable['headers']['header'][$i]['visible'] 		= $uicols[$i]['visible'];
+//				$datatable['headers']['header'][$i]['sortable']		= $uicols[$i]['sortable'];
+//				$datatable['headers']['header'][$i]['sort_field']	= $uicols[$i]['sort_field'];
+//				$datatable['headers']['header'][$i]['className']	= $uicols[$i]['className'];
+//				$datatable['headers']['header'][$i]['formatter']	= ($uicols[$i]['formatter']==''?  '""' : $uicols[$i]['formatter']);
+//			}
+
 
 			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			//$datatable['pagination']['records_returned']= count($content);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				//avoid ,in the last page, reformate paginator when records are lower than records_returned
-				if(count($content) <= $datatable['pagination']['records_limit'])
-				{
-					$datatable['pagination']['records_returned']= count($content);
-				}
-				else
-				{
-					$datatable['pagination']['records_returned']= $datatable['pagination']['records_limit'];
-				}
-
-				$datatable['sorting']['currentPage']	= 1;
-				$datatable['sorting']['order'] 			= $uicols[0]['name']; // name key Column in myColumnDef
-				$datatable['sorting']['sort']			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['currentPage']	= phpgw::get_var('currentPage');
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort']			= phpgw::get_var('sort', 'string'); // ASC / DESC
-				$datatable['pagination']['records_returned']= phpgw::get_var('recordsReturned', 'int');
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'currentPage'		=> $datatable['sorting']['currentPage'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						$json_row[$column['name']] = $column['value'];
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-			$json['message']			= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-			//$json ['sum_initial_value'] = number_format($sum_initial_value, 0, ',', '');
-			//$json ['sum_value'] 		= number_format($sum_value, 0, ',', '');
-			//$json['sum_this_write_off_ex'] 		= number_format($sum_this_write_off_ex, 0, ',', '');
-			//_debug_array($json);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-			//Title of Page
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('investment') . ': ' . lang('list investment');
-
-			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'investment.index', 'property' );
-
+//			$property_js = "/property/js/yahoo/property.js";
+//
+//			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+//			{
+//				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+//				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+//			}
+//
+//			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
+//
+//			// Pagination and sort values
+//			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+//			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+//			//$datatable['pagination']['records_returned']= count($content);
+//			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+//
+//			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+//			{
+//				//avoid ,in the last page, reformate paginator when records are lower than records_returned
+//				if(count($content) <= $datatable['pagination']['records_limit'])
+//				{
+//					$datatable['pagination']['records_returned']= count($content);
+//				}
+//				else
+//				{
+//					$datatable['pagination']['records_returned']= $datatable['pagination']['records_limit'];
+//				}
+//
+//				$datatable['sorting']['currentPage']	= 1;
+//				$datatable['sorting']['order'] 			= $uicols[0]['name']; // name key Column in myColumnDef
+//				$datatable['sorting']['sort']			= 'asc'; // ASC / DESC
+//			}
+//			else
+//			{
+//				$datatable['sorting']['currentPage']	= phpgw::get_var('currentPage');
+//				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+//				$datatable['sorting']['sort']			= phpgw::get_var('sort', 'string'); // ASC / DESC
+//				$datatable['pagination']['records_returned']= phpgw::get_var('recordsReturned', 'int');
+//			}
+//
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('connection');
+//			phpgwapi_yui::load_widget('loader');
+//			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('animation');
+//
+//			//-- BEGIN----------------------------- JSON CODE ------------------------------
+//
+//			//values for Pagination
+//			$json = array
+//				(
+//					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+//					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+//					'startIndex' 		=> $datatable['pagination']['records_start'],
+//					'sort'				=> $datatable['sorting']['order'],
+//					'dir'				=> $datatable['sorting']['sort'],
+//					'currentPage'		=> $datatable['sorting']['currentPage'],
+//					'records'			=> array()
+//				);
+//
+//			// values for datatable
+//			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+//				foreach( $datatable['rows']['row'] as $row )
+//				{
+//					$json_row = array();
+//					foreach( $row['column'] as $column)
+//					{
+//						$json_row[$column['name']] = $column['value'];
+//					}
+//					$json['records'][] = $json_row;
+//				}
+//			}
+//
+//			// right in datatable
+//			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+//			{
+//				$json ['rights'] = $datatable['rowactions']['action'];
+//			}
+//			$json['message']			= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+//			//$json ['sum_initial_value'] = number_format($sum_initial_value, 0, ',', '');
+//			//$json ['sum_value'] 		= number_format($sum_value, 0, ',', '');
+//			//$json['sum_this_write_off_ex'] 		= number_format($sum_this_write_off_ex, 0, ',', '');
+//			//_debug_array($json);
+//
+//			if( phpgw::get_var('phpgw_return_as') == 'json' )
+//			{
+//				return $json;
+//			}
+//
+//
+//			$datatable['json_data'] = json_encode($json);
+//			//-------------------- JSON CODE ----------------------
+//
+//			// Prepare template variables and process XSLT
+//			$template_vars = array();
+//			$template_vars['datatable'] = $datatable;
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+//
+//			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+//			{
+//				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+//			}
+//			// Prepare CSS Style
+//			$GLOBALS['phpgw']->css->validate_file('datatable');
+//			$GLOBALS['phpgw']->css->validate_file('property');
+//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+//
+//			//Title of Page
+//			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('investment') . ': ' . lang('list investment');
+//
+//			// Prepare YUI Library
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'investment.index', 'property' );
 			//$this->save_sessiondata();			
+            phpgwapi_jquery::load_widget('numberformat');
+            self::add_javascript('property', 'portico', 'investment.index.js');
+
+            self::render_template_xsl('uiinvestment.index',$data);
 		}
 
 
