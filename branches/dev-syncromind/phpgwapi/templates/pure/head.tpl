@@ -19,9 +19,8 @@
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
-		<link href="{webserver_url}/phpgwapi/js/jquery/mmenu/src/css/extensions/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
+		{menu_stylesheet_widescreen}
 
-		
 		
 		<style>
 			.priority1

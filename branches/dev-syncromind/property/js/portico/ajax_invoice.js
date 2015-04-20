@@ -78,9 +78,9 @@ $(document).ready(function(){
 				if( data != null)
 				{
 					line_id = data['line_id'];
-					base_java_url['line_id'] = line_id;
-					base_java_url['voucher_id_filter'] = voucher_id;
-					execute_async(myDataTable_0);
+					var oArgs_table = {menuaction:'property.uiinvoice2.query',line_id: line_id, voucher_id_filter: voucher_id};
+					var requestUrl_table = phpGWLink('index.php', oArgs_table, true);
+					JqueryPortico.updateinlineTableHelper('datatable-container_1', requestUrl_table);
 					update_form_values(line_id, 0);
 				}
 			}
@@ -211,9 +211,10 @@ $(document).ready(function(){
 	    			{
 		    			$(submitBnt).val("Lagret");
 
-						base_java_url['voucher_id_filter'] = $("#voucher_id").val();
-						base_java_url['line_id'] = line_id;
-						execute_async(myDataTable_0);
+						var oArgs_table = {menuaction:'property.uiinvoice2.query',line_id: line_id, voucher_id_filter: $("#voucher_id").val()};
+						var requestUrl_table = phpGWLink('index.php', oArgs_table, true);
+						JqueryPortico.updateinlineTableHelper('datatable-container_1', requestUrl_table);
+
 					}
 					else
 					{
@@ -691,9 +692,10 @@ function reset_table(voucher_id)
 			if( data != null)
 			{
 				line_id = data['line_id'];
-				base_java_url['line_id'] = line_id;
-				base_java_url['voucher_id_filter'] = voucher_id;
-				execute_async(myDataTable_0);
+				var oArgs_table = {menuaction:'property.uiinvoice2.query',line_id: line_id, voucher_id_filter: voucher_id};
+				var requestUrl_table = phpGWLink('index.php', oArgs_table, true);
+				JqueryPortico.updateinlineTableHelper('datatable-container_1', requestUrl_table);
+
 				update_form_values(line_id, 0);
 			}
 		}

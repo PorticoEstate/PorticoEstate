@@ -20,6 +20,17 @@
 		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
 		$javascripts[] = "/phpgwapi/js/jquery/mmenu/src/js/jquery.mmenu.min.all.js";
 		$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
+
+		$stylesheets[] = "/phpgwapi/js/jquery/mmenu/src/css/jquery.mmenu.all.css";
+
+		$menu_stylesheet_widescreen = <<<HTML
+
+		<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/jquery/mmenu/src/css/extensions/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
+HTML;
+	}
+	else
+	{
+		$menu_stylesheet_widescreen = '';
 	}
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
@@ -35,11 +46,11 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
+	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
-	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/src/css/jquery.mmenu.all.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";
@@ -78,19 +89,19 @@
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
-
 	$tpl_vars = array
 	(
-		'noheader'				=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
-		'nofooter'				=> isset($GLOBALS['phpgw_info']['flags']['nofooter']) && $GLOBALS['phpgw_info']['flags']['nofooter'] ? 'true' : 'false',
-		'css'					=> $GLOBALS['phpgw']->common->get_css(),
-		'javascript'			=> $GLOBALS['phpgw']->common->get_javascript(),
-		'img_icon'				=> $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
-		'site_title'			=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
-		'browser_not_supported'	=> lang('browser not supported'),
-		'str_base_url'			=> $GLOBALS['phpgw']->link('/', array(), true),
-		'webserver_url'			=> $GLOBALS['phpgw_info']['server']['webserver_url'],
-		'win_on_events'			=> $GLOBALS['phpgw']->common->get_on_events(),
+		'noheader'					=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
+		'nofooter'					=> isset($GLOBALS['phpgw_info']['flags']['nofooter']) && $GLOBALS['phpgw_info']['flags']['nofooter'] ? 'true' : 'false',
+		'css'						=> $GLOBALS['phpgw']->common->get_css(),
+		'javascript'				=> $GLOBALS['phpgw']->common->get_javascript(),
+		'img_icon'					=> $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
+		'site_title'				=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
+		'browser_not_supported'		=> lang('browser not supported'),
+		'str_base_url'				=> $GLOBALS['phpgw']->link('/', array(), true),
+		'webserver_url'				=> $GLOBALS['phpgw_info']['server']['webserver_url'],
+		'win_on_events'				=> $GLOBALS['phpgw']->common->get_on_events(),
+		'menu_stylesheet_widescreen'=> $menu_stylesheet_widescreen,
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

@@ -26,14 +26,14 @@
  	* @version $Id$
 	*/
 
-	phpgw::import_class('phpgwapi.yui');
 	/**
 	* Import the jQuery class
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class property_uiinvoice2
+	class property_uiinvoice2 extends phpgwapi_uicommon_jquery
 	{
 		var $cat_id;
 		var $start;
@@ -63,7 +63,7 @@
 
 		function __construct()
 		{
-//			parent::__construct();
+			parent::__construct();
 		
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account_id 			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -77,52 +77,11 @@
 			$this->status_id			= $this->bo->status_id;
 			$this->allrows				= $this->bo->allrows;
 		
-//			self::set_active_menu('property::invoice::invoice2');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::invoice2';
+			self::set_active_menu('property::invoice::invoice');
+//			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::invoice2';
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->config->read();
 
-		}
-
-		public function add_javascript($app, $pkg, $name)
-		{
-  			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
-		}
-		/**
-		* A more flexible version of xslttemplate.add_file
-		*/
-		public function add_template_file($tmpl)
-		{
-			if(is_array($tmpl))
-			{
-				foreach($tmpl as $t)
-				{
-					$this->add_template_file($t);
-				}
-				return;
-			}
-			foreach(array_reverse($this->tmpl_search_path) as $path)
-			{
-				$filename = $path . '/' . $tmpl . '.xsl';
-				if (file_exists($filename))
-				{
-					$GLOBALS['phpgw']->xslttpl->xslfiles[$tmpl] = $filename;
-					return;
-				}
-			}
-			echo "Template $tmpl not found in search path: ";
-			print_r($this->tmpl_search_path);
-			die;
-		}
-
-		public function link($data)
-		{
-			return $GLOBALS['phpgw']->link('/index.php', $data);
-		}
-
-		public function redirect($link_data)
-		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
 		/**
@@ -462,21 +421,6 @@
 
 			$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> $this->query(),//json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 1,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
-
 			$datatable = array
 			(
 				array
@@ -489,20 +433,20 @@
 					'key' => 'approve_line',
 					'label' => lang('select'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'status_line',
 					'label' => lang('status'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key'	=>	'amount',
 					'label'	=>	lang('amount'),
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 					'sortable'	=>	true
 				),
 				array
@@ -510,63 +454,63 @@
 					'key' => 'approved_amount',
 					'label' => lang('approved amount'),
 					'sortable'	=> true,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'split',
 					'label' => lang('split line'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'budget_account',
 					'label' => lang('budget account'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'dima',
 					'label' => lang('dim a'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'dimb',
 					'label' => lang('dim b'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
 					'key' => 'order_id',
 					'label' => lang('order'),
 					'sortable' => false,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'dime',
 					'label' => lang('dime'),
 					'sortable' => false,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'project_group',
 					'label' => lang('project group'),
 					'sortable' => false,
-					'formatter' => 'FormatterRight',
+					'formatter' => 'JqueryPortico.FormatterRight',
 				),
 				array
 				(
 					'key' => 'line_text',
 					'label' => lang('invoice line text'),
 					'sortable' => false,
-					'formatter' => 'FormatterCenter',
+					'formatter' => 'JqueryPortico.FormatterCenter',
 				),
 				array
 				(
@@ -575,11 +519,18 @@
 				)
 			);
 
-			$myColumnDefs[0] = array
+
+			$datatable_def = array();
+			$datatable_def[] = array
 			(
-				'name'		=> "0",
-				'values'	=>	json_encode($datatable)
-			);	
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> $datatable,
+				'config'		=> array(
+					array('disableFilter' => true),
+	//				array('disablePagination' => false)
+				)
+			);
 
 			$criteria_list = array
 			(
@@ -617,13 +568,8 @@
 			
 			$data = array
 			(
-				'td_count'						=> '""',
-				'base_java_url'					=> "{menuaction:'property.uiinvoice2.query'}",
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable_def'					=> $datatable_def,
 				'email_base_url'				=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice2.index'),true,true)),
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
 
 				'msgbox_data'					=> $msgbox_data,
 				'invoice_layout_config'			=> json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'invoice_layout_config')),
@@ -660,24 +606,22 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
-			phpgwapi_yui::load_widget('layout');
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('layout');
+			phpgwapi_jquery::load_widget('numberformat');
 
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
-			self::add_javascript('property', 'yahoo', 'invoice2.index.js');
+			self::add_javascript('property', 'portico', 'invoice2.index.js');
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-menu-min.js');
+			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-base-min.js');
+			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu/gallery-sm-item-min.js');
+			self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-sm-menu-templates/gallery-sm-menu-templates-min.js');
+
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2','datatable_inline'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
 		}
 	
@@ -685,6 +629,8 @@
 		public function query()
 		{
 			$line_id =	phpgw::get_var('line_id', 'int');
+			$draw = phpgw::get_var('draw', 'int'.'REQUEST', 0);
+
 			if ( ! $voucher_id = phpgw::get_var('voucher_id_filter') )
 			{
 				$voucher_id = phpgw::get_var('voucher_id');
@@ -712,8 +658,11 @@
 
 				$results['results'][]= $entry;
 			}
+			$results['total_records'] = count($values);
 
-			return json_encode($values);
+			$results['draw'] = $draw;
+
+			return $this->jquery_results($results);
 		}
 
 		public function get_vouchers()

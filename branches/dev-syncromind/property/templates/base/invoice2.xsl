@@ -1,22 +1,5 @@
 <!-- $Id$ -->
 
-<func:function name="phpgw:conditional">
-	<xsl:param name="test"/>
-	<xsl:param name="true"/>
-	<xsl:param name="false"/>
-
-	<func:result>
-		<xsl:choose>
-			<xsl:when test="$test">
-				<xsl:value-of select="$true"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$false"/>
-			</xsl:otherwise>
-		</xsl:choose>
-  	</func:result>
-</func:function>
-
 <!-- separate tabs and  inline tables-->
 
 
@@ -61,35 +44,40 @@
 	</script>
 	-->
 		<script type="text/javascript">
-			var invoice_layout_config = <xsl:value-of select="invoice_layout_config"/>;
+			var email_base_url = <xsl:value-of select="//email_base_url"/>;
 		</script>
-
-	<!-- IMPORTANT!!! Loads YUI javascript -->
-<!--	<xsl:call-template name="common"/> -->
-
-	<div class="yui-content">
-		<div id="invoice-layout">
-				<div class="layout-north">
-					<div class="body">
-						<h2 class="icon"><xsl:value-of select="site_title"/></h2>
-						<div class="button-bar">
-							<a href="{home_url}" class="icon icon-home">
-								<xsl:value-of select="home_text"/>
-							</a>
-							<a href="{about_url}" class="icon icon-about">
-								<xsl:value-of select="about_text"/>
-							</a>
-							<a href="{preferences_url}" class="icon icon-preferences">
-								<xsl:value-of select="preferences_text"/>
-							</a>
-							<a href="{logout_url}" class="icon icon-logout">
-								<xsl:value-of select="logout_text"/>
-							</a>
-						</div>
-					</div>
+			<!--div class="ui-layout-north">
+				<div id="horizontal-menu">
+					<ul id="std-menu-items">
+						<li>
+							<a href="#">Nes, Sigurd</a>
+							<ul>
+								<li>
+									<a href="{home_url}" class="icon icon-home">
+										<xsl:value-of select="home_text"/>
+									</a>
+								</li>
+								<li>
+									<a href="{about_url}" class="icon icon-about">
+										<xsl:value-of select="about_text"/>
+									</a>
+								</li>
+								<li>
+									<a href="{preferences_url}" class="icon icon-preferences">
+										<xsl:value-of select="preferences_text"/>
+									</a>
+								</li>
+								<li>
+									<a href="{logout_url}" class="icon icon-logout">
+										<xsl:value-of select="logout_text"/>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
 				</div>
-
-			<div class="layout-center">
+			</div-->
+			<div class="ui-layout-center">
 				<div class="header">
 					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
 				</div>
@@ -109,8 +97,18 @@
 						<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
-										<xsl:apply-templates select="paging"/>
-										<xsl:apply-templates select="datatable"/>
+										<xsl:for-each select="datatable_def">
+											<xsl:if test="container = 'datatable-container_1'">
+												<xsl:call-template name="table_setup">
+													<xsl:with-param name="container" select ='container'/>
+													<xsl:with-param name="requestUrl" select ='requestUrl' />
+													<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+													<xsl:with-param name="tabletools" select ='tabletools' />
+													<xsl:with-param name="config" select ='config' />
+												</xsl:call-template>
+											</xsl:if>
+										</xsl:for-each>
+										<div id="receipt"></div>
 									</td>
 								</tr>
 								<tr>
@@ -132,7 +130,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="layout-east">
+			<div class="ui-layout-east">
 				<div class="header">
 					<h2>Bilde</h2>
 				</div>
@@ -149,17 +147,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<table>
-			<tr>
-				<td>
-				</td>
-				<td>
-				</td>
-			</tr>
-		</table>
-	</div>
 </xsl:template>
 
 <xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
@@ -569,52 +556,6 @@
 			</td>
 		</tr>
 	</xsl:template>
-
-
-<xsl:template match="datatable" xmlns:php="http://php.net/xsl">
-	<div id="paging_0"/>
-	<div id="datatable-container_0"/>
-
-	<div id="data_paginator"/>
-	<div id="datatable-container"/>
-	
-  	<xsl:call-template name="datasource-definition" />
-	<div id="receipt"></div>
-</xsl:template>
-
-<xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
-
-		<!--  DATATABLE DEFINITIONS-->
-		<script type="text/javascript">
-			var email_base_url = <xsl:value-of select="//email_base_url"/>;
-			var property_js = <xsl:value-of select="//property_js"/>;
-			var base_java_url = <xsl:value-of select="//base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-			var myButtons = new Array();
-			var td_count = <xsl:value-of select="//td_count"/>;
-
-			<xsl:for-each select="//datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						edit_action:  <xsl:value-of select="edit_action"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-			<xsl:for-each select="//myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-			<xsl:for-each select="//myButtons">
-				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-		</script>
-
-
-</xsl:template>
 
 <!-- options for use with select-->
 <xsl:template match="options">
