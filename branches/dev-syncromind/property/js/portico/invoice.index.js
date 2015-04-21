@@ -52,7 +52,7 @@
 		
 		var data = {"period": el.options[el.selectedIndex].value, "voucher_id_for_period": idvoucher};
 		JqueryPortico.execute_ajax(requestUrl, function(result){
-			document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
+			document.getElementById("message").innerHTML = result.message[0].msg;
 		}, data, "POST", "JSON");
 	}
 	
@@ -107,7 +107,7 @@
 		
 		var data = {"periodization_start": el.options[el.selectedIndex].value, "voucher_id_for_periodization_start": idvoucher};
 		JqueryPortico.execute_ajax(requestUrl, function(result){
-			document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
+			document.getElementById("message").innerHTML = result.message[0].msg;
 		}, data, "POST", "JSON");
 	}
 	
@@ -118,7 +118,7 @@
 		
 		var data = {"periodization": el.options[el.selectedIndex].value, "voucher_id_for_periodization": idvoucher};
 		JqueryPortico.execute_ajax(requestUrl, function(result){
-			document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
+			document.getElementById("message").innerHTML = result.message[0].msg;
 		}, data, "POST", "JSON");
 	}
 	
@@ -195,8 +195,20 @@
 		
 		var data = {"values": values};
 		JqueryPortico.execute_ajax(requestUrl, function(result){
-			document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
+			//var msg = result.message;
+			document.getElementById("message").innerHTML = '';
+			$.each(result.message, function (k, v) {
+				document.getElementById("message").innerHTML += v.msg + "<br/>";
+			});
+			//var error = result.error;
+			if (typeof(result.error) !== 'undefined')
+			{
+				$.each(result.error, function (k, v) {
+					document.getElementById("message").innerHTML += v.msg + "<br/>";
+				});
+			}
+			oTable.fnDraw();
+			//document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
 		}, data, "POST", "JSON");
 		
-		oTable.fnDraw();
 	}
