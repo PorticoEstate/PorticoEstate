@@ -212,10 +212,24 @@
 			return $invoice;
 		}
 
-		function read_invoice_sub($voucher_id=0,$paid = false)
+		function read_invoice_sub($data)
 		{
-			$invoice = $this->so->read_invoice_sub(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid, 'results' => $this->results,'allrows'=>$this->allrows));
+			/*$invoice = $this->so->read_invoice_sub(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid, 'results' => $this->results,'allrows'=>$this->allrows));*/
+			
+			$invoice = $this->so->read_invoice_sub(array(
+				'start'		=> $data['start'],
+				'query'		=> $data['query'],
+				'sort'		=> $data['sort'],
+				'order'		=> $data['order'],
+				'user_lid'	=> $this->user_lid,
+				'cat_id'	=> $this->cat_id,
+				'voucher_id' => $data['voucher_id'],
+				'paid'		=> $data['paid'], 
+				'results'	=> $data['results'],
+				'allrows'	=> $data['allrows']
+			));
+
 			$this->total_records = $this->so->total_records;
 			return $invoice;
 		}
