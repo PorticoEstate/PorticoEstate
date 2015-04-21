@@ -1120,7 +1120,7 @@ JS;
 											$data[$j]['column'][$i]['name'] 		= 'sign_tmp';
 											$data[$j]['column'][$i]['type'] 		= 'radio';
 											$data[$j]['column'][$i]['value']		= ($type_sign == 'janitor'? 'sign_janitor':($type_sign == 'supervisor'? 'sign_supervisor' : 'sign_budget_responsible'));
-											$data[$j]['column'][$i]['extra_param']	= " checked ";
+											$data[$j]['column'][$i]['extra_param']	= ' checked="checked" ';
 										}
 										else
 										{
@@ -1334,8 +1334,63 @@ JS;
 			$values		= phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id');
 
-			$datatable = array();
+			$receipt = array();
 
+			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
+			{
+				if($this->bo->get_approve_role())
+				{
+					$receipt = $this->bo->update_invoice_sub($values);
+				}
+				else
+				{
+					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
+				}
+			}
+			
+            if( phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+				return $this->query();
+            }
+			
+
+            $data   = array(
+                'datatable_name'    => $appname,
+                'form'  => array(
+                               'toolbar'    => array(
+                                   'item'   => array(
+                                       array(
+                                           'type'   => 'link',
+                                           'value'  => lang('new'),
+                                           'href'   => self::link(array(
+                                               'menuaction'	=> 'property.uiinvoice.add'
+                                           )),
+                                           'class'  => 'new_item'
+                                       )
+                                   )
+                               )
+                            ),
+                'datatable' =>  array(
+                    'source'    => self::link(array(
+                        'menuaction'		=> 'property.uiinvoice.list_sub',
+						'paid'				=> $paid,
+						'sub'				=> $this->sub,
+						'voucher_id'		=> $voucher_id,
+                        'phpgw_return_as'   => 'json'
+                    )),
+					'download'	=> self::link(array(
+							'menuaction'	=> 'property.uiinvoice.download',
+							'export'		=> true,
+							'skip_origin'	=> true,
+							'allrows'		=> true
+					)),
+                    'allrows'   => true,
+                    'editor_action' => '',
+                    'field' =>  array()
+                )
+            );
+			
+			/*
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['menu']					= $this->bocommon->get_menu();
@@ -1348,11 +1403,8 @@ JS;
 						'cat_id'		=> $this->cat_id,
 						'user_lid'		=> $this->user_lid,
 						'sub'			=> $this->sub,
-				//		'query'			=> $this->query,
-				//		'start'			=> $this->start,
 						'paid'			=> $paid,
 						'voucher_id'	=> $voucher_id,
-				//		'query'			=> $voucher_id
 					));
 				$datatable['config']['allow_allrows'] = false;
 
@@ -1363,11 +1415,8 @@ JS;
 					."cat_id: '{$this->cat_id}',"
 					."user_lid:'{$this->user_lid}',"
 					."sub:'{$this->sub}',"
-				//	."query:'{$this->query}',"
-				//	."start:'{$this->start}',"
 					."paid:'{$paid}',"
 					."voucher_id:'{$voucher_id}'";
-				//	."query:'{$voucher_id}'";
 
 				$field_invoice = array
 					(array
@@ -1428,29 +1477,224 @@ JS;
 					)
 				);
 
-			} //-- of if( phpgw::get_var('phpgw_return_as') != 'json' )
+			}*/
 
-			//-- edicion de registro
-			$values  = phpgw::get_var('values');
-			$receipt = array();
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
+			$uicols = array (
+				array(
+					'key'=>'workorder','label'=>lang('Workorder'),'className'=>'center','sortable'=>true,'hidden'=>false),
+				array(
+					'key'=>'project_group','label'=>lang('project group'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'close_order','label'=>lang('Close order'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'change_tenant','label'=>lang('Charge tenant'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'invoice_id','label'=>lang('Invoice Id'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'budget_Account','label'=>lang('Budget account'),'className'=>'center','sortable'=>true,'hidden'=>false),
+				array(
+					'key'=>'sum','label'=>lang('Sum'),'className'=>'right','sortable'=>true,'sort_field'=>'belop','hidden'=>false),
+				array(
+					'key'=>'approved_amount','label'=>lang('approved amount'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'currency','label'=>lang('currency'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'dim_A','label'=>lang('Dim A'),'className'=>'center','sortable'=>true,'hidden'=>false),
+				array(
+					'key'=>'dim_B','label'=>lang('Dim B'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'dim_D','label'=>lang('Dim D'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'Tax_code','label'=>lang('Tax code'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'Remark','label'=>lang('Remark'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'external_ref','label'=>lang('external ref'),'className'=>'center','sortable'=>false,'hidden'=>false),
+				array(
+					'key'=>'counter','hidden'=>true),
+				array(
+					'key'=>'id','hidden'=>true),
+				array(
+					'key'=>'_external_ref','hidden'=>true)
+				);
+
+            foreach ($uicols as $col) 
 			{
-				if($this->bo->get_approve_role())
+                array_push($data['datatable']['field'], $col);
+            }
+			
+			$current_Consult = array ();
+			for($i=0;$i<2;$i++)
+			{
+				if($i==0)
 				{
-					$receipt = $this->bo->update_invoice_sub($values);
+					$current_Consult[] = array(lang('Vendor'),$content[0]['vendor']);
 				}
-				else
+				if($i==1)
 				{
-					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
+					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
 				}
 			}
 
+			// query parameters
+			if(isset($current_Consult) && is_array($current_Consult))
+			{
+				$json['current_consult'] = $current_Consult;
+			}
+
+
+			//-------------- menu
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			$parameters2 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'docid',
+							'source'	=> '_external_ref'
+						),
+					)
+				);
+
+
+			if($this->acl_read && $baseurl_invoice)
+			{
+				$_baseurl_invoice = rtrim($baseurl_invoice,"?{$parameters2['parameter'][0]['name']}=");
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'		=> 'picture',
+						'text'			=> $lang_picture,
+						'action'		=> "{$_baseurl_invoice}?target=_blank",
+						'parameters'	=> $parameters2
+					);
+			}
+
+			if($this->acl_edit)
+			{
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'		=> 'edit',
+						'text'			=> $paid ? lang('view') : lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'property.uiinvoice.edit',
+							'voucher_id'		=> $voucher_id,
+							'user_lid'			=> $this->user_lid,
+							'target'			=> '_tinybox',
+							'paid'				=> $paid
+						)),
+						'parameters'	=> $parameters
+					);
+			}
+
+
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json['rights'] = $datatable['rowactions']['action'];
+			}
+
+			//--------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
+
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
+
+			$datatable['json_data'] = json_encode($json);
+			//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
+			// Prepare CSS Style
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+
+
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
+
+
+			//Title of Page
+			$appname = lang('location');
+			if ($paid)
+			{
+				$function_msg	= lang('list paid invoice');
+			}
+			else
+			{
+				$function_msg	= lang('list invoice');
+			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.list_sub', 'property' );
+		}
+
+        public function query_list_sub()
+        {	
+			$paid 			= phpgw::get_var('paid', 'bool');
+			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
+			$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+
+			$params = array
+				(
+					'start'         => phpgw::get_var('start', 'int', 'REQUEST', 0),
+					'results'       => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'query'         => $search['value'],
+					'order'         => $columns[$order[0]['column']]['data'],
+					'sort'          => $order[0]['dir'],
+					'allrows'       => 1,
+					'paid'			=> $paid ? $paid : false,
+					'voucher_id'	=> $voucher_id,
+				);
+
+			//$invoice_list = $this->bo->read_invoice($params);
 			$content = array();
 			if ($voucher_id)
 			{
 				$this->bo->allrows = true;
-				$content = $this->bo->read_invoice_sub($voucher_id,$paid);
+				$content = $this->bo->read_invoice_sub($params);
 			}
 
 			$sum=0;
@@ -1470,13 +1714,16 @@ JS;
 				$entry['link_order'] 		= $_link_order;
 				$entry['link_claim'] 		= $_link_claim;
 			}
-
-			unset($entry);
-			unset($_link_order);
-			unset($_link_claim);
-			unset($dimb_list);
-			unset($tax_code_list);
-
+			
+			if( phpgw::get_var('export', 'bool'))
+			{
+					return $content;
+			}
+			
+			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$baseurl_invoice = isset($custom_config->config_data['common']['baseurl_invoice']) && $custom_config->config_data['common']['baseurl_invoice'] ? $custom_config->config_data['common']['baseurl_invoice'] : '';
+			$lang_picture = lang('picture');
+			
 			$uicols = array (
 				array(
 					'col_name'=>'workorder'		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'visible'=>true),
@@ -1514,15 +1761,16 @@ JS;
 					'col_name'=>'id',		'visible'=>false),
 				array(
 					'col_name'=>'_external_ref',		'visible'=>false)
-				);
+			);
+			
+			$link_sub 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>$this->user_lid));
 
-
-	//		$config		= CreateObject('phpgwapi.config','property');
-	//		$config->read();
-			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
-			$baseurl_invoice = isset($custom_config->config_data['common']['baseurl_invoice']) && $custom_config->config_data['common']['baseurl_invoice'] ? $custom_config->config_data['common']['baseurl_invoice'] : '';
-			$lang_picture = lang('picture');
-
+			if($paid)
+			{
+				$link_sub.="&paid=true";
+			}
+			
+			$values = array();
 			$j=0;
 			//---- llena DATATABLE-ROWS con los valores del READ
 			$workorders = array();
@@ -1763,225 +2011,18 @@ JS;
 					$workorders[$invoices['workorder_id']] = true;
 				}
 
-				$datatable['rows']['row'][] = $json_row;
+				$values[] = $json_row;
 				$j++;
 			}
+			
+			$result_data    =   array('results' =>  $values);
+			$result_data['total_records']   = $this->bo->total_records;
+			$result_data['draw']    = $draw;
 
-
-			$current_Consult = array ();
-			for($i=0;$i<2;$i++)
-			{
-				if($i==0)
-				{
-					$current_Consult[] = array(lang('Vendor'),$content[0]['vendor']);
-				}
-				if($i==1)
-				{
-					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
-				}
-			}
-
-			//no grants
-			$datatable['rowactions']['action'] = array();
-
-			for ($i=0;$i<count($uicols);$i++)
-			{
-				$datatable['headers']['header'][$i]['name'] 			= $uicols[$i]['col_name'];
-				$datatable['headers']['header'][$i]['text'] 			= $uicols[$i]['label'];
-				$datatable['headers']['header'][$i]['formatter'] 		= ($uicols[$i]['formatter']=='' ?  '""' : $uicols[$i]['formatter']);
-				$datatable['headers']['header'][$i]['className']		= $uicols[$i]['className'];
-				$datatable['headers']['header'][$i]['visible'] 			= $uicols[$i]['visible'];
-				$datatable['headers']['header'][$i]['sortable']			= $uicols[$i]['sortable'];
-				$datatable['headers']['header'][$i]['sort_field']		= $uicols[$i]['sort_field'];
-			}
-
-			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= count($content);
-			$datatable['pagination']['records_returned']= count($content);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			if ( (phpgw::get_var("start")== 0) && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= $uicols[11]['col_name']; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			$json['records']	= $datatable['rows']['row'];
-
-			// right in datatable
-			$json['rights']	= $datatable['rowactions']['action'];
-
-			$json['sum']		= number_format($sum, 2, ',', '');
-
-			// message when editting & deleting records
-			if(isset($receipt) && is_array($receipt) && count($receipt))
-			{
-				$json['message']= $GLOBALS['phpgw']->common->msgbox($this->bocommon->msgbox_data($receipt));
-			}
-
-			// query parameters
-			if(isset($current_Consult) && is_array($current_Consult))
-			{
-				$json['current_consult'] = $current_Consult;
-			}
-
-
-			//-------------- menu
-			$datatable['rowactions']['action'] = array();
-
-			$parameters = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'id',
-							'source'	=> 'id'
-						),
-					)
-				);
-
-			$parameters2 = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'docid',
-							'source'	=> '_external_ref'
-						),
-					)
-				);
-
-
-			if($this->acl_read && $baseurl_invoice)
-			{
-				$_baseurl_invoice = rtrim($baseurl_invoice,"?{$parameters2['parameter'][0]['name']}=");
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name'		=> 'picture',
-						'text'			=> $lang_picture,
-						'action'		=> "{$_baseurl_invoice}?target=_blank",
-						'parameters'	=> $parameters2
-					);
-			}
-
-			if($this->acl_edit)
-			{
-				$datatable['rowactions']['action'][] = array
-					(
-						'my_name'		=> 'edit',
-						'text'			=> $paid ? lang('view') : lang('edit'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'		=> 'property.uiinvoice.edit',
-							'voucher_id'		=> $voucher_id,
-							'user_lid'			=> $this->user_lid,
-							'target'			=> '_tinybox',
-							'paid'				=> $paid
-						)),
-						'parameters'	=> $parameters
-					);
-			}
-
-
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json['rights'] = $datatable['rowactions']['action'];
-			}
-
-			//--------------
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-
-			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
-
-
-
-			//Title of Page
-			$appname = lang('location');
-			if ($paid)
-			{
-				$function_msg	= lang('list paid invoice');
-			}
-			else
-			{
-				$function_msg	= lang('list invoice');
-			}
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.list_sub', 'property' );
+			return $this->jquery_results($result_data);
 		}
-
+		
+		
 		/**
 		 * Edit single line within a voucher
 		 *
