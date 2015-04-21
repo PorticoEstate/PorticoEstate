@@ -723,11 +723,19 @@
 					data: {},
 					type: 'GET'
 				},
+				fnServerParams: function ( aoData ) {
+					var column = aoData.order[0].column;
+					var dir = aoData.order[0].dir;
+					var column_to_keep = aoData.columns[column];
+					delete aoData.columns;
+					aoData.columns = {};
+					aoData.columns[column] = column_to_keep;
+				 },
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 								if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
 								{
 									//nRow.addClass(''),
-									console.log(nRow),
+								//	console.log(nRow),
 									$('td', nRow).addClass('priority' + aData['priority']);
 								}
                 },
