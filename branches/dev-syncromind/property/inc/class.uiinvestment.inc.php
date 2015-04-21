@@ -56,6 +56,7 @@
 				'add'		=> true,
 				'delete'	=> true,
                 '_get_filters' => true,
+                'updateinvest' => true,
 			);
 
 		function __construct()
@@ -188,7 +189,7 @@
 					if($investment['value']!= 0)
 					{
 						$check = "<input type=\"hidden\" name=\"values[update][".$counter."]\" value=\"\" class=\"myValuesForPHP select_hidden\"  />";
-						$check .= "<input type=\"checkbox\" name=\"values[update_tmp][".$counter."]\" value=\"".$counter."\" class=\"select_check\"  />";
+						$check .= "<input type=\"checkbox\" name=\"values[update_tmp][".$counter."]\" value=\"".$counter."\" class=\"mychecks select_check\"  id=\"check\"/>";
 					}
 				}
 
@@ -218,7 +219,8 @@
 						'date'				=> date($dateformat,strtotime($investment['date'])),
 						'index_count'		=> $investment['index_count'],
 						'link_history'		=> $link_history,
-						'check'				=> $check
+						'check'				=> $check,
+                        'counter'           => $counter
 					);
 				$counter++;
 			}	
@@ -236,7 +238,33 @@
             return $this->jquery_results($result_data);
             
         }
-                
+         
+        function updateinvest()
+        {
+            
+            $ids                = !empty($_POST['ids'])?$_POST['ids']:'';
+            $new_date           = !empty($_POST['date'])?$_POST['date']:'';
+            $new_index          = !empty($_POST['index'])?$_POST['index']:'';
+            $entity_id          = !empty($_POST['entid'])?$_POST['entid']:'';
+            $investment_id      = !empty($_POST['invid'])?$_POST['invid']:'';
+            $initial_value      = !empty($_POST['inval'])?$_POST['inval']:'';
+            $value              = !empty($_POST['value'])?$_POST['value']:'';
+            $counter            = !empty($_POST['up'])?$_POST['up']:'';
+            
+            $values = array(
+                            'entity_id'     => $entity_id,
+                            'investment_id' => $investment_id,
+                            'initial_value' => $initial_value,
+                            'value'         => $value,
+                            'update'        => $counter,
+                            'new_index'     => $new_index,
+                            'date'          => $new_date,
+                           );
+            
+            $receipt	 = $this->update_investment($values);
+            
+        }
+        
 		function index()
 		{
 			if(!$this->acl_read)
@@ -272,6 +300,10 @@
             self::add_javascript('phpgwapi','jquery','editable/jquery.jeditable.js');
             self::add_javascript('phpgwapi','jquery','editable/jquery.dataTables.editable.js');
             
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
+            
             $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('investment') . ': ' . lang('list investment');
             
             $data = array(
@@ -298,24 +330,24 @@
 					'allrows'	=> true,
 					'editor_action' => '',
 					'field' => array(
-                        array('key'=>'order_dummy','label'=>  lang('Order dummy'),'sortable'=>false,'hidden'=>TRUE),
-                        array('key'=>'district_id','label'=>lang('District'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'part_of_town','label'=>lang('Part of town'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'entity_id','label'=>lang('entity id'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'investment_id','label'=>lang('investment id'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'descr','label'=>lang('Descr'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'entity_name','label'=>lang('Entity name'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'initial_value_ex','label'=>lang('initial value ex'),'sortable'=>false,'hidden'=>TRUE),
+                        array('key'=>'order_dummy','label'=>  lang('Order dummy'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'district_id','label'=>lang('District'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'part_of_town','label'=>lang('Part of town'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'entity_id','label'=>lang('entity id'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'investment_id','label'=>lang('investment id'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'descr','label'=>lang('Descr'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'entity_name','label'=>lang('Entity name'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'initial_value_ex','label'=>lang('initial value ex'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'),
                         array('key'=>'initial_value','label'=>lang('Initial value'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterAmount0'),
-                        array('key'=>'value_ex','label'=>lang('value ex'),'sortable'=>false,'hidden'=>TRUE),
+                        array('key'=>'value_ex','label'=>lang('value ex'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'),
                         array('key'=>'value','label'=>lang('Value'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterAmount0'),
-                        array('key'=>'this_index','label'=>lang('Last index'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'this_write_off_ex','label'=>lang('write off ex'),'sortable'=>false,'hidden'=>TRUE),
+                        array('key'=>'this_index','label'=>lang('Last index'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'this_write_off_ex','label'=>lang('write off ex'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'),
                         array('key'=>'this_write_off','label'=>lang('Write off'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterAmount0',),
-                        array('key'=>'date','label'=>lang('Date'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'index_count','label'=>lang('Index count'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'link_history','label'=>lang('History'),'sortable'=>false,'hidden'=>FALSE),
-                        array('key'=>'check','label'=>lang('Select'),'sortable'=>false,'hidden'=>FALSE),
+                        array('key'=>'date','label'=>lang('Date'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'index_count','label'=>lang('Index count'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'link_history','label'=>lang('History'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                        array('key'=>'check','label'=>lang('Select'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
                     )
                 ),
                 'down-toolbar' => array(
@@ -327,7 +359,34 @@
                                 'value' => lang('New Index'),
                                 'style' => 'filter',
                                 'group' => '1'
-                            )
+                            ),
+                             array
+							(
+								'type' => 'text',
+								'id' => 'txt_index',
+                                'name' => 'txt_index',
+								'tab_index' => 5,
+								'style' => 'filter',
+								'group' => '1'
+							),
+                            array(
+                                'type' => 'date-picker',
+                                'id'   => 'start_date',
+                                'name' => 'start_date',
+                                'value'=> '',
+                                'style' => 'filter',
+								'group' => '1'
+                            ),
+                            array
+							(
+								'type' => 'button',
+								'id' => 'btn_update',
+								'value'	=> lang('Update'),
+								'tab_index' => 5,
+								'style' => 'filter',
+								'group' => '1',
+                                'action' => 'onclikUpdateinvestment()'
+							),
                         )
                     )
                 )
@@ -339,7 +398,10 @@
                 array_unshift($data['form']['toolbar']['item'], $filter);
             }
             
-//          echo '<pre>'; print_r($data); echo '</pre>'; exit('uiinvestment');
+            $data['datatable']['actions'] = array(
+				'my_name'=> '',
+			);
+
 //			$datatable = array();
 //
 //			if( phpgw::get_var('phpgw_return_as') != 'json' )
@@ -614,13 +676,8 @@
 //				}
 //			}
 
-//			$datatable['rowactions']['action'] = array();
-//			$datatable['rowactions']['action'][] = array(
-//				'my_name'		=> 'add',
-//				'text' 			=> lang('add'),
-//				'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvestment.add'))
-//			);
-
+//			$data['datatable']['actions'] = array();
+			
 
 //			for ($i=0;$i<count($uicols);$i++)
 //			{
