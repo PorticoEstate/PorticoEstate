@@ -74,6 +74,44 @@
 	</xsl:variable>
 	var oTable<xsl:number value="($num - 1)"/> = null;
 		
+<![CDATA[
+			TableTools.BUTTONS.download = {
+				"sAction": "text",
+				"sTag": "default",
+				"sFieldBoundary": "",
+				"sFieldSeperator": "\t",
+				"sNewLine": "<br>",
+				"sToolTip": "",
+				"sButtonClass": "DTTT_button_text",
+				"sButtonClassHover": "DTTT_button_text_hover",
+				"sButtonText": "Download",
+				"mColumns": "all",
+				"bHeader": true,
+				"bFooter": true,
+				"sDiv": "",
+				"fnMouseover": null,
+				"fnMouseout": null,
+				"fnClick": function( nButton, oConfig ) {
+					var oParams = this.s.dt.oApi._fnAjaxParameters( this.s.dt );
+					oParams.length = -1;
+					oParams.columns = null;
+					oParams.start = null;
+					oParams.draw = null;
+					var iframe = document.createElement('iframe');
+					iframe.style.height = "0px";
+					iframe.style.width = "0px";
+					iframe.src = oConfig.sUrl+"?"+$.param(oParams) + "&export=1";
+					if(confirm("This will take some time..."))
+					{
+						document.body.appendChild( iframe );
+					}
+				},
+				"fnSelect": null,
+				"fnComplete": null,
+				"fnInit": null
+			};
+	]]>
+	
 	<xsl:choose>
 			<xsl:when test="$tabletools">
 					JqueryPortico.TableTools<xsl:number value="($num - 1)"/> = 	{
@@ -81,15 +119,6 @@
 							"sRowSelect": "multi",
 							"aButtons":
 								[
-									<xsl:choose>
-										<xsl:when test="download">
-										{
-											"sExtends": "download",
-											"sButtonText": "Download",
-											"sUrl": '<xsl:value-of select="download"/>'
-										}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-										</xsl:when>
-									</xsl:choose>
 									<xsl:for-each select="$tabletools">
 										<xsl:choose>
 											<xsl:when test="my_name = 'select_all'">
@@ -116,6 +145,13 @@
 															 $(this).prop("checked", false);
 														});
 													}
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
+											</xsl:when>
+											<xsl:when test="my_name = 'download'">
+												{
+													"sExtends": "download",
+													"sButtonText": "Download",
+													"sUrl": '<xsl:value-of select="download"/>'
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
 											</xsl:when>
 											<xsl:when test="type = 'custom'">
