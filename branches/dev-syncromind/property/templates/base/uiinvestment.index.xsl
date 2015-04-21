@@ -344,8 +344,15 @@
 					<div class="pure-u-1">
 						<xsl:for-each select="//down-toolbar/fields/field">
 							<xsl:choose>
+                                                                <xsl:when test="type = 'date-picker'">
+                                                                        <td valign="top">
+                                                                        <div>
+                                                                                <input id="filter_{name}" name="filter_{name}" type="text"></input>
+                                                                        </div>
+                                                                        </td>
+                                                                </xsl:when>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
+									<button id="{id}" type="{type}" class="pure-button pure-button-primary" onclick="{action}"><xsl:value-of select="value"/></button>
 								</xsl:when>
 								<xsl:when test="type='label'">
 									<xsl:value-of select="value"/>
@@ -743,6 +750,7 @@
 			
 			oTable = $('#datatable-container').dataTable( {
 				paginate:		disablePagination ? false : true,
+                                filter:			false,
 				processing:		true,
 				serverSide:		true,
 				responsive:		true,
