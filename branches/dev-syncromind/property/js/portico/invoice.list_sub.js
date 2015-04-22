@@ -1,4 +1,81 @@
   	function onSave ()
   	{
+		var api = oTable0.api();
+
+		var values = {};
 		
+		values['counter'] = {};
+		values['id'] = {};
+		values['workorder_id'] = {};
+		values['budget_account'] = {};
+		values['approved_amount'] = {};
+		values['dima'] = {};
+		values['dimb'] = {};
+		values['dimd'] = {};
+		values['tax_code'] = {};
+		values['close_order_orig'] = {};
+		values['close_order'] = {};
+		
+		var budget_account = $('.budget_account');
+		var approved_amount = $('.approved_amount');
+		var dima = $('.dima');
+		var dimb_tmp = $('.dimb_tmp');
+		var dimd = $('.dimd');
+		var tax_code_tmp = $('.tax_code_tmp');
+		
+		var close_order_orig = $('.close_order_orig');
+		var close_order_tmp = $('.close_order_tmp');
+		//var close_order = $('.close_order');
+				
+		var i = 0; 
+		api.data().each( function (d) {
+
+			values['counter'][i] = i;
+			values['id'][i] = d.id;
+			values['workorder_id'][i] = d.workorder_id;
+			
+			values['budget_account'][i] = budget_account[i].value;
+			values['approved_amount'][i] = approved_amount[i].value;
+			values['dima'][i] = dima[i].value;
+			
+			values['dimb'][i] = dimb_tmp[i].value;
+			values['dimd'][i] = dimd[i].value;
+			values['tax_code'][i] = tax_code_tmp[i].value;
+			
+			i++;
+		});
+		
+		close_order_orig.each(function(i, obj) {
+			values['close_order_orig'][$(obj).attr('counter')] = obj.value;
+		});
+		
+		close_order_tmp.each(function(i, obj) {
+			if (obj.checked) 
+			{
+				values['close_order'][$(obj).attr('counter')] = true;
+			} else {
+				values['close_order'][$(obj).attr('counter')] = '';
+			}
+		});
+		
+		
+		var requestUrl = api.ajax.url();
+		
+		var data = {"values": values};
+		JqueryPortico.execute_ajax(requestUrl, function(result){
+			//var msg = result.message;
+			document.getElementById("message").innerHTML = '';
+			$.each(result.message, function (k, v) {
+				document.getElementById("message").innerHTML += v.msg + "<br/>";
+			});
+			//var error = result.error;
+			if (typeof(result.error) !== 'undefined')
+			{
+				$.each(result.error, function (k, v) {
+					document.getElementById("message").innerHTML += v.msg + "<br/>";
+				});
+			}
+			oTable0.fnDraw();
+			//document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
+		}, data, "POST", "JSON");
 	}
