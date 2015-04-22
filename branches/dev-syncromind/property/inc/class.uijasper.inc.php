@@ -620,8 +620,11 @@
 
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
 
 			/*if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
@@ -843,6 +846,8 @@
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,
+                    'tabs'                          => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				); 
 
 			//---datatable settings--------------------
