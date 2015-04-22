@@ -352,7 +352,11 @@
 			{
 				$this->bo->resort(array('custom_id'=>$custom_id,'id'=>$cols_id,'resort'=>$resort));
 			}
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+//			$tabs['items']	= array('label' => lang('items'), 'link' => "#items");
 			//$GLOBALS['phpgw']->xslttpl->add_file(array('custom'));
 
 			if ($values['cancel'])
@@ -444,6 +448,8 @@
 					'lang_up_text'					=> lang('Up'),
 					'lang_down_text'				=> lang('Down'),
 					'lang_sorting'					=> lang('Sorting'),
+                    'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 
 				);
                         
