@@ -175,10 +175,17 @@
 			if($fileid)
 			{
 				$bra5ServiceGet = new Bra5ServiceGet();
+				$debug = false;
+				if($debug)
+				{
+					$bra5ServiceGet->getDocument(new Bra5StructGetDocument($this->secKey, $fileid));
+					_debug_array($bra5ServiceGet->getResult());
+					$GLOBALS['phpgw']->common->phpgw_exit();
 
+				}
 				if($bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($this->secKey, $fileid)))
 				{
-//					_debug_array($bra5ServiceGet->getResult());
+					_debug_array($bra5ServiceGet->getResult());
 					$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
 					$file = base64_decode($file_result->getFileAsByteArrayResult);
 				}
@@ -188,7 +195,6 @@
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 			}
-//die();
 			return $file;
 		}
 
@@ -382,10 +388,13 @@
 			$att4->setUsesLookupValues(false);
 			$att4->setAttribType(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
 			$att4->setName("Byggnr");
-		//	$att4->setValue(new Bra5StructArrayOfAnyType(array('139276655')));
-			$att4->setValue(array('139276655'));
+//			$att4->setValue(new Bra5StructArrayOfAnyType(array('139276655')));
+//			$att4->setValue(new Bra5StructArrayOfAnyType(new Bra5StructArrayOfString('139276655')));
+//			$att4->setValue(new Bra5StructArrayOfAnyType(new Bra5StructArrayOfString(array('139276655'))));
+//			$att4->setValue(array('139276655'));
+			$att4->setValue('139276655');
 
-			//$att4->setValue("139276655");
+		//	$att4->setValue(new Bra5StructArrayOfString('139276655'));
 			$attributter[] = $att4;
 
 			$att5 = new Bra5StructAttribute();

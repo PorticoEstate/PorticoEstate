@@ -40,6 +40,7 @@
 							'column' 	=> 'name'
 					)),
 					'description'	=> array('type' => 'string', 'query' => true, 'required' => true),
+                    'equipment'	=> array('type' => 'string', 'query' => true, 'required' => false),
 					'contact_name'	=> array('type' => 'string', 'query' => true, 'required'=> true),
 					'contact_email'	=> array('type' => 'string', 'required'=> true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),
@@ -116,6 +117,74 @@
 						 'name' => $this->db->f('name', false));
 		}
 
+		function get_accepted($id)
+		{
+			$sql = "SELECT bad.from_, bad.to_
+					FROM bb_application ba, bb_application_date bad, bb_event be
+					WHERE ba.id=($id)
+					AND ba.id=bad.application_id
+					AND ba.id=be.application_id
+					AND be.from_=bad.from_
+					AND be.to_=bad.to_";
+			$results = array();		
+			$this->db->query($sql,__LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('from_' => $this->db->f('from_', false),
+						           'to_' => $this->db->f('to_', false));
+			}
+			return $results;
+		}
+
+		function get_rejected($id)
+		{
+			$sql = "SELECT bad.from_, bad.to_ FROM bb_application ba, bb_application_date bad 
+					WHERE ba.id=($id)
+					AND ba.id=bad.application_id
+					AND bad.id NOT IN (SELECT bad.id
+					FROM bb_application ba, bb_application_date bad, bb_event be
+					WHERE ba.id=($id) 
+					AND ba.id=bad.application_id
+					AND ba.id=be.application_id
+					AND be.from_=bad.from_
+					AND be.to_=bad.to_)";
+			$results = array();		
+			$this->db->query($sql,__LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('from_' => $this->db->f('from_', false),
+						           'to_' => $this->db->f('to_', false));
+			}
+			return $results;
+		}
+
+		function get_tilsyn_email($id)
+		{
+			$sql = "SELECT tilsyn_email, tilsyn_email2, email FROM bb_building where id=(select id from bb_building where name = '$id' AND active = 1)";
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return array('email1' => $this->db->f('tilsyn_email', false),
+						 'email2' => $this->db->f('tilsyn_email2', false),
+                         'email3' => $this->db->f('email', false));
+
+		}
+
+		function get_resource_name($id)
+		{
+			$list = implode(",",$id);
+			$results = array();		
+			$this->db->query("SELECT name FROM bb_resource where id IN ($list)",__LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->f('name', false);
+			}
+			return $results;
+
+		}
+		
 		function get_building($id)
 		{
 			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
@@ -137,6 +206,38 @@
 						           'name' => $this->db->f('name', false));
 			}
 			return $results;
+		}
+
+		function set_inactive($id,$type)
+		{
+ 			if ($type == 'event') {
+				$sql = "UPDATE bb_event SET active = 0 where id = ($id)";
+     		} elseif ($type == 'allocation') {
+				$sql = "UPDATE bb_allocation SET active = 0 where id = ($id)";
+			} elseif ($type == 'booking') {
+				$sql = "UPDATE bb_booking SET active = 0 where id = ($id)";
+			} else {
+				throw new UnexpectedValueException('Encountered an unexpected error');
+			}
+			$this->db->query($sql, __LINE__, __FILE__);
+			return;
+
+		}
+
+		function set_active($id,$type)
+		{
+ 			if ($type == 'event') {
+				$sql = "UPDATE bb_event SET active = 1 where id = ($id)";
+     		} elseif ($type == 'allocation') {
+				$sql = "UPDATE bb_allocation SET active = 1 where id = ($id)";
+			} elseif ($type == 'booking') {
+				$sql = "UPDATE bb_booking SET active = 1 where id = ($id)";
+			} else {
+				throw new UnexpectedValueException('Encountered an unexpected error');
+			}
+			$this->db->query($sql, __LINE__, __FILE__);
+			return;
+
 		}
 
         function get_activities_main_level()
@@ -169,10 +270,37 @@
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
 			$db->query($sql, __LINE__, __FILE__);
 		}
-             
 
+        function check_collision($resources, $from_, $to_)
+        {
+            $rids = join(',', array_map("intval", $resources));
+            $sql  =  "SELECT ba.id
+                      FROM bb_allocation ba, bb_allocation_resource bar
+                      WHERE ba.id = bar.allocation_id
+                      AND bar.resource_id in ($rids)
+                      AND ((ba.from_ < '$from_' AND ba.to_ > '$from_')
+                      OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
+                      OR (ba.from_ < '$to_' AND ba.to_ > '$to_'))
+                      UNION
+                      SELECT be.id
+                      FROM bb_event be, bb_event_resource ber, bb_event_date bed
+                      WHERE be.id = ber.event_id
+                      AND be.id = bed.event_id
+                      AND ber.resource_id in ($rids)
+                      AND ((bed.from_ < '$from_' AND bed.to_ > '$from_')
+                      OR (bed.from_ >= '$from_' AND bed.to_ <= '$to_')
+                      OR (bed.from_ < '$to_' AND bed.to_ > '$to_'))";
 
-		
+            $this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+
+            if(!$this->db->next_record())
+            {
+                return False;
+            }
+            return True;
+
+        }
+
 		/**
 		 * Check if a given timespan is available for bookings or allocations
 		 *
@@ -186,7 +314,7 @@
 		{
 			$rids = join(',', array_map("intval", $resources));
 			$nrids = count($resources);
-			$this->db->query("SELECT id FROM bb_season 
+			$this->db->query("SELECT id FROM bb_season
 			                  WHERE id IN (SELECT season_id 
 							               FROM bb_season_resource 
 							               WHERE resource_id IN ($rids,-1) 
@@ -213,7 +341,8 @@
 					'id'					=> array('type' => 'int'),
 					'application_id'		=> array('type' => 'int'),
 					'type'	=> array('type' => 'string', 'required' => true),
-					'from_'	=> array('type' => 'timestamp'),
-					'to_'	=> array('type' => 'timestamp')));
+					'from_'	=> array('type' => 'timestamp','query' => true),
+					'to_'	=> array('type' => 'timestamp'),
+					'active' => array('type' => 'int')));
 		}
 	}

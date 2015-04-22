@@ -1,5 +1,6 @@
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="serie_id"><xsl:value-of select="serie_id" /></xsl:variable>
 
 	<script>
 <xsl:text>
@@ -240,6 +241,8 @@ function chooseLocation( label, value ){
 												<xsl:with-param name="location_code">
 													<xsl:value-of select="//current_location/location_code"/>
 												</xsl:with-param>
+												<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
+												<xsl:with-param name="session_url"><xsl:value-of select="$session_url"/></xsl:with-param>
 											</xsl:call-template>
 										</td>
 									</xsl:for-each>
@@ -358,6 +361,8 @@ function chooseLocation( label, value ){
 													<xsl:with-param name="location_code">
 														<xsl:value-of select="//current_location/location_code"/>
 													</xsl:with-param>
+													<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
+													<xsl:with-param name="session_url"><xsl:value-of select="$session_url"/></xsl:with-param>
 												</xsl:call-template>
 											</td>
 										</xsl:for-each>

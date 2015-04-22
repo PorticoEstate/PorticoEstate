@@ -443,10 +443,30 @@
 			$control_registered= isset($data['control_registered']) ? $data['control_registered'] : '';
 			$control_id		= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
+			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 
+			if($location_id)
+			{
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$type_arr = explode('.',  $loc_arr['location']);
+				if(count($type_arr) != 4)
+				{
+					return array();
+				}
+
+				$this->type	= $type_arr[1];
+				$entity_id	= $type_arr[2];
+				$cat_id		= $type_arr[3];
+
+			}
 			if(!$entity_id || !$cat_id)
 			{
 				return array();
+			}
+
+			if(!$location_id)
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
 
 			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
@@ -464,7 +484,6 @@
 
 			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			$entity_table = 'fm_bim_item';
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
@@ -1185,10 +1204,30 @@
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
 			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
+			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 
+			if($location_id)
+			{
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$type_arr = explode('.',  $loc_arr['location']);
+				if(count($type_arr) != 4)
+				{
+					return array();
+				}
+
+				$this->type	= $type_arr[1];
+				$entity_id	= $type_arr[2];
+				$cat_id		= $type_arr[3];
+
+			}
 			if(!$entity_id || !$cat_id)
 			{
 				return array();
+			}
+
+			if(!$location_id)
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
 
 			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
@@ -1206,7 +1245,6 @@
 
 			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$this->get_cols($category,$entity_id,$cat_id,$lookup,$location_id);
 

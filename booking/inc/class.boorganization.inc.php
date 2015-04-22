@@ -51,7 +51,7 @@
 			if ($this->current_app() == 'bookingfrontend') {	             
 				$defaultPermissions[self::ROLE_ADMIN] = array
 				(
-					'write' => array_fill_keys(array('name','homepage','phone','email','description','street','zip_code','district','city','active','organization_number'), true),
+					'write' => array_fill_keys(array('name','homepage','phone','email','description','street','zip_code','district','city','active','organization_number','contacts'), true),
 				);
 			}
 			
@@ -103,8 +103,8 @@
 		/**
 		 * @see soorganization
 		 */
-		function find_building_users($building_id)
+		function find_building_users($building_id, $split = false, $activities = array())
 		{
-			return $this->so->find_building_users($building_id, $this->build_default_read_params());
+			return $this->so->find_building_users($building_id, $this->build_default_read_params(), $split, $activities);
 		}
 	}

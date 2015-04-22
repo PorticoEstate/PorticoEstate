@@ -3,6 +3,7 @@
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <xsl:variable name="location_code"><xsl:value-of select="location_code" /></xsl:variable>
+<xsl:variable name="serie_id"><xsl:value-of select="serie_id" /></xsl:variable>
 
 
 <div id="main_content">
@@ -26,6 +27,12 @@
 							<xsl:value-of select="//control/id"/>
 						  </xsl:attribute>
 						</input>
+						<input type="hidden" name="serie_id" >
+							<xsl:attribute name="value">
+								<xsl:value-of select="$serie_id"/>
+							</xsl:attribute>
+						</input>
+
 						<select id="choose-my-location" class="select-location">
 						  <option>Velg bygg</option>
 						  <xsl:for-each select="locations_list">
@@ -55,6 +62,7 @@
 			<xsl:call-template name="nav_calendar_year">
     		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
     		<xsl:with-param name="location_code"><xsl:value-of select="$location_code"/></xsl:with-param>
+    		<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
   		</xsl:call-template>
 		</div>
 		<div id="cal_wrp">
@@ -80,6 +88,8 @@
 									<xsl:value-of select="//control/id"/>
 									<xsl:text>&amp;location_code=</xsl:text>
 									<xsl:value-of select="$location_code"/>
+									<xsl:text>&amp;serie_id=</xsl:text>
+									<xsl:value-of select="$serie_id"/>
 									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
@@ -124,6 +134,8 @@
 							<td>
 								<xsl:call-template name="check_list_status_manager" >
 									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+									<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
+									<xsl:with-param name="session_url"><xsl:value-of select="$session_url"/></xsl:with-param>
 								</xsl:call-template>
 							</td>
 						</xsl:for-each>
@@ -157,6 +169,8 @@
 									<xsl:value-of select="//control/id"/>
 									<xsl:text>&amp;location_code=</xsl:text>
 									<xsl:value-of select="$location_code"/>
+									<xsl:text>&amp;serie_id=</xsl:text>
+									<xsl:value-of select="$serie_id"/>
 									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
@@ -194,6 +208,8 @@
 							<td>
 								<xsl:call-template name="check_list_status_manager" >
 									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+									<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
+									<xsl:with-param name="session_url"><xsl:value-of select="$session_url"/></xsl:with-param>
 								</xsl:call-template>
 							</td>
 						</xsl:for-each>

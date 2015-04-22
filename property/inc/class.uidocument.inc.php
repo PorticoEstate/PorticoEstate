@@ -1114,8 +1114,7 @@
 
 				if(phpgw::get_var('p_num'))
 				{
-					$_values	= execMethod('property.soentity.read_single',array('entity_id'=>$p_entity_id,'cat_id'=>$p_cat_id, 'num' => phpgw::get_var('p_num')));
-	
+					$_values	= execMethod('property.soentity.read_single',array('entity_id'=>$p_entity_id,'cat_id'=>$p_cat_id, 'id' => phpgw::get_var('p_num')));
 					$location = $this->bo->read_location_data($_values['location_code']);
 					$location_code = $_values['location_code'];
 					unset($_values);

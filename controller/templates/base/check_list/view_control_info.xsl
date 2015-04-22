@@ -77,6 +77,8 @@
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_details</xsl:text>
 				<xsl:text>&amp;control_id=</xsl:text>
 				<xsl:value-of select="control/id"/>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>

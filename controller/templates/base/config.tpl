@@ -13,7 +13,7 @@
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_controller} {lang_settings}</b></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Use_ACL_for_control_areas}.</td>
 			<td>
 				<select name="newsettings[acl_at_control_area]">
@@ -22,18 +22,29 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>Antall planlagte kontroller som skal vises.</td>
 			<td>
 				<input type="text" name="newsettings[no_of_planned_controls]" value="{value_no_of_planned_controls}"/>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>Antall tildelte kontroller som skal vises</td>
 			<td>
 				<input type="text" name="newsettings[no_of_assigned_controls]" value="{value_no_of_assigned_controls}"/>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_document_category}:</td>
+			<td>
+	    	<!--to be able to blank the setting - need an empty value-->
+	    	<input type = 'hidden' name="newsettings[document_cat][]" value="">
+		     <table>
+{hook_document_cat}
+			 </table>
+			</td>
+		</tr>
+
 		<!-- END body -->
 		<!-- BEGIN footer -->
 		<tr class="th">

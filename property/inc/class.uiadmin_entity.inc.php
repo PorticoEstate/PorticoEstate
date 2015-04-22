@@ -557,6 +557,8 @@
 			$uicols['descr'][6]	= lang('is_eav');
 			$uicols['name'][6]	= 'enable_bulk';
 			$uicols['descr'][6]	= lang('enable bulk');
+			$uicols['name'][7]	= 'enable_controller';
+			$uicols['descr'][7]	= lang('enable controller');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -1199,6 +1201,7 @@
 					'value_start_ticket'				=> $values['start_ticket'],
 					'value_is_eav'						=> $values['is_eav'],
 					'value_enable_bulk'					=> $values['enable_bulk'],
+					'value_enable_controller'			=> $values['enable_controller'],
 					'jasperupload'						=> true,
 					'category_list'						=> $category_list,
 					'parent_list'						=> $parent_list

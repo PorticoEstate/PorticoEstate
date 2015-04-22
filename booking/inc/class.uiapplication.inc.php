@@ -5,7 +5,8 @@
 	class booking_uiapplication extends booking_uicommon
 	{
 		const COMMENT_TYPE_OWNERSHIP='ownership';
-		
+        const ORGNR_SESSION_KEY = 'orgnr';
+
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -16,11 +17,14 @@
 			'toggle_show_inactive'	=>	true,
 		);
 		
-		protected $customer_id;
+		protected $customer_id,
+                  $default_module = 'bookingfrontend',
+                  $module;
 
 		public function __construct()
 		{
 			parent::__construct();
+            $this->set_module();
 			self::process_booking_unauthorized_exceptions();
 			$this->bo = CreateObject('booking.boapplication');
 			$this->customer_id = CreateObject('booking.customer_identifier');
@@ -30,14 +34,26 @@
 			$this->assoc_bo = new booking_boapplication_association();
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->resource_bo = CreateObject('booking.boresource');
+            $this->building_bo = CreateObject('booking.bobuilding');
+            $this->organization_bo = CreateObject('booking.boorganization');
 			$this->document_bo = CreateObject('booking.bodocument_building');
 			self::set_active_menu('booking::applications');
-			$this->fields = array('description', 'resources', 'activity_id', 
+			$this->fields = array('description', 'equipment', 'resources', 'activity_id',
 								  'building_id', 'building_name', 'contact_name', 
 								  'contact_email', 'contact_phone', 'audience',
 								  'active', 'accepted_documents');
 		}
-		
+
+        protected function set_module($module = null)
+        {
+            $this->module = is_string($module) ? $module : $this->default_module;
+        }
+
+        public function get_module()
+        {
+            return $this->module;
+        }
+
 		protected function is_assigned_to_current_user(&$application) {
 			$current_account_id = $this->current_account_id();
 			if (empty($current_account_id) || !isset($application['case_officer_id'])) { return false; }
@@ -204,6 +220,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uiapplication.index', 'phpgw_return_as' => 'json')),
+					'sorted_by' => array('key' => 'created', 'dir' => 'asc'),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -229,6 +246,10 @@
 						array(
 							'key' => 'modified',
 							'label' => lang('last modified')
+						),
+						array(
+							'key' => 'from_',
+							'label' => lang('From')
 						),
 						array(
 							'key' => 'activity_name',
@@ -276,13 +297,18 @@
                 }
                 
 			} else {
+				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
 				if (phpgw::get_var('status') == 'none')
 				{
 					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				} 
+				}
+				elseif (isset($test)) 
+				{
+	                $filters['status'] = phpgw::get_var('status');
+				}
 				else
 				{
-                $filters['status'] = phpgw::get_var('status');
+	                $filters['status'] = 'NEW';
 				}
                 $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
                 if ($testdata != 0) {
@@ -317,6 +343,13 @@
 					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
 				}
 
+				$dates = array();
+				foreach ($application['dates'] as $data) {
+					$dates[] = $data['from_'];
+					break;
+				}
+				$fromdate = implode(',',$dates);
+				$application['from_'] = pretty_timestamp($fromdate);
 				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
@@ -346,7 +379,9 @@
 				$association['from_'] = pretty_timestamp($association['from_']);
 				$association['to_'] = pretty_timestamp($association['to_']);
 				$association['link'] = self::link(array('menuaction' => 'booking.ui'.$association['type'].'.edit', 'id'=>$association['id']));
+				$association['dellink'] = self::link(array('menuaction' => 'booking.ui'.$association['type'].'.delete', 'event_id'=>$association['id'], 'application_id'=>$association['application_id']));
 				$association['type'] = lang($association['type']);
+
 			}
 			return $this->yui_results($associations);
 		}
@@ -418,15 +453,32 @@
 
     public function add()
 		{
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+            $orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+            $application_text = $config->config_data;
+
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+                $building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'GET'))));
+
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
 				array_set_default($_POST, 'from_', array());
 				array_set_default($_POST, 'to_', array());
 
 				$application = $this->extract_form_data();
+
+				foreach ($_POST['from_'] as &$from) {
+					$timestamp =  strtotime($from);
+					$from =  date("Y-m-d H:i:s",$timestamp);
+				}
+				foreach ($_POST['to_'] as &$to) {
+					$timestamp =  strtotime($to);
+					$to =  date("Y-m-d H:i:s",$timestamp);
+				}
+
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				$application['active'] = '1';
 				$application['status'] = 'NEW';
@@ -449,6 +501,9 @@
 						$errors['agegroups'] = lang('Agegroups can not be larger than 9999 peoples');
 					}
 				}
+                if ($building['results'][0]['deactivate_application']) {
+                    $errors['application_deactivated'] = lang('Application on this building is not possible.');
+                }
 
 				if(!$errors)
 				{
@@ -474,7 +529,9 @@
 			}
 			else 
 			{
-			array_set_default($application, 'resources', array(get_var('resource', int, 'GET')));
+                $resources = explode(",",phpgw::get_var('resource', 'GET'));
+                array_set_default($application, 'resources', $resources);
+
 			}
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
 
@@ -518,7 +575,22 @@
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
-			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+            if ($orgnr) {
+                $application['customer_identifier_type'] = 'organization_number';
+                $application['customer_organization_number'] = $orgnr;
+                $orgid = $this->organization_bo->so->get_orgid($orgnr);
+                $organization = $this->organization_bo->read_single($orgid);
+                if ($organization['contacts'][0]['name'] != '') {
+                    $application['contact_name'] = $organization['contacts'][0]['name'];
+                    $application['contact_email'] = $organization['contacts'][0]['email'];
+                    $application['contact_phone'] = $organization['contacts'][0]['phone'];
+                } else {
+                    $application['contact_name'] = $organization['contacts'][1]['name'];
+                    $application['contact_email'] = $organization['contacts'][1]['email'];
+                    $application['contact_phone'] = $organization['contacts'][1]['phone'];
+                }
+            }
+			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}
 
 		public function edit()
@@ -548,7 +620,20 @@
 				}
 
 				$errors = $this->validate($application);
+
+				foreach ($_POST['from_'] as &$from) {
+					$timestamp =  strtotime($from);
+					$from =  date("Y-m-d H:i:s",$timestamp);
+				}
+
+				foreach ($_POST['to_'] as &$to) {
+					$timestamp =  strtotime($to);
+					$to =  date("Y-m-d H:i:s",$timestamp);
+				}
+
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+
+
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($application);
@@ -637,11 +722,14 @@
 		
 		public function show()
 		{
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$application_text = $config->config_data;
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				if($_POST['create'])
+                if($_POST['create'])
 				{
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 				}
@@ -685,16 +773,31 @@
 				{
 					$this->check_application_assigned_to_current_user($application);
 					$application['status'] = $_POST['status'];
+
+					if ($application['status'] == 'REJECTED') {
+						$test = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
+						foreach ($test['results'] as $app) {
+							$this->bo->so->set_inactive($app['id'],$app['type']);						
+						}
+					}
+
+					if ($application['status'] == 'ACCEPTED') {
+						$test = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
+						foreach ($test['results'] as $app) {
+							$this->bo->so->set_active($app['id'],$app['type']);						
+						}
+					}
+
 					$update = true;
 					$notify = true;
 				}
 				
-				$update AND $receipt = $this->bo->update($application);
-				$notify AND $this->bo->send_notification($application);
-				
+                $update AND $receipt = $this->bo->update($application);
+                $notify AND $this->bo->send_notification($application);
+
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
-			
+
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
 			$application['applications_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$application['edit_link'] = self::link(array('menuaction' => 'booking.uiapplication.edit', 'id' => $application['id']));
@@ -729,13 +832,32 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			$application['status'] = $application['status'];
 			// Check if any bookings, allocations or events are associated with this application
-			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
+			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id']),'sort'=>'from_', 'dir' => 'asc'));
+			$from = array();		
+			foreach($associations['results'] as $assoc)
+			{	
+							$from[] = $assoc['from_'];
+			}
+			$from = array("data" => implode(',',$from));
 			$num_associations = $associations['total_records'];
+			if ($this->is_assigned_to_current_user($application) && $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+				$application['currentuser'] = true;
+			else
+				$application['currentuser'] = false;
+
+            $collision_dates = array();
+            foreach($application['dates'] as &$date)
+            {
+                $collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_']);
+                if($collision) {
+                    $collision_dates[] = $date['from_'];
+                }
+            }
+            $collision_dates = array("data" => implode(',',$collision_dates));
 			self::check_date_availability($application);
-			self::render_template('application', array('application' => $application, 
+			self::render_template('application', array('application' => $application,
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations,'comments' => $application['comments']));
+								  'num_associations'=>$num_associations, 'assoc' =>$from, 'collision' => $collision_dates, 'comments' => $comments,'config' => $application_text));
 		}
 	}

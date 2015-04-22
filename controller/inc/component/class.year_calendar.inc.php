@@ -14,14 +14,16 @@ class year_calendar {
 	private $component;
 	private $location_code;
 	private $calendar_array = array();
+	private $control_relation = array();
 	
-  public function __construct($control, $year, $component, $location_code, $type)
+  public function __construct($control, $year, $component, $location_code, $type, $control_relation)
   {
     $this->year = $year;
     $this->control = $control;
     $this->component = $component;
     $this->location_code = $location_code;
     $this->type = $type;
+    $this->control_relation = $control_relation;
         
     $this->init_calendar();
   }
@@ -73,6 +75,12 @@ class year_calendar {
       
 	      $this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
 	      $this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
+		  if(! $this->calendar_array[ $month_nr ]["info"]['serie_id'])
+		  {
+			  $this->calendar_array[ $month_nr ]["info"]['serie_id'] = $this->control_relation['serie_id'];
+		  }
+		  $this->calendar_array[ $month_nr ]["info"]['service_time'] = $this->control_relation['service_time'];
+		  $this->calendar_array[ $month_nr ]["info"]['controle_time'] = $this->control_relation['controle_time'];
 		}
 	}
    	

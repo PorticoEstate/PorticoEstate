@@ -76,7 +76,11 @@ JS;
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
-
+	//FIXME: To consider...
+	/*
+    $javascripts[] = "/phpgwapi/js/jquery/js/jquery-1.7.2.min.js";
+	$javascripts[] = "/phpgwapi/templates/stavanger/js/minid.js";
+*/
 	foreach ( $javascripts as $javascript )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
@@ -115,9 +119,74 @@ JS;
 	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
 
 	$bodoc = CreateObject('booking.bodocumentation');
-	
 	$manual  =  $bodoc->so->getFrontendDoc();	
 
+	$menuaction = phpgw::get_var('menuaction', 'GET');
+	$id = phpgw::get_var('id', 'GET');
+	if (strpos($menuaction, 'organization'))
+	{
+		$boorganization = CreateObject('booking.boorganization');
+		$metainfo = $boorganization->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['shortname'].",".$metainfo['district'].",".$metainfo['city']; 
+	} 
+	elseif (strpos($menuaction, 'group'))
+	{
+		$bogroup = CreateObject('booking.bogroup');
+		$metainfo = $bogroup->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['shortname'].",".$metainfo['organization'].",".$metainfo['district'].",".$metainfo['city']; 
+	}	
+	elseif (strpos($menuaction, 'building'))
+	{
+		$bobuilding = CreateObject('booking.bobuilding');
+		$metainfo = $bobuilding->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['district'].",".$metainfo['city']; 
+	}
+	elseif (strpos($menuaction, 'resource'))
+	{
+		$boresource = CreateObject('booking.boresource');
+		$metainfo = $boresource->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['building'].",".$metainfo['district'].",".$metainfo['city']; 
+	}
+	if($keywords != '')
+	{
+		$keywords = '<meta name="keywords" content="'.$keywords.'">';
+	}
+	else
+	{
+		$keywords = '<meta name="keywords" content="phpGroupWare">';
+	}
+	if($description != '')
+	{
+		$description = '<meta name="description" content="'.$description.'">';
+	}
+	else
+	{
+		$description = '<meta name="description" content="phpGroupWare">';
+	}
+	if ($config->config_data['metatag_author'] != '')
+	{
+		$author = '<meta name="author" content="'.$config->config_data['metatag_author'].'">';
+	}
+	else
+	{
+		$author = '<meta name="author" content="phpGroupWare http://www.phpgroupware.org">';
+	}
+	if ($config->config_data['metatag_robots'] != '')
+	{
+		$robots = '<meta name="robots" content="'.$config->config_data['metatag_robots'].'">';
+	}
+	else
+	{
+		$robots = '<meta name="robots" content="none">';
+	}
+
+    $test = $GLOBALS['phpgw']->common->get_on_events();
+    $test = str_replace('window.onload = function()','$(document).ready(function()',$test);
+    $test = str_replace("\n}\n","\n})\n",$test);
 	$app = lang($app);
 	$tpl_vars = array
 	(
@@ -127,8 +196,13 @@ JS;
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
-		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+//		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+        'win_on_events'	=> $test,
 		'navbar_config' => $_navbar_config,
+		'metainfo_author' => $author,
+		'metainfo_keywords' => $keywords,
+		'metainfo_description' => $description,
+		'metainfo_robots' => $robots,
 		'lbl_search'   	=> lang('Search'),
 		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
@@ -141,13 +215,30 @@ JS;
 #		$tpl_vars['help_url'] = => '#';
 	}
 	$bouser = CreateObject('bookingfrontend.bouser');
+    $org = CreateObject('bookingfrontend.uiorganization');
+    $orgid = $org->get_orgid($bouser->orgnr);
 	if($bouser->is_logged_in())
 	{
+		$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
+
+		$tpl_vars['change_org_header'] = lang('Change organization');
+
+        if ( $bouser->orgname == '000000000') {
+            $tpl_vars['login_text_org'] = lang('SSN not registred');
+            $tpl_vars['login_text'] = lang('Logout');
+            $tpl_vars['org_url'] = '#';
+        } else {
+        	$tpl_vars['login_text_org'] = $bouser->orgname;
+            $tpl_vars['login_text'] = lang('Logout');
+            $tpl_vars['org_url'] = "/bookingfrontend/?menuaction=bookingfrontend.uiorganization.show&id=".$orgid;
+        }
 		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
 		$tpl_vars['login_url'] = 'logout.php';
 	}
 	else
 	{
+		$tpl_vars['login_text_org'] = '';
+		$tpl_vars['org_url'] = '#';
 		$tpl_vars['login_text'] = lang('Login');
 		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
 		$config		= CreateObject('phpgwapi.config','bookingfrontend');
@@ -164,7 +255,6 @@ JS;
 			$tpl_vars['login_url'] = $custom_login_url;
 		}
 	}
-
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
 	$GLOBALS['phpgw']->template->pfp('out', 'head');

@@ -4,6 +4,7 @@
 <xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <xsl:variable name="location_code"><xsl:value-of select="location_code" /></xsl:variable>
+<xsl:variable name="serie_id"><xsl:value-of select="serie_id" /></xsl:variable>
 
 <div id="main_content">
 	<div id="control_plan">
@@ -59,6 +60,8 @@
 						<xsl:value-of select="control/id"/>
 						<xsl:text>&amp;location_code=</xsl:text>
 						<xsl:value-of select="$location_code"/>
+						<xsl:text>&amp;serie_id=</xsl:text>
+						<xsl:value-of select="$serie_id"/>
 						<xsl:value-of select="$session_url"/>
 					</xsl:attribute>
 					Årsoversikt
@@ -69,6 +72,7 @@
 			<xsl:call-template name="nav_calendar_month">
     		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
     		<xsl:with-param name="location_code"><xsl:value-of select="$location_code"/></xsl:with-param>
+    		<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
   		</xsl:call-template>
 		</div>
 		
@@ -125,6 +129,8 @@
 							<td>
 								<xsl:call-template name="check_list_status_manager" >
 									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+									<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
+									<xsl:with-param name="session_url"><xsl:value-of select="$session_url"/></xsl:with-param>
 								</xsl:call-template>
 							</td>
 						</xsl:for-each>
@@ -178,6 +184,8 @@
 							<td>
 								<xsl:call-template name="check_list_status_manager" >
 									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+									<xsl:with-param name="serie_id"><xsl:value-of select="$serie_id"/></xsl:with-param>
+									<xsl:with-param name="session_url"><xsl:value-of select="$session_url"/></xsl:with-param>
 								</xsl:call-template>
 							</td>
 						</xsl:for-each>
