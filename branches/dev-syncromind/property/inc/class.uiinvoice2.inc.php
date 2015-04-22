@@ -135,7 +135,7 @@
 			if($voucher_id)
 			{
 				$filename = "{$voucher_id}_split";
-				$voucher = $this->bo->read_invoice_sub($voucher_id);
+				$voucher = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 				foreach($voucher as $line)
 				{
 					$data[] = array
@@ -636,7 +636,7 @@
 				$voucher_id = phpgw::get_var('voucher_id');
 			}
 			$this->bo->allrows = true;
-			$values = $this->bo->read_invoice_sub($voucher_id);
+			$values = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 
 			foreach($values as &$entry)
 			{
@@ -690,7 +690,7 @@
 		public function get_first_line()
 		{
 			$voucher_id =  phpgw::get_var('voucher_id', 'int');
-			$voucher = $this->bo->read_invoice_sub($voucher_id);
+			$voucher = $this->bo->read_invoice_sub(array('voucher_id' => $voucher_id));
 			$ret = array('line_id' => 0);
 			if($voucher)
 			{

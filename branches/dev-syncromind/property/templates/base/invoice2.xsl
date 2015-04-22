@@ -28,7 +28,29 @@
 	{
 		background-color: #DDF0FF;
 	}
+#navcontainer ul
+{
+margin: 0;
+padding: 0;
+list-style-type: none;
+text-align: right;
+}
 
+#navcontainer ul li { display: inline; }
+
+#navcontainer ul li a
+{
+text-decoration: none;
+padding: .2em 1em;
+color: #fff;
+background-color: #036;
+}
+
+#navcontainer ul li a:hover
+{
+color: #fff;
+background-color: #369;
+}
 	</style>
 
 	<xsl:call-template name="invoice" />
@@ -46,37 +68,37 @@
 		<script type="text/javascript">
 			var email_base_url = <xsl:value-of select="//email_base_url"/>;
 		</script>
-			<!--div class="ui-layout-north">
-				<div id="horizontal-menu">
-					<ul id="std-menu-items">
+			<div class="ui-layout-north">
+				<div id="navcontainer">
+					<ul>
 						<li>
-							<a href="#">Nes, Sigurd</a>
-							<ul>
-								<li>
-									<a href="{home_url}" class="icon icon-home">
-										<xsl:value-of select="home_text"/>
-									</a>
-								</li>
-								<li>
-									<a href="{about_url}" class="icon icon-about">
-										<xsl:value-of select="about_text"/>
-									</a>
-								</li>
-								<li>
-									<a href="{preferences_url}" class="icon icon-preferences">
-										<xsl:value-of select="preferences_text"/>
-									</a>
-								</li>
-								<li>
-									<a href="{logout_url}" class="icon icon-logout">
-										<xsl:value-of select="logout_text"/>
-									</a>
-								</li>
-							</ul>
+							<a href="#">
+								<xsl:value-of select="user_fullname"/>
+							</a>
+						</li>
+						<li>
+							<a href="{home_url}" class="icon icon-home">
+								<xsl:value-of select="home_text"/>
+							</a>
+						</li>
+						<!--li>
+							<a href="{about_url}" class="icon icon-about">
+								<xsl:value-of select="about_text"/>
+							</a>
+						</li>
+						<li>
+							<a href="{preferences_url}" class="icon icon-preferences">
+								<xsl:value-of select="preferences_text"/>
+							</a>
+						</li-->
+						<li>
+							<a href="{logout_url}" class="icon icon-logout">
+								<xsl:value-of select="logout_text"/>
+							</a>
 						</li>
 					</ul>
 				</div>
-			</div-->
+			</div>
 			<div class="ui-layout-center">
 				<div class="header">
 					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
