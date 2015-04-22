@@ -229,12 +229,15 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 			data:			data,
 			ajax:			ajax_def,
 			fnServerParams: function ( aoData ) {
-				var column = aoData.order[0].column;
-				var dir = aoData.order[0].dir;
-				var column_to_keep = aoData.columns[column];
-				delete aoData.columns;
-				aoData.columns = {};
-				aoData.columns[column] = column_to_keep;
+				if(typeof(aoData.order) != 'undefined')
+				{
+					var column = aoData.order[0].column;
+					var dir = aoData.order[0].dir;
+					var column_to_keep = aoData.columns[column];
+					delete aoData.columns;
+					aoData.columns = {};
+					aoData.columns[column] = column_to_keep;
+				}
 			 },
 			fnInitComplete: function (oSettings, json)
 			{
