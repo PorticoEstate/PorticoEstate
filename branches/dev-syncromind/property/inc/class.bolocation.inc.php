@@ -611,15 +611,8 @@
 				}
 			}
 
-			//_debug_array($location['location']);
-			if(isset($input_name))
-			{
-				phpgwapi_cache::session_set('property', 'lookup_fields',$input_name);
-			}
-			if($input_name_entity)
-			{
-				phpgwapi_cache::session_set('property', 'lookup_fields_entity',$input_name_entity);
-			}
+			phpgwapi_cache::session_set('property', 'lookup_fields',$input_name);
+			phpgwapi_cache::session_set('property', 'lookup_fields_entity',$input_name_entity);
 
 			if($input_name_entity && is_array($input_name_entity))
 			{
