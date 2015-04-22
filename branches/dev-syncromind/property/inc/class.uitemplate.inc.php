@@ -343,18 +343,18 @@
             
             self::render_template_xsl('datatable_jquery', $data);
 		}
-                public function add()
-                {
-                    $this->edit_template();
-                }
-                public function query()
+        public function add()
+        {
+            $this->edit_template();
+        }
+        public function query()
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 
 			$params = array(
-                                'filter' => $this->filter,
+                'filter' => $this->filter,
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
@@ -701,7 +701,11 @@
 			$values		= phpgw::get_var('values');
 			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
-                       
+                
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			if ($template_id)
 			{
 				$values = $this->bo->read_single_template($template_id);
@@ -751,7 +755,9 @@
 					'lang_chapter_statustext'               => lang('Select the chapter (for tender) for this activity.'),
 					'lang_add'				=> lang('add a hour'),
 					'lang_add_statustext'                   => lang('add a hour to this template'),
-					'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour', 'template_id'=> $template_id))
+					'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour', 'template_id'=> $template_id)),
+                    'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'					=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
                         
 			$appname	= lang('Workorder template');
@@ -765,7 +771,7 @@
                 public function save()
                 {
                         $template_id 	= (int)phpgw::get_var('template_id');
-			$values		= phpgw::get_var('values');
+                        $values		= phpgw::get_var('values');
                         $receipt = array();
 
                         $values['template_id'] = $template_id; 
