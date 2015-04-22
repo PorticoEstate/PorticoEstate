@@ -403,7 +403,16 @@
 
 	<!-- add / edit  -->
 	<xsl:template match="edit_template">
-		<div align="left">
+            <script type="text/javascript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+            </script>
+            <div id="tab-content">
+                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                <div class="yui-content">
+                    <div id="general">
+                        <div align="left">
+                        <form method="post" class="pure-form pure-form-aligned" name="form">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -417,7 +426,7 @@
 				<xsl:variable name="form_action">
 					<xsl:value-of select="form_action"/>
 				</xsl:variable>
-				<form method="post" name="form" action="{$form_action}">
+				<form method="post" class="pure-form pure-form-aligned" name="form" action="{$form_action}">
 					<xsl:choose>
 						<xsl:when test="value_template_id !=''">
 							<tr>
@@ -472,7 +481,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="lang_save"/>
 							</xsl:variable>
-							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_save_statustext"/>
@@ -493,7 +502,7 @@
 									<xsl:value-of select="lang_add"/>
 								</xsl:variable>
 								<form method="post" action="{$add_action}">
-									<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
+									<input type="submit" class="pure-button pure-button-primary" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_add_statustext"/>
@@ -514,7 +523,7 @@
 							<xsl:value-of select="lang_done"/>
 						</xsl:variable>
 						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+							<input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_done_statustext"/>
@@ -525,7 +534,11 @@
 					</td>
 				</tr>
 			</table>
-		</div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>    
 	</xsl:template>
 
 	<!-- New template-->
