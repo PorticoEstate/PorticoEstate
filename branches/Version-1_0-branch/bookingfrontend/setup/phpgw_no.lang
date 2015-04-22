@@ -110,6 +110,10 @@ last modified	bookingfrontend	no	Sist endret
 location	bookingfrontend	no	Lokale
 log on	bookingfrontend	no	Logg inn
 log off	bookingfrontend	no	Logg ut
+login	common	no	Logg inn
+logout	common	no	Logg ut
+SSN not registred	common	no	Du er ikke registert i Frivillighetsregisteret eller organisasjonen din mangler organisasjonesnummer i AktivBy
+No valid identification returned from login	common	no	Ingen gyldig identifikasjon returnert fra innlogging.
 male	bookingfrontend	no	Mann
 mar	bookingfrontend	no	mars
 may	bookingfrontend	no	mai
@@ -321,6 +325,7 @@ E-mail address	bookingfrontend	no	E-postadresse
 Confirm e-mail address	bookingfrontend	no	Bekreft e-postadressen
 The e-mail addresses you entered do not match	bookingfrontend	no	E-postadressene er ikke like
 Lengt of shortname is to long, max 11 characters long	bookingfrontend	no	Kortnavn er for langt, maks 11 tegn
+Lengt of name is to long, max 50 characters long	bookingfrontend	no	Navn er for langt, maks 50 tegn
 Go back to calendar	bookingfrontend	no	Tilbake til kalender
 Agegroups kan not be larger than 9999 peoples	bookingfrontend	no	Estimert antall deltakere kan ikke være større en 9999 personer
 Contact information name is to long. max 50 characters	bookingfrontend	no	Navn i kontakt informasjon er for langt. Maks 50 tegn
@@ -335,7 +340,8 @@ Cancelation of allocation from	bookingfrontend	no	Avbestilling av tildeling fra
 Cancelation of booking from	bookingfrontend	no	Avbestilling av booking fra
 To cancel booking use this link	bookingfrontend	no	For å slette bookingen bruk lenken
 To cancel allocation use this link	bookingfrontend	no	For å slette tildelingen bruk lenken
-manual	common	no	Veiledning lag og organisasjoner
+manual	common	no	Brukerveiledning
+Change organization	common	no	Bytt organisasjon
 Cancel allocation	bookingfrontend	no	Avbestill tildelinger
 Allocations deleted on	bookingfrontend	no	Tildelinger slette på
 Allocation deleted on	bookingfrontend	no	Tildeling slette på
@@ -350,10 +356,27 @@ Cancelation of bookings from	bookingfrontend	no	Avbestilling av bookinger fra
 Layout	bookingfrontend	no	Frontend design
 Delete information	bookingfrontend	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
 Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
-Booking Delete information	bookingfrontend	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
-Booking  Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
+Booking Delete information	bookingfrontend	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst.
+Booking Delete information3	bookingfrontend	no	Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
+Booking Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Cancel information	bookingfrontend	no	Hvis du kun skal avbestille tildeling på valgt dato, velg Avbestill-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org. 
 Cancel information2	bookingfrontend	no	Skal du Avbestille flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Booking Cancel information	bookingfrontend	no	Hvis du skal avbestille booking på valgt dato, velg Avbestill-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
 Booking Cancel information2	bookingfrontend	no	Skal du avbestille flere kan du velge Ut sesong eller Avbestill til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 You cant edit a booking that is older than 2 weeks	bookingfrontend	no	Du kan ikke redigere en booking som er eldre en 2 uker.
+Tilsynsvakt name	bookingfrontend	no	Tilsynsvakt navn
+Tilsynsvakt email	bookingfrontend	no	Tilsynsvakt epost
+Tilsynsvakt telephone	bookingfrontend	no	Tilsynsvakt telefon
+Public schedule	bookingfrontend	no	Publikumsbading
+Apply for time	bookingfrontend	no	Søk om tid
+Could not delete allocation due to a booking still use it	bookingfrontend	no	Kunne ikke slette tildeling på grunn av at en booking forsatt bruker den
+Event Delete Information	bookingfrontend	no	Fjerning av arrangement er permanent.
+Event Delete Information2	bookingfrontend	no	Arrangement blir satt inaktivt.
+Edit Events	bookingfrontend	no	Rediger arrangement
+Delete Event	bookingfrontend	no	Slett arrangement
+Check calendar	bookingfrontend	no	Sjekk kalender
+You can't cancel event that has started, for help contacts site admin	bookingfrontend	no	Du kan ikke slette arrangement som er over.
+You can't extend the event, for that contact administrator	bookingfrontend	no	Du kan ikke øke lengden på arrangementet, for det må du kontakte administrator
+You can't change resources to the event, for that contact administrator	bookingfrontend	no	Du kan ikke forandre på ressurser, for det må du kontakte administrator
+Cancelation of booking from	bookingfrontend	no	Avbestilling fra
+Deleted on	bookingfrontend	no	Avbestilling i

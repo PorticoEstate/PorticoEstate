@@ -3,6 +3,7 @@
 	<xsl:param name="true"/>
 	<xsl:param name="false"/>
 
+
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
@@ -114,6 +115,8 @@
             <dd><xsl:value-of select="application/activity_name"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
 			<dd><div style="width: 80%;"><xsl:value-of select="application/description"/></div></dd>
+            <dt><xsl:value-of select="php:function('lang', 'Extra information')" /></dt>
+            <dd><div style="width: 80%;"><xsl:value-of select="application/equipment"/></div></dd>
 		</dl>
         <dl class="proplist-col">
             <dt class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></dt>
@@ -132,10 +135,44 @@
 				var allocationParams = {};
 				var bookingParams = {};
 				var eventParams = {};
+                var applicationDate = {};
 			</script>
+
+			<xsl:variable name='assocdata'>
+				 <xsl:value-of select="assoc/data" />
+			</xsl:variable>
+
+            <xsl:variable name='collisiondata'>
+                <xsl:value-of select="collision/data" />
+            </xsl:variable>
+			<dd></dd>
+            <script type="text/javascript">
+                building_id = <xsl:value-of select="application/building_id"/>;
+            </script>
+
 			<xsl:for-each select="application/dates">
-				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/></dd>
-				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
+				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/>
+                    <xsl:if test="../case_officer/is_current_user">
+                        <xsl:if test="contains($collisiondata, from_)">
+                            <xsl:if test="not(contains($assocdata, from_))">
+                                <script type="text/javascript">
+                                    applicationDate[<xsl:value-of select="id"/>] = '<xsl:value-of select="substring(from_,0,11)"/>';
+                                </script>
+                                <a href="javascript: void(0)"
+                                   onclick="window.open('/bookingfrontend/index.php?menuaction=bookingfrontend.uibuilding.schedule&amp;id='+building_id+'&amp;backend=true&amp;date='+applicationDate[{id}],
+                                             '',
+                                             'width=1048, height=600, scrollbars=yes');
+                                             return false;">
+                                                <i class="fa fa-exclamation-circle"></i>
+                                </a>
+                            </xsl:if>
+                        </xsl:if>
+                    </xsl:if>
+                </dd>
+
+            <dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
+
+
 				<xsl:if test="../edit_link">
 				<script type="text/javascript">
 					allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
@@ -143,14 +180,21 @@
 					eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
 				</script>
 				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
+
 					<xsl:if test="not(../case_officer/is_current_user)">
-						<xsl:attribute name="disabled">disabled</xsl:attribute>		
+						<xsl:attribute name="disabled">disabled</xsl:attribute>
 					</xsl:if>
-					
-					<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
-					<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
-					<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
-					<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+
+						<xsl:if test="not(contains($assocdata, from_))">
+							<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
+							<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
+							<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
+							<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+						</xsl:if>
+						<xsl:if test="contains($assocdata, from_)">
+                            <xsl:attribute name="disabled">disabled</xsl:attribute>
+                            <option><xsl:value-of select="php:function('lang', '- Created -')" /></option>
+						</xsl:if>
 				</select>
 				</xsl:if>
 			</xsl:for-each>
@@ -212,7 +256,7 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
-			<p><xsl:value-of select="php:function('lang', 'All that borrow premises from Bergen Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" /></p>
+			<p><xsl:value-of select="php:function('lang', 'All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" /></p>
 			<br />
 			<div id='regulation_documents'>&nbsp;</div>
 			<br />
@@ -307,10 +351,11 @@
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
+    var currentuser = '<xsl:value-of select="application/currentuser"/>';
 	 if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 	 }
-	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del')"/>;
 	var app_id = <xsl:value-of select="application/id"/>;
 	var building_id = <xsl:value-of select="application/building_id"/>;	
 	var resources = <xsl:value-of select="application/resources"/>;
@@ -326,15 +371,26 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	if (resourceIds) {
 	    <![CDATA[
 	    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
-	    var url2 = 'index.php?menuaction=booking.uiapplication.associated&phpgw_return_as=json&filter_application_id=' + app_id;
+	    var url2 = 'index.php?menuaction=booking.uiapplication.associated&sort=from_&dir=asc&phpgw_return_as=json&filter_application_id='+app_id;
 		]]>
 	    var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
 	    YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
-	    var colDefs = [
-		{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
-		{key: 'type', label: lang['Type']},
-		{key: 'from_', label: lang['From']},
-		{key: 'to_', label: lang['To']}];
+		if (currentuser == 1) {
+		    var colDefs = [
+				{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
+				{key: 'type', label: lang['Type']},
+				{key: 'from_', label: lang['From']},
+				{key: 'to_', label: lang['To']},
+				{key: 'active', label: lang['Active']},
+				{key: 'dellink', label: lang['Delete'], formatter: YAHOO.booking.formatLink2}];
+		} else {
+		    var colDefs = [
+				{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
+				{key: 'type', label: lang['Type']},
+				{key: 'from_', label: lang['From']},
+				{key: 'to_', label: lang['To']},
+				{key: 'active', label: lang['Active']}];
+		}
 	    YAHOO.booking.inlineTableHelper('associated_container', url2, colDefs);
     }
 

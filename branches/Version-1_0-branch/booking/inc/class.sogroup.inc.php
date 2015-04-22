@@ -46,6 +46,21 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
+		function get_metainfo($id)
+		{
+			$this->db->limit_query("SELECT bg.name, bg.shortname, bo.name as organization, bo.district, bo.city, bg.description FROM bb_group as bg, bb_organization as bo where bg.organization_id=bo.id and bg.id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return array('name' => $this->db->f('name', false),
+						 'shortname' => $this->db->f('shortname', false),
+						 'organization' => $this->db->f('organization', false),
+						 'district' => $this->db->f('district', false),
+						 'city' => $this->db->f('city', false),
+						 'description' => $this->db->f('description', false));
+		}
+
 		/**
 		 * Removes any extra contacts from entity if such exists (only two contacts allowed per group).
 		 */

@@ -190,6 +190,7 @@
 */
   	if($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey,$_baseclassname = 'Eiendomsarkiver',$classname,$_where = "Byggnr = {$bygningsnr}",$_maxhits = -1)))
 	{
+//		_debug_array($bra5ServiceSearch->getResult());die();
 		$_result = $bra5ServiceSearch->getResult()->getsearchAndGetDocumentsResult()->getExtendedDocument()->getsearchAndGetDocumentsResult()->ExtendedDocument;
 	}
 

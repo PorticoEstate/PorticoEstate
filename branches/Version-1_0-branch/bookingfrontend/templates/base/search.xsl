@@ -34,9 +34,7 @@
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-		<div>Velkommen til Bergen kommune og AktivBy.<br />
-			Her finner du informasjon om bygg, anlegg<br />
-			som leies ut av Idrett, Kultur og Grønn etat.</div>
+		<div class="frontpagetext"><xsl:value-of select="frontpagetext"/></div>
 		
 		</div>
 		<div style="text-align:center;">

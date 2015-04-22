@@ -42,6 +42,7 @@
 		protected $title;//
 		protected $description;//
 		protected $control_id;
+		protected $serie_id;
 		protected $status;
 		protected $comment;
 		protected $deadline;
@@ -192,8 +193,18 @@
 		{
 			$this->location_id = $location_id;
 		}
-		
+
 		public function get_location_id() { return $this->location_id; }
+
+		public function set_serie_id($serie_id)
+		{
+			$this->serie_id = $serie_id;
+		}
+
+		public function get_serie_id()
+		{
+			return $this->serie_id;
+		}
 
 		public function get_num_open_cases() { return $this->num_open_cases; }
 		
@@ -273,7 +284,8 @@
 				'location_id' 		=> $this->get_location_id(),
 				'num_open_cases' 	=> $this->get_num_open_cases(),
 				'assigned_to'		=> $this->get_assigned_to(),
-				'billable_hours'	=> $this->get_billable_hours()
+				'billable_hours'	=> $this->get_billable_hours(),
+				'serie_id'			=> $this->get_serie_id()
 			);
 		}
 		

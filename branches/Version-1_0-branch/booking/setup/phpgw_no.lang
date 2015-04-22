@@ -1,5 +1,47 @@
 booking	common	no	Booking
 bookingfrontend	common	no	Bookingfrontend
+global configuration	common	no	Global konfigurasjon
+global message	common	no	Globale beskjeder
+manage users	common	no	Administrere brukere
+manage groups	common	no	Administrere grupper
+clear cache	common	no	Slett cache
+Global Categories	common	no	Globale kategorier
+View Sessions	common	no	Vis sesjoner
+View Access Log	common	no	Vis Access logger
+Find and Register all Application Hooks	common	no	Finn og register alle applikasjons koblinger
+Asynchronous timed services	common	no	Asynkrone tidsbestemte tjenester
+list users	common	no	bruker liste
+list groups	common	no	gruppe liste
+firstname	common	no	Fornavn
+lastname	common	no	Etternavn
+description	common	no	Beskrivelse
+add sub	common	no	Legg til underkategori
+color	common	no	Farge
+apply	common	no	Aktiver
+enabled	common	no	aktiv
+no category	common	no	Ingen kategori
+inactive	common	no	Inaktiv
+inactive and hidden	common	no	Inaktiv og gjemt
+status	common	no	Status
+contact	common	no	Kontakt
+user data	common	no	Bruker data
+Application	common	no	Applikasjon
+User access	common	no	Bruker tilgang
+edit user	common	no	Rediger bruker
+edit user account	common	no	Rediger bruker konto
+group data	common	no	Gruppe data 
+edit group	common	no	Rediger gruppe
+group	common	no	Gruppe
+all users	common	no	Alle brukere
+members	common	no	Medlemer
+applications	common	no	Applikasjoner
+You do not have edit access to addressmaster contacts	common	no	Du har ikke tilgang til AddresseMaster kontakter  
+Can change password	common	no	Kan bytte passord
+Anonymous User (not shown in list sessions)	common	no	Anonym bruker (vises ikke i sesjons liste)
+expires	common	no	Uløpsdato
+Never	common	no	Aldri
+quota	common	no	Kvote
+are you sure you want to clear cache	admin	no	Er du sikker på at du vil slette cache
 current activities	booking	no	Aktiviteter
 -- select an activity --	booking	no	Velg en aktivitet
 -- select a building --	booking	no	Velg en bygning
@@ -70,6 +112,7 @@ dashboard	booking	no	Skrivebord
 day of the week	booking	no	Ukedag
 dec	booking	no	desember
 description	booking	no	Beskrivelse
+Extra information	booking	no	Ekstra informasjon om arrangement
 district	booking	no	Bydel
 document	booking	no	Dokument
 document name	booking	no	Dokumentnavn
@@ -239,6 +282,7 @@ Account Codes	booking	no	Konteringsstrenger
 Account Codes	booking	no	Konteringsstreng
 New Account Codes	booking	no	Ny konteringsstreng
 - Actions -	booking	no	- Valg -
+- Created -	booking	no	- Opprettet -
 Create allocation	booking	no	Lag tildeling
 Create booking	booking	no	Lag booking
 Create event	booking	no	Lag arrangement
@@ -469,6 +513,7 @@ E-mail address	booking	no	E-postadresse
 Confirm e-mail address	booking	no	Bekreft e-postadressen
 The e-mail addresses you entered do not match	booking	no	E-postadressene er ikke like
 Lengt of shortname is to long, max 11 characters long	booking	no	Kortnavn er for langt, maks 11 tegn
+Lengt of name is to long, max 50 characters long	booking	no	Navn er for langt, maks 50 tegn
 The organization number is wrong or not present	booking	no	Det er ikke registrert fakturainformasjon på denne organisasjonen
 The resource number is wrong or not present	booking	no	Det er ikke registert et ressursnummer på denne organisasjonen
 Recurring allocation	booking	no	Gjenta tildelingen
@@ -537,11 +582,12 @@ Cancelation of bookings and allocations from	booking	no	Avbestilling av bookinge
 Cancelation of bookings from	booking	no	Avbestilling av bookinger fra
 Booking system settings	booking	no	Bookingmodul systeminnstillinger
 Frontend users can delete bookings and allocations	booking	no	Brukere av frontend kan slette bookinger og tildelinger direkte
-All that borrow premises from Bergen Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.	booking	no	Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.
-Delete information	bookingfrontend	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
-Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
-Booking Delete information	bookingfrontend	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
-Booking  Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
+All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.	booking	no	Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.
+Delete Information	booking	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
+Delete information2	booking	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
+Booking Delete information	booking	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst.
+Booking Delete information3	booking	no	Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
+Booking  Delete information2	booking	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 There is a cost of %1 assosiated with the allocation you are useing	booking	no	Det er en kostnad på %1kr knyttet til den tildelingen du bruker.
 Export	booking	no	Eksport
 Upload	booking	no	Last opp
@@ -557,3 +603,75 @@ Agegroups can not be larger than 9999 peoples	booking	no	Det kan ikke være mer 
 Resourcenumber is wrong, 5 or 6 characters long	booking	no	Ressursnummer er feil, skal være 5 eller 6 tegn langt.
 office	booking	no	Kontor
 office user	booking	no	Saksbehandler
+Mail Settings	booking	no	E-post oppsett
+Application Settings	booking	no	Søknads oppsett
+Booking application settings	booking	no	Booking søknads oppsett.
+Booking email settings	booking	no	Booking epost oppsett.
+System name	booking	no	System navn
+Subject	booking	no	Subject
+Mail text for application created	booking	no	Epost tekst for søknad opprettet.
+Mail text for application pending	booking	no	Epost tekst for søknad under behandling.
+Mail text for application accepted	booking	no	Epost tekst for søknad akseptert.
+Mail text for application rejected	booking	no	Epost tekst for søknad avist.
+Signature	booking	no	Signatur
+Tilsynsvakt name	booking	no	Tilsynsvakt navn
+Tilsynsvakt email	booking	no	Tilsynsvakt epost
+Tilsynsvakt telephone	booking	no	Tilsynsvakt telefon
+Metadata	common	no	Metadata
+Author	booking	no	Forfatter
+Robots	booking	no	Søkerobot parameter
+Frontpage text	booking	no	Forside tekst
+Calendar text	booking	no	Tekst bak kalender knapp.
+Reference	booking	no	Referanse
+Event Mail Settings	booking	no	Arrangement E-post oppsett 
+Booking event email settings	booking	no	Arrangement epost oppsett
+Event Change Subject	booking	no	E-post emne for endring
+Mail for event change	booking	no	E-post tekst for endring
+Event Conflict Subject	booking	no	E-post emne for konflikt
+Mail text to event contact when collision	booking	no	E-post tekst til arrangement kontakt person når konflikt 
+Mail text to conflicting event contact when collision	booking	no	E-post tekst til kontaktpersoner når konflikt 
+Event message to building Subject	booking	no	E-post emne for melding til tilsynsfører/bygg kontakt
+Mail text to building contact	booking	no	E-post tekst til tilsynsfører/bygg kontakt
+Event Canceled Subject	booking	no	E-post emne når arrangement avlyses
+Mail for event canceled	booking	no	E-post tekst når arrangement avlyses
+Extra kalendar for public opening times	booking	no	Aktiver ekstra kalender for publikumsbading
+Apply for time	booking	no	Søk om tid
+Cancel booking/allocation email settings	booking	no	Avbestill booking/tildeling e-post oppsett
+Booking Canceled Subject	booking	no	Booking avbestilt e-post emne
+Mail for booking canceled	booking	no	Booking avbestilt e-post tekst
+Allocation Canceled Subject	booking	no	Tildeling avbestilt e-post emne
+Mail for allocation canceled	booking	no	Tildeling avbestilt e-post tekst
+Frontend users can delete bookings/events	booking	no	Frontend bruker kan slette bookinger/arrangementer
+Events is deleted from database	booking	no	Arrangementer slettes fra databasen
+Frontend users can delete allocations	booking	no	Frontend bruker kan slette tildelinger
+Activate extra kalendar field on building	booking	no	Aktiver ekstra kalender felt på bygg
+Ids that should be included in the calendar	booking	no	Id som skal brukes i ekstra kalender
+Extra information for the event	booking	no	Ekstra informasjon på arrangement
+Event Edited Subject	booking	no	E-Post emne når Arrangement Redigeres
+Mail for event edited	booking	no	E-Post når når Arrangement Redigeres
+Email warnings	booking	no	E-Post Varsel
+Cancelation Email Adresses	booking	no	E-Post adresser som får varsel ved avbestilling(1 adresse pr. linje)
+file configuration	common	no	Fil konfigurasjon
+file attributes	common	no	Fil attributer
+file categories	common	no	Fil kategorier
+Outdoors	booking	no	Utendørs
+Indoors	booking	no	Innendørs
+Activities	booking	no	Aktiviteter
+Application on this building is not possible.	booking	no	Det er ikke mulig å søke om tid på dette bygget.
+Split mail if building contains swiming pools resources	booking	no	Spesial behandle bygg med svømmebasseng
+Split mail when building has swiming pool	booking	no	Ikke send e-post om svømming til andre idretter og omvendt.
+activities that uses swimming pools	booking	no	Svømmehaller
+other activities	booking	no	Andre idretter.
+activities that all should get except those in the next field.	booking	no	Aktiviteter som det altid skal sendes e-post om.
+activities that never should get mail	booking	no	Aktiviteter som det aldri skal sendes e-post om kanselering til.
+Who get cancelation mails	booking	no	Hvem får kanselerings e-poster.
+Users of current season or users the last 300 days	booking	no	Brukere denne sesongen eller bruker de siste 300 dager.
+Last 300 days	booking	no	Siste 300 dager
+Cancelation Email Addresses	booking	no	Hvem som skal få saksbehander e-post.
+One e-mail pr. line.	booking	no	Bare en e-post adresse pr. linje.
+Application email settings	booking	no	Søknad epost innstillinger
+Application comment email settings	booking	no	Søknad kommentar epost innstillinger
+Subject caseofficer	booking	no	Emne Saksbehandler
+Mail text for comment added	booking	no	Ekstra epost tekst for kommentar
+organzations_ids_description	booking	no	Her kan du legge inn en komma separert liste med organisasjons IDer som vil få epost viss noen avbestiller denne ressursen.
+organzations_ids	booking	no	Organisasjons IDer

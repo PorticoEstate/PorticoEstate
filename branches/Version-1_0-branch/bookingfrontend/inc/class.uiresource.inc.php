@@ -14,7 +14,8 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boresource');
-			$old_top = array_pop($this->tmpl_search_path);
+            $this->building_bo = CreateObject('booking.bobuilding');
+            $old_top = array_pop($this->tmpl_search_path);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, $old_top);
 		}
@@ -41,8 +42,18 @@
 		public function schedule()
 		{
             $resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding', 'bookingfrontend.uiresource', 'bookingfrontend.uisearch.index');
-			$resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add', 'building_id' => $resource['building_id'], 'building_name'=>$resource['building_name'], 'resource' => $resource['id']));
-			$resource['datasource_url'] = self::link(array(
+            $building = $this->building_bo->read_single($resource['building_id']);
+            $resource['deactivate_application'] = $building['deactivate_application'];
+            if ($building['deactivate_application'] == 0) {
+                $resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add',
+                    'building_id' => $resource['building_id'],
+                    'building_name'=>$resource['building_name'],
+                    'resource' => $resource['id']));
+            } else {
+                $resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
+                    'id' => $resource['id']));
+            }
+            $resource['datasource_url'] = self::link(array(
 				'menuaction' => 'bookingfrontend.uibooking.resource_schedule', 
 				'resource_id' => $resource['id'], 
 				'phpgw_return_as' => 'json',
