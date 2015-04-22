@@ -381,8 +381,12 @@
 		{
 			$id	= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('async'));
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('async'));
 
 			/*if ($values['save'])
 			{
@@ -469,12 +473,20 @@
 					'value_data'				=> $method_data,
 					'lang_data'					=> lang('Data'),
 					'lang_data_statustext'		=> lang('Input data for the nethod'),
+                    'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'					=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
 			$appname	= lang('async method');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+            
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+			
+			self::render_template_xsl(array('async','datatable_inline'), array('edit' => $data));
+            
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 		function delete()
