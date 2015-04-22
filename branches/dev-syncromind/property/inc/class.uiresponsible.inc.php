@@ -881,7 +881,11 @@
 			$id			= phpgw::get_var('id', 'int');
 			$location	= phpgw::get_var('location', 'string');
 			$values		= phpgw::get_var('values');
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			if (isset($values['cancel']) && $values['cancel'])
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'appname' => $this->appname));
@@ -1003,6 +1007,8 @@
 						'select_name' => 'values[cat_id]',
 						'selected' => isset($values['cat_id'])?$values['cat_id']:''
 					)),
+                    'tabs'                          => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 
 			//---datatable settings--------------------
