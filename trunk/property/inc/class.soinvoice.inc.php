@@ -2037,6 +2037,19 @@
 			$local_error = false;
 			if($condition)
 			{
+				/*
+				* Look for roles at lower level
+				*/
+
+				$this->db->query("SELECT * FROM fm_ecobilag {$condition}", __LINE__, __FILE__);
+				$this->db->next_record();
+				$oppsynsigndato			= $this->db->f('oppsynsigndato');
+				$oppsynsmannid			= $this->db->f('oppsynsmannid');
+				$saksigndato			= $this->db->f('saksigndato');
+				$saksbehandlerid		= $this->db->f('saksbehandlerid');
+				$budsjettansvarligid	= $this->db->f('budsjettansvarligid');
+
+
 				//start check
 				$check_count = $this->check_count($data['voucher_id']);
 
@@ -2101,9 +2114,21 @@
 					{
 						case 'is_janitor':
 							$value_set['oppsynsigndato']	 = null;
+							if($oppsynsmannid == $saksbehandlerid)
+							{
+								$value_set['oppsynsmannid']		 = null;
+							}
+							if($saksbehandlerid ==$budsjettansvarligid)
+							{
+								$value_set['oppsynsmannid']		 = null;
+							}
 							break;
 						case 'is_supervisor':
 							$value_set['saksigndato']		 = null;
+							if($saksbehandlerid ==$budsjettansvarligid)
+							{
+								$value_set['saksbehandlerid']		 = null;							
+							}
 							break;
 						case 'is_budget_responsible':
 							$value_set['budsjettsigndato']	 = null;
@@ -2119,10 +2144,25 @@
 						case 'is_supervisor':
 							$value_set['saksigndato']			 = date($this->db->datetime_format());
 							$value_set['saksbehandlerid']		 = $data['my_initials'];
+							if($data['forward']['oppsynsmannid'] == $data['my_initials'] && $oppsynsmannid == $data['my_initials'])
+							{
+								$value_set['oppsynsmannid']		 = '';
+								$value_set['oppsynsigndato']	 = '';
+							}
 							break;
 						case 'is_budget_responsible':
 							$value_set['budsjettsigndato']		 = date($this->db->datetime_format());
 							$value_set['budsjettansvarligid']	 = $data['my_initials'];
+							if( $data['forward']['saksbehandlerid'] == $data['my_initials'] && $saksbehandlerid == $data['my_initials'])
+							{
+								$value_set['saksbehandlerid']	 = '';
+								$value_set['saksigndato']		 = '';
+							}
+							if($data['forward']['oppsynsmannid'] == $data['my_initials'] && $oppsynsmannid == $data['my_initials'])
+							{
+								$value_set['oppsynsmannid']		 = '';
+								$value_set['oppsynsigndato']	 = '';
+							}
 							break;
 					}
 				}
