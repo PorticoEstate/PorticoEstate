@@ -1726,13 +1726,23 @@
 
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
-
+//				_debug_array($attributes_groups);
 				$attributes_general = array();
 				$i = -1;
 				$attributes = array();
+
+				$_dummy = array(array(
+//					'id' => 0,
+//					'datatype' => 'R',
+//					'nullable' => 1,
+				));
 				foreach ($attributes_groups as $_key => $group)
 				{
-					if(isset($group['attributes']) && (isset($group['group_sort']) || !$location_data))
+					if(!isset($group['attributes']))
+					{
+						$group['attributes'] = $_dummy;
+					}
+					if((isset($group['group_sort']) || !$location_data))
 					{
 						if($group['level'] == 0)
 						{
@@ -1755,7 +1765,7 @@
 						}
 						unset($_tab_name);
 					}
-					else if(isset($group['attributes']) && !isset($group['group_sort']) && $location_data)
+					else if(!isset($group['group_sort']) && $location_data)
 					{
 						$attributes_general = array_merge($attributes_general,$group['attributes']);
 					}
@@ -2136,6 +2146,8 @@
 			//$category['org_unit'] =1;
 			if($category['org_unit'] && $mode == 'edit')
 			{
+				phpgwapi_jquery::load_widget('autocomplete');
+
 					$_autocomplete = <<<JS
 
 					$(document).ready(function () 
