@@ -1340,11 +1340,11 @@ JS;
 			{
 				if($this->bo->get_approve_role())
 				{
-					$receipt = $this->bo->update_invoice_sub($values);
+					return $this->bo->update_invoice_sub($values);
 				}
 				else
 				{
-					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
+					return array('msg'=>lang('you are not approved for this task'));
 				}
 			}
 			
@@ -1655,6 +1655,8 @@ JS;
 				array(
 					'col_name'=>'id',		'visible'=>false),
 				array(
+					'col_name'=>'workorder_id',		'visible'=>false),
+				array(
 					'col_name'=>'_external_ref',		'visible'=>false)
 			);
 			
@@ -1677,9 +1679,9 @@ JS;
 
 					if($i == 0)
 					{
-						$json_row[$uicols[$i]['col_name']] .= " <input name='values[counter][".$j."]' id='values[counter][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['counter']."'/>";
+						/*$json_row[$uicols[$i]['col_name']] .= " <input name='values[counter][".$j."]' id='values[counter][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['counter']."'/>";
 						$json_row[$uicols[$i]['col_name']] .= " <input name='values[id][".$j."]' id='values[id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['id']."'/>";
-						$json_row[$uicols[$i]['col_name']] .= " <input name='values[workorder_id][".$j."]' id='values[workorder_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['workorder_id']."'/>";
+						$json_row[$uicols[$i]['col_name']] .= " <input name='values[workorder_id][".$j."]' id='values[workorder_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$invoices['workorder_id']."'/>";*/
 						$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_order'].'&order_id='.$invoices['workorder_id']."'>".$invoices['workorder_id']."</a>";
 					}
 					else if(($i == 1))
@@ -1708,9 +1710,9 @@ JS;
 								$_checked = 'checked="checked"';
 							}
 
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_orig][{$j}]' id='values[close_order_orig][{$j}]' class='myValuesForPHP ' type='hidden' value='{$invoices['closed']}'/>";
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_tmp][{$j}]' id='values[close_order_tmp][{$j}]' class='close_order_tmp transfer_idClass' type='checkbox' value='true' {$_checked}/>";
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][{$j}]' id='values[close_order][{$j}]' class='myValuesForPHP close_order' type='hidden' value=''/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input counter='".$invoices['counter']."' name='values[close_order_orig][{$j}]' id='values[close_order_orig][{$j}]' class='close_order_orig ' type='hidden' value='{$invoices['closed']}'/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input counter='".$invoices['counter']."' name='values[close_order_tmp][{$j}]' id='values[close_order_tmp][{$j}]' class='close_order_tmp transfer_idClass' type='checkbox' value='true' {$_checked}/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input counter='".$invoices['counter']."' name='values[close_order][{$j}]' id='values[close_order][{$j}]' class='close_order' type='hidden' value=''/>";
 						}
 						else
 						{
@@ -1754,7 +1756,7 @@ JS;
 						}
 						else
 						{
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[budget_account][".$j."]' id='values[budget_account][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['budget_account']."'/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[budget_account][".$j."]' id='values[budget_account][".$j."]'  class='budget_account'  type='text' size='7' value='".$invoices['budget_account']."'/>";
 						}
 					}
 
@@ -1772,7 +1774,7 @@ JS;
 						}
 						else
 						{
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[approved_amount][".$j."]' id='values[approved_amount][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['approved_amount']."'/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[approved_amount][".$j."]' id='values[approved_amount][".$j."]'  class='approved_amount'  type='text' size='7' value='".$invoices['approved_amount']."'/>";
 						}
 
 
@@ -1791,7 +1793,7 @@ JS;
 						}
 						else
 						{
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['dima']."'/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='dima'  type='text' size='7' value='".$invoices['dima']."'/>";
 						}
 					}
 					else if(($i == 10))
@@ -1803,7 +1805,7 @@ JS;
 						else
 						{
 
-							$json_row[$uicols[$i]['col_name']]  .= " <select name='values[dimb_tmp][".$j."]' id='values[dimb_tmp][".$j."]'  class='dimb_tmp'><option value=''></option>";
+							$json_row[$uicols[$i]['col_name']]  .= " <select name='values[dimb_tmp][".$j."]' id='values[dimb_tmp][".$j."]' class='dimb_tmp'><option value=''></option>";
 
 							for($k = 0 ;$k < count($invoices['dimb_list']) ; $k++)
 							{
@@ -1817,7 +1819,7 @@ JS;
 								}
 							}
 							$json_row[$uicols[$i]['col_name']]  .="</select>";
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimb][".$j."]' id='values[dimb][".$j."]'  class='myValuesForPHP dimb'  type='hidden' value=''/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimb][".$j."]' id='values[dimb][".$j."]'  class='dimb'  type='hidden' value=''/>";
 
 						}
 					}
@@ -1829,7 +1831,7 @@ JS;
 						}
 						else
 						{
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='myValuesForPHP'  type='text' size='4' value='".$invoices['dimd']."'/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='dimd'  type='text' size='4' value='".$invoices['dimd']."'/>";
 						}
 					}
 					else if(($i == 12))
@@ -1855,7 +1857,7 @@ JS;
 								}
 							}
 							$json_row[$uicols[$i]['col_name']]  .="</select>";
-							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[tax_code][".$j."]' id='values[tax_code][".$j."]'  class='myValuesForPHP tax_code'  type='hidden' value=''/>";
+							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[tax_code][".$j."]' id='values[tax_code][".$j."]'  class='tax_code'  type='hidden' value=''/>";
 
 						}
 					}
@@ -1896,6 +1898,10 @@ JS;
 						$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
 					}
 					else if($i == 17)
+					{
+						$json_row[$uicols[$i]['col_name']]  = $invoices['workorder_id'];
+					}
+					else if($i == 18)
 					{
 						$json_row[$uicols[$i]['col_name']]  = $invoices['external_ref'];
 					}
