@@ -692,6 +692,10 @@
 			$values	 = phpgw::get_var('values');
 			$config	 = CreateObject('phpgwapi.config', $this->type_app[$this->type]);
 
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
 			if($id)
@@ -716,7 +720,6 @@
 				'id'		 => $id,
 				'type'		 => $this->type
 			);
-			//_debug_array($include_list);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -756,13 +759,14 @@
 				'lang_documentation'			 => lang('documentation'),
 				'value_documentation'			 => $values['documentation'],
 				'lang_documentation_statustext'	 => lang('If this entity type is to be linked to documents'),
+                'tabs'                           => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+                'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		public function save_category()
@@ -1635,7 +1639,11 @@
 			$cat_id		 = phpgw::get_var('cat_id', 'int');
 			$id			 = phpgw::get_var('id', 'int');
 			$values		 = phpgw::get_var('values');
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			if(!$values)
@@ -1770,7 +1778,9 @@
 				'value_remark'			 => $values['remark'],
 				'lang_done_attribtext'	 => lang('Back to the list'),
 				'lang_save_attribtext'	 => lang('Save the attribute'),
-				'parent_list'			 => $parent_list
+				'parent_list'			 => $parent_list,
+                'tabs'                           => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+                'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 			//_debug_array($values);
 
@@ -1795,6 +1805,10 @@
 			$values		 = phpgw::get_var('values');
 			$group_id	 = phpgw::get_var('group_id', 'int');
 
+             $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			if(!$values)
@@ -1962,7 +1976,9 @@
 				'value_get_single_function'			 => $values['get_single_function'],
 				'value_get_single_function_input'	 => print_r($values['get_single_function_input'], true),
 				'value_short_description'			 => $values['short_description'],
-				'value_javascript_action'			 => $values['javascript_action']
+				'value_javascript_action'			 => $values['javascript_action'],
+                'tabs'                           => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+                'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 
 			$appname = lang('entity');
