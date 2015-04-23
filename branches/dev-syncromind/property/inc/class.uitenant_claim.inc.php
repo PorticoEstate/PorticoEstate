@@ -488,11 +488,10 @@
                 public function query($data = array())
                 {
                         $search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
+                        $order = phpgw::get_var('order');
+                        $draw = phpgw::get_var('draw', 'int');
                         $district_id = phpgw::get_var('district_id', 'int');
-			$columns = phpgw::get_var('columns');
-                        
+                        $columns = phpgw::get_var('columns');
                         $project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
                         
 			$params = array(                  
@@ -501,10 +500,10 @@
                                 'query' => $search['value'],
                                 'sort' => $order[0]['dir'],
                                 'order' => $columns[$order[0]['column']]['data'],
-				'user_id' => $this->user_id,
+                                'user_id' => $this->user_id,
                                 'status' => $this->status,
                                 'cat_id' => $this->cat_id,
-				'allrows'=>phpgw::get_var('length', 'int') == -1,
+                                'allrows'=>phpgw::get_var('length', 'int') == -1,
                                 'project_id' => $project_id, 
                                 'district_id' => $district_id
 			);
@@ -577,7 +576,11 @@
 			$values['tenant_id']		= phpgw::get_var('tenant_id', 'int', 'POST');
 			$values['last_name']		= phpgw::get_var('last_name', 'string', 'POST');
 			$values['first_name']		= phpgw::get_var('first_name', 'string', 'POST');
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			if($project_id)
 			{
 				$values['project_id'] = $project_id;
@@ -1015,6 +1018,8 @@
 					'lang_cat_statustext'				=> lang('Select the category the claim belongs to. To do not use a category select NO CATEGORY'),
 					'select_name'						=> 'values[cat_id]',
 					'cat_list'							=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'tenant_claim','order'=>'descr')),
+                    'tabs'                              => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'                         => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . ': ' . ($claim_id?lang('edit claim'):lang('add claim'));
 
