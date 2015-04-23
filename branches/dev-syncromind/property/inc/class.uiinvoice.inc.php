@@ -1334,8 +1334,6 @@ JS;
 			$values		= phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id');
 
-			$receipt = array();
-
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			{
 				if($this->bo->get_approve_role())
@@ -1392,42 +1390,6 @@ JS;
 					'key'=>'_external_ref','hidden'=>true)
 			);
 
-			/*$search			= phpgw::get_var('search');
-			$order			= phpgw::get_var('order');
-			$columns		= phpgw::get_var('columns');
-
-			$params = array
-				(
-					'start'         => phpgw::get_var('start', 'int', 'REQUEST', 0),
-					'results'       => phpgw::get_var('length', 'int', 'REQUEST', 0),
-					'query'         => $search['value'],
-					'order'         => $columns[$order[0]['column']]['data'],
-					'sort'          => $order[0]['dir'],
-					'allrows'       => 1,
-					'paid'			=> $paid ? $paid : false,
-					'voucher_id'	=> $voucher_id,
-				);
-			
-			$content = array();
-			if ($voucher_id)
-			{
-				$this->bo->allrows = true;
-				$content = $this->bo->read_invoice_sub($params);
-			}
-			print_r($content); die;*/
-			$current_Consult = array ();
-			for($i=0;$i<2;$i++)
-			{
-				if($i==0)
-				{
-					$current_Consult[] = array(lang('Vendor'),$content[0]['vendor']);
-				}
-				if($i==1)
-				{
-					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
-				}
-			}
-
 			$parameters = array
 				(
 					'parameter' => array
@@ -1482,15 +1444,19 @@ JS;
 					(
 						'my_name'		=> 'edit',
 						'text'			=> $paid ? lang('view') : lang('edit'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'		=> 'property.uiinvoice.edit',
-							'voucher_id'		=> $voucher_id,
-							'user_lid'			=> $this->user_lid,
-							'target'			=> '_tinybox',
-							'paid'				=> $paid
-						)),
-						'parameters'	=> json_encode($parameters)
+						'type'			=> 'custom',
+						'custom_code'	=> ""
+							. "			
+										var selected = JqueryPortico.fnGetSelected(oTable0);
+
+										if (selected.length ==0){
+											alert('None selected');
+											return false;
+										}
+										var aData = oTable0.fnGetData( selected[0] );
+										var id = aData['id'];
+							"					
+							. "JqueryPortico.openPopup({menuaction:'property.uiinvoice.edit', voucher_id:'{$voucher_id}', user_lid:'{$this->user_lid}', paid:'{$paid}', id: id}, {closeAction:'reload'})"
 					);
 			}
 
@@ -1549,11 +1515,9 @@ JS;
 			}
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			// Prepare YUI Library
 			$data = array
 			(
 				'datatable_def'			=> $datatable_def,
-				'current_consult'		=> $current_Consult,
 				'top_toolbar'			=> $top_toolbar
 			);
 			
@@ -1776,15 +1740,11 @@ JS;
 						{
 							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[approved_amount][".$j."]' id='values[approved_amount][".$j."]'  class='approved_amount'  type='text' size='7' value='".$invoices['approved_amount']."'/>";
 						}
-
-
 					}
-
 					else if(($i == 8))
 					{
 						$json_row[$uicols[$i]['col_name']]  .= $invoices['currency'];
 					}
-
 					else if(($i == 9))
 					{
 						if($invoices['paid'] == true)
@@ -1804,7 +1764,6 @@ JS;
 						}
 						else
 						{
-
 							$json_row[$uicols[$i]['col_name']]  .= " <select name='values[dimb_tmp][".$j."]' id='values[dimb_tmp][".$j."]' class='dimb_tmp'><option value=''></option>";
 
 							for($k = 0 ;$k < count($invoices['dimb_list']) ; $k++)
@@ -1842,7 +1801,6 @@ JS;
 						}
 						else
 						{
-
 							$json_row[$uicols[$i]['col_name']]  .= " <select name='values[tax_code_tmp][".$j."]' id='values[tax_code_tmp][".$j."]'  class='tax_code_tmp'><option value=''></option>";
 
 							for($k = 0 ;$k < count($invoices['tax_code_list']) ; $k++)
@@ -1919,6 +1877,9 @@ JS;
 			$result_data    =   array('results' =>  $values);
 			$result_data['total_records']   = $this->bo->total_records;
 			$result_data['draw']    = $draw;
+			$result_data['sum_amount']    = number_format($sum, 2, ',', ' ');;
+			$result_data['vendor']    = lang('Vendor').": ".$content[0]['vendor'];
+			$result_data['voucher_id'] = lang('Voucher Id').": ".($content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
 
 			return $this->jquery_results($result_data);
 		}
@@ -2084,6 +2045,10 @@ JS;
 				'project_group'			=> $values['project_group']?$values['project_group']:$line['project_group'],
 				'project_group_descr'	=> $values['project_group_descr']));
 
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$data = array
 			(
 					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
@@ -2101,11 +2066,13 @@ JS;
 					'value_approved_amount'	=> $line['approved_amount'],
 					'value_currency'		=> $line['currency'],
 					'value_process_log'		=> isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log'],
-					'paid'					=> $paid
+					'paid'					=> $paid,
+					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
+			/*$GLOBALS['phpgw']->xslttpl->add_file('invoice');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));*/
+			self::render_template_xsl(array('invoice'), array('edit' => $data));
 		}
 
 		function remark()
