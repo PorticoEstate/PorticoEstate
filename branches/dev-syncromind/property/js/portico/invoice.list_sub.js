@@ -1,4 +1,26 @@
-  	function onSave ()
+	this.local_DrawCallback1 = function()
+	{
+		var api = oTable0.api();
+		var data = api.ajax.json();
+
+		for(i=0;i < columns.length;i++)
+		{
+			switch (columns[i]['data']) 
+			{
+				case 'approved_amount':
+					
+					if (typeof(api.column(i).footer()) !== 'undefined') 
+					{
+						$(api.column(i-1).footer()).html("<div align=\"right\">Sum:</div>");
+						$(api.column(i).footer()).html("<div align=\"right\">"+data.sum_amount+"</div>");
+					}
+			}
+		}
+		$("#vendorDiv").html(data.vendor);
+		$("#voucheridDiv").html(data.voucher_id);
+	};
+
+	function onSave ()
   	{
 		var api = oTable0.api();
 
@@ -64,10 +86,8 @@
 		var data = {"values": values};
 		JqueryPortico.execute_ajax(requestUrl, function(result){
 			//var msg = result.message;
-			document.getElementById("message").innerHTML = '';
-			$.each(result.message, function (k, v) {
-				document.getElementById("message").innerHTML += v.msg + "<br/>";
-			});
+			document.getElementById("message").innerHTML = result.message[0].msg + "<br/>";
+
 			//var error = result.error;
 			if (typeof(result.error) !== 'undefined')
 			{
