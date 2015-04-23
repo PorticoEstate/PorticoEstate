@@ -433,530 +433,541 @@
 
 	<!-- add / edit  -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
-		<div align="left">
-			<xsl:variable name="form_action">
-				<xsl:value-of select="form_action"/>
-			</xsl:variable>
-			<form name="form" method="post" action="{$form_action}">
-			<table cellpadding="2" cellspacing="2" width="80%" align="center">
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<tr>
-							<td align="left" colspan="3">
-								<xsl:call-template name="msgbox"/>
-							</td>
-						</tr>
-					</xsl:when>
-				</xsl:choose>
-					<tr>
-						<td class="th_text" align="left">
-							<xsl:value-of select="lang_entity"/>
-						</td>
-						<td class="th_text" align="left">
-							<xsl:value-of select="entity_name"/>
-						</td>
-					</tr>
-					<xsl:choose>
-						<xsl:when test="parent_list != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'parent')"/>
-								</td>
-								<td valign="top">
-									<select id="parent_id" name="values[parent_id]">
-										<option value="">
-											<xsl:value-of select="php:function('lang', 'select parent')"/>
-										</option>
-										<xsl:apply-templates select="parent_list"/>
-									</select>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="value_id != ''">
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'category')"/>
-								</td>
-								<td>
-									<xsl:value-of select="value_id"/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'name')"/>
-						</td>
-						<td>
-							<input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_name_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'descr')"/>
-						</td>
-						<td>
-							<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_descr_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="value_descr"/>
-							</textarea>
-						</td>
-					</tr>
-					<xsl:choose>
-						<xsl:when test="lang_location_form != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="lang_location_form"/>
-								</td>
-								<td>
-									<xsl:choose>
-										<xsl:when test="value_location_form = 1">
-											<input type="checkbox" name="values[location_form]" value="1" checked="checked" onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_location_form_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</xsl:when>
-										<xsl:otherwise>
-											<input type="checkbox" name="values[location_form]" value="1" onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_location_form_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</xsl:otherwise>
-									</xsl:choose>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="lang_documentation != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="lang_documentation"/>
-								</td>
-								<td>
-									<xsl:choose>
-										<xsl:when test="value_documentation = 1">
-											<input type="checkbox" name="values[documentation]" value="1" checked="checked" onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_documentation_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</xsl:when>
-										<xsl:otherwise>
-											<input type="checkbox" name="values[documentation]" value="1" onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_documentation_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</xsl:otherwise>
-									</xsl:choose>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="value_location_form = 1">
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_include_in_location_form"/>
-								</td>
-								<td>
-									<xsl:call-template name="include_list"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_include_this_entity"/>
-								</td>
-								<td>
-									<xsl:call-template name="include_list_2"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_start_this_entity"/>
-								</td>
-								<td>
-									<xsl:call-template name="include_list_3"/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="edit_prefix != ''">
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'prefix')"/>
-								</td>
-								<td>
-									<input type="text" name="values[prefix]" value="{value_prefix}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_prefix_standardtext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="org_unit != ''">
-							<tr>
-								<td>
-									<xsl:variable name="lang_org_unit">
-										<xsl:value-of select="php:function('lang', 'department')"/>
-									</xsl:variable>
-									<xsl:value-of select="$lang_org_unit"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[org_unit]" value="1">
-										<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'department')"/>
-											</xsl:attribute>
-										<xsl:if test="value_org_unit = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
+            <script type="text/javascript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+            </script>
+            <div id="tab-content">
+                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                <div class="yui-content">
+                    <div id="general">
+                        <div align="left">
+                                <xsl:variable name="form_action">
+                                        <xsl:value-of select="form_action"/>
+                                </xsl:variable>
+                                <form name="form" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
+                                <table cellpadding="2" cellspacing="2" width="80%" align="center">
+                                        <xsl:choose>
+                                                <xsl:when test="msgbox_data != ''">
+                                                        <tr>
+                                                                <td align="left" colspan="3">
+                                                                        <xsl:call-template name="msgbox"/>
+                                                                </td>
+                                                        </tr>
+                                                </xsl:when>
+                                        </xsl:choose>
+                                                <tr>
+                                                        <td class="th_text" align="left">
+                                                                <xsl:value-of select="lang_entity"/>
+                                                        </td>
+                                                        <td class="th_text" align="left">
+                                                                <xsl:value-of select="entity_name"/>
+                                                        </td>
+                                                </tr>
+                                                <xsl:choose>
+                                                        <xsl:when test="parent_list != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'parent')"/>
+                                                                        </td>
+                                                                        <td valign="top">
+                                                                                <select id="parent_id" name="values[parent_id]">
+                                                                                        <option value="">
+                                                                                                <xsl:value-of select="php:function('lang', 'select parent')"/>
+                                                                                        </option>
+                                                                                        <xsl:apply-templates select="parent_list"/>
+                                                                                </select>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="value_id != ''">
+                                                                <tr>
+                                                                        <td valign="top">
+                                                                                <xsl:value-of select="php:function('lang', 'category')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <xsl:value-of select="value_id"/>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <tr>
+                                                        <td valign="top">
+                                                                <xsl:value-of select="php:function('lang', 'name')"/>
+                                                        </td>
+                                                        <td>
+                                                                <input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
+                                                                        <xsl:attribute name="onMouseover">
+                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                <xsl:value-of select="lang_name_standardtext"/>
+                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                        </xsl:attribute>
+                                                                </input>
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td valign="top">
+                                                                <xsl:value-of select="php:function('lang', 'descr')"/>
+                                                        </td>
+                                                        <td>
+                                                                <textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
+                                                                        <xsl:attribute name="onMouseover">
+                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                <xsl:value-of select="lang_descr_standardtext"/>
+                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                        </xsl:attribute>
+                                                                        <xsl:value-of select="value_descr"/>
+                                                                </textarea>
+                                                        </td>
+                                                </tr>
+                                                <xsl:choose>
+                                                        <xsl:when test="lang_location_form != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="lang_location_form"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <xsl:choose>
+                                                                                        <xsl:when test="value_location_form = 1">
+                                                                                                <input type="checkbox" name="values[location_form]" value="1" checked="checked" onMouseout="window.status='';return true;">
+                                                                                                        <xsl:attribute name="onMouseover">
+                                                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                                                <xsl:value-of select="lang_location_form_statustext"/>
+                                                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                                                        </xsl:attribute>
+                                                                                                </input>
+                                                                                        </xsl:when>
+                                                                                        <xsl:otherwise>
+                                                                                                <input type="checkbox" name="values[location_form]" value="1" onMouseout="window.status='';return true;">
+                                                                                                        <xsl:attribute name="onMouseover">
+                                                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                                                <xsl:value-of select="lang_location_form_statustext"/>
+                                                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                                                        </xsl:attribute>
+                                                                                                </input>
+                                                                                        </xsl:otherwise>
+                                                                                </xsl:choose>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="lang_documentation != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="lang_documentation"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <xsl:choose>
+                                                                                        <xsl:when test="value_documentation = 1">
+                                                                                                <input type="checkbox" name="values[documentation]" value="1" checked="checked" onMouseout="window.status='';return true;">
+                                                                                                        <xsl:attribute name="onMouseover">
+                                                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                                                <xsl:value-of select="lang_documentation_statustext"/>
+                                                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                                                        </xsl:attribute>
+                                                                                                </input>
+                                                                                        </xsl:when>
+                                                                                        <xsl:otherwise>
+                                                                                                <input type="checkbox" name="values[documentation]" value="1" onMouseout="window.status='';return true;">
+                                                                                                        <xsl:attribute name="onMouseover">
+                                                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                                                <xsl:value-of select="lang_documentation_statustext"/>
+                                                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                                                        </xsl:attribute>
+                                                                                                </input>
+                                                                                        </xsl:otherwise>
+                                                                                </xsl:choose>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="value_location_form = 1">
+                                                                <tr>
+                                                                        <td valign="top">
+                                                                                <xsl:value-of select="lang_include_in_location_form"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <xsl:call-template name="include_list"/>
+                                                                        </td>
+                                                                </tr>
+                                                                <tr>
+                                                                        <td valign="top">
+                                                                                <xsl:value-of select="lang_include_this_entity"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <xsl:call-template name="include_list_2"/>
+                                                                        </td>
+                                                                </tr>
+                                                                <tr>
+                                                                        <td valign="top">
+                                                                                <xsl:value-of select="lang_start_this_entity"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <xsl:call-template name="include_list_3"/>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="edit_prefix != ''">
+                                                                <tr>
+                                                                        <td valign="top">
+                                                                                <xsl:value-of select="php:function('lang', 'prefix')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="text" name="values[prefix]" value="{value_prefix}" onMouseout="window.status='';return true;">
+                                                                                        <xsl:attribute name="onMouseover">
+                                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                                <xsl:value-of select="lang_prefix_standardtext"/>
+                                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                                        </xsl:attribute>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="org_unit != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:variable name="lang_org_unit">
+                                                                                        <xsl:value-of select="php:function('lang', 'department')"/>
+                                                                                </xsl:variable>
+                                                                                <xsl:value-of select="$lang_org_unit"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[org_unit]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                        <xsl:value-of select="php:function('lang', 'department')"/>
+                                                                                                </xsl:attribute>
+                                                                                        <xsl:if test="value_org_unit = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
 
-					<xsl:choose>
-						<xsl:when test="lookup_tenant != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'lookup tenant')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[lookup_tenant]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'If this entity type is to look up tenants')"/>
-										</xsl:attribute>
-										<xsl:if test="value_lookup_tenant = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="tracking != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'tracking helpdesk')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[tracking]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'activate tracking of dates in helpdesk main list')"/>
-										</xsl:attribute>
-										<xsl:if test="value_tracking = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="fileupload != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'enable file upload')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[fileupload]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'If files can be uploaded for this category')"/>
-										</xsl:attribute>
-										<xsl:if test="value_fileupload = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="jasperupload != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'jasper upload')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[jasperupload]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'allow to upload definition of jasper reports')"/>
-										</xsl:attribute>
-										<xsl:if test="value_jasperupload = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="loc_link != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'Link from location')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[loc_link]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Enable link from location detail')"/>
-										</xsl:attribute>
-										<xsl:if test="value_loc_link = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="start_project != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'start project')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[start_project]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Enable start project from this category')"/>
-										</xsl:attribute>
-										<xsl:if test="value_start_project = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="start_ticket != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'start ticket')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[start_ticket]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Enable start ticket from this category')"/>
-										</xsl:attribute>
-										<xsl:if test="value_start_ticket = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<tr>
-						<td>
-							<xsl:value-of select="php:function('lang', 'is eav')"/>
-						</td>
-						<td>
-							<input type="checkbox" name="values[is_eav]" value="1">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'This category is modelled in the database as a xml adapted entity attribute value model')"/>
-								</xsl:attribute>
-								<xsl:if test="value_is_eav = '1'">
-									<xsl:attribute name="checked">
-										<xsl:text>checked</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
-								<xsl:if test="value_is_eav = '1' or value_id != ''">
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
-							</input>
-							<xsl:choose>
-								<xsl:when test="value_is_eav = '1'">
-									<input type="hidden" name="values[is_eav]" value="1"/>
-								</xsl:when>
-							</xsl:choose>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<xsl:value-of select="php:function('lang', 'enable bulk')"/>
-						</td>
-						<td>
-							<input type="checkbox" name="values[enable_bulk]" value="1">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'This category is allowed to reperesent bulk entities')"/>
-								</xsl:attribute>
-								<xsl:if test="value_enable_bulk = '1'">
-									<xsl:attribute name="checked">
-										<xsl:text>checked</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
-							</input>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<xsl:value-of select="php:function('lang', 'enable controller')"/>
-						</td>
-						<td>
-							<input type="checkbox" name="values[enable_controller]" value="1">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'This category is allowed to link to controller')"/>
-								</xsl:attribute>
-								<xsl:if test="value_enable_controller > '0'">
-									<xsl:attribute name="checked">
-										<xsl:text>checked</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
-								<xsl:if test="value_enable_controller > '1'">
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
+                                                <xsl:choose>
+                                                        <xsl:when test="lookup_tenant != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'lookup tenant')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[lookup_tenant]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                                <xsl:value-of select="php:function('lang', 'If this entity type is to look up tenants')"/>
+                                                                                        </xsl:attribute>
+                                                                                        <xsl:if test="value_lookup_tenant = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="tracking != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'tracking helpdesk')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[tracking]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                                <xsl:value-of select="php:function('lang', 'activate tracking of dates in helpdesk main list')"/>
+                                                                                        </xsl:attribute>
+                                                                                        <xsl:if test="value_tracking = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="fileupload != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'enable file upload')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[fileupload]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                                <xsl:value-of select="php:function('lang', 'If files can be uploaded for this category')"/>
+                                                                                        </xsl:attribute>
+                                                                                        <xsl:if test="value_fileupload = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="jasperupload != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'jasper upload')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[jasperupload]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                                <xsl:value-of select="php:function('lang', 'allow to upload definition of jasper reports')"/>
+                                                                                        </xsl:attribute>
+                                                                                        <xsl:if test="value_jasperupload = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="loc_link != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'Link from location')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[loc_link]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                                <xsl:value-of select="php:function('lang', 'Enable link from location detail')"/>
+                                                                                        </xsl:attribute>
+                                                                                        <xsl:if test="value_loc_link = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="start_project != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'start project')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[start_project]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                                <xsl:value-of select="php:function('lang', 'Enable start project from this category')"/>
+                                                                                        </xsl:attribute>
+                                                                                        <xsl:if test="value_start_project = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="start_ticket != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'start ticket')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <input type="checkbox" name="values[start_ticket]" value="1">
+                                                                                        <xsl:attribute name="title">
+                                                                                                <xsl:value-of select="php:function('lang', 'Enable start ticket from this category')"/>
+                                                                                        </xsl:attribute>
+                                                                                        <xsl:if test="value_start_ticket = '1'">
+                                                                                                <xsl:attribute name="checked">
+                                                                                                        <xsl:text>checked</xsl:text>
+                                                                                                </xsl:attribute>
+                                                                                        </xsl:if>
+                                                                                </input>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <tr>
+                                                        <td>
+                                                                <xsl:value-of select="php:function('lang', 'is eav')"/>
+                                                        </td>
+                                                        <td>
+                                                                <input type="checkbox" name="values[is_eav]" value="1">
+                                                                        <xsl:attribute name="title">
+                                                                                <xsl:value-of select="php:function('lang', 'This category is modelled in the database as a xml adapted entity attribute value model')"/>
+                                                                        </xsl:attribute>
+                                                                        <xsl:if test="value_is_eav = '1'">
+                                                                                <xsl:attribute name="checked">
+                                                                                        <xsl:text>checked</xsl:text>
+                                                                                </xsl:attribute>
+                                                                        </xsl:if>
+                                                                        <xsl:if test="value_is_eav = '1' or value_id != ''">
+                                                                                <xsl:attribute name="disabled">
+                                                                                        <xsl:text>disabled</xsl:text>
+                                                                                </xsl:attribute>
+                                                                        </xsl:if>
+                                                                </input>
+                                                                <xsl:choose>
+                                                                        <xsl:when test="value_is_eav = '1'">
+                                                                                <input type="hidden" name="values[is_eav]" value="1"/>
+                                                                        </xsl:when>
+                                                                </xsl:choose>
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>
+                                                                <xsl:value-of select="php:function('lang', 'enable bulk')"/>
+                                                        </td>
+                                                        <td>
+                                                                <input type="checkbox" name="values[enable_bulk]" value="1">
+                                                                        <xsl:attribute name="title">
+                                                                                <xsl:value-of select="php:function('lang', 'This category is allowed to reperesent bulk entities')"/>
+                                                                        </xsl:attribute>
+                                                                        <xsl:if test="value_enable_bulk = '1'">
+                                                                                <xsl:attribute name="checked">
+                                                                                        <xsl:text>checked</xsl:text>
+                                                                                </xsl:attribute>
+                                                                        </xsl:if>
+                                                                </input>
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>
+                                                                <xsl:value-of select="php:function('lang', 'enable controller')"/>
+                                                        </td>
+                                                        <td>
+                                                                <input type="checkbox" name="values[enable_controller]" value="1">
+                                                                        <xsl:attribute name="title">
+                                                                                <xsl:value-of select="php:function('lang', 'This category is allowed to link to controller')"/>
+                                                                        </xsl:attribute>
+                                                                        <xsl:if test="value_enable_controller > '0'">
+                                                                                <xsl:attribute name="checked">
+                                                                                        <xsl:text>checked</xsl:text>
+                                                                                </xsl:attribute>
+                                                                        </xsl:if>
+                                                                        <xsl:if test="value_enable_controller > '1'">
+                                                                                <xsl:attribute name="disabled">
+                                                                                        <xsl:text>disabled</xsl:text>
+                                                                                </xsl:attribute>
+                                                                        </xsl:if>
 
-							</input>
-						</td>
-					</tr>
-					<xsl:choose>
-						<xsl:when test="lang_location_level != ''">
-							<tr>
-								<td>
-									<xsl:value-of select="lang_location_level"/>
-								</td>
-								<td valign="top">
-									<xsl:variable name="lang_location_level_statustext">
-										<xsl:value-of select="lang_location_level_statustext"/>
-									</xsl:variable>
-									<select name="values[location_level]" class="forms" onMouseover="window.status='{$lang_location_level_statustext}'; return true;" onMouseout="window.status='';return true;">
-										<option value="">
-											<xsl:value-of select="lang_no_location_level"/>
-										</option>
-										<xsl:apply-templates select="location_level_list/options"/>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<xsl:value-of select="lang_location_link_level"/>
-								</td>
-								<td valign="top">
-									<xsl:variable name="lang_location_link_level_statustext">
-										<xsl:value-of select="lang_location_link_level_statustext"/>
-									</xsl:variable>
-									<select name="values[location_link_level]" title="{$lang_location_link_level_statustext}">
-										<option value="">
-											<xsl:value-of select="lang_no_location_link_level"/>
-										</option>
-										<xsl:apply-templates select="location_link_level_list/options"/>
-									</select>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="category_list != '' and value_id = ''">
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'template')"/>
-								</td>
-								<td valign="top">
-									<select id="category_template" name="values[category_template]" onChange="get_template_attributes()">
-										<option value="">
-											<xsl:value-of select="php:function('lang', 'select template')"/>
-										</option>
-										<xsl:apply-templates select="category_list"/>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td width="19%" align="left" valign="top">
-									<xsl:value-of select="php:function('lang', 'attributes')"/>
-								</td>
-								<td>
-									<div id="paging_0"/>
-									<div id="datatable-container_0"/>
-									<input type="hidden" name="template_attrib" value=""/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<tr height="50">
-						<td>
-							<input type="submit" name="values[save]" value="{lang_save}" onClick="onActionsClick()">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'save')"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-				</table>
-				</form>
-				<table>
-				<tr>
-					<td>
-						<xsl:variable name="done_action">
-							<xsl:value-of select="done_action"/>
-						</xsl:variable>
-						<xsl:variable name="lang_done">
-							<xsl:value-of select="lang_done"/>
-						</xsl:variable>
-						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_done_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</form>
-					</td>
-				</tr>
-			</table>
-		</div>
+                                                                </input>
+                                                        </td>
+                                                </tr>
+                                                <xsl:choose>
+                                                        <xsl:when test="lang_location_level != ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="lang_location_level"/>
+                                                                        </td>
+                                                                        <td valign="top">
+                                                                                <xsl:variable name="lang_location_level_statustext">
+                                                                                        <xsl:value-of select="lang_location_level_statustext"/>
+                                                                                </xsl:variable>
+                                                                                <select name="values[location_level]" class="forms" onMouseover="window.status='{$lang_location_level_statustext}'; return true;" onMouseout="window.status='';return true;">
+                                                                                        <option value="">
+                                                                                                <xsl:value-of select="lang_no_location_level"/>
+                                                                                        </option>
+                                                                                        <xsl:apply-templates select="location_level_list/options"/>
+                                                                                </select>
+                                                                        </td>
+                                                                </tr>
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="lang_location_link_level"/>
+                                                                        </td>
+                                                                        <td valign="top">
+                                                                                <xsl:variable name="lang_location_link_level_statustext">
+                                                                                        <xsl:value-of select="lang_location_link_level_statustext"/>
+                                                                                </xsl:variable>
+                                                                                <select name="values[location_link_level]" title="{$lang_location_link_level_statustext}">
+                                                                                        <option value="">
+                                                                                                <xsl:value-of select="lang_no_location_link_level"/>
+                                                                                        </option>
+                                                                                        <xsl:apply-templates select="location_link_level_list/options"/>
+                                                                                </select>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <xsl:choose>
+                                                        <xsl:when test="category_list != '' and value_id = ''">
+                                                                <tr>
+                                                                        <td>
+                                                                                <xsl:value-of select="php:function('lang', 'template')"/>
+                                                                        </td>
+                                                                        <td valign="top">
+                                                                                <select id="category_template" name="values[category_template]" onChange="get_template_attributes()">
+                                                                                        <option value="">
+                                                                                                <xsl:value-of select="php:function('lang', 'select template')"/>
+                                                                                        </option>
+                                                                                        <xsl:apply-templates select="category_list"/>
+                                                                                </select>
+                                                                        </td>
+                                                                </tr>
+                                                                <tr>
+                                                                        <td width="19%" align="left" valign="top">
+                                                                                <xsl:value-of select="php:function('lang', 'attributes')"/>
+                                                                        </td>
+                                                                        <td>
+                                                                                <div id="paging_0"/>
+                                                                                <div id="datatable-container_0"/>
+                                                                                <input type="hidden" name="template_attrib" value=""/>
+                                                                        </td>
+                                                                </tr>
+                                                        </xsl:when>
+                                                </xsl:choose>
+                                                <tr height="50">
+                                                        <td>
+                                                                <input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}" onClick="onActionsClick()">
+                                                                        <xsl:attribute name="title">
+                                                                                <xsl:value-of select="php:function('lang', 'save')"/>
+                                                                        </xsl:attribute>
+                                                                </input>
+                                                        </td>
+                                                </tr>
+                                        </table>
+                                        </form>
+                                        <table>
+                                        <tr>
+                                                <td>
+                                                        <xsl:variable name="done_action">
+                                                                <xsl:value-of select="done_action"/>
+                                                        </xsl:variable>
+                                                        <xsl:variable name="lang_done">
+                                                                <xsl:value-of select="lang_done"/>
+                                                        </xsl:variable>
+                                                        <form method="post" action="{$done_action}">
+                                                                <input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+                                                                        <xsl:attribute name="onMouseover">
+                                                                                <xsl:text>window.status='</xsl:text>
+                                                                                <xsl:value-of select="lang_done_standardtext"/>
+                                                                                <xsl:text>'; return true;</xsl:text>
+                                                                        </xsl:attribute>
+                                                                </input>
+                                                        </form>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		<!--  DATATABLE DEFINITIONS-->
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js"/>;
@@ -1293,11 +1304,19 @@
 
 	<!-- add attribute group / edit attribute group -->
 	<xsl:template match="edit_attrib_group" xmlns:php="http://php.net/xsl">
+            <script type="text/javascript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+            </script>
+            <div id="tab-content">
+                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                <div class="yui-content">
+                    <div id="general">
 		<div align="left">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form method="post" action="{$form_action}">
+			<form method="post" class="pure-form pure-form-aligned" action="{$form_action}">
 
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -1403,7 +1422,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="lang_save"/>
 							</xsl:variable>
-							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_save_attribtext"/>
@@ -1424,7 +1443,7 @@
 							<xsl:value-of select="lang_done"/>
 						</xsl:variable>
 						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+							<input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_done_attribtext"/>
@@ -1436,15 +1455,26 @@
 				</tr>
 			</table>
 		</div>
+                    </div>
+                </div>
+            </div>
 	</xsl:template>
 
 	<!-- add attribute / edit attribute -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_attrib">
+            <script type="text/javascript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+            </script>
+            <div id="tab-content">
+                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                <div class="yui-content">
+                    <div id="general">
 		<div align="left">
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form method="post" action="{$form_action}">
+			<form method="post" class="pure-form pure-form-aligned" action="{$form_action}">
 
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -1794,7 +1824,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:variable>
-							<input type="submit" name="values[save]" value="{$lang_save}">
+							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'save the attribute')"/>
 								</xsl:attribute>
@@ -1813,7 +1843,7 @@
 							<xsl:value-of select="php:function('lang', 'done')"/>
 						</xsl:variable>
 						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}">
+							<input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'back to the list')"/>
 								</xsl:attribute>
@@ -1823,6 +1853,9 @@
 				</tr>
 			</table>
 		</div>
+                    </div>
+                </div>
+            </div>
 	</xsl:template>
 
 	<!-- list custom_function -->
