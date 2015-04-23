@@ -29,9 +29,8 @@
 	<div class="toolbar-container">
 		<div class="pure-g">
 			<div class="pure-u-1-3">
-				<xsl:for-each select="info">
-					<div><xsl:value-of select="name"/>:<xsl:value-of select="value"/></div>
-				</xsl:for-each>
+				<div id="vendorDiv"></div>
+				<div id="voucheridDiv"></div>
 			</div>
 			<div class="pure-u-2-3">
 				<xsl:for-each select="top_toolbar">
