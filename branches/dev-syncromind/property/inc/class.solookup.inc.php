@@ -137,6 +137,7 @@
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 				$order		= isset($data['order'])?$data['order']:'';
 				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
+				$results	= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -159,7 +160,7 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 
 			$phpgw_user = array();
 			while ($this->db->next_record())

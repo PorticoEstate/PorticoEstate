@@ -1230,10 +1230,10 @@
 			}
 
 			$action = '';
-			$action .= 'parent.document.getElementsByName("'.$user_id.'")[0].value = "";'."\r";
-			$action .= 'parent.document.getElementsByName("'.$user_name.'")[0].value = "";'."\r";
-			$action .= 'parent.document.getElementsByName("'.$user_id.'")[0].value = aData["id"];'."\r";
-			$action .= 'parent.document.getElementsByName("'.$user_name.'")[0].value = aData["first_name"] + " " + aData["last_name"];'."\r";
+			$action .= 'parent.document.getElementById("'.$user_id.'").value = "";'."\r";
+			$action .= 'parent.document.getElementById("'.$user_name.'").value = "";'."\r";
+			$action .= 'parent.document.getElementById("'.$user_id.'").value = aData["id"];'."\r";
+			$action .= 'parent.document.getElementById("'.$user_name.'").value = aData["first_name"] + " " + aData["last_name"];'."\r";
 			$action .= 'window.parent.JqueryPortico.onPopupClose("close");'."\r";
 			
 			$data = array(
@@ -1254,7 +1254,7 @@
 							'column'			=> $column,
 							'phpgw_return_as' => 'json'
 					)),
-					'allrows'	=> true,
+					'allrows'	=> false,
 					'editor_action' => '',
 					'field' => array()
 				)

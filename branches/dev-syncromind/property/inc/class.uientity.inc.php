@@ -2061,7 +2061,6 @@
 					)
 				);
 
-
 				$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(),false , 'controller');
 				$socase 			= CreateObject('controller.socase');
 				$controller_cases	= $socase->get_cases_by_component($location_id, $id);
@@ -3118,10 +3117,19 @@ JS;
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
 				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
 			}
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
+
+			if (phpgw::get_var('phpgw_return_as') != 'json')
 			{
-					return json_encode($controls);
+				return $controls;
 			}
-			return $controls;
+
+			$result_data = array
+			(
+				'results' => $controls,
+				'total_records' => count($controls),
+				'draw' => phpgw::get_var('draw', 'int')
+			);
+
+			return $this->jquery_results($result_data);
 		}
 	}

@@ -284,7 +284,10 @@
 		<xsl:choose>
 			<xsl:when test="mode = 'edit'">
 				<script type="text/javascript">
-					self.name="first_Window";
+					function set_tab(active_tab)
+					{
+						document.form.active_tab.value = active_tab;
+					}
 					<xsl:value-of select="lookup_functions"/>
 				</script>
 			</xsl:when>
@@ -497,14 +500,14 @@
 							{
 								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible'};
 								var requestUrl = phpGWLink('index.php', oArgs);
-								var Window1=window.open(requestUrl,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+								TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 							}
 
 							lookup_control = function()
 							{
 								var oArgs = {menuaction:'controller.uilookup.control'};
 								var requestUrl = phpGWLink('index.php', oArgs);
-								var Window1=window.open(requestUrl,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+								TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 							}
 <![CDATA[
 							function parseURL(url)
@@ -579,7 +582,7 @@
 
 								var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
 								var requestUrl2 = phpGWLink('index.php', oArgs2, true);
-								execute_async(myDataTable_4, oArgs2);
+								JqueryPortico.updateinlineTableHelper('datatable-container_4', requestUrl2);
 							};
 
 							</script>
@@ -588,33 +591,37 @@
 								<legend>
 									<xsl:value-of select="php:function('lang', 'new')" />
 								</legend>
-								<label>
-									<xsl:value-of select="php:function('lang', 'user')" />
-								</label>
-								<input type="text" name="control_responsible" id="control_responsible" value="" onClick="lookup_control_responsible();" readonly="readonly" size="6">
-								</input>
-								<input size="30" type="text" name="control_responsible_user_name" id="control_responsible_user_name" value="" onClick="lookup_control_responsible();" readonly="readonly">
-								</input>
-								<br/>
-								<label>
-									<xsl:value-of select="php:function('lang', 'controller')" />
-								</label>
-								<input type="text" name="control_id" id="control_id" value="" onClick="lookup_control();" readonly="readonly" size="6">
-								</input>
-								<input type="text" name="control_name" id="control_name" value="" onClick="lookup_control();" readonly="readonly" size="30">
-								</input>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'user')" />
+									</label>
+									<input type="text" name="control_responsible" id="control_responsible" value="" onClick="lookup_control_responsible();" readonly="readonly" size="6">
+									</input>
+									<input size="30" type="text" name="control_responsible_user_name" id="control_responsible_user_name" value="" onClick="lookup_control_responsible();" readonly="readonly">
+									</input>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'controller')" />
+									</label>
+									<input type="text" name="control_id" id="control_id" value="" onClick="lookup_control();" readonly="readonly" size="6">
+									</input>
+									<input type="text" name="control_name" id="control_name" value="" onClick="lookup_control();" readonly="readonly" size="30">
+									</input>
+								</div>
 								<xsl:variable name="lang_add">
 									<xsl:value-of select="php:function('lang', 'add')"/>
 								</xsl:variable>
-								<br/>
 
+								<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'start date')" />
 								</label>
 
 								<input type="text" name="control_start_date" id="control_start_date" value=""  readonly="readonly" size="10">
 								</input>
-								<br/>
+								</div>
+								<div class="pure-control-group">
 
 								<label>
 									<xsl:value-of select="php:function('lang', 'repeat type')" />
@@ -623,45 +630,38 @@
 									<option value=""><xsl:value-of select="php:function('lang', 'select')"/></option>
 									<xsl:apply-templates select="repeat_types/options"/>
 								</select>
-								<br/>
-
+								</div>
+								<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'interval')" />
 								</label>
 								<input type="text" name="repeat_interval" id="repeat_interval" value="1" size="2">
 								</input>
-
-								<br/>
-
+								</div>
+								
+								<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'controle time')" />
 								</label>
 								<input type="text" name="controle_time" id="controle_time" value="" size="">
 								</input>
-								<br/>
-
+								</div>
+								<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'service time')" />
 								</label>
 								<input type="text" name="service_time" id="service_time" value="" size="">
 								</input>
-
-								<br/>
-
+								</div>
+								<div class="pure-control-group">
 								<input type="button" name="" value="{$lang_add}" title="{$lang_add}" onClick="add_control();">
 								</input>
-
+								</div>
 							</fieldset>
-							<table>
-								<tr>
-									<td>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'controller')" />
-										
-									</td>
-									<td>
-									<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<tr>
-										<td>
+								</label>
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_4'">
 													<xsl:call-template name="table_setup">
@@ -669,41 +669,30 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 													  	<xsl:with-param name="tabletools" select ='tabletools' />
+													  	<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
 											</xsl:for-each>
-										</td>
-									</tr>
-								</table>
-							</td>
-								</tr>
-								<tr>
-									<td>
-									<xsl:value-of select="php:function('lang', 'cases')" />
-									</td>
-									<td>
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<tr>
-										<td>
-											<xsl:for-each select="datatable_def">
-												<xsl:if test="container = 'datatable-container_5'">
-													<xsl:call-template name="table_setup">
-														<xsl:with-param name="container" select ='container'/>
-														<xsl:with-param name="requestUrl" select ='requestUrl' />
-														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-													  	<xsl:with-param name="tabletools" select ='tabletools' />
-														<xsl:with-param name="config" select ='config' />
-													</xsl:call-template>
-												</xsl:if>
-											</xsl:for-each>
-										</td>
-									</tr>
-								</table>
-									</td>
-								</tr>
-							</table>
+							</div>
 
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'cases')" />
+								</label>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_5'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
 							<xsl:call-template name="controller_integration">
 								<xsl:with-param name="controller" select ='controller'/>
 							</xsl:call-template>
@@ -727,6 +716,7 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 													  	<xsl:with-param name="tabletools" select ='tabletools' />
+													  	<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
@@ -775,9 +765,8 @@
 					</xsl:choose>
 
 					<xsl:choose>
-						<xsl:when test="value_id !='' and enable_bulk = ''">
+						<xsl:when test="value_id !='' and enable_bulk = 0">
 							<div id="related">
-								<fieldset>
 									<div class="pure-control-group">
 										<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_1'">
@@ -786,6 +775,7 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 														<xsl:with-param name="tabletools" select ='tabletools' />
+													  	<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
@@ -799,12 +789,12 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 													  	<xsl:with-param name="tabletools" select ='tabletools' />
+													  	<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
 										</xsl:for-each>
 									</div>
-								</fieldset>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -821,6 +811,7 @@
 														<xsl:with-param name="requestUrl" select ='requestUrl' />
 														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 													  	<xsl:with-param name="tabletools" select ='tabletools' />
+													  	<xsl:with-param name="data" select ='data' />
 														<xsl:with-param name="config" select ='config' />
 													</xsl:call-template>
 												</xsl:if>
