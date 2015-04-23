@@ -416,6 +416,10 @@
 			$id	= (int)phpgw::get_var('id');
 			$values	= phpgw::get_var('values');
 
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_location'));
 
 			if ($id)
@@ -436,35 +440,36 @@
 					'menuaction'	=> 'property.uiadmin_location.save',
 					'id'		=> $id
 				);
-			//_debug_array($values);
 
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
                         
 			$data = array
 				(
-					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'msgbox_data'                   => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'lang_name_standardtext'		=> lang('Enter a name of the standard'),
-					'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
-					'lang_id'				=> lang('standard ID'),
-					'lang_name'				=> lang('Name'),
-					'lang_descr'				=> lang('Descr'),
-					'lang_save'				=> lang('save'),
-					'lang_done'				=> lang('done'),
-					'value_id'				=> (isset($id)?$id:''),
-					'value_name'				=> (isset($values['name'])?$values['name']:''),
+					'form_action'                   => $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'                   => $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
+					'lang_id'                       => lang('standard ID'),
+					'lang_name'                     => lang('Name'),
+					'lang_descr'                    => lang('Descr'),
+					'lang_save'                     => lang('save'),
+					'lang_done'                     => lang('done'),
+					'value_id'                      => (isset($id)?$id:''),
+					'value_name'                    => (isset($values['name'])?$values['name']:''),
 					'lang_id_standardtext'			=> lang('Enter the standard ID'),
 					'lang_descr_standardtext'		=> lang('Enter a description of the standard'),
 					'lang_done_standardtext'		=> lang('Back to the list'),
 					'lang_save_standardtext'		=> lang('Save the standard'),
-					'value_descr'				=> (isset($values['descr'])?$values['descr']:''),
-					'lang_list_info'			=> lang('list info'),
-					'lang_select'				=> lang('select'),
-					'value_list_info'			=> $this->bo->get_list_info((isset($id)?$id:''),$values['list_info']),
-					'lang_location'                         => lang('location'),
+					'value_descr'                   => (isset($values['descr'])?$values['descr']:''),
+					'lang_list_info'                => lang('list info'),
+					'lang_select'                   => lang('select'),
+					'value_list_info'               => $this->bo->get_list_info((isset($id)?$id:''),$values['list_info']),
+					'lang_location'                 => lang('location'),
 					'lang_list_info_statustext'		=> lang('Names of levels to list at this level'),
 					'value_list_address'			=> isset($values['list_address'])?$values['list_address']:'',
-					'value_list_documents'			=> isset($values['list_documents'])?$values['list_documents']:''
+					'value_list_documents'			=> isset($values['list_documents'])?$values['list_documents']:'',
+                    'tabs'                          => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+                    'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 
 			$appname	= lang('location');
@@ -910,6 +915,11 @@
 			$location	= ".location.{$type_id}";
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			if(!$values)
 			{
 				$values=array();
@@ -1011,7 +1021,9 @@
 					'value_remark'						=> $values['remark'],
 
 					'lang_done_attribtext'				=> lang('Back to the list'),
-					'lang_save_attribtext'				=> lang('Save the attribute')
+					'lang_save_attribtext'				=> lang('Save the attribute'),
+                    'tabs'                          => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+                    'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 
 			$appname = lang('location');
@@ -1318,7 +1330,11 @@
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::location::attribute_loc_{$type_id}";
 
 			if(!$values)
@@ -1484,6 +1500,8 @@
 					'nullable_list'				=> $this->bocommon->select_nullable($values['column_info']['nullable']),
 					'value_lookup_form'			=> $values['lookup_form'],
 					'value_list'				=> $values['list'],
+                    'tabs'                      => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+                    'validator'					=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 			//_debug_array($data);
 
