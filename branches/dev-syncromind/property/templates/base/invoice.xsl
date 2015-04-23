@@ -1,5 +1,5 @@
 <!-- $Id$ -->
-<xsl:template name="app_data">
+<xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="add">
 			<xsl:apply-templates select="add"/>
@@ -1367,7 +1367,7 @@
 </xsl:template>
 
 <!-- edit single voucher line  -->
-<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+<xsl:template  match="edit">
 	<xsl:choose>
 		<xsl:when test="normalize-space(redirect) != ''">
 			<script>
@@ -1376,179 +1376,156 @@
 			</script>
 		</xsl:when>
 	</xsl:choose>
-	<form name="form" method="post" action="{form_action}">
-		<input type="hidden" name="paid" value="{paid}"/>
-		<table cellpadding="0" cellspacing="0" width="100%">
-			<xsl:choose>
-				<xsl:when test="msgbox_data != ''">
-					<tr>
-						<td align="left" colspan="2">
-							<xsl:call-template name="msgbox"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-
-			<xsl:for-each select="approved_list">
-				<tr>
-					<td align="left" style="white-space: nowrap;">
-						<xsl:value-of select="role"/>
-					</td>
-					<td align="left" style="white-space: nowrap;">
-						<xsl:if test="initials != ''">
-							<xsl:value-of select="initials"/>
-							<xsl:text>: </xsl:text>
-							<xsl:value-of select="date"/>
-						</xsl:if>
-					</td>
-				</tr>
-			</xsl:for-each>
-			<xsl:choose>
-				<xsl:when test="paid != 1">
-					<tr>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'order id')"/>
-						</td>
-						<td align="left" class="th_text" valign="top">
-							<input type="text" name="values[order_id]" value="{order_id}">
-								<xsl:attribute name="size">
-									<xsl:text>20</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="title">
+	<xsl:choose>
+		<xsl:when test="msgbox_data != ''">
+			<dl>
+				<dt>
+					<xsl:call-template name="msgbox"/>
+				</dt>
+			</dl>
+		</xsl:when>
+	</xsl:choose>
+	<form name="form" id="form" method="post" action="{form_action}" class= "pure-form pure-form-aligned">
+		<input type="hidden" name="tab" value=""/>
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="generic">
+					<input type="hidden" name="paid" value="{paid}"/>
+					<xsl:for-each select="approved_list">
+						<div class="pure-control-group">
+							<label><xsl:value-of select="role"/></label>
+							<xsl:if test="initials != ''">
+								<xsl:value-of select="initials"/>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="date"/>
+							</xsl:if>
+						</div>
+					</xsl:for-each>
+					<xsl:choose>
+						<xsl:when test="paid != 1">
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'order id')"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-					<tr>
-						<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
-						<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'approve')"/>
-						</td>
-						<td class="th_text" valign="top" align="left">
-							<select name="values[approve]">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'grant')"/>
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="php:function('lang', 'select')"/>
-								</option>
-								<xsl:apply-templates select="approve_list"/>
-							</select>
-						</td>
-					</tr>
-
-					<tr>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'voucher process code')"/>
-						</td>
-						<td align="left" class="th_text" valign="top">
-							<select name="values[process_code]">
-								<xsl:attribute name="title">
+								</label>
+								<input type="text" name="values[order_id]" value="{order_id}">
+									<xsl:attribute name="size">
+										<xsl:text>20</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'order id')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
+								<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
+								<label>
+									<xsl:value-of select="php:function('lang', 'approve')"/>
+								</label>
+								<select name="values[approve]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'grant')"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</option>
+									<xsl:apply-templates select="approve_list"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'voucher process code')"/>
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="php:function('lang', 'voucher process code')"/>
-								</option>
-								<xsl:apply-templates select="process_code_list"/>
-							</select>
-						</td>
-					</tr>
-					<xsl:call-template name="project_group_form"/>
-					<tr>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-						</td>
-						<td align="left">
-							<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
-								<xsl:attribute name="title">
+								</label>
+								<select name="values[process_code]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'voucher process code')"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'voucher process code')"/>
+									</option>
+									<xsl:apply-templates select="process_code_list"/>
+								</select>
+							</div>
+							<xsl:call-template name="project_group_form"/>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-								</xsl:attribute>
-								<xsl:value-of select="value_process_log"/>
-							</textarea>
-						</td>
-					</tr>
-
-
-					<tr>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'approved amount')"/>
-						</td>
-						<td align="left" class="th_text" valign="top">
-							<input type="text" name="values[approved_amount]" value="{value_approved_amount}">
-								<xsl:attribute name="size">
-									<xsl:text>20</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="title">
+								</label>
+								<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+									</xsl:attribute>
+									<xsl:value-of select="value_process_log"/>
+								</textarea>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'approved amount')"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-
-
-					<tr>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'split line')"/>
-						</td>
-						<td align="left" valign="top">
-							<input type="checkbox" name="values[split_line]" value="1">
-								<xsl:attribute name="title">
+								</label>
+								<input type="text" name="values[approved_amount]" value="{value_approved_amount}">
+									<xsl:attribute name="size">
+										<xsl:text>20</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'approved amount')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'split line')"/>
-								</xsl:attribute>
-							</input>
-							<xsl:text> [ </xsl:text>
-							<xsl:value-of select="value_amount"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="value_currency"/>
-							<xsl:text> ]</xsl:text>
-						</td>
-					</tr>
-					<tr>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'amount')"/>
-						</td>
-						<td align="left" class="th_text" valign="top">
-							<input type="text" name="values[split_amount]">
-								<xsl:attribute name="size">
-									<xsl:text>20</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="title">
+								</label>
+								<input type="checkbox" name="values[split_line]" value="1">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'split line')"/>
+									</xsl:attribute>
+								</input>
+								<xsl:text> [ </xsl:text>
+								<xsl:value-of select="value_amount"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="value_currency"/>
+								<xsl:text> ]</xsl:text>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'amount')"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-					<tr height="50">
-						<td>
-							<xsl:variable name="lang_send">
-								<xsl:value-of select="php:function('lang', 'save')"/>
-							</xsl:variable>
-							<input type="submit" name="values[save]" value="{$lang_send}" title="{$lang_send}">
-							</input>
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
-					<tr>
-						<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-							<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-						</td>
-						<td align="left">
-							<textarea cols="60" rows="10" wrap="virtual">
-								<xsl:attribute name="readonly">
-									<xsl:text>readonly</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="value_process_log"/>
-							</textarea>
-						</td>
-					</tr>
-
-				</xsl:otherwise>
-			</xsl:choose>
-
-		</table>
+								</label>
+								<input type="text" name="values[split_amount]">
+									<xsl:attribute name="size">
+										<xsl:text>20</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'amount')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+								</label>
+								<textarea cols="60" rows="10" wrap="virtual">
+									<xsl:attribute name="readonly">
+										<xsl:text>readonly</xsl:text>
+									</xsl:attribute>
+									<xsl:value-of select="value_process_log"/>
+								</textarea>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+			</div>
+		</div>
+		<div class="proplist-col">
+					<xsl:choose>
+						<xsl:when test="paid != 1">			
+			<xsl:variable name="lang_send">
+				<xsl:value-of select="php:function('lang', 'save')"/>
+			</xsl:variable>
+			<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_send}" title="{$lang_send}"></input>
+						</xsl:when>
+					</xsl:choose>
+		</div>
 	</form>
 </xsl:template>
 
