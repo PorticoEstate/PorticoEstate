@@ -3026,6 +3026,7 @@
 
 		function view()
 		{
+            
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
@@ -3033,10 +3034,13 @@
 
 			$s_agreement_id	= phpgw::get_var('id'); // in case of bigint
 			$config		= CreateObject('phpgwapi.config','property');
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement', 'attributes_view', 'files'));
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement', 'attributes_view', 'files'));
-
-
+            $tabs = array();
+            $tabs['general']    = array('label' => lang('general'), 'link' => '#general');
+            $active_tab = 'general';
+            $tabs['items'] = array('label' => lang('items'), 'link' => "#items");
+            
 			$s_agreement = $this->bo->read_single(array('s_agreement_id'=>$s_agreement_id));
 
 
@@ -3123,23 +3127,23 @@
 				(
 					'parameter' => array
 					(
-						array
-						(
-							'name'		=> 's_agreement_id',
-							'source'	=> $s_agreement_id,
-							'ready'		=> 1
-						),
+//						array
+//						(
+//							'name'		=> 's_agreement_id',
+//							'source'	=> $s_agreement_id,
+//							'ready'		=> 1
+//						),
 						array
 						(
 							'name'		=> 'id',
 							'source'	=> 'item_id'
 						),
-						array
-						(
-							'name'		=> 'from',
-							'source'	=> 'view',
-							'ready'		=> 1
-						)
+//						array
+//						(
+//							'name'		=> 'from',
+//							'source'	=> 'view',
+//							'ready'		=> 1
+//						)
 					)
 				);
 
@@ -3155,27 +3159,48 @@
 
 
 			//------- alarm--------
-			$datavalues[0] = array
-				(
-					'name'   		=> "0",
-					'values'   		=> json_encode($alarm_data['values']),
-					'total_records' => count($alarm_data['values']),
-					'is_paginator'  => 0,
-					'permission'	=> '""',
-					'footer'  		=> 0
-				);
+//			$datavalues[0] = array
+//				(
+//					'name'   		=> "0",
+//					'values'   		=> json_encode($alarm_data['values']),
+//					'total_records' => count($alarm_data['values']),
+//					'is_paginator'  => 0,
+//					'permission'	=> '""',
+//					'footer'  		=> 0
+//				);
 
-			$myColumnDefs[0] = array
-				(
-					'name'   => "0",
-					'values'  => json_encode(array( array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
-													array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
-													array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
-													array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
-													array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true)))
-				);
+//			$myColumnDefs[0] = array
+//				(
+//					'name'   => "0",
+//					'values'  => json_encode(array( array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
+//													array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
+//													array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
+//													array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
+//													array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true)))
+//				);
 
-
+            $myColumnDefs0 = array
+            (
+                array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
+                array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
+                array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
+                array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter','width'=>60),
+                array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true)
+            );
+            
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($alarm_data['values']),
+//                'tabletools'	=> $tabletools,
+				'ColumnDefs'	=> $myColumnDefs0,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+            
 			$content_values = array();
 
 			for($y=0;$y<count($content);$y++)
@@ -3190,15 +3215,15 @@
 			}
 
 			//---------items------------------------------------
-			$datavalues[1] = array
-				(
-					'name'					=> "1",
-					'values' 				=> json_encode($content_values),
-					'total_records'			=> count($content_values),
-					'is_paginator'			=> 1,
-					'permission'			=> json_encode($permissions['rowactions']),
-					'footer'				=> 0
-				);
+//			$datavalues[1] = array
+//				(
+//					'name'					=> "1",
+//					'values' 				=> json_encode($content_values),
+//					'total_records'			=> count($content_values),
+//					'is_paginator'			=> 1,
+//					'permission'			=> json_encode($permissions['rowactions']),
+//					'footer'				=> 0
+//				);
 
 			$td_count = 0;
 			$ColumnDefs_data = array();
@@ -3220,11 +3245,36 @@
 				}
 			}
 
-			$myColumnDefs[1] = array
-				(
-					'name'		=> "1",
-					'values'	=>	json_encode($ColumnDefs_data)
-				);
+//			$myColumnDefs[1] = array
+//				(
+//					'name'		=> "1",
+//					'values'	=>	json_encode($ColumnDefs_data)
+//				);
+            
+//            $myColumnDefs1 = array
+//            (
+//                array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true)
+//            );
+//            
+            $tabletools = array
+			(
+                array('my_name' => 'view', 'text' =>lang('View'),
+                        'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.view_item','s_agreement_id'=>$s_agreement_id,'from'=>'view')),'parameters'	=> json_encode($parameters)),
+			);
+            
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_values),
+                'tabletools'	=> $tabletools,
+				'ColumnDefs'	=> $ColumnDefs_data,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+				)
+			);
+            
+            
 			unset($ColumnDefs_data);
 
 
@@ -3244,48 +3294,90 @@
 				}
 			}
 
-			$datavalues[2] = array
-				(
-					'name'					=> "2",
-					'values' 				=> json_encode($content_files),
-					'total_records'			=> count($content_files),
-					'permission'   			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
+//			$datavalues[2] = array
+//				(
+//					'name'					=> "2",
+//					'values' 				=> json_encode($content_files),
+//					'total_records'			=> count($content_files),
+//					'permission'   			=> "''",
+//					'is_paginator'			=> 0,
+//					'footer'				=> 0
+//				);
 
-			$myColumnDefs[2] = array
-				(
-					'name'		=> "2",
-					'values'	=>	json_encode(array(array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true)))
-				);
+//			$myColumnDefs[2] = array
+//				(
+//					'name'		=> "2",
+//					'values'	=>	json_encode(array(array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true)))
+//				);
 
-
+            $myColumnDefs2 = array
+            (
+                array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true)
+            );
+            
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_files),
+//                'tabletools'	=> $tabletools,
+				'ColumnDefs'	=> $myColumnDefs2,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+            
 			$content_budget = $this->bo->get_budget($s_agreement_id);
 
-			$datavalues[3] = array
-				(
-					'name'					=> "3",
-					'values' 				=> json_encode($content_budget),
-					'total_records'			=> count($content_budget),
-					'permission'   			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 1
-				);
+//			$datavalues[3] = array
+//				(
+//					'name'					=> "3",
+//					'values' 				=> json_encode($content_budget),
+//					'total_records'			=> count($content_budget),
+//					'permission'   			=> "''",
+//					'is_paginator'			=> 0,
+//					'footer'				=> 1
+//				);
 
-			$myColumnDefs[3] = array
-				(
-					'name'		=> "3",
-					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true)))
-				);
+//			$myColumnDefs[3] = array
+//				(
+//					'name'		=> "3",
+//					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+//														array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+//														array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
+//														array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
+//														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+//														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true)))
+//				);
+            
+            $myColumnDefs3 = array
+            (
+                array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+                array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+                array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
+                array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
+                array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+                array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true)
+            );
+             
+            $datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_3',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content_budget),
+//                'tabletools'	=> $tabletools,
+				'ColumnDefs'	=> $myColumnDefs3,
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+            
 
 			$data = array
 				(
+                    'datatable_def'                 => $datatable_def,
 					'lang_budget'					=> lang('budget'),
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'					=> json_encode(array('menuaction' => "property.uis_agreement.view")),
@@ -3341,28 +3433,35 @@
 					'values'						=> $content,
 					'table_header'					=> $table_header,
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+                    'tabs'                          => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('connection');
+//			phpgwapi_yui::load_widget('loader');
+//			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('animation');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . lang('view');
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
 
 			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
+            
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+            
+            self::render_template_xsl(array('s_agreement','datatable_inline','files','attributes_view'), array('view' => $data));
 		}
 	}
