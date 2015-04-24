@@ -663,12 +663,19 @@
 					(
 						'my_name'		=> 'forward',
 						'text' 			=> lang('forward'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uiinvoice.forward'
-						)),
-						'target'		=> '_lightbox',
-						'parameters'	=> json_encode($parameters)
+						'type'			=> 'custom',
+						'custom_code'	=> ""
+							. "			
+										var selected = JqueryPortico.fnGetSelected(oTable);
+
+										if (selected.length ==0){
+											alert('None selected');
+											return false;
+										}
+										var aData = oTable.fnGetData( selected[0] );
+										var voucher_id_num = aData['voucher_id_num'];
+							"					
+							. "JqueryPortico.openPopup({menuaction:'property.uiinvoice.forward', voucher_id: voucher_id_num}, {closeAction:'reload'})"
 					);
 
 				if($this->acl_delete)
@@ -2067,7 +2074,7 @@ JS;
 					'value_currency'		=> $line['currency'],
 					'value_process_log'		=> isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log'],
 					'paid'					=> $paid,
-					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
 			/*$GLOBALS['phpgw']->xslttpl->add_file('invoice');
@@ -2970,6 +2977,9 @@ JS;
 			}
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
 
 			$GLOBALS['phpgw']->jqcal->add_listener('invoice_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('payment_date');
@@ -3070,7 +3080,8 @@ JS;
 					'location_data'						=> $location_data,
 					'b_account_data'					=> $b_account_data,
 					'link_receipt'						=> isset($link_receipt)?$link_receipt:'',
-					'lang_receipt'						=> lang('receipt')
+					'lang_receipt'						=> lang('receipt'),
+					'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
 			//_debug_array($data);
@@ -3082,7 +3093,6 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function receipt()
@@ -3387,7 +3397,9 @@ JS;
 				}
 			}
 
-
+			$tabs = array();
+			$tabs['confirm']	= array('label' => lang('confirm'), 'link' => '#confirm');
+			$active_tab = 'confirm';
 
 			$data = array
 				(
@@ -3412,7 +3424,8 @@ JS;
 					'sum'						=> number_format($values[0]['amount'], 2, ',', ''),
 					'table_header'				=> $table_header,
 					'values'					=> $content,
-					'table_add'					=> $table_add
+					'table_add'					=> $table_add,
+					'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
 			//_debug_array($data);
@@ -3666,6 +3679,10 @@ JS;
 				}
 			}
 
+			$tabs = array();
+			$tabs['record_detail']	= array('label' => lang('record detail'), 'link' => '#record_detail');
+			$active_tab = 'record_detail';
+			
 			$data = array
 			(
 					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'user_lid' => $user_lid)) : null,
@@ -3680,7 +3697,8 @@ JS;
 					'orders'				=> $orders,
 					'value_amount'			=> $line['amount'],
 					'value_currency'		=> $line['currency'],
-					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']
+					'value_process_log'		=> isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log'],
+					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
