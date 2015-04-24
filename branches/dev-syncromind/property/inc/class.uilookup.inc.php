@@ -512,7 +512,8 @@
 				'input_type'	=>	array('text','text','text'),
 				'name'			=>	array('id','org_name','status'),
 				'formatter'		=>	array('','',''),
-				'descr'			=>	array(lang('ID'),lang('Name'), lang('status'))
+				'descr'			=>	array(lang('ID'),lang('Name'), lang('status')),
+				'sortable'		=>	array(true,true,false)
 			);
 
 			$count_uicols_name = count($uicols['name']);
@@ -522,7 +523,7 @@
 				$params = array(
 								'key' => $uicols['name'][$k],
 								'label' => $uicols['descr'][$k],
-								'sortable' => false,
+								'sortable' => $uicols['sortable'][$k],
 								'hidden' => false
 							);
 				
@@ -640,7 +641,7 @@
 				$params = array(
 								'key' => $uicols['name'][$k],
 								'label' => $uicols['descr'][$k],
-								'sortable' => false,
+								'sortable' => true,
 								'hidden' => false
 							);
 
