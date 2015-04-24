@@ -195,14 +195,16 @@
 		}
 
 
-		function read_custom($custom_id,$allrows='')
+		function read_custom($data = array())
 		{
-			if($allrows)
+//            ,$custom_id,$allrows=''
+			if($data['allrows'])
 			{
-				$this->allrows=$allrows;
+				$data['allrows']=$data['allrows'];
 			}
-			$custom = $this->so->read_custom(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'custom_id' => $custom_id,'allrows'=>$this->allrows));
+//			$custom = $this->so->read_custom(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'filter' => $this->filter,'custom_id' => $custom_id,'allrows'=>$this->allrows));
+            $custom = $this->so->read_custom($data);
 			$this->uicols = $this->so->uicols;
 			$this->total_records = $this->so->total_records;
 			return $custom;
