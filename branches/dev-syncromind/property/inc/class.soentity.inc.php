@@ -747,7 +747,7 @@
 				$sql_cnt_control_fields = '';
 			}
 
-			if(isset($category['location_level']) && $category['location_level'])
+			if(isset($category['location_level']) && $category['location_level'] > 0)
 			{
 				$sql .= "{$this->join} fm_location1 ON (fm_bim_item.loc1 = fm_location1.loc1)";
 				$sql .= "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
@@ -854,7 +854,7 @@
 			$cols_return = $uicols['name'];
 //			$cols_return = $this->cols_return;
 			$dataset = array();
-
+//_debug_array($uicols);
 			while ($this->db->next_record())
 			{
 				$xmldata = $this->db->f('xml_representation');
@@ -900,6 +900,19 @@
 						'value'		=> $this->type,
 						'datatype'	=> false,
 						'attrib_id'	=> false
+					);
+				$dataset[$j]['p_id'] = array
+					(
+						'value'		=> $this->db->f('p_id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+
+				$dataset[$j]['p_location_id'] = array
+					(
+						'value'		=> $this->db->f('p_location_id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
 					);
 
 				if($lookup)
@@ -959,6 +972,11 @@
 
 			if(!$this->uicols)
 			{
+				$admin_entity	= CreateObject('property.soadmin_entity');
+				$admin_entity->type = $this->type;
+
+				$entity = $admin_entity->read_single($entity_id);
+
 
 				$cols_return_extra	= array();
 				$cols_return		= array();
@@ -988,6 +1006,20 @@
 				$uicols['exchange'][]		= false;
 				$uicols['formatter'][]		= $lookup ? '' : 'linktToEntity';
 				$uicols['classname'][]		= '';
+
+				if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
+				{
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= 'p_location';
+					$uicols['descr'][]			= lang('location');
+					$uicols['statustext'][]		= lang('location');
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
+					$uicols['sortable'][]		= true;
+					$uicols['exchange'][]		= false;
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
+				}
 
 				$cols_return[] 				= 'id';
 				$uicols['input_type'][]		= 'hidden';
@@ -1061,6 +1093,17 @@
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
 					$uicols['sortable'][]		= true;
+					$uicols['exchange'][]		= false;
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
+
+					$uicols['input_type'][]		= 'hidden';
+					$uicols['name'][]			= 'org_unit_id';
+					$uicols['descr'][]			= 'dummy';
+					$uicols['statustext'][]		= 'dummy';
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
+					$uicols['sortable'][]		= false;
 					$uicols['exchange'][]		= false;
 					$uicols['formatter'][]		= '';
 					$uicols['classname'][]		= '';

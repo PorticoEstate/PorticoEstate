@@ -582,6 +582,12 @@ JS;
 					}
 					$entry['org_unit'] = $org_units_data[$entry['org_unit_id']]['name'];
 				}
+
+				if(isset($entry['p_location_id']) && isset($entry['p_id']) && $entry['p_id'])
+				{
+					//static cached within so-class
+					$entry['p_location'] = $this->so->get_short_description(array('location_id' => $entry['p_location_id'], 'id' => $entry['p_id']));
+				}
 				
 				foreach($javascript_action as $_name => $_action)
 				{
@@ -654,6 +660,10 @@ JS;
 				$values['p'][$p__location[2]]['p_entity_id']=$p__location[2];
 				$values['p'][$p__location[2]]['p_cat_id']=$p__location[3];
 				$values['p'][$p__location[2]]['p_cat_name'] = $p_location['descr'];
+				if($short_description = $this->so->get_short_description(array('location_id' => $values['p_location_id'], 'id' => $values['p_id'])))
+				{
+					$values['p'][$p__location[2]]['p_cat_name'] .= "::$short_description";
+				}
 			}
 
 			$vfs = CreateObject('phpgwapi.vfs');

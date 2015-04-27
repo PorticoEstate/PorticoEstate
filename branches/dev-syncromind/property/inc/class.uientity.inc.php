@@ -137,7 +137,7 @@
 		/*
 		* Overrides with incoming data from POST
 		*/
-		private function _populate()
+		private function _populate($data = array())
 		{
 			$values				= phpgw::get_var('values');
 			$values_attribute	= phpgw::get_var('values_attribute');
@@ -195,13 +195,15 @@
 			if($category['org_unit'])
 			{
 				$values['extra']['org_unit_id'] = phpgw::get_var('org_unit_id', 'int');
+				$values['org_unit_id']	= $values['extra']['org_unit_id'];
+				$values['org_unit_name'] = phpgw::get_var('org_unit_name', 'string');
 			}
 			if($GLOBALS['phpgw']->session->is_repost())
 			{
 				$this->receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 			}
 
-			if(!$values['location'] && isset($category['location_level']) && $category['location_level'])
+			if((!$values['location'] && !$values['p']) && isset($category['location_level']) && $category['location_level'])
 			{
 				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
 			}
@@ -221,8 +223,8 @@
 					}
 				}
 			}
-			
-			if ($this->receipt['error']) 
+
+			if ($this->receipt['error'])
 			{
 				if($values['location'])
 				{
@@ -242,9 +244,16 @@
 			
 			$values['attributes'] = $values_attribute;
 
+			foreach($data as $key => $original_value)
+			{
+				if((!isset($values['attributes']) || !$values['attributes']) && $data[$key] )
+				{
+					$values[$key] = $original_value;
+				}
+			}
 			return $values;
 		}
-		
+
 		
 		private function _handle_files($values)
 		{
@@ -584,7 +593,12 @@
 			/*
 			* Overrides with incoming data from POST
 			*/
-			$data = $this->_populate();
+			if ($id)
+			{
+				$data	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+			}
+
+			$data = $this->_populate($data);
 			$values = $data;
 			$attributes = $data['attributes'];
 			unset($values['attributes']);
