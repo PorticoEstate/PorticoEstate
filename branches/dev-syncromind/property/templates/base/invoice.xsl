@@ -1498,31 +1498,31 @@
 
 <!-- New template-->
 <xsl:template match="approved_list" xmlns:php="http://php.net/xsl">
-	<tr>
-		<td align="left" style="white-space: nowrap;">
-			<xsl:value-of select="role"/>
-		</td>
-		<td align="left" style="white-space: nowrap;">
-			<xsl:if test="initials != ''">
-				<xsl:value-of select="initials"/>
-				<xsl:text>: </xsl:text>
-				<xsl:value-of select="date"/>
-			</xsl:if>
-		</td>
-		<td align="left" style="white-space: nowrap;">
-			<xsl:if test="date = ''">
-				<select name="values[forward][{role_sign}]">
-					<xsl:attribute name="title">
-						<xsl:value-of select="role"/>
-					</xsl:attribute>
-					<option value="">
-						<xsl:value-of select="php:function('lang', 'select')"/>
-					</option>
-					<xsl:apply-templates select="user_list/options_user"/>
-				</select>
-			</xsl:if>
-		</td>
-	</tr>
+		<div class="pure-g">
+			<div class="pure-u-1-4">
+				<xsl:value-of select="role"/>
+			</div>
+			<div class="pure-u-1-4">
+				<xsl:if test="initials != ''">
+					<xsl:value-of select="initials"/>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="date"/>
+				</xsl:if>
+			</div>
+			<div class="pure-u-1-4">
+				<xsl:if test="date = ''">
+					<select name="values[forward][{role_sign}]">
+						<xsl:attribute name="title">
+							<xsl:value-of select="role"/>
+						</xsl:attribute>
+						<option value="">
+							<xsl:value-of select="php:function('lang', 'select')"/>
+						</option>
+						<xsl:apply-templates select="user_list/options_user"/>
+					</select>
+				</xsl:if>
+			</div>
+		</div>
 </xsl:template>
 
 
@@ -1536,57 +1536,40 @@
 			</script>
 		</xsl:when>
 	</xsl:choose>
-	<form name="form" method="post" action="{form_action}">
+	<xsl:choose>
+		<xsl:when test="msgbox_data != ''">
+			<dl>
+				<dt>
+					<xsl:call-template name="msgbox"/>
+				</dt>
+			</dl>
+		</xsl:when>
+	</xsl:choose>
+	<form id="form" name="form" method="post" action="{form_action}" class="pure-form">
 			<input type="hidden" name="tab" value=""/>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="record_detail">
+					<xsl:apply-templates select="approved_list"/>
+					<div class="pure-g">
+						<div class="pure-u-1-4">
+							<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
+							<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
+							<xsl:value-of select="php:function('lang', 'approve')"/>
+						</div>
+						<div class="pure-u-1-4">
+							<select name="values[approve]">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'grant')"/>
+								</xsl:attribute>
+								<option value="">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:apply-templates select="approve_list"/>
+							</select>
+						</div>
+					</div>
 		<table cellpadding="0" cellspacing="0" width="100%">
-			<xsl:choose>
-				<xsl:when test="msgbox_data != ''">
-					<tr>
-						<td align="left" colspan="3">
-							<xsl:call-template name="msgbox"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-
-			<xsl:apply-templates select="approved_list"/>
-			<tr>
-				<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
-				<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
-				<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-					<xsl:value-of select="php:function('lang', 'approve')"/>
-				</td>
-				<td class="th_text" valign="top" align="left">
-					<select name="values[approve]">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'grant')"/>
-						</xsl:attribute>
-						<option value="">
-							<xsl:value-of select="php:function('lang', 'select')"/>
-						</option>
-						<xsl:apply-templates select="approve_list"/>
-					</select>
-				</td>
-			</tr>
-
-			<!--
-							<tr>
-								<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-									<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-								</td>
-								<td align="left">
-									<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-										</xsl:attribute>
-										<xsl:value-of select="value_process_log"/>
-									</textarea>
-								</td>
-							</tr>
-			-->
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_send">
