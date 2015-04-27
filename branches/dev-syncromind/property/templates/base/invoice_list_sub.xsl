@@ -10,6 +10,15 @@
 <xsl:template match="list_sub">
 	<xsl:call-template name="top-toolbar" />
 	<div>
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dl>
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</dl>
+			</xsl:when>
+		</xsl:choose>
 		<xsl:for-each select="datatable_def">
 			<xsl:if test="container = 'datatable-container_0'">
 				<xsl:call-template name="table_setup">
