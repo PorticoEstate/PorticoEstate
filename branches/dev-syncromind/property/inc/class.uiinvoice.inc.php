@@ -1521,11 +1521,14 @@ JS;
 				$function_msg	= lang('list invoice');
 			}
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 			(
 				'datatable_def'			=> $datatable_def,
-				'top_toolbar'			=> $top_toolbar
+				'top_toolbar'			=> $top_toolbar,
+				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 			);
 			
 			phpgwapi_jquery::load_widget('numberformat');
@@ -1924,12 +1927,12 @@ JS;
 				$values['project_group'] = phpgw::get_var('project_group', 'int', 'POST');
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
-					$receipt['error'][]=array('msg'=>lang('repost'));
+					$this->receipt['error'][]=array('msg'=>lang('repost'));
 				}
 
 				if(!$approve)
 				{
-					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
+					$this->receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
 				}
 
 				if(!isset($values['process_log']) || !$values['process_log'])
@@ -1943,7 +1946,7 @@ JS;
 					$values['approved_amount'] 		= str_replace(',','.',$values['approved_amount']);
 					if( isset($values['order_id']) && $values['order_id'] && !execMethod('property.soXport.check_order',$values['order_id']) )
 					{
-						$receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));
+						$this->receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));
 					}
 				}
 				else
@@ -1958,11 +1961,11 @@ JS;
 					$values['split_amount'] 		= str_replace(',','.',$values['split_amount']);
 					if(!is_numeric($values['split_amount']))
 					{
-						$receipt['error'][]=array('msg'=>lang('Not a valid amount'));
+						$this->receipt['error'][]=array('msg'=>lang('Not a valid amount'));
 					}
 				}
 
-				if (!$receipt['error'])
+				if (!$this->receipt['error'])
 				{
 					$redirect = true;
 					$values['id'] = $id;
@@ -2056,10 +2059,12 @@ JS;
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
 			
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			
 			$data = array
 			(
 					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
-					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'from_name'				=> $GLOBALS['phpgw_info']['user']['fullname'],
 					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.edit', 'id' => $id, 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
 					'approve_list'			=> $approve_list,
@@ -3565,19 +3570,19 @@ JS;
 			{
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
-					$receipt['error'][]=array('msg'=>lang('repost'));
+					$this->receipt['error'][]=array('msg'=>lang('repost'));
 				}
 
 				if(!$approve)
 				{
-					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
+					$this->receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
 				}
 
-				if (!$receipt['error'])
+				if (!$this->receipt['error'])
 				{
 					$values['voucher_id'] = $voucher_id;
-					$receipt = $this->bo->forward($values);
-					if(!$receipt['error'])
+					$this->receipt = $this->bo->forward($values);
+					if(!$this->receipt['error'])
 					{
 						execMethod('property.soworkorder.close_orders',phpgw::get_var('orders'));
 						$redirect = true;
@@ -3679,6 +3684,8 @@ JS;
 				}
 			}
 
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+
 			$tabs = array();
 			$tabs['record_detail']	= array('label' => lang('record detail'), 'link' => '#record_detail');
 			$active_tab = 'record_detail';
@@ -3686,7 +3693,7 @@ JS;
 			$data = array
 			(
 					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'user_lid' => $user_lid)) : null,
-					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'from_name'				=> $GLOBALS['phpgw_info']['user']['fullname'],
 					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.forward', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
 					'approve_list'			=> $approve_list,
