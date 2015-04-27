@@ -195,12 +195,15 @@
 		
 		var data = {"values": values};
 		JqueryPortico.execute_ajax(requestUrl, function(result){
-			//var msg = result.message;
+			
 			document.getElementById("message").innerHTML = '';
-			$.each(result.message, function (k, v) {
-				document.getElementById("message").innerHTML += v.msg + "<br/>";
-			});
-			//var error = result.error;
+			if (typeof(result.message) !== 'undefined')
+			{
+				$.each(result.message, function (k, v) {
+					document.getElementById("message").innerHTML += v.msg + "<br/>";
+				});
+			}
+
 			if (typeof(result.error) !== 'undefined')
 			{
 				$.each(result.error, function (k, v) {
@@ -208,7 +211,7 @@
 				});
 			}
 			oTable.fnDraw();
-			//document.getElementById("message").innerHTML += "<br/>" + result.message[0].msg;
+
 		}, data, "POST", "JSON");
 		
 	}
