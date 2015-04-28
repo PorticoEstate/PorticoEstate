@@ -164,13 +164,15 @@
                         
 		}
 
-		function read_template_hour($template_id)
+		function read_template_hour($data = array())
 		{
-			$template = $this->so->read_template_hour(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows, 'template_id'=>$template_id));
+            
+            $template = $this->so->read_template_hour($data);
+//			$template = $this->so->read_template_hour(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows, 'template_id'=>$template_id));
 			$this->total_records = $this->so->total_records;
 
-			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			return $template;
 		}
