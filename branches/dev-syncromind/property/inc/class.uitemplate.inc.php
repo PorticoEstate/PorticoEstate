@@ -474,15 +474,15 @@
 
 			$template_id = phpgw::get_var('template_id', 'int');
 
-//			if($delete && $hour_id && phpgw::get_var('phpgw_return_as') == 'json')
-//			{
-//				$receipt = $this->bo->delete_hour($hour_id,$template_id);
-//				return "hour ".$hour_id." ".lang("has been deleted");
-//			}
-//			else
-//			{
-//				$receipt = array();
-//			}
+			if($delete && $hour_id)
+			{
+				$receipt = $this->bo->delete_hour($hour_id,$template_id);
+				return "hour ".$hour_id." ".lang("has been deleted");
+			}
+			else
+			{
+				$receipt = array();
+			}
 
             
             if(phpgw::get_var('phpgw_return_as') == 'json')
