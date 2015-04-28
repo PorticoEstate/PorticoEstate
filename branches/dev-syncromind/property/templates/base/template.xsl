@@ -412,7 +412,7 @@
                 <div class="yui-content">
                     <div id="general">
                         <div align="left">
-                        <form method="post" class="pure-form pure-form-aligned" name="form">
+                        <!--form method="post" class="pure-form pure-form-aligned" name="form" -->
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -534,7 +534,7 @@
 					</td>
 				</tr>
 			</table>
-                        </form>
+                        <!--/form-->
                         </div>
                     </div>
                 </div>
