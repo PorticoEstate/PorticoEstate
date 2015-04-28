@@ -55,7 +55,7 @@
 				$order 			= isset($data['order']) ? $data['order']:'';
 				$chapter_id             = isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id']:0;
 				$allrows 		= isset($data['allrows']) ? $data['allrows']:'';
-                                $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
+                $results	        = isset($data['results'])  ? (int) $data['results'] : 0;
 			}
                         /*
     [filter] => 1020
@@ -136,7 +136,7 @@
 
 		function read_template_hour($data)
 		{
-
+               
 			if(is_array($data))
 			{
 				if ($data['start'])
@@ -181,6 +181,8 @@
 			. " {$this->join} fm_standard_unit ON fm_template_hours.unit = fm_standard_unit.id"
 			. " {$filtermethod} {$querymethod}";
 
+//            echo '<pre>'; print_r($sql); echo '</pre>';die('hour12'); 
+            
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
