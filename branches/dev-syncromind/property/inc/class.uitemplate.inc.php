@@ -49,15 +49,17 @@
 
 		var $public_functions = array
 			(       
-                                'query'                 => true,
+                'query'         => true,
 				'index'			=> true,
 				'view'			=> true,
-				'edit_template' 	=> true,
+				'edit_template' => true,
 				'edit_hour'		=> true,
 				'delete'		=> true,
 				'hour'			=> true,
-                                'columns'               => true,
-                                'save'                  => true
+                'columns'       => true,
+                'save'          => true,
+                'query_hour'    => true,
+            
 			);
                 function __construct() {
                     parent::__construct();
@@ -385,6 +387,86 @@
 
 			return $this->jquery_results($result_data);
 		}
+        
+        public function query_hour($template_id)
+        {
+            $search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+            $columns = phpgw::get_var('columns');
+            
+            $params = array(
+                    'start'         => $this->start,
+                    'results'       => phpgw::get_var('length', 'int', 'REQUEST', 0),
+                    'query'         => $search['value'],
+                    'sort'          => $order[0]['dir'],
+                    'order'         => $columns[$order[0]['column']]['data'],
+                    'allrows'       => phpgw::get_var('length', 'int') == -1,
+                    'chapter_id'    => $this->chapter_id,
+                    'template_id'   => $template_id
+            );
+            
+            $template_list	= $this->bo->read_template_hour($params);
+                     
+//            
+            $i=0;
+			$grouping_descr_old='';			
+			while (is_array($template_list) && list(,$template) = each($template_list))
+			{
+
+				if($template['grouping_descr']!=$grouping_descr_old)
+				{
+					$new_grouping = true;
+				}
+				else
+				{
+					$new_grouping = false;
+				}
+
+				$grouping_descr_old = $template['grouping_descr'];
+
+				if($template['activity_num'])
+				{
+					$code = $template['activity_num'];
+				}
+				else
+				{
+					$code = str_replace("-",$template['tolerance'],$template['ns3420_id']);
+				}
+
+				$content[] = array
+					(
+						'hour_id'			=>	$template['hour_id'],
+						'template_id'		=>	$template_id,
+						'counter'			=> $i,
+						'record'			=> $template['record'],
+						'grouping_descr'	=> $template['grouping_descr'],
+						'building_part'		=> $template['building_part'],
+						'code'				=> $code,
+						'hours_descr'		=> $template['remark']!= "" ? $template['hours_descr']."<br>".$template['remark'] : $template['hours_descr'],
+						'unit'				=> $template['unit'],
+						'billperae'			=> $template['billperae'],
+					);
+				unset($new_grouping);
+				unset($grouping_descr_old);
+				unset($code);
+
+				$i++;
+			}
+//            
+//            echo '<pre>'; print_r($content); echo '</pre>';exit('hour');            
+            if ( phpgw::get_var('export', 'bool'))
+			{
+				return $content;
+			}
+                        
+			$result_data = array('results' => $content);
+			$result_data['total_records'] = $this->bo->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
+        }
+        
 		function hour()
 		{
 			$delete = phpgw::get_var('delete', 'bool');
@@ -392,20 +474,82 @@
 
 			$template_id = phpgw::get_var('template_id', 'int');
 
-			if($delete && $hour_id && phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				$receipt = $this->bo->delete_hour($hour_id,$template_id);
-				return "hour ".$hour_id." ".lang("has been deleted");
-			}
-			else
-			{
-				$receipt = array();
-			}
+//			if($delete && $hour_id && phpgw::get_var('phpgw_return_as') == 'json')
+//			{
+//				$receipt = $this->bo->delete_hour($hour_id,$template_id);
+//				return "hour ".$hour_id." ".lang("has been deleted");
+//			}
+//			else
+//			{
+//				$receipt = array();
+//			}
 
-			$datatable = array();
-			$values_combo_box = array();
+            
+            if(phpgw::get_var('phpgw_return_as') == 'json')
+            {
+                return $this->query_hour($template_id);
+            }
+            
+            self::add_javascript('phpgwapi','jquery','editable/jquery.editable.js');
+            self::add_javascript('phpgwapi','jquery','editable/jquery.dataTables.editable.js');
+            
+            $appname	= lang('template');
+			$function_msg	= lang('view template detail');
+            
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+            
+            $data = array(
+                'datatable_name'    => $appname,
+                'form'  => array(
+                    'toolbar'   => array(
+                        'item'  => array(
+                            array(
+                                'type'  => 'link',
+                                'value' => lang('new'),
+                                'href'  => self::link(array(
+                                    'menuaction'    => 'property.uitemplate.edit_hour',
+                                    'template_id'   => $template_id,
+                                )),
+                                'class' => 'new_item'
+                            ),
+                            array(
+                                'type'  => 'link',
+                                'value' => lang('Cancel'),
+                                'href'  => self::link(array(
+                                    'menuaction'    => 'property.uitemplate.index',
+                                    'template_id'   => $template_id,
+                                )),
+                                'class' => 'new_item'
+                            )
+                        )
+                    )
+                ),
+                'datatable' => array(
+                    'source'    => self::link(array(
+                        'menuaction' 		=> 'property.uitemplate.hour',
+						'template_id'		=> $template_id,
+                        'phpgw_return_as'   => 'json'
+                    )),
+                    'allrows'   => true,
+                    'editor_action' => '',
+                    'field' => array(
+                        array('key'=>'hour_id','hidden'=>true,'label'=>'','sortable'=>false),
+                        array('key'=>'template_id','hidden'=>true,'label'=>'','sortable'=>false),
+                        array('key'=>'counter','hidden'=>true,'label'=>'','sortable'=>false),
+                        array('key'=>'record','hidden'=>false,'label'=>lang('Record'),'sortable'=>false),
+                        array('key'=>'building_part','hidden'=>false,'label'=>lang('Building part'),'sortable'=>true),
+                        array('key'=>'code','hidden'=>false,'label'=>lang('Code'),'sortable'=>false),
+                        array('key'=>'grouping_descr','hidden'=>false,'label'=>lang('Grouping'),'sortable'=>false),
+                        array('key'=>'hours_descr','hidden'=>false,'label'=>lang('Description'),'sortable'=>false),
+                        array('key'=>'unit','hidden'=>false,'label'=>lang('Unit'),'sortable'=>false),
+                        array('key'=>'billperae','hidden'=>false,'label'=>lang('Bill per unit'),'sortable'=>true)
+                    )
+                )    
+            );
+//			$datatable = array();
+//			$values_combo_box = array();
 
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			/*if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 					(
@@ -469,92 +613,92 @@
 						)
 					)
 				);
-			}
-			$uicols = array (
-				array(
-					'col_name'=>hour_id,		'visible'=>false,	'name'=>hour_id,		'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>template_id,	'visible'=>false,	'name'=>template_id,	'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>counter,		'visible'=>false,	'name'=>counter,		'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>records,		'visible'=>true,	'name'=>record,			'label'=>lang('Record'),		'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>building_part ,	'visible'=>true,	'name'=>building_part,	'label'=>lang('Building part'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'building_part','formatter'=>''),
-				array(
-					'col_name'=>code,			'visible'=>true,	'name'=>'',				'label'=>lang('Code'),			'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>grouping_descr,	'visible'=>true,	'name'=>grouping_descr,	'label'=>lang('Grouping'),		'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>hours_descr,	'visible'=>true,	'name'=>hours_descr,	'label'=>lang('Description'),	'className'=>'leftClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>unit,			'visible'=>true,	'name'=>unit,			'label'=>lang('Unit'),			'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
-				array(
-					'col_name'=>billperae,		'visible'=>true,	'name'=>billperae,		'label'=>lang('Bill per unit'),	'className'=>'rightClasss',		'sortable'=>true,	'sort_field'=>'billperae',	'formatter'=>'')
-				);
+			}*/
+            
+//			$uicols = array (
+//				array(
+//					'col_name'=>hour_id,		'visible'=>false,	'name'=>hour_id,		'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>template_id,	'visible'=>false,	'name'=>template_id,	'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>counter,		'visible'=>false,	'name'=>counter,		'label'=>'',					'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>records,		'visible'=>true,	'name'=>record,			'label'=>lang('Record'),		'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>building_part ,	'visible'=>true,	'name'=>building_part,	'label'=>lang('Building part'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'building_part','formatter'=>''),
+//				array(
+//					'col_name'=>code,			'visible'=>true,	'name'=>'',				'label'=>lang('Code'),			'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>grouping_descr,	'visible'=>true,	'name'=>grouping_descr,	'label'=>lang('Grouping'),		'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>hours_descr,	'visible'=>true,	'name'=>hours_descr,	'label'=>lang('Description'),	'className'=>'leftClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>unit,			'visible'=>true,	'name'=>unit,			'label'=>lang('Unit'),			'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+//				array(
+//					'col_name'=>billperae,		'visible'=>true,	'name'=>billperae,		'label'=>lang('Bill per unit'),	'className'=>'rightClasss',		'sortable'=>true,	'sort_field'=>'billperae',	'formatter'=>'')
+//				);
+//
+//			$template_list	= $this->bo->read_template_hour($template_id);
+//			$i=0;
+//			$grouping_descr_old='';			
+//			while (is_array($template_list) && list(,$template) = each($template_list))
+//			{
+//
+//				if($template['grouping_descr']!=$grouping_descr_old)
+//				{
+//					$new_grouping = true;
+//				}
+//				else
+//				{
+//					$new_grouping = false;
+//				}
+//
+//				$grouping_descr_old = $template['grouping_descr'];
+//
+//				if($template['activity_num'])
+//				{
+//					$code = $template['activity_num'];
+//				}
+//				else
+//				{
+//					$code = str_replace("-",$template['tolerance'],$template['ns3420_id']);
+//				}
+//
+//				$content[] = array
+//					(
+//						'hour_id'			=>	$template['hour_id'],
+//						'template_id'		=>	$template_id,
+//						'counter'			=> $i,
+//						'record'			=> $template['record'],
+//						'grouping_descr'	=> $template['grouping_descr'],
+//						'building_part'		=> $template['building_part'],
+//						'code'				=> $code,
+//						'hours_descr'		=> $template['remark']!= "" ? $template['hours_descr']."<br>".$template['remark'] : $template['hours_descr'],
+//						'unit'				=> $template['unit'],
+//						'billperae'			=> $template['billperae'],
+//					);
+//				unset($new_grouping);
+//				unset($grouping_descr_old);
+//				unset($code);
+//
+//				$i++;
+//			}
+//
+//			$j=0;
+//			if (isset($content) && is_array($content))
+//			{
+//				foreach($content as $template)
+//				{
+//					for ($i=0;$i<count($uicols);$i++)
+//					{
+//						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols[$i]['col_name'];
+//						$datatable['rows']['row'][$j]['column'][$i]['value']		= $template[$uicols[$i]['name']];
+//					}
+//					$j++;
+//				}
+//			}
 
-			$template_list	= $this->bo->read_template_hour($template_id);
-			//_debug_array($template_list);
-			$i=0;
-			$grouping_descr_old='';			
-			while (is_array($template_list) && list(,$template) = each($template_list))
-			{
-
-				if($template['grouping_descr']!=$grouping_descr_old)
-				{
-					$new_grouping = true;
-				}
-				else
-				{
-					$new_grouping = false;
-				}
-
-				$grouping_descr_old = $template['grouping_descr'];
-
-				if($template['activity_num'])
-				{
-					$code = $template['activity_num'];
-				}
-				else
-				{
-					$code = str_replace("-",$template['tolerance'],$template['ns3420_id']);
-				}
-
-				$content[] = array
-					(
-						'hour_id'			=>	$template['hour_id'],
-						'template_id'		=>	$template_id,
-						'counter'			=> $i,
-						'record'			=> $template['record'],
-						'grouping_descr'	=> $template['grouping_descr'],
-						'building_part'		=> $template['building_part'],
-						'code'				=> $code,
-						'hours_descr'		=> $template['remark']!= "" ? $template['hours_descr']."<br>".$template['remark'] : $template['hours_descr'],
-						'unit'				=> $template['unit'],
-						'billperae'			=> $template['billperae'],
-					);
-				unset($new_grouping);
-				unset($grouping_descr_old);
-				unset($code);
-
-				$i++;
-			}
-
-			$j=0;
-			if (isset($content) && is_array($content))
-			{
-				foreach($content as $template)
-				{
-					for ($i=0;$i<count($uicols);$i++)
-					{
-						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols[$i]['col_name'];
-						$datatable['rows']['row'][$j]['column'][$i]['value']		= $template[$uicols[$i]['name']];
-					}
-					$j++;
-				}
-			}
-
-			$datatable['rowactions']['action'] = array();
+			$data['datatable']['actions'][] = array();
 			$parameters = array();
 			$parameters[] = array('parameter' => array(	array('name'=> 'hour_id',		'source'	=> 'hour_id'),
 				array('name'=> 'template_id',	'source'	=> 'template_id')));
@@ -563,135 +707,136 @@
 				array('name'=> 'template_id',	'source'	=> 'template_id'),
 				array('name'=> 'delete',		'source'	=> 'template_id')));
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name'		=> 'edit',
 					'text' 			=> lang('edit'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour')),
-					'parameters'	=> $parameters[0]
+					'parameters'	=> json_encode($parameters[0])
 				);
-			$datatable['rowactions']['action'][] = array
+            
+			$data['datatable']['actions'][] = array
 				(
 					'my_name'		=> 'delete',
 					'text' 			=> lang('delete'),
 					'confirm_msg'	=> lang('do you really want to delete this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.hour')),
-					'parameters'	=> $parameters[1]
+					'parameters'	=> json_encode($parameters[1])
 				);
-			$datatable['rowactions']['action'][] = array
-				(
-					'my_name'		=> 'add',
-					'text' 			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour','template_id'=> $template_id)),
-				);
+            
+//			$data['datatable']['actions'][] = array
+//				(
+//					'my_name'		=> 'add',
+//					'text' 			=> lang('add'),
+//					'action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.edit_hour','template_id'=> $template_id)),
+//				);
 			unset($parameters);	
 
-			for ($i=0;$i<count($uicols);$i++)
-			{
-				$datatable['headers']['header'][$i]['name']			= $uicols[$i]['col_name'];
-				$datatable['headers']['header'][$i]['text'] 		= $uicols[$i]['label'];
-				$datatable['headers']['header'][$i]['visible'] 		= $uicols[$i]['visible'];
-				$datatable['headers']['header'][$i]['sortable']		= $uicols[$i]['sortable'];
-				$datatable['headers']['header'][$i]['sort_field']	= $uicols[$i]['sort_field'];
-				$datatable['headers']['header'][$i]['className']	= $uicols[$i]['className'];
-				$datatable['headers']['header'][$i]['formatter']	= ($uicols[$i]['formatter']==''?  '""' : $uicols[$i]['formatter']);
-			}
+//			for ($i=0;$i<count($uicols);$i++)
+//			{
+//				$datatable['headers']['header'][$i]['name']			= $uicols[$i]['col_name'];
+//				$datatable['headers']['header'][$i]['text'] 		= $uicols[$i]['label'];
+//				$datatable['headers']['header'][$i]['visible'] 		= $uicols[$i]['visible'];
+//				$datatable['headers']['header'][$i]['sortable']		= $uicols[$i]['sortable'];
+//				$datatable['headers']['header'][$i]['sort_field']	= $uicols[$i]['sort_field'];
+//				$datatable['headers']['header'][$i]['className']	= $uicols[$i]['className'];
+//				$datatable['headers']['header'][$i]['formatter']	= ($uicols[$i]['formatter']==''?  '""' : $uicols[$i]['formatter']);
+//			}
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($content);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= $uicols[1]['col_name']; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						$json_row[$column['name']] = $column['value'];
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-			//Title of Page
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('template') . ': ' . lang('view template detail');
-
-			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'template.hour', 'property' );
-
-			//$this->save_sessiondata();
+//			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+//
+//			// Pagination and sort values
+//			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+//			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+//			$datatable['pagination']['records_returned']= count($content);
+//			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+//
+//			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+//			{
+//				$datatable['sorting']['order'] 			= $uicols[1]['col_name']; // name key Column in myColumnDef
+//				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+//			}
+//			else
+//			{
+//				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+//				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+//			}
+//
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('connection');
+//			phpgwapi_yui::load_widget('loader');
+//			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('animation');
+//
+//			//-- BEGIN----------------------------- JSON CODE ------------------------------
+//
+//			//values for Pagination
+//			$json = array
+//				(
+//					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+//					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+//					'startIndex' 		=> $datatable['pagination']['records_start'],
+//					'sort'				=> $datatable['sorting']['order'],
+//					'dir'				=> $datatable['sorting']['sort'],
+//					'records'			=> array()
+//				);
+//
+//			// values for datatable
+//			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+//				foreach( $datatable['rows']['row'] as $row )
+//				{
+//					$json_row = array();
+//					foreach( $row['column'] as $column)
+//					{
+//						$json_row[$column['name']] = $column['value'];
+//					}
+//					$json['records'][] = $json_row;
+//				}
+//			}
+//
+//			// right in datatable
+//			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+//			{
+//				$json ['rights'] = $datatable['rowactions']['action'];
+//			}
+//
+//			if( phpgw::get_var('phpgw_return_as') == 'json' )
+//			{
+//				return $json;
+//			}
+//
+//
+//			$datatable['json_data'] = json_encode($json);
+//			//-------------------- JSON CODE ----------------------
+//
+//			// Prepare template variables and process XSLT
+//			$template_vars = array();
+//			$template_vars['datatable'] = $datatable;
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+//
+//			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+//			{
+//				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+//			}
+//			// Prepare CSS Style
+//			$GLOBALS['phpgw']->css->validate_file('datatable');
+//			$GLOBALS['phpgw']->css->validate_file('property');
+//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+//
+//			//Title of Page
+//			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('template') . ': ' . lang('view template detail');
+//
+//			// Prepare YUI Library
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'template.hour', 'property' );
+                self::render_template_xsl('datatable_jquery', $data);
 		}
 
 
@@ -816,7 +961,11 @@
 			$values['ns3420_descr']	= phpgw::get_var('ns3420_descr');
 			$error_id = false;
 			$receipt = array();
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$bopricebook	= CreateObject('property.bopricebook');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('template'));
@@ -962,7 +1111,9 @@
 					'lang_ns3420'				=> lang('NS3420'),
 					'value_ns3420_id'			=> $values['ns3420_id'],
 					'lang_ns3420_statustext'	=> lang('Select a standard-code from the norwegian standard'),
-					'currency'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
+					'currency'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+                    'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'					=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 
 				);
 
