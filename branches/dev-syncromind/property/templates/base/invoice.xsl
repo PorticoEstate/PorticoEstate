@@ -75,30 +75,35 @@
 
 <!-- New template-->
 <xsl:template match="remark">
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
-		<tr>
-			<td colspan="2" align="center">
-				<xsl:value-of select="message"/>
-			</td>
-		</tr>
-		<tr>
-			<td align="left">
-				<xsl:choose>
-					<xsl:when test="html = ''">
-						<textarea cols="60" rows="15" name="remark" readonly="readonly">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_content_statustext"/>
-							</xsl:attribute>
-							<xsl:value-of select="remark"/>
-						</textarea>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of disable-output-escaping="yes" select="remark"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</td>
-		</tr>
-	</table>
+	<dl>
+		<dt>
+			<xsl:value-of select="message"/>
+		</dt>
+	</dl>
+	<div class="pure-control-group">
+		<xsl:choose>
+			<xsl:when test="html = ''">
+				<!--
+				<textarea cols="60" rows="15" name="remark" readonly="readonly">
+					<xsl:attribute name="title">
+						<xsl:value-of select="lang_content_statustext"/>
+					</xsl:attribute>
+					<xsl:value-of select="remark"/>
+				</textarea> -->
+				<xsl:variable name="title">
+					<xsl:value-of select="lang_content_statustext"/>
+				</xsl:variable>
+				<div title="{$title}">
+					<xsl:value-of select="remark"/>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:value-of disable-output-escaping="yes" select="remark"/>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
+	</div>
 </xsl:template>
 
 <!-- New template-->
