@@ -86,6 +86,8 @@
 		var data = {"values": values};
 		JqueryPortico.execute_ajax(requestUrl, function(result){
 			
+			document.getElementById("message").innerHTML = '';
+			
 			if (typeof(result.message) !== 'undefined')
 			{
 				$.each(result.message, function (k, v) {
