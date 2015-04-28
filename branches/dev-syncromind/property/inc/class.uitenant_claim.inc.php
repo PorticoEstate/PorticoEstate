@@ -190,7 +190,9 @@
 								'type' => 'link',
 								'value' => lang('new'),
 								'href' => self::link(array(
-									'menuaction' => 'property.uitenant_claim.index'								
+                                    'menuaction' => 'property.uiproject.index',
+                                    'lookup'     => '1',
+                                    'from'       => 'tenant_claim'
 									)),
 								'class' => 'new_item'
 							)
