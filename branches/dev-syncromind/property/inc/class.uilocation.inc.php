@@ -709,9 +709,9 @@
 
 		function index()
 		{
-			$type_id	= $this->type_id;
+			$type_id	= phpgw::get_var('type_id');
 			// $lookup use for pop-up
-			$lookup 	= $this->lookup;
+			$lookup 	= phpgw::get_var('lookup');
 			// $lookup_name use in pop-up option "project"
 			$lookup_name 	= phpgw::get_var('lookup_name');
 			// use in option menu TENANT
@@ -850,7 +850,7 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$this->bo->read(array('lookup_tenant' => $lookup_tenant,'lookup' => $lookup,'dry_run' => true));
+			$this->bo->read(array('type_id'=>$type_id, 'lookup_tenant' => $lookup_tenant,'lookup' => $lookup,'dry_run' => true));
 			$uicols = $this->bo->uicols;
 
 			$appname = lang('location');
@@ -860,7 +860,8 @@
 				$lookup_list	= $GLOBALS['phpgw']->session->appsession('lookup_name','property');
 				$function_msg	= $lookup_list[$lookup_name];
 			// for POP-UPs
-				$input_name		= phpgwapi_cache::session_get('property', 'lookup_fields');
+				//$input_name		= phpgwapi_cache::session_get('property', 'lookup_fields');
+				$input_name = array();
 				$function_exchange_values = <<<JS
 
 				$(document).ready(function() {
