@@ -555,7 +555,7 @@
                     <xsl:value-of disable-output-escaping="yes" select="tabs"/>
                     <div id="general">
                         <div align="left">
-                                <form method="post" class="pure-form pure-form-aligned" name="form" action="">
+                                <!--form method="post" class="pure-form pure-form-aligned" name="form" action=""-->
                                 <table cellpadding="2" cellspacing="2" width="80%" align="center">
                                         <xsl:choose>
                                                 <xsl:when test="msgbox_data != ''">
@@ -836,7 +836,7 @@
                                                 </td>
                                         </tr>
                                 </table>
-                                </form>
+                                <!--/form-->
                         </div>
                     </div>
                 </div>
