@@ -330,7 +330,13 @@
                                                'menuaction'	=> 'property.uiinvoice.add'
                                            )),
                                            'class'  => 'new_item'
-                                       )
+                                       ),
+                                       array(
+                                           'type'	=> 'link',
+                                           'value'  => lang('Save'),
+                                           'onclick'  => 'onSave()',
+                                           'class'  => 'new_item'
+                                       )								
                                    )
                                )
                             ),
@@ -704,14 +710,14 @@
 						'target'		=> '_blank',
 						'parameters'	=> json_encode($parameters)
 					);
-
+				/*
 				$data['datatable']['actions'][] = array
 					(
 						'my_name'	=> 'save',
 						'text' 		=> lang('save'),
 						'type'		=> 'custom',
 						'custom_code' => "onSave();"
-					);
+					);*/
 
 				unset($parameters);
 			}
@@ -760,6 +766,61 @@ JS;
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $jscode, true);
 				
+				
+			$columns = array (
+				array('id'=>'workorder_id', 'label'=>lang('Workorder ID'), 'type'=>'text'),
+				array('id'=>'', 'label'=>"<a href=\"#\" onClick=\"JqueryPortico.openPopup({menuaction:'property.uilookup.vendor'})\">".lang('Vendor')."</a>", 'type' => 'link'),
+				array('id'=>'vendor_id', 'label'=>lang('Vendor'), 'type'=>'text'),
+				array('id'=>'vendor_name', 'label'=>'', 'type'=>'hidden'),
+				array('id'=>'invoice_id', 'label'=>lang('invoice number'), 'type'=>'text'),
+				array('id'=>'', 'label'=>"<a href=\"#\" onClick=\"JqueryPortico.openPopup({menuaction:'property.uilocation.index', lookup:'1', type_id:'1', lookup_name:'0'})\">".lang('property')."</a>", 'type' => 'link'),
+				array('id'=>'loc1', 'label'=>lang('property'), 'type'=>'text'),
+				array('id'=>'loc1_name', 'label'=>'', 'type'=>'hidden'),
+				array('id'=>'voucher_id', 'label'=>lang('Voucher ID'), 'type'=>'text')
+			);
+			
+			$code =	"var columns = ".json_encode($columns);
+					
+			$code .= <<<JS
+				
+				function initCompleteDatatable(oSettings, json, oTable) 
+				{
+					$('#datatable-container_filter').empty();
+					$.each(columns, function(i, val) 
+					{
+						if (val['type'] == 'text') 
+						{
+							$('#datatable-container_filter').append('<input type="text" placeholder="Search '+val['label']+'" id="'+val['id']+'" name="'+val['id']+'" />');
+						}
+						else if (val['type'] == 'hidden') 
+						{
+							$('#datatable-container_filter').append('<input type="hidden" id="'+val['id']+'" name="'+val['id']+'" />');
+						}
+						else {
+							$('#datatable-container_filter').append(val['label']);
+						}
+					});
+					
+					// Apply the search
+					var api = oTable.api();
+					
+					$.each(columns, function(i, val) 
+					{
+						$( '#' + val['id']).on( 'keyup change', function () 
+						{
+							if (val['type'] == 'text') 
+							{
+								oTable.dataTableSettings[0]['ajax']['data'][val['id']] = this.value;
+								oTable.fnDraw();
+							}
+						});
+					});
+				};
+					
+JS;
+
+			$GLOBALS['phpgw']->js->add_code('', $code, true);
+			
 			//Title of Page
 			$appname	= lang('invoice');
 			$function_msg	= lang('list voucher');
@@ -1545,13 +1606,32 @@ JS;
 			$order			= phpgw::get_var('order');
 			$draw			= phpgw::get_var('draw', 'int');
 			$columns		= phpgw::get_var('columns');
-
+			$order_field	= '';
+			
+			switch($columns[$order[0]['column']]['data'])
+			{
+				case 'workorder':
+					$order_field = 'pmwrkord_code';
+					break;
+				case 'budget_Account':
+					$order_field = 'spbudact_code';
+					break;
+				case 'sum':
+					$order_field = 'belop';
+					break;
+				case 'dim_A':
+					$order_field = 'dima';
+					break;
+				default:
+					$order_field = $columns[$order[0]['column']]['data'];
+			}
+			
 			$params = array
 				(
 					'start'         => phpgw::get_var('start', 'int', 'REQUEST', 0),
 					'results'       => phpgw::get_var('length', 'int', 'REQUEST', 0),
 					'query'         => $search['value'],
-					'order'         => $columns[$order[0]['column']]['data'],
+					'order'         => $order_field,
 					'sort'          => $order[0]['dir'],
 					'allrows'       => 1,
 					'paid'			=> $paid ? $paid : false,
@@ -1833,12 +1913,7 @@ JS;
 					{
 						if($invoices['remark'] == true)
 						{
-							$json_row[$uicols[$i]['col_name']] .= " <a href=\"javascript:openwindow('".$GLOBALS['phpgw']->link('/index.php', array
-								(
-									'menuaction'=> 'property.uiinvoice.remark',
-									'id'		=> $invoices['id'],
-									'paid'		=> $invoices['paid']
-								)). "','550','400')\" >".lang('Remark')."</a>";
+							$json_row[$uicols[$i]['col_name']] .= "<a href='#' onClick=\"JqueryPortico.openPopup({'menuaction':'property.uiinvoice.remark', id:'{$invoices['id']}', paid:'{$invoices['paid']}'})\">".lang('Remark')."</a>";
 						}
 						else
 						{
@@ -1849,8 +1924,8 @@ JS;
 					{
 						if(isset($invoices['external_ref']) && $invoices['external_ref'])
 						{
-							//	$json_row[$uicols[$i]['col_name']] = " <a target='_blank' href='".$baseurl_invoice. $invoices['external_ref']."'>{$lang_picture}</a>";
-							$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$invoices['external_ref']}','640','800')\" >{$lang_picture}</a>";
+							//$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$invoices['external_ref']}','640','800')\" >{$lang_picture}</a>";
+							$json_row[$uicols[$i]['col_name']] = "<a href='#' onClick=\"JqueryPortico.openPopup({'menuaction':'{$baseurl_invoice}{$invoices['external_ref']}'})\">{$lang_picture}</a>";
 						}
 						else
 						{
