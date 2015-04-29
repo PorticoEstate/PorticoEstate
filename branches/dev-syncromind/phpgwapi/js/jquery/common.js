@@ -407,7 +407,7 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		var width = options['width'] || 750;
 		var height = options['height'] || 450;
 		var closeAction = options['closeAction'] || false;
-
+		
 
 		var requestUrl = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:width,height:height,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){JqueryPortico.onPopupClose(closeAction);}});
@@ -422,6 +422,11 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		if(closeAction=='close')
 		{
 			TINY.box.hide();
+			
+			if(typeof(afterPopupClose) == 'function')
+			{
+				afterPopupClose();
+			}
 		}
 	};
 
