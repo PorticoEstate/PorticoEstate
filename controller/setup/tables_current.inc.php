@@ -167,6 +167,7 @@
 					'repeat_interval'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
 					'service_time'			=> array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 					'controle_time'			=> array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'enabled'				=> array('type' => 'int', 'precision' => 2, 'nullable' => True,'default' => 1)
 				),
 			'pk' => array('id'),
 			'fk' => array(),

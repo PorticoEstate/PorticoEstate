@@ -3,6 +3,11 @@ var  myPaginator_0, myDataTable_0;
 var  myPaginator_1, myDataTable_1;
 var  myPaginator_2, myDataTable_2;
 var  myPaginator_3, myDataTable_3;
+var  myPaginator_4, myDataTable_4;
+
+var Button_4_0, Button_4_1, Button_4_2;
+
+
 /********************************************************************************/
 var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 {
@@ -10,6 +15,153 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 }
 
 /********************************************************************************/
+	this.onActionsClick=function()
+	{
+		flag = false;
+		//validate ckecks true
+		array_checks = YAHOO.util.Dom.getElementsByClassName('mychecks');
+		for ( var i in array_checks )
+		{
+			if(array_checks[i].checked)
+			{
+				flag = true;
+				break;
+			}
+		}
+
+		if(flag)
+		{
+			var action = this.get("value");
+
+			var ids = [];
+
+			$(".mychecks:checked").each(function () {
+					ids.push($(this).val());
+			});
+
+			var data = {"ids": ids, "action": action};
+			data.repeat_interval = $("#repeat_interval").val();
+			data.controle_time = $("#controle_time").val();
+			data.service_time = $("#service_time").val();
+			data.control_responsible = $("#control_responsible").val();
+			data.control_start_date = $("#control_start_date").val();
+			data.repeat_type = $("#repeat_type").val();
+
+			var formUrl = $("#form").attr("action");
+			var Url = parseURL(formUrl);
+			oArgs  = Url.searchObject;
+			delete oArgs.click_history;
+			oArgs.menuaction = 'property.boentity.update_control_serie';
+
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+	//								alert(requestUrl);
+
+			$("#controller_receipt").html("");
+
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: requestUrl,
+				data: data,
+				success: function(data) {
+					if( data != null)
+					{
+						$("#controller_receipt").html(data.status + '::' + data.msg);
+						if(data.status_kode == 'ok')
+						{
+
+						}
+					}
+				}
+			});
+
+
+			var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
+			var requestUrl2 = phpGWLink('index.php', oArgs2, true);
+			execute_async(myDataTable_4, oArgs2);
+		}
+	}
+	
+	this.cleanValuesHiddenActionsButtons=function()
+	{
+		YAHOO.util.Dom.get('hd_values[enable_serie]').value = '';
+		YAHOO.util.Dom.get('hd_values[disable_serie]').value = '';
+	}
+
+	function parseURL(url)
+	{
+		var parser = document.createElement('a'),
+			searchObject = {},
+			queries, split, i;
+		// Let the browser do the work
+		parser.href = url;
+		// Convert query string to object
+		queries = parser.search.replace(/^\?/, '').split('&');
+		for( i = 0; i < queries.length; i++ ) {
+			split = queries[i].split('=');
+			searchObject[split[0]] = split[1];
+		}
+		return {
+			protocol: parser.protocol,
+			host: parser.host,
+			hostname: parser.hostname,
+			port: parser.port,
+			pathname: parser.pathname,
+			search: parser.search,
+			searchObject: searchObject,
+			hash: parser.hash
+		};
+	}
+
+	add_control = function()
+	{
+		var formUrl = $("#form").attr("action");
+		var Url = parseURL(formUrl);
+		oArgs  = Url.searchObject;
+		delete oArgs.click_history;
+		oArgs.menuaction = 'property.boentity.add_control';
+		oArgs.control_id = $("#control_id").val();
+		oArgs.control_responsible = $("#control_responsible").val();
+		oArgs.control_start_date = $("#control_start_date").val();
+		oArgs.repeat_type = $("#repeat_type").val();
+		if(!oArgs.repeat_type)
+		{
+			alert('velg type serie');
+			return;
+		}
+
+		oArgs.repeat_interval = $("#repeat_interval").val();
+		oArgs.controle_time = $("#controle_time").val();
+		oArgs.service_time = $("#service_time").val();
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+//								alert(requestUrl);
+
+		$("#controller_receipt").html("");
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					$("#controller_receipt").html(data.status + '::' + data.msg);
+					if(data.status_kode == 'ok')
+					{
+						$("#control_id").val('');
+						$("#control_name").val('');
+						$("#control_responsible").val('');
+						$("#control_responsible_user_name").val('');
+						$("#control_start_date").val('');
+					}
+				}
+			}
+		});
+
+		var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
+		var requestUrl2 = phpGWLink('index.php', oArgs2, true);
+		execute_async(myDataTable_4, oArgs2);
+	};
 
 	this.myParticularRenderEvent = function()
 	{
