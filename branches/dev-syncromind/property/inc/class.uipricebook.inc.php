@@ -32,9 +32,12 @@
 	 * @package property
 	 */
 
-	phpgw::import_class('phpgwapi.yui');
+//	phpgw::import_class('phpgwapi.yui');
 
-	class property_uipricebook
+    phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.jquery');
+
+	class property_uipricebook extends phpgwapi_uicommon_jquery
 	{
 		var $grants;
 		var $cat_id;
@@ -49,6 +52,7 @@
 
 		var $public_functions = array
 			(
+                'query'                 => true,
 				'activity'				=> true,
 				'index'  				=> true,
 				'agreement_group'   	=> true,
@@ -58,11 +62,16 @@
 				'prizing'				=> true,
 				'delete' 				=> true,
 				'download'				=> true,
-				'download_2'			=> true
+				'download_2'			=> true,
+                '_get_Filters'          => true,
+                '_get_Filters_Activity' => true,
+                'query_Activity'        => true,
 			);
 
-		function property_uipricebook()
+		function __construct()
 		{
+            parent::__construct();
+            
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 
@@ -124,45 +133,52 @@
 
 			$this->bocommon->download($list,$name,$descr);
 		}
+        
+        private function _get_Filters()
+        {
+            $values_combo_box = array();
+            $combos = array();
+            
+            $values_combo_box[0] = $this->bo->get_vendor_list('filter',$this->cat_id);
+            array_unshift($values_combo_box[0],array('id'=>'', 'name'=>lang('no category')));
+            $combos[] = array
+                            (
+                                'type' => 'filter',
+                                'name'   => 'cat_id',
+								'text'   => lang('no Category'),
+								'list'   => $values_combo_box[0]
+                            );
+            
+            return $combos;
+            
+        }
+        
+        public function query()
+        {
+            $search     = phpgw::get_var('search');
+			$order      = phpgw::get_var('order');
+			$draw       = phpgw::get_var('draw', 'int');
+			$columns    = phpgw::get_var('columns');
 
-		function index()
-		{
-			if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
-			}
-
-			$GLOBALS['phpgw']->session->appsession('referer','property','');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
-				'nextmatchs',
-				'search_field'));
-
-			$values			= phpgw::get_var('values');
-
-			//_debug_array($values);
-			if($values['submit_update'])
-			{
-				$receipt=$this->bo->update_pricebook($values);
-			}
-
-			$pricebook_list = $this->bo->read();
-
-			$i=0;
+            $params = array
+                (
+                    'start'             => phpgw::get_var('start','int','REQUEST',0),
+                    'results'           => phpgw::get_var('length', 'int', 'REQUEST', 0),
+                    'query'             => $search['value'],
+                    'order'             => $columns[$order[0]['column']]['data'],
+                    'sort'              => $order[0]['dir'],
+                    'filter'            => $this->filter,
+                    'cat_id'            => $this->cat_id,
+                    'allrows'           => phpgw::get_var('length','int') == -1
+                );
+            
+            $pricebook_list = $this->bo->read($params);
+       
+            $i=0;
 			if (isSet($pricebook_list) AND is_array($pricebook_list))
 			{
 				foreach($pricebook_list as $pricebook)
 				{
-					if($this->acl_manage)
-					{
-						$link_edit					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id']));
-						$link_prizing				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'], 'cat_id'=> $this->cat_id));
-						$lang_edit_statustext		= lang('edit the pricebook');
-						$lang_prizing_statustext	= lang('view or edit prizing history of this element');
-						$text_edit					= lang('edit');
-						$text_prizing				= lang('prizing');
-					}
-
 					$content[] = array
 						(
 							'counter'					=> $i,
@@ -178,61 +194,234 @@
 							'unit'						=> $pricebook['unit'],
 							'descr'						=> $pricebook['descr'],
 							'index_count'				=> $pricebook['index_count'],
-							'link_edit'					=> $link_edit,
-							'link_prizing'				=> $link_prizing,
-							'lang_edit_statustext'		=> $lang_edit_statustext,
-							'lang_prizing_statustext'	=> $lang_prizing_statustext,
-							'text_edit'					=> $text_edit,
-							'text_prizing'				=> $text_prizing
 						);
 					$i++;
 				}
 			}
+            
+            if( phpgw::get_var('export','bool'))
+            {
+                return $content;
+            }
+            
+            $result_data = array('results'  => $content);
+            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['draw'] = $draw;
+			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+            
+            return $this->jquery_results($result_data);
+        }
+        
+		function index()
+		{
+           
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
 
-			$table_header[] = array
-				(
-					'sort_num'	=> $this->nextmatchs->show_sort_order(array
-					(
-						'sort'	=> $this->sort,
-						'var'	=> 'num',
-						'order'	=> $this->order,
-						'extra'	=> array
-						(
-							'menuaction'	=> 'property.uipricebook.index',
-							'cat_id'	=>$this->cat_id,
-							'allrows'	=>$this->allrows)
-						)
-					),
-					'lang_index_count'	=> lang('Index Count'),
-					'lang_num'		=> lang('Activity Num'),
-					'lang_branch'		=> lang('Branch'),
-					'lang_vendor'		=> lang('Vendor'),
-					'lang_select'		=> lang('Select'),
-					'lang_total_cost'	=> lang('Total Cost'),
-					'lang_prizing'		=> lang('Prizing'),
-					'lang_last_index'	=> lang('Last index'),
-					'lang_descr'		=> lang('Description'),
-					'lang_m_cost'		=> lang('Material cost'),
-					'lang_w_cost'		=> lang('Labour cost'),
-					'lang_prizing'		=> lang('Prizing'),
-					'lang_unit'		=> lang('Unit'),
-					'lang_view'		=> lang('view'),
-					'lang_edit'		=> lang('edit'),
-					'sort_total_cost'	=> $this->nextmatchs->show_sort_order(array
-					(
-						'sort'	=> $this->sort,
-						'var'	=> 'total_cost',
-						'order'	=> $this->order,
-						'extra'	=> array
-						(
-							'menuaction'	=> 'property.uipricebook.index',
-							'cat_id'	=>$this->cat_id,
-							'allrows'	=>$this->allrows)
-						)
-					)
-				);
+			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook','nextmatchs','search_field'));
 
+			$values	= phpgw::get_var('values');
+
+			if($values['submit_update'])
+			{
+				$receipt=$this->bo->update_pricebook($values);
+			}
+
+//			$pricebook_list = $this->bo->read();
+//
+//			$i=0;
+//			if (isSet($pricebook_list) AND is_array($pricebook_list))
+//			{
+//				foreach($pricebook_list as $pricebook)
+//				{
+//					if($this->acl_manage)
+//					{
+//						$link_edit					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id']));
+//						$link_prizing				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'], 'cat_id'=> $this->cat_id));
+//						$lang_edit_statustext		= lang('edit the pricebook');
+//						$lang_prizing_statustext	= lang('view or edit prizing history of this element');
+//						$text_edit					= lang('edit');
+//						$text_prizing				= lang('prizing');
+//					}
+//
+//					$content[] = array
+//						(
+//							'counter'					=> $i,
+//							'activity_id'				=> $pricebook['activity_id'],
+//							'num'						=> $pricebook['num'],
+//							'branch'					=> $pricebook['branch'],
+//							'vendor_id'					=> $pricebook['vendor_id'],
+//							'agreement_id'				=> $pricebook['agreement_id'],
+//							'm_cost'					=> $pricebook['m_cost'],
+//							'w_cost'					=> $pricebook['w_cost'],
+//							'total_cost'				=> $pricebook['total_cost'],
+//							'this_index'				=> $pricebook['this_index'],
+//							'unit'						=> $pricebook['unit'],
+//							'descr'						=> $pricebook['descr'],
+//							'index_count'				=> $pricebook['index_count'],
+////							'link_edit'					=> $link_edit,
+////							'link_prizing'				=> $link_prizing,
+////							'lang_edit_statustext'		=> $lang_edit_statustext,
+////							'lang_prizing_statustext'	=> $lang_prizing_statustext,
+////							'text_edit'					=> $text_edit,
+////							'text_prizing'				=> $text_prizing
+//						);
+//					$i++;
+//				}
+//			}
+
+//			$table_header[] = array
+//				(
+//					'sort_num'	=> $this->nextmatchs->show_sort_order(array
+//					(
+//						'sort'	=> $this->sort,
+//						'var'	=> 'num',
+//						'order'	=> $this->order,
+//						'extra'	=> array
+//						(
+//							'menuaction'	=> 'property.uipricebook.index',
+//							'cat_id'	=>$this->cat_id,
+//							'allrows'	=>$this->allrows)
+//						)
+//					),
+//					'lang_index_count'	=> lang('Index Count'),
+//					'lang_num'          => lang('Activity Num'),
+//					'lang_branch'		=> lang('Branch'),
+//					'lang_vendor'		=> lang('Vendor'),
+//					'lang_select'		=> lang('Select'),
+//					'lang_total_cost'	=> lang('Total Cost'),
+//					'lang_prizing'		=> lang('Prizing'),
+//					'lang_last_index'	=> lang('Last index'),
+//					'lang_descr'		=> lang('Description'),
+//					'lang_m_cost'		=> lang('Material cost'),
+//					'lang_w_cost'		=> lang('Labour cost'),
+//					'lang_prizing'		=> lang('Prizing'),
+//					'lang_unit'		=> lang('Unit'),
+//					'lang_view'		=> lang('view'),
+//					'lang_edit'		=> lang('edit'),
+//					'sort_total_cost'	=> $this->nextmatchs->show_sort_order(array
+//					(
+//						'sort'	=> $this->sort,
+//						'var'	=> 'total_cost',
+//						'order'	=> $this->order,
+//						'extra'	=> array
+//						(
+//							'menuaction'	=> 'property.uipricebook.index',
+//							'cat_id'	=>$this->cat_id,
+//							'allrows'	=>$this->allrows)
+//						)
+//					)
+//				);
+            
+            if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+                return $this->query();
+			}
+            
+            self::add_javascript('phpgwapi','jquery','editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi','jquery','editable/jquery.dataTables.editable.js');
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			phpgwapi_jquery::load_widget('datepicker');
+            
+            $appname	= lang('pricebook');
+			$function_msg	= lang('list pricebook per vendor');
+            
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+            
+            $data = array(
+                'datatable_name' => $appname . ': ' . $function_msg,
+                'form' => array(
+                    'toolbar' => array(
+                        'item'  => array()
+                    )
+                ),
+                'datatable' => array(
+                    'source' => self::link(array(
+                       'menuaction'        => 'property.uipricebook.index',
+                       'phpgw_return_as'   => 'json'
+                    )),
+                    'download'  => self::link(array(
+                        'menuaction'	=> 'property.uipricebook.download',
+                        'cat_id'        => $this->cat_id,
+                        'filter'        => $this->filter,
+                        'export'        => true,
+                        'skip_origin'   => true,
+                        'allrows'       => true
+                    )),
+                    'allrows'   => true,
+                    'editor'    => '',
+                    'field'     => array(
+                            array('key'=>'activity_id','label'=>lang('Activity Id'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                            array('key'=>'num','label'=>lang('Activity num'),'sortable'=>true,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
+                            array('key'=>'vendor_id','label'=>lang('Vendor'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'branch','label'=>lang('branch'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'descr','label'=>lang('Description'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'unit','label'=>lang('Unit'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'w_cost','label'=>lang('Labour cost'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'m_cost','label'=>lang('Material cost'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'total_cost','label'=>lang('Total Cost'),'sortable'=>true,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'this_index','label'=>lang('Last index'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'index_count','label'=>lang('Index count'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'agreement_id','label'=>lang('Agreement id'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                    )
+                ),
+                'down-toolbar'  => array(
+                    'fields'    => array(
+                        'field' => array(
+                            array(
+                                'type' => 'label',
+                                'id' => 'lbl_input_index',
+                                'value' => lang('New Index'),
+                                'style' => 'filter',
+                                'group' => '1'
+                            ),
+                             array
+							(
+								'type' => 'text',
+								'id' => 'txt_index',
+                                'name' => 'txt_index',
+								'tab_index' => 5,
+								'style' => 'filter',
+								'group' => '1'
+							),
+                            array(
+                                'type' => 'date-picker',
+                                'id'   => 'start_date',
+                                'name' => 'start_date',
+                                'value'=> '',
+                                'style' => 'filter',
+								'group' => '1'
+                            ),
+                            array
+							(
+								'type' => 'button',
+								'id' => 'btn_update',
+								'value'	=> lang('Update'),
+								'tab_index' => 5,
+								'style' => 'filter',
+								'group' => '1',
+                                'action' => 'onclikUpdateinvestment()'
+							),
+                        )
+                    )
+                )
+            );
+            
+            $filters = $this->_get_Filters();
+            krsort($filters);
+            foreach($filters as $filter){
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
+//            [unit_name] => time
+//            [dim_d] => 341
+//            [ns3420_id] => 
+//            [base_descr] => 
+                       
 			if($this->acl_manage)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_date');
@@ -247,15 +436,15 @@
 					);
 			}
 
-			$link_data = array
-				(
-					'menuaction'	=> 'property.uipricebook.index',
-					'sort'			=> $this->sort,
-					'order'			=> $this->order,
-					'cat_id'		=> $this->cat_id,
-					'filter'		=> $this->filter,
-					'query'			=> $this->query
-				);
+//			$link_data = array
+//				(
+//					'menuaction'	=> 'property.uipricebook.index',
+//					'sort'			=> $this->sort,
+//					'order'			=> $this->order,
+//					'cat_id'		=> $this->cat_id,
+//					'filter'		=> $this->filter,
+//					'query'			=> $this->query
+//				);
 
 			if(!$this->allrows)
 			{
@@ -268,61 +457,130 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$link_download = array
-				(
-					'menuaction'	=> 'property.uipricebook.download',
-					'sort'		=> $this->sort,
-					'order'		=> $this->order,
-					'cat_id'	=> $this->cat_id,
-					'filter'	=> $this->filter,
-					'query'		=> $this->query,
-					'allrows'	=> $this->allrows,
-					'start'		=> $this->start
-				);
-
+//			$link_download = array
+//				(
+//					'menuaction'	=> 'property.uipricebook.download',
+//					'sort'		=> $this->sort,
+//					'order'		=> $this->order,
+//					'cat_id'	=> $this->cat_id,
+//					'filter'	=> $this->filter,
+//					'query'		=> $this->query,
+//					'allrows'	=> $this->allrows,
+//					'start'		=> $this->start
+//				);
+            
+            $parameters = array
+					(
+						'parameter' => array
+						(
+							array
+							(
+								'name'		=> 'activity_id',
+								'source'	=> 'activity_id'
+							),
+						)
+					);
+            
+            $parameters2 = array
+					(
+						'parameter' => array
+						(
+							array
+							(
+								'name'		=> 'activity_id',
+								'source'	=> 'activity_id'
+							),
+                            array
+                            (
+                                'name'		=> 'agreement_id',
+								'source'	=> 'agreement_id'
+                            ),
+                            array
+                            (
+                                'name'		=> 'cat_id',
+								'source'	=> 'vendor_id'
+                            )
+						)
+					);
+            
+            if($this->acl_manage)
+            {
+            
+                $data['datatable']['actions'][] = array
+                (
+                    'my_name' 			=> 'edit',
+                    'statustext' 		=> lang('edit the pricebook'),
+                    'text' 				=> lang('edit'),
+                    'action'			=> $GLOBALS['phpgw']->link('/index.php',array
+                    (
+                        'menuaction'    => 'property.uipricebook.edit_activity', 
+                    )),
+                    'parameters'	=> json_encode($parameters)
+                );
+            
+                
+                $data['datatable']['actions'][] = array
+                (
+                    'my_name' 			=> 'prizing',
+                    'statustext' 		=> lang('view or edit prizing history of this element'),
+                    'text' 				=> lang('prizing'),
+                    'action'			=> $GLOBALS['phpgw']->link('/index.php',array
+                    (
+                        'menuaction'=> 'property.uipricebook.prizing', 
+                    )),
+                    'parameters'	=> json_encode($parameters2)
+                );
+                
+            }
+            
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
-			$data = array
-				(
-					'menu'							=> $this->bocommon->get_menu(),
-					'lang_download'					=> 'download',
-					'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-					'lang_download_help'				=> lang('Download table to your browser'),
-
-					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'allrows'						=> $this->allrows,
-					'allow_allrows'					=> true,
-					'start_record'					=> $this->start,
-					'record_limit'					=> $record_limit,
-					'num_records'					=> count($pricebook_list),
-					'all_records'					=> $this->bo->total_records,
-					'lang_select_all'				=> lang('Select All'),
-					'img_check'						=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
-					'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-					'lang_no_cat'					=> lang('no category'),
-					'lang_cat_statustext'			=> lang('Select the category the pricebook belongs to. To do not use a category select NO CATEGORY'),
-					'select_name'					=> 'cat_id',
-					'cat_list'						=> $this->bo->get_vendor_list('filter',$this->cat_id),
-					'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'yours' => 'yes')),
-					'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
-					'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-					'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-					'query'							=> $this->query,
-					'lang_search'					=> lang('search'),
-					'table_header'					=> $table_header,
-					'values'						=> $content,
-					'table_update'					=> $table_update,
-					'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.index'))			);
-
-			$appname	= lang('pricebook');
-			$function_msg	= lang('list pricebook per vendor');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
+//			$data = array
+//				(
+//					'menu'							=> $this->bocommon->get_menu(),
+//					'lang_download'					=> 'download',
+//					'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+//					'lang_download_help'			=> lang('Download table to your browser'),
+//
+//					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+//					'allrows'						=> $this->allrows,
+//					'allow_allrows'					=> true,
+//					'start_record'					=> $this->start,
+//					'record_limit'					=> $record_limit,
+//					'num_records'					=> count($pricebook_list),
+//					'all_records'					=> $this->bo->total_records,
+//					'lang_select_all'				=> lang('Select All'),
+//					'img_check'						=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
+//					'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+//					'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+//					'lang_no_cat'					=> lang('no category'),
+//					'lang_cat_statustext'			=> lang('Select the category the pricebook belongs to. To do not use a category select NO CATEGORY'),
+//					'select_name'					=> 'cat_id',
+//					'cat_list'						=> $this->bo->get_vendor_list('filter',$this->cat_id),
+//					'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+//					'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'yours' => 'yes')),
+//					'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
+//					'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+//					'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+//					'query'							=> $this->query,
+//					'lang_search'					=> lang('search'),
+//					'table_header'					=> $table_header,
+//					'values'						=> $content,
+//					'table_update'					=> $table_update,
+//					'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.index'))			
+//            );
+//
+//			$appname	= lang('pricebook');
+//			$function_msg	= lang('list pricebook per vendor');
+//
+//			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
+            
+            phpgwapi_jquery::load_widget('numberformat');
+//            self::add_javascript('property', 'portico', 'investment.index.js');
+            self::render_template_xsl('uipricebook.index',$data);
 		}
 
 		function agreement_group()
@@ -1034,8 +1292,62 @@
 
 			$this->bocommon->download($list,$name,$descr);
 		}
+        
+        private function _get_Filters_Activity()
+        {
+            $values_combo_box = array();
+            $combos = array();
+                    
+            $values_combo_box[0]  = $this->bo->get_agreement_group_list('filter',$this->cat_id);
+			$default_value = array ('id'=>'','name'=>lang('select agreement_group'));
+			array_unshift ($values_combo_box[0],$default_value);
+                        $combos[] = array
+                            (
+                                'type' => 'filter',
+                                'name'   => 'cat_id',
+								'text'   => lang('select agreement_group'),
+								'list'   => $values_combo_box[0]
+                            );
+                        
+            return $combos;
+            
+        }
+        
+        public function query_Activity()
+        {
+            $search     = phpgw::get_var('search');
+			$order      = phpgw::get_var('order');
+			$draw       = phpgw::get_var('draw', 'int');
+			$columns    = phpgw::get_var('columns');
 
-
+            $params = array
+                (
+                    'start'             => phpgw::get_var('start','int','REQUEST',0),
+                    'results'           => phpgw::get_var('length', 'int', 'REQUEST', 0),
+                    'query'             => $search['value'],
+                    'order'             => $columns[$order[0]['column']]['data'],
+                    'sort'              => $order[0]['dir'],
+                    'filter'            => $this->filter,
+                    'cat_id'            => $this->cat_id,
+                    'allrows'           => phpgw::get_var('length','int') == -1
+                );
+            
+            $values = $this->bo->read_activities_pr_agreement_group($params);
+            
+            if( phpgw::get_var('export','bool'))
+            {
+                return $values;
+            }
+            
+            $result_data = array('results'  => $values);
+            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['draw'] = $draw;
+			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+            
+            return $this->jquery_results($result_data);
+            
+        }
+        
 		function activity()
 		{
 			if(!$this->acl_manage)
@@ -1044,137 +1356,203 @@
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::activities';
+            
+            if(phpgw::get_var('phpgw_return_as') == 'json' )
+			{       
+                return $this->query_Activity();
+			} 
+            
+            self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+           
+            $appname	= lang('pricebook');
+			$function_msg	= lang('list activities per agreement_group');
+            
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+            
+            $data = array(
+                'datatable_name'    => $appname,
+                'form'  => array(
+                    'toolbar'   => array(
+                        'item'  => array(
+                            array(
+                                'type'  => 'link',
+                                'value'    => lang('new'),
+                                'href'  => self::link(array(
+                                    'menuaction'	=> 'property.uipricebook.edit_activity',
+                                    'agreement_group'	=> $this->cat_id
+                                )),
+                                'class' => 'new_item'
+                            )
+                        )
+                    )
+                ),
+                'datatable' => array(
+                    'source'    => self::link(array(
+                        'menuaction'=> 'property.uipricebook.activity',
+                        'cat_id'	=>$this->cat_id,
+                        'filter'	=> $this->filter,
+                        'phpgw_return_as'   => 'json'
+                    )),
+//                    'download'  => self::link(array(
+//                        
+//                    )),
+                    'allrows'   => true,
+                    'editor_action' => '',
+                    'field' => array()
+                )                
+            );
+            
+            $filters = $this->_get_Filters_Activity();
+			krsort($filters);
+            foreach($filters as $filter){
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
+//			$datatable = array();
+//
+//			if( phpgw::get_var('phpgw_return_as') != 'json' )
+//			{
+//
+//				if(!$lookup)
+//				{
+//					$datatable['menu']	= $this->bocommon->get_menu();
+//				}
+//
+//				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+//					(
+//						'menuaction'=> 'property.uipricebook.activity',
+//						'cat_id'	=>$this->cat_id,
+//						'filter'	=> $this->filter,
+//						'query'		=>$this->query
+//
+//					));
+//
+//				$datatable['config']['allow_allrows'] = true;
+//
+//				$datatable['config']['base_java_url'] = "menuaction:'property.uipricebook.activity',"	    											
+//					."cat_id:'{$this->cat_id}',"
+//					."filter:'{$this->filter}',"
+//					."query:'{$this->query}'";
+//
+//
+//				$values_combo_box[0]  = $this->bo->get_agreement_group_list('filter',$this->cat_id);
+//				$default_value = array ('id'=>'','name'=>lang('select agreement_group'));
+//				array_unshift ($values_combo_box[0],$default_value);
+//
+//
+//				$datatable['actions']['form'] = array
+//					(
+//						array
+//						(
+//							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+//							array
+//							(
+//								'menuaction' 	=> 'property.uipricebook.activity',
+//								'cat_id'	=>$this->cat_id,
+//								'filter'	=> $this->filter,
+//								'query'		=>$this->query
+//							)
+//						),
+//						'fields'	=> array
+//						(
+//							'field' => array
+//							(
+//								array
+//								(
+//									'id' => 'btn_cat_id',
+//									'name' => 'cat_id',
+//									'value'	=> lang('Category'),
+//									'type' => 'button',
+//									'style' => 'filter',
+//									'tab_index' => 1
+//								),
+//								array
+//								(
+//									'type'	=> 'button',
+//									'id'	=> 'btn_export',
+//									'value'	=> lang('download'),
+//									'tab_index' => 5
+//								),				                                        
+//								array
+//								(
+//									'type'	=> 'button',
+//									'id'	=> 'btn_new',
+//									'value'	=> lang('add'),
+//									'tab_index' => 4
+//								),
+//								array
+//								( //boton     SEARCH
+//									'id' => 'btn_search',
+//									'name' => 'search',
+//									'value'    => lang('search'),
+//									'type' => 'button',
+//									'tab_index' => 3
+//								),
+//								array
+//								( // TEXT IMPUT
+//									'name'     => 'query',
+//									'id'     => 'txt_query',
+//									'value'    => '',//$query,
+//									'type' => 'text',
+//									'onkeypress' => 'return pulsar(event)',
+//									'size'    => 28,
+//									'tab_index' => 2
+//								)		                                        
+//							),
+//							'hidden_value' => array
+//							(
+//								array
+//								( //div values  combo_box_0
+//									'id' => 'values_combo_box_0',
+//									'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+//								)
+//							)
+//						)
+//					)
+//				);
+//			}
 
-			$datatable = array();
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-
-				if(!$lookup)
-				{
-					$datatable['menu']	= $this->bocommon->get_menu();
-				}
-
-				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'=> 'property.uipricebook.activity',
-						'cat_id'	=>$this->cat_id,
-						'filter'	=> $this->filter,
-						'query'		=>$this->query
-
-					));
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uipricebook.activity',"	    											
-					."cat_id:'{$this->cat_id}',"
-					."filter:'{$this->filter}',"
-					."query:'{$this->query}'";
-
-
-				$values_combo_box[0]  = $this->bo->get_agreement_group_list('filter',$this->cat_id);
-				$default_value = array ('id'=>'','name'=>lang('select agreement_group'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' 	=> 'property.uipricebook.activity',
-								'cat_id'	=>$this->cat_id,
-								'filter'	=> $this->filter,
-								'query'		=>$this->query
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								(
-									'id' => 'btn_cat_id',
-									'name' => 'cat_id',
-									'value'	=> lang('Category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_export',
-									'value'	=> lang('download'),
-									'tab_index' => 5
-								),				                                        
-								array
-								(
-									'type'	=> 'button',
-									'id'	=> 'btn_new',
-									'value'	=> lang('add'),
-									'tab_index' => 4
-								),
-								array
-								( //boton     SEARCH
-									'id' => 'btn_search',
-									'name' => 'search',
-									'value'    => lang('search'),
-									'type' => 'button',
-									'tab_index' => 3
-								),
-								array
-								( // TEXT IMPUT
-									'name'     => 'query',
-									'id'     => 'txt_query',
-									'value'    => '',//$query,
-									'type' => 'text',
-									'onkeypress' => 'return pulsar(event)',
-									'size'    => 28,
-									'tab_index' => 2
-								)		                                        
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
-								)
-							)
-						)
-					)
-				);
-			}
-
-			$pricebook_list = array();
-			$pricebook_list = $this->bo->read_activities_pr_agreement_group();
+//			$pricebook_list = array();
+//			$pricebook_list = $this->bo->read_activities_pr_agreement_group();
 
 			$uicols = array (
-				'input_type'	=>	array(hidden,text,text,text,text,text,text,text),
-				'name'			=>	array(activity_id,num,descr,unit_name,ns3420,base_descr,branch,dim_d),
-				'formatter'		=>	array('','','','','','','',''),
-				'descr'			=>	array('',lang('Activity Num'),lang('Description'),lang('Unit'),lang('NS3420'),lang('Base'),lang('Branch'),lang('Dim d'))
+                'name'			=>	array('activity_id','num','descr','unit_name','ns3420','base_descr','branch','dim_d'),
+				'input_type'	=>	array('hidden','text','text','text','text','text','text','text'),
+				'descr'			=>	array('',lang('Activity Num'),lang('Description'),lang('Unit'),lang('NS3420'),lang('Base'),lang('Branch'),lang('Dim d')),
+				'formatter'		=>	array('','','','','','','','')
 			);
 
-			$j=0;
-			if (isset($pricebook_list) && is_array($pricebook_list))
-			{
-				foreach ($pricebook_list as $pricebook)
-				{
-					for ($i=0; $i<count($uicols['name']); $i++)
-					{
-						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
-						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $pricebook[$uicols['name'][$i]];												
-					}
+            $count_uicols_name = count($uicols['name']);
+            
+            for($k=0; $k<$count_uicols_name; $k++)
+            {
+                $params = array(
+                                   'key' => $uicols['name'][$k],
+                                   'label' => $uicols['descr'][$k],
+                                   'className' => $uicols['className'][$k],
+                                   'sortable' => ($uicols['name'][$k] == 'num') ? true : false,
+                                   'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+                               );
+                           
+                
+                array_push ($data['datatable']['field'], $params);
+            }
+//			$j=0;
+//			if (isset($pricebook_list) && is_array($pricebook_list))
+//			{
+//				foreach ($pricebook_list as $pricebook)
+//				{
+//					for ($i=0; $i<count($uicols['name']); $i++)
+//					{
+//						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+//						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $pricebook[$uicols['name'][$i]];												
+//					}
+//
+//					$j++;
+//				}
+//			}
 
-					$j++;
-				}
-			}
-
-			$datatable['rowactions']['action'] = array();
+//			$datatable['rowactions']['action'] = array();
 
 			$parameters = array
 				(
@@ -1188,7 +1566,7 @@
 					)
 				);
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 			=> 'vendor',
 					'text' 			=> lang('vendor'),
@@ -1197,10 +1575,10 @@
 						'menuaction'	=> 'property.uipricebook.activity_vendor',
 						'agreement_group'	=> $this->cat_id
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 		=> 'vendor',
 					'text' 			=> lang('open vendor in new window'),
@@ -1210,10 +1588,10 @@
 						'agreement_group'	=> $this->cat_id,
 						'target'		=> '_blank'
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=>json_encode($parameters)
 				);					
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 			=> 'edit',
 					'text' 			=> lang('edit'),
@@ -1222,10 +1600,10 @@
 						'menuaction'	=> 'property.uipricebook.edit_activity',
 						'agreement_group'	=> $this->cat_id
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 		=> 'edit',
 					'text' 			=> lang('open edit in new window'),
@@ -1235,10 +1613,10 @@
 						'agreement_group'	=> $this->cat_id,
 						'target'		=> '_blank'
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);	
 
-			$datatable['rowactions']['action'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 			=> 'delete',
 					'text' 			=> lang('delete'),
@@ -1248,172 +1626,174 @@
 						'menuaction'	=> 'property.uipricebook.delete',
 						'method'	=> 'activity'
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-			$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 			=> 'add',
-					'text' 			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'	=> 'property.uipricebook.edit_activity',
-						'agreement_group'	=> $this->cat_id
-					))
-				);
+//			$datatable['rowactions']['action'][] = array
+//				(
+//					'my_name' 			=> 'add',
+//					'text' 			=> lang('add'),
+//					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+//					(
+//						'menuaction'	=> 'property.uipricebook.edit_activity',
+//						'agreement_group'	=> $this->cat_id
+//					))
+//				);
 
 			unset($parameters);
 
-
-			$uicols_count	= count($uicols['descr']);
-			for ($i=0;$i<$uicols_count;$i++)
-			{
-				//all colums should be have formatter
-				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-
-					if ($uicols['name'][$i] == 'num')
-					{
-						$datatable['headers']['header'][$i]['sortable']			= true;
-						$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['name'][$i];
-					}
-				}
-				else
-				{
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];					
-					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']			= false;					
-				}
-			}
-
-			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($pricebook_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			$appname	= lang('pricebook');
-			$function_msg	= lang('list activities per agreement_group');
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			//// cramirez: necesary for include a partucular js
-			phpgwapi_yui::load_widget('loader');
-			//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-			//Title of Page
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'pricebook.activity', 'property' );	
-
-			$this->save_sessiondata();
+//
+//			$uicols_count	= count($uicols['descr']);
+//			for ($i=0;$i<$uicols_count;$i++)
+//			{
+//				//all colums should be have formatter
+//				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+//
+//				if($uicols['input_type'][$i]!='hidden')
+//				{
+//					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+//					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+//					$datatable['headers']['header'][$i]['visible'] 			= true;
+//					$datatable['headers']['header'][$i]['sortable']			= false;
+//
+//					if ($uicols['name'][$i] == 'num')
+//					{
+//						$datatable['headers']['header'][$i]['sortable']			= true;
+//						$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['name'][$i];
+//					}
+//				}
+//				else
+//				{
+//					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+//					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];					
+//					$datatable['headers']['header'][$i]['visible'] 			= false;
+//					$datatable['headers']['header'][$i]['sortable']			= false;					
+//				}
+//			}
+//
+//			// path for property.js
+//			$property_js = "/property/js/yahoo/property.js";
+//
+//			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+//			{
+//				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+//				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+//			}
+//
+//			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
+//
+//			// Pagination and sort values
+//			$datatable['pagination']['records_start'] 	= (int)$this->start;
+//			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+//			$datatable['pagination']['records_returned']= count($pricebook_list);
+//			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+//
+//			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+//			{
+//				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
+//				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+//			}
+//			else
+//			{
+//				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+//				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+//			}
+//
+//			$appname	= lang('pricebook');
+//			$function_msg	= lang('list activities per agreement_group');
+//
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('connection');
+//			//// cramirez: necesary for include a partucular js
+//			phpgwapi_yui::load_widget('loader');
+//			//cramirez: necesary for use opener . Avoid error JS
+//			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('paginator');
+//			//FIXME this one is only needed when $lookup==true - so there is probably an error
+//			phpgwapi_yui::load_widget('animation');
+//
+//
+//			//-- BEGIN----------------------------- JSON CODE ------------------------------
+//
+//			//values for Pagination
+//			$json = array
+//				(
+//					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+//					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+//					'startIndex' 		=> $datatable['pagination']['records_start'],
+//					'sort'				=> $datatable['sorting']['order'],
+//					'dir'				=> $datatable['sorting']['sort'],
+//					'records'			=> array()
+//				);
+//
+//			// values for datatable
+//			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+//				foreach( $datatable['rows']['row'] as $row )
+//				{
+//					$json_row = array();
+//					foreach( $row['column'] as $column)
+//					{
+//						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+//						{
+//							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+//						}
+//						else if(isset($column['format']) && $column['format']== "link")
+//						{
+//							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+//						}
+//						else
+//						{
+//							$json_row[$column['name']] = $column['value'];
+//						}
+//					}
+//					$json['records'][] = $json_row;
+//				}
+//			}
+//
+//			// right in datatable
+//			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+//			{
+//				$json ['rights'] = $datatable['rowactions']['action'];
+//			}
+//
+//			if( phpgw::get_var('phpgw_return_as') == 'json' )
+//			{
+//				return $json;
+//			}
+//
+//
+//			$datatable['json_data'] = json_encode($json);
+//			//-------------------- JSON CODE ----------------------
+//
+//			// Prepare template variables and process XSLT
+//			$template_vars = array();
+//			$template_vars['datatable'] = $datatable;
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+//
+//			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+//			{
+//				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+//			}
+//			// Prepare CSS Style
+//			$GLOBALS['phpgw']->css->validate_file('datatable');
+//			$GLOBALS['phpgw']->css->validate_file('property');
+//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+//
+//			//Title of Page
+//			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+//
+//			// Prepare YUI Library
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'pricebook.activity', 'property' );	
+//
+//			$this->save_sessiondata();
+//            echo '<pre>'; print_r($data); echo '</pre>'; exit('activity');
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
 		function activity_vendor()
@@ -1564,7 +1944,11 @@
 			$agreement_group 	= phpgw::get_var('agreement_group', 'int', 'GET');
 			$values			= phpgw::get_var('values');
 			$values['ns3420_id']	= phpgw::get_var('ns3420_id');
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			if(!$values['cat_id'])
 			{
 				$values['cat_id'] = $agreement_group;
@@ -1705,6 +2089,8 @@
 					'lang_ns3420'					=> lang('NS3420'),
 					'value_ns3420_id'				=> $values['ns3420_id'],
 					'lang_ns3420_statustext'		=> lang('Select a standard-code from the norwegian standard'),
+                    'tabs'                          => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
 			$appname = lang('pricebook');
@@ -1833,5 +2219,6 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-	}
+
+}
 
