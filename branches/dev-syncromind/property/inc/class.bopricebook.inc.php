@@ -146,10 +146,11 @@
 			return $this->bocommon->select_list($selected,$status_entries);
 		}
 
-		function read()
+		function read($data = array())
 		{
-			$pricebook = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+//			$pricebook = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+            $pricebook = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -171,10 +172,13 @@
 		}
 
 
-		function read_activities_pr_agreement_group()
+		function read_activities_pr_agreement_group($data = array())
 		{
-			$pricebook = $this->so->read_activities_pr_agreement_group(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+//			$pricebook = $this->so->read_activities_pr_agreement_group(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+           
+            $pricebook = $this->so->read_activities_pr_agreement_group($data);
+            
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
