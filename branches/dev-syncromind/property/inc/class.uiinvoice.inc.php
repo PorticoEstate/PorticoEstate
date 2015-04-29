@@ -767,7 +767,7 @@ JS;
 				$GLOBALS['phpgw']->js->add_code('', $jscode, true);
 				
 				
-			$columns = array (
+			$inputFilters = array (
 				array('id'=>'workorder_id', 'label'=>lang('Workorder ID'), 'type'=>'text'),
 				array('id'=>'', 'label'=>"<a href=\"#\" onClick=\"JqueryPortico.openPopup({menuaction:'property.uilookup.vendor'})\">".lang('Vendor')."</a>", 'type' => 'link'),
 				array('id'=>'vendor_id', 'label'=>lang('Vendor'), 'type'=>'text'),
@@ -779,18 +779,18 @@ JS;
 				array('id'=>'voucher_id', 'label'=>lang('Voucher ID'), 'type'=>'text')
 			);
 			
-			$code =	"var columns = ".json_encode($columns);
+			$code =	"var inputFilters = ".json_encode($inputFilters);
 					
 			$code .= <<<JS
 				
 				function initCompleteDatatable(oSettings, json, oTable) 
 				{
 					$('#datatable-container_filter').empty();
-					$.each(columns, function(i, val) 
+					$.each(inputFilters, function(i, val) 
 					{
 						if (val['type'] == 'text') 
 						{
-							$('#datatable-container_filter').append('<input type="text" placeholder="Search '+val['label']+'" id="'+val['id']+'" name="'+val['id']+'" />');
+							$('#datatable-container_filter').append('<input type="text" placeholder="'+val['label']+'" id="'+val['id']+'" name="'+val['id']+'" />');
 						}
 						else if (val['type'] == 'hidden') 
 						{
@@ -801,22 +801,30 @@ JS;
 						}
 					});
 					
-					// Apply the search
-					var api = oTable.api();
+					var valuesInputFilter = {};
 					
-					$.each(columns, function(i, val) 
+					$.each(inputFilters, function(i, val) 
 					{
-						$( '#' + val['id']).on( 'keyup change', function () 
+						if (val['type'] == 'text') 
 						{
-							if (val['type'] == 'text') 
+							valuesInputFilter[val['id']] = '';
+							$( '#' + val['id']).on( 'keyup change', function () 
 							{
-								oTable.dataTableSettings[0]['ajax']['data'][val['id']] = this.value;
-								oTable.fnDraw();
-							}
-						});
+								if ( $.trim($(this).val()) != $.trim(valuesInputFilter[val['id']]) ) 
+								{
+									filterData(val['id'], $(this).val());
+									valuesInputFilter[val['id']] = $(this).val();
+								}
+							});
+						}
 					});
 				};
-					
+				
+				function afterPopupClose() 
+				{
+					$('#loc1').change();
+					$('#vendor_id').change();
+				};
 JS;
 
 			$GLOBALS['phpgw']->js->add_code('', $code, true);
