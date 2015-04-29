@@ -992,6 +992,7 @@
 			$sql = "SELECT controller_control_component_list.* ,"
 			. " controller_control.title, controller_control.enabled as control_enabled,"
 			. " controller_control_component_list.enabled as relation_enabled,"
+			. " controller_control_serie.enabled as serie_enabled,"
 			. " controller_control_serie.id as serie_id,"
 			. " controller_control_serie.assigned_to,controller_control_serie.start_date,"
 			. " controller_control_serie.repeat_type,controller_control_serie.repeat_interval,"
@@ -1020,6 +1021,7 @@
 					'repeat_interval'	=> $this->db->f('repeat_interval'),
 					'control_enabled'	=> $this->db->f('control_enabled'),
 					'relation_enabled'	=> $this->db->f('relation_enabled'),
+					'serie_enabled'		=> $this->db->f('serie_enabled'),
 					'service_time'		=> (float)$this->db->f('service_time'),
 					'controle_time'		=> (float)$this->db->f('controle_time'),
 				);
@@ -1347,5 +1349,63 @@
 				$result = $this->db->f('location_code');
 				return $result;
 			}
+		}
+		function update_control_serie($data = array())
+		{
+			if(!isset($data['ids']) || !$data['ids'])
+			{
+				throw new Exception("controller_socontrol::update_control_serie - Missing ids in input");
+			}
+			if(!isset($data['action']) || !$data['action'])
+			{
+				throw new Exception("controller_socontrol::update_control_serie - Missing action in input");
+			}
+
+			$ids		= $data['ids'];
+			$action		= $data['action'];
+			$value_set = array();
+			switch($action)
+			{
+				case 'enable':
+					$value_set['enabled'] = 1;
+					break;
+				case 'disable':
+					$value_set['enabled'] = 0;
+					break;
+				case 'edit':
+					if($data['assigned_to'])
+					{
+						$value_set['assigned_to']		= $data['assigned_to'];
+					}
+					if($data['start_date'])
+					{
+						$value_set['start_date']		= $data['start_date'];
+					}
+					if($data['repeat_type'])
+					{
+						$value_set['repeat_type']		= $data['repeat_type'];
+					}
+					if($data['repeat_interval'])
+					{
+						$value_set['repeat_interval']	= $data['repeat_interval'];
+					}
+					if($data['controle_time'])
+					{
+						$value_set['controle_time']		= $data['controle_time'];
+					}
+					if($data['service_time'])
+					{
+						$value_set['service_time']		= $data['service_time'];
+					}
+					break;
+				default:
+					throw new Exception("controller_socontrol::update_control_serie - not av valid action: '{$action}'");
+					break;
+				}
+				$value_set_update = $this->db->validate_update($value_set);
+
+			$sql = "UPDATE controller_control_serie SET {$value_set_update} WHERE id IN (" . implode(',', $ids) . ')';
+			$this->db->query($sql,__LINE__,__FILE__);
+
 		}
 	}

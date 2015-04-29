@@ -374,3 +374,6 @@ Status not done	controller	no	Status: Ikke utført
 Status done controller	no	Status: Utført
 planned date	common	no	Planlagt Dato
 status components	controller	no	Status komponenter
+controle time	common	no	Kontrolltid
+service time	common	no	Servicetid
+total time	common	no	Totaltid
