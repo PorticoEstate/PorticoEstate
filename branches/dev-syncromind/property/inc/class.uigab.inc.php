@@ -323,7 +323,7 @@
 			}*/
 			unset($parameters);
 			
-			$columns = array (
+			$inputFilters = array (
 				'gaards_nr'		=>	lang('Gaards nr'),
 				'bruksnr'		=>	lang('Bruks nr'),
 				'feste_nr'		=>	lang('Feste nr'),
@@ -332,27 +332,30 @@
 				'address'		=>	lang('Address')
 			);
 			
-			$code =	"var columns = ".json_encode($columns);
+			$code =	"var inputFilters = ".json_encode($inputFilters);
 					
 			$code .= <<<JS
 				
 				function initCompleteDatatable(oSettings, json, oTable) 
 				{
 					$('#datatable-container_filter').empty();
-					$.each(columns, function(i, val) 
+					$.each(inputFilters, function(i, val) 
 					{
 						$('#datatable-container_filter').append('<input type="text" placeholder="Search '+val+'" id="'+i+'" />');
 					});
 					
-					// Apply the search
-					var api = oTable.api();
+					var valuesInputFilter = {};
 					
-					$.each(columns, function(i, val) 
+					$.each(inputFilters, function(i, val) 
 					{
+						valuesInputFilter[i] = '';
 						$( '#' + i).on( 'keyup change', function () 
 						{
-							oTable.dataTableSettings[0]['ajax']['data'][i] = this.value;
-							oTable.fnDraw();
+							if ( $.trim($(this).val()) != $.trim(valuesInputFilter[i]) ) 
+							{
+								filterData(i, $(this).val());
+								valuesInputFilter[i] = $(this).val();
+							}
 						});
 					});
 				};
