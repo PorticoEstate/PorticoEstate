@@ -860,8 +860,8 @@
 				$lookup_list	= $GLOBALS['phpgw']->session->appsession('lookup_name','property');
 				$function_msg	= $lookup_list[$lookup_name];
 			// for POP-UPs
-				//$input_name		= phpgwapi_cache::session_get('property', 'lookup_fields');
-				$input_name = array();
+				$input_name		= phpgwapi_cache::session_get('property', 'lookup_fields');
+				//$input_name = array();
 				$function_exchange_values = <<<JS
 
 				$(document).ready(function() {
@@ -876,8 +876,11 @@ JS;
 					for ($k=0;$k<count($input_name);$k++)
 					{
 						$function_exchange_values .= <<<JS
-
-						parent.document.getElementsByName("{$input_name[$k]}")[0].value = "";
+								
+						if (parent.document.getElementsByName("{$input_name[$k]}").length > 0) 
+						{								
+							parent.document.getElementsByName("{$input_name[$k]}")[0].value = "";
+						}
 JS;
 					}
 				}
@@ -896,7 +899,7 @@ JS;
 
 				$function_exchange_values .=<<<JS
 
-				parent.TINY.box.hide();
+				parent.JqueryPortico.onPopupClose("close");
 
 			});
 
