@@ -818,6 +818,27 @@ JS;
 							});
 						}
 					});
+					
+					setTimeout(function() 
+					{
+						var rds_supervisor = $('.supervisorClass');
+						var rds_budget_responsible = $('.budget_responsibleClass');
+					
+						rds_budget_responsible.each(function(i, obj) 
+						{
+							if ($(obj).attr("checked"))
+							{
+								obj.checked = true;
+							}
+						});
+						rds_supervisor.each(function(i, obj) 
+						{
+							if ($(obj).attr("checked"))
+							{
+								obj.checked = true;
+							}
+						});
+					}, 100);					
 				};
 				
 				function afterPopupClose() 
@@ -1196,7 +1217,7 @@ JS;
 											$data[$j]['column'][$i]['name'] 		= 'sign_tmp';
 											$data[$j]['column'][$i]['type'] 		= 'radio';
 											$data[$j]['column'][$i]['value']		= ($type_sign == 'janitor'? 'sign_janitor':($type_sign == 'supervisor'? 'sign_supervisor' : 'sign_budget_responsible'));
-											$data[$j]['column'][$i]['extra_param']	= ' checked="checked" ';
+											$data[$j]['column'][$i]['extra_param']	= ' checked="true" ';
 										}
 										else
 										{
@@ -1395,10 +1416,11 @@ JS;
 					$k++;
 				}
 			}
-			
+	
 			$result_data    =   array('results' =>  $values);
-			$result_data['total_records']   = $this->bo->total_records;
-			$result_data['draw']    = $draw;
+			$result_data['total_records']  = $this->bo->total_records;
+			$result_data['sum_amount']	= number_format($this->bo->sum_amount, 2, ',', ' ');
+			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
 		}
@@ -1970,7 +1992,7 @@ JS;
 			$result_data    =   array('results' =>  $values);
 			$result_data['total_records']   = $this->bo->total_records;
 			$result_data['draw']    = $draw;
-			$result_data['sum_amount']    = number_format($sum, 2, ',', ' ');;
+			$result_data['sum_amount']    = number_format($sum, 2, ',', ' ');
 			$result_data['vendor']    = lang('Vendor').": ".$content[0]['vendor'];
 			$result_data['voucher_id'] = lang('Voucher Id').": ".($content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
 
