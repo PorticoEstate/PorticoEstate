@@ -135,10 +135,11 @@
 			return $this->so->read_single_method($id);
 		}
 
-		function read()
+		function read($data = array())
 		{
-			$jobs = $this->so->read(array('id'=>'%','start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'allrows'=>$this->allrows));
+//			$jobs = $this->so->read(array('id'=>'%','start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'filter' => $this->filter,'allrows'=>$this->allrows));
+            $jobs = $this->so->read($data);
 			$this->total_records	= $this->so->total_records;
 			return $jobs;
 		}
