@@ -452,3 +452,32 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		});
 	}
 
+	JqueryPortico.CreateRowChecked = function(Class)
+	{
+		newTD = document.createElement('td');
+		newTD.setAttribute("align","center");
+
+		newTD.colSpan = 1;
+	//	newTD.style.borderTop="1px solid #000000";
+		//create the anchor node
+		myA=document.createElement("A");
+		url = "javascript:JqueryPortico.checkAll(\""+Class+"\")";
+		myA.setAttribute("href",url);
+		//create the image node
+		url = "property/templates/portico/images/check.png";
+		myImg=document.createElement("IMG");
+		myImg.setAttribute("src",url);
+		myImg.setAttribute("width","16");
+		myImg.setAttribute("height","16");
+		myImg.setAttribute("border","0");
+		myImg.setAttribute("alt","Select All");
+		// Appends the image node to the anchor
+		myA.appendChild(myImg);
+		// Appends myA to mydiv
+		mydiv=document.createElement("div");
+		mydiv.setAttribute("align","center");
+		mydiv.appendChild(myA);
+		// Appends mydiv to newTD
+		newTD.appendChild(mydiv);
+		return newTD;
+	}

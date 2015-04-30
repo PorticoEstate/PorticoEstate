@@ -849,7 +849,7 @@
 				$values['template_attrib'] = array_values(explode(',', $template_attrib));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity', 'datatable_inline'));
 
 			if($id)
 			{
@@ -903,7 +903,7 @@
 			$category_list = array();
 			foreach($entity_list as $entry)
 			{
-				$cat_list = $this->bo->read_category($entry['id']);
+				$cat_list = $this->bo->read_category(array('entity_id' => $entry['id'], 'allrows' => true));
 
 				foreach($cat_list as $category)
 				{
@@ -916,31 +916,25 @@
 			}
 
 
-			$myColumnDefs[0] = array
-				(
-				'name'	 => "0",
-				'values' => json_encode(array(array('key' => 'attrib_id', 'label' => lang('id'),
-						'sortable' => false, 'resizeable' => true, 'hidden' => false),
-					array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'datatype', 'label' => lang('datatype'), 'sortable' => false,
-						'resizeable' => true),
-					array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'resizeable' => false,
-						'formatter' => 'myFormatterCheck', 'width' => 30)))
+			$myColumnDefs = array(
+				array('key' => 'attrib_id', 'label' => lang('id'),'sortable' => false, 'resizeable' => true, 'hidden' => false),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'datatype', 'label' => lang('datatype'), 'sortable' => false,'resizeable' => true),
+				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'resizeable' => false,	'formatter' => 'myFormatterCheck', 'width' => 30)
 			);
 
+			$datatable_def = array();
 
-			$content_attributes = array
+			$datatable_def[] = array
 			(
-			);
-
-			$datavalues[0] = array
-				(
-				'name'			 => "0",
-				'values'		 => json_encode($content_attributes),
-				'total_records'	 => 0,
-				'permission'	 => "''",
-				'is_paginator'	 => 0,
-				'footer'		 => 1
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> $myColumnDefs,
+				'data'			=> json_encode(array()),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
 			);
 
 
@@ -955,12 +949,10 @@
 			}
 
 			$data = array
-				(
-				'td_count'		 => 3,
-				'base_java_url'	 => "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
-				'property_js'	 => json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . "/property/js/yahoo/property2.js"),
-				'datatable'		 => $datavalues,
-				'myColumnDefs'	 => $myColumnDefs,
+			(
+				'datatable_def'					=> $datatable_def,
+				'td_count'						=> 3,
+				'base_java_url'					=> "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
 				'lang_entity'				 => lang('entity'),
 				'entity_name'				 => $id ? $entity['name'] . ' :: ' . implode(' >> ', $this->bo->get_path($entity_id, $id)) : $entity['name'],
 				'msgbox_data'				 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -968,7 +960,7 @@
 				'lang_name_standardtext'	 => lang('Enter a name of the standard'),
 				'form_action'							 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action'							 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
-					'entity_id' => $entity_id, 'type' => $this->type)),
+																'entity_id' => $entity_id, 'type' => $this->type)),
 				'lang_save'								 => lang('save'),
 				'lang_done'								 => lang('done'),
 				'value_id'								 => $id,
@@ -1017,23 +1009,12 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 			//---datatable settings--------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
 
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
-			$GLOBALS['phpgw']->js->validate_file('yahoo', 'admin_entity.edit_category', 'property');
+			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit_category', 'property');
 		}
 
 		function get_template_attributes()
@@ -1042,7 +1023,7 @@
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
 
-			$attrib_list = $this->bo->read_attrib($template_entity_id, $template_cat_id, true);
+			$attrib_list = $this->bo->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' => true));
 
 			$content = array();
 			foreach($attrib_list as $_entry)
@@ -1055,14 +1036,13 @@
 				);
 			}
 
-			if(count($content))
-			{
-				return json_encode($content);
-			}
-			else
-			{
-				return "";
-			}
+			$result_data = array
+			(
+				'results' => $content,
+				'total_records' => count($content),
+				'draw' => phpgw::get_var('draw', 'int')
+			);
+			return $this->jquery_results($result_data);
 		}
 
 		function delete()
