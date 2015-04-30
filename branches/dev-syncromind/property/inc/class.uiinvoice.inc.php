@@ -160,26 +160,9 @@
 
 		function download()
 		{
-			$paid 			= phpgw::get_var('paid', 'bool');
-			$start_date 	= phpgw::get_var('start_date');
-			$end_date 		= phpgw::get_var('end_date');
-			$submit_search 	= phpgw::get_var('submit_search', 'bool');
-			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
-			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
-			$loc1 			= phpgw::get_var('loc1');
-			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
-
-			$start_date	= urldecode($start_date);
-			$end_date	= urldecode($end_date);
-
-			if(!$end_date)
-			{
-				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$start_date = $end_date;
-			}
-
-			$list = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
-
+			
+			$list = $this->query();
+			
 			while (is_array($list[0]) && list($name_entry,) = each($list[0]))
 			{
 				$name[]=$name_entry;
@@ -193,51 +176,45 @@
 
 		function download_sub()
 		{
-			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
-			$paid 		= phpgw::get_var('paid', 'bool');
+			$list = $this->query_list_sub();
 
-			if ($voucher_id)
-			{
-				$list = $this->bo->read_invoice_sub($voucher_id,$paid);
+			$name = array
+				(
+					'workorder_id',
+					'project_group',
+					'status',
+					'voucher_id',
+					'invoice_id',
+					'budget_account',
+					'dima',
+					'dimb',
+					'dimd',
+					'tax_code',
+					'amount',
+					'charge_tenant',
+					'claim_issued',
+					'vendor'
+				);
 
-				$name = array
-					(
-						'workorder_id',
-						'project_group',
-						'status',
-						'voucher_id',
-						'invoice_id',
-						'budget_account',
-						'dima',
-						'dimb',
-						'dimd',
-						'tax_code',
-						'amount',
-						'charge_tenant',
-						'claim_issued',
-						'vendor'
-					);
+			$descr = array
+				(
+					lang('Workorder'),
+					lang('project group'),
+					lang('status'),
+					lang('voucher'),
+					lang('Invoice Id'),
+					lang('Budget account'),
+					lang('Dim A'),
+					lang('Dim B'),
+					lang('Dim D'),
+					lang('Tax code'),
+					lang('Sum'),
+					lang('Charge tenant'),
+					lang('claim issued'),
+					lang('vendor')
+				);
 
-				$descr = array
-					(
-						lang('Workorder'),
-						lang('project group'),
-						lang('status'),
-						lang('voucher'),
-						lang('Invoice Id'),
-						lang('Budget account'),
-						lang('Dim A'),
-						lang('Dim B'),
-						lang('Dim D'),
-						lang('Tax code'),
-						lang('Sum'),
-						lang('Charge tenant'),
-						lang('claim issued'),
-						lang('vendor')
-					);
-
-				$this->bocommon->download($list,$name,$descr);
-			}
+			$this->bocommon->download($list,$name,$descr);
 		}
 
 		function index()
@@ -280,7 +257,6 @@
 			}
 			//-- edicion de registro
 			$values  = phpgw::get_var('values');
-			$receipt = array();
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			{
@@ -1494,18 +1470,6 @@ JS;
 					(
 						array
 						(
-							'name'		=> 'id',
-							'source'	=> 'id'
-						)
-					)
-				);
-
-			$parameters2 = array
-				(
-					'parameter' => array
-					(
-						array
-						(
 							'name'		=> 'docid',
 							'source'	=> '_external_ref'
 						)
@@ -1526,13 +1490,13 @@ JS;
 
 			if($this->acl_read && $baseurl_invoice)
 			{
-				$_baseurl_invoice = rtrim($baseurl_invoice,"?{$parameters2['parameter'][0]['name']}=");
+				$_baseurl_invoice = rtrim($baseurl_invoice,"?{$parameters['parameter'][0]['name']}=");
 				$tabletools[] = array
 					(
 						'my_name'		=> 'picture',
 						'text'			=> $lang_picture,
 						'action'		=> "{$_baseurl_invoice}?target=_blank",
-						'parameters'	=> json_encode($parameters2)
+						'parameters'	=> json_encode($parameters)
 					);
 			}
 
@@ -1631,7 +1595,7 @@ JS;
         public function query_list_sub()
         {	
 			$paid 			= phpgw::get_var('paid', 'bool');
-			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
+			$voucher_id 	= phpgw::get_var('voucher_id');
 			$search			= phpgw::get_var('search');
 			$order			= phpgw::get_var('order');
 			$draw			= phpgw::get_var('draw', 'int');
@@ -1668,7 +1632,6 @@ JS;
 					'voucher_id'	=> $voucher_id,
 				);
 
-			//$invoice_list = $this->bo->read_invoice($params);
 			$content = array();
 			if ($voucher_id)
 			{
@@ -1676,6 +1639,11 @@ JS;
 				$content = $this->bo->read_invoice_sub($params);
 			}
 
+			if( phpgw::get_var('export', 'bool'))
+			{
+					return $content;
+			}
+			
 			$sum=0;
 
 			$dimb_list			= $this->bo->select_dimb_list();
@@ -1692,11 +1660,6 @@ JS;
 				$entry['tax_code_list']		= $this->bo->tax_code_list($entry['tax_code'], $tax_code_list);
 				$entry['link_order'] 		= $_link_order;
 				$entry['link_claim'] 		= $_link_claim;
-			}
-			
-			if( phpgw::get_var('export', 'bool'))
-			{
-					return $content;
 			}
 			
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
@@ -2187,8 +2150,6 @@ JS;
 					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
-			/*$GLOBALS['phpgw']->xslttpl->add_file('invoice');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));*/
 			self::render_template_xsl(array('invoice'), array('edit' => $data));
 		}
 
