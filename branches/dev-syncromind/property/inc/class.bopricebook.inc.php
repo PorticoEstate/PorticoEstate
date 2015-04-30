@@ -183,10 +183,12 @@
 			return $pricebook;
 		}
 
-		function read_vendor_pr_activity($activity_id)
+		function read_vendor_pr_activity($data = array())
 		{
-			$pricebook = $this->so->read_vendor_pr_activity(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id));
+//			$pricebook = $this->so->read_vendor_pr_activity(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+//				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id));
+            $pricebook = $this->so->read_vendor_pr_activity($data);
+            
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
