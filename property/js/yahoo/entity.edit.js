@@ -29,10 +29,17 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 			}
 		}
 
+		$("#controller_receipt").html("");
+
+		var action = this.get("value");
+
+		if(action === 'add')
+		{
+			add_control();
+		}
+
 		if(flag)
 		{
-			var action = this.get("value");
-
 			var ids = [];
 
 			$(".mychecks:checked").each(function () {
@@ -54,9 +61,6 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 			oArgs.menuaction = 'property.boentity.update_control_serie';
 
 			var requestUrl = phpGWLink('index.php', oArgs, true);
-	//								alert(requestUrl);
-
-			$("#controller_receipt").html("");
 
 			$.ajax({
 				type: 'POST',
@@ -82,12 +86,6 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 		}
 	}
 	
-	this.cleanValuesHiddenActionsButtons=function()
-	{
-		YAHOO.util.Dom.get('hd_values[enable_serie]').value = '';
-		YAHOO.util.Dom.get('hd_values[disable_serie]').value = '';
-	}
-
 	function parseURL(url)
 	{
 		var parser = document.createElement('a'),
@@ -153,6 +151,9 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 						$("#control_responsible").val('');
 						$("#control_responsible_user_name").val('');
 						$("#control_start_date").val('');
+						$("#repeat_interval").val('');
+						$("#controle_time").val('');
+						$("#service_time").val('');
 					}
 				}
 			}

@@ -1055,6 +1055,29 @@ JS;
 				'controle_time'		=> phpgw::get_var('controle_time', 'float'),
 				'service_time'		=> phpgw::get_var('service_time', 'float')
 			);
-			$so_control->update_control_serie($values);
+			$ret = $so_control->update_control_serie($values);
+
+			if($ret)
+			{
+				$result =  array
+				(
+					'status_kode'=> 'ok',
+					'status'	=> 'Ok',
+					'msg'		=> lang('updated')
+
+				);
+			}
+			else
+			{
+				$result =  array
+				(
+					'status_kode'=> 'error',
+					'status'	=> lang('error'),
+					'msg'		=> 'Noe gikk galt'
+				);
+			}
+
+			return $result;
+
 		}
 	}
