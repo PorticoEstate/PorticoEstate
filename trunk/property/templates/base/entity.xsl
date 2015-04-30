@@ -725,13 +725,6 @@
 								</input>
 								</td>
 								</tr>
-								<tr>
-								<td>
-								<input type="button" name="" value="{$lang_add}" title="{$lang_add}" onClick="add_control();">
-								</input>
-								</td>
-								<td></td>
-								</tr>
 							</table>
 							<table>
 								<tr>
@@ -847,7 +840,7 @@
 					</xsl:choose>
 
 					<xsl:choose>
-						<xsl:when test="value_id !='' and enable_bulk = ''">
+						<xsl:when test="value_id !='' and enable_bulk = '0'">
 							<div id="related">
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>

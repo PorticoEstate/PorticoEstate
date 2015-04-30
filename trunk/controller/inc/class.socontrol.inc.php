@@ -895,9 +895,39 @@
 					$sql .= "AND component_id = {$component_id}";
 					
 					$this->db->query($sql, __LINE__, __FILE__);
-			
-					if(!$this->db->next_record() || $duplicate)
+					$this->db->next_record();
+					$relation_id = $this->db->f('id');
+					if(!$relation_id || $duplicate)
 					{
+						if($relation_id)
+						{
+							$sql = "SELECT * FROM controller_control_serie"
+							. " WHERE control_relation_id = {$relation_id}"
+							. " AND repeat_type = {$repeat_type}";
+							//. " AND repeat_interval = {$repeat_interval}";
+							$this->db->query($sql, __LINE__, __FILE__);
+							$this->db->next_record();
+							$serie_id = $this->db->f('id');
+							if($serie_id)
+							{
+								$this->update_control_serie($data = array(
+									'ids'				=> array($serie_id),
+									'action'			=> 'edit',
+									'assigned_to'		=> $assigned_to,
+									'start_date'		=> $start_date,
+									'repeat_type'		=> $repeat_type,
+									'repeat_interval'	=> $repeat_interval,
+									'controle_time'		=> $controle_time,
+									'service_time'		=> $service_time,
+								));
+								$ret = $this->update_control_serie($data = array(
+									'ids'				=> array($serie_id),
+									'action'			=> 'enable',
+								));
+								continue;
+							}
+						}
+
 						$values_insert = array
 						(
 							'control_id'		=> $control_id,
@@ -1405,7 +1435,9 @@
 				$value_set_update = $this->db->validate_update($value_set);
 
 			$sql = "UPDATE controller_control_serie SET {$value_set_update} WHERE id IN (" . implode(',', $ids) . ')';
-			$this->db->query($sql,__LINE__,__FILE__);
-
+			if($this->db->query($sql,__LINE__,__FILE__))
+			{
+				return PHPGW_ACL_EDIT; // Bit - edit
+			}
 		}
 	}

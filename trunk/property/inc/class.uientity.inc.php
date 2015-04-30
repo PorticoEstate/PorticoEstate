@@ -2391,9 +2391,10 @@ JS;
 					$myButtons[4] = array
 					(
 						'name'   => "4",
-						'values'  => json_encode(array( array('id' =>'values[enable_serie]','type'=>'buttons', 'value'=>'enable', 'label'=>lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-														array('id' =>'values[disable_serie]','type'=>'buttons', 'value'=>'disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-														array('id' =>'values[edit_serie]','type'=>'buttons', 'value'=>'edit', 'label'=>lang('edit'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+						'values'  => json_encode(array( array('id' =>'add_serie','type'=>'buttons', 'value'=>'add', 'label'=>lang('add'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+														array('id' =>'enable_serie','type'=>'buttons', 'value'=>'enable', 'label'=>lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+														array('id' =>'disable_serie','type'=>'buttons', 'value'=>'disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+														array('id' =>'edit_serie','type'=>'buttons', 'value'=>'edit', 'label'=>lang('edit'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 					))
 				);
 
