@@ -84,7 +84,8 @@
 			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order		= isset($data['order']) ? $data['order'] : '';
 			$allrows 	= isset($data['allrows']) ? $data['allrows'] : '';
-
+            $results	= isset($data['results'])  ? (int) $data['results'] : 0;
+            
 			if($order == 'undefined')
 			{
 				$order = '';
@@ -130,13 +131,13 @@
 			}
 
 			$sql = "SELECT phpgw_async.id,phpgw_async.next,phpgw_async.times,phpgw_async.method,phpgw_async.data,account_lid FROM phpgw_async $this->join phpgw_accounts on phpgw_async.account_id=phpgw_accounts.account_id $filtermethod $querymethod";
-
+            
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
