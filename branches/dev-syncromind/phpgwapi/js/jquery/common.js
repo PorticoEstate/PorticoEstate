@@ -454,11 +454,6 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 
 	JqueryPortico.CreateRowChecked = function(Class)
 	{
-		newTD = document.createElement('td');
-		newTD.setAttribute("align","center");
-
-		newTD.colSpan = 1;
-	//	newTD.style.borderTop="1px solid #000000";
 		//create the anchor node
 		myA=document.createElement("A");
 		url = "javascript:JqueryPortico.checkAll(\""+Class+"\")";
@@ -477,7 +472,5 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		mydiv=document.createElement("div");
 		mydiv.setAttribute("align","center");
 		mydiv.appendChild(myA);
-		// Appends mydiv to newTD
-		newTD.appendChild(mydiv);
-		return newTD;
+		return mydiv;
 	}
