@@ -45,6 +45,7 @@
 		var $order;
 		var $sub;
 		var $currentapp;
+		var $receipt = array();
 		var $public_functions = array
 			(
 			'query'						 => true,
@@ -619,7 +620,7 @@
 
 			if(!$values['name'])
 			{
-				$receipt['error'][] = array('msg' => lang('Name not entered!'));
+				$this->receipt['error'][] = array('msg' => lang('Name not entered!'));
 			}
 
 			if($id)
@@ -628,17 +629,16 @@
 				$action			 = 'edit';
 			}
 
-			if(!$receipt['error'])
+			if(!$this->receipt['error'])
 			{
 				try
 				{
 
-					$receipt	 = $this->bo->save($values, $action);
-					$msgbox_data = $this->bocommon->msgbox_data($receipt);
+					$this->receipt	 = $this->bo->save($values, $action);
 
 					if(!$id)
 					{
-						$id = $receipt['id'];
+						$id = $this->receipt['id'];
 					}
 
 					$config->read();
@@ -677,7 +677,7 @@
 			}
 			else
 			{
-				$receipt['error'][] = array('msg' => lang('Entity has NOT been saved'));
+				$this->receipt['error'][] = array('msg' => lang('Entity has NOT been saved'));
 			}
 		}
 
@@ -721,7 +721,7 @@
 				'type'		 => $this->type
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 				(
@@ -771,19 +771,30 @@
 
 		public function save_category()
 		{
-			$entity_id	 = (int)phpgw::get_var('entity_id');
-			$id			 = (int)phpgw::get_var('id');
-			$values		 = phpgw::get_var('values');
+			if(!$this->acl_add)
+			{
+				return;
+			}
+
+			$entity_id		 = phpgw::get_var('entity_id', 'int');
+			$id				 = phpgw::get_var('id', 'int');
+			$values			 = phpgw::get_var('values');
+			$template_attrib = phpgw::get_var('template_attrib');
+
+			if($template_attrib)
+			{
+				$values['template_attrib'] = array_values(explode(',', $template_attrib));
+			}
 
 			$values['entity_id'] = $entity_id;
 
 			if(!$values['name'])
 			{
-				$receipt['error'][] = array('msg' => lang('Name not entered!'));
+				$this->receipt['error'][] = array('msg' => lang('Name not entered!'));
 			}
 			if(!$values['entity_id'])
 			{
-				$receipt['error'][] = array('msg' => lang('Entity not chosen'));
+				$this->receipt['error'][] = array('msg' => lang('Entity not chosen'));
 			}
 
 			if($id)
@@ -792,16 +803,15 @@
 				$action			 = 'edit';
 			}
 
-			if(!$receipt['error'])
+			if(!$this->receipt['error'])
 			{
 				try
 				{
-					$receipt = $this->bo->save_category($values, $action);
+					$this->receipt = $this->bo->save_category($values, $action);
 					if(!$id)
 					{
-						$id = $receipt['id'];
+						$id = $this->receipt['id'];
 					}
-					$msgbox_data = $this->bocommon->msgbox_data($receipt);
 				}
 				catch(Exception $e)
 				{
@@ -827,16 +837,17 @@
 			}
 			else
 			{
-				$receipt['error'][] = array('msg' => lang('Category has NOT been saved'));
+				$this->receipt['error'][] = array('msg' => lang('Category has NOT been saved'));
+				$this->edit_category($values);
 			}
 		}
 
-		function edit_category()
+		function edit_category($values = array())
 		{
 			if(!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+					'perm' => PHPGW_ACL_ADD, 'acl_location' => $this->acl_location));
 			}
 
 			$entity_id		 = phpgw::get_var('entity_id', 'int');
@@ -938,7 +949,7 @@
 			);
 
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 			$location_level_list = $this->bo->get_location_level_list();
 
 			array_unshift ($location_level_list,array ('id'=> -2,'name'=>lang('no locations')));

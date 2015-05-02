@@ -304,7 +304,7 @@
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
 
-			$attrib_group_list = $this->read_attrib_group($template_entity_id, $template_cat_id, true);
+			$attrib_group_list = $this->read_attrib_group( array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' =>true) );
 
 			foreach($attrib_group_list as $attrib_group)
 			{
@@ -319,7 +319,7 @@
 				$this->custom->add_group($group);
 			}
 
-			$attrib_list = $this->read_attrib($template_entity_id, $template_cat_id, true);
+			$attrib_list = $this->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' =>true));
 
 			$template_attribs = array();
 			foreach($attrib_list as $attrib)
