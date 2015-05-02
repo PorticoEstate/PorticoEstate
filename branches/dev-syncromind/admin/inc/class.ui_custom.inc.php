@@ -543,7 +543,7 @@
 				'sort_name'			=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
-											'var'	=> 'column_name',
+											'var'	=> 'file_name',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'admin.ui_custom.list_custom_function',
 														'appname'	=> $appname,
@@ -555,7 +555,7 @@
 				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
-											'var'	=> 'custom_function_sort',
+											'var'	=> 'custom_sort',
 											'order'	=> $this->order,
 											'extra'	=> array('menuaction'	=> 'admin.ui_custom.list_custom_function',
 														'appname'	=> $appname,
