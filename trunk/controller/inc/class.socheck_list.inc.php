@@ -629,16 +629,19 @@ class controller_socheck_list extends controller_socommon
 	 * @param $repeat_type_expr repeat type expression
 	 * @return array with check list objects
 	*/
-	function get_check_lists_for_control_and_component( $control_id, $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type = null )
+	function get_check_lists_for_control_and_component( $control_id, $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type = null, $user_id=0 )
 	{
 		$control_id = (int) $control_id;
 		$location_id = (int) $location_id;
 		$component_id = (int) $component_id;
+		$user_id = (int) $user_id;
 
-		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
-		$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases ,cl.serie_id ";
+		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, cl.assigned_to, ";
+		$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id,"
+		. " cl.location_code as cl_location_code, num_open_cases, num_pending_cases ,cl.serie_id, cs.repeat_type ";
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_control c on cl.control_id = c.id ";
+		$sql .= "LEFT JOIN controller_control_serie cs on cl.serie_id = cs.id ";
 		$sql .= "WHERE cl.control_id = {$control_id} ";
 		$sql .= "AND cl.component_id = {$component_id} ";
 		$sql .= "AND cl.location_id = {$location_id} ";
@@ -647,9 +650,14 @@ class controller_socheck_list extends controller_socommon
 		{
 			$sql .= "AND c.repeat_type = $repeat_type ";
 		}
+
+//		if($user_id)
+//		{
+//			$sql .= " AND assigned_to = {$user_id} ";
+//		}
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
-		
+//		_debug_array($sql);
 		$this->db->query($sql);
 		
 		$check_lists_array = array();
@@ -668,6 +676,8 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
 			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 			$check_list->set_serie_id($this->db->f('serie_id'));
+			$check_list->set_repeat_type($this->db->f('repeat_type'));
+
 			
 			$check_lists_array[] = $check_list;
 		}

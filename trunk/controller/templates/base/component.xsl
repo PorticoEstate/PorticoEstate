@@ -167,6 +167,22 @@
 					if( data != null)
 					{
 						$("#tbody").html(data.tbody);
+						var time_sum = data.time_sum;
+
+						$("#sum_text").html('Sum');
+						$("#month0").html(time_sum[0]);
+						$("#month1").html(time_sum[1]);
+						$("#month2").html(time_sum[2]);
+						$("#month3").html(time_sum[3]);
+						$("#month4").html(time_sum[4]);
+						$("#month5").html(time_sum[5]);
+						$("#month6").html(time_sum[6]);
+						$("#month7").html(time_sum[7]);
+						$("#month8").html(time_sum[8]);
+						$("#month9").html(time_sum[9]);
+						$("#month10").html(time_sum[10]);
+						$("#month11").html(time_sum[11]);
+						$("#month12").html(time_sum[12]);
 					}
 				}
 			});
@@ -175,6 +191,40 @@
 ]]>
 	</script>
 	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
+		<thead>
+			<tr>
+				<td>
+				</td>
+				<td id='sum_text'>
+				</td>
+				<td id='month0'>
+				</td>
+				<td id='month1'>
+				</td>
+				<td id='month2'>
+				</td>
+				<td id='month3'>
+				</td>
+				<td id='month4'>
+				</td>
+				<td id='month5'>
+				</td>
+				<td id='month6'>
+				</td>
+				<td id='month7'>
+				</td>
+				<td id='month8'>
+				</td>
+				<td id='month9'>
+				</td>
+				<td id='month10'>
+				</td>
+				<td id='month11'>
+				</td>
+				<td id='month12'>
+				</td>
+			</tr>
+		</thead>
 		<thead>
 			<tr>
 				<xsl:for-each select="//datatable/field">

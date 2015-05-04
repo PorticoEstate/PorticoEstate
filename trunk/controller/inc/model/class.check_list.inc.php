@@ -43,6 +43,7 @@
 		protected $description;//
 		protected $control_id;
 		protected $serie_id;
+		protected $repeat_type;
 		protected $status;
 		protected $comment;
 		protected $deadline;
@@ -204,6 +205,15 @@
 		public function get_serie_id()
 		{
 			return $this->serie_id;
+		}
+		public function set_repeat_type($repeat_type)
+		{
+			$this->repeat_type = $repeat_type;
+		}
+
+		public function get_repeat_type()
+		{
+			return $this->repeat_type;
 		}
 
 		public function get_num_open_cases() { return $this->num_open_cases; }
