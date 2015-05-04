@@ -23,6 +23,8 @@ Choose_control_items	controller	no	Velg kontrollpunkt
 Choose_building_type	controller	no	Velg byggtype
 Choose_building_category	controller	no	Velg byggkategori
 Choose_district	controller	no	Velg distrikt
+district	controller	no	Distrikt
+user	controller	no	Bruker
 Choose_part_of_town	controller	no	Velg bydel
 DATATABLE_MSG_EMPTY	controller	no	Ingen data
 DATATABLE_MSG_ERROR	controller	no	Datafeil

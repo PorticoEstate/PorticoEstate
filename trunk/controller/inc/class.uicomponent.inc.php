@@ -98,6 +98,7 @@
 
 
 			$component_type = '';//phpgwapi_cache::session_get('controller', 'component_type');
+			$sort_key = array();
 			if(!$component_type)
 			{
 				$this->soadmin_entity	= CreateObject('property.soadmin_entity');
@@ -112,14 +113,23 @@
 
 						if($category['enable_controller'])
 						{
+							$sort_arr = explode(' ', $category['name']);
 							$component_type[] = array
 							(
 								'id' => $category['location_id'],
-								'name'=> "{$entry['name']}::{$category['name']}"
+								'name'=> "{$entry['name']}::{$category['name']}",
+								'sort_key' => trim($sort_arr[0])
 							);
 						}
 					}
 				}
+				// Obtain a list of columns
+				foreach ($component_type as $key => $row)
+				{
+					$id[$key]  = $row['sort_key'];
+				}
+
+				array_multisort($id,SORT_ASC, SORT_STRING, $component_type);
 				array_unshift($component_type, array('id' => '', 'name' => lang('select value')));
 //				phpgwapi_cache::session_set('controller', 'component_type', $component_type);
 			}
@@ -255,62 +265,62 @@
 				),
 				array(
 					'key'		 => '1',
-					'label'		 => lang('jan'),
+					'label'		 => lang('month 1'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '2',
-					'label'		 => lang('feb'),
+					'label'		 => lang('month 2'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '3',
-					'label'		 => lang('mar'),
+					'label'		 => lang('month 3'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '4',
-					'label'		 => lang('apr'),
+					'label'		 => lang('month 4'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '5',
-					'label'		 => lang('may'),
+					'label'		 => lang('month 5'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '6',
-					'label'		 => lang('june'),
+					'label'		 => lang('month 6'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '7',
-					'label'		 => lang('july'),
+					'label'		 => lang('month 7'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '8',
-					'label'		 => lang('aug'),
+					'label'		 => lang('month 8'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '9',
-					'label'		 => lang('sept'),
+					'label'		 => lang('month 9'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '10',
-					'label'		 => lang('oct'),
+					'label'		 => lang('month 10'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '11',
-					'label'		 => lang('nov'),
+					'label'		 => lang('month 11'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '12',
-					'label'		 => lang('dec'),
+					'label'		 => lang('month 12'),
 					'sortable'	 => true,
 				),
 			);
@@ -340,6 +350,7 @@
 			$to_date_ts = execMethod('controller.uicalendar.get_end_date_year_ts',$year);
 
 			$components = execMethod('property.soentity.read',array('location_id' => $location_id, 'district_id' => $district_id, 'allrows' => true));
+			$total_records = count($components);
 			$all_components = array();
 			$components_with_calendar_array = array();
 //			_debug_array($components);
@@ -637,11 +648,11 @@
 				$data_set[] = $row;
 			}
 			$fields	= $this->get_fields();
-
+			$class = '';
 			$tbody = '';
 			foreach($data_set as $row_data )
 			{
-				$tbody .= '<tr>';
+				$tbody .= "<tr {$class}>";
 				foreach($fields as $field )
 				{
 					$tbody .= '<td>';
@@ -649,6 +660,8 @@
 					$tbody .= '</td>';
 				}
 				$tbody .= '</tr>';
+				$class = $class ? '' : 'class="alt"';
+
 			}
 
 			$result = array
@@ -679,6 +692,7 @@
 				}
 			}
 			$result['time_sum'][0] = $sum_year;
+			$result['total_records'] = $total_records;
 
 			return $result;
 		}
