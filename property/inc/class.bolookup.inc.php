@@ -340,8 +340,25 @@
 			return $ns3420;
 		}
 
-		function read_phpgw_user()
+		function read_phpgw_user($acl_app = '',	$acl_location = '', $acl_required ='')
 		{
+			if($acl_app && $acl_location && $acl_required)
+			{
+				$users = $GLOBALS['phpgw']->acl->get_user_list_right($acl_required, $acl_location, $acl_app);
+				$user_list = array();
+				foreach($users as $user)
+				{
+					$user_list[] = array
+					(
+						'id'		=> $user['account_id'],
+						'last_name'	=> $user['account_lastname'],
+						'first_name'	=> $user['account_firstname'],
+					);
+				}
+				$this->total_record = count($user_list);
+				return $user_list;
+			}
+
 			$phpgw_user = $this->so->read_phpgw_user(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id));
 			$this->total_records = $this->so->total_records;

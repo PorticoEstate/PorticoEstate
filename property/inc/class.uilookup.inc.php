@@ -2331,6 +2331,9 @@ JS;
 		function phpgw_user()
 		{
 			$column = phpgw::get_var('column');
+			$acl_app = phpgw::get_var('acl_app');
+			$acl_location = phpgw::get_var('acl_location');
+			$acl_required = phpgw::get_var('acl_required', 'int');
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
@@ -2352,9 +2355,12 @@ JS;
 					."cat_id:'{$this->cat_id}',"
 					."query:'{$this->query}',"
 					."filter:'{$this->filter}',"
+					."acl_app:'{$acl_app}',"
+					."acl_location:'{$acl_location}',"
+					."acl_required:'{$acl_required}',"
 					."column:'{$column}'";
 
-				$datatable['actions']['form'] = array
+					$datatable['actions']['form'] = array
 					(
 						array
 						(
@@ -2409,7 +2415,7 @@ JS;
 			);
 
 			$phpgw_user_list = array();
-			$phpgw_user_list = $this->bo->read_phpgw_user();
+			$phpgw_user_list = $this->bo->read_phpgw_user($acl_app,	$acl_location, $acl_required);
 
 			$content = array();
 			$j=0;
