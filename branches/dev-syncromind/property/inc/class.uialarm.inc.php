@@ -48,13 +48,14 @@
 
 		var $public_functions = array
 			(
-                'query'     => true,
-				'index'  	=> true,
-				'view'		=> true,
-				'edit'		=> true,
-				'delete'	=> true,
-				'list_alarm'=> true,
-				'run'		=> true
+                'query'         => true,
+				'index'         => true,
+				'view'          => true,
+				'edit'          => true,
+				'delete'        => true,
+				'list_alarm'    => true,
+				'run'           => true,
+                'edit_alarm'    => true,
 			);
 		private $bo;
 
@@ -163,25 +164,45 @@
             return $this->jquery_results($result_data);
         }
         
+        function edit_alarm()
+        {
+            $ids_alarm      = !empty($_POST['ids'])?$_POST['ids']:'';
+            $type_alarm     = !empty($_POST['type'])?$_POST['type']:'';
+         
+            if(($type_alarm == 'disable_alarm' || $type_alarm == 'enable_alarm' ) && count($ids_alarm))
+            {
+                $_enable_alarm = ($type_alarm == 'disable_alarm') ? false : true;
+				$this->bo->enable_alarm('fm_async',$ids_alarm,$_enable_alarm);
+            }
+            else if($type_alarm == 'test_cron')
+            {
+                $this->bo->test_cron($ids_alarm);
+            }
+            else if($type_alarm == 'delete_alarm' && count($ids_alarm))
+            {
+                $this->bo->delete_alarm('fm_async',$ids_alarm);
+            }
+        }
+        
 		function index()
 		{
 			$values		= phpgw::get_var('values');
 
-			if($values['delete_alarm'] && count($values['alarm']))
-			{
-				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
-			}
-			else if( (isset($values['enable_alarm']) && $values['enable_alarm']) || (isset($values['disable_alarm']) && $values['disable_alarm']) && count($values['alarm']))
-			{
-				$_enable_alarm = isset($values['enable_alarm']) && $values['enable_alarm'] ? true : false;
-				$receipt = $this->bo->enable_alarm('fm_async',$values['alarm'],$_enable_alarm);
-			}
-			else if(isset($values['test_cron']) && $values['test_cron'] && isset($values['alarm']) && $values['alarm'])
-			{
-				$this->bo->test_cron($values['alarm']);
-			}
+//			if($values['delete_alarm'] && count($values['alarm']))
+//			{
+//				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
+//			}
+//			else if( (isset($values['enable_alarm']) && $values['enable_alarm']) || (isset($values['disable_alarm']) && $values['disable_alarm']) && count($values['alarm']))
+//			{
+//				$_enable_alarm = isset($values['enable_alarm']) && $values['enable_alarm'] ? true : false;
+//				$receipt = $this->bo->enable_alarm('fm_async',$values['alarm'],$_enable_alarm);
+//			}
+//			else if(isset($values['test_cron']) && $values['test_cron'] && isset($values['alarm']) && $values['alarm'])
+//			{
+//				$this->bo->test_cron($values['alarm']);
+//			}
             
-             if(phpgw::get_var('phpgw_return_as') == 'json')
+            if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
                 return $this->query();
 			}
@@ -197,18 +218,18 @@
             $data = array(
                 'datatable_name'  => $appname . ': ' . $function_msg,
                 'form' => array(
-//                    'toolbar'   => array(
-//                        'item'  => array(
-//                            array(
-//                                'type'  => 'link',
-//                                'value' => lang('new'),
-//                                'href'  => self::link(array(
-//                                    'menuaction'	=> 'property.uialarm.edit'
-//                                )),
-//                                'class' => 'new_item'
-//                            )
-//                        )
-//                    )
+                    'toolbar'   => array(
+                        'item'  => array(
+                            array(
+                                'type'  => 'link',
+                                'value' => lang('new'),
+                                'href'  => self::link(array(
+                                    'menuaction'	=> 'property.uialarm.edit'
+                                )),
+                                'class' => 'new_item'
+                            )
+                        )
+                    )
                 ),
                 'datatable' => array(
                     'source'    => self::link(array(
@@ -230,7 +251,7 @@
 //                        array('key'=>'select','label'=>lang('select'),'sortable'=>false ,'formatter'=>'JqueryPortico.FormatterCenter'),
                         array('key'=>'edit','label'=>lang('edit'),'sortable'=>false ,'formatter'=>'JqueryPortico.FormatterCenter')
                     )
-                ),
+                )/*,
                 'top-toolbar'   => array(
                     'fields'    => array(
                         'field' => array(
@@ -294,7 +315,7 @@
 							)
                         )
                     )
-                )
+                )*/
             );
 //			$datatable = array();
 //			$values_combo_box = array();
@@ -509,6 +530,15 @@
 
 //			$datatable['rowactions']['action'] = array();
 
+             $requestUrl = json_encode(self::link(array(
+                        'menuaction'	=>	'property.uialarm.index',
+                        'cat_id'		=>	$this->cat_id,
+                        'filter'		=>	$this->filter,
+                        'phpgw_return_as'   => 'json'
+                                                        )
+                                                  )
+                                       );
+            
 			$parameters = array
 				(
 					'parameter' => array
@@ -516,7 +546,7 @@
 						array
 						(
 							'name'		=> 'id',
-							'source'	=> 'alarm_id'
+							'source'	=> 'id'
 						),
 					)
 				);
@@ -531,6 +561,111 @@
 				)),
 				'parameters'		=> json_encode($parameters)
 			);
+            
+            $data['datatable']['actions'][] = array(
+                'my_name'		=> 'disable_alarm',
+                'text' 			=> lang('Disable'),
+                'type'			=> 'custom',
+                'custom_code' => "
+                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
+                    var selected = oTT.fnGetSelectedData();
+
+                    var numSelected = 	selected.length;
+
+                    if (numSelected ==0){
+                        alert('None selected');
+                        return false;
+                    }
+                    var  ids = {};
+                    for ( var n = 0; n < selected.length; ++n )
+                    {
+                        var aData = selected[n];
+                        //ids.push(aData['id']);
+                        ids[aData['id']] = aData['id'];
+                    }
+                    onActionsClick_Toolbar('disable_alarm', ids);
+                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
+                   "
+            );
+                    
+             $data['datatable']['actions'][] = array(
+                'my_name'		=> 'enable_alarm',
+                'text' 			=> lang('Enable'),
+                'type'			=> 'custom',
+                'custom_code' => "
+                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
+                    var selected = oTT.fnGetSelectedData();
+
+                    var numSelected = 	selected.length;
+
+                    if (numSelected ==0){
+                        alert('None selected');
+                        return false;
+                    }
+                    var  ids = {};
+                    for ( var n = 0; n < selected.length; ++n )
+                    {
+                        var aData = selected[n];
+                        //ids.push(aData['id']);
+                        ids[aData['id']] = aData['id'];
+                    }
+                    onActionsClick_Toolbar('enable_alarm', ids);
+                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
+                   "
+            );
+            
+             $data['datatable']['actions'][] = array(
+                'my_name'		=> 'test_cron',
+                'text' 			=> lang('test cron'),
+                'type'			=> 'custom',
+                'custom_code' => "
+                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
+                    var selected = oTT.fnGetSelectedData();
+
+                    var numSelected = 	selected.length;
+
+                    if (numSelected ==0){
+                        alert('None selected');
+                        return false;
+                    }
+                    var  ids = {};
+                    for ( var n = 0; n < selected.length; ++n )
+                    {
+                        var aData = selected[n];
+                        //ids.push(aData['id']);
+                        ids[aData['id']] = aData['id'];
+                    }
+                    onActionsClick_Toolbar('test_cron', ids);
+                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
+                   "
+            );
+                    
+             $data['datatable']['actions'][] = array(
+                'my_name'		=> 'delete_alarm',
+                'text' 			=> lang('Delete'),
+                'type'			=> 'custom',
+                'custom_code' => "
+                    var oTT = TableTools.fnGetInstance( 'datatable-container' );
+                    var selected = oTT.fnGetSelectedData();
+
+                    var numSelected = 	selected.length;
+
+                    if (numSelected ==0){
+                        alert('None selected');
+                        return false;
+                    }
+                    var  ids = {};
+                    for ( var n = 0; n < selected.length; ++n )
+                    {
+                        var aData = selected[n];
+                        //ids.push(aData['id']);
+                        ids[aData['id']] = aData['id'];
+                    }
+                    onActionsClick_Toolbar('delete_alarm', ids);
+                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
+                   "
+            );
+//            JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
 //
 //			$data['datatable']['actions'][] = array(
 //				'my_name'		=> 'add',
@@ -672,8 +807,12 @@
 			// Prepare YUI Library
 //			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'alarm.index', 'property' );
             
-            phpgwapi_jquery::load_widget('numberformat');
-            self::render_template_xsl('uialarm.index',$data);
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+            
+            self::add_javascript('property', 'portico', 'uialarm.index.js');
+//            self::render_template_xsl('uialarm.index',$data);
+            self::render_template_xsl('datatable_jquery',$data);
 
 			//$this->save_sessiondata();		
 		}
@@ -1032,7 +1171,11 @@
 				$async_id_elements = explode(':',$async_id);
 				$method_id = $async_id_elements[1];
 			}
-
+            
+            $tabs = array();
+            $tabs['general']    = array('label' => lang('general'), 'link' => '#general');
+            $active_tab = 'general';
+            
 			$this->method_id = $method_id ? $method_id : $this->method_id;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm'));
@@ -1135,7 +1278,9 @@
 					'lang_minute'					=> lang('minute'),
 					'value_minute'					=> $alarm['times']['min'],
 					'lang_data'						=> lang('data'),
-					'lang_data_statustext'				=> lang('inputdata for the method')
+					'lang_data_statustext'				=> lang('inputdata for the method'),
+                    'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 			//_debug_array($data);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('async') . ': ' . ($async_id?lang('edit timer'):lang('add timer'));
@@ -1243,7 +1388,7 @@
 				);
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::cron::run";
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::cron::run ::" . $id;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
