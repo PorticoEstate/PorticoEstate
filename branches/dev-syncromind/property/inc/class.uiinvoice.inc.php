@@ -125,18 +125,58 @@
 								'text'   => lang('User'),
 								'list'   => $values_combo_box[1]
 							);
+            
+            return $combos;
+        }
+		
+        private function _get_Filters_consume()
+        {
+			$district_id 	 = phpgw::get_var('district_id', 'int');
+			$b_account_class = phpgw::get_var('b_account_class', 'int');
+			$b_account		 = phpgw::get_var('b_account', 'int');
+			$b_account_class = $b_account_class ? $b_account_class : substr($b_account,0,2);
+			$ecodimb 		 = phpgw::get_var('ecodimb');
 			
-			
-			/*$values_combo_box[2]  = $this->bo->select_account_class($b_account_class);
-			array_unshift ($values_combo_box[2], array ('id'=>'','name'=>lang('No account')));
+			$values_combo_box[0]  = $this->bo->select_category('', $this->cat_id);
+			array_unshift ($values_combo_box[0], array('id'=>'','name'=>lang('no category')));
 			$combos[] = array
 							(
 								'type'   => 'filter',
-								'name'   => 'filter',
-								'text'   => lang('User'),
+								'name'   => 'cat_id',
+								'text'   => lang('Category'),
+								'list'   => $values_combo_box[0]
+							);
+			
+			$values_combo_box[1]  = $this->bocommon->select_district_list('select',$district_id);
+			array_unshift ($values_combo_box[1], array('id'=>'','name'=>lang('no district')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'district_id',
+								'text'   => lang('District'),
+								'list'   => $values_combo_box[1]
+							);
+			
+			$values_combo_box[2]  = $this->bo->select_account_class($b_account_class);
+			array_unshift ($values_combo_box[2], array('id'=>'','name'=>lang('No account')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'b_account_class',
+								'text'   => lang('No account'),
 								'list'   => $values_combo_box[2]
-							);*/
-            
+							);
+			
+			$values_combo_box[3]  = $this->bocommon->select_category_list(array('type'=>'dimb', 'selected' => $ecodimb));
+			array_unshift ($values_combo_box[3], array('id'=>'','name'=>lang('no dimb')));
+			$combos[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'ecodimb',
+								'text'   => lang('dimb'),
+								'list'   => $values_combo_box[3]
+							);
+			
             return $combos;
         }
 		
@@ -1962,6 +2002,59 @@ JS;
 			return $this->jquery_results($result_data);
 		}
 		
+        public function query_consume()
+        {	
+			$start_date			= phpgw::get_var('start_date');
+			$end_date			= phpgw::get_var('end_date');
+			$vendor_id			= phpgw::get_var('vendor_id', 'int');
+			$workorder_id		= phpgw::get_var('workorder_id', 'int');
+			$loc1				= phpgw::get_var('loc1');
+			$district_id		= phpgw::get_var('district_id', 'int');
+			$b_account_class	= phpgw::get_var('b_account_class', 'int');
+			$b_account			= phpgw::get_var('b_account', 'int');
+			$b_account_class	= $b_account_class ? $b_account_class : substr($b_account,0,2);
+			$ecodimb			= phpgw::get_var('ecodimb');
+			$draw				= phpgw::get_var('draw', 'int');
+
+			$start_date	= urldecode($start_date);
+			$end_date	= urldecode($end_date);
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			if(!$start_date)
+			{
+				//-- actual date
+				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$dateformat);
+				$end_date	= $start_date;
+			}
+			
+			$content = $this->bo->read_consume($start_date,$end_date,$vendor_id,$loc1,$workorder_id,$b_account_class,$district_id,$ecodimb);
+
+			$sum = 0;
+			foreach ($content as &$entry)
+			{
+				$sum			= $sum + $entry['consume'];
+				$entry['link_voucher'] 	= urldecode($GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'		=> 'property.uiinvoice.index',
+						'paid'				=> true,
+						'district_id'		=> $district_id,
+						'b_account_class'	=> $b_account_class,
+						'start_date'		=> $start_date,
+						'end_date'			=> $end_date,
+						'ecodimb'			=> $ecodimb
+					)
+				));
+				$entry['consume'] 	= number_format($entry['consume'], 0, ',', ' ');
+			}
+			
+			$result_data    =   array('results' =>  $content);
+			$result_data['total_records']   = count($content);
+			$result_data['draw']    = $draw;
+			$result_data['sum']    = number_format($sum, 0, ',', ' ');
+
+			return $this->jquery_results($result_data);
+		}
 		
 		/**
 		 * Edit single line within a voucher
@@ -1989,7 +2082,6 @@ JS;
 
 			$values	= phpgw::get_var('values');
 
-			$receipt = array();
 			if (isset($values['save']))
 			{
 				$values['project_group'] = phpgw::get_var('project_group', 'int', 'POST');
@@ -2186,25 +2278,24 @@ JS;
 		function consume()
 		{
 			//-- captura datos de URL
-			$start_date 	= phpgw::get_var('start_date');
-			$end_date 		= phpgw::get_var('end_date');
-			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
-			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
-			$loc1 			= phpgw::get_var('loc1');
-			$district_id 	= phpgw::get_var('district_id', 'int');
-			$b_account_class= phpgw::get_var('b_account_class', 'int');
-			$b_account= phpgw::get_var('b_account', 'int');
+			$start_date			= phpgw::get_var('start_date');
+			$end_date			= phpgw::get_var('end_date');
+			$vendor_id			= phpgw::get_var('vendor_id', 'int');
+			$workorder_id		= phpgw::get_var('workorder_id', 'int');
+			$loc1				= phpgw::get_var('loc1');
+			$district_id		= phpgw::get_var('district_id', 'int');
+			$b_account_class	= phpgw::get_var('b_account_class', 'int');
+			$b_account			= phpgw::get_var('b_account', 'int');
 
-			$b_account_class = $b_account_class ? $b_account_class : substr($b_account,0,2);
-
-			$ecodimb 		= phpgw::get_var('ecodimb');
+			$b_account_class	= $b_account_class ? $b_account_class : substr($b_account,0,2);
+			$ecodimb			= phpgw::get_var('ecodimb');
 
 			//-- ubica focus del menu derecho
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::consume';
 
 			//-- captura datos de URL
-			$start_date	=urldecode($start_date);
-			$end_date	=urldecode($end_date);
+			$start_date	= urldecode($start_date);
+			$end_date	= urldecode($end_date);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -2215,276 +2306,59 @@ JS;
 				$end_date	= $start_date;
 			}
 
-
-			$datatable = array();
-			$values_combo_box = array();
-			$sum = 0;
+            if( phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+				return $this->query_consume();
+            }
+			
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
+			
+			$data   = array(
+                'datatable_name'    => $appname,
+                'form'  => array(
+                               'toolbar'    => array(
+                                   'item'   => array(
+                                       array(
+                                           'type'   => 'date-picker',
+											'id'	=> 'start_date',
+											'name'	=> 'start_date',
+											'value'	=> '',
+											'text'  => lang('from')
+                                       ),
+                                       array(
+											'type'	=> 'date-picker',
+											'id'	=> 'end_date',
+											'name'	=> 'end_date',
+											'value'	=> '',
+											'text'  => lang('to')
+                                       )								
+								   )
+                               )
+                            ),
+                'datatable' =>  array(
+                    'source'    => self::link(array(
+						'menuaction'		=> 'property.uiinvoice.consume',
+						'district_id'		=> $district_id,
+						'ecodimb'			=> $ecodimb,
+						'b_account_class'	=> $b_account_class,
+                        'phpgw_return_as'   => 'json'
+                    )),
+                    'allrows'			=> true,
+                    'editor_action'		=> '',
+                    'field'				=> array(),
+					'disablePagination' => true
+                )
+            );
+	 
+            $filters = $this->_get_Filters_consume();
+			krsort($filters);
+            foreach($filters as $filter){
+                array_unshift($data['form']['toolbar']['item'], $filter);
+            }
+			
 			$vendor_name ="";
-
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-				$datatable['menu']				= $this->bocommon->get_menu();
-
-				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'	=> 'property.uiinvoice.consume',
-						'order'			=> $this->order,
-						'sort'			=> $this->sort,
-						'cat_id'		=> $this->cat_id,
-						'district_id'	=> $district_id,
-						'sub'			=> $this->sub,
-						'query'			=> $this->query,
-						'start'			=> $this->start,
-						'filter'		=> $this->filter,
-						'ecodimb'		=> $ecodimb
-					));
-
-				$datatable['config']['allow_allrows'] = false;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uiinvoice.consume',"
-					."order: '{$this->order}',"
-					."sort:'{$this->sort}',"
-					."cat_id:'{$this->cat_id}',"
-					."district_id:'{$district_id}',"
-					."sub:'{$this->sub}',"
-					."query:'{$this->query}',"
-					."start:'{$this->start}',"
-					."filter:'{$this->filter}',"
-					."ecodimb:'{$ecodimb}',"
-					."b_account_class:'{$b_account_class}'";
-
-				$values_combo_box[0]  = $this->bo->select_category('',$this->cat_id);
-				$default_value = array ('id'=>'','name'=>lang('no category'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->select_district_list('select',$district_id);
-				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				$values_combo_box[2]  = $this->bo->select_account_class($b_account_class);
-				$default_value = array ('id'=>'','name'=>lang('No account'));
-				array_unshift ($values_combo_box[2],$default_value);
-
-				$values_combo_box[3]  = $this->bocommon->select_category_list(array('type'=>'dimb', 'selected' => $ecodimb));
-				$default_value = array ('id'=>'','name'=>lang('no dimb'));
-				array_unshift ($values_combo_box[3],$default_value);
-
-				$field_invoice = array
-					(
-						array
-						( // imag calendar1
-							'type' 		=> 'img',
-							'id'     	=> 'start_date-trigger',
-						//	'src'    	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-							'alt'		=> lang('Select date'),
-							'tab_index' => 1,
-							'style' 	=> 'filter'
-						),
-						array
-						( // calendar1 start_date
-							'type' 		=> 'text',
-							'name'     	=> 'start_date',
-							'id'     	=> 'start_date',
-							'value'    	=> $start_date,
-							'size'    	=> 7,
-							'readonly' 	=> 'readonly',
-							'tab_index' => 2,
-							'style' 	=> 'filter'
-						),
-						array
-						( // imag calendar2
-							'type' 		=> 'img',
-							'id'     	=> 'end_date-trigger',
-						//	'src'    	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-							'alt'		=> lang('Select date'),
-							'tab_index' => 3,
-							'style' 	=> 'filter'
-						),
-						array
-						( // calendar2 start_date
-							'type' 		=> 'text',
-							'name'     	=> 'end_date',
-							'id'     	=> 'end_date',
-							'value'    	=> $end_date,
-							'size'    	=> 7,
-							'readonly' 	=> 'readonly',
-							'tab_index' => 4,
-							'style' 	=> 'filter'
-						),
-						array
-						( // workorder link
-							'type' 		=> 'link',
-							'id' 		=> 'lnk_workorder',
-							'url' 		=> "",
-							'value' 	=> lang('Workorder ID'),
-							'tab_index' => 5,
-							'style' 	=> 'filter'
-						),
-						array
-						( // workorder box
-							'name'     	=> 'workorder_id',
-							'id'     	=> 'txt_workorder',
-							'value'    	=> $workorder_id,
-							'type' 		=> 'text',
-							'size'    	=> 10,
-							'tab_index' => 6,
-							//'readonly' => 'readonly',
-							'style' 	=> 'filter'
-						),
-						array
-						( //vendor link
-							'type' 		=> 'link',
-							'id' 		=> 'lnk_vendor',
-							'url' 		=> "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' => 'property.uilookup.vendor',
-							))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
-							'value' 	=> lang('Vendor'),
-							'tab_index' => 7,
-							'style' 	=> 'filter'
-						),
-						array
-						( // this field hidden is necesary for avoid js error
-							'name'     => 'vendor_name',
-							'id'     => 'txt_vendor_name',
-							'value'    => "",
-							'type' => 'hidden',
-							'size'    => 10,
-							'style' => 'filter'
-						),
-						array
-						( // Vendor box
-							'name'		=> 'vendor_id',
-							'id'     	=> 'txt_vendor',
-							'value'    	=> $vendor_id,
-							'type'		=> 'text',
-							'size'		=> 10,
-							'tab_index' => 8,
-							//'readonly' => 'readonly',
-							'style'		=> 'filter'
-						),
-						array
-						(
-							'type'		=> 'link',
-							'id'		=> 'lnk_property',
-							'url'		=> "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' => 'property.uilocation.index',
-								'lookup'  	=> 1,
-								'type_id'  	=> 1,
-								'lookup_name'  	=> 0,
-							))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
-							'value' => lang('property'),
-							'tab_index' => 9,
-							'style' => 'filter'
-						),
-						array
-						( // txt Facilities Management
-							'name'		=> 'loc1',
-							'id'		=> 'txt_loc1',
-							'value'		=> $loc1,
-							'type'		=> 'text',
-							'size'		=> 8,
-							'tab_index' => 10,
-							//'readonly' => 'readonly',
-							'style'		=> 'filter'
-						),
-						array
-						( //boton   SEARCH
-							'id'		=> 'btn_search',
-							'name'		=> 'search',
-							'value'		=> lang('search'),
-							'type'		=> 'button',
-							'tab_index' => 11,
-							'style'		=> 'filter'
-						),
-						array
-						( //boton 	CATEGORY
-							'id'		=> 'btn_cat_id',
-							'name'		=> 'cat_id',
-							'value'		=> lang('Category'),
-							'type'		=> 'button',
-							'tab_index' => 12,
-							'style'		=> 'filter'
-						),
-						array
-						( //boton 	DISTRICT
-							'id'		=> 'btn_district_id',
-							'name'		=> 'district_id',
-							'value'		=> lang('District'),
-							'type'		=> 'button',
-							'tab_index' => 13,
-							'style'		=> 'filter'
-						),
-						array
-						( //boton 	ACCOUNT
-							'id'		=> 'btn_b_account_class',
-							'name'		=> 'b_account_class',
-							'value'		=> lang('No account'),
-							'type'		=> 'button',
-							'tab_index' => 14,
-							'style'		=> 'filter'
-						),
-						array
-						( 
-							'id' => 'sel_ecodimb',
-							'name' => 'ecodimb',
-							'value'	=> lang('dimb'),
-							'type' => 'select',
-							'style' => 'filter',
-							'values' => $values_combo_box[3],
-							'onchange'=> 'onChangeSelect("ecodimb");',
-							'tab_index' => 5
-						),
-					);
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction'		=> 'property.uiinvoice.consume',
-								'order'				=> $this->order,
-								'sort'				=> $this->sort,
-								'cat_id'			=> $this->cat_id,
-								'district_id'		=> district_id,
-								'sub'				=> $this->sub,
-								'query'				=> $this->query,
-								'start'				=> $this->start,
-								'filter'			=> $this->filter,
-								'ecodimb'			=> $ecodimb
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => $field_invoice,
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								),
-								array
-								( //div values  combo_box_2
-									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2])
-								)
-							)
-						)
-					)
-				);
-
-			} //-- of if( phpgw::get_var('phpgw_return_as') != 'json' )
 
 			if($vendor_id)
 			{
@@ -2532,28 +2406,6 @@ JS;
 				{
 					$current_Consult[] = array(lang('property'),$loc1);
 				}
-
-			}
-
-			$content = $this->bo->read_consume($start_date,$end_date,$vendor_id,$loc1,$workorder_id,$b_account_class,$district_id,$ecodimb);
-
-			$sum = 0;
-			foreach ($content as & $entry)
-			{
-				$sum			= $sum + $entry['consume'];
-				$entry['link_voucher'] 	= $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'		=> 'property.uiinvoice.index',
-						'paid'				=> true,
-				//		'user_lid'			=> 'all',
-						'district_id'		=> $district_id,
-						'b_account_class'	=> $b_account_class,
-						'start_date'		=> $start_date,
-						'end_date'			=> $end_date,
-						'ecodimb'			=> $ecodimb
-					)
-				);
-				$entry['consume'] 	= number_format($entry['consume'], 0, ',', ' ');
 			}
 
 
@@ -2563,187 +2415,92 @@ JS;
 					'type'			=>	array('text'	 ,'text'	 ,'text'	 ,'url', 'text' ),
 					'col_name'		=>	array('district_id','period','account_class','consume', 'paid'),
 					'name'			=>	array('district_id','period','account_class','consume', 'paid'),
-					'formatter'		=>	array('','','','',''),
+					'formatter'		=>	array('','','','formatLinkIndexInvoice',''),
 					'descr'			=>	array(lang('District'),lang('Period'),lang('Budget account'),lang('Consume'),lang('paid')),
-					'className'		=> 	array('centerClasss','centerClasss','centerClasss','rightClasss','centerClasss')
+					'className'		=> 	array('center','center','center','right','center')
 				);
 
-			$j=0;
+			$count_uicols_name = count($uicols['name']);
 
-			if (isset($content) && is_array($content))
+            for ($k = 0; $k < $count_uicols_name; $k++) 
 			{
-				foreach($content as $invoices)
+                $params = array
+                            (
+                                'key'		=>  $uicols['col_name'][$k],
+                                'label'		=>  $uicols['descr'][$k],
+                                'sortable'  =>  ($uicols['sortable'][$k])?true:false,
+                                'hidden'    =>  ($uicols['input_type'][$k] == 'hidden')?true:false,
+								'className' =>  ($uicols['className'][$k])?$uicols['className'][$k]:''
+                            );               
+                
+                if($uicols['formatter'][$k])
 				{
-					for ($i=0;$i<count($uicols['name']);$i++)
-					{
-						$datatable['rows']['row'][$j]['column'][$i]['value']	= $invoices[$uicols['name'][$i]];
-						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['col_name'][$i];
-						$datatable['rows']['row'][$j]['column'][$i]['type'] 	= $uicols['type'][$i];
+					$params['formatter'] = $uicols['formatter'][$k];
+				}
+					
+                array_push($data['datatable']['field'], $params);
+            }
 
-						if($uicols['input_type'][$i]!='hidden')
+			$inputFilters = array (
+				array('id'=>'workorder_id', 'label'=>lang('Workorder ID'), 'type'=>'text'),
+				array('id'=>'', 'label'=>"<a href=\"#\" onClick=\"JqueryPortico.openPopup({menuaction:'property.uilookup.vendor'})\">".lang('Vendor')."</a>", 'type' => 'link'),
+				array('id'=>'vendor_id', 'label'=>lang('Vendor'), 'type'=>'text'),
+				array('id'=>'vendor_name', 'label'=>'', 'type'=>'hidden'),
+				array('id'=>'', 'label'=>"<a href=\"#\" onClick=\"JqueryPortico.openPopup({menuaction:'property.uilocation.index', lookup:'1', type_id:'1', lookup_name:'0'})\">".lang('property')."</a>", 'type' => 'link'),
+				array('id'=>'loc1', 'label'=>lang('property'), 'type'=>'text'),
+				array('id'=>'loc1_name', 'label'=>'', 'type'=>'hidden')
+			);
+			
+			$code =	"var inputFilters = ".json_encode($inputFilters);
+					
+			$code .= <<<JS
+				
+				function initCompleteDatatable(oSettings, json, oTable) 
+				{
+					$('#datatable-container_filter').empty();
+					$.each(inputFilters, function(i, val) 
+					{
+						if (val['type'] == 'text') 
 						{
-							//--- varchar--
-							if($uicols['input_type'][$i]=='varchar' && $invoices[$uicols['name'][$i]])
+							$('#datatable-container_filter').append('<input type="text" placeholder="'+val['label']+'" id="'+val['id']+'" name="'+val['id']+'" />');
+						}
+						else if (val['type'] == 'hidden') 
+						{
+							$('#datatable-container_filter').append('<input type="hidden" id="'+val['id']+'" name="'+val['id']+'" />');
+						}
+						else {
+							$('#datatable-container_filter').append(val['label']);
+						}
+					});
+					
+					var valuesInputFilter = {};
+					
+					$.each(inputFilters, function(i, val) 
+					{
+						if (val['type'] == 'text') 
+						{
+							valuesInputFilter[val['id']] = '';
+							$( '#' + val['id']).on( 'keyup change', function () 
 							{
-								$datatable['rows']['row'][$j]['column'][$i]['format']	= 'varchar';
-							}
-							//--- link--
-							else if($uicols['input_type'][$i]=='link' && $invoices[$uicols['name'][$i]])
-							{
-								$datatable['rows']['row'][$j]['column'][$i]['format']	= 'link';
-								if($uicols['type'][$i]=='url')
+								if ( $.trim($(this).val()) != $.trim(valuesInputFilter[val['id']]) ) 
 								{
-									$datatable['rows']['row'][$j]['column'][$i]['link']	= $invoices['link_voucher'];
+									filterData(val['id'], $(this).val());
+									valuesInputFilter[val['id']] = $(this).val();
 								}
-								$datatable['rows']['row'][$j]['column'][$i]['target']	= '';
-							}
+							});
 						}
-					}
-					$j++;
-				}
-			}
-
-			//not grants
-			$datatable['rowactions']['action'] = array();
-
-
-			$uicols_count	= count($uicols['descr']);
-
-			for ($i=0;$i<$uicols_count;$i++)
-			{
-				$datatable['headers']['header'][$i]['name'] 		= $uicols['col_name'][$i];
-				$datatable['headers']['header'][$i]['text'] 		= $uicols['descr'][$i];
-				$datatable['headers']['header'][$i]['formatter'] 	= ($uicols['formatter'][$i]=='' ?  '""' : $uicols['formatter'][$i]);
-				$datatable['headers']['header'][$i]['className']	= $uicols['className'][$i];
-
-				if($uicols['input_type'][$i]!='hidden')
+					});									
+				};
+				
+				function afterPopupClose() 
 				{
-					$datatable['headers']['header'][$i]['visible'] 	= true;
-					$datatable['headers']['header'][$i]['format'] 	= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
-					$datatable['headers']['header'][$i]['sortable']	= false;
-				}
-			}
+					$('#loc1').change();
+					$('#vendor_id').change();
+				};
+JS;
 
-
-			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($content);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-
-			//for maintein page number in datatable
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order']	= 'district_id'; // name key Column in myColumnDef
-				$datatable['sorting']['sort']	= 'desc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']	= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort']	= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			//// cramirez: necesary for include a partucular js
-			phpgwapi_yui::load_widget('loader');
-			//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array(),
-					'sum'				=> number_format($sum, 0, ',', ' ')
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target=''>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json['rights'] = $datatable['rowactions']['action'];
-			}
-			// query parameters
-			if(isset($current_Consult) && is_array($current_Consult))
-			{
-				$json['current_consult'] = $current_Consult;
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
+			$GLOBALS['phpgw']->js->add_code('', $code, true);
+			
 			//Title of Page
 			$appname		= lang('consume');
 
@@ -2751,8 +2508,11 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.consume', 'property' );
-			//die(_debug_array($datatable));
+			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.consume', 'property' );
+
+			phpgwapi_jquery::load_widget('numberformat');
+			self::add_javascript('property', 'portico', 'invoice.consume.js');
+			self::render_template_xsl('datatable_jquery',$data);
 		}
 
 		function delete()
@@ -3580,33 +3340,29 @@ JS;
 				}
 			}
 
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$tab_info = array
-			(
-				'deposition'		=> array('label' => lang('deposition'), 'link' => '#deposition'),
-				'reconciliation'	=> array('label' => lang('reconciliation'), 'link' => '#reconciliation')
-			);
-
-			phpgwapi_yui::tabview_setup('reporting_tabview');
-
-			$msgbox_data = isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'';
-
+			$tabs = array();
+			$tabs['deposition']	= array('label' => lang('deposition'), 'link' => '#deposition');
+			$tabs['reconciliation']	= array('label' => lang('reconciliation'), 'link' => '#reconciliation');
+			$active_tab = $type;
+			
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.reporting')),
 				'accounting_periods'		=> array('options' => $this->bo->get_historical_accounting_periods()),
-				'tabs'						=> phpgwapi_yui::tabview_generate($tab_info, $type)
+				'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
 			$function_msg = lang('reporting');
-			$appname		= lang('invoice');
+			$appname	  = lang('invoice');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice_reporting','attributes_form'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('reporting' => $data));
-
+			
+			self::render_template_xsl(array('invoice_reporting'), $data);
 		}
+		
 		/**
 		 * forward voucher to other persons
 		 *
