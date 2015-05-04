@@ -657,16 +657,17 @@
 		 * @param $control_id control id
 		 * @return array with arrays of component info  
 		 */
-		function get_components_for_control($control_id, $location_id = 0, $component_id = 0, $serie_id = 0)
+		function get_components_for_control($control_id, $location_id = 0, $component_id = 0, $serie_id = 0, $user_id = 0)
 		{
 			$control_id = (int) $control_id;
 			$serie_id = (int) $serie_id;
+			$user_id = (int) $user_id;
 
 			$controls_array = array();
 
 			$sql =  "SELECT ccl.control_id, ccl.component_id as component_id,"
 			. " ccl.location_id as location_id, ccs.id as serie_id, ccs.assigned_to, ccs.start_date,"
-			. " ccs.repeat_type, ccs.repeat_interval, ccs.service_time, ccs.controle_time,"
+			. " ccs.repeat_type, ccs.repeat_interval, ccs.service_time, ccs.controle_time, ccs.enabled as serie_enabled,"
 			. " bim_type.description, bim_item.location_code ";
 
 			$sql .= "FROM controller_control_component_list ccl,controller_control_serie ccs, fm_bim_item bim_item, fm_bim_type bim_type ";
@@ -686,7 +687,11 @@
 			{
 				$sql .= " AND ccs.id = {$serie_id}";
 			}
-
+			if($user_id)
+			{
+				$sql .= " AND ccs.assigned_to = {$user_id}";
+			}
+//	_debug_array($sql);
 			$this->db->query($sql);
 
 			while($this->db->next_record())
@@ -699,7 +704,8 @@
 					'repeat_type'		=> $this->db->f('repeat_type'),
 					'repeat_interval'	=> $this->db->f('repeat_interval'),
 					'service_time'		=> $this->db->f('service_time'),
-					'controle_time'		=> $this->db->f('controle_time')
+					'controle_time'		=> $this->db->f('controle_time'),
+					'serie_enabled'		=> (int)$this->db->f('serie_enabled')
 				);
 
 				$component = new controller_component();
@@ -715,7 +721,7 @@
 				
 				$components_array[] = $component;
 			}
-
+//	_debug_array($components_array);
 			if( count( $components_array ) > 0 )
 			{
 				return $components_array; 
