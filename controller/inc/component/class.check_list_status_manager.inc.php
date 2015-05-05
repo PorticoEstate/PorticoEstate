@@ -35,10 +35,14 @@
 		private $check_list;
 		private $type;
 
-		public function __construct($check_list, $type)
+		public function __construct($check_list, $type = '')
 		{
 			$this->check_list	 = $check_list;
 			$this->type			 = $type;
+			if(!$type)
+			{
+				$check_list->get_component_id() ? 'component' : '';
+			}
 		}
 
 		function get_status_for_check_list()
