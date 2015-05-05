@@ -464,7 +464,7 @@ class rental_uibilling extends rental_uicommon
 		//set is_billed on invoice price items to false
 		$billing_job_invoices = rental_soinvoice::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
 		foreach($billing_job_invoices as $invoice){
-			$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id(), 'one_time' => true));
+			$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id(), 'one_time' => true, 'include_billed' => true));
 			foreach($price_items as $price_item){
 				if($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()){
 					$price_item->set_is_billed(false);
