@@ -22,6 +22,9 @@
 		<xsl:when test="remark">
 			<xsl:apply-templates select="remark"/>
 		</xsl:when>
+		<xsl:when test="forward">
+			<xsl:apply-templates select="forward"/>
+		</xsl:when>
 	</xsl:choose>
 </xsl:template>
 
@@ -1551,60 +1554,50 @@
 		</xsl:when>
 	</xsl:choose>
 	<form id="form" name="form" method="post" action="{form_action}" class="pure-form">
-			<input type="hidden" name="tab" value=""/>
-			<div id="tab-content">
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="record_detail">
-					<xsl:apply-templates select="approved_list"/>
-					<div class="pure-g">
-						<div class="pure-u-1-4">
-							<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
-							<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
-							<xsl:value-of select="php:function('lang', 'approve')"/>
-						</div>
-						<div class="pure-u-1-4">
-							<select name="values[approve]">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'grant')"/>
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="php:function('lang', 'select')"/>
-								</option>
-								<xsl:apply-templates select="approve_list"/>
-							</select>
-						</div>
+		<input type="hidden" name="tab" value=""/>
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="record_detail">
+				<xsl:apply-templates select="approved_list"/>
+				<div class="pure-g">
+					<div class="pure-u-1-4">
+						<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
+						<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
+						<xsl:value-of select="php:function('lang', 'approve')"/>
 					</div>
-		<table cellpadding="0" cellspacing="0" width="100%">
-			<tr height="50">
-				<td>
-					<xsl:variable name="lang_send">
-						<xsl:value-of select="php:function('lang', 'save')"/>
-					</xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_send}" title="{$lang_send}">
-					</input>
-				</td>
-			</tr>
-			<tr>
-				<td class="th_text" align="left" valign="top" >
-					<xsl:value-of select="php:function('lang', 'order id')"/>
-				</td>
-				<td align="left" class="th_text" valign="top" colspan = '2'>
-					<xsl:value-of select="php:function('lang', 'close')"/>
-					<table>
+					<div class="pure-u-1-4">
+						<select name="values[approve]">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'grant')"/>
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="approve_list"/>
+						</select>
+					</div>
+				</div>
+				<div class="pure-g">
+					<div class="pure-u-1-4">
+						<xsl:variable name="lang_send">
+							<xsl:value-of select="php:function('lang', 'save')"/>
+						</xsl:variable>
+						<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_send}" title="{$lang_send}"></input>
+					</div>				
+				</div>
+				<div class="pure-g">
+					<div class="pure-u-1-4">
+						<xsl:value-of select="php:function('lang', 'order id')"/>
+					</div>
+					<div class="pure-u-1-4">
 						<xsl:for-each select="orders">
-							<tr>
-								<td class="th_text" align="left" valign="top" >
-									<xsl:value-of select="id"/>
-								</td>
-								<td align="left" class="th_text" valign="top">
-									<input type="checkbox" name="orders[]" value="{id}" checked="checked"/>
-								</td>
-							</tr>
-						</xsl:for-each>
-					</table>
-				</td>
-			</tr>
-		</table>
+							<label class="pure-checkbox">
+								<xsl:value-of select="id"/>
+								<input type="checkbox" name="orders[]" value="{id}" checked="checked"/>
+							</label>
+						</xsl:for-each>						
+					</div>
+				</div>
 			</div>
 		</div>
 	</form>
