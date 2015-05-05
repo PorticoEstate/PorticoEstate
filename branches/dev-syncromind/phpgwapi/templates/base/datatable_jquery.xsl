@@ -125,7 +125,7 @@
 				<xsl:when test="type = 'date-picker'">
 					<td valign="top">
 					<div>
-						<input id="filter_{name}" name="filter_{name}" type="text"></input>
+						<input id="filter_{name}" name="filter_{name}" value="{value}" type="text"></input>
 					</div>
 					</td>
 				</xsl:when>
