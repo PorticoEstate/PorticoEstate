@@ -38,8 +38,13 @@ class year_calendar {
 	    {
 			  $this->calendar_array[$i] = null;
 	    }
-		
-	    $ctr_start_date_ts = $this->control->get_start_date();
+
+		if($this->control_relation && !$this->control_relation['serie_enabled'])
+		{
+			return;
+		}
+
+		$ctr_start_date_ts = $this->control->get_start_date();
 	    $ctr_end_date_ts = $this->control->get_end_date();
 	    $period_start_date_ts = $this->get_start_date_year_ts($this->year);
 	    $period_end_date_ts = $this->get_start_date_year_ts($this->year+1);
@@ -56,7 +61,8 @@ class year_calendar {
 	    	$check_list = new controller_check_list();
 	    	$check_list->set_deadline( $date_ts );
 	    	$check_list->set_control_id( $this->control->get_id() );
-    	
+   			$check_list->set_assigned_to($this->control_relation['assigned_to']);
+ 	
 	    	if($this->type == "component")
 	    	{
 	    		$check_list->set_component_id( $this->component->get_id() );
@@ -68,8 +74,8 @@ class year_calendar {
 	    		$check_list->set_location_code( $this->location_code );
 	    		$check_list_status_manager = new check_list_status_manager( $check_list, "location" );
 	    	} 
-    	
-			$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 
+
+			$check_list_status_info = $check_list_status_manager->get_status_for_check_list();
     	
 			$month_nr = date("n", $date_ts);
       
@@ -93,8 +99,13 @@ class year_calendar {
 
 			$month_nr = date("n", $check_list_status_info->get_deadline_date_ts());
 			
-			$this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
-			$this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
+			$repeat_type = $check_list->get_repeat_type();
+			if( !isset($this->calendar_array[ $month_nr ]) || $repeat_type > $this->calendar_array[ $month_nr ]['repeat_type'])
+			{
+				$this->calendar_array[ $month_nr ]['repeat_type'] = $repeat_type;
+				$this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
+				$this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
+			}
 		}
 		
 		return $this->calendar_array;

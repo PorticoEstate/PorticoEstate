@@ -409,6 +409,7 @@
 			var base_java_url = <xsl:value-of select="base_java_url"/>;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
+			var myButtons = new Array();
 
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
@@ -424,6 +425,9 @@
 
 			<xsl:for-each select="myColumnDefs">
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
 		</script>
 		<div class="yui-navset" id="entity_edit_tabview">
@@ -629,7 +633,7 @@
 							<script type="text/javascript">
 							lookup_control_responsible = function()
 							{
-								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible'};
+								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible', acl_app:'controller', acl_location: '.control', acl_required:4};
 								var requestUrl = phpGWLink('index.php', oArgs);
 								var Window1=window.open(requestUrl,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 							}
@@ -640,152 +644,88 @@
 								var requestUrl = phpGWLink('index.php', oArgs);
 								var Window1=window.open(requestUrl,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 							}
-<![CDATA[
-							function parseURL(url)
-							{
-								var parser = document.createElement('a'),
-									searchObject = {},
-									queries, split, i;
-								// Let the browser do the work
-								parser.href = url;
-								// Convert query string to object
-								queries = parser.search.replace(/^\?/, '').split('&');
-								for( i = 0; i < queries.length; i++ ) {
-									split = queries[i].split('=');
-									searchObject[split[0]] = split[1];
-								}
-								return {
-									protocol: parser.protocol,
-									host: parser.host,
-									hostname: parser.hostname,
-									port: parser.port,
-									pathname: parser.pathname,
-									search: parser.search,
-									searchObject: searchObject,
-									hash: parser.hash
-								};
-							}
-]]>
-							add_control = function()
-							{
-								var formUrl = $("#form").attr("action");
-								var Url = parseURL(formUrl);
-								oArgs  = Url.searchObject;
-								delete oArgs.click_history;
-								oArgs.menuaction = 'property.boentity.add_control';
-								oArgs.control_id = $("#control_id").val();
-								oArgs.control_responsible = $("#control_responsible").val();
-								oArgs.control_start_date = $("#control_start_date").val();
-								oArgs.repeat_type = $("#repeat_type").val();
-								if(!oArgs.repeat_type)
-								{
-									alert('velg type serie');
-									return;
-								}
-
-								oArgs.repeat_interval = $("#repeat_interval").val();
-								oArgs.controle_time = $("#controle_time").val();
-								oArgs.service_time = $("#service_time").val();
-								var requestUrl = phpGWLink('index.php', oArgs, true);
-//								alert(requestUrl);
-
-								$("#controller_receipt").html("");
-
-								$.ajax({
-									type: 'POST',
-									dataType: 'json',
-									url: requestUrl,
-									success: function(data) {
-										if( data != null)
-										{
-											$("#controller_receipt").html(data.status + '::' + data.msg);
-											if(data.status_kode == 'ok')
-											{
-												$("#control_id").val('');
-												$("#control_name").val('');
-												$("#control_responsible").val('');
-												$("#control_responsible_user_name").val('');
-												$("#control_start_date").val('');
-											}
-										}
-									}
-								});
-
-								var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
-								var requestUrl2 = phpGWLink('index.php', oArgs2, true);
-								execute_async(myDataTable_4, oArgs2);
-							};
 
 							</script>
 							<div id="controller_receipt"></div>
-							<fieldset>
-								<legend>
-									<xsl:value-of select="php:function('lang', 'new')" />
-								</legend>
-								<label>
+							<xsl:variable name="lang_add">
+								<xsl:value-of select="php:function('lang', 'add')"/>
+							</xsl:variable>
+
+							<table>
+								<tr>
+								<td>
 									<xsl:value-of select="php:function('lang', 'user')" />
-								</label>
+								</td>
+								<td>
 								<input type="text" name="control_responsible" id="control_responsible" value="" onClick="lookup_control_responsible();" readonly="readonly" size="6">
 								</input>
 								<input size="30" type="text" name="control_responsible_user_name" id="control_responsible_user_name" value="" onClick="lookup_control_responsible();" readonly="readonly">
 								</input>
-								<br/>
-								<label>
+								</td>
+								</tr>
+								<tr>
+								<td>
 									<xsl:value-of select="php:function('lang', 'controller')" />
-								</label>
+								</td>
+								<td>
 								<input type="text" name="control_id" id="control_id" value="" onClick="lookup_control();" readonly="readonly" size="6">
 								</input>
 								<input type="text" name="control_name" id="control_name" value="" onClick="lookup_control();" readonly="readonly" size="30">
 								</input>
-								<xsl:variable name="lang_add">
-									<xsl:value-of select="php:function('lang', 'add')"/>
-								</xsl:variable>
-								<br/>
+								</td>
+								</tr>
+								<tr>
+									<td>
 
-								<label>
 									<xsl:value-of select="php:function('lang', 'start date')" />
-								</label>
+									</td>
+									<td>
 
 								<input type="text" name="control_start_date" id="control_start_date" value=""  readonly="readonly" size="10">
 								</input>
-								<br/>
+									</td>
+								</tr>
+								<tr>
 
-								<label>
+								<td>
 									<xsl:value-of select="php:function('lang', 'repeat type')" />
-								</label>
+								</td>
+								<td>
 								<select id="repeat_type" name="repeat_type">
 									<option value=""><xsl:value-of select="php:function('lang', 'select')"/></option>
 									<xsl:apply-templates select="repeat_types/options"/>
 								</select>
-								<br/>
-
-								<label>
+								</td>
+								</tr>
+								<tr>
+				
+								<td>
 									<xsl:value-of select="php:function('lang', 'interval')" />
-								</label>
+								</td>
+								<td>
 								<input type="text" name="repeat_interval" id="repeat_interval" value="1" size="2">
 								</input>
-
-								<br/>
-
-								<label>
+								</td>
+								</tr>
+								<tr>
+								<td>
 									<xsl:value-of select="php:function('lang', 'controle time')" />
-								</label>
+								</td>
+								<td>
 								<input type="text" name="controle_time" id="controle_time" value="" size="">
 								</input>
-								<br/>
-
-								<label>
+								</td>
+								</tr>
+								<tr>
+								<td>
 									<xsl:value-of select="php:function('lang', 'service time')" />
-								</label>
+								</td>
+								<td>
 								<input type="text" name="service_time" id="service_time" value="" size="">
 								</input>
-
-								<br/>
-
-								<input type="button" name="" value="{$lang_add}" title="{$lang_add}" onClick="add_control();">
-								</input>
-
-							</fieldset>
+								</td>
+								</tr>
+							</table>
 							<table>
 								<tr>
 									<td>
@@ -796,6 +736,7 @@
 									<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
 										<td>
+											<div id="datatable-buttons_4"/>
 											<div id="datatable-container_4"/>
 										</td>
 									</tr>
@@ -899,7 +840,7 @@
 					</xsl:choose>
 
 					<xsl:choose>
-						<xsl:when test="value_id !='' and enable_bulk = ''">
+						<xsl:when test="value_id !='' and enable_bulk = '0'">
 							<div id="related">
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>

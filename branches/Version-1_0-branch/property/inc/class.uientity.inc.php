@@ -2386,8 +2386,18 @@ JS;
 
 			}
 
-			if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
-			{
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+				{
+					$myButtons[4] = array
+					(
+						'name'   => "4",
+						'values'  => json_encode(array( array('id' =>'add_serie','type'=>'buttons', 'value'=>'add', 'label'=>lang('add'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+														array('id' =>'enable_serie','type'=>'buttons', 'value'=>'enable', 'label'=>lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+														array('id' =>'disable_serie','type'=>'buttons', 'value'=>'disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+														array('id' =>'edit_serie','type'=>'buttons', 'value'=>'edit', 'label'=>lang('edit'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					))
+				);
+
 				$location_id		= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 				$_controls = $this->get_controls_at_component($location_id, $id);
 
@@ -2412,11 +2422,12 @@ JS;
 							array('key' => 'assigned_to_name','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
-							array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'repeat_interval','label'=>lang('interval'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
-							array('key' => 'relation_enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'serie_enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+							array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true),
 							array('key' => 'location_id','hidden'=>true),
 							array('key' => 'component_id','hidden'=>true),
 							array('key' => 'id','hidden'=>true),
@@ -2533,8 +2544,8 @@ JS;
 			}
 
 			$repeat_types = array();
-			$repeat_types[] = array('id'=> -1, 'name' => lang('day'));
-			$repeat_types[] = array('id'=> 1, 'name' => lang('weekly'));
+	//		$repeat_types[] = array('id'=> -1, 'name' => lang('day'));
+	//		$repeat_types[] = array('id'=> 1, 'name' => lang('weekly'));
 			$repeat_types[] = array('id'=> 2, 'name' => lang('month'));
 			$repeat_types[] = array('id'=> 3, 'name' => lang('year'));
 
@@ -2544,7 +2555,8 @@ JS;
 				'controller'						=> $_enable_controller,
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'						=> $datavalues,
-					'myColumnDefs'					=> $myColumnDefs,	
+					'myColumnDefs'					=> $myColumnDefs,
+					'myButtons'							=> $myButtons,
 					'enable_bulk'					=> $category['enable_bulk'],
 					'org_unit'					=> $category['org_unit'],
 					'value_org_unit_id'			=> $values['org_unit_id'],
@@ -3578,6 +3590,8 @@ JS;
 				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
 				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
+				$entry['select'] = "<input type='checkbox' class='mychecks' value='{$entry['serie_id']}'></input>";
+
 			}
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{

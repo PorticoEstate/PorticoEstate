@@ -398,20 +398,18 @@
 			{
 				$order_add 	= $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
 				$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
+				$_end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+				$_start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+				$filtermethod .= " $where fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date ";
 
 				if($order_add || $order_edit)
 				{
 					$end_period	= date('Ym', $end_date);
 					$start_period	= date('Ym', $start_date);
-					$date_join = "JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
+					$date_join = "LEFT JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
 					$actual_cost_field = 'SUM(fm_tts_payments.amount) AS actual_cost';
 					$actual_cost_group_field = '';
-				}
-				else
-				{
-					$_end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
-					$_start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
-					$filtermethod .= " $where fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date ";
+
 				}
 
 				$where= 'AND';
