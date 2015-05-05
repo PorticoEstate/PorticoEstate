@@ -99,7 +99,9 @@
 
         private function _get_Filters()
         {
+			$paid 			= phpgw::get_var('paid', 'bool');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
+			$ecodimb 		= phpgw::get_var('ecodimb');
 			
             $values_combo_box = array();
             $combos = array();
@@ -116,8 +118,8 @@
 			
 			
 			$values_combo_box[1]  = $this->bo->get_invoice_user_list('select',$this->user_lid,array('all'),$default='all');
-			array_unshift ($values_combo_box[1],array('lid'=> $GLOBALS['phpgw']->accounts->get($this->account)->lid, 'firstname'=>lang('mine vouchers')));
-			array_unshift ($values_combo_box[1], array('lid'=>'','firstname'=>lang('no user')));
+			array_unshift ($values_combo_box[1],array('id'=> $GLOBALS['phpgw']->accounts->get($this->account)->lid, 'name'=>lang('mine vouchers')));
+			array_unshift ($values_combo_box[1], array('id'=>'','name'=>lang('no user')));
 			$combos[] = array
 							(
 								'type'   => 'filter',
@@ -126,6 +128,29 @@
 								'list'   => $values_combo_box[1]
 							);
             
+			if ($paid)
+			{
+				$values_combo_box[2]  = $this->bo->select_account_class($b_account_class);
+				array_unshift ($values_combo_box[2], array('id'=>'','name'=>lang('No account')));
+				$combos[] = array
+								(
+									'type'   => 'filter',
+									'name'   => 'b_account_class',
+									'text'   => lang('Account'),
+									'list'   => $values_combo_box[2]
+								);
+
+				$values_combo_box[3]  = $this->bocommon->select_category_list(array('type'=>'dimb', 'selected' => $ecodimb));
+				array_unshift ($values_combo_box[3], array('id'=>'','name'=>lang('no dimb')));
+				$combos[] = array
+								(
+									'type'   => 'filter',
+									'name'   => 'ecodimb',
+									'text'   => lang('dimb'),
+									'list'   => $values_combo_box[3]
+								);
+			}
+			
             return $combos;
         }
 		
@@ -288,11 +313,13 @@
 			$start_date = urldecode($start_date);
 			$end_date = urldecode($end_date);
 
-			//-- si end_date no existe
+			if(!$start_date)
+			{
+				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,'01','01',date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			}
 			if(!$end_date)
 			{
 				//-- fecha actual
-				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,'01','01',date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
 			//-- edicion de registro
@@ -333,6 +360,12 @@
             {
 				return $this->query();
             }
+			
+			$appname	= lang('invoice');
+			
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('datepicker');
 			
             $data   = array(
                 'datatable_name'    => $appname,
@@ -390,7 +423,7 @@
 						'type'	=> 'date-picker',
 						'id'	=> 'start_date',
 						'name'	=> 'start_date',
-						'value'	=> '',
+						'value'	=> $start_date,
 						'text'  => lang('from')
 					);
 				$data['form']['toolbar']['item'][] = array
@@ -398,7 +431,7 @@
 						'type'	=> 'date-picker',
 						'id'	=> 'end_date',
 						'name'	=> 'end_date',
-						'value'	=> '',
+						'value'	=> $end_date,
 						'text'  => lang('to')
 					);
 			}
@@ -867,7 +900,6 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $code, true);
 			
 			//Title of Page
-			$appname	= lang('invoice');
 			$function_msg	= lang('list voucher');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			
@@ -1600,7 +1632,8 @@ JS;
 					'value'	=> lang('Cancel'),
 					'url'	=> self::link(array
 					(
-						'menuaction'	=> 'property.uiinvoice.index'
+						'menuaction'	=> 'property.uiinvoice.index',
+						'paid'				=> $paid
 					))
 				)
 			);
@@ -2016,18 +2049,18 @@ JS;
 			$ecodimb			= phpgw::get_var('ecodimb');
 			$draw				= phpgw::get_var('draw', 'int');
 
-			$start_date	= urldecode($start_date);
-			$end_date	= urldecode($end_date);
-
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
+			$actual_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$dateformat);
+			
 			if(!$start_date)
 			{
-				//-- actual date
-				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$dateformat);
-				$end_date	= $start_date;
+				$start_date = $actual_date;
 			}
-			
+			if(!$end_date) 
+			{
+				$end_date = $actual_date;
+			}
+
 			$content = $this->bo->read_consume($start_date,$end_date,$vendor_id,$loc1,$workorder_id,$b_account_class,$district_id,$ecodimb);
 
 			$sum = 0;
@@ -2311,6 +2344,8 @@ JS;
 				return $this->query_consume();
             }
 			
+			$appname		= lang('consume');
+			
             $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
@@ -2324,14 +2359,14 @@ JS;
                                            'type'   => 'date-picker',
 											'id'	=> 'start_date',
 											'name'	=> 'start_date',
-											'value'	=> '',
+											'value'	=> $start_date,
 											'text'  => lang('from')
                                        ),
                                        array(
 											'type'	=> 'date-picker',
 											'id'	=> 'end_date',
 											'name'	=> 'end_date',
-											'value'	=> '',
+											'value'	=> $end_date,
 											'text'  => lang('to')
                                        )								
 								   )
@@ -2342,7 +2377,7 @@ JS;
 						'menuaction'		=> 'property.uiinvoice.consume',
 						'district_id'		=> $district_id,
 						'ecodimb'			=> $ecodimb,
-						'b_account_class'	=> $b_account_class,
+						'b_account_class'	=> $b_account_class,					
                         'phpgw_return_as'   => 'json'
                     )),
                     'allrows'			=> true,
@@ -2502,13 +2537,9 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $code, true);
 			
 			//Title of Page
-			$appname		= lang('consume');
 
 			$function_msg	= lang('list consume');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			// Prepare YUI Library
-			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.consume', 'property' );
 
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('property', 'portico', 'invoice.consume.js');
@@ -3529,9 +3560,8 @@ JS;
 					'value_process_log'		=> isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log'],
 					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
-
-			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('forward' => $data));
+			
+			self::render_template_xsl(array('invoice'), array('forward' => $data));
 		}
 
 	}
