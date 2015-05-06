@@ -471,6 +471,12 @@
 			$start_date	= urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
 			
+			if($start_date && empty($end_date)) 
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$dateformat);
+			}
+			
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
