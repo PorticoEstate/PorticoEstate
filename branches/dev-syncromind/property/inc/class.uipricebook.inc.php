@@ -206,8 +206,7 @@
             }
             
             $result_data = array('results'  => $content);
-            
-            echo '<pre>'; print_r($result_data); echo '</pre>';
+           
             $result_data['total_records'] = $this->bo->total_records;
             $result_data['draw'] = $draw;
 			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
