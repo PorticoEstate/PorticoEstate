@@ -448,57 +448,55 @@
 					</xsl:variable>
 					<form name="form" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
+                                                    <dl>
 							<xsl:choose>
 								<xsl:when test="msgbox_data != ''">
-									<tr>
-										<td align="left" colspan="3">
+									<dt>
 											<xsl:call-template name="msgbox"/>
-										</td>
-									</tr>
+									</dt>
 								</xsl:when>
 							</xsl:choose>
-							<tr>
-								<td class="th_text" align="left">
+                                                    </dl>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="lang_entity"/>
-								</td>
-								<td class="th_text" align="left">
+								</label>
+								<label>
 									<xsl:value-of select="entity_name"/>
-								</td>
-							</tr>
+								</label>
+                                                        </div>
 							<xsl:choose>
 								<xsl:when test="parent_list != ''">
-									<tr>
-										<td>
+									<div class="pure-control-group">
+										<label>
 											<xsl:value-of select="php:function('lang', 'parent')"/>
-										</td>
-										<td valign="top">
+										</label>
+										<label valign="top">
 											<select id="parent_id" name="values[parent_id]">
 												<option value="">
 													<xsl:value-of select="php:function('lang', 'select parent')"/>
 												</option>
 												<xsl:apply-templates select="parent_list"/>
 											</select>
-										</td>
-									</tr>
+										</label>
+                                                                        </div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="value_id != ''">
-									<tr>
-										<td valign="top">
+									<div class="pure-control-group">
+										<label>
 											<xsl:value-of select="php:function('lang', 'category')"/>
-										</td>
-										<td>
-											<xsl:value-of select="value_id"/>
-										</td>
-									</tr>
+										</label>
+										<xsl:value-of select="value_id"/>
+                                                                        </div>
 								</xsl:when>
 							</xsl:choose>
-							<tr>
-								<td valign="top">
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'name')"/>
-								</td>
-								<td>
+								</label>
+								
 									<input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
@@ -506,13 +504,12 @@
 											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
+								
+                                                        </div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'descr')"/>
-								</td>
-								<td>
+								</label>
 									<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
@@ -521,15 +518,13 @@
 										</xsl:attribute>
 										<xsl:value-of select="value_descr"/>
 									</textarea>
-								</td>
-							</tr>
+                                                        </div>
 							<xsl:choose>
 								<xsl:when test="lang_location_form != ''">
-									<tr>
-										<td>
+									<div class="pure-control-group">
+										<label>
 											<xsl:value-of select="lang_location_form"/>
-										</td>
-										<td>
+										</label>
 											<xsl:choose>
 												<xsl:when test="value_location_form = 1">
 													<input type="checkbox" name="values[location_form]" value="1" checked="checked" onMouseout="window.status='';return true;">
@@ -550,17 +545,15 @@
 													</input>
 												</xsl:otherwise>
 											</xsl:choose>
-										</td>
-									</tr>
+                                                                        </div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="lang_documentation != ''">
-									<tr>
-										<td>
+									<div class="pure-control-group">
+										<label>
 											<xsl:value-of select="lang_documentation"/>
-										</td>
-										<td>
+										</label>
 											<xsl:choose>
 												<xsl:when test="value_documentation = 1">
 													<input type="checkbox" name="values[documentation]" value="1" checked="checked" onMouseout="window.status='';return true;">
@@ -581,16 +574,15 @@
 													</input>
 												</xsl:otherwise>
 											</xsl:choose>
-										</td>
-									</tr>
+									</div>
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="value_location_form = 1">
 									<tr>
-										<td valign="top">
+                                                                                <td valign="top">
 											<xsl:value-of select="lang_include_in_location_form"/>
-										</td>
+                                                                                </td>
 										<td>
 											<xsl:call-template name="include_list"/>
 										</td>
