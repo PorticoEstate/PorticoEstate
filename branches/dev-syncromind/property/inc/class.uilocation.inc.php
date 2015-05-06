@@ -865,7 +865,7 @@
 				$function_exchange_values = <<<JS
 
 				$(document).ready(function() {
-					$("#datatable-container").on("click", "tr", function() {
+					$("#datatable-container").on("click", "tbody tr", function() {
 					var iPos = oTable.fnGetPosition( this );
 					var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
 
