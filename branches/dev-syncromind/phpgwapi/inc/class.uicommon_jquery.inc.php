@@ -785,15 +785,27 @@
 		{
 			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
 			{
-				$this->bo->unset_show_all_objects();
+				unset($_SESSION['showall']);
 			}
 			else
 			{
-				$this->bo->show_all_objects();
+				$_SESSION['showall'] = "1";
 			}
 			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
 		}
 
+		public function toggle_show_inactive()
+		{
+			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
+			{
+				unset($_SESSION['showall']);
+			}
+			else
+			{
+				$_SESSION['showall'] = "1";
+			}
+			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
+		}
 /*
 		public function use_yui_editor()
 		{
