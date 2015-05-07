@@ -206,18 +206,17 @@
                                     <xsl:value-of select="form_action"/>
                             </xsl:variable>
                             <form method="post" class="pure-form pure-form-aligned" action="{$form_action}">
-                            <table cellpadding="2" cellspacing="2" width="80%" align="center">
+                                <dl>
                                     <xsl:choose>
                                             <xsl:when test="msgbox_data != ''">
-                                                    <tr>
-                                                            <td align="left" colspan="3">
+                                                    <dt>
                                                                     <xsl:call-template name="msgbox"/>
-                                                            </td>
-                                                    </tr>
+                                                    </dt>
                                             </xsl:when>
                                     </xsl:choose>
-                                            <tr>
-                                                    <td valign="top">
+                                </dl>
+                                            <div class="pure-control-group">
+                                                    <label>
                                                             <xsl:choose>
                                                                     <xsl:when test="value_id != ''">
                                                                             <xsl:value-of select="lang_id"/>
@@ -225,8 +224,7 @@
                                                                     <xsl:otherwise>
                                                                     </xsl:otherwise>
                                                             </xsl:choose>
-                                                    </td>
-                                                    <td>
+                                                    </label>
                                                             <xsl:choose>
                                                                     <xsl:when test="value_id != ''">
                                                                             <xsl:value-of select="value_id"/>
@@ -234,13 +232,11 @@
                                                                     <xsl:otherwise>
                                                                     </xsl:otherwise>
                                                             </xsl:choose>
-                                                    </td>
-                                            </tr>
-                                            <tr>
-                                                    <td valign="top">
+                                            </div>
+                                            <div class="pure-control-group">
+                                                    <label>
                                                             <xsl:value-of select="lang_name"/>
-                                                    </td>
-                                                    <td>
+                                                    </label>
                                                             <input type="text" size="40" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
                                                                     <xsl:attribute name="onMouseover">
                                                                             <xsl:text>window.status='</xsl:text>
@@ -248,13 +244,11 @@
                                                                             <xsl:text>'; return true;</xsl:text>
                                                                     </xsl:attribute>
                                                             </input>
-                                                    </td>
-                                            </tr>
-                                            <tr>
-                                                    <td valign="top">
+                                            </div>
+                                            <div class="pure-control-group">
+                                                    <label>
                                                             <xsl:value-of select="lang_data"/>
-                                                    </td>
-                                                    <td>
+                                                    </label>
                                                             <input type="text" size="60" name="values[data]" value="{value_data}" onMouseout="window.status='';return true;">
                                                                     <xsl:attribute name="onMouseover">
                                                                             <xsl:text>window.status='</xsl:text>
@@ -262,13 +256,11 @@
                                                                             <xsl:text>'; return true;</xsl:text>
                                                                     </xsl:attribute>
                                                             </input>
-                                                    </td>
-                                            </tr>
-                                            <tr>
-                                                    <td valign="top">
+                                            </div>
+                                            <div class="pure-control-group">
+                                                    <label>
                                                             <xsl:value-of select="lang_descr"/>
-                                                    </td>
-                                                    <td>
+                                                    </label>
                                                             <textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
                                                                     <xsl:attribute name="onMouseover">
                                                                             <xsl:text>window.status='</xsl:text>
@@ -277,10 +269,8 @@
                                                                     </xsl:attribute>
                                                                     <xsl:value-of select="value_descr"/>
                                                             </textarea>
-                                                    </td>
-                                            </tr>
-                                            <tr height="50">
-                                                    <td>
+                                            </div>
+                                            <div class="pure-control-group">
                                                             <xsl:variable name="lang_save">
                                                                     <xsl:value-of select="lang_save"/>
                                                             </xsl:variable>
@@ -291,13 +281,9 @@
                                                                             <xsl:text>'; return true;</xsl:text>
                                                                     </xsl:attribute>
                                                             </input>
-                                                    </td>
-                                            </tr>
-                                    </table>
+                                            </div>
                                     </form>
-                                    <table cellpadding="2" cellspacing="2" width="80%" align="center">
-                                    <tr>
-                                            <td>
+                                    <div class="pure-control-group">
                                                     <xsl:variable name="done_action">
                                                             <xsl:value-of select="done_action"/>
                                                     </xsl:variable>
@@ -313,9 +299,7 @@
                                                                     </xsl:attribute>
                                                             </input>
                                                     </form>
-                                            </td>
-                                    </tr>
-                            </table>
+                                    </div>
                         </div>
                     </div>
                 </div>
