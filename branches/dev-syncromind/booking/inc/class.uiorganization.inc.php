@@ -1,7 +1,7 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uiorganization extends booking_uicommon
+	class booking_uiorganization extends phpgwapi_uicommon_jquery
 	{
 		protected $fields;
 		
@@ -9,7 +9,7 @@
 		(
 			'building_users' => true,
 			'index'			=>	true,
-			'index_json'		=>	true,
+			'query'			=>	true,
 			'add'			=>	true,
 			'edit'			=>	true,
 			'show'			=>	true,
@@ -53,7 +53,7 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
@@ -66,15 +66,6 @@
 								'type' => 'link',
 								'value' => lang('New organization'),
 								'href' => self::link(array('menuaction' => 'booking.uiorganization.add'))
-							),
-							array(
-								'type' => 'text',
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
 							),
 							array(
 								'type' => 'link',
@@ -90,7 +81,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Organization'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'shortname',
@@ -127,10 +118,10 @@
 					)
 				)
 			);
-			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			$organizations = $this->bo->read();
 			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
@@ -147,8 +138,7 @@
 					);
 				}
 			}
-
-			return $this->yui_results($organizations);
+            return $this->jquery_results($organizations);
 		}
 		
 		protected function get_customer_identifier() {
@@ -214,7 +204,7 @@
 			$this->use_yui_editor();
 			
 			$this->add_template_helpers();
-			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
+			self::render_template_xsl('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 
 		public function edit()
@@ -260,7 +250,7 @@
 			$this->use_yui_editor();
             
 			$this->add_template_helpers();
-			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
+			self::render_template_xsl('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 		
 		public function show()
@@ -274,6 +264,6 @@
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
 			$this->install_customer_identifier_ui($organization);
-			self::render_template('organization', array('organization' => $organization));
+			self::render_template_xsl('organization', array('organization' => $organization));
 		}
 	}
