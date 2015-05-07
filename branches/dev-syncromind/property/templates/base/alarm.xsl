@@ -252,15 +252,15 @@
                     <div id="general">
                             <form name="form" class="pure-form pure-form-aligned" method="post" action="{$edit_url}">
                                     <table cellpadding="2" cellspacing="2" width="79%" align="center">
+                                        <dl>
                                             <xsl:choose>
                                                     <xsl:when test="msgbox_data != ''">
-                                                            <tr>
-                                                                    <td align="left" colspan="3">
+                                                            <dt>
                                                                             <xsl:call-template name="msgbox"/>
-                                                                    </td>
-                                                            </tr>
+                                                            </dt>
                                                     </xsl:when>
                                             </xsl:choose>
+                                        </dl>
                                             <xsl:choose>
                                                     <xsl:when test="value_async_id!=''">
                                                             <tr>
@@ -274,20 +274,20 @@
                                                     </xsl:when>
                                             </xsl:choose>
                                             <tr>
-                                                    <td align="left">
-                                                            <xsl:value-of select="lang_method"/>
-                                                    </td>
-                                                    <td align="left">
-                                                            <xsl:variable name="lang_method_statustext">
-                                                                    <xsl:value-of select="lang_method_statustext"/>
-                                                            </xsl:variable>
-                                                            <select name="values[method_id]" class="forms" onMouseover="window.status='{$lang_method_statustext}'; return true;" onMouseout="window.status='';return true;">
-                                                                    <option value="">
-                                                                            <xsl:value-of select="lang_no_method"/>
-                                                                    </option>
-                                                                    <xsl:apply-templates select="method_list"/>
-                                                            </select>
-                                                    </td>
+                                                <td align="left">
+                                                        <xsl:value-of select="lang_method"/>
+                                                </td>
+                                                <td align="left">
+                                                    <xsl:variable name="lang_method_statustext">
+                                                            <xsl:value-of select="lang_method_statustext"/>
+                                                    </xsl:variable>
+                                                    <select name="values[method_id]" class="forms" onMouseover="window.status='{$lang_method_statustext}'; return true;" onMouseout="window.status='';return true;">
+                                                            <option value="">
+                                                                    <xsl:value-of select="lang_no_method"/>
+                                                            </option>
+                                                            <xsl:apply-templates select="method_list"/>
+                                                    </select>
+                                                </td>
                                             </tr>
                                             <tr>
                                                     <td align="left" valign="top">
