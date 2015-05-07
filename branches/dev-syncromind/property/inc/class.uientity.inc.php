@@ -670,10 +670,11 @@
 			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			$start_date 	= urldecode($this->start_date);
-			$end_date 	= urldecode($this->end_date);
+			//$start_date 	= urldecode($this->start_date);
+			//$end_date 	= urldecode($this->end_date);
 
-			$list = $this->bo->read(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'allrows'=>true,'start_date'=>$start_date,'end_date'=>$end_date, 'type' => $this->type));
+			//$list = $this->bo->read(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'allrows'=>true,'start_date'=>$start_date,'end_date'=>$end_date, 'type' => $this->type));
+			$list = $this->query();
 			$uicols	= $this->bo->uicols;
 
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
