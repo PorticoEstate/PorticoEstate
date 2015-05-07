@@ -85,15 +85,6 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->part_of_town_id		= $this->bo->part_of_town_id;
 			$this->district_id			= $this->bo->district_id;
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
 
 			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 			{
@@ -103,9 +94,6 @@
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 		}
 
