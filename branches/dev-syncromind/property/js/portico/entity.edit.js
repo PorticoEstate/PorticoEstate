@@ -51,11 +51,6 @@
 		var api = oTable3.api();
 		api.ajax.url( requestUrl ).load();
 	}
-
-	this.showlightbox_history = function(sUrl)
-	{
-		TINY.box.show({iframe:sUrl, boxid:'frameless',width:650,height:400,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true});
-	}
 	
 var documents = null;
 var requestUrlDoc = null;

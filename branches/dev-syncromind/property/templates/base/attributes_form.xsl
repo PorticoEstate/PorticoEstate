@@ -710,7 +710,7 @@
 							<xsl:variable name="lang_history">
 								<xsl:value-of select="php:function('lang', 'history')" />
 							</xsl:variable>
-							<a href="javascript:showlightbox_history('{$link_history}')" title="{$lang_history}">
+							<a href="javascript:JqueryPortico.showlightbox_history('{$link_history}')" title="{$lang_history}">
 								<xsl:value-of select="$lang_history"/>
 							</a>
 						</xsl:when>

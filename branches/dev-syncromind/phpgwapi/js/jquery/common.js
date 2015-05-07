@@ -437,6 +437,11 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		TINY.box.show({iframe:strURL, boxid:'frameless',width:$(window).width(),height:400,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: false,closejs:false});
 	};
 
+	JqueryPortico.showlightbox_history = function(sUrl)
+	{
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:650,height:400,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true});
+	}
+
 	JqueryPortico.checkAll = function(myclass)
   	{
 		$("." + myclass).each(function()
