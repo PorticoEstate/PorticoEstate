@@ -137,60 +137,53 @@
                         </xsl:variable>
                         <div align="left">
                                 <form name="form" class="pure-form pure-form-aligned" method="post" action="{$edit_url}">
-                                        <table cellpadding="2" cellspacing="2" width="50%" align="center">
+                                            <dl>
                                                 <xsl:choose>
                                                         <xsl:when test="msgbox_data != ''">
-                                                                <tr>
-                                                                        <td align="left" colspan="3">
+                                                                        <dt>
                                                                                 <xsl:call-template name="msgbox"/>
-                                                                        </td>
-                                                                </tr>
+                                                                        </dt>
                                                         </xsl:when>
                                                 </xsl:choose>
+                                            </dl>
                                                 <xsl:choose>
                                                         <xsl:when test="value_custom_id!=''">
-                                                                <tr>
-                                                                        <td width="25%" align="left">
+                                                                <div class="pure-control-group">
+                                                                        <label>
                                                                                 <xsl:value-of select="lang_custom_id"/>
-                                                                        </td>
-                                                                        <td width="75%" align="left">
+                                                                        </label>
+                                                                        
                                                                                 <xsl:value-of select="value_custom_id"/>
-                                                                        </td>
-                                                                </tr>
+                                                                </div>
                                                         </xsl:when>
                                                 </xsl:choose>
-                                                <tr align="left">
-                                                        <td valign="top">
+                                                <div class="pure-control-group">
+                                                        <label>
                                                                 <xsl:value-of select="lang_name"/>
-                                                        </td>
-                                                        <td align="left">
+                                                        </label>
                                                                 <input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
                                                                         <xsl:attribute name="title">
                                                                                 <xsl:value-of select="lang_name_statustext"/>
                                                                         </xsl:attribute>
                                                                 </input>
-                                                        </td>
-                                                </tr>
-                                                <tr align="left">
-                                                        <td valign="top">
+                                                </div>
+                                                <div class="pure-control-group">
+                                                        <label>
                                                                 <xsl:value-of select="lang_sql_text"/>
-                                                        </td>
-                                                        <td align="left">
+                                                        </label>
                                                                 <textarea cols="60" rows="6" name="values[sql_text]" onMouseout="window.status='';return true;">
                                                                         <xsl:attribute name="title">
                                                                                 <xsl:value-of select="lang_sql_statustext"/>
                                                                         </xsl:attribute>
                                                                         <xsl:value-of select="value_sql_text"/>
                                                                 </textarea>
-                                                        </td>
-                                                </tr>
+                                                </div>
                                                 <xsl:choose>
                                                         <xsl:when test="value_custom_id != ''">
-                                                                <tr>
-                                                                        <td valign="top">
+                                                                <div class="pure-control-group">
+                                                                        <label>
                                                                                 <xsl:value-of select="lang_columns"/>
-                                                                        </td>
-                                                                        <td align="">
+                                                                        </label>
                                                                                 <!--xsl:call-template name="columns"/-->
                                                                                 <div class="pure-custom">
                                                                                     <xsl:for-each select="datatable_def">
@@ -218,7 +211,7 @@
                                                                                     </input>
                                                                                 </div>
 
-                                                                                <div class="pure-control-group" align="right">
+                                                                                <div class="pure-control-group">
                                                                                     <label for="name">
                                                                                                 <xsl:value-of select="lang_descr"/>
                                                                                     </label>
@@ -228,12 +221,10 @@
                                                                                             </xsl:attribute>
                                                                                     </input>
                                                                                 </div>
-                                                                        </td>
-                                                                </tr>
+                                                                </div>
                                                         </xsl:when>
                                                 </xsl:choose>
-                                                <tr height="50">
-                                                        <td valign="bottom">
+                                                <div class="pure-control-group">
                                                                 <xsl:variable name="lang_save">
                                                                         <xsl:value-of select="lang_save"/>
                                                                 </xsl:variable>
@@ -242,8 +233,6 @@
                                                                                 <xsl:value-of select="lang_save_statustext"/>
                                                                         </xsl:attribute>
                                                                 </input>
-                                                        </td>
-                                                        <td valign="bottom">
                                                                 <xsl:variable name="lang_apply">
                                                                         <xsl:value-of select="lang_apply"/>
                                                                 </xsl:variable>
@@ -252,8 +241,6 @@
                                                                                 <xsl:value-of select="lang_apply_statustext"/>
                                                                         </xsl:attribute>
                                                                 </input>
-                                                        </td>
-                                                        <td align="right" valign="bottom">
                                                                 <xsl:variable name="lang_cancel">
                                                                         <xsl:value-of select="lang_cancel"/>
                                                                 </xsl:variable>
@@ -264,9 +251,7 @@
                                                                                 <xsl:text>'; return true;</xsl:text>
                                                                         </xsl:attribute>
                                                                 </input>
-                                                        </td>
-                                                </tr>
-                                        </table>
+                                                </div>
                                 </form>
                         </div>
                     </div>
