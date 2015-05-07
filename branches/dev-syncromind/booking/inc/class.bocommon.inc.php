@@ -57,6 +57,14 @@
 		
 		protected function build_default_read_params()
 		{
+			/*
+			 * Sigurd: Temporary est for new datatables
+			 */
+			if($columns = phpgw::get_var('columns'))
+			{
+				return $this->build_default_read_params_new();
+			}
+
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
 			$query = phpgw::get_var('query');
@@ -84,6 +92,42 @@
 				'dir'	=> $dir,
 				'filters' => $filters
 			);
+		}
+
+		protected function build_default_read_params_new()
+		{
+
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'sort' => $columns[$order[0]['column']]['data'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+			);
+
+			foreach($this->so->get_field_defs() as $field => $_params)
+			{
+				if(phpgw::get_var("filter_$field"))
+				{
+					$params['filters'][$field] = phpgw::get_var("filter_$field");
+				}
+			}
+
+			if(!isset($_SESSION['showall']))
+			{
+				if(!isset($params['filters']['application_id']))
+				{
+					$params['filters']['active'] = "1";
+				}
+			}
+
+			return $params;
 		}
 
 		function add($entity)
