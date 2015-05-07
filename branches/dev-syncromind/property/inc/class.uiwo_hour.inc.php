@@ -697,6 +697,11 @@
 				return "hour_id ".$hour_id." ".lang("has been deleted");
 			}
 			
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $this->query();
+			}
+			
 			$appname	= lang('Workorder');
 			$function_msg	= lang('list hours');
 			
@@ -1000,6 +1005,64 @@
 
 			unset($parameters);				
 
+			/*$common_data = $this->common_data($workorder_id);
+			$content = $common_data['content'];
+			$values = array();
+			$k = 0;
+			foreach ($content as $row)
+			{
+				foreach ($uicols['name'] as $name) 
+				{
+					if ($name == 'deviation')
+					{
+						if (is_numeric($row[$name])) 
+						{
+							$values[$k][$name] = $row[$name];
+						}
+						else 
+						{
+							$values[$k][$name] = '';
+						}
+					}
+					else
+					{
+						$values[$k][$name] = $row[$name];
+					}
+				}
+				$k ++;
+			}*/
+
+			//$data['datatable']['data'] = json_encode($values);
+			$data['datatable']['table_sum']	= $common_data['table_sum'][0];
+			$data['datatable']['workorder_data']	= $common_data['workorder_data'];
+			$data['datatable']['total_hours_records']	= $common_data['total_hours_records'];
+			
+			self::render_template_xsl('wo_hour.index', $data);
+
+			//Title of Page
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			// Prepare YUI Library
+			//$GLOBALS['phpgw']->js->validate_file( 'wo_hour.index');
+												
+		}
+
+		/**
+		 * Fetch data from $this->bo based on parametres
+		 * @return array
+		 */
+		public function query()
+		{
+			$workorder_id = phpgw::get_var('workorder_id');
+			$draw       = phpgw::get_var('draw', 'int');
+
+			$uicols = array (
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
+				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
+				'className'		=> 	array('','','','','','dt-right','dt-right','dt-right','dt-right','dt-right','','dt-right')
+			);
+			
 			$common_data = $this->common_data($workorder_id);
 			$content = $common_data['content'];
 			$values = array();
@@ -1026,28 +1089,12 @@
 				}
 				$k ++;
 			}
-
-			$data['datatable']['data'] = json_encode($values);
-			$data['datatable']['table_sum']	= $common_data['table_sum'][0];
-			$data['datatable']['workorder_data']	= $common_data['workorder_data'];
-			$data['datatable']['total_hours_records']	= $common_data['total_hours_records'];
 			
-			self::render_template_xsl('wo_hour.index', $data);
+			$result_data    =   array('results' =>  $values);
+			$result_data['total_records']   = count($values);
+			$result_data['draw']    = $draw;
 
-			//Title of Page
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'wo_hour.index');
-												
-		}
-
-		/**
-		 * Fetch data from $this->bo based on parametres
-		 * @return array
-		 */
-		public function query()
-		{
+			return $this->jquery_results($result_data);
 		}
 		
 		function view()
@@ -3120,12 +3167,8 @@ HTML;
 			$values['ns3420_id']	= phpgw::get_var('ns3420_id');
 			$values['ns3420_descr']	= phpgw::get_var('ns3420_descr');
 
-
-			//_debug_array($workorder);
-
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
-
+			$receipt = array();
+			
 			if ($values['save'])
 			{
 				if($values['copy_hour'])
@@ -3155,8 +3198,6 @@ HTML;
 
 			$workorder	= $this->boworkorder->read_single($workorder_id);
 
-			//_debug_array($values);
-
 			if($error_id)
 			{
 				unset($values['hour_id']);
@@ -3182,6 +3223,10 @@ HTML;
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$data = array
 				(
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -3275,14 +3320,16 @@ HTML;
 					'wo_hour_cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['wo_hour_cat'],'type' =>'wo_hours','order'=>'id')),
 					'lang_cat_per_cent_statustext'	=> lang('the percentage of the category'),
 					'value_cat_per_cent'			=> $values['cat_per_cent'],
-					'lang_per_cent'					=> lang('percent')
+					'lang_per_cent'					=> lang('percent'),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				);
-			//_debug_array($data);
+
 			$appname = lang('Workorder');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_hour' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			
+			self::render_template_xsl(array('wo_hour'), array('edit_hour' => $data));
+
 		}
 
 		function delete()
