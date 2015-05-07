@@ -438,9 +438,9 @@
 			
 			var options = {disablePagination:true, disableFilter:true};
 			options.TableTools = JqueryPortico.TableTools;
-			var data = <xsl:value-of select="data"/>;
+			var source = "<xsl:value-of select="source"/>";
 
-			var oTable = JqueryPortico.inlineTableHelper('datatable-container', '', JqueryPortico.columns, options, data );
+			var oTable = JqueryPortico.inlineTableHelper('datatable-container', source, JqueryPortico.columns, options );
 			
 <![CDATA[
 
