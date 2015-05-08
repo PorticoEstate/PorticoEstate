@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.688';
+	$setup_info['property']['version']		= '0.9.17.689';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -212,7 +212,8 @@
 		'fm_jasper_format_type',
 		'fm_jasper_input',
 		'fm_custom_menu_items',
-		'fm_regulations'
+		'fm_regulations',
+		'fm_generic_history'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

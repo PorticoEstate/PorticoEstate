@@ -387,10 +387,6 @@
 									'sortable' => ($uicols['sortable'][$k]) ? true : false,
 									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 								);
-					if ($uicols['name'][$k] == 'id')
-					{
-						$params['formatter'] = 'JqueryPortico.formatLink';
-					}
 					switch ($uicols['datatype'][$k])
 					{
 						case 'email':
@@ -401,6 +397,11 @@
 						break;
 					}
 
+					if ($uicols['name'][$k] == 'id')
+					{
+						$params['formatter'] = 'JqueryPortico.formatLink';
+						$params['editor'] = false;
+					}
 					array_push ($data['datatable']['field'], $params);
 			}
 
@@ -608,11 +609,10 @@
 							(
 								'menuaction'	=> 'property.uigeneric.attrib_history',
 								'appname'		=> $this->appname,
-								'attrib_id'	=> $attribute['id'],
-								'actor_id'	=> $actor_id,
-								'role'		=> $this->role,
+								'attrib_id'		=> $attribute['id'],
+								'id'			=> $id,
 								'acl_location'	=> $this->acl_location,
-								'edit'		=> true
+								'edit'			=> true
 							);
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
@@ -725,22 +725,20 @@
 
 		function attrib_history()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
+			$appname		= phpgw::get_var('appname', 'string');
 			$acl_location 	= phpgw::get_var('acl_location', 'string');
 			$id				= phpgw::get_var('id', 'int');
 			$attrib_id 		= phpgw::get_var('attrib_id', 'int');
-			$detail_id 		= phpgw::get_var('detail_id', 'int');
 
-			$data_lookup= array
-			(
-				'app'			=> 'property',
-				'acl_location'	=> $acl_location,
-				'id'			=> $id,
-				'attrib_id' 	=> $attrib_id,
-				'detail_id' 	=> $detail_id,
-			);
+			$data_lookup = array
+				(
+					'appname'		=> $appname,
+					'acl_location'	=> $acl_location,
+					'id'			=> $id,
+					'attrib_id' 	=> $attrib_id,
+				);
 
 			$delete = phpgw::get_var('delete', 'bool');
 			$edit = phpgw::get_var('edit', 'bool');
@@ -748,215 +746,146 @@
 			if ($delete)
 			{
 				$data_lookup['history_id'] = phpgw::get_var('history_id', 'int');
-		//		$this->bo->delete_history_item($data_lookup);
+				$this->bo->delete_history_item($data_lookup);
+
+				return 'ok';
 			}
-
-			$values = $this->bo->read_attrib_history($data_lookup);
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			while (is_array($values) && list(,$entry) = each($values))
-			{
-				$link_delete_history_data = array
-					(
-						'menuaction'	=> 'property.uientity.attrib_history',
-						'acl_location'	=> $acl_location,
-						'id'			=> $data_lookup['id'],
-						'attrib_id'		=> $data_lookup['attrib_id'],
-						'detail_id' 	=> $data_lookup['detail_id'],
-						'history_id'	=> $entry['id'],
-						'delete'		=> true,
-						'edit'			=> true,
-						'type'			=> $this->type
-					);
-				if($edit)
-				{
-					$text_delete	= lang('delete');
-					$link_delete	= $GLOBALS['phpgw']->link('/index.php',$link_delete_history_data);
-				}
-
-				$content[] = array
-					(
-						'id'				=> $entry['id'],
-						'value'				=> $entry['new_value'],
-						'user'				=> $entry['owner'],
-						'time_created'			=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],$dateformat),
-						'link_delete'			=> $link_delete,
-						'lang_delete_statustext'	=> lang('delete the item'),
-						'text_delete'			=> $text_delete,
-					);
-			}
-
-
-			$table_header = array
-				(
-					'lang_value'		=> lang('value'),
-					'lang_user'			=> lang('user'),
-					'lang_time_created'	=> lang('time created'),
-					'lang_delete'		=> lang('delete')
-				);
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uientity.attrib_history',
-					'acl_location'	=> $acl_location,
-					'id'			=> $id,
-					'detail_id' 	=> $data_lookup['detail_id'],
-					'edit'			=> $edit,
-					'type'			=> $this->type
+					'menuaction'		=> 'property.uigeneric.attrib_history',
+					'appname'			=> $appname,
+					'acl_location'		=> $acl_location,
+					'id'				=> $id,
+					'attrib_id'			=> $attrib_id,
+					'edit'				=> $edit,
+					'phpgw_return_as'	=> 'json'
 				);
 
-
-			//--- asynchronous response --------------------------------------------				
 
 			if( phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if(count($content))
+				$values = $this->bo->read_attrib_history($data_lookup);
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+				$content = array();
+				while (is_array($values) && list(,$entry) = each($values))
 				{
-					return json_encode($content);
+					$content[] = array
+						(
+							'id'				=> $entry['id'],
+							'value'				=> $entry['new_value'],
+							'user'				=> $entry['owner'],
+							'time_created'		=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],"{$dateformat} G:i:s")
+						);
+				}
+
+				$draw = phpgw::get_var('draw', 'int');
+				$allrows = phpgw::get_var('length', 'int') == -1;
+
+				$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+				$total_records = count($content);
+
+				$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
+
+				if($allrows)
+				{
+					$out = $content;
 				}
 				else
 				{
-					return "";
+					if ($total_records > $num_rows)
+					{
+						$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+						$values_part = array_chunk($content, $num_rows);
+						$out = $values_part[$page];
+					}
+					else
+					{
+						$out = $content;
+					}
 				}
-			}		
-			//---datatable settings---------------------------------------------------				
-			$parameters['delete'] = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'  => 'acl_location',
-							'source' => $data_lookup['acl_location'],
-							'ready'  => 1
-						),
-						array
-						(
-							'name'  => 'id',
-							'source' => $data_lookup['id'],
-							'ready'  => 1
-						),
-						array
-						(
-							'name'  => 'attrib_id',
-							'source' => $data_lookup['attrib_id'],
-							'ready'  => 1
-						),
-						array
-						(
-							'name'  => 'detail_id',
-							'source' => $data_lookup['detail_id'],
-							'ready'  => 1
-						),
-						array
-						(
-							'name'  => 'history_id',
-							'source' => 'id',
-						),
-						array
-						(
-							'name'  => 'delete',
-							'source' => true,
-							'ready'  => 1
-						),
-						array
-						(
-							'name'  => 'edit',
-							'source' => true,
-							'ready'  => 1
-						),
-						array
-						(
-							'name'  => 'type',
-							'source' => $this->type,
-							'ready'  => 1
-						)				
-					)
-				);
 
+				$result_data = array('results' => $out);
+
+				$result_data['total_records'] = $total_records;
+				$result_data['draw'] = $draw;
+
+				return $this->jquery_results($result_data);
+
+			}
+
+			$tabletools = array();
 			if($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
 			{
-				$permissions['rowactions'][] = array
+				$parameters = array
 					(
-						'text'    	=> lang('delete'),
-						'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uigeneric.attrib_history' )),
-						'confirm_msg'=> lang('do you really want to delete this entry'),
-						'parameters'=> $parameters['delete']
+						'parameter' => array
+						(
+							array
+							(
+								'name'		=> 'history_id',
+								'source'	=> 'id'
+							)
+						)
 					);
+
+				$tabletools[] = array
+				(
+					'my_name'		=> 'delete',
+					'text' 			=> lang('delete'),
+					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'property.uigeneric.attrib_history',
+						'acl_location'	=> $acl_location,
+						'id'			=> $id,
+						'attrib_id'		=> $attrib_id,
+						'detail_id' 	=> $detail_id,
+						'delete'		=> true,
+						'edit'			=> true,
+						'type'			=> $this->type
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
 			}
 
-			$datavalues[0] = array
-				(
-					'name'			=> "0",
-					'values' 		=> json_encode($content),
-					'total_records'	=> count($content),
-					'permission'   	=> json_encode($permissions['rowactions']),
-					'is_paginator'	=> 1,
-					'footer'		=> 0
-				);			   
+			$history_def = array
+			(
+				array('key'=>'value', 'label'=>lang('value'), 'sortable'=>false),
+				array('key'=>'time_created', 'label'=>lang('time created'), 'sortable'=>false),
+				array('key'=>'user', 'label'=>lang('user'), 'sortable'=>false),
+				array('key'=>'id', 'hidden'=>true)
+			);
 
-			$myColumnDefs[0] = array
-				(
-					'name'			=> "0",
-					'values'		=>	json_encode(array(	array('key' => 'id',			'hidden'=>true),
-													array('key' => 'value',			'label'=>lang('value'),		'sortable'=>true,'resizeable'=>true),
-													array('key' => 'time_created',	'label'=>lang('time created'),'sortable'=>true,'resizeable'=>true),
-													array('key' => 'user',			'label'=>lang('user'),		'sortable'=>true,'resizeable'=>true)
-				))
-			);				
-
-			//----------------------------------------------datatable settings--------			
-			$property_js = "/property/js/yahoo/property2.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link($link_data)),
+				'ColumnDefs'	=> $history_def,
+				'tabletools'	=> $tabletools,
+				'config'		=> array(
+					array('disableFilter' => true)
+				)
+			);
 
 			$data = array
 			(
-				'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'base_java_url'		=> json_encode(array(menuaction => "property.uigeneric.attrib_history")),
-				'datatable'			=> $datavalues,
-				'myColumnDefs'		=> $myColumnDefs,
-				'allow_allrows'		=> false,
-				'start_record'		=> $this->start,
-				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'num_records'		=> count($values),
-				'all_records'		=> $this->bo->total_records,
+				'datatable_def'		=> $datatable_def,
 				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'values' 			=> $content,
-				'table_header'		=> $table_header,
+				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default')
 			);
-			//---datatable settings--------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
 
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.attrib_history', 'property' );
-			//-----------------------datatable settings---	
-
-			//_debug_array($data);die();
 			$custom			= createObject('phpgwapi.custom_fields');
-			$attrib_data 	= $custom->get('property', $acl_location, $attrib_id);
+			$attrib_data 	= $custom->get($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
 			$appname		= $attrib_data['input_text'];
 			$function_msg	= lang('history');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
+
+			self::render_template_xsl(array('attrib_history', 'datatable_inline'), array('attrib_history' => $data));
 		}
 
 		function delete()

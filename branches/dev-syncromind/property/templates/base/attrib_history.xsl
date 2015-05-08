@@ -1,6 +1,14 @@
   <!-- $Id$ -->
 <!-- attrib_history -->
-   
+ <xsl:template match="data">
+	<xsl:choose>
+		<xsl:when test="attrib_history">
+			<xsl:apply-templates select="attrib_history"/>
+		</xsl:when>
+	</xsl:choose>
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+</xsl:template>
+
 <xsl:template match="attrib_history">
 	<div id="tab-content">
 		<fieldset>

@@ -3261,16 +3261,16 @@
 				$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$id}'",__LINE__,__FILE__);
 			}
 
-/*			//FIXME
+			//FIXME
 			if (isset($data_attribute['history_set']) && is_array($data_attribute['history_set']))
 			{
-				$historylog	= CreateObject('phpgwapi.historylog','property', $this->location_info['acl_location']);
+				$historylog	= CreateObject('property.historylog',$this->location_info['acl_app'], $this->location_info['acl_location']);
 				foreach ($data_attribute['history_set'] as $attrib_id => $history)
 				{
-					$historylog->add('SO',$data['id'],$history['value'],false, $attrib_id,$history['date']);
+					$historylog->add('SO',$data['id'],$history['value'],isset($history['old_value'])?$history['old_value']:null, $attrib_id,$history['date']);
 				}
 			}
- */
+ 
 			$this->_db->transaction_commit();
 
 			$receipt['id'] = $data['id'];

@@ -575,9 +575,10 @@ JS;
 							if($entry['value'] != $old_value)
 							{
 								$data['history_set'][$entry['attrib_id']] = array
-								('
-									value'	=> $entry['value'],
-									'date'	=> phpgwapi_datetime::date_to_timestamp($entry['date'])
+								(
+									'value'		=> $entry['value'],
+									'old_value'	=> $old_value,
+									'date'		=> phpgwapi_datetime::date_to_timestamp($entry['date'])
 								);
 							}
 						}

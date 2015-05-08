@@ -268,10 +268,9 @@
 
 		public function read_attrib_history($data)
 		{
-			$attrib_data = $this->custom->get($data['app'], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
-			$history_type = $this->get_history_type_for_location($data['acl_location']);
-			$historylog = CreateObject('property.historylog',$history_type);
-			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','DESC',$data['id'],$data['attrib_id'], $data['detail_id']);
+			$attrib_data = $this->custom->get($data['appname'], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
+			$historylog = CreateObject('property.historylog',$data['appname'],$data['acl_location']);
+			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','DESC',$data['id'],$data['attrib_id']);
 
 			if($attrib_data['column_info']['type'] == 'LB')
 			{
@@ -299,6 +298,12 @@
 			reset($history_values);
 			$this->total_records = count($history_values);
 			return $history_values;
+		}
+
+		public function delete_history_item($data)
+		{
+			$historylog = CreateObject('property.historylog',$data['appname'],$data['acl_location']);
+			$historylog->delete_single_record((int)$data['history_id']);
 		}
 
 		function get_history_type_for_location($acl_location)
