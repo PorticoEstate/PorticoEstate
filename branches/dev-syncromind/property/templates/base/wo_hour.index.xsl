@@ -67,10 +67,10 @@
 </xsl:template>
 
 <xsl:template match="workorder_data">
-	<div><xsl:value-of select="lang_project_id"/>:<a href="{link_project}"><xsl:value-of select="project_id"/></a></div>
-	<div><xsl:value-of select="lang_workorder_id"/>:<a href="{link_workorder}"><xsl:value-of select="workorder_id"/></a></div>
-	<div><xsl:value-of select="lang_workorder_title"/>:<xsl:value-of select="workorder_title"/></div>
-	<div><xsl:value-of select="lang_vendor_name"/>:<xsl:value-of select="vendor_name"/></div>
+	<div><xsl:value-of select="lang_project_id"/>:<span id="project_id"></span></div>
+	<div><xsl:value-of select="lang_workorder_id"/>:<span id="workorder_id"></span></div>
+	<div><xsl:value-of select="lang_workorder_title"/>:<span id="workorder_title"></span></div>
+	<div><xsl:value-of select="lang_vendor_name"/>:<span id="vendor_name"></span></div>
 </xsl:template>
 
 <xsl:template name="down-toolbar">
@@ -125,39 +125,39 @@
 		</thead>
 		<tfoot>
 			<tr>
-				<th colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_sum_calculation"/></th>
+				<th colspan="2" class="dt-right"><div id="lang_sum_calculation"></div><xsl:value-of select="//table_sum/lang_sum_calculation"/></th>
 				<th colspan="4"></th>
-				<th class="dt-right"><xsl:value-of select="//table_sum/value_sum_calculation"/></th>
-				<th class="dt-right"><xsl:value-of select="//table_sum/sum_deviation"/></th>
-				<th class="dt-right"><xsl:value-of select="//table_sum/sum_result"/></th>
+				<th class="dt-right"><div id="value_sum_calculation"></div></th>
+				<th class="dt-right"><div id="sum_deviation"></div></th>
+				<th class="dt-right"><div id="sum_result"></div></th>
 				<th></th>
 				<th></th>
 			</tr>
 			<tr>
-				<td colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_addition_rs"/></td>
+				<td colspan="2" class="dt-right"><div id="lang_addition_rs"></div><xsl:value-of select="//table_sum/lang_addition_rs"/></td>
 				<td colspan="6"></td>
-				<td class="dt-right"><xsl:value-of select="//table_sum/value_addition_rs"/></td>
+				<td class="dt-right"><div id="value_addition_rs"></div></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_addition_percentage"/></td>
+				<td colspan="2" class="dt-right"><div id="lang_addition_percentage"></div><xsl:value-of select="//table_sum/lang_addition_percentage"/></td>
 				<td colspan="6"></td>
-				<td class="dt-right"><xsl:value-of select="//table_sum/value_addition_percentage"/></td>
+				<td class="dt-right"><div id="value_addition_percentage"></div></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_sum_tax"/></td>
+				<td colspan="2" class="dt-right"><div id="lang_sum_tax"></div><xsl:value-of select="//table_sum/lang_sum_tax"/></td>
 				<td colspan="6"></td>
-				<td class="dt-right"><xsl:value-of select="//table_sum/value_sum_tax"/></td>
+				<td class="dt-right"><div id="value_sum_tax"></div></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<th colspan="2" class="dt-right"><xsl:value-of select="//table_sum/lang_total_sum"/></th>
+				<th colspan="2" class="dt-right"><div id="lang_total_sum"></div><xsl:value-of select="//table_sum/lang_total_sum"/></th>
 				<th colspan="6"></th>
-				<th class="dt-right"><xsl:value-of select="//table_sum/value_total_sum"/></th>
+				<th class="dt-right"><div id="value_total_sum"></div></th>
 				<th></th>
 				<th></th>
 			</tr>
@@ -438,6 +438,7 @@
 			
 			var options = {disablePagination:true, disableFilter:true};
 			options.TableTools = JqueryPortico.TableTools;
+			
 			var source = "<xsl:value-of select="source"/>";
 
 			var oTable = JqueryPortico.inlineTableHelper('datatable-container', source, JqueryPortico.columns, options );
