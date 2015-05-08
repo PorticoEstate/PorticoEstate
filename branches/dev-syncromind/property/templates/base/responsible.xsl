@@ -31,53 +31,46 @@
                         <xsl:variable name="form_action">
                                 <xsl:value-of select="form_action"/>
                         </xsl:variable>
-                        <table cellpadding="2" cellspacing="2" width="80%" align="center">
-                                <tr>
-                                        <td>
-                                                <table cellpadding="2" cellspacing="2" align="left">
+                                <div class="pure-control-group">
+                                                    <dl>
                                                         <xsl:choose>
                                                                 <xsl:when test="msgbox_data != ''">
-                                                                        <tr>
-                                                                                <td align="left" colspan="3">
+                                                                                <dt>
                                                                                         <xsl:call-template name="msgbox"/>
-                                                                                </td>
-                                                                        </tr>
+                                                                                </dt>
                                                                 </xsl:when>
                                                         </xsl:choose>
-                                                        <xsl:choose>
-                                                                <xsl:when test="value_id != ''">
-                                                                        <tr>
-                                                                                <td valign="top">
-                                                                                        <xsl:value-of select="php:function('lang', 'id')"/>
-                                                                                </td>
-                                                                                <td>
-                                                                                        <xsl:value-of select="value_id"/>
-                                                                                </td>
-                                                                        </tr>
-                                                                </xsl:when>
-                                                        </xsl:choose>
+                                                    </dl>
+                                                       
                                                         <form name="form_app" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
-                                                                <tr>
-                                                                        <td>
+                                                                <xsl:choose>
+                                                                    <xsl:when test="value_id != ''">
+                                                                            <div class="pure-control-group">
+                                                                                    <label>
+                                                                                            <xsl:value-of select="php:function('lang', 'id')"/>
+                                                                                    </label>
+                                                                                            <xsl:value-of select="value_id"/>
+                                                                            </div>
+                                                                    </xsl:when>
+                                                                </xsl:choose>
+                                                                <div class="pure-control-group">
+                                                                        <label>
                                                                                 <xsl:value-of select="php:function('lang', 'application')"/>
-                                                                        </td>
-                                                                        <td align="left">
+                                                                        </label>
                                                                                 <select name="appname" onChange="this.form.submit();">
                                                                                         <xsl:attribute name="title">
                                                                                                 <xsl:value-of select="php:function('lang', 'application')"/>
                                                                                         </xsl:attribute>
                                                                                         <xsl:apply-templates select="apps_list/options"/>
                                                                                 </select>
-                                                                        </td>
-                                                                </tr>
+                                                                </div>
                                                         </form>
                                                         <form name="form_location" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
-                                                                <tr>
-                                                                        <td>
+                                                                <div class="pure-control-group">
+                                                                        <label>
                                                                                 <input type="hidden" name="appname" value="{value_appname}"/>
                                                                                 <xsl:value-of select="php:function('lang', 'location')"/>
-                                                                        </td>
-                                                                        <td align="left">
+                                                                        </label>
                                                                                 <select name="location" onChange="this.form.submit();">
                                                                                         <xsl:attribute name="title">
                                                                                                 <xsl:value-of select="php:function('lang', 'Select submodule')"/>
@@ -87,66 +80,53 @@
                                                                                         </option>
                                                                                         <xsl:apply-templates select="location_list/options"/>
                                                                                 </select>
-                                                                        </td>
-                                                                </tr>
+                                                                </div>
                                                         </form>
-                                                </table>
-                                                <tr>
-                                                        <td>
+                                                <div class="pure-control-group">
                                                                 <form name="form" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
-                                                                        <table cellpadding="2" cellspacing="2" align="left">
-                                                                                <tr>
-                                                                                        <td>
+                                                                                <div class="pure-control-group">
+                                                                                        <label>
                                                                                                 <input type="hidden" name="values[appname]" value="{value_appname}"/>
                                                                                                 <input type="hidden" name="values[location]" value="{value_location}"/>
                                                                                                 <xsl:value-of select="php:function('lang', 'category')"/>
-                                                                                        </td>
-                                                                                        <td>
+                                                                                        </label>
                                                                                                 <xsl:call-template name="categories"/>
-                                                                                        </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                        <td>
+                                                                                </div>
+                                                                                <div class="pure-control-group">
+                                                                                        <label>
                                                                                                 <xsl:value-of select="php:function('lang', 'name')"/>
-                                                                                        </td>
-                                                                                        <td>
+                                                                                        </label>
                                                                                                 <input type="text" name="values[name]" value="{value_name}" size="60">
                                                                                                         <xsl:attribute name="title">
                                                                                                                 <xsl:value-of select="php:function('lang', 'name')"/>
                                                                                                         </xsl:attribute>
                                                                                                 </input>
-                                                                                        </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                        <td valign="top">
+                                                                                </div>
+                                                                                <div class="pure-control-group">
+                                                                                        <label>
                                                                                                 <xsl:value-of select="php:function('lang', 'descr')"/>
-                                                                                        </td>
-                                                                                        <td>
+                                                                                        </label>
                                                                                                 <textarea cols="60" rows="10" name="values[descr]">
                                                                                                         <xsl:attribute name="title">
                                                                                                                 <xsl:value-of select="php:function('lang', 'descr')"/>
                                                                                                         </xsl:attribute>
                                                                                                         <xsl:value-of select="value_descr"/>
                                                                                                 </textarea>
-                                                                                        </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                        <td class="th_text" valign="top">
+                                                                                </div>
+                                                                                <div class="pure-control-group">
+                                                                                        <label>
                                                                                                 <xsl:value-of select="php:function('lang', 'details')"/>
-                                                                                        </td>
-                                                                                        <td>
+                                                                                        </label>
+                                                                                        <div style="display: inline-block; vertical-align: top;">
                                                                                                 <table width="100%" cellpadding="2" cellspacing="2" align="center">
-                                                                                                        <!--  DATATABLE 0-->
                                                                                                         <td>
                                                                                                                 <div id="paging_0"/>
                                                                                                                 <div id="datatable-container_0"/>
                                                                                                         </td>
                                                                                                 </table>
-                                                                                        </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                        <td colspan="2">
-                                                                                                <table cellpadding="2" cellspacing="2" width="50%" align="center">
+                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="pure-control-group">
                                                                                                         <xsl:variable name="lang_save">
                                                                                                                 <xsl:value-of select="php:function('lang', 'save')"/>
                                                                                                         </xsl:variable>
@@ -156,39 +136,27 @@
                                                                                                         <xsl:variable name="lang_cancel">
                                                                                                                 <xsl:value-of select="php:function('lang', 'cancel')"/>
                                                                                                         </xsl:variable>
-                                                                                                        <tr height="50">
-                                                                                                                <td>
+                                                                                                        <div class="pure-control-group">
                                                                                                                         <input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
                                                                                                                                 <xsl:attribute name="title">
                                                                                                                                         <xsl:value-of select="php:function('lang', 'save')"/>
                                                                                                                                 </xsl:attribute>
                                                                                                                         </input>
-                                                                                                                </td>
-                                                                                                                <td>
                                                                                                                         <input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}">
                                                                                                                                 <xsl:attribute name="title">
                                                                                                                                         <xsl:value-of select="php:function('lang', 'apply')"/>
                                                                                                                                 </xsl:attribute>
                                                                                                                         </input>
-                                                                                                                </td>
-                                                                                                                <td>
                                                                                                                         <input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}">
                                                                                                                                 <xsl:attribute name="title">
                                                                                                                                         <xsl:value-of select="php:function('lang', 'cancel')"/>
                                                                                                                                 </xsl:attribute>
                                                                                                                         </input>
-                                                                                                                </td>
-                                                                                                        </tr>
-                                                                                                </table>
-                                                                                        </td>
-                                                                                </tr>
-                                                                        </table>
+                                                                                                        </div>
+                                                                                </div>
                                                                 </form>
-                                                        </td>
-                                                </tr>
-                                        </td>
-                                </tr>
-                        </table>
+                                                </div>
+                                </div>
                         <!--  DATATABLE DEFINITIONS-->
                         <script type="text/javascript">
                                 var property_js = <xsl:value-of select="property_js"/>;
