@@ -7852,7 +7852,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget DROP CONSTRAINT fm_budget_year_key");
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget DROP CONSTRAINT fm_budget_year_b_account_id_district_id_revision_key");
 		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget ADD CONSTRAINT fm_budget_year_key UNIQUE(year , b_account_id , district_id , revision, ecodimb ,category)");
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_department','name', array('type' => 'varchar','precision' => '200','nullable' => False));
@@ -8325,6 +8325,42 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.688';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.687 to 0.9.17.688
+	* Add generic history
+	*/
+	$test[] = '0.9.17.688';
+	function property_upgrade0_9_17_688()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_generic_history', array(
+				'fd' => array(
+					'history_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'history_record_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_owner' => array('type' => 'int','precision' => '4','nullable' => False),
+					'history_status' => array('type' => 'char','precision' => '2','nullable' => False),
+					'history_new_value' => array('type' => 'text','nullable' => False),
+					'history_old_value' => array('type' => 'text','nullable' => true),
+					'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp'),
+					'history_attrib_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'app_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				),
+				'pk' => array('history_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.689';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
