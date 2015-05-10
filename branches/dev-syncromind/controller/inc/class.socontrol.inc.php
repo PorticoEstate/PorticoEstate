@@ -657,16 +657,17 @@
 		 * @param $control_id control id
 		 * @return array with arrays of component info  
 		 */
-		function get_components_for_control($control_id, $location_id = 0, $component_id = 0, $serie_id = 0)
+		function get_components_for_control($control_id, $location_id = 0, $component_id = 0, $serie_id = 0, $user_id = 0)
 		{
 			$control_id = (int) $control_id;
 			$serie_id = (int) $serie_id;
+			$user_id = (int) $user_id;
 
 			$controls_array = array();
 
 			$sql =  "SELECT ccl.control_id, ccl.component_id as component_id,"
 			. " ccl.location_id as location_id, ccs.id as serie_id, ccs.assigned_to, ccs.start_date,"
-			. " ccs.repeat_type, ccs.repeat_interval, ccs.service_time, ccs.controle_time,"
+			. " ccs.repeat_type, ccs.repeat_interval, ccs.service_time, ccs.controle_time, ccs.enabled as serie_enabled,"
 			. " bim_type.description, bim_item.location_code ";
 
 			$sql .= "FROM controller_control_component_list ccl,controller_control_serie ccs, fm_bim_item bim_item, fm_bim_type bim_type ";
@@ -686,7 +687,11 @@
 			{
 				$sql .= " AND ccs.id = {$serie_id}";
 			}
-
+			if($user_id)
+			{
+				$sql .= " AND ccs.assigned_to = {$user_id}";
+			}
+//	_debug_array($sql);
 			$this->db->query($sql);
 
 			while($this->db->next_record())
@@ -699,7 +704,8 @@
 					'repeat_type'		=> $this->db->f('repeat_type'),
 					'repeat_interval'	=> $this->db->f('repeat_interval'),
 					'service_time'		=> $this->db->f('service_time'),
-					'controle_time'		=> $this->db->f('controle_time')
+					'controle_time'		=> $this->db->f('controle_time'),
+					'serie_enabled'		=> (int)$this->db->f('serie_enabled')
 				);
 
 				$component = new controller_component();
@@ -715,7 +721,7 @@
 				
 				$components_array[] = $component;
 			}
-
+//	_debug_array($components_array);
 			if( count( $components_array ) > 0 )
 			{
 				return $components_array; 
@@ -895,9 +901,39 @@
 					$sql .= "AND component_id = {$component_id}";
 					
 					$this->db->query($sql, __LINE__, __FILE__);
-			
-					if(!$this->db->next_record() || $duplicate)
+					$this->db->next_record();
+					$relation_id = $this->db->f('id');
+					if(!$relation_id || $duplicate)
 					{
+						if($relation_id)
+						{
+							$sql = "SELECT * FROM controller_control_serie"
+							. " WHERE control_relation_id = {$relation_id}"
+							. " AND repeat_type = {$repeat_type}";
+							//. " AND repeat_interval = {$repeat_interval}";
+							$this->db->query($sql, __LINE__, __FILE__);
+							$this->db->next_record();
+							$serie_id = $this->db->f('id');
+							if($serie_id)
+							{
+								$this->update_control_serie($data = array(
+									'ids'				=> array($serie_id),
+									'action'			=> 'edit',
+									'assigned_to'		=> $assigned_to,
+									'start_date'		=> $start_date,
+									'repeat_type'		=> $repeat_type,
+									'repeat_interval'	=> $repeat_interval,
+									'controle_time'		=> $controle_time,
+									'service_time'		=> $service_time,
+								));
+								$ret = $this->update_control_serie($data = array(
+									'ids'				=> array($serie_id),
+									'action'			=> 'enable',
+								));
+								continue;
+							}
+						}
+
 						$values_insert = array
 						(
 							'control_id'		=> $control_id,
@@ -992,6 +1028,7 @@
 			$sql = "SELECT controller_control_component_list.* ,"
 			. " controller_control.title, controller_control.enabled as control_enabled,"
 			. " controller_control_component_list.enabled as relation_enabled,"
+			. " controller_control_serie.enabled as serie_enabled,"
 			. " controller_control_serie.id as serie_id,"
 			. " controller_control_serie.assigned_to,controller_control_serie.start_date,"
 			. " controller_control_serie.repeat_type,controller_control_serie.repeat_interval,"
@@ -1020,6 +1057,7 @@
 					'repeat_interval'	=> $this->db->f('repeat_interval'),
 					'control_enabled'	=> $this->db->f('control_enabled'),
 					'relation_enabled'	=> $this->db->f('relation_enabled'),
+					'serie_enabled'		=> $this->db->f('serie_enabled'),
 					'service_time'		=> (float)$this->db->f('service_time'),
 					'controle_time'		=> (float)$this->db->f('controle_time'),
 				);
@@ -1346,6 +1384,66 @@
 				$this->db->next_record();
 				$result = $this->db->f('location_code');
 				return $result;
+			}
+		}
+		function update_control_serie($data = array())
+		{
+			if(!isset($data['ids']) || !$data['ids'])
+			{
+				throw new Exception("controller_socontrol::update_control_serie - Missing ids in input");
+			}
+			if(!isset($data['action']) || !$data['action'])
+			{
+				throw new Exception("controller_socontrol::update_control_serie - Missing action in input");
+			}
+
+			$ids		= $data['ids'];
+			$action		= $data['action'];
+			$value_set = array();
+			switch($action)
+			{
+				case 'enable':
+					$value_set['enabled'] = 1;
+					break;
+				case 'disable':
+					$value_set['enabled'] = 0;
+					break;
+				case 'edit':
+					if($data['assigned_to'])
+					{
+						$value_set['assigned_to']		= $data['assigned_to'];
+					}
+					if($data['start_date'])
+					{
+						$value_set['start_date']		= $data['start_date'];
+					}
+					if($data['repeat_type'])
+					{
+						$value_set['repeat_type']		= $data['repeat_type'];
+					}
+					if($data['repeat_interval'])
+					{
+						$value_set['repeat_interval']	= $data['repeat_interval'];
+					}
+					if($data['controle_time'])
+					{
+						$value_set['controle_time']		= $data['controle_time'];
+					}
+					if($data['service_time'])
+					{
+						$value_set['service_time']		= $data['service_time'];
+					}
+					break;
+				default:
+					throw new Exception("controller_socontrol::update_control_serie - not av valid action: '{$action}'");
+					break;
+				}
+				$value_set_update = $this->db->validate_update($value_set);
+
+			$sql = "UPDATE controller_control_serie SET {$value_set_update} WHERE id IN (" . implode(',', $ids) . ')';
+			if($this->db->query($sql,__LINE__,__FILE__))
+			{
+				return PHPGW_ACL_EDIT; // Bit - edit
 			}
 		}
 	}

@@ -997,7 +997,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('name')
+			'uc' => array('num')
 		),
 		'fm_tts_status' => array(
 			'fd' => array(

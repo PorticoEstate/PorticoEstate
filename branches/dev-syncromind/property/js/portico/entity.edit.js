@@ -51,7 +51,148 @@
 		var api = oTable3.api();
 		api.ajax.url( requestUrl ).load();
 	}
-	
+
+	this.onActionsClick=function(action)
+	{
+		$("#controller_receipt").html("");
+		if(action === 'add')
+		{
+			add_control();
+		}
+		
+		var oTT = TableTools.fnGetInstance( 'datatable-container_4' );
+		var selected = oTT.fnGetSelectedData();
+		var numSelected = 	selected.length;
+
+		if (numSelected ==0){
+			alert('None selected');
+			return false;
+		}
+		var ids = [];
+		for ( var n = 0; n < selected.length; ++n )
+		{
+			var aData = selected[n];
+			ids.push(aData['serie_id']);
+		}
+
+		if(ids.length > 0)
+		{
+			var data = {"ids": ids, "action": action};
+			data.repeat_interval = $("#repeat_interval").val();
+			data.controle_time = $("#controle_time").val();
+			data.service_time = $("#service_time").val();
+			data.control_responsible = $("#control_responsible").val();
+			data.control_start_date = $("#control_start_date").val();
+			data.repeat_type = $("#repeat_type").val();
+
+			var formUrl = $("#form").attr("action");
+			var Url = parseURL(formUrl);
+			oArgs  = Url.searchObject;
+			delete oArgs.click_history;
+			oArgs.menuaction = 'property.boentity.update_control_serie';
+
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: requestUrl,
+				data: data,
+				success: function(data) {
+					if( data != null)
+					{
+						$("#controller_receipt").html(data.status + '::' + data.msg);
+						if(data.status_kode == 'ok')
+						{
+
+						}
+					}
+				}
+			});
+
+
+			var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
+			var requestUrl2 = phpGWLink('index.php', oArgs2, true);
+			JqueryPortico.updateinlineTableHelper('datatable-container_4', requestUrl2);
+		}
+	}
+
+	function parseURL(url)
+	{
+		var parser = document.createElement('a'),
+			searchObject = {},
+			queries, split, i;
+		// Let the browser do the work
+		parser.href = url;
+		// Convert query string to object
+		queries = parser.search.replace(/^\?/, '').split('&');
+		for( i = 0; i < queries.length; i++ ) {
+			split = queries[i].split('=');
+			searchObject[split[0]] = split[1];
+		}
+		return {
+			protocol: parser.protocol,
+			host: parser.host,
+			hostname: parser.hostname,
+			port: parser.port,
+			pathname: parser.pathname,
+			search: parser.search,
+			searchObject: searchObject,
+			hash: parser.hash
+		};
+	}
+
+	add_control = function()
+	{
+		var formUrl = $("#form").attr("action");
+		var Url = parseURL(formUrl);
+		oArgs  = Url.searchObject;
+		delete oArgs.click_history;
+		oArgs.menuaction = 'property.boentity.add_control';
+		oArgs.control_id = $("#control_id").val();
+		oArgs.control_responsible = $("#control_responsible").val();
+		oArgs.control_start_date = $("#control_start_date").val();
+		oArgs.repeat_type = $("#repeat_type").val();
+		if(!oArgs.repeat_type)
+		{
+			alert('velg type serie');
+			return;
+		}
+
+		oArgs.repeat_interval = $("#repeat_interval").val();
+		oArgs.controle_time = $("#controle_time").val();
+		oArgs.service_time = $("#service_time").val();
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+//								alert(requestUrl);
+
+		$("#controller_receipt").html("");
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					$("#controller_receipt").html(data.status + '::' + data.msg);
+					if(data.status_kode == 'ok')
+					{
+						$("#control_id").val('');
+						$("#control_name").val('');
+						$("#control_responsible").val('');
+						$("#control_responsible_user_name").val('');
+						$("#control_start_date").val('');
+					}
+				}
+			}
+		});
+
+		var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
+		var requestUrl2 = phpGWLink('index.php', oArgs2, true);
+		JqueryPortico.updateinlineTableHelper('datatable-container_4', requestUrl2);
+	};
+
+
 var documents = null;
 var requestUrlDoc = null;
 	

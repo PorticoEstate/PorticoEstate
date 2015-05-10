@@ -4,7 +4,8 @@
 	 *
 	 * @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
 	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2015 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -97,6 +98,7 @@
 
 
 			$component_type = '';//phpgwapi_cache::session_get('controller', 'component_type');
+			$sort_key = array();
 			if(!$component_type)
 			{
 				$this->soadmin_entity	= CreateObject('property.soadmin_entity');
@@ -111,14 +113,23 @@
 
 						if($category['enable_controller'])
 						{
+							$sort_arr = explode(' ', $category['name']);
 							$component_type[] = array
 							(
 								'id' => $category['location_id'],
-								'name'=> "{$entry['name']}::{$category['name']}"
+								'name'=> "{$entry['name']}::{$category['name']}",
+								'sort_key' => trim($sort_arr[0])
 							);
 						}
 					}
 				}
+				// Obtain a list of columns
+				foreach ($component_type as $key => $row)
+				{
+					$id[$key]  = $row['sort_key'];
+				}
+
+				array_multisort($id,SORT_ASC, SORT_STRING, $component_type);
 				array_unshift($component_type, array('id' => '', 'name' => lang('select value')));
 //				phpgwapi_cache::session_set('controller', 'component_type', $component_type);
 			}
@@ -134,6 +145,7 @@
 					'selected'	=> $this->account == $user['account_id'] ? 1 : 0
 				);
 			}
+			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
 
 			// Sigurd: Start categories
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -158,6 +170,19 @@
 			array_unshift($district_list, array('id' => '', 'name' => lang('no district')));
 			// end district
 
+			$year_list	= array();
+
+			$year = date('Y');
+			for ( $_year= ($year - 2); $_year < ($year + 5); $_year++ )
+			{
+				$year_list[] = array
+				(
+					'id'	 => $_year,
+					'name'	 => $_year,
+					'selected'	=> $_year == $year ? 1 : 0
+				);
+			}
+
 
 			$data = array(
 				'datatable_name' => lang('status components'),
@@ -178,17 +203,23 @@
 								'text'	 => lang('Control_area'),
 								'list'	 => $control_areas_array,
 								'onchange'	=> 'update_table();'
-							),
+							),*/
 							array('type'	 => 'filter',
 								'name'	 => 'user_id',
 								'text'	 => lang('User'),
 								'list'	 => $user_list,
 								'onchange'	=> 'update_table();'
-							),*/
+							),
 							array('type'	 => 'filter',
 								'name'	 => 'district_id',
 								'text'	 => lang('district'),
 								'list'	 => $district_list,
+								'onchange'	=> 'update_table();'
+							),
+							array('type'	 => 'filter',
+								'name'	 => 'year',
+								'text'	 => lang('year'),
+								'list'	 => $year_list,
 								'onchange'	=> 'update_table();'
 							),/*
 							array('type'	 => 'text',
@@ -234,62 +265,62 @@
 				),
 				array(
 					'key'		 => '1',
-					'label'		 => lang('jan'),
+					'label'		 => lang('month 1'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '2',
-					'label'		 => lang('feb'),
+					'label'		 => lang('month 2'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '3',
-					'label'		 => lang('mar'),
+					'label'		 => lang('month 3'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '4',
-					'label'		 => lang('apr'),
+					'label'		 => lang('month 4'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '5',
-					'label'		 => lang('may'),
+					'label'		 => lang('month 5'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '6',
-					'label'		 => lang('june'),
+					'label'		 => lang('month 6'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '7',
-					'label'		 => lang('july'),
+					'label'		 => lang('month 7'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '8',
-					'label'		 => lang('aug'),
+					'label'		 => lang('month 8'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '9',
-					'label'		 => lang('sept'),
+					'label'		 => lang('month 9'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '10',
-					'label'		 => lang('oct'),
+					'label'		 => lang('month 10'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '11',
-					'label'		 => lang('nov'),
+					'label'		 => lang('month 11'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '12',
-					'label'		 => lang('dec'),
+					'label'		 => lang('month 12'),
 					'sortable'	 => true,
 				),
 			);
@@ -319,19 +350,25 @@
 			$to_date_ts = execMethod('controller.uicalendar.get_end_date_year_ts',$year);
 
 			$components = execMethod('property.soentity.read',array('location_id' => $location_id, 'district_id' => $district_id, 'allrows' => true));
+			$total_records = count($components);
 			$all_components = array();
 			$components_with_calendar_array = array();
-
+//			_debug_array($components);
 			foreach($components as $_component)
 			{
 				$component_id = $_component['id'];
 				$all_components[$component_id] = $_component;
 				$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $component_id));
+//_debug_array($controls);
 				foreach($controls as $_control)
 				{
+					if(!$_control['serie_enabled'])
+					{
+	//					continue;
+					}
 					$control_id						= $_control['control_id'];
 					$control						= $so_control->get_single($_control['control_id']);
-					$components_for_control_array	= $so_control->get_components_for_control($control_id, $location_id, $component_id);
+					$components_for_control_array	= $so_control->get_components_for_control($control_id, $location_id, $component_id,0);//,$user_id);
 
 					// LOCATIONS: Process aggregated values for controls with repeat type day or week
 					if($control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK)
@@ -413,7 +450,7 @@
 							$component->set_xml_short_desc($short_desc_arr);
 
 							$repeat_type				 = $control->get_repeat_type();
-							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
+							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
 
 							$check_lists_array = $component_with_check_lists["check_lists_array"];
 
@@ -439,10 +476,18 @@
 								$control->set_repeat_interval($control_relation['repeat_interval']);
 							}
 
+							if(!$control_relation['serie_enabled'])
+							{
+		//						$control->set_repeat_interval(1000);
+							}
+
 							/*
 							 * End override control with data from serie
 							 */
-
+							if($check_lists_array)
+							{
+//								_debug_array($component_with_check_lists);
+							}
 							$year_calendar	 = new year_calendar($control, $year, $component, null, "component", $control_relation);
 							$calendar_array	 = $year_calendar->build_calendar($check_lists_array);
 
@@ -450,13 +495,11 @@
 								"calendar_array" => $calendar_array);
 						}
 					}
-
-
-
 				}
 			}
+			_debug_array($components_with_calendar_array);
 			unset($component_id);
-			_debug_array($components_with_calendar_array[1]);
+//			_debug_array($components_with_calendar_array[1]);
 //			_debug_array($components);
 //			_debug_array(array_keys($components_with_calendar_array));
 			$repeat_type_array = array
@@ -488,6 +531,9 @@
 				foreach($entry as $dataset)
 				{
 					$repeat_type = (int)$dataset['component']['control_relation']['repeat_type'];
+					$service_time = $dataset['component']['control_relation']['service_time'];
+					$controle_time = $dataset['component']['control_relation']['controle_time'];
+
 					if($repeat_type > $max_repeat_type)
 					{
 						$max_repeat_type = $repeat_type;
@@ -496,6 +542,8 @@
 					{
 						if($calendar)
 						{
+							$calendar['info']['service_time'] = $calendar['info']['service_time'] ? $calendar['info']['service_time'] : $service_time;
+							$calendar['info']['controle_time'] = $calendar['info']['controle_time'] ? $calendar['info']['controle_time'] : $controle_time;
 							$_data[$month][$repeat_type] = $calendar;
 						}
 					}
@@ -569,8 +617,11 @@
 			}
 //_debug_array($values);
 			$data_set = array();
+			$total_time = array();
 			foreach ($values as $entry)
 			{
+				$row		= array();
+				$row_sum	= array();
 				$row['component_id'] = $entry['component_id'];
 				$row['year'] = '';
 				$row['descr'] = '';
@@ -584,16 +635,24 @@
 				for ( $_month=1; $_month < 13; $_month++ )
 				{
 					$row[$_month] = $this->translate_calendar_info($entry[$_month],$year, $_month);
+					if( !$user_id || $entry[$_month]['info']['assigned_to'] == $user_id)
+					{
+						$row_sum[$_month] = $entry[$_month]['info']['service_time'] + $entry[$_month]['info']['controle_time'];
+					}
+					else
+					{
+						$row_sum[$_month] = 0;
+					}
 				}
-
+				$total_time[] = $row_sum;
 				$data_set[] = $row;
 			}
 			$fields	= $this->get_fields();
-
+			$class = '';
 			$tbody = '';
 			foreach($data_set as $row_data )
 			{
-				$tbody .= '<tr>';
+				$tbody .= "<tr {$class}>";
 				foreach($fields as $field )
 				{
 					$tbody .= '<td>';
@@ -601,12 +660,40 @@
 					$tbody .= '</td>';
 				}
 				$tbody .= '</tr>';
+				$class = $class ? '' : 'class="alt"';
+
 			}
 
 			$result = array
 			(
 				'tbody' => $tbody
 			);
+
+			unset($_month);
+
+			$sum_year = 0;
+
+			if(!$total_time)
+			{
+				for ( $_month=1; $_month < 13; $_month++ )
+				{
+					$result['time_sum'][$_month] = 0;
+				}
+			}
+			else
+			{
+				foreach ($total_time as $_row)
+				{
+					for ( $_month=1; $_month < 13; $_month++ )
+					{
+						$result['time_sum'][$_month] += $_row[$_month];
+						$sum_year += $_row[$_month];
+					}
+				}
+			}
+			$result['time_sum'][0] = $sum_year;
+			$result['total_records'] = $total_records;
+
 			return $result;
 		}
 

@@ -1082,3 +1082,18 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.51';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+
+	$test[] = '0.1.51';
+	function controller_upgrade0_1_51()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_serie','enabled',array(
+				'type' => 'int',
+				'precision' => '2',
+				'nullable' => true,
+				'default' => 1,
+			)
+		);
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.52';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

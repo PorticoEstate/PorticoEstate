@@ -2059,21 +2059,54 @@
 					array('key' => 'assigned_to_name','label'=>lang('user'),'sortable'=>false,'resizeable'=>true),
 					array('key' => 'start_date','label'=>lang('start date'),'sortable'=>false,'resizeable'=>true),
 					array('key' => 'repeat_type','label'=>lang('repeat type'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'repeat_interval','label'=>lang('repeat interval'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'repeat_interval','label'=>lang('interval'),'sortable'=>false,'resizeable'=>true),
 					array('key' => 'controle_time','label'=>lang('controle time'),'sortable'=>false,'resizeable'=>true),
 					array('key' => 'service_time','label'=>lang('service time'),'sortable'=>false,'resizeable'=>true),
 					array('key' => 'total_time','label'=>lang('total time'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'relation_enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'serie_enabled','label'=>lang('enabled'),'sortable'=>false,'resizeable'=>true),
+//					array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true),
 					array('key' => 'location_id','hidden'=>true),
 					array('key' => 'component_id','hidden'=>true),
 					array('key' => 'id','hidden'=>true),
 					array('key' => 'assigned_to','hidden'=>true),
 				);
+            $tabletools = array
+            (
+                array(
+                    'my_name'	=> 'add',
+                    'text' => lang('add'),
+                     'type'			=> 'custom',
+					'custom_code' => "
+										add_control();"
+                    ),
+		        array(
+                    'my_name'	=> 'enable',
+                    'text' => lang('enable'),
+                     'type'			=> 'custom',
+					'custom_code' => "
+										onActionsClick('enable');"
+                    ),
+                array(
+                    'my_name'	=> 'disable',
+                    'text' => lang('disable'),
+                    'type'			=> 'custom',
+					'custom_code' => "
+										onActionsClick('disable');"
+                    ),
+                array(
+                    'my_name'	=> 'edit',
+                    'text' => lang('edit'),
+                    'type'			=> 'custom',
+					'custom_code' => "
+										onActionsClick('edit');"
+                    )
+            );
 
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_4',
 					'requestUrl'	=> "''",
+	                'tabletools'	=> $tabletools,
 					'ColumnDefs'	=> $controls_def,
 					'data'			=> json_encode($_controls),
 					'config'		=> array(
@@ -2183,8 +2216,8 @@ JS;
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$repeat_types = array();
-			$repeat_types[] = array('id'=> -1, 'name' => lang('day'));
-			$repeat_types[] = array('id'=> 1, 'name' => lang('weekly'));
+//			$repeat_types[] = array('id'=> -1, 'name' => lang('day'));
+//			$repeat_types[] = array('id'=> 1, 'name' => lang('weekly'));
 			$repeat_types[] = array('id'=> 2, 'name' => lang('month'));
 			$repeat_types[] = array('id'=> 3, 'name' => lang('year'));
 
@@ -3137,6 +3170,7 @@ JS;
 				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
 				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
+//				$entry['select'] = "<input type='checkbox' class='mychecks' value='{$entry['serie_id']}'></input>";
 			}
 
 			if (phpgw::get_var('phpgw_return_as') != 'json')

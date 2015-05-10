@@ -56,12 +56,13 @@
 
 		var $public_functions = array
 			(
-				'read'			=> true,
-				'read_single'	=> true,
-				'save'			=> true,
-				'delete'		=> true,
-				'check_perms'	=> true,
-				'add_control'	=> true
+				'read'					=> true,
+				'read_single'			=> true,
+				'save'					=> true,
+				'delete'				=> true,
+				'check_perms'			=> true,
+				'add_control'			=> true,
+				'update_control_serie'	=> true
 			);
 
 		var $type_app = array();
@@ -998,7 +999,7 @@ JS;
 						'service_time'			=> $service_time,
 						'duplicate'				=> true
 					);
-					_debug_array($values);
+	//				_debug_array($values);
 					if($add = $so_control->register_control_to_component($values))
 					{
 						if($add == PHPGW_ACL_ADD)
@@ -1070,4 +1071,50 @@ JS;
 			}
 		}
 
+		function update_control_serie()
+		{
+			if($start_date = phpgw::get_var('control_start_date', 'string'))
+			{
+				phpgw::import_class('phpgwapi.datetime');
+				$start_date = phpgwapi_datetime::date_to_timestamp($start_date);
+			}
+
+			$so_control	= CreateObject('controller.socontrol');
+
+			$values = array
+			(
+				'ids'				=> phpgw::get_var('ids', 'int'),
+				'action'			=> phpgw::get_var('action', 'string'),
+				'assigned_to'		=> phpgw::get_var('control_responsible', 'int'),
+				'start_date'		=> $start_date,
+				'repeat_type'		=> phpgw::get_var('repeat_type', 'int'),
+				'repeat_interval'	=> phpgw::get_var('repeat_interval', 'int'),
+				'controle_time'		=> phpgw::get_var('controle_time', 'float'),
+				'service_time'		=> phpgw::get_var('service_time', 'float')
+			);
+			$ret = $so_control->update_control_serie($values);
+
+			if($ret)
+			{
+				$result =  array
+				(
+					'status_kode'=> 'ok',
+					'status'	=> 'Ok',
+					'msg'		=> lang('updated')
+
+				);
+			}
+			else
+			{
+				$result =  array
+				(
+					'status_kode'=> 'error',
+					'status'	=> lang('error'),
+					'msg'		=> 'Noe gikk galt'
+				);
+			}
+
+			return $result;
+
+		}
 	}

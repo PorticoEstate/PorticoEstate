@@ -7852,7 +7852,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget DROP CONSTRAINT fm_budget_year_key");
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget DROP CONSTRAINT fm_budget_year_b_account_id_district_id_revision_key");
 		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_budget ADD CONSTRAINT fm_budget_year_key UNIQUE(year , b_account_id , district_id , revision, ecodimb ,category)");
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_department','name', array('type' => 'varchar','precision' => '200','nullable' => False));

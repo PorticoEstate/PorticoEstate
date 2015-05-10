@@ -498,7 +498,7 @@
 							<script type="text/javascript">
 							lookup_control_responsible = function()
 							{
-								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible'};
+								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible', acl_app:'controller', acl_location: '.control', acl_required:4};
 								var requestUrl = phpGWLink('index.php', oArgs);
 								TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 							}
@@ -509,81 +509,6 @@
 								var requestUrl = phpGWLink('index.php', oArgs);
 								TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 							}
-<![CDATA[
-							function parseURL(url)
-							{
-								var parser = document.createElement('a'),
-									searchObject = {},
-									queries, split, i;
-								// Let the browser do the work
-								parser.href = url;
-								// Convert query string to object
-								queries = parser.search.replace(/^\?/, '').split('&');
-								for( i = 0; i < queries.length; i++ ) {
-									split = queries[i].split('=');
-									searchObject[split[0]] = split[1];
-								}
-								return {
-									protocol: parser.protocol,
-									host: parser.host,
-									hostname: parser.hostname,
-									port: parser.port,
-									pathname: parser.pathname,
-									search: parser.search,
-									searchObject: searchObject,
-									hash: parser.hash
-								};
-							}
-]]>
-							add_control = function()
-							{
-								var formUrl = $("#form").attr("action");
-								var Url = parseURL(formUrl);
-								oArgs  = Url.searchObject;
-								delete oArgs.click_history;
-								oArgs.menuaction = 'property.boentity.add_control';
-								oArgs.control_id = $("#control_id").val();
-								oArgs.control_responsible = $("#control_responsible").val();
-								oArgs.control_start_date = $("#control_start_date").val();
-								oArgs.repeat_type = $("#repeat_type").val();
-								if(!oArgs.repeat_type)
-								{
-									alert('velg type serie');
-									return;
-								}
-
-								oArgs.repeat_interval = $("#repeat_interval").val();
-								oArgs.controle_time = $("#controle_time").val();
-								oArgs.service_time = $("#service_time").val();
-								var requestUrl = phpGWLink('index.php', oArgs, true);
-//								alert(requestUrl);
-
-								$("#controller_receipt").html("");
-
-								$.ajax({
-									type: 'POST',
-									dataType: 'json',
-									url: requestUrl,
-									success: function(data) {
-										if( data != null)
-										{
-											$("#controller_receipt").html(data.status + '::' + data.msg);
-											if(data.status_kode == 'ok')
-											{
-												$("#control_id").val('');
-												$("#control_name").val('');
-												$("#control_responsible").val('');
-												$("#control_responsible_user_name").val('');
-												$("#control_start_date").val('');
-											}
-										}
-									}
-								});
-
-								var oArgs2 = {menuaction:'property.uientity.get_controls_at_component', type:oArgs.type, entity_id:oArgs.entity_id, cat_id:oArgs.cat_id, id: oArgs.id};
-								var requestUrl2 = phpGWLink('index.php', oArgs2, true);
-								JqueryPortico.updateinlineTableHelper('datatable-container_4', requestUrl2);
-							};
 
 							</script>
 							<div id="controller_receipt"></div>
@@ -651,10 +576,6 @@
 									<xsl:value-of select="php:function('lang', 'service time')" />
 								</label>
 								<input type="text" name="service_time" id="service_time" value="" size="">
-								</input>
-								</div>
-								<div class="pure-control-group">
-								<input type="button" name="" value="{$lang_add}" title="{$lang_add}" onClick="add_control();">
 								</input>
 								</div>
 							</fieldset>

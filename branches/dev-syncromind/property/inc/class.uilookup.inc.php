@@ -1161,6 +1161,9 @@
 		function phpgw_user()
 		{
 			$column = phpgw::get_var('column');
+			$acl_app = phpgw::get_var('acl_app');
+			$acl_location = phpgw::get_var('acl_location');
+			$acl_required = phpgw::get_var('acl_required', 'int');
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -1191,7 +1194,10 @@
 					'sort' => $order[0]['dir'],
 					'dir' => $order[0]['dir'],
 					'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-					'allrows' => phpgw::get_var('length', 'int') == -1
+					'allrows' => phpgw::get_var('length', 'int') == -1,
+					'acl_app'	=> $acl_app,
+					'acl_location'	=> $acl_location,
+					'acl_required'	=> $acl_required
 				);
 
 				$values = $this->bo->read_phpgw_user($params);
@@ -1241,7 +1247,10 @@
 							'query'				=> $this->query,
 							'filter'			=> $this->filter,
 							'column'			=> $column,
-							'phpgw_return_as' => 'json'
+							'acl_app'			=> $acl_app,
+							'acl_location'		=> $acl_location,
+							'acl_required'		=> $acl_required,
+							'phpgw_return_as'	=> 'json'
 					)),
 					'allrows'	=> false,
 					'editor_action' => '',

@@ -288,6 +288,23 @@
 
 		function read_phpgw_user($data = array())
 		{
+			if($data['acl_app'] && $data['acl_location'] && $data['acl_required'])
+			{
+				$users = $GLOBALS['phpgw']->acl->get_user_list_right($data['acl_required'], $data['acl_location'], $data['acl_app']);
+				$user_list = array();
+				foreach($users as $user)
+				{
+					$user_list[] = array
+					(
+						'id'		=> $user['account_id'],
+						'last_name'	=> $user['account_lastname'],
+						'first_name'	=> $user['account_firstname'],
+					);
+				}
+				$this->total_record = count($user_list);
+				return $user_list;
+			}
+
 			$phpgw_user = $this->so->read_phpgw_user($data);
 			$this->total_records = $this->so->total_records;
 
