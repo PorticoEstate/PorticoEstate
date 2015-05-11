@@ -39,7 +39,15 @@
 
 	<!-- New template-->
 	<xsl:template match="list_deviation">
-		
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dl>
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</dl>
+			</xsl:when>
+		</xsl:choose>
 		<xsl:for-each select="datatable_def">
 			<xsl:if test="container = 'datatable-container_0'">
 				<xsl:call-template name="table_setup">
@@ -53,41 +61,34 @@
 			</xsl:if>
 		</xsl:for-each>
 
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<tr>
-				<td height="50" width="4%">
-					
-					<xsl:variable name="add_action">
-						<xsl:value-of select="add_action"/>
-					</xsl:variable>
-					<a class="pure-button pure-button-primary" href="{$add_action}">
-						<xsl:value-of select="lang_add"/>
-						<!--
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-							<xsl:value-of select="lang_add_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-						-->
-					</a>
-				</td>
-				<td height="50" width="96%">
-					<xsl:variable name="done_action">
-						<xsl:value-of select="done_action"/>
-					</xsl:variable>
-					<a class="pure-button pure-button-primary" href="{$done_action}">
-						<xsl:value-of select="lang_done"/>
-						<!--
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-							<xsl:value-of select="lang_done_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-						-->
-					</a>
-				</td>
-			</tr>
-		</table>
+		<div class="proplist-col">
+			<xsl:variable name="add_action">
+				<xsl:value-of select="add_action"/>
+			</xsl:variable>
+			<a class="pure-button pure-button-primary" href="{$add_action}">
+				<xsl:value-of select="lang_add"/>
+				<!--
+				<xsl:attribute name="onMouseover">
+					<xsl:text>window.status='</xsl:text>
+					<xsl:value-of select="lang_add_statustext"/>
+					<xsl:text>'; return true;</xsl:text>
+				</xsl:attribute>
+				-->
+			</a>
+			<xsl:variable name="done_action">
+				<xsl:value-of select="done_action"/>
+			</xsl:variable>
+			<a class="pure-button pure-button-primary" href="{$done_action}">
+				<xsl:value-of select="lang_done"/>
+				<!--
+				<xsl:attribute name="onMouseover">
+					<xsl:text>window.status='</xsl:text>
+					<xsl:value-of select="lang_done_statustext"/>
+					<xsl:text>'; return true;</xsl:text>
+				</xsl:attribute>
+				-->
+			</a>
+		</div>
 	</xsl:template>
 
 	<!-- New template-->
@@ -1525,7 +1526,7 @@
 					<xsl:apply-templates select="table_done"/>
 				</td>
 			</tr>
-		</table>
+		</table> 
 	</xsl:template>
 
 	<!-- New template-->
@@ -2453,125 +2454,108 @@
 	<!-- add_deviation / edit_deviation  -->
 	<xsl:template match="edit_deviation">
 		<div align="left">
-			<xsl:variable name="form_action">
-				<xsl:value-of select="form_action"/>
-			</xsl:variable>
-			<form method="post" action="{$form_action}">
-			<table cellpadding="2" cellspacing="2" width="80%" align="center">
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<tr>
-							<td align="left" colspan="3">
-								<xsl:call-template name="msgbox"/>
-							</td>
-						</tr>
-					</xsl:when>
-				</xsl:choose>
-					<tr>
-						<td class="th_text" align="left">
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dl>
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</dl>
+			</xsl:when>
+		</xsl:choose>
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
+		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="generic">
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="lang_workorder"/>
-						</td>
-						<td class="th_text" align="left">
-							<xsl:value-of select="value_workorder_id"/>
-							<input type="hidden" name="workorder_id" value="{value_workorder_id}"/>
-							<input type="hidden" name="hour_id" value="{value_hour_id}"/>
-						</td>
-					</tr>
-					<tr>
-						<td class="th_text" align="left">
+						</label>
+						<xsl:value-of select="value_workorder_id"/>
+						<input type="hidden" name="workorder_id" value="{value_workorder_id}"/>
+						<input type="hidden" name="hour_id" value="{value_hour_id}"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="lang_hour_id"/>
-						</td>
-						<td class="th_text" align="left">
-							<xsl:value-of select="value_hour_id"/>
-						</td>
-					</tr>
+						</label>
+						<xsl:value-of select="value_hour_id"/>
+					</div>
 					<xsl:choose>
 						<xsl:when test="value_id != ''">
-							<tr>
-								<td valign="top">
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="lang_id"/>
-								</td>
-								<td>
-									<xsl:value-of select="value_id"/>
-									<input type="hidden" name="values[id]" value="{value_id}"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
+								</label>
+								<xsl:value-of select="value_id"/>
+								<input type="hidden" name="values[id]" value="{value_id}"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="lang_date"/>
-								</td>
-								<td>
-									<xsl:value-of select="entry_date"/>
-								</td>
-							</tr>
+								</label>
+								<xsl:value-of select="entry_date"/>
+							</div>
 						</xsl:when>
 					</xsl:choose>
-					<tr>
-						<td valign="top">
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="lang_amount"/>
-						</td>
-						<td>
-							<input type="text" name="values[amount]" value="{value_amount}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_amount_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
+						</label>
+						<input type="text" name="values[amount]" value="{value_amount}" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_amount_standardtext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="lang_descr"/>
-						</td>
-						<td>
-							<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_descr_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="value_descr"/>
-							</textarea>
-						</td>
-					</tr>
-					<tr height="50">
-						<td>
-							<xsl:variable name="lang_save">
-								<xsl:value-of select="lang_save"/>
-							</xsl:variable>
-							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_save_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-					</table>
-				</form>
-				<table>
-				<tr>
-					<td>
-						<xsl:variable name="done_action">
-							<xsl:value-of select="done_action"/>
-						</xsl:variable>
-						<xsl:variable name="lang_done">
-							<xsl:value-of select="lang_done"/>
-						</xsl:variable>
-						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_done_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</form>
-					</td>
-				</tr>
-			</table>
+						</label>
+						<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
+							<xsl:attribute name="onMouseover">
+								<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_descr_standardtext"/>
+								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+							<xsl:value-of select="value_descr"/>
+						</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="proplist-col">
+				<xsl:variable name="lang_save">
+					<xsl:value-of select="lang_save"/>
+				</xsl:variable>
+				<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+					<xsl:attribute name="onMouseover">
+						<xsl:text>window.status='</xsl:text>
+						<xsl:value-of select="lang_save_standardtext"/>
+						<xsl:text>'; return true;</xsl:text>
+					</xsl:attribute>
+				</input>
+				<xsl:variable name="lang_done">
+					<xsl:value-of select="lang_done"/>
+				</xsl:variable>
+				<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
+					<xsl:attribute name="onMouseover">
+						<xsl:text>window.status='</xsl:text>
+						<xsl:value-of select="lang_done_statustext"/>
+						<xsl:text>'; return true;</xsl:text>
+					</xsl:attribute>
+				</input>
+			</div>
+		</form>
+				
+		<xsl:variable name="done_action">
+			<xsl:value-of select="done_action"/>
+		</xsl:variable>
+		<form name="cancel_form" id="cancel_form" action="{$done_action}" method="post"></form>
 		</div>
 	</xsl:template>
 
