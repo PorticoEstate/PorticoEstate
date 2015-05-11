@@ -39,6 +39,18 @@
 
 <xsl:template match="datatable">
 	<xsl:call-template name="top-toolbar" />
+	<xsl:for-each select="datatable_def">
+		<xsl:if test="container = 'datatable-container_1'">
+			<xsl:call-template name="table_setup">
+				<xsl:with-param name="container" select ='container'/>
+				<xsl:with-param name="requestUrl" select ='requestUrl' />
+				<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+				<xsl:with-param name="tabletools" select ='tabletools' />
+				<xsl:with-param name="data" select ='data' />
+				<xsl:with-param name="config" select ='config' />
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:for-each>
   	<xsl:call-template name="datasource-definition" />
 	<xsl:call-template name="down-toolbar" />
 </xsl:template>
