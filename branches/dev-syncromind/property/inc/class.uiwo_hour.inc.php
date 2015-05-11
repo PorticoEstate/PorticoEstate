@@ -193,9 +193,9 @@
 			$columns_def = array
 			(
 				array('key'=>'id', 'label'=>lang('ID'), 'sortable'=>true),
-				array('key'=>'amount', 'label'=>lang('amount'), 'sortable'=>true),
+				array('key'=>'amount', 'label'=>lang('amount'), 'sortable'=>true, 'className'=>'right'),
 				array('key'=>'descr', 'label'=>lang('Descr'), 'sortable'=>true),
-				array('key'=>'entry_date', 'label'=>lang('date'), 'sortable'=>true)
+				array('key'=>'entry_date', 'label'=>lang('date'), 'sortable'=>true, 'className'=>'right')
 			);
 
 			$datatable_def[] = array
@@ -210,7 +210,7 @@
 					array('disablePagination'	=> true)
 				)
 			);
-
+			
 			$data = array
 			(
 					'datatable_def'				=> $datatable_def,
@@ -229,6 +229,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			
+			self::add_javascript('property', 'portico', 'wo_hour.deviation.js');
 			self::render_template_xsl(array('wo_hour','datatable_inline'), array('list_deviation' => $data));
 
 		}
@@ -346,6 +347,10 @@
 
 			$entry_date = (isset($values['entry_date'])?$GLOBALS['phpgw']->common->show_date($values['entry_date'],$dateformat):'');
 
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
 			$data = array
 				(
 					'lang_workorder'				=> lang('Workorder ID'),
@@ -368,7 +373,8 @@
 					'lang_save_standardtext'		=> lang('Save the deviation'),
 					'lang_amount'					=> lang('amount'),
 					'value_amount'					=> $values['amount'],
-					'value_descr'					=> $values['descr']
+					'value_descr'					=> $values['descr'],
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
 			$appname						= lang('workorder');
@@ -2151,11 +2157,12 @@ HTML;
 				$receipt=$this->bo->add_hour($values,$workorder_id);
 			}
 
-			$common_data=$this->common_data($workorder_id);
+			//$common_data = $this->common_data($workorder_id);
+			$common_data = $this->common_data();
 
 			$workorder	= $common_data['workorder'];
 
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			/*if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
@@ -2240,7 +2247,7 @@ HTML;
 							)
 						)
 					);
-			}
+			}*/
 
 			$uicols = array (
 				'input_type'	=>	array('hidden','text','hidden','hidden','text','text','text','text','text','text','hidden','varchar','select','varchar'),
@@ -2251,13 +2258,17 @@ HTML;
 				'className'		=> 	array('','','','','','','','rightClasss','rightClasss','rightClasss','','','','')
 			);
 
-
 			if($workorder['vendor_id'])
 			{
-				$this->bopricebook->cat_id = $workorder['vendor_id'];
+				$params = array
+					(
+						'cat_id' => $workorder['vendor_id'],
+						'allrows' => true,
+					);
+				/*$this->bopricebook->cat_id = $workorder['vendor_id'];
 				$this->bopricebook->start = $this->start;
-				$this->bopricebook->query = $this->query;
-				$pricebook_list	= $this->bopricebook->read();
+				$this->bopricebook->query = $this->query;*/
+				$pricebook_list	= $this->bopricebook->read($params);
 			}
 
 			$values_combo_box	= $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
@@ -2270,6 +2281,8 @@ HTML;
 			{
 				foreach($pricebook_list as $pricebook)
 				{
+					$json_row = array();
+					
 					$hidden = '';
 					$hidden .= " <input name='values[activity_id][".$j."]' id='values[activity_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['activity_id']."'/>";
 					$hidden .= " <input name='values[activity_num][".$j."]' id='values[activity_num][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['num']."'/>";
@@ -2286,15 +2299,14 @@ HTML;
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{				
 						if ($i==0) {
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $pricebook[$uicols['name'][$i]].$hidden;
+							$json_row[$uicols['name'][$i]] 	= $pricebook[$uicols['name'][$i]].$hidden;
 						} else {
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $pricebook[$uicols['name'][$i]];
+							$json_row[$uicols['name'][$i]] 	= $pricebook[$uicols['name'][$i]];
 						}
-						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 
 						if($uicols['input_type'][$i]=='varchar') 
 						{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] = "<input name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]' size='4' class='myValuesForPHP'/>";
+							$json_row[$uicols['name'][$i]] = "<input name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]' size='4' class='myValuesForPHP'/>";
 						}
 						$select = '';
 						if($uicols['input_type'][$i]=='select') 
@@ -2306,80 +2318,103 @@ HTML;
 							}
 							$select  .= "</select>";	
 							$select  .= " <input name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]'  class='myValuesForPHP select'  type='hidden' value=''/>";						
-							$datatable['rows']['row'][$j]['column'][$i]['value'] = $select;
+							$json_row[$uicols['name'][$i]] = $select;
 						}												
 					}
+					$content[] = $json_row;
 					$j++;
 				}
 			}
 
-			$uicols_count	= count($uicols['descr']);
-			$datatable['rowactions']['action'] = array();
-			for ($i=0;$i<$uicols_count;$i++)
+			$count_uicols = count($uicols['name']);
+			$price_book_def = array();
+
+			for($k=0;$k<$count_uicols;$k++)
 			{
-				//all colums should be have formatter
-				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'className' => $uicols['className'][$k],
+									'sortable' => ($uicols['sortable'][$k]) ? true : false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
 
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']		= false;
-					$datatable['headers']['header'][$i]['className']		= $uicols['className'][$i];
-
-					if ($uicols['name'][$i] == 'num' || $uicols['name'][$i] == 'total_cost')
-					{
-						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
-					}
-				}
-				else
-				{
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']		= false;
-					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
-				}
+					array_push ($price_book_def, $params);
 			}
-
+			
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($content),
+				'ColumnDefs'	=> $price_book_def,
+				'config'		=> array(
+					array('disableFilter'	=> true)
+				)
+			);
+			
 			//*************************************************/
-
-			$uicols_details = array (
+			$data = array();
+			$data['datatable_def'] = $datatable_def;
+			$data['datatable_name'] = '';
+			$data['form'] = array();
+			$data['datatable'] = array
+				(
+					'source' => self::link(array(
+						'menuaction'	=> 'property.uiwo_hour.index',
+						'workorder_id'	=> $workorder_id,
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array()
+				);
+			
+			$data['top-toolbar'] = array
+				(
+					'fields'	=> array
+					(
+						'field' => array
+						(
+							array
+							(
+								'type' => 'button',
+								'id' => 'btn_save',
+								'tab_index' => 4,
+								'value' => lang('Save'),
+							),	
+							array
+							(
+								'type' => 'button',
+								'id' => 'btn_done',
+								'tab_index' => 3,
+								'value'	=> lang('done')
+							)
+						)
+					)					
+				);
+								
+			$uicols_hour = array (
 				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
-				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
+				'className'		=> 	array('','','','','','dt-right','dt-right','dt-right','dt-right','dt-right','','dt-right')
 			);
 
-			$j=0;
-			if (isset($common_data['content']) && is_array($common_data['content']))
-			{
-				foreach($common_data['content'] as $content)
-				{
-					for ($i=0; $i<count($uicols_details['name']); $i++)
-					{
-						if ($uicols_details['name'][$i] == 'deviation') 
-						{
-							if (is_numeric($content[$uicols_details['name'][$i]])) {
-								$details['rows'][$j][$uicols_details['name'][$i]] 	= $content[$uicols_details['name'][$i]];
-							}
-							else
-							{
-								$details['rows'][$j][$uicols_details['name'][$i]] 	= '';
-							}
-						}
-						else
-						{
-							$details['rows'][$j][$uicols_details['name'][$i]] 	= $content[$uicols_details['name'][$i]];
-						}
-					}
-					$j++;
-				}
-			}
+			$count_uicols_name = count($uicols_hour['name']);
 
-			$details['rowactions'] = array();
+			for($k=0;$k<$count_uicols_name;$k++)
+			{
+					$params = array(
+									'key' => $uicols_hour['name'][$k],
+									'label' => $uicols_hour['descr'][$k],
+									'className' => $uicols_hour['className'][$k],
+									'sortable' => ($uicols_hour['sortable'][$k]) ? true : false,
+									'hidden' => ($uicols_hour['input_type'][$k] == 'hidden') ? true : false
+								);
+
+					array_push ($data['datatable']['field'], $params);
+			}
 
 			$parameters = array
 				(
@@ -2392,48 +2427,46 @@ HTML;
 						)
 					)
 				);
-
-			$details['rowactions'][] = array
+			
+			$data['datatable']['actions'][] = array
 				(
-					'my_name' 			=> 'deviation',
+					'my_name' 		=> 'deviation',
 					'text' 			=> lang('Deviation'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
 						'menuaction'	=> 'property.uiwo_hour.deviation',
 						'workorder_id'	=> $workorder_id
-
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
-
-			$details['rowactions'][] = array
+				
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 			=> 'deviation',
 					'text' 				=> lang('open deviation in new window'),
 					'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 					(
 						'menuaction'	=> 'property.uiwo_hour.deviation',
-						'workorder_id'	=> $workorder_id,
-						'target'		=> '_blank'
-
+						'workorder_id'	=> $workorder_id
 					)),
-					'parameters'	=> $parameters
+					'target'		=> '_blank',
+					'parameters'	=> json_encode($parameters)
 				);
 
-			$details['rowactions'][] = array
+			$data['datatable']['actions'][] = array
 				(
-					'my_name' 			=> 'edit',
+					'my_name' 		=> 'edit',
 					'text' 			=> lang('Edit'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
 						'menuaction'	=> 'property.uiwo_hour.edit',
 						'workorder_id'	=> $workorder_id,
-						'from'			=> 'prizebook'
+						'from'			=> 'index'
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-			$details['rowactions'][] = array
+			$data['datatable']['actions'][] = array
 				(
 					'my_name' 			=> 'edit',
 					'text' 				=> lang('open edit in new window'),
@@ -2441,167 +2474,43 @@ HTML;
 					(
 						'menuaction'	=> 'property.uiwo_hour.edit',
 						'workorder_id'	=> $workorder_id,
-						'from'			=> 'prizebook',								
-						'target'		=> '_blank'
-
+						'from'			=> 'index'						
 					)),
-					'parameters'	=> $parameters
+					'target'		=> '_blank',
+					'parameters'	=> json_encode($parameters)
 				);
 
-			$details['rowactions'][] = array
+			$data['datatable']['actions'][] = array
 				(
-					'my_name' 			=> 'delete',
+					'my_name' 		=> 'delete',
 					'text' 			=> lang('Delete'),
 					'confirm_msg'	=> lang('do you really want to delete this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'	=> 'property.uiwo_hour.prizebook',
+						'menuaction'	=> 'property.uiwo_hour.index',
 						'workorder_id'	=> $workorder_id,
 						'delete'	=> true
 					)),
-					'parameters'	=> $parameters
+					'parameters'	=> json_encode($parameters)
 				);
 
-			unset($parameters);
+			unset($parameters);				
+			
+			//$common_data = $this->common_data();
 
+			$data['datatable']['table_sum']	= $common_data['table_sum'][0];
+			$data['datatable']['workorder_data']	= $common_data['workorder_data'];
+			
 
-			//************************************************/
-
-			$datatable['exchange_values'] = '';
-			$datatable['valida'] = '';
-
-			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($pricebook_list);
-			$datatable['pagination']['records_total'] 	= $this->bopricebook->total_records;
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			$appname	= lang('pricebook');
-			$function_msg	= lang('list pricebook');
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			//// cramirez: necesary for include a partucular js
-			phpgwapi_yui::load_widget('loader');
-			//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');	
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array(),
-					'details'			=> $details,
-					'uicols_details'	=> $uicols_details,
-					'table_sum'			=> $common_data['table_sum'][0],
-					'workorder_data'	=> $common_data['workorder_data'],
-					'total_hours_records'	=> $common_data['total_hours_records'],
-					'lang_total_records'	=> lang('Total records')
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-
-			// message when editting & deleting records
-			if(isset($receipt) && is_array($receipt))
-			{
-				$json ['message'][] = $receipt;
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.prizebook', 'property' );
+			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.prizebook', 'property' );
+			self::render_template_xsl(array('wo_hour.index'), $data);
 
-			$this->save_sessiondata();
+			//$this->save_sessiondata();
 		}
 
 
