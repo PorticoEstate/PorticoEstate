@@ -854,7 +854,11 @@
 			$id				 = phpgw::get_var('id', 'int');
 			$values			 = phpgw::get_var('values');
 			$template_attrib = phpgw::get_var('template_attrib');
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			if($template_attrib)
 			{
 				$values['template_attrib'] = array_values(explode(',', $template_attrib));
@@ -1012,7 +1016,9 @@
 				'value_enable_controller'				 => $values['enable_controller'],
 				'jasperupload'							 => true,
 				'category_list'							 => $category_list,
-				'parent_list'							 => $parent_list
+				'parent_list'							 => $parent_list,
+//              'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+//				'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 
 			$appname = lang('entity');
