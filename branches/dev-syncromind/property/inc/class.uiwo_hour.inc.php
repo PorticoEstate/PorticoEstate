@@ -755,7 +755,7 @@
 								'id' => 'btn_save_template',
 								'tab_index' => 4,
 								'value' => lang('Save as template'),
-								'url'	=> self::link(array
+								'href'	=> self::link(array
 								(
 									'menuaction'	=> 'property.uiwo_hour.save_template',
 									'from'=> 'index',
@@ -768,7 +768,7 @@
 								'id' => 'btn_add_custom',
 								'tab_index' => 3,
 								'value'	=> lang('Add custom'),
-								'url'	=> self::link(array
+								'href'	=> self::link(array
 								(
 									'menuaction'	=> 'property.uiwo_hour.edit',
 									'from'=> 'index',
@@ -781,7 +781,7 @@
 								'id'	=> 'btn_add_template',
 								'tab_index' => 2,
 								'value'	=> lang('Add from template'),
-								'url'	=> self::link(array
+								'href'	=> self::link(array
 								(
 									'menuaction'	=> 'property.uitemplate.index',
 									'lookup'=> true,
@@ -794,7 +794,7 @@
 								'id'	=> 'btn_add_prizebook',
 								'tab_index' => 1,
 								'value'	=> lang('Add from prizebook'),
-								'url'	=> self::link(array
+								'href'	=> self::link(array
 								(
 									'menuaction'	=> 'property.uiwo_hour.prizebook',
 									'workorder_id'	=> $workorder_id
@@ -806,7 +806,7 @@
 								'id'	=> 'btn_import_calculation',
 								'tab_index' => 1,
 								'value'	=> lang('import calculation'),
-								'url'	=> self::link(array
+								'href'	=> self::link(array
 								(
 									'menuaction'	=> 'property.uiwo_hour.import_calculation',
 									'workorder_id'	=> $workorder_id
@@ -1028,7 +1028,8 @@
 			$data['datatable']['workorder_data']	= $common_data['workorder_data'];
 			
 			self::add_javascript('property', 'portico', 'wo_hour.index.js');
-			self::render_template_xsl('wo_hour.index', $data);
+			//self::render_template_xsl('wo_hour.index', $data);
+			self::render_template_xsl(array('wo_hour.index','datatable_inline'), $data);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
@@ -2141,7 +2142,6 @@ HTML;
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$values = phpgw::get_var('values');
 
-
 			if($delete && $hour_id)
 			{
 				$receipt = $this->bo->delete($hour_id,$workorder_id);
@@ -2151,180 +2151,26 @@ HTML;
 				}
 			}
 
-
 			if($values['add'])
 			{
-				$receipt=$this->bo->add_hour($values,$workorder_id);
+				$receipt = $this->bo->add_hour($values,$workorder_id);
+				return $receipt;
 			}
 
-			//$common_data = $this->common_data($workorder_id);
-			$common_data = $this->common_data();
-
-			$workorder	= $common_data['workorder'];
-
-			/*if( phpgw::get_var('phpgw_return_as') != 'json' )
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-
-				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'			=> 'property.uiwo_hour.prizebook',
-						'workorder_id'	=> $workorder_id,
-						'query'				=> $this->query
-					));
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uiwo_hour.prizebook',"
-					."workorder_id:'{$workorder_id}',"
-					."query:'{$this->query}'";
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' 		=> 'property.uiwo_hour.prizebook',
-								'workorder_id'	=> $workorder_id,
-								'query'				=> $this->query
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( // mensaje
-									'type'	=> 'label',
-									'id'	=> 'msg_header',
-									'value'	=> '',
-									'style' => 'filter'
-								),												
-								array
-								( // boton done
-									'type'	=> 'button',
-									'id'	=> 'btn_done',
-									'tab_index' => 4,
-									'value'	=> lang('done')
-								),												
-								array
-								( // boton SAVE
-									'type'	=> 'button',
-									'id'	=> 'btn_save',
-									'tab_index' => 3,
-									'value'	=> lang('save')
-								),			                                        
-								array
-								( //boton  SEARCH
-									'id' => 'btn_search',
-									'name' => 'search',
-									'value'    => lang('search'),
-									'type' => 'button',
-									'tab_index' => 2
-								),
-								array
-								( // TEXT IMPUT
-									'name'     => 'query',
-									'id'     => 'txt_query',
-									'value'    => '',
-									'type' => 'text',
-									'size'    => 28,
-									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 1
-								),
-								array
-								(
-									'type'	=> 'label',
-									'id'	=> 'lbl_template',
-									'value'	=> ''
-
-								)				                                        
-							),
-							'hidden_value' => array
-							(
-								)
-							)
-						)
-					);
-			}*/
+				return $this->query_prizebook();
+			}
 
 			$uicols = array (
 				'input_type'	=>	array('hidden','text','hidden','hidden','text','text','text','text','text','text','hidden','varchar','select','varchar'),
-				'type'			=>	array('','','','','','','','','','','','text','',''),				
+				'type'			=>	array('','','','','','','','','','','','text','',''),	
+				'sortable'		=>	array('',true,'','','','','',true,'','','','text','',''),	
 				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit_name','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
 				'formatter'		=>	array('','','','','','','','','','','','','',''),
 				'descr'			=>	array('',lang('Activity Num'),lang('Branch'),lang('Vendor'),lang('Description'),lang('Base'),lang('Unit'),lang('Labour cost'),lang('Material cost'),lang('Total Cost'),'',lang('Quantity'),lang('category'),lang('percent')),
 				'className'		=> 	array('','','','','','','','rightClasss','rightClasss','rightClasss','','','','')
 			);
-
-			if($workorder['vendor_id'])
-			{
-				$params = array
-					(
-						'cat_id' => $workorder['vendor_id'],
-						'allrows' => true,
-					);
-				/*$this->bopricebook->cat_id = $workorder['vendor_id'];
-				$this->bopricebook->start = $this->start;
-				$this->bopricebook->query = $this->query;*/
-				$pricebook_list	= $this->bopricebook->read($params);
-			}
-
-			$values_combo_box	= $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-			$default_value = array ('id'=>'','name'=>lang('no category'));
-			array_unshift ($values_combo_box,$default_value);			
-
-			$content = array();
-			$j=0;
-			if (isset($pricebook_list) && is_array($pricebook_list))
-			{
-				foreach($pricebook_list as $pricebook)
-				{
-					$json_row = array();
-					
-					$hidden = '';
-					$hidden .= " <input name='values[activity_id][".$j."]' id='values[activity_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['activity_id']."'/>";
-					$hidden .= " <input name='values[activity_num][".$j."]' id='values[activity_num][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['num']."'/>";
-					$hidden .= " <input name='values[unit][".$j."]' id='values[unit][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['unit']."'/>";
-					$hidden .= " <input name='values[dim_d][".$j."]' id='values[dim_d][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['dim_d']."'/>";
-					$hidden .= " <input name='values[ns3420_id][".$j."]' id='values[ns3420_id][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['ns3420_id']."'/>";
-					$hidden .= " <input name='values[descr][".$j."]' id='values[descr][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['descr']."'/>";
-					$hidden .= " <input name='values[total_cost][".$j."]' id='values[total_cost][".$j."]'  class='myValuesForPHP'  type='hidden' value='".$pricebook['total_cost']."'/>";
-
-					if ($j==0) 
-					{
-						$hidden .= " <input name='values[add]' id='values[add]'  class='myValuesForPHP'  type='hidden' value='add'/>";
-					}
-					for ($i=0;$i<count($uicols['name']);$i++)
-					{				
-						if ($i==0) {
-							$json_row[$uicols['name'][$i]] 	= $pricebook[$uicols['name'][$i]].$hidden;
-						} else {
-							$json_row[$uicols['name'][$i]] 	= $pricebook[$uicols['name'][$i]];
-						}
-
-						if($uicols['input_type'][$i]=='varchar') 
-						{
-							$json_row[$uicols['name'][$i]] = "<input name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]' size='4' class='myValuesForPHP'/>";
-						}
-						$select = '';
-						if($uicols['input_type'][$i]=='select') 
-						{
-							$select  .= "<select name='values[".$uicols['name'][$i]."_list][".$j."]' id='values[".$uicols['name'][$i]."_list][".$j."]' class='select_tmp'>";
-							for($k = 0; $k < count($values_combo_box); $k++)
-							{
-								$select  .= "<option value='".$values_combo_box[$k]['id']."'>".$values_combo_box[$k]['name']."</option>";
-							}
-							$select  .= "</select>";	
-							$select  .= " <input name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]'  class='myValuesForPHP select'  type='hidden' value=''/>";						
-							$json_row[$uicols['name'][$i]] = $select;
-						}												
-					}
-					$content[] = $json_row;
-					$j++;
-				}
-			}
 
 			$count_uicols = count($uicols['name']);
 			$price_book_def = array();
@@ -2345,8 +2191,8 @@ HTML;
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> "''",
-				'data'			=> json_encode($content),
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'property.uiwo_hour.prizebook', 'workorder_id'=>$workorder_id, 'phpgw_return_as'=>'json'))),
+				'data'			=> json_encode(array()),
 				'ColumnDefs'	=> $price_book_def,
 				'config'		=> array(
 					array('disableFilter'	=> true)
@@ -2380,15 +2226,19 @@ HTML;
 							(
 								'type' => 'button',
 								'id' => 'btn_save',
-								'tab_index' => 4,
 								'value' => lang('Save'),
+								'href' => '#',
+								'onclick' => 'onSave();'
 							),	
 							array
 							(
 								'type' => 'button',
 								'id' => 'btn_done',
-								'tab_index' => 3,
-								'value'	=> lang('done')
+								'value'	=> lang('done'),
+								'href' => self::link(array(
+												'menuaction'	=> 'property.uiwo_hour.index',
+												'workorder_id'	=> $workorder_id
+											))
 							)
 						)
 					)					
@@ -2496,7 +2346,7 @@ HTML;
 
 			unset($parameters);				
 			
-			//$common_data = $this->common_data();
+			$common_data = $this->common_data();
 
 			$data['datatable']['table_sum']	= $common_data['table_sum'][0];
 			$data['datatable']['workorder_data']	= $common_data['workorder_data'];
@@ -2508,12 +2358,106 @@ HTML;
 
 			// Prepare YUI Library
 			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.prizebook', 'property' );
-			self::render_template_xsl(array('wo_hour.index'), $data);
+			//self::render_template_xsl(array('wo_hour.index'), $data);
+			self::add_javascript('property', 'portico', 'wo_hour.index.js');
+			self::render_template_xsl(array('wo_hour.index','datatable_inline'), $data);
 
 			//$this->save_sessiondata();
 		}
 
 
+		public function query_prizebook()
+		{
+			$workorder_id 	= phpgw::get_var('workorder_id'); // in case of bigint
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+
+			$common_data = $this->common_data($workorder_id);
+			$workorder	= $common_data['workorder'];
+			
+			$uicols = array (
+				'input_type'	=>	array('hidden','text','hidden','hidden','text','text','text','text','text','text','hidden','varchar','select','varchar'),
+				'type'			=>	array('','','','','','','','','','','','text','',''),				
+				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit_name','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
+				'formatter'		=>	array('','','','','','','','','','','','','',''),
+				'descr'			=>	array('',lang('Activity Num'),lang('Branch'),lang('Vendor'),lang('Description'),lang('Base'),lang('Unit'),lang('Labour cost'),lang('Material cost'),lang('Total Cost'),'',lang('Quantity'),lang('category'),lang('percent')),
+				'className'		=> 	array('','','','','','','','rightClasss','rightClasss','rightClasss','','','','')
+			);
+
+			if($workorder['vendor_id'])
+			{
+				$params = array
+					(
+						'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+						'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+						'order' => $columns[$order[0]['column']]['data'],
+						'sort' => $order[0]['dir'],
+						'allrows' => phpgw::get_var('length', 'int') == -1,
+						'cat_id' => $workorder['vendor_id']
+						
+					);
+				$pricebook_list	= $this->bopricebook->read($params);
+			}
+			
+			$values_combo_box	= $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+			$default_value = array ('id'=>'','name'=>lang('no category'));
+			array_unshift ($values_combo_box,$default_value);			
+
+			$content = array();
+			$j=0;
+			if (isset($pricebook_list) && is_array($pricebook_list))
+			{
+				foreach($pricebook_list as $pricebook)
+				{
+					$json_row = array();
+					
+					$hidden = '';
+					$hidden .= " <input counter='".$j."' name='values[activity_id][".$j."]' id='values[activity_id][".$j."]' class='activity_id'  type='hidden' value='".$pricebook['activity_id']."'/>";
+					$hidden .= " <input counter='".$j."' name='values[activity_num][".$j."]' id='values[activity_num][".$j."]' class='activity_num'  type='hidden' value='".$pricebook['num']."'/>";
+					$hidden .= " <input counter='".$j."' name='values[unit][".$j."]' id='values[unit][".$j."]' class='unit'  type='hidden' value='".$pricebook['unit']."'/>";
+					$hidden .= " <input counter='".$j."' name='values[dim_d][".$j."]' id='values[dim_d][".$j."]' class='dim_d'  type='hidden' value='".$pricebook['dim_d']."'/>";
+					$hidden .= " <input counter='".$j."' name='values[ns3420_id][".$j."]' id='values[ns3420_id][".$j."]' class='ns3420_id'  type='hidden' value='".$pricebook['ns3420_id']."'/>";
+					$hidden .= " <input counter='".$j."' name='values[descr][".$j."]' id='values[descr][".$j."]' class='descr'  type='hidden' value='".$pricebook['descr']."'/>";
+					$hidden .= " <input counter='".$j."' name='values[total_cost][".$j."]' id='values[total_cost][".$j."]' class='total_cost'  type='hidden' value='".$pricebook['total_cost']."'/>";
+				
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{				
+						$json_row[$uicols['name'][$i]] 	= $pricebook[$uicols['name'][$i]];
+
+						if($uicols['name'][$i]=='quantity') 
+						{
+							$json_row[$uicols['name'][$i]] = "<input counter='".$j."' name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]' size='4' class='quantity'/>";
+						}
+						if($uicols['name'][$i]=='cat_per_cent') 
+						{
+							$json_row[$uicols['name'][$i]] = "<input counter='".$j."' name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]' size='4' class='cat_per_cent'/>";
+						}
+						$select = '';
+						if($uicols['input_type'][$i]=='select') 
+						{
+							$select  .= "<select counter='".$j."' name='values[".$uicols['name'][$i]."_list][".$j."]' id='values[".$uicols['name'][$i]."_list][".$j."]' class='wo_hour_cat'>";
+							for($k = 0; $k < count($values_combo_box); $k++)
+							{
+								$select  .= "<option value='".$values_combo_box[$k]['id']."'>".$values_combo_box[$k]['name']."</option>";
+							}
+							$select  .= "</select>";							
+							$json_row[$uicols['name'][$i]] = $select.$hidden;
+						}												
+					}
+					$content[] = $json_row;
+					$j++;
+				}
+			}
+			
+			$result_data    =   array('results' =>  $content);
+			$result_data['total_records']	= $this->bopricebook->total_records;
+			$result_data['draw']    = $draw;
+
+			return $this->jquery_results($result_data);
+		}
+		
+		
 		function template()
 		{
 			if(!$this->acl_read)
