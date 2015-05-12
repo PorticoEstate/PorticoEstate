@@ -1,19 +1,3 @@
-<func:function name="phpgw:conditional">
-	<xsl:param name="test"/>
-	<xsl:param name="true"/>
-	<xsl:param name="false"/>
-
-	<func:result>
-		<xsl:choose>
-			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$false"/>
-			</xsl:otherwise>
-		</xsl:choose>
-  	</func:result>
-</func:function>
 
 <xsl:template match="data">
 	<xsl:choose>
@@ -23,35 +7,18 @@
 			</h3>
 		</xsl:when>
 	</xsl:choose>
-	<xsl:call-template name="datatable" />
+	<xsl:apply-templates select="datatable"/> 
 </xsl:template>
 
-
-<xsl:template name="datatable">
+<xsl:template match="datatable">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<div id="list_flash">
 		<xsl:call-template name="msgbox"/>
 	</div>
 	<div id="message" class='message'/>
-	<xsl:apply-templates select="datatable"/> 
-</xsl:template>
-
-
-<xsl:template match="datatable">
 	<xsl:call-template name="top-toolbar" />
-	<xsl:for-each select="datatable_def">
-		<xsl:if test="container = 'datatable-container_1'">
-			<xsl:call-template name="table_setup">
-				<xsl:with-param name="container" select ='container'/>
-				<xsl:with-param name="requestUrl" select ='requestUrl' />
-				<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-				<xsl:with-param name="tabletools" select ='tabletools' />
-				<xsl:with-param name="data" select ='data' />
-				<xsl:with-param name="config" select ='config' />
-			</xsl:call-template>
-		</xsl:if>
-	</xsl:for-each>
-  	<xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="prizebook_table" />
+  	<xsl:call-template name="wo_hour_table" />
 	<xsl:call-template name="down-toolbar" />
 </xsl:template>
 
@@ -67,7 +34,7 @@
 						<xsl:for-each select="//top-toolbar/fields/field">
 							<xsl:choose>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="pure-button pure-button-primary"><xsl:value-of select="value"/></button>
+									<a id="{id}" class="pure-button pure-button-primary" href="{href}" onclick="{onclick}"><xsl:value-of select="value"/></a>
 								</xsl:when>
 							</xsl:choose>									
 						</xsl:for-each>
@@ -83,6 +50,21 @@
 	<div><xsl:value-of select="lang_workorder_id"/>:<span id="workorder_id"></span></div>
 	<div><xsl:value-of select="lang_workorder_title"/>:<span id="workorder_title"></span></div>
 	<div><xsl:value-of select="lang_vendor_name"/>:<span id="vendor_name"></span></div>
+</xsl:template>
+
+<xsl:template name="prizebook_table">
+	<xsl:for-each select="//datatable_def">
+		<xsl:if test="container = 'datatable-container_0'">
+			<xsl:call-template name="table_setup">
+				<xsl:with-param name="container" select ='container'/>
+				<xsl:with-param name="requestUrl" select ='requestUrl' />
+				<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+				<xsl:with-param name="tabletools" select ='tabletools' />
+				<xsl:with-param name="data" select ='data' />
+				<xsl:with-param name="config" select ='config' />
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:for-each>
 </xsl:template>
 
 <xsl:template name="down-toolbar">
@@ -115,7 +97,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template name="datasource-definition">
+<xsl:template name="wo_hour_table">
 	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
 				<xsl:for-each select="//datatable/field">
@@ -177,6 +159,11 @@
 	</table>
 	<script>
 
+		if (JqueryPortico.inlineTablesRendered == 0)
+		{
+			JqueryPortico.inlineTablesRendered = 1;
+		}
+		
 		var columns = [
 			<xsl:for-each select="//datatable/field">
 				{
@@ -241,6 +228,7 @@
 
 	<script type="text/javascript" class="init">
 		
+		var oTable = null;
 		$(document).ready(function() {
 
 			var ajax_url = '<xsl:value-of select="source"/>';
@@ -248,6 +236,7 @@
 			var exclude_colvis = [];
 			var editor_cols = [];
 			var editor_action = '<xsl:value-of select="editor_action"/>';
+			
 			
 			<xsl:choose>
 				<xsl:when test="//datatable/actions">
@@ -453,7 +442,7 @@
 			
 			var source = "<xsl:value-of select="source"/>";
 
-			var oTable = JqueryPortico.inlineTableHelper('datatable-container', source, JqueryPortico.columns, options );
+			oTable = JqueryPortico.inlineTableHelper('datatable-container', source, JqueryPortico.columns, options );
 			
 <![CDATA[
 
