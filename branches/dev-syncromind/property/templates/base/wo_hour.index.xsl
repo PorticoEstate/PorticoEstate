@@ -25,22 +25,20 @@
 <xsl:template name="top-toolbar">
 	<div class="toolbar-container">
 		<div class="toolbar">
-			<form class="pure-form pure-form-stacked">
-				<div class="pure-g">
-					<div class="pure-u-1-3">
-						<xsl:apply-templates select="//datatable/workorder_data" />
-					</div>
-					<div class="pure-u-2-3">
-						<xsl:for-each select="//top-toolbar/fields/field">
-							<xsl:choose>
-								<xsl:when test="type='button'">
-									<a id="{id}" class="pure-button pure-button-primary" href="{href}" onclick="{onclick}"><xsl:value-of select="value"/></a>
-								</xsl:when>
-							</xsl:choose>									
-						</xsl:for-each>
-					</div>
+			<div class="pure-g">
+				<div class="pure-u-1-3">
+					<xsl:apply-templates select="//datatable/workorder_data" />
 				</div>
-			</form>
+				<div class="pure-u-2-3">
+					<xsl:for-each select="//top-toolbar/fields/field">
+						<xsl:choose>
+							<xsl:when test="type='button'">
+								<a id="{id}" class="pure-button pure-button-primary" href="{href}" onclick="{onclick}"><xsl:value-of select="value"/></a>
+							</xsl:when>
+						</xsl:choose>									
+					</xsl:for-each>
+				</div>
+			</div>
 		</div>
 	</div>
 </xsl:template>
