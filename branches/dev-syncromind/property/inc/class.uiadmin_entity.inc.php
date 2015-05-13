@@ -864,7 +864,7 @@
 				$values['template_attrib'] = array_values(explode(',', $template_attrib));
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity', 'datatable_inline'));
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity', 'datatable_inline'));
 
 			if($id)
 			{
@@ -1017,21 +1017,29 @@
 				'jasperupload'							 => true,
 				'category_list'							 => $category_list,
 				'parent_list'							 => $parent_list,
-//              'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-//				'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+                'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
+            
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+            
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_custom_function' => $data));
+           
+            self::render_template_xsl(array('admin_entity','datatable_inline','nextmatchs'), array('edit' => $data));
+            
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 			//---datatable settings--------------------
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-
-			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit_category', 'property');
+//
+//			$GLOBALS['phpgw']->css->validate_file('datatable');
+//			$GLOBALS['phpgw']->css->validate_file('property');
+//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+//
+//			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit_category', 'property');
 		}
 
 		function get_template_attributes()
@@ -2386,8 +2394,12 @@
 			$cat_id		 = phpgw::get_var('cat_id', 'int');
 			$id			 = phpgw::get_var('id', 'int');
 			$values		 = phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
 			if($values['save'])
 			{
@@ -2486,12 +2498,20 @@
 				'value_client_side'		 => $values['client_side'],
 				'lang_active'			 => lang('Active'),
 				'lang_active_statustext' => lang('check to activate custom function'),
+                'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_custom_function' => $data));
+            
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+            
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_custom_function' => $data));
+           
+            self::render_template_xsl(array('admin_entity','datatable_inline','nextmatchs'), array('edit_custom_function' => $data));
 		}
 
 		function convert_to_eav()
