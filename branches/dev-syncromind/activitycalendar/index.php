@@ -21,5 +21,3 @@
 		$start_page = array('menuaction'=> APP_NAME.'.uifrontpage.index');
 	}
 	$GLOBALS['phpgw']->redirect_link('/index.php',$start_page);
-	
-?>
