@@ -1,13 +1,16 @@
 <?php
-	phpgw::import_class('booking.uicommon');
-	phpgw::import_class('booking.uidocument_building');
-	phpgw::import_class('booking.uipermission_building');
+	//phpgw::import_class('booking.uicommon');
+	//phpgw::import_class('booking.uidocument_building');
+	//phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uibuilding extends booking_uicommon
+	class booking_uibuilding extends phpgwapi_uicommon_jquery
 	{	
 		public $public_functions = array
 		(
 			'index'			=>	true,
+			'query'			=>	true,
 			'active'		=>	true,
 			'add'			=>	true,
 			'show'			=>	true,
@@ -22,7 +25,7 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+			//self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.bobuilding');
             $this->bo_booking = CreateObject('booking.bobooking');
@@ -64,7 +67,7 @@
 		public function index()
 		{	
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
@@ -134,10 +137,11 @@
 				));
 			}
 
-			self::render_template('datatable', $data);
+			//self::render_template('datatable', $data);
+			self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+		public function query()
 		{
 			
 			$buildings = $this->bo->read();
@@ -146,7 +150,7 @@
 				$building['link'] = $this->link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 #				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
-			return $this->yui_results($buildings);
+			return $this->jquery_results($buildings);
 		}
 
 		public function add()
