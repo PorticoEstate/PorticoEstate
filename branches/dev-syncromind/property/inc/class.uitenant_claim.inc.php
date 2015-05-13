@@ -826,7 +826,22 @@
 															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
 															array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)))
 				);
-
+            
+//                $myColumnDefs0 = array
+//				(
+//					array('key' => 'workorder_id',	'label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+//                    array('key' => 'budget',	'label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+//                    array('key' => 'budget_hidden','hidden'=>true),
+//                    array('key' => 'calculation',	'label'=>lang('Calculation'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+//                    array('key' => 'calculation_hidden','hidden'=>true),
+//                    array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+//                    array('key' => 'actual_cost_hidden','hidden'=>true),
+//                    array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+//                    array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter'),
+//                    array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
+//                    array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
+//                    array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)
+//                );
 
 			if($claim_id)
 			{
@@ -1105,12 +1120,16 @@
 			$claim_id	= phpgw::get_var('claim_id', 'int');
 
 			$this->boproject= CreateObject('property.boproject');
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
 
 			$values = $this->bo->read_single($claim_id);
 
 			$project_values	= $this->boproject->read_single($values['project_id']);
-
+            
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$table_header_workorder[] = array
 				(
 					'lang_workorder_id'	=> lang('Workorder'),
@@ -1289,9 +1308,16 @@
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
 					'lang_done'							=> lang('done'),
 					'value_entry_date'					=> $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+                    'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+                    'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
+            
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . '::' . lang('view claim');
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+            
+            phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+            
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+            self::render_template_xsl(array('tenant_claim','datatable_inline','nextmatchs'), array('view' => $data));
 		}
 	}
