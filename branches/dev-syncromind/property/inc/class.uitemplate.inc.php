@@ -154,13 +154,13 @@
                                 return $this->query();
 			} 
                         
-                        self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-                        self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+            self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+            self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
                         
-                        $appname				= lang('template');
-			$function_msg				= lang('list template');
+            $appname		= lang('template');
+			$function_msg	= lang('list template');
                         
-                        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
                         
                 $data = array(
 				'datatable_name'	=> $appname,
@@ -698,7 +698,7 @@
 //				}
 //			}
 
-			$data['datatable']['actions'][] = array();
+//			$data['datatable']['actions'][] = array();
 			$parameters = array();
 			$parameters[] = array('parameter' => array(	array('name'=> 'hour_id',		'source'	=> 'hour_id'),
 				array('name'=> 'template_id',	'source'	=> 'template_id')));
