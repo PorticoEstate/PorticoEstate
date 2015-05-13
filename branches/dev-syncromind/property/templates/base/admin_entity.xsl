@@ -1,6 +1,6 @@
 
 <!-- $Id$ -->
-<xsl:template name="app_data">
+<xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit"/>
@@ -1879,162 +1879,151 @@
 
 <!-- add custom_function / edit custom_function -->
 <xsl:template match="edit_custom_function" xmlns:php="http://php.net/xsl">
-	<div align="left">
-		<xsl:variable name="form_action">
-			<xsl:value-of select="form_action"/>
-		</xsl:variable>
-		<form method="post" action="{$form_action}">
-			<table cellpadding="2" cellspacing="2" width="80%" align="center">
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<tr>
-							<td align="left" colspan="3">
-								<xsl:call-template name="msgbox"/>
-							</td>
-						</tr>
-					</xsl:when>
-				</xsl:choose>
-				<tr>
-					<td class="th_text" align="left">
-						<xsl:value-of select="lang_entity"/>
-					</td>
-					<td class="th_text" align="left">
-						<xsl:value-of select="entity_name"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="th_text" align="left">
-						<xsl:value-of select="lang_category"/>
-					</td>
-					<td class="th_text" align="left">
-						<xsl:value-of select="category_name"/>
-					</td>
-				</tr>
-				<xsl:choose>
-					<xsl:when test="value_id != ''">
-						<tr>
-							<td valign="top">
-								<xsl:value-of select="lang_id"/>
-							</td>
-							<td>
-								<xsl:value-of select="value_id"/>
-							</td>
-						</tr>
-					</xsl:when>
-				</xsl:choose>
-				<tr>
-					<td valign="top">
-						<xsl:value-of select="lang_descr"/>
-					</td>
-					<td>
-						<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_descr_custom_functiontext"/>
-								<xsl:text>'; return true;</xsl:text>
-							</xsl:attribute>
-							<xsl:value-of select="value_descr"/>
-						</textarea>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<xsl:value-of select="lang_custom_function"/>
-					</td>
-					<td valign="top">
-						<xsl:variable name="lang_custom_function_statustext">
-							<xsl:value-of select="lang_custom_function_statustext"/>
-						</xsl:variable>
-						<select name="values[custom_function_file]" class="forms" onMouseover="window.status='{$lang_custom_function_statustext}'; return true;" onMouseout="window.status='';return true;">
-							<option value="">
-								<xsl:value-of select="lang_no_custom_function"/>
-							</option>
-							<xsl:apply-templates select="custom_function_list"/>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<xsl:value-of select="lang_active"/>
-					</td>
-					<td>
-						<xsl:choose>
-							<xsl:when test="value_active = 1">
-								<input type="checkbox" name="values[active]" value="1" checked="checked" onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_active_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
-									</xsl:attribute>
-								</input>
-							</xsl:when>
-							<xsl:otherwise>
-								<input type="checkbox" name="values[active]" value="1" onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_active_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
-									</xsl:attribute>
-								</input>
-							</xsl:otherwise>
-						</xsl:choose>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<xsl:value-of select="php:function('lang', 'client-side')"/>
-					</td>
-					<td>
-						<input type="checkbox" name="values[client_side]" value="1">
-							<xsl:attribute name="title">
-								<xsl:text>otherwise: server-side</xsl:text>
-							</xsl:attribute>
-							<xsl:if test="value_client_side = '1'">
-								<xsl:attribute name="checked">
-									<xsl:text>checked</xsl:text>
-								</xsl:attribute>
-							</xsl:if>
-						</input>
-					</td>
-				</tr>
-				<tr height="50">
-					<td>
-						<xsl:variable name="lang_save">
-							<xsl:value-of select="lang_save"/>
-						</xsl:variable>
-						<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_custom_functiontext"/>
-								<xsl:text>'; return true;</xsl:text>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
-			</table>
-		</form>
-		<table>
-			<tr>
-				<td>
-					<xsl:variable name="done_action">
-						<xsl:value-of select="done_action"/>
-					</xsl:variable>
-					<xsl:variable name="lang_done">
-						<xsl:value-of select="lang_done"/>
-					</xsl:variable>
-					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_done_custom_functiontext"/>
-								<xsl:text>'; return true;</xsl:text>
-							</xsl:attribute>
-						</input>
-					</form>
-				</td>
-			</tr>
-		</table>
-	</div>
+    <script type="text/javascript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+    </script>
+    <div id="tab-content">
+        <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+        <div id="general">
+            <div align="left">
+                    <xsl:variable name="form_action">
+                            <xsl:value-of select="form_action"/>
+                    </xsl:variable>
+                    <form method="post" class="pure-form pure-form-aligned" action="{$form_action}">
+                                <dl>
+                                    <xsl:choose>
+                                            <xsl:when test="msgbox_data != ''">
+                                                            <dt>
+                                                                    <xsl:call-template name="msgbox"/>
+                                                            </dt>
+                                            </xsl:when>
+                                    </xsl:choose>
+                                </dl>
+                                    <div class="pure-control-group">
+                                            <label>
+                                                    <xsl:value-of select="lang_entity"/>
+                                            </label>
+
+                                                    <xsl:value-of select="entity_name"/>
+                                    </div>
+                                    <div class="pure-control-group">
+                                            <label>
+                                                    <xsl:value-of select="lang_category"/>
+                                            </label>
+                                                    <xsl:value-of select="category_name"/>
+                                    </div>
+                                    <xsl:choose>
+                                            <xsl:when test="value_id != ''">
+                                                    <div class="pure-control-group">
+                                                            <label>
+                                                                    <xsl:value-of select="lang_id"/>
+                                                            </label>
+                                                                    <xsl:value-of select="value_id"/>
+                                                    </div>
+                                            </xsl:when>
+                                    </xsl:choose>
+                                    <div class="pure-control-group">
+                                            <label>
+                                                    <xsl:value-of select="lang_descr"/>
+                                            </label>
+                                                    <textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
+                                                            <xsl:attribute name="onMouseover">
+                                                                    <xsl:text>window.status='</xsl:text>
+                                                                    <xsl:value-of select="lang_descr_custom_functiontext"/>
+                                                                    <xsl:text>'; return true;</xsl:text>
+                                                            </xsl:attribute>
+                                                            <xsl:value-of select="value_descr"/>
+                                                    </textarea>
+                                    </div>
+                                    <div class="pure-control-group">
+                                            <label>
+                                                    <xsl:value-of select="lang_custom_function"/>
+                                            </label>
+                                                    <xsl:variable name="lang_custom_function_statustext">
+                                                            <xsl:value-of select="lang_custom_function_statustext"/>
+                                                    </xsl:variable>
+                                                    <select name="values[custom_function_file]" class="forms" onMouseover="window.status='{$lang_custom_function_statustext}'; return true;" onMouseout="window.status='';return true;">
+                                                            <option value="">
+                                                                    <xsl:value-of select="lang_no_custom_function"/>
+                                                            </option>
+                                                            <xsl:apply-templates select="custom_function_list"/>
+                                                    </select>
+                                    </div>
+                                    <div class="pure-control-group">
+                                            <label>
+                                                    <xsl:value-of select="lang_active"/>
+                                            </label>
+                                                    <xsl:choose>
+                                                            <xsl:when test="value_active = 1">
+                                                                    <input type="checkbox" name="values[active]" value="1" checked="checked" onMouseout="window.status='';return true;">
+                                                                            <xsl:attribute name="onMouseover">
+                                                                                    <xsl:text>window.status='</xsl:text>
+                                                                                    <xsl:value-of select="lang_active_statustext"/>
+                                                                                    <xsl:text>'; return true;</xsl:text>
+                                                                            </xsl:attribute>
+                                                                    </input>
+                                                            </xsl:when>
+                                                            <xsl:otherwise>
+                                                                    <input type="checkbox" name="values[active]" value="1" onMouseout="window.status='';return true;">
+                                                                            <xsl:attribute name="onMouseover">
+                                                                                    <xsl:text>window.status='</xsl:text>
+                                                                                    <xsl:value-of select="lang_active_statustext"/>
+                                                                                    <xsl:text>'; return true;</xsl:text>
+                                                                            </xsl:attribute>
+                                                                    </input>
+                                                            </xsl:otherwise>
+                                                    </xsl:choose>
+                                    </div>
+                                    <div class="pure-control-group">
+                                            <label>
+                                                    <xsl:value-of select="php:function('lang', 'client-side')"/>
+                                            </label>
+                                                    <input type="checkbox" name="values[client_side]" value="1">
+                                                            <xsl:attribute name="title">
+                                                                    <xsl:text>otherwise: server-side</xsl:text>
+                                                            </xsl:attribute>
+                                                            <xsl:if test="value_client_side = '1'">
+                                                                    <xsl:attribute name="checked">
+                                                                            <xsl:text>checked</xsl:text>
+                                                                    </xsl:attribute>
+                                                            </xsl:if>
+                                                    </input>
+                                    </div>
+                                    <div class="pure-control-group">
+                                                    <xsl:variable name="lang_save">
+                                                            <xsl:value-of select="lang_save"/>
+                                                    </xsl:variable>
+                                                    <input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+                                                            <xsl:attribute name="onMouseover">
+                                                                    <xsl:text>window.status='</xsl:text>
+                                                                    <xsl:value-of select="lang_save_custom_functiontext"/>
+                                                                    <xsl:text>'; return true;</xsl:text>
+                                                            </xsl:attribute>
+                                                    </input>
+                                    </div>
+                    </form>
+                            <div class="pure-control-group">
+
+                                            <xsl:variable name="done_action">
+                                                    <xsl:value-of select="done_action"/>
+                                            </xsl:variable>
+                                            <xsl:variable name="lang_done">
+                                                    <xsl:value-of select="lang_done"/>
+                                            </xsl:variable>
+                                            <form method="post" action="{$done_action}">
+                                                    <input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+                                                            <xsl:attribute name="onMouseover">
+                                                                    <xsl:text>window.status='</xsl:text>
+                                                                    <xsl:value-of select="lang_done_custom_functiontext"/>
+                                                                    <xsl:text>'; return true;</xsl:text>
+                                                            </xsl:attribute>
+                                                    </input>
+                                            </form>
+                            </div>
+            </div>
+        </div>
+    </div>
 </xsl:template>
 
 <!-- attrib_group_list -->
