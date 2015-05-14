@@ -550,9 +550,6 @@
 
 		function save_template()
 		{
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
-
 			$values 		= phpgw::get_var('values');
 			$workorder_id 	= phpgw::get_var('workorder_id'); // in case of bigint
 
@@ -571,11 +568,8 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			//------JSON code-------------------
-			//join columns hours_descr and remark
 			for($i=0;$i<count($common_data['content']);$i++ ) 
 			{
-
 				if($common_data['content'][$i]['remark']!="")
 				{
 					if(trim($common_data['content'][$i]["hours_descr"]) == "")
@@ -595,47 +589,39 @@
 				$common_data['content'][$i]['extra_hours_descr'] = $extra;
 			}	
 
+			$column_def = array
+			(
+				array('key' => 'post',				'label' => $common_data['table_header'][0]['lang_post'],	'sortable' => true),
+				array('key' => 'code',				'label' => $common_data['table_header'][0]['lang_code'],	'sortable' => true),
+				array('key' => 'extra_hours_descr',	'label' => $common_data['table_header'][0]['lang_descr'],	'sortable' => true),
+				array('key' => 'unit',				'label' => $common_data['table_header'][0]['lang_unit'],	'sortable' => true),
+				array('key' => 'quantity',			'label' => $common_data['table_header'][0]['lang_quantity'],'sortable' => true, 'className' => 'right'),
+				array('key' => 'billperae',			'label' => $common_data['table_header'][0]['lang_billperae'],'sortable' => true, 'className' => 'right'),
+				array('key' => 'cost',				'label' => $common_data['table_header'][0]['lang_cost'],	'sortable' => true, 'className' => 'right'),
+				array('key' => 'result',			'label' => $common_data['table_header'][0]['lang_result'],	'sortable' => true, 'className' => 'right'),
+				array('key' => 'wo_hour_category',	'label' => $common_data['table_header'][0]['lang_category'],'sortable' => true),
+				array('key' => 'cat_per_cent',		'label' => $common_data['table_header'][0]['lang_per_cent'],'sortable' => true, 'className' => 'center')
+			);
 
-			//---datatable1 settings---------------------------------------------------
-
-
-			$datavalues[0] = array
-				(
-					'name'			=> "0",
-					'values' 		=> json_encode($common_data['content']),
-					'total_records'	=> count($common_data['content']),
-					'is_paginator'	=> 1,
-					'footer'		=> 0
-				);		
-
-			//_debug_array($common_data['table_header'][0]['lang_post']);die;
-
-			$myColumnDefs[0] = array
-				(
-					'name'			=> "0",
-					'values'		=>	json_encode(array(	array('key' => 'post',				'label' => $common_data['table_header'][0]['lang_post'],	'sortable' => true,'resizeable' => true),
-															array('key' => 'code',				'label' => $common_data['table_header'][0]['lang_code'],	'sortable' => true,'resizeable' => true),
-															array('key' => 'extra_hours_descr',	'label' => $common_data['table_header'][0]['lang_descr'],	'sortable' => true,'resizeable' => true),
-															array('key' => 'unit',				'label' => $common_data['table_header'][0]['lang_unit'],	'sortable' => true,'resizeable' => true),
-															array('key' => 'quantity',			'label' => $common_data['table_header'][0]['lang_quantity'],'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
-															array('key' => 'billperae',			'label' => $common_data['table_header'][0]['lang_billperae'],'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
-															array('key' => 'cost',				'label' => $common_data['table_header'][0]['lang_cost'],	'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
-															array('key' => 'result',			'label' => $common_data['table_header'][0]['lang_result'],	'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
-															array('key' => 'wo_hour_category',	'label' => $common_data['table_header'][0]['lang_category'],'sortable' => true,'resizeable' => true),
-															array('key' => 'cat_per_cent',		'label' => $common_data['table_header'][0]['lang_per_cent'],'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterCenter')
-				)));	
-
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode($common_data['content']),
+				'ColumnDefs'	=> $column_def,
+				'config'		=> array(
+					array('disableFilter' => true)
+				)
+			);
+			
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
 			
 			$data = array
 			(
-					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
-					'base_java_url'				=> json_encode(array(menuaction => "property.uiwo_hour.index",workorder_id=>$workorder_id)),
-					'datatable'					=> $datavalues,
-					'myColumnDefs'				=> $myColumnDefs,
-
+					'datatable_def'				=> $datatable_def,
 					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.save_template', 'workorder_id'=> $workorder_id)),
@@ -654,23 +640,20 @@
 					'lang_descr'				=> lang('Description'),
 					'lang_descr_statustext'		=> lang('Enter a short description of this template'),
 
-					'total_hours_records'		=> $common_data['total_hours_records'],
-					'lang_total_records'		=> lang('Total records'),
-					'table_header_hour'			=> $common_data['table_header'],
-					'values_hour'				=> $common_data['content'],
+					//'total_hours_records'		=> $common_data['total_hours_records'],
+					//'lang_total_records'		=> lang('Total records'),
+					//'table_header_hour'		=> $common_data['table_header'],
+					//'values_hour'				=> $common_data['content'],
 					'workorder_data' 			=> $common_data['workorder_data'],
 					'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				);
-
-			//_debug_array($data);die;
 
 			$appname		= lang('Workorder');
 			$function_msg	= lang('Add template');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_template' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			self::render_template_xsl(array('wo_hour','datatable_inline'), array('add_template' => $data));
 		}
 
 
@@ -1078,7 +1061,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id));
 			}
 			
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour', 'files'));
+			//$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour', 'files'));
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
 			$show_details	= true;//phpgw::get_var('show_details', 'bool');
@@ -1596,7 +1579,32 @@ HTML;
 				}
 			}
 
-			$datavalues[0] = array
+			$datatable_def = array();
+			
+			$column_def = array
+			(
+				array('key' => 'post',		'label' => lang('Post'),		'sortable' => true,'resizeable' => true),
+				array('key' => 'code',		'label' => lang('Code'),		'sortable' => true,'resizeable' => true),
+				array('key' => 'descr',		'label' => lang('descr'),		'sortable' => true,'resizeable' => true),
+				array('key' => 'unit_name',	'label' => lang('Unit'),		'sortable' => true,'resizeable' => true),
+				array('key' => 'quantity',	'label' => lang('Quantity'),	'sortable' => true,'resizeable' => true),
+				array('key' => 'billperae',	'label' => lang('Bill per unit'),'sortable' => true,'resizeable' => true),
+				array('key' => 'cost',		'label' => lang('cost'),		'sortable' => true,'resizeable' => true)
+			);
+				
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> $column_def,
+				'data'			=> json_encode($table_view_order),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+			
+			/*$datavalues[0] = array
 				(
 					'name'					=> "0",
 					'values' 				=> json_encode($table_view_order),
@@ -1608,17 +1616,18 @@ HTML;
 			$myColumnDefs[0] = array
 				(
 					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'post',		'label' => lang('Post'),		'sortable' => true,'resizeable' => true),
+					'values'	=>	json_encode(array(	
+														array('key' => 'post',		'label' => lang('Post'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'code',		'label' => lang('Code'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'descr',		'label' => lang('descr'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'unit_name',	'label' => lang('Unit'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'quantity',	'label' => lang('Quantity'),	'sortable' => true,'resizeable' => true),
 														array('key' => 'billperae',	'label' => lang('Bill per unit'),'sortable' => true,'resizeable' => true),
 														array('key' => 'cost',		'label' => lang('cost'),		'sortable' => true,'resizeable' => true)))
-				);	
+				);	*/
 
 			$workorder_history = $this->boworkorder->read_record_history($workorder_id); // second time...(after the order is sendt)
-			$datavalues[1] = array
+			/*$datavalues[1] = array
 				(
 					'name'					=> "1",
 					'values' 				=> json_encode($workorder_history),
@@ -1630,27 +1639,41 @@ HTML;
 			$myColumnDefs[1] = array
 				(
 					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'value_date',	'label' => lang('Date'),	'sortable' => true,'resizeable' => true),
+					'values'	=>	json_encode(array(	
+														array('key' => 'value_date',	'label' => lang('Date'),	'sortable' => true,'resizeable' => true),
 														array('key' => 'value_user',	'label' => lang('User'),	'sortable' => true,'resizeable' => true),
 														array('key' => 'value_action',	'label' => lang('Action'),	'sortable' => true,'resizeable' => true),
-														array('key' => 'value_new_value','label' => lang('New value'),'sortable' => true,'resizeable' => true)))
-				);	
+														array('key' => 'value_new_value','label' => lang('New value'),'sortable' => true,'resizeable' => true)
+						))
+				);	*/
 
-
-			//----------------------------------------------datatable settings--------	
-			$property_js = "/property/js/yahoo/property2.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
+			$history_def = array
+			(
+				array('key' => 'value_date',	'label' => lang('Date'),	'sortable' => true,'resizeable' => true),
+				array('key' => 'value_user',	'label' => lang('User'),	'sortable' => true,'resizeable' => true),
+				array('key' => 'value_action',	'label' => lang('Action'),	'sortable' => true,'resizeable' => true),
+				array('key' => 'value_new_value','label' => lang('New value'),'sortable' => true,'resizeable' => true)
+			);
+				
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> $history_def,
+				'data'			=> json_encode($workorder_history),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+			
 
 			$data = array
 			(
-					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
-					'datatable'							=> $datavalues,
-					'myColumnDefs'						=> $myColumnDefs,
+					//'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+					//'datatable'							=> $datavalues,
+					//'myColumnDefs'						=> $myColumnDefs,
+					'datatable_def'						=> $datatable_def,
 
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'lang_mail'							=> lang('E-Mail'),
@@ -1706,31 +1729,14 @@ HTML;
 																	'preview'		=> true)),
 					'mail_recipients' 					=> isset($workorder['mail_recipients']) && is_array($workorder['mail_recipients']) ? implode(';', $workorder['mail_recipients']) : ''
 				);
-
-
-			//---datatable settings-----------------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.view', 'property' );
-			//------------------------------datatable settings--
+			
 
 			$appname		= lang('Workorder');
 			$function_msg	= $this->boworkorder->order_sent_adress ? lang('ReSend order') :lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+			
+			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+			self::render_template_xsl(array('wo_hour','datatable_inline','files'), array('view' => $data));
 		}
 
 
