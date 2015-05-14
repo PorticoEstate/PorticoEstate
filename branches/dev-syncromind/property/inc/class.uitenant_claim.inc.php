@@ -590,7 +590,7 @@
 
 			$this->boproject= CreateObject('property.boproject');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim','files'));
+//			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim','files'));
 
 			if ($values['save'] || $values['apply'])
 			{
@@ -795,54 +795,66 @@
 				}
 				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
 			}
-
+            
 			//---datatable0 settings---------------------------------------------------
 
-			$datavalues[0] = array
-				(
-					'name'			=> "0",
-					'values' 		=> json_encode($project_values['workorder_budget']),
-					'total_records'	=> count($project_values['workorder_budget']),
-					'edit_action'	=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
-					'is_paginator'	=> 1,
-					'footer'		=> 0
-				);
-
-			//_debug_array($project_values['workorder_budget']);die();
-
-			$myColumnDefs[0] = array
-				(
-					'name'			=> "0",
-					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-															array('key' => 'budget',	'label'=>lang('Budget'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-															array('key' => 'budget_hidden','hidden'=>true),
-															array('key' => 'calculation',	'label'=>lang('Calculation'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-															array('key' => 'calculation_hidden','hidden'=>true),
-															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-															array('key' => 'actual_cost_hidden','hidden'=>true),
-															array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
-															array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter'),
-															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
-															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
-															array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)))
-				);
-            
-//                $myColumnDefs0 = array
+//			$datavalues[0] = array
 //				(
-//					array('key' => 'workorder_id',	'label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-//                    array('key' => 'budget',	'label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-//                    array('key' => 'budget_hidden','hidden'=>true),
-//                    array('key' => 'calculation',	'label'=>lang('Calculation'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-//                    array('key' => 'calculation_hidden','hidden'=>true),
-//                    array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-//                    array('key' => 'actual_cost_hidden','hidden'=>true),
-//                    array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
-//                    array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter'),
-//                    array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
-//                    array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
-//                    array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)
-//                );
+//					'name'			=> "0",
+//					'values' 		=> json_encode($project_values['workorder_budget']),
+//					'total_records'	=> count($project_values['workorder_budget']),
+//					'edit_action'	=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+//					'is_paginator'	=> 1,
+//					'footer'		=> 0
+//				);
 
+
+//			$myColumnDefs[0] = array
+//				(
+//					'name'			=> "0",
+//					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+//															array('key' => 'budget',	'label'=>lang('Budget'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+//															array('key' => 'budget_hidden','hidden'=>true),
+//															array('key' => 'calculation',	'label'=>lang('Calculation'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+//															array('key' => 'calculation_hidden','hidden'=>true),
+//															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+//															array('key' => 'actual_cost_hidden','hidden'=>true),
+//															array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+//															array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+//															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
+//															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
+//															array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)))
+//				);
+            
+                $myColumnDefs0 = array
+				(
+					array('key' => 'workorder_id','label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.formatLink'),
+                    array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+                    array('key' => 'budget_hidden','hidden'=>true),
+                    array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+                    array('key' => 'calculation_hidden','hidden'=>true),
+                    array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+                    array('key' => 'actual_cost_hidden','hidden'=>true),
+                    array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+                    array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter'),
+                    array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
+                    array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
+                    array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)
+                );
+
+                
+                $datatable_def[] = array
+                (
+                    'container'		=> 'datatable-container_0',
+                    'requestUrl'	=> "''",
+                    'data'			=> json_encode($project_values['workorder_budget']),
+                    'ColumnDefs'	=> $myColumnDefs0,
+                    'config'		=> array(
+                        array('disableFilter'	=> true),
+//                        array('disablePagination'	=> false)
+                    )
+                );
+                            
 			if($claim_id)
 			{
 				$record_history = $this->bo->read_record_history($claim_id);
@@ -885,52 +897,89 @@
 				$z++;
 			}
 
-			$datavalues[1] = array
-			(
-				'name'					=> "1",
-				'values' 				=> json_encode($content_files),
-				'total_records'			=> count($content_files),
-				'edit_action'			=> "''",
-				'is_paginator'			=> 1,
-				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'footer'				=> 0
-			);
-
-			$myColumnDefs[1] = array
+//			$datavalues[1] = array
+//			(
+//				'name'					=> "1",
+//				'values' 				=> json_encode($content_files),
+//				'total_records'			=> count($content_files),
+//				'edit_action'			=> "''",
+//				'is_paginator'			=> 1,
+//				'rows_per_page'			=> 5,//$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+//				'footer'				=> 0
+//			);
+//
+//			$myColumnDefs[1] = array
+//				(
+//					'name'		=> "1",
+//					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+//					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
+//				);
+            
+            	$myColumnDefs1 = array
 				(
-					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
+					array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)
 				);
-
+                
+                $datatable_def[] = array
+                (
+                    'container'		=> 'datatable-container_1',
+                    'requestUrl'	=> "''",
+                    'data'			=> json_encode($content_files),
+                    'ColumnDefs'	=> $myColumnDefs1,
+                    'config'		=> array(
+                        array('disableFilter'	=> true),
+                        array('disablePagination'	=> true)
+                    )
+                );
 //--------------files
 
 			
 			
-			$datavalues[2] = array
+//			$datavalues[2] = array
+//				(
+//					'name'					=> "2",
+//					'values' 				=> json_encode($record_history),
+//					'total_records'			=> count($record_history),
+//					'edit_action'			=> "''",
+//					'is_paginator'			=> 0,
+//					'footer'				=> 0
+//				);
+//
+//			$myColumnDefs[2] = array
+//				(
+//					'name'		=> "2",
+//					'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
+//														array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
+//														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
+//														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
+//														array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
+//				);
+                
+            	$myColumnDefs2 = array
 				(
-					'name'					=> "2",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
+					array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
+                    array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
+                    array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
+                    array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
+                    array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)
 				);
-
-			$myColumnDefs[2] = array
-				(
-					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
-														array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
-				);
-
-
+                
+                $datatable_def[] = array
+                (
+                    'container'		=> 'datatable-container_2',
+                    'requestUrl'	=> "''",
+                    'data'			=> json_encode($record_history),
+                    'ColumnDefs'	=> $myColumnDefs2,
+                    'config'		=> array(
+                        array('disableFilter'	=> true),
+                        array('disablePagination'	=> true)
+                    )
+                );
 
 			$data = array
 				(
+                    'datatable_def'                     => $datatable_def,
 					'table_header_workorder'			=> $table_header_workorder,
 					'lang_no_workorders'				=> lang('No workorder budget'),
 					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
@@ -940,8 +989,8 @@
 
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'						=> json_encode(array(menuaction => "property.uitenant_claim.edit",claim_id=>$claim_id)),
-					'datatable'							=> $datavalues,
-					'myColumnDefs'						=> $myColumnDefs,
+//					'datatable'							=> $datavalues,
+//					'myColumnDefs'						=> $myColumnDefs,
 					//'myButtons'						=> $myButtons,
 
 					'lang_end_date'						=> lang('Project end date'),
@@ -1035,32 +1084,42 @@
 					'lang_cat_statustext'				=> lang('Select the category the claim belongs to. To do not use a category select NO CATEGORY'),
 					'select_name'						=> 'values[cat_id]',
 					'cat_list'							=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'tenant_claim','order'=>'descr')),
+                
                     'tabs'                              => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'validator'                         => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
+            
+//            echo '<pre>'; print_r($data); echo '</pre>';
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . ': ' . ($claim_id?lang('edit claim'):lang('add claim'));
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
 
-			//_debug_array($data);die;
+			self::add_javascript('property', 'portico', 'tenant_claim.edit.js');
+            
+			self::render_template_xsl(array('tenant_claim','datatable_inline','files'), array('edit' => $data));
 
-			//---datatable settings--------------------
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uitenant.edit', 'property' );
+//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+//
+//			//_debug_array($data);die;
+//
+//			//---datatable settings--------------------
+//			phpgwapi_yui::load_widget('dragdrop');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('menu');
+//			phpgwapi_yui::load_widget('connection');
+//			phpgwapi_yui::load_widget('loader');
+//			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('animation');
+//
+//			$GLOBALS['phpgw']->css->validate_file('datatable');
+//			$GLOBALS['phpgw']->css->validate_file('property');
+//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uitenant.edit', 'property' );
 			//-----------------------datatable settings---
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
