@@ -415,21 +415,19 @@
 				});
 			</xsl:if>
 
-			<xsl:for-each select="//top-toolbar/fields/field">
-				<xsl:if test="type = 'button'">
-					$('#<xsl:value-of select="id"/>').click( function() 
-					{
-						var sUrl = '<xsl:value-of select="url"/>';
-						window.open(sUrl,'_self');
-					});
-				</xsl:if>
-			</xsl:for-each>
-
 			<xsl:for-each select="//down-toolbar/fields/field">
 				<xsl:if test="type = 'button'">
 					$('#<xsl:value-of select="id"/>').click( function() 
 					{
 						var sUrl = '<xsl:value-of select="url"/>';
+						var params = <xsl:value-of select="params"/>;
+						$.each(params, function(i, item) 
+						{
+							if($("#"+item.obj).is(':checked')) 
+							{
+								sUrl += '&amp;' + item.param + '=' + 1;
+							}
+						});					
 						window.open(sUrl,'_self');
 					});
 				</xsl:if>
