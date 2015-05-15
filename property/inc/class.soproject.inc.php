@@ -37,6 +37,7 @@
 
 		var $total_records	 = 0;
 		private $global_lock	 = false;
+		private $vendor_list	= array();
 
 		function __construct()
 		{
@@ -755,6 +756,7 @@
 
 						$year			 = (int) $filter_year;
 						$project_budget	 = $this->get_budget($project['project_id']);
+						$project['vendor_list']  = $this->vendor_list;
 						foreach($project_budget as $entry)
 						{
 							if($year && $entry['year'] == $year)
@@ -2118,16 +2120,23 @@
 
 			$project_total_budget = array_sum($project_budget);
 
-			$sql = "SELECT fm_workorder.id AS order_id "
+			$sql = "SELECT fm_workorder.id AS order_id, vendor_id"
 			. " FROM fm_workorder"
 			. " WHERE project_id = {$project_id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$_order_list = array();
+			$_vendor_list = array();
 			while($this->db->next_record())
 			{
 				$_order_list[] = $this->db->f('order_id');
+
+				if($_vendor_id = $this->db->f('vendor_id'))
+				{
+					$_vendor_list[] = $_vendor_id;
+				}
 			}
+			$this->vendor_list = $_vendor_list;
 
 			$soworkorder = CreateObject('property.soworkorder');
 
