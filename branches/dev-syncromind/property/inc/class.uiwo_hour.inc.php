@@ -189,21 +189,19 @@
 					'confirm_msg'	=> lang('do you really want to delete this entry'),
 					'parameters'	=> json_encode($parameters_delete)
 				);
-			
-			$columns_def = array
-			(
-				array('key'=>'id', 'label'=>lang('ID'), 'sortable'=>true),
-				array('key'=>'amount', 'label'=>lang('amount'), 'sortable'=>true, 'className'=>'right'),
-				array('key'=>'descr', 'label'=>lang('Descr'), 'sortable'=>true),
-				array('key'=>'entry_date', 'label'=>lang('date'), 'sortable'=>true, 'className'=>'right')
-			);
 
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'property.uiwo_hour.deviation', 'workorder_id'=>$workorder_id, 'hour_id'=>$hour_id, 'phpgw_return_as'=>'json'))),
 				'data'			=> json_encode(array()),
-				'ColumnDefs'	=> $columns_def,
+				'ColumnDefs'	=> array
+								(
+									array('key'=>'id', 'label'=>lang('ID'), 'sortable'=>true),
+									array('key'=>'amount', 'label'=>lang('amount'), 'sortable'=>true, 'className'=>'right'),
+									array('key'=>'descr', 'label'=>lang('Descr'), 'sortable'=>true),
+									array('key'=>'entry_date', 'label'=>lang('date'), 'sortable'=>true, 'className'=>'right')
+								),
 				'tabletools'	=> $tabletools,
 				'config'		=> array(
 					array('disableFilter'	=> true),
@@ -237,7 +235,6 @@
 			$hour_id	 	= phpgw::get_var('hour_id', 'int');
 			$draw			= phpgw::get_var('draw', 'int');
 
-			//$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
 			$list = $this->bo->read_deviation(array('workorder_id'=>$workorder_id,'hour_id'=>$hour_id));
 
 			$sum_deviation = 0;
@@ -282,8 +279,6 @@
 			$id	 	= phpgw::get_var('id', 'int');
 			$values	 	= phpgw::get_var('values');
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
 
 			if ($values['save'])
 			{
@@ -377,8 +372,8 @@
 			$appname						= lang('workorder');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_deviation' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+
+			self::render_template_xsl(array('wo_hour'), array('edit_deviation' => $data));
 		}
 
 		function common_data($workorder_id,$view='')
@@ -3068,16 +3063,22 @@ HTML;
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 			}
 
+			$tabs = array();
+			$tabs['upload_file']	= array('label' => lang('Upload file'), 'link' => '#upload_file');
+			$active_tab = 'upload_file';
+			
 			$data = array
 			(
 					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
 					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
 					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiwo_hour.import_calculation')),
-					'workorder_id'			=> $workorder_id
+					'workorder_id'			=> $workorder_id,
+					'lang_done'				=> lang('done'),
+					'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id)),
+					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file('wo_hour');
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('import_calculation' => $data));
+			self::render_template_xsl(array('wo_hour'), array('import_calculation' => $data));
 		}
 
 		private function _import_calculation($workorder_id)
