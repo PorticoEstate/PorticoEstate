@@ -12,11 +12,10 @@ var intVal = function ( i )
 };
 
 
-var local_DrawCallback1 = function(oTable)
+this.local_DrawCallback1 = function(oTable)
 {       
 	var api = oTable.api(); 
 	// Remove the formatting to get integer data for summation
-        
 //	var columns = ["6"];
 //	$(api.column(5).footer()).html("<div align=\"right\">Sum</div>");
         
@@ -33,65 +32,5 @@ var local_DrawCallback1 = function(oTable)
 			$(api.column(i).footer()).html("<div align=\"right\">"+pageTotal+"</div>");		
 		} 
 	}
-        
-//	columns.forEach(function(col)
-//	{ 
-//		data = api.column( col, { page: 'current'} ).data();
-//		pageTotal = data.length ?
-//			data.reduce(function (a, b){
-//					return intVal(a) + intVal(b);
-//			}) : 0;
-//
-//		$(api.column(col).footer()).html("<div align=\"right\">"+pageTotal+"</div>");
-//	});
-
+       
 };
-
-
-//var local_DrawCallback1 = function (oTable)
-//{
-//    var api = oTable.api();
-//    for(i=0;i < JqueryPortico.columns.length; i++)
-//    {
-//        console.log(JqueryPortico.columns[i]['data']);
-////        if(JqueryPortico.columns[i]['data'] === 'initial_value')
-////        {
-////            data = api.column(i ,{page: 'current'}).data();
-////            pagetotal = data.length ? 
-////                data.reduce(function (a, b){
-////                    return intVal(a) + intVal(b)
-////                }) : 0;
-////                
-////            var amount = $.number( pagetotal, 0, ',', ' ');
-////            
-////            $(api.column(i).footer()).html("<div align=\"right\">"+amount+"</div>");
-////        }
-////        
-////        if(JqueryPortico.columns[i]['data'] === 'value')
-////        {
-////            data = api.column(i ,{page: 'current'}).data();
-////            pagetotal = data.length ? 
-////                data.reduce(function (a, b){
-////                    return intVal(a) + intVal(b)
-////                }) : 0;
-////                
-////            var amount = $.number( pagetotal, 0, ',', ' ');
-////            
-////            $(api.column(i).footer()).html("<div align=\"right\">"+amount+"</div>");
-////        }
-////        
-////        if(JqueryPortico.columns[i]['data'] === 'this_write_off')
-////        {
-////            data = api.column(i ,{page: 'current'}).data();
-////            pagetotal = data.length ? 
-////                data.reduce(function (a, b){
-////                    return intVal(a) + intVal(b)
-////                }) : 0;
-////                
-////            var amount = $.number( pagetotal, 0, ',', ' ');
-////            
-////            $(api.column(i).footer()).html("<div align=\"right\">"+amount+"</div>");
-////        }
-//    }
-//};
-
