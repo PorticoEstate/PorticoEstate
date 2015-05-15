@@ -794,8 +794,15 @@
 					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
 				}
 				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
+                
+                if($project_values['workorder_budget'][$d]['claim_issued'] == 1){
+                    
+                    $sumaBudget += $project_values['workorder_budget'][$d]['budget_hidden'];
+                    $sumactualcost += $project_values['workorder_budget'][$d]['actual_cost'];
+                    
+                }
 			}
-            
+
 			//---datatable0 settings---------------------------------------------------
 
 //			$datavalues[0] = array
@@ -826,45 +833,42 @@
 //															array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)))
 //				);
             
-                $myColumnDefs0 = array
-				(
-					array('key' => 'workorder_id','label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.formatLink'),
-                    array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-                    array('key' => 'budget_hidden','hidden'=>true),
-                    array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-                    array('key' => 'calculation_hidden','hidden'=>true),
-                    array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-                    array('key' => 'actual_cost_hidden','hidden'=>true),
-                    array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
-                    array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter'),
-                    array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
-                    array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
-                    array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)
-                );
+            $myColumnDefs0 = array
+            (
+                array('key' => 'workorder_id','label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.formatLink','value_footer'=>lang('Sum')),
+                array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($sumaBudget, 0, $this->decimal_separator, ' ')),
+                array('key' => 'budget_hidden','hidden'=>true),
+                array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+                array('key' => 'calculation_hidden','hidden'=>true),
+                array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($sumactualcost, 0, $this->decimal_separator, ' ')),
+                array('key' => 'actual_cost_hidden','hidden'=>true),
+                array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+                array('key' => 'charge_tenant','label'=>lang('Charge tenant'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterCenter'),
+                array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
+                array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
+                array('key' => 'selected','label'=> lang('select'),	'sortable'=>false,'resizeable'=>false)
+            );
 
+            $datatable_def[] = array
+            (
+                'container'		=> 'datatable-container_0',
+                'requestUrl'	=> "''",
+                'data'			=> json_encode($project_values['workorder_budget']),
+                'ColumnDefs'	=> $myColumnDefs0,
+                'config'		=> array(
+                    array('disableFilter'	=> true),
+                    array('disablePagination'	=> false)
+                )
+            );  
                 
-                $datatable_def[] = array
-                (
-                    'container'		=> 'datatable-container_0',
-                    'requestUrl'	=> "''",
-                    'data'			=> json_encode($project_values['workorder_budget']),
-                    'ColumnDefs'	=> $myColumnDefs0,
-                    'config'		=> array(
-                        array('disableFilter'	=> true),
-//                        array('disablePagination'	=> false)
-                    )
-                );
-                            
-			if($claim_id)
-			{
-				$record_history = $this->bo->read_record_history($claim_id);
-//_debug_array($content_budget);die();
-			}
-			else
-			{
-				$record_history = array();
-			}
-
+            if($claim_id)
+            {
+                $record_history = $this->bo->read_record_history($claim_id);
+            }
+            else
+            {
+                $record_history = array();
+            }
 
 //--------------files
 			$link_file_data = array
