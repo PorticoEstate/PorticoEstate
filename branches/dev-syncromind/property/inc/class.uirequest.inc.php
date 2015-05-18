@@ -140,6 +140,12 @@
 				$search['value'] = $query;
 			}
 			
+			if($start_date && empty($end_date)) 
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$dateformat);
+			}
+			
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
@@ -617,7 +623,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			
 			$data = array(
-				'datatable_name'	=> $appname,
+				'datatable_name'	=> $appname. ': ' . $function_msg,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
