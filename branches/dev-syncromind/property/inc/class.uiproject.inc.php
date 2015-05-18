@@ -357,7 +357,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
             
             $data   = array(
-                'datatable_name'    => $appname,
+                'datatable_name'    => $appname . ': ' . $function_msg,
                 'form'  => array(
                                'toolbar'    => array(
                                    'item'   => array(
@@ -633,6 +633,12 @@ JS;
  			$start_date		= urldecode(phpgw::get_var('start_date'));
 			$end_date		= urldecode(phpgw::get_var('end_date'));
 			$skip_origin	= phpgw::get_var('skip_origin', 'bool');
+			
+			if($start_date && empty($end_date)) 
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$dateformat);
+			}
 			
             $params = array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
