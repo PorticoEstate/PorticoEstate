@@ -1040,103 +1040,80 @@
 			}
 		</script>
 
-		<div align="center"  id="dialog1" class="yui-pe-content">
-			<table cellpadding="2" cellspacing="2" width="80%" align="center">
-				<tr>
-					<td colspan="2" align="center">
-						<xsl:value-of select="message"/>
-					</td>
-				</tr>
+		<div>
+			<dl>
+				<dt>
+					<xsl:value-of select="message"/>
+				</dt>
+			</dl>
+			<dl>
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
-						<tr>
-							<td align="left" colspan="3">
-								<xsl:call-template name="msgbox"/>
-							</td>
-						</tr>
+						<dt>
+							<xsl:call-template name="msgbox"/>
+						</dt>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" id="add_invoice" name="form" action="{$form_action}">
-<!--
-					<tr>
-						<td>
-							<xsl:value-of select="php:function('lang', 'Auto TAX')"/>
-						</td>
-						<td>
-							<input type="checkbox" name="values[auto_tax]" value="True" checked="checked" >
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'Set tax')"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
--->
-					<xsl:call-template name="location_form"/>
-					<xsl:call-template name="b_account_form"/>
-					<xsl:call-template name="project_group_form"/>
-					<xsl:call-template name="ecodimb_form"/>
-					<tr>
+			</dl>
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<form method="post" id="add_invoice" name="form" action="{$form_action}" class="pure-form pure-form-aligned">
+				<div id="tab-content">
+					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+					<div id="invoice">
+						<xsl:call-template name="location_form"/>
+						<xsl:call-template name="b_account_form"/>
+						<xsl:call-template name="project_group_form"/>
+						<xsl:call-template name="ecodimb_form"/>
 						<xsl:call-template name="vendor_form"/>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'janitor')"/>
-						</td>
-						<td valign="top">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'janitor')"/>
+							</label>
 							<select name="values[janitor]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'no janitor')"/>
 								</option>
 								<xsl:apply-templates select="janitor_list/options_lid"/>
 							</select>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'supervisor')"/>
-						</td>
-						<td valign="top">
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'supervisor')"/>
+							</label>
 							<select name="values[supervisor]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'no supervisor')"/>
 								</option>
 								<xsl:apply-templates select="supervisor_list/options_lid"/>
 							</select>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'B - responsible')"/>
-						</td>
-						<td valign="top">
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'B - responsible')"/>
+							</label>
 							<select name="values[budget_responsible]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'Select B-Responsible')"/>
 								</option>
 								<xsl:apply-templates select="budget_responsible_list/options_lid"/>
 							</select>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'order id')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'order id')"/>
+							</label>
 							<input type="text" name="values[order_id]" value="{value_order_id}" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Order # that initiated the invoice')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'tax code')"/>
-						</td>
-						<td valign="top">
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'tax code')"/>
+							</label>
 							<select name="values[tax_code]" class="forms" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'tax code')"/>
@@ -1146,13 +1123,11 @@
 								</option>
 								<xsl:apply-templates select="tax_code_list/options"/>
 							</select>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'art')"/>
-						</td>
-						<td valign="top">
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'art')"/>
+							</label>
 							<select name="values[artid]" class="forms" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'You have to select type of invoice')"/>
@@ -1162,138 +1137,112 @@
 								</option>
 								<xsl:apply-templates select="art_list/options"/>
 							</select>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'Type invoice II')"/>
-						</td>
-						<td valign="top">
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'Type invoice II')"/>
+							</label>
 							<select name="values[typeid]" class="forms">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Select the type  invoice. To do not use type -  select NO TYPE')"/>
 								</xsl:attribute>
 								<option value="">
-							<xsl:value-of select="php:function('lang', 'No type')"/>
+									<xsl:value-of select="php:function('lang', 'No type')"/>
 								</option>
 								<xsl:apply-templates select="type_list/options"/>
 							</select>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'voucher id')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'voucher id')"/>
+							</label>
 							<input type="text" name="values[voucher_out_id]" value="{value_voucher_out_id}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'voucher id')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'Invoice Number')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'Invoice Number')"/>
+							</label>
 							<input type="text" name="values[invoice_id]" value="{value_invoice_id}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter Invoice Number')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'KID nr')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'KID nr')"/>
+							</label>
 							<input type="text" name="values[kidnr]" value="{value_kidnr}" >
 								<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'Enter Kid nr')"/>
+									<xsl:value-of select="php:function('lang', 'Enter Kid nr')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'amount')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'amount')"/>
+							</label>
 							<input type="text" name="values[amount]" value="{value_amount}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'amount of the invoice')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'invoice date')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'invoice date')"/>
+							</label>
 							<input type="text" id="invoice_date" name="values[invoice_date]" size="10" value="{value_invoice_date}" readonly="readonly" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter the invoice date')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'payment date')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'payment date')"/>
+							</label>
 							<input type="text" id="payment_date" name="values[payment_date]" size="10" value="{value_payment_date}" readonly="readonly">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'payment date')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'paid')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'paid')"/>
+							</label>
 							<input type="text" id="paid_date" name="values[paid_date]" size="10" value="{value_paid_date}" readonly="readonly">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'paid')"/>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="php:function('lang', 'remark')"/>
-						</td>
-						<td>
+						</div>
+						<div class="pure-control-group">		
+							<label>
+								<xsl:value-of select="php:function('lang', 'remark')"/>
+							</label>
 							<textarea cols="60" rows="10" name="values[merknad]">
 								<xsl:value-of select="value_merknad"/>
 							</textarea>
-						</td>
-					</tr>
-					<tr height="50">
-						<td colspan ="2">
-							<xsl:variable name="lang_add">
-								<xsl:value-of select="php:function('lang', 'add')"/>
-							</xsl:variable>
-							<input type="submit" class="pure-button pure-button-primary" name="add" value="{$lang_add}" title='{$lang_add}'>
-							</input>
-							<xsl:variable name="cancel_action">
-								<xsl:value-of select="cancel_action"/>
-							</xsl:variable>
-							<!--
-							<xsl:variable name="lang_cancel">
-								<xsl:value-of select="php:function('lang', 'cancel')"/>
-							</xsl:variable>	
-							<input type="submit" name="done" value="{$lang_cancel}" title="{$lang_cancel}" onClick="javascript:window_close()">
-							</input>-->
-						</td>
-					</tr>
-				</form>
-			</table>
+						</div>
+					</div>
+				</div>
+				<div class="pure-control-group">		
+					<xsl:variable name="lang_add">
+						<xsl:value-of select="php:function('lang', 'add')"/>
+					</xsl:variable>
+					<input type="submit" class="pure-button pure-button-primary" name="add" value="{$lang_add}" title='{$lang_add}'>
+					</input>
+					<xsl:variable name="cancel_action">
+						<xsl:value-of select="cancel_action"/>
+					</xsl:variable>
+				</div>
+			</form>
 		</div>
 	</xsl:template>
 
