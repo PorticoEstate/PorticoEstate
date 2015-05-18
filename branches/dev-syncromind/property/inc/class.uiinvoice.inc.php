@@ -362,13 +362,14 @@
             }
 			
 			$appname	= lang('invoice');
+			$function_msg	= lang('list voucher');
 			
             $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
 			
             $data   = array(
-                'datatable_name'    => $appname,
+                'datatable_name'    => $appname . ': ' . $function_msg,
                 'form'  => array(
                                'toolbar'    => array(
                                    'item'   => array(
@@ -900,7 +901,6 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $code, true);
 			
 			//Title of Page
-			$function_msg	= lang('list voucher');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			
 			phpgwapi_jquery::load_widget('numberformat');
@@ -2345,13 +2345,14 @@ JS;
             }
 			
 			$appname		= lang('consume');
+			$function_msg	= lang('list consume');
 			
             $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('datepicker');
 			
 			$data   = array(
-                'datatable_name'    => $appname,
+                'datatable_name'    => $appname . ': ' . $function_msg,
                 'form'  => array(
                                'toolbar'    => array(
                                    'item'   => array(
@@ -2375,6 +2376,8 @@ JS;
                 'datatable' =>  array(
                     'source'    => self::link(array(
 						'menuaction'		=> 'property.uiinvoice.consume',
+						'start_date'		=> $start_date,
+						'end_date'			=> $end_date,
 						'district_id'		=> $district_id,
 						'ecodimb'			=> $ecodimb,
 						'b_account_class'	=> $b_account_class,					
@@ -2537,8 +2540,6 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $code, true);
 			
 			//Title of Page
-
-			$function_msg	= lang('list consume');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			phpgwapi_jquery::load_widget('numberformat');
