@@ -801,7 +801,7 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::obligations';
 
             $data   = array(
-                'datatable_name'    => lang('list budget'),
+                'datatable_name'    => lang('list obligations'),
                 'form'  => array(
                                'toolbar'    => array(
                                    'item'   => array()
