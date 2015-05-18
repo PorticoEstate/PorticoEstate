@@ -306,6 +306,13 @@
 		{
 			$start_date = urldecode($this->start_date);
 			$end_date   = urldecode($this->end_date);
+			
+			if($start_date && empty($end_date)) 
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$dateformat);
+			}
+
 			$search     = phpgw::get_var('search');
 			$order      = phpgw::get_var('order');
 			$draw       = phpgw::get_var('draw', 'int');
@@ -353,6 +360,9 @@
 				$this->district_id	= $default_district;
 			}
 
+			$start_date 	= urldecode($this->start_date);
+			$end_date 		= urldecode($this->end_date);
+			
 			$this->save_sessiondata();
                         
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -397,7 +407,7 @@
 								'type'	=> 'date-picker',
 								'id'	=> 'start_date',
 								'name'	=> 'start_date',
-								'value'	=> '',
+								'value'	=> $start_date,
 								'text' => lang('from')
 							),
 							array
@@ -405,7 +415,7 @@
 								'type'	=> 'date-picker',
 								'id'	=> 'end_date',
 								'name'	=> 'end_date',
-								'value'	=> '',
+								'value'	=> $end_date,
 								'text' => lang('to')
 							)
 						)
@@ -414,6 +424,11 @@
 				'datatable' => array(
 					'source' => self::link(array(
 							'menuaction'		=> 'property.uiworkorder.index',
+							'start_date'		=> $start_date,
+							'end_date'			=> $end_date,
+							'b_group'			=> $this->b_group,
+							'paid'				=> $this->paid,
+							'obligation'		=> $this->obligation,
 							'phpgw_return_as'	=> 'json'
 					)),
 					'download'	=> self::link(array(
@@ -2210,7 +2225,7 @@
 			{
 				$redirect = true;
 			}
-//_debug_array( $menuaction);die();
+
 			if($add_invoice = phpgw::get_var('add', 'bool'))
 			{
 				$values = phpgw::get_var('values');
@@ -2401,6 +2416,10 @@
 
 			$order_id = isset($values['order_id']) && $values['order_id'] ? $values['order_id'] : $order_id;
 
+			$tabs = array();
+			$tabs['invoice']	= array('label' => lang('Invoice'), 'link' => '#invoice');
+			$active_tab = 'invoice';
+			
 			$account_lid = $GLOBALS['phpgw']->accounts->get($this->account)->lid;
 			$data = array
 			(
@@ -2429,19 +2448,14 @@
 				'budget_responsible_list'			=> array('options_lid' => $this->bocommon->get_user_list_right(128,isset($values['budget_responsible']) && $values['budget_responsible'] ? $values['budget_responsible']:$account_lid,'.invoice')),
 				'location_data'						=> $location_data,
 				'b_account_data'					=> $b_account_data,
+				'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'redirect'							=> isset($redirect) && $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit', 'id' => $order_id , 'tab' => 'budget')) : null,
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
+			
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_invoice' => $data));
-
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/fonts/fonts-min.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/button/assets/skins/sam/button.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 		}
 
