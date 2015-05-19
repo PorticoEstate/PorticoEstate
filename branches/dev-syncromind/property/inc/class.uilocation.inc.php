@@ -211,6 +211,7 @@
 			//$this->save_sessiondata();
 
 			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
+			$result['message'] = array();
 
 			if(($assign || $assign_orig) && $this->acl_edit)
 			{
@@ -220,7 +221,7 @@
 				$contact_id = $account->person_id;
 				if(empty($role_id))
 				{
-					$result = lang('missing role');
+					$result['error'][] = array('msg'=> lang('missing role'));
 				}
 				else
 				{
@@ -233,7 +234,7 @@
 					$result = $boresponsible->update_role_assignment($values);
 				}
 			}
-
+			
 			return $result;
 		}
 
@@ -1374,7 +1375,8 @@ JS;
 							'second_display'    => 1,
 							'status'            => $this->status,
 							'location_code'     => $this->location_code,
-							'entity_id'			=> $this->entity_id
+							'entity_id'			=> $this->entity_id,
+							'phpgw_return_as' => 'json'
 						));
 				
 				$code = '
@@ -1392,9 +1394,21 @@ JS;
 
 					var data = {"assign": assign, "assign_orig": assign_orig, "user_id": $("#user_id").val(), "role_id": $("#role_id").val()};
 					execute_ajax(link, function(result){
-						document.getElementById("message").innerHTML += "<br/>" + result;
+						document.getElementById("message").innerHTML = "";
+						if (typeof(result.message) !== "undefined")
+						{
+							$.each(result.message, function (k, v) {
+								document.getElementById("message").innerHTML = v.msg + "<br/>";
+							});
+						}
+						if (typeof(result.error) !== "undefined")
+						{
+							$.each(result.error, function (k, v) {
+								document.getElementById("message").innerHTML += v.msg + "<br/>";
+							});
+						}
 						oTable.fnDraw();
-					}, data, "POST");
+					}, data, "POST", "JSON");
 				';
 
 				$data['datatable']['actions'][] = array
