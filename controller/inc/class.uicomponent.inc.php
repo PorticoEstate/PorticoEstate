@@ -103,7 +103,7 @@
 
 						if($category['enable_controller'])
 						{
-							if($entity_group_id && ! $category['entity_group_id'])
+							if($entity_group_id && $category['entity_group_id'] != $entity_group_id)
 							{
 								continue;
 							}
