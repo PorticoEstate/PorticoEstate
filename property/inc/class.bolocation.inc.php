@@ -790,7 +790,7 @@ JS;
 			}
 			else
 			{
-				$values = $this->so->read_single($location_code);
+				$values = $this->so->read_single($location_code, array(), true);
 			}
 
 

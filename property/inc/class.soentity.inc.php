@@ -882,6 +882,12 @@
 
 				$dataset[$j]['num']['value'] = $dataset[$j]['id']['value'];
 
+				$dataset[$j]['location_id'] = array
+					(
+						'value'		=> $location_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
 				$dataset[$j]['entity_id'] = array
 					(
 						'value'		=> $entity_id,
@@ -1177,6 +1183,65 @@
 
 		}
 
+		/**
+		 * FIXME
+		 * @param type $data
+		 * @return type
+		 */
+		function read_entity_group($data)
+		{
+			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$entity_group_id	= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
+
+			$location_filter = array();
+
+			if($entity_group_id)
+			{
+				if($location_id < 0)
+				{
+					$entity_list 	= $admin_entity->read(array('allrows' => true));
+
+					foreach($entity_list as $entry)
+					{
+						$categories = $admin_entity->read_category(array('entity_id' => $entry['id'],'order' => 'name','sort' => 'asc','enable_controller' => true, 'allrows' => true));
+						foreach($categories as $category)
+						{
+
+							if($category['entity_group_id'])
+							{
+								$location_filter[] = $category['location_id'];
+							}
+						}
+					}
+				}
+				else
+				{
+					$location_filter[] = $location_id;
+				}
+			}
+//			_debug_array($location_filter);
+			$values = array();
+			if($category['is_eav'] || $location_filter)
+			{
+				if($location_filter)
+				{
+					foreach($location_filter as $location_id)
+					{
+						$this->get_cols($category,$entity_id,$cat_id,$lookup,$location_id);
+						$data['location_id'] = $location_id;
+						$values = array_merge($values, $this->read_eav($data));
+
+					}
+				}
+				else
+				{
+					$values = $this->read_eav($data);
+				}
+				return $values;
+			}
+
+		}
+
 
 		function read($data)
 		{
@@ -1230,16 +1295,6 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
 
-			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
-
-			if(!$grants)
-			{
-				$this->acl 	= & $GLOBALS['phpgw']->acl;
-				$this->acl->set_account_id($this->account);
-				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
-				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
-			}
-
 			$admin_entity	= CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
 
@@ -1263,6 +1318,16 @@
 			if (!$cat_id > 0)
 			{
 				return;
+			}
+
+			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
+
+			if(!$grants)
+			{
+				$this->acl 	= & $GLOBALS['phpgw']->acl;
+				$this->acl->set_account_id($this->account);
+				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
+				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
 			}
 
 			//_debug_array($cols_return_extra);
@@ -1595,6 +1660,12 @@
 
 					);
 				}
+				$dataset[$j]['location_id'] = array
+					(
+						'value'		=> $location_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
 				$dataset[$j]['entity_id'] = array
 					(
 						'value'		=> $entity_id,

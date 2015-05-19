@@ -107,6 +107,12 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.convert_to_eav') )
 				);
 
+				$admin_children_entity['entity_group'] = array
+				(
+							'text'	=> lang('entity group'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'entity_group') )
+				);
+
 				$admin_children_tenant = array
 					(
 						'tenant_cats'	=> array

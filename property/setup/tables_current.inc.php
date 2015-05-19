@@ -162,7 +162,8 @@
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'level' => array('type' => 'int','precision' => '4','nullable' => False),
 				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'loc1' => array('type' => 'varchar','precision' => '6','nullable' => False)
+				'loc1' => array('type' => 'varchar','precision' => '6','nullable' => False),
+				'name' => array('type' => 'text','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1959,7 +1960,8 @@
 				'jasperupload' => array('type' => 'int','precision' => '2','nullable' => True),
 				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'level' => array('type' => 'int','precision' => '4','nullable' => True),
-				'department' => array('type' => 'int','precision' => '2','nullable' => True),
+				'org_unit' => array('type' => 'int','precision' => '2','nullable' => True),
+				'entity_group_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('entity_id','id'),
 			'fk' => array(),
@@ -1990,6 +1992,21 @@
 				'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
 			),
 			'pk' => array('history_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_entity_group' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
+				'descr' => array('type' => 'text','nullable' => true),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => True,'default' => 0),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'entry_date' => array('type' => 'int','precision' => 8,'nullable' => False),
+				'modified_date' => array('type' => 'int','precision' => 8,'nullable' => False)
+			),
+			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
