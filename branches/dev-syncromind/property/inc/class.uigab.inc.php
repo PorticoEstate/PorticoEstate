@@ -220,7 +220,7 @@
 			$function_msg	= lang('list gab');
 			
             $data   = array(
-                'datatable_name'    => $appname,
+                'datatable_name'    => $appname.': '.$function_msg,
                 'form'  => array(
                                'toolbar'    => array(
                                    'item'   => array(								   
