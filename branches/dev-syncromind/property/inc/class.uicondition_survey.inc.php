@@ -185,16 +185,19 @@
 							'key' => 'year',
 							'label' => lang('year'),
 							'sortable' => true,
+							'className'=>'center'
 						),
 						array(
 							'key' => 'multiplier',
 							'label' => lang('multiplier'),
 							'sortable' => false,
+							'className'=>'right'
 						),
 						array(
 							'key' => 'cnt',
 							'label' => lang('count'),
 							'sortable' => false,
+							'className'=>'center'
 						),
 						array(
 							'key' => 'link',
@@ -455,19 +458,19 @@
 
 			$related_def = array
 			(
-				array('key' => 'url','label'=>lang('id'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true,'width' => '100'),//width not working...
-				array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'url','label'=>lang('id'),'sortable'=>true),
+				array('key' => 'title','label'=>lang('title'),'sortable'=>false),//width not working...
+				array('key' => 'status','label'=>lang('status'),'sortable'=>true),
 //				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'condition_degree','label'=>lang('condition degree'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'score','label'=>lang('score'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'amount_investment','label'=>lang('investment'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'amount_operation','label'=>lang('operation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'condition_degree','label'=>lang('condition degree'),'sortable'=>false),
+				array('key' => 'score','label'=>lang('score'),'sortable'=>true),
+				array('key' => 'amount_investment','label'=>lang('investment'),'sortable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'amount_operation','label'=>lang('operation'),'sortable'=>true,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
 				array('key' => 'amount_potential_grants','label'=>lang('potential grants'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 //				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'recommended_year','label'=>lang('recommended year'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'planned_year','label'=>lang('planned year'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'related','label'=>lang('related'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'recommended_year','label'=>lang('recommended year'),'sortable'=>true, 'className'=>'center'),
+				array('key' => 'planned_year','label'=>lang('planned year'),'sortable'=>true, 'className'=>'center'),
+				array('key' => 'related','label'=>lang('related'),'sortable'=>false),
 			);
 
 			$datatable_def[] = array
@@ -479,15 +482,15 @@
 
 			$summation_def = array
 			(
-				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false),
 				array('key' => 'category','label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
-				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'className'=>'right','formatter'=>'JqueryPortico.FormatterAmount0'),
 			);
 
 			$datatable_def[] = array
@@ -529,7 +532,8 @@
 				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
                 phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 			}
-
+			
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('property', 'portico', 'condition_survey.js');
 
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
