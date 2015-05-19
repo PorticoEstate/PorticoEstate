@@ -16,7 +16,7 @@ class year_calendar {
 	private $calendar_array = array();
 	private $control_relation = array();
 	
-  public function __construct($control, $year, $component, $location_code, $type, $control_relation)
+  public function __construct($control, $year, $component, $location_code, $type, $control_relation = array())
   {
     $this->year = $year;
     $this->control = $control;
@@ -100,7 +100,7 @@ class year_calendar {
 			$month_nr = date("n", $check_list_status_info->get_deadline_date_ts());
 			
 			$repeat_type = $check_list->get_repeat_type();
-			if( !isset($this->calendar_array[ $month_nr ]) || $repeat_type > $this->calendar_array[ $month_nr ]['repeat_type'])
+	//		if( !isset($this->calendar_array[ $month_nr ]) || $repeat_type > $this->calendar_array[ $month_nr ]['repeat_type'])
 			{
 				$this->calendar_array[ $month_nr ]['repeat_type'] = $repeat_type;
 				$this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
