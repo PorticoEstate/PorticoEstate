@@ -109,12 +109,25 @@
 				$order = phpgw::get_var('order');
 				$draw = phpgw::get_var('draw', 'int');
 				$columns = phpgw::get_var('columns');
+				$order_field	= '';
 
+				switch($columns[$order[0]['column']]['data'])
+				{
+					case 'contact_id':
+						$order_field = 'person_id';
+						break;
+					case 'contact_name':
+						$order_field = 'last_name';
+						break;
+					default:
+						$order_field = $columns[$order[0]['column']]['data'];
+				}
+			
 				$params = array(
 					'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 					'query' => $search['value'],
-					'order' => $columns[$order[0]['column']]['data'],
+					'order' => $order_field,
 					'sort' => $order[0]['dir'],
 					'dir' => $order[0]['dir'],
 					'allrows' => phpgw::get_var('length', 'int') == -1,
