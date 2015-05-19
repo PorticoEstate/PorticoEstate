@@ -384,6 +384,10 @@
 			{
 				//nothing
 			}
+			else if(!$location_id && $entity_group_id)
+			{
+				//still nothing
+			}
 			else
 			{
 				foreach($location_filter as $_location_filter)
