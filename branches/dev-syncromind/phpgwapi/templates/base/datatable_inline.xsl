@@ -312,14 +312,16 @@
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 			</xsl:for-each>
 		];
-<![CDATA[
-		columns = [];
 
+		var columns<xsl:number value="($num - 1)"/> = [];
+<![CDATA[
 		for(i=0;i < PreColumns.length;i++)
 		{
 			if ( PreColumns[i]['visible'] == true )
 			{
-				columns.push(PreColumns[i]);
+]]>
+				columns<xsl:number value="($num - 1)"/>.push(PreColumns[i]);
+<![CDATA[
 			}
 		}
 ]]>
@@ -349,6 +351,6 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
+		oTable<xsl:number value="($num - 1)"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="($num - 1)"/>, options<xsl:number value="($num - 1)"/> , <xsl:value-of select="$dataset"/>);
 	</script>
 </xsl:template>
