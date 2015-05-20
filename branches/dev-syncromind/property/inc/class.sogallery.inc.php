@@ -135,7 +135,7 @@
 
 			$sql = "SELECT * FROM  phpgw_vfs"
 				." {$filtermethod} {$querymethod}";
-
+//                echo '<pre>'; print_r($sql); echo '</pre>';
 			//_debug_array($sql . $ordermethod);
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
