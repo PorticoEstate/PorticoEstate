@@ -347,6 +347,7 @@
 		public function query()
 		{
 			static $_location_name = array();
+			static $cache_component_descr = array();
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$control_area = phpgw::get_var('control_area', 'int');
@@ -424,6 +425,8 @@
 
 				$short_desc_arr = execMethod('property.soentity.get_short_description', array(
 				'location_id' => $location_id, 'id' => $component_id));
+
+				$cache_component_descr[$location_id][$component_id] = $short_desc_arr;
 
 				if(!isset($_location_name[$_component['location_code']]))
 				{
@@ -632,8 +635,8 @@
 						'active_tab'	=> 'controller'
 					);
 
-					$short_desc_arr = execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component['id'], 'entity_id' =>$component['entity_id'], 'cat_id' => $component['cat_id']));
+					$short_desc_arr = $cache_component_descr[$location_id][$component['id']];//execMethod('property.soentity.get_short_description', array(
+						//'location_id' => $location_id, 'id' => $component['id'], 'entity_id' =>$component['entity_id'], 'cat_id' => $component['cat_id']));
 
 					if(!isset($_location_name[$component['location_code']]))
 					{
