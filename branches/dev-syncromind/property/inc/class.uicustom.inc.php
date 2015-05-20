@@ -273,7 +273,6 @@
             $result_data = array('results' => $values);
             $result_data['total_records'] =  $this->bo->total_records;
             $result_data['draw'] = $draw;
-            
             return $this->jquery_results($result_data);
         }
         
@@ -382,7 +381,8 @@
             
             
             $custom_def = array
-			(
+			(   
+//                array('key' => 'id', 'label'=>lang('Id'), 'sortable'=>true, 'resizeable'=>true),
 				array('key' => 'name', 'label'=>lang('Column name'), 'sortable'=>FALSE, 'resizeable'=>true),
 				array('key' => 'descr', 'label'=>lang('Column description'), 'sortable'=>FALSE, 'resizeable'=>true),
                 array('key' => 'sorting', 'label'=>lang('Sorting'), 'sortable'=>FALSE, 'resizeable'=>true,'formatter'=>'JqueryPortico.formatUpDown'),
@@ -404,7 +404,7 @@
 				);
 			}
                          
-            
+          
             $datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
@@ -461,6 +461,7 @@
             phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 			
+            self::add_javascript('property', 'portico', 'custom.edit.js');
 			self::render_template_xsl(array('custom','datatable_inline'), array('edit' => $data));
 		}
 
