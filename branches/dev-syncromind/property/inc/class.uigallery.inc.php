@@ -763,22 +763,22 @@
 			}
  */
 			unset($parameters);
-
-			if($this->acl_add)
-			{
-				$data['datatable']['actions'][] = array
-					(
-						'my_name' 			=> 'add',
-						'statustext' 	=> lang('add'),
-						'text'			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uigallery.edit',
-							'type'			=> $type,
-							'type_id'		=> $type_id
-						))
-					);
-			}
+            $data['datatable']['actions'][] = array();
+//			if($this->acl_add)
+//			{
+//				$data['datatable']['actions'][] = array
+//					(
+//						'my_name' 			=> 'add',
+//						'statustext' 	=> lang('add'),
+//						'text'			=> lang('add'),
+//						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+//						(
+//							'menuaction'	=> 'property.uigallery.edit',
+//							'type'			=> $type,
+//							'type_id'		=> $type_id
+//						))
+//					);
+//			}
 
 			/*for ($i=0;$i<$count_uicols_name;$i++)
 			{
