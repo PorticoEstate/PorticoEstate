@@ -141,7 +141,8 @@
 			$this->total_records = $this->so->total_records;*/
             
             $custom = $this->so->read($data);
-
+            $this->total_records = $this->so->total_records;
+            
 			for ($i=0; $i<count($custom); $i++)
 			{
 				$custom[$i]['entry_date']  = $GLOBALS['phpgw']->common->show_date($custom[$i]['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
