@@ -123,9 +123,9 @@
 			//$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
 			//$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
 
-			//$valid_locations = $this->get_gallery_location();
-            //echo '<pre>'; print_r($valid_locations);echo '</pre>';
-            //array_unshift($data['valid_locations'],$valid_locations);
+//			$valid_locations = $this->get_gallery_location();
+//            //echo '<pre>'; print_r($valid_locations);echo '</pre>';
+//            array_unshift($data['valid_locations'],$valid_locations);
             
             
 //			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
