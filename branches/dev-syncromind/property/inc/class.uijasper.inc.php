@@ -185,7 +185,7 @@
                                             'type'  => 'link',
                                             'value' =>  lang('new'),
                                             'href'  =>  self::link(array(
-                                                'menuaction'	=> 'property.uijasper.index',
+                                                'menuaction'	=> 'property.uijasper.edit',
                                                 'app'			=> $this->app
                                             )),
                                             'class' => 'new_item'
@@ -199,6 +199,12 @@
 						'app'			=> $this->app,
                         'phpgw_return_as'   => 'json'
                     )),
+                    'download'	=> self::link(array(
+							'menuaction'	=> 'property.uijasper.download',
+							'export'		=> true,
+							'skip_origin'	=> true,
+							'allrows'		=> true
+					)),
                    // 'download'  => self::link(array(
                         
                    // )),
@@ -213,42 +219,42 @@
                         array(
                             'key'   => 'title',
                             'label' =>  lang('title'),
-                            'sortable' => true
+                            'sortable' => false
                         ),
                         array(
                             'key'   => 'descr',
                             'label' =>  lang('Description'),
-                            'sortable' => true
+                            'sortable' => false
                         ),
                         array(
                             'key'   => 'file_name',
                             'label' =>  lang('filename'),
-                            'sortable' => true
+                            'sortable' => false
                         ),
                         array(
                             'key'   => 'location',
                             'label' =>  lang('location'),
-                            'sortable' => true
+                            'sortable' => false
                         ),
                         array(
                             'key'   => 'user',
                             'label' =>  lang('user'),
-                            'sortable' => true
+                            'sortable' => false
                         ),
                          array(
                             'key'   => 'entry_date',
                             'label' =>  lang('entry date'),
-                            'sortable' => true
+                            'sortable' => false
                         ),
                          array(
                             'key'   => 'access',
                             'label' =>  lang('access'),
-                            'sortable' => true
+                            'sortable' => false
                         ),
                          array(
                             'key'   => 'formats',
                             'label' =>  lang('formats'),
-                            'sortable' => true
+                            'sortable' => false
                         )
                     )
                 )
@@ -402,8 +408,8 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uijasper.view',
-							'target'		=> '_blank'
 						)),
+                        'target'		=> '_blank',
 						'parameters'			=> json_encode($parameters_view)
 					);
 				$data['datatable']['actions'][] = array
@@ -413,8 +419,8 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uijasper.get_file',
-							'target'		=> '_blank'
 						)),
+                        'target'		=> '_blank',
 						'parameters'			=> json_encode($parameters_view)
 					);
 			}
@@ -845,7 +851,7 @@
 					'base_java_url'					=> "{menuaction:'property.uijasper.edit'}",
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
-					'myColumnDefs'					=> $myColumnDefs,
+//					'myColumnDefs'					=> $myColumnDefs,
                     'tabs'                          => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				); 
