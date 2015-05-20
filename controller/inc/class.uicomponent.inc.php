@@ -380,7 +380,11 @@
 //			_debug_array($location_type_name);
 			$components = array();
 
-			if($location_id == -1 && !$entity_group_id)
+			if(!$location_id)
+			{
+				//nothing
+			}
+			else if($location_id == -1 && !$entity_group_id)
 			{
 				//nothing
 			}
@@ -398,7 +402,15 @@
 					}
 					$_location_id = $_location_filter['id'];
 
-					$_components = execMethod('property.soentity.read',array('entity_group_id' => $entity_group_id,'location_id' => $_location_id, 'district_id' => $district_id, 'allrows' => true));
+					$_components = execMethod('property.soentity.read',array(
+						'entity_group_id' => $entity_group_id,
+						'location_id' => $_location_id,
+						'district_id' => $district_id,
+						'allrows' => true,
+						'control_registered' => !!$user_id,
+						'check_for_control' => true
+						)
+					);
 					$components = array_merge($components, $_components);
 				}
 			}
@@ -432,6 +444,10 @@
 				}
 				$short_desc_arr .= ' [' . $_location_name[$_component['location_code']] . ']';
 
+				if (!$user_id && !$_component['has_control'])
+				{
+					continue;
+				}
 				$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $component_id));
 //_debug_array($controls);
 				foreach($controls as $_control)
@@ -442,6 +458,7 @@
 					}
 					$control_id						= $_control['control_id'];
 					$control						= $so_control->get_single($_control['control_id']);
+					// one for each serie
 					$components_for_control_array	= $so_control->get_components_for_control($control_id, $location_id, $component_id,0);//,$user_id);
 
 					// LOCATIONS: Process aggregated values for controls with repeat type day or week
