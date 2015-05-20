@@ -459,9 +459,9 @@
                                     'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                                     (
                                         'menuaction'	=> 'property.uijasper.view',
-                                        'jasper_id'	=> $report['id'],
-                                        'target'	=> '_blank'
+                                        'jasper_id'	=> $report['id']
                                     )),
+                                    'target'	=> '_blank',
                                     'parameters'	=> json_encode($parameters)
                                 );
 			}
@@ -793,7 +793,7 @@
 					$project_values['workorder_budget'][$d]['actual_cost_hidden'] = 0;
 					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
 				}
-				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
+//				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
                 
                 if($project_values['workorder_budget'][$d]['claim_issued'] == 1){
                     
@@ -835,7 +835,7 @@
             
             $myColumnDefs0 = array
             (
-                array('key' => 'workorder_id','label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.formatLink','value_footer'=>lang('Sum')),
+                array('key' => 'workorder_id','label'=>lang('Workorder'),	'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.formatLinkTenant','value_footer'=>lang('Sum')),
                 array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0','value_footer'=>number_format($sumaBudget, 0, $this->decimal_separator, ' ')),
                 array('key' => 'budget_hidden','hidden'=>true),
                 array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
