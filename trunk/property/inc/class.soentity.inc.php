@@ -441,6 +441,7 @@
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
 			$control_registered= isset($data['control_registered']) ? $data['control_registered'] : '';
+			$check_for_control= isset($data['check_for_control']) ? $data['check_for_control'] : '';
 			$control_id		= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
 			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
@@ -735,16 +736,38 @@
 			}
 
 			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)";
+			$join_control = "controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
+
 			if($control_registered)
 			{
-				$sql .= "{$this->join} controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
-				$sql_cnt_control_fields = ',control_id ';
-				$filtermethod .= " $where  controller_control_component_list.control_id = $control_id";
-				$where = 'AND';
+				$sql .= "{$this->join} {$join_control}";
+				if($control_id)
+				{
+					$sql_cnt_control_fields = ',control_id ';
+					$filtermethod .= " $where  controller_control_component_list.control_id = $control_id";
+					$where = 'AND';
+				}
 			}
 			else
 			{
 				$sql_cnt_control_fields = '';
+			}
+
+			if($check_for_control && !$control_registered)
+			{
+				$sql .= "{$this->left_join} {$join_control}";
+
+				$sql_check_control_field = ',count(control_id) AS has_control';
+				$this->uicols['input_type'][]		= 'hidden';
+				$this->uicols['name'][]				= 'has_control';
+				$this->uicols['descr'][]			= '';
+				$this->uicols['statustext'][]		= '';
+				$this->uicols['align'][] 			= '';
+				$this->uicols['datatype'][]			= '';
+				$this->uicols['sortable'][]			= true;
+				$this->uicols['exchange'][]			= false;
+				$this->uicols['formatter'][]		= '';
+				$this->uicols['classname'][]		= '';
 			}
 
 			if(isset($category['location_level']) && $category['location_level'])
@@ -837,6 +860,12 @@
 			}
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
+
+			if($sql_check_control_field)
+			{
+				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_check_control_field}", $sql);
+				$sql .= 'GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type';
+			}
 //_debug_array($sql);
 
 			if(!$allrows)
