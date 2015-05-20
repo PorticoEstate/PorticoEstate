@@ -242,17 +242,13 @@
 								'text'	 => lang('year'),
 								'list'	 => $year_list,
 								'onchange'	=> 'update_table();'
-							),/*
-							array('type'	 => 'text',
-								'text'	 => lang('searchfield'),
-								'name'	 => 'query'
 							),
-							array(
-								'type'	 => 'button',
-								'name'	 => 'search',
-								'value'	 => lang('Search'),
-								'onclick'=> 'update_table();'
-							),*/
+							array('type'	 => 'checkbox',
+								'name'	 => 'all_items',
+								'text'	 => 'List uten kontroller',
+								'value'	 => 1,
+								'onclick'	=> 'update_table();'
+							),
 						),
 					),
 				),
@@ -358,6 +354,7 @@
 			$district_id = phpgw::get_var('district_id', 'int');
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
+			$all_items = phpgw::get_var('all_items', 'bool');
 
 			$so_control			 = CreateObject('controller.socontrol');
 			$this->so			= CreateObject('controller.socheck_list');
@@ -407,7 +404,7 @@
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
 						'allrows' => true,
-						'control_registered' => !!$user_id,
+						'control_registered' => !$all_items,
 						'check_for_control' => true
 						)
 					);
@@ -444,7 +441,7 @@
 				}
 				$short_desc_arr .= ' [' . $_location_name[$_component['location_code']] . ']';
 
-				if (!$user_id && !$_component['has_control'])
+				if ($all_items && !$_component['has_control'])
 				{
 					continue;
 				}
