@@ -449,8 +449,13 @@
 
 		function edit()
 		{
-			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-
+			$lookup 	= phpgw::get_var('lookup');
+			
+			if($lookup)
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
+			
 			if(!$this->acl_add)
 			{
 				$this->bocommon->no_access();
@@ -569,7 +574,8 @@
 					'location'		=> $location,
 					'attrib_id'		=> $attrib_id,
 					'item_id'		=> $item_id,
-					'id'			=> $id
+					'id'			=> $id,
+					'lookup'		=> $lookup
 				);
 
 			$link_schedule_data = array
@@ -642,6 +648,7 @@
 					'lang_descr'					=> lang('Description'),
 					'lang_save'						=> lang('save'),
 					'lang_cancel'					=> lang('cancel'),
+					'lookup'						=> $lookup,
 					'lang_apply'					=> lang('apply'),
 					'value_id'						=> isset($values['id']) ? $values['id'] : '',
 
@@ -704,8 +711,7 @@
 												var aData = selected[n];
 												values['alarm'][aData['alarm_id']] = aData['alarm_id'];
 											}
-											{$entry['funct']}(values);
-											JqueryPortico.updateinlineTableHelper(oTable0, '$link_shedule2');"
+											{$entry['funct']}(values);"
 					);
 				}
 				
@@ -723,10 +729,7 @@
 			url: '$link_shedule2',
 			data:{values:values},
 			success: function(data) {
-				if( data != null)
-				{
-
-				}
+				JqueryPortico.updateinlineTableHelper(oTable0, '$link_shedule2');
 			}
 			});
 	}
@@ -912,16 +915,16 @@ JS;
 					}
 
 					$result_data = array('results' => $out);
-
 					$result_data['total_records'] = $total_records;
-					$result_data['draw'] = $draw;
-					
-					return $this->jquery_results($result_data);
 				}
 				else
 				{
-					return "";
+					$result_data = array('results' => array());
+					$result_data['total_records'] = 0;
+					
 				}
+				$result_data['draw'] = $draw;
+				return $this->jquery_results($result_data);
 			}
 
 			//--------------------JSON code-----
