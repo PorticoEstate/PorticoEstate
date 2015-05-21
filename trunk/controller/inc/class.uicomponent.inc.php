@@ -346,8 +346,6 @@
 
 		public function query()
 		{
-			static $_location_name = array();
-			static $cache_component_descr = array();
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$control_area = phpgw::get_var('control_area', 'int');
@@ -423,26 +421,8 @@
 				$component_id = $_component['id'];
 				$all_components[$component_id] = $_component;
 
-				$short_desc_arr = execMethod('property.soentity.get_short_description', array(
-				'location_id' => $location_id, 'id' => $component_id));
-
-				$cache_component_descr[$location_id][$component_id] = $short_desc_arr;
-
-				if(!isset($_location_name[$_component['location_code']]))
-				{
-					$_location		 = execMethod('property.solocation.read_single', $_component['location_code']);
-					$location_arr	 = explode('-', $_component['location_code']);
-					$i				 = 1;
-					$name_arr		 = array();
-					foreach($location_arr as $_dummy)
-					{
-						$name_arr[] = $_location["loc{$i}_name"];
-						$i++;
-					}
-
-					$_location_name[$_component['location_code']] = implode('::', $name_arr);
-				}
-				$short_desc_arr .= ' [' . $_location_name[$_component['location_code']] . ']';
+				$short_description = $_component['short_description'];
+				$short_description .= ' [' . $_component['location_name']. ']';
 
 				if ($all_items && !$_component['has_control'])
 				{
@@ -468,7 +448,7 @@
 						// COMPONENTS: Process aggregated values for controls with repeat type day or week
 						foreach($components_for_control_array as $component)
 						{
-							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_desc_arr}");
+							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
 							$repeat_type				 = $control->get_repeat_type();
 							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
@@ -495,7 +475,7 @@
 					{
 						foreach($components_for_control_array as $component)
 						{
-							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_desc_arr}");
+							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
 							$repeat_type				 = $control->get_repeat_type();
 							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
@@ -635,27 +615,10 @@
 						'active_tab'	=> 'controller'
 					);
 
-					$short_desc_arr = $cache_component_descr[$location_id][$component['id']];//execMethod('property.soentity.get_short_description', array(
-						//'location_id' => $location_id, 'id' => $component['id'], 'entity_id' =>$component['entity_id'], 'cat_id' => $component['cat_id']));
+					$short_description = $component['short_description'];
+					$short_description .= "[ {$component['location_name']} ]";
 
-					if(!isset($_location_name[$component['location_code']]))
-					{
-						$_location		 = execMethod('property.solocation.read_single', $component['location_code']);
-						$location_arr	 = explode('-', $component['location_code']);
-						$i				 = 1;
-						$name_arr		 = array();
-						foreach($location_arr as $_dummy)
-						{
-							$name_arr[] = $_location["loc{$i}_name"];
-							$i++;
-						}
-
-						$_location_name[$component['location_code']] = implode('::', $name_arr);
-					}
-
-					$short_desc_arr .= "[ {$_location_name[$component['location_code']]} ]";
-
-					$data['component_id'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_desc_arr}</a>";
+					$data['component_id'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
 					$data['missing_control'] = true;
 					$values[] = $data;
 
@@ -799,24 +762,6 @@
 			}
 			else
 			{
-/*
-				$menuaction	= 'controller.uicalendar.view_calendar_year_for_locations';
-				if($param['info']['repeat_type'] < 2)
-				{
-					$menuaction	= 'controller.uicalendar.view_calendar_month_for_locations';
-				}
-
-				$control_link_data = array
-				(
-					'menuaction'	=> $menuaction,
-					'control_id'	=> $param['info']['control_id'],
-					'location_id'	=> $param['info']['location_id'],
-					'component_id'	=> $param['info']['component_id'],
-					'serie_id'		=> $param['info']['serie_id'],
-					'year'			=> $year,
-					'month'			=> $month
-				);
-*/
 				$menuaction	= 'controller.uicheck_list.add_check_list';
 				$control_link_data = array
 				(
@@ -828,9 +773,6 @@
 					'deadline_ts'	=> mktime(23, 59, 00, $month, date('t', $month), $year),
 					'type'			=> $param['info']['component_id'] ? 'component' : ''
 				);
-
-
-
 			}
 			$link = "<a href=\"".$GLOBALS['phpgw']->link('/index.php',$control_link_data)."\" target=\"_blank\">{$img}</a>";
 
