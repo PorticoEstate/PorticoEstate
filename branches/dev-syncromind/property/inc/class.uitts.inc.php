@@ -1275,6 +1275,10 @@
 				$my_groups[$group_id] = $group->firstname;
 
 			}
+			
+			$tabs = array();
+			$tabs['add']	= array('label' => lang('Add'), 'link' => '#add');
+			$active_tab = 'add';
 
 			$data = array
 			(
@@ -1329,6 +1333,8 @@
 					'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl,'required' => true)),
 					'pref_send_mail'				=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
 					'fileupload'					=> (isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:''),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+					
 				);
 
 			//_debug_array($data);
@@ -2410,6 +2416,12 @@
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'));
 
+			$tabs = array();
+			$tabs['general']	= array('label' => lang('General'), 'link' => '#general');
+			$tabs['notify']		= array('label' => lang('Notify'), 'link' => '#notify');
+			$tabs['history']	= array('label' => lang('History'), 'link' => '#history');
+			$active_tab = 'general';
+			
 			$data = array
 			(
 					'datatable_def'					=> $datatable_def,
@@ -2523,6 +2535,7 @@
 					'branch_list'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1 ? array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) :'',
 					'preview_html'					=> "javascript:preview_html($id)",
 					'preview_pdf'					=> "javascript:preview_pdf($id)",
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 
 				);
 
