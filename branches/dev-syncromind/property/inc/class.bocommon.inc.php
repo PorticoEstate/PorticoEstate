@@ -894,7 +894,7 @@
 					'id'			=> isset($event['value']) && $event['value'] ? $event['value'] : '')
 				);
 
-			$event['event_link'] = "{menuaction:'property.uievent.edit',"
+			$event['event_link'] = "{menuaction:'property.uievent.edit',lookup:1,"
 				."location:'{$data['location']}',"
 				."attrib_id:'{$event['name']}'";
 			$event['event_link'] .=	isset($event['item_id']) ? ",item_id:{$event['item_id']}" : '';		
