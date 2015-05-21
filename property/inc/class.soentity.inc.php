@@ -753,11 +753,13 @@
 				$sql_cnt_control_fields = '';
 			}
 
+			$sql_custom_field = '';
+
 			if($check_for_control && !$control_registered)
 			{
 				$sql .= "{$this->left_join} {$join_control}";
 
-				$sql_check_control_field = ',count(control_id) AS has_control';
+				$sql_custom_field .= ',count(control_id) AS has_control';
 				$this->uicols['input_type'][]		= 'hidden';
 				$this->uicols['name'][]				= 'has_control';
 				$this->uicols['descr'][]			= '';
@@ -775,6 +777,22 @@
 				$sql .= "{$this->join} fm_location1 ON (fm_bim_item.loc1 = fm_location1.loc1)";
 				$sql .= "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
 				$sql .= "{$this->join} fm_owner ON (fm_location1.owner_id = fm_owner.id)";
+				$sql .= "{$this->join} fm_locations ON (fm_bim_item.location_code = fm_locations.location_code)";
+
+				$sql_custom_field .= ',fm_locations.name AS location_name';
+				$sql_custom_group = ',fm_locations.name';
+
+				$this->uicols['input_type'][]		= 'hidden';
+				$this->uicols['name'][]				= 'location_name';
+				$this->uicols['descr'][]			= '';
+				$this->uicols['statustext'][]		= '';
+				$this->uicols['align'][] 			= '';
+				$this->uicols['datatype'][]			= '';
+				$this->uicols['sortable'][]			= true;
+				$this->uicols['exchange'][]			= false;
+				$this->uicols['formatter'][]		= '';
+				$this->uicols['classname'][]		= '';
+
 			}
 
 			$_joinmethod_datatype = array_merge($_joinmethod_datatype, $_joinmethod_datatype_custom);
@@ -861,12 +879,19 @@
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
 
-			if($sql_check_control_field)
+			if($sql_custom_field)
 			{
-				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_check_control_field}", $sql);
-				$sql .= 'GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type';
+				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
+				$sql .= "GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
 			}
 //_debug_array($sql);
+			static $cache_attributes = array();
+
+			if(!isset($cache_attributes[$location_id]))
+			{
+				$filters = array("short_description" => "IS NOT NULL");
+				$cache_attributes[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'short_description', true, true,$filters);
+			}
 
 			if(!$allrows)
 			{
@@ -908,6 +933,36 @@
 					);
 				}
 
+
+				//Start: get short descripion - if any
+				$_short_description = array();
+
+				foreach ($cache_attributes[$location_id] as $key => $attribute)
+				{
+					$description_value = $xml->getElementsByTagName($attribute['name'])->item(0)->nodeValue;
+
+					if(isset($cache_attributes[$location_id][$key]['choice']) && $cache_attributes[$location_id][$key]['choice'])
+					{
+						$choice = $cache_attributes[$location_id][$key]['choice'];
+						foreach($choice as $choice_value)
+						{
+							if ($choice_value['id'] == $description_value)
+							{
+								$description_value = $choice_value['value'];
+								break;
+							}
+						}
+					}
+
+					if($description_value)
+					{
+						$_short_description[] = "{$attribute['input_text']}: {$description_value}";
+					}
+				}
+
+				$dataset[$j]['short_description']['value'] = implode(', ', $_short_description);
+
+				//END: get short descripion
 
 				$dataset[$j]['num']['value'] = $dataset[$j]['id']['value'];
 
@@ -1918,11 +1973,11 @@
 
 				if($description_value)
 				{
-					$short_description[] = "{$attribute['input_text']}: {$description_value}";
+					$_short_description[] = "{$attribute['input_text']}: {$description_value}";
 				}
 			}
 
-			$short_description = implode(', ', $short_description);
+			$short_description = implode(', ', $_short_description);
 
 			return $short_description;
 		}
