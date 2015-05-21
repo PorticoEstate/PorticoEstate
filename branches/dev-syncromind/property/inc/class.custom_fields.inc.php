@@ -409,7 +409,7 @@ JS;
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
 
-					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',"
+					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',lookup:1,"
 						."location:'{$location}',"
 						."attrib_id:'{$attributes['id']}'";
 					$lookup_functions[$m]['action'] .=	isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';
