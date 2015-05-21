@@ -18,28 +18,25 @@
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
-
 		var my_groups = <xsl:value-of select="my_groups"/>;
-
 	</script>
 
-	<xsl:choose>
-		<xsl:when test="msgbox_data != ''">
-			<table class="pure-table pure-u-md-1-1">
-				<tr>
-					<td align="left" colspan="3">
-						<xsl:call-template name="msgbox"/>
-					</td>
-				</tr>
-			</table>
-		</xsl:when>
-	</xsl:choose>
+	<dl>
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dt>
+					<xsl:call-template name="msgbox"/>
+				</dt>
+			</xsl:when>
+		</xsl:choose>
+	</dl>
 	<xsl:variable name="form_action">
 		<xsl:value-of select="form_action"/>
 	</xsl:variable>
 	<form class="pure-form pure-form-aligned"  ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
-		<div id="ticket_tabview">
-			<div >
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="add">
 				<fieldset>
 					<xsl:for-each select="value_origin">
 						<div class="pure-control-group">
@@ -203,37 +200,28 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-
 				</fieldset>
 			</div>
-			<table cellpadding="2" cellspacing="2" width="50%" align="center">
-				<tr height="50">
-					<td>
-						<input type="hidden" id="save" name="values[save]" value=""/>
-						<input type="hidden" id="apply" name="values[apply]" value=""/>
-						<input type="hidden" id="cancel" name="values[cancel]" value=""/>
-						<input type="button" name="save" value="{lang_send}" onClick="confirm_session('save');">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_send_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-					<td>
-						<input type="button" name="apply" value="{lang_save}" onClick="confirm_session('apply');">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_send_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-					<td>
-						<input type="button" name="cancel" value="{lang_cancel}" onClick="confirm_session('cancel');">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_send_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
-			</table>
+		</div>
+		<div class="proplist-col">
+			<input type="hidden" id="save" name="values[save]" value=""/>
+			<input type="hidden" id="apply" name="values[apply]" value=""/>
+			<input type="hidden" id="cancel" name="values[cancel]" value=""/>
+			<input class="pure-button pure-button-primary" type="button" name="save" value="{lang_send}" onClick="confirm_session('save');">
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_send_statustext"/>
+				</xsl:attribute>
+			</input>
+			<input class="pure-button pure-button-primary" type="button" name="apply" value="{lang_save}" onClick="confirm_session('apply');">
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_send_statustext"/>
+				</xsl:attribute>
+			</input>
+			<input class="pure-button pure-button-primary" type="button" name="cancel" value="{lang_cancel}" onClick="confirm_session('cancel');">
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_send_statustext"/>
+				</xsl:attribute>
+			</input>
 		</div>
 	</form>
 </xsl:template>
@@ -309,7 +297,7 @@
 		<xsl:value-of select="form_action"/>
 	</xsl:variable>
 	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
-		<div id="ticket_tabview">
+		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="general">
 				<fieldset>
@@ -981,6 +969,7 @@
 				</xsl:for-each>
 
 			</div>
+		</div>
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<tr height="50">
 					<td>
@@ -996,7 +985,6 @@
 					</td>
 				</tr>
 			</table>
-		</div>
 	</form>
 	<table cellpadding="2" cellspacing="2" width="80%" align="center">
 		<tr>
