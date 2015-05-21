@@ -143,21 +143,25 @@
 					</xsl:if>
 				</div>
 				<div class="proplist-col">
-					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_save_statustext"/>
-						</xsl:attribute>
-					</input>
 					<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{lang_apply}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_apply_statustext"/>
 						</xsl:attribute>
 					</input>
-					<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{lang_cancel}" onClick="parent.TINY.box.hide();">
+					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_cancel_statustext"/>
+							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>
-					</input> 
+					</input>
+					<xsl:choose>
+						<xsl:when test="lookup != '1'">
+							<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{lang_cancel}" onClick="document.done_form.submit();">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_cancel_statustext"/>
+								</xsl:attribute>
+							</input>			
+						</xsl:when>
+					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="value_id != ''">
 							<input type="submit" class="pure-button pure-button-primary" name="values[delete]" value="{lang_delete}">
@@ -169,6 +173,10 @@
 					</xsl:choose>
 				</div>
 			</form>
+			<xsl:variable name="done_action">
+				<xsl:value-of select="done_action"/>
+			</xsl:variable>
+			<form name="done_form" id="done_form" method="post" action="{$done_action}"></form>
 		</div>
 	</xsl:template>
 
