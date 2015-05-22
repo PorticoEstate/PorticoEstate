@@ -376,6 +376,8 @@
 //			_debug_array($location_type_name);
 			$components = array();
 
+			$lookup_stray_items = false;
+
 			if(!$location_id)
 			{
 				//nothing
@@ -390,16 +392,35 @@
 			}
 			else
 			{
+				$lookup_stray_items = $entity_group_id;
+				$exclude_locations = array();
+
 				foreach($location_filter as $_location_filter)
 				{
 					if($location_id > 0 && $_location_filter['id'] != $location_id)
 					{
 						continue;
 					}
-					$_location_id = $_location_filter['id'];
+					$_location_id = (int)$_location_filter['id'];
+					$exclude_locations[] = $_location_id;
 
 					$_components = execMethod('property.soentity.read',array(
+						'filter_entity_group' => $entity_group_id,
+						'location_id' => $_location_id,
+						'district_id' => $district_id,
+						'allrows' => true,
+						'control_registered' => !$all_items,
+						'check_for_control' => true
+						)
+					);
+					$components = array_merge($components, $_components);
+				}
+
+				if($lookup_stray_items)
+				{
+					$_components = execMethod('property.soentity.read_entity_group',array(
 						'entity_group_id' => $entity_group_id,
+						'exclude_locations'	=> $exclude_locations,
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
 						'allrows' => true,
