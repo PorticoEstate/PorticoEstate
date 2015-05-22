@@ -230,8 +230,9 @@
                 return $content;
             }
             
+            
             $result_data = array('results'  => $content);
-            $result_data['total_records'] = $this->bo->total_records;
+            $result_data['total_records'] = (!empty($this->bo->total_records))?$this->bo->total_records:0;
             $result_data['draw'] = $draw;
 			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
             
@@ -1234,7 +1235,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 			$values					= phpgw::get_var('values');
-
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			$GLOBALS['phpgw']->xslttpl->add_file(array('investment'));
 
 			if (isset($values['save']) && $values['save'])
@@ -1354,7 +1358,9 @@
 					'lang_no_cat'						=> lang('Select'),
 					'lang_cat_statustext'				=> lang('Select the category the investment belongs to. To do not use a category select NO CATEGORY'),
 					'select_name'						=> 'values[period]',
-					'investment_type_id'				=> $investment['investment_type_id']
+					'investment_type_id'				=> $investment['investment_type_id'],
+                    'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
 			$appname		= lang('investment');
