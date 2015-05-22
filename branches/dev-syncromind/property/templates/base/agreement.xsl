@@ -97,123 +97,95 @@
 	</xsl:template>
 
 	<!-- New template-->
+        
 	<xsl:template match="add_activity">
-		<table>
-			<tr>
-				<td align="left">
-					<xsl:value-of select="lang_id"/>
-				</td>
-				<td align="left">
-					<xsl:value-of select="value_agreement_id"/>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_name"/>
-				</td>
-				<td>
-					<input type="text" disabled="disabled" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_name_statustext"/>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_descr"/>
-				</td>
-				<td>
-					<textarea cols="60" disabled="disabled" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_descr_statustext"/>
-						</xsl:attribute>
-						<xsl:value-of select="value_descr"/>
-					</textarea>
-				</td>
-			</tr>
-		</table>
-		<xsl:variable name="add_action">
-			<xsl:value-of select="add_action"/>
-		</xsl:variable>
-		<form name="form2" method="post" action="{$add_action}" >
-			<table width="100%" cellpadding="2" cellspacing="2" align="center">
-                                <tr>
-                                    <td>
-                                        <div class="pure-custom">
-                                            <xsl:for-each select="datatable_def">
-                                                    <xsl:if test="container = 'datatable-container_0'">
-                                                            <xsl:call-template name="table_setup">
-                                                                    <xsl:with-param name="container" select ='container'/>
-                                                                    <xsl:with-param name="requestUrl" select ='requestUrl' />
-                                                                    <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-                                                                    <xsl:with-param name="tabletools" select ='tabletools' />
-                                                                    <xsl:with-param name="data" select ='data' />
-                                                                    <xsl:with-param name="config" select ='config' />
-                                                            </xsl:call-template>
-                                                    </xsl:if>
-                                            </xsl:for-each>
-                                        </div>
-                                    </td>
-                                </tr>
-				<!--xsl:call-template name="table_header"/>
-				<xsl:choose>
-					<xsl:when test="values != ''">
-						<xsl:call-template name="values4"/>
-					</xsl:when>
-				</xsl:choose-->
-				<tr>
-					<td/>
-					<td/>
-					<td/>
-					<td/>
-					<td/>
-					<td/>
-					<!--td align="center">
-						<input type="hidden" name="values[agreement_id]" value="{agreement_id}"/>
-						<xsl:variable name="img_check">
-							<xsl:value-of select="img_check"/>
-						</xsl:variable>
-						<a href="javascript:check_all_checkbox2('values[select]')">
-							<img src="{$img_check}" border="0" height="16" width="21" alt="{lang_select_all}"/>
-						</a>
-					</td-->
-				</tr>
-				<tr height="50">
-					<td valign="bottom">
-						<xsl:variable name="lang_save">
-							<xsl:value-of select="lang_save"/>
-						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_save_statustext"/>
-							</xsl:attribute>
-						</input>
-                                                
-					</td>
-					<td valign="bottom">
-						<xsl:variable name="lang_apply">
-							<xsl:value-of select="lang_apply"/>
-						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_apply_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-					<td align="right" valign="bottom">
-						<xsl:variable name="lang_cancel">
-							<xsl:value-of select="lang_cancel"/>
-						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_cancel_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
-			</table>
-		</form>
+            <div id="tab-content">
+                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                <div id="general">
+                        <form class="pure-form pure-form-aligned"> 
+                            <div class="pure-control-group">
+                                    <label>
+                                            <xsl:value-of select="lang_id"/>
+                                    </label>
+                                            <xsl:value-of select="value_agreement_id"/>
+                            </div>
+                            <div class="pure-control-group">
+                                    <label>
+                                            <xsl:value-of select="lang_name"/>
+                                    </label>
+                                            <input type="text" disabled="disabled" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
+                                                    <xsl:attribute name="title">
+                                                            <xsl:value-of select="lang_name_statustext"/>
+                                                    </xsl:attribute>
+                                            </input>
+                            </div>
+                            <div class="pure-control-group">
+                                    <label>
+                                            <xsl:value-of select="lang_descr"/>
+                                    </label>
+                                            <textarea cols="60" disabled="disabled" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
+                                                    <xsl:attribute name="title">
+                                                            <xsl:value-of select="lang_descr_statustext"/>
+                                                    </xsl:attribute>
+                                                    <xsl:value-of select="value_descr"/>
+                                            </textarea>
+                            </div>
+                        </form>
+                    <xsl:variable name="add_action">
+                            <xsl:value-of select="add_action"/>
+                    </xsl:variable>
+                    <form name="form2" method="post" class="pure-form pure-form-aligned" action="{$add_action}" >
+                                    <div class="pure-control-group">
+                                            <div class="pure-custom" style="display:inherit !important;">
+                                                <xsl:for-each select="datatable_def">
+                                                        <xsl:if test="container = 'datatable-container_0'">
+                                                                <xsl:call-template name="table_setup">
+                                                                        <xsl:with-param name="container" select ='container'/>
+                                                                        <xsl:with-param name="requestUrl" select ='requestUrl' />
+                                                                        <xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+                                                                        <xsl:with-param name="tabletools" select ='tabletools' />
+                                                                        <xsl:with-param name="data" select ='data' />
+                                                                        <xsl:with-param name="config" select ='config' />
+                                                                </xsl:call-template>
+                                                        </xsl:if>
+                                                </xsl:for-each>
+                                            </div>
+                                    </div>
+                                    <!--xsl:call-template name="table_header"/>
+                                    <xsl:choose>
+                                            <xsl:when test="values != ''">
+                                                    <xsl:call-template name="values4"/>
+                                            </xsl:when>
+                                    </xsl:choose-->
+                                    <div class="pure-control-group">
+                                                    <xsl:variable name="lang_save">
+                                                            <xsl:value-of select="lang_save"/>
+                                                    </xsl:variable>
+                                                    <input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+                                                            <xsl:attribute name="title">
+                                                                    <xsl:value-of select="lang_save_statustext"/>
+                                                            </xsl:attribute>
+                                                    </input>
+                                                    <xsl:variable name="lang_apply">
+                                                            <xsl:value-of select="lang_apply"/>
+                                                    </xsl:variable>
+                                                    <input type="submit" class="pure-button pure-button-primary" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
+                                                            <xsl:attribute name="title">
+                                                                    <xsl:value-of select="lang_apply_statustext"/>
+                                                            </xsl:attribute>
+                                                    </input>
+                                                    <xsl:variable name="lang_cancel">
+                                                            <xsl:value-of select="lang_cancel"/>
+                                                    </xsl:variable>
+                                                    <input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
+                                                            <xsl:attribute name="title">
+                                                                    <xsl:value-of select="lang_cancel_statustext"/>
+                                                            </xsl:attribute>
+                                                    </input>
+                                    </div>
+                    </form>
+                </div>
+            </div>
 	</xsl:template>
 
 	<!-- New template-->
