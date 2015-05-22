@@ -417,34 +417,37 @@
 
 		protected function read_eav($data)
 		{
-			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
-			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
-			$query			= isset($data['query']) ? $data['query'] : '';
-			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order			= isset($data['order']) && $data['order'] ? $data['order'] : 'id';
-			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
-			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
-			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
-			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
-			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
-			$status			= isset($data['status']) ? $data['status'] : '';
-			$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
-			$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
-			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
-			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
-			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
-			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
-			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
-			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
-			$control_registered= isset($data['control_registered']) ? $data['control_registered'] : '';
-			$check_for_control= isset($data['check_for_control']) ? $data['check_for_control'] : '';
-			$control_id		= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
-			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
-			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$results			= isset($data['results']) && $data['results'] ? $data['results'] : 0;
+			$filter				= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
+			$query				= isset($data['query']) ? $data['query'] : '';
+			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order				= isset($data['order']) && $data['order'] ? $data['order'] : 'id';
+			$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$district_id		= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+			$part_of_town_id	= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
+			$lookup				= isset($data['lookup']) ? $data['lookup'] : '';
+			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
+			$entity_id			= isset($data['entity_id']) ? $data['entity_id'] : '';
+			$cat_id				= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$status				= isset($data['status']) ? $data['status'] : '';
+			$start_date			= isset($data['start_date']) ? $data['start_date'] : '';
+			$end_date			= isset($data['end_date']) ? $data['end_date'] : '';
+			$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$this->type			= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$location_code		= isset($data['location_code']) ? $data['location_code'] : '';
+			$criteria_id		= isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$attrib_filter		= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$p_num				= isset($data['p_num']) ? $data['p_num'] : '';
+			$custom_condition	= isset($data['custom_condition']) ? $data['custom_condition'] : '';
+			$control_registered	= isset($data['control_registered']) ? $data['control_registered'] : '';
+			$check_for_control	= isset($data['check_for_control']) ? $data['check_for_control'] : '';
+			$control_id			= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
+			$org_units			= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
+			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$entity_group_id	= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
+			$filter_entity_group= isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
+
 
 			if($location_id)
 			{
@@ -598,6 +601,16 @@
 			if ($p_num)
 			{
 				$filtermethod .= " $where $entity_table.p_id='$p_num'";
+				$where= 'AND';
+			}
+			if ($entity_group_id)
+			{
+				$filtermethod .= " {$where} {$entity_table}.entity_group_id = {$entity_group_id}";
+				$where= 'AND';
+			}
+			if ($filter_entity_group)
+			{
+				$filtermethod .= " {$where} {$entity_table}.entity_group_id IS NULL";
 				$where= 'AND';
 			}
 
@@ -1274,56 +1287,26 @@
 		 */
 		function read_entity_group($data)
 		{
-			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
-			$entity_group_id	= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
+			$entity_group_id	= (int)$data['entity_group_id'];
 
+			$exclude_locations	= isset($data['exclude_locations']) && $data['exclude_locations'] && is_array($data['exclude_locations']) ? $data['exclude_locations'] : array(0);
+			$exclude_filter = implode(', ', $exclude_locations);
 			$location_filter = array();
-
-			if($entity_group_id)
+			$sql = "SELECT DISTINCT location_id FROM fm_bim_item WHERE entity_group_id = {$entity_group_id} AND location_id NOT IN ({$exclude_filter})";
+			$this->db->query($sql);
+			while ($this->db->next_record())
 			{
-				if($location_id < 0)
-				{
-					$entity_list 	= $admin_entity->read(array('allrows' => true));
-
-					foreach($entity_list as $entry)
-					{
-						$categories = $admin_entity->read_category(array('entity_id' => $entry['id'],'order' => 'name','sort' => 'asc','enable_controller' => true, 'allrows' => true));
-						foreach($categories as $category)
-						{
-
-							if($category['entity_group_id'])
-							{
-								$location_filter[] = $category['location_id'];
-							}
-						}
-					}
-				}
-				else
-				{
-					$location_filter[] = $location_id;
-				}
+				$location_filter[] = $this->db->f('location_id');
 			}
-//			_debug_array($location_filter);
-			$values = array();
-			if($category['is_eav'] || $location_filter)
+			$components = array();
+			foreach($location_filter as $location_id)
 			{
-				if($location_filter)
-				{
-					foreach($location_filter as $location_id)
-					{
-						$this->get_cols($category,$entity_id,$cat_id,$lookup,$location_id);
-						$data['location_id'] = $location_id;
-						$values = array_merge($values, $this->read_eav($data));
-
-					}
-				}
-				else
-				{
-					$values = $this->read_eav($data);
-				}
-				return $values;
+				$data['location_id'] = $location_id;
+				$_components = $this->read($data);
+				$components = array_merge($components, $_components);
 			}
 
+			return $components;
 		}
 
 
@@ -1354,6 +1337,8 @@
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
 			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
 			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$entity_group_id= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
+
 
 			if($location_id)
 			{
@@ -1893,6 +1878,7 @@
 				$values['user_id']			= $this->db->f('user_id');
 				$values['entry_date']		= $this->db->f('entry_date');
 				$values['org_unit_id']		= $this->db->f('org_unit_id');
+				$values['entity_group_id']	= $this->db->f('entity_group_id');
 
 				$xmldata = $this->db->f('xml_representation',true);
 				$xml = new DOMDocument('1.0', 'utf-8');
@@ -2295,7 +2281,8 @@
 				'location_code'			=> $data['location_code'],
 				'loc1'					=> $data['loc1'],
 				'address'				=> $data['address'],
-				'org_unit_id'			=> $data['org_unit_id']
+				'org_unit_id'			=> $data['org_unit_id'],
+				'entity_group_id'		=> $data['entity_group_id']
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
@@ -2451,6 +2438,11 @@
 				{
 					$value_set['p_id']			= $p_id;
 					$value_set['p_location_id'] = $p_location_id;
+				}
+
+				if($category['entity_group_id'] != $values['entity_group_id'])
+				{
+					$value_set['entity_group_id'] = $values['entity_group_id'];
 				}
 
 				$this->_edit_eav($value_set, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}", $values['id']);
