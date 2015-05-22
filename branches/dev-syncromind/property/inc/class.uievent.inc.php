@@ -47,6 +47,7 @@
 
 		var $public_functions = array
 			(
+                'query'     => true,
 				'index'		=> true,
 				'view'		=> true,
 				'edit'		=> true,
@@ -374,9 +375,9 @@
                     (
                         'menuaction'		=> 'property.uievent.edit',
                         'type'				=> $type,
-                        'type_id'			=> $type_id,
-                        'target'			=> '_blank'
+                        'type_id'			=> $type_id
                     )),
+                    'target'			=> '_blank',
                     'parameters'	=> json_encode($parameters)
                 );
 			}
@@ -412,9 +413,11 @@
 		}
 
 		public function query()
-		{
-            $start_date = urldecode($this->start_date);
-			$end_date   = urldecode($this->end_date);
+		{   
+            $date1 = phpgw::get_var('start_date');
+            $date2 = phpgw::get_var('end_date');
+            $start_date = urldecode($date1);
+			$end_date   = urldecode($date2);
 			$search     = phpgw::get_var('search');
 			$order      = phpgw::get_var('order');
 			$draw       = phpgw::get_var('draw', 'int');
