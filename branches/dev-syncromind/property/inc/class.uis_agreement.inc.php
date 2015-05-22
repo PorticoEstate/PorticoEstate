@@ -591,9 +591,9 @@
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uijasper.view',
-								'jasper_id'			=> $report['id'],
-								'target'		=> '_blank'
+								'jasper_id'			=> $report['id']
 							)),
+                            'target'		=> '_blank',
 							'parameters'			=> json_encode($parameters)
 						);
 				}
@@ -632,20 +632,20 @@
 					);
 			}
 
-			if($this->acl_add)
-			{
-				$data['datatable']['actions'][] = array
-					(
-						'my_name' 			=> 'add',
-						'statustext' 	=> lang('add an entity'),
-						'text'			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uis_agreement.edit',
-							'role'			=> $this->role
-						))
-					);
-			}
+//			if($this->acl_add)
+//			{
+//				$data['datatable']['actions'][] = array
+//					(
+//						'my_name' 			=> 'add',
+//						'statustext' 	=> lang('add an entity'),
+//						'text'			=> lang('add'),
+//						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+//						(
+//							'menuaction'	=> 'property.uis_agreement.edit',
+//							'role'			=> $this->role
+//						))
+//					);
+//			}
 
 			unset($parameters);
 			unset($parameters2);
@@ -1279,7 +1279,7 @@
 			$values			= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item');
 			$item_id		= phpgw::get_var('item_id');
-			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
+//			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
 			$config			= CreateObject('phpgwapi.config','property');
 			$boalarm		= CreateObject('property.boalarm');
@@ -1583,15 +1583,6 @@
 			}
 
 			//--------------------JSON code-----
-
-
-
-
-			//_debug_array($id);die;
-
-
-
-
 			$parameters = array
 				(
 					'parameter' => array
@@ -1867,7 +1858,7 @@
 							(
 								'key'			=> $uicols['name'][$key],
 								'label'			=> $uicols['descr'][$key],
-								'sortable'		=> true,
+								'sortable'		=> false,
 								'resizeable'	=> true
 							);
 						$td_count ++;
@@ -2065,9 +2056,9 @@
 					'td_count'							=> $td_count,
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'						=> json_encode(array('menuaction' => "property.uis_agreement.edit",'id'=>$id)),
-					'datatable'							=> $datavalues,
-					'myColumnDefs'						=> $myColumnDefs,
-					'myButtons'							=> $myButtons,
+//					'datatable'							=> $datavalues,
+//					'myColumnDefs'						=> $myColumnDefs,
+//					'myButtons'							=> $myButtons,
 
 					'link_import'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.import', 'tab' => 'items')),
 					'alarm_data'						=> $alarm_data,
@@ -2292,6 +2283,11 @@
 			$id	= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 			$delete_last	= phpgw::get_var('delete_last', 'bool', 'GET');
+            
+            $tabs = array();
+            $tabs['general']    = array('label' => lang('general'), 'link' => '#general');
+            $active_tab = 'general';
+            
 			if($delete_last)
 			{
 				$this->bo->delete_last_index($s_agreement_id,$id);
@@ -2699,6 +2695,8 @@
 					'lang_history_date_statustext'	=> lang('Enter the date for this reading'),
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+                    'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 					//'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
 				);
 
@@ -2740,7 +2738,9 @@
 			$from = $from == 'edit'?'edit':'view';
 			$s_agreement_id	= phpgw::get_var('s_agreement_id'); // in case of bigint
 			$id	= phpgw::get_var('id', 'int');
-
+            $tabs = array();
+            $tabs['general']    = array('label' => lang('general'), 'link' => '#general');
+            $active_tab = 'general';
 			$bolocation			= CreateObject('property.bolocation');
 
 //			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement','attributes_view'));
@@ -2951,7 +2951,9 @@
 					'lang_history'					=> lang('history'),
 					'lang_history_help'				=> lang('history of this attribute'),
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+                    'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
 //			phpgwapi_yui::load_widget('dragdrop');
