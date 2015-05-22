@@ -903,7 +903,10 @@
 //			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement'));
 
 			$agreement = $this->bo->read_single(array('agreement_id'=>$agreement_id));
-
+            $tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$active_tab = 'general';
+            
 			if($this->acl_add && (is_array($values)))
 			{
 				if ($values['save'] || $values['apply'])
@@ -986,6 +989,8 @@
 					'lang_apply_statustext'		=> lang('Apply the values'),
 					'lang_cancel_statustext'	=> lang('Leave the agreement untouched and return back to the list'),
 					'lang_save_statustext'		=> lang('Save the agreement and return back to the list'),
+                    'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'					=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
                
