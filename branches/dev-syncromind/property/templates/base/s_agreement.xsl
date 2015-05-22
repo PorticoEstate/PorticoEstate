@@ -704,55 +704,50 @@
 				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
 		</script>
-		<div class="yui-navset" id="edit_tabview">
-			<div class="yui-content">
+		<div id="tab-content">
+                    <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                    <div id="general">
 				<xsl:variable name="edit_url">
 					<xsl:value-of select="edit_url"/>
 				</xsl:variable>
-				<form name="form" method="post" action="{$edit_url}">
-					<table cellpadding="2" cellspacing="2" width="79%" align="center">
+				<form name="form" method="post" class="pure-form pure-form-aligned" action="{$edit_url}">
+                                            <dl>
 						<xsl:choose>
 							<xsl:when test="msgbox_data != ''">
-								<tr>
-									<td align="left" colspan="3">
-										<xsl:call-template name="msgbox"/>
-									</td>
-								</tr>
+                                                                <dt>
+                                                                        <xsl:call-template name="msgbox"/>
+                                                                </dt>
 							</xsl:when>
 						</xsl:choose>
+                                            </dl>
 						<xsl:choose>
 							<xsl:when test="value_s_agreement_id!=''">
-								<tr>
-									<td align="left">
+								<div class="pure-control-group">
+									<label>
 										<xsl:value-of select="lang_agreement"/>
-									</td>
-									<td align="left">
+									</label>
 										<xsl:value-of select="value_s_agreement_id"/>
 										<xsl:text> [</xsl:text>
 										<xsl:value-of select="agreement_name"/>
 										<xsl:text>] </xsl:text>
-									</td>
-								</tr>
+								</div>
 							</xsl:when>
 						</xsl:choose>
 						<xsl:choose>
 							<xsl:when test="value_id!=''">
-								<tr>
-									<td align="left">
+                                                                <div class="pure-control-group">
+									<label>
 										<xsl:value-of select="lang_id"/>
-									</td>
-									<td align="left">
+									</label>
 										<xsl:value-of select="value_id"/>
-									</td>
-								</tr>
+								</div>
 							</xsl:when>
 						</xsl:choose>
 						<xsl:call-template name="location_form"/>
-						<tr>
-							<td valign="top">
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="lang_cost"/>
-							</td>
-							<td>
+							</label>
 								<input type="text" name="values[cost]" value="{value_cost}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
@@ -760,19 +755,15 @@
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
-							</td>
-						</tr>
+						</div>
 						<xsl:choose>
 							<xsl:when test="attributes_group != ''">
-								<tr>
-									<td colspan="2">
+								<div class="pure-control-group">
 										<xsl:call-template name="attributes_values"/>
-									</td>
-								</tr>
+								</div>
 							</xsl:when>
 						</xsl:choose>
-						<tr height="50">
-							<td valign="bottom">
+						<div class="pure-control-group">
 								<xsl:variable name="lang_save">
 									<xsl:value-of select="lang_save"/>
 								</xsl:variable>
@@ -783,8 +774,6 @@
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
-							</td>
-							<td valign="bottom">
 								<xsl:variable name="lang_apply">
 									<xsl:value-of select="lang_apply"/>
 								</xsl:variable>
@@ -795,8 +784,6 @@
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
-							</td>
-							<td align="right" valign="bottom">
 								<xsl:variable name="lang_cancel">
 									<xsl:value-of select="lang_cancel"/>
 								</xsl:variable>
@@ -807,9 +794,7 @@
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
-							</td>
-						</tr>
-					</table>
+						</div>
 				</form>
 				<style type="text/css">
 					.calendar-opt
@@ -839,16 +824,9 @@
 						<form method="post" name="form2" action="{$update_action}">
 							<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}"/>
 							<input type="hidden" name="values[item_id]" value="{value_id}"/>
-							<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
-								<tr>
-									<td>
-										<br/>
-									</td>
-								</tr>
-								<!-- DataTable 0 EDIT_ITEM-->
+							<fieldset>
 								<div id="contextmenu_0"/>
-								<tr>
-									<td class="center" align="left" colspan="10">
+								<div class="pure-control-group">
 										<!--div id="datatable-container_0"/></div-->
                                                                                 <div class="pure-custom">
                                                                                     <xsl:for-each select="datatable_def">
@@ -864,15 +842,8 @@
                                                                                             </xsl:if>
                                                                                     </xsl:for-each>
                                                                                 </div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<br/>
-									</td>
-								</tr>
-								<tr>
-									<td class="center" align="left" colspan="10">
+								</div>
+								<div class="pure-control-group">
 										<div id="datatable-buttons_0" class="div-buttons">
 											<input type="text" class="calendar-opt" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;">
 												<xsl:attribute name="title">
@@ -885,9 +856,8 @@
                                                                                         <input type="button" name="" value="Update" id="values[update]" onClick="onUpdateClickItems('update_item');"/>
                                                                                 <input type="button" name="" value="delete las index" id="values[delete]" onClick="onActionsClickDeleteLastIndex('delete_item');"/>
 										</div>
-									</td>
-								</tr>
-							</table>
+								</div>
+							</fieldset>
 						</form>
 					</xsl:when>
 				</xsl:choose>
@@ -1192,7 +1162,9 @@
 
 	<!-- view item -->
 	<xsl:template match="view_item">
-		<div align="left">
+		<div id="tab-content">
+                    <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                    <div id="general">
 			<script type="text/javascript">
 				var property_js = <xsl:value-of select="property_js"/>;
 				var base_java_url = <xsl:value-of select="base_java_url"/>;
@@ -1219,69 +1191,64 @@
 					myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 				</xsl:for-each>
 			</script>
-			<table cellpadding="2" cellspacing="2" width="79%" align="center">
+                            <dl>
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
-						<tr>
-							<td align="left" colspan="3">
-								<xsl:call-template name="msgbox"/>
-							</td>
-						</tr>
+                                                <dt>
+                                                        <xsl:call-template name="msgbox"/>
+                                                </dt>
 					</xsl:when>
 				</xsl:choose>
+                            </dl>
+                            <form method="post" class="pure-form pure-form-aligned"  name="form">
 				<xsl:choose>
 					<xsl:when test="value_s_agreement_id!=''">
-						<tr>
-							<td align="left">
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="lang_agreement"/>
-							</td>
-							<td align="left">
+							</label>
 								<xsl:value-of select="value_s_agreement_id"/>
 								<xsl:text> [</xsl:text>
 								<xsl:value-of select="agreement_name"/>
 								<xsl:text>] </xsl:text>
-							</td>
-						</tr>
+						</div>
 					</xsl:when>
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="value_id!=''">
-						<tr>
-							<td align="left">
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="lang_id"/>
-							</td>
-							<td align="left">
+							</label>
 								<xsl:value-of select="value_id"/>
-							</td>
-						</tr>
-					</xsl:when>
-				</xsl:choose>
-				<xsl:call-template name="location_view"/>
-				<tr>
-					<td valign="top">
-						<xsl:value-of select="lang_cost"/>
-					</td>
-					<td>
-						<xsl:value-of select="value_cost"/>
-					</td>
-				</tr>
-				<xsl:choose>
-					<xsl:when test="attributes_view != ''">
-						<div clas="pure-control-group">
-								<xsl:apply-templates select="attributes_view"/>
 						</div>
 					</xsl:when>
 				</xsl:choose>
-			</table>
+				<xsl:call-template name="location_view"/>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="lang_cost"/>
+					</label>
+						<xsl:value-of select="value_cost"/>
+				</div>
+				<xsl:choose>
+					<xsl:when test="attributes_view != ''">
+						<div clas="pure-control-group">
+                                                    <br></br>
+								<xsl:apply-templates select="attributes_view"/>
+                                                                
+						</div>
+					</xsl:when>
+				</xsl:choose>
+                            </form>
 			<xsl:choose>
 				<xsl:when test="values != ''">
 					<xsl:variable name="update_action">
 						<xsl:value-of select="update_action"/>
 					</xsl:variable>
-					<table width="79%" cellpadding="2" cellspacing="2" align="center">
+					<fieldset>
 						<!--  DataTable 0 VIEW ITEM -->
-						<tr>
-							<td align="left" colspan="4">
+						<div class="pure-control-group">
 								<!--div id="datatable-container_0"/-->
                                                                 <div class="pure-custom">
                                                                     <xsl:for-each select="datatable_def">
@@ -1298,22 +1265,19 @@
                                                                     </xsl:for-each>
                                                                 </div>
 								<div id="contextmenu_0"/>
-							</td>
-						</tr>
+						</div>
 						<!--
 <xsl:call-template name="table_header"/>
 <xsl:call-template name="values2"/>
 -->
-					</table>
+					</fieldset>
 				</xsl:when>
 			</xsl:choose>
 			<xsl:variable name="edit_url">
 				<xsl:value-of select="edit_url"/>
 			</xsl:variable>
-			<form name="form" method="post" action="{$edit_url}">
-				<table width="80%" cellpadding="2" cellspacing="2" align="center">
-					<tr height="50">
-						<td align="left" valign="bottom">
+			<form name="form" method="post" class="pure-form pure-form-aligned" action="{$edit_url}">
+					<div class="pure-control-group">
 							<xsl:variable name="lang_cancel">
 								<xsl:value-of select="lang_cancel"/>
 							</xsl:variable>
@@ -1324,11 +1288,10 @@
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
-						</td>
-					</tr>
-				</table>
+					</div>
 			</form>
 		</div>
+                </div>
 	</xsl:template>
 
 	<!-- New template-->
