@@ -288,6 +288,7 @@
 
 		function read_agreement_group($data)
 		{
+           
 			if(is_array($data))
 			{
 				if ($data['start'])
@@ -305,7 +306,7 @@
 				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
 				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
 			}
-
+            
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -331,7 +332,7 @@
 			}
 
 			$sql = "SELECT * FROM  fm_agreement_group $filtermethod $querymethod";
-
+            
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
