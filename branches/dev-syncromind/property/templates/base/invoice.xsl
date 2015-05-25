@@ -524,6 +524,9 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_amount_statustext"/>
 							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
 						</input>
 					</div>
 					<div class="pure-control-group">
