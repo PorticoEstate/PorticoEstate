@@ -2272,7 +2272,8 @@ JS;
 					'value_currency'		=> $line['currency'],
 					'value_process_log'		=> isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log'],
 					'paid'					=> $paid,
-					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+					'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'             => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);
 
 			self::render_template_xsl(array('invoice'), array('edit' => $data));
@@ -2944,7 +2945,8 @@ JS;
 					'b_account_data'					=> $b_account_data,
 					'link_receipt'						=> isset($link_receipt)?$link_receipt:'',
 					'lang_receipt'						=> lang('receipt'),
-					'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+					'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
 			//_debug_array($data);
