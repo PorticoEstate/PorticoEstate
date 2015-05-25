@@ -6,7 +6,18 @@
 		<xsl:variable name="select_district_name">
 			<xsl:value-of select="select_district_name"/>
 		</xsl:variable>
+		<xsl:variable name="district_required">
+			<xsl:value-of select="district_required"/>
+		</xsl:variable>
 		<select name="{$select_district_name}" class="forms" onMouseover="window.status='{$lang_district_statustext}'; return true;" onMouseout="window.status='';return true;">
+			<xsl:if test="$district_required = 1">
+				<xsl:attribute name="data-validation">
+					<xsl:text>required</xsl:text>
+				</xsl:attribute>
+				<xsl:attribute name="data-validation-error-msg">
+					<xsl:value-of select="php:function('lang', 'Please select a district !')"/>
+				</xsl:attribute>
+			</xsl:if>
 			<option value="">
 				<xsl:value-of select="lang_no_district"/>
 			</option>
