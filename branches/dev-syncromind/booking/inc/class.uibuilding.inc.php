@@ -1,7 +1,7 @@
 <?php
 	//phpgw::import_class('booking.uicommon');
-	//phpgw::import_class('booking.uidocument_building');
-	//phpgw::import_class('booking.uipermission_building');
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
 	
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 
@@ -99,7 +99,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Building'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'street',
