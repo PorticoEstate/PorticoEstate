@@ -774,8 +774,11 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('property', 'portico', 'tts.index.js');
 
+			$appname						= lang('helpdesk');
+			$function_msg					= lang('list ticket');
+			
 			$data = array(
-				'datatable_name'	=> lang('condition survey'),
+				'datatable_name'	=> $appname .': '.$function_msg,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -947,7 +950,7 @@
 				}
 			}
 
-
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 
 			self::render_template_xsl('datatable_jquery', $data);
