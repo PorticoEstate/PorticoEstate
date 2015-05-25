@@ -1180,6 +1180,7 @@
 					'lang_no_district'					=> lang('no district'),
 					'lang_district_statustext'			=> lang('Select the district'),
 					'select_district_name'				=> 'values[district_id]',
+					'district_required'					=> 1,
 					'district_list'						=> $this->bocommon->select_district_list('select',$district_id),
 
 					'value_year'						=> $values['year'],
@@ -1205,9 +1206,10 @@
 					'lang_apply_statustext'				=> lang('Apply the values'),
 					'lang_cancel_statustext'			=> lang('Leave the budget untouched and return to the list'),
 					'lang_save_statustext'				=> lang('Save the budget and return to the list'),
-					'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+					'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
-			
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id?lang('edit budget'):lang('add budget'));
 
 			self::render_template_xsl(array('budget'), array('edit_basis' => $data));
