@@ -619,6 +619,7 @@
 				{
 					$receipt = $this->bo->save($values, $attributes, $action, $this->entity_id, $this->cat_id);
 					$values['id'] = $receipt['id'];
+					$this->receipt = $receipt;
 				}
 
 				catch(Exception $e)
@@ -633,7 +634,7 @@
 				
 				$this->_handle_files($values);
 				
-				phpgwapi_cache::message_set($receipt, 'message'); 
+				//phpgwapi_cache::message_set($receipt, 'message'); 
 				if ($values['apply']) {
 					$this->edit($values);
 					return;
