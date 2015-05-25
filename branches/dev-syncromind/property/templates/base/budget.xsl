@@ -388,17 +388,16 @@
 		<xsl:variable name="edit_url">
 			<xsl:value-of select="edit_url"/>
 		</xsl:variable> 
-		
+		<dl>
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</xsl:when>
+			</xsl:choose>
+		</dl>
 		<form name="form" id="form" method="post" action="{$edit_url}" class="pure-form pure-form-aligned">
-			<dl>
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<dt>
-							<xsl:call-template name="msgbox"/>
-						</dt>
-					</xsl:when>
-				</xsl:choose>
-			</dl>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="generic">
@@ -481,6 +480,12 @@
 									<xsl:value-of select="lang_b_group_statustext"/>
 								</xsl:variable>
 								<select name="values[b_group]" class="forms" onMouseover="window.status='{$lang_b_group_statustext}'; return true;" onMouseout="window.status='';return true;">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please select a budget group !')"/>
+									</xsl:attribute>									
 									<xsl:apply-templates select="b_group_list"/>
 								</select>
 							</xsl:otherwise>
@@ -495,6 +500,12 @@
 								<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_budget_cost_statustext"/>
 								<xsl:text>'; return true;</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please enter a budget cost !')"/>
 							</xsl:attribute>
 						</input>
 					</div>
