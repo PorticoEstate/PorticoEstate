@@ -197,6 +197,12 @@
 									<xsl:value-of select="lang_name_statustext"/>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please - enter a template name!')"/>
+								</xsl:attribute>
 							</input>
 						</div>
 						<div class="pure-control-group">
