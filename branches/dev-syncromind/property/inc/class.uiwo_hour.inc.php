@@ -641,6 +641,7 @@
 					//'values_hour'				=> $common_data['content'],
 					'workorder_data' 			=> $common_data['workorder_data'],
 					'tabs'						=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+					'validator'					=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
 
 			$appname		= lang('Workorder');
