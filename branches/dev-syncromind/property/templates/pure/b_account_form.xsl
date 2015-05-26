@@ -31,7 +31,7 @@
 						<xsl:value-of select="lang_b_account"/>
 					</a>
 				</label>
-				<input size="9" type="text" name="b_account_id" value="{value_b_account_id}">
+				<input size="9" type="text" id="b_account_id" name="b_account_id" value="{value_b_account_id}">
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_select_b_account_help"/>
 					</xsl:attribute>
