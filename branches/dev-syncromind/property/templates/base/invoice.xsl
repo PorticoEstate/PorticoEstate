@@ -394,6 +394,12 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_vendor_statustext"/>
 							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - select Vendor!')"/>
+							</xsl:attribute>
 						</input>
 						<input type="text" name="vendor_name" value="{value_vendor_name}" size="40">
 							<xsl:attribute name="title">
@@ -446,6 +452,12 @@
 							<xsl:value-of select="select_budget_responsible"/>
 						</xsl:variable>
 						<select name="{$select_budget_responsible}" class="forms" title="{$lang_budget_responsible_statustext}">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - select budget responsible!')"/>
+							</xsl:attribute>
 							<option value="">
 								<xsl:value-of select="lang_select_budget_responsible"/>
 							</option>
@@ -456,9 +468,15 @@
 						<label>
 							<xsl:value-of select="lang_order"/>
 						</label>
-						<input type="text" name="order_id" value="{value_order_id}">
+						<input type="text" data-validation="number" name="order_id" value="{value_order_id}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_order_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - enter an integer for order!')"/>
 							</xsl:attribute>
 						</input>
 					</div>
@@ -473,6 +491,12 @@
 							<xsl:value-of select="select_art"/>
 						</xsl:variable>
 						<select name="{$select_art}" class="forms" title="{$lang_art_statustext}">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - select type invoice!')"/>
+							</xsl:attribute>
 							<option value="">
 								<xsl:value-of select="lang_select_art"/>
 							</option>
@@ -490,6 +514,12 @@
 							<xsl:value-of select="select_type"/>
 						</xsl:variable>
 						<select name="{$select_type}" class="forms" title="{$lang_type_statustext}">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - select type order!')"/>
+							</xsl:attribute>
 							<option value="">
 								<xsl:value-of select="lang_no_type"/>
 							</option>
@@ -503,6 +533,12 @@
 						<input type="text" name="invoice_num" value="{value_invoice_num}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_invoice_num_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - enter a invoice num!')"/>
 							</xsl:attribute>
 						</input>
 					</div>
@@ -527,6 +563,9 @@
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - enter an amount!')"/>
+							</xsl:attribute>
 						</input>
 					</div>
 					<div class="pure-control-group">
@@ -543,7 +582,7 @@
 						<label>
 							<xsl:value-of select="lang_no_of_days"/>
 						</label>
-						<input type="text" name="num_days" value="{value_num_days}" size="4">
+						<input type="text" name="num_days" id="num_days" value="{value_num_days}" size="4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_num_days_statustext"/>
 							</xsl:attribute>
@@ -553,9 +592,12 @@
 						<label>
 							<xsl:value-of select="lang_payment_date"/>
 						</label>
-						<input type="text" id="payment_date" name="payment_date" size="10" value="{value_payment_date}" readonly="readonly">
+						<input type="text" data-validation="days_payment_date" id="payment_date" name="payment_date" size="10" value="{value_payment_date}" readonly="readonly">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_payment_date_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please - select either payment date or number of days from invoice date !')"/>
 							</xsl:attribute>
 						</input>
 					</div>
@@ -596,6 +638,20 @@
 		</xsl:variable>
 		<form method="post" name="cancel_form" id="cancel_form" action="{$cancel_action}"></form>
 	</div>
+	<script type="text/javascript">
+		$.formUtils.addValidator({
+			name : 'days_payment_date',
+			validatorFunction : function(value, $el, config, language, $form) {
+				var payment_date = (value == '') ? 0 : 1;
+				var nun_days = ($('#num_days').val() == parseInt($('#num_days').val(), 10)) ? 1 : 0;
+				var result = (nun_days + payment_date == 0) ? false : true;
+				return result;
+			},
+			errorMessage : '',
+			errorMessageKey: ''
+		});
+	</script>
+
 </xsl:template>
 
 <!-- import -->
