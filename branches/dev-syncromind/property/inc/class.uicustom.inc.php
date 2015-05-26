@@ -451,7 +451,6 @@
 					'lang_sorting'					=> lang('Sorting'),
                     'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
-
 				);
                         
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('custom') . ': ' . ($custom_id?lang('edit custom'):lang('add custom'));
