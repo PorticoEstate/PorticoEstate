@@ -1012,13 +1012,14 @@
                             </xsl:when>
                     </xsl:choose>
                 </dl>
-                <div id="tab-content">
-		<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                    <div id="general">
+                
                                     <xsl:variable name="form_action">
                                             <xsl:value-of select="form_action"/>
                                     </xsl:variable>
-                                    <form method="post" name="form" class="pure-form pure-form-aligned" action="{$form_action}">
+                                    <form method="post" name="form" class="pure-form pure-form-aligned"  id="form" action="{$form_action}">
+                                        <div id="tab-content">
+                                        <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                                            <div id="general">
                                             <xsl:choose>
                                                     <xsl:when test="value_activity_id !=''">
                                                             <div class="pure-control-group">
@@ -1033,7 +1034,7 @@
                                                     <label>
                                                             <xsl:value-of select="lang_num"/>
                                                     </label>
-                                                            <input type="text" name="values[num]" value="{value_num}" onMouseout="window.status='';return true;">
+                                                            <input type="text" data-validation="required" name="values[num]" value="{value_num}" onMouseout="window.status='';return true;">
                                                                     <xsl:attribute name="onMouseover">
                                                                             <xsl:text>window.status='</xsl:text>
                                                                             <xsl:value-of select="lang_num_statustext"/>
@@ -1045,7 +1046,7 @@
                                                     <label>
                                                             <xsl:value-of select="lang_category"/>
                                                     </label>
-                                                            <xsl:call-template name="cat_select"/>
+                                                            <xsl:call-template name="cat_select" data-validation="required" />
                                             </div>
                                             <div class="pure-control-group">
                                                     <label>
@@ -1118,6 +1119,8 @@
                                                                     </xsl:attribute>
                                                             </input>
                                             </div>
+                                         </div>
+                                        </div>
                                     </form>
                                     <div class="pure-control-group">
                                                     <xsl:variable name="done_action">
@@ -1136,8 +1139,6 @@
                                                             </input>
                                                     </form>
                                     </div>
-                    </div>
-                </div>
 	</xsl:template>
 
 	<!-- New template-->
