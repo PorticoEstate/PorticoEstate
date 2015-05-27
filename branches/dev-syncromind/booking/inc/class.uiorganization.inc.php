@@ -256,6 +256,10 @@
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('Organization'), 'link' => '#organization');
+			$active_tab = 'generic';
 
 			if ( trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])) )
 			{
@@ -263,6 +267,7 @@
 			}
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
+			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$this->install_customer_identifier_ui($organization);
 			self::render_template_xsl('organization', array('organization' => $organization));
 		}
