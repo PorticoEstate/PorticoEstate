@@ -365,25 +365,25 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
             </script>
-            <div id="tab-content">
-                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                <div class="yui-content">
-                    <div id="general">
-                        <div align="left">
+            
+                        <dl>
+                            <xsl:choose>
+                                    <xsl:when test="msgbox_data != ''">
+                                                    <dt>
+                                                            <xsl:call-template name="msgbox"/>
+                                                    </dt>
+                                    </xsl:when>
+                            </xsl:choose>
+                        </dl>
                                 <xsl:variable name="form_action">
                                         <xsl:value-of select="form_action"/>
                                 </xsl:variable>
-                                <form method="post" class="pure-form pure-form-aligned" action="{$form_action}">
+                                <form method="post" class="pure-form pure-form-aligned" id="form" name="form" action="{$form_action}">
+                                    <div id="tab-content">
+                                    <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                                        <div id="general">
                                 <table cellpadding="2" cellspacing="2" width="80%" align="center">
-                                    <dl>
-                                        <xsl:choose>
-                                                <xsl:when test="msgbox_data != ''">
-                                                                <dt>
-                                                                        <xsl:call-template name="msgbox"/>
-                                                                </dt>
-                                                </xsl:when>
-                                        </xsl:choose>
-                                    </dl>
+                                    
                                                 <div class="pure-control-group">
                                                         <label>
                                                                 <xsl:choose>
@@ -406,7 +406,7 @@
                                                         <label>
                                                                 <xsl:value-of select="lang_name"/>
                                                         </label>
-                                                                <input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
+                                                                <input type="text" name="values[name]" data-validation="required" value="{value_name}" onMouseout="window.status='';return true;">
                                                                         <xsl:attribute name="onMouseover">
                                                                                 <xsl:text>window.status='</xsl:text>
                                                                                 <xsl:value-of select="lang_name_standardtext"/>
@@ -484,6 +484,8 @@
                                                         </td>
                                                 </tr>
                                 </table>
+                                     </div>
+            </div>
                                         </form>
                                         <table>
                                         <tr>
@@ -506,10 +508,6 @@
                                                 </td>
                                         </tr>
                                 </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
 	</xsl:template>
 
 	<!-- New template-->
@@ -667,24 +665,22 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
             </script>
-            <div id="tab-content">
-                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                <div class="yui-content">
-                    <div id="general">
-                        <div align="left">
+                        <dl>
+                            <xsl:choose>
+                                    <xsl:when test="msgbox_data != ''">
+                                                    <dt>
+                                                            <xsl:call-template name="msgbox"/>
+                                                    </dt>
+                                    </xsl:when>
+                            </xsl:choose>
+                        </dl>
                                 <xsl:variable name="form_action">
                                         <xsl:value-of select="form_action"/>
                                 </xsl:variable>
-                                <form method="post" class="pure-form pure-form-aligned" action="{$form_action}">
-                                    <dl>
-                                        <xsl:choose>
-                                                <xsl:when test="msgbox_data != ''">
-                                                                <dt>
-                                                                        <xsl:call-template name="msgbox"/>
-                                                                </dt>
-                                                </xsl:when>
-                                        </xsl:choose>
-                                    </dl>
+                                <form method="post" class="pure-form pure-form-aligned" id="form" name="form" action="{$form_action}">
+                                    <div id="tab-content">
+                                    <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                                        <div id="general">
                                                 <div class="pure-control-group">
                                                         <label>
                                                                 <xsl:choose>
@@ -707,7 +703,7 @@
                                                         <label>
                                                                 <xsl:value-of select="lang_column_name"/>
                                                         </label>
-                                                                <input type="text" name="values[column_name]" value="{value_column_name}" maxlength="20">
+                                                                <input type="text" data-validation="required" name="values[column_name]" value="{value_column_name}" maxlength="20">
                                                                         <xsl:attribute name="title">
                                                                                 <xsl:value-of select="lang_column_name_statustext"/>
                                                                         </xsl:attribute>
@@ -717,7 +713,7 @@
                                                         <label>
                                                                 <xsl:value-of select="lang_input_text"/>
                                                         </label>
-                                                                <input type="text" name="values[input_text]" value="{value_input_text}" size="60" maxlength="50">
+                                                                <input type="text" data-validation="required" name="values[input_text]" value="{value_input_text}" size="60" maxlength="50">
                                                                         <xsl:attribute name="title">
                                                                                 <xsl:value-of select="lang_input_text_statustext"/>
                                                                         </xsl:attribute>
@@ -727,7 +723,7 @@
                                                         <label>
                                                                 <xsl:value-of select="lang_statustext"/>
                                                         </label>
-                                                                <textarea cols="60" rows="10" name="values[statustext]">
+                                                                <textarea cols="60" rows="10" data-validation="required" name="values[statustext]">
                                                                         <xsl:attribute name="title">
                                                                                 <xsl:value-of select="lang_statustext_attribtext"/>
                                                                         </xsl:attribute>
@@ -744,7 +740,7 @@
                                                                 <xsl:variable name="select_location_type">
                                                                         <xsl:value-of select="select_location_type"/>
                                                                 </xsl:variable>
-                                                                <select name="{$select_location_type}" class="forms" title="{$lang_entity_statustext}">
+                                                                <select name="{$select_location_type}" class="forms" title="{$lang_entity_statustext}" data-validation="required">
                                                                         <option value="">
                                                                                 <xsl:value-of select="lang_no_location_type"/>
                                                                         </option>
@@ -769,7 +765,7 @@
                                                         <label>
                                                                 <xsl:value-of select="php:function('lang', 'datatype')"/>
                                                         </label>
-                                                                <select name="values[column_info][type]" class="forms">
+                                                                <select name="values[column_info][type]" class="forms" data-validation="required">
                                                                         <xsl:attribute name="title">
                                                                                 <xsl:value-of select="php:function('lang', 'select a datatype')"/>
                                                                         </xsl:attribute>
@@ -813,7 +809,7 @@
                                                         <label>
                                                                 <xsl:value-of select="php:function('lang', 'nullable')"/>
                                                         </label>
-                                                                <select name="values[column_info][nullable]">
+                                                                <select name="values[column_info][nullable]" data-validation="required">
                                                                         <xsl:attribute name="title">
                                                                                 <xsl:value-of select="php:function('lang', 'chose if this column is nullable')"/>
                                                                         </xsl:attribute>
@@ -888,6 +884,8 @@
                                                                         </xsl:attribute>
                                                                 </input>
                                                 </div>
+                                        </div>
+                                    </div>
                                 </form>
                                     <div class="pure-control-group">
                                                     <xsl:variable name="done_action">
@@ -904,10 +902,6 @@
                                                             </input>
                                                     </form>
                                     </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 	</xsl:template>
 
 	<!-- New template-->
