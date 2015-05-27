@@ -502,10 +502,6 @@
 				Window1=window.open('<xsl:value-of select="location_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
 		</script>
-                <div id="tab-content">
-                    <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                    <div id="general">
-                        <div align="left">
                                     <dl>
                                         <xsl:choose>
                                                 <xsl:when test="msgbox_data != ''">
@@ -520,16 +516,19 @@
                                         <xsl:variable name="form_action">
                                                 <xsl:value-of select="form_action"/>
                                         </xsl:variable>
-                                        <form method="post" class="pure-form pure-form-aligned" action="{$form_action}" name="form">
+                                        <form method="post" class="pure-form pure-form-aligned" id="form" action="{$form_action}" name="form">
+                                            <div id="tab-content">
+                                            <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                                            <div id="general">
                                                 <xsl:call-template name="location_form"/>
                                                 <div class="pure-control-group">
                                                         <label>
                                                                 <xsl:value-of select="lang_write_off_period"/>
                                                         </label>
-                                                                <xsl:call-template name="cat_select"/>
+                                                                <xsl:call-template name="cat_select_investment" />
                                                                 <xsl:text>  </xsl:text>
                                                                 <xsl:value-of select="lang_new"/>
-                                                                <input type="text" name="values[new_period]" value="{value_new_period}" size="3" onMouseout="window.status='';return true;">
+                                                                <input type="text"  id="numperiod" name="values[new_period]" value="{value_new_period}" size="3" onMouseout="window.status='';return true;">
                                                                         <xsl:attribute name="onMouseover">
                                                                                 <xsl:text>window.status='</xsl:text>
                                                                                 <xsl:value-of select="lang_new_period_statustext"/>
@@ -591,6 +590,8 @@
                                                                         </xsl:attribute>
                                                                 </input>
                                                 </div>
+                                             </div>
+                                            </div>
                                         </form>
                                         <div class="pure-control-group">
                                                         <xsl:variable name="done_action">
@@ -607,9 +608,20 @@
                                                                                 <xsl:text>'; return true;</xsl:text>
                                                                         </xsl:attribute>
                                                                 </input>
-                                                        </form>
+                                                        </form> 
                                         </div>
-                        </div>
-                    </div>
-                </div>
+        <script type="text/javascript">
+		$.formUtils.addValidator({
+			name : 'write_period_num',
+			validatorFunction : function(value, $el, config, language, $form) {
+				var select_num = (value == '') ? 0 : 1;
+				var nun_period = ($('#numperiod').val() == parseInt($('#numperiod').val(), 10)) ? 1 : 0;
+				var result = (nun_period + select_num == 0) ? false : true;
+				return result;
+			},
+			errorMessage : '',
+			errorMessageKey: ''
+		});
+	</script>
+                    
 	</xsl:template>
