@@ -1307,6 +1307,7 @@
 					'values'	=> $values['location_data'],
 					'type_id'	=> -1, // calculated from location_types
 					'no_link'	=> false, // disable lookup links for location type less than type_id
+                    'required_level' => 1,
 					'lookup_type'	=> 'form',
 					'lookup_entity'	=> $this->bocommon->get_lookup_entity('investment'),
 					'entity_data'	=> $values['p']
