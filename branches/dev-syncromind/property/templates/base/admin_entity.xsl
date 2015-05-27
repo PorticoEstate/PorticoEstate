@@ -438,24 +438,25 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 	</script>
-	<div id="tab-content">
-		<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-			<div id="general">
-				<div align="left">
+	
+                                        <dl>
+                                            <xsl:choose>
+                                                    <xsl:when test="msgbox_data != ''">
+                                                            <dt>
+                                                                            <xsl:call-template name="msgbox"/>
+                                                            </dt>
+                                                    </xsl:when>
+                                            </xsl:choose>
+                                        </dl>
 					<xsl:variable name="form_action">
 						<xsl:value-of select="form_action"/>
 					</xsl:variable>
-					<form name="form" class="pure-form pure-form-aligned" method="post" action="{$form_action}">
+					<form name="form" class="pure-form pure-form-aligned" method="post" id="form" action="{$form_action}">
+                                            <div id="tab-content">
+                                            <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                                                    <div id="general">
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
-                                                    <dl>
-							<xsl:choose>
-								<xsl:when test="msgbox_data != ''">
-									<dt>
-											<xsl:call-template name="msgbox"/>
-									</dt>
-								</xsl:when>
-							</xsl:choose>
-                                                    </dl>
+                                                    
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="lang_entity"/>
@@ -496,7 +497,7 @@
 									<xsl:value-of select="php:function('lang', 'name')"/>
 								</label>
 								
-									<input type="text" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
+									<input type="text" data-validation="required" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_name_standardtext"/>
@@ -911,6 +912,8 @@
 								</td>
 							</tr>
 						</table>
+                                              </div>
+                                            </div>
 					</form>
 					<table>
 						<tr>
@@ -933,9 +936,6 @@
                                                     </td>
 						</tr>
 					</table>
-				</div>
-			</div>
-	</div>
 	<!--  DATATABLE DEFINITIONS-->
 	<script type="text/javascript">
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
@@ -1253,25 +1253,24 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 	</script>
-	<div id="tab-content">
-		<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-		<div class="yui-content">
-			<div id="general">
-				<div align="left">
+	
+                             <dl>
+                                <xsl:choose>
+                                        <xsl:when test="msgbox_data != ''">
+                                                <dt>
+                                                        <xsl:call-template name="msgbox"/>
+                                                </dt>
+                                        </xsl:when>
+                                </xsl:choose>
+                            </dl>
 					<xsl:variable name="form_action">
 						<xsl:value-of select="form_action"/>
 					</xsl:variable>
-					<form method="post" class="pure-form pure-form-aligned" action="{$form_action}">
-
-                                                    <dl>
-							<xsl:choose>
-								<xsl:when test="msgbox_data != ''">
-                                                                        <dt>
-                                                                                <xsl:call-template name="msgbox"/>
-                                                                        </dt>
-								</xsl:when>
-							</xsl:choose>
-                                                    </dl>
+					<form method="post" class="pure-form pure-form-aligned" id="form" name="form" action="{$form_action}">
+                                            <div id="tab-content">
+                                            <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                                                    <div id="general">
+                                                   
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="lang_entity"/>
@@ -1314,7 +1313,7 @@
 								<label>
 									<xsl:value-of select="lang_group_name"/>
 								</label>
-									<input type="text" name="values[group_name]" value="{value_group_name}" maxlength="100" onMouseout="window.status='';return true;">
+									<input type="text" data-validation="required" name="values[group_name]" value="{value_group_name}" maxlength="100" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_group_name_statustext"/>
@@ -1326,7 +1325,7 @@
 								<label>
 									<xsl:value-of select="lang_descr"/>
 								</label>
-									<input type="text" name="values[descr]" value="{value_descr}" size="60" maxlength="150" onMouseout="window.status='';return true;">
+									<input type="text" data-validation="required" name="values[descr]" value="{value_descr}" size="60" maxlength="150" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_descr_statustext"/>
@@ -1359,6 +1358,8 @@
 										</xsl:attribute>
 									</input>
 							</div>
+                                                			</div>
+	</div>
 					</form>
 						<div class="pure-control-group">
 								<xsl:variable name="done_action">
@@ -1377,10 +1378,6 @@
 									</input>
 								</form>
 						</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </xsl:template>
 
 <!-- add attribute / edit attribute -->
