@@ -82,17 +82,17 @@
 
 	<!-- add / edit -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dl>
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</dl>
+			</xsl:when>
+		</xsl:choose>
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<tr>
-							<td align="left" colspan="3">
-								<xsl:call-template name="msgbox"/>
-							</td>
-						</tr>
-					</xsl:when>
-				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="value_request_id!='' and acl_add_project='1'">
 						<tr>
@@ -266,11 +266,17 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'request status')"/>
 									</label>
-									<select name="values[status]" data-validation="required" style="width:200px;">
+									<select name="values[status]" style="width:200px;">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'Set the status of the request')"/>
 										</xsl:attribute>
-										<option value="0">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please select a status !')"/>
+										</xsl:attribute>
+										<option value="">
 											<xsl:value-of select="php:function('lang', 'no status')"/>
 										</option>
 										<xsl:apply-templates select="status_list/options"/>
@@ -335,7 +341,13 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'select building part')"/>
 									</xsl:attribute>
-									<option value="0">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please select a building part!')"/>
+									</xsl:attribute>
+									<option value="">
 										<xsl:value-of select="php:function('lang', 'select building part')"/>
 									</option>
 									<xsl:apply-templates select="building_part_list/options"/>
@@ -348,7 +360,14 @@
 								<label title="{$lang_request_title}">
 									<xsl:value-of select="php:function('lang', 'request action title')"/>
 								</label>
-								<input data-validation="required" type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}"></input>
+								<input type="text" name="values[title]" value="{value_title}" size="120" title="{$lang_request_title}">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please enter a request TITLE !')"/>
+									</xsl:attribute>									
+								</input>
 							</div>
 							<div class="pure-control-group">
 								<xsl:variable name="lang_request_description">
@@ -457,7 +476,7 @@
 										<label class="requirement-action-label">
 											<xsl:value-of select="php:function('lang', 'cost operation')"/>
 										</label>
-										<input type="text" data-validation="number" name="values[amount_operation]" value="{value_amount_operation}">
+										<input type="text" data-validation="number" data-validation-allowing="float" name="values[amount_operation]" value="{value_amount_operation}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="lang_budget_statustext"/>
 											</xsl:attribute>
@@ -471,7 +490,7 @@
 										<label class="requirement-action-label">
 											<xsl:value-of select="php:function('lang', 'cost investment')"/>
 										</label>
-										<input type="text" data-validation="number" name="values[amount_investment]" value="{value_amount_investment}">
+										<input type="text" data-validation="number" data-validation-allowing="float" name="values[amount_investment]" value="{value_amount_investment}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="lang_budget_statustext"/>
 											</xsl:attribute>
@@ -505,7 +524,7 @@
 										<label class="requirement-action-label-wide">
 											<xsl:value-of select="php:function('lang', 'potential grants')"/>
 										</label>
-										<input type="text" data-validation="number" name="values[amount_potential_grants]" value="{value_amount_potential_grants}">
+										<input type="text" data-validation="number" data-validation-allowing="float" name="values[amount_potential_grants]" value="{value_amount_potential_grants}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="lang_budget_statustext"/>
 											</xsl:attribute>
