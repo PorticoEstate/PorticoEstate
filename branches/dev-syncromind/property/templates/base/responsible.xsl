@@ -25,9 +25,7 @@
             </script>
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                <div class="yui-content">
                     <div id="general">
-                        <div align="left">
                         <xsl:variable name="form_action">
                                 <xsl:value-of select="form_action"/>
                         </xsl:variable>
@@ -184,9 +182,7 @@
                                         myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
                                 </xsl:for-each>
                         </script>
-                        </div>
                     </div>
-                </div>
             </div>
 	</xsl:template>
 
