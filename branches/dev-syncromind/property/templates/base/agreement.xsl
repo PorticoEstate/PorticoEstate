@@ -491,12 +491,10 @@
 		</script>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-			<div class="yui-content">
 				<div id="general">
 					<xsl:variable name="edit_url">
 						<xsl:value-of select="edit_url"/>
 					</xsl:variable>
-					
 						<div class="pure-control-group">
 								<form ENCTYPE="multipart/form-data" class="pure-form pure-form-aligned" id="form" method="post" name="form" action="{$edit_url}">
 									<fieldset>
@@ -716,12 +714,7 @@
 									</fieldset>
 								</form>
 						</div>
-						<!--tr>
-							<td>
-								<br/>
-								<br/>
-							</td>
-						</tr-->
+
 						<div class="pure-control-group">
 								<form method="post" name="alarm" action="{$edit_url}">
 									<input type="hidden" name="values[entity_id]" value="{value_agreement_id}"/>
@@ -866,7 +859,6 @@
 						</xsl:when>
 					</xsl:choose>
 				</div>
-			</div>
 		</div>
 		<!--  DATATABLE DEFINITIONS-->
 		<style type="text/css">
