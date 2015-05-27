@@ -79,18 +79,16 @@
 		<xsl:variable name="lang_save">
 			<xsl:value-of select="lang_save"/>
 		</xsl:variable>
-
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dl>
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</dl>
+			</xsl:when>
+		</xsl:choose>
 		<table cellpadding="2" cellspacing="2" align="center">
-			<xsl:choose>
-				<xsl:when test="msgbox_data != ''">
-					<tr>
-						<td align="left" colspan="3">
-							<xsl:call-template name="msgbox"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-
 			<div id="receipt"></div>
 			<input type="hidden" id = "lean" name="lean" value="{lean}"/>
 			<xsl:choose>
