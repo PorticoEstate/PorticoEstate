@@ -7,6 +7,9 @@
 			<xsl:value-of select="select_branch"/>
 		</xsl:variable>
 		<select name="{$select_name}" class="forms" title="{$lang_branch_statustext}">
+                        <xsl:attribute name="data-validation">
+				<xsl:text>required</xsl:text>
+			</xsl:attribute>
 			<option value="">
 				<xsl:value-of select="lang_no_branch"/>
 			</option>
