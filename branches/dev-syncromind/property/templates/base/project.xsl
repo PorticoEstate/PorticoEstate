@@ -26,16 +26,16 @@
 		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 		var base_java_url = <xsl:value-of select="base_java_url"/>; 
    </script>
-    <table cellpadding="2" cellspacing="2" align="center">
 	<xsl:choose>
-	    <xsl:when test="msgbox_data != ''">
-		<tr>
-		    <td align="left" colspan="3">
-			<xsl:call-template name="msgbox"/>
-		    </td>
-		</tr>
-	    </xsl:when>
+		<xsl:when test="msgbox_data != ''">
+			<dl>
+				<dt>
+					<xsl:call-template name="msgbox"/>
+				</dt>
+			</dl>
+		</xsl:when>
 	</xsl:choose>
+    <table cellpadding="2" cellspacing="2" align="center">
 	<xsl:choose>
 	    <xsl:when test="value_project_id &gt; 0  and mode='edit'">
 		<td valign="top">
