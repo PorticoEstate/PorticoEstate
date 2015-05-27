@@ -1225,6 +1225,7 @@
 				'type_id'	=> -1, // calculated from location_types
 				'no_link'	=> false, // disable lookup links for location type less than type_id
 				'tenant'	=> true,
+				'required_level' => 1,
 				'lookup_type'	=> 'form2',
 				'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
 				'entity_data'	=> (isset($values['p'])?$values['p']:'')
