@@ -898,7 +898,7 @@
 					$receipt = $this->bo->save($values, $action);
 					$values['id'] = $receipt['id'];
 					$id = $receipt['id'];
-					
+					$this->receipt = $receipt;
 				}
 
 				catch(Exception $e)
@@ -1075,7 +1075,6 @@
 
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
-
 					if(!$this->receipt['error'])
 					{
 						$result =  array
@@ -1095,7 +1094,7 @@
 					return $result;
 				}
 				
-				phpgwapi_cache::message_set($receipt, 'message'); 
+				//phpgwapi_cache::message_set($receipt, 'message'); 
 				$this->edit($values);
 				
 				return;
