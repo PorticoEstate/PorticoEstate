@@ -12,7 +12,10 @@
                     <xsl:value-of select="organization/name"/>
             </li>
         </ul-->
-		<form class= "pure-form pure-form-aligned">
+		<xsl:variable name="edit_action">
+			<xsl:value-of select="organization/edit_link"/>
+		</xsl:variable>
+		<form class= "pure-form pure-form-aligned" action="{$edit_action}" method="post" id="form" name="form">
 			<input type="hidden" name="tab" value=""/>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="organization/tabs"/>
