@@ -967,7 +967,7 @@ JS;
 					$receipt = $this->bo->save($values, $action, $values_attribute);
 					$values['id'] = $receipt['id'];
 					$id = $receipt['id'];
-					$this->receipt['error'] = $receipt['error'];
+					$this->receipt = $receipt;
 				}
 				catch(Exception $e)
 				{
@@ -1129,7 +1129,7 @@ JS;
 				}
 			}
 			 
-			phpgwapi_cache::message_set($receipt, 'message');
+			//phpgwapi_cache::message_set($receipt, 'message');
 			
 			$this->edit($values, 'after_save');
 
