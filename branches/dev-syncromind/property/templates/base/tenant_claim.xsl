@@ -19,24 +19,22 @@
 				Window1=window.open('<xsl:value-of select="tenant_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
 		</script>
-                        <div id="tab-content">
-                            <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                                <div id="general">
+                                      <dl>
+                                        <xsl:choose>
+                                                <xsl:when test="msgbox_data != ''">
+                                                        <dt>
+                                                                <xsl:call-template name="msgbox"/>
+                                                        </dt>
+                                                </xsl:when>
+                                        </xsl:choose>
+                                      </dl>
                                         <xsl:variable name="edit_url">
                                                 <xsl:value-of select="edit_url"/>
                                         </xsl:variable>
-                                        <form ENCTYPE="multipart/form-data" class="pure-form pure-form-aligned" name="form" method="post" action="{$edit_url}">
-                                                    
-                                                        <xsl:choose>
-                                                                <xsl:when test="msgbox_data != ''">
-                                                                    <dl>
-                                                                        <dt>
-                                                                                <xsl:call-template name="msgbox"/>
-                                                                        </dt>
-                                                                    </dl>
-                                                                </xsl:when>
-                                                        </xsl:choose>
-                                                    
+                                        <form ENCTYPE="multipart/form-data" class="pure-form pure-form-aligned" name="form" id="form" method="post" action="{$edit_url}">
+                                            <div id="tab-content">
+                                            <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                                                <div id="general">        
                                                         <xsl:choose>
                                                                 <xsl:when test="value_claim_id!=''">
                                                                         <div class="pure-control-group">
@@ -82,7 +80,7 @@
                                                                 <label>
                                                                         <xsl:value-of select="lang_category"/>
                                                                 </label>
-                                                                <xsl:for-each select="cat_list_project">
+                                                                <xsl:for-each select="cat_list_project" data-validation="required">
                                                                         <xsl:choose>
                                                                                 <xsl:when test="selected='selected'">
                                                                                                 <xsl:value-of select="name"/>
@@ -317,7 +315,6 @@
                             <br></br>
                             <fieldset style="border: 1px solid #000;">
                                 <div class="pure-control-group">
-                                        <!--div id="datatable-container_2"/-->
                                         <div class="pure-custom" style="width: 100%;">
                                             <xsl:for-each select="datatable_def">
                                                     <xsl:if test="container = 'datatable-container_2'">
@@ -334,6 +331,8 @@
                                         </div>
                                 </div>
                             </fieldset>
+                           </div>
+                        </div>
                     </form>
                     <script type="text/javascript">
                         var property_js = <xsl:value-of select="property_js"/>;
@@ -363,8 +362,6 @@
                             myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
                         </xsl:for-each>
                     </script>
-                </div>
-            </div>
         </xsl:template>
 
 <!-- New template-->
