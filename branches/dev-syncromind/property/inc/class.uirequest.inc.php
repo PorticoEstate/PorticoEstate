@@ -996,7 +996,7 @@ JS;
 				{
 					$receipt = $this->bo->save($values, $action, $values_attribute);
 					$values['id'] = $receipt['id'];
-					$id = $receipt['id'];
+					$this->receipt = $receipt;
 				}
 				catch(Exception $e)
 				{
@@ -1019,8 +1019,8 @@ JS;
 					$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
 					$headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
 
-					$subject = lang(notify).": ". $id;
-					$message = lang(request) . " " . $id ." ". lang('is registered');
+					$subject = lang(notify).": ". $values['id'];
+					$message = lang(request) . " " . $values['id'] ." ". lang('is registered');
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
@@ -1040,13 +1040,13 @@ JS;
 
 				if($rcpt)
 				{
-					$receipt['message'][]=array('msg'=>lang('%1 is notified',$values['mail_address']));
+					$this->receipt['message'][]=array('msg'=>lang('%1 is notified',$values['mail_address']));
 				}
 					
-				phpgwapi_cache::message_set($receipt, 'message'); 
+				//phpgwapi_cache::message_set($receipt, 'message'); 
 				if ($values['save_new']) 
 				{
-					$values	= $this->bo->read_single($id);
+					$values	= $this->bo->read_single($values['id']);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array
 						(
 							'menuaction'	=> 'property.uirequest.add',
@@ -1228,6 +1228,7 @@ JS;
 					'type_id'		=> isset($this->config->config_data['request_location_level']) && $this->config->config_data['request_location_level'] ? $this->config->config_data['request_location_level'] : -1,
 					'no_link'		=> false, // disable lookup links for location type less than type_id
 					'tenant'		=> true,
+					'required_level' => 1,
 					'lookup_type'	=> $lookup_type,
 					'lookup_entity'	=> $this->bocommon->get_lookup_entity('request'),
 					'entity_data'	=> $values['p']
@@ -1373,7 +1374,7 @@ JS;
 				$receipt['error'][]=array('msg'=>lang('negative value for budget'));
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$related = $this->get_related($id);
 
@@ -1516,9 +1517,9 @@ JS;
 					'value_diff'						=> number_format($value_diff, 0, ',', ' '),
 					'value_diff2'						=> number_format($value_diff2, 0, ',', ' '),
 
-					'value_amount_potential_grants'		=> number_format($values['amount_potential_grants'], 0, ',', ' '),
-					'value_amount_investment'			=> number_format($values['amount_investment'], 0, ',', ' '),
-					'value_amount_operation'			=> number_format($values['amount_operation'], 0, ',', ' '),
+					'value_amount_potential_grants'		=> number_format($values['amount_potential_grants'], 0, ',', ''),
+					'value_amount_investment'			=> number_format($values['amount_investment'], 0, ',', ''),
+					'value_amount_operation'			=> number_format($values['amount_operation'], 0, ',', ''),
 
 					'loc1'								=> $values['location_data']['loc1'],
 					'location_data2'					=> $location_data,
@@ -1579,6 +1580,7 @@ JS;
 					'value_total_cost_estimate'			=> $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']) , 0, ',', ' ') : '',
 					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
+
 			$appname	= lang('request');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
