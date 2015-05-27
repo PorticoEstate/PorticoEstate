@@ -240,7 +240,6 @@
 		<!--div class="yui-navset" id="edit_tabview"-->
                 <div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-			<div class="yui-content">
 				<xsl:variable name="edit_url">
 					<xsl:value-of select="edit_url"/>
 				</xsl:variable>
@@ -462,11 +461,6 @@
 					<form method="post" name="alarm" action="{$edit_url}">
 						<input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}"/>
 						<fieldset>
-							<!--tr>
-								<td width="79%" class="center" align="left">
-									<br/>
-								</td>
-							</tr-->
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="lang_alarm"/>
@@ -490,11 +484,6 @@
                                                                             </xsl:for-each>
                                                                         </div>
 							</div>
-							<!--div class="pure-control-group">
-								<td class="center" align="right" colspan="10">
-									<div id="datatable-buttons_0"/>
-								</td>
-							</tr-->
 							<div class="pure-control-group">
 									<xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/>
 									<xsl:text> : </xsl:text>
@@ -668,7 +657,6 @@
 						</xsl:when>
 					</xsl:choose>
 				</div>
-			</div>
 		</div>
 	</xsl:template>
 
