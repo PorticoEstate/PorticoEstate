@@ -946,6 +946,7 @@
 					unset($fields['attributes']);
 					
 					$receipt = $this->bo->save($fields, $action, $attributes);
+					$this->receipt = $receipt;
 				}
 
 				catch(Exception $e)
@@ -958,7 +959,7 @@
 					}
 				}
 
-				phpgwapi_cache::message_set($receipt, 'message'); 
+				//phpgwapi_cache::message_set($receipt, 'message'); 
 				if ($values['apply']) {
 					$this->edit();
 					return;
