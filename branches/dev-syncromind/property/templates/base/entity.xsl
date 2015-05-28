@@ -617,7 +617,12 @@
 							</xsl:call-template>
 						</div>
 					</xsl:if>
-					<xsl:call-template name="attributes_values"/>
+					
+					<xsl:choose>
+						<xsl:when test="attributes_group!=''">				
+							<xsl:call-template name="attributes_values"/>
+						</xsl:when>
+					</xsl:choose>
 					
 					<xsl:choose>
 						<xsl:when test="files!='' or fileupload = 1">
@@ -779,7 +784,7 @@
 									<input type="submit" name="location" class="pure-button pure-button-primary" value="{$lang_start_ticket}">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_start_ticket_statustext"/>
-										</xsl:attribute>º
+										</xsl:attribute>
 									</input>
 								</form>
 							</xsl:when>
