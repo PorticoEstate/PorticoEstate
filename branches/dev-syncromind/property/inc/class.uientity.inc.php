@@ -1699,7 +1699,14 @@
 				);
 
 			$tabs = array();
+			$active_tab = phpgw::get_var('active_tab');
 
+			if($category['location_level'])
+			{
+				$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'disable' => 0);
+				$active_tab = $active_tab ? $active_tab : 'location';
+			}
+				
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
 				foreach ($values['attributes'] as & $attribute)
@@ -1728,14 +1735,6 @@
 					{
 						$attribute['hide_row'] = true;
 					}
-				}
-		
-				$active_tab = phpgw::get_var('active_tab');
-				
-				if($category['location_level'])
-				{
-					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'disable' => 0);
-					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
 				$_enable_controller = !!$category['enable_controller'];
