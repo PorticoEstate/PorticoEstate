@@ -3,8 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+var intVal = function ( i )
+{
+	return typeof i === 'string' ?
+		i.replace(/[\$,]/g, '')*1 :
+		typeof i === 'number' ?
+			i : 0;
+};
+
 this.local_DrawCallback1 = function(oTable)
 {       
-	var api = oTable.api(); 
-        api.columns( '.sorting' ).order( 'asc' );
+            var oTable = $('#datatable-container_0').dataTable();
+//            var api = oTable.api(); 
+//            api.columns('.sorting').order('asc');
+                oTable.fnSort( [ [2,'asc'] ] );
 };
