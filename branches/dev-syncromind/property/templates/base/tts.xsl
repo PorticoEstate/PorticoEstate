@@ -43,21 +43,19 @@
 							<label>
 								<xsl:value-of select="descr"/>
 							</label>
-							<table>
+							<div class="pure-custom">
 								<xsl:for-each select="data">
-									<tr>
-										<td align="left">
-											<xsl:variable name="link_request">
-												<xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/>
-											</xsl:variable>
-											<a href="{link}" title="{//lang_origin_statustext}">
-												<xsl:value-of select="id"/>
-											</a>
-											<xsl:text> </xsl:text>
-										</td>
-									</tr>
+									<div>
+										<xsl:variable name="link_request">
+											<xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/>
+										</xsl:variable>
+										<a href="{link}" title="{//lang_origin_statustext}">
+											<xsl:value-of select="id"/>
+										</a>
+										<xsl:text> </xsl:text>
+									</div>
 								</xsl:for-each>
-							</table>
+							</div>
 						</div>
 					</xsl:for-each>
 					<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
