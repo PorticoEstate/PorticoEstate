@@ -732,7 +732,7 @@
 			url: '$link_shedule2',
 			data:{values:values},
 			success: function(data) {
-				JqueryPortico.updateinlineTableHelper(oTable0, '$link_shedule2');
+				oTable0.fnDraw();
 			}
 			});
 	}
