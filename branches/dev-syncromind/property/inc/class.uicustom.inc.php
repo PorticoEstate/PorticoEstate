@@ -382,7 +382,7 @@
             
             $custom_def = array
 			(   
-//                array('key' => 'id', 'label'=>lang('Id'), 'sortable'=>true, 'resizeable'=>true),
+                array('key' => 'id', 'label'=>lang('Id'), 'sortable'=>true, 'resizeable'=>true,'hidden'=>true),
 				array('key' => 'name', 'label'=>lang('Column name'), 'sortable'=>FALSE, 'resizeable'=>true),
 				array('key' => 'descr', 'label'=>lang('Column description'), 'sortable'=>FALSE, 'resizeable'=>true),
                 array('key' => 'sorting', 'label'=>lang('Sorting'), 'sortable'=>FALSE, 'resizeable'=>true,'formatter'=>'JqueryPortico.formatUpDown'),
@@ -460,8 +460,10 @@
             phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 			
-            self::add_javascript('property', 'portico', 'custom.edit.js');
+          
 			self::render_template_xsl(array('custom','datatable_inline'), array('edit' => $data));
+            
+            self::add_javascript('property', 'portico', 'custom.edit.js');
 		}
 
 
