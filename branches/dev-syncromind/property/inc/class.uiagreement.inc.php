@@ -1616,8 +1616,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-										onActionsClick_notify('enable_alarm', ids);
-                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
+										onActionsClick_notify('enable_alarm', ids , {$requestUrl_Alarm} );"
+//                                        JqueryPortico.updateinlineTableHelper(oTable0, );"
                     ),
                 array(
                     'my_name'	=> 'disable_alarm',
@@ -1639,8 +1639,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-										onActionsClick_notify('disable_alarm', ids);
-                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
+										onActionsClick_notify('disable_alarm', ids , {$requestUrl_Alarm});"
+//                                        JqueryPortico.updateinlineTableHelper(oTable0, );"
                     ),
                 array(
                     'my_name'	=> 'delete_alarm',
@@ -1662,8 +1662,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-										onActionsClick_notify('delete_alarm', ids);
-                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
+										onActionsClick_notify('delete_alarm', ids,{$requestUrl_Alarm});"
+//                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
                     )
             );
             
@@ -1826,9 +1826,9 @@
                     'datatable_def'                         => $datatable_def,
 					'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'base_java_url'							=> json_encode(array(menuaction => "property.uiagreement.edit",id=>$id)),
-					'datatable'								=> $datavalues,
-					'myColumnDefs'							=> $myColumnDefs,
-					'myButtons'								=> $myButtons,
+//					'datatable'								=> $datavalues,
+//					'myColumnDefs'							=> $myColumnDefs,
+//					'myButtons'								=> $myButtons,
 
 					'allow_allrows'							=> true,
 					'allrows'								=> $this->allrows,
