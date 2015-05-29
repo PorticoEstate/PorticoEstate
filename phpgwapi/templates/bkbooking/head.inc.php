@@ -1,4 +1,5 @@
 <?php
+	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.template_portico');
 
@@ -44,6 +45,7 @@ JS;
 
 	$javascripts = array();
 
+	phpgwapi_jquery::load_widget('core');
 	phpgwapi_yui::load_widget('dragdrop');
 	phpgwapi_yui::load_widget('element');
 	phpgwapi_yui::load_widget('container');
@@ -76,9 +78,10 @@ JS;
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
+ //   $javascripts[] = "/phpgwapi/js/jquery/js/jquery-1.7.2.min.js";
+
 	//FIXME: To consider...
 	/*
-    $javascripts[] = "/phpgwapi/js/jquery/js/jquery-1.7.2.min.js";
 	$javascripts[] = "/phpgwapi/templates/stavanger/js/minid.js";
 */
 	foreach ( $javascripts as $javascript )
