@@ -439,6 +439,11 @@
 					$params['formatter'] = 'JqueryPortico.formatProject';
 				}
                 
+                if($uicols['name'][$k] == 'ticket')
+				{
+					$params['formatter'] = 'formatLinkTicket';
+				}
+				
                 if($uicols['name'][$k] == 'loc1')
 				{
                     # Aca debe ser el Onclick
@@ -619,7 +624,8 @@ JS;
 				}
 				
 			}
-          
+			
+			self::add_javascript('property', 'portico', 'project.index.js');
             self::render_template_xsl('datatable_jquery',$data);
 		}
 
