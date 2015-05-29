@@ -2180,7 +2180,8 @@ JS;
 				'documents'						=> $documents,
 				'file_tree'						=> $file_tree,
 				'lang_expand_all'				=> lang('expand all'),
-				'lang_collapse_all'				=> lang('collapse all')
+				'lang_collapse_all'				=> lang('collapse all'),
+				'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 
 			phpgwapi_jquery::load_widget('treeview');
