@@ -213,6 +213,12 @@
 			$organization = $this->bo->read_single($id);
 			$organization['id'] = $id;
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
+			
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('Generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			
+			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -248,6 +254,8 @@
 			
 			$this->install_customer_identifier_ui($organization);
 			$this->use_yui_editor();
+			
+			$this->rich_text_editor('field-description');
             
 			$this->add_template_helpers();
 			self::render_template_xsl('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
