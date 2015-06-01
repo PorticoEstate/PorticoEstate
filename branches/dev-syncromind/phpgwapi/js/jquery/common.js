@@ -146,11 +146,10 @@ JqueryPortico.formatCheckCustom = function(key, oData) {
 
 JqueryPortico.formatUpDown = function(key, oData){
     
-  var name = oData[key];
   var linkUp = oData['link_up'];
   var linkDown = oData['link_down'];
   
-  return '<center>'+ name +'&nbsp;<a href="' + linkUp + '">up</a> | <a href="' + linkDown + '">down</a></center>';
+  return '<a href="' + linkUp + '">up</a> | <a href="' + linkDown + '">down</a>';
 }; 
 
 JqueryPortico.formatRadio = function(key, oData){
