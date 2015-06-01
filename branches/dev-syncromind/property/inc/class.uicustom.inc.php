@@ -382,13 +382,14 @@
             
             $custom_def = array
 			(   
-                array('key' => 'id', 'label'=>lang('Id'), 'sortable'=>true, 'resizeable'=>true,'hidden'=>true),
-				array('key' => 'name', 'label'=>lang('Column name'), 'sortable'=>FALSE, 'resizeable'=>true),
-				array('key' => 'descr', 'label'=>lang('Column description'), 'sortable'=>FALSE, 'resizeable'=>true),
-                array('key' => 'sorting', 'label'=>lang('Sorting'), 'sortable'=>FALSE, 'resizeable'=>true,'formatter'=>'JqueryPortico.formatUpDown'),
-                array('key' => 'delete', 'label'=>lang('Delete column'), 'sortable'=>FALSE, 'resizeable'=>true,'formatter'=>'JqueryPortico.formatCheckCustom'),
-                array('key' => 'link_up', 'label'=>lang('Up'), 'sortable'=>FALSE, 'resizeable'=>true, 'hidden'=>TRUE),
-				array('key' => 'link_down', 'label'=>lang('Down'), 'sortable'=>FALSE, 'resizeable'=>true,'hidden'=>TRUE)
+                array('key' => 'id', 'label'=>lang('Id'), 'sortable'=>true, 'hidden'=>true),
+				array('key' => 'name', 'label'=>lang('Column name'), 'sortable'=>FALSE),
+				array('key' => 'descr', 'label'=>lang('Column description'), 'sortable'=>FALSE),
+				array('key' => 'order', 'label'=>lang('Order'), 'sortable'=>FALSE, 'className'=>'center'),
+                array('key' => 'sorting', 'label'=>lang('Sorting'), 'sortable'=>FALSE, 'className'=>'center','formatter'=>'JqueryPortico.formatUpDown'),
+                array('key' => 'delete', 'label'=>lang('Delete column'), 'sortable'=>FALSE, 'formatter'=>'JqueryPortico.formatCheckCustom'),
+                array('key' => 'link_up', 'label'=>lang('Up'), 'sortable'=>FALSE, 'hidden'=>TRUE),
+				array('key' => 'link_down', 'label'=>lang('Down'), 'sortable'=>FALSE, 'hidden'=>TRUE)
 			);
             //formatLink formatCheck
             while (is_array($custom['cols']) && list(,$entry) = each($custom['cols']))
@@ -397,6 +398,7 @@
 					'id'		=> $entry['id'],
 					'name'		=> $entry['name'],
 					'descr'		=> $entry['descr'],
+					'order'		=> $entry['sorting'],
 					'sorting'	=> $entry['sorting'],
 					'link_up'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'up', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
 					'link_down'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'down', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
@@ -404,7 +406,6 @@
 				);
 			}
                          
-          
             $datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
