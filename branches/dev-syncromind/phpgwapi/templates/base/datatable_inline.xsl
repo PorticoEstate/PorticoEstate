@@ -334,6 +334,9 @@
 			<xsl:if test="disablePagination">
 				options<xsl:number value="($num - 1)"/>.disablePagination = true;
 			</xsl:if>
+			<xsl:if test="order">
+				options<xsl:number value="($num - 1)"/>.order = <xsl:value-of select="order" />;
+			</xsl:if>
 		</xsl:for-each>
 		if (JqueryPortico.TableTools<xsl:number value="($num - 1)"/>)
 		{
