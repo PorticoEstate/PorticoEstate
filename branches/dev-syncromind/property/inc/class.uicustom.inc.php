@@ -413,7 +413,8 @@
 				'ColumnDefs'	=> $custom_def,
 				'config'		=> array(
 					array('disableFilter'	=> true),
-					array('disablePagination'	=> true)
+					array('disablePagination'	=> true),
+					array('order'	=> json_encode(array('2','asc')))
 				)
 			);
 	                    
@@ -454,16 +455,11 @@
 				);
                         
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('custom') . ': ' . ($custom_id?lang('edit custom'):lang('add custom'));
-
-			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
             
             phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
-			
-          
+			         
 			self::render_template_xsl(array('custom','datatable_inline'), array('edit' => $data));
-            
-            self::add_javascript('property', 'portico', 'custom.edit.js');
 		}
 
 
