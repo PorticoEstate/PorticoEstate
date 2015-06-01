@@ -232,16 +232,16 @@
 																				action += "&amp;confirm=yes&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
 																					document.getElementById("message").innerHTML += '<br/>' + result;
-																				});
-																				oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																					oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																				});																			
 																		}
 																		else if (target == 'ajax')
 																		{
 																				action += "&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
 																					document.getElementById("message").innerHTML += '<br/>' + result;
-																				});
-																				oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																					oTable<xsl:number value="($num - 1)"/>.fnDraw();
+																				});																				
 																		}
 																		else
 																		{
