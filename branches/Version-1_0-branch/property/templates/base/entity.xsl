@@ -591,6 +591,21 @@
 								<table>
 									<xsl:choose>
 										<xsl:when test="mode='edit'">
+											<tr>
+												<xsl:variable name="lang_entity_group">
+													<xsl:value-of select="php:function('lang', 'entity group')"/>
+												</xsl:variable>
+												<td>
+													<xsl:value-of select="$lang_entity_group"/>
+												</td>
+												<td valign="top">
+													<select name="values[entity_group_id]" title="$lang_entity_group">
+														<xsl:apply-templates select="entity_group_list/options"/>
+													</select>
+													<xsl:value-of select="entity_group_name"/>
+												</td>
+											</tr>
+
 											<xsl:choose>
 												<xsl:when test="org_unit='1'">
 													<tr>

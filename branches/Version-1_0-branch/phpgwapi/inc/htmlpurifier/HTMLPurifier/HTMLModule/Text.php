@@ -14,14 +14,23 @@
  */
 class HTMLPurifier_HTMLModule_Text extends HTMLPurifier_HTMLModule
 {
-
+    /**
+     * @type string
+     */
     public $name = 'Text';
+
+    /**
+     * @type array
+     */
     public $content_sets = array(
         'Flow' => 'Heading | Block | Inline'
     );
 
-    public function setup($config) {
-
+    /**
+     * @param HTMLPurifier_Config $config
+     */
+    public function setup($config)
+    {
         // Inline Phrasal -------------------------------------------------
         $this->addElement('abbr',    'Inline', 'Inline', 'Common');
         $this->addElement('acronym', 'Inline', 'Inline', 'Common');
@@ -47,10 +56,17 @@ class HTMLPurifier_HTMLModule_Text extends HTMLPurifier_HTMLModule
 
         // Block Phrasal --------------------------------------------------
         $this->addElement('address',     'Block', 'Inline', 'Common');
-        $this->addElement('blockquote',  'Block', 'Optional: Heading | Block | List', 'Common', array('cite' => 'URI') );
+        $this->addElement('blockquote', 'Block', 'Optional: Heading | Block | List', 'Common', array('cite' => 'URI'));
         $pre = $this->addElement('pre', 'Block', 'Inline', 'Common');
         $pre->excludes = $this->makeLookup(
-            'img', 'big', 'small', 'object', 'applet', 'font', 'basefont' );
+            'img',
+            'big',
+            'small',
+            'object',
+            'applet',
+            'font',
+            'basefont'
+        );
         $this->addElement('h1', 'Heading', 'Inline', 'Common');
         $this->addElement('h2', 'Heading', 'Inline', 'Common');
         $this->addElement('h3', 'Heading', 'Inline', 'Common');
@@ -60,12 +76,12 @@ class HTMLPurifier_HTMLModule_Text extends HTMLPurifier_HTMLModule
 
         // Block Structural -----------------------------------------------
         $p = $this->addElement('p', 'Block', 'Inline', 'Common');
-        $p->autoclose = array_flip(array("address", "blockquote", "center", "dir", "div", "dl", "fieldset", "ol", "p", "ul"));
+        $p->autoclose = array_flip(
+            array("address", "blockquote", "center", "dir", "div", "dl", "fieldset", "ol", "p", "ul")
+        );
 
         $this->addElement('div', 'Block', 'Flow', 'Common');
-
     }
-
 }
 
 // vim: et sw=4 sts=4

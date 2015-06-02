@@ -897,6 +897,19 @@
 							</tr>
 						</xsl:when>
 					</xsl:choose>
+					<tr>
+						<xsl:variable name="lang_entity_group">
+							<xsl:value-of select="php:function('lang', 'entity group')"/>
+						</xsl:variable>
+						<td>
+							<xsl:value-of select="$lang_entity_group"/>
+						</td>
+						<td valign="top">
+							<select name="values[entity_group_id]" title="$lang_entity_group">
+								<xsl:apply-templates select="entity_group_list/options"/>
+							</select>
+						</td>
+					</tr>
 					<xsl:choose>
 						<xsl:when test="category_list != '' and value_id = ''">
 							<tr>

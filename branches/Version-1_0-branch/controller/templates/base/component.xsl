@@ -210,7 +210,40 @@
 						$("#month10").html(time_sum[10]);
 						$("#month11").html(time_sum[11]);
 						$("#month12").html(time_sum[12]);
+						if(data.location_filter)
+						{
+							var obj = data.location_filter;
+							var htmlString  = "<option value=''>" + obj.length + " register funnet</option>";
+							var entity_group_id = $("#entity_group_id").val();
+							var location_id = $("#location_id").val();
+
+							if(entity_group_id)
+							{
+								var selected = '';
+								if(location_id == -1)
+								{
+									selected = ' selected';
+								}
+								htmlString  += "<option value='-1'" + selected + ">Velg alle</option>";
+							}
+
+							$.each(obj, function(i)
+							{
+								var selected = '';
+								if(obj[i].selected == 1)
+								{
+									selected = ' selected';
+								}
+
+								htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+
+							});
+
+							$("#location_id").html( htmlString );
+
+						}
 					}
+
 				}
 			});
 

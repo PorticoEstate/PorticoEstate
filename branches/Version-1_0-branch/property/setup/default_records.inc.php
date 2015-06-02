@@ -302,8 +302,8 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_agreement_status (id, desc
 #
 #  fm_ns3420
 #
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, tekst1, enhet) VALUES ('D00', 'RIGGING, KLARGJØRING', 'RS')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, tekst1, enhet,tekst2) VALUES ('D20', 'RIGGING, ANLEGGSTOMT', 'RS','TILFØRSEL- OG FORSYNINGSANLEGG')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, num, tekst1, enhet) VALUES (1, 'D00', 'RIGGING, KLARGJØRING', 'RS')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, num, tekst1, enhet,tekst2) VALUES (2, 'D20', 'RIGGING, ANLEGGSTOMT', 'RS','TILFØRSEL- OG FORSYNINGSANLEGG')");
 
 #
 # Data-ark for tabell fm_idgenerator

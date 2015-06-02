@@ -20,13 +20,18 @@
 		<script type="text/javascript">
 		<!--
 			var strBaseURL = '{str_base_url}';
-			{win_on_events}
 		//-->
 		</script>
 		{javascript}
 		<!-- BEGIN javascript -->
        		<script type="text/javascript" src="{javascript_uri}"></script>
     	<!-- END javascript -->
+
+		<script type="text/javascript">
+		<!--
+			{win_on_events}
+		//-->
+		</script>
 
 	</head>
 <body>

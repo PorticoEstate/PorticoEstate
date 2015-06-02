@@ -1178,7 +1178,7 @@
 			return $sql;
 		}
 
-		function read_single($location_code='',$values = array())
+		function read_single($location_code='',$values = array(), $skip_attribs = false)
 		{
 			//cache result
 			static $location = array();
@@ -1196,7 +1196,7 @@
 				return $location[$location_code];
 			}
 
-			if(!isset($values['attributes']) || ! $values['attributes'])
+			if(!$skip_attribs && (!isset($values['attributes']) || ! $values['attributes']))
 			{
 				$values['attributes'] = $this->custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
@@ -1321,6 +1321,7 @@
 
 			$sql	= "INSERT INTO fm_locations (level, location_code, loc1) VALUES ({$type_id}, '{$location['location_code']}', '{$location['loc1']}')";
 			$this->db->query($sql,__LINE__,__FILE__);
+			$this->update_location_name($location['location_code']);
 
 			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('Location %1 has been saved',$location['location_code']));
@@ -1413,8 +1414,10 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$sql = "UPDATE fm_location$type_id SET $value_set WHERE location_code='" . $location['location_code'] . "'";
-
 			$this->db->query($sql,__LINE__,__FILE__);
+
+			$this->update_location_name($location['location_code']);
+
 			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('Location %1 has been edited',$location['location_code']));
 			$receipt['location_code'] = $location['location_code'];
@@ -1518,6 +1521,7 @@
 			{
 				$this->db->transaction_begin();
 			}
+			set_time_limit(0);
 
 			$this->db->query('SELECT max(id) as levels FROM fm_location_type');
 			$this->db->next_record();
@@ -1606,6 +1610,20 @@
 				}
 			}
 
+			$this->db->query("SELECT location_code FROM fm_locations WHERE name IS NULL");
+
+			$locations = array();
+
+			while ($this->db->next_record())
+			{
+				$locations[] = $this->db->f('location_code');
+			}
+
+			foreach($locations as $location_code)
+			{
+				$this->update_location_name($location_code);
+			}
+
 			if ( !$this->global_lock )
 			{
 				if( $this->db->transaction_commit() )
@@ -1617,6 +1635,22 @@
 					return $receipt['error'][]=array('msg'=>lang('update failed'));
 				}
 			}
+		}
+
+		function update_location_name($location_code)
+		{
+			$location_array = $this->read_single($location_code);
+
+			$location_arr = explode('-', $location_code);
+			$loc_name_arr = array();
+			$i = 1;
+			foreach ($location_arr as $_part)
+			{
+				$loc_name_arr[] = $location_array["loc{$i}_name"];
+				$i++;
+			}
+			$name	= $this->db->db_addslashes(implode(', ', $loc_name_arr));
+			$this->db->query("UPDATE fm_locations SET name = '{$name}' WHERE location_code = '{$location_code}'");
 		}
 
 		function read_summary($data='')
