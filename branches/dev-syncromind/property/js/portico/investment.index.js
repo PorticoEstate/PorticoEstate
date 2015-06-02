@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uiinvestment.updateinvest'});
 
 var intVal = function ( i )
 {
@@ -64,48 +63,70 @@ onclikUpdateinvestment = function(){
     
     var oDate = $('#filter_start_date').val();
     var oIndex = $('#txt_index').val();
-
-    var oTT = TableTools.fnGetInstance( 'datatable-container' );
-    var selected = oTT.fnGetSelectedData();
-    var numSelected = 	selected.length;
-
-    if (numSelected == '0'){
+	var select_check = $('.select_check');
+	
+    if (select_check.length == '0'){
         alert('None selected');
         return false;
-    }else if(numSelected != '0' && oDate == '' && oIndex == ''){
-        alert('None index and date');
+    }
+	if(oIndex == ''){
+        alert('None index');
         return false;
-    }else if(numSelected != '0' && oDate!='' && oIndex == ''){
-        alert('None Index');
-        return false;
-    }else if(numSelected != '0' && oDate=='' && oIndex != ''){
+    }
+	if(oDate == ''){
         alert('None Date');
         return false;
     }
-    
-    var ids = [];
-    var up = {}; var value = {}; var inval = {}; var invid = {}; var entid = {};
-    for ( var n = 0; n < selected.length; ++n )
-    {
-        var aData = selected[n];
-        ids.push(aData['counter']);
-        entid[aData['counter']] = aData['entity_id'];
-        invid[aData['counter']] = aData['investment_id'];
-        inval[aData['counter']] = aData['initial_value_ex'];
-        value[aData['counter']] = aData['value_ex'];
-        up[aData['counter']] = aData['counter'];
-    }
-    
-    $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: ""+ sUrl_agreement +"&phpgw_return_as=json",
-            data:{ids:ids,entid:entid,invid:invid,inval:inval,value:value,up:up,date:oDate,index:oIndex},
-            success: function(data) {
-                $('#filter_start_date').val('');
-                $('#txt_index').val('');
-                oTable.fnDraw();
-            }
-    });
+	
+	var values = {};
+
+	values['entity_id'] = {};
+	values['investment_id'] = {};
+	values['initial_value'] = {};
+	values['value'] = {};
+	values['update'] = {};
+	values['new_index'] = oIndex;
+	values['date'] = oDate;
+	
+	var api = oTable.api();
+	api.data().each( function (d) 
+	{
+		values['entity_id'][d.counter] = d.entity_id;
+		values['investment_id'][d.counter] = d.investment_id;
+		values['initial_value'][d.counter] = d.initial_value;
+		values['value'][d.counter] = d.value;
+	});
+		
+	select_check.each(function(i, obj) {
+		if (obj.checked) 
+		{
+			values['update'][obj.value] = obj.value;
+		}
+	});
+		
+	var requestUrl = api.ajax.url();
+	var data = {"values": values};
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+        $('#filter_start_date').val('');
+        $('#txt_index').val('');
+		document.getElementById("message").innerHTML = '';
+
+		if (typeof(result.message) !== 'undefined')
+		{
+			$.each(result.message, function (k, v) {
+				document.getElementById("message").innerHTML += v.msg + "<br/>";
+			});
+		}
+
+		if (typeof(result.error) !== 'undefined')
+		{
+			$.each(result.error, function (k, v) {
+				document.getElementById("message").innerHTML += v.msg + "<br/>";
+			});
+		}
+		oTable.fnDraw();
+
+	}, data, "POST", "JSON");
 }
 
