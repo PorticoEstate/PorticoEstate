@@ -559,6 +559,9 @@
 			$uicols['descr'][6]	= lang('enable bulk');
 			$uicols['name'][7]	= 'enable_controller';
 			$uicols['descr'][7]	= lang('enable controller');
+			$uicols['name'][8]	= 'entity_group_id';
+			$uicols['descr'][8]	= lang('entity group');
+
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -1203,6 +1206,7 @@
 					'value_enable_bulk'					=> $values['enable_bulk'],
 					'value_enable_controller'			=> $values['enable_controller'],
 					'jasperupload'						=> true,
+					'entity_group_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'entity_group', 'selected' => $values['entity_group_id'], 'add_empty' => true))),
 					'category_list'						=> $category_list,
 					'parent_list'						=> $parent_list
 				);
