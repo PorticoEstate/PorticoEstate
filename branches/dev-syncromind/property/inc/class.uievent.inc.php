@@ -219,20 +219,21 @@
                 'form' => array(
                     'toolbar' => array(
                         'item' => array(
-                            array(
-                                'type' => 'date-picker',
-                                'id'   => 'start_date',
-                                'name' => 'start_date',
-                                'value'=> '',
-                                'text' => lang('from')
-                            ),
-                            array(
-                                'type' => 'date-picker',
-                                'id'   => 'end_date',
-                                'name' => 'end_date',
-                                'value'=> '',
-                                'text' => lang('to')
-                            )
+//                            el metodo read de la clase boevent no recibe variable fechas
+//                            array(
+//                                'type' => 'date-picker',
+//                                'id'   => 'start_date',
+//                                'name' => 'start_date',
+//                                'value'=> '',
+//                                'text' => lang('from')
+//                            ),
+//                            array(
+//                                'type' => 'date-picker',
+//                                'id'   => 'end_date',
+//                                'name' => 'end_date',
+//                                'value'=> '',
+//                                'text' => lang('to')
+//                            )
                         )
                     )
                 ),
