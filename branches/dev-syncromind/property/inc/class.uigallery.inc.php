@@ -917,14 +917,16 @@
         
         public function query()
         {
-            
-            $start_date	= urldecode($this->start_date);
-			$end_date = urldecode($this->end_date);
+            $start_date = urldecode(phpgw::get_var('start_date'));
+            $end_date   = urldecode(phpgw::get_var('end_date'));
+//            $start_date	= urldecode($this->start_date);
+//			$end_date = urldecode($this->end_date);
             
             $search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+            
             
             $params = array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
