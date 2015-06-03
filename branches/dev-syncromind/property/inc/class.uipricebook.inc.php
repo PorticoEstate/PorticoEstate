@@ -182,6 +182,14 @@
 			{
 				foreach($pricebook_list as $pricebook)
 				{
+					$check = '';
+					if($this->acl_manage)
+					{						
+						if(!empty($pricebook['total_cost']))
+						{
+							$check = "<input type='checkbox' name='values[update][".$i."]' value='".$i."' class='mychecks select_check' />";
+						}
+					}
 					$content[] = array
 						(
 							'counter'					=> $i,
@@ -197,6 +205,7 @@
 							'unit'						=> $pricebook['unit'],
 							'descr'						=> $pricebook['descr'],
 							'index_count'				=> $pricebook['index_count'],
+							'select'					=> $check
 						);
 					$i++;
 				}
@@ -211,7 +220,6 @@
            
             $result_data['total_records'] = $this->bo->total_records;
             $result_data['draw'] = $draw;
-			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
             
             return $this->jquery_results($result_data);
         }
@@ -224,102 +232,12 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw']->session->appsession('referer','property','');
-
-//			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook','nextmatchs','search_field'));
-
 			$values	= phpgw::get_var('values');
 
-			if($values['submit_update'])
+			if($values['submit_update'] && phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				$receipt=$this->bo->update_pricebook($values);
+				return $this->bo->update_pricebook($values);
 			}
-
-//			$pricebook_list = $this->bo->read();
-//
-//			$i=0;
-//			if (isSet($pricebook_list) AND is_array($pricebook_list))
-//			{
-//				foreach($pricebook_list as $pricebook)
-//				{
-//					if($this->acl_manage)
-//					{
-//						$link_edit					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id']));
-//						$link_prizing				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.prizing', 'activity_id'=> $pricebook['activity_id'], 'agreement_id'=> $pricebook['agreement_id'], 'cat_id'=> $this->cat_id));
-//						$lang_edit_statustext		= lang('edit the pricebook');
-//						$lang_prizing_statustext	= lang('view or edit prizing history of this element');
-//						$text_edit					= lang('edit');
-//						$text_prizing				= lang('prizing');
-//					}
-//
-//					$content[] = array
-//						(
-//							'counter'					=> $i,
-//							'activity_id'				=> $pricebook['activity_id'],
-//							'num'						=> $pricebook['num'],
-//							'branch'					=> $pricebook['branch'],
-//							'vendor_id'					=> $pricebook['vendor_id'],
-//							'agreement_id'				=> $pricebook['agreement_id'],
-//							'm_cost'					=> $pricebook['m_cost'],
-//							'w_cost'					=> $pricebook['w_cost'],
-//							'total_cost'				=> $pricebook['total_cost'],
-//							'this_index'				=> $pricebook['this_index'],
-//							'unit'						=> $pricebook['unit'],
-//							'descr'						=> $pricebook['descr'],
-//							'index_count'				=> $pricebook['index_count'],
-////							'link_edit'					=> $link_edit,
-////							'link_prizing'				=> $link_prizing,
-////							'lang_edit_statustext'		=> $lang_edit_statustext,
-////							'lang_prizing_statustext'	=> $lang_prizing_statustext,
-////							'text_edit'					=> $text_edit,
-////							'text_prizing'				=> $text_prizing
-//						);
-//					$i++;
-//				}
-//			}
-
-//			$table_header[] = array
-//				(
-//					'sort_num'	=> $this->nextmatchs->show_sort_order(array
-//					(
-//						'sort'	=> $this->sort,
-//						'var'	=> 'num',
-//						'order'	=> $this->order,
-//						'extra'	=> array
-//						(
-//							'menuaction'	=> 'property.uipricebook.index',
-//							'cat_id'	=>$this->cat_id,
-//							'allrows'	=>$this->allrows)
-//						)
-//					),
-//					'lang_index_count'	=> lang('Index Count'),
-//					'lang_num'          => lang('Activity Num'),
-//					'lang_branch'		=> lang('Branch'),
-//					'lang_vendor'		=> lang('Vendor'),
-//					'lang_select'		=> lang('Select'),
-//					'lang_total_cost'	=> lang('Total Cost'),
-//					'lang_prizing'		=> lang('Prizing'),
-//					'lang_last_index'	=> lang('Last index'),
-//					'lang_descr'		=> lang('Description'),
-//					'lang_m_cost'		=> lang('Material cost'),
-//					'lang_w_cost'		=> lang('Labour cost'),
-//					'lang_prizing'		=> lang('Prizing'),
-//					'lang_unit'		=> lang('Unit'),
-//					'lang_view'		=> lang('view'),
-//					'lang_edit'		=> lang('edit'),
-//					'sort_total_cost'	=> $this->nextmatchs->show_sort_order(array
-//					(
-//						'sort'	=> $this->sort,
-//						'var'	=> 'total_cost',
-//						'order'	=> $this->order,
-//						'extra'	=> array
-//						(
-//							'menuaction'	=> 'property.uipricebook.index',
-//							'cat_id'	=>$this->cat_id,
-//							'allrows'	=>$this->allrows)
-//						)
-//					)
-//				);
             
             if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -360,18 +278,19 @@
                     'allrows'   => true,
                     'editor'    => '',
                     'field'     => array(
-                            array('key'=>'activity_id','label'=>lang('Activity Id'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'),
-                            array('key'=>'num','label'=>lang('Activity num'),'sortable'=>true,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'),
-                            array('key'=>'vendor_id','label'=>lang('Vendor'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'branch','label'=>lang('branch'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'descr','label'=>lang('Description'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'unit','label'=>lang('Unit'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'w_cost','label'=>lang('Labour cost'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'m_cost','label'=>lang('Material cost'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'total_cost','label'=>lang('Total Cost'),'sortable'=>true,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'this_index','label'=>lang('Last index'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'index_count','label'=>lang('Index count'),'sortable'=>false,'hidden'=>FALSE,'formatter'=>'JqueryPortico.FormatterCenter'), 
-                            array('key'=>'agreement_id','label'=>lang('Agreement id'),'sortable'=>false,'hidden'=>TRUE,'formatter'=>'JqueryPortico.FormatterCenter'), 
+                            array('key'=>'activity_id','label'=>lang('Activity Id'),'sortable'=>false,'hidden'=>TRUE,'className'=>'center'),
+                            array('key'=>'num','label'=>lang('Activity num'),'sortable'=>true,'hidden'=>FALSE,'className'=>'center'),
+                            array('key'=>'vendor_id','label'=>lang('Vendor'),'sortable'=>false,'hidden'=>FALSE,'className'=>'center'), 
+                            array('key'=>'branch','label'=>lang('branch'),'sortable'=>false,'hidden'=>FALSE,'className'=>'center'), 
+                            array('key'=>'descr','label'=>lang('Description'),'sortable'=>false,'hidden'=>FALSE), 
+                            array('key'=>'unit','label'=>lang('Unit'),'sortable'=>false,'hidden'=>FALSE,'className'=>'center'), 
+                            array('key'=>'w_cost','label'=>lang('Labour cost'),'sortable'=>false,'hidden'=>FALSE,'className'=>'right'), 
+                            array('key'=>'m_cost','label'=>lang('Material cost'),'sortable'=>false,'hidden'=>FALSE,'className'=>'right'), 
+                            array('key'=>'total_cost','label'=>lang('Total Cost'),'sortable'=>true,'hidden'=>FALSE,'className'=>'right'), 
+                            array('key'=>'this_index','label'=>lang('Last index'),'sortable'=>false,'hidden'=>FALSE,'className'=>'center'), 
+                            array('key'=>'index_count','label'=>lang('Index count'),'sortable'=>false,'hidden'=>FALSE,'className'=>'center'), 
+                            array('key'=>'agreement_id','label'=>lang('Agreement id'),'sortable'=>false,'hidden'=>TRUE,'className'=>'center'), 
+							array('key'=>'select','label'=>lang('Select'),'sortable'=>false,'hidden'=>false,'className'=>'center')
                     )
                 ),
                 'down-toolbar'  => array(
@@ -409,8 +328,8 @@
 								'tab_index' => 5,
 								'style' => 'filter',
 								'group' => '1',
-                                'action' => 'onclikUpdateinvestment()'
-							),
+                                'action' => 'onclikUpdatePricebook()'
+							)
                         )
                     )
                 )
@@ -421,12 +340,8 @@
             foreach($filters as $filter){
                 array_unshift($data['form']['toolbar']['item'], $filter);
             }
-//            [unit_name] => time
-//            [dim_d] => 341
-//            [ns3420_id] => 
-//            [base_descr] => 
                        
-			if($this->acl_manage)
+			/*if($this->acl_manage)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 
@@ -438,40 +353,9 @@
 						'lang_update'					=> lang('Update'),
 						'lang_update_statustext'		=> lang('update selected investments')
 					);
-			}
+			}*/
 
-//			$link_data = array
-//				(
-//					'menuaction'	=> 'property.uipricebook.index',
-//					'sort'			=> $this->sort,
-//					'order'			=> $this->order,
-//					'cat_id'		=> $this->cat_id,
-//					'filter'		=> $this->filter,
-//					'query'			=> $this->query
-//				);
-
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-//			$link_download = array
-//				(
-//					'menuaction'	=> 'property.uipricebook.download',
-//					'sort'		=> $this->sort,
-//					'order'		=> $this->order,
-//					'cat_id'	=> $this->cat_id,
-//					'filter'	=> $this->filter,
-//					'query'		=> $this->query,
-//					'allrows'	=> $this->allrows,
-//					'start'		=> $this->start
-//				);
+			//$msgbox_data = $this->bocommon->msgbox_data($receipt);
             
             $parameters = array
 					(
@@ -537,53 +421,9 @@
                 
             }
             
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
-
-//			$data = array
-//				(
-//					'menu'							=> $this->bocommon->get_menu(),
-//					'lang_download'					=> 'download',
-//					'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-//					'lang_download_help'			=> lang('Download table to your browser'),
-//
-//					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-//					'allrows'						=> $this->allrows,
-//					'allow_allrows'					=> true,
-//					'start_record'					=> $this->start,
-//					'record_limit'					=> $record_limit,
-//					'num_records'					=> count($pricebook_list),
-//					'all_records'					=> $this->bo->total_records,
-//					'lang_select_all'				=> lang('Select All'),
-//					'img_check'						=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
-//					'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-//					'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-//					'lang_no_cat'					=> lang('no category'),
-//					'lang_cat_statustext'			=> lang('Select the category the pricebook belongs to. To do not use a category select NO CATEGORY'),
-//					'select_name'					=> 'cat_id',
-//					'cat_list'						=> $this->bo->get_vendor_list('filter',$this->cat_id),
-//					'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-//					'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'yours' => 'yes')),
-//					'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
-//					'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-//					'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-//					'query'							=> $this->query,
-//					'lang_search'					=> lang('search'),
-//					'table_header'					=> $table_header,
-//					'values'						=> $content,
-//					'table_update'					=> $table_update,
-//					'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.index'))			
-//            );
-//
-//			$appname	= lang('pricebook');
-//			$function_msg	= lang('list pricebook per vendor');
-//
-//			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
-			$this->save_sessiondata();
-            
             phpgwapi_jquery::load_widget('numberformat');
-//            self::add_javascript('property', 'portico', 'investment.index.js');
+			
+            self::add_javascript('property', 'portico', 'pricebook.index.js');
             self::render_template_xsl('uipricebook.index',$data);
 		}
         
