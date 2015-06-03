@@ -92,8 +92,13 @@
 						$resourcename = implode(",",$this->get_resource_name($application['resources']));
 						$bsubject = $config->config_data['application_mail_subject'].": En søknad om leie/lån av ".$resourcename." på ".$application['building_name']." er godkjent";
 						$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." på ".$application['building_name']."</p>";
-						$bbody .= "<p>Den ".$adates."er Godkjent</p>";
-						$bbody .= "<p><b>Ekstra informasjon fra søker:</b><br />".$application['equipment']."</p>";
+//						$bbody .= "<p>Den ".$adates."er Godkjent</p>";
+						if($adates)
+						{
+							$body .= "<pre>Godkjent:\n".$adates."</pre>";
+						}
+
+						$bbody .= "<p><b>{$config->config_data['application_equipment']}:</b><br />".$application['equipment']."</p>";
 
 						foreach ($buildingemail as $bemail)
 						{
