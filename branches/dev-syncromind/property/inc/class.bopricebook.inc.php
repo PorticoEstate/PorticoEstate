@@ -147,7 +147,8 @@
 		}
 
 		function read($data = array())
-		{
+		{   
+//            $data = array()
 //			$pricebook = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
             $pricebook = $this->so->read($data);
