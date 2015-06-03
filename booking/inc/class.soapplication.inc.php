@@ -117,7 +117,8 @@
 						 'name' => $this->db->f('name', false));
 		}
 
-		function get_accepted($id)
+//		function get_accepted($id)
+		function get_rejected($id)
 		{
 			$sql = "SELECT bad.from_, bad.to_
 					FROM bb_application ba, bb_application_date bad, bb_event be
@@ -136,7 +137,8 @@
 			return $results;
 		}
 
-		function get_rejected($id)
+//		function get_rejected($id)
+		function get_accepted($id)
 		{
 			$sql = "SELECT bad.from_, bad.to_ FROM bb_application ba, bb_application_date bad 
 					WHERE ba.id=($id)

@@ -37,52 +37,76 @@
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
-			} elseif ($application['status'] == 'ACCEPTED') {
-				$accepted = $this->so->get_accepted($application['id']);
-				$adates = "";
-				foreach ($accepted as $key => $date) {
-						if($key === 0)
-							$adates .= implode(" - ",$date)."\n";
-						else
-							$adates .= "\t".implode(" - ",$date)."\n";
+			}
+			elseif ($application['status'] == 'ACCEPTED')
+			{
+				// Sigurd:
+				// Check if any bookings, allocations or events are associated with this application
+				$assoc_bo = new booking_boapplication_association();
+				$associations = $assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id']),'sort'=>'from_', 'dir' => 'asc'));
+				$_adates = array();
+
+				foreach($associations['results'] as $assoc)
+				{
+					if($assoc['active'])
+					{
+						$_adates[] = "\t{$assoc['from_']} - {$assoc['to_']}";
+					}
 				}
+
+				$adates = implode("\n",$_adates);
+
 				$rejected = $this->so->get_rejected($application['id']);
 				$rdates = "";
-				foreach ($rejected as $key => $date) {
-						if($key === 0)
-							$rdates .= implode(" - ",$date)."\n";
-						else
-							$rdates .= "\t".implode(" - ",$date)."\n";
+				foreach ($rejected as $key => $date)
+				{
+					if($key === 0)
+					{
+						$rdates .= implode(" - ",$date)."\n";
+					}
+					else
+					{
+						$rdates .= "\t".implode(" - ",$date)."\n";
+					}
 				}
 
 				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']);
 				$body .= '</p><pre>'.$config->config_data['application_mail_accepted'].'<br /><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
-				$body .= "<pre>Godkjent: ".$adates."</pre>";
-				$body .= "<pre>Avvist: ".$rdates."</pre>";
+				if($adates)
+				{
+					$body .= "<pre>Godkjent:\n".$adates."</pre>";
+				}
+				if($rdates)
+				{
+					$body .= "<pre>Avvist: ".$rdates."</pre>";
+				}
 
 				if ($application['comment'] != '') {
 					$body .= "<p>Kommentar fra saksbehandler:<br />".$application['comment']."</p>";
 				}
 
-				$buildingemail = $this->get_tilsyn_email($application['building_name']);
-				if ($buildingemail['email1'] != '' || $buildingemail['email2'] != '' || $buildingemail['email3'] != '') {
-					$resourcename = implode(",",$this->get_resource_name($application['resources']));
-					$bsubject = $config->config_data['application_mail_subject'].": En søknad om leie/lån av ".$resourcename." på ".$application['building_name']." er godkjent";
-					$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." på ".$application['building_name']."</p>";
-					$bbody .= "<p>Den ".$adates."er Godkjent</p>";
-                    $bbody .= "<p><b>Ekstra informasjon fra søker:</b><br />".$application['equipment']."</p>";
+				if (isset ($config->config_data['application_notify_on_accepted']) && $config->config_data['application_notify_on_accepted'] ==1)
+				{
+					$buildingemail = $this->get_tilsyn_email($application['building_name']);
+					if ($buildingemail['email1'] != '' || $buildingemail['email2'] != '' || $buildingemail['email3'] != '') {
+						$resourcename = implode(",",$this->get_resource_name($application['resources']));
+						$bsubject = $config->config_data['application_mail_subject'].": En søknad om leie/lån av ".$resourcename." på ".$application['building_name']." er godkjent";
+						$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." på ".$application['building_name']."</p>";
+						$bbody .= "<p>Den ".$adates."er Godkjent</p>";
+						$bbody .= "<p><b>Ekstra informasjon fra søker:</b><br />".$application['equipment']."</p>";
 
-					foreach ($buildingemail as $bemail)
-					{
-						try
+						foreach ($buildingemail as $bemail)
 						{
-							$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, '', 'html');
-						}
-						catch (phpmailerException $e)
-						{
-						// TODO: Inform user if something goes wrong
-						}
+							try
+							{
+								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, '', 'html');
+							}
+							catch (phpmailerException $e)
+							{
+							// TODO: Inform user if something goes wrong
+							}
 
+						}
 					}
 				}
 			} elseif ($application['status'] == 'REJECTED') {
