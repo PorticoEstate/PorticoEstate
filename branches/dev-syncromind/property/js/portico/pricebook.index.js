@@ -20,6 +20,7 @@ onclikUpdatePricebook = function(){
 	
 	var values = {};
 
+	values['agreement_id'] = {};
 	values['activity_id'] = {};
 	values['vendor_id'] = {};
 	values['old_m_cost'] = {};
@@ -33,13 +34,14 @@ onclikUpdatePricebook = function(){
 	var api = oTable.api();
 	api.data().each( function (d) 
 	{
+		values['agreement_id'][d.counter] = d.agreement_id;
 		values['activity_id'][d.counter] = d.activity_id;
 		values['vendor_id'][d.counter] = d.vendor_id;
 		values['old_m_cost'][d.counter] = d.m_cost;
 		values['old_w_cost'][d.counter] = d.w_cost;
 		values['old_total_cost'][d.counter] = d.total_cost;
 	});
-		
+
 	select_check.each(function(i, obj) {
 		if (obj.checked) 
 		{

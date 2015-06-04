@@ -234,7 +234,7 @@
 			$sql = "SELECT DISTINCT fm_activities.num, fm_activities.unit, fm_activities.dim_d, fm_activities.ns3420, fm_activities.descr AS descr,"
 				. " fm_activities.base_descr, fm_activity_price_index.activity_id, fm_branch.descr AS branch,"
 				. " fm_agreement.vendor_id, fm_activity_price_index.total_cost, fm_activity_price_index.m_cost,"
-				. " fm_activity_price_index.w_cost, fm_activity_price_index.index_count, fm_activity_price_index.this_index, fm_agreement.id,"
+				. " fm_activity_price_index.w_cost, fm_activity_price_index.index_count, fm_activity_price_index.this_index, fm_agreement.id as agreement_id,"
 				. " fm_standard_unit.name AS unit_name"
 				. " FROM  fm_activities "
 				. " $this->join fm_activity_price_index ON fm_activities.id = fm_activity_price_index.activity_id "
@@ -279,7 +279,7 @@
 						'descr'			=> $this->db->f('descr',true),
 						'base_descr'	=> $this->db->f('base_descr',true),
 						'index_count'	=> $this->db->f('index_count'),
-						'agreement_id'	=> $this->db->f('fm_agreement.id')
+						'agreement_id'	=> $this->db->f('agreement_id')
 					);
 			}
 			//		_debug_array($pricebook);
