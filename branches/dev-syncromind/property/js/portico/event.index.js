@@ -31,7 +31,22 @@ function onSave ()
             dataType: 'json',
             url: ""+ sUrl_agreement +"&phpgw_return_as=json",
             data:{ids:ids,mckec:mckec},
-            success: function(data) {
+            success: function(result) {
+				document.getElementById("message").innerHTML = '';
+
+				if (typeof(result.message) !== 'undefined')
+				{
+					$.each(result.message, function (k, v) {
+						document.getElementById("message").innerHTML += v.msg + "<br/>";
+					});
+				}
+
+				if (typeof(result.error) !== 'undefined')
+				{
+					$.each(result.error, function (k, v) {
+						document.getElementById("message").innerHTML += v.msg + "<br/>";
+					});
+				}
                 oTable.fnDraw();
             }
     });
