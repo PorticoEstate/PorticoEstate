@@ -1,5 +1,5 @@
   <!-- $Id$ -->
-	<xsl:template name="app_data">
+	<xsl:template match="data">
 		<xsl:choose>
 			<xsl:when test="add">
 				<xsl:apply-templates select="add"/>
@@ -322,175 +322,88 @@
 		</tr>
 	</xsl:template>
 
-	<!-- New template-->
-	<!-- History -->
-	<xsl:template match="history">
-		<xsl:apply-templates select="menu"/>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:choose>
-				<xsl:when test="msgbox_data != ''">
-					<tr>
-						<td align="left" colspan="3">
-							<xsl:call-template name="msgbox"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-			<tr>
-				<td colspan="3" width="100%">
-					<xsl:call-template name="nextmatchs"/>
-				</td>
-			</tr>
-		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:choose>
-				<xsl:when test="entity_type!=''">
-					<tr>
-						<td width="25%" class="th_text" align="left">
-							<xsl:value-of select="lang_entity_type"/>
-						</td>
-						<td width="25%" class="th_text" align="left">
-							<xsl:value-of select="entity_type"/>
-						</td>
-						<td width="50%">
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="entity_id!=''">
-					<tr>
-						<td width="25%" class="th_text" align="left">
-							<xsl:value-of select="lang_entity_id"/>
-						</td>
-						<td width="25%" class="th_text" align="left">
-							<xsl:value-of select="entity_id"/>
-						</td>
-						<td width="50%">
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="investment_id!=''">
-					<tr>
-						<td width="25%" class="th_text" align="left">
-							<xsl:value-of select="lang_investment_id"/>
-						</td>
-						<td width="25%" class="th_text" align="left">
-							<xsl:value-of select="investment_id"/>
-						</td>
-						<td width="50%">
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-		</table>
-		<xsl:variable name="update_action">
-			<xsl:value-of select="update_action"/>
-		</xsl:variable>
-		<form method="post" name="form" action="{$update_action}">
-			<table width="100%" cellpadding="2" cellspacing="2" align="center">
-				<input type="hidden" name="values[update][0]" value="0"/>
-				<input type="hidden" name="values[entity_id][0]" value="{entity_id}"/>
-				<input type="hidden" name="values[investment_id][0]" value="{investment_id}"/>
-				<xsl:apply-templates select="table_header_history"/>
-				<xsl:apply-templates select="values_history"/>
-			</table>
-			<table width="50%" cellpadding="2" cellspacing="2" align="center">
-				<xsl:apply-templates select="table_update"/>
-			</table>
-		</form>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:apply-templates select="table_done"/>
-		</table>
-	</xsl:template>
+<xsl:template match="history">
+	<xsl:call-template name="top-toolbar" />
+	<div>
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dl>
+					<dt>
+						<xsl:call-template name="msgbox"/>
+					</dt>
+				</dl>
+			</xsl:when>
+		</xsl:choose>
+		<xsl:for-each select="datatable_def">
+			<xsl:if test="container = 'datatable-container_0'">
+				<xsl:call-template name="table_setup">
+					<xsl:with-param name="container" select ='container'/>
+					<xsl:with-param name="requestUrl" select ='requestUrl' />
+					<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+					<xsl:with-param name="tabletools" select ='tabletools' />
+					<xsl:with-param name="data" select ='data' />
+					<xsl:with-param name="config" select ='config' />
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:for-each>
+	</div>
+	<xsl:call-template name="down-toolbar" />
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="table_header_history">
-		<tr class="th">
-			<td class="th_text" width="10%" align="center">
-				<xsl:value-of select="lang_initial_value"/>
-			</td>
-			<td class="th_text" width="10%" align="center">
-				<xsl:value-of select="lang_value"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_last_index"/>
-			</td>
-			<td class="th_text" width="10%" align="center">
-				<xsl:value-of select="lang_write_off"/>
-			</td>
-			<td class="th_text" width="10%" align="center">
-				<xsl:value-of select="lang_date"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_index_count"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_delete"/>
-			</td>
-		</tr>
-	</xsl:template>
+<xsl:template name="top-toolbar">
+	<div class="toolbar-container">
+		<div class="pure-g">
+			<div class="pure-u-1-3">
+				<xsl:for-each select="info">
+					<div>
+						<span><xsl:value-of select="name"/></span>: <span><xsl:value-of select="value"/></span>
+					</div>
+				</xsl:for-each>
+			</div>
+			<div class="pure-u-2-3">
+				<xsl:for-each select="top_toolbar">
+					<a class="pure-button pure-button-primary" href="{url}"><xsl:value-of select="value"/></a>						
+				</xsl:for-each>
+			</div>
+		</div>
+	</div>
+</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="values_history">
-		<xsl:variable name="lang_delete_statustext">
-			<xsl:value-of select="lang_delete_statustext"/>
-		</xsl:variable>
-		<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<td align="right">
-				<xsl:value-of select="initial_value"/>
-			</td>
-			<td align="right">
-				<xsl:value-of select="value"/>
-			</td>
-			<td align="right">
-				<xsl:value-of select="this_index"/>
-			</td>
-			<td align="right">
-				<xsl:value-of select="this_write_off"/>
-			</td>
-			<td align="right">
-				<xsl:value-of select="date"/>
-			</td>
-			<td align="center">
-				<xsl:value-of select="index_count"/>
-			</td>
-			<xsl:choose>
-				<xsl:when test="is_admin=16 and current_index=1">
-					<td align="center">
-						<xsl:variable name="link_delete">
-							<xsl:value-of select="link_delete"/>
-						</xsl:variable>
-						<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;">
-							<xsl:value-of select="lang_delete"/>
-						</a>
-						<input type="hidden" name="values[initial_value][0]" value="{initial_value_ex}"/>
-						<input type="hidden" name="values[value][0]" value="{value_ex}"/>
-					</td>
-				</xsl:when>
-				<xsl:otherwise>
-					<td>
-						<xsl:text/>
-					</td>
-				</xsl:otherwise>
-			</xsl:choose>
-		</tr>
-	</xsl:template>
+<xsl:template name="down-toolbar">
+	<div class="toolbar-container">
+		<div class="toolbar">
+			<form class="pure-form pure-form-stacked">
+				<div class="pure-g">
+					<div class="pure-u-1">
+						<xsl:for-each select="down_toolbar">
+							<xsl:choose>
+								<xsl:when test="type = 'date-picker'">
+									<div>
+										<input id="filter_{name}" name="filter_{name}" type="text"></input>
+									</div>
+								</xsl:when>
+								<xsl:when test="type='button'">
+									<button id="{id}" type="{type}" class="pure-button pure-button-primary" onclick="{action}"><xsl:value-of select="value"/></button>
+								</xsl:when>
+								<xsl:when test="type='label'">
+									<xsl:value-of select="value"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input id="{id}" type="{type}" name="{name}" value="{value}">
+										<xsl:if test="type = 'checkbox' and checked = '1'">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</xsl:template>
+
 
 	<!-- New template-->
 	<!-- add -->
