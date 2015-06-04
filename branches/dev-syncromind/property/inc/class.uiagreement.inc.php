@@ -1468,6 +1468,12 @@
 					'id'		=> $id,
 					'role'		=> $this->role
 				);
+           
+            $link_data_cancel = array
+                (
+                    'menuaction'	=> 'property.uiagreement.index',
+					'role'		=> $this->role
+                );
 
 			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id'		=> $agreement['vendor_id'],
@@ -1859,6 +1865,7 @@
 
 					'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'edit_url'								=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+                    'cancel_url'								=> $GLOBALS['phpgw']->link('/index.php',$link_data_cancel),
 					'lang_id'								=> lang('ID'),
 					'value_agreement_id'					=> $id,
 					'lang_category'							=> lang('category'),
