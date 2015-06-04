@@ -2059,6 +2059,7 @@
 
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'edit_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'cancel_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.index')),
 					'lang_id'							=> lang('ID'),
 					'value_s_agreement_id'				=> $id,
 					'lang_category'						=> lang('category'),
