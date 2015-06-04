@@ -619,6 +619,7 @@
         
 		function edit()
 		{
+            
 			if(!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
@@ -626,7 +627,7 @@
 
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
-            
+
             $tabs = array();
 			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
@@ -749,7 +750,13 @@
 			{
 				$function_msg = lang('add report');
 			}
-
+            
+            $link_data_cancel = array
+				(
+					'menuaction'	=> 'property.uijasper.index',
+					'app'		=> $this->app
+				);
+            
 			$link_data = array
 				(
 					'menuaction'	=> 'property.uijasper.save',
@@ -837,6 +844,7 @@
                     'datatable_def'                 => $datatable_def,
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+                    'form_cancel'					=> $GLOBALS['phpgw']->link('/index.php',$link_data_cancel),
 					'value_app'						=> $this->app,
 					'value_id'						=> $id,
 					'value_file_name'				=> $values['file_name'],
