@@ -203,7 +203,7 @@
                                                                                                                     <xsl:value-of select="php:function('lang', 'apply')"/>
                                                                                                             </xsl:attribute>
                                                                                                     </input>
-                                                                                                    <input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}">
+                                                                                                    <input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onClick="document.cancel_form.submit();">
                                                                                                             <xsl:attribute name="title">
                                                                                                                     <xsl:value-of select="php:function('lang', 'cancel')"/>
                                                                                                             </xsl:attribute>
@@ -211,6 +211,11 @@
                                                                                                     
                                                             </div>
                                             </form>
+                                            
+                                            <xsl:variable name="form_cancel">
+                                                    <xsl:value-of select="form_cancel"/>
+                                            </xsl:variable>
+                                            <form name="cancel_form" id="cancel_form" method="post" action="{$form_cancel}"></form>
                                         </div>
                             <!--  DATATABLE DEFINITIONS-->
                     </div>
