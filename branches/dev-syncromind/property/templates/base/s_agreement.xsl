@@ -450,7 +450,7 @@
 									<xsl:variable name="lang_cancel">
 										<xsl:value-of select="lang_cancel"/>
 									</xsl:variable>
-									<input type="submit" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
+									<input type="button" class="pure-button pure-button-primary" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="lang_cancel_statustext"/>
@@ -459,6 +459,10 @@
 									</input>
                                                         </div>
 					</form>
+					<xsl:variable name="cancel_url">
+						<xsl:value-of select="cancel_url"/>
+					</xsl:variable>
+					<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 					<form method="post" name="alarm" action="{$edit_url}">
 						<input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}"/>
 						<fieldset>
