@@ -167,6 +167,7 @@
                 
 				$receipt = $this->bo->update_receipt($values);
 			}
+			return $receipt;
         }
         
 		function index()
