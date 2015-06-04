@@ -454,12 +454,21 @@
 			$columns    = phpgw::get_var('columns');
             $cat_id     = phpgw::get_var('cat_id');
                         
+            switch($columns[$order[0]['column']]['data'])
+			{
+				case 'agreement_group_id':
+					$order_field = 'id';
+					break;
+				default:
+					$order_field = $columns[$order[0]['column']]['data'];
+			}
+            
             $params = array
                 (
                     'start'             => phpgw::get_var('start','int','REQUEST',0),
                     'results'           => phpgw::get_var('length', 'int', 'REQUEST', 0),
                     'query'             => $search['value'],
-                    'order'             => $columns[$order[0]['column']]['data'],
+                    'order'             => $order_field,
                     'sort'              => $order[0]['dir'],
                     'filter'            => $this->filter,
                     'cat_id'            => $cat_id,
