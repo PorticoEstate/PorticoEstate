@@ -1269,7 +1269,7 @@
 		function edit()
 		{
 			$id				= phpgw::get_var('id'); // in case of bigint
-
+            
 			if(!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $id));
@@ -1488,13 +1488,13 @@
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
-			$tabs = array();
+//			$tabs = array();
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
 
-				phpgwapi_yui::tabview_setup('edit_tabview');
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+//				phpgwapi_yui::tabview_setup('edit_tabview');
+//				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
 				$location = $this->acl_location;
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
@@ -1510,7 +1510,7 @@
 				unset($attributes_groups);
 				unset($values['attributes']);
 
-				$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
+//				$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
 			}
 
 			//----------JSON CODE ----------------------------------------------
@@ -1995,29 +1995,6 @@
 					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}' title='{$lang_delete}'>";
 				}
 			}
-
-//			$datavalues[3] = array
-//				(
-//					'name'					=> "3",
-//					'values' 				=> json_encode($content_budget),
-//					'total_records'			=> count($content_budget),
-//					'permission'   			=> "''",
-//					'is_paginator'			=> 0,
-//					'footer'				=> 1
-//				);
-//
-//
-//			$myColumnDefs[3] = array
-//				(
-//					'name'		=> "3",
-//					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
-//														array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
-//														array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
-//														array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
-//														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-//														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true),
-//														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-//				);
             
             $myColumnDefs3 = array
 			(
@@ -2050,6 +2027,7 @@
             array_unshift($alarm_data['add_alarm']['hour_list'], $indice);
             array_unshift($alarm_data['add_alarm']['minute_list'], $indice);
 
+            
 			$data = array
 				(
                     'datatable_def'					    => $datatable_def,
@@ -2153,38 +2131,18 @@
 					'lang_import'						=> lang('import'),
 					'textareacols'						=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'						=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-//					'tabs'								=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
                     'tabs'								=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 					'validator'							=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 				);
-            
- //echo '<pre>'; print_r($data); echo '</pre>'; exit();
-
-
-//			phpgwapi_yui::load_widget('dragdrop');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('menu');
-//			phpgwapi_yui::load_widget('connection');
-//			phpgwapi_yui::load_widget('loader');
-//			phpgwapi_yui::load_widget('tabview');
-//			phpgwapi_yui::load_widgetº('paginator');
-//			phpgwapi_yui::load_widget('animation');
 
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
             
             phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
-            
+                        
             self::add_javascript('property', 'portico', 's_agreement.edit.js');
 			self::render_template_xsl(array('s_agreement','datatable_inline','files','attributes_form'), array('edit' => $data));
-            
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-//			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
             
 		}
 
