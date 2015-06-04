@@ -825,12 +825,21 @@
 			$draw       = phpgw::get_var('draw', 'int');
 			$columns    = phpgw::get_var('columns');
             
+            switch($columns[$order[0]['column']]['data'])
+			{
+				case 'next_run':
+					$order_field = 'next';
+					break;
+				default:
+					$order_field = $columns[$order[0]['column']]['data'];
+			}
+            
             $params = array
                 (
                     'start'             => phpgw::get_var('start','int','REQUEST',0),
                     'results'           => phpgw::get_var('length', 'int', 'REQUEST', 0),
                     'query'             => $search['value'],
-                    'order'             => $columns[$order[0]['column']]['data'],
+                    'order'             => $order_field,
                     'sort'              => $order[0]['dir'],
                     'filter'            => $this->filter,
                     'id'                =>'%',
@@ -838,6 +847,8 @@
                 );
            
             $list = $this->bo->read($params);
+            
+//            echo '<pre>'; print_r($list); echo '</pre>';
             
             while (is_array($list) && list($id,$alarm) = each($list))
 			{
