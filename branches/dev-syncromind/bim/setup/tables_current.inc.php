@@ -61,6 +61,7 @@
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'org_unit_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'entity_group_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('type','id'),
 			'fk' => array(

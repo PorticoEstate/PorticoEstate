@@ -598,7 +598,8 @@
 		/**
 		 * Get locations that a control should be carried out for
 		 *
-		 * @param $control_id control id
+		 * @param int $control_id control id
+		 * @param array $location_code_filter
 		 * @return array with arrays of location info  
 		 */
 		function get_locations_for_control($control_id)
@@ -607,10 +608,11 @@
 
 			$controls_array = array();
 
-			$sql =  "SELECT c.id, c.title, cll.location_code "; 
-			$sql .= "FROM controller_control c, controller_control_location_list cll ";
+			$sql =  "SELECT c.id, c.title, cll.location_code, fm_locations.name as loc_name ";
+			$sql .= "FROM controller_control c, controller_control_location_list cll, fm_locations ";
 			$sql .= "WHERE cll.control_id = {$control_id} ";
-			$sql .= "AND cll.control_id = c.id";
+			$sql .= "AND cll.control_id = c.id ";
+			$sql .= "AND cll.location_code = fm_locations.location_code";
 
 			$this->db->query($sql);
 
@@ -619,7 +621,10 @@
 				$control_id = $this->unmarshal($this->db->f('id'), 'int');
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
 				$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
+				$loc_name = $this->db->f('loc_name', true);
+				$loc_name_arr = explode(', ', $loc_name);
 
+/*
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code,'extra' => array('noattrib' => true)));
 
 				$location_arr = explode('-', $location_code);
@@ -630,14 +635,14 @@
 					$loc_name_arr[] = $location_array["loc{$i}_name"];
 					$i++;
 				}
-
+*/
 				$controls_array[] = array
 				(
 					'id'			=> $control_id, 
 					'title'			=> $title, 
 					'location_code'	=> $location_code, 
-					'loc1_name'		=> $location_array['loc1_name'],
-					'loc_name'		=> implode(', ', $loc_name_arr)
+					'loc1_name'		=> $loc_name_arr[0],
+					'loc_name'		=> $loc_name
 				);
 			}
 

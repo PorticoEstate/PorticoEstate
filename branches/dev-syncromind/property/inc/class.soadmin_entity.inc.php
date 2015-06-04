@@ -511,6 +511,7 @@
 					'parent_id'					=> $this->db->f('parent_id'),
 					'level'						=> $this->db->f('level'),
 					'org_unit'					=> $this->db->f('org_unit'),
+					'entity_group_id'			=> $this->db->f('entity_group_id'),
 					'location_id'				=> $location_id
 				);
 			}
@@ -604,6 +605,7 @@
 			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['org_unit_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['entity_group_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			return $fd;
 		}
 
@@ -655,12 +657,13 @@
 					$values['jasperupload'],
 					$values['parent_id'],
 					$values['org_unit'],
+					$values['entity_group_id'],
 					$level
 				);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,enable_bulk,enable_controller,jasperupload,parent_id,org_unit,level ) "
+			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,enable_bulk,enable_controller,jasperupload,parent_id,org_unit,entity_group_id,level ) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 
@@ -878,7 +881,8 @@
 						'jasperupload'				=> $entity['jasperupload'],
 						'parent_id'					=> $entity['parent_id'],
 						'level'						=> $level,
-						'org_unit'				=> $entity['org_unit']
+						'org_unit'					=> $entity['org_unit'],
+						'entity_group_id'			=> $entity['entity_group_id'],
 					);
 
 				$value_set	= $this->db->validate_update($value_set);

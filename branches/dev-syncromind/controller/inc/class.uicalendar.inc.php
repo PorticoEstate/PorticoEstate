@@ -475,7 +475,6 @@
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$bookmark_locations	 = array();
 			$bookmarks			 = phpgwapi_cache::user_get('controller', "location_bookmark", $user_id);
 			if(is_array($bookmarks))
 			{

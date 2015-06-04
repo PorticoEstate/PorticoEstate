@@ -18,29 +18,58 @@
 
 class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
 {
-
+    /**
+     * @type string
+     */
     public $name = 'Legacy';
 
-    public function setup($config) {
-
-        $this->addElement('basefont', 'Inline', 'Empty', false, array(
+    /**
+     * @param HTMLPurifier_Config $config
+     */
+    public function setup($config)
+    {
+        $this->addElement(
+            'basefont',
+            'Inline',
+            'Empty',
+            null,
+            array(
             'color' => 'Color',
             'face' => 'Text', // extremely broad, we should
             'size' => 'Text', // tighten it
             'id' => 'ID'
-        ));
+            )
+        );
         $this->addElement('center', 'Block', 'Flow', 'Common');
-        $this->addElement('dir', 'Block', 'Required: li', 'Common', array(
+        $this->addElement(
+            'dir',
+            'Block',
+            'Required: li',
+            'Common',
+            array(
             'compact' => 'Bool#compact'
-        ));
-        $this->addElement('font', 'Inline', 'Inline', array('Core', 'I18N'), array(
+            )
+        );
+        $this->addElement(
+            'font',
+            'Inline',
+            'Inline',
+            array('Core', 'I18N'),
+            array(
             'color' => 'Color',
             'face' => 'Text', // extremely broad, we should
             'size' => 'Text', // tighten it
-        ));
-        $this->addElement('menu', 'Block', 'Required: li', 'Common', array(
+            )
+        );
+        $this->addElement(
+            'menu',
+            'Block',
+            'Required: li',
+            'Common',
+            array(
             'compact' => 'Bool#compact'
-        ));
+            )
+        );
 
         $s = $this->addElement('s', 'Inline', 'Inline', 'Common');
         $s->formatting = true;
@@ -151,9 +180,7 @@ class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
 
         $legend = $this->addBlankElement('legend');
         $legend->attr['align'] = 'LAlign';
-
     }
-
 }
 
 // vim: et sw=4 sts=4

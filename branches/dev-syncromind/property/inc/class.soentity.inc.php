@@ -417,33 +417,37 @@
 
 		protected function read_eav($data)
 		{
-			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
-			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
-			$query			= isset($data['query']) ? $data['query'] : '';
-			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order			= isset($data['order']) && $data['order'] ? $data['order'] : 'id';
-			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
-			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
-			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
-			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
-			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
-			$status			= isset($data['status']) ? $data['status'] : '';
-			$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
-			$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
-			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
-			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
-			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
-			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
-			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
-			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
-			$control_registered= isset($data['control_registered']) ? $data['control_registered'] : '';
-			$control_id		= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
-			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
-			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$results			= isset($data['results']) && $data['results'] ? $data['results'] : 0;
+			$filter				= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
+			$query				= isset($data['query']) ? $data['query'] : '';
+			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order				= isset($data['order']) && $data['order'] ? $data['order'] : 'id';
+			$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$district_id		= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+			$part_of_town_id	= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
+			$lookup				= isset($data['lookup']) ? $data['lookup'] : '';
+			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
+			$entity_id			= isset($data['entity_id']) ? $data['entity_id'] : '';
+			$cat_id				= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$status				= isset($data['status']) ? $data['status'] : '';
+			$start_date			= isset($data['start_date']) ? $data['start_date'] : '';
+			$end_date			= isset($data['end_date']) ? $data['end_date'] : '';
+			$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$this->type			= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$location_code		= isset($data['location_code']) ? $data['location_code'] : '';
+			$criteria_id		= isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$attrib_filter		= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$p_num				= isset($data['p_num']) ? $data['p_num'] : '';
+			$custom_condition	= isset($data['custom_condition']) ? $data['custom_condition'] : '';
+			$control_registered	= isset($data['control_registered']) ? $data['control_registered'] : '';
+			$check_for_control	= isset($data['check_for_control']) ? $data['check_for_control'] : '';
+			$control_id			= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
+			$org_units			= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
+			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$entity_group_id	= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
+			$filter_entity_group= isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
+
 
 			if($location_id)
 			{
@@ -599,6 +603,16 @@
 				$filtermethod .= " $where $entity_table.p_id='$p_num'";
 				$where= 'AND';
 			}
+			if ($entity_group_id)
+			{
+				$filtermethod .= " {$where} {$entity_table}.entity_group_id = {$entity_group_id}";
+				$where= 'AND';
+			}
+			if ($filter_entity_group)
+			{
+				$filtermethod .= " {$where} {$entity_table}.entity_group_id IS NULL";
+				$where= 'AND';
+			}
 
 			$_querymethod = array();
 			$__querymethod = array();
@@ -735,16 +749,40 @@
 			}
 
 			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)";
+			$join_control = "controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
+
 			if($control_registered)
 			{
-				$sql .= "{$this->join} controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
-				$sql_cnt_control_fields = ',control_id ';
-				$filtermethod .= " $where  controller_control_component_list.control_id = $control_id";
-				$where = 'AND';
+				$sql .= "{$this->join} {$join_control}";
+				if($control_id)
+				{
+					$sql_cnt_control_fields = ',control_id ';
+					$filtermethod .= " $where  controller_control_component_list.control_id = $control_id";
+					$where = 'AND';
+				}
 			}
 			else
 			{
 				$sql_cnt_control_fields = '';
+			}
+
+			$sql_custom_field = '';
+
+			if($check_for_control && !$control_registered)
+			{
+				$sql .= "{$this->left_join} {$join_control}";
+
+				$sql_custom_field .= ',count(control_id) AS has_control';
+				$this->uicols['input_type'][]		= 'hidden';
+				$this->uicols['name'][]				= 'has_control';
+				$this->uicols['descr'][]			= '';
+				$this->uicols['statustext'][]		= '';
+				$this->uicols['align'][] 			= '';
+				$this->uicols['datatype'][]			= '';
+				$this->uicols['sortable'][]			= true;
+				$this->uicols['exchange'][]			= false;
+				$this->uicols['formatter'][]		= '';
+				$this->uicols['classname'][]		= '';
 			}
 
 			if(isset($category['location_level']) && $category['location_level'] > 0)
@@ -752,6 +790,22 @@
 				$sql .= "{$this->join} fm_location1 ON (fm_bim_item.loc1 = fm_location1.loc1)";
 				$sql .= "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
 				$sql .= "{$this->join} fm_owner ON (fm_location1.owner_id = fm_owner.id)";
+				$sql .= "{$this->join} fm_locations ON (fm_bim_item.location_code = fm_locations.location_code)";
+
+				$sql_custom_field .= ',fm_locations.name AS location_name';
+				$sql_custom_group = ',fm_locations.name';
+
+				$this->uicols['input_type'][]		= 'hidden';
+				$this->uicols['name'][]				= 'location_name';
+				$this->uicols['descr'][]			= '';
+				$this->uicols['statustext'][]		= '';
+				$this->uicols['align'][] 			= '';
+				$this->uicols['datatype'][]			= '';
+				$this->uicols['sortable'][]			= true;
+				$this->uicols['exchange'][]			= false;
+				$this->uicols['formatter'][]		= '';
+				$this->uicols['classname'][]		= '';
+
 			}
 
 			$_joinmethod_datatype = array_merge($_joinmethod_datatype, $_joinmethod_datatype_custom);
@@ -837,7 +891,20 @@
 			}
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
+
+			if($sql_custom_field)
+			{
+				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
+				$sql .= "GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
+			}
 //_debug_array($sql);
+			static $cache_attributes = array();
+
+			if(!isset($cache_attributes[$location_id]))
+			{
+				$filters = array("short_description" => "IS NOT NULL");
+				$cache_attributes[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'short_description', true, true,$filters);
+			}
 
 			if(!$allrows)
 			{
@@ -880,8 +947,44 @@
 				}
 
 
+				//Start: get short descripion - if any
+				$_short_description = array();
+
+				foreach ($cache_attributes[$location_id] as $key => $attribute)
+				{
+					$description_value = $xml->getElementsByTagName($attribute['name'])->item(0)->nodeValue;
+
+					if(isset($cache_attributes[$location_id][$key]['choice']) && $cache_attributes[$location_id][$key]['choice'])
+					{
+						$choice = $cache_attributes[$location_id][$key]['choice'];
+						foreach($choice as $choice_value)
+						{
+							if ($choice_value['id'] == $description_value)
+							{
+								$description_value = $choice_value['value'];
+								break;
+							}
+						}
+					}
+
+					if($description_value)
+					{
+						$_short_description[] = "{$attribute['input_text']}: {$description_value}";
+					}
+				}
+
+				$dataset[$j]['short_description']['value'] = implode(', ', $_short_description);
+
+				//END: get short descripion
+
 				$dataset[$j]['num']['value'] = $dataset[$j]['id']['value'];
 
+				$dataset[$j]['location_id'] = array
+					(
+						'value'		=> $location_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
 				$dataset[$j]['entity_id'] = array
 					(
 						'value'		=> $entity_id,
@@ -1220,6 +1323,35 @@
 
 		}
 
+		/**
+		 * FIXME
+		 * @param type $data
+		 * @return type
+		 */
+		function read_entity_group($data)
+		{
+			$entity_group_id	= (int)$data['entity_group_id'];
+
+			$exclude_locations	= isset($data['exclude_locations']) && $data['exclude_locations'] && is_array($data['exclude_locations']) ? $data['exclude_locations'] : array(0);
+			$exclude_filter = implode(', ', $exclude_locations);
+			$location_filter = array();
+			$sql = "SELECT DISTINCT location_id FROM fm_bim_item WHERE entity_group_id = {$entity_group_id} AND location_id NOT IN ({$exclude_filter})";
+			$this->db->query($sql);
+			while ($this->db->next_record())
+			{
+				$location_filter[] = $this->db->f('location_id');
+			}
+			$components = array();
+			foreach($location_filter as $location_id)
+			{
+				$data['location_id'] = $location_id;
+				$_components = $this->read($data);
+				$components = array_merge($components, $_components);
+			}
+
+			return $components;
+		}
+
 
 		function read($data)
 		{
@@ -1248,6 +1380,8 @@
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
 			$org_units		= isset($data['org_units']) && is_array($data['org_units']) ? $data['org_units'] : array();
 			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$entity_group_id= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
+
 
 			if($location_id)
 			{
@@ -1273,16 +1407,6 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
 
-			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
-
-			if(!$grants)
-			{
-				$this->acl 	= & $GLOBALS['phpgw']->acl;
-				$this->acl->set_account_id($this->account);
-				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
-				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
-			}
-
 			$admin_entity	= CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
 
@@ -1306,6 +1430,16 @@
 			if (!$cat_id > 0)
 			{
 				return;
+			}
+
+			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
+
+			if(!$grants)
+			{
+				$this->acl 	= & $GLOBALS['phpgw']->acl;
+				$this->acl->set_account_id($this->account);
+				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
+				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
 			}
 
 			//_debug_array($cols_return_extra);
@@ -1638,6 +1772,12 @@
 
 					);
 				}
+				$dataset[$j]['location_id'] = array
+					(
+						'value'		=> $location_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
 				$dataset[$j]['entity_id'] = array
 					(
 						'value'		=> $entity_id,
@@ -1781,6 +1921,7 @@
 				$values['user_id']			= $this->db->f('user_id');
 				$values['entry_date']		= $this->db->f('entry_date');
 				$values['org_unit_id']		= $this->db->f('org_unit_id');
+				$values['entity_group_id']	= $this->db->f('entity_group_id');
 
 				$xmldata = $this->db->f('xml_representation',true);
 				$xml = new DOMDocument('1.0', 'utf-8');
@@ -1861,11 +2002,11 @@
 
 				if($description_value)
 				{
-					$short_description[] = "{$attribute['input_text']}: {$description_value}";
+					$_short_description[] = "{$attribute['input_text']}: {$description_value}";
 				}
 			}
 
-			$short_description = implode(', ', $short_description);
+			$short_description = implode(', ', $_short_description);
 
 			return $short_description;
 		}
@@ -2183,7 +2324,8 @@
 				'location_code'			=> $data['location_code'],
 				'loc1'					=> $data['loc1'],
 				'address'				=> $data['address'],
-				'org_unit_id'			=> $data['org_unit_id']
+				'org_unit_id'			=> $data['org_unit_id'],
+				'entity_group_id'		=> $data['entity_group_id']
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
@@ -2339,6 +2481,11 @@
 				{
 					$value_set['p_id']			= $p_id;
 					$value_set['p_location_id'] = $p_location_id;
+				}
+
+				if($category['entity_group_id'] != $values['entity_group_id'])
+				{
+					$value_set['entity_group_id'] = $values['entity_group_id'];
 				}
 
 				$this->_edit_eav($value_set, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}", $values['id']);

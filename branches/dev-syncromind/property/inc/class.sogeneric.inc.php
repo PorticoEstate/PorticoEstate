@@ -2701,6 +2701,50 @@
 
 				break;
 
+			case 'entity_group':
+				$info = array
+					(
+						'table' 			=> 'fm_entity_group',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('entity group'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin.entity',
+						'menu_selection'	=> 'admin::property::entity::entity_group',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('add'	=> 'time()', 'edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
+
+				break;
+
 // START BOOKING TABLES
 			case 'bb_office':
 				$info = array

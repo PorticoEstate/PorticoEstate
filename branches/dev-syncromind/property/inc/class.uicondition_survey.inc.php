@@ -120,9 +120,6 @@
 				return $this->query();
 			}
 
-			//self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
-	//		phpgwapi_yui::load_widget('datatable');
-	//		phpgwapi_yui::load_widget('paginator');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -163,7 +160,6 @@
 							'key' => 'title',
 							'label' => lang('title'),
 							'sortable' => true,
-							//FIXME: to be implemented: http://jquery-datatables-editable.googlecode.com/svn/trunk/inline-edit.html
 							'editor' => true
 						),
 /*						array(
@@ -322,9 +318,6 @@
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
-//			$result_data['start'] = $params['start'];
-//			$result_data['sort'] = $params['sort'];
-//			$result_data['dir'] = $params['dir'];
 			$result_data['draw'] = $draw;
 
 			array_walk(	$result_data['results'], array($this, '_add_links'), array('menuaction' => 'property.uicondition_survey.view') );

@@ -38,6 +38,20 @@
 			<dd class="yui-skin-sam">
 				<textarea id="field_application_mail_accepted" class="full-width settings" name="application_mail_accepted" type="text"><xsl:value-of select="config_data/application_mail_accepted"/></textarea>
 			</dd>
+            <dt><label for="field_application_notify_on_accepted"><xsl:value-of select="php:function('lang', 'notify on accepted')"/></label></dt>
+			<dd class="yui-skin-sam">
+				<input  name="application_notify_on_accepted" type="hidden" value = "0"/>
+				<input id="field_application_notify_on_accepted" class="full-width settings" name="application_notify_on_accepted" type="checkbox" value = "1">
+					<xsl:if test="config_data/application_notify_on_accepted = '1'">
+						<xsl:attribute name="checked">
+							<xsl:text>checked</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="checked">
+							<xsl:text>checked</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
+				</input>
+			</dd>
             <dt><label for="field_application_mail_rejected"><xsl:value-of select="php:function('lang', 'Mail text for application rejected')"/></label></dt>
 			<dd class="yui-skin-sam">
 				<textarea id="field_application_mail_rejected" class="full-width settings" name="application_mail_rejected" type="text"><xsl:value-of select="config_data/application_mail_rejected"/></textarea>

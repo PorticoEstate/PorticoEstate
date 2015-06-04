@@ -455,6 +455,12 @@
 							'key'		 => 'enable_controller',
 							'label'		 => lang('enable controller'),
 							'sortable'	 => false
+						),
+						array
+							(
+							'key'		 => 'entity_group_id',
+							'label'		 => lang('entity group'),
+							'sortable'	 => false
 						)
 					)
 				)
@@ -1015,8 +1021,9 @@
 				'value_enable_bulk'						 => $values['enable_bulk'],
 				'value_enable_controller'				 => $values['enable_controller'],
 				'jasperupload'							 => true,
-				'category_list'							 => $category_list,
-				'parent_list'							 => $parent_list,
+				'entity_group_list'						=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'entity_group', 'selected' => $values['entity_group_id'], 'add_empty' => true))),
+				'category_list'							=> $category_list,
+				'parent_list'							=> $parent_list,
                 'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
 			);

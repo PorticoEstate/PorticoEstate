@@ -613,6 +613,7 @@ Mail text for application created	booking	no	Epost tekst for søknad opprettet.
 Mail text for application pending	booking	no	Epost tekst for søknad under behandling.
 Mail text for application accepted	booking	no	Epost tekst for søknad akseptert.
 Mail text for application rejected	booking	no	Epost tekst for søknad avist.
+notify on accepted	booking	no	Send kvittering til ansvarlig ved akseptert.
 Signature	booking	no	Signatur
 Tilsynsvakt name	booking	no	Tilsynsvakt navn
 Tilsynsvakt email	booking	no	Tilsynsvakt epost

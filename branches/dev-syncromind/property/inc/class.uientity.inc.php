@@ -1737,7 +1737,7 @@
 					}
 				}
 
-				$_enable_controller = !!$category['enable_controller'];
+				$_enable_controller = !!$category['enable_controller'] || !!$values['entity_group_id'];
 				if($_enable_controller && $id)
 				{
 					$tabs['controller']	= array('label' => lang('controller'), 'link' => '#controller', 'function' => "set_tab('controller')");
@@ -2221,6 +2221,16 @@ JS;
 			$repeat_types[] = array('id'=> 2, 'name' => lang('month'));
 			$repeat_types[] = array('id'=> 3, 'name' => lang('year'));
 
+			$entity_group_name = '';
+			$entity_group_list	= execMethod('property.bogeneric.get_list',array('type' => 'entity_group', 'selected' => $values['entity_group_id'], 'add_empty' => true));
+			foreach ($entity_group_list as $entity_group)
+			{
+				if($category['entity_group_id'] && $entity_group['id'] == $category['entity_group_id'])
+				{
+					$entity_group_name = $entity_group['name'];
+				}
+			}
+
 			$data = array
 			(
 					'datatable_def'					=> $datatable_def,
@@ -2296,6 +2306,8 @@ JS;
 					'documents'						=> $documents,
 					'requestUrlDoc'					=> $requestUrlDoc ? $requestUrlDoc : '',
 					'lean'							=> $_lean ? 1 : 0,
+					'entity_group_list'				=> array('options' => $entity_group_list),
+					'entity_group_name'				=> $entity_group_name,
 					'validator'                     => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 				);
 															

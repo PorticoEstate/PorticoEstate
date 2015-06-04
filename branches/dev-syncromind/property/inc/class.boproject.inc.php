@@ -236,6 +236,12 @@
 					'name'		=> lang('billable hours'),
 					'sortable'	=> true
 				);
+			$columns['vendor_names'] = array
+				(
+					'id'		=> 'vendor_names',
+					'name'		=> lang('vendor'),
+					'sortable'	=> false
+				);
 
 			return $columns;
 		}
@@ -502,6 +508,7 @@
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
 			$column_list = $this->get_column_list();
+			$get_vendor_names = false;
 
 			foreach ($custom_cols as $col_id)
 			{
@@ -517,6 +524,10 @@
 					$this->uicols['sortable'][]		= $column_list[$col_id]['sortable'];
 					$this->uicols['formatter'][]	= $column_list[$col_id]['formatter'];
 					$this->uicols['classname'][]	= $column_list[$col_id]['classname'];
+					if($col_id == 'vendor_names')
+					{
+						$get_vendor_names = true;
+					}
 				}
 			}
 
@@ -541,6 +552,18 @@
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
 				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
+				if($get_vendor_names && isset($entry['vendor_list']) && $entry['vendor_list'])
+				{
+					$vendor_names = array();
+					foreach($entry['vendor_list'] as $vendor_id)
+					{
+						$vendor_names[] = $this->get_vendor_name($vendor_id);
+					}
+					if($vendor_names)
+					{
+						$entry['vendor_names'] = implode(', ', $vendor_names);
+					}
+				}
 				if(!isset($data['skip_origin']) || !$data['skip_origin'])
 				{
 					$origin = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
@@ -621,12 +644,41 @@
 			return $values;
 		}
 
+		private function get_vendor_name($vendor_id = 0)
+		{
+			static $vendor_name = array();
+			static $attributes = array();
+			static $contacts = null;
+
+			if(isset($vendor_name[$vendor_id]) && $vendor_name[$vendor_id])
+			{
+				return $vendor_name[$vendor_id];
+			}
+			else
+			{
+				if(!$contacts)
+				{
+					$contacts = CreateObject('property.sogeneric');
+					$contacts->get_location_info('vendor',false);
+				}
+				if(!$attributes)
+				{
+					$attributes = $this->custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				}
+				$vendor	= $contacts->read_single(array('id' => $vendor_id), array('id' => $vendor_id, 'attributes' => $attributes));
+				foreach($vendor['attributes'] as $attribute)
+				{
+					if($attribute['name']=='org_name')
+					{
+						$vendor_name[$vendor_id] = $attribute['value'];
+						return $attribute['value'];
+					}
+				}
+			}
+		}
+
 		public function get_orders($data)
 		{
-			$contacts	= CreateObject('property.sogeneric');
-			$contacts->get_location_info('vendor',false);
-
-			static $vendor_name = array();
 			$values	= $this->so->project_workorder_data($data);
 
 			$sum_deviation = 0;
@@ -635,29 +687,10 @@
 				$sum_deviation+= $entry['deviation'];
 
 				$entry['cost'] = $entry['combined_cost'];
-		//		$entry['title']=htmlspecialchars_decode($entry['title']);
 
 				if(isset($entry['vendor_id']) && $entry['vendor_id'])
 				{
-					if(isset($vendor_name[$entry['vendor_id']]) && $vendor_name[$entry['vendor_id']])
-					{
-						$entry['vendor_name'] = $vendor_name[$entry['vendor_id']];
-					}
-					else
-					{
-						$vendor['attributes'] = $this->custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-
-						$vendor	= $contacts->read_single(array('id' => $entry['vendor_id']), $vendor);
-						foreach($vendor['attributes'] as $attribute)
-						{
-							if($attribute['name']=='org_name')
-							{
-								$entry['vendor_name'] = $attribute['value'];
-								$vendor_name[$entry['vendor_id']] = $attribute['value'];
-								break;
-							}
-						}
-					}
+					$entry['vendor_name'] = $this->get_vendor_name((int)$entry['vendor_id']);
 				}
 			}
 			return $values;

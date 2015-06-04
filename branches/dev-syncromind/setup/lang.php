@@ -163,7 +163,7 @@ HTML;
 				$checkbox_langs .="<label><input type=\"checkbox\" name=\"lang_selected[]\" value=\"$id\"$checked>{$name}</label><br>";
 			}
 
-			$GLOBALS['phpgw_setup']->db->query("UPDATE phpgw_languages SET available = 'Yes' WHERE lang_id IN('" . implode("','", $avail_lang) . "'"); 
+			$GLOBALS['phpgw_setup']->db->query("UPDATE phpgw_languages SET available = 'Yes' WHERE lang_id IN('" . implode("','", $avail_lang) . "')");
 
 			if ( !$newinstall )
 			{
