@@ -411,7 +411,6 @@
 
 		function history()
 		{
-
 			$values		= phpgw::get_var('values');
 			$entity_type	= phpgw::get_var('entity_type');
 			$entity_id	= phpgw::get_var('entity_id', 'int');
@@ -423,158 +422,17 @@
 				$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			}
 
-			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			{
-
-				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'	=> 'property.uiinvestment.history',
-						'entity_id'	=> $entity_id, 
-						'investment_id'	=> $investment_id, 
-						'entity_type'		=> $entity_type
-					));
-
-				$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uiinvestment.history',"
-					."entity_id:'{$entity_id}',"
-					."investment_id:'{$investment_id}',"
-					."entity_type:'{$entity_type}'";
-
-				$datatable['actions']['form'] = array
-					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array
-							(
-								'menuaction' 		=> 'property.uiinvestment.history',
-								'entity_id'			=> $entity_id, 
-								'investment_id'		=> $investment_id, 
-								'entity_type'		=> $entity_type								
-							)
-						),
-						'fields'	=> array
-						(
-							'field' => array
-							(
-								array
-								( // mensaje
-									'type'	=> 'label',
-									'id'	=> 'msg_header',
-									'value'	=> '',
-									'style' => 'filter'
-								),
-								array
-								( // mensaje
-									'type'	=> 'label',
-									'id'	=> 'msg',
-									'value'	=> '',
-									'style' => 'filter'
-								),													
-								array
-								( // boton done
-									'type'	=> 'button',
-									'id'	=> 'btn_done',
-									'tab_index' => 1,
-									'value'	=> lang('done')
-								)																								
-							),
-							'hidden_value' => array
-							(
-								)
-							)
-						)
-					);
-
-			}
-
-			$datatable['actions']['down-toolbar'] = array
-				(
-					'fields'	=> array
-					(
-						'field' => array
-						(
-							array
-							( // link New index
-								'type' 	=> 'link',
-								'id' 	=> 'lnk_index',
-								'url' 	=> "",
-								'value' => lang('New index'),
-								'tab_index' => 6,
-								'style' => 'filter'
-							),
-							array
-							( // New index box
-								'name'	=> 'values[new_index]',
-								'id'	=> 'txt_index',
-								'value' => '',
-								'type'	=> 'text',
-								'size'	=> 8,
-								'tab_index' => 2,
-								'class' => 'myValuesForPHP down-toolbar_button',
-								'style' => 'filter'
-							),
-							array
-							( // imag calendar1
-								'type'	=> 'img',
-								'id'	=> 'start_date-trigger',
-								'src'	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-								'alt'	=> lang('Select date'),
-								'tab_index' => 5,
-								'style' => 'filter'
-							),
-							array
-							( // calendar1 start_date
-								'type'	=> 'text',
-								'name'	=> 'values[date]',
-								'id'	=> 'start_date',
-								'value' => '',
-								'size'  => 7,
-								'readonly' => 'readonly',
-								'tab_index' => 3,
-								'class' => 'myValuesForPHP down-toolbar_button',
-								'style' => 'filter'
-							),
-							array
-							( //hidden update
-								'type'	=> 'hidden',
-								'name'     => 'values[update][0]',
-								'value'	=> 0,
-								'class' => 'myValuesForPHP',
-								'style' => 'filter'
-							),	   
-							array
-							( //hidden entity_id
-								'type'	=> 'hidden',
-								'name'     => 'values[entity_id][0]',
-								'value'	=> $entity_id,
-								'class' => 'myValuesForPHP',
-								'style' => 'filter'
-							),	
-							array
-							( //hidden investment_id
-								'type'	=> 'hidden',
-								'name'     => 'values[investment_id][0]',
-								'value'	=> $investment_id,
-								'class' => 'myValuesForPHP',
-								'style' => 'filter'
-							),			                            		                                                         
-							array
-							( //boton   SEARCH
-								'id' => 'btn_update',
-								'name' => 'update',
-								'value'    => lang('Update'),
-								'tab_index' => 4,
-								'type' => 'button',
-								'style' => 'filter'
-							)
-						)
-					)
-				); 
-
+			$uicols = array (
+				'input_type'	=>	array('text','text','text','text','text','text','hidden'),
+				'name'			=>	array('initial_value','value','this_index','this_write_off','date','index_count','is_admin'),
+				'formatter'		=>	array('','','','','','',''),
+				'descr'			=>	array(lang('Initial value'),lang('Value'),lang('Last index'),lang('Write off'),lang('Date'),lang('Index count'),''),
+				'className'		=> 	array('center','right','right','right','center','center',''),
+				'hidden'		=> 	array(false,false,false,false,true,false,true)
+			);
+			
 			$investment_list = $this->bo->read_single($entity_id,$investment_id);
-
+			
 			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$sep = '/';
 			$dlarr[strpos($dateformat,'y')] 		= 'Y';
@@ -583,51 +441,120 @@
 			ksort($dlarr);
 			$dateformat								= (implode($sep,$dlarr));
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-
-			$uicols = array (
-				'input_type'	=>	array('text','text','text','text','text','text','hidden'),
-				'name'			=>	array('initial_value','value','this_index','this_write_off','date','index_count','is_admin'),
-				'formatter'		=>	array('','','','','','',''),
-				'descr'			=>	array(lang('Initial value'),lang('Value'),lang('Last index'),lang('Write off'),lang('Date'),lang('Index count'),''),
-				'className'		=> 	array('rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss','')
-			);
-
-
-			$j=0;
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			phpgwapi_jquery::load_widget('datepicker');
+			
+			$values = array();
 			if (isset($investment_list) && is_array($investment_list))
 			{
 				foreach($investment_list as $investment)
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$json_row[$uicols['name'][$i]] = '';
 						if ($uicols['name'][$i] == 'date')
 						{							
-							$datatable['rows']['row'][$j]['column'][$i]['value']	= date($dateformat,strtotime($investment[$uicols['name'][$i]]));								
+							$json_row[$uicols['name'][$i]]  = date($dateformat,strtotime($investment[$uicols['name'][$i]]));								
 						}
 						else if ($uicols['name'][$i] == 'is_admin') 
 						{
-							$datatable['rows']['row'][$j]['column'][$i]['value']	= $this->admin_invoice;
+							$json_row[$uicols['name'][$i]]	= $this->admin_invoice;
 						} 
 						else
 						{
 							if ($uicols['name'][$i] == 'initial_value' || $uicols['name'][$i] == 'value' || $uicols['name'][$i] == 'this_write_off')
 							{
-								$datatable['rows']['row'][$j]['column'][$i]['value']	= number_format($investment[$uicols['name'][$i]], 0, ',', '');							
+								$json_row[$uicols['name'][$i]]	= number_format($investment[$uicols['name'][$i]], 0, ',', '');							
 							}
 							else
 							{
-								$datatable['rows']['row'][$j]['column'][$i]['value']	= $investment[$uicols['name'][$i]];
+								$json_row[$uicols['name'][$i]]	= $investment[$uicols['name'][$i]];
 							}
 						}
 					}
-					$j++;
+					$values[] = $json_row;
 				}
-			}			
+			}
+			
+			$column_def = array();
+			$count_uicols = count($uicols['name']);
+			for($k=0;$k<$count_uicols;$k++)
+			{
+					$params = array(
+									'key' => $uicols['name'][$k],
+									'label' => $uicols['descr'][$k],
+									'className' => $uicols['className'][$k],
+									'sortable' => ($uicols['sortable'][$k]) ? true : false,
+									'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+								);
 
-			$datatable['rowactions']['action'] = array();
-
+					array_push ($column_def, $params);
+			}
+			
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> "''",
+				'ColumnDefs'	=> $column_def,
+				'data'			=> json_encode($values),
+				'config'		=> array(
+					array('disableFilter'	=> true),
+					array('disablePagination'	=> true)
+				)
+			);
+			
+			$top_toolbar = array
+			(
+				array
+				( 
+					'type'	=> 'button',
+					'id'	=> 'btn_cancel',
+					'value'	=> lang('Cancel'),
+					'url'	=> self::link(array
+					(
+						'menuaction'	=> 'property.uiinvestment.index'
+					))
+				)
+			);
+			
+			$down_toolbar = array
+			(
+				array(
+					'type' => 'label',
+					'id' => 'lbl_input_index',
+					'value' => lang('New Index'),
+					'style' => 'filter',
+					'group' => '1'
+				),
+				array
+				(
+					'type' => 'text',
+					'id' => 'txt_index',
+					'name' => 'txt_index',
+					'tab_index' => 5,
+					'style' => 'filter',
+					'group' => '1'
+				),
+				array(
+					'type' => 'date-picker',
+					'id'   => 'start_date',
+					'name' => 'start_date',
+					'value'=> '',
+					'style' => 'filter',
+					'group' => '1'
+				),
+				array
+				(
+					'type' => 'button',
+					'id' => 'btn_update',
+					'value'	=> lang('Update'),
+					'tab_index' => 5,
+					'style' => 'filter',
+					'group' => '1',
+					'action' => ''
+				)
+			);
+				
 			$info = array ();
 			$info[0]['name'] = lang('Entity Type');		
 			$info[0]['value'] = lang($entity_type);
@@ -635,158 +562,23 @@
 			$info[1]['value'] = $entity_id;																												
 			$info[2]['name'] = lang('Investment Id');		
 			$info[2]['value'] = $investment_id;			
-
-			$uicols_count	= count($uicols['descr']);
-
-			for ($i=0;$i<$uicols_count;$i++)
-			{
-				//all colums should be have formatter
-				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-					$datatable['headers']['header'][$i]['className']		= $uicols['className'][$i];
-
-					/*if($uicols['name'][$i]=='initial_value')
-					{
-						$datatable['headers']['header'][$i]['sortable']		= false;
-						$datatable['headers']['header'][$i]['sort_field'] 	= '';
-					}		*/
-				}
-				else
-				{
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']		= false;
-					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
-				}
-			}	
-
-			// path for property.js
-			$property_js = "/property/js/yahoo/property.js";
-
-			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
-			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
-			}
-
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
-
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($investment_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;			
-
-			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-
+			
+			$data = array
+			(
+				'datatable_def'			=> $datatable_def,
+				'top_toolbar'			=> $top_toolbar,
+				'down_toolbar'			=> $down_toolbar,
+				'info'					=> $info,
+				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+			);
+			
 			$appname	= lang('investment');
 			$function_msg	= lang('investment history');
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-			{
-				$datatable['sorting']['order']		= ''; // name key Column in myColumnDef
-				$datatable['sorting']['sort']		= ''; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']   	= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 		= phpgw::get_var('sort', 'string'); // ASC / DESC
-			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('tabview');
-
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array(),
-					'info'				=> $info
-				);
-
-			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-				foreach( $datatable['rows']['row'] as $row )
-				{
-					$json_row = array();
-					foreach( $row['column'] as $column)
-					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-						}
-						else if(isset($column['format']) && $column['format']== "link")
-						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-						}
-						else
-						{
-							$json_row[$column['name']] = $column['value'];
-						}
-					}
-					$json['records'][] = $json_row;
-				}
-			}
-
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
-			$json ['message']			= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				return $json;
-			}
-
-
-			$datatable['json_data'] = json_encode($json);
-			//-------------------- JSON CODE ----------------------
-
-			// Prepare template variables and process XSLT
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-			{
-				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-			}
-
-			// Prepare CSS Style
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'investment.history', 'property' );
+			self::render_template_xsl(array('investment', 'datatable_inline'), array('history' => $data));
 
 		}
 
