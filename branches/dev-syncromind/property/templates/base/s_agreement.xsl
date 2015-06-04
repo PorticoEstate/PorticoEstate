@@ -1,6 +1,9 @@
   <!-- $Id$ -->
 	<xsl:template match="data">
 		<xsl:choose>
+                        <xsl:when test="add">
+                                <xsl:apply-templates select="add"/>
+                        </xsl:when>
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
 			</xsl:when>
@@ -238,23 +241,22 @@
 			<xsl:value-of select="lookup_functions"/>
 		</script>
 		<!--div class="yui-navset" id="edit_tabview"-->
+                <dl>
+                    <xsl:choose>
+                            <xsl:when test="msgbox_data != ''">
+                                <dt>
+                                        <xsl:call-template name="msgbox"/>
+                                </dt>
+                            </xsl:when>
+                    </xsl:choose>
+                </dl>
                 <div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                            <div id="general">
 				<xsl:variable name="edit_url">
 					<xsl:value-of select="edit_url"/>
 				</xsl:variable>
-				<div id="general">
-					<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}" class="pure-form pure-form-aligned">
-						<!--table cellpadding="2" cellspacing="2" width="79%" align="center" border="0"-->
-							<xsl:choose>
-								<xsl:when test="msgbox_data != ''">
-									<dl>
-										<dt>
-											<xsl:call-template name="msgbox"/>
-										</dt>
-                                                                        </dl>
-								</xsl:when>
-							</xsl:choose>
+					<form ENCTYPE="multipart/form-data" method="post" name="form" id="form" action="{$edit_url}" class="pure-form pure-form-aligned">
 							<xsl:choose>
 								<xsl:when test="value_s_agreement_id!=''">
 									<div class="pure-control-group">
@@ -456,7 +458,6 @@
 										</xsl:attribute>
 									</input>
                                                         </div>
-						<!--/table-->
 					</form>
 					<form method="post" name="alarm" action="{$edit_url}">
 						<input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}"/>
@@ -512,12 +513,11 @@
                                                                     <input type="hidden" id="agreementid" name="agreementid" value="{value_s_agreement_id}" />
                                                                     <input type="button" name="" value="Add" id="values[add_alarm]" onClick="onAddClick_Alarm('add_alarm');"/>
 							</div>
-							<!-- <xsl:call-template name="alarm_form"/>  -->
 						</fieldset>
 					</form>
 				</div>
 				<div id="items">
-					<script type="text/javascript">
+					<!--script type="text/javascript">
 						var property_js = <xsl:value-of select="property_js"/>;
 						var base_java_url = <xsl:value-of select="base_java_url"/>;
 						var datatable = new Array();
@@ -543,7 +543,7 @@
 						<xsl:for-each select="myButtons">
 							myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 						</xsl:for-each>
-					</script>
+					</script-->
 						<xsl:choose>
 							<xsl:when test="value_s_agreement_id!=''">
 								<div class="pure-control-group">
@@ -1814,3 +1814,4 @@
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		<br/>
 	</xsl:template>
+        
