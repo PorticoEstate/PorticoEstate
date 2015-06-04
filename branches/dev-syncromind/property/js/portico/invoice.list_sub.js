@@ -3,9 +3,9 @@
 		var api = oTable0.api();
 		var data = api.ajax.json();
 
-		for(i=0;i < columns.length;i++)
+		for(i=0;i < columns0.length;i++)
 		{
-			switch (columns[i]['data']) 
+			switch (columns0[i]['data']) 
 			{
 				case 'approved_amount':
 					
