@@ -351,7 +351,7 @@ JS;
 											ids.push(aData['id']);
 										}
 										{$entry['funct']}('{$entry['id']}', ids);
-										JqueryPortico.updateinlineTableHelper(oTable{$count}, {$requestUrl});"
+										"
 				);
 			}
 			
@@ -388,6 +388,7 @@ JS;
 				{
 
 				}
+				JqueryPortico.updateinlineTableHelper(oTable{$count}, {$requestUrl});
 			}
 			});
 
