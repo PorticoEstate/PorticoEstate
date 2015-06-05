@@ -585,7 +585,6 @@
                         ids[aData['id']] = aData['id'];
                     }
                     onActionsClick_Toolbar('disable_alarm', ids);
-                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
                    "
             );
                     
@@ -611,7 +610,6 @@
                         ids[aData['id']] = aData['id'];
                     }
                     onActionsClick_Toolbar('enable_alarm', ids);
-                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
                    "
             );
             
@@ -637,7 +635,6 @@
                         ids[aData['id']] = aData['id'];
                     }
                     onActionsClick_Toolbar('test_cron', ids);
-                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
                    "
             );
                     
@@ -663,7 +660,6 @@
                         ids[aData['id']] = aData['id'];
                     }
                     onActionsClick_Toolbar('delete_alarm', ids);
-                    JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
                    "
             );
 //            JqueryPortico.updateinlineTableHelper(oTable, {$requestUrl});
