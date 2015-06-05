@@ -17,6 +17,7 @@ onActionsClick_Toolbar=function(type, ids){
                     {
 
                     }
+					JqueryPortico.updateinlineTableHelper(oTable);
             }
     });
 }
