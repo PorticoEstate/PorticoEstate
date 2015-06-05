@@ -1763,8 +1763,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-                                        onActionsClick_notify('enable_alarm', ids);
-                                        JqueryPortico.updateinlineTableHelper(oTable0,{$requestUrl_Alarm});"
+                                        onActionsClick_notify('enable_alarm', ids, {$requestUrl_Alarm});
+                                        "
                     ),
                 array(
                     'my_name'	=> 'disable_alarm',
@@ -1785,8 +1785,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-                                        onActionsClick_notify('disable_alarm', ids);
-                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
+                                        onActionsClick_notify('disable_alarm', ids, {$requestUrl_Alarm});
+                                        "
                     ),
                 array(
                     'my_name'	=> 'delete_alarm',
@@ -1807,8 +1807,8 @@
 											var aData = selected[n];
 											ids.push(aData['id']);
 										}
-                                        onActionsClick_notify('delete_alarm', ids);
-                                        JqueryPortico.updateinlineTableHelper(oTable0, {$requestUrl_Alarm});"
+                                        onActionsClick_notify('delete_alarm', ids, {$requestUrl_Alarm});
+                                        "
                     )
             );
             
