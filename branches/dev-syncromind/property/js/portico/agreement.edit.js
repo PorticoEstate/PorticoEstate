@@ -14,7 +14,7 @@ onActionsClick_notify=function(type, ids , url){
             data:{ids:ids,type:type},
             success: function(data) {
                        
-                JqueryPortico.updateinlineTableHelper('datatable-container_0');
+                JqueryPortico.updateinlineTableHelper(oTable0, url);
             }
     });
 }
