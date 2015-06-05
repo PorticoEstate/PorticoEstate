@@ -5,7 +5,7 @@
  */
 var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uis_agreement.edit_alarm'});
 
-onActionsClick_notify=function(type, ids){
+onActionsClick_notify=function(type, ids, requestUrl){
 
     $.ajax({
             type: 'POST',
@@ -17,6 +17,7 @@ onActionsClick_notify=function(type, ids){
                     {
 
                     }
+					JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
             }
     });
 }
