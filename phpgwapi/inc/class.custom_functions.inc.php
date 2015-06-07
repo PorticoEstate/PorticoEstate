@@ -289,8 +289,13 @@
 			$querymethod = '';
 			if($query)
 			{
-				$querymethod = " AND file_name {$this->_like} '%{$query}%'"
-							. " OR descr {$this->_like} '%{$query}%'";
+				$querymethod = " AND (file_name {$this->_like} '%{$query}%'"
+							. " OR descr {$this->_like} '%{$query}%')";
+			}
+
+			if ( isset($data['pre_commit']) )
+			{
+				$querymethod = " AND pre_commit = 1";
 			}
 
 			$sql = 'FROM phpgw_cust_function'
