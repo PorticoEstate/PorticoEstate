@@ -256,7 +256,11 @@
 			$this->service_id = $service_id;
 		}
 
-		public function get_service_id() { return $this->service_id; }
+		public function get_service_id()
+		{
+			//Add magic
+			return $this->service_id;
+		}
 
 		public function set_responsibility_id($responsibility_id)
 		{
