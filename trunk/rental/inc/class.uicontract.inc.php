@@ -679,6 +679,7 @@
 			$contract->set_location_id(phpgw::get_var('responsibility_id'));
 			$contract->set_account_in(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true));
 			$contract->set_account_out(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false));
+			$contract->set_executive_officer_id($GLOBALS['phpgw_info']['user']['account_id']);
 
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
