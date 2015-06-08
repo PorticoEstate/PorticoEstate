@@ -14,10 +14,19 @@
 		
 		function search($searchterm)
 		{
-			$type = phpgw::get_var('type', 'GET');
-            $bui_result = $org_result = $res_result = array();
+			if($type = phpgw::get_var('type', 'GET'))
+			{
+				$types = array($type);
+			}
+			else
+			{
+				$types = array('building','resource'); //default
+			}
 
-            if (!$type || $type == "building") {
+			$bui_result = $org_result = $res_result = $event_result = array();
+
+			if(in_array('building', $types))
+			{
                 $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array("active" => "1")));
                 foreach($bui_result['results'] as &$bui)
                 {
@@ -31,7 +40,9 @@
 					}
                 }
             }
-            if (!$type || $type == "organization") {
+
+			if(in_array('organization', $types))
+			{
                 $org_result = $this->soorganization->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc", "filters" => array("active" => "1")));
                 foreach($org_result['results'] as &$org)
                 {
@@ -44,7 +55,9 @@
 					}
                 }
             }
-            if(!$type || $type == "resource") {
+
+			if(in_array('resource', $types))
+			{
                 $res_result = $this->soresource->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array("active" => "1")));
                 foreach($res_result['results'] as &$res)
                 {
@@ -56,7 +69,8 @@
                 }
             }
 
-            if(!$type || $type == "event") {
+			if(in_array('event', $types))
+			{
 				$now = date('Y-m-d');
 				$expired_conditions = "(bb_event.active != 0 AND bb_event.completed = 0 AND bb_event.from_ > '{$now}' AND bb_event.description != '')";
                 $event_result = $this->soevent->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array('where' => $expired_conditions)));
