@@ -53,4 +53,4 @@
 			return $this->function_map;
 		}
 	}
-?>
+

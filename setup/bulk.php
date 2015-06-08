@@ -165,4 +165,3 @@
 	$setup_tpl->set_var('cancel',lang('Cancel'));
 	$setup_tpl->pparse('out','T_footer');
 	$GLOBALS['phpgw_setup']->html->show_footer();
-?>

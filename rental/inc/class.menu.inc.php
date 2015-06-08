@@ -166,7 +166,12 @@
 					'text'	=> lang('import_adjustments'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.import_regulations', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'document-save')
-				)
+				),
+				'custom_functions'	=> array
+				(
+					'text'	=> lang('custom functions'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function','appname' => 'rental', 'location' => '.contract', 'menu_selection' => 'admin::rental::custom_functions') )
+				),
 			);
 			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');

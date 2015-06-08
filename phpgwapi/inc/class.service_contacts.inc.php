@@ -51,4 +51,4 @@
 			return ExecMethod($this->svc . '.' . $this->function_map['delete']['function'],$data);
 		}
 	}
-?>
+

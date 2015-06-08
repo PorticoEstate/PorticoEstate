@@ -319,7 +319,11 @@ function loadDatatables(currTab){
 					</dt>
 					<dd>
 					<?php 
-						$executive_officer = $contract->get_executive_officer_id();
+						if(!$executive_officer = $contract->get_executive_officer_id())
+						{
+							$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
+						}
+
 						if($editable)
 						{
 							$location_name = $contract->get_field_of_responsibility_name();
@@ -440,7 +444,11 @@ function loadDatatables(currTab){
 					</dt>
 					<dd>
 						<?php
-						$current_term_id = $contract->get_term_id();
+						if(!$current_term_id = $contract->get_term_id())
+						{
+							$current_term_id = $config->config_data['default_billing_term'];
+						}
+
 						if ($editable)
 						{
 							?>

@@ -212,3 +212,34 @@ HTML;
 		}
 		return $out;
 	}
+
+	/**
+	* Get HTML radiobox with default billing term for new contracts
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function default_billing_term($config)
+	{
+		phpgw::import_class('rental.sobilling');
+		$billing_terms = rental_sobilling::get_instance()->get_billing_terms();
+		$term_assigned = isset($config['default_billing_term']) ? $config['default_billing_term'] : array();
+		$lang_none = lang('none');
+		$out = "<tr><td><input type=\"radio\" name=\"newsettings[default_billing_term]\" value=\"\"><label>{$lang_none}</label></td></tr>";
+
+		foreach ( $billing_terms as $term_id => $_label)
+		{
+			$label = $GLOBALS['phpgw']->translation->translate($_label, array(), false, 'rental');
+			$checked = '';
+			if ($term_id == $term_assigned)
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+			<tr><td><input type="radio" name="newsettings[default_billing_term]" value="{$term_id}" {$checked}><label>{$label}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
+

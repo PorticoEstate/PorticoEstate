@@ -856,5 +856,3 @@
 		
 	} // end class net_http_client
 
-	
-?>

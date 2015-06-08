@@ -430,4 +430,3 @@ class html2text
 
 }
 
-?>

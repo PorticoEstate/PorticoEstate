@@ -68,4 +68,4 @@
 			return $auth->authenticate($uid,$password);
 		}									    
 	}
-?>
+

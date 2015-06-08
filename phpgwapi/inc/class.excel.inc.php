@@ -42,4 +42,3 @@
 	* @see workbook
 	*/
 	require_once(PHPGW_API_INC . '/excel/Workbook.php');
-?>
