@@ -54,4 +54,4 @@
 	$GLOBALS['phpgw']->template->set_var($var);
 	$GLOBALS['phpgw']->template->pfp('out','head');
 	unset($tpl);
-?>
+

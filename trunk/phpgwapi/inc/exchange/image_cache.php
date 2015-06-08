@@ -21,4 +21,4 @@ $h = new http();
 $h->fetch($_GET['url'], $_GET['ttl']);
 header("Content-Type: image/jpeg");
 echo $h->body;
-?>
+
