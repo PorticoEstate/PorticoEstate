@@ -23,6 +23,7 @@
 			$contract = $data['contract'];
 			$location_arr = explode('-', $data['location_code']);
 			$loc1 = $location_arr[0];
+			$loc2 = $location_arr[1];
 
 			if($loc1 > 8006 && $loc1 < 8100)
 			{
@@ -30,11 +31,18 @@
 			}
 			else if($loc1 > 8499 && $loc1 < 8600)
 			{
-				$responsibility_id = 3015;
+				if($loc2 == 18)
+				{
+					$responsibility_id = 4036;
+				}
+				else
+				{
+					$responsibility_id = 4034;
+				}
 			}
 			else if($loc1 > 8599 && $loc1 < 8700)
 			{
-				$responsibility_id = 4036;
+				$responsibility_id = 3015;
 			}
 
 			$contract->set_responsibility_id($responsibility_id);
