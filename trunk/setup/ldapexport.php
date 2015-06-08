@@ -349,4 +349,3 @@
 	$setup_tpl->pfp('out','footer');
 
 	$GLOBALS['phpgw_setup']->html->show_footer();
-?>

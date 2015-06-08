@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare Setup - http://phpGroupWare.org
 	*
-	* @copyright Portions Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2000-2015 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$

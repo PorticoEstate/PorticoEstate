@@ -2,7 +2,7 @@
 	/**
 	* Setup
 	*
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2015 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$
@@ -523,7 +523,7 @@
 						{
 							$setup_tpl->set_var('bg_class', "row_install_{$row}");
 							$status = "[{$value['status']}] " . lang('Please install');
-							if ( isset($value['tables']) && is_array($value['tables']) && $GLOBALS['phpgw_setup']->detection->check_app_tables($value['name'],True))
+							if ( isset($value['tables']) && is_array($value['tables']) && $value['tables'] && $GLOBALS['phpgw_setup']->detection->check_app_tables($value['name'],True))
 							{
 								// Some tables missing
 								$setup_tpl->set_var('bg_class', "row_err_gen_{$row}");

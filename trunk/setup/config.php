@@ -299,4 +299,3 @@
 	$setup_tpl->pparse('out','T_config_post_script');
 
 	$GLOBALS['phpgw_setup']->html->show_footer();
-?>
