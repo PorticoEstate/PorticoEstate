@@ -80,4 +80,4 @@
 	$tpl->set_var($var);
 	$tpl->pfp('out','head');
 	unset($tpl);
-?>
+

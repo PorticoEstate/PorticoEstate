@@ -1028,4 +1028,3 @@ class Template
 	}
 
 }
-?>

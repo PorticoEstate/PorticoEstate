@@ -72,4 +72,4 @@
 			return $auth->authenticate($uid,$password,'text');
 		}
 	}
-?>
+

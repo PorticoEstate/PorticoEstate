@@ -196,4 +196,3 @@ class ipc_manager
 	}
 
 }
-?>

@@ -66,4 +66,3 @@
 			return 'CN=Users,'.$this->base_dn;
 		}
 	}
-?>

@@ -132,4 +132,3 @@
 			return '<a href="#" class="tooltip">'.$link_content.'<span class="tooltip"><span class="tooltip_headline">'.$tooltip_headline.'</span><span class="tooltip_line">&nbsp;</span><span class="tooltip_content">'.$tooltip_content.'</span></span></a>';
 		}
 	}
-?>

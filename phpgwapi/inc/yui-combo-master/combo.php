@@ -13,4 +13,4 @@ $config = array(
 $combo = new YUICombo($_GET, $config);
 
 $combo->loadModules();
-?>
+

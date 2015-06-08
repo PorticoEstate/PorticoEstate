@@ -506,4 +506,3 @@
 		}
 		return trim($val);
 	}
-?>

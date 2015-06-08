@@ -53,4 +53,4 @@ is wrong.
 echo "<h1>Log</h1>";
 echo $x->log; 
   
-?>
+
