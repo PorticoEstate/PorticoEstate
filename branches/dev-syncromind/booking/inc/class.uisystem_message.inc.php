@@ -1,11 +1,17 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 
-	class booking_uisystem_message extends booking_uicommon
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
+	class booking_uisystem_message extends phpgwapi_uicommon_jquery
 	{
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'show'			=>	true,
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
@@ -26,18 +32,20 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+            
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter', 
+							array(
+                                'type' => 'filter', 
 								'name' => 'status',
                                 'text' => lang('Status').':',
                                 'list' => array(
@@ -55,7 +63,8 @@
                                     )
                                 )
                             ),
-							array('type' => 'filter', 
+							array(
+                                'type' => 'filter', 
 								'name' => 'type',
                                 'text' => lang('Type').':',
                                 'list' => array(
@@ -73,12 +82,14 @@
                                     ), 
                                 )
                             ),
-							array('type' => 'autocomplete', 
+							array(
+                                'type' => 'autocomplete', 
 								'name' => 'building',
 								'ui' => 'building',
 								'text' => lang('Building').':',
 							),
-					        array('type' => 'text', 
+					        array(
+                                'type' => 'text', 
 								'name' => 'query'
 							),
 							array(
@@ -100,7 +111,7 @@
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'status',
@@ -133,10 +144,98 @@
 					)
 				)
 			);
-			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery', $data);
+//			self::render_template('datatable', $data);
 		}
 
-		public function index_json()
+        public function query()
+        {
+            $this->db = & $GLOBALS['phpgw']->db;
+
+//			$current_user = $this->current_account_id();
+            $current_user = 7;
+			$current_user_building_data = array();
+			$sql = "select object_id from bb_permission where subject_id=".$current_user." and role='case_officer';";
+			$this->db->query($sql);
+			while ($record = array_shift($this->db->resultSet)) {
+				$current_user_building_data[] = $record['object_id'];
+			}
+
+			$filters['building_id'] = $current_user_building_data;
+
+			if(isset($_SESSION['showall']))
+			{
+				unset($filters['building_id']);
+			} else {
+				$filters['building_id'] = $current_user_building_data;
+			}
+
+            $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
+            if ($testdata != 0) {
+	            $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));        
+            } else {
+	            unset($filters['building_name']);                
+            }
+            $testdata2 =  phpgw::get_var('type', 'str', 'REQUEST');
+            if ($testdata2 != '') {
+	            $filters['type'] = phpgw::get_var('type', 'str', 'REQUEST');        
+            } else {
+	            unset($filters['type']);
+            }
+            $testdata2 =  phpgw::get_var('status', 'str', 'REQUEST');
+            if ($testdata2 != '') {
+	            $filters['status'] = phpgw::get_var('status', 'str', 'REQUEST');        
+            } else {
+	            unset($filters['status']);
+            }
+            
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
+			$system_messages = $this->bo->so->read($params);
+			array_walk($system_messages["results"], array($this, "_add_links"), "booking.uisystem_message.show");
+
+
+			foreach($system_messages['results'] as &$system_message)
+			{
+				$building_case_officers_data =  array(); 
+				$building_case_officers =  array(); 
+				$sql = "SELECT account_id, account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id IN (SELECT subject_id FROM bb_permission WHERE object_id=".$system_message['building_id']." AND role='case_officer')";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					 $building_case_officers_data[] = array('account_id' => $record['account_id'], 'account_lid' => $record['account_lid'],'account_name' => $record['account_firstname']." ".$record['account_lastname']);
+					 $building_case_officers[] = $record['account_id'];
+				}
+
+				$system_message['created'] = pretty_timestamp($system_message['created']);
+				$system_message['type'] = lang($system_message['type']);
+				$system_message['status'] = lang($system_message['status']);
+				$system_message['modified'] = '';
+				$system_message['activity_name'] = '';
+				$system_message['contact_name'] = $system_message['name'];
+				$system_message['case_officer_name'] = $for_case_officer_id;
+				$system_message['what'] = $system_message['title'];
+				if (strstr($system_message['what'],"%")){
+					$search = array('%2C','%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
+					$replace = array (',','Å','å','Ø','ø','Æ','æ');
+					$system_message['what'] = str_replace($search, $replace, $system_message['what']);
+				}
+
+				while($case_officer = array_shift($building_case_officers_data)) {
+					if ($system_message['case_officer_name'] = $case_officer['account_id'])
+						$system_message['case_officer_name'] = $case_officer['account_name'];
+				}
+			}
+			return $this->jquery_results($system_messages);
+        }
+
+        public function index_json()
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 
