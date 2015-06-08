@@ -1,11 +1,17 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 
-	class booking_uidashboard extends booking_uicommon
+    phpgw::import_class('booking.uidocument_building');
+    phpgw::import_class('booking.uipermission_building');
+//    
+    phpgw::import_class('phpgwapi.uicommon_jquery');
+
+	class booking_uidashboard extends phpgwapi_uicommon_jquery
 	{
 		public $public_functions = array
 		(
 			'index'	=> true,
+            'query' => true,
 			'toggle_show_all_dashboard_applications' => true,
 			'toggle_show_all_dashboard_messages' => true,
 		);
@@ -58,17 +64,21 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+                
+				return $this->query();
 			}
+            
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+            
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter', 
+							array(
+                                'type' => 'filter', 
 								'name' => 'status',
                                 'text' => lang('Status').':',
                                 'list' => array(
@@ -121,7 +131,7 @@
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'status',
@@ -158,12 +168,49 @@
 					)
 				)
 			);
-			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
+//			self::render_template('datatable', $data);
 		}
+        
+        public function query()
+        {
+//            Analizar luego esta variable -> $this->current_account_id()
+            $this->db = $GLOBALS['phpgw']->db;
+			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(null,7) : array(1,7));
+			foreach($applications['results'] as &$application)
+			{
+				$application['status'] = lang($application['status']);
+				$application['type'] = lang($application['type']);
+				$application['created'] = pretty_timestamp($application['created']);
+				$application['modified'] = pretty_timestamp($application['modified']);
+				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
+				$application['resources'] = $this->resource_bo->so->read(array('filters'=>array('id'=>$application['resources'])));
+				$application['resources'] = $application['resources']['results'];
+				if($application['resources'])
+				{
+					$names = array();
+					foreach($application['resources'] as $res)
+					{
+						$names[] = $res['name'];
+					}
+					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
+				}
 
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$application['case_officer_name']."'";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					$application['case_officer_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				}
+			}
+			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
+
+			return $this->jquery_results($applications);
+        }
+        
 		public function index_json()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
+            
 			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(null,$this->current_account_id()) : array(1,$this->current_account_id()));
 			foreach($applications['results'] as &$application)
 			{
