@@ -709,9 +709,22 @@
 				$db_contract->transaction_begin();
 				if($so_contract->store($contract))
 				{
+					// Add standard price items to contract
+					if($contract->get_location_id() && ($this->isExecutiveOfficer() || $this->isAdministrator()))
+					{
+						$so_price_item = rental_soprice_item::get_instance();
+						//get default price items for location_id
+						$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
+
+						foreach($default_price_items as $price_item_id)
+						{
+							$so_price_item->add_price_item($contract->get_id(), $price_item_id);
+						}
+					}
 					// Add that composite to the new contract
 					$success = $so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
-					if($success){
+					if($success)
+					{
 						$db_contract->transaction_commit();
 						$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
 						$message = lang('messages_new_contract_from_composite').' '.$comp_name;
