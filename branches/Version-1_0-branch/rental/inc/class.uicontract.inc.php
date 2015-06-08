@@ -677,6 +677,31 @@
 		{
 			$contract = new rental_contract();
 			$contract->set_location_id(phpgw::get_var('responsibility_id'));
+			$contract->set_account_in(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true));
+			$contract->set_account_out(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false));
+			$contract->set_executive_officer_id($GLOBALS['phpgw_info']['user']['account_id']);
+
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+			$default_billing_term = $config->config_data['default_billing_term'];
+
+			$contract->set_term_id($default_billing_term);
+
+			$units = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_units();
+			$location_code = $units[0]->get_location()->get_location_code();
+
+			$args = array
+			(
+				'acl_location'	=> '.contract',
+				'location_code' => $location_code,
+				'contract'		=> &$contract
+			);
+
+			$hook_helper = CreateObject('rental.hook_helper');
+			$hook_helper->add_contract_from_composite($args);
+
+	//		_debug_array($contract); die();
+
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				$so_contract = rental_socontract::get_instance();

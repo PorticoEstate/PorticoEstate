@@ -838,4 +838,4 @@
 			return 'phpgw_hooks';
 		}
 }
-?>
+

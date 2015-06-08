@@ -98,4 +98,4 @@
 
 	$tpl->pfp('out','head');
 	unset($tpl);
-?>
+

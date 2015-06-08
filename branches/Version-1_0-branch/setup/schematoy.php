@@ -281,4 +281,3 @@
 	$GLOBALS['setup_tpl']->pparse('out','app_footer');
 	$GLOBALS['setup_tpl']->pparse('out','footer');
 	$GLOBALS['phpgw_setup']->html->show_footer();
-?>

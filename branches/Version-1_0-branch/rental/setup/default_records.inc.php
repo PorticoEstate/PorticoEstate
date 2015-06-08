@@ -34,7 +34,8 @@ unset($locations);
 
 
 //Create groups, users, add users to groups and set preferences
-$GLOBALS['phpgw']->locations->add('.',				'Root',			'rental',false);
+$GLOBALS['phpgw']->locations->add('.',				'Root',		'rental',false);
+$GLOBALS['phpgw']->locations->add('.contract',		'Contract','rental', $allow_grant = false, $custom_tbl = false, $c_function = true);
 $GLOBALS['phpgw']->locations->add('.ORG',			'Locations for organisational units',				'rental',false);
 $GLOBALS['phpgw']->locations->add('.ORG.BK',		'Organisational units in Bergen Kommune',			'rental',false);
 

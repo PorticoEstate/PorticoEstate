@@ -447,7 +447,7 @@
 
 			if($c_function)
 			{
-				$filter .= ' AND c_function = 1';
+				$filter .= ' AND allow_c_function = 1';
 			}
 
 			$sql = "SELECT phpgw_locations.location_id, phpgw_locations.name, phpgw_locations.descr FROM phpgw_locations"

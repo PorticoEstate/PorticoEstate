@@ -75,4 +75,4 @@ class xml {
     return utf8_decode(trim($string));
   }
 }
-?>
+

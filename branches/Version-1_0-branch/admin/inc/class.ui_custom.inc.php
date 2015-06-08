@@ -620,7 +620,7 @@
 				'lang_no_location'							=> lang('No location'),
 				'lang_location_statustext'					=> lang('Select submodule'),
 				'select_name_location'						=> 'location',
-				'location_list'								=> $this->bolocation->select_location('filter',$location,False,True),
+				'location_list'								=> $this->bolocation->select_location('filter', $location, false, false, true),
 
 			);
 

@@ -57,4 +57,4 @@
 			return ExecMethod($this->svc . '.' . $this->function_map['export_event']['function'],$data);
 		}
 	}
-?>
+

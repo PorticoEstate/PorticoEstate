@@ -43,4 +43,4 @@
 			$GLOBALS['phpgw']->sbox = createObject('phpgwapi.portalbox');
 		}
 	}
-?>
+

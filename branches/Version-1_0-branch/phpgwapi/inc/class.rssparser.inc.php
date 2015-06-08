@@ -225,4 +225,4 @@
 
 		return $GLOBALS['_rss'];
 	}
-?>
+
