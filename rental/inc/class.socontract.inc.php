@@ -1209,4 +1209,3 @@ class rental_socontract extends rental_socommon
     }
 
 }
-?>
