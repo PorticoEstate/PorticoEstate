@@ -19,7 +19,7 @@
 	$setup_info['phpsysinfo']['version']   = '3.1.7';
 	$setup_info['phpsysinfo']['app_order'] = 99;
 	$setup_info['phpsysinfo']['enable']    = 2;
-//	$setup_info['phpsysinfo']['tables']    =  array();
+	$setup_info['phpsysinfo']['tables']    =  array();
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['phpsysinfo']['hooks'] = array
