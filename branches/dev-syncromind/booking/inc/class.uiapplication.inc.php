@@ -1,8 +1,13 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.account_helper');
+    
+    phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uiapplication extends booking_uicommon
+	class booking_uiapplication extends phpgwapi_uicommon_jquery
 	{
 		const COMMENT_TYPE_OWNERSHIP='ownership';
         const ORGNR_SESSION_KEY = 'orgnr';
@@ -10,6 +15,7 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
@@ -25,7 +31,7 @@
 		{
 			parent::__construct();
             $this->set_module();
-			self::process_booking_unauthorized_exceptions();
+//			Analizar esta linea self::process_booking_unauthorized_exceptions();
 			$this->bo = CreateObject('booking.boapplication');
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->event_bo = CreateObject('booking.boevent');
@@ -150,7 +156,7 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
@@ -225,7 +231,7 @@
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'status',
@@ -267,9 +273,113 @@
 				),
 			);
 
-			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
+//			self::render_template('datatable', $data);
 		}
 
+        public function query() 
+        {
+            
+            // users with the booking role admin should have access to all buildings
+			// admin users should have access to all buildings
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
+			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) )
+			{
+				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+			}
+			$filters['status'] = 'NEW';
+			if(isset($_SESSION['showall']))
+			{
+				$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED');
+                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['activity_id']);                
+                }
+                
+			} else {
+				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
+				if (phpgw::get_var('status') == 'none')
+				{
+					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
+				}
+				elseif (isset($test)) 
+				{
+	                $filters['status'] = phpgw::get_var('status');
+				}
+				else
+				{
+	                $filters['status'] = 'NEW';
+				}
+                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['activity_id']);                
+                }
+            }
+
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
+			$applications = $this->bo->so->read($params);
+
+			foreach($applications['results'] as &$application)
+			{
+				if (strstr($application['building_name'],"%")){
+					$search = array('%2C','%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
+					$replace = array (',','Å','å','Ø','ø','Æ','æ');
+					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
+				}
+
+				$dates = array();
+				foreach ($application['dates'] as $data) {
+					$dates[] = $data['from_'];
+					break;
+				}
+				$fromdate = implode(',',$dates);
+				$application['from_'] = pretty_timestamp($fromdate);
+				$application['status'] = lang($application['status']);
+				$application['created'] = pretty_timestamp($application['created']);
+				$application['modified'] = pretty_timestamp($application['modified']);
+				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
+				$application['resources'] = $this->resource_bo->so->read(array('filters'=>array('id'=>$application['resources'])));
+				$application['resources'] = $application['resources']['results'];
+				if($application['resources'])
+				{
+					$names = array();
+					foreach($application['resources'] as $res)
+					{
+						$names[] = $res['name'];
+					}
+					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
+				}
+			}
+			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
+
+			return $this->jquery_results($applications);
+            
+        }
+        
 		public function index_json()
 		{
 			// users with the booking role admin should have access to all buildings
