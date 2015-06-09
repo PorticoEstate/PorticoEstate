@@ -1,12 +1,18 @@
 <?php
-phpgw::import_class('booking.uicommon');
+//phpgw::import_class('booking.uicommon');
 phpgw::import_class('phpgwapi.send');
 
-class booking_uievent extends booking_uicommon
+phpgw::import_class('booking.uidocument_building');
+phpgw::import_class('booking.uipermission_building');
+
+phpgw::import_class('phpgwapi.uicommon_jquery');
+
+class booking_uievent extends phpgwapi_uicommon_jquery
 {
 	public $public_functions = array
 	(
 		'index'			=>	true,
+        'query'         =>  true,
 		'add'			=>	true,
 		'edit'			=>	true,
 		'delete'			=>	true,
@@ -38,7 +44,7 @@ class booking_uievent extends booking_uicommon
 	public function index()
 	{
 		if(phpgw::get_var('phpgw_return_as') == 'json') {
-			return $this->index_json();
+			return $this->query();
 		}
 		self::add_javascript('booking', 'booking', 'datatable.js');
 		phpgwapi_yui::load_widget('datatable');
@@ -84,7 +90,7 @@ class booking_uievent extends booking_uicommon
 					array(
 						'key' => 'id',
 						'label' => lang('ID'),
-						'formatter' => 'YAHOO.booking.formatLink'
+						'formatter' => 'JqueryPortico.formatLink'
 					),
 					array(
 						'key' => 'description',
@@ -125,9 +131,57 @@ class booking_uievent extends booking_uicommon
 				)
 			)
 		);
-		self::render_template('datatable', $data);
+//		self::render_template('datatable', $data);
+        self::render_template_xsl('datatable_jquery',$data);
 	}
 
+    public function query()
+	{
+		if(isset($_SESSION['showall']))
+		{
+			unset($filters['building_name']);
+			unset($filters['activity_id']);
+		} else {
+			$testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+			if ($testdata != 0) {
+				$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
+			} else {
+				unset($filters['building_name']);
+			}
+			$testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
+			if ($testdata2 != 0) {
+				$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
+			} else {
+				unset($filters['activity_id']);
+			}
+		}
+        
+        $search = phpgw::get_var('search');
+        $order = phpgw::get_var('order');
+        $columns = phpgw::get_var('columns');
+
+        $params = array(
+            'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+            'results' => phpgw::get_var('length', 'int', 'REQUEST', null),
+            'query' => $search['value'],
+            'order' => $columns[$order[0]['column']]['data'],
+            'sort'	=> $columns[$order[0]['column']]['data'],
+            'dir'	=> $order[0]['dir'],
+            'filters' => $filters
+        );
+        
+		$events = $this->bo->so->read($params);
+
+		foreach($events['results'] as &$event)
+		{
+			$event['from_'] = pretty_timestamp($event['from_']);
+			$event['to_'] = pretty_timestamp($event['to_']);
+		}
+
+		array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
+		return $this->jquery_results($events);
+	}
+    
 	public function index_json()
 
 	{
