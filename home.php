@@ -203,7 +203,7 @@ HTML;
 	}
         
 	$GLOBALS['phpgw']->hooks->process('home', $sorted_apps);
-        
+
 	if ( isset($GLOBALS['portal_order']) && is_array($GLOBALS['portal_order']) )
 	{
 		$GLOBALS['phpgw']->preferences->delete('portal_order');
@@ -213,12 +213,12 @@ HTML;
 		}
 		$GLOBALS['phpgw']->preferences->save_repository();
 	}
-        if( phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'))
-		{
-                        echo "<div class='msg_important'><h2>";
-                        echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'));
-                        echo "</h2>";
-			echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'));
-                        echo '</div>';
-		}
+	if( phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'))
+	{
+		echo "<div class='msg_important'><h2>";
+		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'));
+		echo "</h2>";
+		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'));
+		echo '</div>';
+	}
 	$GLOBALS['phpgw']->common->phpgw_footer();
