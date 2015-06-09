@@ -64,6 +64,11 @@
 		 */
 		public function home()
 		{
+			$app_id = $GLOBALS['phpgw']->applications->name2id('controller');
+			if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+			{
+				$GLOBALS['portal_order'][] = $app_id;
+			}
 
 			$location_array = array();
 			$component_short_desc = array();

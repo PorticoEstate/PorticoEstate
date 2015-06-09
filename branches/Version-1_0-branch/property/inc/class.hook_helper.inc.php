@@ -89,6 +89,7 @@
 		 */
 		public function home_backend()
 		{
+			$this->home_tenant_claims();
 			$this->home_ticket();
 			$this->home_project();
 			$this->home_workorder();
@@ -103,6 +104,92 @@
 			$this->home_ticket();
 		}
 
+		private function get_controls($app_id)
+		{
+			$var = array
+			(
+				'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+				'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+//				'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+//				'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+//				'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+			);
+			return $var;
+		}
+
+		/**
+		 * Show tenant claims on homepage
+		 *
+		 * @return void
+		 */
+		public function home_tenant_claims()
+		{
+			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
+
+			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
+
+			if ( isset($prefs['property']['mainscreen_show_open_tenant_claim'])
+			&& $prefs['property']['mainscreen_show_open_tenant_claim'] == 'yes')
+			{
+				$sotenant_claim = CreateObject('property.sotenant_claim');
+				$claims = $sotenant_claim->read(array
+					(
+						'start' => 0,
+						'user_id' => $accound_id
+					)
+				);
+
+				$total_records = $sotenant_claim->total_records;
+				$portalbox = CreateObject('phpgwapi.listbox', array
+				(
+					'title'		=> lang('tenant claim') . " ({$total_records})",
+					'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'	=> '100%',
+					'outerborderwidth'	=> '0',
+					'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+				));
+
+				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+				if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+				{
+					$GLOBALS['portal_order'][] = $app_id;
+				}
+
+				$var = $this->get_controls($app_id);
+
+				foreach ( $var as $key => $value )
+				{
+	//				$portalbox->set_controls($key,$value);
+				}
+				foreach ($claims as &$entry)
+				{
+					$entry['entry_date']  = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$location_info = execMethod('property.solocation.read_single',$entry['location_code']);
+					$entry['loc1_name'] = $location_info['loc1_name'];
+					$entry['loc_category'] = $location_info['category_name'];
+
+					$portalbox->data[] = array
+					(
+						'text' => "{$entry['claim_id']} :: {$entry['location_code']} :: {$location_info['loc1_name']} :: {$location_info['category_name']} :: {$entry['name']}",
+						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitenant_claim.edit', 'claim_id' => $entry['claim_id']))
+					);
+				}
+				echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
+
+				unset($tts);
+				unset($portalbox);
+				unset($category_name);
+				unset($default_status);
+
+			}
+
+		}
 		/**
 		 * Show ticket info for homepage
 		 *
@@ -144,18 +231,12 @@
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+					$portalbox->set_controls($key,$value);
 				}
 
 				$category_name = array(); // caching
@@ -224,18 +305,12 @@
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$category_name = array(); // caching
@@ -305,18 +380,12 @@
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$category_name = array(); // caching
@@ -384,18 +453,12 @@
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$status = array();
@@ -495,18 +558,12 @@
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$portalbox->data = array();
@@ -570,18 +627,12 @@
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$portalbox->data = array();
@@ -625,18 +676,12 @@
 				{
 					$GLOBALS['portal_order'][] = $app_id;
 				}
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$portalbox->data = array();
@@ -681,18 +726,11 @@
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$action_params = array
@@ -804,18 +842,11 @@
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$action_params = array
@@ -931,18 +962,11 @@
 					$GLOBALS['portal_order'][] = $app_id;
 				}
 
-				$var = array
-				(
-					'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
-					'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
-				);
+				$var = $this->get_controls($app_id);
 
 				foreach ( $var as $key => $value )
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
 				$action_params = array
