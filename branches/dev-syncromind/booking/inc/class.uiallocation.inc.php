@@ -1,12 +1,18 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.boorganization');
+    
+    phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uiallocation extends booking_uicommon
+	class booking_uiallocation extends phpgwapi_uicommon_jquery
 	{
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
@@ -34,7 +40,7 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'allocation_list.js');
 			self::add_javascript('booking', 'booking', 'datatable.js');
@@ -98,7 +104,7 @@
 						array(
 							'key' => 'organization_name',
 							'label' => lang('Organization'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'shortname',
@@ -137,9 +143,64 @@
 				));
 			}
 			$data['filters'] = $this->export_filters;
-			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
+//			self::render_template('datatable', $data);
 		}
 
+        public function query()
+		{
+			if(isset($_SESSION['showall']))
+			{
+        		unset($filters['building_name']);
+                unset($filters['organization_id']);
+                unset($filters['season_id']);
+			} else {
+                $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('organizations', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['organization_id'] = $this->bo->so->get_organization(phpgw::get_var('organizations', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['organization_id']);
+                }
+                $testdata3 =  phpgw::get_var('filter_season_id', 'int', 'REQUEST', null);
+                if ($testdata3 != 0) {
+                    $filters['season_id'] = $this->bo->so->get_season(phpgw::get_var('filter_season_id', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['season_id']);                
+                }
+            }
+           
+            $search = phpgw::get_var('search');
+            $order = phpgw::get_var('order');
+			$columns = phpgw::get_var('columns');
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+                'query' => $search['value'],
+                'order' => $columns[$order[0]['column']]['data'],
+				'sort'	=> $columns[$order[0]['column']]['data'],
+                'dir'	=> $order[0]['dir'],
+				'filters' => $filters,
+			);
+            
+			$allocations = $this->bo->so->read($params);
+			array_walk($allocations["results"], array($this, "_add_links"), "booking.uiallocation.show");
+
+			foreach($allocations['results'] as &$allocation)
+			{
+				$allocation['from_'] = pretty_timestamp($allocation['from_']);
+				$allocation['to_'] = pretty_timestamp($allocation['to_']);
+			}
+            
+			return $this->jquery_results($allocations);
+		}
+        
 		public function index_json()
 		{
 			if(isset($_SESSION['showall']))
