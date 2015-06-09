@@ -73,29 +73,29 @@
 			$curr_position = $GLOBALS['phpgw']->common->find_portal_order((int) $_GET['app']);
 			$max_count = count($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) - 1;
 			$offset = -1;
-			if($curr_position == 0)
+			if($curr_position == 0) // already on top
 			{
-				$new_order = $max_count;
+//				$new_order = $max_count;
 			}
 			else
 			{
 				$new_order = $curr_position + $offset;
+				move_boxes($curr_position,$new_order,$offset,0,$max_count);
 			}
-			move_boxes($curr_position,$new_order,$offset,0,$max_count);
 			break;
 		case 'down':
 			$curr_position = $GLOBALS['phpgw']->common->find_portal_order((int) $_GET['app']);
 			$max_count = count($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) - 1;
 			$offset = 1;
-			if($curr_position == $max_count)
+			if($curr_position == $max_count) // already last
 			{
 				$new_order = 0;
 			}
 			else
 			{
 				$new_order = $curr_position + $offset;
+				move_boxes($curr_position,$new_order,$offset,$max_count,0);
 			}
-			move_boxes($curr_position,$new_order,$offset,$max_count,0);
 			break;
 		case 'edit':
 		case 'question':

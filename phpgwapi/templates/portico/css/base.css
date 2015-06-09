@@ -400,3 +400,10 @@ ul#menu li li
 	cursor: default;
 }
 
+.home_portal_controls
+{
+	float: right;
+	text-align: right;
+	padding: 5px 5px 0px 0px;
+	width: 10px;
+}
