@@ -1,11 +1,17 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 
-	class booking_uigroup extends booking_uicommon
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
+	class booking_uigroup extends phpgwapi_uicommon_jquery
 	{
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'show'			=>	true,
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
@@ -101,7 +107,7 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
@@ -141,7 +147,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Group'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'shortname',
@@ -170,9 +176,46 @@
 					)
 				)
 			);
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
+        public function query()
+		{
+			$groups = $this->bo->read();
+			array_walk($groups["results"], array($this, "_add_links"), $this->module.".uigroup.show");
+			foreach($groups["results"] as &$group) {
+				
+				$contact = (isset($group['contacts']) && isset($group['contacts'][0])) ? $group['contacts'][0] : null;
+				$contact2 = (isset($group['contacts']) && isset($group['contacts'][1])) ? $group['contacts'][1] : null;
+				
+				if ($contact) {
+					$group += array(
+								"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
+								"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
+								"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
+					);
+				}
+				if ($contact2) {
+					$group += array(
+								"secondary_contact_name"  => ($contact2["name"])  ? $contact2["name"] : '',
+								"secondary_contact_phone" => ($contact2["phone"]) ? $contact2["phone"] : '',
+								"secondary_contact_email" => ($contact2["email"]) ? $contact2["email"] : '',
+					);
+				}
+			}
+			
+			$results = $this->jquery_results($groups);
+			
+			if (is_array($parent_entity = $this->get_parent_if_inline())) {
+				if ($this->bo->allow_create(array($this->get_current_parent_type().'_id' => $parent_entity['id']))) {
+					$results['Actions']['add'] = array('text' => lang('Add Group'), 'href' => $this->link_to('edit'));
+				}
+			}
+
+			return $results;
+		}
+        
 		public function index_json()
 		{
 			$groups = $this->bo->read();
