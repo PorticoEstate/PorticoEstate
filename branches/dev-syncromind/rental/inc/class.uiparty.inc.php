@@ -1,5 +1,9 @@
 <?php
-phpgw::import_class('rental.uicommon');
+//phpgw::import_class('rental.uicommon');
+
+phpgw::import_class('phpgwapi.uicommon_jquery');
+phpgw::import_class('phpgwapi.jquery');
+	
 phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.sodocument');
@@ -8,7 +12,8 @@ include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');
 
-class rental_uiparty extends rental_uicommon
+//class rental_uiparty extends rental_uicommon
+class rental_uiparty extends phpgwapi_uicommon_jquery
 {
 	public $public_functions = array
 	(
@@ -178,7 +183,7 @@ class rental_uiparty extends rental_uicommon
 		// ... add result data
 		$party_data = array('results' => $rows, 'total_records' => $result_count);
 
-		$editable = phpgw::get_var('editable') == 'true' ? true : false;
+		$editable = phpgw::get_var('editable', 'bool');
 
 		if(!$export){
 			array_walk(
@@ -194,7 +199,12 @@ class rental_uiparty extends rental_uicommon
 			);
 		}
 		
-		return $this->yui_results($party_data, 'total_records', 'results');
+		$result_data    =   array('results' =>  $party_data['results']);
+		$result_data['total_records']	= count($party_data['results']);
+		$result_data['draw']    = 1;
+
+		return $this->jquery_results($result_data);
+		//return $this->yui_results($party_data, 'total_records', 'results');
 	}
 	
 	/*
@@ -514,8 +524,112 @@ class rental_uiparty extends rental_uicommon
 	
 	public function sync()
 	{
+		$editable	= phpgw::get_var('editable', 'bool');
 		$sync_job	= phpgw::get_var('sync', 'string', 'GET');
+		
+		$uicols = array(
+			array('key'=>'identifier', 'label'=>lang('identifier'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+			array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+			array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
+		);
+				
 		switch($sync_job)
+		{
+			case 'resp_and_service':
+				/*self::set_active_menu('rental::parties::sync::sync_resp_and_service');
+				$this->render('sync_party_list.php');*/
+				$type = 'sync_parties';
+				$extra_cols = array(
+					array("key" => "responsibility_id", "label" => lang('responsibility_id'), "sortable"=>false, "hidden"=>false),
+					array("key" => "sync_message", "label" => lang('sync_message'), "sortable"=>false, "hidden"=>false),
+					array("key" => "org_unit_name", "label" => lang('org_unit_name'), "sortable"=>false, "hidden"=>false)
+				);
+				break;
+			case 'res_unit_number':
+				/*self::set_active_menu('rental::parties::sync::sync_res_units');
+				$this->render('sync_party_list_res_unit.php');*/
+				$type = 'sync_parties_res_unit';
+				$extra_cols = array(
+					array("key" => "result_unit_number", "label" => lang('result_unit_number'), "sortable"=>false, "hidden"=>false),
+					array("key" => "sync_message", "label" => lang('sync_message'), "sortable"=>false, "hidden"=>false),
+					array("key" => "org_unit_name", "label" => lang('org_unit_name'), "sortable"=>false, "hidden"=>false)
+				);
+				break;
+			case 'identifier':
+				/*self::set_active_menu('rental::parties::sync::sync_identifier');
+				$this->render('sync_party_list_identifier.php');*/
+				$type = 'sync_parties_identifier';
+				$extra_cols = array(
+					array("key" => "service_id", "label" => lang('service_id'), "sortable"=>false, "hidden"=>false),
+					array("key" => "responsibility_id", "label" => lang('responsibility_id'), "sortable"=>false, "hidden"=>false),
+					array("key" => "identifier", "label" => lang('identifier'), "sortable"=>false, "hidden"=>false),
+					array("key" => "sync_message", "label" => lang('sync_message'), "sortable"=>false, "hidden"=>false),
+					array("key" => "org_unit_name", "label" => lang('org_unit_name'), "sortable"=>false, "hidden"=>false)
+				);
+				break;
+			case 'org_unit':
+				/*self::set_active_menu('rental::parties::sync::sync_org_unit');
+				$this->render('sync_party_list_org_id.php');*/
+				$type = 'sync_parties_org_unit';
+				$extra_cols = array(
+					array("key" => "org_unit_name", "label" => lang('sync_org_name_fellesdata'), "sortable"=>false, "hidden"=>false),
+					array("key" => "dep_org_name", "label" => lang('sync_org_department_fellesdata'), "sortable"=>false, "hidden"=>false),
+					array("key" => "unit_leader", "label" => lang('sync_org_unit_leader_fellesdata'), "sortable"=>false, "hidden"=>false),
+					array("key" => "org_email", "label" => lang('sync_org_email_fellesdata'), "sortable"=>false, "hidden"=>false)
+				);
+				break;
+		}
+		
+		if (phpgw::get_var('phpgw_return_as') == 'json')
+		{
+			return $this->query();
+		}
+
+		$appname			= $this->location_info['name'];
+		$function_msg		= lang('list %1', $appname);
+
+		$data = array(
+			'datatable_name'	=> $appname. ': ' . $function_msg,
+			'form' => array(
+				'toolbar' => array(
+					'item' => array()
+				)
+			),
+			'datatable' => array(
+				'source' => self::link(array(
+					'menuaction' => 'rental.uiparty.sync', 
+					'editable'		=> ($editable) ? 1 : 0,
+					'type'			=> $type,
+					'phpgw_return_as' => 'json'
+				)),
+				'download'	=> self::link(array('menuaction' => 'rental.uiparty.download',
+								'type'		=> $type,
+								'export'    => true,
+								'allrows'   => true)),
+				'allrows'	=> true,
+				'editor_action' => '',
+				'field' => array()
+			)
+		);
+
+		foreach  ($uicols as $col)
+		{
+			array_push($data['datatable']['field'], $col);
+		}
+				
+		foreach  ($extra_cols as $col)
+		{
+			array_push($data['datatable']['field'], $col);
+		}
+		
+		/*$filters = $this->_get_filters();
+
+		foreach ($filters as $filter) 
+		{
+			array_unshift ($data['form']['toolbar']['item'], $filter);
+		}*/
+			
+		/*switch($sync_job)
 		{
 			case 'resp_and_service':
 				self::set_active_menu('rental::parties::sync::sync_resp_and_service');
@@ -533,7 +647,10 @@ class rental_uiparty extends rental_uicommon
 				self::set_active_menu('rental::parties::sync::sync_org_unit');
 				$this->render('sync_party_list_org_id.php');
 				break;
-		}
+		}*/
+		
+		self::render_template_xsl('datatable_jquery', $data);
+		//self::render_template_xsl(array('wo_hour.index','datatable_inline'), $data);
 	}
 	
 	public function syncronize_party()
