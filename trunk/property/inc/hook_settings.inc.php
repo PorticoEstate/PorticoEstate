@@ -73,6 +73,8 @@
 	}
 
 
+	create_select_box('show oen tenant claims on main screen','mainscreen_show_open_tenant_claim',$yes_and_no,'Link to claims you are assigned to');
+
 	create_select_box('show new/updated tickets on main screen','mainscreen_show_new_updated_tts',$yes_and_no,'Link to tickets you are assigned to');
 	create_select_box('Default ticket status','tts_status',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title');
