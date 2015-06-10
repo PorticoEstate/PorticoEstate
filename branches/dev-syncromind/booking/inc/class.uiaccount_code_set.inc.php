@@ -1,11 +1,17 @@
 <?php
-phpgw::import_class('booking.uicommon');
+//phpgw::import_class('booking.uicommon');
 
-	class booking_uiaccount_code_set extends booking_uicommon
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
+	class booking_uiaccount_code_set extends phpgwapi_uicommon_jquery
 	{
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'show'			=>	true,
 			'edit'			=>	true,
 			'add'				=> true,
@@ -50,7 +56,7 @@ phpgw::import_class('booking.uicommon');
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
@@ -82,7 +88,8 @@ phpgw::import_class('booking.uicommon');
 				),
 			);
 			$data['datatable']['source'][] = $this->link_to('index', array('phpgw_return_as' => 'json'));
-			$data['datatable']['field'][] = array('key' => 'name', 'label' => lang('Name'), 'formatter' => 'YAHOO.booking.formatLink');
+			$data['datatable']['field'][] = array(
+                'key' => 'name', 'label' => lang('Name'), 'formatter' => 'JqueryPortico.formatLink');
 			if (isset($config->config_data['dim_3'])) $data['datatable']['field'][] = array('key' => 'object_number', 'label' => $config->config_data['dim_3']);
 			if (isset($config->config_data['dim_1'])) $data['datatable']['field'][] = array('key' => 'responsible_code', 'label' => $config->config_data['dim_1']);
 			if (isset($config->config_data['article'])) $data['datatable']['field'][] = array('key' => 'article', 'label' => lang('Article'));
@@ -103,19 +110,31 @@ phpgw::import_class('booking.uicommon');
 				));
 			}
 			
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+        public function query()
 		{
 			$account_code_sets = $this->bo->read();
 			array_walk($account_code_sets["results"], array($this, "_add_links"), $this->module.".uiaccount_code_set.show");
 			//foreach($account_code_sets["results"] as &$account_code_set) {}
 			
-			$results = $this->yui_results($account_code_sets);
+			$results = $this->jquery_results($account_code_sets);
 			
 			return $results;
 		}
+        
+//		public function index_json()
+//		{
+//			$account_code_sets = $this->bo->read();
+//			array_walk($account_code_sets["results"], array($this, "_add_links"), $this->module.".uiaccount_code_set.show");
+//			//foreach($account_code_sets["results"] as &$account_code_set) {}
+//			
+//			$results = $this->yui_results($account_code_sets);
+//			
+//			return $results;
+//		}
 		
 		protected function add_default_display_data(&$account_code_set)
 		{
