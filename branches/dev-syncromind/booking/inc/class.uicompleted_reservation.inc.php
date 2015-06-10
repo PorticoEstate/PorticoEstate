@@ -1,14 +1,20 @@
 <?php
-phpgw::import_class('booking.uicommon');
+//phpgw::import_class('booking.uicommon');
 phpgw::import_class('booking.sopermission');
 
-	class booking_uicompleted_reservation extends booking_uicommon
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
+	class booking_uicompleted_reservation extends phpgwapi_uicommon_jquery
 	{
 		const SESSION_EXPORT_FILTER_KEY = 'export_filters';
 		
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'show'			=>	true,
 			'edit'			=>	true,
 			'export'       => true,
@@ -96,12 +102,15 @@ phpgw::import_class('booking.sopermission');
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 
 			if (phpgw::get_var('export')) {
 				return $this->export();
 			}
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_to');
+            phpgwapi_jquery::load_widget('datepicker');
 			
 			self::add_javascript('booking', 'booking', 'completed_reservation.js');
 			self::add_javascript('booking', 'booking', 'datatable.js');
@@ -124,8 +133,11 @@ phpgw::import_class('booking.sopermission');
 								'text' => lang('Season').':',
 								'requestGenerator' => 'requestWithBuildingFilter',
 							),
-							array('type' => 'date-picker', 
+							array(
+                                'type' => 'date-picker',
+                                'id'   => 'to',
 								'name' => 'to',
+                                'value'=> '',
 								'text' => lang('To').':',
 							),
 							array(
@@ -157,12 +169,12 @@ phpgw::import_class('booking.sopermission');
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'reservation_type',
 							'label' => lang('Res. Type'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
 							'key' => 'event_id',
@@ -208,12 +220,12 @@ phpgw::import_class('booking.sopermission');
 						array(
 							'key' => 'exported',
 							'label' => lang('Exported'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
 							'key' => 'export_file_id',
 							'label' => lang('Export File'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
 							'key' => 'invoice_file_order_id',
@@ -228,21 +240,25 @@ phpgw::import_class('booking.sopermission');
 			);
 			
 			$data['filters'] = $this->export_filters;
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 		
 		protected function add_current_customer_identifier_info(&$data) {
 			$this->get_customer_identifier()->add_current_identifier_info($data);
 		}
 		
-		public function index_json()
+        public function query()
 		{
-			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
-			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$dir = phpgw::get_var('dir');
-
+            $search = phpgw::get_var('search');
+            $order = phpgw::get_var('order');
+            $columns = phpgw::get_var('columns');
+            
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results = phpgw::get_var('length', 'int', 'REQUEST', null);
+			$query = $search['value'];
+			$sort = $columns[$order[0]['column']]['data'];
+			$dir = $order[0]['dir'];
 			/*
 			 * Due to problem on order with offset - we need to set an additional parameter in some cases
 			 * http://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
@@ -416,10 +432,196 @@ phpgw::import_class('booking.sopermission');
 					$reservation['customer_identifier_value'] : lang('None');
 			}
 			
-			$results = $this->yui_results($reservations);
+			$results = $this->jquery_results($reservations);
 			
 			return $results;
 		}
+        
+//		public function index_json()
+//		{
+//			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+//			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
+//			$query = phpgw::get_var('query');
+//			$sort = phpgw::get_var('sort');
+//			$dir = phpgw::get_var('dir');
+//
+//			/*
+//			 * Due to problem on order with offset - we need to set an additional parameter in some cases
+//			 * http://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
+//			 */
+//
+//			switch($sort)
+//			{
+//				case 'cost':
+//					$_sort = array('cost','id');
+//					break;
+//				case 'reservation_type':
+//					$_sort = array('reservation_type','id');
+//					break;
+//				case 'building_name':
+//					$_sort = array('building_name','id');
+//					break;
+//				case 'organization_name':
+//					$_sort = array('organization_name','id');
+//					break;
+//				case 'contact_name':
+//					$_sort = array('contact_name','id');
+//					break;
+//				case 'customer_type':
+//					$_sort = array('customer_type','id');
+//					break;
+//				case 'from_':
+//					$_sort = array('from_','id');
+//					break;
+//				case 'to_':
+//					$_sort = array('to_','id');
+//					break;
+//				case 'exported':
+//					$_sort = array('exported','id');
+//					break;
+//				case 'export_file_id':
+//					$_sort = array('export_file_id','id');
+//					break;
+//				default:
+//					$_sort = $sort;
+//					break;
+//			}
+//
+//			$filters = array();
+//			foreach($this->bo->so->get_field_defs() as $field => $params) {
+//				if(phpgw::get_var("filter_$field")) {
+//					$filters[$field] = phpgw::get_var("filter_$field");
+//				}
+//			}
+//
+//			$to = strtotime(phpgw::get_var('filter_to', 'string', 'REQUEST', null));
+//			$filter_to = date("Y-m-d",$to);
+//
+//			if ($filter_to) {
+//				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+//			}
+//
+//			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
+//			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) ) { // users with the booking role admin should have access to all buildings
+//
+//				$accessable_buildings = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+//
+//				// if no buildings are searched for, show all accessable buildings
+//				if ( !isset($filters['building_id']) ) {
+//					$filters['building_id'] = $accessable_buildings;
+//				} else { // before displaying search result, check if the building search for is accessable
+//					if (!in_array($filters['building_id'], $accessable_buildings)) {
+//						$filters['building_id'] = -1;
+//						unset($filters['building_name']);
+//					}
+//				}
+//			}
+//
+//			if(!isset($_SESSION['showall'])) {
+//				$filters['active'] = "1";
+//			}
+//
+//			if (!isset($_SESSION['show_all_completed_reservations'])) {
+//				$filters['exported'] = '';
+//			}
+//
+//			$params = array(
+//				'start' => $start,
+//				'results' => $results,
+//				'query'	=> $query,
+//				'sort'	=> $_sort,
+//				'dir'	=> $dir,
+//				'filters' => $filters
+//			);
+//
+//			$reservations = $this->bo->so->read($params);
+//
+//			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation.show");
+//			foreach($reservations["results"] as &$reservation) {
+//				
+//				if (!empty($reservation['exported'])) 
+//				{
+//					$reservation['exported'] = array(
+//						'href' => $this->link_to('show', array('ui' => 'completed_reservation_export', 'id' => $reservation['exported'])),
+//						'label' => (string)$reservation['exported'],
+//					);
+//				} else {
+//					$reservation['exported'] = array('label' => lang('No'));
+//				}
+//				
+//				$reservation['reservation_type'] = array(
+//					'href' => $this->link_to($reservation['reservation_type'] == 'event' ? 'edit' : 'show', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
+//					'label' => lang($reservation['reservation_type']),
+//				);
+//				
+//				if (isset($reservation['export_file_id']) && !empty($reservation['export_file_id'])) {
+//					$reservation['export_file_id'] = array(
+//						'label' => (string)$reservation['export_file_id'],
+//						'href' => $this->link_to('show', array('ui' => 'completed_reservation_export_file', 'id' => $reservation['export_file_id']))
+//					);
+//				} else {
+//					$reservation['export_file_id'] = array('label' => lang("Not Generated"));
+//				}
+//				
+//				if (empty($reservation['invoice_file_order_id'])) {
+//					$reservation['invoice_file_order_id'] = lang("Not Generated");
+//				}
+//
+//				$this->db = & $GLOBALS['phpgw']->db;
+//
+//				if ($reservation['reservation_type']['label'] == 'Arrangement') {
+//					$sql = "select description,contact_name from bb_event where id=".$reservation['reservation_id'];
+//					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+//					$this->db->next_record();
+//					$reservation['event_id'] = $reservation['reservation_id'];
+//					$reservation['description'] = $this->db->f('description', false);
+//					$reservation['contact_name'] = $this->db->f('contact_name', false);
+//
+//				} elseif ($reservation['reservation_type']['label'] == 'Booking') {
+//					$sql = "select  application_id from bb_booking where id=".$reservation['reservation_id'];
+//					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+//					$this->db->next_record();
+//					if (!$this->db->f('application_id', false)) {
+//						$reservation['contact_name'] = '';
+//					 } else {
+//						$sql = "select  contact_name from bb_application where id=".$this->db->f('application_id', false);
+//						$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+//						$this->db->next_record();
+//						$reservation['contact_name'] = $this->db->f('contact_name', false);
+//					}
+//					$reservation['event_id'] = '';
+//					$reservation['description'] = '';
+//				} else {
+//					$sql = "select  application_id from bb_allocation where id=".$reservation['reservation_id'];
+//					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+//					$this->db->next_record();
+//					if (!$this->db->f('application_id', false)) {
+//						$reservation['contact_name'] = '';
+//					 } else {
+//						$sql = "select  contact_name from bb_application where id=".$this->db->f('application_id', false);
+//						$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+//						$this->db->next_record();
+//						$reservation['contact_name'] = $this->db->f('contact_name', false);
+//					}
+//					$reservation['event_id'] = '';
+//					$reservation['description'] = '';
+//				}
+//				$reservation['from_'] = substr($reservation['from_'], 0, -3);
+//				$reservation['to_'] = substr($reservation['to_'], 0, -3);
+//				$reservation['from_'] = pretty_timestamp($reservation['from_']);
+//				$reservation['to_'] = pretty_timestamp($reservation['to_']);
+//				$reservation['customer_type'] = lang($reservation['customer_type']);
+//
+//				$this->add_current_customer_identifier_info($reservation);
+//				
+//				$reservation['customer_identifier'] = isset($reservation['customer_identifier_label']) ? 
+//					$reservation['customer_identifier_value'] : lang('None');
+//			}
+//			
+//			$results = $this->yui_results($reservations);
+//			
+//			return $results;
+//		}
 		
 		protected function add_default_display_data(&$reservation)
 		{
