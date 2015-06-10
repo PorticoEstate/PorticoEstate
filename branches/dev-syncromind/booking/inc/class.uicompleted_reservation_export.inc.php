@@ -1,12 +1,18 @@
 <?php
-phpgw::import_class('booking.uicommon');
+//phpgw::import_class('booking.uicommon');
 
-	class booking_uicompleted_reservation_export extends booking_uicommon
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+    
+	class booking_uicompleted_reservation_export extends phpgwapi_uicommon_jquery
 	{	
 		public $public_functions = array
 		(
 			'index'			=> true,
-			'add'				=> true,
+            'query'         => true,    
+			'add'			=> true,
 			'show'			=> true
 		);
 
@@ -76,23 +82,30 @@ phpgw::import_class('booking.uicommon');
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 
 			if (phpgw::get_var('generate_files')) {
 				$this->generate_files();
 			}
 			
-			self::add_javascript('booking', 'booking', 'datatable.js');
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_to');
+            phpgwapi_jquery::load_widget('datepicker');
+            
+			self::add_javascript('booking', 'booking', 'datatable.js');            
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+                        
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'date-picker', 
-								'name' => 'to',
-								'text' => lang('To').':',
+							array(
+                                'type'	=> 'date-picker',
+								'id'	=> 'to',
+								'name'	=> 'to',
+								'value'	=> '',
+								'text'  => lang('To').':'
 							),
 							array(
 								'type' => 'submit',
@@ -118,17 +131,17 @@ phpgw::import_class('booking.uicommon');
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'building_id',
 							'label' => lang('Building'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
 							'key' => 'season_id',
 							'label' => lang('Season'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
 							'key' => 'from_',
@@ -157,13 +170,13 @@ phpgw::import_class('booking.uicommon');
 						array(
 							'key' => 'internal',
 							'label' => lang('Int. invoice file'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false,
 						),
 						array(
 							'key' => 'external',
 							'label' => lang('Ext. invoice file'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false,
 						),
 						array(
@@ -192,9 +205,30 @@ phpgw::import_class('booking.uicommon');
 			$data['filters'] = date("Y-m-d",$filters_to);
 
 
-			$this->render_template('datatable', $data);
+//			$this->render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 		
+        public function query() //index_json
+		{
+			$this->db = $GLOBALS['phpgw']->db;
+			$exports = $this->bo->read();
+			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
+
+			foreach($exports["results"] as &$export) {
+				$export = $this->bo->so->initialize_entity($export);
+				$this->add_default_display_data($export);
+
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export['created_by_name']."'";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					$export['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				}
+			}
+			$results = $this->jquery_results($exports);
+			return $results;
+		}
+        
 		public function create_link_data($entity, $id_key, $label_key, $null_label, $ui, $action = 'show') {
 			$link_data = array(); 
 			
@@ -235,25 +269,25 @@ phpgw::import_class('booking.uicommon');
 			}
 		}
 
-		public function index_json()
-		{
-			$this->db = $GLOBALS['phpgw']->db;
-			$exports = $this->bo->read();
-			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
-
-			foreach($exports["results"] as &$export) {
-				$export = $this->bo->so->initialize_entity($export);
-				$this->add_default_display_data($export);
-
-				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export['created_by_name']."'";
-				$this->db->query($sql);
-				while ($record = array_shift($this->db->resultSet)) {
-					$export['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
-				}
-			}
-			$results = $this->yui_results($exports);
-			return $results;
-		}
+//		public function index_json()
+//		{
+//			$this->db = $GLOBALS['phpgw']->db;
+//			$exports = $this->bo->read();
+//			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
+//
+//			foreach($exports["results"] as &$export) {
+//				$export = $this->bo->so->initialize_entity($export);
+//				$this->add_default_display_data($export);
+//
+//				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export['created_by_name']."'";
+//				$this->db->query($sql);
+//				while ($record = array_shift($this->db->resultSet)) {
+//					$export['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
+//				}
+//			}
+//			$results = $this->yui_results($exports);
+//			return $results;
+//		}
 		
 		public function show()
 		{
