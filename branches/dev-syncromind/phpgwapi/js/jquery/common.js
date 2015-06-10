@@ -46,23 +46,28 @@ JqueryPortico.formatProject = function(key, oData){
  }
 
 JqueryPortico.formatLinkGeneric = function(key, oData) {
+        
 	if(!oData[key])
 	{
 		return '';
 	}
+        
 	var data = oData[key];
 
-	if ( typeof(data) == 'object')
+        if( key == 'actions' )
+        {
+                var link = data;
+                var name = 'Delete';
+        }
+	else if ( typeof(data) == 'object')
 	{
 		var link = data['href'];
 		var name = data['label'];
-
 	}
-	else
+        else
 	{
 		var name = 'Link';
 		var link = data;
-
 	}
 
 	return '<a href="' + link + '">' + name + '</a>';
