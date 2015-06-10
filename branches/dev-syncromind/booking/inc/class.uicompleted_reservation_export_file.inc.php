@@ -1,11 +1,17 @@
 <?php
-phpgw::import_class('booking.uicommon');
+//phpgw::import_class('booking.uicommon');
 
-	class booking_uicompleted_reservation_export_file extends booking_uicommon
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+    
+	class booking_uicompleted_reservation_export_file extends phpgwapi_uicommon_jquery
 	{	
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'show'			=>	true,
 			'add'				=> true,
 			'download'  	=> true,
@@ -59,7 +65,7 @@ phpgw::import_class('booking.uicommon');
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 
 			self::add_javascript('booking', 'booking', 'datatable.js');
@@ -88,7 +94,7 @@ phpgw::import_class('booking.uicommon');
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'type',
@@ -113,19 +119,19 @@ phpgw::import_class('booking.uicommon');
 						array(
 							'key' => 'download',
 							'label' => lang('Actions'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false,
 						),
 						array(
 							'key' => 'upload',
 							'label' => lang('Export'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false,
 						),
 						array(
 							'key' => 'log',
 							'label' => lang('Logfile'),
-							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 							'sortable' => false,
 						),
 						array(
@@ -136,10 +142,11 @@ phpgw::import_class('booking.uicommon');
 				)
 			);
 			
-			$this->render_template('datatable', $data);
+//			$this->render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+        public function query()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
             $config	= CreateObject('phpgwapi.config','booking');
@@ -185,9 +192,59 @@ phpgw::import_class('booking.uicommon');
 				}
 			}
 			
-			$results = $this->yui_results($export_files);
+			$results = $this->jquery_results($export_files);
 			return $results;
 		}
+        
+//		public function index_json()
+//		{
+//			$this->db = $GLOBALS['phpgw']->db;
+//            $config	= CreateObject('phpgwapi.config','booking');
+//			$config->read();
+//#            if ($config->config_data['output_files'] == 'single')
+//			$export_files = $this->bo->read();
+//			array_walk($export_files["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export_file.show");
+//			foreach($export_files["results"] as &$export_file) {
+//				$export_file['created_on'] = pretty_timestamp(substr($export_file['created_on'], 0, 19));
+//				$export_file['type'] = lang($export_file['type']);
+//				
+//				$export_file['download'] = array(
+//					'label' => lang('Download'), 
+//					'href' => $this->link_to('download', array('id' => $export_file['id']))
+//				);
+//                if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'] and !empty($export_file['log_filename'])) {
+//    				$export_file['log'] = array(
+//	    				'label' => lang('log'), 
+//	    				'href' => $this->link_to('log', array('id' => $export_file['id']))
+//	    			);
+//                } else {
+//					$export_file['log'] = array(
+//						'label' => ' ', 
+//						'href' => '#'
+//					);
+//                }
+//				if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'])
+//				{
+//					$export_file['upload'] = array(
+//						'label' => lang('Upload'), 
+//						'href' => $this->link_to('upload', array('id' => $export_file['id']))
+//					);
+//				} else {
+//					$export_file['upload'] = array(
+//						'label' => ' ', 
+//						'href' => '#'
+//					);
+//				}
+//				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export_file['created_by_name']."'";
+//				$this->db->query($sql);
+//				while ($record = array_shift($this->db->resultSet)) {
+//					$export_file['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
+//				}
+//			}
+//			
+//			$results = $this->yui_results($export_files);
+//			return $results;
+//		}
 		
 		public function show()
 		{
