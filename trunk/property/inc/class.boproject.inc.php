@@ -44,6 +44,7 @@
 		var $cat_id;
 		var $allrows;
 		var $project_type_id;
+		var $acl_location = '.project';
 
 		var $public_functions = array
 			(
@@ -54,11 +55,11 @@
 				'check_perms'		=> true
 			);
 
-		function property_boproject($session=false)
+		function __construct($session=false)
 		{
 			$this->so 					= CreateObject('property.soproject');
 			$this->bocommon 			= & $this->so->bocommon;
-			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', $this->acl_location);
 			$this->cats->supress_info	= true;
 			$this->interlink 			= & $this->so->interlink;
 			$this->custom 				= & $this->so->custom;
@@ -907,6 +908,34 @@
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
+			// Custom rules - pre commit
+			$criteria = array
+				(
+					'appname'	=> 'property',
+					'location'	=> '.project',
+					'allrows'	=> true
+				);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && $entry['pre_commit'])
+				{
+					require_once $file;
+				}
+			}
+			unset($entry);
+			reset($custom_functions);
+
 			if ($action=='edit')
 			{
 				try
@@ -944,6 +973,22 @@
 			else
 			{
 				$receipt = $this->so->add($project, $values_attribute);
+			}
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
+				if ( $entry['active'] && is_file($file)  && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require_once $file;
+				}
 			}
 			return $receipt;
 		}
