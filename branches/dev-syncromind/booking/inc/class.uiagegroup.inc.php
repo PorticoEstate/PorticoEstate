@@ -1,11 +1,17 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 
-	class booking_uiagegroup extends booking_uicommon
+	phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
+	class booking_uiagegroup extends phpgwapi_uicommon_jquery
 	{
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'add'			=>	true,
 			'show'			=>	true,
 			'active'		=>	true,
@@ -16,7 +22,7 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+//			Analizar esta linea de permisos self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.boagegroup');
 			
@@ -47,7 +53,7 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			
 			self::add_javascript('booking', 'booking', 'datatable.js');
@@ -89,7 +95,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Name'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'active',
@@ -115,10 +121,11 @@
 				unset($data['datatable']['field'][2]); 
 			}
 	
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+        public function query()
 		{
 			$groups = $this->bo->read();
 			foreach($groups['results'] as &$agegroup)
@@ -126,8 +133,19 @@
 				$agegroup['link'] = $this->link(array('menuaction' => 'booking.uiagegroup.edit', 'id' => $agegroup['id']));
 				$agegroup['active'] = $agegroup['active'] ? lang('Active') : lang('Inactive');
 			}
-			return $this->yui_results($groups);
+			return $this->jquery_results($groups);
 		}
+        
+//		public function index_json()
+//		{
+//			$groups = $this->bo->read();
+//			foreach($groups['results'] as &$agegroup)
+//			{
+//				$agegroup['link'] = $this->link(array('menuaction' => 'booking.uiagegroup.edit', 'id' => $agegroup['id']));
+//				$agegroup['active'] = $agegroup['active'] ? lang('Active') : lang('Inactive');
+//			}
+//			return $this->yui_results($groups);
+//		}
 
 		public function add()
 		{
