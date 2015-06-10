@@ -56,6 +56,7 @@
 
 		public function index()
 		{
+                    $org_unit = $this->header_state['selected_org_unit'];
 		    $contractdata = array();	// This is the main container for all contract data sent to XSLT template stuff
 		    $msglog = array();			// Array of errors and other notifications displayed to us
 		    
@@ -83,9 +84,10 @@
     		// The current state of the contract view of this user's session
     		$this->contract_state_doc = phpgwapi_cache::session_get('frontend', $this->contract_state_identifier_doc);
     		$new_contract = phpgw::get_var('contract_id');
-    		$contracts_per_location = phpgwapi_cache::session_get('frontend', $this->contracts_per_location_identifier_doc);
+    		$contracts_per_location_all = phpgwapi_cache::session_get('frontend', $this->contracts_per_location_identifier_doc);
     		$contracts_for_selection = array();
     		$number_of_valid_contracts = 0;
+                $contracts_per_location = $contracts_per_location_all[$org_unit];
     		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
     		{
     			if(	($this->contract_filter_doc == 'active' && $contract->is_active()) ||
