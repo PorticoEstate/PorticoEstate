@@ -85,4 +85,3 @@
   //$worksheet2->insert_bitmap(0, 0, "some.bmp",10,10);
 
   $workbook->close();
-?>

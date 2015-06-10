@@ -99,4 +99,3 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 	}
-?>

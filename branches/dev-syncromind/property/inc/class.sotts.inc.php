@@ -400,16 +400,21 @@
 				$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
 				$_end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$_start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
-				$filtermethod .= " $where fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date ";
+				$filtermethod .= " $where (fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date ";
 
 				if($order_add || $order_edit)
 				{
 					$end_period	= date('Ym', $end_date);
 					$start_period	= date('Ym', $start_date);
+					$filtermethod .= " OR (fm_tts_payments.period >= {$start_period} AND fm_tts_payments.period <= {$end_period}))";
 					$date_join = "LEFT JOIN fm_tts_payments ON ( fm_tts_tickets.id=fm_tts_payments.ticket_id AND fm_tts_payments.period >= $start_period AND fm_tts_payments.period <= $end_period )";
 					$actual_cost_field = 'SUM(fm_tts_payments.amount) AS actual_cost';
 					$actual_cost_group_field = '';
 
+				}
+				else
+				{
+					$filtermethod .= ')';
 				}
 
 				$where= 'AND';
@@ -448,7 +453,7 @@
 					if(!$p_num)
 					{
 						$query=explode(".",$query);
-						$querymethod .= " OR (fm_tts_tickets.loc1='{$query[0]}' AND fm_tts_tickets.loc4='{$query[1]}'))";
+						$querymethod .= " OR (fm_tts_tickets.loc1='{$query[0]}' AND fm_tts_tickets.loc4='{$query[1]}')";
 					}
 					else
 					{
@@ -456,20 +461,21 @@
 						$querymethod = " {$where} (fm_tts_tickets.p_entity_id='" . (int)$query[1] . "' AND fm_tts_tickets.p_cat_id='" . (int)$query[2] . "' AND fm_tts_tickets.p_num='{$query[3]}')";
 					}
 				}
-				else
-				{
-					$querymethod .= ')';
-				}
+
 				$custom_filter = $this->custom->get_custom_filter($location_id,'fm_tts_tickets', $criteria_id = '', $query);
 
 				if ($custom_filter['querymethod'])
 				{
-					$_where = $where = 'AND' ? 'OR' : 'WHERE';
+					$_where = $where == 'AND' ? 'OR' : 'WHERE';
 					$querymethod .= " $_where (" . implode (' OR ',$custom_filter['querymethod']) . ')';
 				}
 				else if(isset($custom_filter['joinmethod_datatype']) && $custom_filter['joinmethod_datatype'])
 				{
 					$querymethod = '';
+				}
+				if($querymethod)
+				{
+					$querymethod .= ')';
 				}
 			}
 
@@ -553,23 +559,21 @@
 						$closed_status[] =  "C{$custom['id']}";
 					}
 				}
-
-				$filter_closed = "{$where} fm_tts_tickets.status NOT IN ('" . implode("','", $closed_status) . "')";
+				$filter_closed = " AND fm_tts_tickets.status NOT IN ('" . implode("','", $closed_status) . "')";
 				$sql2 = "SELECT (SUM(budget) - SUM(actual_cost)) as sum_difference FROM ({$sql_cnt} {$filter_closed} GROUP BY fm_tts_tickets.id, fm_tts_tickets.budget {$actual_cost_group_field}) as t";
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
 				unset($sql2);
 
-				$cache_info['sum_difference']	= (int)$this->db->f('sum_difference');
+				$cache_info['sum_difference']	= (float)$this->db->f('sum_difference');
 
 				phpgwapi_cache::session_set('property','tts_listing_metadata',$cache_info);
 			}
 
-			$this->total_records	= $cache_info['total_records'];
-			$this->sum_budget		= $cache_info['sum_budget'];
-			$this->sum_actual_cost	= $cache_info['sum_actual_cost'];
-			$this->sum_difference	= $cache_info['sum_difference'];
-
+			$this->total_records	= (int)$cache_info['total_records'];
+			$this->sum_budget		= (int)$cache_info['sum_budget'];
+			$this->sum_actual_cost	= (int)$cache_info['sum_actual_cost'];
+			$this->sum_difference	= (float)$cache_info['sum_difference'];
 
 			$tickets = array();
 			if(!$dry_run)

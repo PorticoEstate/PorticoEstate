@@ -26,4 +26,4 @@
   // delete old (timed out) sessions
   $query = sprintf("delete from phpgw_sessions where session_dla <= '$purgetime'");
   $res = mysql_query($query, $link);
-?>
+

@@ -951,4 +951,3 @@ class excel extends BIFFwriter
         $this->_append($header.$data);
     }
 }
-?>

@@ -301,4 +301,3 @@
 		}
 		$setup_tpl->pfp('out','appfooter');
 	}
-?>

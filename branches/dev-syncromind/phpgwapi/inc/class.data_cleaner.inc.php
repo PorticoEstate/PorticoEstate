@@ -261,4 +261,3 @@ class data_cleaner
 		return $data;
 	}
 }
-?>

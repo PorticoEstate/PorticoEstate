@@ -28,4 +28,4 @@ class YUIHeaderUtil {
 		header("Content-Encoding: gzip");
 	}
 }
-?>
+

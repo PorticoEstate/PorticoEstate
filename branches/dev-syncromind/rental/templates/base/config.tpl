@@ -169,6 +169,16 @@
 				</table>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td valign = 'top'>{lang_default_billing_term}:</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<!--input type = 'hidden' name="newsettings[default_billing_term]" value=""-->
+				<table>
+					{hook_default_billing_term}
+				</table>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

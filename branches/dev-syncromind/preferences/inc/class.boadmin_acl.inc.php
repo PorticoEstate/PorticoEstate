@@ -128,7 +128,7 @@
 			}
 		}
 
-		function select_location($format = 'filter', $selected='', $grant = false, $allow_c_attrib = false)
+		function select_location($format = 'filter', $selected='', $grant = false, $allow_c_attrib = false, $allow_c_functions = false)
 		{
 
 			switch($format)
@@ -143,7 +143,7 @@
 
 			$location_list = array();
 
-			$locations = $GLOBALS['phpgw']->locations->get_locations($grant, $this->acl_app, $allow_c_attrib);
+			$locations = $GLOBALS['phpgw']->locations->get_locations($grant, $this->acl_app, $allow_c_attrib, $allow_c_functions);
 
 			$i = 0;
 			foreach ( $locations as $loc_id => $loc_descr )

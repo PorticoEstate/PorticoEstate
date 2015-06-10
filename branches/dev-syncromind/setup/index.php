@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare Setup - http://phpGroupWare.org
 	*
-	* @copyright Portions Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2000-2015 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$
@@ -50,8 +50,12 @@
 	$setup_tpl->set_block('T_login_stage_header','B_multi_domain','V_multi_domain');
 	$setup_tpl->set_block('T_login_stage_header','B_single_domain','V_single_domain');
 
-	$setup_tpl->set_block('T_setup_svn_blocks','B_svn_stage_1','V_svn_stage_1');
-	$setup_tpl->set_block('T_setup_svn_blocks','B_svn_stage_2','V_svn_stage_2');
+	if(false)//enable svn check from setup
+	{
+		$setup_tpl->set_block('T_setup_svn_blocks','B_svn_stage_1','V_svn_stage_1');
+		$setup_tpl->set_block('T_setup_svn_blocks','B_svn_stage_2','V_svn_stage_2');
+		$setup_tpl->set_var('svn_step_text',lang('Step 0 - check for updates. The user %1 has to be member of sudoers and have a password',getenv('APACHE_RUN_USER')));
+	}
 
 	$setup_tpl->set_block('T_setup_db_blocks','B_db_stage_1','V_db_stage_1');
 	$setup_tpl->set_block('T_setup_db_blocks','B_db_stage_2','V_db_stage_2');
@@ -195,7 +199,6 @@
 	$setup_tpl->set_var('img_incomplete', $incomplete);
 	$setup_tpl->set_var('img_completed', $completed);
 
-	$setup_tpl->set_var('svn_step_text',lang('Step 0 - check for updates. The user %1 has to be member of sudoers and have a password',getenv('APACHE_RUN_USER')));
 	$setup_tpl->set_var('db_step_text',lang('Step 1 - Simple Application Management'));
 
 	switch($GLOBALS['phpgw_info']['setup']['stage']['svn'])

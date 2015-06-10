@@ -50,4 +50,4 @@ class YUIFileUtil {
 		return false;
 	}
 }
-?>
+

@@ -677,6 +677,31 @@
 		{
 			$contract = new rental_contract();
 			$contract->set_location_id(phpgw::get_var('responsibility_id'));
+			$contract->set_account_in(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true));
+			$contract->set_account_out(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false));
+			$contract->set_executive_officer_id($GLOBALS['phpgw_info']['user']['account_id']);
+
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+			$default_billing_term = $config->config_data['default_billing_term'];
+
+			$contract->set_term_id($default_billing_term);
+
+			$units = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_units();
+			$location_code = $units[0]->get_location()->get_location_code();
+
+			$args = array
+			(
+				'acl_location'	=> '.contract',
+				'location_code' => $location_code,
+				'contract'		=> &$contract
+			);
+
+			$hook_helper = CreateObject('rental.hook_helper');
+			$hook_helper->add_contract_from_composite($args);
+
+	//		_debug_array($contract); die();
+
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				$so_contract = rental_socontract::get_instance();
@@ -684,9 +709,22 @@
 				$db_contract->transaction_begin();
 				if($so_contract->store($contract))
 				{
+					// Add standard price items to contract
+					if($contract->get_location_id() && ($this->isExecutiveOfficer() || $this->isAdministrator()))
+					{
+						$so_price_item = rental_soprice_item::get_instance();
+						//get default price items for location_id
+						$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
+
+						foreach($default_price_items as $price_item_id)
+						{
+							$so_price_item->add_price_item($contract->get_id(), $price_item_id);
+						}
+					}
 					// Add that composite to the new contract
 					$success = $so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
-					if($success){
+					if($success)
+					{
 						$db_contract->transaction_commit();
 						$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
 						$message = lang('messages_new_contract_from_composite').' '.$comp_name;

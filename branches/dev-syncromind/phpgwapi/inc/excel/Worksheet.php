@@ -2832,4 +2832,3 @@ class Worksheet extends BIFFwriter
         $this->_append($header.$data);
     }
 }
-?>

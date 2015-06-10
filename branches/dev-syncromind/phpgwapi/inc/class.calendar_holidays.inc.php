@@ -567,4 +567,3 @@
  $cal_workdays->add_number_of_workdays(31,5,2004,3,'Germany','Lower Saxony','Evangelic',$day,$month,$year);
  echo $year . '-' . $month . '-' . $day . "\n";
  */
-?>

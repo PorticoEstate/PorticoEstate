@@ -434,7 +434,7 @@
 		 * the effektive prefs ($this->data) are updated to reflect the change
 		 * @return the new effective prefs (even when forced or default prefs are deleted!)
 		 */
-		public function delete($app_name, $var = False,$type = 'user')
+		public function delete($app_name, $var = false,$type = 'user')
 		{
 			//echo "<p>delete('$app_name','$var')</p>\n";
 			$set_via = array(
@@ -446,7 +446,7 @@
 			{
 				$type = 'user';
 			}
-			if ($all = (is_string($var) && $var == ''))
+			if ($all = !$var)
 			{
 				unset($this->{$type}[$app_name]);
 				unset($this->data[$app_name]);

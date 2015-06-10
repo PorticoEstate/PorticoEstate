@@ -211,4 +211,4 @@ class YUICombo {
 		$this->modules = $newModules;
 	}
 }
-?>
+

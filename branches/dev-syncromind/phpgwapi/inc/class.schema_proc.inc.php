@@ -716,4 +716,4 @@
 			return $this->m_odb->validate_insert($values);
 		}
 	}
-?>
+

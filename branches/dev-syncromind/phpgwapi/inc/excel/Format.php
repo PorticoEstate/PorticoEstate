@@ -634,4 +634,3 @@ class Format
         $this->_text_wrap = $text_wrap;
     }
 }
-?>

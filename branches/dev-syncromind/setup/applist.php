@@ -104,4 +104,3 @@
 	$v = $r->value();
 
 	$GLOBALS['phpgw_setup']->html->show_footer();
-?>
