@@ -1,13 +1,19 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.uidocument_resource');
 	phpgw::import_class('booking.uipermission_resource');
+    
+    phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uiresource extends booking_uicommon
+	class booking_uiresource extends phpgwapi_uicommon_jquery
 	{
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'add'			=>	true,
 			'edit'			=>	true,
 			'show'			=>	true,
@@ -19,7 +25,7 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+//			Analizar esta linea de permiso self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
@@ -30,7 +36,7 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
@@ -61,7 +67,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Resource Name'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'sort',
@@ -111,13 +117,19 @@
 				));
 			}
 			
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+        public function query()
 		{
 			return $this->bo->populate_grid_data("booking.uiresource.show");
 		}
+        
+//		public function index_json()
+//		{
+//			return $this->bo->populate_grid_data("booking.uiresource.show");
+//		}
 
 		public function add()
 		{
