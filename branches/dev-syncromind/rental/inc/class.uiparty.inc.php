@@ -1,8 +1,5 @@
 <?php
-//phpgw::import_class('rental.uicommon');
-
-phpgw::import_class('phpgwapi.uicommon_jquery');
-phpgw::import_class('phpgwapi.jquery');
+phpgw::import_class('rental.uicommon');
 	
 phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
@@ -11,9 +8,8 @@ phpgw::import_class('rental.bofellesdata');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');
-
-//class rental_uiparty extends rental_uicommon
-class rental_uiparty extends phpgwapi_uicommon_jquery
+	
+class rental_uiparty extends rental_uicommon
 {
 	public $public_functions = array
 	(
@@ -36,6 +32,7 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 	public function __construct()
 	{
 		parent::__construct();
+		
 		self::set_active_menu('rental::parties');
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('parties');
 	}
@@ -128,6 +125,8 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 		// Form variables
 		$search_for 	= $search['value'];
 		$search_type	= phpgw::get_var('search_option');
+		
+		$editable = phpgw::get_var('editable', 'bool');
 			
 		// Create an empty result set
 		$result_objects = array();
@@ -244,30 +243,22 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 				//check if party is a part of a contract
 				$party_in_contract = rental_soparty::get_instance()->has_contract($party->get_id());
 				$serialized['party_in_contract'] = $party_in_contract ? true : false;
+				$serialized['actions'] = $this->get_actions($serialized, array(	// Parameters (non-object pointers)
+												$contract_id,										// [1] The contract id
+												$type,												// [2] The type of query
+												isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
+												$editable,											// [4] Editable flag
+												$this->type_of_user									// [5] User role
+											));
 				
 				$rows[] = $serialized;
 			}
 		}
 		// ... add result data
-		$party_data = array('results' => $rows, 'total_records' => $result_count);
+		//$party_data = array('results' => $rows, 'total_records' => $result_count);
 
-		$editable = phpgw::get_var('editable', 'bool');
-
-		if(!$export){
-			array_walk(
-				$party_data['results'], 
-				array($this, 'add_actions'), 
-				array(													// Parameters (non-object pointers)
-					$contract_id,										// [1] The contract id
-					$type,												// [2] The type of query
-					isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
-					$editable,											// [4] Editable flag
-					$this->type_of_user									// [5] User role
-				)
-			);
-		}
 		
-		$result_data    =   array('results' =>  $party_data['results']);
+		$result_data    =   array('results' =>  $rows);
 		$result_data['total_records']	= $result_count;
 		$result_data['draw']    = $draw;
 
@@ -354,7 +345,7 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 	 * @param $key ?
 	 * @param $params [composite_id, type of query, contract editable]
 	 */
-	public function add_actions(&$value, $key, $params)
+	/*public function add_actions(&$value, $key, $params)
 	{
 		$value['ajax'] = array();
 		$value['actions'] = array();
@@ -372,15 +363,15 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 		switch($type)
 		{
 			case 'included_parties':
-				/*$value['ajax'][] = false;
+				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');*/
+				$value['labels'][] = lang('show');
 
 				if($editable == true)
 				{
-					/*$value['ajax'][] = true;
+					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
-					$value['labels'][] = lang('remove');*/
+					$value['labels'][] = lang('remove');
 
 					if($value['id'] != $serialized_contract['payer_id']){
 						$value['ajax'][] = true;
@@ -390,7 +381,7 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 				}
 				break;
 			case 'not_included_parties':
-				/*$value['ajax'][] = false;
+				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 				if($editable == true)
@@ -398,18 +389,18 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
 					$value['labels'][] = lang('add');
-				}*/
+				}
 				break;
 			default:
-				/*$value['ajax'][] = false;
+				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');*/
+				$value['labels'][] = lang('show');
 					
 				if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
 				{
-					/*$value['ajax'][] = false;
+					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit');*/
+					$value['labels'][] = lang('edit');
 					
 					if((isset($value['party_in_contract']) && $value['party_in_contract'] == false) && (!isset($value['org_enhet_id']) || $value['org_enhet_id'] == ''))
 					{
@@ -448,6 +439,67 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 				}
 				break;
 		}
+	}*/
+	
+	public function get_actions($value, $params)
+	{
+		// Get parameters
+		$contract_id = $params[0];
+		$type		 = $params[1];
+		$serialized_contract = $params[2];
+		$editable = $params[3];
+		$user_is = $params[4];
+		$actions = '';
+		
+		// Depending on the type of query: set an ajax flag and define the action and label for each row
+		switch($type)
+		{
+			case 'included_parties':
+				if($editable == true)
+				{
+					if($value['id'] != $serialized_contract['payer_id'])
+					{
+						$url  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer', 'party_id' => $value['id'], 'contract_id' => $params[0])));
+						$actions .= ' <a href="'.$url.'">'.lang('set_payer').'</a>';
+					}
+				}
+				break;
+			case 'not_included_parties':
+				break;
+			default:
+					
+				if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
+				{
+					if((isset($value['party_in_contract']) && $value['party_in_contract'] == false) && (!isset($value['org_enhet_id']) || $value['org_enhet_id'] == ''))
+					{
+						$alertMessage_deleteParty = "Du er i ferd med å slette en kontraktspart.\n\n";
+						$alertMessage_deleteParty .= "Operasjonen kan ikke angres.\n\n";
+						$alertMessage_deleteParty .= "Vil du gjøre dette?";
+						
+						$url = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.delete_party', 'id' => $value['id'])));
+						$actions .= ' <a href="'.$url.'">'.lang('delete').'</a>';
+					}
+					
+					if(isset($value['org_enhet_id']) && $value['org_enhet_id'] != '')
+					{
+						$url = html_entity_decode(self::link(array('menuaction' => 'frontend.uihelpdesk.index', 'org_enhet_id' => $value['org_enhet_id'])));
+						$actions .= ' <a href="'.$url.'">'.lang('frontend_access').'</a>';
+					}
+					
+					if(isset($value['org_enhet_id']) && $value['org_enhet_id'] != '')
+					{		
+						$alertMessage = "Du er i ferd med å overskrive data med informasjon hentet fra Fellesdata.\n\n";
+						$alertMessage .= "Følgende felt vil bli overskrevet: Foretak, Avdeling, Enhetsleder, Epost. \n\n";
+						$alertMessage .= "Vil du gjøre dette?";
+
+						$url = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party', 'org_enhet_id' => $value['org_enhet_id'], 'party_id' => $value['id'])));
+						$actions .= ' <a href="'.$url.'">'.lang('syncronize_party').'</a>';
+					}
+				}
+				break;
+		}
+		
+		return $actions;
 	}
 	
 	/**
@@ -601,7 +653,7 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 		$sync_job		= phpgw::get_var('sync', 'string', 'GET');
 		$contract_id	= phpgw::get_var('contract_id');
 		$user_is		= $this->type_of_user;
-		
+
 		switch($sync_job)
 		{
 			case 'resp_and_service':
@@ -712,6 +764,7 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 		{
 			array_push($data['datatable']['field'], $col);
 		}
+		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false));
 		
 		$parameters = array
 			(
@@ -765,9 +818,6 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 							)),
 							'parameters'	=> json_encode($parameters2)
 						);
-					/*$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
-					$value['labels'][] = lang('remove');*/
 				}
 				break;
 			case 'not_included_parties':
@@ -785,9 +835,6 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 							)),
 							'parameters'	=> json_encode($parameters2)
 						);
-					/*$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
-					$value['labels'][] = lang('add');*/
 				}
 				break;
 			default:
@@ -804,13 +851,10 @@ class rental_uiparty extends phpgwapi_uicommon_jquery
 							)),
 							'parameters'	=> json_encode($parameters)
 						);
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit');*/
 				}
 				break;
 		}
-		
+
 		self::render_template_xsl('datatable_jquery', $data);
 	}
 	
