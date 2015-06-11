@@ -1,7 +1,12 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 
-	class booking_uidocumentation extends booking_uicommon
+    phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
+	class booking_uidocumentation extends phpgwapi_uicommon_jquery
 	{
 		protected
 			$documentOwnerType = null,
@@ -10,6 +15,7 @@
 		public 
 			$public_functions = array(
 				'index'			=> true,
+                'query'         => true,
 				'show'			=> true,
 				'add'			=> true,
 				'edit'			=> true,
@@ -28,21 +34,13 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			
-			// if($_SESSION['showall'])
-			// {
-			// 	$active_botton = lang('Show only active');
-			// }else{
-			// 	$active_botton = lang('Show all');
-			// }
-			
-						
+	
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
@@ -56,11 +54,6 @@
 								'name' => 'search',
 								'value' => lang('Search')
 							),
-							// array(
-							// 	'type' => 'link',
-							// 	'value' => $active_botton,
-							// 	'href' => self::link(array('menuaction' => $this->get_owner_typed_link('active')))
-							// ),
 						)
 					),
 				),
@@ -70,7 +63,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Document Name'),
-							'formatter' => 'YAHOO.booking.formatLink',
+							'formatter' => 'JqueryPortico.formatLink',
 						),
 						array(
 							'key' => 'description',
@@ -81,9 +74,14 @@
 							'label' => lang('Category'),
 						),
 						array(
-							'key' => 'actions',
-							'label' => lang('Actions'),
-							'formatter' => 'YAHOO.booking.'.sprintf('formatGenericLink(\'%s\', \'%s\')', lang('edit'), lang('delete')),
+							'key' => 'opcion_edit',
+							'label' => lang('Edit'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
+						),
+                        array(
+							'key' => 'opcion_delete',
+							'label' => lang('Delete'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
 							'key' => 'link',
@@ -100,10 +98,11 @@
 					'href' => self::link(array('menuaction' => $this->module.'.uidocumentation.add')),
 			 	));
 			
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+                self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+        public function query()
 		{
 			$documents = $this->bo->read();
 			
@@ -113,14 +112,34 @@
 				$document['category'] = lang(self::humanize($document['category']));
 				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
 				
-				$document_actions = array();
-				$document_actions[] = self::link(array('menuaction' => $this->module.'.uidocumentation.edit', 'id' => $document['id']));
-				$document_actions[] = self::link(array('menuaction' => $this->module.'.uidocumentation.delete', 'id' => $document['id']));
+//				$document_actions = array();
+//				$document_actions[] = 
+//				$document_actions[] = 
 				
-				$document['actions'] = $document_actions;
+				$document['opcion_edit'] = self::link(array('menuaction' => $this->module.'.uidocumentation.edit', 'id' => $document['id']));
+                $document['opcion_delete'] = self::link(array('menuaction' => $this->module.'.uidocumentation.delete', 'id' => $document['id']));
 			}
-			return $this->yui_results($documents);
+			return $this->jquery_results($documents);
 		}
+        
+//		public function index_json()
+//		{
+//			$documents = $this->bo->read();
+//			
+//			foreach($documents['results'] as &$document)
+//			{
+//				$document['link'] = self::link(array('menuaction' => $this->module.'.uidocumentation.download', 'id' => $document['id']));
+//				$document['category'] = lang(self::humanize($document['category']));
+//				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
+//				
+//				$document_actions = array();
+//				$document_actions[] = self::link(array('menuaction' => $this->module.'.uidocumentation.edit', 'id' => $document['id']));
+//				$document_actions[] = self::link(array('menuaction' => $this->module.'.uidocumentation.delete', 'id' => $document['id']));
+//				
+//				$document['actions'] = $document_actions;
+//			}
+//			return $this->yui_results($documents);
+//		}
 
 		public function index_images()
 		{
