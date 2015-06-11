@@ -1,7 +1,12 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+//	phpgw::import_class('booking.uicommon');
 
-	abstract class booking_uidocument extends booking_uicommon
+    phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
+	
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+    
+	abstract class booking_uidocument extends phpgwapi_uicommon_jquery
 	{
 		protected
 			$documentOwnerType = null,
@@ -10,6 +15,7 @@
 		public 
 			$public_functions = array(
 				'index'			=> true,
+                'query'         => true,
 				'show'			=> true,
 				'add'			=> true,
 				'edit'			=> true,
@@ -21,7 +27,7 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+//			Analizar esta linea de permiso self::process_booking_unauthorized_exceptions();
 			
 			$this->set_business_object();
 			
@@ -126,7 +132,7 @@
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 
 			$this->redirect_to_parent_if_inline();
@@ -134,14 +140,6 @@
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			
-			// if($_SESSION['showall'])
-			// {
-			// 	$active_botton = lang('Show only active');
-			// }else{
-			// 	$active_botton = lang('Show all');
-			// }
-			
 						
 			$data = array(
 				'form' => array(
@@ -156,11 +154,6 @@
 								'name' => 'search',
 								'value' => lang('Search')
 							),
-							// array(
-							// 	'type' => 'link',
-							// 	'value' => $active_botton,
-							// 	'href' => self::link(array('menuaction' => $this->get_owner_typed_link('active')))
-							// ),
 						)
 					),
 				),
@@ -170,7 +163,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Document Name'),
-							'formatter' => 'YAHOO.booking.formatLink',
+							'formatter' => 'JqueryPortico.formatLink',
 						),
 						array(
 							'key' => 'owner_name',
@@ -185,9 +178,14 @@
 							'label' => lang('Category'),
 						),
 						array(
-							'key' => 'actions',
-							'label' => lang('Actions'),
-							'formatter' => 'YAHOO.booking.'.sprintf('formatGenericLink(\'%s\', \'%s\')', lang('edit'), lang('delete')),
+							'key' => 'opcion_edit',
+							'label' => lang('Edit'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
+						),
+                        array(
+							'key' => 'opcion_delete',
+							'label' => lang('Delete'),
+							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
 							'key' => 'link',
@@ -206,10 +204,11 @@
 			 	));
 			}	
 			
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+        public function query()
 		{
 			$documents = $this->bo->read();
 			foreach($documents['results'] as &$document)
@@ -218,16 +217,19 @@
 				$document['category'] = lang(self::humanize($document['category']));
 				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
 				
-				$document_actions = array();
-				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
-				if ($this->bo->allow_delete($document)) $document_actions[] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
-				
-				$document['actions'] = $document_actions;
+//				$document_actions = array();
+//				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+//				if ($this->bo->allow_delete($document)) $document_actions[] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+//				
+//				$document['actions'] = $document_actions;
+                
+                if ($this->bo->allow_write($document))  $document['opcion_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+				if ($this->bo->allow_delete($document)) $document['opcion_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+                        
 			}
 			if (phpgw::get_var('no_images'))
 			{
 				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
-
 				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
 				// reindexing the results array solves the problem
 				$doc_backup = $documents;
@@ -238,8 +240,40 @@
 				}
 				$documents['total_records'] = count($documents['results']);
 			}
-			return $this->yui_results($documents);
+			return $this->jquery_results($documents);
 		}
+        
+//		public function index_json()
+//		{
+//			$documents = $this->bo->read();
+//			foreach($documents['results'] as &$document)
+//			{
+//				$document['link'] = $this->get_owner_typed_link('download', array('id' => $document['id']));
+//				$document['category'] = lang(self::humanize($document['category']));
+//				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
+//				
+//				$document_actions = array();
+//				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+//				if ($this->bo->allow_delete($document)) $document_actions[] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+//				
+//				$document['actions'] = $document_actions;
+//			}
+//			if (phpgw::get_var('no_images'))
+//			{
+//				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
+//
+//				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
+//				// reindexing the results array solves the problem
+//				$doc_backup = $documents;
+//				unset($documents['results']);
+//				foreach($doc_backup['results'] as $doc)
+//				{
+//					$documents['results'][] = $doc;
+//				}
+//				$documents['total_records'] = count($documents['results']);
+//			}
+//			return $this->yui_results($documents);
+//		}
 
  		private function is_image($document)
 		{
