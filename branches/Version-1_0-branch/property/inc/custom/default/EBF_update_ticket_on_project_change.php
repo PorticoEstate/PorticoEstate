@@ -77,7 +77,8 @@
 			{
 				$fields_updated = array('finnish_date');
 				$this->historylog->add('F',$id,$finnish_date,$old_value);
-				$this->botts->mail_ticket($id, $fields_updated, $receipt=array(),'', false, true);
+				$this->botts->mail_ticket($id, $fields_updated, $receipt=array(),$project['location_code'], false, true);
+				phpgwapi_cache::message_set(lang('finnish date changed'), 'message');
 			}
 		}
 	}

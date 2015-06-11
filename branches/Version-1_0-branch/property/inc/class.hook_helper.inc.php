@@ -25,6 +25,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('phpgwapi.datetime');
 
 	/**
 	 * Hook helper
@@ -89,6 +90,8 @@
 		 */
 		public function home_backend()
 		{
+			$this->home_workorder_overdue_tender();
+			$this->home_workorder_overdue_end_date();
 			$this->home_tenant_claims();
 			$this->home_ticket();
 			$this->home_project();
@@ -115,6 +118,148 @@
 //				'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
 			);
 			return $var;
+		}
+
+		/**
+		 * Show project that is overdue
+		 *
+		 * @return void
+		 */
+		public function home_workorder_overdue_tender()
+		{
+			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
+
+			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
+
+			if ( isset($prefs['property']['mainscreen_show_project_overdue'])
+			&& $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
+			{
+				$soworkorder = CreateObject('property.soworkorder');
+
+				$values = $soworkorder->read(array(
+					'filter'			=> $accound_id,
+					'tender_deadline'	=> time()
+				));
+
+				$total_records = $soworkorder->total_records;
+				$portalbox = CreateObject('phpgwapi.listbox', array
+				(
+					'title'		=> lang('tender delay') . " ({$total_records})",
+					'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'	=> '100%',
+					'outerborderwidth'	=> '0',
+					'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+				));
+
+				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+				if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+				{
+					$GLOBALS['portal_order'][] = $app_id;
+				}
+
+				$var = $this->get_controls($app_id);
+
+				foreach ( $var as $key => $value )
+				{
+	//				$portalbox->set_controls($key,$value);
+				}
+				foreach ($values as $entry)
+				{
+					$entry['tender_delay']	= ceil(phpgwapi_datetime::get_working_days($entry['tender_deadline'], time()));
+					$portalbox->data[] = array
+					(
+						'text' => "Forsinkelse: {$entry['tender_delay']} dager :: bestilling nr:{$entry['workorder_id']} :: {$entry['location_code']} :: {$entry['address']}",
+						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit', 'id' => $entry['workorder_id'], 'tab' => 'budget'))
+					);
+				}
+				echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
+
+				unset($tts);
+				unset($portalbox);
+				unset($category_name);
+				unset($default_status);
+			}
+
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
+
+		}
+
+		/**
+		 * Show project that is overdue
+		 *
+		 * @return void
+		 */
+		public function home_workorder_overdue_end_date()
+		{
+			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
+
+			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
+
+			if ( isset($prefs['property']['mainscreen_show_project_overdue'])
+			&& $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
+			{
+				$soworkorder = CreateObject('property.soworkorder');
+
+				$values = $soworkorder->read(array(
+					'filter'			=> $accound_id,
+					'inspection_on_completion'	=> time(),
+				));
+
+				$total_records = $soworkorder->total_records;
+				$portalbox = CreateObject('phpgwapi.listbox', array
+				(
+					'title'		=> lang('end date delay') . " ({$total_records})",
+					'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'	=> '100%',
+					'outerborderwidth'	=> '0',
+					'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+				));
+
+				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+				if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+				{
+					$GLOBALS['portal_order'][] = $app_id;
+				}
+
+				$var = $this->get_controls($app_id);
+
+				foreach ( $var as $key => $value )
+				{
+	//				$portalbox->set_controls($key,$value);
+				}
+				foreach ($values as $entry)
+				{
+					$entry['tender_delay']	= ceil(phpgwapi_datetime::get_working_days($entry['tender_deadline'], time()));
+					$portalbox->data[] = array
+					(
+						'text' => "Forsinkelse: {$entry['tender_delay']} dager :: bestilling nr:{$entry['workorder_id']} :: {$entry['location_code']} :: {$entry['address']}",
+						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit', 'id' => $entry['workorder_id'], 'tab' => 'budget'))
+					);
+				}
+				echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
+
+				unset($tts);
+				unset($portalbox);
+				unset($category_name);
+				unset($default_status);
+			}
+
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
+
 		}
 
 		/**
@@ -188,7 +333,8 @@
 				unset($default_status);
 
 			}
-
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 		}
 		/**
 		 * Show ticket info for homepage

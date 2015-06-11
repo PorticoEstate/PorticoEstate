@@ -1142,10 +1142,6 @@
 			// build subject
 			$subject = '['.lang('Ticket').' #'.$id.'] : ' . $location_code .' ' .$this->get_category_name($ticket['cat_id']) . '; ' .$ticket['subject'];
 
-			$prefs_user = $this->bocommon->create_preferences('property',$ticket['user_id']);
-
-			$from_address=$prefs_user['email'];
-
 			//-----------from--------
 
 			$current_prefs_user = $this->bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
