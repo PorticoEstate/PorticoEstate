@@ -51,10 +51,17 @@ JqueryPortico.formatLinkGeneric = function(key, oData) {
 	{
 		return '';
 	}
-        
+            
 	var data = oData[key];
-
-        if( key == 'actions' )
+        if( key == 'opcion_edit'){
+                var link = data;
+                var name = 'Edit';
+        }
+        else if ( key == 'opcion_delete'){
+                var link = data;
+                var name = 'Delete';
+        }
+        else if( key == 'actions' )
         {
                 var link = data;
                 var name = 'Delete';
