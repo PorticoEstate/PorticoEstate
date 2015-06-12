@@ -195,7 +195,11 @@
 					'selected'	=> $_year == $year ? 1 : 0
 				);
 			}
-
+			$status_list = array(
+				array('id' => '', 'name' => lang('select value')),
+				array('id' => 'not_performed', 'name' => lang('status not done')),
+				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
+			);
 			$location_filter = $this->get_location_filter();
 			array_unshift($location_filter, array('id' => '', 'name' => lang('select value')));
 
@@ -241,6 +245,12 @@
 								'name'	 => 'year',
 								'text'	 => lang('year'),
 								'list'	 => $year_list,
+								'onchange'	=> 'update_table();'
+							),
+							array('type'	 => 'filter',
+								'name'	 => 'status',
+								'text'	 => lang('status'),
+								'list'	 => $status_list,
 								'onchange'	=> 'update_table();'
 							),
 							array('type'	 => 'checkbox',
@@ -354,6 +364,7 @@
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
 			$all_items = phpgw::get_var('all_items', 'bool');
+			$filter_status = phpgw::get_var('status', 'string');
 
 			$so_control			 = CreateObject('controller.socontrol');
 			$this->so			= CreateObject('controller.socheck_list');
@@ -436,6 +447,7 @@
 			$all_components = array();
 			$components_with_calendar_array = array();
 //			_debug_array($components);
+			$have_been_here_before = array();
 			foreach($components as $_component)
 			{
 				$location_id = $_component['location_id'];
@@ -461,9 +473,10 @@
 					$control						= $so_control->get_single($_control['control_id']);
 					// one for each serie
 					$components_for_control_array	= $so_control->get_components_for_control($control_id, $location_id, $component_id,0);//,$user_id);
+					$repeat_type				 = $control->get_repeat_type();
 
 					// LOCATIONS: Process aggregated values for controls with repeat type day or week
-					if($control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK)
+					if($repeat_type <= controller_control::REPEAT_TYPE_WEEK)
 					{
 
 						// COMPONENTS: Process aggregated values for controls with repeat type day or week
@@ -471,7 +484,6 @@
 						{
 							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
-							$repeat_type				 = $control->get_repeat_type();
 							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
 
 							$cl_criteria = new controller_check_list();
@@ -492,13 +504,18 @@
 						}
 					}
 					// Process values for controls with repeat type month or year
-					else if($control->get_repeat_type() > controller_control::REPEAT_TYPE_WEEK)
+					else if($repeat_type > controller_control::REPEAT_TYPE_WEEK)
 					{
 						foreach($components_for_control_array as $component)
 						{
+							if($have_been_here_before[$component->get_id()])
+							{
+								continue;
+							}
+							$have_been_here_before[$component->get_id()] = true;
+
 							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
-							$repeat_type				 = $control->get_repeat_type();
 							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
 
 							$check_lists_array = $component_with_check_lists["check_lists_array"];
@@ -591,6 +608,7 @@
 					{
 						if($calendar)
 						{
+							$repeat_type = $calendar['info']['repeat_type'] ? (int)$calendar['info']['repeat_type'] : $repeat_type;
 							$calendar['info']['service_time'] = $calendar['info']['service_time'] ? $calendar['info']['service_time'] : $service_time;
 							$calendar['info']['controle_time'] = $calendar['info']['controle_time'] ? $calendar['info']['controle_time'] : $controle_time;
 							$_data[$month][$repeat_type] = $calendar;
@@ -662,9 +680,10 @@
 					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
 				}
 
+				$found_at_least_one = false;
 				for ( $_month=1; $_month < 13; $_month++ )
 				{
-					$row[$_month] = $this->translate_calendar_info($entry[$_month],$year, $_month);
+					$row[$_month] = $this->translate_calendar_info($entry[$_month],$year, $_month, $filter_status, $found_at_least_one);
 					if( !$user_id || $entry[$_month]['info']['assigned_to'] == $user_id)
 					{
 						$row_sum[$_month] = $entry[$_month]['info']['service_time'] + $entry[$_month]['info']['controle_time'];
@@ -674,8 +693,11 @@
 						$row_sum[$_month] = 0;
 					}
 				}
-				$total_time[] = $row_sum;
-				$data_set[] = $row;
+				if(!$filter_status || $found_at_least_one)
+				{
+					$total_time[] = $row_sum;
+					$data_set[] = $row;
+				}
 			}
 			$fields	= $this->get_fields();
 			$class = '';
@@ -729,12 +751,45 @@
 			return $result;
 		}
 
-		private function translate_calendar_info($param = array(), $year, $month)
+		private function translate_calendar_info($param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false)
 		{
 			if(!isset($param['repeat_type']))
 			{
 				return '';
 			}
+
+			if($filter_status)
+			{
+				if($filter_status == 'not_performed')
+				{
+					switch($param['status'])
+					{
+						case "CONTROL_NOT_DONE":
+						case "CONTROL_REGISTERED":
+						case "CONTROL_PLANNED":
+						case "CONTROL_NOT_DONE_WITH_PLANNED_DATE":
+							break;//continues
+						default:
+							return;
+					}
+				}
+				else if($filter_status == 'done_with_open_deviation')
+				{
+					switch($param['status'])
+					{
+					//	case "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS":
+					//	case "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS":
+						case "CONTROL_DONE_WITH_ERRORS":
+					//	case "CONTROL_CANCELED":
+							break;//continues
+						default:
+							return;
+					}
+				}
+			}
+
+			$found_at_least_one = true;
+
 			switch($param['status'])
 			{
 				case "CONTROL_NOT_DONE":

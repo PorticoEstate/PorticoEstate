@@ -245,6 +245,7 @@ status_date	controller	no	den
 status_unknown	controller	no	Ukjent status
 status	controller	no	Status
 status not done	controller	no	Ikke utført
+done with open deviation	controller	no	Utført med åpne avvik
 Success	controller	no	Suksess
 sum	controller	no	Sum
 System setting for responsibility id for the current user must be 6 characters.	controller	no	Systeminnstilling for ansvar må være seks tegn.

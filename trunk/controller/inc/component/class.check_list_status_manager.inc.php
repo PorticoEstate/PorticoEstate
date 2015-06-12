@@ -40,7 +40,7 @@
 			$this->check_list	 = $check_list;
 			if(!$type)
 			{
-				$check_list->get_component_id() ? 'component' : '';
+				$type = $check_list->get_component_id() ? 'component' : '';
 			}
 			$this->type			 = $type;
 		}
