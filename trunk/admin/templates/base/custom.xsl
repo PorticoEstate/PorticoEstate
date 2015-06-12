@@ -636,7 +636,8 @@
 
 	<xsl:template match="edit_custom_function" xmlns:php="http://php.net/xsl">
 		<div align="left">
-		
+
+		<form method="post" action="{form_action}">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -647,8 +648,6 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-			
-			<form method="post" action="{form_action}">
 
 			<tr>
 				<td class="th_text" align="left">
@@ -778,8 +777,9 @@
 					</input>
 				</td>
 			</tr>
-
-			</form>
+		</table>
+	</form>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
