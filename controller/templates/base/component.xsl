@@ -180,6 +180,15 @@
 <xsl:template name="datasource-definition">
 	<script type="text/javascript">
 <![CDATA[
+		$(document).ready(function(){
+			update_table();
+		});
+
+		deselect_component = function()
+		{
+			$("[name='filter_component']").val('');
+			update_table();
+		};
 		update_table = function()
 		{
 			var requestUrl = $("#queryForm").attr("action");
@@ -253,6 +262,8 @@
 	<table id="components">
 		<thead>
 			<tr>
+				<td id='selected'>
+				</td>
 				<td id='total_records'>
 				</td>
 				<td id='sum_text'>
