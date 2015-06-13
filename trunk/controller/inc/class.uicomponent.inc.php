@@ -203,7 +203,11 @@
 			$location_filter = $this->get_location_filter();
 			array_unshift($location_filter, array('id' => '', 'name' => lang('select value')));
 
-
+			$filter_component = '';
+			if(phpgw::get_var('component_id', 'int'))
+			{
+				$filter_component = phpgw::get_var('location_id', 'int') . '_' . phpgw::get_var('component_id', 'int');
+			}
 			$data = array(
 				'datatable_name' => lang('status components'),
 				'form'			 => array(
@@ -259,22 +263,32 @@
 								'value'	 => 1,
 								'onclick'	=> 'update_table();'
 							),
+							array('type'	 => 'hidden',
+								'name'	 => 'filter_component',
+								'text'	 => '',
+								'value'	 => $filter_component
+							),
 						),
 					),
 				),
 				'datatable'		 => array(
 					'source' => self::link(array('menuaction' => 'controller.uicomponent.index',
 						'phpgw_return_as' => 'json')),
-					'field'	 =>  $this->get_fields(),
+					'field'	 =>  $this->get_fields($filter_component),
 				),
 			);
 			self::render_template_xsl(array('component'), $data);
 		}
 
-		private function get_fields()
+		private function get_fields($filter_component = '')
 		{
 			$fields = array
 			(
+				array(
+					'key'		 => 'selected',
+					'label'		 => '',
+					'sortable'	 => false,
+				),
 				array(
 					'key'		 => 'component_id',
 					'label'		 => lang('component'),
@@ -351,6 +365,7 @@
 					'sortable'	 => true,
 				),
 			);
+
 			return $fields;
 		}
 
@@ -365,6 +380,12 @@
 			$year = phpgw::get_var('year', 'int');
 			$all_items = phpgw::get_var('all_items', 'bool');
 			$filter_status = phpgw::get_var('status', 'string');
+			if($filter_component_str = phpgw::get_var('filter_component', 'string'))
+			{
+				$filter_component_arr = explode('_', $filter_component_str);
+				$location_id = $filter_component_arr[0];
+				$filter_component = $filter_component_arr[1];
+			}
 
 			$so_control			 = CreateObject('controller.socontrol');
 			$this->so			= CreateObject('controller.socheck_list');
@@ -416,12 +437,13 @@
 					$exclude_locations[] = $_location_id;
 
 					$_components = execMethod('property.soentity.read',array(
-						'filter_entity_group' => $entity_group_id,
-						'location_id' => $_location_id,
-						'district_id' => $district_id,
-						'allrows' => true,
-						'control_registered' => !$all_items,
-						'check_for_control' => true
+						'filter_entity_group'		=> $entity_group_id,
+						'location_id'				=> $_location_id,
+						'district_id'				=> $district_id,
+						'allrows'					=> true,
+						'control_registered'		=> !$all_items,
+						'check_for_control'			=> true,
+						'filter_item'				=> $filter_component
 						)
 					);
 					$components = array_merge($components, $_components);
@@ -447,7 +469,6 @@
 			$all_components = array();
 			$components_with_calendar_array = array();
 //			_debug_array($components);
-			$have_been_here_before = array();
 			foreach($components as $_component)
 			{
 				$location_id = $_component['location_id'];
@@ -508,11 +529,6 @@
 					{
 						foreach($components_for_control_array as $component)
 						{
-							if($have_been_here_before[$component->get_id()])
-							{
-								continue;
-							}
-							$have_been_here_before[$component->get_id()] = true;
 
 							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
@@ -676,6 +692,14 @@
 
 				if(!isset($entry['missing_control']))
 				{
+					if($filter_component_str)
+					{
+						$row['selected'] = '<input id="selected_component" type="checkbox" name="selected_component" checked = "checked" onclick="deselect_component();">';
+					}
+					else
+					{
+						$row['selected'] = '';
+					}
 					$row['year'] = $year;
 					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
 				}
@@ -699,7 +723,7 @@
 					$data_set[] = $row;
 				}
 			}
-			$fields	= $this->get_fields();
+			$fields	= $this->get_fields($filter_component_str);
 			$class = '';
 			$tbody = '';
 			foreach($data_set as $row_data )
