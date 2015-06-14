@@ -306,62 +306,62 @@
 				),
 				array(
 					'key'		 => '1',
-					'label'		 => lang('month 1'),
+					'label'		 => lang('short_month 1 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '2',
-					'label'		 => lang('month 2'),
+					'label'		 => lang('short_month 2 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '3',
-					'label'		 => lang('month 3'),
+					'label'		 => lang('short_month 3 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '4',
-					'label'		 => lang('month 4'),
+					'label'		 => lang('short_month 4 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '5',
-					'label'		 => lang('month 5'),
+					'label'		 => lang('short_month 5 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '6',
-					'label'		 => lang('month 6'),
+					'label'		 => lang('short_month 6 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '7',
-					'label'		 => lang('month 7'),
+					'label'		 => lang('short_month 7 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '8',
-					'label'		 => lang('month 8'),
+					'label'		 => lang('short_month 8 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '9',
-					'label'		 => lang('month 9'),
+					'label'		 => lang('short_month 9 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '10',
-					'label'		 => lang('month 10'),
+					'label'		 => lang('short_month 10 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '11',
-					'label'		 => lang('month 11'),
+					'label'		 => lang('short_month 11 capitalized'),
 					'sortable'	 => true,
 				),
 				array(
 					'key'		 => '12',
-					'label'		 => lang('month 12'),
+					'label'		 => lang('short_month 12 capitalized'),
 					'sortable'	 => true,
 				),
 			);
@@ -842,7 +842,7 @@
 					break;
 				case "CONTROL_DONE_WITH_ERRORS":
 					$status = "Utført med {$param['info']['num_open_cases']} åpne avvik";
-					$img = "<img height=\"15\" src=\"controller/images/status_icon_yellow_ring.png\" title=\"{$status}\"/> ({$param['info']['num_open_cases']})";
+					$img = "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"{$status}\"/> ({$param['info']['num_open_cases']})";
 					break;
 				case "CONTROL_CANCELED":
 					$status = 'Kansellert';
@@ -863,6 +863,7 @@
 			else
 			{
 				$menuaction	= 'controller.uicheck_list.add_check_list';
+				$a_date = "{$year}-{$month}-23";
 				$control_link_data = array
 				(
 					'menuaction'	=> $menuaction,
@@ -870,8 +871,9 @@
 					'location_id'	=> $param['info']['location_id'],
 					'component_id'	=> $param['info']['component_id'],
 					'serie_id'		=> $param['info']['serie_id'],
-					'deadline_ts'	=> mktime(23, 59, 00, $month, date('t', $month), $year),
-					'type'			=> $param['info']['component_id'] ? 'component' : ''
+					'deadline_ts'	=> mktime(23, 59, 00, $month, date('t', strtotime($a_date)), $year),
+					'type'			=> $param['info']['component_id'] ? 'component' : '',
+					'assigned_to'	=> $param['info']['assigned_to']
 				);
 			}
 			$link = "<a href=\"".$GLOBALS['phpgw']->link('/index.php',$control_link_data)."\" target=\"_blank\">{$img}</a>";

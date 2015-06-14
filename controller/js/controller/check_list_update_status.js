@@ -22,6 +22,11 @@ $(document).ready(function() {
 					if (jsonObj.status == 'not_saved')
 					{
 						$(submitBnt).val("feil ved lagring");
+						if (jsonObj.message)
+						{
+							alert(jsonObj.message);
+						}
+
 					}
 					else if (jsonObj.status == '1')
 					{

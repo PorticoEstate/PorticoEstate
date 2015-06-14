@@ -24,43 +24,45 @@
 		</div>
 		
 		<div class="box-2 select-box">
-			<a>
-				<xsl:attribute name="href">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:choose>
-					  <xsl:when test="type = 'component'">
-						  <xsl:value-of select="building_location_code"/>
-						</xsl:when>
-						<xsl:otherwise>
-						  <xsl:value-of select="location_array/location_code"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				Vis kontrollplan (år)
-			</a>
-				
-			<a class="last">
-				<xsl:attribute name="href">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;month=</xsl:text>
-					<xsl:value-of select="current_month_nr"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:choose>
-					  <xsl:when test="type = 'component'">
-						  <xsl:value-of select="building_location_code"/>
-						</xsl:when>
-						<xsl:otherwise>
-						  <xsl:value-of select="location_array/location_code"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				Vis kontrollplan (måned)
-			</a>
+			<xsl:when test="type = 'component'">
+				<a>
+					<xsl:attribute name="href">
+						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
+						<xsl:text>&amp;year=</xsl:text>
+						<xsl:value-of select="current_year"/>
+						<xsl:text>&amp;location_id=</xsl:text>
+						<xsl:value-of select="component_array/location_id"/>
+						<xsl:text>&amp;component_id=</xsl:text>
+						<xsl:value-of select="component_array/id"/>
+					</xsl:attribute>
+					Kontrollplan for komponent (år)
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a>
+					<xsl:attribute name="href">
+						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
+						<xsl:text>&amp;year=</xsl:text>
+						<xsl:value-of select="current_year"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="location_array/location_code"/>
+					</xsl:attribute>
+					Vis kontrollplan (år)
+				</a>
+
+				<a class="last">
+					<xsl:attribute name="href">
+						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
+						<xsl:text>&amp;year=</xsl:text>
+						<xsl:value-of select="current_year"/>
+						<xsl:text>&amp;month=</xsl:text>
+						<xsl:value-of select="current_month_nr"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="location_array/location_code"/>
+					</xsl:attribute>
+					Vis kontrollplan (måned)
+				</a>
+			</xsl:otherwise>
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
