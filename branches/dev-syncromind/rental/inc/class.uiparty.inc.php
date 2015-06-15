@@ -392,7 +392,134 @@ class rental_uiparty extends rental_uicommon
 	 */
 	public function index()
 	{
-		$this->render('party_list.php');
+		if (phpgw::get_var('phpgw_return_as') == 'json')
+		{
+			return $this->query();
+		}
+		
+		$editable		= phpgw::get_var('editable', 'bool');
+		$user_is		= $this->type_of_user;
+			
+		self::set_active_menu('rental::parties');
+		$appname = lang('parties');
+		$type = 'all_parties';
+				
+		$function_msg = lang('list %1', $appname);
+
+		$data = array(
+			'datatable_name'	=> $function_msg,
+			'form' => array(
+				'toolbar' => array(
+					'item' => array(
+						array(
+							'type'   => 'link',
+							'value'  => lang('new'),
+							'href'   => self::link(array(
+								'menuaction'	=> 'rental.uiparty.add'
+							)),
+							'class'  => 'new_item'
+						)							
+					)
+				)
+			),
+			'datatable' => array(
+				'source'	=> self::link(array(
+					'menuaction'	=> 'rental.uiparty.index', 
+					'editable'		=> ($editable) ? 1 : 0,
+					'type'			=> $type,
+					'phpgw_return_as' => 'json'
+				)),
+				'download'	=> self::link(array('menuaction' => 'rental.uiparty.download',
+						'type'		=> $type,
+						'export'    => true,
+						'allrows'   => true
+				)),
+				'allrows'	=> true,
+				'editor_action' => '',
+				'field' => array(
+					array(
+						'key'		=> 'identifier', 
+						'label'		=> lang('identifier'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'name', 
+						'label'		=> lang('name'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'address', 
+						'label'		=> lang('address'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					)
+				)
+			)
+		);
+				
+		$filters = $this->_get_Filters();
+		krsort($filters);
+		foreach($filters as $filter){
+			array_unshift($data['form']['toolbar']['item'], $filter);
+		}
+			
+		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
+		
+		$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
+		
+		$data['datatable']['actions'][] = array
+			(
+				'my_name'		=> 'download_agresso',
+				'text' 			=> lang('Download Agresso import file'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				(
+					'menuaction'	=> 'rental.uiparty.download_agresso'
+				)),
+				'parameters'	=> json_encode(array())
+			);
+		
+		$data['datatable']['actions'][] = array
+			(
+				'my_name'		=> 'view',
+				'text' 			=> lang('show'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				(
+					'menuaction'	=> 'rental.uiparty.view'
+				)),
+				'parameters'	=> json_encode($parameters)
+			);
+					
+		if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
+		{
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('edit'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'rental.uiparty.edit'
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
+		}
+		
+		self::add_javascript('rental', 'rental', 'party.sync.js');
+		self::render_template_xsl('datatable_jquery', $data);
 	}
 
 	/**
@@ -505,8 +632,8 @@ class rental_uiparty extends rental_uicommon
 				}
 			}
 		}
-
-		$config = CreateObject('phpgwapi.config','rental');
+//print_r($party); die;
+		/*$config = CreateObject('phpgwapi.config','rental');
 		$config->read();
 
 		return $this->render('party.php', array
@@ -517,8 +644,36 @@ class rental_uiparty extends rental_uicommon
 				'error' => isset($error) ? $error : phpgw::get_var('error'),
 				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => 'yes')),
 				'use_fellesdata' => $config->config_data['use_fellesdata']
-			)	
+			)
+		);*/
+
+		$link_index = array
+			(
+				'menuaction'	=> 'rental.uiparty.index',
+				'populate_form'	=> 'yes'
+			);
+			
+		$tabs = array();
+		$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
+		$active_tab = 'details';
+
+		//$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+		$msgbox_data = '';
+			
+		$data = array
+		(
+			'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+			'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+			'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiparty.edit')),
+			'cancel_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_index),
+			'lang_save'				=> lang('save'),
+			'lang_sync_data'		=> lang('get_sync_data'),
+			'lang_cancel'			=> lang('party_back'),			
+			'editable'				=> true,
+			'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 		);
+		
+		self::render_template_xsl(array('party'), array('edit' => $data));
 	}
 	
 	public function download()
