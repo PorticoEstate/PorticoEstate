@@ -3163,6 +3163,7 @@ JS;
 			$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $id));
 			foreach($controls as &$entry)
 			{
+/*
 				$menuaction	= 'controller.uicalendar.view_calendar_year_for_locations';
 				if($entry['repeat_type'] < 2)
 				{
@@ -3177,6 +3178,17 @@ JS;
 					'component_id'	=> $id,
 					'serie_id'		=> $entry['serie_id']
 				);
+*/
+
+				$menuaction	= 'controller.uicomponent.index';
+
+				$control_link_data = array
+				(
+					'menuaction'	=> $menuaction,
+					'location_id'	=> $location_id,
+					'component_id'	=> $id,
+				);
+
 				$entry['title'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$control_link_data).'" target="_blank">'.$entry['title'].'</a>';
 
 				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);

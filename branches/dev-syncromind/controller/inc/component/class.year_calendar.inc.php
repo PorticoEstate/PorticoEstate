@@ -94,6 +94,11 @@ class year_calendar {
 	{
 		foreach($check_lists_array as $check_list)
 		{
+			if(isset($this->control_relation['serie_id']) && $check_list->get_serie_id() != $this->control_relation['serie_id'])
+			{
+				continue;
+			}
+
 			$check_list_status_manager = new check_list_status_manager( $check_list );
 			$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 
 

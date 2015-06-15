@@ -400,7 +400,7 @@
 				$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
 				$_end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$_start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
-				$filtermethod .= " $where (fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date ";
+				$filtermethod .= " $where (fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
 
 				if($order_add || $order_edit)
 				{

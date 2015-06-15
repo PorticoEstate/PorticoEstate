@@ -525,6 +525,8 @@
 		//		$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     					
 				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component->set_location_code( $component_arr['location_code'] );
 			    $component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
@@ -728,6 +730,8 @@
 //				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     					
 				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component->set_location_code( $component_arr['location_code'] );
 			    $component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
@@ -901,6 +905,8 @@
 //				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
 				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component->set_location_code( $component_arr['location_code'] );
 			    $component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
@@ -1006,6 +1012,8 @@
 //				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
 				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component->set_location_code( $component_arr['location_code'] );
 			    $component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();

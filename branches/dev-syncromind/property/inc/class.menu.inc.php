@@ -156,6 +156,55 @@
 						)
 					);
 
+				$admin_children_project = array
+					(
+						'project_cats'	=> array
+						(
+							'text'	=> lang('project categories'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project::project_cats') )
+						),
+						'project_attribs'	=> array
+						(
+							'text'	=> lang('project attributes'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.project', 'menu_selection' => 'admin::property::project::project_attribs') )
+						),
+						'workorder_status'	=> array
+						(
+							'text'	=> lang('Workorders status'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'workorder_status') )
+						),
+						'project_status'	=> array
+						(
+							'text'	=> lang('project status'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'project_status') )
+						),
+						'project_group'	=> array
+						(
+							'text'	=> lang('project group'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'project_group') )
+						),
+						'workorder_detail'	=> array
+						(
+							'text'	=> lang('Workorder Detail Categories'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'wo_hours') )
+						),
+						'workorder_recalculate'	=> array
+						(
+							'text'	=> lang('Workorder recalculate actual cost'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.recalculate') )
+						),
+						'project_functions'	=> array
+						(
+							'text'	=> lang('custom functions'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function','appname' => 'property', 'location' => '.project', 'menu_selection' => 'admin::property::project::project_functions') )
+						),
+						'check_missing_project_budget'	=> array
+						(
+							'text'	=> lang('check missing project budget'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.check_missing_project_budget') )
+						)
+				);
+
 				$admin_children_ticket = array
 					(
 						'ticket_cats'	=> array
@@ -296,16 +345,7 @@
 						(
 							'text'	=> lang('Accounting voucher type'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'voucher_type') )
-						),
-						'check_missing_project_budget'	=> array
-						(
-							'text'	=> lang('check missing project budget'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.check_missing_project_budget') )
 						)
-
-
-
-
 					);
 
 				$admin_children_agreement = array
@@ -435,25 +475,11 @@
 							'text'	=> lang('Update the not active category for locations'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_cat') )
 						),
-						'project_cats'	=> array
+						'project'	=> array
 						(
-							'text'	=> lang('project categories'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
-						),
-						'project_attribs'	=> array
-						(
-							'text'	=> lang('project attributes'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.project', 'menu_selection' => 'admin::property::project_attribs') )
-						),
-						'workorder_detail'	=> array
-						(
-							'text'	=> lang('Workorder Detail Categories'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'wo_hours') )
-						),
-						'workorder_recalculate'	=> array
-						(
-							'text'	=> lang('Workorder recalculate actual cost'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.recalculate') )
+							'text'	=> lang('project'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project::project_cats') ),
+							'children' => $admin_children_project
 						),
 						'ticket'	=> array
 						(
@@ -559,21 +585,6 @@
 						(
 							'text'	=> lang('order_dim1'),//translation have to refeflect the (local) meaning
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'order_dim1') )
-						),
-						'workorder_status'	=> array
-						(
-							'text'	=> lang('Workorders status'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'workorder_status') )
-						),
-						'project_status'	=> array
-						(
-							'text'	=> lang('project status'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'project_status') )
-						),
-						'project_group'	=> array
-						(
-							'text'	=> lang('project group'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'project_group') )
 						),
 						'agreement'	=> array
 						(

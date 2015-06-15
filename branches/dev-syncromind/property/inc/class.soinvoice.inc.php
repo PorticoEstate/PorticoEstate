@@ -2316,7 +2316,18 @@
 			unset($value_set);
 
 			$value_set_line = array();
-
+			$process_log = '';
+			if(isset($data['process_log']) && $data['process_log'])
+			{
+				if(stripos($data['process_log'], '::'))
+				{
+					$process_log = $this->db->db_addslashes($data['process_log']);
+				}
+				else
+				{
+					$process_log = $this->db->db_addslashes("{$GLOBALS['phpgw_info']['user']['account_lid']}::{$data['process_log']}");
+				}
+			}
 			$value_set_line['pmwrkord_code'] = $data['order_id'];
 			$value_set_line['dimb']			 = $data['dim_b'];
 			$value_set_line['dima']			 = $data['dim_a'];
@@ -2325,7 +2336,7 @@
 			$value_set_line['project_id']	 = $data['project_group'];
 			$value_set_line['spbudact_code'] = $data['b_account_id'];
 			$value_set_line['line_text']	 = $this->db->db_addslashes($data['line_text']);
-			$value_set_line['process_log']	 = $this->db->db_addslashes($data['process_log']);
+			$value_set_line['process_log']	 = $process_log;
 			$value_set_line['process_code']	 = $data['process_code'];
 
 			$value_set_line = $this->db->validate_update($value_set_line);

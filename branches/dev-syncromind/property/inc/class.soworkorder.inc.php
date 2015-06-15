@@ -167,6 +167,8 @@
 			$dry_run		 = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$criteria		 = isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
 			$filter_year	 = isset($data['filter_year']) ? $data['filter_year'] : '';
+			$tender_deadline = isset($data['tender_deadline']) && $data['tender_deadline'] ? (int) $data['tender_deadline'] : 0;
+			$inspection_on_completion		 = isset($data['inspection_on_completion']) && $data['inspection_on_completion'] ? (int) $data['inspection_on_completion'] : 0;
 
 			$GLOBALS['phpgw']->config->read();
 			$sql = $this->bocommon->fm_cache('sql_workorder' . !!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
@@ -661,6 +663,24 @@
 					$filtermethod .= ')';
 				}
 
+				$where = 'AND';
+			}
+
+			if($tender_deadline)
+			{
+				$tender_deadline = $tender_deadline - 3600 * 8 + phpgwapi_datetime::user_timezone();
+				$filtermethod .= " $where (fm_workorder.tender_deadline IS NOT NULL AND fm_workorder.tender_deadline > 0"
+				. " AND fm_workorder.tender_deadline <= {$tender_deadline} AND"
+				. " (fm_workorder.tender_received  = 0 OR fm_workorder.tender_received  IS NULL))";
+				$where = 'AND';
+			}
+			if($inspection_on_completion)
+			{
+				$inspection_on_completion = $inspection_on_completion - 3600 * 8 + phpgwapi_datetime::user_timezone();
+				$filtermethod .= " $where (fm_workorder.tender_deadline IS NOT NULL  AND fm_workorder.tender_deadline > 0"
+				. " AND fm_workorder.end_date IS NOT NULL AND fm_workorder.end_date > 0"
+				. " AND fm_workorder.end_date <= {$inspection_on_completion} AND"
+				. " (fm_workorder.inspection_on_completion  = 0 OR fm_workorder.inspection_on_completion  IS NULL))";
 				$where = 'AND';
 			}
 
