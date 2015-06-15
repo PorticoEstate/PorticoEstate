@@ -276,6 +276,8 @@
 				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component->set_location_code($component_arr['location_code']);
 				$component->set_xml_short_desc($short_desc);
 
@@ -291,13 +293,16 @@
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
-			$responsible_user_id = execMethod('property.soresponsible.get_responsible_user_id',
+			if(!$responsible_user_id = phpgw::get_var('assigned_to', 'int'))
+			{
+				$responsible_user_id = execMethod('property.soresponsible.get_responsible_user_id',
 					array
 					(
 						'responsibility_id' => $control->get_responsibility_id(),
 						'location_code' => $location_code
 					)
 				);
+			}
 
 			$year = date("Y", $deadline_ts);
 			$month_nr = date("n", $deadline_ts);
@@ -379,6 +384,8 @@
 				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component->set_location_code($component_arr['location_code']);
 				$component->set_xml_short_desc($short_desc);
 				$component_array = $component->toArray();
@@ -709,6 +716,8 @@
 				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component->set_location_code($component_arr['location_code']);
 				$component->set_xml_short_desc($short_desc);
 				$component_array = $component->toArray();
@@ -879,7 +888,7 @@
 		{
 			if(!$this->add && !$this->edit)
 			{
-				return json_encode( array( "status" => 'not_saved') );
+				return json_encode( array( "status" => 'not_saved', 'message' => '') );
 			}
 
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -888,7 +897,23 @@
 			$check_list = $this->so->get_single($check_list_id);
 			if ( !$this->_check_for_required($check_list) )
 			{
-				return json_encode( array( "status" => 'not_saved') );			
+				$messages = phpgwapi_cache::message_get(true);
+				$message = '';
+				foreach($messages as $_type => $_message)
+				{
+					if($_type == 'error')
+					{
+						foreach($_message as $__message)
+						{
+					//		$message.= strip_tags($__message['msg']);
+							$message.= preg_replace("/<\/br[^>]*>\s*\r*\n*/is", "\n", $__message['msg']);
+
+						}
+					}
+
+				}
+				return json_encode( array( "status" => 'not_saved', 'message' => $message) );
+
 			}
 
 			if($check_list_status == controller_check_list::STATUS_DONE)
@@ -909,7 +934,7 @@
 			}
 			else
 			{
-				return json_encode( array( "status" => 'not_saved') );
+				return json_encode( array( "status" => 'not_saved', 'message' => '') );
 			}
 		}
 

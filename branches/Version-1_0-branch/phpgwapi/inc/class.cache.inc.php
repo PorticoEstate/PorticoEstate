@@ -596,4 +596,20 @@
 
 			return !!self::session_set('phpgwapi', 'phpgw_messages', $receipt);
 		}
+
+		/**
+		 * GET system message from the session cache
+		 *
+		 * @param bool clear flag
+		 * @return array containing messages
+		 */
+		public static function message_get($clear = false)
+		{
+			$messages =  self::session_get('phpgwapi', 'phpgw_messages');
+			if($clear)
+			{
+				self::session_clear('phpgwapi', 'phpgw_messages');
+			}
+			return $messages;
+		}
 	}

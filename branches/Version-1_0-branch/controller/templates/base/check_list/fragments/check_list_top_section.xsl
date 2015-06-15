@@ -23,13 +23,13 @@
 			</xsl:choose>
 		</div>
 		
-		<div class="box-2 select-box">
-            <xsl:call-template name="nav_control_plan" />
-		</div>
+		
 		
     <!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
  		<xsl:choose>
 			<xsl:when test="check_list/id != 0">
+		<div class="box-2 select-box">
+            <xsl:call-template name="nav_control_plan" />
 		      <xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" /></xsl:variable>
 			      <form id="update-check-list-status" class="done" action="{$action_url}" method="post">
 					<input type="hidden" name="check_list_id" value="{check_list/id}" /> 
@@ -64,9 +64,9 @@
 						</div>
 -->
 			      </form>
+		      </div>
 				</xsl:when>
 			</xsl:choose>
-      
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
         <xsl:choose>
         <xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">
