@@ -52,22 +52,13 @@
 				_debug_array($headers);
 			}
 
-			$header_regular_expression =  '/^cn=(.*),cn=users.*$/';
-			$header_key = 'Osso-User-Dn';
-			$matches = array();
-			preg_match_all($header_regular_expression,$headers[$header_key], $matches);
-			$fodsels_nr = $matches[1][0];
-			$uid = $headers['uid'];
+			$fodsels_nr = $headers['uid'];
 
 			if($this->debug)
 			{
 				echo 'fødselsnr:<br>';
 				_debug_array($fodsels_nr);
-				echo 'uid:<br>';
-				_debug_array($uid);
 			}
-
-			$fodsels_nr = $uid ? $uid : $fodsels_nr;
 
 			$request =
 			"<soapenv:Envelope
@@ -81,7 +72,6 @@
 					</v1:getOrganisasjonsAvgivere>
 				</soapenv:Body>
 			</soapenv:Envelope>";
-
 
 			$location_URL = isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : "http://wsm01e-t.usrv.ubergenkom.no:8888/gateway/services/AltinnReporteesService"; #A-test
 
@@ -98,7 +88,8 @@
 
 			try
 			{
-				$response = $client->__doRequest($request,$location_URL,$location_URL,1);
+				$action = "";
+				$response = $client->__doRequest($request,$location_URL,$action,1);
 				$reader = new XMLReader();
 				$reader->xml($response);
 
