@@ -17,8 +17,8 @@
 </func:function>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content">
-        <ul class="pathway">
+    <!--div id="content"-->
+        <!--ul class="pathway">
             <li>
                 <a>
 					<xsl:attribute name="href"><xsl:value-of select="application/applications_link"/></xsl:attribute>
@@ -26,19 +26,24 @@
                 </a>
             </li>
             <li>#<xsl:value-of select="application/id"/></li> 
-			<li>
-				<xsl:if test="frontend and application/status='ACCEPTED'">
-						<form method="POST">
-						<input type="hidden" name="print" value="ACCEPTED"/>
-						<input type="submit" value="{php:function('lang', 'Print as PDF')}" />
-					</form>
-				</xsl:if>
-			</li>
-        </ul>
+            <li>
+                    <xsl:if test="frontend and application/status='ACCEPTED'">
+                                    <form method="POST">
+                                    <input type="hidden" name="print" value="ACCEPTED"/>
+                                    <input type="submit" value="{php:function('lang', 'Print as PDF')}" />
+                            </form>
+                    </xsl:if>
+            </li>
+        </ul-->
 
         <xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
-
+		<!--xsl:call-template name="yui_booking_i18n"/-->
+                <form class= "pure-form pure-form-aligned" action="" method="post" id="form" name="form">
+                    <input type="hidden" name="tab" value=""/>
+			<div id="tab-content">
+                            <xsl:value-of disable-output-escaping="yes" select="application/tabs"/>
+                            <div id="application">
+                    
 			<xsl:if test="not(frontend)">
 				<div style="border: 3px solid red; padding: 3px 4px 3px 4px">
 					<xsl:choose>
@@ -350,7 +355,10 @@
 				<dd><br/><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
 			</dl>
 		</xsl:if>
-    </div>
+                            </div>
+                        </div>
+                </form>
+    <!--/div-->
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
