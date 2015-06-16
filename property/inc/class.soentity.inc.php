@@ -447,7 +447,7 @@
 			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$entity_group_id	= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
 			$filter_entity_group= isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
-			$filter_item		= isset($data['filter_item']) && $data['filter_item'] ? (int)$data['filter_item'] : 0;
+			$filter_item		= isset($data['filter_item']) && $data['filter_item'] ? $data['filter_item'] : array();
 
 
 			if($location_id)
@@ -615,9 +615,9 @@
 				$where= 'AND';
 			}
 
-			if ($filter_item)
+			if (is_array($filter_item) && count($filter_item))
 			{
-				$filtermethod .= " {$where} {$entity_table}.id = {$filter_item}";
+				$filtermethod .= " {$where} {$entity_table}.id IN (" . implode(',', $filter_item) . ')';
 				$where= 'AND';
 			}
 
@@ -1346,7 +1346,7 @@
 			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$entity_group_id= isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
 			$filter_entity_group= isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
-
+			$filter_item		= isset($data['filter_item']) && $data['filter_item'] ? $data['filter_item'] : array();
 
 			if($location_id)
 			{
@@ -1540,6 +1540,12 @@
 			if ($filter_entity_group)
 			{
 				$filtermethod .= " {$where} {$entity_table}.entity_group_id IS NULL";
+				$where= 'AND';
+			}
+
+			if (is_array($filter_item) && count($filter_item))
+			{
+				$filtermethod .= " {$where} {$entity_table}.id IN (" . implode(',', $filter_item) . ')';
 				$where= 'AND';
 			}
 

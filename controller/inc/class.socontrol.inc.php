@@ -775,15 +775,42 @@
 			$control_id		= (int) $control_id;
 			$location_id	= (int) $location_id;
 			$component_id	= (int) $component_id;
-			
+
 			$sql  = "SELECT * ";
 			$sql .= "FROM controller_control_component_list ";
 			$sql .= "WHERE control_id = {$control_id} ";
 			$sql .= "AND location_id = {$location_id} ";
 			$sql .= "AND component_id = {$component_id}";
-			
+
 			$this->db->query($sql, __LINE__, __FILE__);
 			return $this->db->next_record();
+		}
+
+		public function get_assigned_control_components($from_date, $to_date, $assigned_to = 0)
+		{
+			$assigned_to	= (int) $assigned_to;
+			$location_id	= (int) $location_id;
+			$component_id	= (int) $component_id;
+
+			$sql  = "SELECT DISTINCT ccl.component_id, ccl.location_id";
+			$sql .= " FROM controller_control_component_list ccl , controller_control_serie cs";
+			$sql .= " WHERE ccl.id = cs.control_relation_id";
+			$sql .= " AND cs.control_relation_type = 'component'";
+			$sql .= " AND cs.assigned_to = {$assigned_to}";
+			$sql .= " AND cs.enabled = 1";
+//			$sql .= " AND ((cs.start_date <= $to_date AND cs.end_date IS NULL) ";
+//			$sql .= " OR (cs.start_date <= $to_date AND cs.end_date > $from_date ))";
+			$sql .= " AND cs.start_date <= $to_date";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$components = array();
+
+			while($this->db->next_record())
+			{
+				$location_id = $this->db->f('location_id');
+				$components[$location_id][] = $this->db->f('component_id');
+			}
+			return $components;
 		}
 
 		/**
