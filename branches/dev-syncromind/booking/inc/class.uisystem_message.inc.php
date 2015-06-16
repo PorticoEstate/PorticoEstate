@@ -189,12 +189,16 @@
 	            unset($filters['status']);
             }
             
+            $search = phpgw::get_var('search');
+            $order = phpgw::get_var('order');
+            $columns = phpgw::get_var('columns');
+            
 			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query'	=> phpgw::get_var('query'),
-				'sort'	=> phpgw::get_var('sort'),
-				'dir'	=> phpgw::get_var('dir'),
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', null),
+				'query'	=> $search['value'],
+				'sort'	=> $columns[$order[0]['column']]['data'],
+				'dir'	=> $order[0]['dir'],
 				'filters' => $filters
 			);
 
