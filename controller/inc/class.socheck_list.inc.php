@@ -638,7 +638,7 @@ class controller_socheck_list extends controller_socommon
 
 		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, cl.assigned_to, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id,"
-		. " cl.location_code as cl_location_code, num_open_cases, num_pending_cases ,cl.serie_id, cs.repeat_type ";
+		. " cl.location_code as cl_location_code, num_open_cases, num_pending_cases ,cl.serie_id, cl.billable_hours, cs.repeat_type ";
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_control c on cl.control_id = c.id ";
 		$sql .= "LEFT JOIN controller_control_serie cs on cl.serie_id = cs.id ";
@@ -677,7 +677,7 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 			$check_list->set_serie_id($this->db->f('serie_id'));
 			$check_list->set_repeat_type($this->db->f('repeat_type'));
-
+			$check_list->set_billable_hours((float)$this->db->f('billable_hours'));
 			
 			$check_lists_array[] = $check_list;
 		}

@@ -155,9 +155,21 @@
 				(
 					'id'		=> $user['account_id'],
 					'name'		=> "{$user['account_lastname']}, {$user['account_firstname']}",
-					'selected'	=> $this->account == $user['account_id'] ? 1 : 0
+					'selected'	=> 0 //$this->account == $user['account_id'] ? 1 : 0
 				);
 			}
+
+			$_my_negative_self = -1 * $this->account;
+
+			$default_value = array
+			(
+				'id'		=> $_my_negative_self,
+				'name'		=> lang('my assigned controls'),
+				'selected' 	=> $_my_negative_self == ($this->account * -1)
+			);
+
+			unset($_my_negative_self);
+			array_unshift ($user_list,$default_value);
 			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
 
 			// Sigurd: Start categories
@@ -277,7 +289,7 @@
 					'field'	 =>  $this->get_fields($filter_component),
 				),
 			);
-			self::render_template_xsl(array('component'), $data);
+			self::render_template_xsl(array('component','calendar/icon_color_map'), $data);
 		}
 
 		private function get_fields($filter_component = '')
@@ -407,10 +419,30 @@
 			}
 //			_debug_array($location_type_name);
 			$components = array();
+			$keep_only_assigned_to = 0;
 
 			$lookup_stray_items = false;
+			if($user_id < 0)
+			{
+				$user_id = $user_id * -1;
 
-			if(!$location_id)
+				$keep_only_assigned_to = $user_id;
+				$assigned_components = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id);
+				foreach($assigned_components as $_location_id => $component_list)
+				{
+					$_components = execMethod('property.soentity.read',array(
+						'filter_entity_group'		=> $entity_group_id,
+						'location_id'				=> $_location_id,
+						'district_id'				=> $district_id,
+						'allrows'					=> true,
+						'filter_item'				=> $component_list
+						)
+					);
+					$components = array_merge($components, $_components);
+
+				}
+			}
+			else if(!$location_id)
 			{
 				//nothing
 			}
@@ -443,7 +475,7 @@
 						'allrows'					=> true,
 						'control_registered'		=> !$all_items,
 						'check_for_control'			=> true,
-						'filter_item'				=> $filter_component
+						'filter_item'				=> $filter_component ? array($filter_component) : array()
 						)
 					);
 					$components = array_merge($components, $_components);
@@ -482,7 +514,7 @@
 				{
 					continue;
 				}
-				$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $component_id));
+				$controls = $so_control->get_controls_at_component(array('location_id' => $location_id, 'component_id' => $component_id));
 //_debug_array($controls);
 				foreach($controls as $_control)
 				{
@@ -686,6 +718,7 @@
 			{
 				$row		= array();
 				$row_sum	= array();
+				$row_sum_actual	= array();//billable_hours
 				$row['component_id'] = $entry['component_id'];
 				$row['year'] = '';
 				$row['descr'] = '';
@@ -707,19 +740,22 @@
 				$found_at_least_one = false;
 				for ( $_month=1; $_month < 13; $_month++ )
 				{
-					$row[$_month] = $this->translate_calendar_info($entry[$_month],$year, $_month, $filter_status, $found_at_least_one);
-					if( !$user_id || $entry[$_month]['info']['assigned_to'] == $user_id)
+					$row[$_month] = $this->translate_calendar_info($entry[$_month],$year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to);
+					if($row[$_month] &&( !$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 					{
 						$row_sum[$_month] = $entry[$_month]['info']['service_time'] + $entry[$_month]['info']['controle_time'];
+						$row_sum_actual[$_month] =  + $entry[$_month]['info']['billable_hours'];
 					}
 					else
 					{
 						$row_sum[$_month] = 0;
+						$row_sum_actual[$_month] = 0;
 					}
 				}
 				if(!$filter_status || $found_at_least_one)
 				{
 					$total_time[] = $row_sum;
+					$total_time_actual[] = $row_sum_actual;
 					$data_set[] = $row;
 				}
 			}
@@ -748,6 +784,7 @@
 			unset($_month);
 
 			$sum_year = 0;
+			$sum_year_actual = 0;
 
 			if(!$total_time)
 			{
@@ -766,18 +803,43 @@
 						$sum_year += $_row[$_month];
 					}
 				}
+				unset($_row);
 			}
 			$result['time_sum'][0] = $sum_year;
-			$result['total_records'] = $total_records;
 
+			if(!$total_time_actual)
+			{
+				for ( $_month=1; $_month < 13; $_month++ )
+				{
+					$result['time_sum_actual'][$_month] = 0;
+				}
+			}
+			else
+			{
+				foreach ($total_time_actual as $_row)
+				{
+					for ( $_month=1; $_month < 13; $_month++ )
+					{
+						$result['time_sum_actual'][$_month] += $_row[$_month];
+						$sum_year_actual += $_row[$_month];
+					}
+				}
+			}
+			$result['time_sum_actual'][0] = $sum_year_actual;
+			$result['total_records'] = $total_records;
 			$result['location_filter'] = $location_filter;
 
 			return $result;
 		}
 
-		private function translate_calendar_info($param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false)
+		private function translate_calendar_info($param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to)
 		{
 			if(!isset($param['repeat_type']))
+			{
+				return '';
+			}
+
+			if($keep_only_assigned_to && $keep_only_assigned_to != $param['info']['assigned_to'])
 			{
 				return '';
 			}
@@ -885,6 +947,10 @@
 		//	$controle_time = $param['info']['controle_time'] ? $param['info']['controle_time'] : '&nbsp;';
 			$time = $param['info']['service_time'] + $param['info']['controle_time'];
 			$time = $time ? $time : '&nbsp;';
+			$billable_hours = (float)$param['info']['billable_hours'];
+			{
+				$time .= " / {$billable_hours}";
+			}
 
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
 		}
