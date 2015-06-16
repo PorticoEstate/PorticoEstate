@@ -1,5 +1,5 @@
 <?php
-//	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.account_helper');
     
     phpgw::import_class('booking.uidocument_building');
@@ -61,7 +61,7 @@
         }
 
 		protected function is_assigned_to_current_user(&$application) {
-			$current_account_id = $this->current_account_id();
+			$current_account_id = 7;
 			if (empty($current_account_id) || !isset($application['case_officer_id'])) { return false; }
 			return $application['case_officer_id'] == $current_account_id;
 		}
@@ -75,7 +75,7 @@
 		}
 		
 		protected function assign_to_current_user(&$application) {					
-			$current_account_id = $this->current_account_id();
+			$current_account_id = 7;
 
 			if (!empty($current_account_id) && is_array($application) && 
 					!isset($application['case_officer_id']) || $application['case_officer_id'] != $current_account_id) 
@@ -332,12 +332,16 @@
                 }
             }
 
+            $search = phpgw::get_var('search');
+            $order = phpgw::get_var('order');
+            $columns = phpgw::get_var('columns');
+            
 			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query'	=> phpgw::get_var('query'),
-				'sort'	=> phpgw::get_var('sort'),
-				'dir'	=> phpgw::get_var('dir'),
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', null),
+				'query'	=> $search['value'],
+				'sort'	=> $columns[$order[0]['column']]['data'],
+				'dir'	=> $order[0]['dir'],
 				'filters' => $filters
 			);
 
@@ -529,7 +533,7 @@
 					'name' => $application['case_officer_name'],
 				);
 				
-				if ($application['case_officer_id'] == $this->current_account_id()) {
+				if ($application['case_officer_id'] == 7) {
 					$application['case_officer']['is_current_user'] = true;
 				}
 			}
@@ -838,6 +842,10 @@
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Application'), 'link' => '#application');
+			$active_tab = 'generic';
+            
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if($_POST['create'])
 				{
@@ -966,8 +974,19 @@
             }
             $collision_dates = array("data" => implode(',',$collision_dates));
 			self::check_date_availability($application);
-			self::render_template('application', array('application' => $application,
+//            echo '<pre>';print_r($application); echo '</pre>';
+//            echo '<pre>';print_r($audience); echo '</pre>';
+//            echo '<pre>';print_r($agegroups); echo '</pre>';
+//            echo '<pre>';print_r($num_associations); echo '</pre>';
+//            echo '<pre>';print_r($from); echo '</pre>';
+//            echo '<pre>';print_r($collision_dates); echo '</pre>';
+//            echo '<pre>';print_r($comments); echo '</pre>';
+//            echo '<pre>';print_r($application_text); echo '</pre>';
+            $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('application', array('application' => $application,
 								  'audience' => $audience, 'agegroups' => $agegroups,
 								  'num_associations'=>$num_associations, 'assoc' =>$from, 'collision' => $collision_dates, 'comments' => $comments,'config' => $application_text));
+//            self::render_template_xsl('application', array('application' => $application));
 		}
 	}
