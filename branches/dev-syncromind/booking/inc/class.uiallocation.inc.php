@@ -1,5 +1,5 @@
 <?php
-//	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.boorganization');
     
     phpgw::import_class('booking.uidocument_building');
