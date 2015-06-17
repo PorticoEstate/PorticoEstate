@@ -8,6 +8,7 @@
     
 	abstract class booking_uidocument extends booking_uicommon
 	{
+        
 		protected
 			$documentOwnerType = null,
 			$module;
