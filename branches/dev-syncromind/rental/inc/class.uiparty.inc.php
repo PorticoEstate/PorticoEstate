@@ -517,7 +517,7 @@ class rental_uiparty extends rental_uicommon
 					'parameters'	=> json_encode($parameters)
 				);
 		}
-		
+	
 		self::add_javascript('rental', 'rental', 'party.sync.js');
 		self::render_template_xsl('datatable_jquery', $data);
 	}
@@ -574,8 +574,7 @@ class rental_uiparty extends rental_uicommon
 	{
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		// Get the contract part id
-		$party_id = (int)phpgw::get_var('id');
-		
+		$party_id = (int)phpgw::get_var('id');		
 		
 		// Retrieve the party object or create a new one if correct permissions
 		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
@@ -594,6 +593,8 @@ class rental_uiparty extends rental_uicommon
 			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
 		}
 		
+		$msgbox_data = '';
+	
 		if(isset($_POST['save_party'])) // The user has pressed the save button
 		{
 			if(isset($party)) // If a party object is created
@@ -613,7 +614,7 @@ class rental_uiparty extends rental_uicommon
 				$party->set_mobile_phone(phpgw::get_var('mobile_phone'));
 				$party->set_fax(phpgw::get_var('fax'));
 				$party->set_email(phpgw::get_var('email'));
-				$party->set_url(phpgw::get_var('url'));
+				$party->set_url(phpgw::get_var('url'));  
 				$party->set_account_number(phpgw::get_var('account_number'));
 				$party->set_reskontro(phpgw::get_var('reskontro'));
 				$party->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
@@ -624,18 +625,18 @@ class rental_uiparty extends rental_uicommon
 				
 				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
-					$message = lang('messages_saved_form');	
+					$msgbox_data = array(lang('messages_saved_form') => 1);
 				}
 				else
 				{
-					$error = lang('messages_form_error');
+					$msgbox_data = array(lang('messages_form_error') => 0);
 				}
 			}
 		}
 //print_r($party); die;
-		/*$config = CreateObject('phpgwapi.config','rental');
+		$config = CreateObject('phpgwapi.config','rental');
 		$config->read();
-
+		/*
 		return $this->render('party.php', array
 			(
 				'party' 	=> $party,
@@ -647,6 +648,8 @@ class rental_uiparty extends rental_uicommon
 			)
 		);*/
 
+		$datatable_def = array();
+		
 		$link_index = array
 			(
 				'menuaction'	=> 'rental.uiparty.index',
@@ -656,24 +659,118 @@ class rental_uiparty extends rental_uicommon
 		$tabs = array();
 		$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
 		$active_tab = 'details';
-
-		//$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-		$msgbox_data = '';
+		
+		if ($party_id)
+		{
+			$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.query', 'editable'=>1, 'type'=>'contracts_part', 'party_id'=>$party_id, 'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> array(
+							array('key'=>'old_contract_id', 'label'=>lang('contract_id'), 'sortable'=>true),
+							array('key'=>'date_start', 'label'=>lang('date_start'), 'sortable'=>true),
+							array('key'=>'date_end', 'label'=>lang('date_end'), 'sortable'=>true),
+							array('key'=>'type', 'label'=>lang('title'), 'sortable'=>false),
+							array('key'=>'composite', 'label'=>lang('composite'), 'sortable'=>false),
+							array('key'=>'term_label', 'label'=>lang('billing_term'), 'sortable'=>true),
+							array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false),
+							array('key'=>'rented_area', 'label'=>lang('area'), 'sortable'=>false),
+							array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false),
+							array('key'=>'contract_notification_status', 'label'=>lang('notification_status'), 'sortable'=>false)					
+				),
+				'config'		=> array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)	
+			);
+			
+			$contracts = array(
+				'lang_search'				=> lang('search_for'),
+				'lang_where'				=> lang('search_where'),
+				'lang_status'				=> lang('status'),
+				'lang_date'					=> lang('date'),
+				'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
+				'lang_date_start'			=> lang('date_start'),
+				'lang_date_end'				=> lang('date_end'),
+			);
+			
+			$tabs['documents']	= array('label' => lang('Documents'), 'link' => '#documents');
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uidocument.query', 'editable'=>1, 'type'=>'documents_for_party', 'party_id'=>$party_id, 'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> array(
+							array('key'=>'title', 'label'=>lang('title'), 'sortable'=>true),
+							array('key'=>'type', 'label'=>lang('type'), 'sortable'=>true),
+							array('key'=>'name', 'label'=>lang('name'), 'sortable'=>true)					
+				),
+				'config'		=> array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+		}
 			
 		$data = array
 		(
-			'tabs'					=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-			'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-			'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiparty.edit')),
-			'cancel_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_index),
-			'lang_save'				=> lang('save'),
-			'lang_sync_data'		=> lang('get_sync_data'),
-			'lang_cancel'			=> lang('party_back'),			
-			'editable'				=> true,
+			'datatable_def'					=> $datatable_def,
+			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+			'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+			'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiparty.edit')),
+			'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
+			'lang_save'						=> lang('save'),
+			'lang_sync_data'				=> lang('get_sync_data'),
+			'lang_cancel'					=> lang('party_back'),			
+			'editable'						=> true,
+			'party_id'						=> $party_id,
+			
+			'lang_identifier'				=> lang('identifier'),
+			'lang_firstname'				=> lang('firstname'),
+			'lang_lastname'					=> lang('lastname'),
+			'lang_job_title'				=> lang('job_title'),
+			'lang_company'					=> lang('company'),
+			'lang_department'				=> lang('department'),
+			'lang_address'					=> lang('address'),
+			'lang_postal_code_place'		=> lang('postal_code_place'),
+			'lang_inactive_party'			=> lang('inactive_party'),
+			'lang_account_number'			=> lang('account_number'),
+			'lang_phone'					=> lang('phone'),
+			'lang_mobile_phone'				=> lang('mobile_phone'),
+			'lang_fax'						=> lang('fax'),
+			'lang_email'					=> lang('email'),
+			'lang_url'						=> lang('url'),
+			'lang_unit_leader'				=> lang('unit_leader'),
+			'lang_comment'					=> lang('comment'),
+			'lang_organization'				=> lang('organization'),
+			
+			'value_identifier'				=> $party->get_identifier(),
+			'value_firstname'				=> $party->get_first_name(),
+			'value_lastname'				=> $party->get_last_name(),
+			'value_job_title'				=> $party->get_title(),
+			'value_company'					=> $party->get_company_name(),
+			'value_department'				=> $party->get_department(),
+			'value_address1'				=> $party->get_address_1(),
+			'value_address2'				=> $party->get_address_2(),
+			'value_postal_code'				=> $party->get_postal_code(),
+			'value_place'					=> $party->get_place(),
+			'value_inactive_party'			=> $party->is_inactive(),
+			'value_account_number'			=> $party->get_account_number(),
+			'value_phone'					=> $party->get_phone(),
+			'value_mobile_phone'			=> $party->get_mobile_phone(),
+			'value_fax'						=> $party->get_fax(),
+			'value_email'					=> $party->get_email(),
+			'value_url'						=> $party->get_url(),
+			'value_unit_leader'				=> $party->get_unit_leader(),
+			'value_comment'					=> $party->get_comment(),
+			'value_organization'			=> '',
+			
+			'use_fellesdata'				=> $config->config_data['use_fellesdata'],
+			
 			'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 		);
 		
-		self::render_template_xsl(array('party'), array('edit' => $data));
+		self::render_template_xsl(array('party', 'datatable_inline'), array('edit' => $data));
 	}
 	
 	public function download()
