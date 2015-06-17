@@ -230,8 +230,14 @@
 			
 			
 			//Build a YUI result from the data
-			$result_data = array('results' => $rows, 'total_records' => $result_count);
-			return $this->yui_results($result_data, 'total_records', 'results');
+			/*$result_data = array('results' => $rows, 'total_records' => $result_count);
+			return $this->yui_results($result_data, 'total_records', 'results');*/
+			
+			$result_data    =   array('results' =>  $rows);
+			$result_data['total_records']	= $result_count;
+			$result_data['draw']    = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 
 		/**
