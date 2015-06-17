@@ -85,7 +85,7 @@
 			parent::__construct();
 
 			$this->ui_session_key = $this->current_app().'_uicommon';
-			$this->restore_flash_msgs();
+			//$this->restore_flash_msgs();
 			$this->config = CreateObject( 'phpgwapi.config', 'bookingfrontend' );
 			$this->config->read();
 			
