@@ -116,21 +116,32 @@
 		public function populate_grid_data($menuaction)
 		{
 			$resources = $this->read();
+            
 			foreach($resources['results'] as &$resource)
 			{
 				$resource['link']        = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
 				$resource['type']		 = lang($resource['type']);
 				$resource['full_name'] = $resource['building_name'] . ' / ' . $resource['name'];
 			}
-			$data = array(
-				 'ResultSet' => array(
-					'totalResultsAvailable' => $resources['total_records'], 
-					'startIndex' => $resources['start'], 
-					'sortKey' => $resources['sort'], 
-					'sortDir' => $resources['dir'], 
-					'Result' => $resources['results']
-				)
+//			$data = array(
+//				 'ResultSet' => array(
+//					'totalResultsAvailable' => $resources['total_records'], 
+//					'startIndex' => $resources['start'], 
+//					'sortKey' => $resources['sort'], 
+//					'sortDir' => $resources['dir'], 
+//					'Result' => $resources['results']
+//				)
+//			);
+            
+            $data = array(
+					'total_records' => $resources['total_records'], 
+					'start' => $resources['start'], 
+					'sort' => $resources['sort'], 
+					'dir' => $resources['dir'], 
+					'results' => $resources['results']
 			);
+                        
+//            echo '<pre>'; print_r($rpta); echo '</pre>'; exit('saul');
 			return $data;
 		}
 
