@@ -177,6 +177,7 @@
 //            Analizar luego esta variable -> $this->current_account_id()
             $this->db = $GLOBALS['phpgw']->db;
 			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(null,7) : array(1,7));
+//            echo '<pre>'; print_r($applications); echo '</pre>';exit('saul');
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
