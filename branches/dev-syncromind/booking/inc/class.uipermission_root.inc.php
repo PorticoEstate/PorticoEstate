@@ -1,13 +1,13 @@
 <?php
-//	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.account_ui_utils');
     
     phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uipermission_root extends phpgwapi_uicommon_jquery
+	class booking_uipermission_root extends booking_uicommon
 	{
 				
 		public 

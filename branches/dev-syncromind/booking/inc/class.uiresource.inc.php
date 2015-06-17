@@ -1,14 +1,14 @@
 <?php
-//	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.uidocument_resource');
 	phpgw::import_class('booking.uipermission_resource');
     
     phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uiresource extends phpgwapi_uicommon_jquery
+	class booking_uiresource extends booking_uicommon
 	{
 		public $public_functions = array
 		(

@@ -38,11 +38,10 @@
 		const UI_SESSION_FLASH = 'flash_msgs';
 
 		protected
-			$filesArray;
-
-		private
+			$filesArray,
 			$ui_session_key,
 			$flash_msgs;
+
 
 		public $dateFormat;
 
@@ -125,7 +124,7 @@
 			return $this->ui_session_key;
 		}
 
-		private function restore_flash_msgs()
+		protected function restore_flash_msgs()
 		{
 			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH)))
 			{

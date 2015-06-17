@@ -1,12 +1,12 @@
 <?php
-//	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uicommon');
 
     phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
     
-	abstract class booking_uidocument extends phpgwapi_uicommon_jquery
+	abstract class booking_uidocument extends booking_uicommon
 	{
 		protected
 			$documentOwnerType = null,

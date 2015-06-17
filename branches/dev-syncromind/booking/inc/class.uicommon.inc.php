@@ -1,6 +1,7 @@
 <?php
-	phpgw::import_class('phpgwapi.yui');
-	
+//	phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
+
 	/**
 	 * Cherry pick selected values into a new array
 	 * 
@@ -70,58 +71,29 @@
 	}
 
 	
-	abstract class booking_uicommon
+	abstract class booking_uicommon extends phpgwapi_uicommon_jquery
 	{
-		const UI_SESSION_FLASH = 'flash_msgs';
-		
-		protected	
-			$filesArray;
 			
 		protected static 
 			$old_exception_handler;
 			
 		private 
-			$ui_session_key,
-			$flash_msgs,
 			$config;
 		
 		public function __construct()
 		{
+			parent::__construct();
+
 			$this->ui_session_key = $this->current_app().'_uicommon';
 			$this->restore_flash_msgs();
 			$this->config = CreateObject( 'phpgwapi.config', 'bookingfrontend' );
 			$this->config->read();
 			
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			self::set_active_menu('booking');
-			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
-			self::add_stylesheet('booking/templates/base/css/base.css');
-			self::add_javascript('booking', 'booking', 'common.js');
-			$this->tmpl_search_path = array();
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
-
 			// Add configurable bookingfrontend template search path.
 			// This is being done here in booking because ui-classes in bookingfrontend inherit either directly or indirectly from this class.
 			if( strlen( $this->config->config_data['customtemplate'] ) ) {
 				array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $this->config->config_data['customtemplate'] );
 			}
-
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('history');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
-			phpgwapi_yui::load_widget('animation');
-			$this->url_prefix = str_replace('_', '.', get_class($this));
 			
 			if ($this->current_app() == 'bookingfrontend') {
 				$GLOBALS['phpgw']->translation->add_app('booking');
@@ -129,77 +101,7 @@
 		}
 		
 
-		/**
-		 * Creates an array of translated strings.
-		 */
-		function lang_array()
-		{
-			$keys = func_get_args();
-			foreach($keys as &$key) $key = lang($key);
-			return $keys;
-		}
-
-		private function get_ui_session_key() {
-			return $this->ui_session_key;
-		}
-		
-		private function restore_flash_msgs() {
-			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH))) {
-				if (is_array($flash_msgs)) {
-					$this->flash_msgs = $flash_msgs;
-					$this->session_set(self::UI_SESSION_FLASH, array());
-					return true;
-				}
-			}
-			
-			$this->flash_msgs = array();
-			return false;
-		}
-		
-		private function store_flash_msgs() {
-			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
-		}
-		
-		private function reset_flash_msgs() {
-			$this->flash_msgs = array();
-			$this->store_flash_msgs();
-		}
-		
-		private function session_set($key, $data) {
-			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
-		}
-		
-		private function session_get($key) {
-			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
-		}
-		
-		/**
-		 * Provides a private session cache setter per ui class.
-		 */
-		protected function ui_session_set($key, $data) {
-			return $this->session_set(get_class($this).'_'.$key, $data);
-		}
-		
-		/**
-		 * Provides a private session cache getter per ui class .
-		 */
-		protected function ui_session_get($key) {
-			return $this->session_get(get_class($this).'_'.$key);
-		}
-
-		protected function generate_secret($length = 10)
-		{
-			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
-		}
-		
-		public function add_js_event($event, $js) {
-			$GLOBALS['phpgw']->js->add_event($event, $js);
-		}
-		
-		public function add_js_load_event($js) {
-			$this->add_js_event('load', $js);
-		}
-		
+	
 		/**
 		 * @see booking_account_helper
 		 */
@@ -231,7 +133,7 @@
 			if (!self::$old_exception_handler) {
 				self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
 				if (!self::$old_exception_handler) {
-					//The exception handler of phpgw has probably not been activated, 
+					//The exception handler of phpgw has probably not been activated,
 					//so taking that as a hint to not enable any of our own either.
 					restore_exception_handler();
 				}
@@ -244,10 +146,10 @@
 			{
 				$message = htmlentities('HTTP/1.0 401 Unauthorized to '.$e->get_operation(), null, self::encoding());
 				$exception_message = $e->getMessage();
-			
+
 				if (!empty($exception_message))
 					$message .= ' - '.htmlentities($exception_message, null, self::encoding());
-					
+
 				header($message);
 				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
 			} else {
@@ -266,28 +168,28 @@
 			return $this->current_app() == 'bookingfrontend';
 		}
 
-		public static function link($data)
+		public function link($data)
 		{
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
 				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
+			}
 			else
+			{
 				return $GLOBALS['phpgw']->link('/index.php', $data);
+			}
 		}
 
 		public function redirect($link_data)
 		{
 			$this->store_flash_msgs();
-			
+
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
 			else
 				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
-		public function flash($msg, $type='success')
-		{
-			$this->flash_msgs[$msg] = $type == 'success';
-		}
 
 		public function create_error_stack($errors = array())
 		{
@@ -300,87 +202,7 @@
 			$this->flash_msgs = $error_stack->to_flash_error_msgs();
 		}
 
-		public function add_stylesheet($path)
-		{
-			$GLOBALS['phpgw']->css->add_external_file($path);
-		}
-
-		public function add_javascript($app, $pkg, $name)
-		{
-  			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
-		}
-
-        public function set_active_menu($item)
-        {
-            $GLOBALS['phpgw_info']['flags']['menu_selection'] = $item;
-        }
-
-		/**
-		* A more flexible version of xslttemplate.add_file
-		*/
-		public function add_template_file($tmpl)
-		{
-			if(is_array($tmpl))
-			{
-				foreach($tmpl as $t)
-				{
-					$this->add_template_file($t);
-				}
-				return;
-			}
-			foreach(array_reverse($this->tmpl_search_path) as $path)
-			{
-				$filename = $path . '/' . $tmpl . '.xsl';
-				if (file_exists($filename))
-				{
-					$GLOBALS['phpgw']->xslttpl->xslfiles[$tmpl] = $filename;
-					return;
-				}
-			}
-			echo "Template $tmpl not found in search path: ";
-			print_r($this->tmpl_search_path);
-			die;
-		}
 		
-		public function add_yui_translation(&$data)
-		{
-			$this->add_template_file('yui_booking_i18n');
-			$previous = lang('prev');
-			$next = lang('next');
-							
-			$data['yui_booking_i18n'] = array(
-				'Calendar' => array(
-					'WEEKDAYS_SHORT' => json_encode($this->lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
-					'WEEKDAYS_FULL' => json_encode($this->lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
-					'MONTHS_LONG' => json_encode($this->lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
-				),
-				'DataTable' => array(
-					'MSG_EMPTY' => json_encode(lang('No records found.')),
-					'MSG_LOADING' => json_encode(lang("Loading...")),
-					'MSG_SORTASC' => json_encode(lang('Click to sort ascending')),
-					'MSG_SORTDESC' => json_encode(lang('Click to sort descending')),
-				),
-				'setupDatePickerHelper' => array(
-					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
-				),
-				'setupPaginator' => array(
-			        'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
-					'previousPageLinkLabel' => json_encode("&lt; {$previous}"),
-					'nextPageLinkLabel' => json_encode("{$next} &gt;"),
-				),
-				'common' => array(
-					'LBL_NAME' => json_encode(lang('Name')),
-					'LBL_TIME' => json_encode(lang('Time')),
-					'LBL_WEEK' => json_encode(lang('Week')),
-					'LBL_RESOURCE' => json_encode(lang('Resource')),
-				),
-			);
-		}
-
-		public function add_template_helpers() {
-			$this->add_template_file('helpers');
-		}
-
 		public function render_template($files, $data)
 		{
 			if($this->flash_msgs) {
@@ -388,12 +210,12 @@
 			} else {
 				$this->add_template_file('msgbox');
 			}
-			
+
 			$this->reset_flash_msgs();
-			
+
 			$this->add_yui_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
-			
+
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
 			//$GLOBALS['phpgw']->xslttpl->add_file(array($files));
@@ -407,23 +229,23 @@
 			{
 				throw new InvalidArgumentException('File is not readable');
 			}
-			
+
 			$base_name = basename($file_path);
 			$file_type = self::get_file_type_from_extension($base_name);
-			
+
 			$options = array_merge(
 				array('filename' => $base_name),
 				$options
 			);
-			
+
 			$options['latin1_filename'] = utf8_decode($options['filename']);
 			$options['utf8_filename'] = rawurlencode($options['filename']);
-			
+
 			#Below only seems to work for firefox. RE: http://www.ietf.org/rfc/rfc2047.txt
 			#header("Content-Disposition: attachment; filename*=utf-8'en-us'{$options['filename']}");
-			
-			//The behaviour of sending both the filename both in traditional format and in utf-8 RFC2231 encoded is undefined. 
-			//However, in reality (where most of us live), UAs pick one of the two values that it understands. 
+
+			//The behaviour of sending both the filename both in traditional format and in utf-8 RFC2231 encoded is undefined.
+			//However, in reality (where most of us live), UAs pick one of the two values that it understands.
 			header("Content-Disposition: attachment; filename={$options['latin1_filename']}");
 			#header("Content-Description: {$options['filename']}");
 			header("Content-Type: $file_type");
@@ -434,51 +256,7 @@
 			exit;
 		}
 
-		// Add link key to a result array
-		public function _add_links(&$value, $key, $menuaction)
-		{
-			$unset = 0;
-			// FIXME: Fugly workaround
-			// I cannot figure out why this variable isn't set, but it is needed 
-			// by the ->link() method, otherwise we wind up in the phpgroupware 
-			// errorhandler which does lot of weird things and breaks the output
-			if (!isset($GLOBALS['phpgw_info']['server']['webserver_url'])) {
-				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
-				$unset = 1;
-			}
-
-			$value['link'] = self::link(array('menuaction' => $menuaction, 'id' => $value['id']));
-
-			// FIXME: Fugly workaround
-			// I kid you not my friend. There is something very wonky going on 
-			// in phpgroupware which I cannot figure out.
-			// If this variable isn't unset() (if it wasn't set before that is) 
-			// then it will contain extra slashes and break URLs
-			if ($unset) {
-				unset($GLOBALS['phpgw_info']['server']['webserver_url']);
-			}
-		}
-
-		// Build a YUI result style array
-		public function yui_results($results)
-		{
-			if (!$results) {
-				$results['total_records'] = 0;
-				$result['results'] = array();
-			}
-			
-			return array(   
-				'ResultSet' => array(
-					'totalResultsAvailable' => $results['total_records'], 
-					'startIndex' => $results['start'], 
-					'sortKey' => $results['sort'], 
-					'sortDir' => $results['dir'], 
-					'Result' => $results['results']
-				)   
-			);  
-		}
-        	
-        public function check_active($url)
+         public function check_active($url)
 		{
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -488,106 +266,7 @@
 			}
 		}
 		
-		
-		/**
-		 * Returns a human-readable string from a lower case and underscored word by replacing underscores
-		 * with a space, and by upper-casing the initial characters.
-		 *
-		 * @param  string $lower_case_and_underscored_word String to make more readable.
-		 *
-		 * @return string Human-readable string.
-		 */
-		public static function humanize($lower_case_and_underscored_word)
-		{
-			if (substr($lower_case_and_underscored_word, -3) === '_id')
-			{
-				$lower_case_and_underscored_word = substr($lower_case_and_underscored_word, 0, -3);
-			}
 
-			return ucfirst(str_replace('_', ' ', $lower_case_and_underscored_word));
-		}
-		
-	  /**
-	   * Retrieves an array of files from $_FILES
-	   *
-	   * @param  string $key  	A key
-	   * @return array  		An associative array of files
-	   */
-		public function get_files($key = null)
-		{
-			if (!$this->filesArray)
-			{
-				$this->filesArray = self::convert_file_information($_FILES);
-			}
-
-			return is_null($key) ? $this->filesArray : (isset($this->filesArray[$key]) ? $this->filesArray[$key] : array());
-		}
-
-		public function toggle_show_inactive()
-		{
-			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
-			{
-				$this->bo->unset_show_all_objects();
-			}else{
-				$this->bo->show_all_objects();
-			}
-			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
-		}
-		
-		public function use_yui_editor()
-		{
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
-		}
-
-		static protected function fix_php_files_array($data)
-		{
-			$fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
-			$keys = array_keys($data);
-			sort($keys);
-
-			if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
-			{
-			 	return $data;
-			}
-
-			$files = $data;
-			foreach ($fileKeys as $k)
-			{
-			 	unset($files[$k]);
-			}
-			foreach (array_keys($data['name']) as $key)
-			{
-				$files[$key] = self::fix_php_files_array(array(
-					'error'    => $data['error'][$key],
-					'name'     => $data['name'][$key],
-					'type'     => $data['type'][$key],
-					'tmp_name' => $data['tmp_name'][$key],
-					'size'     => $data['size'][$key],
-				));
-			}
-
-			return $files;
-		}
-		
-		/**
-		* It's safe to pass an already converted array, in which case this method just returns the original array unmodified.
-		*
-		* @param  array $taintedFiles An array representing uploaded file information
-		*
-		* @return array An array of re-ordered uploaded file information
-		*/
-		static public function convert_file_information(array $taintedFiles)
-		{
-			$files = array();
-			foreach ($taintedFiles as $key => $data)
-			{
-				$files[$key] = self::fix_php_files_array($data);
-			}
-
-			return $files;
-		}
-		
 		protected static function get_file_type_from_extension($file, $defaultType = 'application/octet-stream')
 		{
 			if (false === ($extension = (false === $pos = strrpos($file, '.')) ? false : substr($file, $pos+1)))

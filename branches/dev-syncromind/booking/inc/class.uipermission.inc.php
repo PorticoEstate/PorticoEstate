@@ -1,13 +1,13 @@
 <?php
-//	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.account_ui_utils');
     
     phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	abstract class booking_uipermission extends phpgwapi_uicommon_jquery
+	abstract class booking_uipermission extends booking_uicommon
 	{
 		protected
 			$object_type = null;
@@ -25,6 +25,8 @@
 		
 		public function __construct()
 		{
+			_debug_array('hei');
+
 			parent::__construct();
 			
 //			Analizar esta linea de permiso self::process_booking_unauthorized_exceptions();

@@ -1,7 +1,8 @@
 <?php
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('booking.uicommon');
 
-	class booking_uiorganization extends phpgwapi_uicommon_jquery
+	class booking_uiorganization extends booking_uicommon
 	{
 		protected $fields;
 		

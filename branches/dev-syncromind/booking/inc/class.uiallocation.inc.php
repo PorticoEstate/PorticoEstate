@@ -5,9 +5,9 @@
     phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uiallocation extends phpgwapi_uicommon_jquery
+	class booking_uiallocation extends booking_uicommon
 	{
 		public $public_functions = array
 		(

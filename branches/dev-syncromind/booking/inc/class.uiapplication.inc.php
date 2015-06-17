@@ -5,9 +5,9 @@
     phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uiapplication extends phpgwapi_uicommon_jquery
+	class booking_uiapplication extends booking_uicommon
 	{
 		const COMMENT_TYPE_OWNERSHIP='ownership';
         const ORGNR_SESSION_KEY = 'orgnr';

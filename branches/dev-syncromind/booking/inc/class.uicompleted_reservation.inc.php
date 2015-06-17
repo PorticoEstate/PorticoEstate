@@ -1,13 +1,13 @@
 <?php
-//phpgw::import_class('booking.uicommon');
+phpgw::import_class('booking.uicommon');
 phpgw::import_class('booking.sopermission');
 
 	phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
-	phpgw::import_class('phpgwapi.uicommon_jquery');
+//	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uicompleted_reservation extends phpgwapi_uicommon_jquery
+	class booking_uicompleted_reservation extends booking_uicommon
 	{
 		const SESSION_EXPORT_FILTER_KEY = 'export_filters';
 		
