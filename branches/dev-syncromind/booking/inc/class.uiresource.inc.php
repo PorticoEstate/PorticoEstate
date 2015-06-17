@@ -123,7 +123,8 @@
 
         public function query()
 		{
-			return $this->bo->populate_grid_data("booking.uiresource.show");
+            
+			return  $this->jquery_results($this->bo->populate_grid_data("booking.uiresource.show"));
 		}
         
 //		public function index_json()
@@ -222,6 +223,7 @@
 			);
 			
 			self::render_template('resource', $data);
+            
 		}
 
 		public function schedule()
