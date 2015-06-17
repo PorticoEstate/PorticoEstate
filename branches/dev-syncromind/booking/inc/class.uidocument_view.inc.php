@@ -8,6 +8,7 @@
 		
 		public 
 			$public_functions = array(
+                'query'                 => true,
 				'regulations'			=> true,
 				'download'				=> true,
 			);
@@ -54,7 +55,7 @@
 		public function regulations()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->regulations_json();
+				return $this->query();
 			}
 			
 			self::add_javascript('booking', 'booking', 'datatable.js');
@@ -83,7 +84,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Name'),
-							'formatter' => 'YAHOO.booking.formatLink',
+							'formatter' => 'JqueryPortico.formatLink',
 						),
 						array(
 							'key' => 'link',
@@ -93,7 +94,8 @@
 				)
 			);
 			
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
 		public static function sort_by_params($a, $b) {
@@ -106,10 +108,10 @@
 			$retVal = strcmp($a[$sort], $b[$sort]);
 			return ($dir == 'desc' ? -$retVal : $retVal);
 		}
-
-		public function regulations_json()
-		{
-			$documents = $this->bo->read_regulations();
+        
+        public function query()
+        {
+            $documents = $this->bo->read_regulations();
 			
 			foreach($documents['results'] as &$document) {
 				$document['link'] = $this->link_to('download', array('id' => $document['id']));
@@ -121,7 +123,24 @@
 			//when choosing between name and description of document
 			usort($documents['results'], array(self, 'sort_by_params'));
 			
-			return $this->yui_results($documents);
-		}
+			return $this->jquery_results($documents);
+        }
+        
+//		public function regulations_json()
+//		{
+//			$documents = $this->bo->read_regulations();
+//			
+//			foreach($documents['results'] as &$document) {
+//				$document['link'] = $this->link_to('download', array('id' => $document['id']));
+//				$document['name'] = isset($document['description']) && strlen(trim($document['description'])) > 0 ? 
+//					$document['description'] : $document['name'];
+//			}
+//			
+//			//Resort because the sorting order from the database may have been screwed up above
+//			//when choosing between name and description of document
+//			usort($documents['results'], array(self, 'sort_by_params'));
+//			
+//			return $this->yui_results($documents);
+//		}
 		
 	}
