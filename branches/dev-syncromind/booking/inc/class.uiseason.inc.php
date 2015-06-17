@@ -2,12 +2,16 @@
 	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.boresource');
 	phpgw::import_class('booking.uipermission_season');
+        
+    phpgw::import_class('booking.uidocument_building');
+	phpgw::import_class('booking.uipermission_building');
 
 	class booking_uiseason extends booking_uicommon
 	{
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
@@ -25,7 +29,7 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
+//			Analizar esta linea de permisos self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.boseason');
 			$this->resource_bo = CreateObject('booking.boresource');
@@ -40,7 +44,7 @@
 			$this->db = $GLOBALS['phpgw']->db;
 			
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
+				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
@@ -72,7 +76,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Season Name'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'building_name',
@@ -114,10 +118,11 @@
 				));
 			}
 			
-			self::render_template('datatable', $data);
+//			self::render_template('datatable', $data);
+            self::render_template_xsl('datatable_jquery',$data);
 		}
 
-		public function index_json()
+        public function query()
 		{
 			$seasons = $this->bo->read();
 			array_walk($seasons["results"], array($this, "_add_links"), "booking.uiseason.show");
@@ -144,8 +149,38 @@
 					$season['officer_name'] = $record['account_firstname']." ".$record['account_lastname'];
 				}
 			}
-			return $this->yui_results($seasons);
+			return $this->jquery_results($seasons);
 		}
+        
+//		public function index_json()
+//		{
+//			$seasons = $this->bo->read();
+//			array_walk($seasons["results"], array($this, "_add_links"), "booking.uiseason.show");
+//			
+//			foreach($seasons['results'] as &$season) {
+//				$season['status'] = lang($season['status']);
+//				$season['from_'] = pretty_timestamp($season['from_']);
+//				$season['to_'] = pretty_timestamp($season['to_']);
+//
+//				$resources = $this->resource_bo->read_single($season['id']);
+//				if (isset($season['resources'])) {
+//					$filters['filters']['id'] = $season['resources'];
+//					$resources = $this->resource_bo->so->read($filters);
+//					$temparray = array();
+//					foreach($resources['results'] as $resource) {
+//						$temparray[] = $resource['name'];
+//					}
+//					$season['resource_list'] = implode(', ', $temparray);
+//				}
+//
+//				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$season['officer_name']."'";
+//				$this->db->query($sql);
+//				while ($record = array_shift($this->db->resultSet)) {
+//					$season['officer_name'] = $record['account_firstname']." ".$record['account_lastname'];
+//				}
+//			}
+//			return $this->yui_results($seasons);
+//		}
 
 		public function add()
 		{
