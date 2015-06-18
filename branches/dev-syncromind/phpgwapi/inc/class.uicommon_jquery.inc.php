@@ -140,23 +140,23 @@
 			return false;
 		}
 
-		private function store_flash_msgs()
+		protected function store_flash_msgs()
 		{
 			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
 		}
 
-		private function reset_flash_msgs()
+		protected function reset_flash_msgs()
 		{
 			$this->flash_msgs = array();
 			$this->store_flash_msgs();
 		}
 
-		private function session_set($key, $data)
+		protected function session_set($key, $data)
 		{
 			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
 		}
 
-		private function session_get($key)
+		protected function session_get($key)
 		{
 			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
 		}
