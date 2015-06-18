@@ -168,6 +168,12 @@
 				'selected' 	=> $_my_negative_self == ($this->account * -1)
 			);
 
+			/*Unselect user if filter on component*/
+			if(phpgw::get_var('component_id', 'int'))
+			{
+				$default_value['selected'] = 0;
+			}
+
 			unset($_my_negative_self);
 			array_unshift ($user_list,$default_value);
 			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
@@ -297,12 +303,12 @@
 			$fields = array
 			(
 				array(
-					'key'		 => 'selected',
+					'key'		 => 'choose',
 					'label'		 => '',
 					'sortable'	 => false,
 				),
 				array(
-					'key'		 => 'component_id',
+					'key'		 => 'component_url',
 					'label'		 => lang('component'),
 					'sortable'	 => true,
 				),
@@ -638,7 +644,10 @@
 					'active_tab'	=> 'controller'
 				);
 			
-				$data['component_id'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id}{$entry[0]['component']['xml_short_desc']}</a>";
+				$data['component_url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id}{$entry[0]['component']['xml_short_desc']}</a>";
+				$data['component_id'] = $component_id;
+				$data['location_id'] = $location_id;
+
 
 				$max_repeat_type = 0;
 				$_data = array();
@@ -687,8 +696,10 @@
 			unset($component_id);
 			unset($component);
 
+			$choose_master = false;
 			if($all_components && count($all_components))
 			{
+				$choose_master = true;
 				foreach($all_components as $component_id => $component)
 				{
 					$data = array();
@@ -705,7 +716,9 @@
 					$short_description = $component['short_description'];
 					$short_description .= "[ {$component['location_name']} ]";
 
-					$data['component_id'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
+					$data['component_url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
+					$data['component_id'] = $component_id;
+					$data['location_id'] = $location_id;
 					$data['missing_control'] = true;
 					$values[] = $data;
 
@@ -719,7 +732,7 @@
 				$row		= array();
 				$row_sum	= array();
 				$row_sum_actual	= array();//billable_hours
-				$row['component_id'] = $entry['component_id'];
+				$row['component_url'] = $entry['component_url'];
 				$row['year'] = '';
 				$row['descr'] = '';
 
@@ -727,14 +740,18 @@
 				{
 					if($filter_component_str)
 					{
-						$row['selected'] = '<input id="selected_component" type="checkbox" name="selected_component" checked = "checked" onclick="deselect_component();">';
+						$row['choose'] = '<input id="selected_component" type="checkbox" name="selected_component" checked = "checked" onclick="deselect_component();">';
 					}
-					else
+					else if ($choose_master)
 					{
-						$row['selected'] = '';
+						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}\" >";
 					}
 					$row['year'] = $year;
 					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
+				}
+				else if ($choose_master)
+				{
+					$row['choose'] = "<input id=\"selected_components\" class=\"mychecks\" type=\"checkbox\" name=\"selected_components[]\" value = \"{$entry['location_id']}_{$entry['component_id']}\"  onclick=\"add_from_master({$entry['location_id']},{$entry['component_id']});\">";
 				}
 
 				$found_at_least_one = false;
@@ -828,6 +845,18 @@
 			$result['time_sum_actual'][0] = $sum_year_actual;
 			$result['total_records'] = $total_records;
 			$result['location_filter'] = $location_filter;
+			if ($choose_master)
+			{
+				$lang_save = lang('add');
+				$lang_select = lang('select');
+				$result['checkall'] = "<input type=\"button\" value = '{$lang_save}' title = '{$lang_save}' onclick=\"add_from_master('mychecks');\">";
+				$result['checkall'] .= '</br>';
+				$result['checkall'] .= "<input type=\"checkbox\" title = '{$lang_select}' onclick=\"checkAll('mychecks');\">";
+			}
+			else
+			{
+				$result['checkall'] = '';
+			}
 
 			return $result;
 		}

@@ -258,6 +258,7 @@
 						var time_sum = data.time_sum;
 						var time_sum_actual = data.time_sum_actual;
 
+						$("#checkall").html(data.checkall);
 						$("#total_records").html(data.total_records);
 						$("#sum_text").html('Sum');
 						$("#month0").html(time_sum[0] + '/' + time_sum_actual[0]);
@@ -311,12 +312,67 @@
 			});
 
 		};
+
+		add_from_master = function(myclass)
+		{
+			var myRadio = $('input[name=master_component]');
+			var master_component = myRadio.filter(':checked').val();
+
+			if(!master_component)
+			{
+				alert('velg master');
+				return;
+			}
+
+			var selected  = new Array();
+
+			$("." + myclass).each(function()
+			{
+				if($(this).prop("checked"))
+				{
+					selected.push( $(this).val() );
+				}
+			});
+
+			oArgs = {menuaction: 'controller.uicomponent.add_controll_from _master'};
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			$.ajax({
+				type: 'POST',
+				data: {master_component:master_component, target:selected},
+				dataType: 'json',
+				url: requestUrl,
+				success: function(data) {
+					if( data != null)
+					{
+						update_table();
+					}
+				}
+			});
+
+		};
+
+		checkAll = function(myclass)
+		{
+			$("." + myclass).each(function()
+			{
+				if($(this).prop("checked"))
+				{
+					$(this).prop("checked", false);
+				}
+				else
+				{
+					$(this).prop("checked", true);
+				}
+			});
+		};
+
 ]]>
 	</script>
 	<table id="components">
 		<thead>
 			<tr>
-				<td id='selected'>
+				<td id='checkall'>
 				</td>
 				<td id='total_records'>
 				</td>
