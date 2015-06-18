@@ -11,6 +11,8 @@ include_class('rental', 'location_hierarchy', 'inc/locations/');
 	
 class rental_uiparty extends rental_uicommon
 {
+	private $receipt = array();
+	
 	public $public_functions = array
 	(
 			'add'				=> true,
@@ -518,6 +520,18 @@ class rental_uiparty extends rental_uicommon
 				);
 		}
 	
+		$alertMessage_deleteParty = '"Du er i ferd med å slette en kontraktspart.\n\n Operasjonen kan ikke angres.\n\n Vil du gjøre dette?";';
+		$alertMessage_syncParty = '"Du er i ferd med å overskrive data med informasjon hentet fra Fellesdata.\n\n Følgende felt vil bli overskrevet: Foretak, Avdeling, Enhetsleder, Epost. \n\n Vil du gjøre dette?";';
+						
+		$jscode = <<<JS
+
+				var confirm_msg_sync = $alertMessage_syncParty
+				var confirm_msg_delete = $alertMessage_deleteParty
+
+JS;
+		
+		$GLOBALS['phpgw']->js->add_code('', $jscode);
+		
 		self::add_javascript('rental', 'rental', 'party.sync.js');
 		self::render_template_xsl('datatable_jquery', $data);
 	}
@@ -633,20 +647,14 @@ class rental_uiparty extends rental_uicommon
 				}
 			}
 		}
-//print_r($party); die;
+		
+		if (empty($party_id)) 
+		{
+			$party_id = $party->get_id();
+		}
+
 		$config = CreateObject('phpgwapi.config','rental');
 		$config->read();
-		/*
-		return $this->render('party.php', array
-			(
-				'party' 	=> $party,
-				'editable' => true,
-				'message' => isset($message) ? $message : phpgw::get_var('message'),
-				'error' => isset($error) ? $error : phpgw::get_var('error'),
-				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => 'yes')),
-				'use_fellesdata' => $config->config_data['use_fellesdata']
-			)
-		);*/
 
 		$datatable_def = array();
 		
@@ -656,6 +664,12 @@ class rental_uiparty extends rental_uicommon
 				'populate_form'	=> 'yes'
 			);
 			
+		$link_sync_info = array
+			(
+				'menuaction'		=> 'rental.uiparty.get_synchronize_party_info',
+				'phpgw_return_as'	=> 'json'
+			);
+		
 		$tabs = array();
 		$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
 		$active_tab = 'details';
@@ -711,7 +725,35 @@ class rental_uiparty extends rental_uicommon
 				)
 			);
 		}
-			
+		
+		$result_units = rental_bofellesdata::get_instance()->get_result_units();
+		$party_org_enhet_id = $party->get_org_enhet_id();
+		$organization_options[] = array('id'=>'', 'name'=>lang('no_party_location'), 'selected'=>0);
+		foreach ($result_units as $result_unit)
+		{
+			$selected = ($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id) ? 1 : 0;
+			$organization_options[] = array('id'=>$result_unit['ORG_UNIT_ID'], 'name'=>$result_unit['UNIT_ID'].' - '.$result_unit['ORG_UNIT_NAME'], 'selected'=>$selected);
+		}
+		
+		$valid_email = 0;
+		$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
+		$email = $party->get_email();
+		if($email_validator->check_email_address($email) && !$GLOBALS['phpgw']->accounts->exists($email))
+		{
+			$valid_email = 1;
+			$link_create_user = array
+				(
+					'menuaction'	=> 'rental.uiparty.create_user_based_on_email',
+					'id'			=> $party_id
+				);	
+		}
+							
+		$alertMessage_get_syncData = '"Du må velge organisasjonsenhet før du kan synkronisere";';						
+		$jscode = <<<JS
+				var msg_get_syncData = $alertMessage_get_syncData
+JS;
+		$GLOBALS['phpgw']->js->add_code('', $jscode);
+		
 		$data = array
 		(
 			'datatable_def'					=> $datatable_def,
@@ -763,13 +805,18 @@ class rental_uiparty extends rental_uicommon
 			'value_url'						=> $party->get_url(),
 			'value_unit_leader'				=> $party->get_unit_leader(),
 			'value_comment'					=> $party->get_comment(),
-			'value_organization'			=> '',
-			
+			'sync_info_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_sync_info),
 			'use_fellesdata'				=> $config->config_data['use_fellesdata'],
+			'list_organization'				=> array('options' => $organization_options),
 			
+			'lang_create_user'				=> lang('create_user_based_on_email_link'),
+			'valid_email'					=> $valid_email,
+			'link_create_user'				=> $GLOBALS['phpgw']->link('/index.php',$link_create_user),
+					
 			'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 		);
 		
+		self::add_javascript('rental', 'rental', 'party.edit.js');
 		self::render_template_xsl(array('party', 'datatable_inline'), array('edit' => $data));
 	}
 	
