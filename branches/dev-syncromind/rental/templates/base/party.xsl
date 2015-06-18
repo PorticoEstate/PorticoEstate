@@ -118,6 +118,11 @@
 								<xsl:value-of select="lang_email"/>
 							</label>
 							<input type="text" name="email" value="{value_email}"></input>
+							<xsl:choose>
+								<xsl:when test="valid_email = 1">
+									<xsl:text> </xsl:text> <a href="{link_create_user}"><xsl:value-of select="lang_create_user"/></a>
+								</xsl:when>
+							</xsl:choose>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -137,6 +142,18 @@
 							</label>
 							<textarea cols="47" rows="7" name="comment"><xsl:value-of select="value_comment"/></textarea>
 						</div>
+						<xsl:choose>
+							<xsl:when test="use_fellesdata = 1">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="lang_organization"/>
+									</label>
+									<select id="org_enhet_id" name="org_enhet_id">
+										<xsl:apply-templates select="list_organization/options"/>
+									</select>
+								</div>
+							</xsl:when>
+						</xsl:choose>
 					</fieldset>
 				</div>
 				<xsl:choose>
@@ -177,21 +194,13 @@
 				</xsl:choose>
 			</div>
 			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save_party" value="{lang_save}" onMouseout="window.status='';return true;">
-					<xsl:attribute name="title">
-						<xsl:value-of select="php:function('lang', 'Save the record and return to the list')"/>
-					</xsl:attribute>
-				</input>
-				<input type="submit" class="pure-button pure-button-primary" name="synchronize" value="{lang_sync_data}" onMouseout="window.status='';return true;">
-					<xsl:attribute name="title">
-						<xsl:value-of select="php:function('lang', 'Apply the values')"/>
-					</xsl:attribute> 
-				</input>
-				<input type="button" class="pure-button pure-button-primary" name="party_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();">
-					<xsl:attribute name="title">
-						<xsl:value-of select="php:function('lang', 'Leave the record untouched and return to the list')"/>
-					</xsl:attribute>
-				</input>
+				<input type="submit" class="pure-button pure-button-primary" name="save_party" value="{lang_save}" onMouseout="window.status='';return true;"/>
+				<xsl:choose>
+					<xsl:when test="use_fellesdata = 1">
+						<input type="button" onclick="onGetSync_data('{sync_info_url}')" class="pure-button pure-button-primary" name="synchronize" value="{lang_sync_data}" onMouseout="window.status='';return true;"/>
+					</xsl:when>
+				</xsl:choose>
+				<input type="button" class="pure-button pure-button-primary" name="party_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
 			</div>
 		</form>
 		<xsl:variable name="cancel_url">
@@ -199,4 +208,13 @@
 		</xsl:variable>
 		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
+</xsl:template>
+
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>
