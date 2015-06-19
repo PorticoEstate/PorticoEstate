@@ -20,6 +20,7 @@
 	<h2>
 		<xsl:value-of select="datatable_name"/>
 	</h2>
+	<div id="receipt"></div>
 	<xsl:call-template name="icon_color_map" />
 	<xsl:apply-templates select="form" />
 	<xsl:apply-templates select="paging"/>
@@ -224,6 +225,8 @@
 		};
 		update_table = function()
 		{
+			$("#receipt").html('');
+
 			var user_id = $("#user_id").val();
 			if(user_id < 0)
 			{
@@ -233,6 +236,8 @@
 				$("[for='location_id']").hide();
 				$("[name='all_items']").hide();
 				$("[for='all_items']").hide();
+				$( "#org_unit_id" ).hide();
+				$("[for='org_unit_id']").hide();
 			}
 			else
 			{
@@ -242,6 +247,8 @@
 				$("[for='location_id']").show();
 				$("[name='all_items']").show();
 				$("[for='all_items']").show();
+				$( "#org_unit_id" ).show();
+				$("[for='org_unit_id']").show();
 			}
 
 			var requestUrl = $("#queryForm").attr("action");
@@ -334,7 +341,7 @@
 				}
 			});
 
-			oArgs = {menuaction: 'controller.uicomponent.add_controll_from _master'};
+			oArgs = {menuaction: 'controller.uicomponent.add_controll_from_master'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
 			$.ajax({
@@ -345,7 +352,21 @@
 				success: function(data) {
 					if( data != null)
 					{
+console.log(data);
+						var message = data.message;
+
+						htmlString = "";
+						var msg_class = "msg_good";
+						if(data.status =='error')
+						{
+							msg_class = "error";
+						}
+						htmlString += "<div class=\"" + msg_class + "\">";
+						htmlString += message;
+						htmlString += '</div>';
 						update_table();
+						$("#receipt").html(htmlString);
+
 					}
 				}
 			});
