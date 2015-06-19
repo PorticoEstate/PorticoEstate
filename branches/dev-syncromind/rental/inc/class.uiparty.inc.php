@@ -606,8 +606,6 @@ JS;
 		{
 			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
 		}
-		
-		$msgbox_data = '';
 	
 		if(isset($_POST['save_party'])) // The user has pressed the save button
 		{
@@ -639,11 +637,13 @@ JS;
 				
 				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
-					$msgbox_data = array(lang('messages_saved_form') => 1);
+					//$msgbox_data = array(lang('messages_saved_form') => 1);
+					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message'); 
 				}
 				else
 				{
-					$msgbox_data = array(lang('messages_form_error') => 0);
+					//$msgbox_data = array(lang('messages_form_error') => 0);
+					phpgwapi_cache::message_set(lang('messages_form_error'), 'error'); 
 				}
 			}
 		}
@@ -757,8 +757,7 @@ JS;
 		$data = array
 		(
 			'datatable_def'					=> $datatable_def,
-			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-			'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
 			'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiparty.edit')),
 			'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 			'lang_save'						=> lang('save'),
@@ -1208,11 +1207,15 @@ JS;
 				$validator = CreateObject('phpgwapi.EmailAddressValidator');
 				if(!$validator->check_email_address($email))
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => lang('error_create_user_based_on_email_not_valid_address')));
+					phpgwapi_cache::message_set(lang('error_create_user_based_on_email_not_valid_address'), 'error'); 
+					$this->edit();
+					return;					
 				}
 				if ($GLOBALS['phpgw']->accounts->exists($email) )
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => lang('error_create_user_based_on_email_account_exist')));
+					phpgwapi_cache::message_set(lang('error_create_user_based_on_email_account_exist'), 'error'); 
+					$this->edit();
+					return;
 				}
 				
 				//Read group configuration
@@ -1255,8 +1258,10 @@ JS;
 					$preferences->save_repository();
 				
 				} catch (Exception $e) {
-					//Redirect with error message if something goes wrong
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => $e->getMessage()));
+					
+					phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+					$this->edit();
+					return;
 				}
 		
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
@@ -1283,13 +1288,17 @@ JS;
 					//Redirect with sucess message if receipt is ok
 					if($rcpt)
 					{
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'message' => lang('success_create_user_based_on_email')));
+						phpgwapi_cache::message_set(lang('success_create_user_based_on_email'), 'message'); 
+						$this->edit();
+						return;						
 					}
 				}
 			}	
 		}
-		//Redirect to edit mode with error message if user reaches this point.
-		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => lang('error_create_user_based_on_email')));
+
+		phpgwapi_cache::message_set(lang('error_create_user_based_on_email'), 'error'); 
+		$this->edit();
+		return;			
 	}
 	
 	public function delete_party()
