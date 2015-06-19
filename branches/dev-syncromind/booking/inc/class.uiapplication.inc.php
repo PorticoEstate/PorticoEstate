@@ -717,6 +717,11 @@
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
 			$application['building_name'] = $building_info['name'];
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Application Edit'), 'link' => '#application_edit');
+			$active_tab = 'generic';
+            
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{	
@@ -771,7 +776,11 @@
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);	
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
-			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+            
+//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+            $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+            self::render_template_xsl('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		private function check_date_availability(&$allocation)
