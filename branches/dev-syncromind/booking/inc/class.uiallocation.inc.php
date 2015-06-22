@@ -449,11 +449,16 @@
 
 		public function edit()
 		{
+            
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$allocation = $this->bo->read_single($id);
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
 			$allocation['building_name'] = $allocation['building']['name'];
 			$errors = array();
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Allocations Edit'), 'link' => '#allocations_edit');
+			$active_tab = 'generic';
+            
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
@@ -477,7 +482,9 @@
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
-			self::render_template('allocation_edit', array('allocation' => $allocation));
+            $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('allocation_edit', array('allocation' => $allocation));
 		}
 
 		public function delete()
@@ -609,13 +616,20 @@
 			$allocation['allocations_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
 			$allocation['edit_link'] = self::link(array('menuaction' => 'booking.uiallocation.edit', 'id' => $allocation['id']));
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Allocations'), 'link' => '#allocations');
+			$active_tab = 'generic';
+            
 			$resource_ids = '';
 			foreach($allocation['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$allocation['resource_ids'] = $resource_ids;
-			self::render_template('allocation', array('allocation' => $allocation));
+            $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+//            self::render_template_xsl('datatable_jquery',$data);
+			self::render_template_xsl('allocation', array('allocation' => $allocation));
 		}
 		public function info()
 		{
