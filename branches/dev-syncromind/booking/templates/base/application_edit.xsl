@@ -89,10 +89,11 @@
                                         <xsl:value-of select="php:function('lang', 'Select a building first')" />
                             </div>
                     </div>
-                    <dl class="form-col">
+                    <div class="pure-control-group">
                             <div class="heading">3. <xsl:value-of select="php:function('lang', 'When?')" /></div>
                             <div id="dates-container">
-                                    <xsl:for-each select="application/dates"><div class="date-container">
+                                    <xsl:for-each select="application/dates">
+                                        <div class="date-container">
                                             <a href="#" class="close-btn">-</a>
                                             <dt><label for="field_{position()}_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
                                             <dd class="datetime-picker">
@@ -106,11 +107,12 @@
                                                             <xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
                                                     </input>
                                             </dd>
-                                    </div></xsl:for-each>
+                                        </div>
+                                    </xsl:for-each>
                             </div>
                             <dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
-                    </dl>   
-                    <dl class="form-col">
+                    </div>
+                    <div class="pure-control-group">
                             <div class="heading">4. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
                             <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
                             <dd>
@@ -153,29 +155,35 @@
                                             </xsl:for-each>
                                     </table>
                             </dd>
-                    </dl>
+                    </div>
                     <div class="clr"/>
-                    <dl class="form-col">
+                    <div class="pure-control-group">
                             <div class="heading"><br /><xsl:value-of select="php:function('lang', 'Contact information')" /></div>
-                            <dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
-                            <dd>
-                                    <input id="field_contact_name" name="contact_name" type="text">
-                                            <xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
-                                    </input>
-                            </dd>
-                            <dt><label for="field_contact_email"><xsl:value-of select="php:function('lang', 'Email')" /></label></dt>
-                            <dd>
-                                    <input id="field_contact_email" name="contact_email" type="text">
-                                            <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
-                                    </input>
-                            </dd>
-                            <dt><label for="field_contact_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label></dt>
-                            <dd>
-                                    <input id="field_contact_phone" name="contact_phone" type="text">
-                                            <xsl:attribute name="value"><xsl:value-of select="application/contact_phone"/></xsl:attribute>
-                                    </input>
-                            </dd>
-                    </dl>
+                            <div class="pure-control-group">
+                                <label>
+                                    <xsl:value-of select="php:function('lang', 'Name')" />
+                                </label>
+                                        <input id="field_contact_name" name="contact_name" type="text">
+                                                <xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
+                                        </input>
+                            </div>
+                            <div class="pure-control-group">
+                                    <label>
+                                        <xsl:value-of select="php:function('lang', 'Email')" />
+                                    </label>
+                                        <input id="field_contact_email" name="contact_email" type="text">
+                                                <xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
+                                        </input>
+                            </div>
+                            <div class="pure-control-group">
+                                    <label>
+                                        <xsl:value-of select="php:function('lang', 'Phone')" />
+                                    </label>
+                                        <input id="field_contact_phone" name="contact_phone" type="text">
+                                                <xsl:attribute name="value"><xsl:value-of select="application/contact_phone"/></xsl:attribute>
+                                        </input>
+                            </div>
+                    </div>
                     <dl class="form-col">
                             <div class="heading"><xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
                             <xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
@@ -185,17 +193,17 @@
                             <br/>
                             <div id='regulation_documents'/>
                     </dl>
-                    <div class="form-buttons">
-                            <input type="submit">
-                                    <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')"/></xsl:attribute>
-                            </input>
-                            <a class="cancel">
-                                    <xsl:attribute name="href"><xsl:value-of select="application/cancel_link"/></xsl:attribute>
-                                    <xsl:value-of select="php:function('lang', 'Cancel')" />
-                            </a>
-                    </div>
                     </fieldset>
                 </div>
+            </div>
+            <div class="proplist-col">
+                <input type="submit" class="pure-button pure-button-primary">
+                        <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')"/></xsl:attribute>
+                </input>
+                <a class="cancel">
+                        <xsl:attribute name="href"><xsl:value-of select="application/cancel_link"/></xsl:attribute>
+                        <xsl:value-of select="php:function('lang', 'Cancel')" />
+                </a>
             </div>
 	</form>
 	<!--/div-->
