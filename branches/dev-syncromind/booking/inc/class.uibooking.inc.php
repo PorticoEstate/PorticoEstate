@@ -618,6 +618,11 @@
 			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
 			$booking['building_name'] = $booking['building']['name'];
 			$errors = array();
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Booking Edit'), 'link' => '#booking_edit');
+			$active_tab = 'generic';
+            
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
@@ -648,7 +653,9 @@
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			self::render_template('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+            $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		public function delete()
@@ -805,12 +812,18 @@
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit', 'id' => $booking['id']));
 			$booking['delete_link'] = self::link(array('menuaction' => 'booking.uibooking.delete', 'id' => $booking['id']));
 			$resource_ids = '';
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Booking'), 'link' => '#booking');
+			$active_tab = 'generic';
+            
 			foreach($booking['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$booking['resource_ids'] = $resource_ids;
-			self::render_template('booking', array('booking' => $booking));
+            $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			self::render_template_xsl('booking', array('booking' => $booking));
 		}
 
 		public function info()
