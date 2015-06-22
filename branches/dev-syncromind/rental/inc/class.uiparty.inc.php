@@ -112,7 +112,7 @@ class rental_uiparty extends rental_uicommon
 		$columns		= phpgw::get_var('columns');
 
 		$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-		$num_of_objects	= phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page);
+		$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 		$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'identifier'; 
 		$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 		// Form variables
