@@ -19,6 +19,15 @@
 		protected $standard;
 		protected $responsibility_id;
 		protected $responsibility_title;
+		protected $price_type_id;
+		protected $price_type_title;
+		protected $price_types = array(
+					1 => 'year',
+					2 => 'month',
+					3 => 'day',
+					4 => 'hour',
+				);
+
 		//protected $is_one_time;
 
 		/**
@@ -131,7 +140,8 @@
 				'standard' => $this->get_standard_text(),
 				'price' => $this->get_price(),
 				'responsibility_id' => $this->get_responsibility_id(),
-				'responsibility_title' => lang($this->get_responsibility_title())
+				'responsibility_title' => lang($this->get_responsibility_title()),
+				'price_type_title' => lang($this->get_price_type_title()),
 				//'is_one_time' => $this->is_one_time()
 			);
 		}
@@ -197,6 +207,30 @@
 			*/
 
 			return $valid;
+		}
+
+		public function get_price_types()
+		{
+			return $this->price_types;
+		}
+		public function get_price_type_id()
+		{
+			return $this->price_type_id;
+		}
+
+		public function set_price_type_id($price_type_id)
+		{
+			$this->price_type_id = $price_type_id;
+		}
+
+		public function get_price_type_title()
+		{
+			return $this->price_type_title;
+		}
+
+		public function set_price_type_title($price_type_id)
+		{
+			$this->price_type_title = $this->price_types[$price_type_id];
 		}
 
 		public function get_responsibility_id()
