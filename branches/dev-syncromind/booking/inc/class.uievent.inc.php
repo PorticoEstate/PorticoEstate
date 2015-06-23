@@ -568,6 +568,10 @@ class booking_uievent extends booking_uicommon
 		$event['building_name'] = $building_info['name'];
 		$config	= CreateObject('phpgwapi.config','booking');
 		$config->read();
+        
+        $tabs = array();
+        $tabs['generic']	= array('label' => lang('Event Edit'), 'link' => '#event_edit');
+        $active_tab = 'generic';
 
 		$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 		$link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id='.$event['building_id']."&date=".substr($event['from_'],0,-9);
@@ -849,10 +853,16 @@ class booking_uievent extends booking_uicommon
 			$event['customer_internal'] = $customer['customer_internal'];
 		}
 
+        $GLOBALS['phpgw']->jqcal->add_listener('from_', 'datetime');
+		$GLOBALS['phpgw']->jqcal->add_listener('to_', 'datetime');
+        phpgwapi_jquery::load_widget('datepicker');
+        
+        
 		self::add_javascript('booking', 'booking', 'event.js');
 		$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 		$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id'=> $event['application_id']));
 		$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
+        $event['editable'] = true;
 		$activities = $this->activity_bo->fetch_activities();
 		$activities = $activities['results'];
 #			$comments = array_reverse($event['comments']);
@@ -863,7 +873,12 @@ class booking_uievent extends booking_uicommon
 		$audience = $audience['results'];
 		$this->install_customer_identifier_ui($event);
 		$this->add_template_helpers();
-		self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
+        
+//        phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'),'activity_form');
+        
+        $event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+//        echo '<pre>'; print_r($event);echo '</pre>';
+		self::render_template_xsl('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
 	}
 	public function delete()
 	{
