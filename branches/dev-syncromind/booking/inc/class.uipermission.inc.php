@@ -25,7 +25,7 @@
 		
 		public function __construct()
 		{
-			_debug_array('hei');
+//			_debug_array('hei');
 
 			parent::__construct();
 			
@@ -316,7 +316,9 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$permission = $this->bo->read_single($id);
-			
+			$tabs = array();
+            $tabs['generic']	= array('label' => lang('Permission Edit'), 'link' => '#permission_edit');
+            $active_tab = 'generic';
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -340,7 +342,9 @@
 			
 			$this->flash_form_errors($errors);
 			
-			self::render_template('permission_form', array('permission' => $permission));
+            $permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('permission_form', array('permission' => $permission));
 		}
 		
 		public function delete()
