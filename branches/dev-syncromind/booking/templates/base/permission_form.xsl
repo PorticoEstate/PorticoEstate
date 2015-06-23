@@ -1,7 +1,7 @@
 <xsl:template match="data">
 	<div id="content">
 		<xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
+		<!--xsl:call-template name="yui_booking_i18n"/-->
 		<xsl:apply-templates select="permission"/>
 	</div>
 </xsl:template>
@@ -23,7 +23,11 @@
 	<li><xsl:value-of select="php:function('lang', 'Buildings')"/></li>
 	</ul-->
 
-	<form action="" method="POST">    
+	<form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">   
+             <input type="hidden" name="tab" value=""/>
+            <div id="tab-content">
+                <xsl:value-of disable-output-escaping="yes" select="permision/tabs"/>
+                <div id="permission_edit"> 
 		<dl class="form-col">
 			<xsl:if test="id">
 				<!-- An update, add id column -->
@@ -92,23 +96,25 @@
 		</dl>
 
 		<div class="clr"/>
-		<div class="form-buttons">
-			<input type="submit">
-				<xsl:attribute name="value">
-					<xsl:choose>
-						<xsl:when test="id">
-							<xsl:value-of select="php:function('lang', 'Update')"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="php:function('lang', 'Create')"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-			</input>
-			<a class="cancel">
-				<xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'Cancel')"/>
-			</a>
-		</div>
+                        <div class="form-buttons">
+                                <input type="submit">
+                                        <xsl:attribute name="value">
+                                                <xsl:choose>
+                                                        <xsl:when test="id">
+                                                                <xsl:value-of select="php:function('lang', 'Update')"/>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                                <xsl:value-of select="php:function('lang', 'Create')"/>
+                                                        </xsl:otherwise>
+                                                </xsl:choose>
+                                        </xsl:attribute>
+                                </input>
+                                <a class="cancel">
+                                        <xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
+                                        <xsl:value-of select="php:function('lang', 'Cancel')"/>
+                                </a>
+                        </div>
+                </div>
+            </div>
 	</form>
 </xsl:template>
