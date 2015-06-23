@@ -28,6 +28,7 @@
 			'add_from_composite'	=> true,
 			'copy_contract'			=> true,
 			'edit'					=> true,
+			'save'					=> true,
 			'index'					=> true,
 			'query'					=> true,
 			'view'					=> true,
@@ -499,9 +500,7 @@
 						array(
 							'type'   => 'link',
 							'value'  => lang('new'),
-							'href'   => self::link(array(
-								'menuaction'	=> 'rental.uicontract.add'
-							)),
+							'onclick'=> 'onNew_contract()',
 							'class'  => 'new_item'
 						)
 					)
@@ -613,71 +612,177 @@
 			
 		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
 		
-		/*$parameters = array
-			(
-				'parameter' => array
-				(
-					array
-					(
-						'name'		=> 'id',
-						'source'	=> 'id'
-					)
-				)
-			);
-		
-		$data['datatable']['actions'][] = array
-			(
-				'my_name'		=> 'download_agresso',
-				'text' 			=> lang('Download Agresso import file'),
-				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-				(
-					'menuaction'	=> 'rental.uiparty.download_agresso'
-				)),
-				'parameters'	=> json_encode(array())
-			);
-		
-		$data['datatable']['actions'][] = array
-			(
-				'my_name'		=> 'view',
-				'text' 			=> lang('show'),
-				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-				(
-					'menuaction'	=> 'rental.uiparty.view'
-				)),
-				'parameters'	=> json_encode($parameters)
-			);
-					
-		if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
-		{
-			$data['datatable']['actions'][] = array
-				(
-					'my_name'		=> 'edit',
-					'text' 			=> lang('edit'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'	=> 'rental.uiparty.edit'
-					)),
-					'parameters'	=> json_encode($parameters)
-				);
-		}
-	
-		$alertMessage_deleteParty = '"Du er i ferd med å slette en kontraktspart.\n\n Operasjonen kan ikke angres.\n\n Vil du gjøre dette?";';
-		$alertMessage_syncParty = '"Du er i ferd med å overskrive data med informasjon hentet fra Fellesdata.\n\n Følgende felt vil bli overskrevet: Foretak, Avdeling, Enhetsleder, Epost. \n\n Vil du gjøre dette?";';
-						
-		$jscode = <<<JS
-
-				var confirm_msg_sync = $alertMessage_syncParty
-				var confirm_msg_delete = $alertMessage_deleteParty
-
-JS;
-		
-		$GLOBALS['phpgw']->js->add_code('', $jscode);
-		
-		self::add_javascript('rental', 'rental', 'party.sync.js');*/
+		self::add_javascript('rental', 'rental', 'contract.index.js');
 		self::render_template_xsl('datatable_jquery', $data);
 		
 	}
 
+		public function save()
+		{
+			$contract_id = (int)phpgw::get_var('id');
+			$location_id = (int)phpgw::get_var('location_id');
+			$update_price_items = false;
+			
+			$message = null;
+			$error = null;
+			$add_default_price_items = false;
+
+			if(isset($contract_id) && $contract_id > 0)
+			{
+				$contract = rental_socontract::get_instance()->get_single($contract_id);
+
+				// Gets responsibility area from db (ex: eksternleie, internleie)
+				$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
+
+				// Redirect with error message if responsibility area is eksternleie and contract type not set
+				if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) )
+				{
+					//$error = lang('billing_removed_external_contract');
+					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));	
+					phpgwapi_cache::message_set(lang('billing_removed_external_contract'), 'error'); 
+					$this->edit();
+				}
+
+				if(!$contract->has_permission(PHPGW_ACL_EDIT))
+				{
+					unset($contract);
+					//$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
+					phpgwapi_cache::message_set(lang('permission_denied_edit_contract'), 'error'); 
+					$this->edit();
+				}
+			}
+			else
+			{
+				// Gets responsibility area from db (ex: eksternleie, internleie) 
+				$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($location_id);
+
+				// Redirect with error message if responsibility area is eksternleie and contract type not set
+				if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) )
+				{
+					//$error = lang('billing_removed_external_contract');						
+					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'location_id' => $location_id, 'message' => $message, 'error' => $error));
+					phpgwapi_cache::message_set(lang('billing_removed_external_contract'), 'error'); 
+					$this->edit();					
+				}
+
+				if(isset($location_id) && ($this->isExecutiveOfficer() || $this->isAdministrator())){
+					$contract = new rental_contract();
+					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+					$contract->set_location_id($location_id);
+					$contract->set_contract_type_title($fields[$location_id]);
+					$add_default_price_items = true;
+				}
+			}
+
+			$date_start =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_start'));
+			$date_end =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_end'));
+
+			if(isset($contract))
+			{ 
+				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
+				$contract->set_security_type(phpgw::get_var('security_type'));
+				$contract->set_security_amount(phpgw::get_var('security_amount'));
+				$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
+				$contract->set_comment(phpgw::get_var('comment'));
+
+				if(isset($location_id) && $location_id > 0)
+				{
+					$contract->set_location_id($location_id); // only present when new contract
+				}
+				$contract->set_term_id(phpgw::get_var('billing_term'));
+				$contract->set_billing_start_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_start_date')));
+				$contract->set_billing_end_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_end_date')));
+				$contract->set_service_id(phpgw::get_var('service_id'));
+				$contract->set_responsibility_id(phpgw::get_var('responsibility_id'));
+				$contract->set_reference(phpgw::get_var('reference'));
+				$contract->set_invoice_header(phpgw::get_var('invoice_header'));
+				$contract->set_account_in(phpgw::get_var('account_in'));
+
+				$contract->set_account_out(phpgw::get_var('account_out'));
+
+				$contract->set_project_id(phpgw::get_var('project_id'));
+				$contract->set_due_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('due_date')));
+				$contract->set_contract_type_id(phpgw::get_var('contract_type'));
+				$old_rented_area = $contract->get_rented_area();
+				$new_rented_area = phpgw::get_var('rented_area');
+				$new_rented_area = str_replace(',','.',$new_rented_area);
+				$validated_numeric = false;
+				if(!isset($new_rented_area) || $new_rented_area == ''){
+					$new_rented_area = 0;
+				}
+				if($old_rented_area != $new_rented_area){
+					$update_price_items = true;
+				}
+				$contract->set_rented_area($new_rented_area);
+				$contract->set_adjustment_interval(phpgw::get_var('adjustment_interval'));
+				$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
+				$contract->set_adjustable(phpgw::get_var('adjustable') == 'on' ? true : false);
+				$contract->set_publish_comment(phpgw::get_var('publish_comment') == 'on' ? true : false);
+				$validated_numeric = $contract->validate_numeric();
+
+				if($validated_numeric)
+				{
+					$so_contract = rental_socontract::get_instance();
+					$db_contract = $so_contract->get_db();
+					$db_contract->transaction_begin();
+					if($so_contract->store($contract))
+					{
+						if($update_price_items){
+							$success = $so_contract->update_price_items($contract->get_id(), $new_rented_area);
+							if($success){
+								$db_contract->transaction_commit();
+								$message = lang('messages_saved_form');
+								$contract_id = $contract->get_id();
+							}
+							else{
+								$db_contract->transaction_abort();
+								$error = lang('messages_form_error');
+							}
+						}
+						else if($add_default_price_items)
+						{
+							$so_price_item = rental_soprice_item::get_instance();
+							//get default price items for location_id
+							$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
+
+							//add price_items to contract
+							foreach($default_price_items as $price_item_id)
+							{
+								$so_price_item->add_price_item($contract->get_id(), $price_item_id);
+							}
+							$db_contract->transaction_commit();
+							$message = lang('messages_saved_form');
+							$contract_id = $contract->get_id();
+						}
+						else{
+							$db_contract->transaction_commit();
+							$message = lang('messages_saved_form');
+							$contract_id = $contract->get_id();
+						}
+					}
+					else
+					{
+						$db_contract->transaction_abort();
+						$error = lang('messages_form_error');
+					}
+				}
+				else{
+					$error = $contract->get_validation_errors();
+					//return $this->viewedit(true, $contract_id, $contract, $location_id,$notification, $message, $error);
+				}
+			}
+			
+			if (!empty($error))
+			{
+				phpgwapi_cache::message_set($error, 'error'); 
+			}
+			if (!empty($message))
+			{
+				phpgwapi_cache::message_set($message, 'message'); 
+			}
+			$this->edit();	
+		}
+		
 		/**
 		 * Common function for viewing or editing a contract
 		 *
@@ -788,193 +893,37 @@ JS;
 			$error = null;
 			$add_default_price_items = false;
 			
-			if(isset($_POST['save_contract']))
-			{
-				if(isset($contract_id) && $contract_id > 0)
-				{
-					$contract = rental_socontract::get_instance()->get_single($contract_id);
-					
-					// Gets responsibility area from db (ex: eksternleie, internleie)
-					$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
-					
-					// Redirect with error message if responsibility area is eksternleie and contract type not set
-					if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) ){
-						$error = lang('billing_removed_external_contract');
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));	
-					}
-					
-					if(!$contract->has_permission(PHPGW_ACL_EDIT))
-					{
-						unset($contract);
-						$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
-					}
-				}
-				else
-				{
-					// Gets responsibility area from db (ex: eksternleie, internleie) 
-					$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($location_id);
-					
-					// Redirect with error message if responsibility area is eksternleie and contract type not set
-					if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) ){
-						$error = lang('billing_removed_external_contract');
-						
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'location_id' => $location_id, 'message' => $message, 'error' => $error));
-					}
-				
-					if(isset($location_id) && ($this->isExecutiveOfficer() || $this->isAdministrator())){
-						$contract = new rental_contract();
-						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-						$contract->set_location_id($location_id);
-						$contract->set_contract_type_title($fields[$location_id]);
-						$add_default_price_items = true;
-					}
-				}
-				
-				$date_start =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_start'));
-				$date_end =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_end'));
-				
-				if(isset($contract)){ 
-					$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
-					$contract->set_security_type(phpgw::get_var('security_type'));
-					$contract->set_security_amount(phpgw::get_var('security_amount'));
-					$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
-					$contract->set_comment(phpgw::get_var('comment'));
-					
-					if(isset($location_id) && $location_id > 0)
-					{
-						$contract->set_location_id($location_id); // only present when new contract
-					}
-					$contract->set_term_id(phpgw::get_var('billing_term'));
-					$contract->set_billing_start_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_start_date')));
-					$contract->set_billing_end_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_end_date')));
-					$contract->set_service_id(phpgw::get_var('service_id'));
-					$contract->set_responsibility_id(phpgw::get_var('responsibility_id'));
-					$contract->set_reference(phpgw::get_var('reference'));
-					$contract->set_invoice_header(phpgw::get_var('invoice_header'));
-					$contract->set_account_in(phpgw::get_var('account_in'));
-					
-					/*
-					if($contract->get_contract_type_id() != phpgw::get_var('contract_type'))
-					{
-						// New contract type id set, retrieve correct account out
-						$type_id = phpgw::get_var('contract_type');
-						if(isset($type_id) && $type_is != ''){
-							$account = rental_socontract::get_instance()->get_contract_type_account($type_id);
-							$contract->set_account_out($account);
-						}
-						else
-						{
-							$contract->set_account_out(phpgw::get_var('account_out'));
-						}
-					}
-					else
-					{*/
-						$contract->set_account_out(phpgw::get_var('account_out'));
-					//}
-					
-					$contract->set_project_id(phpgw::get_var('project_id'));
-					$contract->set_due_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('due_date')));
-					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
-					$old_rented_area = $contract->get_rented_area();
-					$new_rented_area = phpgw::get_var('rented_area');
-					$new_rented_area = str_replace(',','.',$new_rented_area);
-					$validated_numeric=false;
-					if(!isset($new_rented_area) || $new_rented_area == ''){
-						$new_rented_area = 0;
-					}
-					if($old_rented_area != $new_rented_area){
-						$update_price_items = true;
-					}
-					$contract->set_rented_area($new_rented_area);
-					$contract->set_adjustment_interval(phpgw::get_var('adjustment_interval'));
-					$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
-					$contract->set_adjustable(phpgw::get_var('adjustable') == 'on' ? true : false);
-					$contract->set_publish_comment(phpgw::get_var('publish_comment') == 'on' ? true : false);
-					$validated_numeric = $contract->validate_numeric();
-					
-					if($validated_numeric){
-						$so_contract = rental_socontract::get_instance();
-						$db_contract = $so_contract->get_db();
-						$db_contract->transaction_begin();
-						if($so_contract->store($contract))
-						{
-							if($update_price_items){
-								$success = $so_contract->update_price_items($contract->get_id(), $new_rented_area);
-								if($success){
-									$db_contract->transaction_commit();
-									$message = lang('messages_saved_form');
-									$contract_id = $contract->get_id();
-								}
-								else{
-									$db_contract->transaction_abort();
-									$error = lang('messages_form_error');
-								}
-							}
-							else if($add_default_price_items)
-							{
-								$so_price_item = rental_soprice_item::get_instance();
-								//get default price items for location_id
-								$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
-								
-								//add price_items to contract
-								foreach($default_price_items as $price_item_id)
-								{
-									$so_price_item->add_price_item($contract->get_id(), $price_item_id);
-								}
-								$db_contract->transaction_commit();
-								$message = lang('messages_saved_form');
-								$contract_id = $contract->get_id();
-							}
-							else{
-								$db_contract->transaction_commit();
-								$message = lang('messages_saved_form');
-								$contract_id = $contract->get_id();
-							}
-						}
-						else
-						{
-							$db_contract->transaction_abort();
-							$error = lang('messages_form_error');
-						}
-					}
-					else{
-						$error = $contract->get_validation_errors();
-						return $this->viewedit(true, $contract_id, $contract, $location_id,$notification, $message, $error);
-					}
-				}
-				
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));		
-			}
-			else if(isset($_POST['add_notification']))
-			{
-				$contract = rental_socontract::get_instance()->get_single($contract_id);
-				if($contract->has_permission(PHPGW_ACL_EDIT))
-				{
-					$account_id = phpgw::get_var('notification_target');
-					$location_id = phpgw::get_var('notification_location');
-					$date = phpgw::get_var('date_notification');
-					if($date)
-					{
-						$date = phpgwapi_datetime::date_to_timestamp($date);
-					}
-					$notification = new rental_notification(-1, $account_id, $location_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
-					if (rental_sonotification::get_instance()->store($notification))
-					{
-						$message = lang('messages_saved_form');
-						$notification = null; // We don't want to display the date/message when it was sucessfully stored.
-					}
-					else
-					{
+			$link_save = array
+				(
+					'menuaction'	=> 'rental.uicontract.save'
+				);
+
+			$link_index = array
+				(
+					'menuaction'	=> 'rental.uicontract.index',
+				);
+			
+		
+			$tabs = array();
+			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
+			$active_tab = 'details';
+		
+			$data = array
+				(
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_save),
+					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
+					'lang_save'						=> lang('save'),
+					'lang_cancel'					=> lang('cancel'),
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				);
+
+			//$appname	=  $this->location_info['name'];
+
+			//$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 	
-						$error = lang('messages_form_error');
-					}
-				}
-				else
-				{
-					$error = lang('permission_denied_edit_contract');
-				}
-			}
-			return $this->viewedit(true, $contract_id, null, $location_id,$notification, $message, $error);
+			self::render_template_xsl(array('contract'), array('edit' => $data));
+			
+			//return $this->viewedit(true, $contract_id, null, $location_id, array(), $message, $error);
 		}
 
 		/**
