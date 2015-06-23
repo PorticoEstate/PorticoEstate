@@ -57,9 +57,11 @@
 		private $add;
 		private $edit;
 		private $delete;
+		private $org_units;
 		public $public_functions = array
 			(
-			'index'							 => true,
+			'index'						=> true,
+			'add_controll_from_master'	=> true
 		);
 
 		public function __construct()
@@ -80,6 +82,35 @@
 
 			self::set_active_menu('controller::status_components');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
+		}
+
+		public function add_controll_from_master()
+		{
+			$master_component = phpgw::get_var('master_component', 'string');
+			$target = phpgw::get_var('target', 'string');//array of strings
+			$result = array('status' => 'error', 'message' => '');
+
+			if($this->manage)
+			{
+				$so_control	= CreateObject('controller.socontrol');
+				try
+				{
+					$result['status'] = $so_control->add_controll_to_component_from_master($master_component, $target);
+					$result['message'] = count($target) . ' ' . lang('added');
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						$result['message'] = $e->getMessage();
+					}
+				}
+			}
+			else
+			{
+				$result['message'] = 'Go away';
+			}
+			return $result;
 		}
 
 		private function get_location_filter()
@@ -168,6 +199,12 @@
 				'selected' 	=> $_my_negative_self == ($this->account * -1)
 			);
 
+			/*Unselect user if filter on component*/
+			if(phpgw::get_var('component_id', 'int'))
+			{
+				$default_value['selected'] = 0;
+			}
+
 			unset($_my_negative_self);
 			array_unshift ($user_list,$default_value);
 			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
@@ -212,8 +249,6 @@
 				array('id' => 'not_performed', 'name' => lang('status not done')),
 				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
 			);
-			$location_filter = $this->get_location_filter();
-			array_unshift($location_filter, array('id' => '', 'name' => lang('select value')));
 
 			$filter_component = '';
 			if(phpgw::get_var('component_id', 'int'))
@@ -233,12 +268,23 @@
 								'list'	 => execMethod('property.bogeneric.get_list',array('type' => 'entity_group', 'selected' => phpgw::get_var('entity_group_id'), 'add_empty' => true)),
 								'onchange'	=> 'update_table();'
 							),
+							array('type'	 => 'hidden',
+								'name'	 => 'location_id',
+								'value'	 => phpgw::get_var('location_id', 'int')
+							),
 							array('type'	 => 'filter',
 								'name'	 => 'location_id',
 								'text'	 => lang('component'),
-								'list'	 => $location_filter,
+								'list'	 => array(),
 								'onchange'	=> 'update_table();'
-							),/*
+							),
+							array('type'	 => 'filter',
+								'name'	 => 'org_unit_id',
+								'text'	 => lang('department'),
+								'list'	 => execMethod('property.bogeneric.get_list',array('type' => 'org_unit', 'selected' => phpgw::get_var('org_unit_id'), 'add_empty' => true)),
+								'onchange'	=> 'update_table();'
+							),
+							/*
 							array('type'	 => 'filter',
 								'name'	 => 'control_area',
 								'text'	 => lang('Control_area'),
@@ -297,12 +343,12 @@
 			$fields = array
 			(
 				array(
-					'key'		 => 'selected',
+					'key'		 => 'choose',
 					'label'		 => '',
 					'sortable'	 => false,
 				),
 				array(
-					'key'		 => 'component_id',
+					'key'		 => 'component_url',
 					'label'		 => lang('component'),
 					'sortable'	 => true,
 				),
@@ -381,6 +427,21 @@
 			return $fields;
 		}
 
+		/**
+		* Get the sublevels of the org tree into one arry
+		*/
+		private function _get_children($data = array() )
+		{
+			foreach ($data as $entry)
+			{
+				$this->org_units[]= $entry['id'];
+				if(isset($entry['children']) && $entry['children'])
+				{
+					$this->_get_children($entry['children']);
+				}
+			}
+		}
+
 		public function query()
 		{
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
@@ -397,6 +458,21 @@
 				$filter_component_arr = explode('_', $filter_component_str);
 				$location_id = $filter_component_arr[0];
 				$filter_component = $filter_component_arr[1];
+			}
+			if($org_unit_id = phpgw::get_var('org_unit_id', 'int'))
+			{
+				$_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $org_unit_id, 'type' => 'org_unit'));
+				$this->org_units[]= $org_unit_id;
+				foreach($_subs as $entry)
+				{
+					$this->org_units[]= $entry['id'];
+					if(isset($entry['children']) && $entry['children'])
+					{
+						$this->_get_children($entry['children']);
+					}
+				}
+				unset($entry);
+				unset($_subs);
 			}
 
 			$so_control			 = CreateObject('controller.socontrol');
@@ -425,6 +501,7 @@
 			if($user_id < 0)
 			{
 				$user_id = $user_id * -1;
+				$all_items = false;
 
 				$keep_only_assigned_to = $user_id;
 				$assigned_components = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id);
@@ -472,6 +549,7 @@
 						'filter_entity_group'		=> $entity_group_id,
 						'location_id'				=> $_location_id,
 						'district_id'				=> $district_id,
+						'org_units'					=> $this->org_units,
 						'allrows'					=> true,
 						'control_registered'		=> !$all_items,
 						'check_for_control'			=> true,
@@ -484,13 +562,14 @@
 				if($lookup_stray_items)
 				{
 					$_components = execMethod('property.soentity.read_entity_group',array(
-						'entity_group_id' => $entity_group_id,
-						'exclude_locations'	=> $exclude_locations,
-						'location_id' => $_location_id,
-						'district_id' => $district_id,
-						'allrows' => true,
-						'control_registered' => !$all_items,
-						'check_for_control' => true
+						'entity_group_id'			=> $entity_group_id,
+						'exclude_locations'			=> $exclude_locations,
+						'location_id'				=> $_location_id,
+						'district_id'				=> $district_id,
+						'org_units'					=> $this->org_units,
+						'allrows'					=> true,
+						'control_registered'		=> !$all_items,
+						'check_for_control'			=> true
 						)
 					);
 					$components = array_merge($components, $_components);
@@ -638,7 +717,10 @@
 					'active_tab'	=> 'controller'
 				);
 			
-				$data['component_id'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id}{$entry[0]['component']['xml_short_desc']}</a>";
+				$data['component_url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id}{$entry[0]['component']['xml_short_desc']}</a>";
+				$data['component_id'] = $component_id;
+				$data['location_id'] = $location_id;
+
 
 				$max_repeat_type = 0;
 				$_data = array();
@@ -687,8 +769,10 @@
 			unset($component_id);
 			unset($component);
 
+			$choose_master = false;
 			if($all_components && count($all_components))
 			{
+				$choose_master = true;
 				foreach($all_components as $component_id => $component)
 				{
 					$data = array();
@@ -705,7 +789,9 @@
 					$short_description = $component['short_description'];
 					$short_description .= "[ {$component['location_name']} ]";
 
-					$data['component_id'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
+					$data['component_url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$component_link_data)."\" target='_blank'>{$component_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
+					$data['component_id'] = $component_id;
+					$data['location_id'] = $location_id;
 					$data['missing_control'] = true;
 					$values[] = $data;
 
@@ -719,7 +805,7 @@
 				$row		= array();
 				$row_sum	= array();
 				$row_sum_actual	= array();//billable_hours
-				$row['component_id'] = $entry['component_id'];
+				$row['component_url'] = $entry['component_url'];
 				$row['year'] = '';
 				$row['descr'] = '';
 
@@ -727,14 +813,18 @@
 				{
 					if($filter_component_str)
 					{
-						$row['selected'] = '<input id="selected_component" type="checkbox" name="selected_component" checked = "checked" onclick="deselect_component();">';
+						$row['choose'] = '<input id="selected_component" type="checkbox" name="selected_component" checked = "checked" onclick="deselect_component();">';
 					}
-					else
+					else if ($choose_master)
 					{
-						$row['selected'] = '';
+						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}\" >";
 					}
 					$row['year'] = $year;
 					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
+				}
+				else if ($choose_master)
+				{
+					$row['choose'] = "<input id=\"selected_components\" class=\"mychecks\" type=\"checkbox\" name=\"selected_components[]\" value = \"{$entry['location_id']}_{$entry['component_id']}\">";
 				}
 
 				$found_at_least_one = false;
@@ -828,6 +918,18 @@
 			$result['time_sum_actual'][0] = $sum_year_actual;
 			$result['total_records'] = $total_records;
 			$result['location_filter'] = $location_filter;
+			if ($choose_master)
+			{
+				$lang_save = lang('add');
+				$lang_select = lang('select');
+				$result['checkall'] = "<input type=\"button\" value = '{$lang_save}' title = '{$lang_save}' onclick=\"add_from_master('mychecks');\">";
+				$result['checkall'] .= '</br>';
+				$result['checkall'] .= "<input type=\"checkbox\" title = '{$lang_select}' onclick=\"checkAll('mychecks');\">";
+			}
+			else
+			{
+				$result['checkall'] = '';
+			}
 
 			return $result;
 		}

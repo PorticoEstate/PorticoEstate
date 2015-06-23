@@ -509,11 +509,12 @@
 			$filtermethod = "WHERE fm_bim_type.location_id = {$location_id}";
 			$where= 'AND';
 
-			if( $category['org_unit'])
+//			if( $category['org_unit'])
 			{
 				if($org_units)
 				{
 					$filtermethod .= " $where ( $entity_table.org_unit_id IN(" . implode(',',$org_units) . "))";
+					$where= 'AND';
 				}
 			}
 
@@ -1455,7 +1456,7 @@
 			}
 
 			unset($_config);
-			if( $category['org_unit'])
+//			if( $category['org_unit'])
 			{
 				if($org_units)
 				{

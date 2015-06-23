@@ -24,7 +24,9 @@ class rental_socomposite extends rental_socommon
 	}
 
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
-	{		
+	{
+		$location_id_into = $GLOBALS['phpgw']->locations->get_id( 'rental', '.RESPONSIBILITY.INTO');
+
 		$clauses = array('1=1');
 		if($search_for)
 		{
@@ -180,7 +182,8 @@ class rental_socomposite extends rental_socommon
 			{
 				$cols = "rental_composite.id AS composite_id,";
 			}
-			$cols .= "rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, 
+
+			$cols .= "rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number,
 					  rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area, rental_composite.description, rental_composite.furnish_type_id, rental_composite.standard_id, ";
 			$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id, ";
 			$cols .= "
@@ -188,6 +191,7 @@ class rental_socomposite extends rental_socommon
 			(
 				NOT rental_contract_composite.contract_id IS NULL AND
 				NOT rental_contract.date_start IS NULL AND
+				NOT rental_contract.location_id = {$location_id_into} AND
 				((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
 		 		OR
 				(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))

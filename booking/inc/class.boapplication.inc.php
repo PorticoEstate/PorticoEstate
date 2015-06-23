@@ -31,12 +31,12 @@
 				$body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
 
 			} elseif ($application['status'] == 'PENDING') {
-				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']);
-				$body .= "</p><pre>".$config->config_data['application_mail_pending']."</pre>";
-				$body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']) . '</p>';
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
+				$body .= "<pre>".$config->config_data['application_mail_pending']."</pre>";
+				$body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
 			}
 			elseif ($application['status'] == 'ACCEPTED')
 			{
@@ -70,8 +70,11 @@
 					}
 				}
 
-				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']);
-				$body .= '</p><pre>'.$config->config_data['application_mail_accepted'].'<br /><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']) . '</p>';
+				if ($application['comment'] != '') {
+					$body .= "<p>Kommentar fra saksbehandler:<br />".$application['comment']."</p>";
+				}
+				$body .= '<pre>'.$config->config_data['application_mail_accepted'].'<br /><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
 				if($adates)
 				{
 					$body .= "<pre>Godkjent:\n".$adates."</pre>";
@@ -81,9 +84,6 @@
 					$body .= "<pre>Avvist: ".$rdates."</pre>";
 				}
 
-				if ($application['comment'] != '') {
-					$body .= "<p>Kommentar fra saksbehandler:<br />".$application['comment']."</p>";
-				}
 
 				if (isset ($config->config_data['application_notify_on_accepted']) && $config->config_data['application_notify_on_accepted'] ==1)
 				{
@@ -115,11 +115,11 @@
 					}
 				}
 			} elseif ($application['status'] == 'REJECTED') {
-				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']);
-				$body .= '</p><pre>'.$config->config_data['application_mail_rejected'].' <a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er ".lang($application['status']) . '</p>';
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
+				$body .= '<pre>'.$config->config_data['application_mail_rejected'].' <a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
 			} else {
                 $subject = $config->config_data['application_comment_mail_subject'];
                 $body = "<pre><p>".$config->config_data['application_comment_added_mail']."</p>";

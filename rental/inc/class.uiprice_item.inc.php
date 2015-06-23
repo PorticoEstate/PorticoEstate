@@ -72,8 +72,20 @@ class rental_uiprice_item extends rental_uicommon
 			return;
 		}
 
-		$id = (int)phpgw::get_var('id');
-		$price_item = rental_price_item::get($id);
+		if($id = phpgw::get_var('id', 'int'))
+		{
+			$price_item = rental_price_item::get($id);
+		}
+		else
+		{
+			$title = phpgw::get_var('price_item_title');
+			$responsibility_id = phpgw::get_var('responsibility_id');
+			$price_item = new rental_price_item();
+			$price_item->set_title($title);
+			$price_item->set_responsibility_id($responsibility_id);
+			$price_item->set_price_type_id(1); // defaults to year
+		}
+
 
 		// Save the price item if it was posted
 		if(isset($_POST['save']))
@@ -85,6 +97,7 @@ class rental_uiprice_item extends rental_uicommon
 			$price_item->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
 			$price_item->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
 			$price_item->set_price(phpgw::get_var('price'));
+			$price_item->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
 			if($price_item->get_agresso_id() == null)
 			{
 				return $this->viewedit(true, $price_item, '', lang('missing_agresso_id'));
@@ -103,6 +116,7 @@ class rental_uiprice_item extends rental_uicommon
 	}
 
 	/*
+	 * To be removed
 	 * Add a new price item to the database.  Requires only a title.
 	 */
 	public function add()
