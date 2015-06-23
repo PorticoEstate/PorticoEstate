@@ -51,7 +51,7 @@
 	  	YAHOO.util.Event.stopEvent(e);
 	  	newName = document.getElementById('ctrl_add_price_item_name').value;
 	  	resp_id = document.getElementById('responsibility_id').value;
-			window.location = 'index.php?menuaction=rental.uiprice_item.add&amp;price_item_title=' + newName + '&amp;responsibility_id=' + resp_id;
+			window.location = 'index.php?menuaction=rental.uiprice_item.edit&amp;price_item_title=' + newName + '&amp;responsibility_id=' + resp_id;
 		}
 	);
 
@@ -108,6 +108,10 @@
 		{
 			key: "standard",
 			label: "<?php echo lang('is_standard') ?>"
+		},
+		{
+			key: "price_type_title",
+			label: "<?php echo lang('type') ?>"
 		},
 		{
 			key: "actions",

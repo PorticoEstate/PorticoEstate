@@ -20,6 +20,8 @@
 	<h2>
 		<xsl:value-of select="datatable_name"/>
 	</h2>
+	<div id="receipt"></div>
+	<xsl:call-template name="icon_color_map" />
 	<xsl:apply-templates select="form" />
 	<xsl:apply-templates select="paging"/>
 	<div id="list_flash">
@@ -180,6 +182,38 @@
 <xsl:template name="datasource-definition">
 	<script type="text/javascript">
 <![CDATA[
+
+		/**
+		* Detect if browsertab is active - and update when revisit
+		*/
+		var vis = (function(){
+			var stateKey, eventKey, keys = {
+				hidden: "visibilitychange",
+				webkitHidden: "webkitvisibilitychange",
+				mozHidden: "mozvisibilitychange",
+				msHidden: "msvisibilitychange"
+			};
+			for (stateKey in keys) {
+				if (stateKey in document) {
+					eventKey = keys[stateKey];
+					break;
+				}
+			}
+			return function(c) {
+				if (c) document.addEventListener(eventKey, c);
+				return !document[stateKey];
+			}
+		})();
+
+		vis(function(){
+			if(vis())
+			{
+					update_table();
+			}
+		});
+
+
+
 		$(document).ready(function(){
 			update_table();
 		});
@@ -191,6 +225,32 @@
 		};
 		update_table = function()
 		{
+			$("#receipt").html('');
+
+			var user_id = $("#user_id").val();
+			if(user_id < 0)
+			{
+				$( "#entity_group_id" ).hide();
+				$("[for='entity_group_id']").hide();
+				$( "#location_id" ).hide();
+				$("[for='location_id']").hide();
+				$("[name='all_items']").hide();
+				$("[for='all_items']").hide();
+				$( "#org_unit_id" ).hide();
+				$("[for='org_unit_id']").hide();
+			}
+			else
+			{
+				$( "#entity_group_id" ).show();
+				$("[for='entity_group_id']").show();
+				$( "#location_id" ).show();
+				$("[for='location_id']").show();
+				$("[name='all_items']").show();
+				$("[for='all_items']").show();
+				$( "#org_unit_id" ).show();
+				$("[for='org_unit_id']").show();
+			}
+
 			var requestUrl = $("#queryForm").attr("action");
 			requestUrl += '&phpgw_return_as=json' + "&" + $("#queryForm").serialize();
 
@@ -203,22 +263,24 @@
 					{
 						$("#tbody").html(data.tbody);
 						var time_sum = data.time_sum;
+						var time_sum_actual = data.time_sum_actual;
 
+						$("#checkall").html(data.checkall);
 						$("#total_records").html(data.total_records);
 						$("#sum_text").html('Sum');
-						$("#month0").html(time_sum[0]);
-						$("#month1").html(time_sum[1]);
-						$("#month2").html(time_sum[2]);
-						$("#month3").html(time_sum[3]);
-						$("#month4").html(time_sum[4]);
-						$("#month5").html(time_sum[5]);
-						$("#month6").html(time_sum[6]);
-						$("#month7").html(time_sum[7]);
-						$("#month8").html(time_sum[8]);
-						$("#month9").html(time_sum[9]);
-						$("#month10").html(time_sum[10]);
-						$("#month11").html(time_sum[11]);
-						$("#month12").html(time_sum[12]);
+						$("#month0").html(time_sum[0] + '/' + time_sum_actual[0]);
+						$("#month1").html(time_sum[1] + '/' + time_sum_actual[1]);
+						$("#month2").html(time_sum[2] + '/' + time_sum_actual[2]);
+						$("#month3").html(time_sum[3] + '/' + time_sum_actual[3]);
+						$("#month4").html(time_sum[4] + '/' + time_sum_actual[4]);
+						$("#month5").html(time_sum[5] + '/' + time_sum_actual[5]);
+						$("#month6").html(time_sum[6] + '/' + time_sum_actual[6]);
+						$("#month7").html(time_sum[7] + '/' + time_sum_actual[7]);
+						$("#month8").html(time_sum[8] + '/' + time_sum_actual[8]);
+						$("#month9").html(time_sum[9] + '/' + time_sum_actual[9]);
+						$("#month10").html(time_sum[10] + '/' + time_sum_actual[10]);
+						$("#month11").html(time_sum[11] + '/' + time_sum_actual[11]);
+						$("#month12").html(time_sum[12] + '/' + time_sum_actual[12]);
 						if(data.location_filter)
 						{
 							var obj = data.location_filter;
@@ -257,12 +319,81 @@
 			});
 
 		};
+
+		add_from_master = function(myclass)
+		{
+			var myRadio = $('input[name=master_component]');
+			var master_component = myRadio.filter(':checked').val();
+
+			if(!master_component)
+			{
+				alert('velg master');
+				return;
+			}
+
+			var selected  = new Array();
+
+			$("." + myclass).each(function()
+			{
+				if($(this).prop("checked"))
+				{
+					selected.push( $(this).val() );
+				}
+			});
+
+			oArgs = {menuaction: 'controller.uicomponent.add_controll_from_master'};
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			$.ajax({
+				type: 'POST',
+				data: {master_component:master_component, target:selected},
+				dataType: 'json',
+				url: requestUrl,
+				success: function(data) {
+					if( data != null)
+					{
+console.log(data);
+						var message = data.message;
+
+						htmlString = "";
+						var msg_class = "msg_good";
+						if(data.status =='error')
+						{
+							msg_class = "error";
+						}
+						htmlString += "<div class=\"" + msg_class + "\">";
+						htmlString += message;
+						htmlString += '</div>';
+						update_table();
+						$("#receipt").html(htmlString);
+
+					}
+				}
+			});
+
+		};
+
+		checkAll = function(myclass)
+		{
+			$("." + myclass).each(function()
+			{
+				if($(this).prop("checked"))
+				{
+					$(this).prop("checked", false);
+				}
+				else
+				{
+					$(this).prop("checked", true);
+				}
+			});
+		};
+
 ]]>
 	</script>
 	<table id="components">
 		<thead>
 			<tr>
-				<td id='selected'>
+				<td id='checkall'>
 				</td>
 				<td id='total_records'>
 				</td>

@@ -38,6 +38,8 @@
   class controller_socontrol extends controller_socommon
   {
 		protected static $so;
+		protected $global_lock = false;
+
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -775,15 +777,42 @@
 			$control_id		= (int) $control_id;
 			$location_id	= (int) $location_id;
 			$component_id	= (int) $component_id;
-			
+
 			$sql  = "SELECT * ";
 			$sql .= "FROM controller_control_component_list ";
 			$sql .= "WHERE control_id = {$control_id} ";
 			$sql .= "AND location_id = {$location_id} ";
 			$sql .= "AND component_id = {$component_id}";
-			
+
 			$this->db->query($sql, __LINE__, __FILE__);
 			return $this->db->next_record();
+		}
+
+		public function get_assigned_control_components($from_date, $to_date, $assigned_to = 0)
+		{
+			$assigned_to	= (int) $assigned_to;
+			$location_id	= (int) $location_id;
+			$component_id	= (int) $component_id;
+
+			$sql  = "SELECT DISTINCT ccl.component_id, ccl.location_id";
+			$sql .= " FROM controller_control_component_list ccl , controller_control_serie cs";
+			$sql .= " WHERE ccl.id = cs.control_relation_id";
+			$sql .= " AND cs.control_relation_type = 'component'";
+			$sql .= " AND cs.assigned_to = {$assigned_to}";
+			$sql .= " AND cs.enabled = 1";
+//			$sql .= " AND ((cs.start_date <= $to_date AND cs.end_date IS NULL) ";
+//			$sql .= " OR (cs.start_date <= $to_date AND cs.end_date > $from_date ))";
+			$sql .= " AND cs.start_date <= $to_date";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$components = array();
+
+			while($this->db->next_record())
+			{
+				$location_id = $this->db->f('location_id');
+				$components[$location_id][] = $this->db->f('component_id');
+			}
+			return $components;
 		}
 
 		/**
@@ -878,7 +907,14 @@
 
 			$delete_component = array();
 			$add_component = array();
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			if(isset($data['register_component']) && is_array($data['register_component']))
 			{
@@ -990,7 +1026,11 @@
 				$ret += PHPGW_ACL_DELETE; //bit - delete
 			}
  
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
+
 			return $ret;
 		}
 
@@ -1450,5 +1490,72 @@
 			{
 				return PHPGW_ACL_EDIT; // Bit - edit
 			}
+		}
+
+		function add_controll_to_component_from_master($master_component, $targets = array())
+		{
+			$master_component_arr = explode('_', $master_component);
+			if(count($master_component_arr) != 2)
+			{
+				throw new Exception("controller_socontrol::add_controll_to_component_from_master - Missing master component");
+			}
+
+			$location_id = (int)$master_component_arr[0];
+			$component_id = (int)$master_component_arr[1];
+
+			$sql = "SELECT * FROM controller_control_component_list"
+			. " {$this->db->join} controller_control_serie"
+			. " ON controller_control_serie.control_relation_id = controller_control_component_list.id"
+			. " AND controller_control_serie.control_relation_type = 'component'"
+			. " WHERE location_id = {$location_id} AND  component_id = {$component_id}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$series = array();
+			while($this->db->next_record())
+			{
+				$start_date		= $this->db->f('start_date');
+				if($start_date < time())
+				{
+					$start_date	= time();
+				}
+				$series[] = array(
+					'control_id'			=> $this->db->f('control_id'),
+					'assigned_to'			=> $this->db->f('assigned_to'),
+					'start_date'			=> $start_date,
+					'repeat_type'			=> $this->db->f('repeat_type'),
+					'repeat_interval'		=> $this->db->f('repeat_interval'),
+					'service_time'			=> $this->db->f('service_time'),
+					'controle_time'			=> $this->db->f('controle_time'),
+					'duplicate'				=> true
+
+				);
+			}
+
+			$this->db->transaction_begin();
+
+			foreach($targets as $target)
+			{
+				$target_component_arr = explode('_', $target);
+
+				$target_location_id = (int)$target_component_arr[0];
+				$target_component_id = (int)$target_component_arr[1];
+				foreach($series as $serie)
+				{
+					$values = array
+					(
+						'register_component'	=> array("{$serie['control_id']}_{$target_location_id}_{$target_component_id}"),
+						'assigned_to'			=> $serie['assigned_to'],
+						'start_date'			=> $serie['start_date'],
+						'repeat_type'			=> $serie['repeat_type'],
+						'repeat_interval'		=> $serie['repeat_interval'],
+						'controle_time'			=> $serie['controle_time'],
+						'service_time'			=> $serie['service_time'],
+						'duplicate'				=> true
+					);
+					$this->register_control_to_component($values);
+				}
+			}
+			return $this->db->transaction_commit();
 		}
 	}

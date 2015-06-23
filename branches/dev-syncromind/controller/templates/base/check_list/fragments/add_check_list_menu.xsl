@@ -21,11 +21,11 @@
         <div class="right_btns">
             <!-- ==================  REGISTER NEW CASE  ===================== -->
             <span class="btn focus first">
-                Registrer sak
+				<xsl:value-of select="php:function('lang', 'add case')"/>
             </span>
             <!-- ==================  REGISTER NEW MESSAGE  ===================== -->
             <span class="btn focus">
-                Registrer melding
+				<xsl:value-of select="php:function('lang', 'add ticket')"/>
             </span>
         </div>
     </div>
