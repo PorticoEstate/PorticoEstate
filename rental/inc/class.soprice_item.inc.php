@@ -45,6 +45,9 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 		$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 		$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
+		$price_type_id  = (int)$this->db->f('type');
+		$price_item->set_price_type_id($price_type_id);
+		$price_item->set_price_type_title($price_type_id);
 		
 		return $price_item;
 	}
@@ -73,7 +76,9 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
-			
+			$price_type_id  = (int)$this->db->f('type');
+			$price_item->set_price_type_id($price_type_id);
+			$price_item->set_price_type_title($price_type_id);
 			return $price_item;
 		}
 		
@@ -102,6 +107,9 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
+			$price_type_id  = (int)$this->db->f('type');
+			$price_item->set_price_type_id($price_type_id);
+			$price_item->set_price_type_title($price_type_id);
 			
 			return $price_item;
 		}
@@ -139,6 +147,9 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$price_type_id  = (int)$this->db->f('type');
+			$price_item->set_price_type_id($price_type_id);
+			$price_item->set_price_type_title($price_type_id);
 			
 			$results[] = $price_item;
 		}
@@ -190,6 +201,11 @@ class rental_soprice_item extends rental_socommon
 			case "both":
 				break;
 		}
+
+		if(isset($filters['type']) && $filters['type'])
+		{
+				$filter_clauses[] = 'rental_price_item.type = ' . (int)$filters['type'];
+		}
 			
 		if(count($filter_clauses))
 			{
@@ -217,10 +233,11 @@ class rental_soprice_item extends rental_socommon
 			($price_item->is_adjustable() ? "true" : "false"),
 			($price_item->is_standard() ? "true" : "false"),
 			str_replace(',','.',$price),
-			$price_item->get_responsibility_id()
+			$price_item->get_responsibility_id(),
+			$price_item->get_price_type_id()
 		);
 		
-		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'is_adjustable', 'standard', 'price', 'responsibility_id');
+		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'is_adjustable', 'standard', 'price', 'responsibility_id', 'type');
 		
 		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		
@@ -250,7 +267,8 @@ class rental_soprice_item extends rental_socommon
 			'is_adjustable = ' . ($price_item->is_adjustable() ? "true" : "false"),
 			'standard = ' . ($price_item->is_standard() ? "true" : "false"),
 			'price = ' . str_replace(',','.',$price_item->get_price()),
-			'responsibility_id = ' . $price_item->get_responsibility_id()
+			'responsibility_id = ' . $price_item->get_responsibility_id(),
+			'type = ' . $price_item->get_price_type_id()
 		);
 				
 		$this->db->query('UPDATE rental_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -466,6 +484,10 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
+			$price_type_id  = (int)$this->db->f('type');
+			$price_item->set_price_type_id($price_type_id);
+			$price_item->set_price_type_title($price_type_id);
+
 		}
 		return $price_item;
 	}
