@@ -146,7 +146,7 @@
 					$stop			 = $price_item->get_timestamp_end();
 					if(isset($start) && isset($stop))
 					{
-						$description .= ' ' . date('j/n', $start) . '-' . date('j/n', $stop);
+//						$description .= ' ' . date('j/n', $start) . '-' . date('j/n', $stop);
 					}
 					$data['article_description'] = $description;
 					$data['article_code']		 = $price_item->get_agresso_id();

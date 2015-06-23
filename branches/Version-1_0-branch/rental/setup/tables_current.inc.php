@@ -238,7 +238,8 @@
 					'is_adjustable' =>	array('type' => 'bool','nullable' => true,'default' => 'true'),
 					'standard' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
 					'price' =>      array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
-					'responsibility_id' => array('type' => 'int','precision' => '4', 'nullable' => false)
+					'responsibility_id' => array('type' => 'int','precision' => '4', 'nullable' => false),
+					'type' =>	array('type' => 'int', 'precision' => 2, 'nullable' => false,'default' => 1),
 				),
 				'pk' => array('id'),
 				'fk' => array(),

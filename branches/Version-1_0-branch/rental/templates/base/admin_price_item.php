@@ -52,6 +52,33 @@
 			<input type="radio" name="is_area" value="false" id="is_area"<?php echo !$price_item->is_area() ? ' checked="checked"' : '' ?> <?php echo !$editable ? ' disabled="disabled"' : '' ?>/>
 			<label for="is_area"><?php echo lang('calculate_price_apiece') ?></label>
 		</dd>
+		<dt>
+			<label for="is_area"><?php echo lang('type') ?></label>
+		</dt>
+		<dd>
+			<?php
+			$current_price_type_id = $price_item->get_price_type_id();
+			if ($editable)
+			{
+				?>
+				<select name="price_type_id">
+					<?php
+					foreach($price_item->get_price_types() as $price_type_id => $price_type_title)
+					{
+						echo "<option ".($current_price_type_id == $price_type_id ? 'selected="selected"' : "")." value=\"{$price_type_id}\">".lang($price_type_title)."</option>";
+					}
+					?>
+				</select>
+				<?php
+			?>
+			<?php
+			}
+			else // Non-editable
+			{
+				echo lang($price_item->get_price_types($current_price_type_id));
+			}
+			?>
+		</dd>
 
 		<dt>
 			<label for="price"><?php echo lang('price') ?></label>
