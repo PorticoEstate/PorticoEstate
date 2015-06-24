@@ -360,8 +360,8 @@
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
-			$document = $this->bo->read_single($id);
-			
+			$document = $this->bo->read_single($id);        
+            
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -385,7 +385,13 @@
 			
 			$this->flash_form_errors($errors);
 			
-			self::render_template('document_form', array('document' => $document));
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Document Edit'), 'link' => '#document_edit');
+            $active_tab = 'generic';
+            
+            $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('document_form', array('document' => $document));
 		}
 		
 		public function download()
