@@ -24,7 +24,7 @@
 		const LOCATION_OUT = '.RESPONSIBILITY.OUT';
 		const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
 		
-		public $dateFormat;
+		//public $dateFormat;
 		
 		public $type_of_user;
 		
