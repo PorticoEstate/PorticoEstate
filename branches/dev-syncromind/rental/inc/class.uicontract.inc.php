@@ -878,20 +878,154 @@
 		/**
 		 * Edit a contract
 		 */
-		public function edit()
+		public function edit($values = array(), $mode = 'edit')
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
+			
 			$contract_id = (int)phpgw::get_var('id');
 			$location_id = (int)phpgw::get_var('location_id');
-			$update_price_items = false;
-
-			phpgw::import_class('phpgwapi.jquery');
-			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('rental', 'rental', 'contract.edit.js');
 			
 			$message = null;
 			$error = null;
-			$add_default_price_items = false;
+			
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+	
+			if ($values['contract_id'])
+			{
+				$contract_id = $values['contract_id'];
+			}
+				
+			if (!empty($contract_id)) 
+			{
+				$contract = rental_socontract::get_instance()->get_single($contract_id);
+				$created = date($this->dateFormat, $contract->get_last_updated());  
+				$created_by = $contract->get_last_edited_by();
+					
+				if ($contract) {
+					
+					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
+					{
+						$editable = false;
+						$error .= '<br/>'.lang('permission_denied_edit_contract');
+					}
+					
+					if(!$editable && !$contract->has_permission(PHPGW_ACL_READ))
+					{
+						$this->render('permission_denied.php',array('error' => lang('permission_denied_view_contract')));
+						return;
+					}
+				}
+			}
+			else
+			{
+				if($this->isAdministrator() || $this->isExecutiveOfficer())
+				{
+					$created = date($this->dateFormat, strtotime('now'));
+					$created_by = $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw_info']['user']['account_id']);
+
+					$contract = new rental_contract();
+					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+					$contract->set_location_id($location_id);
+					$contract->set_contract_type_title($fields[$location_id]);
+				}
+				else
+				{
+					$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
+					return;	
+				}
+			}
+			
+			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
+			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
+			
+			$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
+			$current_contract_type_id = $contract->get_contract_type_id();
+			if( strcmp($responsibility_area, "contract_type_eksternleie") != 0 )
+			{ 
+				$contract_type_options[] = array('id'=>'', 'name'=>lang('Ingen type'), 'selected'=>0);
+			}
+			$contract_types = rental_socontract::get_instance()->get_contract_types($contract->get_location_id());		
+			foreach($contract_types as $contract_type_id => $contract_type_label)
+			{
+				$selected = ($contract_type_id == $current_contract_type_id) ? 1 : 0;
+				$contract_type_options[] = array('id'=>$contract_type_id, 'name'=>lang($contract_type_label), 'selected'=>$selected);
+			}
+		
+			if(!$executive_officer = $contract->get_executive_officer_id())
+			{
+				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+			$location_name = $contract->get_field_of_responsibility_name();
+			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $location_name, 'rental');
+			$executive_officer_options[] = array('id'=>'', 'name'=>lang('nobody'), 'selected'=>0);
+			foreach($accounts as $account)
+			{
+				$selected = ($account['account_id'] == $executive_officer) ? 1 : 0;
+				$executive_officer_options[] = array('id'=>$account['account_id'], 'name'=>$GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString(), 'selected'=>$selected);
+			}
+			
+			$start_date = ($contract->get_contract_date() && $contract->get_contract_date()->has_start_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_start_date()) : '';
+			$end_date = ($contract->get_contract_date() && $contract->get_contract_date()->has_end_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_end_date()) : '';
+			$due_date = ($contract->get_due_date()) ? date($this->dateFormat, $contract->get_due_date()) : '';
+			
+			
+			if(!$current_term_id = $contract->get_term_id())
+			{
+				$current_term_id = $config->config_data['default_billing_term'];
+			}
+			$billing_terms = rental_sobilling::get_instance()->get_billing_terms();
+			$billing_term_options = array();
+			foreach($billing_terms as $term_id => $term_title)
+			{
+				$selected = ($term_id == $current_term_id) ? 1 : 0;
+				$billing_term_options[] = array('id'=>$term_id, 'name'=>lang($term_title), 'selected'=>$selected);
+			}
+			
+			$billing_start_date = ($contract->get_billing_start_date()) ? date($this->dateFormat, $contract->get_billing_start_date()) : '';
+			$billing_end_date = ($contract->get_billing_end_date()) ? date($this->dateFormat, $contract->get_billing_end_date()) : '';
+			
+			$cur_responsibility_id = $contract->get_responsibility_id();
+			$contract_responsibility_arr = $contract->get_responsibility_arr($cur_responsibility_id);
+			$responsibility_options = array();
+			if($contract_responsibility_arr)
+			{
+				foreach($contract_responsibility_arr as $contract_responsibility)
+				{
+					$selected = ($contract_responsibility['selected'] == 1) ? 1 : 0;
+					$responsibility_options[] = array('id'=>$contract_responsibility['id'], 'name'=>$contract_responsibility['name'], 'selected'=>$selected);
+				}
+			}						
+			
+			if(empty($contract->get_id()))
+			{
+				$account_in = rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
+				$account_out = rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+				$project_id = rental_socontract::get_instance()->get_default_project_number($contract->get_location_id(), false);
+			}
+			else
+			{
+				$account_in = $contract->get_account_in(); 
+				$account_out = $contract->get_account_out();
+				$project_id = $contract->get_project_id() ;
+			}
+			
+			$security_options[] = array('id'=>'', 'name'=>lang('nobody'), 'selected'=>0);
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_BANK_GUARANTEE, 'name'=>lang('bank_guarantee'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_BANK_GUARANTEE) ? 1 : 0));
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_DEPOSIT, 'name'=>lang('deposit'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_DEPOSIT) ? 1 : 0));
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_ADVANCE, 'name'=>lang('advance'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_ADVANCE) ? 1 : 0));
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_OTHER_GUARANTEE, 'name'=>lang('other_guarantee'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_OTHER_GUARANTEE) ? 1 : 0));
+
+			$current_interval = $contract->get_adjustment_interval();
+			$adjustment_interval_options[] = array('id'=>'1', 'name'=>'1 '.lang('year'), 'selected'=>(($current_interval == '1') ? 1 : 0));
+			$adjustment_interval_options[] = array('id'=>'2', 'name'=>'2 '.lang('year'), 'selected'=>(($current_interval == '2') ? 1 : 0));
+			$adjustment_interval_options[] = array('id'=>'10', 'name'=>'10 '.lang('year'), 'selected'=>(($current_interval == '10') ? 1 : 0));
+			
+			$current_share = $contract->get_adjustment_share();
+			$adjustment_share_options[] = array('id'=>'100', 'name'=>'100%', 'selected'=>(($current_share == '100') ? 1 : 0));
+			$adjustment_share_options[] = array('id'=>'90', 'name'=>'90%', 'selected'=>(($current_share == '90') ? 1 : 0));
+			$adjustment_share_options[] = array('id'=>'80', 'name'=>'80%', 'selected'=>(($current_share == '80') ? 1 : 0));
+			$adjustment_share_options[] = array('id'=>'67', 'name'=>'67%', 'selected'=>(($current_share == '67') ? 1 : 0));
 			
 			$link_save = array
 				(
@@ -914,6 +1048,77 @@
 					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'lang_save'						=> lang('save'),
 					'lang_cancel'					=> lang('cancel'),
+				
+					'lang_contract_number'			=> lang('contract_number'),
+					'lang_parties'					=> lang('parties'),
+					'lang_last_updated'				=> lang('last_updated'),
+					'lang_name'						=> lang('name'),
+					'lang_composite'				=> lang('composite'),
+					'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
+					'lang_contract_type'			=> lang('contract_type'),
+					'lang_executive_officer'		=> lang('executive_officer'),
+					'lang_date_start'				=> lang('date_start'),
+					'lang_date_end'					=> lang('date_end'),
+					'lang_due_date'					=> lang('due_date'),
+					'lang_invoice_header'			=> lang('invoice_header'),
+					'lang_billing_term'				=> lang('billing_term'),
+					'lang_billing_start'			=> lang('billing_start'),
+					'lang_billing_end'				=> lang('billing_end'),
+					'lang_reference'				=> lang('reference'),
+					'lang_responsibility'			=> lang('responsibility'),
+					'lang_service'					=> lang('service'),
+					'lang_account_in'				=> lang('account_in'),
+					'lang_account_out'				=> lang('account_out'),
+					'lang_project_id'				=> lang('project_id'),
+					'lang_security'					=> lang('security'),
+					'lang_security_amount'			=> lang('security_amount'),
+					'lang_rented_area'				=> lang('rented_area'),
+					'lang_rented_area'				=> lang('rented_area'),
+					'lang_adjustable'				=> lang('adjustable'),
+					'lang_adjustment_interval'		=> lang('adjustment_interval'),
+					'lang_adjustment_share'			=> lang('adjustment_share'),
+					'lang_adjustment_year'			=> lang('adjustment_year'),
+					'lang_comment'					=> lang('comment'),
+					'lang_publish_comment'			=> lang('publish_comment'),
+
+					'value_contract_number'			=> $contract->get_old_contract_id(),
+					'value_parties'					=> $contract->get_party_name_as_list(),
+					'value_last_updated'			=> $created,
+					'value_name'					=> $created_by,
+					'value_composite'				=> $contract->get_composite_name_as_list(),
+					'value_field_of_responsibility'	=> lang($contract->get_contract_type_title()),
+					'list_contract_type'			=> array('options' => $contract_type_options),
+					'list_executive_officer'		=> array('options' => $executive_officer_options),
+					'value_date_start'				=> $start_date,
+					'value_date_end'				=> $end_date,
+					'value_due_date'				=> $due_date,
+					'value_invoice_header'			=> $contract->get_invoice_header(),
+					'list_billing_term'				=> array('options' => $billing_term_options),
+					'value_billing_start'			=> $billing_start_date,
+					'value_billing_start'			=> $billing_end_date,
+					'value_reference'				=> $contract->get_reference(),
+					'list_responsibility'			=> array('options' => $responsibility_options),
+					'value_responsibility_id'		=> $contract->get_responsibility_id(),
+					'value_service'					=> $contract->get_service_id(),
+					'value_account_in'				=> $account_in,
+					'value_account_out'				=> $account_out, 
+					'value_project_id'				=> $project_id,
+					'list_security'					=> array('options' => $security_options),
+					'security_amount_simbol'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+					'value_security_amount'			=> $contract->get_security_amount(), 
+					'value_rented_area'				=> $contract->get_rented_area(), 
+					'rented_area_simbol'			=> (isset($config->config_data['area_suffix']) && $config->config_data['area_suffix']) ? $config->config_data['area_suffix'] : 'kvm',			
+					'is_adjustable'					=> $contract->is_adjustable(),
+				
+					'list_adjustment_interval'		=> array('options' => $adjustment_interval_options),
+					'list_adjustment_share'			=> array('options' => $adjustment_share_options),
+					'value_adjustment_year'			=> $contract->get_adjustment_year(),
+					'value_comment'					=> $contract->get_comment(),
+					'value_publish_comment'			=> $contract->get_publish_comment(),
+				
+					'location_id'					=> $contract->get_location_id(),
+					'contract_id'					=> $contract->get_id(),
+				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
