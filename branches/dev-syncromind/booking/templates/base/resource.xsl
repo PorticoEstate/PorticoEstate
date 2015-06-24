@@ -19,7 +19,7 @@
             </li>
         </ul>
         <xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
+		<!--xsl:call-template name="yui_booking_i18n"/-->
 
 		<h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
         <div class="description"><xsl:value-of select="resource/description" disable-output-escaping="yes"/></div>
