@@ -213,6 +213,35 @@ abstract class rental_socommon
 
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
 		$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
+
+		/**
+		 * Sigurd: try to limit the candidates to a minimum
+		 */
+		$bypass_offset_check = false;
+		if($num_of_objects && isset($id_field_name_info['translated']))
+		{
+			$bypass_offset_check = true;
+			$sql_parts_filter = explode('FROM',$sql);
+
+			$sql_filter = "SELECT DISTINCT {$id_field_name_info['table']}.{$id_field_name_info['field']} AS {$id_field_name_info['translated']}";
+			if($sort_field && $sort_field != $id_field_name_info['translated'])
+			{
+				$sql_filter .= ",{$sort_field}";
+			}
+
+			$sql_filter .= " FROM {$sql_parts_filter[1]}";
+
+			$this->db->limit_query($sql_filter, $start_index, __LINE__, __FILE__, (int)$num_of_objects);
+			$ids = array();
+			while ($this->db->next_record())
+			{
+				$ids[] = $this->db->f($id_field_name_info['translated']);
+			}
+			$id_filter = "{$id_field_name_info['table']}.{$id_field_name_info['field']} IN(" . implode(',', $ids) . ') ';
+
+			$sql = str_replace('1=1', $id_filter, $sql);
+		}
+
 		$this->db->query($sql,__LINE__, __FILE__, false, true);
 
 		while ($this->db->next_record()) // Runs through all of the results
@@ -230,7 +259,7 @@ abstract class rental_socommon
 					$object_ids[] = $result_id; // We have to add the new id
 				}
 				// We have to check if we should populate this object
-				if(count($object_ids) > $start_index) // We're at index above start index
+				if($bypass_offset_check || ( count($object_ids) > $start_index) ) // We're at index above start index
 				{
 					if($num_of_objects == null || count($results) < $num_of_objects) // We haven't found all the objects we're looking for
 					{
@@ -349,4 +378,3 @@ abstract class rental_socommon
 		return false;
 	}
 }
-?>

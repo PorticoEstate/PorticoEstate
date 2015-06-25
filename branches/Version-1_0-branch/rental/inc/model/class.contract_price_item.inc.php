@@ -201,7 +201,8 @@
 				// in "date" parser which requires a format like: 2009/07/30 to work. 
 				// EHL: Removed 2009-10-27, due to change to int datatype. 
 				'date_start' => $this->get_date_start()!=NULL?date($date_format, $this->get_date_start()):null,  
-				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):null
+				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):null,
+				'price_type_title' => lang($this->get_price_type_title()),
 			);
 		}
 		
