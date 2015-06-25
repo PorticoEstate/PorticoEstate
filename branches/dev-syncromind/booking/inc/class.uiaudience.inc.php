@@ -209,8 +209,15 @@
 				}
 			}
 			$this->flash_form_errors($errors);
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Audience Edit'), 'link' => '#audience_edit');
+            $active_tab = 'generic';
+            
+            $audience['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
 			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
-			self::render_template('audience_edit', array('audience' => $audience));
+			self::render_template_xsl('audience_edit', array('audience' => $audience));
 		}
 		
 		public function show()
