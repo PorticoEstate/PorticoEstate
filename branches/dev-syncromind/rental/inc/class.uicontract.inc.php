@@ -21,6 +21,9 @@
 	class rental_uicontract extends rental_uicommon
 	{
 		private $pdf_templates = array();
+		private $decimalSeparator;
+		private $thousandsSeparator;
+		private $decimalPlaces;
 		
 		public $public_functions = array
 		(
@@ -50,6 +53,11 @@
 			parent::__construct();
 			self::set_active_menu('rental::contracts');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('contracts');
+			
+			$this->thousandsSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : ' ';
+			$this->decimalSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
+			$this->decimalPlaces = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;
+			
 		}
 
 	private function _get_filters()
@@ -622,7 +630,7 @@
 			$contract_id = (int)phpgw::get_var('id');
 			$location_id = (int)phpgw::get_var('location_id');
 			$update_price_items = false;
-			
+
 			$message = null;
 			$error = null;
 			$add_default_price_items = false;
@@ -780,7 +788,7 @@
 			{
 				phpgwapi_cache::message_set($message, 'message'); 
 			}
-			$this->edit();	
+			$this->edit(array('contract_id'=>$contract_id));	
 		}
 		
 		/**
@@ -938,6 +946,9 @@
 			
 			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
 			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
+			$GLOBALS['phpgw']->jqcal->add_listener('due_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('billing_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('billing_end_date');
 			
 			$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
 			$current_contract_type_id = $contract->get_contract_type_id();
@@ -995,7 +1006,7 @@
 					$selected = ($contract_responsibility['selected'] == 1) ? 1 : 0;
 					$responsibility_options[] = array('id'=>$contract_responsibility['id'], 'name'=>$contract_responsibility['name'], 'selected'=>$selected);
 				}
-			}						
+			} 		
 			
 			if(empty($contract->get_id()))
 			{
@@ -1010,11 +1021,12 @@
 				$project_id = $contract->get_project_id() ;
 			}
 			
+			$current_security_type = $contract->get_security_type();
 			$security_options[] = array('id'=>'', 'name'=>lang('nobody'), 'selected'=>0);
-			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_BANK_GUARANTEE, 'name'=>lang('bank_guarantee'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_BANK_GUARANTEE) ? 1 : 0));
-			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_DEPOSIT, 'name'=>lang('deposit'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_DEPOSIT) ? 1 : 0));
-			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_ADVANCE, 'name'=>lang('advance'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_ADVANCE) ? 1 : 0));
-			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_OTHER_GUARANTEE, 'name'=>lang('other_guarantee'), 'selected'=>(($contract->get_security_type() == rental_contract::SECURITY_TYPE_OTHER_GUARANTEE) ? 1 : 0));
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_BANK_GUARANTEE, 'name'=>lang('bank_guarantee'), 'selected'=>(($current_security_type == rental_contract::SECURITY_TYPE_BANK_GUARANTEE) ? 1 : 0));
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_DEPOSIT, 'name'=>lang('deposit'), 'selected'=>(($current_security_type == rental_contract::SECURITY_TYPE_DEPOSIT) ? 1 : 0));
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_ADVANCE, 'name'=>lang('advance'), 'selected'=>(($current_security_type == rental_contract::SECURITY_TYPE_ADVANCE) ? 1 : 0));
+			$security_options[] = array('id'=>rental_contract::SECURITY_TYPE_OTHER_GUARANTEE, 'name'=>lang('other_guarantee'), 'selected'=>(($current_security_type == rental_contract::SECURITY_TYPE_OTHER_GUARANTEE) ? 1 : 0));
 
 			$current_interval = $contract->get_adjustment_interval();
 			$adjustment_interval_options[] = array('id'=>'1', 'name'=>'1 '.lang('year'), 'selected'=>(($current_interval == '1') ? 1 : 0));
@@ -1037,13 +1049,43 @@
 					'menuaction'	=> 'rental.uicontract.index',
 				);
 			
-		
 			$tabs = array();
 			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
 			$active_tab = 'details';
 		
+			if($contract_id)
+			{
+				$tabs['composite']		= array('label' => lang('Composite'), 'link' => '#composite');
+				$tabs['parties']		= array('label' => lang('Parties'), 'link' => '#parties');
+				$tabs['price']			= array('label' => lang('Price'), 'link' => '#price');
+				$tabs['invoice']		= array('label' => lang('Invoice'), 'link' => '#invoice');
+				$tabs['documents']		= array('label' => lang('Documents'), 'link' => '#documents');
+				$tabs['notifications']	= array('label' => lang('Notifications'), 'link' => '#notifications');
+			}
+			
+			$datatable_def = array();
+			
+			if($contract_id)
+			{			
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_0',
+					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.get_total_price', 'contract_id'=>$contract_id,  'phpgw_return_as'=>'json'))),
+					'ColumnDefs'	=> array(
+								array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false),
+								array('key'=>'area', 'label'=>lang('area'), 'sortable'=>false),
+								array('key'=>'price_per_unit', 'label'=>lang('price_per_unit'), 'sortable'=>false)					
+					),
+					'config'		=> array(
+						array('disableFilter' => true),
+						array('disablePagination' => true)
+					)
+				);
+			}
+			
 			$data = array
 				(
+					'datatable_def'					=> $datatable_def,
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_save),
 					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'lang_save'						=> lang('save'),
@@ -1054,6 +1096,7 @@
 					'lang_last_updated'				=> lang('last_updated'),
 					'lang_name'						=> lang('name'),
 					'lang_composite'				=> lang('composite'),
+				
 					'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
 					'lang_contract_type'			=> lang('contract_type'),
 					'lang_executive_officer'		=> lang('executive_officer'),
@@ -1086,6 +1129,7 @@
 					'value_last_updated'			=> $created,
 					'value_name'					=> $created_by,
 					'value_composite'				=> $contract->get_composite_name_as_list(),
+				
 					'value_field_of_responsibility'	=> lang($contract->get_contract_type_title()),
 					'list_contract_type'			=> array('options' => $contract_type_options),
 					'list_executive_officer'		=> array('options' => $executive_officer_options),
@@ -1095,10 +1139,10 @@
 					'value_invoice_header'			=> $contract->get_invoice_header(),
 					'list_billing_term'				=> array('options' => $billing_term_options),
 					'value_billing_start'			=> $billing_start_date,
-					'value_billing_start'			=> $billing_end_date,
+					'value_billing_end'				=> $billing_end_date,
 					'value_reference'				=> $contract->get_reference(),
 					'list_responsibility'			=> array('options' => $responsibility_options),
-					'value_responsibility_id'		=> $contract->get_responsibility_id(),
+					'value_responsibility_id'		=> $cur_responsibility_id,
 					'value_service'					=> $contract->get_service_id(),
 					'value_account_in'				=> $account_in,
 					'value_account_out'				=> $account_out, 
@@ -1117,7 +1161,8 @@
 					'value_publish_comment'			=> $contract->get_publish_comment(),
 				
 					'location_id'					=> $contract->get_location_id(),
-					'contract_id'					=> $contract->get_id(),
+					'contract_id'					=> $contract_id,
+					'mode'							=> 'edit',
 				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
@@ -1126,7 +1171,7 @@
 
 			//$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 	
-			self::render_template_xsl(array('contract'), array('edit' => $data));
+			self::render_template_xsl(array('contract', 'datatable_inline'), array('edit' => $data));
 			
 			//return $this->viewedit(true, $contract_id, null, $location_id, array(), $message, $error);
 		}
@@ -1414,7 +1459,8 @@
 			return false;
 		}
 		
-		public function get_total_price(){
+		public function get_total_price()
+		{
 			$so_contract = rental_socontract::get_instance();
 			$so_contract_price_item = rental_socontract_price_item::get_instance();
 			
@@ -1426,11 +1472,19 @@
 			if(isset($area) && $area > 0)
 			{
 				$price_per_unit = $total_price / $area;
+				$price_per_unit = number_format($price_per_unit, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
 			}
 			
-			$result_array = array('total_price' => $total_price, 'area' => $area, 'price_per_unit' => $price_per_unit);
-			$result_data = array('results' => $result_array, 'total_records' => 1);
-			return $this->yui_results($result_data, 'total_records', 'results');
+			$total_price = number_format($total_price, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
+			$area = number_format($area, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
+						
+			$result_array[] = array('total_price' => $total_price.' NOK', 'area' => $area.' Kvm', 'price_per_unit' => $price_per_unit.' NOK');
+			
+			$result_data    =   array('results' =>  $result_array);
+			$result_data['total_records']	= 1;
+			$result_data['draw']    = 1;
+
+			return $this->jquery_results($result_data);
 		}
 		
 		public function get_max_area(){
