@@ -6,6 +6,7 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true
@@ -50,6 +51,10 @@
 			return $nodes;
 		}
 		
+        public function query() {
+            
+        }
+        
 		public function index()
 		{
 			$show_all = phpgw::get_var('show_all') || false;
@@ -77,7 +82,7 @@
 			{
 				$links['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
 			}
-			self::render_template('activities', array('treedata' => $treedata, 'links' => $links, 'show_all' => $show_all));
+			self::render_template_xsl('activities', array('treedata' => $treedata, 'links' => $links, 'show_all' => $show_all));
 		}
 
 		public function add()
