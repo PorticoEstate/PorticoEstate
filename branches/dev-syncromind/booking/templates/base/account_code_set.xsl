@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:call-template name="yui_booking_i18n"/>
-	<div id="content">
-		<ul class="pathway">
+	<!--xsl:call-template name="yui_booking_i18n"/-->
+	<!--div id="content"-->
+		<!--ul class="pathway">
 			<li>
 				<a>
 					<xsl:attribute name="href"><xsl:value-of select="account_code_set/account_codes_link"/></xsl:attribute>
@@ -11,83 +11,125 @@
 			<li>
 				<xsl:value-of select="account_code_set/name"/>
 			</li>
-		</ul>
-		
-		<dl class="proplist">
-			<dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
-			<dd><xsl:value-of select="account_code_set/name"/></dd>	
-		</dl>
+		</ul-->
+    <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
+        <input type="hidden" name="tab" value=""/>
+        <div id="tab-content">
+            <xsl:value-of disable-output-escaping="yes" select="account_code_set/tabs"/>
+            <div id="account">
+                
+		<div class="pure-control-group">
+                    <label>
+                        <xsl:value-of select="php:function('lang', 'Name')" />
+                    </label>
+			<xsl:value-of select="account_code_set/name"/>
+                </div>
 
-		<dl class="proplist-col">
+		<div class="pure-control-group">
 			<xsl:if test="config_data/dim_3">
-				<dt><xsl:value-of select="config_data/dim_3" /></dt>
-				<dd><xsl:value-of select="account_code_set/object_number"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_3" />
+                            </label>
+                                <xsl:value-of select="account_code_set/object_number"/>
 			</xsl:if>
-			
+                </div>
+                <div class="pure-control-group">	
 			<xsl:if test="config_data/article">
-				<dt><xsl:value-of select="php:function('lang', 'Article')" /></dt>
-				<dd><xsl:value-of select="account_code_set/article"/></dd>
+                            <label>
+                                <xsl:value-of select="php:function('lang', 'Article')" />
+                            </label>
+				<xsl:value-of select="account_code_set/article"/>
 			</xsl:if>
-			
+                </div>
+                <div class="pure-control-group">
 			<xsl:if test="config_data/dim_value_1">
-				<dt><xsl:value-of select="config_data/dim_value_1" /></dt>
-				<dd><xsl:value-of select="account_code_set/unit_number"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_value_1" />
+                            </label>
+				<xsl:value-of select="account_code_set/unit_number"/>
 			</xsl:if>
-			
+                </div>
+                <div class="pure-control-group">	
 			<xsl:if test="config_data/dim_value_4">
-				<dt><xsl:value-of select="config_data/dim_value_4" /></dt>
-				<dd><xsl:value-of select="account_code_set/dim_value_4"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_value_4" />
+                            </label>
+				<xsl:value-of select="account_code_set/dim_value_4"/>
 			</xsl:if>
-			
+                </div>
+                <div class="pure-control-group">	
 			<xsl:if test="config_data/dim_value_5">
-				<dt><xsl:value-of select="config_data/dim_value_5" /></dt>
-				<dd><xsl:value-of select="account_code_set/dim_value_5"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_value_5" />
+                            </label>
+				<xsl:value-of select="account_code_set/dim_value_5"/>
 			</xsl:if>
-			
+                </div>
+                <div class="pure-control-group">	
 			<xsl:if test="config_data/external_format != 'KOMMFAKT'">
-				<dt><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></dt>
-				<dd><xsl:value-of select="account_code_set/unit_prefix"/></dd>
+                            <label>
+                                <xsl:value-of select="php:function('lang', 'Unit Prefix')" />
+                            </label>
+				<xsl:value-of select="account_code_set/unit_prefix"/>
 			</xsl:if>
-		</dl>
+                </div>
 		
-		<dl class="proplist-col">
+		<div class="pure-control-group">
 			<xsl:if test="config_data/dim_1">
-				<dt><xsl:value-of select="config_data/dim_1" /></dt>
-				<dd><xsl:value-of select="account_code_set/responsible_code"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_1" />
+                            </label>
+				<xsl:value-of select="account_code_set/responsible_code"/>
 			</xsl:if>
-			
+                </div>
+                <div class="pure-control-group">	
 			<xsl:if test="config_data/dim_2">
-				<dt><xsl:value-of select="config_data/dim_2" /></dt>
-				<dd><xsl:value-of select="account_code_set/service"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_2" />
+                            </label>
+				<xsl:value-of select="account_code_set/service"/>
 			</xsl:if>
-			
+                </div>
+                <div class="pure-control-group">
 			<xsl:if test="config_data/dim_4">
-				<dt><xsl:value-of select="config_data/dim_4" /></dt>
-				<dd><xsl:value-of select="account_code_set/dim_4"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_4" />
+                            </label>
+				<xsl:value-of select="account_code_set/dim_4"/>
 			</xsl:if>
-
+                </div>
+                <div class="pure-control-group">
 			<xsl:if test="config_data/dim_5">
-				<dt><xsl:value-of select="config_data/dim_5" /></dt>
-				<dd><xsl:value-of select="account_code_set/project_number"/></dd>
+                            <label>
+                                <xsl:value-of select="config_data/dim_5" />
+                            </label>
+				<xsl:value-of select="account_code_set/project_number"/>
 			</xsl:if>
-		</dl>
+                </div>
 		
-			<dl class="proplist">
+			<div class="pure-control-group">
 				<xsl:if test="config_data/external_format != 'KOMMFAKT'">
-					<dt><xsl:value-of select="php:function('lang', 'Invoice instruction')" /></dt>
+					<xsl:value-of select="php:function('lang', 'Invoice instruction')" />
 				</xsl:if>
+                        </div>
+                        <div class="pure-control-group">
 				<xsl:if test="config_data/external_format = 'KOMMFAKT'">
-					<dt><xsl:value-of select="php:function('lang', 'Reference')" /></dt>
+					<xsl:value-of select="php:function('lang', 'Reference')" />
 				</xsl:if>
 				<div class="description"><xsl:value-of select="account_code_set/invoice_instruction"/></div>
-			</dl>
+                        </div>
 
-		<xsl:if test="account_code_set/permission/write">
-			<div class="form-buttons">
-				<button onclick="window.location.href='{account_code_set/edit_link}'">
-					<xsl:value-of select="php:function('lang', 'Edit')" />
-				</button>
-			</div>
-		</xsl:if>
-	</div>
+            </div>
+        </div>
+    </form>
+    <div class="form-buttons">
+        <xsl:if test="account_code_set/permission/write">
+                <div class="form-buttons">
+                        <button onclick="window.location.href='{account_code_set/edit_link}'">
+                                <xsl:value-of select="php:function('lang', 'Edit')" />
+                        </button>
+                </div>
+        </xsl:if>
+    </div>
+	<!--/div-->
 </xsl:template>
