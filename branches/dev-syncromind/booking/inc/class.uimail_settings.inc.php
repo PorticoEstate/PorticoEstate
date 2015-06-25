@@ -6,6 +6,7 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 		);
 		
 		public function __construct()
@@ -14,6 +15,8 @@
 			self::set_active_menu('booking::settings::mail_settings');
 		}
 		
+        public function query(){}
+        
 		public function index()
 		{
 			$config	= CreateObject('phpgwapi.config','booking');
@@ -34,7 +37,14 @@
 				}
 				$config->save_repository();
 			}
-			$this->use_yui_editor();
-			self::render_template('mail_settings', array('config_data' =>$config->config_data));
+//			$this->use_yui_editor();
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Mail Settings'), 'link' => '#mail_settings');
+            $active_tab = 'generic';
+            
+            $mail = array();
+            $mail['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('mail_settings', array('config_data' =>$config->config_data, 'data' => $mail));
 		}
 	}
