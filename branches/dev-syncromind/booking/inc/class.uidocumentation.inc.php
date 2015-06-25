@@ -225,7 +225,13 @@
 			$this->flash_form_errors($errors);
 			$this->add_default_display_data($document);
 			
-			self::render_template('documentation_form', array('document' => $document));
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation_edit');
+            $active_tab = 'generic';
+            
+            $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('documentation_form', array('document' => $document));
 		}
 		
 		public function download()
