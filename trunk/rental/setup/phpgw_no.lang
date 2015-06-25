@@ -1,3 +1,5 @@
+day	rental	no	Dag
+hour	rental	no	Time
 1-6 characters	rental	no	1-6 tegn
 6 characters	rental	no	6 tegn
 account_in	rental	no	Art/konto inntektsside
