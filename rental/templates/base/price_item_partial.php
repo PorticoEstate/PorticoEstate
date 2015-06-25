@@ -79,6 +79,11 @@
 			sortable: true
 		},
 		{
+			key: "price_type_title",
+			label: "<?php echo lang('type') ?>",
+			sortable: false
+		},
+		{
 			key: "id",
 			hidden: true
 		},

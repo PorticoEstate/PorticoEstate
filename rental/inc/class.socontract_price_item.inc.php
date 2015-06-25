@@ -97,20 +97,25 @@ class rental_socontract_price_item extends rental_socommon
 		
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$cols = 'COUNT(DISTINCT(rental_contract_price_item.id)) AS count';
 			$order = "";
 		}
 		else if(isset($filters['export']))
 		{
-			$cols = 'id, price_item_id, contract_id, area, count, agresso_id, title, is_area, price, total_price, is_one_time, date_start, date_end';
+			$cols = "rental_contract_price_item.id, rental_contract_price_item.price_item_id,"
+			. " rental_contract_price_item.contract_id, rental_contract_price_item.area, rental_contract_price_item.count,"
+			. " rental_contract_price_item.agresso_id, rental_contract_price_item.title, rental_contract_price_item.is_area,"
+			. " rental_contract_price_item.price, rental_contract_price_item.total_price, rental_contract_price_item.is_one_time,"
+			. " rental_contract_price_item.date_start, rental_contract_price_item.date_end";
 		}
 		else
 		{
-			$cols = '*';
+			$cols = 'rental_contract_price_item.*, rental_price_item.type';
 		}
 		
 		$tables = "rental_contract_price_item";
-		$joins = "";
+//		$joins = "";
+		$joins = "{$this->join} rental_price_item ON (rental_price_item.id = rental_contract_price_item.price_item_id)";
 
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
@@ -134,6 +139,9 @@ class rental_socontract_price_item extends rental_socommon
 			$price_item->set_total_price($this->unmarshal($this->db->f('total_price'),'float'));
 			$price_item->set_date_start($this->unmarshal($this->db->f('date_start'),'int'));
 			$price_item->set_date_end($this->unmarshal($this->db->f('date_end'),'int'));
+			$price_type_id  = (int)$this->db->f('type');
+			$price_item->set_price_type_id($price_type_id);
+			$price_item->set_price_type_title($price_type_id);
 		}
 		return $price_item;
 	}
