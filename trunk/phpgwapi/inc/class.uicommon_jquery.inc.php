@@ -31,17 +31,17 @@
 
 	//phpgw::import_class('phpgwapi.yui');
 
+	phpgw::import_class('phpgwapi.jquery');
 
 	abstract class phpgwapi_uicommon_jquery
 	{
 		const UI_SESSION_FLASH = 'flash_msgs';
 
 		protected
-			$filesArray;
-
-		private
+			$filesArray,
 			$ui_session_key,
 			$flash_msgs;
+
 
 		public $dateFormat;
 
@@ -51,6 +51,18 @@
 
 		public function __construct($currentapp ='', $yui = '')
 		{
+			$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
+			// start: to be removed
+			phpgw::import_class('phpgwapi.yui');
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('history');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('calendar');
+			phpgwapi_yui::load_widget('autocomplete');
+			phpgwapi_yui::load_widget('animation');
+			//end: to be removed
 
 			$yui = isset($yui) && $yui == 'yui3' ? 'yui3' : 'yahoo';
 			$currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -65,8 +77,12 @@
 			if($yui == 'yui3')
 			{
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-				self::add_javascript('phpgwapi', $yui, 'common.js');
 			}
+
+			self::add_javascript('phpgwapi', $yui, 'common.js');
+
+			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('phpgwapi', "jquery", 'common.js');
 
 			$this->url_prefix = str_replace('_', '.', get_class($this));
 
@@ -76,6 +92,32 @@
 			$this->locations = & $GLOBALS['phpgw']->locations;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($currentapp);
+			
+			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/media/css/jquery.dataTables.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Responsive/css/dataTables.responsive.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colvis.jqueryui.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/TableTools/css/dataTables.tableTools.css');
+
+			//pop up script
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
+			if(phpgw::get_var('nonavbar'))
+			{
+			//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			//	$GLOBALS['phpgw_info']['flags']['headonly']=true;
+			}
+
 		}
 
 		private function get_ui_session_key()
@@ -83,7 +125,7 @@
 			return $this->ui_session_key;
 		}
 
-		private function restore_flash_msgs()
+		protected function restore_flash_msgs()
 		{
 			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH)))
 			{
@@ -99,23 +141,23 @@
 			return false;
 		}
 
-		private function store_flash_msgs()
+		protected function store_flash_msgs()
 		{
 			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
 		}
 
-		private function reset_flash_msgs()
+		protected function reset_flash_msgs()
 		{
 			$this->flash_msgs = array();
 			$this->store_flash_msgs();
 		}
 
-		private function session_set($key, $data)
+		protected function session_set($key, $data)
 		{
 			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
 		}
 
-		private function session_get($key)
+		protected function session_get($key)
 		{
 			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
 		}
@@ -304,7 +346,7 @@
 		}
 		public function add_jquery_translation(&$data)
 		{
-//			$this->add_template_file('yui_phpgw_i18n');
+			$this->add_template_file('jquery_phpgw_i18n');
 			$previous = lang('prev');
 			$next = lang('next');
 			$first = lang('first');
@@ -386,7 +428,7 @@
 
 			$this->reset_flash_msgs();
 
-			//$this->add_yui_translation($data);
+//			$this->add_yui_translation($data);
 			$this->add_jquery_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
@@ -397,7 +439,8 @@
 		}
 
 		// Add link key to a result array
-		public function _add_links(&$value, $key, $menuaction)
+		// Add link key to a result array
+		public function _add_links(&$value, $key, $data)
 		{
 			$unset = 0;
 			// FIXME: Fugly workaround
@@ -409,7 +452,18 @@
 				$unset = 1;
 			}
 
-			$value['link'] = self::link(array('menuaction' => $menuaction, 'id' => $value['id']));
+			if(is_array($data))
+			{
+				$link_array = $data;
+				$link_array['id'] = $value['id'];
+
+			}
+			else
+			{
+				$link_array = array('menuaction' => $data, 'id' => $value['id']);
+			}
+
+			$value['link'] = self::link($link_array);
 
 			// FIXME: Fugly workaround
 			// I kid you not my friend. There is something very wonky going on
@@ -448,94 +502,48 @@
 		}
 
 		// Build a jquery result style array
-		public function jquery_results($results)
+		public function jquery_results($result=array())
 		{
-			if (!$results)
+			if (!$result)
 			{
-				$results['total_records'] = 0;
-				$results['recordsFiltered'] = 0;
-				$result['data'] = array();
+				$result['recordsTotal']	= 0;
+				$result['recordsFiltered']	= 0;
+				$result['data']				= array();
 			}
-	//		_debug_array($result);
-			return array(
-				'recordsTotal'		=> $results['total_records'],
-				'recordsFiltered'	=> $results['total_records'],
-				'draw'				=> $results['draw'],
-				'data'				=> $results['results']
-			);
+
+			$result['recordsTotal']		= $result['total_records'];
+			$result['recordsFiltered']	= $result['recordsTotal'];
+			$result['data']				= (array)$result['results'];
+			unset($result['results']);
+			unset($result['total_records']);
+
+			return $result;
 		}
 
-		public function use_yui_editor($targets)
+		/**
+		 * Initiate rich text editor for selected targets
+		 * @param array $targets
+		 */
+		public function rich_text_editor($targets)
 		{
-			/*
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
-			*/
 			if(!is_array($targets))
 			{
 				$targets = array($targets);
 			}
-
-			$lang_font_style = lang('Font Style');
-			$lang_lists = lang('Lists');
-			$lang_insert_item = lang('Insert Item');
-			$js = '';
 			foreach ( $targets as $target )
 			{
-				$js .= <<<SCRIPT
-			(function() {
-				var Dom = YAHOO.util.Dom,
-				Event = YAHOO.util.Event;
-
-				var editorConfig = {
-					toolbar:
-						{buttons: [
-	 						{ group: 'textstyle', label: '{$lang_font_style}',
-								buttons: [
-									{ type: 'push', label: 'Fet CTRL + SHIFT + B', value: 'bold' }
-								]
-							},
-							{ type: 'separator' },
-							{ group: 'indentlist', label: '{$lang_lists}',
-								buttons: [
-									{ type: 'push', label: 'Opprett punktliste', value: 'insertunorderedlist' },
-									{ type: 'push', label: 'Opprett nummerert liste', value: 'insertorderedlist' }
-								]
-							},
-							{ type: 'separator' },
-							{ group: 'insertitem', label: '{$lang_insert_item}',
-								buttons: [
-									{ type: 'push', label: 'HTML Lenke CTRL + SHIFT + L', value: 'createlink', disabled: true },
-									{ type: 'push', label: 'Sett inn bilde', value: 'insertimage' }
-								]
-							},
-							{ type: 'separator' },
-							{ group: 'undoredo', label: 'Angre/Gjenopprett',
-								buttons: [
-									{ type: 'push', label: 'Angre', value: 'undo' },
-									{ type: 'push', label: 'Gjenopprett', value: 'redo' }
-								]
-							}
-						]
-					},
-					height: '200px',
-					width: '700px',
-					animate: true,
-					dompath: true,
- 					handleSubmit: true
-				};
-
-				var editorWidget = new YAHOO.widget.Editor('{$target}', editorConfig);
-				editorWidget.render();
-			})();
-
-SCRIPT;
+				phpgwapi_jquery::init_ckeditor($target);
 			}
+		}
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/editor/assets/skins/sam/editor.css');
-			phpgw::import_class('phpgwapi.yui');
-			phpgwapi_yui::load_widget('editor');
-			$GLOBALS['phpgw']->js->add_event('load', $js);
+
+		/**
+		 * Initiate rich text editor for selected targets
+		 * @param array $targets
+		 */
+		public function use_yui_editor($targets)
+		{
+			$this->rich_text_editor($targets);
 		}
 
 		public function render($template,$local_variables = array())
@@ -777,15 +785,27 @@ SCRIPT;
 		{
 			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
 			{
-				$this->bo->unset_show_all_objects();
+				unset($_SESSION['showall']);
 			}
 			else
 			{
-				$this->bo->show_all_objects();
+				$_SESSION['showall'] = "1";
 			}
 			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
 		}
 
+		public function toggle_show_inactive()
+		{
+			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
+			{
+				unset($_SESSION['showall']);
+			}
+			else
+			{
+				$_SESSION['showall'] = "1";
+			}
+			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
+		}
 /*
 		public function use_yui_editor()
 		{
