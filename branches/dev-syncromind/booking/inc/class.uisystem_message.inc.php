@@ -404,6 +404,12 @@
 			);
 			$loggedin = (int) true; // FIXME: Some sort of authentication!
 
-			self::render_template('system_message', array('system_message' => $system_message, 'loggedin' => $loggedin));
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('System message'), 'link' => '#system_message');
+            $active_tab = 'generic';
+            
+            $system_message['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('system_message', array('system_message' => $system_message, 'loggedin' => $loggedin));
 		}
 	}
