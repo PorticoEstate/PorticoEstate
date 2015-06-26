@@ -8,6 +8,8 @@
 
 	class rental_uicomposite extends rental_uicommon
 	{
+		var $config;
+		
 		public $public_functions = array
 		(
 			'index'		=> true,
@@ -28,8 +30,93 @@
 
 			self::set_active_menu('rental::composites');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('rc');
+			
+			$this->config = CreateObject('phpgwapi.config','rental');
+			$this->config->read();
 		}
 		
+	private function _get_filters()
+	{
+		$filters = array();
+
+		$search_option = array
+		(
+			array('id' => 'all', 'name' => lang('all')),
+			array('id' => 'name', 'name' => lang('name')),
+			array('id' => 'address', 'name' => lang('address')),
+			array('id' => 'property_id', 'name' => lang('object_number'))
+		);
+		$filters[] = array
+					(
+						'type'   => 'filter',
+						'name'   => 'search_option',
+						'text'   => lang('search option'),
+						'list'   => $search_option
+					);
+		
+		if(isset($this->config->config_data['contract_furnished_status']) && $this->config->config_data['contract_furnished_status'])
+		{
+			$furnish_types_arr = rental_composite::get_furnish_types();
+			$furnish_types = array();
+			array_unshift ($furnish_types, array('id'=>'4', 'name'=>lang('Alle')));
+			foreach($furnish_types_arr as $id => $title){
+					$furnish_types[] = array('id'=>$id, 'name'=>$title); 
+			}
+			$filters[] = array
+						(
+							'type'   => 'filter',
+							'name'   => 'furnished_status',
+							'text'   => lang('furnish_type'),
+							'list'   => $furnish_types
+						);									
+		}
+				 
+		$districts_arr = execMethod('property.sogeneric.get_list',array('type' => 'district'));
+		$districts = array();
+		array_unshift ($districts, array('id'=>'', 'name'=>lang('select')));
+		foreach($districts_arr as $district)
+		{
+			$districts[] = array('id'=>$district['id'], 'name'=>$district['name']); 
+		}
+		$filters[] = array
+					(
+						'type'   => 'filter',
+						'name'   => 'district_id',
+						'text'   => lang('district'),
+						'list'   => $districts
+					);
+		
+		$active_option = array
+		(
+			array('id' => 'both', 'name' =>lang('all')),
+			array('id' => 'active', 'name' =>lang('in_operation')),
+			array('id' => 'non_active', 'name' =>lang('out_of_operation')),
+		);
+		$filters[] = array
+					(
+						'type'   => 'filter',
+						'name'   => 'is_active',
+						'text'   => lang('availability'),
+						'list'   => $active_option
+					);
+		
+		$has_contract_option = array
+		(
+			array('id' => 'both', 'name' =>lang('all')),
+			array('id' => 'has_contract', 'name' =>lang('composite_has_contract')),
+			array('id' => 'has_no_contract', 'name' =>lang('composite_has_no_contract')),
+		);
+		$filters[] = array
+					(
+						'type'   => 'filter',
+						'name'   => 'has_contract',
+						'text'   => '',
+						'list'   => $has_contract_option
+					);
+		
+		return $filters;
+	}
+	
 		public function query()
 		{ 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -40,31 +127,38 @@
 			{
 				$user_rows_per_page = 10;
 			}
-			// YUI variables for paging and sorting
-			$start_index	= phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field		= phpgw::get_var('sort');
-			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
-			// Form variables
-			$search_for 	= phpgw::get_var('query');
-			$search_type	= phpgw::get_var('search_option');
+			
+			$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+
+			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'identifier'; 
+			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
+			$search_for 	= $search['value'];
+			$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+			
+			$export			= phpgw::get_var('export','bool');
+			$editable		= phpgw::get_var('editable', 'bool');
+		
 			// Create an empty result set
 			$result_objects = array();
-			$result_count = 0;
+			$object_count = 0;
 			$district_id	= phpgw::get_var('district_id', 'int');
 			
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
 			
-			$exp_param 	= phpgw::get_var('export');
-			$export = false;
-			if(isset($exp_param)){
-				$export=true;
+			if ($export)
+			{
 				$num_of_objects = null;
 			}
 			
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
+			
 			switch($query_type)
 			{
 				case 'available_composites': // ... get all vacant composites
@@ -120,9 +214,9 @@
 			}
 			
 			// ... add result data
-			$result_data = array('results' => $rows, 'total_records' => $object_count);
+			//$result_data = array('results' => $rows, 'total_records' => $object_count);
 			
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			//$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
 			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
 
@@ -140,7 +234,6 @@
 				}
 			}
 
-			
 			$create_types = array();
 			foreach($contract_types as $id => $label)
 			{
@@ -160,10 +253,10 @@
 				}
 			}
 			
-			if(!$export){
+			/*if(!$export){
 				//Add action column to each row in result table
 				array_walk(
-					$result_data['results'],
+					$rows,
 					array($this, 'add_actions'), 
 					array(													// Parameters (non-object pointers)
 						$contract_id,										// [1] The contract id
@@ -172,9 +265,15 @@
 						$create_types										// [4] Types of contract to create
 					)
 				);
-			}
+			}*/
 
-			return $this->yui_results($result_data, 'total_records', 'results');
+			$result_data    =   array('results' =>  $rows);
+			$result_data['total_records']	= $object_count;
+			$result_data['draw']    = $draw;
+
+			return $this->jquery_results($result_data);
+		
+			//return $this->yui_results($result_data, 'total_records', 'results');
 		}
 		
 		/**
@@ -272,7 +371,136 @@
 		 */
 		public function index()
 		{
-			$search_for = phpgw::get_var('search_for');
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			$editable		= phpgw::get_var('editable', 'bool');
+			$user_is		= $this->type_of_user;
+
+			$appname = lang('rc');
+			$type = 'all_composites';
+
+			$function_msg = lang('list %1', $appname);
+
+			$data = array(
+				'datatable_name'	=> $function_msg,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type'   => 'link',
+								'value'  => lang('new'),
+								'href'   => self::link(array(
+									'menuaction'	=> 'rental.uicomposite.add'
+								)),
+								'class'  => 'new_item'
+							)							
+						)
+					)
+				),
+				'datatable' => array(
+					'source'	=> self::link(array(
+						'menuaction'	=> 'rental.uicomposite.index', 
+						'editable'		=> ($editable) ? 1 : 0,
+						'type'			=> $type,
+						'phpgw_return_as' => 'json'
+					)),
+					'download'	=> self::link(array('menuaction' => 'rental.uicomposite.download',
+							'type'		=> $type,
+							'export'    => true,
+							'allrows'   => true
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+						array(
+							'key'		=> 'id', 
+							'label'		=> lang('serial'), 
+							'className'	=> '', 
+							'sortable'	=> false, 
+							'hidden'	=> true
+						),
+						array(
+							'key'		=> 'location_code', 
+							'label'		=> lang('object_number'), 
+							'className'	=> '', 
+							'sortable'	=> true, 
+							'hidden'	=> false
+						),
+						array(
+							'key'		=> 'name',
+							'label'		=> lang('name'),
+							'sortable'	=> true,
+							'hidden'	=> false
+						),
+						array(
+							'key'		=> 'address',
+							'label'		=> lang('address'),
+							'sortable'	=> true, 
+							'hidden'	=> false
+						),
+						array(
+							'key'		=> 'gab_id',
+							'label'		=> lang('propertyident'),
+							'sortable'	=> false,
+							'hidden'	=> false
+						),
+						array(
+							'key'		=> 'status',
+							'label'		=> lang('status'),
+							'sortable'	=> true,
+							'hidden'	=> false
+						)
+					)
+				)
+			);
+
+			$filters = $this->_get_Filters();
+			krsort($filters);
+			foreach($filters as $filter){
+				array_unshift($data['form']['toolbar']['item'], $filter);
+			}
+
+			if(!empty($this->config->config_data['contract_future_info']))
+			{
+				array_push($data['datatable']['field'], array("key"=>"contracts", "label"=>lang('contract_future_info'), "sortable"=>false, "hidden"=>false));
+			}
+			if(!empty($this->config->config_data['contract_furnished_status']))
+			{
+				array_push($data['datatable']['field'], array("key"=>"furnished_status", "label"=>lang('furnish_type'), "sortable"=>false, "hidden"=>false));
+			}
+			array_push($data['datatable']['field'], array("key"=>"actions", "label"=>lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'view',
+					'text' 			=> lang('show'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'rental.uicomposite.view'
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
+
+			
+			//self::add_javascript('rental', 'rental', 'party.sync.js');
+			self::render_template_xsl('datatable_jquery', $data);
+		
+			/*$search_for = phpgw::get_var('search_for');
 			if($search_for)
 			{
 				phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
@@ -284,7 +512,7 @@
 				phpgwapi_cache::session_set('rental', 'composite_search_type', $s_type);
 				phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('contract_status'));
 			}
-			$this->render('composite_list.php');
+			$this->render('composite_list.php');*/
 		}
 		
 		/**
