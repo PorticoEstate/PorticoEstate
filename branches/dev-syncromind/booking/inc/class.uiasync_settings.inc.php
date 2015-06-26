@@ -8,6 +8,7 @@
 		public $public_functions = array
 		(
 			'index'	=>	true,
+            'query' =>  true
 		);
 		
 		protected $fields = array('booking_async_task_update_reservation_state_enabled', 'booking_async_task_send_reminder_enabled');
@@ -31,7 +32,17 @@
 				$this->bo->update($settings);
 			}
 			
-			self::render_template('async_settings_form', array('settings' => $settings));
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Async Settings'), 'link' => '#async_settings');
+            $active_tab = 'generic';
+            
+            
+            $settings['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('async_settings_form', array('settings' => $settings));
 		} 
+       
+        public function query(){ 
+        }
 		
 	}
