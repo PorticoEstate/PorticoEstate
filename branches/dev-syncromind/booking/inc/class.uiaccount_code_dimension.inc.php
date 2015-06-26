@@ -6,6 +6,7 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         =>  true,
 		);
 		
 		public function __construct()
@@ -34,7 +35,17 @@
 				}
 				$config->save_repository();
 			}
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Account Code Dimension'), 'link' => '#account_code');
+            $active_tab = 'generic';
+            
+            $data = array();
+            $data['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			
-			self::render_template('account_code_dimension', array('config_data' =>$config->config_data));
+			self::render_template_xsl('account_code_dimension', array('config_data' =>$config->config_data, 'data' => $data));
 		}
+        
+        public function query(){         
+        }
 	}
