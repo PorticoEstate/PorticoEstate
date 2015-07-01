@@ -148,7 +148,7 @@
 	 	}
 		else
 		{
-			alert('Sorry! No web storage support..');
+//			alert('Sorry! No web storage support..');
 		}
 
 		if(cached_mapping)
