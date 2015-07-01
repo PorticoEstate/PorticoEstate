@@ -22,6 +22,10 @@ table.dataTable.dtr-inline.collapsed tbody th:first-child:before {
   content: '+';
   background-color: #31b131;
 }
+table.dataTable.dtr-inline.collapsed tbody td:first-child.dataTables_empty:before,
+table.dataTable.dtr-inline.collapsed tbody th:first-child.dataTables_empty:before {
+  display: none;
+}
 table.dataTable.dtr-inline.collapsed tbody tr.parent td:first-child:before,
 table.dataTable.dtr-inline.collapsed tbody tr.parent th:first-child:before {
   content: '-';
@@ -75,6 +79,7 @@ table.dataTable tr.child ul {
 table.dataTable tr.child ul li {
   border-bottom: 1px solid #efefef;
   padding: 0.5em 0;
+  white-space: nowrap;
 }
 table.dataTable tr.child ul li:first-child {
   padding-top: 0;

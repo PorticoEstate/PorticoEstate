@@ -96,7 +96,7 @@
 								<xsl:call-template name="choice"/>
 							</xsl:when>
 							<xsl:when test="datatype='LB'">
-								<select id="id_{name}" name="values_attribute[{counter}][value]" class="forms">
+								<select id="id_{name}" name="values_attribute[{counter}][value]" class="forms" title="{$statustext}">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">

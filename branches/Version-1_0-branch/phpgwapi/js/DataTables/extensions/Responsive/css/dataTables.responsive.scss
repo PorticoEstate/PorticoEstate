@@ -45,6 +45,10 @@ table.dataTable {
 				@include control;
 				@include control-open;
 			}
+
+			&.dataTables_empty:before {
+				display: none;
+			}
 		}
 
 		tr.parent {
@@ -105,6 +109,7 @@ table.dataTable {
 			li {
 				border-bottom: 1px solid #efefef;
 				padding: 0.5em 0;
+				white-space: nowrap;
 
 				&:first-child {
 					padding-top: 0;
