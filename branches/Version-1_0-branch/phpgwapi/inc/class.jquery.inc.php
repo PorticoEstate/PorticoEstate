@@ -56,8 +56,8 @@ class phpgwapi_jquery {
 			case 'core':
 				$load = array
 					(
-					//"js/jquery-1.11.1{$_type}",
-					"js/jquery-2.1.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
 //						"js/jquery-migrate-1.2.1"
 				);
 				break;
@@ -65,8 +65,10 @@ class phpgwapi_jquery {
 			case 'datepicker':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
-					"js/jquery-ui-1.11.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-ui-1.11.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
+					"js/jquery-ui-1.10.4.custom{$_type}",
 					"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 //						"js/jquery-migrate-1.2.1"
 				);
@@ -75,7 +77,8 @@ class phpgwapi_jquery {
 			case 'validator':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
 					"validator/jquery.form-validator{$_type}"
 				);
 				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/validator/css/main.css");
@@ -85,8 +88,10 @@ class phpgwapi_jquery {
 			case 'autocomplete':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
-					"js/jquery-ui-1.11.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-ui-1.11.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
+					"js/jquery-ui-1.10.4.custom{$_type}",
 //						"js/jquery-migrate-1.2.1"
 				);
 
@@ -97,7 +102,8 @@ class phpgwapi_jquery {
 			case 'tabview':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
 				//	"tabs/jquery.responsiveTabs{$_type}",
 					"tabs/jquery.responsiveTabs",
 					'common'
@@ -110,7 +116,8 @@ class phpgwapi_jquery {
 			case 'mmenu':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
 					"mmenu/src/js/jquery.mmenu.min.all"
 				);
 
@@ -121,7 +128,8 @@ class phpgwapi_jquery {
 			case 'treeview':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
 					"treeview/jstree{$_type}"
 				);
 
@@ -132,7 +140,8 @@ class phpgwapi_jquery {
 			case 'numberformat':
 				$load = array
 					(
-					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
 					"number-format/jquery.number{$_type}"
 				);
 
@@ -140,8 +149,10 @@ class phpgwapi_jquery {
 			case 'layout':
 				$load = array
 				(
-					"js/jquery-2.1.1{$_type}",
-					"js/jquery-ui-1.11.1{$_type}",
+//					"js/jquery-2.1.1{$_type}",
+//					"js/jquery-ui-1.11.1{$_type}",
+					"js/jquery-1.11.1{$_type}",
+					"js/jquery-ui-1.10.4.custom{$_type}",
 					'layout'=> array("jquery.layout{$_type}", "plugins/jquery.layout.state")
 				);
 				break;
