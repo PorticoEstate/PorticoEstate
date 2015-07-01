@@ -28,7 +28,6 @@
 	 * @version $Id: class.uidocument2.inc.php 11942 2014-05-04 19:43:36Z sigurdne $
 	 */
 	phpgw::import_class('phpgwapi.uicommon_jquery');
-	phpgw::import_class('phpgwapi.jquery');
 
 	class property_uidocument2 extends phpgwapi_uicommon_jquery
 	{
@@ -154,34 +153,13 @@
 				return;
 			}
 
-			//FIXME:Responsive(js/css) - shows 'hidden' columns...
-			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColVis/js/dataTables.colVis.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/TableTools/js/dataTables.tableTools.js');
-
-//			self::add_javascript('phpgwapi', 'jquery-mobile', 'jquery.mobile-1.4.3.min.js');
-
-			//FIXME: working?
-//			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.columnFilter.js');
-
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/media/css/jquery.dataTables.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Responsive/css/dataTables.responsive.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/ColVis/css/dataTables.colvis.jqueryui.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/TableTools/css/dataTables.tableTools.css');
-//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/jquery-mobile/jquery.mobile-1.4.3.min.css');
-
-
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
 
-//			self::add_javascript('phpgwapi', 'yui3', 'datatable.js');
-//			phpgwapi_yui::load_widget('datatable');
-//			phpgwapi_yui::load_widget('paginator');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			$categories = $this->_get_categories();
 			$columns	= $this->_get_columns();
