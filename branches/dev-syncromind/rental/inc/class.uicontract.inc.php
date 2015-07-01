@@ -173,7 +173,7 @@
 
 		$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
 		$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
-		$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'identifier'; 
+		$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'old_contract_id'; 
 		$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 		// Form variables
 		$search_for 	= $search['value'];
