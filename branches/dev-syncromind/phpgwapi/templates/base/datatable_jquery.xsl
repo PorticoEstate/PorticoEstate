@@ -40,7 +40,7 @@
 </xsl:template>
 
 
-<xsl:template match="toolbar">
+<xsl:template match="toolbar" xmlns:php="http://php.net/xsl">
 	<style id='toggle-box-css' type='text/css' scoped='scoped'>
 .toggle-box {
   display: none;
