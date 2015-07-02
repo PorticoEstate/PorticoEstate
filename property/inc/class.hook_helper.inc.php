@@ -1085,8 +1085,11 @@
 				unset($pending_approvals);
 			}
 
-			if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
-			&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
+			//Sigurd: Consider remove
+
+//			if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
+//			&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
+			if(false)
 			{
 				$total_records = 0;
 				$title = 'dummy';
