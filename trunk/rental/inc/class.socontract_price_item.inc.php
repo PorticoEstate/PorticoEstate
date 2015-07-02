@@ -31,13 +31,13 @@ class rental_socontract_price_item extends rental_socommon
 		$columns = array();
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": 'ORDER BY agresso_id ASC, title ASC';
+		$order = $sort_field ? "ORDER BY rental_contract_price_item.{$sort_field} $dir": 'ORDER BY agresso_id ASC, title ASC';
 		
 		$filter_clauses = array();
 		
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
-			$filter_clauses[] = "{$this->get_id_field_name()} = {$id}";
+			$filter_clauses[] = "rental_contract_price_item.{$this->get_id_field_name()} = {$id}";
 		}
 		if(isset($filters['contract_id'])){
 			$id = $this->marshal($filters['contract_id'],'int');
