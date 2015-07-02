@@ -127,18 +127,75 @@
 				<xsl:for-each select="application/dates">
 					<div class="date-container">
 						<a href="#" class="close-btn">-</a>
-						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+						
+						<!--dt>
+							<label for="field_from">
+								<xsl:value-of select="php:function('lang', 'From')" />
+							</label>
+						</dt>
 						<dd class="datetime-picker">
 							<input id="field_from" name="from_[]" type="text">
 								<xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
 							</input>
+						</dd-->
+						
+						<dt>
+							<label for="field_from">
+								<xsl:value-of select="php:function('lang', 'From')" />
+							</label>
+						</dt>
+						<dd>
+							<input class="datetime" id="start_date" name="start_date" type="text">
+								<xsl:if test="activity/start_date != ''">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/>
+									</xsl:attribute>
+								</xsl:if>
+
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</input>
+
+						</dd>	
+						
+						<dt>
+							<label for="field_to">
+								<xsl:value-of select="php:function('lang', 'To')" />
+							</label>
+						</dt>
+						
+						<dd>
+							<xsl:if test="activity/error_msg_array/end_date != ''">
+								<xsl:variable name="error_msg">
+									<xsl:value-of select="activity/error_msg_array/end_date" />
+								</xsl:variable>
+								<div class='input_error_msg'>
+									<xsl:value-of select="php:function('lang', $error_msg)" />
+								</div>
+							</xsl:if>
+							<div class="help_text">
+								<xsl:value-of select="php:function('lang','Give end date to activity')" />
+							</div>
+							<input class="datetime" id="end_date" name="end_date" type="text">
+								<xsl:if test="activity/end_date != ''">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
 						</dd>
-						<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+						<!--dt>
+							<label for="field_to">
+								<xsl:value-of select="php:function('lang', 'To')" />
+							</label>
+						</dt>
 						<dd class="datetime-picker">
 							<input id="field_to" name="to_[]" type="text">
 								<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
 							</input>
-						</dd>
+						</dd-->
+						
 					</div>
 				</xsl:for-each>
 			</div>
