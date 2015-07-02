@@ -221,7 +221,7 @@ abstract class rental_socommon
 		if($num_of_objects && is_array($id_field_name_info) && $id_field_name_info['translated'])
 		{
 			$bypass_offset_check = true;
-			$sql_parts_filter = explode('FROM',$sql);
+			$sql_parts_filter = explode('FROM',$sql, 2);
 
 			$sql_filter = "SELECT DISTINCT {$id_field_name_info['table']}.{$id_field_name_info['field']} AS {$id_field_name_info['translated']}";
 			if($sort_field && $sort_field != $id_field_name_info['translated'])
