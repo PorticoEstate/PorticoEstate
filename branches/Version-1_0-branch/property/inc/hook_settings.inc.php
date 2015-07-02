@@ -92,8 +92,8 @@
 	create_select_box('Default ticket status 4','tts_status_4',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title_4');
 
-	create_select_box('show pending vendor reminders on main screen','mainscreen_showvendor_reminder',$yes_and_no,'Reminder issued to vendors');
-	create_input_box('Custom title on pending vendor reminders','mainscreen_showvendor_reminder_title');
+//	create_select_box('show pending vendor reminders on main screen','mainscreen_showvendor_reminder',$yes_and_no,'Reminder issued to vendors');
+//	create_input_box('Custom title on pending vendor reminders','mainscreen_showvendor_reminder_title');
 
 	create_select_box('show your pending request for approvals on main screen','mainscreen_showapprovals_request',$yes_and_no,'Your requests for Approvals waiting decisions');
 	create_input_box('Custom title on pending request for approvals','mainscreen_showapprovals_request_title');
