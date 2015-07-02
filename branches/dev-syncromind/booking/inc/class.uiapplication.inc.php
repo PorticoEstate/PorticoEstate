@@ -573,6 +573,7 @@
             $application_text = $config->config_data;
 
 			$errors = array();
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
                 $building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'GET'))));
@@ -687,7 +688,9 @@
 			$application['audience_json'] = json_encode(array_map('intval',$application['audience']));
 
 			$audience = $audience['results'];
-			$this->install_customer_identifier_ui($application);
+			
+			//$this->install_customer_identifier_ui($application);
+
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
             if ($orgnr) {
                 $application['customer_identifier_type'] = 'organization_number';
@@ -704,7 +707,14 @@
                     $application['contact_phone'] = $organization['contacts'][1]['phone'];
                 }
             }
-			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
+			
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+			
+//			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
+			self::render_template_xsl('application_new', array('application' => $application));
+			
+			//self::render_template_xsl('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 
 		public function edit()
