@@ -10,6 +10,7 @@ class rental_uiadjustment extends rental_uicommon {
 		'index'					=> true,
 		'add'					=> true,
 		'query'					=> true,
+		'save'					=> true,
 		'edit'					=> true,
 		'view'					=> true,
 		'show_affected_contracts' =>	true,
@@ -204,6 +205,7 @@ class rental_uiadjustment extends rental_uicommon {
 			(
 				'my_name'		=> 'delete',
 				'text' 			=> lang('delete'),
+				'confirm_msg'	=> lang('do you really want to delete this entry'),
 				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 				(
 					'menuaction'	=> 'rental.uiadjustment.delete'
@@ -308,7 +310,78 @@ class rental_uiadjustment extends rental_uicommon {
 				
 			}
 	}
+
 	
+	public function save()
+	{
+		$adjustment_id = (int)phpgw::get_var('id');
+		$responsibility_id = (int)phpgw::get_var('responsibility_id');
+		
+		$message = null;
+		$error = null;
+	
+		if(isset($adjustment_id) && $adjustment_id > 0)
+		{
+			$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+			if(!$adjustment->has_permission(PHPGW_ACL_EDIT))
+			{
+				unset($adjustment);
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_adjustment')));
+			}
+		}
+		else
+		{
+			if(isset($responsibility_id) && ($this->isExecutiveOfficer() || $this->isAdministrator()))
+			{
+				$adjustment = new rental_adjustment();
+				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+				$adjustment->set_responsibility_id($responsibility_id);
+			}
+		}
+
+		$adjustment_date =  strtotime(phpgw::get_var('adjustment_date'));
+
+		if(isset($adjustment))
+		{
+			$adjustment->set_year(phpgw::get_var('adjustment_year'));
+			$adjustment->set_adjustment_date($adjustment_date);
+			$adjustment->set_price_item_id(0);
+			if(isset($responsibility_id) && $responsibility_id > 0)
+			{
+				$adjustment->set_responsibility_id($responsibility_id); // only present when new contract
+			}
+
+			$adjustment->set_new_price(0);
+			$adjustment->set_percent(phpgw::get_var('percent'));
+			$adjustment->set_interval(phpgw::get_var('interval'));
+			$adjustment->set_adjustment_type(phpgw::get_var('adjustment_type'));
+			$adjustment->set_extra_adjustment(phpgw::get_var('extra_adjustment') == 'on' ? true : false);
+
+			$so_adjustment = rental_soadjustment::get_instance();
+			if($so_adjustment->store($adjustment))
+			{
+				$message = lang('messages_saved_form');
+				$adjustment_id = $adjustment->get_id();
+			}
+			else
+			{
+				$error = lang('messages_form_error');
+			}
+		}
+
+		if (!empty($error))
+		{
+			phpgwapi_cache::message_set($error, 'error'); 
+		}
+		if (!empty($message))
+		{
+			phpgwapi_cache::message_set($message, 'message'); 
+		}
+
+		$this->edit(array('adjustment_id'=>$adjustment_id));			
+		//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiadjustment.edit', 'id' => $adjustment->get_id(), 'message' => $message, 'error' => $error));
+	}
+		
 	/**
 	 * Create a new empty adjustment
 	 */
@@ -321,64 +394,57 @@ class rental_uiadjustment extends rental_uicommon {
 		}
 	}
 	
-	public function edit()
+	public function edit($values = array(), $mode = 'edit')
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
 		$responsibility_id = (int)phpgw::get_var('responsibility_id');
 		
 		$message = null;
 		$error = null;
-		
-		if(isset($_POST['save']))
+			
+		if ($values['adjustment_id'])
 		{
-			if(isset($adjustment_id) && $adjustment_id > 0)
-			{
-				$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+			$adjustment_id = $values['adjustment_id'];
+		}
+			
+		if (!empty($adjustment_id)) 
+		{
+			$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+
+			if ($adjustment) 
+			{				
 				if(!$adjustment->has_permission(PHPGW_ACL_EDIT))
 				{
-					unset($adjustment);
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_adjustment')));
+					$editable = false;
+					$error .= '<br/>'.lang('permission_denied_edit_adjustment');
 				}
+				
+				if(!$adjustment->has_permission(PHPGW_ACL_READ))
+				{
+					$this->render('permission_denied.php',array('error' => lang('permission_denied_view_adjustment')));
+					return;
+				}
+			}
+		}
+		else
+		{
+			if($this->isAdministrator() || $this->isExecutiveOfficer())
+			{
+				$adjustment = new rental_adjustment();
+				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+				$adjustment->set_responsibility_id($responsibility_id);
 			}
 			else
 			{
-				if(isset($responsibility_id) && ($this->isExecutiveOfficer() || $this->isAdministrator())){
-					$adjustment = new rental_adjustment();
-					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-					$adjustment->set_responsibility_id($responsibility_id);
-				}
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_new_adjustment')));
+				return;	
 			}
-			$adjustment_date =  strtotime(phpgw::get_var('adjustment_date_hidden'));
-			
-			if(isset($adjustment)){
-				$adjustment->set_year(phpgw::get_var('adjustment_year'));
-				$adjustment->set_adjustment_date($adjustment_date);
-				$adjustment->set_price_item_id(0);
-				if(isset($responsibility_id) && $responsibility_id > 0)
-				{
-					$adjustment->set_responsibility_id($responsibility_id); // only present when new contract
-				}
-
-				$adjustment->set_new_price(0);
-				$adjustment->set_percent(phpgw::get_var('percent'));
-				$adjustment->set_interval(phpgw::get_var('interval'));
-				$adjustment->set_adjustment_type(phpgw::get_var('adjustment_type'));
-                                $adjustment->set_extra_adjustment(phpgw::get_var('extra_adjustment') == 'on' ? true : false);
-				
-				$so_adjustment = rental_soadjustment::get_instance();
-				if($so_adjustment->store($adjustment))
-				{
-						$message = lang('messages_saved_form');
-						$adjustment_id = $adjustment->get_id();
-				}
-				else
-				{
-					$error = lang('messages_form_error');
-				}
-			}
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiadjustment.edit', 'id' => $adjustment->get_id(), 'message' => $message, 'error' => $error));
 		}
-			
+		
+		$GLOBALS['phpgw']->jqcal->add_listener('adjustment_date');
+		
+		$adjustment_date = ($adjustment->get_adjustment_date()) ? date($this->dateFormat, $adjustment->get_adjustment_date()) : '';
+		
 		$current_adjustment_type = $adjustment->get_adjustment_type();
 		$adjustment_type_options[] = array('id'=>'adjustment_type_KPI', 'name'=>'adjustment_type_KPI', 'selected'=>(($current_adjustment_type == 'adjustment_type_KPI') ? 1 : 0));
 		$adjustment_type_options[] = array('id'=>'adjustment_type_deflator', 'name'=>'adjustment_type_deflator', 'selected'=>(($current_adjustment_type == 'adjustment_type_deflator') ? 1 : 0));
@@ -403,13 +469,13 @@ class rental_uiadjustment extends rental_uicommon {
 			);
 			
 		$tabs = array();
-		$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
-		$active_tab = 'details';
-		
+		$tabs['regulation']	= array('label' => lang('Regulation'), 'link' => '#regulation');
+		$active_tab = 'regulation';
+
 		$data = array
 		(
 			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
-			'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiadjustment.edit')),
+			'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiadjustment.save')),
 			'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 			'lang_save'						=> lang('save'),
 			'lang_cancel'					=> lang('cancel'),			
@@ -420,12 +486,20 @@ class rental_uiadjustment extends rental_uicommon {
 			'lang_percent'					=> lang('percent'),
 			'lang_interval'					=> lang('interval'),
 			'lang_year'						=> lang('year'),
+			'lang_adjustment_date'			=> lang('adjustment_date'),
+			'lang_extra_adjustment'			=> lang('extra_adjustment'),
 			
 			'value_field_of_responsibility'	=> lang(rental_socontract::get_instance()->get_responsibility_title($adjustment->get_responsibility_id())),
 			'list_adjustment_type'			=> array('options' => $adjustment_type_options),
 			'value_percent'					=> $adjustment->get_percent(),
 			'list_interval'					=> array('options' => $interval_options),
 			'list_years'					=> array('options' => $years_options),
+			'value_adjustment_date'			=> $adjustment_date,
+			'is_extra_adjustment'			=> $adjustment->is_extra_adjustment(),
+			'msg_executed'					=> ($adjustment->is_executed()) ? lang('adjustment_is_executed') : lang('adjustment_is_not_executed'),
+			
+			'responsibility_id'				=> $adjustment->get_responsibility_id(),
+			'adjustment_id'					=> $adjustment->get_id(),
 					
 			'validator'						=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 		);
@@ -503,8 +577,22 @@ class rental_uiadjustment extends rental_uicommon {
 	
 	public function delete()
 	{
-		
 		$adjustment_id = (int)phpgw::get_var('id');
+		
+		if( phpgw::get_var('phpgw_return_as') == 'json' )
+		{
+			$result = rental_soadjustment::get_instance()->delete($adjustment_id);
+			if($result)
+			{
+				$msg = lang('id %1 has been deleted', $adjustment_id);
+			}
+			else
+			{
+				$msg =  lang('adjustment_not_deleted');	
+			}
+			return $msg;
+		} 
+			
 		$result = rental_soadjustment::get_instance()->delete($adjustment_id);
 		if($result)
 		{
