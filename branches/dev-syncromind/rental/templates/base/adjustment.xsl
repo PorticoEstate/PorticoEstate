@@ -1,11 +1,107 @@
   <!-- $Id: adjustment.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
-	<xsl:apply-templates select="edit" />
+	<xsl:choose>
+		<xsl:when test="edit">
+			<xsl:apply-templates select="edit" />
+		</xsl:when>
+		<xsl:when test="show_affected_contracts">
+			<xsl:apply-templates select="show_affected_contracts" />
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
+
+<xsl:template xmlns:php="http://php.net/xsl" match="show_affected_contracts">
+	<div>
+		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="details">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_field_of_responsibility"/>
+						</label>
+						<xsl:value-of select="value_field_of_responsibility"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_adjustment_type"/>
+						</label>
+						<xsl:value-of select="value_adjustment_type"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_percent"/>
+						</label>
+						<xsl:value-of select="value_percent"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_interval"/>
+						</label>
+						<xsl:value-of select="value_interval"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_year"/>
+						</label>
+						<xsl:value-of select="value_year"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="lang_adjustment_date"/>
+						</label>
+						<xsl:value-of select="value_adjustment_date"/>
+					</div>
+					<xsl:choose>
+						<xsl:when test="is_extra_adjustment">				
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="lang_extra_adjustment"/>
+								</label>
+								<input type="checkbox" name="extra_adjustment" id="extra_adjustment" disabled="disabled">
+									<xsl:if test="is_extra_adjustment = 1">
+										<xsl:attribute name="checked" value="checked"/>
+									</xsl:if>
+								</input>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label></label>
+						<xsl:value-of select="msg_executed"/>
+					</div>
+					<div class="pure-control-group">
+						<div>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="proplist-col">
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+			</div>
+		</form>
+		<xsl:variable name="cancel_url">
+			<xsl:value-of select="cancel_url"/>
+		</xsl:variable>
+		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
+	</div>
+</xsl:template>
+
 
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
-
 	<div>
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
@@ -14,15 +110,6 @@
 		<xsl:value-of select="validator"/>
 
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
-			<dl>
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<dt>
-							<xsl:call-template name="msgbox"/>
-						</dt>
-					</xsl:when>
-				</xsl:choose>
-			</dl>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="regulation">
