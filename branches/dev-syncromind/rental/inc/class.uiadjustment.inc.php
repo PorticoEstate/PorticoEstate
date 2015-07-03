@@ -339,7 +339,7 @@ class rental_uiadjustment extends rental_uicommon {
 			}
 		}
 
-		$adjustment_date =  strtotime(phpgw::get_var('adjustment_date'));
+		$adjustment_date =  phpgwapi_datetime::date_to_timestamp(phpgw::get_var('adjustment_date'));
 
 		if(isset($adjustment))
 		{
@@ -440,10 +440,10 @@ class rental_uiadjustment extends rental_uicommon {
 				return;	
 			}
 		}
-		
+
 		$GLOBALS['phpgw']->jqcal->add_listener('adjustment_date');
-		
-		$adjustment_date = ($adjustment->get_adjustment_date()) ? date($this->dateFormat, $adjustment->get_adjustment_date()) : '';
+	
+		$adjustment_date = ($adjustment->get_adjustment_date()) ? $GLOBALS['phpgw']->common->show_date($adjustment->get_adjustment_date(), $this->dateFormat) : '';
 		
 		$current_adjustment_type = $adjustment->get_adjustment_type();
 		$adjustment_type_options[] = array('id'=>'adjustment_type_KPI', 'name'=>'adjustment_type_KPI', 'selected'=>(($current_adjustment_type == 'adjustment_type_KPI') ? 1 : 0));
@@ -495,7 +495,7 @@ class rental_uiadjustment extends rental_uicommon {
 			'list_interval'					=> array('options' => $interval_options),
 			'list_years'					=> array('options' => $years_options),
 			'value_adjustment_date'			=> $adjustment_date,
-			'is_extra_adjustment'			=> $adjustment->is_extra_adjustment(),
+			'is_extra_adjustment'			=> ($adjustment->is_extra_adjustment()) ? 1 : 0,
 			'msg_executed'					=> ($adjustment->is_executed()) ? lang('adjustment_is_executed') : lang('adjustment_is_not_executed'),
 			
 			'responsibility_id'				=> $adjustment->get_responsibility_id(),
@@ -505,8 +505,6 @@ class rental_uiadjustment extends rental_uicommon {
 		);
 		
 		self::render_template_xsl(array('adjustment'), array('edit' => $data));
-		
-		//return $this->viewedit(true, $adjustment_id, null, $responsibility_id, $message, $error);
 	}
 	
 	/**
@@ -614,11 +612,66 @@ class rental_uiadjustment extends rental_uicommon {
 		if($adjustment->is_executed()){
 			if(rental_soadjustment::get_instance()->newer_executed_regulation_exists($adjustment))$show_affected_list = false;
 		}
+		
+		$adjustment_date = ($adjustment->get_adjustment_date()) ? $GLOBALS['phpgw']->common->show_date($adjustment->get_adjustment_date(), $this->dateFormat) : '';
 
-		$this->render('contracts_for_regulation_list.php', array('adjustment_id' => $adjustment_id, 
-																	'adjustment' => $adjustment,
-																	'cancel_link' => self::link(array('menuaction' => 'rental.uiadjustment.index')),
-																	'show_affected_list' => $show_affected_list));
+		$tabs = array();
+		$tabs['details']	= array('label' => lang('contracts_for_regulation'), 'link' => '#details');
+		$active_tab = 'details';
+		
+		if ($adjustment_id)
+		{
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.query', 'editable'=>0, 'type'=>'contracts_for_adjustment', 'id'=>$adjustment_id, 'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> array(
+							array('key'=>'old_contract_id', 'label'=>lang('contract_id'), 'sortable'=>true),
+							array('key'=>'date_start', 'label'=>lang('date_start'), 'sortable'=>true),
+							array('key'=>'date_end', 'label'=>lang('date_end'), 'sortable'=>true),
+							array('key'=>'type', 'label'=>lang('responsibility'), 'sortable'=>false),
+							array('key'=>'composite', 'label'=>lang('composite'), 'sortable'=>true),
+							array('key'=>'party', 'label'=>lang('party'), 'sortable'=>true),
+							array('key'=>'term_label', 'label'=>lang('billing_term'), 'sortable'=>true),
+							array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false),
+							array('key'=>'rented_area', 'label'=>lang('area'), 'sortable'=>false),
+							array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false),
+							array('key'=>'adjustment_interval', 'label'=>lang('adjustment_interval'), 'sortable'=>false),
+							array('key'=>'adjustment_share', 'label'=>lang('adjustment_share'), 'sortable'=>false),
+							array('key'=>'adjustment_year', 'label'=>lang('adjustment_year'), 'sortable'=>false)					
+				)	
+			);
+		}
+		
+		$data = array
+		(
+			'datatable_def'					=> $datatable_def,
+			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+			'cancel_url'					=> self::link(array('menuaction' => 'rental.uiadjustment.index')),
+			'lang_cancel'					=> lang('cancel'),			
+			
+			'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
+			'lang_adjustment_type'			=> lang('adjustment_type'),
+			'lang_percent'					=> lang('percent'),
+			'lang_interval'					=> lang('interval'),
+			'lang_year'						=> lang('year'),
+			'lang_adjustment_date'			=> lang('adjustment_date'),
+			'lang_extra_adjustment'			=> lang('extra_adjustment'),
+			
+			'value_field_of_responsibility'	=> lang(rental_socontract::get_instance()->get_responsibility_title($adjustment->get_responsibility_id())),
+			'value_adjustment_type'			=> ($adjustment->get_adjustment_type()) ? lang($adjustment->get_adjustment_type()) : lang('none'),
+			'value_percent'					=> $adjustment->get_percent(). "%",
+			'value_interval'				=> $adjustment->get_interval().' '.lang('year'),
+			'value_year'					=> $adjustment->get_year(),
+			'value_adjustment_date'			=> $adjustment_date,
+			'is_extra_adjustment'			=> ($adjustment->is_extra_adjustment()) ? 1 : 0,
+			'msg_executed'					=> ($adjustment->is_executed()) ? lang('adjustment_is_executed') : lang('adjustment_is_not_executed'),
+			
+			'adjustment_id'					=> $adjustment_id,
+			'show_affected_list'			=> $show_affected_list
+		);
+		
+		self::render_template_xsl(array('adjustment', 'datatable_inline'), array('show_affected_contracts' => $data));
 	}
 	
 	public function run_adjustments()
