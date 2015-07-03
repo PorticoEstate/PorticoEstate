@@ -40,7 +40,139 @@ class rental_uiprice_item extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
-		$this->render('admin_price_item_list.php');
+				
+		if (phpgw::get_var('phpgw_return_as') == 'json')
+		{
+			return $this->query();
+		}
+		
+		$function_msg = lang('price_list');
+
+		$data = array(
+			'datatable_name'	=> $function_msg,
+			'form' => array(
+				'toolbar' => array(
+					'item' => array(
+						array(
+							'type'   => 'link',
+							'value'  => lang('new'),
+							'href'   => self::link(array(
+								'menuaction'	=> 'rental.uiprice_item.add'
+							)),
+							'class'  => 'new_item'
+						)
+					)
+				)
+			),
+			'datatable' => array(
+				'source'	=> self::link(array(
+					'menuaction'	=> 'rental.uiprice_item.index', 
+					'phpgw_return_as' => 'json'
+				)),
+				'allrows'	=> true,
+				'editor_action' => '',
+				'field' => array(
+					array(
+						'key'		=> 'agresso_id', 
+						'label'		=> lang('agresso_id'), 
+						'className'	=> '', 
+						'sortable'	=> false, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'title', 
+						'label'		=> lang('name'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'is_area', 
+						'label'		=> lang('type'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'price', 
+						'label'		=> lang('price'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'is_inactive', 
+						'label'		=> lang('status'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'is_adjustable', 
+						'label'		=> lang('is_adjustable'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'responsibility_title', 
+						'label'		=> lang('responsibility'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'standard', 
+						'label'		=> lang('is_standard'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'price_type_title', 
+						'label'		=> lang('type'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					)					
+				)
+			)
+		);
+				
+		/*$filters = $this->_get_Filters();
+		krsort($filters);
+		foreach($filters as $filter){
+			array_unshift($data['form']['toolbar']['item'], $filter);
+		}
+			
+		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
+		
+		$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
+		
+		$data['datatable']['actions'][] = array
+			(
+				'my_name'		=> 'download_agresso',
+				'text' 			=> lang('Download Agresso import file'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				(
+					'menuaction'	=> 'rental.uiparty.download_agresso'
+				)),
+				'parameters'	=> json_encode(array())
+			);*/
+
+		self::render_template_xsl('datatable_jquery', $data);
+		
+		//$this->render('admin_price_item_list.php');
 	}
 
 	/*
@@ -190,15 +322,20 @@ class rental_uiprice_item extends rental_uicommon
 		else {
 			$user_rows_per_page = 10;
 		}
-		// YUI variables for paging and sorting
-		$start_index	= phpgw::get_var('startIndex', 'int');
-		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-		$sort_field		= phpgw::get_var('sort');
-		if($sort_field == null)
-		{
-			$sort_field = 'agresso_id';
-		}
-		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+		
+		$search			= phpgw::get_var('search');
+		$order			= phpgw::get_var('order');
+		$draw			= phpgw::get_var('draw', 'int');
+		$columns		= phpgw::get_var('columns');
+
+		$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+		$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+		$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'agresso_id'; 
+		$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
+		
+		$search_for 	= '';
+		$search_type	= '';
+		
 		//Create an empty result set
 		$records = array();
 		
@@ -247,13 +384,13 @@ class rental_uiprice_item extends rental_uicommon
 				$rows[] = $record->serialize();
 			}
 		}
-		$data = array('results' => $rows, 'total_records' => $object_count);
+		//$data = array('results' => $rows, 'total_records' => $object_count);
 
 		$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 		//Add action column to each row in result table
 		array_walk(
-			$data['results'], 
+			$rows, 
 			array($this, 'add_actions'), 
 			array(
 				$contract_id,
@@ -261,7 +398,14 @@ class rental_uiprice_item extends rental_uicommon
 				$editable
 			)
 		);
-		return $this->yui_results($data, 'total_records', 'results');
+		
+		$result_data    =   array('results' =>  $rows);
+		$result_data['total_records']	= $object_count;
+		$result_data['draw']    = $draw;
+
+		return $this->jquery_results($result_data);
+		
+		//return $this->yui_results($data, 'total_records', 'results');
 	}
 
 	/**
