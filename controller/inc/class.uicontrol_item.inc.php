@@ -271,7 +271,6 @@
 			$type = phpgw::get_var('control_item_type');
 			$control_group_id = phpgw::get_var('control_group');
 			$control_area_id = phpgw::get_var('control_area');
-			$type = phpgw::get_var('control_item_type');
 			$what_to_do_txt = phpgw::get_var('what_to_do','html');
 			$what_to_do_txt = str_replace("&nbsp;", " ", $what_to_do_txt);
 			$how_to_do_txt = phpgw::get_var('how_to_do','html');
