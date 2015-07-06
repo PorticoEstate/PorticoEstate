@@ -1,26 +1,26 @@
 <?php
 /**
  * syntax for the image tag:
- *
+ * 
  * <C:showimage:<filename> <opt. width> <opt. height>>
- *
+ * 
  * it is possible to specify the image width without specifying the image height (the image will
  * be scaled to the appropriate height).
- *
+ * 
  * supported filename in the image tag:
  * '<C:showimage:'.urlencode('http://myserver.mytld/myimage.png').'>'
  * '<C:showimage:'.urlencode('/home/my home/my image.png').'>'
  * the url encoding is required for:
  *  - files from remote servers (first entry from above)
  *  - local files with whitespaces in the directory or file names
- *
- * local files without whitespaces in their filename can be specified without
+ * 
+ * local files without whitespaces in their filename can be specified without 
  * url encoding:
- *
+ * 
  * '<C:showimage:/home/myhome/myimage.png>'
- *
- * the php gd2 extension must be enabled for remote files and local gif files.
- * local png- and jpeg-files are supported without the gd2 extension.
+ * 
+ * the php gd2 extension must be enabled for remote files and local gif files. 
+ * local png- and jpeg-files are supported without the gd2 extension. 
  *
  * @author Kristian Herpel <Kristian.Herpel@gmx.net>
  * @author Ole K <ole1986@users.sourceforge.net>
@@ -44,12 +44,12 @@ class pdf extends pdf_ {
 		parent::__construct($p, $o,$t,$op);
         $this->allowedTags .= '|showimage:.*?';
 	}
-
+	
 	/**
 	 * Modification to this function from Cezpdf
-	 * line 447-447: added parseImages function
-	 * line 470-477: added some condition to calculate cell height
-	 * line 481    : modified to set the new cell height
+	 * line 495-495: added parseImages function
+	 * line 518-524: added some condition to calculate cell height
+	 * line 528-528: modified to set the new cell height
 	 */
     public function ezTable(&$data,$cols='',$title='',$options=''){
         if (!is_array($data)){
@@ -667,10 +667,10 @@ class pdf extends pdf_ {
         $this->y=$y;
         return $y;
     }
-
+	
 	/**
-	 * parses and returns all image tags from the given text
-	 *
+	 * parses and returns all image tags from the given text 
+	 * 
 	 * @param String $text input text
 	 * @return array found image tags
 	 * @access public
@@ -682,11 +682,11 @@ class pdf extends pdf_ {
 
 	/**
 	 * calculate the total height for all images in text
-	 *
+	 * 
 	 * @param String $text input text
 	 * @return float total height of all images in the text
 	 * @access public
-	 */
+	 */ 
 	function checkForImage($text) {
 		$height = 0;
 		$matches = $this->getImagesFromText($text);
@@ -701,10 +701,10 @@ class pdf extends pdf_ {
 		}
 		return $height;
 	}
-
+	
 	/**
 	 * add a given image to the document
-	 *
+	 * 
 	 * @param CezShowimageParameter $params image parameter
 	 * @param float $x horizontal position
 	 * @param float $y vertical position
@@ -715,9 +715,9 @@ class pdf extends pdf_ {
 	 */
 	function addImage(& $params, $x = 0, $y = 0, $w=0,$h=0,$quality=75) {
 		if ($params->isUrl()) {
-			if (function_exists('imagecreatefrompng')) {
+			if (function_exists('imagecreatefrompng')) { 
 				switch($params->getImageType()) {
-
+					
 					case 3: // png
 						$image = imagecreatefrompng($params->getFilename());
 					break;
@@ -731,7 +731,7 @@ class pdf extends pdf_ {
 				parent::addImage($image, $x, $y, $params->getWidth(), $params->getHeight());
 			}
 		} else {
-			// check for image type, currently only png and jpeg supported
+			// check for image type, currently only png and jpeg supported	
 			switch($params->getImageType()) {
 				case 3: // png
 					parent::addPngFromFile($params->getFilename(), $x, $y, $params->getWidth(), $params->getHeight());
@@ -744,16 +744,16 @@ class pdf extends pdf_ {
 				break;
 			}
 		}
-	}
-
+	} 
+	
 	/**
 	 * callback method for adding an image to the document
-	 *
+	 * 
 	 * note: this method is called by the pdf generator class callback method <code>showImage($info)</code>
-	 *
+	 * 
 	 * @param Cezpdf $ezpdf current cezpdf object
 	 * @param array $info callback data array (see the callback function part in the R&amp;OS pdf documentation)
-	 * @access public
+	 * @access public 
 	 */
 	function showimage($info) {
 		if ($info['status']=='start') {
@@ -765,19 +765,19 @@ class pdf extends pdf_ {
 			}
 		}
 	}
-
+	
 	/**
 	 * searches for <C:showimage:...> and replaces all occurences with extended tag information
-	 *
+	 * 
 	 * the extended informations contains the vertical position and the (calculated) image
 	 * dimensions
-	 *
+	 * 
 	 * @param String $text text to parse
 	 * @param int $maxwidth optional maximal width for the image
 	 * @param int $maxheight optional maximal height for the image
 	 * @param int $currenty current vertical (y) position on the pdf page
 	 * @access public
-	 */
+	 */		
 	function parseImages(&$text, $maxwidth = 0, $maxheight = 0, $currenty = 0) {
 		$matches = $this->getImagesFromText($text);
 		for ($key=0; $key<count($matches[0]); $key++) {
@@ -811,14 +811,14 @@ class pdf extends pdf_ {
 			$text = str_replace($matches[0][$key],$imagetag,$text);
 		}
 	}
-
+	
 	/**
 	 * check for images an calculate their maximum width
-	 *
-	 * note: the image tags will be removed from the input text, this method is required due to further
+	 * 
+	 * note: the image tags will be removed from the input text, this method is required due to further 
 	 * calculation in the original pdf class
-	 *
-	 * @param String $text input text
+	 * 
+	 * @param String $text input text 
 	 * @return float calculated maximum height
 	 * @access public
 	 */
@@ -842,14 +842,14 @@ class pdf extends pdf_ {
 }
 
 /**
- * parameter object
+ * parameter object 
  */
 class CezShowimageParameter {
-
+	
 	var $filename = '';
 	var $width = 0;
 	var $height = 0;
-
+	
 	var $imageType = 0;
 	var $imageHeight = 0;
 	var $imageWidth = 0;
@@ -857,131 +857,131 @@ class CezShowimageParameter {
 	var $IMAGETYPE_GIF = 1;
 	var $IMAGETYPE_JPG = 2;
 	var $IMAGETYPE_PNG = 3;
-
+	
 	var $fileIsUrl = false;
 	var $fileIsReadable = false;
-
+	
 	var $positionX = 0;
 	var $positionY = 0;
 
 	function CezShowimageParameter() {
-
+		
 	}
-
+	
 	/**
 	 * gets the image width
-	 *
+	 * 
 	 * @return int image width
 	 * @access public
 	 */
 	function getWidth() {
 		return $this->width;
 	}
-
+	
 	/**
-	 * gets the image height
-	 *
+	 * gets the image height 
+	 * 
 	 * @return int image height
 	 * @access public
 	 */
 	function getHeight() {
 		return $this->height;
 	}
-
+	
 	/**
 	 * gets the filename
-	 *
+	 * 
 	 * @return String filename
 	 * @access public
 	 */
 	function getFilename() {
 		return $this->filename;
 	}
-
+	
 	function getImagetype() {
 		return $this->imageType;
 	}
-
+	
 	function getOriginalHeight() {
 		return $this->imageHeight;
 	}
-
+	
 	function getOriginalWidth() {
 		return $this->imageWidth;
 	}
-
+	
 	function isUrl() {
 		return $this->fileIsUrl;
 	}
-
+	
 	function isReadable() {
 		return $this->fileIsReadable;
 	}
-
+	
 	function getPositionX() {
 		return $this->positionX;
 	}
-
+	
 	function getPositionY() {
 		return $this->positionY;
 	}
-
+	
 	/**
 	 * @access protected
 	 */
 	function _parse($param = '') {
 		$params = explode(" ", $param);
-
+		
 		$this->filename = urldecode($params[0]);
-
+		
 		if (substr($this->filename,0,5)=='http:' || substr($this->filename,0,6)=='https:') {
 			$this->fileIsUrl = true;
 			$fd = fopen($this->filename, "r");
 			$this->fileIsReadable = ($fd!==false) ? true : false;
-			fclose($fd);
+			fclose($fd); 
 		} else {
 			$this->fileIsUrl = false;
 			$this->fileIsReadable = is_readable($this->filename);
 		}
-
+		
 		if (isset($params[2]) && $params[2]>0) {
-			$this->height = $params[2];
+			$this->height = $params[2];	
 		}
-
+		
 		if (isset($params[1]) && $params[1]>0) {
 			$this->width = $params[1];
 		}
-
+		
 		if (isset($params[3]) && $params[3]>0) {
 			$this->positionY = $params[3];
 		}
-
+		
 		$_imagesize = getImagesize($this->filename);
-
+		
 		if (is_array($_imagesize)) {
-
+			
 			$this->imageType = $_imagesize[2];
-
-			$this->imageWidth = $_imagesize[0];
+			
+			$this->imageWidth = $_imagesize[0]; 
 			$this->imageHeight = $_imagesize[1];
 
 		}
-
+		
 	}
-
+		
 	/**
 	 * creates the parameter object from the given parameter list
-	 *
+	 * 
 	 * @param String $param parameter list as string
 	 * @return CezShowimageParameter parameter object
 	 * @access public
 	 */
 	function  create($param = '') {
-
+		
 		$obj = new CezShowimageParameter();
 		$obj->_parse($param);
 		return $obj;
-
+		
 	}
-
+	
 }

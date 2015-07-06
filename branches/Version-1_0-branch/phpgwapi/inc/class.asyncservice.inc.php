@@ -39,7 +39,7 @@
 		/**
 		* Constructor
 		*/
-		function asyncservice()
+		function __construct()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->cronline = PHPGW_SERVER_ROOT . '/phpgwapi/cron/asyncservices.php '.$GLOBALS['phpgw_info']['user']['domain'];
@@ -384,6 +384,7 @@
 		*/
 		function check_run($run_by='')
 		{
+			@set_time_limit(0);		// dont stop for an execution-time-limit
 			flush();
 			$error = false;
 
