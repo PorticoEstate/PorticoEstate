@@ -1,6 +1,13 @@
   <!-- $Id: price_item.xsl 12604 2015-01-15 17:06:11Z nelson224 $ -->
 <xsl:template match="data">
-	<xsl:apply-templates select="edit" />
+    <xsl:choose>
+		<xsl:when test="edit">
+			<xsl:apply-templates select="edit" />
+		</xsl:when>
+		<xsl:when test="view">
+			<xsl:apply-templates select="view" />
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
 
 <!-- add / edit  -->
@@ -47,7 +54,7 @@
 							</label>
 							<div class="pure-custom">
 								<div>
-									<input type="radio" name="is_area">
+									<input type="radio" name="is_area" value="true">
 										<xsl:if test="is_area = 1">
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
@@ -55,7 +62,7 @@
 									<xsl:value-of select="lang_calculate_price_per_area"/>
 								</div>
 								<div>
-									<input type="radio" name="is_area">
+									<input type="radio" name="is_area" value="false">
 										<xsl:if test="is_area = 0">
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
@@ -119,13 +126,12 @@
 			</div>
 			<div class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save" value="{lang_save}" onMouseout="window.status='';return true;"/>
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
 </xsl:template>
 
@@ -136,4 +142,103 @@
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
+</xsl:template>
+
+
+<xsl:template xmlns:php="http://php.net/xsl" match="view">
+	<div>
+		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="showing">
+					<fieldset>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_title"/>
+							</label>
+							<xsl:value-of select="value_title"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_field_of_responsibility"/>
+							</label>						
+							<xsl:value-of select="value_field_of_responsibility"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_agresso_id"/>
+							</label>
+							<xsl:value-of select="value_agresso_id"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_is_area"/>
+							</label>
+							<div class="pure-custom">
+								<div>
+									<input type="radio" name="is_area" value="true" disabled="disabled">
+										<xsl:if test="is_area = 1">
+											<xsl:attribute name="checked" value="checked"/>
+										</xsl:if>
+									</input> 
+									<xsl:value-of select="lang_calculate_price_per_area"/>
+								</div>
+								<div>
+									<input type="radio" name="is_area" value="false" disabled="disabled">
+										<xsl:if test="is_area = 0">
+											<xsl:attribute name="checked" value="checked"/>
+										</xsl:if>
+									</input> 
+									<xsl:value-of select="lang_calculate_price_apiece"/>
+								</div>
+							</div>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_type"/> 
+							</label>
+							<xsl:value-of select="lang_current_price_type"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_price"/>
+							</label>
+							<xsl:value-of select="value_price_formatted"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_is_inactive"/>
+							</label>
+							<input type="checkbox" name="is_inactive" id="is_inactive" disabled="disabled">
+								<xsl:if test="is_inactive = 1">
+									<xsl:attribute name="checked" value="checked"/>
+								</xsl:if>
+							</input>
+							<xsl:if test="has_active_contract = 1">
+								<xsl:value-of select="lang_price_element_in_use"/>
+							</xsl:if>									
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_is_adjustable"/>
+							</label>
+							<xsl:value-of select="lang_adjustable_text"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="lang_is_standard"/>
+							</label>
+							<xsl:value-of select="lang_standard_text"/>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			<div class="proplist-col">
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
+			</div>
+		</form>
+	</div>
 </xsl:template>
