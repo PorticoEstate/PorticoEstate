@@ -538,10 +538,20 @@
 			$groups = $groups['results'];
 
 			$resouces_full = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
-
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Booking New'), 'link' => '#booking_new');
+            $active_tab = 'generic';
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('start', 'datetime');
+            $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+            
+            $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
 			if ($step < 2) 
 			{
-				self::render_template('booking_new', array('booking' => $booking, 
+				self::render_template_xsl('booking_new', array('booking' => $booking, 
 					'activities' => $activities, 
 					'agegroups' => $agegroups, 
 					'audience' => $audience, 
@@ -560,7 +570,7 @@
 			} 
 			else if ($step == 2) 
 			{
-				self::render_template('booking_new_preview', array('booking' => $booking, 
+				self::render_template_xsl('booking_new_preview', array('booking' => $booking, 
 					'activities' => $activities,
 					'agegroups' => $agegroups,
 					'audience' => $audience,
