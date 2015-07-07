@@ -87,7 +87,7 @@ class rental_socontract extends rental_socommon
 		else if($sort_field == 'term_label'){
 			$sort_field = 'contract.term_id';
 		}
-
+		$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
 
 		//Contracts for billing should always be sorted on biling start
 		if(isset($filters['contracts_for_billing']))
