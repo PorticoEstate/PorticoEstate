@@ -21,9 +21,9 @@
 	class rental_uicontract extends rental_uicommon
 	{
 		private $pdf_templates = array();
-		private $decimalSeparator;
+		/*private $decimalSeparator;
 		private $thousandsSeparator;
-		private $decimalPlaces;
+		private $decimalPlaces;*/
 		
 		public $public_functions = array
 		(
@@ -54,9 +54,9 @@
 			self::set_active_menu('rental::contracts');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('contracts');
 			
-			$this->thousandsSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : ' ';
+			/*$this->thousandsSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : ' ';
 			$this->decimalSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
-			$this->decimalPlaces = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;
+			$this->decimalPlaces = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;*/
 			
 		}
 
@@ -1478,7 +1478,7 @@
 			$total_price = number_format($total_price, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
 			$area = number_format($area, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
 						
-			$result_array[] = array('total_price' => $total_price.' NOK', 'area' => $area.' Kvm', 'price_per_unit' => $price_per_unit.' NOK');
+			$result_array[] = array('total_price' => $total_price.' '.$this->currency_suffix, 'area' => $area.' Kvm', 'price_per_unit' => $price_per_unit.' '.$this->currency_suffix);
 			
 			$result_data    =   array('results' =>  $result_array);
 			$result_data['total_records']	= 1;
