@@ -5,6 +5,7 @@ abstract class rental_socommon
 	protected $like;
 	protected $join;
 	protected $left_join;
+	protected $sort_field;
 	
 	public function __construct()
 	{
@@ -12,6 +13,7 @@ abstract class rental_socommon
 		$this->like			= & $this->db->like;
 		$this->join			= & $this->db->join;
 		$this->left_join	= & $this->db->left_join;
+		$this->sort_field	= null;
 	}
 	
 		/**
@@ -226,7 +228,7 @@ abstract class rental_socommon
 			$sql_filter = "SELECT DISTINCT {$id_field_name_info['table']}.{$id_field_name_info['field']} AS {$id_field_name_info['translated']}";
 			if($sort_field && $sort_field != $id_field_name_info['translated'])
 			{
-				$sql_filter .= ",{$sort_field}";
+				$sql_filter .= $this->sort_field ? ",{$this->sort_field}" :",{$sort_field}";
 			}
 
 			$sql_filter .= " FROM {$sql_parts_filter[1]}";
