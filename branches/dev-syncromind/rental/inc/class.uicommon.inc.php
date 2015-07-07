@@ -30,6 +30,11 @@
 		
 		public $flash_msgs;
 		
+		public $decimalSeparator;
+		public $thousandsSeparator;
+		public $decimalPlaces;
+		public $currency_suffix;
+		
 		public function __construct()
 		{
 			parent::__construct();
@@ -65,6 +70,14 @@
 				ADMINISTRATOR => $this->isAdministrator()
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
+			
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();			
+			
+			$this->thousandsSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : ' ';
+			$this->decimalSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
+			$this->decimalPlaces = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;
+			$this->currency_suffix = ($config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : 'NOK';
 		}
 		
 		/**
