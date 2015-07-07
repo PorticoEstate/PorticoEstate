@@ -7,7 +7,12 @@
 		<xsl:when test="view">
 			<xsl:apply-templates select="view" />
 		</xsl:when>
+		<xsl:when test="adjustment_price">
+			<xsl:apply-templates select="adjustment_price" />
+			
+		</xsl:when>
 	</xsl:choose>
+	
 </xsl:template>
 
 <!-- add / edit  -->
@@ -240,5 +245,46 @@
 				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
+	</div>
+</xsl:template>
+
+
+<xsl:template name="top-toolbar">
+	<div class="toolbar-container">
+		<div class="pure-g">
+			<div class="pure-u-1">
+				<div>
+					<xsl:value-of select="lang_manual_adjust_price_item_select"/> 
+					<select id="price_item_id" name="price_item_id">
+						<xsl:apply-templates select="list_type/options"/>
+					</select>
+					<xsl:value-of select="lang_price"/> 
+					<input type="text" id="ctrl_adjust_price_item_price" name="ctrl_adjust_price_item_price"/>
+					<input type="button" class="pure-button pure-button-primary" name="adjust_price" value="{lang_adjust_price}"  onClick=""/>
+				</div>
+			</div>
+		</div>
+	</div>
+</xsl:template>
+
+<xsl:template xmlns:php="http://php.net/xsl" match="adjustment_price">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+	<div>
+		<xsl:call-template name="top-toolbar" />
+		<br/>
+		<div id="showing">
+			<xsl:for-each select="datatable_def">
+				<xsl:if test="container = 'datatable-container_0'">
+					<xsl:call-template name="table_setup">
+						<xsl:with-param name="container" select ='container'/>
+						<xsl:with-param name="requestUrl" select ='requestUrl' />
+						<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+						<xsl:with-param name="tabletools" select ='tabletools' />
+						<xsl:with-param name="data" select ='data' />
+						<xsl:with-param name="config" select ='config' />
+					</xsl:call-template>
+				</xsl:if>
+			</xsl:for-each>
+		</div>
 	</div>
 </xsl:template>
