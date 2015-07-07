@@ -609,7 +609,109 @@ JS;
 			return;
 		}
 		self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');		
-		$this->render('admin_price_item_manual_adjustment.php');
+		//$this->render('admin_price_item_manual_adjustment.php');
+		
+		$types_options = array();
+		$types_options[] = array('id'=>'', 'name'=>'Velg priselement');
+		$types = rental_soprice_item::get_instance()->get_manual_adjustable();
+		foreach($types as $id => $label)
+		{
+			$types_options[] = array('id'=>$id, 'name'=>lang($label));
+		}
+			
+		$datatable_def[] = array
+		(
+			'container'		=> 'datatable-container_0',
+			'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uiadjustment.query', 'type'=>'manual_adjustments', 'phpgw_return_as'=>'json'))),
+			'ColumnDefs'	=> array(
+					array(
+						'key'		=> 'year', 
+						'label'		=> lang('year'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'adjustment_date', 
+						'label'		=> lang('adjustment_date'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'price_item_id', 
+						'label'		=> lang('price_item'), 
+						'className'	=> '', 
+						'sortable'	=> false, 
+						'hidden'	=> true
+					),
+					array(
+						'key'		=> 'new_price', 
+						'label'		=> lang('new_price'), 
+						'className'	=> '', 
+						'sortable'	=> false, 
+						'hidden'	=> true
+					),
+					array(
+						'key'		=> 'adjustment_type', 
+						'label'		=> lang('adjustment_type'), 
+						'className'	=> '', 
+						'sortable'	=> false, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'percent', 
+						'label'		=> lang('percent'), 
+						'className'	=> '', 
+						'sortable'	=> false, 
+						'hidden'	=> true
+					),
+					array(
+						'key'		=> 'interval', 
+						'label'		=> lang('interval'), 
+						'className'	=> '', 
+						'sortable'	=> false, 
+						'hidden'	=> true
+					),
+					array(
+						'key'		=> 'responsibility_title', 
+						'label'		=> lang('responsibility'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'extra_adjustment', 
+						'label'		=> lang('extra_adjustment'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'is_executed', 
+						'label'		=> lang('is_executed'), 
+						'className'	=> '', 
+						'sortable'	=> true, 
+						'hidden'	=> false
+					)				
+			),
+			'config'		=> array(
+				array('disableFilter' => true)
+			)
+		);
+				
+		$data = array
+			(
+				'datatable_def'					=> $datatable_def,
+
+				'lang_manual_adjust_price_item_select'	=> lang('manual_adjust_price_item_select'),
+				'lang_price'					=> lang('price'),
+				'lang_adjust_price'				=> lang('adjust_price'),
+		
+				'list_type'						=> array('options' => $types_options),
+			);
+
+		self::render_template_xsl(array('price_item', 'datatable_inline'), array('adjustment_price' => $data));
 	}
 	
 	public function adjust_price()
