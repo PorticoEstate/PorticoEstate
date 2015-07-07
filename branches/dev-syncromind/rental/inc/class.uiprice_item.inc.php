@@ -15,11 +15,12 @@ class rental_uiprice_item extends rental_uicommon
 {
 	public $public_functions = array
 	(
-			'add' => true,
-			'index' => true,
-			'query' => true,
+			'add'		=> true,
+			'index'		=> true,
+			'query'		=> true,
 			'view'		=> true,
 			'edit'		=> true,
+			'save'		=> true,
 			'set_value' => true,
 			'manual_adjustment' => true,
 			'adjust_price' => true
@@ -121,9 +122,10 @@ class rental_uiprice_item extends rental_uicommon
 					array(
 						'key'		=> 'price', 
 						'label'		=> lang('price'), 
-						'className'	=> '', 
+						'className'	=> 'right', 
 						'sortable'	=> true, 
-						'hidden'	=> false
+						'hidden'	=> false,
+						'formatter' => 'formatterPrice'
 					),
 					array(
 						'key'		=> 'is_inactive', 
@@ -164,14 +166,6 @@ class rental_uiprice_item extends rental_uicommon
 			)
 		);
 				
-		/*$filters = $this->_get_Filters();
-		krsort($filters);
-		foreach($filters as $filter){
-			array_unshift($data['form']['toolbar']['item'], $filter);
-		}
-			
-		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
-		*/
 		$parameters = array
 			(
 				'parameter' => array
@@ -180,7 +174,7 @@ class rental_uiprice_item extends rental_uicommon
 					(
 						'name'		=> 'id',
 						'source'	=> 'id'
-					),
+					)
 				)
 			);
 		
@@ -206,7 +200,18 @@ class rental_uiprice_item extends rental_uicommon
 				'parameters'	=> json_encode($parameters)
 			);
 		
+		$code =	<<<JS
+				var thousandsSeparator = '$this->thousandsSeparator';
+				var decimalSeparator = '$this->decimalSeparator';
+				var decimalPlaces = '$this->decimalPlaces';
+				var currency_suffix = '$this->currency_suffix';
+JS;
+
+		$GLOBALS['phpgw']->js->add_code('', $code);
+				
 		self::add_javascript('rental', 'rental', 'price_item.index.js');
+		phpgwapi_jquery::load_widget('numberformat');
+		
 		self::render_template_xsl('datatable_jquery', $data);
 	}
 
@@ -222,15 +227,17 @@ class rental_uiprice_item extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
-		$id = (int)phpgw::get_var('id');
+		/*$id = (int)phpgw::get_var('id');
 		$price_item = rental_price_item::get($id);
-		return $this->viewedit(false, $price_item);
+		return $this->viewedit(false, $price_item);*/
+		
+		$this->edit(array(), 'view');
 	}
 
 	/*
 	 * Edit the price item with the id given in the http variable 'id'
 	 */
-	public function edit()
+	public function edit($values = array(), $mode = 'edit')
 	{
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		if(!self::isExecutiveOfficer())
@@ -238,10 +245,18 @@ class rental_uiprice_item extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
+		
 		$responsibility_id = phpgw::get_var('responsibility_id');
-		if($id = phpgw::get_var('id', 'int'))
+		$price_item_id = phpgw::get_var('id', 'int');
+		
+		if (!empty($values['price_item_id']))
 		{
-			$price_item = rental_price_item::get($id);
+			$price_item_id = $values['price_item_id'];
+		}
+		
+		if(!empty($price_item_id))
+		{
+			$price_item = rental_price_item::get($price_item_id);
 		}
 		else
 		{
@@ -252,100 +267,75 @@ class rental_uiprice_item extends rental_uicommon
 			$price_item->set_responsibility_id($responsibility_id);
 			$price_item->set_price_type_id(1); // defaults to year
 		}
+		
+		$responsibility_title = ($price_item->get_responsibility_title()) ? $price_item->get_responsibility_title() : rental_socontract::get_instance()->get_responsibility_title($responsibility_id);
 
+		$link_save = array
+			(
+				'menuaction'	=> 'rental.uiprice_item.save'
+			);
 
-		// Save the price item if it was posted
-		/*if(isset($_POST['save']))
+		$link_index = array
+			(
+				'menuaction'	=> 'rental.uiprice_item.index',
+			);
+
+		$tabs = array();
+		$tabs['showing']	= array('label' => lang('Showing'), 'link' => '#showing');
+		$active_tab = 'showing';
+
+		$current_price_type_id = $price_item->get_price_type_id();
+		$types_options = array();
+		foreach($price_item->get_price_types() as $price_type_id => $price_type_title)
 		{
-			$price_item->set_title(phpgw::get_var('title'));
-			$price_item->set_agresso_id(phpgw::get_var('agresso_id'));
-			$price_item->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
-			$price_item->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
-			$price_item->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
-			$price_item->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
-			$price_item->set_price(phpgw::get_var('price'));
-			$price_item->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
-			if($price_item->get_agresso_id() == null)
-			{
-				return $this->viewedit(true, $price_item, '', lang('missing_agresso_id'));
-			}
-			else
-			{
-				if (rental_soprice_item::get_instance()->store($price_item)) {
-					return $this->viewedit(true, $price_item, lang('messages_saved_form'));
-				} else {
-					return $this->viewedit(true, $price_item, '', lang('messages_form_error'));
-				}
-			}
-		}*/
-			$responsibility_title = ($price_item->get_responsibility_title()) ? $price_item->get_responsibility_title() : rental_socontract::get_instance()->get_responsibility_title($responsibility_id);
+			$selected = ($current_price_type_id == $price_type_id) ? 1 : 0;
+			$types_options[] = array('id'=>$price_type_id, 'name'=>lang($price_type_title), 'selected'=>$selected);				
+		}
 
-			$link_save = array
-				(
-					'menuaction'	=> 'rental.uiprice_item.save'
-				);
+		$data = array
+			(
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_save),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
+				'lang_save'						=> lang('save'),
+				'lang_cancel'					=> lang('cancel'),
 
-			$link_index = array
-				(
-					'menuaction'	=> 'rental.uiprice_item.index',
-				);
-			
-			$tabs = array();
-			$tabs['showing']	= array('label' => lang('Showing'), 'link' => '#showing');
-			$active_tab = 'showing';
-		//return $this->viewedit(true, $price_item);
-
-			$current_price_type_id = $price_item->get_price_type_id();
-			$types_options = array();
-			foreach($price_item->get_price_types() as $price_type_id => $price_type_title)
-			{
-				$selected = ($current_price_type_id == $price_type_id) ? 1 : 0;
-				$types_options[] = array('id'=>$price_type_id, 'name'=>lang($price_type_title), 'selected'=>$selected);				
-			}
-			
-			$data = array
-				(
-					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_save),
-					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
-					'lang_save'						=> lang('save'),
-					'lang_cancel'					=> lang('cancel'),
+				'lang_title'					=> lang('title'),
+				'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
+				'lang_agresso_id'				=> lang('agresso_id'),
+				'lang_is_area'					=> lang('is_area'),
+				'lang_calculate_price_per_area' => lang('calculate_price_per_area'),
+				'lang_calculate_price_apiece'	=> lang('calculate_price_apiece'),
+				'lang_type'						=> lang('type'),
+				'lang_price'					=> lang('price'),
+				'lang_is_inactive'				=> lang('is_inactive'),
+				'lang_price_element_in_use'		=> lang('price_element_in_use'),
+				'lang_is_adjustable'			=> lang('is_adjustable'),
+				'lang_is_standard'				=> lang('is_standard'),
 				
-					'lang_title'					=> lang('title'),
-					'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
-					'lang_agresso_id'				=> lang('agresso_id'),
-					'lang_is_area'					=> lang('is_area'),
-					'lang_calculate_price_per_area' => lang('calculate_price_per_area'),
-					'lang_calculate_price_apiece'	=> lang('calculate_price_apiece'),
-					'lang_type'						=> lang('type'),
-					'lang_price'					=> lang('price'),
-					'lang_is_inactive'				=> lang('is_inactive'),
-					'lang_price_element_in_use'		=> lang('price_element_in_use'),
-					'lang_is_adjustable'			=> lang('is_adjustable'),
-					'lang_is_standard'				=> lang('is_standard'),
+				'lang_current_price_type'		=> lang($price_item->get_price_type_title()),
+				'lang_adjustable_text'			=> $price_item->get_adjustable_text(),
+				'lang_standard_text'			=> $price_item->get_standard_text(),			
 
-					'value_title'					=> $price_item->get_title(),
-					'value_field_of_responsibility'	=> lang($responsibility_title),
-					'value_agresso_id'				=> $price_item->get_agresso_id(),
-					'is_area'						=> ($price_item->is_area()) ? 1 : 0,
-					'list_type'						=> array('options' => $types_options),
-					'value_price'					=> $price_item->get_price(),
-					'has_active_contract'			=> (rental_soprice_item::get_instance()->has_active_contract($price_item->get_id())) ? 1 : 0,
-					'is_inactive'					=> ($price_item->is_inactive()) ? 1 : 0,
-					'is_adjustable'					=> ($price_item->is_adjustable()) ? 1 : 0,
-					'is_standard'					=> ($price_item->is_standard()) ? 1 : 0,
+				'value_title'					=> $price_item->get_title(),
+				'value_field_of_responsibility'	=> lang($responsibility_title),
+				'value_agresso_id'				=> $price_item->get_agresso_id(),
+				'is_area'						=> ($price_item->is_area()) ? 1 : 0,
+				'list_type'						=> array('options' => $types_options),
+				'value_price'					=> $price_item->get_price(),
+				'value_price_formatted'			=> number_format($price_item->get_price(), $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator).' '.$this->currency_suffix,
+				'has_active_contract'			=> (rental_soprice_item::get_instance()->has_active_contract($price_item->get_id())) ? 1 : 0,
+				'is_inactive'					=> ($price_item->is_inactive()) ? 1 : 0,
+				'is_adjustable'					=> ($price_item->is_adjustable()) ? 1 : 0,
+				'is_standard'					=> ($price_item->is_standard()) ? 1 : 0,
 				
-					'price_item_id'					=> $price_item->get_id(),
-					'responsibility_id'				=> $responsibility_id,
-					'mode'							=> 'edit',
-				
-					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
-				);
+				'price_item_id'					=> $price_item->get_id(),
+				'responsibility_id'				=> $responsibility_id,
+				'mode'							=> $mode,
 
-			//$appname	=  $this->location_info['name'];
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+			);
 
-			//$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
-	
-			self::render_template_xsl(array('price_item'), array('edit' => $data));
+		self::render_template_xsl(array('price_item'), array($mode => $data));
 	}
 
 	/*
@@ -360,7 +350,7 @@ class rental_uiprice_item extends rental_uicommon
 			return;
 		}
 			
-		$title = phpgw::get_var('price_item_title');
+		/*$title = phpgw::get_var('price_item_title');
 		$responsibility_id = phpgw::get_var('responsibility_id');
 		if ($title) {
 			$price_item = new rental_price_item();
@@ -372,14 +362,18 @@ class rental_uiprice_item extends rental_uicommon
 			}
 		}
 
-		return $this->index();
+		return $this->index();*/
+		
+		$this->edit();
 	}
 
 	public function save()
 	{
-		if($id = phpgw::get_var('id', 'int'))
+		$price_item_id = phpgw::get_var('id', 'int');
+		
+		if(!empty($price_item_id))
 		{
-			$price_item = rental_price_item::get($id);
+			$price_item = rental_price_item::get($price_item_id);
 		}
 		else
 		{
@@ -401,16 +395,19 @@ class rental_uiprice_item extends rental_uicommon
 		$price_item->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
 		if($price_item->get_agresso_id() == null)
 		{
-			return $this->viewedit(true, $price_item, '', lang('missing_agresso_id'));
+			phpgwapi_cache::message_set(lang('missing_agresso_id'), 'error'); 
 		}
 		else
 		{
-			if (rental_soprice_item::get_instance()->store($price_item)) {
-				return $this->viewedit(true, $price_item, lang('messages_saved_form'));
+			if (rental_soprice_item::get_instance()->store($price_item)) 
+			{
+				phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
+				$price_item_id = $price_item->get_id();
 			} else {
-				return $this->viewedit(true, $price_item, '', lang('messages_form_error'));
+				phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
 			}
 		}
+		$this->edit(array('price_item_id'=>$price_item_id));
 	}
 		
 	public function set_value()
@@ -436,7 +433,7 @@ class rental_uiprice_item extends rental_uicommon
 	 * @param $editable true renders fields editable, false renders fields disabled
 	 * @param $price_item the price item to display
 	 */
-	protected function viewedit($editable, $price_item, $message = '', $error = '')
+	/*protected function viewedit($editable, $price_item, $message = '', $error = '')
 	{
 		$data = array
 		(
@@ -447,7 +444,7 @@ class rental_uiprice_item extends rental_uicommon
 				'cancel_link' => self::link(array('menuaction' => 'rental.uiprice_item.index'))
 		);
 		$this->render('admin_price_item.php', $data);
-	}
+	}*/
 	/**
 	 * (non-PHPdoc)
 	 * @see rental/inc/rental_uicommon#query()
@@ -462,7 +459,6 @@ class rental_uiprice_item extends rental_uicommon
 			$user_rows_per_page = 10;
 		}
 		
-		$search			= phpgw::get_var('search');
 		$order			= phpgw::get_var('order');
 		$draw			= phpgw::get_var('draw', 'int');
 		$columns		= phpgw::get_var('columns');
@@ -474,9 +470,6 @@ class rental_uiprice_item extends rental_uicommon
 		
 		$search_for 	= '';
 		$search_type	= '';
-		
-		//Create an empty result set
-		$records = array();
 		
 		//Retrieve a contract identifier and load corresponding contract
 		$contract_id = phpgw::get_var('contract_id');
@@ -523,7 +516,6 @@ class rental_uiprice_item extends rental_uicommon
 				$rows[] = $record->serialize();
 			}
 		}
-		//$data = array('results' => $rows, 'total_records' => $object_count);
 
 		$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
@@ -543,8 +535,6 @@ class rental_uiprice_item extends rental_uicommon
 		$result_data['draw']    = $draw;
 
 		return $this->jquery_results($result_data);
-		
-		//return $this->yui_results($data, 'total_records', 'results');
 	}
 
 	/**
@@ -599,14 +589,14 @@ class rental_uiprice_item extends rental_uicommon
 	//FIXME: Add actions for composite standard factors
 				}
 				break;
-			default:
+			/*default:
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.edit', 'id' => $value['id'])));
-				$value['labels'][] = lang('edit');
+				$value['labels'][] = lang('edit');*/
 		}
 	}
 	
