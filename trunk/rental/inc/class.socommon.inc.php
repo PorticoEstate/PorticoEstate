@@ -237,9 +237,12 @@ abstract class rental_socommon
 			{
 				$ids[] = $this->db->f($id_field_name_info['translated']);
 			}
-			$id_filter = "{$id_field_name_info['table']}.{$id_field_name_info['field']} IN(" . implode(',', $ids) . ') ';
 
-			$sql = str_replace('1=1', $id_filter, $sql);
+			if($ids)
+			{
+				$id_filter = "{$id_field_name_info['table']}.{$id_field_name_info['field']} IN(" . implode(',', $ids) . ') ';
+				$sql = str_replace('1=1', $id_filter, $sql);
+			}
 		}
 
 		$this->db->query($sql,__LINE__, __FILE__, false, true);
