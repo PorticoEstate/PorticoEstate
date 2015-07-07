@@ -388,13 +388,22 @@
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
 
+            $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
+            $active_tab = 'generic';
+            
+            $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
 			if ($step < 2) 
 			{
 				if($_SERVER['REQUEST_METHOD'] == 'POST' && $errors) {				
 					$allocation['from_'] = strftime("%H:%M", strtotime($_POST['weekday']." ".$_POST['from_']));
 					$allocation['to_'] = strftime("%H:%M", strtotime($_POST['weekday']." ".$_POST['to_']));
 				}
-				self::render_template('allocation_new', array('allocation' => $allocation,
+				self::render_template_xsl('allocation_new', array('allocation' => $allocation,
 					'step' => $step, 
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => $_POST['repeat_until'],
@@ -404,7 +413,7 @@
 			} 
 			else if ($step == 2) 
 			{
-				self::render_template('allocation_new_preview', array('allocation' => $allocation,
+				self::render_template_xsl('allocation_new_preview', array('allocation' => $allocation,
 					'step' => $step,
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
