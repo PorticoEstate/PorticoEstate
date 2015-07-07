@@ -48,8 +48,7 @@
                     </xsl:choose>
 
                   <!-- STATUS -->
-                  <xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
-            	
+           	
                     <div class="row first">
                       <label>Status:</label>
                       <span class="case_status">
@@ -60,7 +59,9 @@
                         </xsl:choose>
                       </span>
                     </div>
-                    
+
+					<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
+                 
                     <!--  MEASUREMENT -->
                     <div class="row">
                       <label>Måleverdi:</label> 
@@ -131,8 +132,7 @@
                    <xsl:attribute name="value"><xsl:value-of select="//control_item/type" /></xsl:attribute>
                  	</input>
                  	
-                  <xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
-                    <!--  STATUS -->
+                   <!--  STATUS -->
                     <div class="row first">
                       <label>Status:</label> 
                       <select name="case_status">
@@ -152,7 +152,8 @@
                         </xsl:choose>
                       </select>
                     </div>
-                    <xsl:choose>
+                  <xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
+                     <xsl:choose>
                       <xsl:when test="$control_item_type = 'control_item_type_2'">
                         <!--  MEASUREMENT -->
                         <div class="row">
