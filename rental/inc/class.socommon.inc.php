@@ -220,7 +220,7 @@ abstract class rental_socommon
 		 * Sigurd: try to limit the candidates to a minimum
 		 */
 		$bypass_offset_check = false;
-		if($num_of_objects && isset($id_field_name_info['translated']))
+		if($num_of_objects && is_array($id_field_name_info) && $id_field_name_info['translated'])
 		{
 			$bypass_offset_check = true;
 			$sql_parts_filter = explode('FROM',$sql, 2);
