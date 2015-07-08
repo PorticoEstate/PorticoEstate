@@ -619,6 +619,55 @@ JS;
 			$types_options[] = array('id'=>$id, 'name'=>lang($label));
 		}
 			
+		$tabletools = array
+		(
+			array('my_name'	=> 'select_all'),
+			array('my_name'	=> 'select_none')
+		);
+			
+		$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					)
+				)
+			);
+		
+		$tabletools[] = array
+			(
+				'my_name'		=> 'view',
+				'text'			=> lang('show'),
+				'action'		=> self::link(array(
+						'menuaction'	=> 'rental.uiadjustment.show_affected_contracts'
+				)),
+				'parameters'	=> json_encode($parameters)
+			);
+		
+		$tabletools[] = array
+			(
+				'my_name'		=> 'edit',
+				'text'			=> lang('edit'),
+				'action'		=> self::link(array(
+						'menuaction'	=> 'rental.uiadjustment.edit'
+				)),
+				'parameters'	=> json_encode($parameters)
+			);
+
+		$tabletools[] = array
+			(
+				'my_name'		=> 'delete',
+				'text'			=> lang('delete'),
+				'action'		=> self::link(array(
+						'menuaction'	=> 'rental.uiadjustment.delete'
+				)),
+				'confirm_msg'	=> lang('do you really want to delete this entry'),
+				'parameters'	=> json_encode($parameters)
+			);
+			
 		$datatable_def[] = array
 		(
 			'container'		=> 'datatable-container_0',
@@ -695,6 +744,7 @@ JS;
 						'hidden'	=> false
 					)				
 			),
+			'tabletools'	=> $tabletools,
 			'config'		=> array(
 				array('disableFilter' => true)
 			)
@@ -710,7 +760,8 @@ JS;
 		
 				'list_type'						=> array('options' => $types_options),
 			);
-
+		
+		self::add_javascript('rental', 'rental', 'price_item.adjust_price.js');
 		self::render_template_xsl(array('price_item', 'datatable_inline'), array('adjustment_price' => $data));
 	}
 	
@@ -721,14 +772,17 @@ JS;
 			$this->render('permission_denied.php');
 			return;
 		}
-		$id = (int)phpgw::get_var('price_item_id');
-		$new_price = phpgw::get_var('new_price');
-		$new_price = str_replace(',','.',$new_price);
 		
-		if($new_price != null && is_numeric($new_price)){
+		$id = (int)phpgw::get_var('price_item_id');
+		$new_price = str_replace(',','.',phpgw::get_var('new_price'));
+		$receipt = array();
+		
+		if($new_price != null && is_numeric($new_price))
+		{
 			$price_item = rental_price_item::get($id);
 			$price_item->set_price($new_price);
-			if (rental_soprice_item::get_instance()->store($price_item)) {
+			if (rental_soprice_item::get_instance()->store($price_item)) 
+			{
 				$adjustment = new rental_adjustment();
 				$adjustment->set_price_item_id($price_item->get_id());
 				$adjustment->set_new_price($new_price);
@@ -737,40 +791,46 @@ JS;
 				$adjustment->set_is_manual(true);
 				$adjustment->set_adjustment_date(time());
 				rental_soadjustment::get_instance()->store($adjustment);
-				$message[] = "Priselement med Agresso id {$price_item->get_agresso_id()} er oppdatert med ny pris {$new_price}";
+				//$message[] = "Priselement med Agresso id {$price_item->get_agresso_id()} er oppdatert med ny pris {$new_price}";
+				$receipt['message'][] = array('msg'=>"Priselement med Agresso id {$price_item->get_agresso_id()} er oppdatert med ny pris {$new_price}");
 				//update affected contract_price_items
 				$no_of_contracts_updated = rental_soprice_item::get_instance()->adjust_contract_price_items($id, $new_price);
 				if($no_of_contracts_updated > 0){
-					$message[] = $no_of_contracts_updated .' priselementer p&aring; kontrakter er oppdatert';
+					$message = $no_of_contracts_updated .' priselementer p&aring; kontrakter er oppdatert';
 				}
 				else{
-					$message[] = "Ingen kontrakter er oppdatert";
+					$message = "Ingen kontrakter er oppdatert";
 				}
-				$data = array
+				/*$data = array
 				(
 					'price_item_id' => $id,
 					'message' => $message
-				);
-				self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
-				$this->render('admin_price_item_manual_adjustment.php', $data);
+				);*/
+				$receipt['message'][] = array('msg'=>$message);
+				//self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
+				//$this->render('admin_price_item_manual_adjustment.php', $data);
 			} else {
-				$data = array
+				/*$data = array
 				(
 					'price_item_id' => $id,
 					'error' => $error
 				);
-				self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
-				$this->render('admin_price_item_manual_adjustment.php', $data);
+				self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	*/
+				//$this->render('admin_price_item_manual_adjustment.php', $data);
+				$receipt['error'][] = array('msg'=>'error');
 			}
 		}
 		else{
-			$data = array
+			/*$data = array
 			(
 				'price_item_id' => $id,
 				'error' => lang('price_not_numeric')
 			);
-			self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
-			$this->render('admin_price_item_manual_adjustment.php', $data);
+			self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	*/
+			//$this->render('admin_price_item_manual_adjustment.php', $data);
+			$receipt['error'][] = array('msg'=>lang('price_not_numeric'));
 		}
+		
+		return $receipt;
 	}
 }
