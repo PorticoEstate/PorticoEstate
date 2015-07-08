@@ -260,7 +260,7 @@
 					</select>
 					<xsl:value-of select="lang_price"/> 
 					<input type="text" id="ctrl_adjust_price_item_price" name="ctrl_adjust_price_item_price"/>
-					<input type="button" class="pure-button pure-button-primary" name="adjust_price" value="{lang_adjust_price}"  onClick=""/>
+					<input type="button" class="pure-button pure-button-primary" name="adjust_price" value="{lang_adjust_price}"  onClick="onAdjust_price()"/>
 				</div>
 			</div>
 		</div>
