@@ -72,18 +72,25 @@
 					</div>
 					<div class="pure-control-group">
 						<div>
-							<xsl:for-each select="datatable_def">
-								<xsl:if test="container = 'datatable-container_0'">
-									<xsl:call-template name="table_setup">
-										<xsl:with-param name="container" select ='container'/>
-										<xsl:with-param name="requestUrl" select ='requestUrl' />
-										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-										<xsl:with-param name="tabletools" select ='tabletools' />
-										<xsl:with-param name="data" select ='data' />
-										<xsl:with-param name="config" select ='config' />
-									</xsl:call-template>
-								</xsl:if>
-							</xsl:for-each>
+							<xsl:if test="show_affected_list = 1">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</xsl:if>
+							<xsl:if test="show_affected_list = 0">
+								<h2>
+									<xsl:value-of select="lang_adjustment_list_out_of_date"/>
+								</h2>
+							</xsl:if>
 						</div>
 					</div>
 				</div>
