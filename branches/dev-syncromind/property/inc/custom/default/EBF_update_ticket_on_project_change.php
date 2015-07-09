@@ -25,7 +25,18 @@
 
 		public function check_values($project, $values_attribute)
 		{
-			$origin = $this->interlink->get_relation('property', '.project', $project['id'], 'origin');
+			if(isset($project['id']) && $project['id'])
+			{
+				$origin = $this->interlink->get_relation('property', '.project', $project['id'], 'origin');
+			}
+			else if (isset($project['origin']) && is_array($project['origin']))
+			{
+				$origin = $project['origin'];
+			}
+			else
+			{
+				$origin = array();
+			}
 			$ids = array();
 			foreach($origin as $_origin)
 			{
@@ -38,6 +49,7 @@
 				}
 			}
 
+
 			foreach($ids as $id)
 			{
 				$this->update_ticket($id, $project, $values_attribute);
@@ -46,10 +58,28 @@
 
 		private function update_ticket($id, $project, $values_attribute)
 		{
-			$finnish_date	= (int)$project['end_date'];
-			if(!$finnish_date)
+			$_finnish_date	= (int)$project['end_date'];
+			if(!$_finnish_date)
 			{
 				return;
+			}
+
+			$finnish_date = $_finnish_date;
+			$note = 'FerdigDato er automatisk til prosjekt sluttDato';
+
+			if($project['b_account_id'] == 48) // klargjøring
+			{
+				//search for 2 working day delay
+				for ( $i=2; $i<10; $i++ )
+				{
+					$finnish_date = $_finnish_date + (86400 * $i);
+					$working_days = phpgwapi_datetime::get_working_days($_finnish_date, $finnish_date);
+					if($working_days == 2)
+					{
+						$note = 'FerdigDato er automatisk oppdatert til 2 virkedager etter prosjekt sluttDato';
+						break;
+					}
+				}
 			}
 
 			$this->db->query("SELECT finnish_date, finnish_date2 FROM fm_tts_tickets WHERE id='$id'",__LINE__,__FILE__);
@@ -77,6 +107,7 @@
 			{
 				$fields_updated = array('finnish_date');
 				$this->historylog->add('F',$id,$finnish_date,$old_value);
+				$this->historylog->add('C',$id, $note);
 				$this->botts->mail_ticket($id, $fields_updated, $receipt=array(),$project['location_code'], false, true);
 				phpgwapi_cache::message_set(lang('finnish date changed'), 'message');
 			}

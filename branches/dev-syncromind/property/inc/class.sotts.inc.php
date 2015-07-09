@@ -1573,6 +1573,10 @@
 				execMethod('property.sopending_action.close_pending_action', $action_params);
 				unset($action_params);
 			}
+			/*
+			 * Sigurd: Consider remove
+			 */
+		/*
 			if ($this->db->f('in_progress') )
 			{
 				$action_params = array
@@ -1590,6 +1594,7 @@
 				execMethod('property.sopending_action.close_pending_action', $action_params);
 				unset($action_params);
 			}
+		*/
 
 			if ($this->db->f('delivered') )
 			{

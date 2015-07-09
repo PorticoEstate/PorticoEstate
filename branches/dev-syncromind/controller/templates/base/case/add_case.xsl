@@ -90,7 +90,14 @@
 											<xsl:when test="type = 'control_item_type_1'">
 													<input type="hidden" name="status" value="0" />
 									            	<input type="hidden" name="type" value="control_item_type_1" />
-												    
+													<div class="row">
+														<label>Status</label>
+														<select name="status">
+															<option value="0" SELECTED="SELECTED">Åpen</option>
+															<option value="1" >Lukket</option>
+															<option value="2" >Venter på tilbakemelding</option>
+												   		</select>
+												   </div>
 													<div>
 												    <label class="comment">Beskrivelse av sak</label>
 													  <textarea name="case_descr" >

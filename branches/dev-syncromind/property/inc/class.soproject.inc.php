@@ -1657,32 +1657,6 @@
 					}
 					$receipt['notice_owner'][] = lang('Status confirmed') . ': ' . $project['status'];
 				}
-
-				/*
-				  // Handled in _update_status_workorder();
-				  if($close_pending_action)
-				  {
-				  $action_params = array
-				  (
-				  'appname'			=> 'property',
-				  'location'			=> '.project.workorder',
-				  'id'				=> 0,
-				  'responsible'		=> $this->account,
-				  'responsible_type'  => 'user',
-				  'action'			=> 'approval',
-				  'remark'			=> '',
-				  'deadline'			=> ''
-				  );
-
-
-				  foreach($workorders as $workorder_id)
-				  {
-				  $action_params['id'] =  $workorder_id;
-				  execMethod('property.sopending_action.close_pending_action', $action_params);
-				  }
-				  unset($action_params);
-				  }
-				 */
 			}
 
 			if(isset($project['project_group']) && $project['project_group'])
@@ -2943,6 +2917,10 @@
 					'deadline'			 => ''
 				);
 
+				/*
+				 * Sigurd: Consider remove
+				*/
+/*
 				$action_params_progress = array
 				(
 					'appname'			 => 'property',
@@ -2954,7 +2932,7 @@
 					'remark'			 => '',
 					'deadline'			 => ''
 				);
-
+ */
 				$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$status_new}'");
 				$this->db->next_record();
 				if($this->db->f('approved'))
@@ -2963,12 +2941,12 @@
 				}
 				if($this->db->f('in_progress'))
 				{
-					execMethod('property.sopending_action.close_pending_action', $action_params_progress);
+//					execMethod('property.sopending_action.close_pending_action', $action_params_progress);
 				}
 				if($this->db->f('delivered') || $this->db->f('closed'))
 				{
 					execMethod('property.sopending_action.close_pending_action', $action_params_approved);
-					execMethod('property.sopending_action.close_pending_action', $action_params_progress);
+//					execMethod('property.sopending_action.close_pending_action', $action_params_progress);
 				}
 			}
 

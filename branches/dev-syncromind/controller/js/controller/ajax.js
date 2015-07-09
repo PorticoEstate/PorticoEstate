@@ -346,7 +346,7 @@ $(document).ready(function(){
 		$(".control_item_type").find(".btn").removeClass("active");
 		
 		// Makes button active and checkes underlying radiobutton
-		$(thisRadio).attr("checked", "checked");
+		$(thisRadio).prop("checked", true);
 		$(thisBtn).addClass("active");
 		
 		var control_item_type = $(this).find("input[type=radio]").val();

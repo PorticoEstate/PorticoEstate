@@ -87,7 +87,7 @@ class rental_socontract extends rental_socommon
 		else if($sort_field == 'term_label'){
 			$sort_field = 'contract.term_id';
 		}
-
+		$this->sort_field = str_ireplace(" {$dir}", '', $sort_field);
 
 		//Contracts for billing should always be sorted on biling start
 		if(isset($filters['contracts_for_billing']))
@@ -277,10 +277,12 @@ class rental_socontract extends rental_socommon
 				case 'closing_due_date':
 					$filter_clauses[] = "contract.due_date >= {$ts_query} AND (contract.due_date - (type.notify_before_due_date * (24 * 60 * 60)))  <= {$ts_query}";
 					$order = "ORDER BY contract.due_date ASC";
+					$this->sort_field = 'contract.due_date';
 					break;
 				case 'terminated_contracts':
 					$filter_clauses[] = "contract.date_end >= ({$ts_query} - (type.notify_after_termination_date * (24 * 60 * 60))) AND contract.date_end < {$ts_query}";
 					$order = "ORDER BY contract.date_end DESC";
+					$this->sort_field = 'contract.date_end';
 					break;
 				case 'ended':
 					$filter_clauses[] = "contract.date_end < {$ts_query}" ;

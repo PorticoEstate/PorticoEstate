@@ -2081,6 +2081,8 @@
 						$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 						$historylog->add('M',$id,"{$_to}{$attachment_log}");
 						$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
+					//Sigurd: Consider remove
+					/*
 						$action_params = array
 							(
 								'appname'			=> 'property',
@@ -2094,6 +2096,7 @@
 							);
 
 						$reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
+					 */
 					}
 				}
 				else

@@ -5,6 +5,7 @@ abstract class rental_socommon
 	protected $like;
 	protected $join;
 	protected $left_join;
+	protected $sort_field;
 	
 	public function __construct()
 	{
@@ -12,6 +13,7 @@ abstract class rental_socommon
 		$this->like			= & $this->db->like;
 		$this->join			= & $this->db->join;
 		$this->left_join	= & $this->db->left_join;
+		$this->sort_field	= null;
 	}
 	
 		/**
@@ -218,15 +220,16 @@ abstract class rental_socommon
 		 * Sigurd: try to limit the candidates to a minimum
 		 */
 		$bypass_offset_check = false;
-		if($num_of_objects && isset($id_field_name_info['translated']))
+		if($num_of_objects && is_array($id_field_name_info) && $id_field_name_info['translated'])
 		{
 			$bypass_offset_check = true;
-			$sql_parts_filter = explode('FROM',$sql);
+			$sql_parts_filter = explode('FROM',$sql, 2);
 
 			$sql_filter = "SELECT DISTINCT {$id_field_name_info['table']}.{$id_field_name_info['field']} AS {$id_field_name_info['translated']}";
-			if($sort_field && $sort_field != $id_field_name_info['translated'])
+			$_sort_field = $this->sort_field ? $this->sort_field : $sort_field;
+			if($_sort_field && $_sort_field != $id_field_name_info['translated'])
 			{
-				$sql_filter .= ",{$sort_field}";
+				$sql_filter .= ",{$_sort_field}";
 			}
 
 			$sql_filter .= " FROM {$sql_parts_filter[1]}";
@@ -237,9 +240,12 @@ abstract class rental_socommon
 			{
 				$ids[] = $this->db->f($id_field_name_info['translated']);
 			}
-			$id_filter = "{$id_field_name_info['table']}.{$id_field_name_info['field']} IN(" . implode(',', $ids) . ') ';
 
-			$sql = str_replace('1=1', $id_filter, $sql);
+			if($ids)
+			{
+				$id_filter = "{$id_field_name_info['table']}.{$id_field_name_info['field']} IN(" . implode(',', $ids) . ') ';
+				$sql = str_replace('1=1', $id_filter, $sql);
+			}
 		}
 
 		$this->db->query($sql,__LINE__, __FILE__, false, true);

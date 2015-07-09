@@ -74,7 +74,7 @@
 			$now = time() + (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * 3600;
 
 			$now_hour = date('G',$now );
-			$now_day = date('N',$now );		
+			$now_day = date('N',$now );
 
 			if(($now_hour < 6 || $now_hour > 17) || $now_day > 5)
 			{
@@ -94,14 +94,14 @@
 			$this->get_files();
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
-			if ( preg_match('/\./', $dirname) 
+			if ( preg_match('/\./', $dirname)
 			 || !is_dir($dirname) )
 			{
 				return array();
 			}
 
 			$file_list = array();
-			$dir = new DirectoryIterator($dirname); 
+			$dir = new DirectoryIterator($dirname);
 			if ( is_object($dir) )
 			{
 				foreach ( $dir as $file )
@@ -173,7 +173,7 @@
 		{
 			$dirname = $this->config->config_data['import']['local_path'];
 
-			if ( preg_match('/\./', $dirname) 
+			if ( preg_match('/\./', $dirname)
 			 || !is_dir($dirname) )
 			{
 				return array();
@@ -181,7 +181,7 @@
 
 			$archive = "{$dirname}/archive";
 			$file_list = array();
-			$dir = new DirectoryIterator($archive); 
+			$dir = new DirectoryIterator($archive);
 			if ( is_object($dir) )
 			{
 				foreach ( $dir as $file )
@@ -362,7 +362,7 @@
 							if( stripos( $file_name, 'Px205' ) === 0)
 							{
 						//		_debug_array($file_name);
-								$file_remote = "{$directory_remote}/{$file_name}";	   
+								$file_remote = "{$directory_remote}/{$file_name}";
 								$file_local = "{$directory_local}/{$file_name}";
 
 								$stream = fopen("ssh2.sftp://$sftp$file_remote", 'r');
@@ -574,12 +574,7 @@
 				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
 				$this->db->query($sql,__LINE__,__FILE__);
 
-				if(!abs($belop) > 0)
-				{
-					$this->receipt['error'][] = array('msg' => "Importeres ikke: Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
-					$this->skip_import = true;				
-				}
-				else if(!$_data['SUPPLIER.CODE'])
+				if(!$_data['SUPPLIER.CODE'])
 				{
 					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
 					$this->skip_import = true;
@@ -656,7 +651,7 @@
 			{
 				_debug_array("Skip import - file: {$file}");
 			}
-			
+
 			if($this->skip_import)
 			{
 				$this->skip_import = false;
@@ -746,7 +741,7 @@
 				$order_info['order_exist'] = true;
 			}
 			if ($this->db->f('location_code'))
-			{ 
+			{
 				$parts = explode('-',$this->db->f('location_code'));
 				$order_info['dima'] = implode('', $parts);
 				$order_info['loc1'] = $parts[0];
@@ -756,7 +751,7 @@
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
 			$order_info['dime']					= $this->db->f('category');
-			$order_info['title']				= $this->db->f('title',true);			
+			$order_info['title']				= $this->db->f('title',true);
 
 			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;

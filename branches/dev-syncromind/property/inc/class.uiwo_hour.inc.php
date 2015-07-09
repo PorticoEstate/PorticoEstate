@@ -1199,7 +1199,8 @@
 				QRcode::png($code_text,$filename);
 				$sms_data['encoded_text'] = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 			}
-
+			$lang_reminder = '';
+/*
 			$action_params = array
 				(
 					'appname'			=> 'property',
@@ -1213,8 +1214,6 @@
 				);
 
 
-			$lang_reminder = '';
-/*
 			$pending_action = execMethod('property.sopending_action.get_pending_action', $action_params);
 
 			$lang_reminder = '';
@@ -1515,7 +1514,8 @@ HTML;
 						$sms->websend2pv($this->account,$to_sms_phone,str_replace(array('__order_id__'), array($workorder_id), $this->config->config_data['sms_client_order_notice']));
 						$historylog->add('MS',$workorder_id,$to_sms_phone);
 					}
-					
+				//Sigurd: Consider remove
+				/*
 					if( $this->boworkorder->order_sent_adress )
 					{
 						$action_params = array
@@ -1532,6 +1532,7 @@ HTML;
 
 						$reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
+			 */
 				}
 				else
 				{
