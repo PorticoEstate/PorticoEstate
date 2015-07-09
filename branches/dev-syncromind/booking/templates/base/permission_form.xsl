@@ -27,7 +27,7 @@
              <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="tabs"/>
-                <div id="permission_edit"> 
+                <div id="permission"> 
                     <fieldset>
                                             
                         <div class="pure-control-group">
