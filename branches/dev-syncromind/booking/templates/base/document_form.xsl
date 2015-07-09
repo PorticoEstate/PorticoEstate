@@ -24,7 +24,7 @@
             <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="document/tabs"/>
-                <div id="document_edit">     
+                <div id="document">     
            
 			<div class="pure-control-group">
 				<xsl:if test="document/id">
@@ -101,7 +101,7 @@
                                             <input id="field_owner_id" name="owner_id" type="hidden">
                                                     <xsl:attribute name="value"><xsl:value-of select="document/owner_id"/></xsl:attribute>
                                             </input>
-                                            <div id="owner_container"/>
+                                            <!--div id="owner_container"/-->
                                     <!--/div-->
                         </div>
 
