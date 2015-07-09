@@ -170,8 +170,15 @@
 			$this->flash_form_errors($errors);
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$this->use_yui_editor();
-			self::render_template('building_form', array('building' => $building, 'new_form' => true));
+//			$this->use_yui_editor();
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_new');
+            $active_tab = 'generic';
+        
+            $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('building_form', array('building' => $building, 'new_form' => true));
 		}
 
 		public function edit()
