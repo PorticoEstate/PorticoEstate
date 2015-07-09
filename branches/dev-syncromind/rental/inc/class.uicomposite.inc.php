@@ -183,8 +183,8 @@
 					phpgwapi_cache::session_set('rental', 'composite_status_contract', phpgw::get_var('has_contract'));
 					phpgwapi_cache::session_set('rental', 'composite_furnished_status', phpgw::get_var('furnished_status'));
 					$filters = array('furnished_status' => phpgw::get_var('furnished_status'),'is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 
-									 'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from_hidden'), 
-									 'availability_date_to' => phpgw::get_var('availability_date_to_hidden'), 'district_id' => $district_id);
+									 'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from'), 
+									 'availability_date_to' => phpgw::get_var('availability_date_to'), 'district_id' => $district_id);
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
@@ -218,7 +218,7 @@
 			
 			//$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
-			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			/*$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
 
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
@@ -251,7 +251,7 @@
 						$create_types[] = array($id, $label);
 					}
 				}
-			}
+			}*/
 			
 			/*if(!$export){
 				//Add action column to each row in result table
@@ -389,6 +389,22 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
+							array
+							 (
+								 'type'	=> 'date-picker',
+								 'id'	=> 'availability_date_from',
+								 'name'	=> 'availability_date_from',
+								 'value'	=> '',
+								 'text' => lang('from')
+							 ),
+							 array
+							 (
+								 'type'	=> 'date-picker',
+								 'id'	=> 'availability_date_to',
+								 'name'	=> 'availability_date_to',
+								 'value'	=> '',
+								 'text' => lang('to')
+							 ),
 							array(
 								'type'   => 'link',
 								'value'  => lang('new'),
@@ -396,7 +412,7 @@
 									'menuaction'	=> 'rental.uicomposite.add'
 								)),
 								'class'  => 'new_item'
-							)							
+							)
 						)
 					)
 				),
@@ -471,8 +487,12 @@
 			{
 				array_push($data['datatable']['field'], array("key"=>"furnished_status", "label"=>lang('furnish_type'), "sortable"=>false, "hidden"=>false));
 			}
-			array_push($data['datatable']['field'], array("key"=>"actions", "label"=>lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
+			//array_push($data['datatable']['field'], array("key"=>"actions", "label"=>lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
 
+            $GLOBALS['phpgw']->jqcal->add_listener('filter_availability_date_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_availability_date_to');
+			phpgwapi_jquery::load_widget('datepicker');
+			
 			$parameters = array
 				(
 					'parameter' => array
@@ -496,23 +516,68 @@
 					'parameters'	=> json_encode($parameters)
 				);
 
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('edit'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'rental.uicomposite.edit'
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
 			
+			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+			$valid_contract_types = array();
+			if(isset($config->config_data['contract_types']) && is_array($config->config_data['contract_types']))
+			{
+				foreach ($config->config_data['contract_types'] as $_key => $_value)
+				{
+					if($_value)
+					{
+						$valid_contract_types[] = $_value;
+					}
+				}
+			}
+
+			$create_types = array();
+			foreach($contract_types as $id => $label)
+			{
+				if($valid_contract_types && !in_array($id,$valid_contract_types))
+				{
+					continue;
+				}
+	
+				$names = $this->locations->get_name($id);
+				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+					{
+						// adding allowed contract_types for context menu creation
+						$create_types[] = array($id, $label);
+					}
+				}
+			}
+			
+			foreach($create_types as $create_type) 
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> $create_type[1],
+						'text' 			=> lang('create_contract_'.$create_type[1]),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'rental.uicontract.add_from_composite',
+							'responsibility_id' => $create_type[0]
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
+					
 			//self::add_javascript('rental', 'rental', 'party.sync.js');
 			self::render_template_xsl('datatable_jquery', $data);
-		
-			/*$search_for = phpgw::get_var('search_for');
-			if($search_for)
-			{
-				phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
-				$s_type = phpgw::get_var('search_type');
-				if($s_type && $s_type == 'location_id')
-				{
-					$s_type = "property_id";
-				}
-				phpgwapi_cache::session_set('rental', 'composite_search_type', $s_type);
-				phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('contract_status'));
-			}
-			$this->render('composite_list.php');*/
 		}
 		
 		/**
@@ -587,7 +652,7 @@
 				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
 			}
 			
-			if(isset($_POST['save_composite'])) // The user has pressed the save button
+			/*if(isset($_POST['save_composite'])) // The user has pressed the save button
 			{
 				if(isset($composite))
 				{
@@ -612,8 +677,91 @@
 						$error = lang('messages_form_error');
 					}
 				}
+			}*/
+			
+			$link_index = array
+				(
+					'menuaction'	=> 'rental.uicomposite.index'
+				);
+		
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+	
+			$cur_standard_id = $composite->get_standard_id();
+			$composite_standard_arr = $composite->get_standards($cur_standard_id);
+			$composite_standard_options = array();
+			foreach($composite_standard_arr as $composite_standard)
+			{
+				$selected = ($composite_standard['selected']) ? 1 : 0;
+				$composite_standard_options[] = array('id'=>$composite_standard['id'], 'name'=>$composite_standard['name'], 'selected'=>$selected);				
+			}			
+		
+			$furnish_types_arr = $composite->get_furnish_types();
+			$cur_furnish_type_id = $composite->get_furnish_type_id();
+			$furnish_types_options = array();
+			foreach($furnish_types_arr as $id => $title)
+			{
+				$selected = ($cur_furnish_type_id == $id) ? 1 : 0;
+				$furnish_types_options[] = array('id'=>$id, 'name'=>$title, 'selected'=>$selected);				
 			}
-			return $this->render('composite.php', array
+			
+			$tabs = array();
+			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
+			$active_tab = 'details';
+		
+			if ($composite_id)
+			{
+				$tabs['units']	= array('label' => lang('Units'), 'link' => '#units');
+				$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
+			}
+			
+			$data = array
+			(
+				//'datatable_def'					=> $datatable_def,
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uicomposite.save')),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
+				'lang_save'						=> lang('save'),
+				'lang_cancel'					=> lang('cacel'),			
+				'editable'						=> true,
+				
+				'lang_name'						=> lang('name'),
+				'lang_address'					=> lang('address'),
+				'lang_composite_standard'		=> lang('composite standard'),
+				'lang_furnish_type'				=> lang('furnish_type'),
+				'lang_has_custom_address'		=> lang('has_custom_address'),
+				'lang_overridden_address'		=> lang('overridden_address'),
+				'lang_house_number'				=> lang('house_number'),
+				'lang_post_code'				=> lang('post_code'),
+				'lang_post_place'				=> lang('post_place'),
+				'lang_area_gros'				=> lang('area_gros'),
+				'lang_area_net'					=> lang('area_net'),
+				'lang_available'				=> lang('available ?'),
+				'lang_description'				=> lang('description'),
+
+				'value_name'					=> $composite->get_name(),
+				'list_composite_standard'		=> array('options' => $composite_standard_options),
+				'list_furnish_type'				=> array('options' => $furnish_types_options),
+				'has_custom_address'			=> ($composite->has_custom_address()) ? 1 : 0,
+				'value_custom_address_1'		=> $composite->get_custom_address_1(),
+				'value_custom_house_number'		=> $composite->get_custom_house_number(),
+				'value_custom_address_2'		=> $composite->get_custom_address_2(),
+				'value_custom_postcode'			=> $composite->get_custom_postcode(),
+				'value_custom_place'			=> $composite->get_custom_place(),
+				'value_area_gros'				=> $composite->get_area_gros(). ' ' .(($config->config_data['area_suffix']) ? $config->config_data['area_suffix'] : 'kvm'),
+				'value_area_net'				=> $composite->get_area_net(). ' ' .(($config->config_data['area_suffix']) ? $config->config_data['area_suffix'] : 'kvm'),
+				'is_active'						=> ($composite->is_active()) ? 1 : 0,
+				'value_description'				=> $composite->get_description(),
+				
+				'composite_id'					=> $composite_id,
+
+				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
+			);
+
+			//self::add_javascript('rental', 'rental', 'party.edit.js');
+			self::render_template_xsl(array('composite', 'datatable_inline'), array('edit' => $data));
+		
+			/*return $this->render('composite.php', array
 				(
 					'composite' 	=> $composite,
 					'editable' => true,
@@ -621,7 +769,7 @@
 					'error' => isset($error) ? $error : phpgw::get_var('error'),
 					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => 'yes')),
 				)	
-			);
+			);*/
 			
 		}
 
