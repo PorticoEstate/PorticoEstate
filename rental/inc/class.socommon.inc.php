@@ -226,9 +226,10 @@ abstract class rental_socommon
 			$sql_parts_filter = explode('FROM',$sql, 2);
 
 			$sql_filter = "SELECT DISTINCT {$id_field_name_info['table']}.{$id_field_name_info['field']} AS {$id_field_name_info['translated']}";
-			if($sort_field && $sort_field != $id_field_name_info['translated'])
+			$_sort_field = $this->sort_field ? $this->sort_field : $sort_field;
+			if($_sort_field && $_sort_field != $id_field_name_info['translated'])
 			{
-				$sql_filter .= $this->sort_field ? ",{$this->sort_field}" :",{$sort_field}";
+				$sql_filter .= ",{$_sort_field}";
 			}
 
 			$sql_filter .= " FROM {$sql_parts_filter[1]}";
