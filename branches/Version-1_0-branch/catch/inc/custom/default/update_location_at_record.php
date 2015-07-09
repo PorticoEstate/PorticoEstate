@@ -50,7 +50,6 @@
 					$origin_location_code 		= $this->db2->f('location_code');
 					$origin_address 			= $this->db2->f('address');
 					$value_set['location_code'] = $origin_location_code;
-//					$value_set['p_num'] 		= $target_id;
 					$value_set['p_num'] 		= $this->db2->f('target_id');
 					$value_set['p_entity_id']	= $p_entity_id;
 					$value_set['p_cat_id']		= $p_cat_id;
