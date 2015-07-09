@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="content">
+    <!--div id="content">
         <ul class="pathway">
             <li>
                 <a>
@@ -15,10 +15,10 @@
             </li>
             <li><xsl:value-of select="php:function('lang', 'Season')" /></li>
             <li><a href=""><xsl:value-of select="season/name"/></a></li>
-        </ul>
+        </ul-->
 
         <xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
+		<!--xsl:call-template name="yui_booking_i18n"/-->
 
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Case officer')" /></dt>
@@ -57,7 +57,7 @@
 
 		<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
 	    <div id="permissions_container"/>
-    </div>
+    <!--/div-->
 
 	<script type="text/javascript">
 		var season_id = <xsl:value-of select="season/id"/>;
