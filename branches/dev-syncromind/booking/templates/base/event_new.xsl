@@ -57,7 +57,7 @@
                     </div>
                     <div class="pure-control-group">
                                     <label><xsl:value-of select="php:function('lang', 'Event type')"/></label>
-                                      <select id="field_public" name="is_public">
+                                        <select id="field_public" name="is_public">
                                               <option value="1">
                                                     <xsl:if test="event/is_public=1">
                                                       <xsl:attribute name="selected">checked</xsl:attribute>
@@ -70,7 +70,7 @@
                                                     </xsl:if>
                                                       <xsl:value-of select="php:function('lang', 'Private event')"/>
                                               </option>
-                                      </select>
+                                        </select>
                     </div>
                     <div class="pure-control-group">
                                     <dt class="heading"><xsl:value-of select="php:function('lang', 'Where')" /></dt>
