@@ -164,8 +164,14 @@
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
-			$this->use_yui_editor();
-			self::render_template('resource_form', array('resource' => $resource, 'activitydata' => $activity_data, 'new_form' => true));
+//			$this->use_yui_editor();
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+            $active_tab = 'generic';
+            
+            $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data, 'new_form' => true));
 		}
 		
 		protected function resource_types()
@@ -205,8 +211,14 @@
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
-			$this->use_yui_editor();
-			self::render_template('resource_form', array('resource' => $resource, 'activitydata' => $activity_data));
+//			$this->use_yui_editor();
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+            $active_tab = 'generic';
+            
+            $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data));
 		}
 		
 		public function show()
