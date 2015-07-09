@@ -205,6 +205,13 @@
 			$this->use_yui_editor();
 			
 			$this->add_template_helpers();
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Organization New'), 'link' => '#generic');
+            $active_tab = 'generic';
+            
+            $organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
 			self::render_template_xsl('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 
