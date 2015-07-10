@@ -1,7 +1,7 @@
 <xsl:template match="data">
 	<div id="content">
 		<xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
+		<!--xsl:call-template name="yui_booking_i18n"/-->
 		<xsl:apply-templates select="permission"/>
 	</div>
 </xsl:template>
