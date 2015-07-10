@@ -131,6 +131,13 @@
 			</div>
 			</form>
 		</div>
+		<xsl:for-each select="integration">
+			<div id="{section}">
+				<iframe id="{section}_content" width="100%" height="{height}" src="{src}">
+					<p>Your browser does not support iframes.</p>
+				</iframe>
+			</div>
+		</xsl:for-each>
 	</div>
 </xsl:template>
 
