@@ -7,6 +7,7 @@ class booking_uireports extends booking_uicommon
 {
 	public $public_functions = array(
 			'index'                 =>      true,
+            'query'                 =>      true,
 			'participants'          =>      true,
 			'freetime'              =>      true,
 		);
@@ -18,14 +19,16 @@ class booking_uireports extends booking_uicommon
 		$this->building_bo = CreateObject('booking.bobuilding');
 		self::set_active_menu('booking::reportcenter');
 	}
+    public function query() {
+        
+    }
 
-	public function index()
+    public function index()
 	{
 		$reports[] = array('name' => lang('Participants Per Age Group Per Month'), 'url' => self::link(array('menuaction' => 'booking.uireports.participants')));
 		$reports[] = array('name' => lang('Free time'), 'url' => self::link(array('menuaction' => 'booking.uireports.freetime')));
 
-		self::render_template('report_index',
-		array('reports' => $reports));
+		self::render_template_xsl('report_index',array('reports' => $reports));
 	}
 
 	public function participants()
@@ -79,8 +82,18 @@ class booking_uireports extends booking_uicommon
 		}
 
 		$this->flash_form_errors($errors);
-		self::render_template('report_participants',
-		array('from' => $from, 'to' => $to, 'buildings' => $buildings['results']));
+        
+        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+        $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+        
+        $tabs = array();
+        $tabs['generic'] = array('label' => lang('Report Participants'), 'link' => '#report_part');
+        $active_tab = 'generic';
+        
+        $data = array();
+        $data['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+		self::render_template_xsl('report_participants',array('data' => $data,'from' => $from, 'to' => $to, 'buildings' => $buildings['results']));
 	}
 
 	public function freetime()
@@ -131,9 +144,19 @@ class booking_uireports extends booking_uicommon
 		}
 
 		$this->flash_form_errors($errors);
+        
+        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+        $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+        
+        $tabs = array();
+        $tabs['generic'] = array('label' => lang('Report FreeTime'), 'link' => '#report_freetime');
+        $active_tab = 'generic';
+        
+        $data = array();
+        $data['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-		self::render_template('report_freetime',
-				array('show' => $show, 'from' => $from, 'to' => $to, 'buildings' => $buildings['results'], 'allocations' => $allocations['results']));
+		self::render_template_xsl('report_freetime',
+				array('data'=>$data, 'show' => $show, 'from' => $from, 'to' => $to, 'buildings' => $buildings['results'], 'allocations' => $allocations['results']));
 	}
 
 	private function get_free_allocations($buildings, $from, $to, $weekdays)
