@@ -153,6 +153,19 @@
 						<xsl:apply-templates select="user_list/options"/>
 					</select>
 				</div>
+				<xsl:if test="required_actual_hours = 1">
+					<div class="row">
+						<label>Egne Timer</label>
+						<input class="date">
+						  <xsl:attribute name="id">billable_hours</xsl:attribute>
+						  <xsl:attribute name="name">billable_hours</xsl:attribute>
+						  <xsl:attribute name="type">text</xsl:attribute>
+						</input>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="check_list/billable_hours"/>
+					</div>
+				</xsl:if>
+
 				<!-- COMMENT -->
 				<div class="comment">
 					<label>Kommentar</label>
