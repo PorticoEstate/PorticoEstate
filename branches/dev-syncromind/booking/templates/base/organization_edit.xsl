@@ -32,7 +32,7 @@
     <xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
 
-	<form action="" method="POST" class= "pure-form pure-form-stacked">
+	<form action="" method="POST" class="pure-form pure-form-stacked" id="form" name="form" >
 		<input type="hidden" name="tab" value=""/>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="organization/tabs"/>
