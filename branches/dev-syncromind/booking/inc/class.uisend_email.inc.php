@@ -7,6 +7,7 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
+            'query'         => true,
 			'receipt'		=>	true,
 		);
 
@@ -16,8 +17,11 @@
 			
 			self::set_active_menu('booking::mailing');
 		}
-		
-		public function index()
+		public function query() {
+            
+        }
+
+        public function index()
 		{
 			$errors = array();
 			$step = 1;
@@ -69,8 +73,15 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'email_send.js');
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Building Send'), 'link' => '#building');
+            $active_tab = 'generic';
+            
+            $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
 			if ($step == 1)
-				self::render_template('email_index', 
+				self::render_template_xsl('email_index', 
 					array('building' => $building,
 					'season' => $season,
 					'mailsubject' => $mailsubject,
@@ -78,7 +89,7 @@
 					'step' => $step));
 
 			if ($step == 2)
-				self::render_template('email_preview', 
+				self::render_template_xsl('email_preview', 
 					array('building' => $building,
 					'season' => $season,
 					'mailsubject' => $mailsubject,
