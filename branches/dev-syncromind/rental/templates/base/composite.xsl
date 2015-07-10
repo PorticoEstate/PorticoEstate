@@ -4,26 +4,26 @@
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
+<xsl:template name="top-toolbar">
+	<div class="toolbar-container">
+		<div class="pure-g">
+			<div class="pure-u-1-3">
+				<div><xsl:value-of select="lang_name"/> : <xsl:value-of select="value_name"/></div>
+			</div>
+		</div>
+	</div>
+</xsl:template>
+
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
 
+	<xsl:call-template name="top-toolbar" />
 	<div>
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 
-		<xsl:value-of select="validator"/>
-
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
-			<dl>
-				<xsl:choose>
-					<xsl:when test="msgbox_data != ''">
-						<dt>
-							<xsl:call-template name="msgbox"/>
-						</dt>
-					</xsl:when>
-				</xsl:choose>
-			</dl>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="details">
@@ -113,6 +113,43 @@
 						</div>
 					</fieldset>
 				</div>
+				<xsl:choose>
+					<xsl:when test="composite_id > 0">
+						<div id="units">
+
+							<div class="pure-control-group">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+							<div class="pure-control-group">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_1'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>	
+						<div id="contracts">
+						</div>
+					</xsl:when>
+				</xsl:choose>
 			</div>
 			<div class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save" value="{lang_save}" onMouseout="window.status='';return true;"/>
