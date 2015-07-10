@@ -50,11 +50,17 @@
 			}
 			
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($composite_id, $editable));
+			//array_walk($rows, array($this, 'add_actions'), array($composite_id, $editable));
 			//Build a YUI result from the data
 			//
-			$result_data = array('results' => $rows, 'total_records' => count($rows));	
-			return $this->yui_results($result_data, 'total_records', 'results');
+			$result_data    =   array('results' =>  $rows);
+			$result_data['total_records']	= count($rows);
+			$result_data['draw']    = 1;
+
+			return $this->jquery_results($result_data);
+		
+			/*$result_data = array('results' => $rows, 'total_records' => count($rows));	
+			return $this->yui_results($result_data, 'total_records', 'results');*/
 		}
 		
 		/**
