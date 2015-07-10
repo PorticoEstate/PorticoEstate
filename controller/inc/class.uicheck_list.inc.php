@@ -346,7 +346,9 @@
 				'location_level' => $level,
 				'check_list_type' => 'add_check_list',
 				'serie_id'			=> $serie_id,
-				'required_actual_hours'	=> $required_actual_hours
+				'required_actual_hours'	=> $required_actual_hours,
+				'integration'			=> $this->_get_component_integration($location_id, $component_arr)
+
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -449,7 +451,8 @@
 				'current_month_nr' => $month,
 				'building_location_code' => $building_location_code,
 				'location_level' => $level,
-				'required_actual_hours'	=> $required_actual_hours
+				'required_actual_hours'	=> $required_actual_hours,
+				'integration'			=> $this->_get_component_integration($location_id, $component_arr)
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -464,6 +467,136 @@
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'check_list/edit_check_list',
 				'check_list/fragments/select_buildings_on_property'), $data);
+		}
+
+		/**
+		 * Get linked information from external systems - as pictures
+		 * @param integer $location_id
+		 * @param array $component_arr
+		 * @return array integration info
+		 */
+		private function _get_component_integration($location_id, $_component_arr = array())
+		{
+			if(isset($_component_arr['id']) && $_component_arr['id'])
+			{
+				$component_id = $_component_arr['id'];
+			}
+			else
+			{
+				return array();
+			}
+			$attributes = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC','attrib_sort', $allrows = true);
+	
+			$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id, 'values' => array('attributes' => $attributes)));
+
+			$_custom_config	= CreateObject('admin.soconfig',$location_id);
+			$_config = isset($_custom_config->config_data) && $_custom_config->config_data ? $_custom_config->config_data : array();
+
+			$integration = array();
+			foreach ($_config as $_config_section => $_config_section_data)
+			{
+				if(isset($_config_section_data['tab']) && $component_arr['id'])
+				{
+					if(!isset($_config_section_data['url']))
+					{
+						phpgwapi_cache::message_set("'url' is a required setting for integrations, '{$_config_section}' is disabled", 'error');
+						break;
+					}
+
+					//get session key from remote system
+					$arguments = array($_config_section_data['auth_hash_name'] => $_config_section_data['auth_hash_value']);
+					$query = http_build_query($arguments);
+					$auth_url = $_config_section_data['auth_url'];
+					$request = "{$auth_url}?{$query}";
+
+					$aContext = array
+					(
+						'http' => array
+						(
+							'request_fulluri' => true,
+						),
+					);
+
+					if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+					{
+						$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+					}
+
+					$cxContext = stream_context_create($aContext);
+					$response = trim(file_get_contents($request, False, $cxContext));
+
+					$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
+					$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
+
+					parse_str($_config_section_data['parametres'], $output);
+
+					foreach ($output as $_dummy => $_substitute)
+					{
+						$_keys[] = $_substitute;
+
+						$__value = false;
+						if(!$__value = urlencode($component_arr[str_replace(array('__','*'),array('',''), $_substitute)]))
+						{
+							foreach ($component_arr['attributes'] as $_attribute)
+							{
+								if(str_replace(array('__','*'),array('',''), $_substitute) == $_attribute['name'])
+								{
+									$__value = urlencode($_attribute['value']);
+									break;
+								}
+							}
+						}
+
+						if($__value)
+						{
+							$_values[] = $__value;
+						}
+					}
+
+					unset($output);
+					unset($__value);
+					$_sep = '?';
+					if (stripos($_config_section_data['url'],'?'))
+					{
+						$_sep = '&';
+					}
+					$_param = str_replace($_keys, $_values, $_config_section_data['parametres']);
+					unset($_keys);
+					unset($_values);
+					$integration_src = "{$_config_section_data['url']}{$_sep}{$_param}";
+					if($_config_section_data['action'])
+					{
+						$_sep = '?';
+						if (stripos($integration_src,'?'))
+						{
+							$_sep = '&';
+						}
+						$integration_src .= "{$_sep}{$_config_section_data['action']}=" . $_config_section_data["action_{$mode}"];
+					}
+
+					if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
+					{
+						$_config_section_data['location_data']	= htmlspecialchars_decode($_config_section_data['location_data']);
+						parse_str($_config_section_data['location_data'], $output);
+						foreach ($output as $_dummy => $_substitute)
+						{
+							$_keys[] = $_substitute;
+							$_values[] = urlencode($component_arr['location_data'][trim($_substitute, '_')]);
+						}
+						$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
+					}
+
+					$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
+
+					$integration[]	= array
+					(
+						'section'	=> $_config_section,
+						'height'	=> isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500,
+						'src'		=> $integration_src
+					);
+				}
+			}
+			return $integration;
 		}
 
 		/**
