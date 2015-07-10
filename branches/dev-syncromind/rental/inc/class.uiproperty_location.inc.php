@@ -16,16 +16,21 @@
 		
 		public function query()
 		{
+			//$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+			
 			// TODO: access control
-			$type_id	= phpgw::get_var('type_id');
-			$composite_id = phpgw::get_var('composite_id');
+			$type_id		= phpgw::get_var('type_id');
+			$composite_id	= phpgw::get_var('composite_id');
 			$search_type	= phpgw::get_var('search_option');
 			
 			// YUI variables for paging and sorting
-			$start_index	= phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
-			$sort_field		= phpgw::get_var('sort');
-			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? 10 : phpgw::get_var('length', 'int');
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'location_code';
+			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 			
 			$property_bolocation =  new property_bolocation();
 			$property_bolocation->order = $sort_field;
@@ -74,11 +79,17 @@
 			}
 			
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($composite_id, $type_id));
+			//array_walk($rows, array($this, 'add_actions'), array($composite_id, $type_id));
 			//Build a YUI result from the data
 			//
-			$result_data = array('results' => $rows, 'total_records' => count($rows_total));	
-			return $this->yui_results($result_data, 'total_records', 'results');
+			$result_data    =   array('results' =>  $rows);
+			$result_data['total_records']	= count($rows_total);
+			$result_data['draw']    = $draw;
+
+			return $this->jquery_results($result_data);
+			
+			/*$result_data = array('results' => $rows, 'total_records' => count($rows_total));	
+			return $this->yui_results($result_data, 'total_records', 'results');*/
 		}
 		
 		/**
