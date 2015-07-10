@@ -326,6 +326,11 @@
 				);
 			}
 
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
 			$data = array
 			(
 				'user_list' => array('options' => $user_list_options),
@@ -340,7 +345,8 @@
 				'building_location_code' => $building_location_code,
 				'location_level' => $level,
 				'check_list_type' => 'add_check_list',
-				'serie_id'			=> $serie_id
+				'serie_id'			=> $serie_id,
+				'required_actual_hours'	=> $required_actual_hours
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -425,6 +431,11 @@
 				);
 			}
 
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
 			$data = array
 			(
 				'user_list' => array('options' => $user_list_options),
@@ -437,7 +448,8 @@
 				'current_year' => $year,
 				'current_month_nr' => $month,
 				'building_location_code' => $building_location_code,
-				'location_level' => $level
+				'location_level' => $level,
+				'required_actual_hours'	=> $required_actual_hours
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -482,6 +494,8 @@
 
 			$deadline_date_ts = date_converter::date_to_timestamp($deadline_date);
 
+			$error = false;
+
 			if($planned_date != '')
 			{
 				$planned_date_ts = date_converter::date_to_timestamp($planned_date);
@@ -520,6 +534,7 @@
 					$status = controller_check_list::STATUS_NOT_DONE;
 					$completed_date_ts = 0;
 					$error_message =  "Status kunne ikke settes til utført - prøv igjen";
+					$error = true;
 					phpgwapi_cache::message_set($error_message, 'error');
 				}
 
@@ -539,16 +554,32 @@
 				}
 			}
 
-			$check_list->set_status($status);
 			$check_list->set_comment($comment);
 			$check_list->set_deadline($deadline_date_ts);
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
 			$check_list->set_assigned_to($assigned_to);
-			$check_list->set_billable_hours($billable_hours);
 
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
 
-			if($check_list->validate())
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
+			if($status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0 && !$billable_hours)
+			{
+				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
+				$error = true;
+			}
+			else
+			{
+				$check_list->set_delta_billable_hours($billable_hours);
+			}
+			if ( $this->_check_for_required($check_list) && !$error)
+			{
+				$check_list->set_status($status);
+			}
+
+			if(!$error && $check_list->validate())
 			{
 				$check_list_id = $this->so->store($check_list);
 
@@ -569,7 +600,17 @@
 				}
 				else
 				{
-					$this->add_check_list($check_list);
+					$this->redirect(array('menuaction' => 'controller.uicheck_list.add_check_list',
+						'control_id'		=> $control_id,
+						'location_id'		=> $location_id,
+						'component_id'		=> $component_id,
+						'serie_id'			=> $serie_id,
+						'deadline_ts'		=> $deadline_date_ts,
+						'type'				=> $type,
+						'assigned_to'		=> $assigned_to,
+						'status'			=> $status,
+					//	'billable_hours' => $billable_hours
+					));
 				}
 			}
 		}
@@ -893,9 +934,21 @@
 
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list_status = phpgw::get_var('status');
-
 			$check_list = $this->so->get_single($check_list_id);
-			if ( !$this->_check_for_required($check_list) )
+
+//
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+			$ok = true;
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+			if($check_list_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
+			{
+				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
+				$ok = false;
+			}
+//
+			if ( !$this->_check_for_required($check_list) || !$ok)
 			{
 				$messages = phpgwapi_cache::message_get(true);
 				$message = '';
@@ -1058,6 +1111,17 @@
 					}
 				}
 			}
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
+			if($check_list->get_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
+			{
+				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
+				$ok = false;
+			}
+
 			return $ok;
 		}
 	}

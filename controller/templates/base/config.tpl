@@ -23,18 +23,27 @@
 			</td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_required_actual_hours}.</td>
+			<td>
+				<select name="newsettings[required_actual_hours]">
+					<option value="" {selected_required_actual_hours_}>NO</option>
+					<option value="1" {selected_required_actual_hours_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_on">
 			<td>Antall planlagte kontroller som skal vises.</td>
 			<td>
 				<input type="text" name="newsettings[no_of_planned_controls]" value="{value_no_of_planned_controls}"/>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>Antall tildelte kontroller som skal vises</td>
 			<td>
 				<input type="text" name="newsettings[no_of_assigned_controls]" value="{value_no_of_assigned_controls}"/>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_document_category}:</td>
 			<td>
 	    	<!--to be able to blank the setting - need an empty value-->

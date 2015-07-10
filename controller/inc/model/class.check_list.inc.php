@@ -56,6 +56,7 @@
 		protected $location_id;
 		protected $assigned_to;
 		protected $billable_hours;
+		protected $delta_billable_hours;
 		protected $control_area_id;		
 
 		// Aggregate fields. Fields not in a table
@@ -268,10 +269,19 @@
 		{
 			$this->billable_hours = $billable_hours;
 		}
-		
+
 		public function get_billable_hours()
 		{
 			return $this->billable_hours;
+		}
+		public function set_delta_billable_hours($delta_billable_hours)
+		{
+			$this->delta_billable_hours = $delta_billable_hours;
+		}
+
+		public function get_delta_billable_hours()
+		{
+			return (float)$this->delta_billable_hours;
 		}
 		
 		public function serialize()
