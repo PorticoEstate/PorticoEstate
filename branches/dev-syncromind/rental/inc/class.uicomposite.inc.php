@@ -15,6 +15,7 @@
 			'index'		=> true,
 			'view'		=> true,
 			'edit'		=> true,
+			'save'		=> true,
 			'columns'	=> true,
 			'add'		=> true,
 			'add_unit' => true,
@@ -629,55 +630,125 @@
 		 * Public method. Called when user wants to edit a composite.
 		 * @param HTTP::id	the composite ID
 		 */
-		public function edit()
+		public function edit($values = array(), $mode = 'edit')
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
-			// Get the composite ID
-			$composite_id = (int)phpgw::get_var('id');
 			
 			// Retrieve the party object or create a new one if correct permissions
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
-			{
-				if(isset($composite_id) && $composite_id > 0)
-				{
-					$composite = rental_socomposite::get_instance()->get_single($composite_id);
-				}
-				else
-				{
-					$composite = new rental_composite();
-				}
-			}
-			else
+			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
 			}
 			
-			/*if(isset($_POST['save_composite'])) // The user has pressed the save button
+			$composite_id = (int)phpgw::get_var('id');
+			
+			if (!empty($values['composite_id']))
 			{
-				if(isset($composite))
-				{
-					$composite->set_name(phpgw::get_var('name'));
-					$composite->set_custom_address_1(phpgw::get_var('address_1'));
-					$composite->set_has_custom_address(phpgw::get_var('has_custom_address') == 'on' ? true : false);
-					$composite->set_custom_house_number(phpgw::get_var('house_number'));
-					$composite->set_custom_address_2(phpgw::get_var('address_2'));
-					$composite->set_custom_postcode(phpgw::get_var('postcode'));
-					$composite->set_custom_place(phpgw::get_var('place'));
-					$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
-					$composite->set_description(phpgw::get_var('description'));
-					$composite->set_furnish_type_id(phpgw::get_var('furnish_type_id'));
-					$composite->set_standard_id(phpgw::get_var('composite_standard_id','int'));
+				$composite_id = $values['composite_id'];
+			}
+		
+			if(isset($composite_id) && $composite_id > 0)
+			{
+				$composite = rental_socomposite::get_instance()->get_single($composite_id);
+			}
+			else
+			{
+				$composite = new rental_composite();
+			}
+			
+			if($composite_id)
+			{
+				$tabletools1 = array
+				(
+					array('my_name'	=> 'select_all'),
+					array('my_name'	=> 'select_none')
+				);
 
-					if(rental_socomposite::get_instance()->store($composite))
-					{
-						$message = lang('messages_saved_form');
-					}
-					else
-					{
-						$error = lang('messages_form_error');
-					}
-				}
-			}*/
+				$tabletools1[] = array
+					(
+						'my_name'		=> 'view',
+						'text'			=> lang('show'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'property.uilocation.view'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
+					);
+
+				$tabletools1[] = array
+					(
+						'my_name'		=> 'delete',
+						'text'			=> lang('remove_location'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uicomposite.remove_unit'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+		
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_0',
+					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uiunit.query', 'composite_id'=>$composite_id, 'editable'=>1, 'phpgw_return_as'=>'json'))),
+					'ColumnDefs'	=> array(
+								array('key'=>'location_code', 'label'=>lang('object_number'), 'sortable'=>true),
+								array('key'=>'loc1_name', 'label'=>lang('property'), 'sortable'=>false),
+								array('key'=>'loc2_name', 'label'=>lang('building'), 'sortable'=>false),
+								array('key'=>'loc3_name', 'label'=>lang('floor'), 'sortable'=>false),
+								array('key'=>'loc4_name', 'label'=>lang('section'), 'sortable'=>false),
+								array('key'=>'loc5_name', 'label'=>lang('room'), 'sortable'=>false),
+								array('key'=>'address', 'label'=>lang('address'), 'sortable'=>false),
+								array('key'=>'area_gros', 'label'=>lang('area_gros'), 'sortable'=>false),
+								array('key'=>'area_net', 'label'=>lang('area_net'), 'sortable'=>false)
+					),
+					'tabletools'	=> $tabletools1,
+					'config'		=> array(
+						array('disableFilter' => true)
+					)
+				);
+				
+				$tabletools2[] = array
+					(
+						'my_name'		=> 'view',
+						'text'			=> lang('show'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'property.uilocation.view'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
+					);
+
+				$tabletools2[] = array
+					(
+						'my_name'		=> 'add',
+						'text'			=> lang('add_location'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uicomposite.add_unit',
+								'composite_id'  => $composite_id,
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
+					);
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_1',
+					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uiproperty_location.query', 'composite_id'=>$composite_id, 'phpgw_return_as'=>'json'))),
+					'ColumnDefs'	=> array(
+								array('key'=>'location_code', 'label'=>lang('location_code'), 'sortable'=>true),
+								array('key'=>'loc1_name', 'label'=>lang('name'), 'sortable'=>false),
+								array('key'=>'loc2_name', 'label'=>lang('building'), 'sortable'=>false),
+								array('key'=>'loc3_name', 'label'=>lang('floor'), 'sortable'=>false),
+								array('key'=>'loc4_name', 'label'=>lang('section'), 'sortable'=>false),
+								array('key'=>'loc5_name', 'label'=>lang('room'), 'sortable'=>false),
+								array('key'=>'adresse1', 'label'=>lang('address'), 'sortable'=>false),
+								array('key'=>'postnummer', 'label'=>lang('post_code'), 'sortable'=>false),
+								array('key'=>'poststed', 'label'=>lang('post_place'), 'sortable'=>false),
+								array('key'=>'gab', 'label'=>lang('gab'), 'sortable'=>false)
+					),
+					'tabletools'	=> $tabletools2,
+					'config'		=> array(
+						array('disableFilter' => true)
+					)
+				);
+				
+			}
 			
 			$link_index = array
 				(
@@ -717,12 +788,12 @@
 			
 			$data = array
 			(
-				//'datatable_def'					=> $datatable_def,
+				'datatable_def'					=> $datatable_def,
 				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uicomposite.save')),
 				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 				'lang_save'						=> lang('save'),
-				'lang_cancel'					=> lang('cacel'),			
+				'lang_cancel'					=> lang('cancel'),			
 				'editable'						=> true,
 				
 				'lang_name'						=> lang('name'),
@@ -760,20 +831,55 @@
 
 			//self::add_javascript('rental', 'rental', 'party.edit.js');
 			self::render_template_xsl(array('composite', 'datatable_inline'), array('edit' => $data));
-		
-			/*return $this->render('composite.php', array
-				(
-					'composite' 	=> $composite,
-					'editable' => true,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => 'yes')),
-				)	
-			);*/
-			
 		}
 
+		
+		public function save()
+		{
+			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+			{
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+			}
+			
+			$composite_id = (int)phpgw::get_var('id');
 
+			if($composite_id)
+			{
+				$composite = rental_socomposite::get_instance()->get_single($composite_id);
+			}
+			else
+			{
+				$composite = new rental_composite();
+			}
+
+			if(isset($composite))
+			{
+				$composite->set_name(phpgw::get_var('name'));
+				$composite->set_custom_address_1(phpgw::get_var('address_1'));
+				$composite->set_has_custom_address(phpgw::get_var('has_custom_address') == 'on' ? true : false);
+				$composite->set_custom_house_number(phpgw::get_var('house_number'));
+				$composite->set_custom_address_2(phpgw::get_var('address_2'));
+				$composite->set_custom_postcode(phpgw::get_var('postcode'));
+				$composite->set_custom_place(phpgw::get_var('place'));
+				$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
+				$composite->set_description(phpgw::get_var('description'));
+				$composite->set_furnish_type_id(phpgw::get_var('furnish_type_id'));
+				$composite->set_standard_id(phpgw::get_var('composite_standard_id','int'));
+
+				if(rental_socomposite::get_instance()->store($composite))
+				{
+					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
+					$composite_id = $composite->get_id();					
+				}
+				else
+				{
+					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+				}
+			}
+			
+			$this->edit(array('composite_id'=>$composite_id));
+		}
+	
 		/**
 		 * Public method. Called when user wants to add a unit to a composite
 		 * @param HTTP::id	the composite ID
