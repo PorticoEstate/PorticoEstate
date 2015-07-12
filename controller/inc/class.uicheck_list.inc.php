@@ -1089,11 +1089,11 @@
 				{
 					if($_type == 'error')
 					{
+						$i = 1;
 						foreach($_message as $__message)
 						{
-					//		$message.= strip_tags($__message['msg']);
-							$message.= preg_replace("/<\/br[^>]*>\s*\r*\n*/is", "\n", $__message['msg']);
-
+							$message.= "#{$i}: " . preg_replace("/<\/br[^>]*>\s*\r*\n*/is", "\n", $__message['msg']) . "\n";
+							$i++;
 						}
 					}
 
@@ -1171,11 +1171,11 @@
 				
 				foreach ($required_control_items as $required_control_item)
 				{
-					$_ok = $this->so_case->get_cases_by_component($location_id, $component_id, $required_control_item['id']);
+					$_ok = $this->so_case->get_cases_by_component($location_id, $component_id, $required_control_item['id'],$check_list->get_id());
 					if(!$_ok)
 					{
-						$error_message =  "mangler registrering for required</br>";
-						$error_message .=  "{$required_control_item['title']}</br>";
+						$error_message =  lang('missing value for required') . "</br>";
+						$error_message .=  "\"{$required_control_item['title']}\"</br>";
 						$error_message .= execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 						$error_message .=  "</br>";
 						phpgwapi_cache::message_set($error_message, 'error');
