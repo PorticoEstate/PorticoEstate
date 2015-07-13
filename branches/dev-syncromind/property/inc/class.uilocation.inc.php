@@ -1757,8 +1757,9 @@ JS;
 				{
 					if(isset($group['attributes']) && isset($group['group_sort']))
 					{
-						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
-						$group['link'] = str_replace(' ', '_', $group['name']);
+						$_group_name = trim(str_replace(' ', '_', $group['name']),'.');
+						$tabs[$_group_name] = array('label' => $group['name'], 'link' => '#' . $_group_name);
+						$group['link'] = $_group_name;
 						$attributes[] = $group;
 					}
 					else if(isset($group['attributes']) && !isset($group['group_sort']))
@@ -1983,7 +1984,7 @@ JS;
 						$response = trim(file_get_contents($request, False, $cxContext));
 
 
-						$_config_section_name = str_replace(' ', '_',$_config_section);
+						$_config_section_name = trim(str_replace(' ', '_',$_config_section),'.');
 						$integration[]	= array
 						(
 							'section' => $_config_section_name,
