@@ -19,71 +19,71 @@
 	<li><xsl:value-of select="php:function('lang', 'Buildings')"/></li>
 	</ul-->
 
-	<form action="" method="POST">    
-		<dl class="form-col">
-			<xsl:if test="id">
-				<!-- An update, add id column -->
-				<input name='field_id' type='hidden'>
-					<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-				</input>
-			</xsl:if>
-			
-			<!-- Role -->
-			<dt>
-				<label for="field_role"><xsl:value-of select="php:function('lang', 'Role')" /></label>
-			</dt>
-			<dd>
-				<xsl:value-of select="node()"/>
-				<select name='role' id='field_role'>
-					<option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
-					<xsl:for-each select="available_roles/*">
-						<option>
-							<xsl:if test="../../role = local-name()">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
+	<form action="" method="POST" class="pure-form pure-form-aligned" id="form" name="form">
+            <input type="hidden" name="tab" value=""/>
+            <div id="tab-content">
+                <xsl:value-of disable-output-escaping="yes" select="tabs"/>
+                <div id="permission_add">   
+                    <div class="pure-control-group">
+                            <xsl:if test="id">
+                                    <!-- An update, add id column -->
+                                    <input name='field_id' type='hidden'>
+                                            <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                    </input>
+                            </xsl:if>
 
-							<xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
-							<xsl:value-of select="php:function('lang', string(node()))"/>
-						</option>
-					</xsl:for-each>
-				</select>
-			</dd>
+                            <!-- Role -->
+                                    <label><xsl:value-of select="php:function('lang', 'Role')" /></label>
+                                    <xsl:value-of select="node()"/>
+                                    <select name='role' id='field_role'>
+                                            <option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
+                                            <xsl:for-each select="available_roles/*">
+                                                    <option>
+                                                            <xsl:if test="../../role = local-name()">
+                                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                            </xsl:if>
 
-			<!-- Subject -->
-			<dt>
-				<label for="field_subject"><xsl:value-of select="php:function('lang', 'Account')" /></label>
-			</dt>
-			<dd>
-				<div class="autocomplete">
-					<input id="field_subject_name" name="subject_name" type="text">
-						<xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
-					</input>
-					<input id="field_subject_id" name="subject_id" type="hidden">
-						<xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>
-					</input>
-					<div id="subject_container"/>
-				</div>
-			</dd>
-		</dl>
+                                                            <xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
+                                                            <xsl:value-of select="php:function('lang', string(node()))"/>
+                                                    </option>
+                                            </xsl:for-each>
+                                    </select>
+                    </div>
+                    <div class="pure-control-group">
+                            <!-- Subject -->
+                                    <label><xsl:value-of select="php:function('lang', 'Account')" /></label>
+                                    <!--div class="autocomplete"-->
+                                            <input id="field_subject_name" name="subject_name" type="text">
+                                                    <xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
+                                            </input>
+                                            <input id="field_subject_id" name="subject_id" type="hidden">
+                                                    <xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>
+                                            </input>
+                                            <!--div id="subject_container"/>
+                                    </div-->
+                    </div>
 
-		<div class="clr"/>
-		<div class="form-buttons">
-			<input type="submit">
-				<xsl:attribute name="value">
-					<xsl:choose>
-						<xsl:when test="id">
-							<xsl:value-of select="php:function('lang', 'Update')"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="php:function('lang', 'Create')"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-			</input>
-			<a class="cancel">
-				<xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'Cancel')"/>
-			</a>
-		</div>
+                    <div class="clr"/>
+                    
+                </div>
+            </div>
+            <div class="form-buttons">
+                    <input type="submit" class="pure-button pure-button-primary">
+                            <xsl:attribute name="value">
+                                    <xsl:choose>
+                                            <xsl:when test="id">
+                                                    <xsl:value-of select="php:function('lang', 'Update')"/>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                    <xsl:value-of select="php:function('lang', 'Create')"/>
+                                            </xsl:otherwise>
+                                    </xsl:choose>
+                            </xsl:attribute>
+                    </input>
+                    <a class="cancel">
+                            <xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
+                            <xsl:value-of select="php:function('lang', 'Cancel')"/>
+                    </a>
+            </div>
 	</form>
 </xsl:template>
