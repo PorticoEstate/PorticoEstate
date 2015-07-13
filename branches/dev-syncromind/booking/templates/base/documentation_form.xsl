@@ -12,7 +12,7 @@
             <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="document/tabs"/>
-                <div id="documentation_edit">
+                <div id="documentation">
 			<div class="pure-control-group">
 				<xsl:if test="document/id">
 					<dt class="heading"><xsl:value-of select="php:function('lang', 'Edit manual')" /></dt>
