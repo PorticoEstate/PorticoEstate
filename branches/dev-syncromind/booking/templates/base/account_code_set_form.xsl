@@ -28,7 +28,7 @@
                     <input type="hidden" name="tab" value=""/>
                     <div id="tab-content">
                         <xsl:value-of disable-output-escaping="yes" select="account_code_set/tabs"/>
-                        <div id="account_edit">
+                        <div id="account">
                             <fieldset>
                             <div class="pure-control-group">
                                 <label>
