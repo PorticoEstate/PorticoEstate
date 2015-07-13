@@ -185,7 +185,15 @@
 			array_set_default($audience, 'sort', '0');
 			$this->flash_form_errors($errors);
 			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
-			self::render_template('audience_new', array('audience' => $audience));
+            
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Audience Add'), 'link' => '#audience_add');
+            $active_tab = 'generic';
+
+//            $data = array();
+            $audience['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('audience_new', array('audience' => $audience));
 		}
 
 		public function edit()
