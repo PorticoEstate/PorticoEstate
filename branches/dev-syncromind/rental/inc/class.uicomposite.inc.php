@@ -673,15 +673,39 @@
 						)),
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
 					);
+				
+				$remove_unit_link = self::link(array('menuaction'=>'rental.uicomposite.remove_unit', 'phpgw_return_as'=>'json'));
 
 				$tabletools1[] = array
 					(
 						'my_name'		=> 'delete',
 						'text'			=> lang('remove_location'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'rental.uicomposite.remove_unit'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+						'type'			=> 'custom',
+						'custom_code'	=> "    
+											var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
+											var selected = oTT.fnGetSelectedData();
+											var numSelected = selected.length;
+
+											if (numSelected == '0'){
+												alert('None selected');
+												return false;
+											}
+
+											var values = {};
+
+											for ( var n = 0; n < selected.length; ++n )
+											{
+												var aData = selected[n];
+												values[n] = aData['id'];
+											}
+
+											var data = {'ids': values};
+											var requestUrl = '".$remove_unit_link."';
+											JqueryPortico.execute_ajax(requestUrl, function(result){
+
+												oTable0.fnDraw();
+
+											}, data, 'POST', 'JSON');"
 					);
 		
 				$datatable_def[] = array
@@ -714,16 +738,56 @@
 						)),
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
 					);
+				
+				$add_unit_link = self::link(array('menuaction'=>'rental.uicomposite.add_unit', 'composite_id'=>$composite_id, 'phpgw_return_as'=>'json'));
 
 				$tabletools2[] = array
 					(
 						'my_name'		=> 'add',
 						'text'			=> lang('add_location'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'rental.uicomposite.add_unit',
-								'composite_id'  => $composite_id,
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
+						'type'			=> 'custom',
+						'custom_code'	=> "    
+											var oTT = TableTools.fnGetInstance( 'datatable-container_1' );
+											var selected = oTT.fnGetSelectedData();
+											var numSelected = selected.length;
+
+											if (numSelected == '0'){
+												alert('None selected');
+												return false;
+											}
+
+											var values = {};
+
+											for ( var n = 0; n < selected.length; ++n )
+											{
+												var aData = selected[n];
+												values[n] = aData['location_code'];
+											}
+
+											var data = {'location_code': values};
+											var requestUrl = '".$add_unit_link."';
+											var level = document.getElementById('type_id').value;
+											requestUrl += '&level=' + level;
+											JqueryPortico.execute_ajax(requestUrl, function(result){
+
+												document.getElementById('message').innerHTML = '';
+
+												if (typeof(result.message) !== 'undefined')
+												{
+													$.each(result.message, function (k, v) {
+														document.getElementById('message').innerHTML = v.msg + '<br/>';
+													});
+												}
+
+												if (typeof(result.error) !== 'undefined')
+												{
+													$.each(result.error, function (k, v) {
+														document.getElementById('message').innerHTML += v.msg + '<br/>';
+													});
+												}
+												oTable0.fnDraw();
+
+											}, data, 'POST', 'JSON');"
 					);
 				
 				$datatable_def[] = array
@@ -776,6 +840,15 @@
 				$furnish_types_options[] = array('id'=>$id, 'name'=>$title, 'selected'=>$selected);				
 			}
 			
+			$search_options[] = array('id'=>'objno_name_address', 'name'=>lang('objno_name_address'), 'selected'=>1);
+			$search_options[] = array('id'=>'gab', 'name'=>lang('gab'), 'selected'=>0);
+			
+			$level_options[] = array('id'=>'1', 'name'=>lang('property'), 'selected'=>0);
+			$level_options[] = array('id'=>'2', 'name'=>lang('building'), 'selected'=>1);
+			$level_options[] = array('id'=>'3', 'name'=>lang('floor'), 'selected'=>0);
+			$level_options[] = array('id'=>'4', 'name'=>lang('section'), 'selected'=>0);
+			$level_options[] = array('id'=>'5', 'name'=>lang('room'), 'selected'=>0);
+			
 			$tabs = array();
 			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
 			$active_tab = 'details';
@@ -809,6 +882,10 @@
 				'lang_area_net'					=> lang('area_net'),
 				'lang_available'				=> lang('available ?'),
 				'lang_description'				=> lang('description'),
+				
+				'lang_search_for'				=> lang('search_for'),
+				'lang_search_where'				=> lang('search_where'),
+				'lang_level'					=> lang('level'),
 
 				'value_name'					=> $composite->get_name(),
 				'list_composite_standard'		=> array('options' => $composite_standard_options),
@@ -824,12 +901,15 @@
 				'is_active'						=> ($composite->is_active()) ? 1 : 0,
 				'value_description'				=> $composite->get_description(),
 				
+				'list_search_option'			=> array('options' => $search_options),
+				'list_type_id'					=> array('options' => $level_options),
+				
 				'composite_id'					=> $composite_id,
 
 				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 
-			//self::add_javascript('rental', 'rental', 'party.edit.js');
+			self::add_javascript('rental', 'rental', 'composite.edit.js');
 			self::render_template_xsl(array('composite', 'datatable_inline'), array('edit' => $data));
 		}
 
@@ -895,17 +975,24 @@
 			}
 			
 			$composite_id = (int)phpgw::get_var('composite_id');
+			$location_code = phpgw::get_var('location_code');
+			$level = (int)phpgw::get_var('level');
 			
 			if(isset($composite_id) && $composite_id > 0)
 			{
-				$location_code = phpgw::get_var('location_code');
-				$level = (int)phpgw::get_var('level');
-				$property_location = new rental_property_location($location_code, '', $level);
-				$unit = new rental_unit(0,$composite_id,$property_location);
-				$result = rental_sounit::get_instance()->store($unit);
-				return $result ? true : false;
+				foreach ($location_code as $code) 
+				{
+					$property_location = new rental_property_location($code, '', $level);
+					$unit = new rental_unit(0,$composite_id, $property_location);
+					$resp = rental_sounit::get_instance()->store($unit);			
+					if ($resp) {
+						$result['message'] = array('msg'=>'iten agregado');
+					} else {
+						$result['error'] = array('msg'=>'iten no fue agregado');
+					}
+				}
 			}
-			return false;
+			return $result;
 		}
 
 		/**
@@ -920,10 +1007,13 @@
 				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
 				return;
 			}
-			$unit_id = (int)phpgw::get_var('id');
-			if(isset($unit_id) && $unit_id > 0 )
+			$unit_ids = phpgw::get_var('ids');
+	
+			if(count($unit_ids)> 0 )
 			{
-				rental_sounit::get_instance()->delete($unit_id);
+				foreach($unit_ids as $id) {
+					rental_sounit::get_instance()->delete($id);
+				}
 			}
 		}
 
