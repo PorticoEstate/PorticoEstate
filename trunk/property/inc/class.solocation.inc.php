@@ -1310,11 +1310,20 @@
 				}
 			}
 
-			$cols	=implode(",", $cols) . ",entry_date,user_id";
-			$vals	="'" . implode("','", $vals) . "'," . "'" . time() . "','" . $this->account . "'";
+			$cols[] = 'user_id';
+			$cols[] = 'entry_date';
+			$cols[] = 'modified_by';
+			$cols[] = 'modified_on';
+			$vals[] = $this->account;
+			$vals[] = time();
+			$vals[] = $this->account;
+			$vals[] = date($this->db->datetime_format(),time());
+
+			$cols	= implode(",", $cols);
+			$vals	= "'" . implode("','", $vals)  . "'";
 
 			$this->db->transaction_begin();
-			$sql	= "INSERT INTO fm_location$type_id ($cols) VALUES ($vals)";
+			$sql	= "INSERT INTO fm_location{$type_id} ($cols) VALUES ($vals)";
 
 			//echo $sql;
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1368,11 +1377,12 @@
 				}
 			}
 
-			$value_set['entry_date'] = time();
+			$value_set['modified_by'] = $this->account;
+			$value_set['modified_on'] = date($this->db->datetime_format(),time());
 
 			$value_set	= $this->db->validate_update($value_set);
 
-			$sql = "SELECT * from fm_location$type_id where location_code ='" . $location['location_code'] . "'";
+			$sql = "SELECT * FROM fm_location{$type_id} WHERE location_code ='{$location['location_code']}'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 
@@ -1410,10 +1420,10 @@
 			$vals = $this->db->validate_insert($vals);
 
 			$this->db->transaction_begin();
-			$sql = "INSERT INTO fm_location" . $type_id ."_history ($cols) VALUES ($vals)";
+			$sql = "INSERT INTO fm_location{$type_id}_history ($cols) VALUES ($vals)";
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$sql = "UPDATE fm_location$type_id SET $value_set WHERE location_code='" . $location['location_code'] . "'";
+			$sql = "UPDATE fm_location{$type_id} SET {$value_set} WHERE location_code='{$location['location_code']}'";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$this->update_location_name($location['location_code']);
@@ -1808,15 +1818,15 @@
 				return;
 			}
 
-			$table = 'fm_location' . $type_id . '_history';
+			$table = "fm_location{$type_id}_history";
 
-			$table_category = 'fm_location' . $type_id . '_category';
+			$table_category = "fm_location{$type_id}_category";
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " location_id = {$location_id}";
+			$attribute_filter = "location_id = {$location_id}";
 
-			$sql = "SELECT column_name,datatype,input_text,id as attrib_id FROM $attribute_table WHERE $attribute_filter";
+			$sql = "SELECT column_name,datatype,input_text,id AS attrib_id FROM {$attribute_table} WHERE {$attribute_filter}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
@@ -1839,14 +1849,16 @@
 
 
 			$attrib[] = array
-				(
-					'column_name'	=> 'exp_date',
-					'input_text'	=> 'exp date',
-					'datatype'		=> 'D',
-					'attrib_id'		=> 0
-				);
+			(
+				'column_name'	=> 'exp_date',
+				'input_text'	=> 'exp date',
+				'datatype'		=> 'D',
+				'attrib_id'		=> 0
+			);
 
-			$sql = "SELECT $table.*, $table_category.descr as category FROM $table $this->left_join $table_category ON $table.category =$table_category.id WHERE location_code='$location_code' ORDER BY exp_date DESC";
+			$sql = "SELECT {$table}.*, {$table_category}.descr as category"
+			. " FROM {$table} {$this->left_join} {$table_category} ON {$table}.category = {$table_category}.id"
+			. " WHERE location_code='{$location_code}' ORDER BY exp_date DESC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$j=0;
