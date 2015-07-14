@@ -1912,6 +1912,12 @@
 
 		function read_single_eav($data, $values = array())
 		{
+
+			if(!$values)
+			{
+				$values = isset($data['values']) && $data['values'] ? $data['values'] : array();
+			}
+
 			$sql = '';
 
 			if(isset($data['guid']) && $data['guid'])

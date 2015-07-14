@@ -820,15 +820,17 @@ class controller_socheck_list extends controller_socommon
 	function update($check_list)
 	{
 		$id = (int)$check_list->get_id();
-
+/*
 		$sql = "SELECT billable_hours FROM controller_check_list WHERE controller_check_list.id = {$id}";
 		
 		$this->db->query($sql);
 		$this->db->next_record();
 			
 		$old_billable_hours = (float) $this->db->f('billable_hours');
+*/
+		$old_billable_hours = (float) $check_list->get_billable_hours();
 
-		$billable_hours = $old_billable_hours + $check_list->get_billable_hours();
+		$billable_hours = $old_billable_hours + $check_list->get_delta_billable_hours();
 
 //--------
 		$so_check_item = CreateObject('controller.socheck_item');
