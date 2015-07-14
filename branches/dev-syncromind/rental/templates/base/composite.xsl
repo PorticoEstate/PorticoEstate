@@ -131,16 +131,25 @@
 								</xsl:for-each>
 							</div>
 							<div class="pure-control-group">
-								<xsl:value-of select="lang_search_for"/>
-								<input type="text" id="query" name="query" value=""></input>
-								<xsl:value-of select="lang_search_where"/>
-								<select id="search_option" name="search_option">
-									<xsl:apply-templates select="list_search_option/options"/>
-								</select>
-								<xsl:value-of select="lang_level"/>
-								<select id="type_id" name="type_id" onchange="onFilterLocations()">
-									<xsl:apply-templates select="list_type_id/options"/>
-								</select>
+								<label>
+									<xsl:value-of select="lang_search_options"/>
+								</label>
+								<div class="pure-custom">
+									<div class="pure-control-group">
+										<label><xsl:value-of select="lang_search_for"/></label>
+										<input type="text" id="query" name="query" value=""></input>
+										<label><xsl:value-of select="lang_search_where"/></label>
+										<select id="search_option" name="search_option">
+											<xsl:apply-templates select="list_search_option/options"/>
+										</select>										
+									</div>
+									<div class="pure-control-group">
+										<label><xsl:value-of select="lang_level"/></label>
+										<select id="type_id" name="type_id">
+											<xsl:apply-templates select="list_type_id/options"/>
+										</select>
+									</div>
+								</div>
 							</div>
 							<div>
 								<xsl:for-each select="datatable_def">
