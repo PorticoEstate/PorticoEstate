@@ -208,19 +208,19 @@
 			$default_attrib['type'][]='V';
 			$default_attrib['precision'][] =4*$standard['id'];
 			$default_attrib['nullable'][] ='false';
-			$default_attrib['input_text'][] ='dummy';
-			$default_attrib['statustext'][] ='dummy';
+			$default_attrib['input_text'][] ='location_code';
+			$default_attrib['statustext'][] ='location_code';
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
 
 			$j++;
 			$default_attrib['id'][]= $j;
-			$default_attrib['column_name'][]= 'loc' . $standard['id'] . '_name';
+			$default_attrib['column_name'][]= "loc{$standard['id']}_name";
 			$default_attrib['type'][]='V';
 			$default_attrib['precision'][] =50;
 			$default_attrib['nullable'][] ='true';
-			$default_attrib['input_text'][] ='dummy';
-			$default_attrib['statustext'][] ='dummy';
+			$default_attrib['input_text'][] ="loc{$standard['id']}_name";
+			$default_attrib['statustext'][] ="loc{$standard['id']}_name";
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
 
@@ -230,8 +230,8 @@
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
 			$default_attrib['nullable'][] ='true';
-			$default_attrib['input_text'][] ='dummy';
-			$default_attrib['statustext'][] ='dummy';
+			$default_attrib['input_text'][] ='entry_date';
+			$default_attrib['statustext'][] ='entry_date';
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
 
@@ -241,8 +241,8 @@
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
 			$default_attrib['nullable'][] ='false';
-			$default_attrib['input_text'][] ='dummy';
-			$default_attrib['statustext'][] ='dummy';
+			$default_attrib['input_text'][] ='category';
+			$default_attrib['statustext'][] ='category';
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
 
@@ -252,8 +252,8 @@
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
 			$default_attrib['nullable'][] ='false';
-			$default_attrib['input_text'][] ='dummy';
-			$default_attrib['statustext'][] ='dummy';
+			$default_attrib['input_text'][] ='user_id';
+			$default_attrib['statustext'][] ='user_id';
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
 
@@ -286,8 +286,8 @@
 			$default_attrib['type'][]='I';
 			$default_attrib['precision'][] =4;
 			$default_attrib['nullable'][] ='true';
-			$default_attrib['input_text'][] ='dummy';
-			$default_attrib['statustext'][] ='dummy';
+			$default_attrib['input_text'][] ='change_type';
+			$default_attrib['statustext'][] ='change_type';
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
 
@@ -342,12 +342,12 @@
 				$pk[$i-1]= 'loc' . $i;
 
 				$default_attrib['id'][]				= $i+$j;
-				$default_attrib['column_name'][]	= 'loc' . $i;
+				$default_attrib['column_name'][]	= "loc{$i}";
 				$default_attrib['type'][]			= 'V';
 				$default_attrib['precision'][]		= 4;
 				$default_attrib['nullable'][] 		= 'false';
-				$default_attrib['input_text'][]		= 'dummy';
-				$default_attrib['statustext'][]		= 'dummy';
+				$default_attrib['input_text'][]		= "loc{$i}";
+				$default_attrib['statustext'][]		= "loc{$i}";
 				$default_attrib['attrib_sort'][]	= '';
 				$default_attrib['custom'][]			= '';
 			}
@@ -374,6 +374,8 @@
 			$fd['area_gross'] = array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00');
 			$fd['area_net'] = array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00');
 			$fd['area_usable'] = array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00');
+			$fd['modified_by'] = array('type' => 'int','precision' => 4,'nullable' => true);
+			$fd['modified_on'] = array('type' => 'timestamp','nullable' => True,'default' => 'current_timestamp');
 
 			$ix = array('location_code');
 			$uc = array();
