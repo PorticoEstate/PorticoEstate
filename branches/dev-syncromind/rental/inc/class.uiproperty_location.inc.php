@@ -50,16 +50,17 @@
 					'seksjons_nr' => empty($query[3])?'':$query[3],
 					'allrows' => true));
 				
-				//var_dump($gabinfo);
-				
-				foreach ($gabinfo as $gabelement)
+				$rows_total = $gabinfo;
+				$gab_list = array_slice($gabinfo, $start_index, 10);
+				foreach ($gab_list as $gabelement)
 				{
 					$row = $property_bolocation->read_single($gabelement['location_code']);
 					$row['gab'] = rental_uicommon::get_nicely_formatted_gab_id($gabelement['gab_id']);  
 					$rows[] = $row;
-					$rows_total[] = $row; 
+					//$rows_total[] = $row; 
 					//TODO: Add gabno for element 
 				}
+				
 			}
 			else
 			{
