@@ -202,7 +202,7 @@
 			$activities = $activities['results'];
 			
 			$this->install_customer_identifier_ui($organization);	
-			$this->use_yui_editor();
+//			$this->use_yui_editor();
 			
 			$this->add_template_helpers();
             
