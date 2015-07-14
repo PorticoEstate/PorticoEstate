@@ -883,6 +883,7 @@
 				'lang_available'				=> lang('available ?'),
 				'lang_description'				=> lang('description'),
 				
+				'lang_search_options'			=> lang('search_options'),
 				'lang_search_for'				=> lang('search_for'),
 				'lang_search_where'				=> lang('search_where'),
 				'lang_level'					=> lang('level'),
