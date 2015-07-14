@@ -1,4 +1,23 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+    <style type="text/css">
+        
+        .date-container {
+            width: 31%;
+        }
+        
+        .date-container .close-btn {
+            background: transparent url("phpgwapi/js/yahoo/assets/skins/sam/sprite.png") no-repeat scroll 0 -300px;
+            border: medium none;
+            color: white;
+            cursor: pointer;
+            display: block;
+            //float: right;
+            height: 15px;
+            text-decoration: none;
+            width: 25px;
+            margin: 4px 0 0 296px;
+        }
+    </style>
 	<!--div id="content"-->
 
 	<h3></h3>
@@ -94,23 +113,29 @@
                             <div id="dates-container">
                                     <xsl:for-each select="application/dates">
                                         <div class="date-container">
-                                            <a href="#" class="close-btn">-</a>
-                                            <dt><label for="field_{position()}_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-                                            <dd class="datetime-picker">
-                                                    <input id="field_{position()}_from" name="from_[]" type="text">
-                                                            <xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
-                                                    </input>
-                                            </dd>
-                                            <dt><label for="field_{position()}_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-                                            <dd class="datetime-picker">
-                                                    <input id="field_{position()}_to" name="to_[]" type="text">
-                                                            <xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
-                                                    </input>
-                                            </dd>
+                                            <a href="javascript:void(0);" class="close-btn btnclose">-</a>
+                                            <div class="pure-control-group">
+                                                    <label for="field_{position()}_from">
+                                                        <xsl:value-of select="php:function('lang', 'From')" />
+                                                    </label>
+                                                        <input class="datetime" id="start_date" name="field_{position()}_from" type="text">
+                                                        <!--input id="field_{position()}_from" name="from_[]" type="text"-->
+                                                                <xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
+                                                        </input>
+                                            </div>
+                                            <div class="pure-control-group">
+                                                    <label for="field_{position()}_to">
+                                                        <xsl:value-of select="php:function('lang', 'To')" />
+                                                    </label>
+                                                        <!--input id="field_{position()}_to" name="to_[]" type="text"-->
+                                                        <input class="datetime" id="end_date" name="field_{position()}_to" type="text">
+                                                                <xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
+                                                        </input>
+                                            </div>
                                         </div>
                                     </xsl:for-each>
                             </div>
-                            <dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
+                            <dt><a href="javascript:;" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
                     </div>
                     <div class="pure-control-group">
                             <div class="heading">4. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
