@@ -775,8 +775,8 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			self::add_javascript('booking', 'booking', 'application.js');
-			
+//			self::add_javascript('booking', 'booking', 'application.js');
+			self::add_javascript('booking', 'booking', 'applicationnew.js');
 			$this->set_case_officer($application);
 			
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
@@ -791,6 +791,9 @@
 			$this->install_customer_identifier_ui($application);	
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
             
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 //			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
             $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
