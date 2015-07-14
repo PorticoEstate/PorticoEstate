@@ -493,6 +493,9 @@
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
             $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
+            $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
+            
 			self::render_template_xsl('allocation_edit', array('allocation' => $allocation));
 		}
 
