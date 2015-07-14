@@ -20,7 +20,7 @@
                     <input type="hidden" name="tab" value=""/>
                     <div id="tab-content">
                     <xsl:value-of disable-output-escaping="yes" select="building/tabs"/>
-                        <div id="building_new">
+                        <div id="building">
                             <div class="pure-control-group">
                                     <label><xsl:value-of select="php:function('lang', 'Building Name')" /></label>
                                     <input name="name" type="text" value="{building/name}"/>
