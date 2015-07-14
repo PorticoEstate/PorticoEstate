@@ -277,7 +277,7 @@
                 </div>
             </div>
             <div class="form-buttons">
-                    <input type="submit">
+                    <input type="submit" class="pure-button pure-button-primary">
                             <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send')"/></xsl:attribute>
                     </input>
                     <a class="cancel">
