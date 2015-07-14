@@ -211,8 +211,14 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$this->use_yui_editor();
-			self::render_template('building_form', array('building' => $building));
+//			$this->use_yui_editor();
+            $tabs = array();
+            $tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building');
+            $active_tab = 'generic';
+        
+            $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('building_form', array('building' => $building));
 		}
 		
 		public function show()
@@ -229,7 +235,7 @@
 			{
 				$building['homepage'] = 'http://'.$building['homepage'];
 			}
-			self::render_template('building', array('building' => $building));
+			self::render_template_xsl('building', array('building' => $building));
 		}
 
 		public function schedule()
