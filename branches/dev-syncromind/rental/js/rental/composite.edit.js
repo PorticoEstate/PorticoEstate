@@ -10,6 +10,16 @@
 		{
 			filterData('search_option', $(this).val());
 		});
+		
+		var valuesInputFilter = {};
+		$('#query').on( 'keyup change', function () 
+		{
+			if ( $.trim($(this).val()) != $.trim(valuesInputFilter[i]) ) 
+			{
+				filterData('query', $(this).val());
+				valuesInputFilter[i] = $(this).val();
+			}
+		});
 	});
 
 	function filterData(param, value)
