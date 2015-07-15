@@ -2525,7 +2525,7 @@
 		'fm_responsibility_contact' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-				'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'responsibility_role_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
 				'p_num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
@@ -2543,7 +2543,7 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'fm_responsibility' => array('responsibility_id' => 'id'),
+				'fm_responsibility_role' => array('responsibility_role_id' => 'id'),
 				'phpgw_contact' => array('contact_id' => 'contact_id')
 			),
 			'ix' => array('location_code'),
