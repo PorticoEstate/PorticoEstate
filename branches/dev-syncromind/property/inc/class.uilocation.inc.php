@@ -205,8 +205,8 @@
 
 			$role_id = phpgw::get_var('role_id', 'int');
 			//$receipt = array();
-			$_role = CreateObject('property.sogeneric');
-			$_role->get_location_info('responsibility_role','');
+//			$_role = CreateObject('property.sogeneric');
+//			$_role->get_location_info('responsibility_role','');
 
 			//$this->save_sessiondata();
 
@@ -225,11 +225,12 @@
 				}
 				else
 				{
-					$role = $_role->read_single($data=array('id' => $role_id));
-					$values['contact_id']			= $contact_id;
-					$values['responsibility_id']	= $role['responsibility_id'];
-					$values['assign']				= $assign;
-					$values['assign_orig']			= $assign_orig;
+//					$role = $_role->read_single($data=array('id' => $role_id));
+					$values['contact_id']				= $contact_id;
+//					$values['responsibility_id']		= $role['responsibility_id'];
+					$values['responsibility_role_id']	= $role_id;
+					$values['assign']					= $assign;
+					$values['assign_orig']				= $assign_orig;
 					$boresponsible = CreateObject('property.boresponsible');
 					$result = $boresponsible->update_role_assignment($values);
 				}

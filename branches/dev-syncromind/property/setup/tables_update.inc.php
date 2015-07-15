@@ -8532,3 +8532,34 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.691 to 0.9.17.692
+	* Alter field name.
+	*/
+	$test[] = '0.9.17.691';
+	function property_upgrade0_9_17_691()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$MetaForeignKeys = $GLOBALS['phpgw_setup']->oProc->m_odb->MetaForeignKeys('fm_responsibility_contact');
+
+		if(isset($MetaForeignKeys['fm_responsibility']) && $MetaForeignKeys['fm_responsibility'])
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_responsibility_contact DROP CONSTRAINT fm_responsibility_contact_responsibility_id_fkey");
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_responsibility_contact','responsibility_id','responsibility_role_id');
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_responsibility_contact"
+		. " ADD CONSTRAINT fm_responsibility_contact_responsibility_role_id_fkey"
+		. " FOREIGN KEY (responsibility_role_id)"
+		. " REFERENCES fm_responsibility_role (id) MATCH SIMPLE"
+		. " ON UPDATE NO ACTION ON DELETE NO ACTION"
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.692';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

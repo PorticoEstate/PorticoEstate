@@ -358,12 +358,12 @@
 					{
 						$to_edit[] = array
 							(
-								'id'				=> $responsible_item,
-								'active_from'		=> time(),
-								'contact_id' 		=> $values['contact_id'],
-								'location_code' 	=> $location_code,
-								'responsibility_id'	=> $values['responsibility_id'],
-								'remark'			=> 'from role assignment'
+								'id'						=> $responsible_item,
+								'active_from'				=> time(),
+								'contact_id'				=> $values['contact_id'],
+								'location_code'				=> $location_code,
+								'responsibility_role_id'	=> $values['responsibility_role_id'],
+								'remark'					=> 'from role assignment'
 							);
 					}
 				}
@@ -381,7 +381,7 @@
 					$receipt['error'][] = array('msg'=> lang('missing contact'));
 				}
 
-				if(!$values['responsibility_id'])
+				if(!$values['responsibility_role_id'])
 				{
 					$receipt['error'][] = array('msg'=> lang('Role is not related to responsibility'));
 				}
@@ -395,7 +395,7 @@
 					(
 						'location' 			=> explode('-', $location_code),
 						'active_from'		=> time(),
-						'responsibility_id'	=> $values['responsibility_id'],
+						'responsibility_role_id'	=> $values['responsibility_role_id'],
 						'contact_id'		=> $values['contact_id'],
 						'remark'			=> 'from role assignment'
 					);

@@ -379,7 +379,7 @@
 
 			//$times['min']= '*'; // for testing the  - every minute
 
-			$account_id = execMethod('property.soresponsible.get_responsible_user_id', $data['responsible']);
+			$account_id = execMethod('property.soresponsible.get_contact_user_id', $data['contact_id']);
 
 			$timer_data = array
 				(
@@ -389,7 +389,7 @@
 					'enabled'		=> !! $data['enabled'],
 //					'action'		=> $action['action'],
 					'action'		=> $this->event_functions[$data['action']]['action'],
-					'action_data'	=> array('responsible_id' => $data['responsible_id'])
+					'action_data'	=> array('contact_id' => $data['contact_id'])
 				);
 
 			if($data['end_date'])
@@ -531,7 +531,6 @@
 			$values = $responsible->read_type(array('start' => 0, 'query' =>'', 'sort' => '',
 				'order' => '', 'location' => $location, 'allrows'=>true,
 				'filter' => ''));
-
 			$list = array(0 => lang('none'));
 			foreach($values as $entry)
 			{
@@ -565,15 +564,15 @@
 			$interlink 	= CreateObject('property.interlink');
 			$relation_link = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
 
-			$responsible_id = isset($data['action_data']['responsible_id']) ? $data['action_data']['responsible_id'] : 0;
-			if(!$responsible_id)
+			$contact_id = isset($data['action_data']['contact_id']) ? $data['action_data']['contact_id'] : 0;
+			if(!$contact_id)
 			{
 				return false;
 			}
 
-			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$responsible_id);
+			$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$contact_id);
 
-			$number = $comms[$responsible_id]['mobile (cell) phone'];
+			$number = $comms[$contact_id]['mobile (cell) phone'];
 			$subject = lang('reminder');
 			$message = "<a href =\"{$relation_link}\">" . lang('record').' #' .$id .'</a>'."\n";
 
@@ -597,17 +596,17 @@
 			$interlink 	= CreateObject('property.interlink');
 			$relation_link = $interlink->get_relation_link(".{$location_arr[1]}", $id, 'view', true);
 
-			$responsible_id = isset($data['action_data']['responsible_id']) ? $data['action_data']['responsible_id'] : 0;
-			if(!$responsible_id)
+			$contact_id = isset($data['action_data']['contact_id']) ? $data['action_data']['contact_id'] : 0;
+			if(!$contact_id)
 			{
 				return false;
 			}
 
-			$account_id = $GLOBALS['phpgw']->accounts->search_person($responsible_id);
+			$account_id = $GLOBALS['phpgw']->accounts->search_person($contact_id);
 			$socommon 	= CreateObject('property.socommon');
 			$prefs		= $socommon->create_preferences('property',$account_id);
-			$comms 		= execMethod('addressbook.boaddressbook.get_comm_contact_data',$responsible_id);
-			$_address 	= isset($comms[$responsible_id]['work email']) && $comms[$responsible_id]['work email'] ? $comms[$responsible_id]['work email'] :$prefs['email'];
+			$comms 		= execMethod('addressbook.boaddressbook.get_comm_contact_data',$contact_id);
+			$_address 	= isset($comms[$contact_id]['work email']) && $comms[$contact_id]['work email'] ? $comms[$contact_id]['work email'] :$prefs['email'];
 
 			$subject = lang('reminder');
 			$message = "<a href =\"{$relation_link}\">" . lang('record').' #' .$id .'</a>'."\n";

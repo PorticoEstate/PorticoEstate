@@ -472,7 +472,7 @@
 			$item_id					= phpgw::get_var('item_id');//might be bigint
 			$id							= phpgw::get_var('id', 'int');
 			$values						= phpgw::get_var('values');
-			$values['responsible_id']	= phpgw::get_var('contact', 'int', 'POST');
+			$values['contact_id']	= phpgw::get_var('contact', 'int', 'POST');
 
 			//			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
 
@@ -493,7 +493,7 @@
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a description'));
 					}
-					if(!isset($values['responsible_id']) || !$values['responsible_id'])
+					if(!isset($values['contact_id']) || !$values['contact_id'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a responsible'));
 					}
@@ -611,7 +611,7 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
-				'contact_id'		=> $values['responsible_id'],
+				'contact_id'		=> $values['contact_id'],
 				'field'				=> 'contact',
 				'type'				=> 'form'));
 
@@ -639,9 +639,6 @@
 					'lang_repeat_interval'			=> lang('interval'),
 					'value_repeat_interval'			=> isset($values['repeat_interval']) ? $values['repeat_interval'] : 0,
 					'lang_repeat_interval_statustext'=> lang('interval'),
-
-					'lang_responsible'				=> lang('responsible'),
-					'responsible'					=> $this->bo->get_responsible(isset($values['responsible']) ? $values['responsible'] : ''),
 
 					'lang_action'					=> lang('action'),
 					'action'						=> $this->bo->get_action(isset($values['action']) ? $values['action'] : ''),
