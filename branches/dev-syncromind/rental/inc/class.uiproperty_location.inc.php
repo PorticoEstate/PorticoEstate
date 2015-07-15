@@ -16,31 +16,36 @@
 		
 		public function query()
 		{
-			//$search			= phpgw::get_var('search');
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$user_rows_per_page = 10;
+			}
+			
 			$order			= phpgw::get_var('order');
 			$draw			= phpgw::get_var('draw', 'int');
 			$columns		= phpgw::get_var('columns');
 			
 			// TODO: access control
 			$type_id		= phpgw::get_var('type_id');
-			$composite_id	= phpgw::get_var('composite_id');
+			//$composite_id	= phpgw::get_var('composite_id');
 			$search_type	= phpgw::get_var('search_option');
 			
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? 10 : phpgw::get_var('length', 'int');
+			$search			= phpgw::get_var('query');
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'location_code';
-			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
+			$sort			= $order[0]['dir'];
 			
 			$property_bolocation =  new property_bolocation();
-			$property_bolocation->order = $sort_field;
-			$property_bolocation->sort = phpgw::get_var('dir');
-			$property_bolocation->start = $start_index;
 			
 			if($search_type == 'gab')
 			{
-				$q = phpgw::get_var('query');
-				$query = explode('/', $q);
+				$query = explode('/', $search);
 				//GAB search
 				$property_sogab = new property_sogab();
 				$gabinfo = $property_sogab->read(array(
@@ -50,17 +55,14 @@
 					'seksjons_nr' => empty($query[3])?'':$query[3],
 					'allrows' => true));
 				
-				$rows_total = $gabinfo;
-				$gab_list = array_slice($gabinfo, $start_index, 10);
+				$rows_total = count($gabinfo);
+				$gab_list	= array_slice($gabinfo, $start_index, $num_of_objects);
 				foreach ($gab_list as $gabelement)
 				{
 					$row = $property_bolocation->read_single($gabelement['location_code']);
 					$row['gab'] = rental_uicommon::get_nicely_formatted_gab_id($gabelement['gab_id']);  
 					$rows[] = $row;
-					//$rows_total[] = $row; 
-					//TODO: Add gabno for element 
-				}
-				
+				}				
 			}
 			else
 			{
@@ -68,29 +70,25 @@
 				{
 					$type_id = 2;
 				}
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				$tmp_count = phpgw::get_var('results', 'int', 'GET', 0);
-				if(isset($tmp_count) && $tmp_count > 0)
-				{
-					$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $num_of_objects;
-				}
-				$rows_total = $property_bolocation->read(array('type_id' => $type_id, 'allrows' => true));
-				$rows = $property_bolocation->read(array('type_id' => $type_id));
-				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $user_rows_per_page;
+				
+				$params = array(
+					'start'		=> $start_index,
+					'query'		=> $search,
+					'results'	=> $num_of_objects,
+					'order'		=> $sort_field,
+					'sort'		=> $sort,
+					'allrows'	=> phpgw::get_var('length', 'int') == -1,
+					'type_id'	=> $type_id
+				);				
+				$rows = $property_bolocation->read($params);
+				$rows_total = $property_bolocation->total_records;
 			}
 			
-			//Add context menu columns (actions and labels)
-			//array_walk($rows, array($this, 'add_actions'), array($composite_id, $type_id));
-			//Build a YUI result from the data
-			//
 			$result_data    =   array('results' =>  $rows);
-			$result_data['total_records']	= count($rows_total);
+			$result_data['total_records']	= $rows_total;
 			$result_data['draw']    = $draw;
 
 			return $this->jquery_results($result_data);
-			
-			/*$result_data = array('results' => $rows, 'total_records' => count($rows_total));	
-			return $this->yui_results($result_data, 'total_records', 'results');*/
 		}
 		
 		/**
@@ -100,7 +98,7 @@
 		 * @param $key ?
 		 * @param $params [type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $params)
+		/*public function add_actions(&$value, $key, $params)
 		{
 			unset($value['query_location']);
 			
@@ -119,6 +117,6 @@
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'location_code' => $value['location_code'], 'composite_id' => $composite_id, 'level' => $type_id)));
 			$value['labels'][] = lang('add_location');
 			
-		}
+		}*/
 	}
 ?>
