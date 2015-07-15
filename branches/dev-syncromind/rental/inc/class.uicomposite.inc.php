@@ -702,7 +702,22 @@
 											var data = {'ids': values};
 											var requestUrl = '".$remove_unit_link."';
 											JqueryPortico.execute_ajax(requestUrl, function(result){
+											
+												document.getElementById('message').innerHTML = '';
 
+												if (typeof(result.message) !== 'undefined')
+												{
+													$.each(result.message, function (k, v) {
+														document.getElementById('message').innerHTML += v.msg + '<br/>';
+													});
+												}
+
+												if (typeof(result.error) !== 'undefined')
+												{
+													$.each(result.error, function (k, v) {
+														document.getElementById('message').innerHTML += v.msg + '<br/>';
+													});
+												}
 												oTable0.fnDraw();
 
 											}, data, 'POST', 'JSON');"
@@ -775,7 +790,7 @@
 												if (typeof(result.message) !== 'undefined')
 												{
 													$.each(result.message, function (k, v) {
-														document.getElementById('message').innerHTML = v.msg + '<br/>';
+														document.getElementById('message').innerHTML += v.msg + '<br/>';
 													});
 												}
 
@@ -812,6 +827,59 @@
 					)
 				);
 				
+				$tabletools3[] = array
+					(
+						'my_name'		=> 'edit',
+						'text'			=> lang('edit'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uicontract.edit',
+								'initial_load'	=> 'no'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+				
+				$tabletools3[] = array
+					(
+						'my_name'		=> 'copy',
+						'text'			=> lang('copy'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uicontract.copy_contract'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+				
+				$tabletools3[] = array
+					(
+						'my_name'		=> 'show',
+						'text'			=> lang('show'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uicontract.view',
+								'initial_load'	=> 'no'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_2',
+					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.query', 'type'=>'contracts_for_composite', 'composite_id'=>$composite_id, 'editable'=>0, 'phpgw_return_as'=>'json'))),
+					'ColumnDefs'	=> array(
+								array('key'=>'old_contract_id', 'label'=>lang('contract_id'), 'sortable'=>true),
+								array('key'=>'date_start', 'label'=>lang('date_start'), 'sortable'=>true),
+								array('key'=>'date_end', 'label'=>lang('date_end'), 'sortable'=>true),
+								array('key'=>'type', 'label'=>lang('title'), 'sortable'=>false),
+								array('key'=>'party', 'label'=>lang('party'), 'sortable'=>false),
+								array('key'=>'term_label', 'label'=>lang('billing_term'), 'sortable'=>true),
+								array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false),
+								array('key'=>'rented_area', 'label'=>lang('area'), 'sortable'=>false),
+								array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false),
+								array('key'=>'contract_notification_status', 'label'=>lang('notification_status'), 'sortable'=>false)
+					),
+					'tabletools'	=> $tabletools3,
+					'config'		=> array(
+						array('disableFilter' => true)
+					)
+				);
 			}
 			
 			$link_index = array
@@ -848,6 +916,13 @@
 			$level_options[] = array('id'=>'3', 'name'=>lang('floor'), 'selected'=>0);
 			$level_options[] = array('id'=>'4', 'name'=>lang('section'), 'selected'=>0);
 			$level_options[] = array('id'=>'5', 'name'=>lang('room'), 'selected'=>0);
+			
+			$contracts_search_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
+			$contracts_search_options[] = array('id'=>'id', 'name'=>lang('contract_id'), 'selected'=>0);
+			$contracts_search_options[] = array('id'=>'party_name', 'name'=>lang('party_name'), 'selected'=>0);
+			$contracts_search_options[] = array('id'=>'composite', 'name'=>lang('composite_name'), 'selected'=>0);
+			$contracts_search_options[] = array('id'=>'composite_address', 'name'=>lang('composite_address'), 'selected'=>0);
+			$contracts_search_options[] = array('id'=>'location_id', 'name'=>lang('object_number'), 'selected'=>0);
 			
 			$tabs = array();
 			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
@@ -904,6 +979,8 @@
 				
 				'list_search_option'			=> array('options' => $search_options),
 				'list_type_id'					=> array('options' => $level_options),
+				
+				'list_contracts_search_options'	=> array('options' => $contracts_search_options),
 				
 				'composite_id'					=> $composite_id,
 
@@ -979,6 +1056,7 @@
 			$location_code = phpgw::get_var('location_code');
 			$level = (int)phpgw::get_var('level');
 			
+			$result = array();
 			if(isset($composite_id) && $composite_id > 0)
 			{
 				foreach ($location_code as $code) 
@@ -987,9 +1065,9 @@
 					$unit = new rental_unit(0,$composite_id, $property_location);
 					$resp = rental_sounit::get_instance()->store($unit);			
 					if ($resp) {
-						$result['message'] = array('msg'=>'iten agregado');
+						$result['message'][] = array('msg'=>$code.' '.lang('has been added'));
 					} else {
-						$result['error'] = array('msg'=>'iten no fue agregado');
+						$result['error'][] = array('msg'=>$code.' '.lang('not added'));
 					}
 				}
 			}
@@ -1009,13 +1087,22 @@
 				return;
 			}
 			$unit_ids = phpgw::get_var('ids');
-	
+			
+			$result = array();
 			if(count($unit_ids)> 0 )
 			{
-				foreach($unit_ids as $id) {
-					rental_sounit::get_instance()->delete($id);
+				foreach($unit_ids as $id) 
+				{
+					$resp = rental_sounit::get_instance()->delete($id);
+					if ($resp) {
+						$result['message'][] = array('msg'=>'id '.$id.' '.lang('has been deleted'));
+					} else {
+						$result['error'][] = array('msg'=>'id '.$id.' '.lang('not deleted'));
+					}					
 				}
 			}
+			
+			return $result;
 		}
 
 		/**
