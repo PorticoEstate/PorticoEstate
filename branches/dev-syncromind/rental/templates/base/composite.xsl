@@ -167,6 +167,35 @@
 							</div>
 						</div>	
 						<div id="contracts">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="lang_search_options"/>
+								</label>
+								<div class="pure-custom">
+									<div class="pure-control-group">
+										<label><xsl:value-of select="lang_search_for"/></label>
+										<input type="text" id="contracts_query" name="contracts_query" value=""></input>
+										<label><xsl:value-of select="lang_search_where"/></label>
+										<select id="contracts_search_option" name="contracts_search_option">
+											<xsl:apply-templates select="list_contracts_search_options/options"/>
+										</select>										
+									</div>
+								</div>
+							</div>
+							<div>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_2'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
 						</div>
 					</xsl:when>
 				</xsl:choose>
