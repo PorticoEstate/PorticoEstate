@@ -752,7 +752,7 @@ JS;
 				'role_id' => $data['role_id'],
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
-				'type_id' => $this->type_id,
+				'type_id' => ($data['type_id']) ? $data['type_id'] : $this->type_id,
 				'lookup' => $this->lookup,
 				'district_id' => $this->district_id,
 				'status' => $this->status,
