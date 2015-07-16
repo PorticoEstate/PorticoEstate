@@ -235,6 +235,13 @@
 			{
 				$building['homepage'] = 'http://'.$building['homepage'];
 			}
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Building Show'), 'link' => '#building_show');
+			$active_tab = 'generic';
+            
+             $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
 			self::render_template_xsl('building', array('building' => $building));
 		}
 
@@ -247,6 +254,13 @@
 				'phpgw_return_as' => 'json',
 			));
 			self::add_javascript('booking', 'booking', 'schedule.js');
-			self::render_template('building_schedule', array('building' => $building));
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Building Schedule'), 'link' => '#building_schedule');
+			$active_tab = 'generic';
+            
+             $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('building_schedule', array('building' => $building));
 		}
 	}
