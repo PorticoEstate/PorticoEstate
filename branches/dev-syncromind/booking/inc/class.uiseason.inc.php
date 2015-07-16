@@ -265,7 +265,14 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
-			self::render_template('season_edit', array('season' => $season, 'lang' => $lang));
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Season Edit'), 'link' => '#season_edit');
+			$active_tab = 'generic';
+            
+            $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
+			self::render_template_xsl('season_edit', array('season' => $season, 'lang' => $lang));
 		}
 		
 		public function show()
@@ -289,6 +296,13 @@
 			}
 			$season['resource_ids'] = $resource_ids;
 			$season['status'] = $season['status'] ? lang($season['status']) : $season['status'];
+            
+            $tabs = array();
+			$tabs['generic']	= array('label' => lang('Season Show'), 'link' => '#season_show');
+			$active_tab = 'generic';
+            
+            $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+            
 			self::render_template_xsl('season', array('season' => $season, 'lang' => $lang));
 		}
 
