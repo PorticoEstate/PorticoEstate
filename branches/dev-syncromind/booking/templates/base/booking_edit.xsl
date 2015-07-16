@@ -111,21 +111,27 @@
                     <label>
                         <xsl:value-of select="php:function('lang', 'From')"/>
                     </label>
-                        <div class="datetime-picker">
+                        <input class="datetime" id="field_from" name="from_" type="text">
+                                <xsl:attribute name="value"><xsl:value-of select="booking/from_"/></xsl:attribute>
+                        </input>
+                        <!--div class="datetime-picker">
                         <input id="field_from" name="from_" type="text">
                             <xsl:attribute name="value"><xsl:value-of select="booking/from_"/></xsl:attribute>
                         </input>
-                        </div>
+                        </div-->
                 </div>
                 <div class="pure-control-group">
                     <label>
                         <xsl:value-of select="php:function('lang', 'To')"/>
                     </label>
-                        <div class="datetime-picker">
+                        <input class="datetime" id="field_to" name="to_" type="text">
+                                <xsl:attribute name="value"><xsl:value-of select="booking/to_"/></xsl:attribute>
+                        </input>
+                        <!--div class="datetime-picker">
                         <input id="field_to" name="to_" type="text">
                             <xsl:attribute name="value"><xsl:value-of select="booking/to_"/></xsl:attribute>
                         </input>
-                        </div>
+                        </div-->
                 </div>
                 <div class="pure-control-group">
                     <label>
