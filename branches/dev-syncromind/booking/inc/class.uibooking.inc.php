@@ -663,6 +663,10 @@
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
+            
+            $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
+                    
             $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
