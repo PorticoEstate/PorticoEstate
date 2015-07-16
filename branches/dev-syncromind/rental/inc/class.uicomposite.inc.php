@@ -887,6 +887,8 @@
 					'menuaction'	=> 'rental.uicomposite.index'
 				);
 		
+			$GLOBALS['phpgw']->jqcal->add_listener('date_status');
+
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
 	
@@ -923,6 +925,19 @@
 			$contracts_search_options[] = array('id'=>'composite', 'name'=>lang('composite_name'), 'selected'=>0);
 			$contracts_search_options[] = array('id'=>'composite_address', 'name'=>lang('composite_address'), 'selected'=>0);
 			$contracts_search_options[] = array('id'=>'location_id', 'name'=>lang('object_number'), 'selected'=>0);
+			
+			$status_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
+			$status_options[] = array('id'=>'under_planning', 'name'=>lang('under_planning'), 'selected'=>0);
+			$status_options[] = array('id'=>'active', 'name'=>lang('active_plural'), 'selected'=>0);
+			$status_options[] = array('id'=>'under_dismissal', 'name'=>lang('under_dismissal'), 'selected'=>0);
+			$status_options[] = array('id'=>'ended', 'name'=>lang('ended'), 'selected'=>0);
+			
+			$fields_of_responsibility_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>0);
+			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach($types as $id => $label)
+			{
+				$fields_of_responsibility_options[] = array('id'=>$id, 'name'=>lang($label), 'selected'=>0);
+			}
 			
 			$tabs = array();
 			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
@@ -981,6 +996,8 @@
 				'list_type_id'					=> array('options' => $level_options),
 				
 				'list_contracts_search_options'	=> array('options' => $contracts_search_options),
+				'list_status_options'			=> array('options' => $status_options),
+				'list_fields_of_responsibility_options'	=> array('options' => $fields_of_responsibility_options),
 				
 				'composite_id'					=> $composite_id,
 
