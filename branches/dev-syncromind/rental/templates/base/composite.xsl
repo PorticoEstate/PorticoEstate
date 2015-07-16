@@ -178,8 +178,22 @@
 										<label><xsl:value-of select="lang_search_where"/></label>
 										<select id="contracts_search_option" name="contracts_search_option">
 											<xsl:apply-templates select="list_contracts_search_options/options"/>
-										</select>										
+										</select>
 									</div>
+									<div class="pure-control-group">
+										<label><xsl:value-of select="php:function('lang', 'status')"/></label>
+										<select id="contract_status" name="contract_status">
+											<xsl:apply-templates select="list_status_options/options"/>
+										</select>
+										<label><xsl:value-of select="php:function('lang', 'date')"/></label>
+										<input type="text" id="date_status" name="date_status" value=""></input>
+									</div>
+									<div class="pure-control-group">
+										<label><xsl:value-of select="php:function('lang', 'field_of_responsibility')"/></label>
+										<select id="contract_type" name="contract_type">
+											<xsl:apply-templates select="list_fields_of_responsibility_options/options"/>
+										</select>
+									</div>									
 								</div>
 							</div>
 							<div>
