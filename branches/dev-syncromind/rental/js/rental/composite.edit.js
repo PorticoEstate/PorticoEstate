@@ -11,13 +11,13 @@
 			filterDataLocations('search_option', $(this).val());
 		});
 		
-		var valuesInputFilter = {};
+		var valuesLocationSearch = {};
 		$('#query').on( 'keyup change', function () 
 		{
-			if ( $.trim($(this).val()) != $.trim(valuesInputFilter[i]) ) 
+			if ( $.trim($(this).val()) != $.trim(valuesLocationSearch[i]) ) 
 			{
-				filterDataLocations('query', $(this).val());
-				valuesInputFilter[i] = $(this).val();
+				filterDataLocations('search', {'value': $(this).val()});
+				valuesLocationSearch[i] = $(this).val();
 			}
 		});
 		
@@ -27,13 +27,13 @@
 			filterDataContracts('search_option', $(this).val());
 		});
 		
-		var valuesInputFilter = {};
+		var valuesContractSearch = {};
 		$('#contracts_query').on( 'keyup change', function () 
 		{
-			if ( $.trim($(this).val()) != $.trim(valuesInputFilter[i]) ) 
+			if ( $.trim($(this).val()) != $.trim(valuesContractSearch[i]) ) 
 			{
-				filterDataContracts('query', $(this).val());
-				valuesInputFilter[i] = $(this).val();
+				filterDataContracts('search', {'value': $(this).val()});
+				valuesContractSearch[i] = $(this).val();
 			}
 		});
 		
