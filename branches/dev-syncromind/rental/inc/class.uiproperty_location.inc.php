@@ -25,6 +25,7 @@
 				$user_rows_per_page = 10;
 			}
 			
+			$search			= phpgw::get_var('search');
 			$order			= phpgw::get_var('order');
 			$draw			= phpgw::get_var('draw', 'int');
 			$columns		= phpgw::get_var('columns');
@@ -36,7 +37,7 @@
 			
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$search			= phpgw::get_var('query');
+			$search_for		= $search['value'];
 			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'location_code';
 			$sort			= $order[0]['dir'];
@@ -45,7 +46,7 @@
 			
 			if($search_type == 'gab')
 			{
-				$query = explode('/', $search);
+				$query = explode('/', $search_for);
 				//GAB search
 				$property_sogab = new property_sogab();
 				$gabinfo = $property_sogab->read(array(
@@ -73,7 +74,7 @@
 				
 				$params = array(
 					'start'		=> $start_index,
-					'query'		=> $search,
+					'query'		=> $search_for,
 					'results'	=> $num_of_objects,
 					'order'		=> $sort_field,
 					'sort'		=> $sort,
