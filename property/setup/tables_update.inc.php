@@ -8573,6 +8573,8 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility_contact',array(),'ecodimb');
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
