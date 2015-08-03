@@ -437,6 +437,30 @@
 			return $receipt;
 		}
 
+		/**
+		 * get the responsibility name
+		 *
+		 * @param type $id
+		 * @return string name
+		 */
+		public function get_responsibility_name($id)
+		{		
+			static $names = array();
+			$i = (int) $id;
+
+			if ($names[$i])
+			{
+				return $names[$i];
+			}
+			
+
+			$sql = "SELECT * FROM fm_responsibility WHERE id= {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();	
+			$name = $this->db->f('name', true);
+			$names[$i] = $name;
+			return $name;
+		}
 
 		/**
 		 * Read single responsibility type
@@ -600,7 +624,6 @@
 						'p_num'						=> $this->db->f('p_num', true),
 						'p_entity_id'				=> $this->db->f('p_entity_id'),
 						'p_cat_id'					=> $this->db->f('p_cat_id'),
-						'ecodimb'					=> $this->db->f('ecodimb'),
 						'remark'					=> $this->db->f('remark', true),
 					);
 			}
@@ -632,7 +655,6 @@
 					isset($values['extra']['p_num']) ? $values['extra']['p_num'] : '',
 					isset($values['extra']['p_entity_id']) ? $values['extra']['p_entity_id'] : '',
 					isset($values['extra']['p_cat_id']) ? $values['extra']['p_cat_id'] : '',
-					$values['ecodimb'],
 					$values['remark'],
 					$this->account,
 					time()
@@ -643,7 +665,7 @@
 			$this->db->transaction_begin();
 
 			$this->db->query("INSERT INTO fm_responsibility_contact (responsibility_role_id, contact_id,"
-				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, ecodimb, remark, created_by, created_on)"
+				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on)"
 				." VALUES ($insert_values)", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())
@@ -678,8 +700,7 @@
 				|| $values['active_from'] != $orig['active_from']
 				|| $values['active_to'] != $orig['active_to']
 				|| $values['extra']['p_num'] != $orig['p_num']
-				|| $values['remark'] != $orig['remark']
-				|| $values['ecodimb'] != $orig['ecodimb'])
+				|| $values['remark'] != $orig['remark'])
 			{
 				$receipt = $this->add_contact($values);
 
@@ -689,7 +710,6 @@
 
 					$value_set['expired_by']	= $this->account;
 					$value_set['expired_on']	= time();
-					$value_set['ecodimb']		= $values['ecodimb'];
 				}
 
 				$value_set	= $this->db->validate_update($value_set);
@@ -759,8 +779,7 @@
 					'created_on'				=> $this->db->f('created_on'),
 					'expired_by'				=> $this->db->f('expired_by'),
 					'expired_on'				=> $this->db->f('expired_on'),
-					'priority'					=> $this->db->f('priority'), // FIXME - evaluate the need for this one
-					'ecodimb'					=> $this->db->f('ecodimb')
+					'priority'					=> $this->db->f('priority') // FIXME - evaluate the need for this one
 				);
 
 			return $values;
@@ -848,13 +867,7 @@
 			$todo = false;
 			$item_filter = '';
 
-			if(isset($data['ecodimb']) && $data['ecodimb'])
-			{
-				$item_filter =   " AND ecodimb = '{$data['ecodimb']}'";
-				$location_filter[] = '';
-				$todo = true;
-			}
-			elseif(isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
+			if(isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
 			{
 				$location_code = implode('-', $data['location']);
 
@@ -863,7 +876,6 @@
 					.' AND p_cat_id =' . (int) $data['extra']['p_cat_id'];
 
 				$location_filter[] = " AND location_code = '{$location_code}'";
-				$ordermethod = '';
 				$todo = true;
 			}
 			else if(isset($data['location']) && $data['location'])
@@ -886,7 +898,6 @@
 				// Start at the bottom level
 				$location_filter	= array_reverse($location_filter);				
 
-				$ordermethod = ' ORDER by location_code.id ASC';
 				$todo = true;
 			}
 
