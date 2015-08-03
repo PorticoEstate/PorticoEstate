@@ -384,11 +384,6 @@
 				<xsl:value-of select="lang_contact"/>
 			</td>
 			<td class="th_text" width="10%" align="left">
-				<a href="{sort_ecodimb}">
-					<xsl:value-of select="lang_ecodimb"/>
-				</a>
-			</td>
-			<td class="th_text" width="10%" align="left">
 				<a href="{$sort_location}">
 					<xsl:value-of select="lang_location"/>
 				</a>
@@ -441,9 +436,6 @@
 			</xsl:attribute>
 			<td align="left">
 				<xsl:value-of select="contact_name"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="ecodimb"/>
 			</td>
 			<td align="left">
 				<xsl:value-of select="location_code"/>
@@ -606,7 +598,6 @@
 							</input>
 						</td>
 					</tr>
-					<xsl:call-template name="ecodimb_form"/>
 					<xsl:call-template name="location_form"/>
 					<tr>
 						<td>

@@ -2538,7 +2538,6 @@
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True)
 			),
 			'pk' => array('id'),

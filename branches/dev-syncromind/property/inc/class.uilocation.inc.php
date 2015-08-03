@@ -478,6 +478,10 @@
 					'order'			=> 'name'
 				);
 			$values_combo_box[4] =   execMethod('property.sogeneric.get_list',$_role_criteria);
+			foreach($values_combo_box[4] as &$_role)
+			{
+				$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name',$_role['id']);
+			}
 			array_unshift ($values_combo_box[4], array('id'=>'', 'name'=>lang('no role')));
 			$combos[] = array('type' => 'filter',
 						'name' => 'role_id',

@@ -554,7 +554,7 @@
 				{
 					$joinmethod .= " {$this->join} fm_responsibility_contact ON ( fm_location{$type_id}.location_code = fm_responsibility_contact.location_code))";
 					$paranthesis .='(';
-					$joinmethod .= " {$this->join} fm_responsibility_role ON ( fm_responsibility_contact.id = fm_responsibility_role.responsibility_role_id))";
+					$joinmethod .= " {$this->join} fm_responsibility_role ON ( fm_responsibility_contact.responsibility_role_id = fm_responsibility_role.id))";
 					$paranthesis .='(';
 
 					$cols.= ',fm_responsibility_role.id as role_id';

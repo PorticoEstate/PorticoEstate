@@ -157,6 +157,13 @@
 						}
 					}
 				}
+				if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
+				{
+					foreach($values as &$entry)
+					{
+						$entry[$field['name']] = execMethod($field['values_def']['get_single_value'],$entry[$field['name']]);
+					}
+				}
 			}
 
 			$this->total_records = $this->so->total_records;

@@ -2345,7 +2345,6 @@
 									'valueset'		=> false,
 									'method'		=> 'preferences.boadmin_acl.get_locations',
 									'method_input'	=> array('acl_app' => 'property',	'selected' => '##location##')
-//									'method_input'	=> array('acl_app' => '$this->appname',	'selected' => '##location##', 'have_categories' => true)
 								)
 							),
 							array
@@ -2356,6 +2355,7 @@
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
+									'get_single_value'	=> 'property.soresponsible.get_responsibility_name',
 									'method'		=> 'property.boresponsible.get_responsibilities',
 									'method_input'	=> array('appname' => '$this->appname',	'selected' => '##responsibility_id##')
 								)
