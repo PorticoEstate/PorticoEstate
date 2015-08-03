@@ -8563,3 +8563,21 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.691 to 0.9.17.692
+	* Alter field name.
+	*/
+	$test[] = '0.9.17.692';
+	function property_upgrade0_9_17_692()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility_contact',array(),'ecodimb');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.693';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
