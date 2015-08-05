@@ -707,7 +707,7 @@
 			{
 				$check_list->set_delta_billable_hours($billable_hours);
 			}
-			if ( $this->_check_for_required($check_list) && !$error)
+			if ( $status == controller_check_list::STATUS_DONE && $this->_check_for_required($check_list) && !$error)
 			{
 				$check_list->set_status($status);
 			}
