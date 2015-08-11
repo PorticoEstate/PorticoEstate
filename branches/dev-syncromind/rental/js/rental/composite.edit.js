@@ -59,3 +59,15 @@
 		oTable2.dataTableSettings[2]['ajax']['data'][param] = value;
 		oTable2.fnDraw();
 	}
+	
+	function formatterArea (key, oData) 
+	{
+		var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + area_suffix;
+		return amount;
+	}
+	
+	function formatterPrice (key, oData) 
+	{
+		var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
+		return amount;
+	}
