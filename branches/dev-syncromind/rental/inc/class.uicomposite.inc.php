@@ -431,46 +431,7 @@
 					)),
 					'allrows'	=> true,
 					'editor_action' => '',
-					'field' => array(
-						array(
-							'key'		=> 'id', 
-							'label'		=> lang('serial'), 
-							'className'	=> '', 
-							'sortable'	=> false, 
-							'hidden'	=> true
-						),
-						array(
-							'key'		=> 'location_code', 
-							'label'		=> lang('object_number'), 
-							'className'	=> '', 
-							'sortable'	=> true, 
-							'hidden'	=> false
-						),
-						array(
-							'key'		=> 'name',
-							'label'		=> lang('name'),
-							'sortable'	=> true,
-							'hidden'	=> false
-						),
-						array(
-							'key'		=> 'address',
-							'label'		=> lang('address'),
-							'sortable'	=> true, 
-							'hidden'	=> false
-						),
-						array(
-							'key'		=> 'gab_id',
-							'label'		=> lang('propertyident'),
-							'sortable'	=> false,
-							'hidden'	=> false
-						),
-						array(
-							'key'		=> 'status',
-							'label'		=> lang('status'),
-							'sortable'	=> true,
-							'hidden'	=> false
-						)
-					)
+					'field' => array()
 				)
 			);
 
@@ -480,6 +441,19 @@
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
+			$uicols = rental_socomposite::get_instance()->get_uicols();
+			
+			for($k=0;$k<count($uicols['name']);$k++)
+			{						
+				$params = array(
+								'key' => $uicols['name'][$k],
+								'label' => $uicols['descr'][$k],
+								'sortable' => ($uicols['sortable'][$k]) ? true : false,
+								'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+							);
+
+				array_push ($data['datatable']['field'], $params);
+			}
 			if(!empty($this->config->config_data['contract_future_info']))
 			{
 				array_push($data['datatable']['field'], array("key"=>"contracts", "label"=>lang('contract_future_info'), "sortable"=>false, "hidden"=>false));
