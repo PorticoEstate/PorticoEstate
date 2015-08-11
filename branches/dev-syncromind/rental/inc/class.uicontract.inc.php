@@ -21,6 +21,7 @@
 	class rental_uicontract extends rental_uicommon
 	{
 		private $pdf_templates = array();
+		private $config;
 		/*private $decimalSeparator;
 		private $thousandsSeparator;
 		private $decimalPlaces;*/
@@ -54,6 +55,8 @@
 			self::set_active_menu('rental::contracts');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('contracts');
 			
+			$this->config = CreateObject('phpgwapi.config','rental');
+			$this->config->read();
 			/*$this->thousandsSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : ' ';
 			$this->decimalSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$this->decimalPlaces = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;*/
@@ -66,12 +69,12 @@
 
 		if($this->isAdministrator() || $this->isExecutiveOfficer())
 		{
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
+			/*$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();*/
 			$valid_contract_types = array();
-			if(isset($config->config_data['contract_types']) && is_array($config->config_data['contract_types']))
+			if(isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
 			{
-				foreach ($config->config_data['contract_types'] as $_key => $_value)
+				foreach ($this->config->config_data['contract_types'] as $_key => $_value)
 				{
 					if($_value)
 					{
@@ -320,17 +323,17 @@
 
 		if(!$export){
 			//Add context menu columns (actions and labels)
-			$config	= CreateObject('phpgwapi.config','rental');
+			//$config	= CreateObject('phpgwapi.config','rental');
 
 			//Check if user has access to Catch module
 			$access = $this->acl->check('.',PHPGW_ACL_READ,'catch');
 			if($access)
 			{
-				$config->read();
-				$entity_id_in = $config->config_data['entity_config_move_in'];
-				$entity_id_out = $config->config_data['entity_config_move_out'];
-				$category_id_in = $config->config_data['category_config_move_in'];	
-				$category_id_out = $config->config_data['category_config_move_out'];		
+				//$config->read();
+				$entity_id_in = $this->config->config_data['entity_config_move_in'];
+				$entity_id_out = $this->config->config_data['entity_config_move_out'];
+				$category_id_in = $this->config->config_data['category_config_move_in'];	
+				$category_id_out = $this->config->config_data['category_config_move_out'];		
 			}
 
 			array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id,$entity_id_in,$entity_id_out,$category_id_in,$category_id_out));
@@ -584,16 +587,18 @@
 					array(
 						'key'		=> 'total_price', 
 						'label'		=> lang('total_price'), 
-						'className'	=> '', 
+						'className'	=> 'right', 
 						'sortable'	=> false, 
-						'hidden'	=> false
+						'hidden'	=> false,
+						'formatter' => 'formatterPrice'
 					),
 					array(
 						'key'		=> 'rented_area', 
 						'label'		=> lang('area'), 
-						'className'	=> '', 
+						'className'	=> 'right', 
 						'sortable'	=> false, 
-						'hidden'	=> false
+						'hidden'	=> false,
+						'formatter' => 'formatterArea'
 					),
 					array(
 						'key'		=> 'contract_status', 
@@ -620,7 +625,17 @@
 			
 		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
 		
+		$code =	<<<JS
+			var thousandsSeparator = '$this->thousandsSeparator';
+			var decimalSeparator = '$this->decimalSeparator';
+			var decimalPlaces = '$this->decimalPlaces';
+			var currency_suffix = '$this->currency_suffix';
+			var area_suffix = '$this->area_suffix';
+JS;
+		$GLOBALS['phpgw']->js->add_code('', $code);
+			
 		self::add_javascript('rental', 'rental', 'contract.index.js');
+		phpgwapi_jquery::load_widget('numberformat');
 		self::render_template_xsl('datatable_jquery', $data);
 		
 	}
@@ -896,8 +911,8 @@
 			$message = null;
 			$error = null;
 			
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
+			/*$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();*/
 	
 			if ($values['contract_id'])
 			{
@@ -983,7 +998,7 @@
 			
 			if(!$current_term_id = $contract->get_term_id())
 			{
-				$current_term_id = $config->config_data['default_billing_term'];
+				$current_term_id = $this->config->config_data['default_billing_term'];
 			}
 			$billing_terms = rental_sobilling::get_instance()->get_billing_terms();
 			$billing_term_options = array();
@@ -1052,21 +1067,11 @@
 			$tabs = array();
 			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
 			$active_tab = 'details';
+			
+			$datatable_def = array();
 		
 			if($contract_id)
 			{
-				$tabs['composite']		= array('label' => lang('Composite'), 'link' => '#composite');
-				$tabs['parties']		= array('label' => lang('Parties'), 'link' => '#parties');
-				$tabs['price']			= array('label' => lang('Price'), 'link' => '#price');
-				$tabs['invoice']		= array('label' => lang('Invoice'), 'link' => '#invoice');
-				$tabs['documents']		= array('label' => lang('Documents'), 'link' => '#documents');
-				$tabs['notifications']	= array('label' => lang('Notifications'), 'link' => '#notifications');
-			}
-			
-			$datatable_def = array();
-			
-			if($contract_id)
-			{			
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_0',
@@ -1081,6 +1086,50 @@
 						array('disablePagination' => true)
 					)
 				);
+				
+				$tabs['composite']		= array('label' => lang('Composite'), 'link' => '#composite', 'function' => 'get_composite_data()');
+				$tabs['parties']		= array('label' => lang('Parties'), 'link' => '#parties');
+				$tabs['price']			= array('label' => lang('Price'), 'link' => '#price');
+				$tabs['invoice']		= array('label' => lang('Invoice'), 'link' => '#invoice');
+				$tabs['documents']		= array('label' => lang('Documents'), 'link' => '#documents');
+				$tabs['notifications']	= array('label' => lang('Notifications'), 'link' => '#notifications');
+				
+				$uicols_composite = rental_socomposite::get_instance()->get_uicols();
+				$composite_def = array();
+				$uicols_count	= count($uicols_composite['descr']);
+				for ($i=0;$i<$uicols_count;$i++)
+				{
+					if ($uicols_composite['input_type'][$i]!='hidden')
+					{
+						$composite_def[$i]['key'] 	= $uicols_composite['name'][$i];
+						$composite_def[$i]['label']	= $uicols_composite['descr'][$i];
+					}
+				}
+
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_1',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> $composite_def,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_2',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> $composite_def,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+				
+				$link_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'included_composites', 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
+				$link_not_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'not_included_composites', 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
 			}
 			
 			$data = array
@@ -1151,7 +1200,7 @@
 					'security_amount_simbol'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 					'value_security_amount'			=> $contract->get_security_amount(), 
 					'value_rented_area'				=> $contract->get_rented_area(), 
-					'rented_area_simbol'			=> (isset($config->config_data['area_suffix']) && $config->config_data['area_suffix']) ? $config->config_data['area_suffix'] : 'kvm',			
+					'rented_area_simbol'			=> $this->area_suffix,			
 					'is_adjustable'					=> $contract->is_adjustable(),
 				
 					'list_adjustment_interval'		=> array('options' => $adjustment_interval_options),
@@ -1163,6 +1212,8 @@
 					'location_id'					=> $contract->get_location_id(),
 					'contract_id'					=> $contract_id,
 					'mode'							=> 'edit',
+					'link_included_composites'		=> $link_included_composites,
+					'link_not_included_composites'	=> $link_not_included_composites,
 				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
@@ -1170,7 +1221,7 @@
 			//$appname	=  $this->location_info['name'];
 
 			//$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
-	
+			self::add_javascript('rental', 'rental', 'contract.edit.js');
 			self::render_template_xsl(array('contract', 'datatable_inline'), array('edit' => $data));
 			
 			//return $this->viewedit(true, $contract_id, null, $location_id, array(), $message, $error);
@@ -1199,9 +1250,9 @@
 			$contract->set_account_out(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false));
 			$contract->set_executive_officer_id($GLOBALS['phpgw_info']['user']['account_id']);
 
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
-			$default_billing_term = $config->config_data['default_billing_term'];
+			/*$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();*/
+			$default_billing_term = $this->config->config_data['default_billing_term'];
 
 			$contract->set_term_id($default_billing_term);
 
