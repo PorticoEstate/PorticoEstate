@@ -444,5 +444,42 @@ class rental_socomposite extends rental_socommon
 
 		return null;
     }
+	
+    public function get_uicols() 
+	{
+		$uicols = array();
+		
+		$uicols['name'][]		= 'id';
+		$uicols['descr'][]		= lang('serial');
+		$uicols['sortable'][]	= false;
+		$uicols['input_type'][]	= 'hidden';
+
+		$uicols['name'][]		= 'location_code';
+		$uicols['descr'][]		= lang('object_number');
+		$uicols['sortable'][]	= true;
+		$uicols['input_type'][]	= 'text';
+		
+		$uicols['name'][]		= 'name';
+		$uicols['descr'][]		= lang('name');
+		$uicols['sortable'][]	= true;
+		$uicols['input_type'][]	= 'text';
+		
+		$uicols['name'][]		= 'address';
+		$uicols['descr'][]		= lang('address');
+		$uicols['sortable'][]	= true;
+		$uicols['input_type'][]	= 'text';
+		
+		$uicols['name'][]		= 'gab_id';
+		$uicols['descr'][]		= lang('propertyident');
+		$uicols['sortable'][]	= false;
+		$uicols['input_type'][]	= 'text';
+		
+		$uicols['name'][]		= 'status';
+		$uicols['descr'][]		= lang('status');
+		$uicols['sortable'][]	= true;
+		$uicols['input_type'][]	= 'text';
+		
+		return $uicols;
+    }
 }
 ?>
