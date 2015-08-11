@@ -34,6 +34,7 @@
 		public $thousandsSeparator;
 		public $decimalPlaces;
 		public $currency_suffix;
+		public $area_suffix;
 		
 		public function __construct()
 		{
@@ -78,6 +79,8 @@
 			$this->decimalSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$this->decimalPlaces = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;
 			$this->currency_suffix = ($config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : 'NOK';
+			
+			$this->area_suffix = ($config->config_data['area_suffix']) ? $config->config_data['area_suffix'] : 'kvm';
 		}
 		
 		/**
