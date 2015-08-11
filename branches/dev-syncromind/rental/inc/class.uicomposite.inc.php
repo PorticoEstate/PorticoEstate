@@ -529,12 +529,12 @@
 				);
 			
 			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
+			/*$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();*/
 			$valid_contract_types = array();
-			if(isset($config->config_data['contract_types']) && is_array($config->config_data['contract_types']))
+			if(isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
 			{
-				foreach ($config->config_data['contract_types'] as $_key => $_value)
+				foreach ($this->config->config_data['contract_types'] as $_key => $_value)
 				{
 					if($_value)
 					{
@@ -735,8 +735,8 @@
 								array('key'=>'loc4_name', 'label'=>lang('section'), 'sortable'=>false),
 								array('key'=>'loc5_name', 'label'=>lang('room'), 'sortable'=>false),
 								array('key'=>'address', 'label'=>lang('address'), 'sortable'=>false),
-								array('key'=>'area_gros', 'label'=>lang('area_gros'), 'sortable'=>false),
-								array('key'=>'area_net', 'label'=>lang('area_net'), 'sortable'=>false)
+								array('key'=>'area_gros', 'label'=>lang('area_gros'), 'sortable'=>false, 'formatter'=>'formatterArea', 'className'=>'right'),
+								array('key'=>'area_net', 'label'=>lang('area_net'), 'sortable'=>false, 'formatter'=>'formatterArea', 'className'=>'right')
 					),
 					'tabletools'	=> $tabletools1,
 					'config'		=> array(
@@ -870,9 +870,9 @@
 								array('key'=>'type', 'label'=>lang('title'), 'sortable'=>false),
 								array('key'=>'party', 'label'=>lang('party'), 'sortable'=>false),
 								array('key'=>'term_label', 'label'=>lang('billing_term'), 'sortable'=>true),
-								array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false),
-								array('key'=>'rented_area', 'label'=>lang('area'), 'sortable'=>false),
-								array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false),
+								array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false, 'formatter'=>'formatterPrice', 'className'=>'right'),
+								array('key'=>'rented_area', 'label'=>lang('area'), 'sortable'=>false, 'formatter'=>'formatterArea', 'className'=>'right'),
+								array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false, 'className'=>'center'),
 								array('key'=>'contract_notification_status', 'label'=>lang('notification_status'), 'sortable'=>false)
 					),
 					'tabletools'	=> $tabletools3,
@@ -889,8 +889,8 @@
 		
 			$GLOBALS['phpgw']->jqcal->add_listener('date_status');
 
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
+			/*$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();*/
 	
 			$cur_standard_id = $composite->get_standard_id();
 			$composite_standard_arr = $composite->get_standards($cur_standard_id);
@@ -949,6 +949,15 @@
 				$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
 			}
 			
+			$code =	<<<JS
+				var thousandsSeparator = '$this->thousandsSeparator';
+				var decimalSeparator = '$this->decimalSeparator';
+				var decimalPlaces = '$this->decimalPlaces';
+				var currency_suffix = '$this->currency_suffix';
+				var area_suffix = '$this->area_suffix';
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $code);
+		
 			$data = array
 			(
 				'datatable_def'					=> $datatable_def,
@@ -987,8 +996,8 @@
 				'value_custom_address_2'		=> $composite->get_custom_address_2(),
 				'value_custom_postcode'			=> $composite->get_custom_postcode(),
 				'value_custom_place'			=> $composite->get_custom_place(),
-				'value_area_gros'				=> $composite->get_area_gros(). ' ' .(($config->config_data['area_suffix']) ? $config->config_data['area_suffix'] : 'kvm'),
-				'value_area_net'				=> $composite->get_area_net(). ' ' .(($config->config_data['area_suffix']) ? $config->config_data['area_suffix'] : 'kvm'),
+				'value_area_gros'				=> $composite->get_area_gros(). ' ' .$this->area_suffix,
+				'value_area_net'				=> $composite->get_area_net(). ' ' .$this->area_suffix,
 				'is_active'						=> ($composite->is_active()) ? 1 : 0,
 				'value_description'				=> $composite->get_description(),
 				
@@ -1005,6 +1014,7 @@
 			);
 
 			self::add_javascript('rental', 'rental', 'composite.edit.js');
+			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('composite', 'datatable_inline'), array('edit' => $data));
 		}
 
