@@ -295,7 +295,39 @@
 						</div>
 						<div id="parties">
 							<fieldset>
-								
+								<script type="text/javascript">
+									link_included_parties = <xsl:value-of select="link_included_parties"/>;
+									link_not_included_parties = <xsl:value-of select="link_not_included_parties"/>;
+								</script>	
+								<div>
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_3'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							
+								<div>
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_4'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>								
 							</fieldset>
 						</div>
 						<div id="price">
