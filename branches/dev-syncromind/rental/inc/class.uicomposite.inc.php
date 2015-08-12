@@ -131,12 +131,12 @@
 			
 			$search			= phpgw::get_var('search');
 			$order			= phpgw::get_var('order');
-			$draw			= phpgw::get_var('draw', 'int');
+			$draw			= phpgw::get_var('draw', 'int', 'REQUEST', 1);
 			$columns		= phpgw::get_var('columns');
 
 			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
-			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'identifier'; 
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id'; 
 			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 			$search_for 	= $search['value'];
 			$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
