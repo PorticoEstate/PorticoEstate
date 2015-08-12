@@ -446,7 +446,7 @@
 							'parameters'	=> $parameters
 						);
 				}
-
+/*
 				$datatable['rowactions']['action'][] = array
 					(
 						'my_name'		=> 'contacts',
@@ -458,7 +458,7 @@
 						)),
 						'parameters'	=> $parameters2
 					);
-
+*/
 				if($this->acl_add)
 				{
 					$datatable['rowactions']['action'][] = array
@@ -1013,7 +1013,6 @@
 						'created_on'			=> $entry['created_on'],
 						'contact_name'			=> $entry['contact_name'],
 						'remark'				=> $entry['remark'],
-						'ecodimb'				=> $entry['ecodimb'],
 						'link_edit'				=> $link_edit,
 						'text_edit'				=> $text_edit,
 						'lang_edit_text'		=> $lang_edit_text,
@@ -1067,20 +1066,6 @@
 							'type_id'		=> $type_id
 						)
 					)),
-					'sort_ecodimb'	=> $this->nextmatchs->show_sort_order(array
-					(
-						'sort'	=> $this->sort,
-						'var'	=> 'ecodimb',
-						'order'	=> $this->order,
-						'extra'	=> array
-						(
-							'menuaction'	=> 'property.uiresponsible.contact',
-							'allrows'		=> $this->allrows,
-							'appname'		=> $this->appname,
-							'location'		=> $this->location,
-							'type_id'		=> $type_id
-						)
-					)),
 					'lang_contact'		=> lang('contact'),
 					'lang_location'		=> lang('location'),
 					'lang_item'			=> lang('item'),
@@ -1089,7 +1074,6 @@
 					'lang_created_on'	=> lang('created'),
 					'lang_created_by'	=> lang('supervisor'),
 					'lang_remark'		=> lang('remark'),
-					'lang_ecodimb'		=> lang('dimb'),
 					'lang_edit'			=> $this->acl_edit ? lang('edit') : '',
 					//		'lang_delete'		=> $this->acl_delete ? lang('delete') : '',
 				);
@@ -1209,8 +1193,6 @@
 
 			if (isset($values) && is_array($values))
 			{
-				$values['ecodimb']			= phpgw::get_var('ecodimb');
-
 				if(!$this->acl_edit)
 				{
 					$this->no_access();
@@ -1355,12 +1337,6 @@
 				)
 			);
 
-			$ecodimb_data=$bocommon->initiate_ecodimb_lookup(array
-				(
-					'ecodimb'			=> $values['ecodimb'],
-					'ecodimb_descr'		=> $values['ecodimb_descr'])
-				);
-
 			$link_data = array
 				(
 					'menuaction'	=> 'property.uiresponsible.edit_contact',
@@ -1407,7 +1383,6 @@
 
 			$data = array
 				(
-					'ecodimb_data'					=> $ecodimb_data,
 					'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
 					'value_name'					=> isset($values['name']) ? $values['name'] : '',
 					'value_remark'					=> isset($values['remark']) ? $values['remark'] : '',

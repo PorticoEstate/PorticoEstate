@@ -1116,8 +1116,8 @@ JS;
 			$values_assign = $_POST['values_assign'];
 			$role_id = phpgw::get_var('role_id', 'int');
 			$receipt = array();
-			$_role = CreateObject('property.sogeneric');
-			$_role->get_location_info('responsibility_role','');
+		//	$_role = CreateObject('property.sogeneric');
+		//	$_role->get_location_info('responsibility_role','');
 
 			$this->save_sessiondata();
 
@@ -1135,9 +1135,10 @@ JS;
 				}
 				else
 				{
-					$role = $_role->read_single($data=array('id' => $role_id));
+			//		$role = $_role->read_single($data=array('id' => $role_id));
 					$values['contact_id']			= $contact_id;
-					$values['responsibility_id']	= $role['responsibility_id'];
+			//		$values['responsibility_id']	= $role['responsibility_id'];
+					$values['responsibility_role_id']	= $role_id;
 					$values['assign']				= $values_assign['assign'];
 					$values['assign_orig']			= $values_assign['assign_orig'];
 					$boresponsible = CreateObject('property.boresponsible');
@@ -1251,6 +1252,11 @@ JS;
 					);
 
 				$values_combo_box[4] =   execMethod('property.sogeneric.get_list',$_role_criteria);
+
+				foreach($values_combo_box[4] as &$_role)
+				{
+					$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name',$_role['id']);
+				}
 				$default_value = array ('id'=>'','name'=>lang('no role'));
 				array_unshift ($values_combo_box[4],$default_value);
 

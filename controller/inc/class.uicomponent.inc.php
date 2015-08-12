@@ -610,6 +610,7 @@
 					// LOCATIONS: Process aggregated values for controls with repeat type day or week
 					if($repeat_type <= controller_control::REPEAT_TYPE_WEEK)
 					{
+						//FIX ME: Not currently supported
 
 						// COMPONENTS: Process aggregated values for controls with repeat type day or week
 						foreach($components_for_control_array as $component)
@@ -1056,4 +1057,35 @@
 
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
 		}
+
+		function get_start_month_for_control($control)
+		{
+			// Checks if control starts in the year that is displayed
+			if(date("Y", $control->get_start_date()) == $year)
+			{
+				$from_month = date("n", $control->get_start_date());
+			}
+			else
+			{
+				$from_month = 1;
+			}
+
+			return $from_month;
+		}
+
+		function get_end_month_for_control($control)
+		{
+			// Checks if control ends in the year that is displayed
+			if(date("Y", $control->get_end_date()) == $year)
+			{
+				$to_month = date("n", $control->get_end_date());
+			}
+			else
+			{
+				$to_month = 12;
+			}
+
+			return $to_month;
+		}
+
 	}

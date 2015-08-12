@@ -326,6 +326,11 @@
 				);
 			}
 
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
 			$data = array
 			(
 				'user_list' => array('options' => $user_list_options),
@@ -340,7 +345,10 @@
 				'building_location_code' => $building_location_code,
 				'location_level' => $level,
 				'check_list_type' => 'add_check_list',
-				'serie_id'			=> $serie_id
+				'serie_id'			=> $serie_id,
+				'required_actual_hours'	=> $required_actual_hours,
+				'integration'			=> $this->_get_component_integration($location_id, $component_arr)
+
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -425,6 +433,11 @@
 				);
 			}
 
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
 			$data = array
 			(
 				'user_list' => array('options' => $user_list_options),
@@ -437,7 +450,9 @@
 				'current_year' => $year,
 				'current_month_nr' => $month,
 				'building_location_code' => $building_location_code,
-				'location_level' => $level
+				'location_level' => $level,
+				'required_actual_hours'	=> $required_actual_hours,
+				'integration'			=> $this->_get_component_integration($location_id, $component_arr)
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -452,6 +467,136 @@
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'check_list/edit_check_list',
 				'check_list/fragments/select_buildings_on_property'), $data);
+		}
+
+		/**
+		 * Get linked information from external systems - as pictures
+		 * @param integer $location_id
+		 * @param array $component_arr
+		 * @return array integration info
+		 */
+		private function _get_component_integration($location_id, $_component_arr = array())
+		{
+			if(isset($_component_arr['id']) && $_component_arr['id'])
+			{
+				$component_id = $_component_arr['id'];
+			}
+			else
+			{
+				return array();
+			}
+			$attributes = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC','attrib_sort', $allrows = true);
+	
+			$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id, 'values' => array('attributes' => $attributes)));
+
+			$_custom_config	= CreateObject('admin.soconfig',$location_id);
+			$_config = isset($_custom_config->config_data) && $_custom_config->config_data ? $_custom_config->config_data : array();
+
+			$integration = array();
+			foreach ($_config as $_config_section => $_config_section_data)
+			{
+				if(isset($_config_section_data['tab']) && $component_arr['id'])
+				{
+					if(!isset($_config_section_data['url']))
+					{
+						phpgwapi_cache::message_set("'url' is a required setting for integrations, '{$_config_section}' is disabled", 'error');
+						break;
+					}
+
+					//get session key from remote system
+					$arguments = array($_config_section_data['auth_hash_name'] => $_config_section_data['auth_hash_value']);
+					$query = http_build_query($arguments);
+					$auth_url = $_config_section_data['auth_url'];
+					$request = "{$auth_url}?{$query}";
+
+					$aContext = array
+					(
+						'http' => array
+						(
+							'request_fulluri' => true,
+						),
+					);
+
+					if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+					{
+						$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+					}
+
+					$cxContext = stream_context_create($aContext);
+					$response = trim(file_get_contents($request, False, $cxContext));
+
+					$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
+					$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
+
+					parse_str($_config_section_data['parametres'], $output);
+
+					foreach ($output as $_dummy => $_substitute)
+					{
+						$_keys[] = $_substitute;
+
+						$__value = false;
+						if(!$__value = urlencode($component_arr[str_replace(array('__','*'),array('',''), $_substitute)]))
+						{
+							foreach ($component_arr['attributes'] as $_attribute)
+							{
+								if(str_replace(array('__','*'),array('',''), $_substitute) == $_attribute['name'])
+								{
+									$__value = urlencode($_attribute['value']);
+									break;
+								}
+							}
+						}
+
+						if($__value)
+						{
+							$_values[] = $__value;
+						}
+					}
+
+					unset($output);
+					unset($__value);
+					$_sep = '?';
+					if (stripos($_config_section_data['url'],'?'))
+					{
+						$_sep = '&';
+					}
+					$_param = str_replace($_keys, $_values, $_config_section_data['parametres']);
+					unset($_keys);
+					unset($_values);
+					$integration_src = "{$_config_section_data['url']}{$_sep}{$_param}";
+					if($_config_section_data['action'])
+					{
+						$_sep = '?';
+						if (stripos($integration_src,'?'))
+						{
+							$_sep = '&';
+						}
+						$integration_src .= "{$_sep}{$_config_section_data['action']}=" . $_config_section_data["action_{$mode}"];
+					}
+
+					if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
+					{
+						$_config_section_data['location_data']	= htmlspecialchars_decode($_config_section_data['location_data']);
+						parse_str($_config_section_data['location_data'], $output);
+						foreach ($output as $_dummy => $_substitute)
+						{
+							$_keys[] = $_substitute;
+							$_values[] = urlencode($component_arr['location_data'][trim($_substitute, '_')]);
+						}
+						$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
+					}
+
+					$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
+
+					$integration[]	= array
+					(
+						'section'	=> $_config_section,
+						'height'	=> isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500,
+						'src'		=> $integration_src
+					);
+				}
+			}
+			return $integration;
 		}
 
 		/**
@@ -481,6 +626,8 @@
 			$billable_hours = phpgw::get_var('billable_hours', 'float');
 
 			$deadline_date_ts = date_converter::date_to_timestamp($deadline_date);
+
+			$error = false;
 
 			if($planned_date != '')
 			{
@@ -520,6 +667,7 @@
 					$status = controller_check_list::STATUS_NOT_DONE;
 					$completed_date_ts = 0;
 					$error_message =  "Status kunne ikke settes til utført - prøv igjen";
+					$error = true;
 					phpgwapi_cache::message_set($error_message, 'error');
 				}
 
@@ -539,16 +687,32 @@
 				}
 			}
 
-			$check_list->set_status($status);
 			$check_list->set_comment($comment);
 			$check_list->set_deadline($deadline_date_ts);
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
 			$check_list->set_assigned_to($assigned_to);
-			$check_list->set_billable_hours($billable_hours);
 
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
 
-			if($check_list->validate())
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
+			if($status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0 && !$billable_hours)
+			{
+				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
+				$error = true;
+			}
+			else
+			{
+				$check_list->set_delta_billable_hours($billable_hours);
+			}
+			if ( $status == controller_check_list::STATUS_DONE && $this->_check_for_required($check_list) && !$error)
+			{
+				$check_list->set_status($status);
+			}
+
+			if(!$error && $check_list->validate())
 			{
 				$check_list_id = $this->so->store($check_list);
 
@@ -569,7 +733,17 @@
 				}
 				else
 				{
-					$this->add_check_list($check_list);
+					$this->redirect(array('menuaction' => 'controller.uicheck_list.add_check_list',
+						'control_id'		=> $control_id,
+						'location_id'		=> $location_id,
+						'component_id'		=> $component_id,
+						'serie_id'			=> $serie_id,
+						'deadline_ts'		=> $deadline_date_ts,
+						'type'				=> $type,
+						'assigned_to'		=> $assigned_to,
+						'status'			=> $status,
+					//	'billable_hours' => $billable_hours
+					));
 				}
 			}
 		}
@@ -893,9 +1067,21 @@
 
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list_status = phpgw::get_var('status');
-
 			$check_list = $this->so->get_single($check_list_id);
-			if ( !$this->_check_for_required($check_list) )
+
+//
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+			$ok = true;
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+			if($check_list_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
+			{
+				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
+				$ok = false;
+			}
+//
+			if ( !$this->_check_for_required($check_list) || !$ok)
 			{
 				$messages = phpgwapi_cache::message_get(true);
 				$message = '';
@@ -903,11 +1089,11 @@
 				{
 					if($_type == 'error')
 					{
+						$i = 1;
 						foreach($_message as $__message)
 						{
-					//		$message.= strip_tags($__message['msg']);
-							$message.= preg_replace("/<\/br[^>]*>\s*\r*\n*/is", "\n", $__message['msg']);
-
+							$message.= "#{$i}: " . preg_replace("/<\/br[^>]*>\s*\r*\n*/is", "\n", $__message['msg']) . "\n";
+							$i++;
 						}
 					}
 
@@ -985,11 +1171,11 @@
 				
 				foreach ($required_control_items as $required_control_item)
 				{
-					$_ok = $this->so_case->get_cases_by_component($location_id, $component_id, $required_control_item['id']);
+					$_ok = $this->so_case->get_cases_by_component($location_id, $component_id, $required_control_item['id'],$check_list->get_id());
 					if(!$_ok)
 					{
-						$error_message =  "mangler registrering for required</br>";
-						$error_message .=  "{$required_control_item['title']}</br>";
+						$error_message =  lang('missing value for required') . "</br>";
+						$error_message .=  "\"{$required_control_item['title']}\"</br>";
 						$error_message .= execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 						$error_message .=  "</br>";
 						phpgwapi_cache::message_set($error_message, 'error');
@@ -1058,6 +1244,17 @@
 					}
 				}
 			}
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+
+			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+
+			if($check_list->get_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
+			{
+				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
+				$ok = false;
+			}
+
 			return $ok;
 		}
 	}
