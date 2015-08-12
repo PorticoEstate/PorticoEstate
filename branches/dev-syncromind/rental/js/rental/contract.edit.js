@@ -2,6 +2,10 @@ var link_not_included_composites = null;
 var link_included_composites = null;
 var set_composite_data = 0;
 
+var link_not_included_parties = null;
+var link_included_parties = null;
+var set_parties_data = 0;
+
 $(document).ready(function(){
 	$("#date_start").change(function(){
 
@@ -29,9 +33,21 @@ $(document).ready(function(){
 	{
 		if (set_composite_data  === 0)
 		{
-			JqueryPortico.updateinlineTableHelper(oTable1, link_not_included_composites);
-			JqueryPortico.updateinlineTableHelper(oTable2, link_included_composites);
+			JqueryPortico.updateinlineTableHelper(oTable1, link_included_composites);
+			JqueryPortico.updateinlineTableHelper(oTable2, link_not_included_composites);
+
 			set_composite_data = 1;
+		}
+	};
+
+	get_parties_data = function()
+	{
+		if (set_parties_data  === 0)
+		{
+			JqueryPortico.updateinlineTableHelper(oTable3, link_included_parties);
+			JqueryPortico.updateinlineTableHelper(oTable4, link_not_included_parties);
+
+			set_parties_data = 1;
 		}
 	};
 });
