@@ -108,7 +108,7 @@ class rental_uiparty extends rental_uicommon
 		
 		$search			= phpgw::get_var('search');
 		$order			= phpgw::get_var('order');
-		$draw			= phpgw::get_var('draw', 'int');
+		$draw			= phpgw::get_var('draw', 'int', 'REQUEST', 1);
 		$columns		= phpgw::get_var('columns');
 
 		$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
