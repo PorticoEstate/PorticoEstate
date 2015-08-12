@@ -86,29 +86,16 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by fm_responsibility.$order $sort";
+				$ordermethod = " ORDER BY fm_responsibility.$order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by fm_responsibility.id DESC';
+				$ordermethod = ' ORDER BY fm_responsibility.id DESC';
 			}
 
 			$where= 'WHERE';
 			$filtermethod = '';
 
-/*
-			if(is_array($filter) && $location)
-			{
-				$filtermethod .= " $where cat_id IN (" . implode(',', $filter) . ')';
-				$where = 'AND';
-			}
-
-			if($location)
-			{
-				$filtermethod .= " $where fm_responsibility_module.location_id =" . $GLOBALS['phpgw']->locations->get_id($this->appname, $location);
-				$where = 'AND';
-			}
- */
 			$querymethod = '';
 			if($query)
 			{
@@ -116,11 +103,7 @@
 			}
 
 			$sql = "SELECT fm_responsibility.* FROM fm_responsibility"
-//			. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
-//			. " {$this->join} phpgw_locations ON fm_responsibility_module.location_id = phpgw_locations.location_id"
-//			. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
 			. " {$filtermethod} {$querymethod}";
-//			. " WHERE app_name = '{$appname}' $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -143,18 +126,13 @@
 					'id'			=> $this->db->f('id'),
 					'name'			=> $this->db->f('name', true),
 					'descr'			=> $this->db->f('descr', true),
-					'active'		=> $this->db->f('active'),
-					'location'		=> $this->db->f('location'),
-					'cat_id'		=> $this->db->f('cat_id'),
-					'created_by'	=> $this->db->f('created_by'),
-					'created_on'	=> $this->db->f('created_on'),
 				);
 			}
 
 			$cats	= CreateObject('phpgwapi.categories', -1);
 			foreach($values as &$entry)
 			{
-				$sql = "SELECT location_id, cat_id FROM fm_responsibility_module WHERE responsibility_id = {$entry['id']}";
+				$sql = "SELECT * FROM fm_responsibility_module WHERE responsibility_id = {$entry['id']}";
 				$this->db->query($sql, __LINE__, __FILE__);			
 				$locations = array();
 				while ($this->db->next_record())
@@ -162,6 +140,10 @@
 					$location_id = $this->db->f('location_id');
 					$cat_id = $this->db->f('cat_id');
 					$locations["{$location_id}_{$cat_id}"] = true;
+					$entry['active']		= $this->db->f('active');
+					$entry['created_by']	= $this->db->f('created_by');
+					$entry['created_on']	= $this->db->f('created_on');
+
 				}		
 				$__location_info = array();
 				foreach($locations as $location => $dummy)
@@ -347,7 +329,6 @@
 					'id'			=> $this->db->f('id'),
 					'name'			=> $this->db->f('name', true),
 					'descr'			=> $this->db->f('descr', true),
-					'active'		=> $this->db->f('active'),
 					'cat_id'		=> $this->db->f('cat_id'),
 					'created_by'	=> $this->db->f('created_by'),
 					'created_on'	=> $this->db->f('created_on'),
@@ -366,7 +347,8 @@
 
 		public function read_single_role($id)
 		{
-			$sql = 'SELECT * FROM fm_responsibility_role WHERE id= ' . (int) $id;
+			$id = (int) $id;
+			$sql = "SELECT * FROM fm_responsibility_role WHERE id= {$id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -429,10 +411,10 @@
 		{
 			$receipt = array();
 
-			$value_set['name']					=$this->db->db_addslashes($data['name']);
+			$value_set['name']					= $this->db->db_addslashes($data['name']);
 			$value_set['remark']				= $this->db->db_addslashes($data['remark']);
 			$value_set['responsibility_id']		= $data['responsibility_id'];
-			$value_set['location_level']				= implode(',', $data['location_level']);
+			$value_set['location_level']		= implode(',', $data['location_level']);
 			$value_set['modified_date']			= time();
 
 
@@ -455,6 +437,30 @@
 			return $receipt;
 		}
 
+		/**
+		 * get the responsibility name
+		 *
+		 * @param type $id
+		 * @return string name
+		 */
+		public function get_responsibility_name($id)
+		{		
+			static $names = array();
+			$i = (int) $id;
+
+			if ($names[$i])
+			{
+				return $names[$i];
+			}
+			
+
+			$sql = "SELECT * FROM fm_responsibility WHERE id= {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();	
+			$name = $this->db->f('name', true);
+			$names[$i] = $name;
+			return $name;
+		}
 
 		/**
 		 * Read single responsibility type
@@ -479,8 +485,6 @@
 					'id'			=> $this->db->f('id'),
 					'name'			=> $this->db->f('name', true),
 					'descr'			=> $this->db->f('descr', true),
-					'active'		=> $this->db->f('active'),
-					'cat_id'		=> $this->db->f('cat_id'),
 					'created_by'	=> $this->db->f('created_by'),
 					'created_on'	=> $this->db->f('created_on'),
 				);
@@ -514,10 +518,23 @@
 
 		function delete_type($id)
 		{
+			$id = (int)$id;
 			$this->db->transaction_begin();
-			$this->db->query('DELETE FROM fm_responsibility_module WHERE responsibility_id='  . (int) $id, __LINE__, __FILE__);
-			$this->db->query('DELETE FROM fm_responsibility_contact WHERE responsibility_id='  . (int) $id, __LINE__, __FILE__);
-			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
+
+			$this->db->query("SELECT id FROM fm_responsibility_role WHERE responsibility_id = {$id}", __LINE__, __FILE__);
+
+			$responsibility_role_ids = array();
+			while ($this->db->next_record())
+			{
+				$responsibility_role_ids[] = $this->db->f('id');
+			}
+			if($responsibility_role_ids)
+			{
+				$this->db->query('DELETE FROM fm_responsibility_contact WHERE responsibility_role_id IN(' . implode(',', $responsibility_role_ids) . ')', __LINE__, __FILE__);
+			}
+			$this->db->query("DELETE FROM fm_responsibility_role WHERE responsibility_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_responsibility_module WHERE responsibility_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_responsibility WHERE id = {$id}", __LINE__, __FILE__);
 			$this->db->transaction_commit();
 		}
 
@@ -540,31 +557,39 @@
 				$order		= isset($data['order']) ? $this->db->db_addslashes($data['order']) : '';
 				$allrows	= isset($data['allrows']) ? !!$data['allrows'] : '';
 				$type_id		= isset($data['type_id']) && $data['type_id'] ? (int) $data['type_id'] : 0;
+				$role_id		= isset($data['role_id']) && $data['role_id'] ? (int) $data['role_id'] : 0;
 			}
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = "ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by responsibility_id DESC';
+				$ordermethod = 'ORDER BY responsibility_role_id DESC';
 			}
 
-			$filtermethod = ' WHERE expired_on IS NULL';
+			$filtermethod = 'WHERE expired_on IS NULL';
 			$where = 'AND';
 
 			if($type_id > 0)
 			{
-				$filtermethod .= " $where responsibility_id = $type_id";
+				$filtermethod .= " {$where} responsibility_id = {$type_id}";
 			}
+			if($role_id > 0)
+			{
+				$filtermethod .= " {$where} responsibility_role_id = {$type_id}";
+			}
+
 			$querymethod = '';
 			if($query)
 			{
 				$querymethod = "$where (remark $this->like '%$query%')";
 			}
 
-			$sql = "SELECT * FROM fm_responsibility_contact $filtermethod $querymethod";
+			$sql = "SELECT fm_responsibility_contact.* , fm_responsibility_role.responsibility_id FROM fm_responsibility_contact"
+			. " $this->join fm_responsibility_role ON fm_responsibility_contact.responsibility_role_id = fm_responsibility_role.id"
+			. " $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -584,22 +609,22 @@
 			{
 				$values[] = array
 					(
-						'id'				=> $this->db->f('id'),
-						'responsibility_id'	=> $this->db->f('responsibility_id'),
-						'contact_id'		=> $this->db->f('contact_id'),
-						'location_code'		=> $this->db->f('location_code'),
-						'priority'			=> $this->db->f('priority'),
-						'active_from'		=> $this->db->f('active_from'),
-						'active_to'			=> $this->db->f('active_to'),
-						'created_on'		=> $this->db->f('created_on'),
-						'created_by'		=> $this->db->f('created_by'),
-						'expired_on'		=> $this->db->f('expired_on'), // historical records
-						'expired_by'		=> $this->db->f('expired_by'),
-						'p_num'				=> $this->db->f('p_num', true),
-						'p_entity_id'		=> $this->db->f('p_entity_id'),
-						'p_cat_id'			=> $this->db->f('p_cat_id'),
-						'ecodimb'			=> $this->db->f('ecodimb'),
-						'remark'			=> $this->db->f('remark', true),
+						'id'						=> $this->db->f('id'),
+						'responsibility_id'			=> $this->db->f('responsibility_id'),
+						'responsibility_role_id'	=> $this->db->f('responsibility_role_id'),
+						'contact_id'				=> $this->db->f('contact_id'),
+						'location_code'				=> $this->db->f('location_code'),
+						'priority'					=> $this->db->f('priority'),
+						'active_from'				=> $this->db->f('active_from'),
+						'active_to'					=> $this->db->f('active_to'),
+						'created_on'				=> $this->db->f('created_on'),
+						'created_by'				=> $this->db->f('created_by'),
+						'expired_on'				=> $this->db->f('expired_on'), // historical records
+						'expired_by'				=> $this->db->f('expired_by'),
+						'p_num'						=> $this->db->f('p_num', true),
+						'p_entity_id'				=> $this->db->f('p_entity_id'),
+						'p_cat_id'					=> $this->db->f('p_cat_id'),
+						'remark'					=> $this->db->f('remark', true),
 					);
 			}
 
@@ -622,7 +647,7 @@
 
 			$insert_values = array
 				(
-					(int) $values['responsibility_id'],
+					(int) $values['responsibility_role_id'],
 					(int) $values['contact_id'],
 					@implode('-', $values['location']),
 					(int) $values['active_from'],
@@ -630,7 +655,6 @@
 					isset($values['extra']['p_num']) ? $values['extra']['p_num'] : '',
 					isset($values['extra']['p_entity_id']) ? $values['extra']['p_entity_id'] : '',
 					isset($values['extra']['p_cat_id']) ? $values['extra']['p_cat_id'] : '',
-					$values['ecodimb'],
 					$values['remark'],
 					$this->account,
 					time()
@@ -640,8 +664,8 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("INSERT INTO fm_responsibility_contact (responsibility_id, contact_id,"
-				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, ecodimb, remark, created_by, created_on)"
+			$this->db->query("INSERT INTO fm_responsibility_contact (responsibility_role_id, contact_id,"
+				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on)"
 				." VALUES ($insert_values)", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())
@@ -676,8 +700,7 @@
 				|| $values['active_from'] != $orig['active_from']
 				|| $values['active_to'] != $orig['active_to']
 				|| $values['extra']['p_num'] != $orig['p_num']
-				|| $values['remark'] != $orig['remark']
-				|| $values['ecodimb'] != $orig['ecodimb'])
+				|| $values['remark'] != $orig['remark'])
 			{
 				$receipt = $this->add_contact($values);
 
@@ -687,7 +710,6 @@
 
 					$value_set['expired_by']	= $this->account;
 					$value_set['expired_on']	= time();
-					$value_set['ecodimb']		= $values['ecodimb'];
 				}
 
 				$value_set	= $this->db->validate_update($value_set);
@@ -727,9 +749,10 @@
 
 		public function read_single_contact($id)
 		{
-			$sql = "SELECT fm_responsibility_contact.*,  fm_responsibility.name as responsibility_name"
+			$sql = "SELECT fm_responsibility_contact.*, fm_responsibility.id as responsibility_id,  fm_responsibility.name AS responsibility_name, fm_responsibility_role.name AS role_name"
 				. " FROM fm_responsibility_contact"
-				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id" 
+				. " {$this->join} fm_responsibility_role ON fm_responsibility_contact.responsibility_role_id = fm_responsibility_role.id"
+				. " {$this->join} fm_responsibility ON fm_responsibility_role.responsibility_id = fm_responsibility.id"
 				. ' WHERE fm_responsibility_contact.id='  . (int) $id;
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -739,23 +762,24 @@
 			$this->db->next_record();
 			$values = array
 				(
-					'id'				=> $this->db->f('id'),
-					'responsibility_id'	=> $this->db->f('responsibility_id'),
-					'responsibility_name'=> $this->db->f('responsibility_name'),
-					'contact_id'		=> $this->db->f('contact_id'),
-					'location_code'		=> $this->db->f('location_code'),
-					'p_num'				=> $this->db->f('p_num'),
-					'p_entity_id'		=> $this->db->f('p_entity_id'),
-					'p_cat_id'			=> $this->db->f('p_cat_id'),
-					'remark'			=> $this->db->f('remark', true),
-					'active_from'		=> $this->db->f('active_from'),
-					'active_to'			=> $this->db->f('active_to'),
-					'created_by'		=> $this->db->f('created_by'),
-					'created_on'		=> $this->db->f('created_on'),
-					'expired_by'		=> $this->db->f('expired_by'),
-					'expired_on'		=> $this->db->f('expired_on'),
-					'priority'			=> $this->db->f('priority'), // FIXME - evaluate the need for this one
-					'ecodimb'			=> $this->db->f('ecodimb')
+					'id'						=> $this->db->f('id'),
+					'responsibility_id'			=> $this->db->f('responsibility_id'),
+					'responsibility_role_id'	=> $this->db->f('responsibility_role_id'),
+					'responsibility_name'		=> $this->db->f('responsibility_name'),
+					'role_name'					=> $this->db->f('role_name'),
+					'contact_id'				=> $this->db->f('contact_id'),
+					'location_code'				=> $this->db->f('location_code'),
+					'p_num'						=> $this->db->f('p_num'),
+					'p_entity_id'				=> $this->db->f('p_entity_id'),
+					'p_cat_id'					=> $this->db->f('p_cat_id'),
+					'remark'					=> $this->db->f('remark', true),
+					'active_from'				=> $this->db->f('active_from'),
+					'active_to'					=> $this->db->f('active_to'),
+					'created_by'				=> $this->db->f('created_by'),
+					'created_on'				=> $this->db->f('created_on'),
+					'expired_by'				=> $this->db->f('expired_by'),
+					'expired_on'				=> $this->db->f('expired_on'),
+					'priority'					=> $this->db->f('priority') // FIXME - evaluate the need for this one
 				);
 
 			return $values;
@@ -808,8 +832,7 @@
 			$time = time() +1;
 
 			$sql = "SELECT fm_responsibility_contact.id, contact_id FROM fm_responsibility_contact"
-				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-				. " {$this->join} fm_responsibility_role ON fm_responsibility.id = fm_responsibility_role.responsibility_id"
+				. " {$this->join} fm_responsibility_role ON fm_responsibility_contact.responsibility_role_id = fm_responsibility_role.id"
 				. " WHERE fm_responsibility_role.id ={$role_id}"
 				. " AND fm_responsibility_contact.location_code ='{$location_code}'"
 				. " AND active_from < {$time} AND (active_to > {$time} OR active_to = 0) AND expired_on IS NULL";
@@ -844,13 +867,7 @@
 			$todo = false;
 			$item_filter = '';
 
-			if(isset($data['ecodimb']) && $data['ecodimb'])
-			{
-				$item_filter =   " AND ecodimb = '{$data['ecodimb']}'";
-				$location_filter[] = '';
-				$todo = true;
-			}
-			elseif(isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
+			if(isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
 			{
 				$location_code = implode('-', $data['location']);
 
@@ -859,7 +876,6 @@
 					.' AND p_cat_id =' . (int) $data['extra']['p_cat_id'];
 
 				$location_filter[] = " AND location_code = '{$location_code}'";
-				$ordermethod = '';
 				$todo = true;
 			}
 			else if(isset($data['location']) && $data['location'])
@@ -882,7 +898,6 @@
 				// Start at the bottom level
 				$location_filter	= array_reverse($location_filter);				
 
-				$ordermethod = ' ORDER by location_code.id ASC';
 				$todo = true;
 			}
 
@@ -892,7 +907,8 @@
 			}
 
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
-				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility_role ON fm_responsibility_contact.responsibility_role_id = fm_responsibility_role.id"
+				. " {$this->join} fm_responsibility ON fm_responsibility_role.responsibility_id = fm_responsibility.id"
 				. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
 				. ' WHERE cat_id =' . (int) $data['cat_id']
 				. ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL'
@@ -938,13 +954,12 @@
 
 		public function get_responsible_user_id($data = array())
 		{
-			$responsibility_id = (int)$data['responsibility_id'];
+			$responsibility_role_id = (int)$data['responsibility_role_id'];
 			$location_code = $data['location_code'];
 			$now = time();
 
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
-				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-				. " WHERE fm_responsibility.id = {$responsibility_id}"
+				. " WHERE responsibility_role_id = {$responsibility_role_id}"
 				. " AND active_from < {$now}"
 				. " AND expired_on IS NULL"
 				. " AND location_code = '{$location_code}'";

@@ -8436,3 +8436,150 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.690 to 0.9.17.691
+	* Add modifyinfo to location-register.
+	*/
+	$test[] = '0.9.17.690';
+	function property_upgrade0_9_17_690()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$attributes= array(
+			array(
+				'column_name'	=> 'modified_by',
+				'type'			=> 'user',
+				'precision'		=> 4,
+				'nullable'		=> 'true',
+				'input_text'	=> 'modified_by',
+				'statustext'	=> 'modified_by'
+			),
+			array(
+				'column_name'	=> 'modified_on',
+				'type'			=> 'DT',
+				'precision'		=> 8,
+				'nullable'		=> 'true',
+				'input_text'	=> 'modified_on',
+				'statustext'	=> 'modified_on'
+
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) as cnt FROM fm_location_type');
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$levels = $GLOBALS['phpgw_setup']->oProc->f('cnt');
+
+		for ($i=1; $i<($levels +1); $i++)
+		{
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$i}",'modified_by',array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+				)
+			);
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$i}",'modified_on',array(
+				'type' => 'timestamp',
+				'nullable' => True,
+				'default' => 'current_timestamp'
+				)
+			);
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$i}_history",'modified_by',array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+				)
+			);
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$i}_history",'modified_on',array(
+				'type' => 'timestamp',
+				'nullable' => True,
+				'default' => 'current_timestamp'
+				)
+			);
+
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location{$i} SET modified_on = NULL");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location{$i}_history SET modified_on = NULL");
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$i}");
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT max(id) as id FROM phpgw_cust_attribute WHERE location_id = {$location_id}");
+			$GLOBALS['phpgw_setup']->oProc->next_record();
+			$id = $GLOBALS['phpgw_setup']->oProc->f('id');
+
+			foreach ( $attributes as $attrib)
+			{
+				$id ++;
+
+				$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id,column_name,datatype,precision_,input_text,statustext,nullable,custom)"
+					. " VALUES ("
+					. $location_id. ','
+					. $id . ",'"
+					. $attrib['column_name'] . "','"
+					. $attrib['type'] . "',"
+					. $attrib['precision'] . ",'"
+					. $attrib['input_text'] . "','"
+					. $attrib['statustext'] . "','"
+					. $attrib['nullable'] . "',NULL)");
+
+			}
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_cust_attribute SET input_text = column_name WHERE input_text = 'dummy'");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.691';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.691 to 0.9.17.692
+	* Alter field name.
+	*/
+	$test[] = '0.9.17.691';
+	function property_upgrade0_9_17_691()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$MetaForeignKeys = $GLOBALS['phpgw_setup']->oProc->m_odb->MetaForeignKeys('fm_responsibility_contact');
+
+		if(isset($MetaForeignKeys['fm_responsibility']) && $MetaForeignKeys['fm_responsibility'])
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_responsibility_contact DROP CONSTRAINT fm_responsibility_contact_responsibility_id_fkey");
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_responsibility_contact','responsibility_id','responsibility_role_id');
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_responsibility_contact"
+		. " ADD CONSTRAINT fm_responsibility_contact_responsibility_role_id_fkey"
+		. " FOREIGN KEY (responsibility_role_id)"
+		. " REFERENCES fm_responsibility_role (id) MATCH SIMPLE"
+		. " ON UPDATE NO ACTION ON DELETE NO ACTION"
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.692';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.691 to 0.9.17.692
+	* Alter field name.
+	*/
+	$test[] = '0.9.17.692';
+	function property_upgrade0_9_17_692()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility_contact',array(),'ecodimb');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.693';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
