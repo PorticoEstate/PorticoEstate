@@ -1088,7 +1088,7 @@ JS;
 				);
 				
 				$tabs['composite']		= array('label' => lang('Composite'), 'link' => '#composite', 'function' => 'get_composite_data()');
-				$tabs['parties']		= array('label' => lang('Parties'), 'link' => '#parties');
+				$tabs['parties']		= array('label' => lang('Parties'), 'link' => '#parties', 'function' => 'get_parties_data()');
 				$tabs['price']			= array('label' => lang('Price'), 'link' => '#price');
 				$tabs['invoice']		= array('label' => lang('Invoice'), 'link' => '#invoice');
 				$tabs['documents']		= array('label' => lang('Documents'), 'link' => '#documents');
@@ -1128,8 +1128,40 @@ JS;
 					)
 				);
 				
-				$link_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'included_composites', 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
-				$link_not_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'not_included_composites', 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
+				$link_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'included_composites', 'editable'=>true, 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
+				$link_not_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'not_included_composites', 'editable'=>true, 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
+				
+
+				$party_def = array(
+									array('key'=>'identifier', 'label'=>lang('identifier'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
+								);
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_3',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> $party_def,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_4',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> $party_def,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);	
+				
+				$link_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'included_parties', 'editable'=>true, 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
+				$link_not_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'not_included_parties', 'editable'=>true, 'contract_id'=>$contract->get_id(), 'phpgw_return_as'=>'json')));
 			}
 			
 			$data = array
@@ -1212,8 +1244,11 @@ JS;
 					'location_id'					=> $contract->get_location_id(),
 					'contract_id'					=> $contract_id,
 					'mode'							=> 'edit',
+				
 					'link_included_composites'		=> $link_included_composites,
 					'link_not_included_composites'	=> $link_not_included_composites,
+					'link_included_parties'			=> $link_included_parties,
+					'link_not_included_parties'		=> $link_not_included_parties,
 				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
