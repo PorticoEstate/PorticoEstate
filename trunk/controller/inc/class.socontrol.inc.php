@@ -672,7 +672,7 @@
 
 			$controls_array = array();
 
-			$sql =  "SELECT ccl.control_id, ccl.component_id as component_id,"
+			$sql =  "SELECT DISTINCT ccl.control_id, ccl.component_id as component_id,"
 			. " ccl.location_id as location_id, ccs.id as serie_id, ccs.assigned_to, ccs.start_date,"
 			. " ccs.repeat_type, ccs.repeat_interval, ccs.service_time, ccs.controle_time, ccs.enabled as serie_enabled,"
 			. " bim_type.description, bim_item.location_code ";
@@ -950,8 +950,8 @@
 						{
 							$sql = "SELECT * FROM controller_control_serie"
 							. " WHERE control_relation_id = {$relation_id}"
-							. " AND repeat_type = {$repeat_type}";
-							//. " AND repeat_interval = {$repeat_interval}";
+							. " AND repeat_type = {$repeat_type}"
+							. " AND repeat_interval = {$repeat_interval}";
 							$this->db->query($sql, __LINE__, __FILE__);
 							$this->db->next_record();
 							$serie_id = $this->db->f('id');
@@ -1118,6 +1118,91 @@
 			}
 			return $controls;
 
+		}
+
+		/**
+		 * Get all controls assosiated with a component
+		 *
+		 * @param array $data location_id and component_id
+		 * @return array controls assosiated with a component
+		 * @throws Exception if missing valid input
+		 */
+		function get_controls_at_component2($data)
+		{
+			if(!isset($data['location_id']) || !$data['location_id'])
+			{
+				throw new Exception("controller_socontrol::get_controls_at_component - Missing location_id in input");
+			}
+			if(!isset($data['id']) || !$data['id'])
+			{
+				throw new Exception("controller_socontrol::get_controls_at_component - Missing component_id in input");
+			}
+
+			static $users = array(); // cache result
+
+			$location_id = (int)$data['location_id'];
+			$component_id = (int)$data['id'];
+
+			$sql = "SELECT DISTINCT controller_control_component_list.* ,"
+			. " controller_control.id as control_id, controller_control.title, controller_control.enabled as control_enabled,"
+			. " controller_control_component_list.enabled as relation_enabled,"
+			. " controller_control_serie.enabled as serie_enabled,"
+			. " controller_control_serie.id as serie_id,"
+			. " controller_control_serie.assigned_to,controller_control_serie.start_date,"
+			. " controller_control_serie.repeat_type,controller_control_serie.repeat_interval,"
+			. " controller_control_serie.service_time,controller_control_serie.controle_time "
+			. " FROM controller_control_component_list"
+			. " {$this->db->join} controller_control ON controller_control.id = controller_control_component_list.control_id"
+			. " {$this->db->left_join} controller_control_serie ON (controller_control_component_list.id = controller_control_serie.control_relation_id AND controller_control_serie.control_relation_type = 'component')"
+			. " WHERE location_id = {$location_id} AND component_id = {$component_id}";
+//			_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$components_array = array();
+			$control_relations = array();
+
+			while ($this->db->next_record())
+			{
+				$control_relations[] = array
+				(
+					'control_id'		=> $this->db->f('control_id'),
+					'serie_id'			=> $this->db->f('serie_id'),
+					'assigned_to'		=> $this->db->f('assigned_to'),
+					'start_date'		=> $this->db->f('start_date'),
+					'repeat_type'		=> $this->db->f('repeat_type'),
+					'repeat_interval'	=> $this->db->f('repeat_interval'),
+					'service_time'		=> $this->db->f('service_time'),
+					'controle_time'		=> $this->db->f('controle_time'),
+					'serie_enabled'		=> (int)$this->db->f('serie_enabled')
+				);
+			}
+
+			foreach($control_relations as &$entry)
+			{
+				if($entry['assigned_to'] && !isset($users[$entry['assigned_to']]))
+				{
+					$users[$entry['assigned_to']] = $GLOBALS['phpgw']->accounts->get($entry['assigned_to'])->__toString();
+				}
+				$entry['assigned_to_name'] = $users[$entry['assigned_to']];
+
+				$component = new controller_component();
+//				$component->set_type($this->unmarshal($data['bim_type'], 'int'));
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
+				$component->set_guid($this->unmarshal($data['guid'], 'string'));
+				$component->set_location_code($this->unmarshal($data['location_code'], 'string'));
+				$component->set_loc_1($this->unmarshal($data['loc_1'], 'string'));
+				$component->set_address($this->unmarshal($data['address'], 'string'));
+//				$component->set_type_str($this->unmarshal($data['bim_type_description']), 'string'));
+				$component->set_control_relation($entry);
+
+				$components_array[] = $component;
+
+			}
+
+			
+
+			return $components_array;
 		}
 
 		function get_id_field_name($extended_info = false)

@@ -593,18 +593,22 @@
 				{
 					continue;
 				}
-				$controls = $so_control->get_controls_at_component(array('location_id' => $location_id, 'component_id' => $component_id));
+//				$controls = $so_control->get_controls_at_component(array('location_id' => $location_id, 'component_id' => $component_id));
+				$controls_at_component = $so_control->get_controls_at_component2($_component);
+
 //_debug_array($controls);
-				foreach($controls as $_control)
+				foreach($controls_at_component as $component)
 				{
-					if(!$_control['serie_enabled'])
+					$_control_relation = $component->get_control_relation();
+
+					if(!$_control_relation['serie_enabled'])
 					{
 	//					continue;
 					}
-					$control_id						= $_control['control_id'];
-					$control						= $so_control->get_single($_control['control_id']);
+					$control_id						= $_control_relation['control_id'];
+					$control						= $so_control->get_single($control_id);
 					// one for each serie
-					$components_for_control_array	= $so_control->get_components_for_control($control_id, $location_id, $component_id,0);//,$user_id);
+//					$components_for_control_array	= $so_control->get_components_for_control($control_id, $location_id, $component_id,0);//,$user_id);
 					$repeat_type				 = $control->get_repeat_type();
 
 					// LOCATIONS: Process aggregated values for controls with repeat type day or week
@@ -612,82 +616,76 @@
 					{
 						//FIX ME: Not currently supported
 
-						// COMPONENTS: Process aggregated values for controls with repeat type day or week
-						foreach($components_for_control_array as $component)
-						{
-							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
+						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
-							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
+						$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
 
-							$cl_criteria = new controller_check_list();
-							$cl_criteria->set_control_id($control->get_id());
-							$cl_criteria->set_component_id($component->get_id());
-							$cl_criteria->set_location_id($component->get_location_id());
+						$cl_criteria = new controller_check_list();
+						$cl_criteria->set_control_id($control->get_id());
+						$cl_criteria->set_component_id($component->get_id());
+						$cl_criteria->set_location_id($component->get_location_id());
 
-							$from_month	 = $this->get_start_month_for_control($control);
-							$to_month	 = $this->get_end_month_for_control($control);
+						$from_month	 = $this->get_start_month_for_control($control);
+						$to_month	 = $this->get_end_month_for_control($control);
 
-							// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
-							$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
+						// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
+						$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 
-							$year_calendar_agg					 = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
-							$calendar_array						 = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
-							$components_with_calendar_array[$component_id][]	 = array("component" => $component->toArray(),
-								"calendar_array" => $calendar_array);
-						}
+						$year_calendar_agg					 = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
+						$calendar_array						 = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
+						$components_with_calendar_array[$component_id][]	 = array("component" => $component->toArray(),
+							"calendar_array" => $calendar_array);
+						
 					}
 					// Process values for controls with repeat type month or year
 					else if($repeat_type > controller_control::REPEAT_TYPE_WEEK)
 					{
-						foreach($components_for_control_array as $component)
+						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
+
+						$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
+
+						$check_lists_array = $component_with_check_lists["check_lists_array"];
+
+						/*
+						 * start override control with data from serie
+						 */
+						$control_relation = $component->get_control_relation();
+						if(isset($control_relation['start_date']) && $control_relation['start_date'])
 						{
-
-							$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
-
-							$component_with_check_lists	 = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
-
-							$check_lists_array = $component_with_check_lists["check_lists_array"];
-
-							/*
-							 * start override control with data from serie
-							 */
-							$control_relation = $component->get_control_relation();
-							if(isset($control_relation['start_date']) && $control_relation['start_date'])
-							{
-								$control->set_start_date($control_relation['start_date']);
-							}
-
-							if(isset($control_relation['end_date']) && $control_relation['end_date'])
-							{
-								$control->set_end_date($control_relation['end_date']);
-							}
-							if(isset($control_relation['repeat_type']) && $control_relation['repeat_type'])
-							{
-								$control->set_repeat_type($control_relation['repeat_type']);
-							}
-							if(isset($control_relation['repeat_interval']) && $control_relation['repeat_interval'])
-							{
-								$control->set_repeat_interval($control_relation['repeat_interval']);
-							}
-
-							if(!$control_relation['serie_enabled'])
-							{
-		//						$control->set_repeat_interval(1000);
-							}
-
-							/*
-							 * End override control with data from serie
-							 */
-							if($check_lists_array)
-							{
-//								_debug_array($component_with_check_lists);
-							}
-							$year_calendar	 = new year_calendar($control, $year, $component, null, "component", $control_relation);
-							$calendar_array	 = $year_calendar->build_calendar($check_lists_array);
-
-							$components_with_calendar_array[$component_id][] = array("component" => $component->toArray(),
-								"calendar_array" => $calendar_array);
+							$control->set_start_date($control_relation['start_date']);
 						}
+
+						if(isset($control_relation['end_date']) && $control_relation['end_date'])
+						{
+							$control->set_end_date($control_relation['end_date']);
+						}
+						if(isset($control_relation['repeat_type']) && $control_relation['repeat_type'])
+						{
+							$control->set_repeat_type($control_relation['repeat_type']);
+						}
+						if(isset($control_relation['repeat_interval']) && $control_relation['repeat_interval'])
+						{
+							$control->set_repeat_interval($control_relation['repeat_interval']);
+						}
+
+						if(!$control_relation['serie_enabled'])
+						{
+	//						$control->set_repeat_interval(1000);
+						}
+
+						/*
+						 * End override control with data from serie
+						 */
+						if($check_lists_array)
+						{
+//								_debug_array($component_with_check_lists);
+						}
+						$year_calendar	 = new year_calendar($control, $year, $component, null, "component", $control_relation);
+						$calendar_array	 = $year_calendar->build_calendar($check_lists_array);
+
+						$components_with_calendar_array[$component_id][] = array("component" => $component->toArray(),
+							"calendar_array" => $calendar_array);
+
 					}
 				}
 			}
@@ -724,10 +722,41 @@
 
 
 				$max_repeat_type = 0;
+				$max_interval_length = 0; //number of months
+
 				$_data = array();
 				foreach($entry as $dataset)
 				{
 					$repeat_type = (int)$dataset['component']['control_relation']['repeat_type'];
+					$repeat_interval = (int)$dataset['component']['control_relation']['repeat_interval'];
+
+				/*
+						REPEAT_TYPE_DAY = 0;
+						REPEAT_TYPE_WEEK = 1;
+						REPEAT_TYPE_MONTH = 2;
+						REPEAT_TYPE_YEAR = 3;
+				 */
+
+					switch($repeat_type)
+					{
+						case controller_control::REPEAT_TYPE_DAY:
+							$interval_length = ceil($repeat_interval/30);
+							break;
+						case controller_control::REPEAT_TYPE_WEEK:
+							$interval_length = ceil($repeat_interval/4);
+							break;
+						case controller_control::REPEAT_TYPE_MONTH:
+							$interval_length = $repeat_interval;
+							break;
+						case controller_control::REPEAT_TYPE_YEAR:
+							$interval_length = $repeat_interval * 12;
+							$interval_length = $interval_length > 12 ? 12 : $interval_length;
+							break;
+						default:
+							$interval_length = 0;
+							break;
+					}
+
 					$service_time = $dataset['component']['control_relation']['service_time'];
 					$controle_time = $dataset['component']['control_relation']['controle_time'];
 
@@ -735,26 +764,36 @@
 					{
 						$max_repeat_type = $repeat_type;
 					}
+					if($interval_length > $max_interval_length)
+					{
+						$max_interval_length = $interval_length;
+					}
 					foreach($dataset['calendar_array'] as $month => $calendar)
 					{
 						if($calendar)
 						{
-							$repeat_type = $calendar['info']['repeat_type'] ? (int)$calendar['info']['repeat_type'] : $repeat_type;
+//							$repeat_type = $calendar['info']['repeat_type'] ? (int)$calendar['info']['repeat_type'] : $repeat_type;
 							$calendar['info']['service_time'] = $calendar['info']['service_time'] ? $calendar['info']['service_time'] : $service_time;
 							$calendar['info']['controle_time'] = $calendar['info']['controle_time'] ? $calendar['info']['controle_time'] : $controle_time;
-							$_data[$month][$repeat_type] = $calendar;
+//							$_data[$month][$repeat_type] = $calendar;
+							$_data[$month][$interval_length] = $calendar;
+							$_data[$month][$interval_length]['repeat_type'] = $repeat_type;
+							$_data[$month][$interval_length]['repeat_interval'] = $repeat_interval;
 						}
 					}
 				}
+//	_debug_array($_data);
 				for ( $_month=1; $_month < 13; $_month++ )
 				{
 
-					for ( $i = $max_repeat_type; $i > -1; $i-- )
+//					for ( $i = $max_repeat_type; $i > -1; $i-- )
+					for ( $i = $max_interval_length; $i > -1; $i-- )
 					{
 						if(isset($_data[$_month][$i]))
 						{
 							$data[$_month] = $_data[$_month][$i];
-							$data[$_month]['repeat_type'] = $repeat_type_array[$i];
+//							$data[$_month]['repeat_type'] = $repeat_type_array[$i];
+							$data[$_month]['repeat_type'] = "{$repeat_type_array[$_data[$_month][$i]['repeat_type']]}/{$_data[$_month][$i]['repeat_interval']}";//FIXME
 							break 1;
 						}
 						else
