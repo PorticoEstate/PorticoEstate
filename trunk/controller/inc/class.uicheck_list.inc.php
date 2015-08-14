@@ -711,6 +711,10 @@
 			{
 				$check_list->set_status($status);
 			}
+			else if ($status == controller_check_list::STATUS_CANCELED && !$error)
+			{
+				$check_list->set_status($status);
+			}
 
 			if(!$error && $check_list->validate())
 			{
