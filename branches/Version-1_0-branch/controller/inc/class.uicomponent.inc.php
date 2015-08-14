@@ -993,8 +993,8 @@
 					switch($param['status'])
 					{
 						case "CONTROL_NOT_DONE":
-						case "CONTROL_REGISTERED":
-						case "CONTROL_PLANNED":
+			//			case "CONTROL_REGISTERED":
+			//			case "CONTROL_PLANNED":
 						case "CONTROL_NOT_DONE_WITH_PLANNED_DATE":
 							break;//continues
 						default:
