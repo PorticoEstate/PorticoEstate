@@ -658,6 +658,7 @@
 			}
 		}
 		
+		//Not used ?
 		/**
 		 * Get arrays with component info that a control should be carried out on
 		 *
