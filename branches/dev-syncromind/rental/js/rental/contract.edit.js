@@ -33,7 +33,10 @@ $(document).ready(function(){
 	{
 		if (set_composite_data  === 0)
 		{
+			oTable1.dataTableSettings[1]['oFeatures']['bServerSide'] = true;
 			JqueryPortico.updateinlineTableHelper(oTable1, link_included_composites);
+			
+			oTable2.dataTableSettings[2]['oFeatures']['bServerSide'] = true;
 			JqueryPortico.updateinlineTableHelper(oTable2, link_not_included_composites);
 
 			set_composite_data = 1;
@@ -44,7 +47,10 @@ $(document).ready(function(){
 	{
 		if (set_parties_data  === 0)
 		{
+			oTable3.dataTableSettings[3]['oFeatures']['bServerSide'] = true;
 			JqueryPortico.updateinlineTableHelper(oTable3, link_included_parties);
+			
+			oTable4.dataTableSettings[4]['oFeatures']['bServerSide'] = true;
 			JqueryPortico.updateinlineTableHelper(oTable4, link_not_included_parties);
 
 			set_parties_data = 1;
