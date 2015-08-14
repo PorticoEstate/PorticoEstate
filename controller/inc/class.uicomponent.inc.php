@@ -284,18 +284,17 @@
 								'list'	 => execMethod('property.bogeneric.get_list',array('type' => 'org_unit', 'selected' => phpgw::get_var('org_unit_id'), 'add_empty' => true)),
 								'onchange'	=> 'update_table();'
 							),
-							/*
-							array('type'	 => 'filter',
-								'name'	 => 'control_area',
-								'text'	 => lang('Control_area'),
-								'list'	 => $control_areas_array,
-								'onchange'	=> 'update_table();'
-							),*/
 							array('type'	 => 'filter',
 								'name'	 => 'user_id',
 								'text'	 => lang('User'),
 								'list'	 => $user_list,
 								'onchange'	=> 'update_table();'
+							),
+							array('type'	 => 'checkbox',
+								'name'	 => 'user_only',
+								'text'	 => 'Filtrer bruker',
+								'value'	 => 1,
+								'onclick'	=> 'update_table();'
 							),
 							array('type'	 => 'filter',
 								'name'	 => 'district_id',
@@ -452,6 +451,7 @@
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
 			$all_items = phpgw::get_var('all_items', 'bool');
+			$user_only = phpgw::get_var('user_only', 'bool');
 			$filter_status = phpgw::get_var('status', 'string');
 			if($filter_component_str = phpgw::get_var('filter_component', 'string'))
 			{
@@ -497,7 +497,9 @@
 			$components = array();
 			$keep_only_assigned_to = 0;
 
-			$lookup_stray_items = false;
+//			$lookup_stray_items = false;
+			$lookup_stray_items = !!$entity_group_id;
+
 			if($user_id < 0)
 			{
 				$user_id = $user_id * -1;
@@ -533,7 +535,6 @@
 			}
 			else
 			{
-				$lookup_stray_items = $entity_group_id;
 				$exclude_locations = array();
 
 				foreach($location_filter as $_location_filter)
@@ -558,7 +559,7 @@
 					);
 					$components = array_merge($components, $_components);
 				}
-
+				
 				if($lookup_stray_items)
 				{
 					$_components = execMethod('property.soentity.read_entity_group',array(
@@ -576,7 +577,6 @@
 				}
 			}
 
-			$total_records = count($components);
 			$all_components = array();
 			$components_with_calendar_array = array();
 //			_debug_array($components);
@@ -593,10 +593,8 @@
 				{
 					continue;
 				}
-//				$controls = $so_control->get_controls_at_component(array('location_id' => $location_id, 'component_id' => $component_id));
 				$controls_at_component = $so_control->get_controls_at_component2($_component);
 
-//_debug_array($controls);
 				foreach($controls_at_component as $component)
 				{
 					$_control_relation = $component->get_control_relation();
@@ -607,8 +605,7 @@
 					}
 					$control_id						= $_control_relation['control_id'];
 					$control						= $so_control->get_single($control_id);
-					// one for each serie
-//					$components_for_control_array	= $so_control->get_components_for_control($control_id, $location_id, $component_id,0);//,$user_id);
+
 					$repeat_type				 = $control->get_repeat_type();
 
 					// LOCATIONS: Process aggregated values for controls with repeat type day or week
@@ -668,20 +665,30 @@
 							$control->set_repeat_interval($control_relation['repeat_interval']);
 						}
 
-						if(!$control_relation['serie_enabled'])
-						{
-	//						$control->set_repeat_interval(1000);
-						}
-
-						/*
-						 * End override control with data from serie
-						 */
-						if($check_lists_array)
-						{
-//								_debug_array($component_with_check_lists);
-						}
 						$year_calendar	 = new year_calendar($control, $year, $component, null, "component", $control_relation);
 						$calendar_array	 = $year_calendar->build_calendar($check_lists_array);
+
+						if($user_only && $user_id)
+						{
+							$found_assigned_to = false;
+
+							if($calendar_array)
+							{
+								foreach ($calendar_array as $_month => $_month_info)
+								{
+									if(isset($_month_info['info']['assigned_to']) && $_month_info['info']['assigned_to'] == $user_id)
+									{
+										$found_assigned_to = true;
+										break;
+									}
+								}
+							}
+							if(!$found_assigned_to)
+							{
+								unset($all_components[$component_id]);
+								continue;
+							}
+						}
 
 						$components_with_calendar_array[$component_id][] = array("component" => $component->toArray(),
 							"calendar_array" => $calendar_array);
@@ -689,6 +696,8 @@
 					}
 				}
 			}
+			$total_records = count($all_components);
+
 //			_debug_array($components_with_calendar_array);
 			unset($component_id);
 //			_debug_array($components_with_calendar_array[1]);
@@ -721,7 +730,6 @@
 				$data['location_id'] = $location_id;
 
 
-				$max_repeat_type = 0;
 				$max_interval_length = 0; //number of months
 
 				$_data = array();
@@ -760,10 +768,6 @@
 					$service_time = $dataset['component']['control_relation']['service_time'];
 					$controle_time = $dataset['component']['control_relation']['controle_time'];
 
-					if($repeat_type > $max_repeat_type)
-					{
-						$max_repeat_type = $repeat_type;
-					}
 					if($interval_length > $max_interval_length)
 					{
 						$max_interval_length = $interval_length;
@@ -775,24 +779,20 @@
 //							$repeat_type = $calendar['info']['repeat_type'] ? (int)$calendar['info']['repeat_type'] : $repeat_type;
 							$calendar['info']['service_time'] = $calendar['info']['service_time'] ? $calendar['info']['service_time'] : $service_time;
 							$calendar['info']['controle_time'] = $calendar['info']['controle_time'] ? $calendar['info']['controle_time'] : $controle_time;
-//							$_data[$month][$repeat_type] = $calendar;
 							$_data[$month][$interval_length] = $calendar;
 							$_data[$month][$interval_length]['repeat_type'] = $repeat_type;
 							$_data[$month][$interval_length]['repeat_interval'] = $repeat_interval;
 						}
 					}
 				}
-//	_debug_array($_data);
+
 				for ( $_month=1; $_month < 13; $_month++ )
 				{
-
-//					for ( $i = $max_repeat_type; $i > -1; $i-- )
 					for ( $i = $max_interval_length; $i > -1; $i-- )
 					{
 						if(isset($_data[$_month][$i]))
 						{
 							$data[$_month] = $_data[$_month][$i];
-//							$data[$_month]['repeat_type'] = $repeat_type_array[$i];
 							$data[$_month]['repeat_type'] = "{$repeat_type_array[$_data[$_month][$i]['repeat_type']]}/{$_data[$_month][$i]['repeat_interval']}";//FIXME
 							break 1;
 						}
