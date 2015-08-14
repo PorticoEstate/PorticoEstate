@@ -1109,7 +1109,7 @@ JS;
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_1',
-					'requestUrl'	=> "''",
+					'requestUrl'	=> "'reload'",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $composite_def,
 					'config'		=> array(
@@ -1120,7 +1120,7 @@ JS;
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_2',
-					'requestUrl'	=> "''",
+					'requestUrl'	=> "'reload'",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $composite_def,
 					'config'		=> array(
@@ -1141,7 +1141,7 @@ JS;
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_3',
-					'requestUrl'	=> "''",
+					'requestUrl'	=> "'reload'",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $party_def,
 					'config'		=> array(
@@ -1152,7 +1152,7 @@ JS;
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_4',
-					'requestUrl'	=> "''",
+					'requestUrl'	=> "'reload'",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $party_def,
 					'config'		=> array(
