@@ -217,7 +217,13 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 //	if (Object.keys(data).length == 0)
 	if(ajax_url)
 	{
-		var ajax_def = {url: ajax_url, data: {}, type: 'GET'};
+		if (ajax_url === 'reload')
+		{
+			var ajax_def = false;
+		}
+		else {
+			var ajax_def = {url: ajax_url, data: {}, type: 'GET'};
+		}
 		var serverSide_def = true;
 	}
 	else
