@@ -238,6 +238,8 @@
 				$("[for='all_items']").hide();
 				$( "#org_unit_id" ).hide();
 				$("[for='org_unit_id']").hide();
+				$("[name='user_only']").hide();
+				$("[for='user_only']").hide();
 			}
 			else
 			{
@@ -249,6 +251,8 @@
 				$("[for='all_items']").show();
 				$( "#org_unit_id" ).show();
 				$("[for='org_unit_id']").show();
+				$("[name='user_only']").show();
+				$("[for='user_only']").show();
 			}
 
 			var requestUrl = $("#queryForm").attr("action");
