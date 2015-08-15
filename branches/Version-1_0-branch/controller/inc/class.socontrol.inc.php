@@ -1644,4 +1644,53 @@
 			}
 			return $this->db->transaction_commit();
 		}
+		function get_serie($serie_id)
+		{
+			$serie_id = (int) $serie_id;
+			$serie = array();
+			$sql = "SELECT controller_control_component_list.* ,"
+			. " controller_control.title, controller_control.enabled as control_enabled,"
+			. " controller_control_component_list.enabled as relation_enabled,"
+			. " controller_control_serie.enabled as serie_enabled,"
+			. " controller_control_serie.id as serie_id,"
+			. " controller_control_serie.assigned_to,controller_control_serie.start_date,"
+			. " controller_control_serie.repeat_type,controller_control_serie.repeat_interval,"
+			. " controller_control_serie.service_time,controller_control_serie.controle_time "
+			. " FROM controller_control_component_list"
+			. " {$this->db->join} controller_control ON controller_control.id = controller_control_component_list.control_id"
+			. " {$this->db->join} controller_control_serie ON (controller_control_component_list.id = controller_control_serie.control_relation_id AND controller_control_serie.control_relation_type = 'component')"
+			. " WHERE controller_control_serie.id = {$serie_id}";
+//			_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			if ($this->db->next_record())
+			{
+				$serie = array
+				(
+					'id'				=> $this->db->f('id'),
+					'serie_id'			=> $this->db->f('serie_id'),
+					'control_id'		=> $this->db->f('control_id'),
+					'title'				=> $this->db->f('title',true),
+					'location_id'		=> $this->db->f('location_id'),
+					'component_id'		=> $this->db->f('component_id'),
+					'assigned_to'		=> $this->db->f('assigned_to'),
+					'start_date'		=> $this->db->f('start_date'),
+					'repeat_type'		=> $this->db->f('repeat_type'),
+					'repeat_interval'	=> $this->db->f('repeat_interval'),
+					'control_enabled'	=> $this->db->f('control_enabled'),
+					'relation_enabled'	=> $this->db->f('relation_enabled'),
+					'serie_enabled'		=> $this->db->f('serie_enabled'),
+					'service_time'		=> (float)$this->db->f('service_time'),
+					'controle_time'		=> (float)$this->db->f('controle_time'),
+				);
+			}
+			return $serie;
+		}
+		function get_check_list_id_for_deadline($serie_id, $deadline_ts = 0)
+		{
+			$sql = "SELECT id FROM controller_check_list WHERE deadline = {$deadline_ts} AND serie_id = ". (int) $serie_id;
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			return $this->db->f('id');
+		}
 	}
