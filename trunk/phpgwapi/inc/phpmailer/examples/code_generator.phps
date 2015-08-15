@@ -1,8 +1,9 @@
 <?php
 /*
-* revised, updated and corrected 27/02/2013
-* by matt.sturdy@gmail.com
-*/
+ * A web form that both generates and uses PHPMailer code.
+ * revised, updated and corrected 27/02/2013
+ * by matt.sturdy@gmail.com
+ */
 require '../PHPMailerAutoload.php';
 
 $CFG['smtp_debug'] = 2; //0 == off, 1 for client output, 2 for client and server
@@ -171,24 +172,17 @@ try {
 
         $example_code .= "\n\$body = <<<'EOT'\n" . htmlentities($body) . "\nEOT;";
 
-        $mail->WordWrap = 80; // set word wrap
+        $mail->WordWrap = 78; // set word wrap to the RFC2822 limit
         $mail->msgHTML($body, dirname(__FILE__), true); //Create message bodies and embed images
 
-        $example_code .= "\n\$mail->WordWrap = 80;";
+        $example_code .= "\n\$mail->WordWrap = 78;";
         $example_code .= "\n\$mail->msgHTML(\$body, dirname(__FILE__), true); //Create message bodies and embed images";
 
-        $mail->addAttachment('images/phpmailer_mini.gif', 'phpmailer_mini.gif'); // optional name
+        $mail->addAttachment('images/phpmailer_mini.png', 'phpmailer_mini.png'); // optional name
         $mail->addAttachment('images/phpmailer.png', 'phpmailer.png'); // optional name
-        $example_code .= "\n\$mail->addAttachment('images/phpmailer_mini.gif'," .
-            "'phpmailer_mini.gif');  // optional name";
+        $example_code .= "\n\$mail->addAttachment('images/phpmailer_mini.png'," .
+            "'phpmailer_mini.png');  // optional name";
         $example_code .= "\n\$mail->addAttachment('images/phpmailer.png', 'phpmailer.png');  // optional name";
-
-        try {
-            $mail->send();
-            $results_messages[] = "Message has been sent using " . strtoupper($_POST["test_type"]);
-        } catch (phpmailerException $e) {
-            throw new phpmailerAppException("Unable to send to: " . $to . ': ' . $e->getMessage());
-        }
 
         $example_code .= "\n\ntry {";
         $example_code .= "\n  \$mail->send();";
@@ -198,6 +192,13 @@ try {
         $example_code .= "\ncatch (phpmailerException \$e) {";
         $example_code .= "\n  throw new phpmailerAppException('Unable to send to: ' . \$to. ': '.\$e->getMessage());";
         $example_code .= "\n}";
+
+        try {
+            $mail->send();
+            $results_messages[] = "Message has been sent using " . strtoupper($_POST["test_type"]);
+        } catch (phpmailerException $e) {
+            throw new phpmailerAppException("Unable to send to: " . $to . ': ' . $e->getMessage());
+        }
     }
 } catch (phpmailerAppException $e) {
     $results_messages[] = $e->errorMessage();
