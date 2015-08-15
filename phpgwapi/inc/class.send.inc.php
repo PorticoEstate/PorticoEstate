@@ -34,7 +34,7 @@
 			$this->err['desc'] = ' ';
 		}
 
-		function msg($service, $to, $subject, $body, $msgtype='', $cc='', $bcc='', $from='', $sender='', $content_type='', $boundary='Message-Boundary',$attachments=array(), $receive_notification = false)
+		function msg($service, $to, $subject, $body, $msgtype='', $cc='', $bcc='', $from='', $sender='', $content_type='', $boundary='',$attachments=array(), $receive_notification = false)
 		{
 			if (!$from)
 			{
@@ -62,37 +62,27 @@
 			switch( $service )
 			{
 				case 'email':
-					return $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary='Message-Boundary', $attachments, $receive_notification);
+					return $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary, $attachments, $receive_notification);
 					break;
 			}
 		}
 
-		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $ignored,$attachments, $receive_notification)
+		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary,$attachments, $receive_notification)
 		{
-			$smtp = createObject('phpgwapi.mailer_smtp');
+			$mail = createObject('phpgwapi.mailer_smtp');
 			$from = str_replace(array('[',']'),array('<','>'),$from);
 			$from_array = split('<', $from);
 			unset($from);
 			if ( count($from_array) == 2 )
 			{
-				$smtp->From = trim($from_array[1],'>');
-				$smtp->FromName = $from_array[0];
+				$mail->From = trim($from_array[1],'>');
+				$mail->FromName = $from_array[0];
 			}
 			else
 			{
-				$smtp->From = $from_array[0];
-				$smtp->FromName = $sender;
+				$mail->From = $from_array[0];
+				$mail->FromName = $sender;
 			}
-/*			
-			if(strpos($to,','))
-			{
-				$delimiter = ',';
-			}
-			else
-			{
-				$delimiter = ';';
-			}
-*/
 			$delimiter = ';';
 			$to = explode($delimiter, $to);
 			
@@ -102,26 +92,16 @@
 				$to_array = split('<', $entry);
 				if ( count($to_array) == 2 )
 				{
-					$smtp->AddAddress(trim($to_array[1],'>'), $to_array[0]);
+					$mail->AddAddress(trim($to_array[1],'>'), $to_array[0]);
 				}
 				else
 				{
-					$smtp->AddAddress($to_array[0]);
+					$mail->AddAddress($to_array[0]);
 				}
 			}
 
 			if($cc)
 			{
-/*
-				if(strpos($cc,','))
-				{
-					$delimiter = ',';
-				}
-				else
-				{
-					$delimiter = ';';
-				}
-*/
 				$delimiter = ';';
 				$cc = explode($delimiter, $cc);
 			
@@ -131,26 +111,16 @@
 					$cc_array = split('<', $entry);
 					if ( count($cc_array) == 2 )
 					{
-						$smtp->AddCC(trim($cc_array[1],'>'), $cc_array[0]);
+						$mail->AddCC(trim($cc_array[1],'>'), $cc_array[0]);
 					}
 					else
 					{
-						$smtp->AddCC($cc_array[0]);
+						$mail->AddCC($cc_array[0]);
 					}
 				}
 			}
 			if($bcc)
 			{
-/*
-				if(strpos($bcc,','))
-				{
-					$delimiter = ',';
-				}
-				else
-				{
-					$delimiter = ';';
-				}
-*/
 				$delimiter = ';';
 				$bcc = explode($delimiter, $bcc);
 			
@@ -160,38 +130,58 @@
 					$bcc_array = split('<', $entry);
 					if ( count($bcc_array) == 2 )
 					{
-						$smtp->AddBCC(trim($bcc_array[1],'>'), $bcc_array[0]);
+						$mail->AddBCC(trim($bcc_array[1],'>'), $bcc_array[0]);
 					}
 					else
 					{
-						$smtp->AddBCC($bcc_array[0]);
+						$mail->AddBCC($bcc_array[0]);
 					}
 				}
 			}
-			$smtp->IsSMTP();
-			$smtp->Subject = $subject;
-			$smtp->Body    = $body;
-			$smtp->AddCustomHeader('X-Mailer: fmsystem (http://www.fmsystem.no)');
+			$mail->IsSMTP();
+			$mail->Subject = $subject;
+			$mail->Body    = $body;
+			$mail->addCustomHeader('X-Mailer: fmsystem (http://www.fmsystem.no)');
 			if($receive_notification)
 			{
-				$smtp->AddCustomHeader("Disposition-Notification-To: {$smtp->From}");
+				$mail->addCustomHeader("Disposition-Notification-To: {$mail->From}");
 			}
 
 			if($content_type =='html')
 			{
-				$smtp->IsHTML(true);
+				$mail->IsHTML(true);
 			}
 			else
 			{
-				$smtp->IsHTML(false);
-				$smtp->WordWrap = 76;
+				$mail->IsHTML(false);
+				$mail->WordWrap = 76;
+			}
+
+			switch($msgtype)
+			{
+				case 'Ical':
+					$mail->Ical = true;
+					$mail->ContentType = 'text/calendar';
+					$mail->addCustomHeader('MIME-version',"1.0");
+					if($boundary)
+					{
+						$mail->addCustomHeader('Content-type',"multipart/alternative; boundary=\"{$boundary}\"");
+					}
+					$mail->addCustomHeader('Content-type',"text/calendar; method=REQUEST; charset=UTF-8");
+					$mail->addCustomHeader('Content-Transfer-Encoding',"8bit");
+					$mail->addCustomHeader('X-Mailer',"Microsoft Office Outlook 12.0");
+					$mail->addCustomHeader("Content-class: urn:content-classes:calendarmessage");
+					break;
+
+				default:
+					break;
 			}
 
 			if($attachments && is_array($attachments))
 			{
 				foreach($attachments as $key => $value)
 				{
-					$smtp->AddAttachment
+					$mail->AddAttachment
 					(
 						$value['file'],
 						utf8_decode($value['name']),
@@ -203,14 +193,14 @@
 
 			// set a higher timeout for big messages
 			@set_time_limit(120);
-			#$smtp->SMTPDebug = 10;
+			#$mail->SMTPDebug = 10;
 			try
 			{
-				$smtp->Send();
+				$mail->Send();
 			}
 			catch (phpmailerException $e)
 			{
-				$this->errorInfo = $smtp->ErrorInfo;
+				$this->errorInfo = $mail->ErrorInfo;
 				throw $e;
 				return false;
 			}
