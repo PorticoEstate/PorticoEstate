@@ -13,6 +13,7 @@
 	* @see phpmailer
 	*/
 	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/class.phpmailer.php';
+	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/PHPMailerAutoload.php';
 	
 	/**
 	* Send email messages via SMTP
