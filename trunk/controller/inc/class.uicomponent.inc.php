@@ -82,6 +82,11 @@
 
 			self::set_active_menu('controller::status_components');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
+
+			if(phpgw::get_var('noframework', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			}
 		}
 
 		public function add_controll_from_master()
