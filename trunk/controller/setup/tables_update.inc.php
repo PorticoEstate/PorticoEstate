@@ -1097,3 +1097,48 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.52';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+
+	$test[] = '0.1.52';
+	function controller_upgrade0_1_52()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_serie_history', array(
+					'fd' => array(
+						'id'					=> array('type' => 'auto', 'nullable' => false),
+						'serie_id'				=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'assigned_to'			=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'assigned_date'			=> array('type' => 'int', 'precision' => '8', 'nullable' => false),
+					),
+				'pk' => array('id'),
+				'fk' => array('controller_control_serie' => array('serie_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT * FROM controller_control_serie');
+
+		$series = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$series[] = array(
+				'serie_id' => $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'assigned_to' => $GLOBALS['phpgw_setup']->oProc->f('assigned_to'),
+				'assigned_date'	=> time()
+			);
+		}
+
+		foreach($series as $serie)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO controller_control_serie_history (serie_id, assigned_to, assigned_date)"
+			. " VALUES ({$serie['serie_id']}, {$serie['assigned_to']}, {$serie['assigned_date']})  ");
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.53';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
