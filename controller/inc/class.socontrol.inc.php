@@ -1002,6 +1002,11 @@
 						$this->db->query("INSERT INTO controller_control_serie (" . implode(',',array_keys($values_insert)) . ') VALUES ('
 						 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
 
+						$assigned_date = time();
+						$serie_id = $this->db->get_last_insert_id('controller_control_serie', 'id');
+						$this->db->query("INSERT INTO controller_control_serie_history (serie_id, assigned_to, assigned_date)"
+							. " VALUES ({$serie_id}, {$assigned_to}, {$assigned_date})  ");
+
 						$ret = PHPGW_ACL_ADD; // Bit - add
 					}
 				}
@@ -1531,6 +1536,7 @@
 			$ids		= $data['ids'];
 			$action		= $data['action'];
 			$value_set = array();
+			$add_history = false;
 			switch($action)
 			{
 				case 'enable':
@@ -1543,6 +1549,7 @@
 					if($data['assigned_to'])
 					{
 						$value_set['assigned_to']		= $data['assigned_to'];
+						$add_history = true;
 					}
 					if($data['start_date'])
 					{
@@ -1574,6 +1581,22 @@
 			$sql = "UPDATE controller_control_serie SET {$value_set_update} WHERE id IN (" . implode(',', $ids) . ')';
 			if($this->db->query($sql,__LINE__,__FILE__))
 			{
+				if($add_history && $value_set['assigned_to'])
+				{
+					$assigned_date = time();
+
+					foreach($ids as $serie_id)
+					{
+						$this->db->query("SELECT assigned_to FROM controller_control_serie_history WHERE serie_id = {$serie_id} ORDER BY id DESC",__LINE__,__FILE__);
+						$this->db->next_record();
+						if($value_set['assigned_to'] !=$this->db->f('assigned_to'))
+						{
+							$this->db->query("INSERT INTO controller_control_serie_history (serie_id, assigned_to, assigned_date)"
+							. " VALUES ({$serie_id}, {$value_set['assigned_to']}, {$assigned_date})  ");
+						}
+					}
+				}
+
 				return PHPGW_ACL_EDIT; // Bit - edit
 			}
 		}
@@ -1686,11 +1709,32 @@
 			}
 			return $serie;
 		}
-		function get_check_list_id_for_deadline($serie_id, $deadline_ts = 0)
+		public function get_check_list_id_for_deadline($serie_id, $deadline_ts = 0)
 		{
 			$sql = "SELECT id FROM controller_check_list WHERE deadline = {$deadline_ts} AND serie_id = ". (int) $serie_id;
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			return $this->db->f('id');
+		}
+
+		public function get_assigned_history($data)
+		{
+			$serie_id = (int) $data['serie_id'];
+			$sql = "SELECT * FROM controller_control_serie_history WHERE serie_id = {$serie_id} ORDER BY id";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$history = array();
+			while ($this->db->next_record())
+			{
+				$history[] = array
+				(
+					'assigned_to' => $this->db->f('assigned_to'),
+					'assigned_date'	=> $this->db->f('assigned_date'),
+				);
+			}
+			foreach($history as &$entry)
+			{
+				$entry['assigned_to_name'] = $GLOBALS['phpgw']->accounts->get($entry['assigned_to'])->__toString();
+			}
+			return $history;
 		}
 	}
