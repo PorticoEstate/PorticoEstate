@@ -194,6 +194,7 @@ HTML;
 		$var = array
 		(
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

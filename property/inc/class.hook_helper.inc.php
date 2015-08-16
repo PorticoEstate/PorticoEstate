@@ -34,6 +34,7 @@
 	 */
 	class property_hook_helper
 	{
+		private $skip_portalbox_controls;
 		/**
 		 * Clear ACL-based userlists
 		 *
@@ -104,11 +105,16 @@
 		 */
 		public function home_mobilefrontend()
 		{
+			$this->skip_portalbox_controls = true;
 			$this->home_ticket();
 		}
 
 		private function get_controls($app_id)
 		{
+			if($this->skip_portalbox_controls)
+			{
+				return array();
+			}
 			$var = array
 			(
 				'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),

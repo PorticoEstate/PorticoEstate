@@ -17,8 +17,8 @@
 			<td>{lang_Use_ACL_for_control_areas}.</td>
 			<td>
 				<select name="newsettings[acl_at_control_area]">
-					<option value="2" {selected_acl_at_control_area_2}>NO</option>
-					<option value="1" {selected_acl_at_control_area_1}>YES</option>
+					<option value="2" {selected_acl_at_control_area_2}>{lang_no}</option>
+					<option value="1" {selected_acl_at_control_area_1}>{lang_yes}</option>
 				</select>
 			</td>
 		</tr>
@@ -26,8 +26,8 @@
 			<td>{lang_required_actual_hours}.</td>
 			<td>
 				<select name="newsettings[required_actual_hours]">
-					<option value="" {selected_required_actual_hours_}>NO</option>
-					<option value="1" {selected_required_actual_hours_1}>YES</option>
+					<option value="" {selected_required_actual_hours_}>{lang_no}</option>
+					<option value="1" {selected_required_actual_hours_1}>{lang_yes}</option>
 				</select>
 			</td>
 		</tr>
@@ -44,6 +44,16 @@
 			</td>
 		</tr>
 		<tr class="row_on">
+			<td>{lang_home_alternative}</td>
+			<td>
+				<select name="newsettings[home_alternative]">
+					<option value="" {selected_home_alternative_}>{lang_no}</option>
+					<option value="1" {selected_home_alternative_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
+
+		<tr class="row_off">
 			<td>{lang_document_category}:</td>
 			<td>
 	    	<!--to be able to blank the setting - need an empty value-->
