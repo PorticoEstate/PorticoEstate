@@ -54,23 +54,24 @@
 
 		var $public_functions = array
 			(
-				'columns'			=> true,
-				'download'			=> true,
-				'view'	 			=> true,
-				'edit'	 			=> true,
-				'delete' 			=> true,
-				'view_file'			=> true,
-				'attrib_history'	=> true,
-				'attrib_help'		=> true,
-				'print_pdf'			=> true,
-				'index'				=> true,
-				'addfiles'			=> true,
-				'get_files'			=> true,
-				'get_inventory'		=> true,
-				'add_inventory'		=> true,
-				'edit_inventory'	=> true,
-				'inventory_calendar'=> true,
-			'get_controls_at_component'=>true
+				'columns'					=> true,
+				'download'					=> true,
+				'view'						=> true,
+				'edit'						=> true,
+				'delete'					=> true,
+				'view_file'					=> true,
+				'attrib_history'			=> true,
+				'attrib_help'				=> true,
+				'print_pdf'					=> true,
+				'index'						=> true,
+				'addfiles'					=> true,
+				'get_files'					=> true,
+				'get_inventory'				=> true,
+				'add_inventory'				=> true,
+				'edit_inventory'			=> true,
+				'inventory_calendar'		=> true,
+				'get_controls_at_component'	=> true,
+				'get_assigned_history'		=> true
 			);
 
 		function __construct()
@@ -2815,6 +2816,59 @@ JS;
 			$this->edit($mode = 'view');
 		}
 
+		function get_assigned_history()
+		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if($this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+			$serie_id		= phpgw::get_var('serie_id', 'int');
+			$history = execMethod('controller.socontrol.get_assigned_history', array('serie_id' => $serie_id));
+			$lang_user = lang('user');
+			$lang_date = lang('date');
+
+			$ret = <<<HTML
+			<html>
+				<head>
+				</head>
+				<body>
+					<table style="width:90%" align = 'center'>
+						<tr align = 'left'>
+							<th>
+								{$lang_user}
+							</th>
+							<th>
+								{$lang_date}
+							</th>
+						</tr>
+
+HTML;
+			foreach($history as $entry)
+			{
+				$date = $GLOBALS['phpgw']->common->show_date($entry['assigned_date']);
+				$ret .= <<<HTML
+						<tr align = 'left'>
+							<td>
+								{$entry['assigned_to_name']}
+							</td>
+							<td>
+								{$date}
+							</td>
+						</tr>
+HTML;
+			}
+			$ret .= <<<HTML
+					</table>
+				</body>
+			</html>
+HTML;
+			echo $ret;
+		}
+
 		function attrib_history()
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
@@ -3580,6 +3634,7 @@ JS;
 					"3"=> lang('year')
 				);
 
+			$lang_history = lang('history');
 			$controls = execMethod('controller.socontrol.get_controls_at_component', array('location_id' => $location_id, 'component_id' => $id));
 			foreach($controls as &$entry)
 			{
@@ -3610,6 +3665,7 @@ JS;
 				);
 
 				$entry['title'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$control_link_data).'" target="_blank">'.$entry['title'].'</a>';
+				$entry['assigned_to_name'] = "<a title=\"{$lang_history}\" onclick='javascript:showlightbox_assigned_history({$entry['serie_id']});'>{$entry['assigned_to_name']}</a>";
 
 				$entry['start_date'] =  $GLOBALS['phpgw']->common->show_date($entry['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
