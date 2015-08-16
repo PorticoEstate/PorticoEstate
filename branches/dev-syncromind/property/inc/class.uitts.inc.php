@@ -2205,7 +2205,7 @@
 				$note_def[] = array('key' => 'order_text','label'=>lang('order text'),'sortable'=>false,'resizeable'=>true, 'formatter'=>'FormatterCenter');
 				foreach($additional_notes as &$note)
 				{
-					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.$note['value_note'].'" title="'.lang('Check to add text to order').'">';
+					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.str_replace('"', "'", $note['value_note']).'" title="'.lang('Check to add text to order').'">';
 				}
 			}
 

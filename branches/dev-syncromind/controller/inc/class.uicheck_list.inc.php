@@ -220,7 +220,27 @@
 				$type = phpgw::get_var('type');
 				$control_id = phpgw::get_var('control_id');
 				$deadline_ts = phpgw::get_var('deadline_ts');
+				$deadline_current = phpgw::get_var('deadline_current', 'bool');
 				$serie_id = phpgw::get_var('serie_id', 'int');
+
+				if($deadline_current)
+				{
+					$year = date('Y');
+					$month = date('m');
+					$a_date = "{$year}-{$month}-23";
+					$deadline_ts	= mktime(00, 00, 00, $month, date('t', strtotime($a_date)), $year);
+					unset($year);
+					unset($month);
+					unset($a_date);
+
+					/*look for checklist with $deadline_ts = $deadline_current*/
+
+					$check_list_id = $this->so_control->get_check_list_id_for_deadline($serie_id, $deadline_ts);
+					if($check_list_id)
+					{
+						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+					}
+				}
 
 				$check_list = new controller_check_list();
 				$check_list->set_control_id($control_id);
@@ -285,7 +305,26 @@
 				$type = "location";
 			}
 
+			$repeat_descr = '';
+			if($serie = $this->so_control->get_serie($serie_id))
+			{
+				$repeat_type_array = array
+					(
+						"0"=> lang('day'),
+						"1"=> lang('week'),
+						"2"=> lang('month'),
+						"3"=> lang('year')
+					);
+				$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+			}
+
 			$control = $this->so_control->get_single($check_list->get_control_id());
+
+			if($repeat_descr)
+			{
+				$repeat_descr .= " :: " .$control->get_title();
+				$control->set_title($repeat_descr);
+			}
 
 			if(!$responsible_user_id = phpgw::get_var('assigned_to', 'int'))
 			{
@@ -371,7 +410,26 @@
 				$check_list = $this->so->get_single($check_list_id);
 			}
 
+			$repeat_descr = '';
+			if($serie = $this->so_control->get_serie($check_list->get_serie_id()))
+			{
+				$repeat_type_array = array
+					(
+						"0"=> lang('day'),
+						"1"=> lang('week'),
+						"2"=> lang('month'),
+						"3"=> lang('year')
+					);
+				$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+			}
+
 			$control = $this->so_control->get_single($check_list->get_control_id());
+
+			if($repeat_descr)
+			{
+				$repeat_descr .= " :: " .$control->get_title();
+				$control->set_title($repeat_descr);
+			}
 
 			$component_id = $check_list->get_component_id();
 
@@ -685,6 +743,9 @@
 			$check_list->set_deadline($deadline_date_ts);
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
+
+			$orig_assigned_to = $check_list->get_assigned_to();
+
 			$check_list->set_assigned_to($assigned_to);
 
 			$config	= CreateObject('phpgwapi.config','controller');
@@ -701,7 +762,11 @@
 			{
 				$check_list->set_delta_billable_hours($billable_hours);
 			}
-			if ( $this->_check_for_required($check_list) && !$error)
+			if ( $status == controller_check_list::STATUS_DONE && $this->_check_for_required($check_list) && !$error)
+			{
+				$check_list->set_status($status);
+			}
+			else if ($status == controller_check_list::STATUS_CANCELED && !$error)
 			{
 				$check_list->set_status($status);
 			}
@@ -709,6 +774,71 @@
 			if(!$error && $check_list->validate())
 			{
 				$check_list_id = $this->so->store($check_list);
+				$serie = $this->so_control->get_serie($check_list->get_serie_id());
+
+				/**
+				 * Add an iCal-event if there is a serie - and the checklist is visited the first time - or assigned is changed
+				 */
+				if(($check_list_id && $serie && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to) )
+				{
+					$bocommon= CreateObject('property.bocommon');
+					$current_prefs_user = $bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
+					$from_address = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
+					$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
+
+					$to_name = $GLOBALS['phpgw']->accounts->id2name($assigned_to);
+					$prefs_target = $bocommon->create_preferences('property',$assigned_to);
+					$to_address = $prefs_target['email'];
+
+					if(! $start_date = $check_list->get_planned_date())
+					{
+						$start_date = $check_list->get_deadline();
+					}
+					$startTime = $start_date + 8 * 3600;
+
+					$endTime = $startTime + ( (float)$serie['service_time'] * 3600 ) + ( (float)$serie['controle_time'] * 3600 );
+
+					if($check_list->get_component_id() > 0)
+					{
+						$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $check_list->get_location_id(), 'id' => $check_list->get_component_id()));
+						$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+						$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array('location_id' => $check_list->get_location_id(), 'id' => $check_list->get_component_id()));
+						$location = $location_name;
+					}
+
+					$repeat_type_array = array
+						(
+							"0"=> lang('day'),
+							"1"=> lang('week'),
+							"2"=> lang('month'),
+							"3"=> lang('year')
+						);
+
+					$subject = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+					$subject .= "::{$serie['title']}::{$short_desc}";
+
+					$description = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction'	=> 'controller.uicheck_list.add_check_list',
+						'control_id'	=> $check_list->get_control_id(),
+						'location_id'	=> $check_list->get_location_id(),
+						'component_id'	=> $check_list->get_component_id(),
+						'serie_id'		=> $check_list->get_serie_id(),
+						'type'			=> 'component',
+						'assigned_to'	=> $check_list->get_assigned_to(),
+						'deadline_current'	=> true
+
+					),false,true).'">' . lang('serie').' #' .$check_list->get_serie_id() .'</a>'."\n";
+
+					$description = str_replace('&amp;', '&', $description);
+					if($from_address && $to_address)
+					{
+						$this->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location);
+					}
+					else
+					{
+						phpgwapi_cache::message_set("Mangler epostadresse til avsender eller addresat - eller begge", 'error');
+					}
+				}
 
 				if($check_list_id > 0)
 				{
@@ -998,11 +1128,11 @@
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
-                        
-                        $location_code = $check_list->get_location_code();
-                        $location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-                        $level = $this->location_finder->get_location_level($location_code);
-                        //var_dump($location_array);
+
+												$location_code = $check_list->get_location_code();
+												$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+												$level = $this->location_finder->get_location_level($location_code);
+												//var_dump($location_array);
 
 			$saved_groups_with_items_array = array();
 
@@ -1020,9 +1150,9 @@
 			(
 				'saved_groups_with_items_array' => $saved_groups_with_items_array,
 				'check_list' => $check_list,
-                                'control' => $control->toArray(),
-                                'location_array' => $location_array,
-                                'location_level' => $level
+																'control' => $control->toArray(),
+																'location_array' => $location_array,
+																'location_level' => $level
 			);
 
 			self::render_template_xsl('check_list/print_check_list', $data);
@@ -1250,5 +1380,118 @@
 			}
 
 			return $ok;
+		}
+
+		/**
+		 * 
+		 * @param string $from_name
+		 * @param string $from_address
+		 * @param string $to_name
+		 * @param string $to_address
+		 * @param int $startTime
+		 * @param int $endTime
+		 * @param string $subject
+		 * @param string $description
+		 * @param string $location
+		 * @return type
+		 */
+		function sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location)
+		{
+//			https://www.exchangecore.com/blog/sending-outlookemail-calendar-events-php/
+
+			$domain = $GLOBALS['phpgw_info']['server']['hostname'];
+
+			//Create Email Headers
+			$mime_boundary = "----Meeting Booking----".md5(time());
+
+			$headers  = <<<HTML
+			From: {$from_name} <{$from_address}>
+			Reply-To: {$from_name} <{$from_address}>
+			MIME-Version: 1.0
+			Content-Type: multipart/alternative; boundary=\"{$mime_boundary}\"
+			Content-class: urn:content-classes:calendarmessage
+HTML;
+
+			//Create Email Body (HTML)
+			$message  = <<<HTML
+			--{$mime_boundary}
+			Content-Type: text/html; charset=UTF-8
+			Content-Transfer-Encoding: 8bit
+
+			<html>
+			<body>
+			<p>Dear {$to_name}</p>
+			<p>{$description}</p>
+			</body>
+			</html>
+			--{$mime_boundary}
+
+
+HTML;
+			$last_modified =  date("Ymd\TGis");
+			$uid = date("Ymd\TGis", $startTime).rand()."@".$domain;
+			$dtstamp = date("Ymd\TGis");
+			$dtstart = date("Ymd\THis", $startTime);
+			$dtend = date("Ymd\THis", $endTime);
+			$timezone = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
+
+
+$ical = <<<HTML
+BEGIN:VCALENDAR
+PRODID:controller
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+X-WR-TIMEZONE:Europe/Oslo
+BEGIN:VEVENT
+ORGANIZER;CN="{$to_name}":MAILTO:{$to_address}
+ATTENDEE;CN="{$to_name}";ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:{$to_address}
+DTSTAMP:{$dtstamp}
+DTSTART:{$dtstart}
+DTEND:{$dtend}
+SEQUENCE:0
+STATUS:TENTATIVE
+SUMMARY:{$subject}
+LOCATION:{$location}
+DESCRIPTION:{$description}
+UID:{$uid}
+BEGIN:VALARM
+TRIGGER:-PT15M
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR
+HTML;
+
+//ORGANIZER;CN="{$from_name}":MAILTO:{$from_address}
+//ATTENDEE;CN="{$to_name}";ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:{$to_address}
+
+
+
+			$message .= $ical;
+
+			$rc = false;
+			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+			{
+				$send= CreateObject('phpgwapi.send');
+				try
+				{
+					$rc = $send->msg('email', $to_address, $subject, $message, $msgtype='Ical', $cc='', $bcc='', $from_address, $from_name,'html',$mime_boundary);
+				}
+				catch (phpmailerException $e)
+				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+				}
+			}
+			else
+			{
+				phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'), 'error');
+			}
+
+
+		//	$mailsent = mail($to_address, $subject, $message, $headers);
+
+			return $rc;
 		}
 	}

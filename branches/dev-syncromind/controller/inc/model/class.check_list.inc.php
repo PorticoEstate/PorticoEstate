@@ -79,6 +79,8 @@
 		public function __construct(int $id = null)
 		{
 			$this->id = (int)$id;
+			//intital status
+			$this->status = self::STATUS_NOT_DONE;
 		}
 		
 		public function set_id($id)

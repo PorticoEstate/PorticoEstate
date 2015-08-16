@@ -10,7 +10,7 @@
  */
 
 /* Callback (action) function
- *   bool    $result        result of the send action
+ *   boolean $result        result of the send action
  *   string  $to            email address of the recipient
  *   string  $cc            cc email addresses
  *   string  $bcc           bcc email addresses
@@ -33,19 +33,19 @@ function callbackAction($result, $to, $cc, $bcc, $subject, $body)
     return true;
 }
 
-require_once '../class.phpmailer.php';
+require_once '../PHPMailerAutoload.php';
 $mail = new PHPMailer();
 
 try {
     $mail->isMail();
     $mail->setFrom('you@example.com', 'Your Name');
     $mail->addAddress('another@example.com', 'John Doe');
-    $mail->Subject = 'PHPMailer Lite Test Subject via mail()';
+    $mail->Subject = 'PHPMailer Test Subject';
+    $mail->msgHTML(file_get_contents('../examples/contents.html'));
     // optional - msgHTML will create an alternate automatically
     $mail->AltBody = 'To view the message, please use an HTML compatible email viewer!';
-    $mail->msgHTML(file_get_contents('../examples/contents.html'));
     $mail->addAttachment('../examples/images/phpmailer.png'); // attachment
-    $mail->addAttachment('../examples/images/phpmailer_mini.gif'); // attachment
+    $mail->addAttachment('../examples/images/phpmailer_mini.png'); // attachment
     $mail->action_function = 'callbackAction';
     $mail->send();
     echo "Message Sent OK</p>\n";
@@ -76,7 +76,6 @@ function cleanEmails($str, $type)
     $addy['Email'] = str_replace('@', '&#64;', $addy['Email']);
     return $addy;
 }
-
 ?>
 </body>
 </html>
