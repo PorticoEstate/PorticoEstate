@@ -174,6 +174,18 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'controller_control_serie_history' => array(
+				'fd' => array(
+					'id'					=> array('type' => 'auto', 'nullable' => false),
+					'serie_id'				=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'assigned_to'			=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'assigned_date'			=> array('type' => 'int', 'precision' => '8', 'nullable' => false),
+				),
+			'pk' => array('id'),
+			'fk' => array('controller_control_serie' => array('serie_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'controller_control_group_component_list' => array(
 				'fd' => array(
 					'id' 								=> array('type' => 'auto', 'nullable' => false),
