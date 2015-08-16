@@ -64,6 +64,8 @@
     private $add;
     private $edit;
     private $delete;
+	private $home_alternative;
+
 
     public $public_functions = array
     (
@@ -107,6 +109,7 @@
 			$config	= CreateObject('phpgwapi.config','controller');
 			$config->read();
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
+			$this->home_alternative = isset($config->config_data['home_alternative']) && $config->config_data['home_alternative'] == 1 ? true : false;
 
 			self::set_active_menu('controller::control');
 		}
@@ -260,17 +263,20 @@
 						array(
 							'key' => 'link',
 							'hidden' => true
-						),
-						array(
+						)
+					)
+				)
+			);
+
+			if(!$this->home_alternative)
+			{
+				$data['datatable']['field'][] = array(
 							'key' => 'show_locations',
 							'label' => '',
 							'sortable' => false,
 							'formatter' => 'YAHOO.portico.formatGenericLink'
-						)
-					)
-				),
-			);
-
+						);
+			}
 			self::render_template_xsl(array( 'datatable_common' ), $data);
 		}
 		
