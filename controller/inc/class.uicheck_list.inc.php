@@ -823,7 +823,7 @@
 					$subject = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
 					$subject .= "::{$serie['title']}::{$short_desc}";
 
-					$description = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+					$link_backend = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction'	=> 'controller.uicheck_list.add_check_list',
 						'control_id'	=> $check_list->get_control_id(),
 						'location_id'	=> $check_list->get_location_id(),
@@ -833,9 +833,21 @@
 						'assigned_to'	=> $check_list->get_assigned_to(),
 						'deadline_current'	=> true
 
-					),false,true).'">' . lang('serie').' #' .$check_list->get_serie_id() .'</a>'."\n";
+					),false,true,true).'">Serie#' . $check_list->get_serie_id() .'::Backend</a>';
 
-					$description = str_replace('&amp;', '&', $description);
+					$link_mobilefrontend = '<a href ="' . $GLOBALS['phpgw']->link('/mobilefrontend/index.php', array(
+						'menuaction'	=> 'controller.uicheck_list.add_check_list',
+						'control_id'	=> $check_list->get_control_id(),
+						'location_id'	=> $check_list->get_location_id(),
+						'component_id'	=> $check_list->get_component_id(),
+						'serie_id'		=> $check_list->get_serie_id(),
+						'type'			=> 'component',
+						'assigned_to'	=> $check_list->get_assigned_to(),
+						'deadline_current'	=> true
+
+					),false,true,true).'">Serie#' . $check_list->get_serie_id() .'::Mobilefrontend</a>';
+
+					$description = str_replace('&amp;', '&', "{$link_mobilefrontend}\\n\\n{$link_backend}");
 					if($from_address && $to_address)
 					{
 						$this->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location);
