@@ -1044,7 +1044,7 @@
 			$value_set['multiplier']				= $request['multiplier'] ? (float)$request['multiplier'] : 1;
 			
 		
-			if($request['origin'][0]['location'] == '.project.condition_survey' && $request['origin'][0]['data'][0]['id'] && !$value_set['condition_survey_id'])
+			if( (isset($request['origin'][0]['location']) && $request['origin'][0]['location'] == '.project.condition_survey') && isset($request['origin'][0]['data'][0]['id']) && !$value_set['condition_survey_id'])
 			{
 				$value_set['condition_survey_id'] 	= (int)$request['origin'][0]['data'][0]['id'];
 			}
