@@ -1410,14 +1410,6 @@
 			//Create Email Headers
 			$mime_boundary = "----Meeting Booking----".md5(time());
 
-			$headers  = <<<HTML
-			From: {$from_name} <{$from_address}>
-			Reply-To: {$from_name} <{$from_address}>
-			MIME-Version: 1.0
-			Content-Type: multipart/alternative; boundary=\"{$mime_boundary}\"
-			Content-class: urn:content-classes:calendarmessage
-HTML;
-
 			//Create Email Body (HTML)
 			$message  = <<<HTML
 			--{$mime_boundary}
@@ -1431,9 +1423,17 @@ HTML;
 			</body>
 			</html>
 			--{$mime_boundary}
-
-
 HTML;
+			//Create Email Body (HTML)
+			$message  = <<<HTML
+			<html>
+			<body>
+			<p>Dear {$to_name}</p>
+			<p>{$description}</p>
+			</body>
+			</html>
+HTML;
+
 			$last_modified =  date("Ymd\TGis");
 			$uid = date("Ymd\TGis", $startTime).rand()."@".$domain;
 			$dtstamp = date("Ymd\TGis");
@@ -1444,7 +1444,7 @@ HTML;
 
 $ical = <<<HTML
 BEGIN:VCALENDAR
-PRODID:controller
+PRODID: controller {$domain}
 VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:REQUEST
@@ -1475,7 +1475,22 @@ HTML;
 
 
 
-			$message .= $ical;
+//			$message .= $ical;
+			$message = $ical;
+
+
+			//Might work....
+			$attachment = array
+			(
+			//	'content'		=> base64_encode($ical),
+				'content'		=> $ical,
+				'name'			=> 'meeting.ics',
+			//	'encoding'		=> 'base64',//'7bit',
+				'encoding'		=> '7bit',
+				'type'			=> "text/calendar;charset=utf-8; method=REQUEST",
+				'disposition'	=> 'inline'
+			);
+
 
 			$rc = false;
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -1483,7 +1498,7 @@ HTML;
 				$send= CreateObject('phpgwapi.send');
 				try
 				{
-					$rc = $send->msg('email', $to_address, $subject, $message, $msgtype='Ical', $cc='', $bcc='', $from_address, $from_name,'html',$mime_boundary);
+					$rc = $send->msg('email', $to_address, $subject, $message, $msgtype='Ical', $cc='', $bcc='', $from_address, $from_name,'html',$mime_boundary);//, array($attachment));
 				}
 				catch (phpmailerException $e)
 				{
@@ -1494,9 +1509,6 @@ HTML;
 			{
 				phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'), 'error');
 			}
-
-
-		//	$mailsent = mail($to_address, $subject, $message, $headers);
 
 			return $rc;
 		}
