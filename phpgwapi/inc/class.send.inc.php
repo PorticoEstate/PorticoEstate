@@ -181,13 +181,27 @@
 			{
 				foreach($attachments as $key => $value)
 				{
-					$mail->AddAttachment
-					(
-						$value['file'],
-						utf8_decode($value['name']),
-						'base64',
-						$value['type']
-					);
+					if(isset($value['content']) && $value['content'])
+					{
+						$mail->AddStringAttachment
+						(
+							$value['content'],
+							$value['name'],		//meeting.ics
+							$value['encoding'],	//7bit
+							$value['type'],		//"text/calendar;charset=utf-8; method=REQUEST"
+							$value['disposition'] // 'attachment' | inline
+						);
+					}
+					else
+					{
+						$mail->AddAttachment
+						(
+							$value['file'],
+							utf8_decode($value['name']),
+							'base64',
+							$value['type']
+						);
+					}
 				}
 			}
 
