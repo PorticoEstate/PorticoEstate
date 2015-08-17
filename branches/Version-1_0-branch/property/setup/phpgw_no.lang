@@ -1597,6 +1597,7 @@ select the estimated date for closing the task	property	no	Velg beregnet dato fo
 select the estimated end date for the agreement	property	no	Angi estimert slutt-dato for avtalen
 select the estimated end date for the project	property	no	Angi estimert sluttdato for prosjektet
 select the estimated end date for the request	property	no	Angi estimert sluttdato for behovet
+select the estimated start date for the request	property	no	Angi ønsket startdato for behovet
 select the estimated termination date	property	no	Angi estimert terminerings-dato
 select the file to import from	property	no	velg fil å importere
 select the filter. to show all entries select show all	property	no	Velg filter. For å vise alle - velg VIS ALLE

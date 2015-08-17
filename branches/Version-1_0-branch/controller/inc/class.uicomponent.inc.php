@@ -612,11 +612,16 @@
 					$control						= $so_control->get_single($control_id);
 
 					$repeat_type				 = $control->get_repeat_type();
-
+					
+					//FIXME: Not currently supported
+					if($repeat_type <= controller_control::REPEAT_TYPE_WEEK)
+					{
+						$repeat_type = controller_control::REPEAT_TYPE_MONTH;
+					}
 					// LOCATIONS: Process aggregated values for controls with repeat type day or week
 					if($repeat_type <= controller_control::REPEAT_TYPE_WEEK)
 					{
-						//FIX ME: Not currently supported
+						//FIXME: Not currently supported
 
 						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
