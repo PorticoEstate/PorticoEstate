@@ -23,7 +23,11 @@
 	<xsl:param name="config" />
 	<xsl:param name="data" />
 	
-	<div id="message" class='message'/>
+	<xsl:variable name="num">
+		<xsl:number count="*"/>
+	</xsl:variable>
+	
+	<div id='message{($num - 1)}' class='message'/>
 	
 	<table id="{$container}" class="display cell-border compact responsive no-wrap" width="100%">
 		<thead>
@@ -69,9 +73,6 @@
 	
 	<script>
 		
-	<xsl:variable name="num">
-		<xsl:number count="*"/>
-	</xsl:variable>
 	var oTable<xsl:number value="($num - 1)"/> = null;
 		
 <![CDATA[
@@ -231,7 +232,7 @@
 																		{               
 																				action += "&amp;confirm=yes&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
-																					document.getElementById("message").innerHTML += '<br/>' + result;
+																					document.getElementById("message<xsl:number value="($num - 1)"/>").innerHTML += '<br/>' + result;
 																					oTable<xsl:number value="($num - 1)"/>.fnDraw();
 																				});																			
 																		}
@@ -239,7 +240,7 @@
 																		{
 																				action += "&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
-																					document.getElementById("message").innerHTML += '<br/>' + result;
+																					document.getElementById("message<xsl:number value="($num - 1)"/>").innerHTML += '<br/>' + result;
 																					oTable<xsl:number value="($num - 1)"/>.fnDraw();
 																				});																				
 																		}
