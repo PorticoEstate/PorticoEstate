@@ -1141,7 +1141,7 @@ JS;
 					)
 				);
 				
-				$tabletools2[] = array
+				$tabletools_composite[] = array
 					(
 						'my_name'		=> 'view',
 						'text'			=> lang('show'),
@@ -1151,18 +1151,19 @@ JS;
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 					);
 				
-
-				$tabletools2[] = array
+				$tabletools_composite[] = array
 					(
 						'my_name'		=> 'add',
 						'text'			=> lang('add'),
-						'action'		=> self::link(array(
-								'menuaction'		=> 'rental.uicontract.add_composite', 
-								'contract_id'		=> $contract_id,
-								'phpgw_return_as'	=> 'json'
-						)),
-						'target'		=> 'ajax',
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id'))))
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.add_composite', 
+									'contract_id'		=> $contract_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							addComposite(oArgs);
+						"
 					);
 				
 				$datatable_def[] = array
@@ -1171,7 +1172,7 @@ JS;
 					'requestUrl'	=> "''",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $composite_def,
-					'tabletools'	=> $tabletools2,
+					'tabletools'	=> $tabletools_composite,
 					'config'		=> array(
 						array('disableFilter'	=> true)
 					)
@@ -1509,6 +1510,7 @@ JS;
 		public function add_composite(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$composite_id = (int)phpgw::get_var('composite_id');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
