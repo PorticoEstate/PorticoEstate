@@ -57,3 +57,34 @@ $(document).ready(function(){
 		}
 	};
 });
+
+addComposite = function(oArgs){
+    
+	var oTT = TableTools.fnGetInstance( 'datatable-container_2' );
+	var selected = oTT.fnGetSelectedData();
+
+	if (selected.length == 0){
+		alert('None selected');
+		return false;
+	}
+
+	var values = {};
+
+	for ( var n = 0; n < selected.length; ++n )
+	{
+		var aData = selected[n];
+		values[n] = aData['id'];
+	}
+
+	var data = {'composite_id': values};
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		JqueryPortico.show_message('1', result);
+		
+		oTable1.fnDraw();
+		oTable2.fnDraw();
+
+	}, data, 'POST', 'JSON');
+};
