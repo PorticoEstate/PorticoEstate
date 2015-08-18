@@ -338,8 +338,27 @@ JqueryPortico.fnGetSelected = function(oTable)
 	return aReturn;
 };
 
+JqueryPortico.show_message = function(n, result)
+{
+	document.getElementById('message' + n).innerHTML = '';
+
+	if (typeof(result.message) !== 'undefined')
+	{
+		$.each(result.message, function (k, v) {
+			document.getElementById('message' + n).innerHTML += v.msg + '<br/>';
+		});
+	}
+
+	if (typeof(result.error) !== 'undefined')
+	{
+		$.each(result.error, function (k, v) {
+			document.getElementById('message' + n).innerHTML += v.msg + '<br/>';
+		});
+	}
+};
+
 JqueryPortico.execute_ajax = function(requestUrl, callback, data,type, dataType)
-{                                       
+{
 	type = typeof type !== 'undefined' ? type : 'POST';
 	dataType = typeof dataType !== 'undefined' ? dataType : 'html';
 	data = typeof data !== 'undefined' ? data : {};
