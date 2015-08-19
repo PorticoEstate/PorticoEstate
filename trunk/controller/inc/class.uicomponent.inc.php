@@ -330,8 +330,13 @@
 								'text'	 => '',
 								'value'	 => $filter_component
 							),
-						),
-					),
+							array('type'	 => 'hidden',
+								'name'	 => 'custom_frontend',
+								'text'	 => '',
+								'value'	 => isset($GLOBALS['phpgw_info']['flags']['custom_frontend']) && $GLOBALS['phpgw_info']['flags']['custom_frontend'] ? 1 : 0
+							)
+						)
+					)
 				),
 				'datatable'		 => array(
 					'source' => self::link(array('menuaction' => 'controller.uicomponent.index',
