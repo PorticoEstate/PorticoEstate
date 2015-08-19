@@ -230,7 +230,7 @@
 			var user_id = $("#user_id").val();
 			var custom_frontend = $("[name='custom_frontend']").val();
 
-			if(user_id < 0 || custom_frontend ==1)
+			if(custom_frontend ==1)
 			{
 				$( "#user_id" ).hide();
 				$("[for='user_id']").hide();
