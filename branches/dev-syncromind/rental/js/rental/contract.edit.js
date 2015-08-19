@@ -58,33 +58,151 @@ $(document).ready(function(){
 	};
 });
 
-addComposite = function(oArgs){
+addComposite = function(oArgs, parameters){
     
 	var oTT = TableTools.fnGetInstance( 'datatable-container_2' );
 	var selected = oTT.fnGetSelectedData();
+	var nTable = 1;
 
 	if (selected.length == 0){
 		alert('None selected');
 		return false;
 	}
 
-	var values = {};
+	var data = {};
 
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
 	for ( var n = 0; n < selected.length; ++n )
 	{
-		var aData = selected[n];
-		values[n] = aData['id'];
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = selected[n][val.source];
+		});		
 	}
 
-	var data = {'composite_id': values};
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
 
-		JqueryPortico.show_message('1', result);
+		JqueryPortico.show_message(nTable, result);
 		
 		oTable1.fnDraw();
 		oTable2.fnDraw();
+
+	}, data, 'POST', 'JSON');
+};
+
+removeComposite = function(oArgs, parameters){
+    
+	var oTT = TableTools.fnGetInstance( 'datatable-container_1' );
+	var selected = oTT.fnGetSelectedData();
+	var nTable = 1;
+
+	if (selected.length == 0){
+		alert('None selected');
+		return false;
+	}
+
+	var data = {};
+
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
+	for ( var n = 0; n < selected.length; ++n )
+	{
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = selected[n][val.source];
+		});		
+	}
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		JqueryPortico.show_message(nTable, result);
+		
+		oTable1.fnDraw();
+		oTable2.fnDraw();
+
+	}, data, 'POST', 'JSON');
+};
+
+
+addParty = function(oArgs, parameters){
+    
+	var oTT = TableTools.fnGetInstance( 'datatable-container_4' );
+	var selected = oTT.fnGetSelectedData();
+	var nTable = 3;
+
+	if (selected.length == 0){
+		alert('None selected');
+		return false;
+	}
+
+	var data = {};
+
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
+	for ( var n = 0; n < selected.length; ++n )
+	{
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = selected[n][val.source];
+		});		
+	}
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		JqueryPortico.show_message(nTable, result);
+		
+		oTable3.fnDraw();
+		oTable4.fnDraw();
+
+	}, data, 'POST', 'JSON');
+};
+
+removeParty = function(oArgs, parameters){
+    
+	var oTT = TableTools.fnGetInstance( 'datatable-container_3' );
+	var selected = oTT.fnGetSelectedData();
+	var nTable = 3;
+
+	if (selected.length == 0){
+		alert('None selected');
+		return false;
+	}
+
+	var data = {};
+
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
+	for ( var n = 0; n < selected.length; ++n )
+	{
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = selected[n][val.source];
+		});		
+	}
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		JqueryPortico.show_message(nTable, result);
+		
+		oTable3.fnDraw();
+		oTable4.fnDraw();
 
 	}, data, 'POST', 'JSON');
 };
