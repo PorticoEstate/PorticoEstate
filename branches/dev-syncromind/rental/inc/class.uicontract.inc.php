@@ -1103,10 +1103,19 @@ JS;
 					{
 						$composite_def[$i]['key'] 	= $uicols_composite['name'][$i];
 						$composite_def[$i]['label']	= $uicols_composite['descr'][$i];
+						$composite_def[$i]['sortable']	= $uicols_composite['sortable'][$i];
 					}
 				}
-
-				$tabletools1[] = array
+				if(!empty($this->config->config_data['contract_future_info']))
+				{
+					$composite_def[] =  array("key"=>"contracts", "label"=>lang('contract_future_info'), "sortable"=>false, "hidden"=>false);
+				}
+				if(!empty($this->config->config_data['contract_furnished_status']))
+				{
+					$composite_def[] = array("key"=>"furnished_status", "label"=>lang('furnish_type'), "sortable"=>false, "hidden"=>false);
+				}
+			
+				$tabletools_composite1[] = array
 					(
 						'my_name'		=> 'view',
 						'text'			=> lang('show'),
@@ -1116,17 +1125,20 @@ JS;
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 					);
 				
-				$tabletools1[] = array
+				$tabletools_composite1[] = array
 					(
 						'my_name'		=> 'delete',
 						'text'			=> lang('remove'),
-						'action'		=> self::link(array(
-								'menuaction'		=> 'rental.uicontract.remove_composite', 
-								'contract_id'		=> $contract_id,
-								'delete'			=> '1',
-								'phpgw_return_as'	=> 'json'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id'))))
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.remove_composite', 
+									'contract_id'		=> $contract_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id')))).";
+							removeComposite(oArgs, parameters);
+						"
 					);
 				
 				$datatable_def[] = array
@@ -1135,13 +1147,13 @@ JS;
 					'requestUrl'	=> "''",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $composite_def,
-					'tabletools'	=> $tabletools1,
+					'tabletools'	=> $tabletools_composite1,
 					'config'		=> array(
 						array('disableFilter'	=> true)
 					)
 				);
 				
-				$tabletools_composite[] = array
+				$tabletools_composite2[] = array
 					(
 						'my_name'		=> 'view',
 						'text'			=> lang('show'),
@@ -1151,7 +1163,7 @@ JS;
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 					);
 				
-				$tabletools_composite[] = array
+				$tabletools_composite2[] = array
 					(
 						'my_name'		=> 'add',
 						'text'			=> lang('add'),
@@ -1162,7 +1174,8 @@ JS;
 									'contract_id'		=> $contract_id,
 									'phpgw_return_as'	=> 'json'
 								)).";
-							addComposite(oArgs);
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id')))).";
+							addComposite(oArgs, parameters);
 						"
 					);
 				
@@ -1172,7 +1185,7 @@ JS;
 					'requestUrl'	=> "''",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $composite_def,
-					'tabletools'	=> $tabletools_composite,
+					'tabletools'	=> $tabletools_composite2,
 					'config'		=> array(
 						array('disableFilter'	=> true)
 					)
@@ -1188,23 +1201,77 @@ JS;
 									array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
 								);
 				
+				$tabletools_party1[] = array
+					(
+						'my_name'		=> 'view',
+						'text'			=> lang('show'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uiparty.view'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+				
+				$tabletools_party1[] = array
+					(
+						'my_name'		=> 'delete',
+						'text'			=> lang('remove'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.remove_party', 
+									'contract_id'		=> $contract_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'party_id', 'source'=>'id')))).";
+							removeParty(oArgs, parameters);
+						"
+					);
+				
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_3',
 					'requestUrl'	=> "''",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $party_def,
+					'tabletools'	=> $tabletools_party1,
 					'config'		=> array(
 						array('disableFilter'	=> true)
 					)
 				);
 
+				$tabletools_party2[] = array
+					(
+						'my_name'		=> 'view',
+						'text'			=> lang('show'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uiparty.view'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+				
+				$tabletools_party2[] = array
+					(
+						'my_name'		=> 'add',
+						'text'			=> lang('add'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.add_party', 
+									'contract_id'		=> $contract_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'party_id', 'source'=>'id')))).";
+							addParty(oArgs, parameters);
+						"
+					);
+				
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_4',
 					'requestUrl'	=> "''",
 					'data'			=> json_encode(array()),
 					'ColumnDefs'	=> $party_def,
+					'tabletools'	=> $tabletools_party2,
 					'config'		=> array(
 						array('disableFilter'	=> true)
 					)
@@ -1214,6 +1281,60 @@ JS;
 				$link_not_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'not_included_parties', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
 			}
 			
+			$composite_search_options = array
+			(
+				array('id'=>'all', 'name'=>lang('all'), 'selected'=>1),
+				array('id'=>'name', 'name'=>lang('name'), 'selected'=>0),
+				array('id'=>'address', 'name'=>lang('address'), 'selected'=>0),
+				array('id'=>'property_id', 'name'=>lang('object_number'), 'selected'=>0)
+			);
+		
+			$furnish_types_options = array();
+			if(!empty($this->config->config_data['contract_furnished_status']))
+			{
+				$furnish_types_arr = rental_composite::get_furnish_types();
+				array_unshift ($furnish_types_options, array('id'=>'4', 'name'=>lang('Alle')));
+				foreach($furnish_types_arr as $id => $title){
+						$furnish_types_options[] = array('id'=>$id, 'name'=>$title); 
+				}								
+			}
+			$active_options = array
+			(
+				array('id'=>'both', 'name'=>lang('all')),
+				array('id'=>'active', 'name'=>lang('in_operation')),
+				array('id'=>'non_active', 'name'=>lang('out_of_operation')),
+			);
+			$has_contract_options = array
+			(
+				array('id'=>'both', 'name'=>lang('all')),
+				array('id'=>'has_contract', 'name'=>lang('composite_has_contract')),
+				array('id'=>'has_no_contract', 'name'=>lang('composite_has_no_contract')),
+			);
+		
+			$party_search_options = array
+			(
+				array('id'=>'all', 'name'=>lang('all')),
+				array('id'=>'name', 'name'=>lang('name')),
+				array('id'=>'address', 'name'=>lang('address')),
+				array('id'=>'identifier', 'name'=>lang('identifier')),
+				array('id'=>'reskontro', 'name'=>lang('reskontro')),
+				array('id'=>'result_unit_number', 'name'=>lang('result_unit_number')),
+			);
+
+			$party_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$party_types_options = array();
+			array_unshift ($party_types_options, array('id'=>'all', 'name'=>lang('all')));
+			foreach($party_types as $id => $label)
+			{
+				$party_types_options[] = array('id'=>$id, 'name'=>lang($label));
+			}
+			$status_options = array
+			(
+				array('id'=>'all', 'name'=>lang('not_available_nor_hidden')),
+				array('id'=>'active', 'name'=>lang('available_for_pick')),
+				array('id'=>'inactive', 'name'=>lang('hidden_for_pick')),
+			);
+		
 			$data = array
 				(
 					'datatable_def'					=> $datatable_def,
@@ -1299,6 +1420,15 @@ JS;
 					'link_not_included_composites'	=> $link_not_included_composites,
 					'link_included_parties'			=> $link_included_parties,
 					'link_not_included_parties'		=> $link_not_included_parties,
+					
+					'list_composite_search'			=> array('options' => $composite_search_options),
+					'list_furnish_types'			=> array('options' => $furnish_types_options),
+					'list_active'					=> array('options' => $active_options),
+					'list_has_contract'				=> array('options' => $has_contract_options),
+				
+					'list_party_search'				=> array('options' => $party_search_options),
+					'list_party_types'				=> array('options' => $party_types_options),
+					'list_status'					=> array('options' => $status_options),
 				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
@@ -1455,14 +1585,24 @@ JS;
 		 */
 		public function add_party(){
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$party_id = (int)phpgw::get_var('party_id');
+			$list_party_id = phpgw::get_var('party_id');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			$message = array();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return $so_contract->add_party($contract_id,$party_id);
+				foreach ($list_party_id as $party_id)
+				{
+					$result = $so_contract->add_party($contract_id, $party_id);
+					if ($result) {
+						$message['message'][] = array('msg'=>'party '.$party_id.' '.lang('has been added'));
+					} else {
+						$message['error'][] = array('msg'=>'party '.$party_id.' '.lang('not added'));
+					}				
+				}				
 			}
-			return false;
+			return $message;
 		}
 
 		/**
@@ -1473,14 +1613,24 @@ JS;
 		 */
 		public function remove_party(){
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$party_id = (int)phpgw::get_var('party_id');
+			$list_party_id = phpgw::get_var('party_id');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			$message = array();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return $so_contract->remove_party($contract_id, $party_id);
+				foreach ($list_party_id as $party_id)
+				{
+					$result = $so_contract->remove_party($contract_id, $party_id);
+					if ($result) {
+						$message['message'][] = array('msg'=>'party '.$party_id.' '.lang('has been removed'));
+					} else {
+						$message['error'][] = array('msg'=>'party '.$party_id.' '.lang('not removed'));
+					}				
+				}				
 			}
-			return false;
+			return $message;
 		}
 
 		/**
@@ -1509,15 +1659,24 @@ JS;
 		 */
 		public function add_composite(){
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$composite_id = (int)phpgw::get_var('composite_id');
-			
+			$list_composite_id = phpgw::get_var('composite_id');
+
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			$message = array();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return $so_contract->add_composite($contract_id, $composite_id);
+				foreach ($list_composite_id as $composite_id)
+				{
+					$result = $so_contract->add_composite($contract_id, $composite_id);
+					if ($result) {
+						$message['message'][] = array('msg'=>'composite '.$composite_id.' '.lang('has been added'));
+					} else {
+						$message['error'][] = array('msg'=>'composite '.$composite_id.' '.lang('not added'));
+					}				
+				}
 			}
-			return false;
+			return $message;
 		}
 
 		/**
@@ -1528,14 +1687,24 @@ JS;
 		 */
 		public function remove_composite(){
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$composite_id = (int)phpgw::get_var('composite_id');
+			$list_composite_id = phpgw::get_var('composite_id');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			$message = array();
 			if(isset($contract) && $contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return $so_contract->remove_composite($contract_id, $composite_id);
+				foreach ($list_composite_id as $composite_id)
+				{
+					$result = $so_contract->remove_composite($contract_id, $composite_id);
+					if ($result) {
+						$message['message'][] = array('msg'=>'composite '.$composite_id.' '.lang('has been removed'));
+					} else {
+						$message['error'][] = array('msg'=>'composite '.$composite_id.' '.lang('not removed'));
+					}				
+				}
 			}
-			return false;
+			return $message;
 		}
 
 		/**
