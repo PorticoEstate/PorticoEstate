@@ -276,7 +276,39 @@
 										</xsl:if>
 									</xsl:for-each>
 								</div>
-							
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'search_options')"/>
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+											<input type="text" id="composite_query" name="composite_query" value=""></input>
+											<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+											<select id="composite_search_options" name="composite_search_options">
+												<xsl:apply-templates select="list_composite_search/options"/>
+											</select>										
+										</div>
+										<div class="pure-control-group">
+											<xsl:choose>
+												<xsl:when test="//list_furnish_types/options!=''">
+													<label><xsl:value-of select="php:function('lang', 'furnish_type')"/></label>
+													<select id="furnished_status" name="furnished_status">
+														<xsl:apply-templates select="list_furnish_types/options"/>
+													</select>
+												</xsl:when>
+											</xsl:choose>									
+											<label><xsl:value-of select="php:function('lang', 'availability')"/></label>
+											<select id="is_active" name="is_active">
+												<xsl:apply-templates select="list_active/options"/>
+											</select>
+											<xsl:text> </xsl:text>
+											<select id="has_contract" name="has_contract">
+												<xsl:apply-templates select="list_has_contract/options"/>
+											</select>																				
+										</div>
+									</div>
+								</div>							
 								<div>
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_2'">
@@ -313,7 +345,31 @@
 										</xsl:if>
 									</xsl:for-each>
 								</div>
-							
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'search_options')"/>
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+											<input type="text" id="party_query" name="party_query" value=""></input>
+											<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+											<select id="party_search_options" name="party_search_options">
+												<xsl:apply-templates select="list_party_search/options"/>
+											</select>										
+										</div>
+										<div class="pure-control-group">									
+											<label><xsl:value-of select="php:function('lang', 'part_of_contract')"/></label>
+											<select id="party_type" name="party_type">
+												<xsl:apply-templates select="list_party_types/options"/>
+											</select>
+											<label><xsl:value-of select="php:function('lang', 'marked_as')"/></label>
+											<select id="active" name="active">
+												<xsl:apply-templates select="list_status/options"/>
+											</select>																				
+										</div>
+									</div>
+								</div>							
 								<div>
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_4'">
