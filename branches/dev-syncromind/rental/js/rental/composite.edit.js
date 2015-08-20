@@ -11,13 +11,13 @@
 			filterDataLocations('search_option', $(this).val());
 		});
 		
-		var valuesLocationSearch = {};
+		var previous_query = '';
 		$('#query').on( 'keyup change', function () 
 		{
-			if ( $.trim($(this).val()) != $.trim(valuesLocationSearch[i]) ) 
+			if ( $.trim($(this).val()) != $.trim(previous_query) ) 
 			{
 				filterDataLocations('search', {'value': $(this).val()});
-				valuesLocationSearch[i] = $(this).val();
+				previous_query = $(this).val();
 			}
 		});
 		
@@ -27,13 +27,13 @@
 			filterDataContracts('search_option', $(this).val());
 		});
 		
-		var valuesContractSearch = {};
+		var previous_contract_query = '';
 		$('#contracts_query').on( 'keyup change', function () 
 		{
-			if ( $.trim($(this).val()) != $.trim(valuesContractSearch[i]) ) 
+			if ( $.trim($(this).val()) != $.trim(previous_contract_query) ) 
 			{
 				filterDataContracts('search', {'value': $(this).val()});
-				valuesContractSearch[i] = $(this).val();
+				previous_contract_query = $(this).val();
 			}
 		});
 		
