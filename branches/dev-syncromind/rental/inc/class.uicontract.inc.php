@@ -1077,9 +1077,9 @@ JS;
 					'container'		=> 'datatable-container_0',
 					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.get_total_price', 'contract_id'=>$contract_id,  'phpgw_return_as'=>'json'))),
 					'ColumnDefs'	=> array(
-								array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false),
-								array('key'=>'area', 'label'=>lang('area'), 'sortable'=>false),
-								array('key'=>'price_per_unit', 'label'=>lang('price_per_unit'), 'sortable'=>false)					
+								array('key'=>'total_price', 'label'=>lang('total_price'), 'className'=>'right', 'sortable'=>false),
+								array('key'=>'area', 'label'=>lang('area'), 'className'=>'right', 'sortable'=>false),
+								array('key'=>'price_per_unit', 'label'=>lang('price_per_unit'), 'className'=>'right', 'sortable'=>false)					
 					),
 					'config'		=> array(
 						array('disableFilter' => true),
@@ -1089,7 +1089,7 @@ JS;
 				
 				$tabs['composite']		= array('label' => lang('Composite'), 'link' => '#composite', 'function' => 'get_composite_data()');
 				$tabs['parties']		= array('label' => lang('Parties'), 'link' => '#parties', 'function' => 'get_parties_data()');
-				$tabs['price']			= array('label' => lang('Price'), 'link' => '#price');
+				$tabs['price']			= array('label' => lang('Price'), 'link' => '#price', 'function' => 'get_price_data()');
 				$tabs['invoice']		= array('label' => lang('Invoice'), 'link' => '#invoice');
 				$tabs['documents']		= array('label' => lang('Documents'), 'link' => '#documents');
 				$tabs['notifications']	= array('label' => lang('Notifications'), 'link' => '#notifications');
@@ -1198,7 +1198,8 @@ JS;
 				$party_def = array(
 									array('key'=>'identifier', 'label'=>lang('identifier'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
 									array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
+									array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'is_payer', 'label'=>lang('is_payer'), 'sortable'=>false, 'hidden'=>false)
 								);
 				
 				$tabletools_party1[] = array
@@ -1265,6 +1266,7 @@ JS;
 						"
 					);
 				
+				$party_def[3]['hidden'] = true;
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_4',
@@ -1279,6 +1281,91 @@ JS;
 				
 				$link_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'included_parties', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
 				$link_not_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'not_included_parties', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
+			
+				$tabletools_price1[] = array
+					(
+						'my_name'		=> 'remove',
+						'text'			=> lang('remove'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.remove_price_item', 
+									'contract_id'		=> $contract_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
+							removePrice(oArgs, parameters);
+						"
+					);
+				
+				$tabletools_price1[] = array
+					(
+						'my_name'		=> 'reset',
+						'text'			=> lang('reset'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.reset_price_item', 
+									'contract_id'		=> $contract_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
+							removePrice(oArgs, parameters);
+						"
+					);
+				
+				$tabletools_price2[] = array
+					(
+						'my_name'		=> 'add',
+						'text'			=> lang('add'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.add_price_item', 
+									'contract_id'		=> $contract_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
+							addPrice(oArgs, parameters);
+						"
+					);
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_5',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> array(
+									array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false)
+					),
+					'tabletools'	=> $tabletools_price1,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_6',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> array(
+									array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false)
+					),
+					'tabletools'	=> $tabletools_price2,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+				
+				$link_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
+				$link_not_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'not_included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'responsibility_id'=>$contract->get_location_id(), 'phpgw_return_as'=>'json')));				
 			}
 			
 			$composite_search_options = array
@@ -1420,6 +1507,8 @@ JS;
 					'link_not_included_composites'	=> $link_not_included_composites,
 					'link_included_parties'			=> $link_included_parties,
 					'link_not_included_parties'		=> $link_not_included_parties,
+					'link_included_price_items'		=> $link_included_price_items,
+					'link_not_included_price_items'	=> $link_not_included_price_items,
 					
 					'list_composite_search'			=> array('options' => $composite_search_options),
 					'list_furnish_types'			=> array('options' => $furnish_types_options),
@@ -1716,15 +1805,26 @@ JS;
 		public function add_price_item()
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$price_item_id = (int)phpgw::get_var('price_item_id');
+			$list_price_item_id = phpgw::get_var('price_item_id');
 			$factor =  phpgw::get_var('factor','float');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			$message = array();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
+				//return rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
+				foreach ($list_price_item_id as $price_item_id)
+				{
+					$result = rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
+					if ($result) {
+						$message['message'][] = array('msg'=>'price_item '.$price_item_id.' '.lang('has been added'));
+					} else {
+						$message['error'][] = array('msg'=>'price_item '.$price_item_id.' '.lang('not added'));
+					}				
+				}					
 			}
-			return false;
+			return $message;
 		}
 
 		/**
@@ -1736,14 +1836,24 @@ JS;
 		public function remove_price_item()
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$price_item_id = (int)phpgw::get_var('price_item_id');
+			$list_price_item_id = phpgw::get_var('price_item_id');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			$message = array();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return rental_soprice_item::get_instance()->remove_price_item($contract_id, $price_item_id);
+				foreach ($list_price_item_id as $price_item_id)
+				{
+					$result = rental_soprice_item::get_instance()->remove_price_item($contract_id, $price_item_id);
+					if ($result) {
+						$message['message'][] = array('msg'=>'price_item '.$price_item_id.' '.lang('has been removed'));
+					} else {
+						$message['error'][] = array('msg'=>'price_item '.$price_item_id.' '.lang('not removed'));
+					}				
+				}
 			}
-			return false;
+			return $message;
 		}
 
 		/**
@@ -1755,14 +1865,25 @@ JS;
 		public function reset_price_item()
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$price_item_id = (int)phpgw::get_var('price_item_id');
+			$list_price_item_id = phpgw::get_var('price_item_id');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			$message = array();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
+				//return rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
+				foreach ($list_price_item_id as $price_item_id)
+				{
+					$result = rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
+					if ($result) {
+						$message['message'][] = array('msg'=>'price_item '.$price_item_id.' '.lang('has been reseted'));
+					} else {
+						$message['error'][] = array('msg'=>'price_item '.$price_item_id.' '.lang('not reseted'));
+					}				
+				}				
 			}
-			return false;
+			return $message;
 		}
 		
 		public function get_total_price()
