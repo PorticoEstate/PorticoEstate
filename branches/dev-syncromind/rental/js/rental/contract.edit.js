@@ -10,6 +10,14 @@ var link_not_included_price_items = null;
 var link_included_price_items = null;
 var set_price_data = 0;
 
+var set_invoice_data = 0;
+
+function formatterPrice (key, oData) 
+{
+	var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
+	return amount;
+}
+	
 $(document).ready(function()
 {
 	$("#date_start").change(function(){
@@ -93,6 +101,14 @@ $(document).ready(function()
 	
 	/******************************************************************************/
 	
+	$('#invoice_id').change( function() 
+	{
+		oTable7.dataTableSettings[7]['ajax']['data']['invoice_id'] = $('#invoice_id').val();
+		JqueryPortico.updateinlineTableHelper(oTable7);
+	});	
+	
+	/******************************************************************************/
+	
 	get_composite_data = function()
 	{
 		if (set_composite_data  === 0)
@@ -135,6 +151,17 @@ $(document).ready(function()
 			JqueryPortico.updateinlineTableHelper(oTable6);
 
 			set_price_data = 1;
+		}
+	};
+	
+	initial_invoice_data = function()
+	{
+		if (set_invoice_data  === 0)
+		{
+			oTable7.dataTableSettings[7]['ajax']['data']['invoice_id'] = $('#invoice_id').val();
+			JqueryPortico.updateinlineTableHelper(oTable7);
+
+			set_invoice_data = 1;
 		}
 	};
 });
@@ -376,6 +403,39 @@ removePrice = function(oArgs, parameters){
 		
 		oTable5.fnDraw();
 		oTable0.fnDraw();
+
+	}, data, 'POST', 'JSON');
+};
+
+deleteNotification = function(oArgs, parameters){
+    
+	var oTT = TableTools.fnGetInstance( 'datatable-container_9' );
+	var selected = oTT.fnGetSelectedData();
+
+	if (selected.length == 0){
+		alert('None selected');
+		return false;
+	}
+
+	var data = {};
+
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
+	for ( var n = 0; n < selected.length; ++n )
+	{
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = selected[n][val.source];
+		});		
+	}
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		oTable9.fnDraw();
 
 	}, data, 'POST', 'JSON');
 };
