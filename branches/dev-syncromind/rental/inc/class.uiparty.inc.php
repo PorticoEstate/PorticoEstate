@@ -201,7 +201,7 @@ class rental_uiparty extends rental_uicommon
 						$unit_name_and_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
 					}
 					
-					if(isset($unit_name_and_id))
+					if(isset($unit_name_and_id) && $unit_name_and_id)
 					{
 						$unit_id = $unit_name_and_id['UNIT_ID'];
 						$unit_name = $unit_name_and_id['UNIT_NAME'];
