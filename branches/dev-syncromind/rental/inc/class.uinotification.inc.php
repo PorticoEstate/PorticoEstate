@@ -19,14 +19,35 @@ class rental_uinotification extends rental_uicommon
 	
 	public function query()
 	{
-		// YUI variables for paging and sorting
-		$start_index	= phpgw::get_var('startIndex', 'int');
+		if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+		{
+			$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+		}
+		else {
+			$user_rows_per_page = 10;
+		}
+			
+		$search			= phpgw::get_var('search');
+		$order			= phpgw::get_var('order');
+		$draw			= phpgw::get_var('draw', 'int');
+		$columns		= phpgw::get_var('columns');
+
+		$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+		$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+		$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'date'; 
+		$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
+		// Form variables
+		$search_for 	= $search['value'];
+		$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+		
+		/*$start_index	= phpgw::get_var('startIndex', 'int');
 		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
 		$sort_field		= phpgw::get_var('sort');
 		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 		// Form variables
 		$search_for 	= phpgw::get_var('query');
-		$search_type	= phpgw::get_var('search_option');
+		$search_type	= phpgw::get_var('search_option');*/
+		
 		// Create an empty result set
 		$result_objects = array();
 		$result_count = 0;
@@ -59,15 +80,19 @@ class rental_uinotification extends rental_uicommon
 				$rows[] = $result->serialize();
 			}
 		}
+
+		$result_data    =   array('results' =>  $rows);
+		$result_data['total_records']	= $result_count;
+		$result_data['draw']    = $draw;
+
+		return $this->jquery_results($result_data);
 		
-		$editable = phpgw::get_var('editable') == 'true' ? true : false;
+		/*$editable = phpgw::get_var('editable') == 'true' ? true : false;
 		
-		//Add context menu columns (actions and labels)
 		array_walk($rows, array($this, 'add_actions'), array($query_type, $editable));
 
-		//Build a YUI result from the data
 		$result_data = array('results' => $rows, 'total_records' => $result_count);
-		return $this->yui_results($result_data, 'total_records', 'results');
+		return $this->yui_results($result_data, 'total_records', 'results');*/
 	}
 	
 	/**
@@ -120,15 +145,26 @@ class rental_uinotification extends rental_uicommon
 	 */
 	public function delete_notification()
 	{
-		$notification_id = (int)phpgw::get_var('id');
+		$list_notification_id = phpgw::get_var('id');
 		$contract_id = (int)phpgw::get_var('contract_id');
+		
 		$contract = rental_socontract::get_instance()->get_single($contract_id);
+		$message = array();
 		if($contract->has_permission(PHPGW_ACL_EDIT))
 		{	
-			rental_sonotification::get_instance()->delete_notification($notification_id);
-			return true;
+			//rental_sonotification::get_instance()->delete_notification($notification_id);
+			//return true;
+			foreach ($list_notification_id as $notification_id)
+			{
+				$result = rental_sonotification::get_instance()->delete_notification($notification_id);
+				if ($result) {
+					$message['message'][] = array('msg'=>'notification '.$notification_id.' '.lang('has been removed'));
+				} else {
+					$message['error'][] = array('msg'=>'notification '.$notification_id.' '.lang('not removed'));
+				}				
+			}
 		}
-		return false;
+		return $message;
 	}
 
 	
