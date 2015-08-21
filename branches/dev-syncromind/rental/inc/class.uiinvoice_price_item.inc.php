@@ -14,18 +14,31 @@ class rental_uiinvoice_price_item extends rental_uicommon
 		);
 	
 	public function query()
-	{
-		// YUI variables for paging and sorting
-		$start_index	= phpgw::get_var('startIndex', 'int');
-		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 1000);
-		$sort_field		= phpgw::get_var('sort');
-		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+	{	
+		if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+		{
+			$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+		}
+		else {
+			$user_rows_per_page = 10;
+		}
+			
+		$search			= phpgw::get_var('search');
+		$order			= phpgw::get_var('order');
+		$draw			= phpgw::get_var('draw', 'int');
+		$columns		= phpgw::get_var('columns');
+
+		$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+		$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+		$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'title'; 
+		$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 		// Form variables
-		$search_for 	= phpgw::get_var('query');
-		$search_type	= phpgw::get_var('search_option');
+		$search_for 	= $search['value'];
+		$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+		
 		// Create an empty result set
 		$result_objects = array();
-		$result_count = 0;
+		$object_count = 0;
 		//Retrieve the type of query and perform type specific logic
 		$query_type = phpgw::get_var('type');
 		switch($query_type)
@@ -50,10 +63,11 @@ class rental_uiinvoice_price_item extends rental_uicommon
 			}
 		}
 		
-		// ... add result data
-		$result_data = array('results' => $rows, 'total_records' => $object_count);
-		
-		return $this->yui_results($result_data, 'total_records', 'results');
+		$result_data    =   array('results' =>  $rows);
+		$result_data['total_records']	= $object_count;
+		$result_data['draw']    = $draw;
+
+		return $this->jquery_results($result_data);
 	}
 		
 }
