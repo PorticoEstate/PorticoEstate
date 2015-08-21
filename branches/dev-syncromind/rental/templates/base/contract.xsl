@@ -424,7 +424,33 @@
 						</div>
 						<div id="invoice">
 							<fieldset>
-								
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'filters')"/>
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">										
+											<label><xsl:value-of select="php:function('lang', 'invoice')"/></label>
+											<select id="invoice_id" name="invoice_id">
+												<xsl:apply-templates select="list_invoices/options"/>
+											</select>										
+										</div>
+									</div>
+								</div>
+								<div>
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_7'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>														
 							</fieldset>
 						</div>
 						<div id="documents">
@@ -434,7 +460,57 @@
 						</div>
 						<div id="notifications">
 							<fieldset>
-								
+								<div>
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_9'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'new_notification')"/>
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'date')"/></label>
+											<input type="text" id="date_notification" name="date_notification" size="10" value="" readonly="readonly"/>												
+											<label><xsl:value-of select="php:function('lang', 'recurrence')"/></label>
+											<select id="notification_recurrence" name="notification_recurrence">
+												<xsl:apply-templates select="list_notification_recurrence/options"/>
+											</select>										
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'message')"/></label>
+											<input type="text" name="notification_message" id="notification_message" size="50" value="" />									
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'user_or_group')"/></label>
+											<select id="notification_target" name="notification_target">
+												<option value=''><xsl:value-of select="php:function('lang', 'target_none')"/></option>
+												<xsl:apply-templates select="list_notification_user_group/option_group"/>
+											</select>
+											<xsl:text> </xsl:text>
+											<label><xsl:value-of select="php:function('lang', 'field_of_responsibility')"/></label>
+											<select id="notification_location" name="notification_location">
+												<option value=''><xsl:value-of select="php:function('lang', 'target_none')"/></option>
+												<xsl:apply-templates select="list_field_of_responsibility/option_group"/>
+											</select>
+											<xsl:text> </xsl:text>
+											<xsl:variable name="add_notification">
+												<xsl:value-of select="php:function('lang', 'add')"/>
+											</xsl:variable>											
+											<input type="button" class="pure-button pure-button-primary" name="add_notification" id="add_notification" value="{$add_notification}" />									
+										</div>									
+									</div>
+								</div>
 							</fieldset>
 						</div>
 					</xsl:when>
@@ -459,4 +535,10 @@
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
+</xsl:template>
+
+<xsl:template match="option_group">
+	<optgroup label="{label}">
+		<xsl:apply-templates select="options"/>
+	</optgroup>
 </xsl:template>
