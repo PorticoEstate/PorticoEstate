@@ -407,6 +407,41 @@ removePrice = function(oArgs, parameters){
 	}, data, 'POST', 'JSON');
 };
 
+removeDocument = function(oArgs, parameters){
+    
+	var oTT = TableTools.fnGetInstance( 'datatable-container_8' );
+	var selected = oTT.fnGetSelectedData();
+	var nTable = 8;
+
+	if (selected.length == 0){
+		alert('None selected');
+		return false;
+	}
+
+	var data = {};
+
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
+	for ( var n = 0; n < selected.length; ++n )
+	{
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = selected[n][val.source];
+		});		
+	}
+
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+		
+		JqueryPortico.show_message(nTable, result);
+		oTable8.fnDraw();
+
+	}, data, 'POST', 'JSON');
+};
+
 deleteNotification = function(oArgs, parameters){
     
 	var oTT = TableTools.fnGetInstance( 'datatable-container_9' );
@@ -437,5 +472,40 @@ deleteNotification = function(oArgs, parameters){
 
 		oTable9.fnDraw();
 
+	}, data, 'POST', 'JSON');
+};
+
+addNotification = function()
+{
+	var nTable = 9;
+	var data = {};
+	
+	if ($.trim($('#notification_message').val()) == '')
+	{
+		alert('enter a message');
+		return;
+	}
+	
+	data['contract_id'] = $('#contract_id').val();
+	data['notification_recurrence'] = $('#notification_recurrence').val();
+	data['notification_message'] = $('#notification_message').val();
+	data['notification_target'] = $('#notification_target').val();
+	data['notification_location'] = $('#notification_location').val();
+	data['date_notification'] = $('#date_notification').val();
+
+	var oArgs = {"menuaction":"rental.uicontract.add_notification","phpgw_return_as":"json"};
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		$('#notification_recurrence')[0].selectedIndex = 0;
+		$('#notification_message').val('');
+		$('#notification_target')[0].selectedIndex = 0;
+		$('#notification_location')[0].selectedIndex = 0;
+		$('#date_notification').val('');
+		
+		JqueryPortico.show_message(nTable, result);
+		oTable9.fnDraw();
+	
 	}, data, 'POST', 'JSON');
 };
