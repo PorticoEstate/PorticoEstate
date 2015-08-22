@@ -22,9 +22,6 @@
 	{
 		private $pdf_templates = array();
 		private $config;
-		/*private $decimalSeparator;
-		private $thousandsSeparator;
-		private $decimalPlaces;*/
 		
 		public $public_functions = array
 		(
@@ -44,6 +41,7 @@
 			'add_price_item'		=> true,
 			'remove_price_item'		=> true,
 			'reset_price_item'		=> true,
+			'add_notification'		=> true,
 			'download'              => true,
 			'get_total_price'		=> true
 		);
@@ -57,10 +55,6 @@
 			
 			$this->config = CreateObject('phpgwapi.config','rental');
 			$this->config->read();
-			/*$this->thousandsSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : ' ';
-			$this->decimalSeparator = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
-			$this->decimalPlaces = ($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;*/
-			
 		}
 
 	private function _get_filters()
@@ -1410,6 +1404,47 @@ JS;
 					)
 				);			
 
+				$tabletools_documents[] = array
+					(
+						'my_name'		=> 'view',
+						'text'			=> lang('view'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uidocument.view'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+				
+				$tabletools_documents[] = array
+					(
+						'my_name'		=> 'delete',
+						'text'			=> lang('remove'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uidocument.delete',
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id')))).";
+							removeDocument(oArgs, parameters);
+						"
+					);
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_8',
+					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uidocument.query', 'type'=>'documents_for_contract', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json'))),
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> array(
+									array('key'=>'title', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'type', 'label'=>lang('type'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
+					),
+					'tabletools'	=> $tabletools_documents,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);	
+				
 				$tabletools_notification[] = array
 					(
 						'my_name'		=> 'delete',
@@ -1499,7 +1534,6 @@ JS;
 				array('id'=>'inactive', 'name'=>lang('hidden_for_pick')),
 			);
 		
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$invoices = rental_soinvoice::get_instance()->get(null, null, null, false, null, null, array('contract_id' => $contract->get_id()));
 			if($invoices != null && count($invoices) > 0)
 			{
@@ -1507,7 +1541,7 @@ JS;
 				{
 					$serial = $invoice->get_serial_number();
 					$serial_number = isset($serial) ?  " - ".$invoice->get_serial_number() : "";
-					$invoice_options[] = array('id'=>$invoice->get_id(), 'name'=>"{$invoice->get_billing_title()} - " . date($date_format, $invoice->get_timestamp_created()) . " - " . number_format($invoice->get_total_sum(), $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator) . " {$this->currency_suffix}".$serial_number);
+					$invoice_options[] = array('id'=>$invoice->get_id(), 'name'=>"{$invoice->get_billing_title()} - " . date($this->dateFormat, $invoice->get_timestamp_created()) . " - " . number_format($invoice->get_total_sum(), $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator) . " {$this->currency_suffix}".$serial_number);
 				}
 			}
 			else
@@ -1540,7 +1574,7 @@ JS;
 			}			
 			$notification_user_group_options[] = array('label'=>lang('notification_optgroup_groups'), 'options'=> $groups);
 									
-			$field_of_responsibility_options = array();
+			$field_of_responsibility_options = array();	
 			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 			foreach($types as $id => $label)
 			{
@@ -1551,6 +1585,17 @@ JS;
 					$field_of_responsibility_options[] = array('id'=>$id, 'name'=>lang($label), 'selected'=>$selected);					
 				}
 			}
+			
+			$document_types = rental_sodocument::get_instance()->get_document_types();
+			$document_types_options = array();
+			foreach($document_types as $id => $label)
+			{
+				$document_types_options[] = array('id'=>$id, 'name'=>lang($label));
+			}
+			
+			$document_search_options[] = array('id'=>'all', 'name'=>lang('all'));
+			$document_search_options[] = array('id'=>'title', 'name'=>lang('document_title'));
+			$document_search_options[] = array('id'=>'name', 'name'=>lang('document_name'));
 			
 			$code =	<<<JS
 				var thousandsSeparator = '$this->thousandsSeparator';
@@ -1662,6 +1707,9 @@ JS;
 					'list_notification_recurrence'	=> array('options' => $notification_recurrence_options),
 					'list_notification_user_group'  => array('option_group' => $notification_user_group_options),
 					'list_field_of_responsibility'  => array('options' => $field_of_responsibility_options),
+					
+					'list_document_types'			=> array('options' => $document_types_options),
+					'list_document_search'			=> array('options' => $document_search_options),
 				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
@@ -2027,6 +2075,35 @@ JS;
 						$message['error'][] = array('msg'=>'price_item '.$price_item_id.' '.lang('not reseted'));
 					}				
 				}				
+			}
+			return $message;
+		}
+		
+		public function add_notification()
+		{
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$account_id = phpgw::get_var('notification_target');
+			$location_id = phpgw::get_var('notification_location');
+			$date = phpgw::get_var('date_notification');
+					
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
+			$message = array();
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				if($date)
+				{
+					$date = phpgwapi_datetime::date_to_timestamp($date);
+				}
+				$notification = new rental_notification(-1, $account_id, $location_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
+				if (rental_sonotification::get_instance()->store($notification))
+				{
+					$message['message'][] = array('msg'=>'notification '.lang('has been added'));
+				}
+				else
+				{
+					$message['error'][] = array('msg'=>'notification '.lang('not added'));
+				}			
 			}
 			return $message;
 		}
