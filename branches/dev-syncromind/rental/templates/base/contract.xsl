@@ -57,7 +57,7 @@
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="details">
 					<fieldset>
-						<input type="hidden" name="id" value="{contract_id}"/>
+						<input type="hidden" name="id" id="contract_id" value="{contract_id}"/>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="lang_field_of_responsibility"/>
@@ -369,7 +369,7 @@
 											</select>																				
 										</div>
 									</div>
-								</div>							
+								</div>
 								<div>
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_4'">
@@ -455,7 +455,63 @@
 						</div>
 						<div id="documents">
 							<fieldset>
-								
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Upload')"/>
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label></label>
+											<input type="file" id="ctrl_upoad_path" name="file_path"/>
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'title')"/></label>
+											<input type="text" id="document_title" name="document_title"/>
+											<xsl:text> </xsl:text>
+											<select id="document_type" name="document_type">
+												<xsl:apply-templates select="list_document_types/options"/>
+											</select>
+											<xsl:text> </xsl:text>
+											<xsl:variable name="upload">
+												<xsl:value-of select="php:function('lang', 'upload')"/>
+											</xsl:variable>											
+											<input type="button" class="pure-button pure-button-primary" name="upload_button" id="upload_button" value="{$upload}" />							
+										</div>
+									</div>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'search_options')"/>
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+											<input id="document_query" type="text" name="document_query" />
+											<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+											<select id="document_search_option" name="document_search_option">
+												<xsl:apply-templates select="list_document_search/options"/>
+											</select>
+											<label><xsl:value-of select="php:function('lang', 'document_type')"/></label>
+											<select id="document_type_search" name="document_type_search">
+												<xsl:apply-templates select="list_document_types/options"/>
+											</select>																	
+										</div>
+									</div>
+								</div>														
+								<div>
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_8'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>								
 							</fieldset>
 						</div>
 						<div id="notifications">
@@ -501,13 +557,13 @@
 											<label><xsl:value-of select="php:function('lang', 'field_of_responsibility')"/></label>
 											<select id="notification_location" name="notification_location">
 												<option value=''><xsl:value-of select="php:function('lang', 'target_none')"/></option>
-												<xsl:apply-templates select="list_field_of_responsibility/option_group"/>
+												<xsl:apply-templates select="list_field_of_responsibility/options"/>
 											</select>
 											<xsl:text> </xsl:text>
 											<xsl:variable name="add_notification">
 												<xsl:value-of select="php:function('lang', 'add')"/>
 											</xsl:variable>											
-											<input type="button" class="pure-button pure-button-primary" name="add_notification" id="add_notification" value="{$add_notification}" />									
+											<input type="button" class="pure-button pure-button-primary" name="add_notification" id="add_notification" value="{$add_notification}" onClick="addNotification()" />									
 										</div>									
 									</div>
 								</div>
