@@ -2306,7 +2306,14 @@
 				<td valign="top" colspan="2">
 					<xsl:value-of select="php:function('lang', 'new value')"/>
 				</td>
-				<td valign="top" colspan="2">
+				<td valign="top">
+					<input type="text" name="values[new_choice_id]" size = '3'>
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'new id for multiple choice')"/>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td valign="top">
 					<input type="text" name="values[new_choice]">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'new value for multiple choice')"/>
