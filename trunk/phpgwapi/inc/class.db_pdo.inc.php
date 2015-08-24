@@ -370,12 +370,14 @@
 
 			try
 			{
-				if($exec)
+/*
+				if($exec) // Commented to prevent from SQL-injection
 				{
 					$this->affected_rows = $this->db->exec($sql);
 					return true;
 				}
 				else
+*/
 				{
 					$statement_object = $this->db->query($sql);
 /*
