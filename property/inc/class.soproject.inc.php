@@ -116,6 +116,7 @@
 			$status_id		 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$start_date		 = isset($data['start_date']) && $data['start_date'] ? (int) $data['start_date'] : 0;
 			$end_date		 = isset($data['end_date']) && $data['end_date'] ? (int) $data['end_date'] : 0;
+			$overdue		 = isset($data['overdue']) && $data['overdue'] ? (int) $data['overdue'] : 0;
 			$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
 			$wo_hour_cat_id	 = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
 			$district_id	 = isset($data['district_id']) ? $data['district_id'] : '';
@@ -492,7 +493,10 @@
 					{
 						$_status_filter[] = $this->db->f('id');
 					}
-					$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+					if($_status_filter)
+					{
+						$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+					}
 				}
 				else
 				{
@@ -551,6 +555,25 @@
 
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where = 'AND';
+			}
+
+			if($overdue)
+			{
+				$end_date = $overdue + 3600 * 16 + phpgwapi_datetime::user_timezone();
+				$filtermethod .= " $where fm_project.end_date <= $end_date AND fm_project.start_date <= $end_date ";
+				$_status_filter = array();
+				$this->db->query("SELECT * FROM fm_project_status WHERE closed IS NULL");
+				while($this->db->next_record())
+				{
+					$_status_filter[] = $this->db->f('id');
+				}
+				if($_status_filter)
+				{
+					$filtermethod .= " AND fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+				}
+
+				$where = 'AND';
+				
 			}
 
 			if($filter_year && $filter_year != 'all')
