@@ -359,13 +359,11 @@
 			{
 				$this->connect();
 			}
-
-			if(!$exec)
+			$fetch = true;
+			if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE|^DROP|^ALTER|^UPDATE)/i', $sql)) // need it for MySQL and Oracle
 			{
-				if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE|^DROP|^ALTER|^UPDATE)/i', $sql)) // need it for MySQL and Oracle
-				{
-					$exec = true;
-				}
+//				$exec = true; //ignored
+				$fetch = false;
 			}
 
 			try
@@ -380,23 +378,27 @@
 */
 				{
 					$statement_object = $this->db->query($sql);
+					if($fetch)
+					{
 /*
-					$num_rows = $this->statement_object->rowCount();
-					if($num_rows > 200)
-					{
-						$fetch_single = true;
-						$this->fetch_single = $fetch_single;
-					}
+						$num_rows = $this->statement_object->rowCount();
+						if($num_rows > 200)
+						{
+							$fetch_single = true;
+							$this->fetch_single = $fetch_single;
+						}
 */
-					if($fetch_single)
-					{
-						$this->resultSet = $statement_object->fetch($this->pdo_fetchmode);
-						$this->statement_object = $statement_object;
-						unset($statement_object);
-					}
-					else
-					{
-						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
+
+						if($fetch_single)
+						{
+							$this->resultSet = $statement_object->fetch($this->pdo_fetchmode);
+							$this->statement_object = $statement_object;
+							unset($statement_object);
+						}
+						else
+						{
+							$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
+						}
 					}
 				}
 			}
