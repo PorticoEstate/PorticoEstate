@@ -162,8 +162,8 @@ ressursnr	preferences	no	Ditt ressursnummer
 default dimb	preferences	no	Standard ansvarssted
 your email	preferences	no	Din e-postadresse
 insert your email address	preferences	no	Legg inn din e-postadresse
-branch tts	preferences	no	Del opp tts
-enable branch in tts-orders	preferences	no	Aktiver oppdeling av tts-ordre
+branch tts	preferences	no	Vis fag for melding
+enable branch in tts-orders	preferences	no	Vis fag for melding-bestilling
 default vendor type	preferences	no	Standard leverandørtype
 which agreement	preferences	no	Velg leverandørtype du vil ha som standard
 with of textarea	preferences	no	Bredde på tekstbokser
