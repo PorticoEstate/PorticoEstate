@@ -404,9 +404,12 @@
 					{
 						return $values['id'];
 					}
+					else
+					{
+						return 0;
+					}
 				}
-
-				return 0;
+				return $values['id'];
 			}
 
 
@@ -444,9 +447,10 @@
 				{
 					return $values['id'];
 				}
+				return 0;
 			}
 
-			return 0;
+			return $values['id'];
 		}
 
 		/**
@@ -924,23 +928,8 @@
 			
 			if(isset($attrib['new_choice']) && $attrib['new_choice'] && !$doubled )
 			{
-				$choice_id = $this->_next_id('phpgw_cust_choice' ,array('location_id'=> $location_id, 'attrib_id'=>$attrib_id));
-				$choice_sort = $choice_id;
-
-				$values= array(
-					$location_id,
-					$attrib_id,
-					$choice_id,
-					$choice_sort,
-					$attrib['new_choice']
-					);
-
-				$values	= $this->_db->validate_insert($values);
-
-				$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value) "
-				. "VALUES ($values)",__LINE__,__FILE__);
+				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id']);
 			}
-
 
 			if ( count($attrib['edit_choice'])  && !$doubled )
 			{
@@ -992,6 +981,38 @@
 			return false;
 		}
 
+		/**
+		 * Insert a new value for a list-attribute
+		 * @param integer $location_id
+		 * @param integer $attrib_id
+		 * @param string $value
+		 * @param integer $choice_id
+
+		 */
+		public function add_choice($location_id,$attrib_id,$value, $choice_id = 0)
+		{
+			if(!$choice_id)
+			{
+				$choice_id = $this->_next_id('phpgw_cust_choice' ,array('location_id'=> $location_id, 'attrib_id'=>$attrib_id));
+			}
+
+			$this->_db->query("SELECT count(id) as cnt FROM phpgw_cust_choice WHERE location_id = {$location_id} AND attrib_id = {$attrib_id}",__LINE__,__FILE__);
+			$this->_db->next_record();
+			$choice_sort = (int)$this->_db->f('cnt') +1;
+
+			$values= array(
+				$location_id,
+				$attrib_id,
+				$choice_id,
+				$choice_sort,
+				$value
+				);
+
+			$values	= $this->_db->validate_insert($values);
+
+			$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value) "
+			. "VALUES ({$values})",__LINE__,__FILE__);
+		}
 
 		/**
 		 * Get a list of attributes
