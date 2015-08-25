@@ -817,7 +817,7 @@
 					$subject = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
 					$subject .= "::{$serie['title']}::{$short_desc}";
 
-					$description = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+					$link_backend = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction'	=> 'controller.uicheck_list.add_check_list',
 						'control_id'	=> $check_list->get_control_id(),
 						'location_id'	=> $check_list->get_location_id(),
@@ -827,9 +827,21 @@
 						'assigned_to'	=> $check_list->get_assigned_to(),
 						'deadline_current'	=> true
 
-					),false,true).'">' . lang('serie').' #' .$check_list->get_serie_id() .'</a>'."\n";
+					),false,true,true).'">Serie#' . $check_list->get_serie_id() .'::Backend</a>';
 
-					$description = str_replace('&amp;', '&', $description);
+					$link_mobilefrontend = '<a href ="' . $GLOBALS['phpgw']->link('/mobilefrontend/index.php', array(
+						'menuaction'	=> 'controller.uicheck_list.add_check_list',
+						'control_id'	=> $check_list->get_control_id(),
+						'location_id'	=> $check_list->get_location_id(),
+						'component_id'	=> $check_list->get_component_id(),
+						'serie_id'		=> $check_list->get_serie_id(),
+						'type'			=> 'component',
+						'assigned_to'	=> $check_list->get_assigned_to(),
+						'deadline_current'	=> true
+
+					),false,true,true).'">Serie#' . $check_list->get_serie_id() .'::Mobilefrontend</a>';
+
+					$description = str_replace('&amp;', '&', "{$link_mobilefrontend}\\n\\n{$link_backend}");
 					if($from_address && $to_address)
 					{
 						$this->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location);
@@ -1404,14 +1416,6 @@
 			//Create Email Headers
 			$mime_boundary = "----Meeting Booking----".md5(time());
 
-			$headers  = <<<HTML
-			From: {$from_name} <{$from_address}>
-			Reply-To: {$from_name} <{$from_address}>
-			MIME-Version: 1.0
-			Content-Type: multipart/alternative; boundary=\"{$mime_boundary}\"
-			Content-class: urn:content-classes:calendarmessage
-HTML;
-
 			//Create Email Body (HTML)
 			$message  = <<<HTML
 			--{$mime_boundary}
@@ -1425,9 +1429,17 @@ HTML;
 			</body>
 			</html>
 			--{$mime_boundary}
-
-
 HTML;
+			//Create Email Body (HTML)
+			$message  = <<<HTML
+			<html>
+			<body>
+			<p>Dear {$to_name}</p>
+			<p>{$description}</p>
+			</body>
+			</html>
+HTML;
+
 			$last_modified =  date("Ymd\TGis");
 			$uid = date("Ymd\TGis", $startTime).rand()."@".$domain;
 			$dtstamp = date("Ymd\TGis");
@@ -1438,7 +1450,7 @@ HTML;
 
 $ical = <<<HTML
 BEGIN:VCALENDAR
-PRODID:controller
+PRODID: controller {$domain}
 VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:REQUEST
@@ -1469,7 +1481,22 @@ HTML;
 
 
 
-			$message .= $ical;
+//			$message .= $ical;
+			$message = $ical;
+
+
+			//Might work....
+			$attachment = array
+			(
+			//	'content'		=> base64_encode($ical),
+				'content'		=> $ical,
+				'name'			=> 'meeting.ics',
+			//	'encoding'		=> 'base64',//'7bit',
+				'encoding'		=> '7bit',
+				'type'			=> "text/calendar;charset=utf-8; method=REQUEST",
+				'disposition'	=> 'inline'
+			);
+
 
 			$rc = false;
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -1477,7 +1504,7 @@ HTML;
 				$send= CreateObject('phpgwapi.send');
 				try
 				{
-					$rc = $send->msg('email', $to_address, $subject, $message, $msgtype='Ical', $cc='', $bcc='', $from_address, $from_name,'html',$mime_boundary);
+					$rc = $send->msg('email', $to_address, $subject, $message, $msgtype='Ical', $cc='', $bcc='', $from_address, $from_name,'html',$mime_boundary);//, array($attachment));
 				}
 				catch (phpmailerException $e)
 				{
@@ -1488,9 +1515,6 @@ HTML;
 			{
 				phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'), 'error');
 			}
-
-
-		//	$mailsent = mail($to_address, $subject, $message, $headers);
 
 			return $rc;
 		}

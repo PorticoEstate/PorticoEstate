@@ -25,5 +25,3 @@
 		'menuaction' => 'property.uiworkorder.view',
 		'id'		=> $param[0]
 	);
-
-?>

@@ -116,6 +116,7 @@
 			$status_id		 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$start_date		 = isset($data['start_date']) && $data['start_date'] ? (int) $data['start_date'] : 0;
 			$end_date		 = isset($data['end_date']) && $data['end_date'] ? (int) $data['end_date'] : 0;
+			$overdue		 = isset($data['overdue']) && $data['overdue'] ? (int) $data['overdue'] : 0;
 			$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
 			$wo_hour_cat_id	 = isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
 			$district_id	 = isset($data['district_id']) ? $data['district_id'] : '';
@@ -493,7 +494,10 @@
 					{
 						$_status_filter[] = $this->db->f('id');
 					}
-					$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+					if($_status_filter)
+					{
+						$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+					}
 				}
 				else
 				{
@@ -552,6 +556,25 @@
 
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where = 'AND';
+			}
+
+			if($overdue)
+			{
+				$end_date = $overdue + 3600 * 16 + phpgwapi_datetime::user_timezone();
+				$filtermethod .= " $where fm_project.end_date <= $end_date AND fm_project.start_date <= $end_date ";
+				$_status_filter = array();
+				$this->db->query("SELECT * FROM fm_project_status WHERE closed IS NULL");
+				while($this->db->next_record())
+				{
+					$_status_filter[] = $this->db->f('id');
+				}
+				if($_status_filter)
+				{
+					$filtermethod .= " AND fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+				}
+
+				$where = 'AND';
+				
 			}
 
 			if($filter_year && $filter_year != 'all')
@@ -908,11 +931,49 @@
 				return false;
 			}
 
-			$this->db->query("SELECT maaler_nr as power_meter FROM $meter_table where location_code='$location_code' and category='1'", __LINE__, __FILE__);
+			$meter_table_arr = explode('_', $meter_table);
 
-			$this->db->next_record();
+			foreach ($meter_table_arr as $key => $value)
+			{
+				if (ctype_digit($value))
+				{
+					break;
+				}
+			}
 
-			return $this->db->f('power_meter');
+			$entity_id	= $meter_table_arr[$key];
+
+			if(!$cat_id	= $meter_table_arr[($key +1)])
+			{
+				return false;
+			}
+
+			$admin_entity	= CreateObject('property.soadmin_entity');
+
+			$category = $admin_entity->read_single_category($entity_id,$cat_id);
+
+			if($category['is_eav'])
+			{
+				$sql = "SELECT * FROM fm_bim_item"
+				. " WHERE location_code = '{$location_code}'"
+				. " AND location_id = '{$category['location_id']}'"
+				. " AND xmlexists('//category[text() = ''1'']' PASSING BY REF xml_representation)";
+
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				$this->db->next_record();
+
+				$xmldata = $this->db->f('xml_representation');
+				$xml = new DOMDocument('1.0', 'utf-8');
+				$xml->loadXML($xmldata);
+				return $xml->getElementsByTagName('maaler_nr')->item(0)->nodeValue;
+			}
+			else
+			{
+				$this->db->query("SELECT maaler_nr as power_meter FROM $meter_table where location_code='$location_code' and category='1'", __LINE__, __FILE__);
+				$this->db->next_record();
+				return $this->db->f('power_meter');
+			}
 		}
 
 		function project_workorder_data($data = array())
@@ -1206,6 +1267,9 @@
 			{
 				return;
 			}
+
+			//Disabled for now
+			return;
 
 			$location = explode('-', $location_code);
 

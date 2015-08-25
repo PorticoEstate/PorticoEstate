@@ -228,7 +228,15 @@
 			$("#receipt").html('');
 
 			var user_id = $("#user_id").val();
-			if(user_id < 0)
+			var custom_frontend = $("[name='custom_frontend']").val();
+
+			if(custom_frontend ==1)
+			{
+				$( "#user_id" ).hide();
+				$("[for='user_id']").hide();
+			}
+
+			if(user_id < 0 || custom_frontend ==1)
 			{
 				$( "#entity_group_id" ).hide();
 				$("[for='entity_group_id']").hide();

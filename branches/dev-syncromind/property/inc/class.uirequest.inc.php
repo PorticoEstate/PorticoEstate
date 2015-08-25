@@ -1496,7 +1496,7 @@ JS;
 					'value_in_progress_date'			=> $values['in_progress_date'],
 					'value_delivered_date'				=> $values['delivered_date'],
 
-					'lang_start_date_statustext'		=> lang('Select the estimated end date for the request'),
+					'lang_start_date_statustext'		=> lang('Select the estimated start date for the request'),
 					'lang_start_date'					=> lang('request start date'),
 					'value_start_date'					=> $values['start_date'],
 

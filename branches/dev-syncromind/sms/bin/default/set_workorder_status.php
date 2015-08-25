@@ -57,7 +57,44 @@
 					}
 				}
 
-				execMethod('property.soworkorder.check_project_status',$workorder_id);
+//				execMethod('property.soworkorder.check_project_status',$workorder_id);
+
+				$project_status_on_last_order_closed = 'utført';
+
+				$this->db->query("SELECT count(id) AS orders_at_project FROM fm_workorder WHERE project_id= {$project_id}", __LINE__, __FILE__);
+				$this->db->next_record();
+				$orders_at_project = (int) $this->db->f('orders_at_project');
+
+				$this->db->query("SELECT count(fm_workorder.id) AS closed_orders_at_project"
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id)"
+				. " WHERE project_id= {$project_id}"
+				. " AND (fm_workorder_status.closed = 1 OR fm_workorder_status.delivered = 1)", __LINE__, __FILE__);
+
+				$this->db->next_record();
+				$closed_orders_at_project = (int) $this->db->f('closed_orders_at_project');
+
+				$this->db->query("SELECT fm_project_status.closed AS closed_project, fm_project.status as old_status"
+				. " FROM fm_project"
+				. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
+				. " WHERE fm_project.id= {$project_id}", __LINE__, __FILE__);
+
+				$this->db->next_record();
+				$closed_project	 = !!$this->db->f('closed_project');
+				$old_status		 = $this->db->f('old_status');
+
+				if($status == 'utført'
+					&& $orders_at_project == $closed_orders_at_project
+					&& $old_status != $project_status_on_last_order_closed)
+				{
+					$this->db->query("UPDATE fm_project SET status = '{$project_status_on_last_order_closed}' WHERE id= {$project_id}", __LINE__, __FILE__);
+
+					$historylog_project = CreateObject('property.historylog', 'project');
+
+					$historylog_project->add('S', $project_id, $project_status_on_last_order_closed, $old_status);
+					$historylog_project->add('RM', $project_id, 'Status endret ved at siste bestilling er satt til utført');
+				}
+			
 				$command_output = 'success';
 			}
 		}

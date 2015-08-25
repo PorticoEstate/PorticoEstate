@@ -92,7 +92,7 @@
 		public function home_backend()
 		{
 			$this->home_workorder_overdue_tender();
-			$this->home_workorder_overdue_end_date();
+			$this->home_project_overdue_end_date();
 			$this->home_tenant_claims();
 			$this->home_ticket();
 			$this->home_project();
@@ -202,7 +202,7 @@
 		 *
 		 * @return void
 		 */
-		public function home_workorder_overdue_end_date()
+		public function home_project_overdue_end_date()
 		{
 			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -215,14 +215,13 @@
 			if ( isset($prefs['property']['mainscreen_show_project_overdue'])
 			&& $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
 			{
-				$soworkorder = CreateObject('property.soworkorder');
+				$soproject = CreateObject('property.soproject');
 
-				$values = $soworkorder->read(array(
+				$values = $soproject->read(array(
 					'filter'			=> $accound_id,
-					'inspection_on_completion'	=> time(),
+					'overdue'			=> time(),
 				));
-
-				$total_records = $soworkorder->total_records;
+				$total_records = $soproject->total_records;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 				(
 					'title'		=> lang('end date delay') . " ({$total_records})",
@@ -248,11 +247,11 @@
 				}
 				foreach ($values as $entry)
 				{
-					$entry['tender_delay']	= ceil(phpgwapi_datetime::get_working_days($entry['tender_deadline'], time()));
+					$entry['delay']	= ceil(phpgwapi_datetime::get_working_days($entry['end_date'], time()));
 					$portalbox->data[] = array
 					(
-						'text' => "Forsinkelse: {$entry['tender_delay']} dager :: bestilling nr:{$entry['workorder_id']} :: {$entry['location_code']} :: {$entry['address']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit', 'id' => $entry['workorder_id'], 'tab' => 'budget'))
+						'text' => "Forsinkelse: {$entry['delay']} dager :: prosjekt nr:{$entry['project_id']} :: {$entry['location_code']} :: {$entry['address']}",
+						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit', 'id' => $entry['project_id'], 'tab' => 'budget'))
 					);
 				}
 				echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
