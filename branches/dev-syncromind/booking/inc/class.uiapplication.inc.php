@@ -689,7 +689,7 @@
 
 			$audience = $audience['results'];
 			
-			//$this->install_customer_identifier_ui($application);
+			$this->install_customer_identifier_ui($application);
 
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
             if ($orgnr) {
@@ -717,7 +717,7 @@
             
             $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             self::add_javascript('booking', 'booking', 'applicationnew.js');
-            
+			
 			self::render_template_xsl('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}
 
