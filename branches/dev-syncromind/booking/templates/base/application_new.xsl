@@ -240,7 +240,12 @@
                                         </input>
                     </div>
                     <div class="pure-control-group">
-                                <div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+						<div class="heading">7.x <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+						<p>Ut fra reglementet i pkt. 8 finner du kriterier for fakturering. Når du som privatperson skal låne noe som det ikke skal faktureres for oppgir du kun fødselsdato, men skal du leie noe som koster noe, da må vi ha hele personnummeret. Alle lag og organisasjoner skal oppgi organisasjonsnr.</p>
+						 <xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
+						<p>
+							<xsl:value-of select="php:function('lang', 'In order to send the invoice we need information about either customer organization number or norwegian social security number')" />
+						</p>
                     </div>
                     <div class="pure-control-group">
                                 <xsl:if test="config/application_responsible_applicant">
@@ -257,22 +262,24 @@
                                 </xsl:if>
                     </div>
                     <div class="pure-control-group">
-                                <div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+                        <div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+						<p>Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
                     </div>
                     <div class="pure-control-group">
-                                <xsl:if test="config/application_terms">
-                                        <p>
-                                                <xsl:value-of select="config/application_terms"/>
-                                        </p>		
-                                </xsl:if>
-                                <br />
-                                <div id='regulation_documents'>&nbsp;</div>
-                                <br />
-                                <xsl:if test="config/application_terms2">
-                                        <p>
-                                                <xsl:value-of select="config/application_terms2"/>
-                                        </p>		
-                                </xsl:if>
+						<xsl:if test="config/application_terms">
+							<p>
+									<xsl:value-of select="config/application_terms"/>
+							</p>		
+						</xsl:if>
+						<br />
+						<div id='regulation_documents'>&nbsp;</div>
+						<br />
+						<xsl:if test="config/application_terms2">
+							<p>
+									<xsl:value-of select="config/application_terms2"/>
+							</p>		
+						</xsl:if>
+						<p><xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" /></p>
                     </div>
                 </div>
             </div>
