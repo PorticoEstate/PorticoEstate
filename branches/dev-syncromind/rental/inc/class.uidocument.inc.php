@@ -22,14 +22,42 @@
 		
 		public function query()
 		{
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else {
+				$user_rows_per_page = 10;
+			}
+		
+			$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
+
+			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+			$sort_field		= 'id'; 			
+			switch ($columns[$order[0]['column']]['data']) {
+				case 'type':
+					$sort_field = 'rental_document.type_id';
+					Break;
+				default :
+					$sort_field = 'rental_document.'.$columns[$order[0]['column']]['data'];
+			}
+			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
+			// Form variables
+			$search_for 	= $search['value'];
+			$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+		
 			// YUI variables for paging and sorting
-			$start_index	= phpgw::get_var('startIndex', 'int');
+			/*$start_index	= phpgw::get_var('startIndex', 'int');
 			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
 			$sort_field		= phpgw::get_var('sort');
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			// Form variables
 			$search_for 	= phpgw::get_var('query');
-			$search_type	= phpgw::get_var('search_option');
+			$search_type	= phpgw::get_var('search_option');*/
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
