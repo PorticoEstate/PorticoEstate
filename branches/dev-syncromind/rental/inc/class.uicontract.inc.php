@@ -889,7 +889,7 @@ JS;
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 			$contract_id = (int)phpgw::get_var('id');
-			return $this->viewedit(false, $contract_id);
+			return $this->edit(array('contract_id'=>$contract_id), 'view');
 		}
 
 		/**
@@ -904,9 +904,6 @@ JS;
 			
 			$message = null;
 			$error = null;
-			
-			/*$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();*/
 	
 			if ($values['contract_id'])
 			{
@@ -953,6 +950,59 @@ JS;
 				}
 			}
 			
+			if(!$executive_officer = $contract->get_executive_officer_id())
+			{
+				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+
+			if(!$current_term_id = $contract->get_term_id())
+			{
+				$current_term_id = $this->config->config_data['default_billing_term'];
+			}
+			
+			if ($mode == 'view')
+			{
+				$current_contract_type_label = rental_socontract::get_instance()->get_contract_type_label($contract->get_contract_type_id());
+
+				if($executive_officer)
+				{
+					 $account = $GLOBALS['phpgw']->accounts->get($executive_officer);
+					 if(!empty($account))
+					 {
+						$executive_officer_label = $account->__toString();
+					 } 
+					 else
+					 {
+						$executive_officer_label = lang('nobody');
+					 }
+				}
+				else
+				{
+					$executive_officer_label = lang('nobody');
+				}
+				
+				$billing_term_label = lang(rental_socontract::get_instance()->get_term_label($current_term_id));
+				
+				switch ($contract->get_security_type())
+				{
+					case rental_contract::SECURITY_TYPE_BANK_GUARANTEE:
+						$security_type_label = lang('bank_guarantee');
+						break;
+					case rental_contract::SECURITY_TYPE_DEPOSIT:
+						$security_type_label = lang('deposit');
+						break;
+					case rental_contract::SECURITY_TYPE_ADVANCE:
+						$security_type_label = lang('advance');
+						break;
+					case rental_contract::SECURITY_TYPE_OTHER_GUARANTEE:
+						$security_type_label = lang('other_guarantee');
+						break;
+					default:
+						$security_type_label = lang('nobody');
+						break;
+				}				
+			}	
+			
 			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
 			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
 			$GLOBALS['phpgw']->jqcal->add_listener('due_date');
@@ -972,10 +1022,6 @@ JS;
 				$contract_type_options[] = array('id'=>$contract_type_id, 'name'=>lang($contract_type_label), 'selected'=>$selected);
 			}
 		
-			if(!$executive_officer = $contract->get_executive_officer_id())
-			{
-				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
-			}
 			$location_name = $contract->get_field_of_responsibility_name();
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $location_name, 'rental');
 			$executive_officer_options[] = array('id'=>'', 'name'=>lang('nobody'), 'selected'=>0);
@@ -989,11 +1035,6 @@ JS;
 			$end_date = ($contract->get_contract_date() && $contract->get_contract_date()->has_end_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_end_date()) : '';
 			$due_date = ($contract->get_due_date()) ? date($this->dateFormat, $contract->get_due_date()) : '';
 			
-			
-			if(!$current_term_id = $contract->get_term_id())
-			{
-				$current_term_id = $this->config->config_data['default_billing_term'];
-			}
 			$billing_terms = rental_sobilling::get_instance()->get_billing_terms();
 			$billing_term_options = array();
 			foreach($billing_terms as $term_id => $term_title)
@@ -1613,39 +1654,6 @@ JS;
 					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 					'lang_save'						=> lang('save'),
 					'lang_cancel'					=> lang('cancel'),
-				
-					'lang_contract_number'			=> lang('contract_number'),
-					'lang_parties'					=> lang('parties'),
-					'lang_last_updated'				=> lang('last_updated'),
-					'lang_name'						=> lang('name'),
-					'lang_composite'				=> lang('composite'),
-				
-					'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
-					'lang_contract_type'			=> lang('contract_type'),
-					'lang_executive_officer'		=> lang('executive_officer'),
-					'lang_date_start'				=> lang('date_start'),
-					'lang_date_end'					=> lang('date_end'),
-					'lang_due_date'					=> lang('due_date'),
-					'lang_invoice_header'			=> lang('invoice_header'),
-					'lang_billing_term'				=> lang('billing_term'),
-					'lang_billing_start'			=> lang('billing_start'),
-					'lang_billing_end'				=> lang('billing_end'),
-					'lang_reference'				=> lang('reference'),
-					'lang_responsibility'			=> lang('responsibility'),
-					'lang_service'					=> lang('service'),
-					'lang_account_in'				=> lang('account_in'),
-					'lang_account_out'				=> lang('account_out'),
-					'lang_project_id'				=> lang('project_id'),
-					'lang_security'					=> lang('security'),
-					'lang_security_amount'			=> lang('security_amount'),
-					'lang_rented_area'				=> lang('rented_area'),
-					'lang_rented_area'				=> lang('rented_area'),
-					'lang_adjustable'				=> lang('adjustable'),
-					'lang_adjustment_interval'		=> lang('adjustment_interval'),
-					'lang_adjustment_share'			=> lang('adjustment_share'),
-					'lang_adjustment_year'			=> lang('adjustment_year'),
-					'lang_comment'					=> lang('comment'),
-					'lang_publish_comment'			=> lang('publish_comment'),
 
 					'value_contract_number'			=> $contract->get_old_contract_id(),
 					'value_parties'					=> $contract->get_party_name_as_list(),
@@ -1685,7 +1693,7 @@ JS;
 				
 					'location_id'					=> $contract->get_location_id(),
 					'contract_id'					=> $contract_id,
-					'mode'							=> 'edit',
+					'mode'							=> $mode,
 				
 					'link_included_composites'		=> $link_included_composites,
 					'link_not_included_composites'	=> $link_not_included_composites,
@@ -1711,15 +1719,23 @@ JS;
 					'list_document_types'			=> array('options' => $document_types_options),
 					'list_document_search'			=> array('options' => $document_search_options),
 				
+					'value_contract_type'			=> lang($current_contract_type_label),
+					'value_executive_officer'		=> $executive_officer_label,
+					'value_billing_term'			=> $billing_term_label,
+					'value_security_type'			=> $security_type_label,
+					'value_security_amount_view'	=> ($contract->get_security_amount()) ? $contract->get_security_amount() : '0',
+					'value_current_interval'		=> $current_interval." ".lang('year'),
+					'value_current_share'			=> $current_share." %",
+				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
 
 			//$appname	=  $this->location_info['name'];
 
 			//$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
-			self::add_javascript('rental', 'rental', 'contract.edit.js');
+			self::add_javascript('rental', 'rental', 'contract.'.$mode.'.js');
 			phpgwapi_jquery::load_widget('numberformat');
-			self::render_template_xsl(array('contract', 'datatable_inline'), array('edit' => $data));
+			self::render_template_xsl(array('contract', 'datatable_inline'), array($mode => $data));
 			
 			//return $this->viewedit(true, $contract_id, null, $location_id, array(), $message, $error);
 		}
