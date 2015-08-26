@@ -249,7 +249,7 @@
 				}
 
 				$values['appname']= $appname;
-				$values['location'] = $location;
+				$values['location'] = $location ? $location : $values['location'];
 
 				if (!$values['location'])
 				{

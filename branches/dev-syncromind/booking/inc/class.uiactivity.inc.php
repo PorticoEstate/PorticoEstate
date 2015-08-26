@@ -100,6 +100,8 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($activity);
+					//Add locations for application and resources
+					$GLOBALS['phpgw']->hooks->single(array('id'	=> $receipt['id'], 'name'=> $activity['name'], 'location'=> 'activity_add'), 'booking');
 					$this->redirect(array('menuaction' => 'booking.uiactivity.index'));
 				}
 			}
@@ -139,6 +141,8 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($activity);
+					//Edit locations for application and resources
+					$GLOBALS['phpgw']->hooks->single(array('id'	=> $id, 'name'=> $activity['name'], 'location'=> 'activity_edit'), 'booking');
 					$this->redirect(array('menuaction' => 'booking.uiactivity.index'));
 				}
 			}

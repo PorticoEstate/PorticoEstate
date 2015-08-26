@@ -2986,7 +2986,6 @@
 	$test[] = '0.2.19';
 	/**
 	 * Update booking version from 0.2.19 to 0.2.20
-	 * add another tilsynsvakt to buidling
 	 *
 	 */
 	function booking_upgrade0_2_19()
@@ -2996,6 +2995,68 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.20';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.20';
+	/**
+	 * Update booking version from 0.2.20 to 0.2.21
+	 * add another tilsynsvakt to buidling
+	 *
+	 */
+	function booking_upgrade0_2_20()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+//- vi registrerer en systemlokasjon pr toppnivå av aktivitet som "resource.<activity_id>"
+//- vi registrerer en systemlokasjon pr toppnivå av aktivitet som "application.<activity_id>"
+		$boactivity = CreateObject('booking.boactivity');
+		$activities = $boactivity->fetch_activities();
+		$activities = $boactivity->so->read(array('sort'=>'name', 'dir'=>'ASC'));
+
+		$top_level = array();
+		foreach($activities['results'] as $activity)
+		{
+			if(!$activity['parent_id'])
+			{
+				$top_level[] = $activity;
+			}
+		}
+		unset($activity);
+
+		foreach($top_level as $activity)
+		{
+			$location	= ".application.{$activity['id']}";
+			$descr		= $activity['name'];
+
+			$GLOBALS['phpgw']->locations->add(
+				$location,
+				$descr,
+				$appname = 'booking',
+				false, //$allow_grant
+				null,//$custom_tbl
+				false,//$c_function
+				true//$c_attrib
+			);
+
+			$location	= ".resource.{$activity['id']}";
+			$descr		= $activity['name'];
+
+			$GLOBALS['phpgw']->locations->add(
+				$location,
+				$descr,
+				$appname = 'booking',
+				false, //$allow_grant
+				null,//$custom_tbl
+				false,//$c_function
+				true//$c_attrib
+			);
+
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.21';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
