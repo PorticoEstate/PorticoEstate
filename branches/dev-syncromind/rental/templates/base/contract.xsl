@@ -823,7 +823,7 @@
 								</script>	
 								<div>
 									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_3'">
+										<xsl:if test="container = 'datatable-container_2'">
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -845,7 +845,7 @@
 								</script>
 								<div>
 									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_5'">
+										<xsl:if test="container = 'datatable-container_3'">
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -876,7 +876,7 @@
 								</div>
 								<div>
 									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_7'">
+										<xsl:if test="container = 'datatable-container_4'">
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -913,7 +913,7 @@
 								</div>														
 								<div>
 									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_8'">
+										<xsl:if test="container = 'datatable-container_5'">
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl' />
@@ -931,7 +931,7 @@
 							<fieldset>
 								<div>
 									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_9'">
+										<xsl:if test="container = 'datatable-container_6'">
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl' />
