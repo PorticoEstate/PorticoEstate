@@ -153,6 +153,481 @@
 		return $filters;
 	}
 	
+	private function _get_tableDef_composite($mode, $contract_id)
+	{
+		$uicols_composite = rental_socomposite::get_instance()->get_uicols();
+		$composite_def = array();
+		$uicols_count	= count($uicols_composite['descr']);
+		for ($i=0;$i<$uicols_count;$i++)
+		{
+			if ($uicols_composite['input_type'][$i]!='hidden')
+			{
+				$composite_def[$i]['key'] 	= $uicols_composite['name'][$i];
+				$composite_def[$i]['label']	= $uicols_composite['descr'][$i];
+				$composite_def[$i]['sortable']	= $uicols_composite['sortable'][$i];
+			}
+		}
+		if(!empty($this->config->config_data['contract_future_info']))
+		{
+			$composite_def[] =  array("key"=>"contracts", "label"=>lang('contract_future_info'), "sortable"=>false, "hidden"=>false);
+		}
+		if(!empty($this->config->config_data['contract_furnished_status']))
+		{
+			$composite_def[] = array("key"=>"furnished_status", "label"=>lang('furnish_type'), "sortable"=>false, "hidden"=>false);
+		}
+
+		$tabletools_composite1[] = array
+			(
+				'my_name'		=> 'view',
+				'text'			=> lang('show'),
+				'action'		=> self::link(array(
+						'menuaction'	=> 'rental.uicomposite.view'
+				)),
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+			);
+
+		if ($mode == 'edit')
+		{
+			$tabletools_composite1[] = array
+				(
+					'my_name'		=> 'delete',
+					'text'			=> lang('remove'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'		=> 'rental.uicontract.remove_composite', 
+								'contract_id'		=> $contract_id,
+								'phpgw_return_as'	=> 'json'
+							)).";
+						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id')))).";
+						removeComposite(oArgs, parameters);
+					"
+				);
+		}
+
+		$datatable_def[] = array
+		(
+			'container'		=> 'datatable-container_1',
+			'requestUrl'	=> "''",
+			'data'			=> json_encode(array()),
+			'ColumnDefs'	=> $composite_def,
+			'tabletools'	=> $tabletools_composite1,
+			'config'		=> array(
+				array('disableFilter'	=> true)
+			)
+		);
+
+		if ($mode == 'edit')
+		{				
+			$tabletools_composite2[] = array
+				(
+					'my_name'		=> 'view',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicomposite.view'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+
+			$tabletools_composite2[] = array
+				(
+					'my_name'		=> 'add',
+					'text'			=> lang('add'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'		=> 'rental.uicontract.add_composite', 
+								'contract_id'		=> $contract_id,
+								'phpgw_return_as'	=> 'json'
+							)).";
+						var parameters = ".json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id')))).";
+						addComposite(oArgs, parameters);
+					"
+				);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> "''",
+				'data'			=> json_encode(array()),
+				'ColumnDefs'	=> $composite_def,
+				'tabletools'	=> $tabletools_composite2,
+				'config'		=> array(
+					array('disableFilter'	=> true)
+				)
+			);
+		}		
+				
+		return $datatable_def;
+	}
+	
+	private function _get_tableDef_party($mode, $contract_id)
+	{
+				$party_def = array(
+									array('key'=>'identifier', 'label'=>lang('identifier'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'is_payer', 'label'=>lang('is_payer'), 'sortable'=>false, 'hidden'=>false)
+								);
+				
+				$tabletools_party1[] = array
+					(
+						'my_name'		=> 'view',
+						'text'			=> lang('show'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uiparty.view'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+				
+				if ($mode == 'edit')
+				{
+					$tabletools_party1[] = array
+						(
+							'my_name'		=> 'delete',
+							'text'			=> lang('remove'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uicontract.remove_party', 
+										'contract_id'		=> $contract_id,
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'party_id', 'source'=>'id')))).";
+								removeParty(oArgs, parameters);
+							"
+						);
+
+				
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_3',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> $party_def,
+					'tabletools'	=> $tabletools_party1,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+
+					$tabletools_party2[] = array
+						(
+							'my_name'		=> 'view',
+							'text'			=> lang('show'),
+							'action'		=> self::link(array(
+									'menuaction'	=> 'rental.uiparty.view'
+							)),
+							'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+						);
+
+					$tabletools_party2[] = array
+						(
+							'my_name'		=> 'add',
+							'text'			=> lang('add'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uicontract.add_party', 
+										'contract_id'		=> $contract_id,
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'party_id', 'source'=>'id')))).";
+								addParty(oArgs, parameters);
+							"
+						);
+
+					$party_def[3]['hidden'] = true;
+					$datatable_def[] = array
+					(
+						'container'		=> 'datatable-container_4',
+						'requestUrl'	=> "''",
+						'data'			=> json_encode(array()),
+						'ColumnDefs'	=> $party_def,
+						'tabletools'	=> $tabletools_party2,
+						'config'		=> array(
+							array('disableFilter'	=> true)
+						)
+					);
+				}
+				else 
+				{
+					$datatable_def[] = array
+					(
+						'container'		=> 'datatable-container_2',
+						'requestUrl'	=> "''",
+						'data'			=> json_encode(array()),
+						'ColumnDefs'	=> $party_def,
+						'tabletools'	=> $tabletools_party1,
+						'config'		=> array(
+							array('disableFilter'	=> true)
+						)
+					);					
+				}
+				
+		return $datatable_def;
+	}
+	
+	private function _get_tableDef_price($mode, $contract_id)
+	{
+				if ($mode == 'edit')
+				{
+					$tabletools_price1[] = array
+						(
+							'my_name'		=> 'remove',
+							'text'			=> lang('remove'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uicontract.remove_price_item', 
+										'contract_id'		=> $contract_id,
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
+								removePrice(oArgs, parameters);
+							"
+						);
+
+					$tabletools_price1[] = array
+						(
+							'my_name'		=> 'reset',
+							'text'			=> lang('reset'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uicontract.reset_price_item', 
+										'contract_id'		=> $contract_id,
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
+								removePrice(oArgs, parameters);
+							"
+						);
+					
+				$datatable_def[] = array
+				(
+					'container'		=> 'datatable-container_5',
+					'requestUrl'	=> "''",
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> array(
+									array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right')
+					),
+					'tabletools'	=> $tabletools_price1,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+	
+					$tabletools_price2[] = array
+						(
+							'my_name'		=> 'add',
+							'text'			=> lang('add'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uicontract.add_price_item', 
+										'contract_id'		=> $contract_id,
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
+								addPrice(oArgs, parameters);
+							"
+						);
+
+					$sogeneric 	= CreateObject('property.sogeneric','composite_standard');
+					$composite_standards = $sogeneric->read(array('allrows' => true));
+					foreach($composite_standards as $composite_standard)
+					{
+						$tabletools_price2[] = array
+							(
+								'my_name'		=> 'add_'.$composite_standard['name'],
+								'text'			=> lang('add') . " {$composite_standard['name']}",
+								'type'			=> 'custom',
+								'custom_code'	=> "
+									var oArgs = ".json_encode(array(
+											'menuaction'		=> 'rental.uicontract.add_price_item', 
+											'contract_id'		=> $contract_id,
+											'factor'			=> $composite_standard['factor'],
+											'phpgw_return_as'	=> 'json'
+										)).";
+									var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
+									addPrice(oArgs, parameters);
+								"
+							);					
+					}
+
+					$datatable_def[] = array
+					(
+						'container'		=> 'datatable-container_6',
+						'requestUrl'	=> "''",
+						'data'			=> json_encode(array()),
+						'ColumnDefs'	=> array(
+										array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+										array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+										array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+										array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right')
+						),
+						'tabletools'	=> $tabletools_price2,
+						'config'		=> array(
+							array('disableFilter'	=> true)
+						)
+					);
+				}
+				else
+				{
+					$datatable_def[] = array
+					(
+						'container'		=> 'datatable-container_3',
+						'requestUrl'	=> "''",
+						'data'			=> json_encode(array()),
+						'ColumnDefs'	=> array(
+										array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+										array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+										array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+										array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right')
+						),
+						'config'		=> array(
+							array('disableFilter'	=> true)
+						)
+					);					
+				}
+		
+		return $datatable_def;
+	}
+	
+	private function _get_tableDef_invoice($mode, $contract_id)
+	{
+		if ($mode == 'edit')
+		{
+			$table_name = 'datatable-container_7';
+		} else {
+			$table_name = 'datatable-container_4';
+		}
+		
+		$datatable_def[] = array
+		(
+			'container'		=> $table_name,
+			'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uiinvoice_price_item.query', 'type'=>'invoice_price_items', 'editable'=>true, 'invoice_id'=>'-1', 'phpgw_return_as'=>'json'))),
+			'data'			=> json_encode(array()),
+			'ColumnDefs'	=> array(
+							array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'is_area', 'label'=>lang('type'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+							array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right'),
+							array('key'=>'area', 'label'=>lang('area'), 'sortable'=>false, 'hidden'=>false, 'className'=>'right'),
+							array('key'=>'count', 'label'=>lang('count'), 'sortable'=>false, 'hidden'=>false, 'className'=>'right'),
+							array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right'),
+							array('key'=>'timestamp_start', 'label'=>lang('date_start'), 'sortable'=>false, 'hidden'=>false, 'className'=>'center'),
+							array('key'=>'timestamp_end', 'label'=>lang('date_end'), 'sortable'=>false, 'hidden'=>false, 'className'=>'center')
+			),
+			'config'		=> array(
+				array('disableFilter'	=> true)
+			)
+		);		
+		
+		return $datatable_def;
+	}
+	
+	private function _get_tableDef_document($mode, $contract_id)
+	{
+				$tabletools_documents[] = array
+					(
+						'my_name'		=> 'view',
+						'text'			=> lang('view'),
+						'action'		=> self::link(array(
+								'menuaction'	=> 'rental.uidocument.view'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+					);
+
+				$table_name = 'datatable-container_5';
+
+				if ($mode == 'edit')
+				{
+					$tabletools_documents[] = array
+						(
+							'my_name'		=> 'delete',
+							'text'			=> lang('remove'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uidocument.delete',
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id')))).";
+								removeDocument(oArgs, parameters);
+							"
+						);
+					$table_name = 'datatable-container_8';
+				}
+				
+				$datatable_def[] = array
+				(
+					'container'		=> $table_name,
+					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uidocument.query', 'type'=>'documents_for_contract', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json'))),
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> array(
+									array('key'=>'title', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'type', 'label'=>lang('type'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
+					),
+					'tabletools'	=> $tabletools_documents,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+				
+		return $datatable_def;
+	}
+	
+	private function _get_tableDef_notification($mode, $contract_id)
+	{
+				$table_name = 'datatable-container_6';
+				
+				if ($mode == 'edit')
+				{
+					$tabletools_notification[] = array
+						(
+							'my_name'		=> 'delete',
+							'text'			=> lang('delete'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uinotification.delete_notification', 
+										'contract_id'		=> $contract_id,
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id')))).";
+								deleteNotification(oArgs, parameters);
+							"
+						);
+					$table_name = 'datatable-container_9';
+				}
+				
+				$datatable_def[] = array
+				(
+					'container'		=> $table_name,
+					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uinotification.query', 'type'=>'notifications', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json'))),
+					'data'			=> json_encode(array()),
+					'ColumnDefs'	=> array(
+									array('key'=>'date', 'label'=>lang('date'), 'className'=>'', 'sortable'=>true, 'hidden'=>false, 'className'=>'center'),
+									array('key'=>'message', 'label'=>lang('message'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'recurrence', 'label'=>lang('recurrence'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+									array('key'=>'name', 'label'=>lang('user_or_group'), 'sortable'=>false, 'hidden'=>false),
+									array('key'=>'field_of_responsibility', 'label'=>lang('field_of_responsibility'), 'sortable'=>false, 'hidden'=>false)
+					),
+					'tabletools'	=> $tabletools_notification,
+					'config'		=> array(
+						array('disableFilter'	=> true)
+					)
+				);
+				
+		return $datatable_def;
+	}
+	
 	public function query()
 	{
 		if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -1128,397 +1603,25 @@ JS;
 				$tabs['invoice']		= array('label' => lang('Invoice'), 'link' => '#invoice', 'function' => 'initial_invoice_data()');
 				$tabs['documents']		= array('label' => lang('Documents'), 'link' => '#documents');
 				$tabs['notifications']	= array('label' => lang('Notifications'), 'link' => '#notifications');
-				
-				$uicols_composite = rental_socomposite::get_instance()->get_uicols();
-				$composite_def = array();
-				$uicols_count	= count($uicols_composite['descr']);
-				for ($i=0;$i<$uicols_count;$i++)
-				{
-					if ($uicols_composite['input_type'][$i]!='hidden')
-					{
-						$composite_def[$i]['key'] 	= $uicols_composite['name'][$i];
-						$composite_def[$i]['label']	= $uicols_composite['descr'][$i];
-						$composite_def[$i]['sortable']	= $uicols_composite['sortable'][$i];
-					}
-				}
-				if(!empty($this->config->config_data['contract_future_info']))
-				{
-					$composite_def[] =  array("key"=>"contracts", "label"=>lang('contract_future_info'), "sortable"=>false, "hidden"=>false);
-				}
-				if(!empty($this->config->config_data['contract_furnished_status']))
-				{
-					$composite_def[] = array("key"=>"furnished_status", "label"=>lang('furnish_type'), "sortable"=>false, "hidden"=>false);
-				}
-			
-				$tabletools_composite1[] = array
-					(
-						'my_name'		=> 'view',
-						'text'			=> lang('show'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'rental.uicomposite.view'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
-					);
-				
-				$tabletools_composite1[] = array
-					(
-						'my_name'		=> 'delete',
-						'text'			=> lang('remove'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uicontract.remove_composite', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id')))).";
-							removeComposite(oArgs, parameters);
-						"
-					);
-				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_1',
-					'requestUrl'	=> "''",
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> $composite_def,
-					'tabletools'	=> $tabletools_composite1,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);
-				
-				$tabletools_composite2[] = array
-					(
-						'my_name'		=> 'view',
-						'text'			=> lang('show'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'rental.uicomposite.view'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
-					);
-				
-				$tabletools_composite2[] = array
-					(
-						'my_name'		=> 'add',
-						'text'			=> lang('add'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uicontract.add_composite', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'composite_id', 'source'=>'id')))).";
-							addComposite(oArgs, parameters);
-						"
-					);
-				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_2',
-					'requestUrl'	=> "''",
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> $composite_def,
-					'tabletools'	=> $tabletools_composite2,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);
-				
+								
 				$link_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'included_composites', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
 				$link_not_included_composites = json_encode(self::link(array('menuaction'=>'rental.uicomposite.query', 'type'=>'not_included_composites', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
 				
-
-				$party_def = array(
-									array('key'=>'identifier', 'label'=>lang('identifier'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'is_payer', 'label'=>lang('is_payer'), 'sortable'=>false, 'hidden'=>false)
-								);
-				
-				$tabletools_party1[] = array
-					(
-						'my_name'		=> 'view',
-						'text'			=> lang('show'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'rental.uiparty.view'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
-					);
-				
-				$tabletools_party1[] = array
-					(
-						'my_name'		=> 'delete',
-						'text'			=> lang('remove'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uicontract.remove_party', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'party_id', 'source'=>'id')))).";
-							removeParty(oArgs, parameters);
-						"
-					);
-				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_3',
-					'requestUrl'	=> "''",
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> $party_def,
-					'tabletools'	=> $tabletools_party1,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);
-
-				$tabletools_party2[] = array
-					(
-						'my_name'		=> 'view',
-						'text'			=> lang('show'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'rental.uiparty.view'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
-					);
-				
-				$tabletools_party2[] = array
-					(
-						'my_name'		=> 'add',
-						'text'			=> lang('add'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uicontract.add_party', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'party_id', 'source'=>'id')))).";
-							addParty(oArgs, parameters);
-						"
-					);
-				
-				$party_def[3]['hidden'] = true;
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_4',
-					'requestUrl'	=> "''",
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> $party_def,
-					'tabletools'	=> $tabletools_party2,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);	
-				
 				$link_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'included_parties', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
 				$link_not_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'not_included_parties', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
-			
-				$tabletools_price1[] = array
-					(
-						'my_name'		=> 'remove',
-						'text'			=> lang('remove'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uicontract.remove_price_item', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
-							removePrice(oArgs, parameters);
-						"
-					);
-				
-				$tabletools_price1[] = array
-					(
-						'my_name'		=> 'reset',
-						'text'			=> lang('reset'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uicontract.reset_price_item', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
-							removePrice(oArgs, parameters);
-						"
-					);
-				
-				$tabletools_price2[] = array
-					(
-						'my_name'		=> 'add',
-						'text'			=> lang('add'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uicontract.add_price_item', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
-							addPrice(oArgs, parameters);
-						"
-					);
-				
-				$sogeneric 	= CreateObject('property.sogeneric','composite_standard');
-				$composite_standards = $sogeneric->read(array('allrows' => true));
-				foreach($composite_standards as $composite_standard)
-				{
-					$tabletools_price2[] = array
-						(
-							'my_name'		=> 'add_'.$composite_standard['name'],
-							'text'			=> lang('add') . " {$composite_standard['name']}",
-							'type'			=> 'custom',
-							'custom_code'	=> "
-								var oArgs = ".json_encode(array(
-										'menuaction'		=> 'rental.uicontract.add_price_item', 
-										'contract_id'		=> $contract_id,
-										'factor'			=> $composite_standard['factor'],
-										'phpgw_return_as'	=> 'json'
-									)).";
-								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'price_item_id', 'source'=>'id')))).";
-								addPrice(oArgs, parameters);
-							"
-						);					
-				}
-					
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_5',
-					'requestUrl'	=> "''",
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> array(
-									array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right')
-					),
-					'tabletools'	=> $tabletools_price1,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);
-				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_6',
-					'requestUrl'	=> "''",
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> array(
-									array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right')
-					),
-					'tabletools'	=> $tabletools_price2,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);
 				
 				$link_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
-				$link_not_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'not_included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'responsibility_id'=>$contract->get_location_id(), 'phpgw_return_as'=>'json')));				
+				$link_not_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'not_included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'responsibility_id'=>$contract->get_location_id(), 'phpgw_return_as'=>'json')));								
 				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_7',
-					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uiinvoice_price_item.query', 'type'=>'invoice_price_items', 'editable'=>true, 'invoice_id'=>'-1', 'phpgw_return_as'=>'json'))),
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> array(
-									array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'is_area', 'label'=>lang('type'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right'),
-									array('key'=>'area', 'label'=>lang('area'), 'sortable'=>false, 'hidden'=>false, 'className'=>'right'),
-									array('key'=>'count', 'label'=>lang('count'), 'sortable'=>false, 'hidden'=>false, 'className'=>'right'),
-									array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right'),
-									array('key'=>'timestamp_start', 'label'=>lang('date_start'), 'sortable'=>false, 'hidden'=>false, 'className'=>'center'),
-									array('key'=>'timestamp_end', 'label'=>lang('date_end'), 'sortable'=>false, 'hidden'=>false, 'className'=>'center')
-					),
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);			
-
-				$tabletools_documents[] = array
-					(
-						'my_name'		=> 'view',
-						'text'			=> lang('view'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'rental.uidocument.view'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
-					);
+				$tableDef_composite = $this->_get_tableDef_composite($mode, $contract_id);
+				$tableDef_party = $this->_get_tableDef_party($mode, $contract_id);
+				$tableDef_price = $this->_get_tableDef_price($mode, $contract_id);
+				$tableDef_invoice = $this->_get_tableDef_invoice($mode, $contract_id);
+				$tableDef_document = $this->_get_tableDef_document($mode, $contract_id);
+				$tableDef_notification = $this->_get_tableDef_notification($mode, $contract_id);
 				
-				$tabletools_documents[] = array
-					(
-						'my_name'		=> 'delete',
-						'text'			=> lang('remove'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uidocument.delete',
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id')))).";
-							removeDocument(oArgs, parameters);
-						"
-					);
+				$datatable_def = array_merge($datatable_def, $tableDef_composite, $tableDef_party, $tableDef_price, $tableDef_invoice, $tableDef_document, $tableDef_notification);
 				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_8',
-					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uidocument.query', 'type'=>'documents_for_contract', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json'))),
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> array(
-									array('key'=>'title', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'type', 'label'=>lang('type'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
-					),
-					'tabletools'	=> $tabletools_documents,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);	
-				
-				$tabletools_notification[] = array
-					(
-						'my_name'		=> 'delete',
-						'text'			=> lang('delete'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-							var oArgs = ".json_encode(array(
-									'menuaction'		=> 'rental.uinotification.delete_notification', 
-									'contract_id'		=> $contract_id,
-									'phpgw_return_as'	=> 'json'
-								)).";
-							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id')))).";
-							deleteNotification(oArgs, parameters);
-						"
-					);
-				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_9',
-					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uinotification.query', 'type'=>'notifications', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json'))),
-					'data'			=> json_encode(array()),
-					'ColumnDefs'	=> array(
-									array('key'=>'date', 'label'=>lang('date'), 'className'=>'', 'sortable'=>true, 'hidden'=>false, 'className'=>'center'),
-									array('key'=>'message', 'label'=>lang('message'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'recurrence', 'label'=>lang('recurrence'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-									array('key'=>'name', 'label'=>lang('user_or_group'), 'sortable'=>false, 'hidden'=>false),
-									array('key'=>'field_of_responsibility', 'label'=>lang('field_of_responsibility'), 'sortable'=>false, 'hidden'=>false)
-					),
-					'tabletools'	=> $tabletools_notification,
-					'config'		=> array(
-						array('disableFilter'	=> true)
-					)
-				);	
 			}
 			
 			$composite_search_options = array
