@@ -903,7 +903,7 @@
 			if($sql_custom_field)
 			{
 				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
-				$sql .= "GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
+				$sql .= " GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
 			}
 //_debug_array($sql);
 			static $cache_attributes = array();
