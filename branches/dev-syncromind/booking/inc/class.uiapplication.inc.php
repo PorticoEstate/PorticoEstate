@@ -790,7 +790,7 @@
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);	
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
-            
+                        //test
             
             $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
