@@ -307,6 +307,17 @@
 				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 			);
 
+		$download = array
+			(
+				'my_name'		=> 'download',
+				'text'			=> lang('download'),
+				'download'		=> self::link(array('menuaction' => 'rental.uiparty.download',
+								'contract_id'	=> $contract_id,
+								'type'			=> 'included_parties',
+								'export'		=> true,
+								'allrows'		=> true))
+			);
+		
 		if ($mode == 'edit')
 		{
 			$tabletools_party1[] = array
@@ -325,7 +336,7 @@
 					"
 				);
 
-
+			$tabletools_party1[] = $download;
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_3',
@@ -363,7 +374,23 @@
 						addParty(oArgs, parameters);
 					"
 				);
-
+			
+			$tabletools_party2[] = array
+				(
+					'my_name'		=> 'download_not_included_composites',
+					'text'			=> lang('download'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'		=> 'rental.uiparty.download', 
+								'contract_id'		=> $contract_id,
+								'type'				=> 'not_included_parties',
+								'export'			=> true
+							)).";
+						downloadParties(oArgs);
+					"			
+				);
+			
 			$columns_def[3]['hidden'] = true;
 			$datatable_def[] = array
 			(
@@ -379,6 +406,7 @@
 		}
 		else 
 		{
+			$tabletools_party1[] = $download;
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_2',
@@ -519,6 +547,22 @@
 	
 	private function _get_tableDef_invoice($mode, $contract_id)
 	{
+			$tabletools_invoice[] = array
+				(
+					'my_name'		=> 'download_not_included_composites',
+					'text'			=> lang('download'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'		=> 'rental.uiinvoice_price_item.download', 
+								'contract_id'		=> $contract_id,
+								'type'				=> 'invoice_price_items',
+								'export'			=> true
+							)).";
+						downloadInvoice(oArgs);
+					"			
+				);
+			
 		if ($mode == 'edit')
 		{
 			$table_name = 'datatable-container_7';
@@ -542,6 +586,7 @@
 							array('key'=>'timestamp_start', 'label'=>lang('date_start'), 'sortable'=>false, 'hidden'=>false, 'className'=>'center'),
 							array('key'=>'timestamp_end', 'label'=>lang('date_end'), 'sortable'=>false, 'hidden'=>false, 'className'=>'center')
 			),
+			'tabletools'	=> $tabletools_invoice,
 			'config'		=> array(
 				array('disableFilter'	=> true)
 			)
