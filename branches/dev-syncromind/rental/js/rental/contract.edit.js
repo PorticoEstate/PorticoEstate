@@ -377,6 +377,23 @@ removeParty = function(oArgs, parameters){
 	}, data, 'POST', 'JSON');
 };
 
+downloadParties = function(oArgs){
+
+	if(!confirm("This will take some time..."))
+	{
+		return false;
+	}
+	
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	requestUrl += '&search_option=' + $('#party_search_options').val();
+	requestUrl += '&search=' + $('#party_query').val();
+	requestUrl += '&party_type=' + $('#party_type').val();
+	requestUrl += '&active=' + $('#active').val();
+
+	window.open(requestUrl,'_self');
+};
+
 
 addPrice = function(oArgs, parameters){
     
@@ -451,6 +468,20 @@ removePrice = function(oArgs, parameters){
 		oTable0.fnDraw();
 
 	}, data, 'POST', 'JSON');
+};
+
+downloadInvoice = function(oArgs){
+
+	if(!confirm("This will take some time..."))
+	{
+		return false;
+	}
+	
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	requestUrl += '&invoice_id=' + $('#invoice_id').val();
+
+	window.open(requestUrl,'_self');
 };
 
 removeDocument = function(oArgs, parameters){
