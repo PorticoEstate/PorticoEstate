@@ -33,8 +33,14 @@ class rental_uiinvoice_price_item extends rental_uicommon
 		$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'title'; 
 		$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 		// Form variables
-		$search_for 	= $search['value'];
+		$search_for 	= (is_array($search)) ? $search['value'] : $search;
 		$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+		$export			= phpgw::get_var('export','bool');
+		
+		if ($export)
+		{
+			$num_of_objects = null;
+		}
 		
 		// Create an empty result set
 		$result_objects = array();
@@ -61,6 +67,11 @@ class rental_uiinvoice_price_item extends rental_uicommon
 					$rows[] = $result->serialize();
 				}
 			}
+		}
+		
+		if($export)
+		{
+			return $rows;
 		}
 		
 		$result_data    =   array('results' =>  $rows);
