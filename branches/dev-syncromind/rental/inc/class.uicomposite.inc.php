@@ -36,88 +36,88 @@
 			$this->config->read();
 		}
 		
-	private function _get_filters()
-	{
-		$filters = array();
-
-		$search_option = array
-		(
-			array('id' => 'all', 'name' => lang('all')),
-			array('id' => 'name', 'name' => lang('name')),
-			array('id' => 'address', 'name' => lang('address')),
-			array('id' => 'property_id', 'name' => lang('object_number'))
-		);
-		$filters[] = array
-					(
-						'type'   => 'filter',
-						'name'   => 'search_option',
-						'text'   => lang('search option'),
-						'list'   => $search_option
-					);
-		
-		if(isset($this->config->config_data['contract_furnished_status']) && $this->config->config_data['contract_furnished_status'])
+		private function _get_filters()
 		{
-			$furnish_types_arr = rental_composite::get_furnish_types();
-			$furnish_types = array();
-			array_unshift ($furnish_types, array('id'=>'4', 'name'=>lang('Alle')));
-			foreach($furnish_types_arr as $id => $title){
-					$furnish_types[] = array('id'=>$id, 'name'=>$title); 
+			$filters = array();
+
+			$search_option = array
+			(
+				array('id' => 'all', 'name' => lang('all')),
+				array('id' => 'name', 'name' => lang('name')),
+				array('id' => 'address', 'name' => lang('address')),
+				array('id' => 'property_id', 'name' => lang('object_number'))
+			);
+			$filters[] = array
+						(
+							'type'   => 'filter',
+							'name'   => 'search_option',
+							'text'   => lang('search option'),
+							'list'   => $search_option
+						);
+
+			if(isset($this->config->config_data['contract_furnished_status']) && $this->config->config_data['contract_furnished_status'])
+			{
+				$furnish_types_arr = rental_composite::get_furnish_types();
+				$furnish_types = array();
+				array_unshift ($furnish_types, array('id'=>'4', 'name'=>lang('Alle')));
+				foreach($furnish_types_arr as $id => $title){
+						$furnish_types[] = array('id'=>$id, 'name'=>$title); 
+				}
+				$filters[] = array
+							(
+								'type'   => 'filter',
+								'name'   => 'furnished_status',
+								'text'   => lang('furnish_type'),
+								'list'   => $furnish_types
+							);									
+			}
+
+			$districts_arr = execMethod('property.sogeneric.get_list',array('type' => 'district'));
+			$districts = array();
+			array_unshift ($districts, array('id'=>'', 'name'=>lang('select')));
+			foreach($districts_arr as $district)
+			{
+				$districts[] = array('id'=>$district['id'], 'name'=>$district['name']); 
 			}
 			$filters[] = array
 						(
 							'type'   => 'filter',
-							'name'   => 'furnished_status',
-							'text'   => lang('furnish_type'),
-							'list'   => $furnish_types
-						);									
+							'name'   => 'district_id',
+							'text'   => lang('district'),
+							'list'   => $districts
+						);
+
+			$active_option = array
+			(
+				array('id' => 'both', 'name' =>lang('all')),
+				array('id' => 'active', 'name' =>lang('in_operation')),
+				array('id' => 'non_active', 'name' =>lang('out_of_operation')),
+			);
+			$filters[] = array
+						(
+							'type'   => 'filter',
+							'name'   => 'is_active',
+							'text'   => lang('availability'),
+							'list'   => $active_option
+						);
+
+			$has_contract_option = array
+			(
+				array('id' => 'both', 'name' =>lang('all')),
+				array('id' => 'has_contract', 'name' =>lang('composite_has_contract')),
+				array('id' => 'has_no_contract', 'name' =>lang('composite_has_no_contract')),
+			);
+			$filters[] = array
+						(
+							'type'   => 'filter',
+							'name'   => 'has_contract',
+							'text'   => '',
+							'list'   => $has_contract_option
+						);
+
+			return $filters;
 		}
-				 
-		$districts_arr = execMethod('property.sogeneric.get_list',array('type' => 'district'));
-		$districts = array();
-		array_unshift ($districts, array('id'=>'', 'name'=>lang('select')));
-		foreach($districts_arr as $district)
-		{
-			$districts[] = array('id'=>$district['id'], 'name'=>$district['name']); 
-		}
-		$filters[] = array
-					(
-						'type'   => 'filter',
-						'name'   => 'district_id',
-						'text'   => lang('district'),
-						'list'   => $districts
-					);
 		
-		$active_option = array
-		(
-			array('id' => 'both', 'name' =>lang('all')),
-			array('id' => 'active', 'name' =>lang('in_operation')),
-			array('id' => 'non_active', 'name' =>lang('out_of_operation')),
-		);
-		$filters[] = array
-					(
-						'type'   => 'filter',
-						'name'   => 'is_active',
-						'text'   => lang('availability'),
-						'list'   => $active_option
-					);
-		
-		$has_contract_option = array
-		(
-			array('id' => 'both', 'name' =>lang('all')),
-			array('id' => 'has_contract', 'name' =>lang('composite_has_contract')),
-			array('id' => 'has_no_contract', 'name' =>lang('composite_has_no_contract')),
-		);
-		$filters[] = array
-					(
-						'type'   => 'filter',
-						'name'   => 'has_contract',
-						'text'   => '',
-						'list'   => $has_contract_option
-					);
-		
-		return $filters;
-	}
-	
 		public function query()
 		{ 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -138,7 +138,7 @@
 			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id'; 
 			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
-			$search_for 	= $search['value'];
+			$search_for 	= (is_array($search)) ? $search['value'] : $search;
 			$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 			
 			$export			= phpgw::get_var('export','bool');
@@ -267,7 +267,11 @@
 					)
 				);
 			}*/
-
+			if ($export)
+			{
+				return $rows;
+			}
+			
 			$result_data    =   array('results' =>  $rows);
 			$result_data['total_records']	= $object_count;
 			$result_data['draw']    = $draw;
