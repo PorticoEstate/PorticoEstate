@@ -109,6 +109,28 @@ $(document).ready(function()
 	
 	/******************************************************************************/
 	
+	$('#document_search_option').change( function() 
+	{
+		filterDataDocument('search_option', $(this).val());
+	});
+
+	var previous_document_query = '';
+	$('#document_query').on( 'keyup change', function () 
+	{
+		if ( $.trim($(this).val()) != $.trim(previous_document_query) ) 
+		{
+			filterDataDocument('search', {'value': $(this).val()});
+			previous_document_query = $(this).val();
+		}
+	});
+
+	$('#document_type_search').change( function() 
+	{
+		filterDataDocument('document_type', $(this).val());
+	});
+	
+	/******************************************************************************/
+	
 	get_composite_data = function()
 	{
 		if (set_composite_data  === 0)
@@ -178,6 +200,12 @@ function filterDataParty(param, value)
 {
 	oTable4.dataTableSettings[4]['ajax']['data'][param] = value;
 	oTable4.fnDraw();
+}
+
+function filterDataDocument(param, value)
+{
+	oTable8.dataTableSettings[8]['ajax']['data'][param] = value;
+	oTable8.fnDraw();
 }
 
 /******************************************************************************/
@@ -254,6 +282,24 @@ removeComposite = function(oArgs, parameters){
 		oTable2.fnDraw();
 
 	}, data, 'POST', 'JSON');
+};
+
+downloadComposite = function(oArgs){
+
+	if(!confirm("This will take some time..."))
+	{
+		return false;
+	}
+	
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	requestUrl += '&search_option=' + $('#composite_search_options').val();
+	requestUrl += '&search=' + $('#composite_query').val();
+	requestUrl += '&furnished_status=' + $('#furnished_status').val();
+	requestUrl += '&is_active=' + $('#is_active').val();
+	requestUrl += '&has_contract=' + $('#has_contract').val();
+
+	window.open(requestUrl,'_self');
 };
 
 
