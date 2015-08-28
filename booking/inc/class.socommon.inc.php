@@ -708,7 +708,10 @@
 					}
 				}
 			}
-			$this->db->query(join($update_queries, ";\n"), __LINE__, __FILE__);
+			foreach($update_queries as $update_query)
+			{
+				$this->db->query($update_query, __LINE__, __FILE__);
+			}
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
 			return $receipt;
