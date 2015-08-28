@@ -67,7 +67,7 @@
 
 				$this->db->query("SELECT count(fm_workorder.id) AS closed_orders_at_project"
 				. " FROM fm_workorder"
-				. " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id)"
+				. " JOIN fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id)"
 				. " WHERE project_id= {$project_id}"
 				. " AND (fm_workorder_status.closed = 1 OR fm_workorder_status.delivered = 1)", __LINE__, __FILE__);
 
@@ -76,7 +76,7 @@
 
 				$this->db->query("SELECT fm_project_status.closed AS closed_project, fm_project.status as old_status"
 				. " FROM fm_project"
-				. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
+				. " JOIN fm_project_status ON (fm_project.status = fm_project_status.id)"
 				. " WHERE fm_project.id= {$project_id}", __LINE__, __FILE__);
 
 				$this->db->next_record();
