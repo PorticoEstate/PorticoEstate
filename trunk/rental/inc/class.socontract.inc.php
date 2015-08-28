@@ -1042,13 +1042,14 @@ class rental_socontract extends rental_socommon
     	$success_parties = true;
     	$success_price_items = true;
 
-    	//composites
+     	$db2 = clone($this->db);
+	   	//composites
     	$this->db->query($q_composites);
     	while($this->db->next_record()){
     		$composite_id = $this->unmarshal($this->db->f('composite_id'),'int');
     		$composite_id = $this->marshal($composite_id, 'int');
     		$sql = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ({$contract_id}, {$composite_id})";
-    		$result_composites = $this->db->query($sql);
+    		$result_composites = $db2->query($sql);
     		if($result_composites){
     			//noop
     		}
@@ -1057,7 +1058,7 @@ class rental_socontract extends rental_socommon
     		}
     	}
 
-    	//parties
+		//parties
         $this->db->query($q_parties);
     	while($this->db->next_record()){
     		$party_id = $this->unmarshal($this->db->f('party_id'),'int');
@@ -1065,7 +1066,7 @@ class rental_socontract extends rental_socommon
     		$is_payer = $this->unmarshal($this->db->f('is_payer'),'bool');
     		$is_payer = $this->marshal($is_payer ? 'true' : 'false','bool');
     		$sql = "INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES ({$contract_id}, {$party_id}, {$is_payer})";
-    		$result_parties = $this->db->query($sql);
+    		$result_parties = $db2->query($sql);
     		if($result_parties){
     			//noop
     		}
@@ -1096,7 +1097,7 @@ class rental_socontract extends rental_socommon
     		$is_one_time = $this->unmarshal($this->db->f('is_one_time'),'bool');
     		$is_one_time = $this->marshal($is_one_time ? 'true' : 'false','bool');
     		$sql = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, is_one_time, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, {$is_one_time}, null, null)";
-    		$result_price_items = $this->db->query($sql);
+    		$result_price_items = $db2->query($sql);
     		if($result_price_items){
     			//noop
     		}
