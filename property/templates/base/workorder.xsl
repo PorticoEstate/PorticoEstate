@@ -80,16 +80,68 @@
 
 
 		<script type="text/javascript">
+
+			function check_valid_session()
+			{
+				var oArgs = {menuaction:'property.bocommon.confirm_session'};
+				var strURL = phpGWLink('index.php', oArgs, true);
+
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: strURL,
+					success: function(data) {
+						if( data != null)
+						{
+							if(data['sessionExpired'] == true)
+							{
+								window.alert('sessionExpired - please log in');
+								lightboxlogin();//defined i phpgwapi/templates/portico/js/base.js
+							}
+							else
+							{
+								document.form.submit();
+							}
+						}
+					},
+					failure: function(o)
+					{
+						window.alert('failure - try again - once');
+					},
+					timeout: 5000
+				});
+			}
+
+			function submit_workorder()
+			{
+				check_valid_session();
+			}
+
 			function calculate_workorder()
 			{
 				document.getElementsByName("calculate_workorder")[0].value = 1;
-				document.form.submit();
+				check_valid_session();
 			}
 			function send_workorder()
 			{
 				document.getElementsByName("send_workorder")[0].value = 1;
-				document.form.submit();
+				check_valid_session();
 			}
+
+			$(document).ready(function()
+			{
+			   $('form[name=form]').submit(function(e) {
+
+					var lean = <xsl:value-of select="lean"/>;
+					if (lean == 0)
+					{
+					   e.preventDefault();
+						check_valid_session();
+					}
+			  });
+		  });
+
+
 			function set_tab(tab)
 			{
 				document.form.tab.value = tab;			
@@ -115,7 +167,7 @@
 						<table>
 							<tr height="50">
 								<td>
-									<input type="button" name="save" value="{$lang_save}" onClick="document.form.submit();">
+									<input type="button" name="save" value="{$lang_save}" onClick="submit_workorder();">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_save_statustext"/>
 										</xsl:attribute>
