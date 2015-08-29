@@ -48,6 +48,42 @@ Returns mixed
 	document.form.tab.value = tab;			
 	}
     </script>
+	 <script type="text/javascript">
+      $(document).ready(function(){
+           $('form[name=form]').submit(function(e) {
+               e.preventDefault();
+
+				var oArgs = {menuaction:'property.bocommon.confirm_session'};
+				var strURL = phpGWLink('index.php', oArgs, true);
+
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: strURL,
+					success: function(data) {
+						if( data != null)
+						{
+							if(data['sessionExpired'] == true)
+							{
+								window.alert('sessionExpired - please log in');
+								lightboxlogin();//defined i phpgwapi/templates/portico/js/base.js
+							}
+							else
+							{
+								document.form.submit();
+							}
+						}
+					},
+					failure: function(o)
+					{
+						window.alert('failure - try again - once');
+					},
+					timeout: 5000
+				});
+
+          });
+      });
+ </script>
     <table cellpadding="2" cellspacing="2" align="center">
 	<xsl:choose>
 	    <xsl:when test="msgbox_data != ''">
