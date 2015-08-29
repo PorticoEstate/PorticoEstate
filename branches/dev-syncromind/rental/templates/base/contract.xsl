@@ -44,6 +44,16 @@
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
 
+	<xsl:choose>
+		<xsl:when test="//list_consistency_warnings!=''">
+			<xsl:for-each select="list_consistency_warnings">
+				<dl>
+					<dt><xsl:value-of select="php:function('lang', 'contract_warning')"/></dt><dd><xsl:value-of select="warning"/></dd>
+				</dl>
+			</xsl:for-each>			
+		</xsl:when>
+	</xsl:choose>
+	
 	<xsl:call-template name="top-toolbar" />
 	<div>
 		<xsl:variable name="form_action">
@@ -462,6 +472,9 @@
 						</div>
 						<div id="documents">
 							<fieldset>
+								<script type="text/javascript">
+									link_upload_document = <xsl:value-of select="link_upload_document"/>;
+								</script>
 								<div class="pure-control-group">
 									<label>
 										<xsl:value-of select="php:function('lang', 'Upload')"/>
@@ -588,6 +601,7 @@
 			<xsl:value-of select="cancel_url"/>
 		</xsl:variable>
 		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
+		<form id="form_upload" name="form_upload" method="post" action="" enctype="multipart/form-data"></form>
 	</div>
 </xsl:template>
 
