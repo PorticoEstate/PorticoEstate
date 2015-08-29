@@ -1445,6 +1445,11 @@ JS;
 						return;
 					}
 				}
+				$contract->check_consistency();
+			} 
+			else 
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.index'));			
 			}
 			
 			if(!$executive_officer = $contract->get_executive_officer_id())
@@ -1671,8 +1676,9 @@ JS;
 			
 			$contract_id = (int)phpgw::get_var('id');
 			$location_id = (int)phpgw::get_var('location_id');
+			$adjustment_id = (int)phpgw::get_var('adjustment_id');
 			
-			$error = null;
+			$list_consistency_warnings  = array();
 	
 			if ($values['contract_id'])
 			{
@@ -1687,17 +1693,13 @@ JS;
 					
 				if ($contract) {
 					
-					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
+					if(!$contract->has_permission(PHPGW_ACL_EDIT))
 					{
-						$editable = false;
-						$error .= '<br/>'.lang('permission_denied_edit_contract');
-					}
-					
-					if(!$editable && !$contract->has_permission(PHPGW_ACL_READ))
-					{
-						$this->render('permission_denied.php',array('error' => lang('permission_denied_view_contract')));
+						$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
 						return;
 					}
+					$contract->check_consistency();
+					$list_consistency_warnings = $contract->get_consistency_warnings();
 				}
 			}
 			else
@@ -1820,10 +1822,17 @@ JS;
 					'menuaction'	=> 'rental.uicontract.save'
 				);
 
-			$link_index = array
+			$link_cancel = array
 				(
 					'menuaction'	=> 'rental.uicontract.index',
 				);
+			$cancel_text = 'cancel';
+			
+			if($adjustment_id)
+			{
+				$link_cancel = self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts','id' => $adjustment_id));
+				$cancel_text = 'contract_regulation_back';
+			}
 			
 			$tabs = array();
 			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
@@ -1862,7 +1871,9 @@ JS;
 				$link_not_included_parties = json_encode(self::link(array('menuaction'=>'rental.uiparty.query', 'type'=>'not_included_parties', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
 				
 				$link_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
-				$link_not_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'not_included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'responsibility_id'=>$contract->get_location_id(), 'phpgw_return_as'=>'json')));								
+				$link_not_included_price_items = json_encode(self::link(array('menuaction'=>'rental.uiprice_item.query', 'type'=>'not_included_price_items', 'editable'=>true, 'contract_id'=>$contract_id, 'responsibility_id'=>$contract->get_location_id(), 'phpgw_return_as'=>'json')));
+				
+				$link_upload_document = json_encode(self::link(array('menuaction'=>'rental.uidocument.add', 'contract_id'=>$contract_id, 'phpgw_return_as'=>'json')));
 				
 				$tableDef_composite = $this->_get_tableDef_composite($mode, $contract_id);
 				$tableDef_party = $this->_get_tableDef_party($mode, $contract_id);
@@ -2014,9 +2025,9 @@ JS;
 				(
 					'datatable_def'					=> $datatable_def,
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_save),
-					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
+					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_cancel),
 					'lang_save'						=> lang('save'),
-					'lang_cancel'					=> lang('cancel'),
+					'lang_cancel'					=> lang($cancel_text),
 
 					'value_contract_number'			=> $contract->get_old_contract_id(),
 					'value_parties'					=> $contract->get_party_name_as_list(),
@@ -2081,6 +2092,10 @@ JS;
 					
 					'list_document_types'			=> array('options' => $document_types_options),
 					'list_document_search'			=> array('options' => $document_search_options),
+					
+					'list_consistency_warnings'		=> $list_consistency_warnings,
+				
+					'link_upload_document'			=> $link_upload_document,
 				
 					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 				);
@@ -2209,17 +2224,23 @@ JS;
 					if($success){
 						$db_contract->transaction_commit();
 						$message = lang(messages_new_contract_copied).' '.$old_contract_old_id;
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'adjustment_id' => $adjustment_id));
+						phpgwapi_cache::message_set($message, 'message');
+						//$this->edit(array('contract_id'=>$contract->get_id(), 'adjustment_id' => $adjustment_id));
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'adjustment_id' => $adjustment_id));
 					}
 					else{
 						$db_contract->transaction_abort();
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error'),'adjustment_id' => $adjustment_id));
+						phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+						//$this->edit(array('contract_id'=>$contract->get_id(), 'adjustment_id' => $adjustment_id));
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'adjustment_id' => $adjustment_id));
 					}
 				}
 				else
 				{
 					$db_contract->transaction_abort();
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error'),'adjustment_id' => $adjustment_id));
+					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+					//$this->edit(array('contract_id'=>$contract->get_id(), 'adjustment_id' => $adjustment_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'adjustment_id' => $adjustment_id));
 				}
 			}
 		
