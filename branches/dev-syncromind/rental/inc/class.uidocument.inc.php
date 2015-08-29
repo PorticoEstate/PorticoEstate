@@ -223,6 +223,11 @@
 					$_FILES["file_path"]["name"]
 				);
 				
+				if (phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					return $result;
+				}
+		
 				if($result)
 				{
 					if(rental_sodocument::get_instance()->store($document))
