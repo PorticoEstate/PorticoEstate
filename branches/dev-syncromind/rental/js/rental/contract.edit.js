@@ -12,6 +12,8 @@ var set_price_data = 0;
 
 var set_invoice_data = 0;
 
+var link_upload_document = null;
+
 function formatterPrice (key, oData) 
 {
 	var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
@@ -186,6 +188,28 @@ $(document).ready(function()
 			set_invoice_data = 1;
 		}
 	};
+	
+	$('#upload_button').on('click', function() 
+	{
+		var form = document.forms.namedItem("form_upload");
+		var file_data = $('#ctrl_upoad_path').prop('files')[0];            
+		var form_data = new FormData(form);
+		form_data.append('file_path', file_data);
+		form_data.append('document_type', $('#document_type').val());
+		form_data.append('document_title', $('#document_title').val());
+
+		$.ajax({
+			url: link_upload_document,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,                         
+			type: 'post',
+			success: function(result){
+				alert(result); 
+			}
+		 });
+	});
 });
 
 /******************************************************************************/
