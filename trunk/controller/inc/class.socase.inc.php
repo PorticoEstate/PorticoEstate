@@ -177,6 +177,7 @@
 					'id'			=> $this->db->f('id'),
 					'check_list_id'	=> $this->db->f('check_list_id'),
 					'descr'			=> $this->db->f('descr', true),
+					'measurement'	=> $this->db->f('measurement', true),
 					'user_id'		=> $this->db->f('user_id'),
 					'status'		=> $this->db->f('status'),
 					'modified_date'	=> $this->db->f('modified_date')
