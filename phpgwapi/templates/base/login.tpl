@@ -82,8 +82,8 @@
 	
 	<div id="content-box">
 		<div class="rawimages">
-			<span><a href="login.php?lang=no"><img src="{flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span>
-			<span><a href="login.php?lang=en"><img src="{flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" ></a></span>
+			<span><a href="login.php?lang=no&lightbox={lightbox}"><img src="{flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span>
+			<span><a href="login.php?lang=en&lightbox={lightbox}"><img src="{flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" ></a></span>
 		</div>
 
 		<div class="padding">

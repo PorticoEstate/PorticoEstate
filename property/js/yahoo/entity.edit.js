@@ -482,3 +482,11 @@ $(document).ready(function(){
 });
 
 
+$(document).ready(function(){
+
+	$("#cases_time_span").change(function(){
+		var oArgs = {menuaction:'property.uientity.get_cases', location_id:location_id,	 id:item_id, year:$(this).val()};
+		execute_async(myDataTable_5, oArgs);
+	});
+});
+

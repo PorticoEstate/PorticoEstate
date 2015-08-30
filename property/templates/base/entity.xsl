@@ -404,6 +404,8 @@
 			{
 				document.form.active_tab.value = active_tab;			
 			}
+			var location_id = '<xsl:value-of select="value_location_id"/>';
+			var item_id = '<xsl:value-of select="value_id"/>';
 
 			var property_js = <xsl:value-of select="property_js"/>;
 			var base_java_url = <xsl:value-of select="base_java_url"/>;
@@ -740,15 +742,13 @@
 								</input>
 								</td>
 								</tr>
-							</table>
-							<table>
 								<tr>
 									<td>
 									<xsl:value-of select="php:function('lang', 'controller')" />
 										
 									</td>
 									<td>
-									<table cellpadding="2" cellspacing="2" width="80%" align="center">
+									<table>
 									<tr>
 										<td>
 											<div id="datatable-buttons_4"/>
@@ -760,11 +760,31 @@
 								</tr>
 								<tr>
 									<td>
-									<xsl:value-of select="php:function('lang', 'cases')" />
+										<table>
+											<tr>
+												<td>
+													<xsl:value-of select="php:function('lang', 'cases')" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<select id = "cases_time_span" name="cases_time_span">
+														<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'select')"/>
+														</xsl:attribute>
+														<option value="0">
+														<xsl:value-of select="php:function('lang', 'select')"/>
+														</option>
+														<xsl:apply-templates select="cases_time_span/options"/>
+													</select>
+												</td>
+											</tr>
+										</table>
 									</td>
 									<td>
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
+								<table >
 									<tr>
+
 										<td>
 											<div id="datatable-container_5"/>
 										</td>
