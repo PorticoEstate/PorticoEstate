@@ -595,7 +595,7 @@
 		return $datatable_def;
 	}
 	
-	private function _get_tableDef_document($mode, $contract_id)
+	private function _get_tableDef_document($mode, $contract_id, $permission=false)
 	{
 		$tabletools_documents[] = array
 			(
@@ -609,7 +609,7 @@
 
 		$table_name = 'datatable-container_5';
 
-		if ($mode == 'edit')
+		if (($mode == 'edit') && $permission)
 		{
 			$tabletools_documents[] = array
 				(
@@ -1531,9 +1531,9 @@ JS;
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.get_total_price', 'contract_id'=>$contract_id,  'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> array(
-							array('key'=>'total_price', 'label'=>lang('total_price'), 'className'=>'right', 'sortable'=>false),
-							array('key'=>'area', 'label'=>lang('area'), 'className'=>'right', 'sortable'=>false),
-							array('key'=>'price_per_unit', 'label'=>lang('price_per_unit'), 'className'=>'right', 'sortable'=>false)					
+							array('key'=>'total_price', 'label'=>lang('total_price'), 'className'=>'right', 'sortable'=>false, 'formatter'=>'formatterPrice'),
+							array('key'=>'area', 'label'=>lang('area'), 'className'=>'right', 'sortable'=>false, 'formatter'=>'formatterArea'),
+							array('key'=>'price_per_unit', 'label'=>lang('price_per_unit'), 'className'=>'right', 'sortable'=>false, 'formatter'=>'formatterPrice')					
 				),
 				'config'		=> array(
 					array('disableFilter' => true),
@@ -1847,9 +1847,9 @@ JS;
 					'container'		=> 'datatable-container_0',
 					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.get_total_price', 'contract_id'=>$contract_id,  'phpgw_return_as'=>'json'))),
 					'ColumnDefs'	=> array(
-								array('key'=>'total_price', 'label'=>lang('total_price'), 'className'=>'right', 'sortable'=>false),
-								array('key'=>'area', 'label'=>lang('area'), 'className'=>'right', 'sortable'=>false),
-								array('key'=>'price_per_unit', 'label'=>lang('price_per_unit'), 'className'=>'right', 'sortable'=>false)					
+								array('key'=>'total_price', 'label'=>lang('total_price'), 'className'=>'right', 'sortable'=>false, 'formatter'=>'formatterPrice'),
+								array('key'=>'area', 'label'=>lang('area'), 'className'=>'right', 'sortable'=>false, 'formatter'=>'formatterArea'),
+								array('key'=>'price_per_unit', 'label'=>lang('price_per_unit'), 'className'=>'right', 'sortable'=>false, 'formatter'=>'formatterPrice')					
 					),
 					'config'		=> array(
 						array('disableFilter' => true),
@@ -1879,7 +1879,7 @@ JS;
 				$tableDef_party = $this->_get_tableDef_party($mode, $contract_id);
 				$tableDef_price = $this->_get_tableDef_price($mode, $contract_id);
 				$tableDef_invoice = $this->_get_tableDef_invoice($mode, $contract_id);
-				$tableDef_document = $this->_get_tableDef_document($mode, $contract_id);
+				$tableDef_document = $this->_get_tableDef_document($mode, $contract_id, $contract->has_permission(PHPGW_ACL_EDIT));
 				$tableDef_notification = $this->_get_tableDef_notification($mode, $contract_id);
 				
 				$datatable_def = array_merge($datatable_def, $tableDef_composite, $tableDef_party, $tableDef_price, $tableDef_invoice, $tableDef_document, $tableDef_notification);
@@ -2499,6 +2499,7 @@ JS;
 		
 		public function get_total_price()
 		{
+			$draw			= phpgw::get_var('draw', 'int');
 			$so_contract = rental_socontract::get_instance();
 			$so_contract_price_item = rental_socontract_price_item::get_instance();
 			
@@ -2507,20 +2508,21 @@ JS;
 			$contract = $so_contract->get_single($contract_id);
 			$area = $contract->get_rented_area();
 			
-			if(isset($area) && $area > 0)
+			if(!empty($area) && !empty($total_price))
 			{
 				$price_per_unit = $total_price / $area;
-				$price_per_unit = number_format($price_per_unit, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
+			} 
+			else {
+				$total_price = 0;
+				$area = 0;
+				$price_per_unit = 0;
 			}
 			
-			$total_price = number_format($total_price, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
-			$area = number_format($area, $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator);
-						
-			$result_array[] = array('total_price' => $total_price.' '.$this->currency_suffix, 'area' => $area.' Kvm', 'price_per_unit' => $price_per_unit.' '.$this->currency_suffix);
+			$result_array[] = array('total_price'=>$total_price, 'area'=>$area, 'price_per_unit'=>$price_per_unit);
 			
 			$result_data    =   array('results' =>  $result_array);
-			$result_data['total_records']	= 1;
-			$result_data['draw']    = 1;
+			$result_data['total_records']	= count($result_array);
+			$result_data['draw']    = $draw;
 
 			return $this->jquery_results($result_data);
 		}
