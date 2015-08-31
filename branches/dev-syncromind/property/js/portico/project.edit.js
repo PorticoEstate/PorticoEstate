@@ -162,3 +162,59 @@ $(document).ready(function(){
 	api2.on( 'draw', sum_columns_table_invoice );
 	
 });
+
+	function check_and_submit_valid_session()
+	{
+		var oArgs = {menuaction:'property.bocommon.confirm_session'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: strURL,
+			success: function(data) {
+				if( data != null)
+				{
+					if(data['sessionExpired'] == true)
+					{
+						window.alert('sessionExpired - please log in');
+						JqueryPortico.lightboxlogin();//defined in common.js
+					}
+					else
+					{
+						document.getElementsByName("save")[0].value = 1;
+						document.form.submit();
+					}
+				}
+			},
+			failure: function(o)
+			{
+				window.alert('failure - try again - once');
+			},
+			timeout: 5000
+		});
+	}
+
+	this.validate_form = function()
+	{
+		conf = {
+				modules : 'location, date, security, file',
+				validateOnBlur : false,
+				scrollToTopOnError : true,
+				errorMessagePosition : 'top',
+				language : validateLanguage
+			};
+		return $('form').validateForm(validateLanguage, conf);
+	}
+
+	$(document).ready(function(){
+	   $('form[name=form]').submit(function(e) {
+		   e.preventDefault();
+
+			if(!validate_form())
+			{
+				return;
+			}
+			check_and_submit_valid_session();
+	  });
+  });

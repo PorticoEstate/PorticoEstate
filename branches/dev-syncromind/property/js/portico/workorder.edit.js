@@ -1,6 +1,49 @@
 
 	var vendor_id;
 
+	$(document).ready(function(){
+	   $('form[name=form]').submit(function(e) {
+		   e.preventDefault();
+
+			if(!validate_form())
+			{
+				return;
+			}
+			check_and_submit_valid_session();
+	  });
+  });
+
+	function check_and_submit_valid_session()
+	{
+		var oArgs = {menuaction:'property.bocommon.confirm_session'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: strURL,
+			success: function(data) {
+				if( data != null)
+				{
+					if(data['sessionExpired'] == true)
+					{
+						window.alert('sessionExpired - please log in');
+						JqueryPortico.lightboxlogin();//defined in common.js
+					}
+					else
+					{
+						document.form.submit();
+					}
+				}
+			},
+			failure: function(o)
+			{
+				window.alert('failure - try again - once');
+			},
+			timeout: 5000
+		});
+	}
+
 	this.validate_form = function()
 	{
 		conf = {
@@ -19,7 +62,7 @@
 		{
 			return;
 		}
-		document.form.submit();
+		check_and_submit_valid_session();
 	}
 
 	function calculate_workorder()
@@ -29,7 +72,7 @@
 			return;
 		}
 		document.getElementsByName("calculate_workorder")[0].value = 1;
-		document.form.submit();
+		check_and_submit_valid_session();
 	}
 	function send_workorder()
 	{
@@ -38,7 +81,7 @@
 			return;
 		}
 		document.getElementsByName("send_workorder")[0].value = 1;
-		document.form.submit();
+		check_and_submit_valid_session();
 	}
 	function set_tab(tab)
 	{

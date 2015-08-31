@@ -614,6 +614,16 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'cases')" />
 								</label>
+								<select id = "cases_time_span" name="cases_time_span">
+									<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+									</xsl:attribute>
+									<option value="0">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+									</option>
+									<xsl:apply-templates select="cases_time_span/options"/>
+								</select>
+
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_5'">
 										<xsl:call-template name="table_setup">

@@ -82,7 +82,7 @@ JqueryPortico.formatLinkGeneric = function(key, oData) {
 
 JqueryPortico.formatLinkGenericLlistAttribute = function(key, oData) {
         
-	var link = oData['link'];
+		var link = oData['link'];
         var type = oData['link'].split(".");
         
         var resort = '';
@@ -95,10 +95,11 @@ JqueryPortico.formatLinkGenericLlistAttribute = function(key, oData) {
             resort = 'down';
         }
         
-        if(type[2] == 'uiadmin_entity')
+        if(type[2] == 'uiadmin_entity' || type[2] == 'ui_custom')
         {
             var url = "'"+ link +'&resort='+ resort +"'";
-        }else
+        }
+		else
         {
             var url = "'"+ link +'&resort='+ resort +"',''";
         }

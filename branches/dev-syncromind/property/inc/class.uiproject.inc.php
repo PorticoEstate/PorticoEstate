@@ -1307,7 +1307,7 @@ JS;
 				}
 			}
 
-			if ($values['save'])
+			if ( $save= phpgw::get_var('save', 'bool'))
 			{
 				$mode = 'edit';
 				
@@ -1344,7 +1344,7 @@ JS;
 					$values['origin'] = '';
 				}
 
-				if(!isset($values['workorder_budget']) && $values['save'] && !$_transfer_new_project && !$values['project_type_id']==3)
+				if(!isset($values['workorder_budget']) && $save && !$_transfer_new_project && !$values['project_type_id']==3)
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
 				}

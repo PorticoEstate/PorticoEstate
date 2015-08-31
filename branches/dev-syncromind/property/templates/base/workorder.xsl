@@ -941,7 +941,7 @@
 				<xsl:choose>
 					<xsl:when test="mode='edit'">
 						<input type="hidden" name="values[save]" value="1"/>
-						<input type="submit" class="pure-button pure-button-primary" name="save" value="{$lang_save}" onMouseout="window.status='';return true;">
+						<input type="submit" class="pure-button pure-button-primary" name="save" value="{$lang_save}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_save_statustext"/>
 							</xsl:attribute>

@@ -24,7 +24,7 @@
 		var project_type_id = '<xsl:value-of select="project_type_id"/>';
 		var project_id = '<xsl:value-of select="value_project_id"/>';
 		var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
-		var base_java_url = <xsl:value-of select="base_java_url"/>; 
+		var base_java_url = <xsl:value-of select="base_java_url"/>;
    </script>
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
@@ -756,7 +756,8 @@
 					<xsl:variable name="lang_save">
 						<xsl:value-of select="lang_save"/>
 					</xsl:variable>
-					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+					<input type="hidden" name='save'  value=""/>
+					<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>

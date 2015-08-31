@@ -208,6 +208,7 @@
 		{
 			// If the lastloginid cookies isn't set, we will default to default_lang - then to english.
 			// Change this if you need.
+			$lightbox	= isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
 
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
 			if (isset($_COOKIE['last_loginid']))
@@ -555,9 +556,13 @@ JS;
 			$this->tmpl->set_var('rounded_css', $rounded_css);
 			$this->tmpl->set_var('flag_no', $flag_no);
 			$this->tmpl->set_var('flag_en', $flag_en);
+			$this->tmpl->set_var('lightbox', $lightbox);
 
-			$this->tmpl->set_var('login_left_message', $GLOBALS['phpgw_info']['login_left_message']);
-			$this->tmpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
+			if(!$lightbox)
+			{
+				$this->tmpl->set_var('login_left_message', $GLOBALS['phpgw_info']['login_left_message']);
+				$this->tmpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
+			}
 
 			$autocomplete = '';
 			if ( isset($GLOBALS['phpgw_info']['server']['autocomplete_login'])
