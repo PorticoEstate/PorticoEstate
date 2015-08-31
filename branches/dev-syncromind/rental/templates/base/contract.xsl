@@ -276,8 +276,8 @@
 						<div id="composite">
 							<fieldset>
 								<script type="text/javascript">
-									link_included_composites = <xsl:value-of select="link_included_composites"/>;
-									link_not_included_composites = <xsl:value-of select="link_not_included_composites"/>;
+									var link_included_composites = <xsl:value-of select="link_included_composites"/>;
+									var link_not_included_composites = <xsl:value-of select="link_not_included_composites"/>;
 								</script>							
 								<div>
 									<xsl:for-each select="datatable_def">
@@ -345,8 +345,8 @@
 						<div id="parties">
 							<fieldset>
 								<script type="text/javascript">
-									link_included_parties = <xsl:value-of select="link_included_parties"/>;
-									link_not_included_parties = <xsl:value-of select="link_not_included_parties"/>;
+									var link_included_parties = <xsl:value-of select="link_included_parties"/>;
+									var link_not_included_parties = <xsl:value-of select="link_not_included_parties"/>;
 								</script>	
 								<div>
 									<xsl:for-each select="datatable_def">
@@ -406,8 +406,8 @@
 						<div id="price">
 							<fieldset>
 								<script type="text/javascript">
-									link_included_price_items = <xsl:value-of select="link_included_price_items"/>;
-									link_not_included_price_items = <xsl:value-of select="link_not_included_price_items"/>;
+									var link_included_price_items = <xsl:value-of select="link_included_price_items"/>;
+									var link_not_included_price_items = <xsl:value-of select="link_not_included_price_items"/>;
 								</script>
 								<div>
 									<xsl:for-each select="datatable_def">
@@ -473,7 +473,7 @@
 						<div id="documents">
 							<fieldset>
 								<script type="text/javascript">
-									link_upload_document = <xsl:value-of select="link_upload_document"/>;
+									var link_upload_document = <xsl:value-of select="link_upload_document"/>;
 								</script>
 								<div class="pure-control-group">
 									<label>
@@ -810,7 +810,7 @@
 						<div id="composite">
 							<fieldset>
 								<script type="text/javascript">
-									link_included_composites = <xsl:value-of select="link_included_composites"/>;
+									var link_included_composites = <xsl:value-of select="link_included_composites"/>;
 								</script>							
 								<div>
 									<xsl:for-each select="datatable_def">
@@ -831,7 +831,7 @@
 						<div id="parties">
 							<fieldset>
 								<script type="text/javascript">
-									link_included_parties = <xsl:value-of select="link_included_parties"/>;
+									var link_included_parties = <xsl:value-of select="link_included_parties"/>;
 								</script>	
 								<div>
 									<xsl:for-each select="datatable_def">
@@ -852,7 +852,7 @@
 						<div id="price">
 							<fieldset>
 								<script type="text/javascript">
-									link_included_price_items = <xsl:value-of select="link_included_price_items"/>;
+									var link_included_price_items = <xsl:value-of select="link_included_price_items"/>;
 								</script>
 								<div>
 									<xsl:for-each select="datatable_def">
