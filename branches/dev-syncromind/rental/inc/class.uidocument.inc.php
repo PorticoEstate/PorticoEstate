@@ -92,10 +92,10 @@
 				}
 			}
 			
-			$editable = phpgw::get_var('editable') == '1' ? true : false;
+			//$editable = phpgw::get_var('editable') == '1' ? true : false;
 			
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($type, isset($contract) ? $contract->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));				
+			//array_walk($rows, array($this, 'add_actions'), array($type, isset($contract) ? $contract->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));				
 			
 			//Build a YUI result from the data
 			/*$result_data = array('results' => $rows, 'total_records' => $result_count);	
@@ -164,7 +164,8 @@
 			$contract_id = intval(phpgw::get_var('contract_id'));
 			$party_id = intval(phpgw::get_var('party_id'));
 			
-			$data = array();
+			$message = array();
+
 			// Check permissions if contract id is set
 			if(isset($contract_id) && $contract_id > 0)
 			{
@@ -172,12 +173,10 @@
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 				if(!$contract->has_permission(PHPGW_ACL_EDIT))
 				{
-					$data['error'] = lang('permission_denied_add_document');
-					$this->render('permission_denied.php', $data);
-					return;
+					$message['error'][] = array('msg'=>lang('permission_denied_add_document'));
+					return $message;
 				}
 			}
-			
 			
 			// Check permissions if party id is set
 			if(isset($party_id) && $party_id > 0)
@@ -186,20 +185,17 @@
 				$party = rental_soparty::get_instance()->get_single($party_id);
 				if(!($this->isAdministrator() || $this->isExecutiveOfficer()))
 				{
-					$data['error'] = lang('permission_denied_add_document');
-					$this->render('permission_denied.php', $data);
-					return;
+					$message['error'][] = array('msg'=>lang('permission_denied_add_document'));
+					return $message;
 				}
 			}
 			
 			// If no contract or party is loaded
 			if(!(isset($party) || isset($contract)))
 			{
-				$data['error'] = lang('error_no_contract_or_party');
-				$this->render('permission_denied.php', $data);
-				return;
+				$message['error'][] = array('msg'=>lang('permission_denied_add_document'));
+				return $message;
 			}
-			
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -213,7 +209,7 @@
 				
 				//Retrieve the document properties
 				$document_properties = $this->get_type_and_id($document);
-				
+			
 				// Move file from temporary storage to vfs
 				$result = rental_sodocument::get_instance()->write_document_to_vfs
 				(
@@ -223,35 +219,20 @@
 					$_FILES["file_path"]["name"]
 				);
 				
-				if (phpgw::get_var('phpgw_return_as') == 'json')
-				{
-					return $result;
-				}
-		
 				if($result)
 				{
 					if(rental_sodocument::get_instance()->store($document))
 					{
-						if(isset($party))
-						{
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party->get_id(), 'tab' => 'documents'));		
-						}
-						else if(isset($contract))
-						{
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'tab' => 'documents'));
-						}
-					}
-					else
-					{
-						// Handle failure on storing document
-						$this->redirect($document, $document_propeties,'','');
-					}
+						$message['message'][] = array('msg'=>lang('document has been added'));
+					} else {
+
+						$message['error'][] = array('msg'=>lang('document not added'));
+					}			
+				} else {
+					$message['error'][] = array('msg'=>lang('failed to upload file').': '.$_FILES["file_path"]["name"]);
 				}
-				else
-				{
-					//Handle vfs failure to store document
-					$this->redirect($document, $document_propeties,'','');
-				}
+				
+				return $message;
 			}
 		}
 		
@@ -295,7 +276,7 @@
 		 * @return true if successful, false if error, permission denied message on
 		 * 			not enough privileges
 		 */
-		public function delete()
+		/*public function delete()
 		{	
 			$document_id = intval(phpgw::get_var('id'));
 			$document = rental_sodocument::get_instance()->get_single($document_id);
@@ -320,6 +301,45 @@
 			} 
 			// TODO: communicate error/message to user
 			return false;
+		}*/
+		
+		public function delete()
+		{	
+			$list_document_id = phpgw::get_var('id');
+			$message = array();
+			
+			foreach ($list_document_id as $document_id)
+			{
+				$document = rental_sodocument::get_instance()->get_single($document_id);
+				$document_properties = $this->get_type_and_id($document);
+				
+				if(!$this->check_permissions($document,$document_properties))
+				{
+					$message['error'][] = array('msg'=>lang('permission_denied').' to remove '.$document->get_name());
+					continue;
+				}
+
+				$result = rental_sodocument::get_instance()->delete_document_from_vfs
+				(
+					$document_properties['document_type'],	
+					$document_properties['id'],
+					$document->get_name()
+				);			
+			
+				if($result)
+				{
+					if(rental_sodocument::get_instance()->delete_document($document_id))
+					{
+						$message['message'][] = array('msg'=>lang('document %1 has been removed', $document->get_name()));
+					}else {
+						$message['error'][] = array('msg'=>lang('document %1 not removed', $document->get_name()));
+					}
+				} else {
+					$message['error'][] = array('msg'=>lang('failed to delete file').': '.$document->get_name());
+				}			
+			}
+			// TODO: communicate error/message to user
+			return $message;
 		}
 		
 		/**
