@@ -49,7 +49,7 @@ Returns mixed
 	}
     </script>
 	 <script type="text/javascript">
-      $(document).ready(function(){
+		 $(document).ready(function(){
            $('form[name=form]').submit(function(e) {
                e.preventDefault();
 
@@ -70,6 +70,7 @@ Returns mixed
 							}
 							else
 							{
+								document.getElementsByName("save")[0].value = 1;
 								document.form.submit();
 							}
 						}
@@ -866,6 +867,7 @@ Returns mixed
 			    <xsl:variable name="lang_save">
 				<xsl:value-of select="lang_save"/>
 			    </xsl:variable>
+				<input type="hidden" name='save'  value=""/>
 			    <input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 				<xsl:attribute name="title">
 				    <xsl:value-of select="lang_save_statustext"/>
