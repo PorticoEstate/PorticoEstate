@@ -1,22 +1,18 @@
-var link_not_included_composites = null;
-var link_included_composites = null;
+
 var set_composite_data = 0;
-
-var link_not_included_parties = null;
-var link_included_parties = null;
 var set_parties_data = 0;
-
-var link_not_included_price_items = null;
-var link_included_price_items = null;
 var set_price_data = 0;
-
 var set_invoice_data = 0;
-
-var link_upload_document = null;
 
 function formatterPrice (key, oData) 
 {
 	var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
+	return amount;
+}
+	
+function formatterArea (key, oData) 
+{
+	var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + area_suffix;
 	return amount;
 }
 	
@@ -191,13 +187,24 @@ $(document).ready(function()
 	
 	$('#upload_button').on('click', function() 
 	{
+		
+		if ($('#ctrl_upoad_path').val() === '') {
+			alert('no file selected');
+			return false;
+		}
+		if ($.trim($('#document_title').val()) === '') {
+			alert('enter document title');
+			return false;
+		}
+		
 		var form = document.forms.namedItem("form_upload");
 		var file_data = $('#ctrl_upoad_path').prop('files')[0];            
 		var form_data = new FormData(form);
 		form_data.append('file_path', file_data);
 		form_data.append('document_type', $('#document_type').val());
 		form_data.append('document_title', $('#document_title').val());
-
+		
+		var nTable = 8;
 		$.ajax({
 			url: link_upload_document,
 			cache: false,
@@ -206,9 +213,13 @@ $(document).ready(function()
 			data: form_data,                         
 			type: 'post',
 			success: function(result){
-				alert(result); 
+				JqueryPortico.show_message(nTable, result);
+				$('#document_type')[0].selectedIndex = 0;
+				$('#document_title').val('');
+				$('#ctrl_upoad_path').val('');
+				oTable8.fnDraw();
 			}
-		 });
+		});
 	});
 });
 
@@ -234,6 +245,25 @@ function filterDataDocument(param, value)
 
 /******************************************************************************/
 
+getRequestData = function(dataSelected, parameters){
+	
+	var data = {};
+	
+	$.each(parameters.parameter, function( i, val ) {
+		data[val.name] = {};
+	});																	
+
+	var n = 0;
+	for ( var n = 0; n < dataSelected.length; ++n )
+	{
+		$.each(parameters.parameter, function( i, val ) {
+			data[val.name][n] = dataSelected[n][val.source];
+		});		
+	}
+	
+	return data;
+};
+
 addComposite = function(oArgs, parameters){
     
 	var oTT = TableTools.fnGetInstance( 'datatable-container_2' );
@@ -245,20 +275,7 @@ addComposite = function(oArgs, parameters){
 		return false;
 	}
 
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
@@ -282,20 +299,7 @@ removeComposite = function(oArgs, parameters){
 		return false;
 	}
 
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
@@ -326,7 +330,6 @@ downloadComposite = function(oArgs){
 	window.open(requestUrl,'_self');
 };
 
-
 addParty = function(oArgs, parameters){
     
 	var oTT = TableTools.fnGetInstance( 'datatable-container_4' );
@@ -338,20 +341,7 @@ addParty = function(oArgs, parameters){
 		return false;
 	}
 
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
@@ -375,20 +365,7 @@ removeParty = function(oArgs, parameters){
 		return false;
 	}
 
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
@@ -429,21 +406,8 @@ addPrice = function(oArgs, parameters){
 		alert('None selected');
 		return false;
 	}
-
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
@@ -467,27 +431,14 @@ removePrice = function(oArgs, parameters){
 		alert('None selected');
 		return false;
 	}
-
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
 
 		JqueryPortico.show_message(nTable, result);
-		
+
 		oTable5.fnDraw();
 		oTable0.fnDraw();
 
@@ -502,7 +453,6 @@ downloadInvoice = function(oArgs){
 	}
 	
 	var requestUrl = phpGWLink('index.php', oArgs);
-
 	requestUrl += '&invoice_id=' + $('#invoice_id').val();
 
 	window.open(requestUrl,'_self');
@@ -519,20 +469,7 @@ removeDocument = function(oArgs, parameters){
 		return false;
 	}
 
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
@@ -553,20 +490,7 @@ deleteNotification = function(oArgs, parameters){
 		return false;
 	}
 
-	var data = {};
-
-	$.each(parameters.parameter, function( i, val ) {
-		data[val.name] = {};
-	});																	
-
-	var n = 0;
-	for ( var n = 0; n < selected.length; ++n )
-	{
-		$.each(parameters.parameter, function( i, val ) {
-			data[val.name][n] = selected[n][val.source];
-		});		
-	}
-
+	var data = getRequestData(selected, parameters);
 	var requestUrl = phpGWLink('index.php', oArgs);
 
 	JqueryPortico.execute_ajax(requestUrl, function(result){
