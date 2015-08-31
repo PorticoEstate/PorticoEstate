@@ -1174,16 +1174,12 @@
 					);
 				}
 
-
-				$save='';
-				if (isset($values['save']))
+				if ( $save= phpgw::get_var('save', 'bool'))
 				{
 					if($GLOBALS['phpgw']->session->is_repost())
 					{
 //						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 					}
-
-					$save=true;
 
 					if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 					{
