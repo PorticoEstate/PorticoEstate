@@ -284,6 +284,9 @@
 		<xsl:choose>
 			<xsl:when test="mode = 'edit'">
 				<script type="text/javascript">
+					var location_id = '<xsl:value-of select="value_location_id"/>';
+					var item_id = '<xsl:value-of select="value_id"/>';
+
 					function set_tab(active_tab)
 					{
 						document.form.active_tab.value = active_tab;

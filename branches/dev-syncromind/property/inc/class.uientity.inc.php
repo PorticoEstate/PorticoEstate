@@ -3205,7 +3205,9 @@ HTML;
 //				$entry['select'] = "<input type='checkbox' class='mychecks' value='{$entry['serie_id']}'></input>";
 			}
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' && !$skip_json)
+			$phpgw_return_as = phpgw::get_var('phpgw_return_as');
+
+			if( ($phpgw_return_as == 'json' && $skip_json) || $phpgw_return_as != 'json')
 			{
 				return $controls;
 			}
@@ -3322,15 +3324,14 @@ HTML;
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
+				$result_data = array
+				(
+					'results' => $_cases,
+					'total_records' => count($_cases),
+					'draw' => phpgw::get_var('draw', 'int')
+				);
 
-				if(count($_cases))
-				{
-					return json_encode($_cases);
-				}
-				else
-				{
-					return "";
-				}
+				return $this->jquery_results($result_data);
 			}
 			return $_cases;
 
