@@ -1,10 +1,6 @@
-var link_included_composites = null;
+
 var set_composite_data = 0;
-
-var link_included_parties = null;
 var set_parties_data = 0;
-
-var link_included_price_items = null;
 var set_price_data = 0;
 
 var set_invoice_data = 0;
@@ -12,6 +8,12 @@ var set_invoice_data = 0;
 function formatterPrice (key, oData) 
 {
 	var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
+	return amount;
+}
+	
+function formatterArea (key, oData) 
+{
+	var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + area_suffix;
 	return amount;
 }
 	
