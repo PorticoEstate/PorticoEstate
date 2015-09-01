@@ -688,25 +688,14 @@ JS;
 							array('key'=>'type', 'label'=>lang('title'), 'sortable'=>false),
 							array('key'=>'composite', 'label'=>lang('composite'), 'sortable'=>false),
 							array('key'=>'term_label', 'label'=>lang('billing_term'), 'sortable'=>true),
-							array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false),
-							array('key'=>'rented_area', 'label'=>lang('area'), 'sortable'=>false),
+							array('key'=>'total_price', 'label'=>lang('total_price'), 'sortable'=>false, 'className'=>'right', 'formatter'=>'formatterPrice'),
+							array('key'=>'rented_area', 'label'=>lang('area'), 'sortable'=>false, 'className'=>'right', 'formatter'=>'formatterArea'),
 							array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false),
 							array('key'=>'contract_notification_status', 'label'=>lang('notification_status'), 'sortable'=>false)					
 				),
 				'config'		=> array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disableFilter' => true)
 				)	
-			);
-			
-			$contracts = array(
-				'lang_search'				=> lang('search_for'),
-				'lang_where'				=> lang('search_where'),
-				'lang_status'				=> lang('status'),
-				'lang_date'					=> lang('date'),
-				'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
-				'lang_date_start'			=> lang('date_start'),
-				'lang_date_end'				=> lang('date_end'),
 			);
 			
 			$tabs['documents']	= array('label' => lang('Documents'), 'link' => '#documents');
@@ -747,10 +736,57 @@ JS;
 					'id'			=> $party_id
 				);	
 		}
-							
+
+		$search_contract_options = array
+		(
+			array('id' => 'all', 'name' => lang('all')),
+			array('id' => 'id', 'name' => lang('contract_id')),
+			array('id' => 'party_name', 'name' => lang('party_name')),
+			array('id' => 'composite', 'name' => lang('composite_name')),
+			array('id' => 'composite_address', 'name' => lang('composite_address')),
+			array('id' => 'location_id', 'name' => lang('object_number'))
+		);
+		
+		$status_options = array
+		(
+			array('id' => 'all', 'name' => lang('all')),
+			array('id' => 'under_planning', 'name' => lang('under_planning')),
+			array('id' => 'active', 'name' => lang('active_plural')),
+			array('id' => 'under_dismissal', 'name' => lang('under_dismissal')),
+			array('id' => 'ended', 'name' => lang('ended'))
+		);
+		
+		$field_of_responsibility = rental_socontract::get_instance()->get_fields_of_responsibility();
+		$field_of_responsibility_options = array();
+		array_unshift ($field_of_responsibility_options, array('id'=>'all', 'name'=>lang('all')));
+		foreach($field_of_responsibility as $id => $label)
+		{
+			$field_of_responsibility_options[] = array('id' => $id, 'name' =>lang($label));
+		}
+		
+		$link_upload_document = json_encode(self::link(array('menuaction'=>'rental.uidocument.add', 'party_id'=>$party_id, 'phpgw_return_as'=>'json')));
+
+		/******************************* document filters */
+		$document_types = rental_sodocument::get_instance()->get_document_types();
+		$document_types_options = array();
+		foreach($document_types as $id => $label)
+		{
+			$document_types_options[] = array('id'=>$id, 'name'=>lang($label));
+		}
+
+		$document_search_options[] = array('id'=>'all', 'name'=>lang('all'));
+		$document_search_options[] = array('id'=>'title', 'name'=>lang('document_title'));
+		$document_search_options[] = array('id'=>'name', 'name'=>lang('document_name'));
+		/***********************************************************************************/
+				
 		$alertMessage_get_syncData = '"Du må velge organisasjonsenhet før du kan synkronisere";';						
 		$jscode = <<<JS
 				var msg_get_syncData = $alertMessage_get_syncData
+				var thousandsSeparator = '$this->thousandsSeparator';
+				var decimalSeparator = '$this->decimalSeparator';
+				var decimalPlaces = '$this->decimalPlaces';
+				var currency_suffix = '$this->currency_suffix';
+				var area_suffix = '$this->area_suffix';
 JS;
 		$GLOBALS['phpgw']->js->add_code('', $jscode);
 		
@@ -762,7 +798,7 @@ JS;
 			'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 			'lang_save'						=> lang('save'),
 			'lang_sync_data'				=> lang('get_sync_data'),
-			'lang_cancel'					=> lang('party_back'),			
+			'lang_cancel'					=> lang('cancel'),			
 			'editable'						=> true,
 			'party_id'						=> $party_id,
 			
@@ -811,11 +847,20 @@ JS;
 			'lang_create_user'				=> lang('create_user_based_on_email_link'),
 			'valid_email'					=> $valid_email,
 			'link_create_user'				=> $GLOBALS['phpgw']->link('/index.php',$link_create_user),
+			
+			'list_search_contract'			=> array('options' => $search_contract_options),
+			'list_status'					=> array('options' => $status_options),
+			'list_field_of_responsibility'	=> array('options' => $field_of_responsibility_options),
 					
+			'list_document_types'			=> array('options' => $document_types_options),
+			'list_document_search'			=> array('options' => $document_search_options),
+			'link_upload_document'			=> $link_upload_document,
+			
 			'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 		);
 		
 		self::add_javascript('rental', 'rental', 'party.edit.js');
+		phpgwapi_jquery::load_widget('numberformat');
 		self::render_template_xsl(array('party', 'datatable_inline'), array('edit' => $data));
 	}
 	
