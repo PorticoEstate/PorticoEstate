@@ -529,4 +529,20 @@
 					trigger_error(lang('Unable to load class: %1', $classname), E_USER_ERROR);
 				}
 			}
+
+			/**
+			 * Display a message - and quit.
+			 * @param string $appname
+			 * @param string $message
+			 */
+			public static function no_access($appname = '', $message = '')
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				$message = $message ? $message : lang('no access');
+				$appname = $appname ? $appname : $GLOBALS['phpgw_info']['flags']['currentapp'];
+				phpgwapi_cache::message_set($message, 'error');
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname) . '::' . lang('No access');
+				$GLOBALS['phpgw']->common->phpgw_header(true);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 		}

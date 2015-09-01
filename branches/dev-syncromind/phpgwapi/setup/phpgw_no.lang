@@ -155,3 +155,4 @@ datatype	common	no	Datatype
 sorting	common	no	Sortering
 up	common	no	opp
 down	common	no	ned
+no access	common	no	Ingen Tilgang

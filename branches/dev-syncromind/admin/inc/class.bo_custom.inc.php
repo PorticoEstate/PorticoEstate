@@ -142,6 +142,16 @@
 			}
 		}
 
+		public function delete_attrib_group($appname = '', $location = '', $group_id = 0)
+		{
+			if ( !$appname || !$location || !$group_id  )
+			{
+				return;
+			}
+
+			return $this->so->delete_group($appname, $location, $group_id);
+		}
+
 		function get_attribs($appname = '',$location = '', $allrows = null)
 		{
 			if ( !is_null($allrows) )

@@ -593,7 +593,15 @@
 							<input type="hidden" name="location" value="{value_location}" />
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:call-template name="select_location"/>
+							<select id="location" name="location"  data-validation="required" >
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'location')"/>
+								</xsl:attribute>
+								<option value="">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:apply-templates select="location_list/options"/>
+							</select>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
@@ -617,7 +625,7 @@
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'select parent')"/>
 								</option>
-								<xsl:apply-templates select="parent_list"/>
+								<xsl:apply-templates select="parent_list/options"/>
 							</select>
 						</div>
 					</xsl:when>
@@ -682,6 +690,7 @@
 			<xsl:value-of select="php:function('lang', 'done')"/>
 		</xsl:variable>
 		<form method="post" action="{$done_action}">
+			<input type="hidden" name="location" value="{value_location}" />
 			<input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}">
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'Back to the list')"/>

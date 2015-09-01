@@ -36,6 +36,8 @@
 			'edit_custom_function'	 => true,
 			'list_attribute_group'	 => true,
 			'edit_attrib_group'		 => true,
+			'query_attrib_group'	 => true,
+			'delete_attrib_group'	 => true
 		);
 
 		public function __construct()
@@ -821,36 +823,62 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
-		function list_attribute_group()
+		function delete_attrib_group()
 		{
+			$acl_delete	 = $this->acl->check($this->location, PHPGW_ACL_DELETE, $this->appname);
 
-			$location = phpgw::get_var('location', 'string');
-
-			if($location && !$this->acl_read)
+			if(!$acl_delete)
 			{
-				phpgwapi_cache::message_set("Go away...", 'error');
-				return;
+				return "NO ACCESS";
+			}
 
-//				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-//					'perm' => 1, 'acl_location' => $this->acl_location));
+			$group_id			 = phpgw::get_var('group_id', 'int');
+			$confirm			 = phpgw::get_var('confirm', 'bool', 'POST');
+
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$this->bo->delete_attrib_group($this->appname, $this->location, $group_id);
+				return lang("this record has been deleted");
+			}
+		}
+
+		function query_attrib_group()
+		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access($this->appname);
+			}
+
+			if($location = phpgwapi_cache::session_get('admin_custom', 'location'))
+			{
+				$this->location = $location;
+				phpgwapi_cache::session_clear('admin_custom', 'location');
 			}
 
 			$id		 = phpgw::get_var('id', 'int');
 			$resort	 = phpgw::get_var('resort');
-
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if($resort && $this->acl_edit)
 			{
-				if($resort)
-				{
-					$this->bo->resort_attrib_group($id, $resort);
-				}
-
-				return $this->query(array
-					(
-					'method'	 => 'list_attribute_group',
-					'location'	 => $location,
-				));
+				phpgwapi_cache::session_set('admin_custom', 'location', $this->location);
+				$this->bo->resort_attrib_group($id, $resort);
 			}
+
+			return $this->query(array
+			(
+				'method'	 => 'list_attribute_group',
+				'location'	 => $this->location,
+			));
+
+		}
+
+		function list_attribute_group()
+		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access($this->appname);
+			}
+			phpgwapi_cache::session_set('admin_custom', 'location', phpgw::get_var('location', 'string'));
+
 			$location_list = $this->bolocation->select_location('filter', $this->location, false, true);
 			foreach($location_list as &$entry)
 			{
@@ -880,7 +908,6 @@
 									'menuaction' => 'admin.ui_custom.edit_attrib_group',
 									'appname'	 => $this->appname,
 									'menu_selection'	 => $this->menu_selection
-//									'location'	 => $location,
 								)),
 								'class'	 => 'new_item'
 							),
@@ -889,7 +916,7 @@
 				),
 				'datatable'		 => array(
 					'source'		 => self::link(array(
-						'menuaction'		 => 'admin.ui_custom.list_attribute_group',
+						'menuaction'		 => 'admin.ui_custom.query_attrib_group',
 						'appname'			 => $this->appname,
 						'phpgw_return_as'	 => 'json'
 					)),
@@ -1015,7 +1042,7 @@
 				(
 				'/index.php', array
 					(
-					'menuaction'	 => 'admin.ui_custom.delete_group',
+					'menuaction'	 => 'admin.ui_custom.delete_attrib_group',
 					'menu_selection'	 => $this->menu_selection
 				)
 				),
@@ -1063,13 +1090,11 @@
 		{
 			if(!$this->acl_add)
 			{
-				phpgwapi_cache::message_set("Go away...", 'error');
-				return;
-
-//				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-//					'perm' => 2, 'acl_location' => $this->acl_location));
+				phpgw::no_access($this->appname);
 			}
-			$location = phpgw::get_var('location', 'string');
+
+			$location = $this->location;
+			$appname = $this->appname;
 
 			$id		 = phpgw::get_var('id', 'int');
 			$values	 = phpgw::get_var('values');
@@ -1093,12 +1118,23 @@
 
 				if($id)
 				{
+					if(!$this->acl->check($this->location, PHPGW_ACL_EDIT, $this->appname))
+					{
+					   phpgw::no_access($this->appname);
+					}
 					$values['id']	 = $id;
 					$action			 = 'edit';
 				}
+				else
+				{
+					if(!$this->acl->check($this->location, PHPGW_ACL_ADD, $this->appname))
+					{
+					   phpgw::no_access($this->appname);
+					}
+				}
 
 				$values['location'] = $location;
-				$values['appname'] = $this->appname;
+				$values['appname'] = $appname;
 
 				if(!$values['group_name'])
 				{
@@ -1133,7 +1169,7 @@
 
 			if($id)
 			{
-				$values			 = $this->bo->read_single_attrib_group($this->appname, $location, $id);
+				$values			 = $this->bo->read_single_attrib_group($appname, $location, $id);
 				$type_name		 = $values['type_name'];
 				$function_msg	 = lang('edit attribute group') . ' ' . lang($type_name);
 				$action			 = 'edit';
@@ -1145,14 +1181,13 @@
 			}
 
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($this->appname, $location);
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			$parent_list = $GLOBALS['phpgw']->custom_fields->find_group($this->appname, $location, 0, '', '', '', true);
+			$parent_list = $GLOBALS['phpgw']->custom_fields->find_group($appname, $location, 0, '', '', '', true);
 
 			$bocommon = CreateObject('property.bocommon');
 
 			$parent_list = $bocommon->select_list($values['parent_id'], $parent_list);
-//_debug_array($parent_list);die();
 
 			if($id)
 			{
@@ -1175,37 +1210,32 @@
 			}
 
 			$link_data = array
-				(
+			(
 				'menuaction'		 => 'admin.ui_custom.edit_attrib_group',
-				'appname'			 => $this->appname,
+				'appname'			 => $appname,
 				'id'				 => $id,
 				'menu_selection'	 => $this->menu_selection
 			);
-
-
-			//		$entity		 = $this->bo->read_single($entity_id, false);
-			//		$category	 = $this->bo->read_single_category($entity_id, $cat_id);
 
 			$msgbox_data = (isset($receipt) ? $bocommon->msgbox_data($receipt) : '');
 
 			$data = array
 			(
-				'appname'					 => $this->appname,
+				'appname'					 => $appname,
 				'value_location'			 => $location,
 				'msgbox_data'				 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action'				 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute_group',
-												'appname'	 => $this->appname,
-												'location'	 => $location,
-												'menu_selection'	 => $this->menu_selection)),
+												'appname'		=> $appname,
+												'menu_selection'=> $this->menu_selection)),
 				'value_id'					 => $id,
 				'value_group_name'			 => $values['group_name'],
 				'value_descr'				 => $values['descr'],
 				'value_remark'				 => $values['remark'],
-				'parent_list'				 => $parent_list,
+				'parent_list'				 => array('options' => $parent_list),
 				'select_name_location'		 => 'location',
 				'select_location_required'	 => true,
-				'location_list' => $this->bolocation->select_location('select', $location, false, true),
+				'location_list'				 => array('options' => $this->bolocation->select_location('select', $location, false, true)),
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator'					 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
@@ -1213,7 +1243,7 @@
 			//_debug_array($values);
 
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->appname) . ' - ' . $location . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname) . ' - ' . $location . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_attrib_group' => $data));
 		}
 
@@ -1287,7 +1317,7 @@
 					break;
 				case 'list_attribute_group':
 					$variable	 = array(
-						'menuaction' => 'admin.ui_custom.list_attribute_group',
+						'menuaction' => 'admin.ui_custom.query_attrib_group',
 						'appname'		 => $this->appname,
 						'location'		 => $this->location,
 						'allrows'		 => $this->allrows,
