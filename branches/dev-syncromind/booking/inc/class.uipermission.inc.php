@@ -135,15 +135,7 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
+							
 						)
 					),
 				),
@@ -166,11 +158,13 @@
 							'key' => 'opcion_edit',
 							'label' => lang('Edit'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
+                                                        'sortable' => false
 						),
-                        array(
+                                                array(
 							'key' => 'opcion_delete',
 							'label' => lang('Delete'),
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
+                                                        'sortable' => false
 						),
 						// array(
 						// 	'key' => 'link',

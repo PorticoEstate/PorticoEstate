@@ -45,52 +45,48 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-                                'type' => 'filter', 
-								'name' => 'status',
-                                'text' => lang('Status').':',
-                                'list' => array(
-                                    array(
-                                        'id' => '',
-                                        'name' => lang('All')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'CLOSED',
-                                        'name' => lang('CLOSED')
-                                    )
-                                )
-                            ),
+                                                            'type' => 'filter', 
+                                                            'name' => 'status',
+                                                            'text' => lang('Status').':',
+                                                            'list' => array(
+                                                                array(
+                                                                    'id' => '',
+                                                                    'name' => lang('All')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'NEW',
+                                                                    'name' => lang('NEW')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'CLOSED',
+                                                                    'name' => lang('CLOSED')
+                                                                )
+                                                            )
+                                                        ),
 							array(
-                                'type' => 'filter', 
-								'name' => 'type',
-                                'text' => lang('Type').':',
-                                'list' => array(
-                                    array(
-                                        'id' => '',
-                                        'name' => lang('All')
-                                    ), 
-                                    array(
-                                        'id' => 'message',
-                                        'name' => lang('Message')
-                                    ), 
-                                    array(
-                                        'id' => 'cancelation',
-                                        'name' => lang('Cancelation')
-                                    ), 
-                                )
-                            ),
+                                                            'type' => 'filter', 
+                                                            'name' => 'type',
+                                                            'text' => lang('Type').':',
+                                                            'list' => array(
+                                                                array(
+                                                                    'id' => '',
+                                                                    'name' => lang('All')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'message',
+                                                                    'name' => lang('Message')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'cancelation',
+                                                                    'name' => lang('Cancelation')
+                                                                ), 
+                                                            )
+                                                        ),
 							array(
-                                'type' => 'autocomplete', 
+                                                                'type' => 'autocomplete', 
 								'name' => 'building',
 								'ui' => 'building',
 								'text' => lang('Building').':',
-							),
-					        array(
-                                'type' => 'text', 
-								'name' => 'query'
 							),
 							array(
 								'type' => 'submit',
@@ -127,15 +123,18 @@
 						),
 						array(
 							'key' => 'what',
-							'label' => lang('What')
+							'label' => lang('What'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'contact_name',
-							'label' => lang('Contact')
+							'label' => lang('Contact'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'case_officer_name',
-							'label' => lang('Case Officer')
+							'label' => lang('Case Officer'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'link',
@@ -144,7 +143,7 @@
 					)
 				)
 			);
-            self::render_template_xsl('datatable_jquery', $data);
+                        self::render_template_xsl('datatable_jquery', $data);
 //			self::render_template('datatable', $data);
 		}
 

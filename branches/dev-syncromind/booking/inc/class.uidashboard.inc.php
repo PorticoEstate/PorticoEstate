@@ -78,39 +78,36 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-                                'type' => 'filter', 
-								'name' => 'status',
-                                'text' => lang('Status').':',
-                                'list' => array(
-                                    array(
-                                        'id' => '',
-                                        'name' => lang('All')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'PENDING',
-                                        'name' =>  lang('PENDING')
-                                    ), 
-                                    array(
-                                        'id' => 'REJECTED',
-                                        'name' => lang('REJECTED')
-                                    ), 
-                                    array(
-                                        'id' => 'ACCEPTED',
-                                        'name' => lang('ACCEPTED')
-                                    ),
-                                )
-                            ),
+                                                            'type' => 'filter', 
+                                                            'name' => 'status',
+                                                            'text' => lang('Status').':',
+                                                            'list' => array(
+                                                                array(
+                                                                    'id' => '',
+                                                                    'name' => lang('All')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'NEW',
+                                                                    'name' => lang('NEW')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'PENDING',
+                                                                    'name' =>  lang('PENDING')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'REJECTED',
+                                                                    'name' => lang('REJECTED')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'ACCEPTED',
+                                                                    'name' => lang('ACCEPTED')
+                                                                ),
+                                                            )
+                                                        ),
 							array('type' => 'autocomplete', 
 								'name' => 'building',
 								'ui' => 'building',
 								'text' => lang('Building').':',
-							),
-							array('type' => 'text', 
-								'name' => 'query'
 							),
 							array(
 								'type' => 'submit',
@@ -147,7 +144,8 @@
 						),
 						array(
 							'key' => 'what',
-							'label' => lang('What')
+							'label' => lang('What'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'activity_name',

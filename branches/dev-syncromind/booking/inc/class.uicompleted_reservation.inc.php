@@ -109,8 +109,8 @@ phpgw::import_class('booking.sopermission');
 				return $this->export();
 			}
             
-            $GLOBALS['phpgw']->jqcal->add_listener('filter_to');
-            phpgwapi_jquery::load_widget('datepicker');
+                        $GLOBALS['phpgw']->jqcal->add_listener('filter_to');
+                        phpgwapi_jquery::load_widget('datepicker');
 			
 			self::add_javascript('booking', 'booking', 'completed_reservation.js');
 			self::add_javascript('booking', 'booking', 'datatable.js');
@@ -134,10 +134,10 @@ phpgw::import_class('booking.sopermission');
 								'requestGenerator' => 'requestWithBuildingFilter',
 							),
 							array(
-                                'type' => 'date-picker',
-                                'id'   => 'to',
+                                                                'type' => 'date-picker',
+                                                                'id'   => 'to',
 								'name' => 'to',
-                                'value'=> '',
+                                                                'value'=> '',
 								'text' => lang('To').':',
 							),
 							array(
@@ -308,12 +308,23 @@ phpgw::import_class('booking.sopermission');
 				}
 			}
 
-			$to = strtotime(phpgw::get_var('filter_to', 'string', 'REQUEST', null));
-			$filter_to = date("Y-m-d",$to);
-
+//			$to = strtotime(phpgw::get_var('filter_to', 'string', 'REQUEST', null));
+//			$filter_to = date("Y-m-d",$to);
+//
+//			if ($filter_to) {
+//				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+//			}
+//                        
+//                        echo 'xxx ' . $filter_to;
+//                        exit();
+                        
+                        $filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
 			if ($filter_to) {
 				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
+//                        
+//                        echo $filter_to;
+//                        exit();
 
 			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
 			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) ) { // users with the booking role admin should have access to all buildings

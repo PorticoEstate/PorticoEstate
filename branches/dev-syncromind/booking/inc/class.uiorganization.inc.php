@@ -98,7 +98,8 @@
 						),
 						array(
 							'key' => 'primary_contact_name',
-							'label' => lang('Admin 1')
+							'label' => lang('Admin 1'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'phone',
@@ -139,7 +140,7 @@
 					);
 				}
 			}
-            return $this->jquery_results($organizations);
+                        return $this->jquery_results($organizations);
 		}
 		
 		protected function get_customer_identifier() {

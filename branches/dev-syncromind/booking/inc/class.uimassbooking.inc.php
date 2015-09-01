@@ -43,15 +43,6 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))

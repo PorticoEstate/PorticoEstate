@@ -72,21 +72,21 @@ phpgw::import_class('booking.uicommon');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			$data = array(
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-						),
-					),
-				),
+//				'form' => array(
+//					'toolbar' => array(
+//						'item' => array(
+//							array(
+//								'type' => 'text', 
+//								'name' => 'query'
+//							),
+//							array(
+//								'type' => 'submit',
+//								'name' => 'search',
+//								'value' => lang('Search')
+//							),
+//						),
+//					),
+//				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
 					'sorted_by' => array('key' => 'id', 'dir' => 'desc'),

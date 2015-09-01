@@ -71,16 +71,7 @@
 								'type' => 'link',
 								'value' => lang('New Root Permission'),
 								'href' => $this->generate_link('add')
-							),
-							array(
-								'type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
+							)
 						)
 					),
 				),

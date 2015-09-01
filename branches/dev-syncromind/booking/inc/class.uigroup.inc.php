@@ -11,7 +11,7 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
-            'query'         =>  true,
+                        'query'         =>  true,
 			'show'			=>	true,
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
@@ -120,14 +120,6 @@
 								'type' => 'link',
 								'value' => lang('New group'),
 								'href' => self::link(array('menuaction' => 'booking.uigroup.edit'))
-							),
-							array('type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
 							),
 							array(
 								'type' => 'link',

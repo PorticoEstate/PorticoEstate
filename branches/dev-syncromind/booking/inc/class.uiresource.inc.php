@@ -45,14 +45,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
 							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
@@ -123,7 +115,6 @@
 
         public function query()
 		{
-            
 			return  $this->jquery_results($this->bo->populate_grid_data("booking.uiresource.show"));
 		}
         

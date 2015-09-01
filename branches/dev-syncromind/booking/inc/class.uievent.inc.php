@@ -68,9 +68,6 @@ class booking_uievent extends booking_uicommon
 							'text' => lang('Activity').':',
 							'list' => $this->bo->so->get_activities_main_level(),
 						),
-						array('type' => 'text',
-							'name' => 'query'
-						),
 						array(
 							'type' => 'submit',
 							'name' => 'search',
