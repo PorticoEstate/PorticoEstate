@@ -160,6 +160,32 @@
 					<xsl:when test="party_id > 0">
 						<div id="contracts">
 							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'search_options')"/>
+								</label>
+								<div class="pure-custom">
+									<div class="pure-control-group">
+										<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+										<input type="text" id="contract_query" name="contract_query" value=""></input>
+										<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+										<select id="contract_search_options" name="contract_search_options">
+											<xsl:apply-templates select="list_search_contract/options"/>
+										</select>
+									</div>
+									<div class="pure-control-group">							
+										<label><xsl:value-of select="php:function('lang', 'status')"/></label>
+										<select id="contract_status" name="contract_status">
+											<xsl:apply-templates select="list_status/options"/>
+										</select>
+										<xsl:text> </xsl:text>
+										<label><xsl:value-of select="php:function('lang', 'field_of_responsibility')"/></label>
+										<select id="contract_type" name="contract_type">
+											<xsl:apply-templates select="list_field_of_responsibility/options"/>
+										</select>																	
+									</div>
+								</div>
+							</div>								
+							<div>
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_0'">
 										<xsl:call-template name="table_setup">
@@ -175,7 +201,53 @@
 							</div>
 						</div>
 						<div id="documents">
+							<script type="text/javascript">
+								var link_upload_document = <xsl:value-of select="link_upload_document"/>;
+							</script>
 							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Upload')"/>
+								</label>
+								<div class="pure-custom">
+									<div class="pure-control-group">
+										<label></label>
+										<input type="file" id="ctrl_upoad_path" name="file_path"/>
+									</div>
+									<div class="pure-control-group">
+										<label><xsl:value-of select="php:function('lang', 'title')"/></label>
+										<input type="text" id="document_title" name="document_title"/>
+										<xsl:text> </xsl:text>
+										<select id="document_type" name="document_type">
+											<xsl:apply-templates select="list_document_types/options"/>
+										</select>
+										<xsl:text> </xsl:text>
+										<xsl:variable name="upload">
+											<xsl:value-of select="php:function('lang', 'upload')"/>
+										</xsl:variable>											
+										<input type="button" class="pure-button pure-button-primary" name="upload_button" id="upload_button" value="{$upload}" />							
+									</div>
+								</div>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'search_options')"/>
+								</label>
+								<div class="pure-custom">
+									<div class="pure-control-group">
+										<label><xsl:value-of select="php:function('lang', 'search_for')"/></label>
+										<input id="document_query" type="text" name="document_query" />
+										<label><xsl:value-of select="php:function('lang', 'search_where')"/></label>
+										<select id="document_search_option" name="document_search_option">
+											<xsl:apply-templates select="list_document_search/options"/>
+										</select>
+										<label><xsl:value-of select="php:function('lang', 'document_type')"/></label>
+										<select id="document_type_search" name="document_type_search">
+											<xsl:apply-templates select="list_document_types/options"/>
+										</select>																	
+									</div>
+								</div>
+							</div>
+							<div>
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_1'">
 										<xsl:call-template name="table_setup">
@@ -207,6 +279,7 @@
 			<xsl:value-of select="cancel_url"/>
 		</xsl:variable>
 		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
+		<form id="form_upload" name="form_upload" method="post" action="" enctype="multipart/form-data"></form>
 	</div>
 </xsl:template>
 
