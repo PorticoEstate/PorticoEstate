@@ -46,7 +46,7 @@
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-            $build_id = phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                        $build_id = phpgw::get_var('buildings', 'int', 'REQUEST', null);
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
@@ -66,8 +66,8 @@
 							),
 							array('type' => 'filter', 
 								'name' => 'organizations',
-                                'text' => lang('Organization').':',
-                                'list' => $this->bo->so->get_organizations(),
+                                                                'text' => lang('Organization').':',
+                                                                'list' => $this->bo->so->get_organizations(),
 							),
 #							array('type' => 'filter', 
 #								'name' => 'buildings',
@@ -82,9 +82,6 @@
 #                                'list' => $this->bo->so->get_seasons($build_id),
 #								'requestGenerator' => 'requestWithBuildingFilter',
 #							),
-							array('type' => 'text', 
-								'name' => 'query'
-							),
 							array(
 								'type' => 'submit',
 								'name' => 'search',
@@ -108,7 +105,8 @@
 						),
 						array(
 							'key' => 'shortname',
-							'label' => lang('Organization shortname')
+							'label' => lang('Organization shortname'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'building_name',
@@ -143,7 +141,7 @@
 				));
 			}
 			$data['filters'] = $this->export_filters;
-            self::render_template_xsl('datatable_jquery',$data);
+                        self::render_template_xsl('datatable_jquery',$data);
 //			self::render_template('datatable', $data);
 		}
 
@@ -151,9 +149,9 @@
 		{
 			if(isset($_SESSION['showall']))
 			{
-        		unset($filters['building_name']);
-                unset($filters['organization_id']);
-                unset($filters['season_id']);
+                            unset($filters['building_name']);
+                            unset($filters['organization_id']);
+                            unset($filters['season_id']);
 			} else {
                 $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
                 if ($testdata != 0) {
@@ -182,10 +180,10 @@
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-                'query' => $search['value'],
-                'order' => $columns[$order[0]['column']]['data'],
+                                'query' => $search['value'],
+                                'order' => $columns[$order[0]['column']]['data'],
 				'sort'	=> $columns[$order[0]['column']]['data'],
-                'dir'	=> $order[0]['dir'],
+                                'dir'	=> $order[0]['dir'],
 				'filters' => $filters,
 			);
             
