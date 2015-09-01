@@ -24,9 +24,6 @@
 
 		public function query()
 		{
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
-			$use_fellesdata = $config->config_data['use_fellesdata'];
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -34,18 +31,19 @@
 			else {
 				$user_rows_per_page = 10;
 			}
-			// YUI variables for paging and sorting
-			$start_index	= phpgw::get_var('startIndex', 'int');
-			if(!$start_index) $start_index = 0;
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field		= phpgw::get_var('sort', 'string', 'GET', 'identifier');
-			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
-			// Form variables
-			$search_for 	= phpgw::get_var('query');
-			$search_type	= phpgw::get_var('search_option');
+			
+			$search			= phpgw::get_var('search');
+			$order			= phpgw::get_var('order');
+			$draw			= phpgw::get_var('draw', 'int');
+			$columns		= phpgw::get_var('columns');
 
-			phpgwapi_cache::session_set('rental', 'resultunit_query', $search_for);
-			phpgwapi_cache::session_set('rental', 'resultunit_search_type', $search_type);
+			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'org_unit_id'; 
+			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
+			// Form variables
+			$search_for 	= $search['value'];
+			$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 
 			// Create an empty result set
 			$result_count = 0;
@@ -60,26 +58,111 @@
 				$unit['UNIT_NO_OF_DELEGATES'] = count(frontend_bofrontend::get_delegates($unit['ORG_UNIT_ID']));
 			}
 
-			$resultunit_data = array('results' => $result_units, 'total_records' => $result_count);
+			$result_data    =   array('results' =>  $result_units);
+			$result_data['total_records']	= 0;
+			$result_data['draw']    = $draw;
 
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-
-			array_walk($resultunit_data['results'], array($this, 'add_actions'));
-
-			return $this->yui_results($resultunit_data, 'total_records', 'results');
+			return $this->jquery_results($result_data);
 		}
 
 		/**
 		* View a list of all resultunits
 		*/
 		public function index()
-		{
-			$search_for = phpgw::get_var('search_for');
-			if($search_for)
+		{	
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				phpgwapi_cache::session_set('rental', 'resultunit_query', $search_for);
+				return $this->query();
 			}
-			$this->render('resultunit_list.php');
+
+			$appname = lang('delegates');
+			$type = 'all_result_units';
+
+			$data = array(
+				'datatable_name'	=> $appname,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array
+							(
+								'type'   => 'filter',
+								'name'   => 'search_option',
+								'text'   => lang('search_where'),
+								'list'   => array
+									(
+										array('id'=>'unit_name', 'name'=>lang('unit_name')),
+										array('id'=>'unit_leader', 'name'=>lang('unit_leader'))
+									)
+							)							
+						)
+					)
+				),
+				'datatable' => array(
+					'source'	=> self::link(array(
+						'menuaction'	=> 'rental.uiresultunit.index', 
+						'type'			=> $type,
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows'	=> true,
+					'editor_action' => '',
+					'field' => array(
+						array(
+							'key'		=> 'ORG_UNIT_ID', 
+							'label'		=> lang('unit_id'), 
+							'className'	=> '', 
+							'sortable'	=> true, 
+							'hidden'	=> false
+						),
+						array(
+							'key'		=> 'ORG_UNIT_NAME', 
+							'label'		=> lang('unit_name'), 
+							'className'	=> 'center', 
+							'sortable'	=> true, 
+							'hidden'	=> false
+						),
+						array(
+							'key'		=> 'LEADER_FULLNAME', 
+							'label'		=> lang('unit_leader_name'), 
+							'className'	=> '', 
+							'sortable'	=> true, 
+							'hidden'	=> false
+						),
+						array(
+							'key'		=> 'UNIT_NO_OF_DELEGATES', 
+							'label'		=> lang('unit_no_of_delegates'), 
+							'className'	=> '', 
+							'sortable'	=> false, 
+							'hidden'	=> false
+						)
+					)
+				)
+			);
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'org_unit_id'
+						)
+					)
+				);
+
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('edit'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'rental.uiresultunit.edit'
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
+
+
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 
