@@ -74,11 +74,8 @@
 							),
 							array('type' => 'filter', 
 								'name' => 'organizations',
-                                'text' => lang('Organization').':',
-                                'list' => $this->bo->so->get_organizations(),
-							),
-							array('type' => 'text', 
-								'name' => 'query'
+                                                                'text' => lang('Organization').':',
+                                                                'list' => $this->bo->so->get_organizations(),
 							),
 							array(
 								'type' => 'submit',
@@ -142,16 +139,16 @@
 			}
 			$data['filters'] = $this->export_filters;
 //			self::render_template('datatable', $data);
-            self::render_template_xsl('datatable_jquery',$data);
+                        self::render_template_xsl('datatable_jquery',$data);
 		}
 
         public function query()
 		{
 			if(isset($_SESSION['showall']))
 			{
-        		unset($filters['building_name']);
-                unset($filters['group_id']);
-                unset($filters['season_id']);
+                            unset($filters['building_name']);
+                            unset($filters['group_id']);
+                            unset($filters['season_id']);
 			} else {
                 $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
                 if ($testdata != 0) {
@@ -161,7 +158,7 @@
                 }
                 $testdata2 =  phpgw::get_var('organizations', 'int', 'REQUEST', null);
                 if ($testdata2 != 0) {
-                    $filters['group_id'] = $this->bo->so->get_group_of_organization(phpgw::get_var('organizations', 'int', 'REQUEST', null));        
+                    $filters['group_id'] = $this->bo->so->get_groups_of_organization(phpgw::get_var('organizations', 'int', 'REQUEST', null));        
                 } else {
 		            unset($filters['group_id']);
                 }
@@ -183,7 +180,7 @@
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort'	=> $columns[$order[0]['column']]['data'],
-                'dir'	=> $order[0]['dir'],
+                                'dir'	=> $order[0]['dir'],
 				'filters' => $filters
 			);
 
@@ -197,7 +194,6 @@
 			}
 
 			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");
-            
 			return $this->jquery_results($bookings);
 		}
         

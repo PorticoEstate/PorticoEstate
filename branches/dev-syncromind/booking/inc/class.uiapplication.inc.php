@@ -171,45 +171,42 @@
 								'value' => lang('New application'),
 								'href' => self::link(array('menuaction' => 'booking.uiapplication.add'))
 							),
-							array('type' => 'filter', 
-								'name' => 'status',
-                                'text' => lang('Status').':',
-                                'list' => array(
-                                    array(
-                                        'id' => 'none',
-                                        'name' => lang('Not selected')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'PENDING',
-                                        'name' =>  lang('PENDING')
-                                    ), 
-                                    array(
-                                        'id' => 'REJECTED',
-                                        'name' => lang('REJECTED')
-                                    ), 
-                                    array(
-                                        'id' => 'ACCEPTED',
-                                        'name' => lang('ACCEPTED')
-                                    )
-                                )
-                            ),
+							array(
+                                                            'type' => 'filter', 
+                                                            'name' => 'status',
+                                                            'text' => lang('Status').':',
+                                                            'list' => array(
+                                                                array(
+                                                                    'id' => 'none',
+                                                                    'name' => lang('Not selected')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'NEW',
+                                                                    'name' => lang('NEW')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'PENDING',
+                                                                    'name' =>  lang('PENDING')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'REJECTED',
+                                                                    'name' => lang('REJECTED')
+                                                                ), 
+                                                                array(
+                                                                    'id' => 'ACCEPTED',
+                                                                    'name' => lang('ACCEPTED')
+                                                                )
+                                                            )
+                                                        ),
 							array('type' => 'filter', 
 								'name' => 'buildings',
-                                'text' => lang('Building').':',
-                                'list' => $this->bo->so->get_buildings(),
+                                                                'text' => lang('Building').':',
+                                                                'list' => $this->bo->so->get_buildings(),
 							),
 							array('type' => 'filter', 
 								'name' => 'activities',
-                                'text' => lang('Activity').':',
-                                'list' => $this->bo->so->get_activities_main_level(),
-							),
-							array('type' => 'text', 
-                                'text' => lang('searchfield'),
-								'name' => 'query'
+                                                                'text' => lang('Activity').':',
+                                                                'list' => $this->bo->so->get_activities_main_level(),
 							),
 							array(
 								'type' => 'submit',
@@ -243,7 +240,8 @@
 						),
 						array(
 							'key' => 'what',
-							'label' => lang('What')
+							'label' => lang('What'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'created',
@@ -255,7 +253,8 @@
 						),
 						array(
 							'key' => 'from_',
-							'label' => lang('From')
+							'label' => lang('From'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'activity_name',
@@ -273,7 +272,7 @@
 				),
 			);
 
-            self::render_template_xsl('datatable_jquery',$data);
+                        self::render_template_xsl('datatable_jquery',$data);
 //			self::render_template('datatable', $data);
 		}
 
@@ -291,18 +290,18 @@
 			if(isset($_SESSION['showall']))
 			{
 				$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED');
-                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
-                if ($testdata != 0) {
-                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
-                } else {
-                    unset($filters['building_name']);                
-                }
-                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
-                if ($testdata2 != 0) {
-                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
-                } else {
-                    unset($filters['activity_id']);                
-                }
+                                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                                if ($testdata != 0) {
+                                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                                } else {
+                                    unset($filters['building_name']);                
+                                }
+                                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
+                                if ($testdata2 != 0) {
+                                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
+                                } else {
+                                    unset($filters['activity_id']);                
+                                }
                 
 			} else {
 				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
@@ -312,11 +311,11 @@
 				}
 				elseif (isset($test)) 
 				{
-	                $filters['status'] = phpgw::get_var('status');
+                                    $filters['status'] = phpgw::get_var('status');
 				}
 				else
 				{
-	                $filters['status'] = 'NEW';
+                                     $filters['status'] = 'NEW';
 				}
                 $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
                 if ($testdata != 0) {
@@ -481,7 +480,6 @@
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
-
 			return $this->yui_results($applications);
 		}
 		
@@ -497,7 +495,8 @@
 				$association['type'] = lang($association['type']);
 
 			}
-			return $this->yui_results($associations);
+//                        return $this->yui_results($associations);
+                        return $associations;
 		}
 
 		private function _combine_dates($from_, $to_)
@@ -1014,5 +1013,8 @@
 								  'audience' => $audience, 'agegroups' => $agegroups,
 								  'num_associations'=>$num_associations, 'assoc' =>$from, 'collision' => $collision_dates, 'comments' => $comments,'config' => $application_text));
 //            self::render_template_xsl('application', array('application' => $application));
+//        var_dump($application);
+//        var_dump($application);
+//        exit();
 		}
 	}
