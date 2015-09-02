@@ -56,7 +56,9 @@
 
 				$adates = implode("\n",$_adates);
 
-				$rejected = $this->so->get_rejected($application['id']);
+				//FIXME Sigurd 2. sept 2015: Something wrong with this one;
+//				$rejected = $this->so->get_rejected($application['id']);
+				$rejected = array();
 				$rdates = "";
 				foreach ($rejected as $key => $date)
 				{
