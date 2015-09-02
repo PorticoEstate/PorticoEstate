@@ -85,14 +85,6 @@
 								'value' => lang('New Audience group'),
 								'href' => self::link(array('menuaction' => 'booking.uiaudience.add'))
 							),
-							array('type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
 							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
