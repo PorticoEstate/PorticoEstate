@@ -241,6 +241,11 @@
 								'text'	=> lang('Activity'),
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
 							),
+							'custom_fields_example'	=> array
+							(
+								'text'	=> 'TEMPORARY:custom fields example',
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.custom_fields_example' ) )
+							),
 							'custom_field_groups'	=> array
 							(
 								'text'	=> lang('custom field groups'),

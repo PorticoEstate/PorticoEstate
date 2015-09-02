@@ -21,6 +21,7 @@
 			'edit'			=>	true,
 			'associated'	=>	true,
 			'toggle_show_inactive'	=>	true,
+			'custom_fields_example'	=> true
 		);
 		
 		protected $customer_id,
@@ -50,7 +51,81 @@
 								  'active', 'accepted_documents');
 		}
 
-        protected function set_module($module = null)
+
+		// --- SIGURD::START EXAMPLE -- //
+
+		/**
+		 * Example on how to retrieve custom fields organized in nested groups
+		 */
+		public function custom_fields_example()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$locations = $GLOBALS['phpgw']->locations->get_locations($grant = false, 'booking', $allow_c_attrib = true, $allow_c_functions = false);
+			echo "Available locations within Booking:</br>";
+
+			foreach($locations as $location => $name)
+			{
+				if(!preg_match('/(^.application|^.resource)/i', $location))
+				{
+					continue;
+				}
+
+				echo "<b>{$location}::{$name}:</b></br>";
+				echo "Custom fields:</br>";
+
+				// THIS ONE IS WHAT YOU WANT
+				$organized_fields = $this->get_attributes($location);
+
+				$url_acl = self::link(array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'booking','module' => $location, 'cat_id' => 'groups') );
+				$url_groups = self::link(array('menuaction' => 'admin.ui_custom.list_attribute_group', 'appname' => 'booking','location' => $location, 'menu_selection' => 'booking::settings::custom_field_groups') );
+				$url_fields = self::link(array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'booking','location' => $location, 'menu_selection' => 'booking::settings::custom_field_groups') );
+
+				if(count($organized_fields) > 1)
+				{
+					_debug_array($organized_fields);
+					echo "<a href='{$url_groups}'>Make more groups here</a></br>";
+					echo "<a href='{$url_fields}'>And fields here</a></br>";
+				}
+				else
+				{
+					echo "No custom fields is defined... yet..</br>";
+					echo "<a href='{$url_acl}'>Define your acl rights here</a></br>";
+					echo "<a href='{$url_groups}'>Make groups here</a></br>";
+					echo "<a href='{$url_fields}'>And fields here</a></br>";
+				}
+			}
+		}
+
+		/**
+		 *
+		 * @param type $location
+		 * @return  array the grouped attributes
+		 */
+		private function get_attributes($location)
+		{
+			$appname = 'booking';
+			$attributes = $GLOBALS['phpgw']->custom_fields->find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
+			return $this->get_attribute_groups($appname, $location, $attributes);
+		}
+
+		/**
+		 * Arrange attributes within groups
+		 *
+		 * @param string  $location    the name of the location of the attribute
+		 * @param array   $attributes  the array of the attributes to be grouped
+		 *
+		 * @return array the grouped attributes
+		 */
+
+		private function get_attribute_groups($appname, $location, $attributes = array())
+		{
+			return $GLOBALS['phpgw']->custom_fields->get_attribute_groups($appname, $location, $attributes);
+		}
+
+		// --- END EXAMPLE -- //
+
+		protected function set_module($module = null)
         {
             $this->module = is_string($module) ? $module : $this->default_module;
         }
