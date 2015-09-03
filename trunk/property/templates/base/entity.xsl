@@ -650,7 +650,7 @@
 							<script type="text/javascript">
 							lookup_control_responsible = function()
 							{
-								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible', acl_app:'controller', acl_location: '.control', acl_required:4};
+								var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible', acl_app:'controller', acl_location: '.checklist', acl_required:4};
 								var requestUrl = phpGWLink('index.php', oArgs);
 								var Window1=window.open(requestUrl,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 							}
