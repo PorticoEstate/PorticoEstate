@@ -183,7 +183,7 @@
 			}
 			phpgwapi_jquery::load_widget('core');
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.control');
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
 			$user_list = array();
 			foreach($users as $user)
 			{
