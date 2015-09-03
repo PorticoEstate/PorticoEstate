@@ -167,8 +167,6 @@ class booking_uievent extends booking_uicommon
             'filters' => $filters
         );
         
-        var_dump($params);
-        exit();
         
 		$events = $this->bo->so->read($params);
 
