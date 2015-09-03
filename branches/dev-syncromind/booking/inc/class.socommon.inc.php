@@ -128,7 +128,7 @@
 		{
 			$cols = array();
 			$joins = array();
-			
+                        
 			foreach($this->fields as $field => $params)
 			{
 				if(isset($params['manytomany']) && $params['manytomany'])
@@ -433,7 +433,9 @@
 				}
 			}
 			
+                echo($condition);exit();
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
+                        
 			if ($results) 
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
@@ -457,7 +459,7 @@
     			foreach($results as $id => $result)
     			{
     			    $id_map[$result['id']] = $id;
-    			}
+    			}                        
     			foreach($this->fields as $field => $params)
     			{
     				if($params['manytomany'])
@@ -472,28 +474,28 @@
 								$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
 							}
 							$colnames = join(',', $colnames);
-							
-	    					$this->db->query("SELECT $colnames, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
-	    					$row[$field] = array();
-	    					while ($this->db->next_record())
-	    					{
-	    					    $id = $this->_unmarshal($this->db->f($key, false), 'int');
-								$data = array();
-								foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
-								{	
-									if (is_array($paramsOrCol)) {
-										$col = $intOrCol;
-										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
-									} else {
-										$col = $paramsOrCol;
-										$type = $params['type'];
-									}
-										
-									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
-								}
-								$row[$field][] = $data;
-	    						$results[$id_map[$id]][$field][] = $data;
-	    					}
+                                                        
+                                                        $this->db->query("SELECT $colnames, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
+                                                        $row[$field] = array();
+                                                        while ($this->db->next_record())
+                                                        {
+                                                            $id = $this->_unmarshal($this->db->f($key, false), 'int');
+                                                                        $data = array();
+                                                                        foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+                                                                        {	
+                                                                                if (is_array($paramsOrCol)) {
+                                                                                        $col = $intOrCol;
+                                                                                        $type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+                                                                                } else {
+                                                                                        $col = $paramsOrCol;
+                                                                                        $type = $params['type'];
+                                                                                }
+
+                                                                                $data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
+                                                                        }
+                                                                        $row[$field][] = $data;
+                                                                $results[$id_map[$id]][$field][] = $data;
+                                                        }
 						}
 						else
 						{

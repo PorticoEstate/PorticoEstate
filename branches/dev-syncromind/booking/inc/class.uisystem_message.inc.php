@@ -151,23 +151,23 @@
         {
             $this->db = & $GLOBALS['phpgw']->db;
 
-//			$current_user = $this->current_account_id();
+//            $current_user = $this->current_account_id();
             $current_user = 7;
-			$current_user_building_data = array();
-			$sql = "select object_id from bb_permission where subject_id=".$current_user." and role='case_officer';";
-			$this->db->query($sql);
-			while ($record = array_shift($this->db->resultSet)) {
-				$current_user_building_data[] = $record['object_id'];
-			}
+            $current_user_building_data = array();
+            $sql = "select object_id from bb_permission where subject_id=".$current_user." and role='case_officer';";
+            $this->db->query($sql);
+            while ($record = array_shift($this->db->resultSet)) {
+                    $current_user_building_data[] = $record['object_id'];
+            }
 
-			$filters['building_id'] = $current_user_building_data;
+            $filters['building_id'] = $current_user_building_data;
 
-			if(isset($_SESSION['showall']))
-			{
-				unset($filters['building_id']);
-			} else {
-				$filters['building_id'] = $current_user_building_data;
-			}
+            if(isset($_SESSION['showall']))
+            {
+                    unset($filters['building_id']);
+            } else {
+                    $filters['building_id'] = $current_user_building_data;
+            }
 
             $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
             if ($testdata != 0) {

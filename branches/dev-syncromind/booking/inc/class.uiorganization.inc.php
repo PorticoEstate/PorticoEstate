@@ -125,7 +125,24 @@
 
 		public function query()
 		{
-			$organizations = $this->bo->read();
+                    
+//                        $search = phpgw::get_var('search');
+//                        $order = phpgw::get_var('order');
+//                        $columns = phpgw::get_var('columns');
+//
+//                        $params = array(
+//                            'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+//                            'results' => phpgw::get_var('length', 'int', 'REQUEST', null),
+//                            'query' => $search['value'],
+//                            'order' => $columns[$order[0]['column']]['data'],
+//                            'sort'	=> $columns[$order[0]['column']]['data'],
+//                            'dir'	=> $order[0]['dir'],
+//                            'filters' => $filters
+//                        );
+//                    
+//			$organizations = $this->bo->so->read($params);
+                    
+                        $organizations = $this->bo->read();
 			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
 
 			foreach($organizations["results"] as &$organization) {

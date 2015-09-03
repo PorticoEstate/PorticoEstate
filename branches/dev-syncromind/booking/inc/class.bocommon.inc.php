@@ -38,7 +38,7 @@
 
 		function read()
 		{
-			return $this->so->read($this->build_default_read_params());
+                    return $this->so->read($this->build_default_read_params());
 		}
 		
 		/**

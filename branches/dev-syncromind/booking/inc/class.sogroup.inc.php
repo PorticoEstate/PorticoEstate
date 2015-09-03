@@ -32,15 +32,18 @@
 							'key' => 'id',
 							'column' => 'name'
 						)),
-					'contacts'		=> array('type' => 'string',
-						'manytomany' => array(
-							'table' => 'bb_group_contact',
-							'key' => 'group_id',
-							'column' => array('name',
-							                  'email' => array('sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% contains an invalid email'))),
-							                  'phone')
-						)
-					),
+					'contacts'		=> array(
+                                                                    'type' => 'string',
+                                                                    'manytomany' => array(
+                                                                        'table' => 'bb_group_contact',
+                                                                        'key' => 'group_id',
+                                                                        'column' => array(
+                                                                            'name',
+                                                                            'email' => array('sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% contains an invalid email'))),
+                                                                            'phone')
+                                                                    )
+                                                                )
+                                        
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

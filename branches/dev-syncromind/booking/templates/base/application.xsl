@@ -119,11 +119,15 @@
                                 </div>
 
                                 <div class="pure-control-group">
-                                    <dt class="heading">1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
+                                    <dt class="heading">
+                                        <h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3>
+                                    </dt>
                                         <div class="pure-control-group">
                                         <xsl:for-each select="application/comments[author]">
                                                 <label>
+                                                    <h4>
                                                         <xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+                                                    </h4>
                                                 </label>
                                                 <xsl:choose>
                                                         <xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>				
@@ -140,31 +144,35 @@
                                 </div>
 
                                 <div class="pure-control-group">
-                                    <dt class="heading">2. <xsl:value-of select="php:function('lang', 'Why?')" /></dt>
+                                    <dt class="heading">
+                                        <h3>2. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
+                                    </dt>
                                     <div class="pure-control-group">
                                         <label>
-                                            <xsl:value-of select="php:function('lang', 'Activity')" />
+                                            <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
                                         </label>
                                         <xsl:value-of select="application/activity_name"/>
                                     </div>
                                     <div class="pure-control-group">
                                         <label>
-                                            <xsl:value-of select="php:function('lang', 'Description')" />
+                                            <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
                                         </label>
                                         <xsl:value-of select="application/description"/>
                                     </div>
                                     <div class="pure-control-group">
                                         <label>
-                                            <xsl:value-of select="config/application_equipment"/>
+                                            <h4><xsl:value-of select="config/application_equipment"/></h4>
                                         </label>
                                         <xsl:value-of select="application/equipment"/>
                                     </div>
                                 </div>
                                 <div class="pure-control-group">
-                                    <dt class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></dt>
+                                    <dt class="heading">
+                                        <h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
+                                    </dt>
                                     <div class="pure-control-group">
                                         <label>
-                                            <xsl:value-of select="php:function('lang', 'Building')" />
+                                            <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
                                         </label>
                                         <xsl:value-of select="application/building_name"/>
                                                     (<a href="javascript: void(0)" 
@@ -177,7 +185,7 @@
                                     <dd><div id="resources_container"/></dd>
                                 </div>
                                 <div class="pure-control-group">
-                                    <dt class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></dt>
+                                    <dt class="heading"><h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3></dt>
                                                 <script type="text/javascript">
                                                         var allocationParams = {};
                                                         var bookingParams = {};
@@ -200,7 +208,7 @@
                                                 <xsl:for-each select="application/dates">
                                                 <div class="pure-control-group">    
                                                     <label>
-                                                        <xsl:value-of select="php:function('lang', 'From')" />:
+                                                        <h4><xsl:value-of select="php:function('lang', 'From')" />:</h4>
                                                     </label> 
                                                     <xsl:value-of select="php:function('pretty_timestamp', from_)"/>
                                                         <xsl:if test="../case_officer/is_current_user">
@@ -222,7 +230,7 @@
                                                 </div>
                                                 <div class="pure-control-group">
                                                     <label>
-                                                        <xsl:value-of select="php:function('lang', 'To')" />:
+                                                        <h4><xsl:value-of select="php:function('lang', 'To')" />:</h4>
                                                     </label> 
                                                         <xsl:value-of select="php:function('pretty_timestamp', to_)"/>
                                                 </div>
@@ -234,6 +242,8 @@
                                                                     bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
                                                                     eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
                                                             </script>
+                                                <div class="pure-control-group">
+                                                    <label></label>
                                                         <select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
 
                                                                 <xsl:if test="not(../case_officer/is_current_user)">
@@ -251,14 +261,15 @@
                                                     <option><xsl:value-of select="php:function('lang', '- Created -')" /></option>
                                                                         </xsl:if>
                                                         </select>
+                                                </div>
                                                         </xsl:if>
                                                 </xsl:for-each>
                                 </div>
                                 <div class="pure-control-group">
-                                    <dt class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></dt>
+                                    <dt class="heading"><h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3></dt>
                                     <div class="pure-control-group">
                                         <label>
-                                            <xsl:value-of select="php:function('lang', 'Target audience')" />
+                                            <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
                                         </label>    
                                             <label>
                                                 <ul>
@@ -272,52 +283,55 @@
                                     </div>
                                     <div class="pure-control-group">
                                         <label>
-                                            <xsl:value-of select="php:function('lang', 'Number of participants')" />
+                                            <h4><xsl:value-of select="php:function('lang', 'Number of participants')" /></h4>
                                         </label>
                                                 
-                                                        <table id="agegroup">
-                                                                <tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
-                                                                    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
+                                                        <table id="agegroup" class="pure-table pure-table-striped">
+                                                            <thead>
+                                                                <tr><th><xsl:value-of select="php:function('lang', 'Name')" /></th><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+                                                                    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr></thead>
+                                                            <tbody>
                                                                 <xsl:for-each select="agegroups">
                                                                         <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
                                                                         <tr>
-                                                                                <th><xsl:value-of select="name"/></th>
+                                                                                <td><xsl:value-of select="name"/></td>
                                                                                 <td><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></td>
                                                                                 <td><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></td>
                                                                         </tr>
                                                                 </xsl:for-each>
+                                                            </tbody>
                                                         </table>
                                                 
                                     </div>                                             
                                 </div>
                                 <div class="clr"/>
                                 <div class="pure-control-group">
-                                        <div class="heading"><br />6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
+                                        <dt class="heading"><h3>6. <xsl:value-of select="php:function('lang', 'Contact information')" /></h3></dt>
                                             <div class="pure-control-group">
                                                 <label>
-                                                    <xsl:value-of select="php:function('lang', 'Name')" />
+                                                    <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
                                                 </label>
                                                         <xsl:value-of select="application/contact_name"/>
                                             </div>
                                             <div class="pure-control-group">
                                                 <label>
-                                                    <xsl:value-of select="php:function('lang', 'Email')" />
+                                                    <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
                                                 </label>
                                                         <xsl:value-of select="application/contact_email"/>
                                             </div>
                                             <div class="pure-control-group">
                                                 <label>
-                                                    <xsl:value-of select="php:function('lang', 'Phone')" />
+                                                    <h4><xsl:value-of select="php:function('lang', 'Phone')" /></h4>
                                                 </label>
                                                         <xsl:value-of select="application/contact_phone"/>
                                             </div>
                                 </div>
                                 <div class="pure-control-group">
-                                        <div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+                                        <dt class="heading"><h3>7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></h3></dt>
                                         <div class="pure-control-group">
                                             <xsl:if test="application/customer_identifier_type = 'organization_number'">
                                                 <label>
-                                                    <xsl:value-of select="php:function('lang', 'organization number')" />
+                                                    <h4><xsl:value-of select="php:function('lang', 'organization number')" /></h4>
                                                 </label>
                                                     <xsl:value-of select="application/customer_organization_number"/>
                                             </xsl:if>
@@ -325,14 +339,14 @@
                                         <div class="pure-control-group">
                                             <xsl:if test="application/customer_identifier_type = 'ssn'">
                                                 <label>
-                                                    <xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
+                                                    <h4><xsl:value-of select="php:function('lang', 'Date of birth or SSN')" /></h4>
                                                 </label>
                                                     <xsl:value-of select="application/customer_ssn"/>
                                             </xsl:if>
                                         </div>
                                 </div>
                                 <div class="pure-control-group">
-                                        <div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+                                        <dt class="heading"><br /><h3>8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3></dt>
                                         <p><xsl:value-of select="php:function('lang', 'All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" /></p>
                                         <br />
                                         <div id='regulation_documents'>&nbsp;</div>
@@ -352,15 +366,15 @@
                                     </button>
                                 </xsl:if-->
                                 <xsl:if test="not(frontend)">
-                                        <dl class="proplist">
-                                    <dt class="heading"><xsl:value-of select="php:function('lang', 'Associated items')" /></dt>
+                                    <div class="pure-control-group">
+                                    <dt class="heading"><h3><xsl:value-of select="php:function('lang', 'Associated items')" /></h3></dt>
                                                 <dd><div id="associated_container"/></dd>
-                                        </dl>
+                                    </div>
                                 </xsl:if>
 
                                 <xsl:if test="application/edit_link">
-                                        <dl class="proplist">
-                                                <dt class="heading"><xsl:value-of select="php:function('lang', 'Actions')" /></dt>
+                                        <div class="pure-control-group">
+                                                <dt class="heading"><h3><xsl:value-of select="php:function('lang', 'Actions')" /></h3></dt>
 
                                                         <dt>
                                                                 <xsl:if test="application/case_officer/is_current_user">
@@ -421,7 +435,7 @@
                                                         </xsl:if>
                                                 </xsl:if>
                                                 <!--dd><br/><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd-->
-                                        </dl>
+                                        </div>
                                 </xsl:if>
                             </fieldset>
                             </div>
@@ -450,10 +464,78 @@
 	 if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 	 }
-	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del')"/>;
 	var app_id = <xsl:value-of select="application/id"/>;
 	var building_id = <xsl:value-of select="application/building_id"/>;	
 	var resources = <xsl:value-of select="application/resources"/>;
+
+        <![CDATA[
+        var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+        var associatedURL = 'index.php?menuaction=booking.uiapplication.associated&sort=from_&dir=asc&phpgw_return_as=json&filter_application_id='+app_id;
+        ]]>
+        
+        
+        $.get(resourcesURL, function(resourcesData){
+            var resourcesBody = '';
+            var resourcesTableClass = "pure-table";
+            if (resourcesData.data.length === 0){
+                resourcesBody = '<tr><td colspan="2">'+lang['No records found']+'</td></tr>';
+            }else{
+                resourcesTableClass = "pure-table pure-table-striped";
+                $.each(resourcesData.data , function(index,value){
+                    <![CDATA[
+                    resourcesBody += '<tr><td><a href='+value.link+'>'+value.name+'</a></td><td>'+value.type+'</td></tr>';
+                    ]]>
+                });
+            }
+            <![CDATA[
+                var resourcesTable = '<table class="'+resourcesTableClass+'"><thead><tr><th>'+lang['Resources']+'</th><th>'+lang['Resource Type']+'</th></tr></thead><tbody>'+resourcesBody+'</tbody></table>';
+            ]]>
+            $('#resources_container').html(resourcesTable);
+        });
+            
+        
+        <![CDATA[
+            var associatedHead = '<th>'+lang['ID']+'</th><th>'+lang['Type']+'</th><th>'+lang['From']+'</th><th>'+lang['To']+'</th><th>'+lang['Active']+'</th>';
+        ]]>
+        
+        if (currentuser != 1) {
+            associatedColspan = 6;
+            associatedHead += '<th>'+lang['Delete']+'</th>'
+        } else {
+            associatedColspan = 5;
+        }
+        
+        $.get(associatedURL, function(associatedData){
+            var associatedBody = '';
+            var associatedTableClass = "pure-table";
+            if (associatedData.results.length === 0){
+                associatedBody += '<tr><td colspan="'+associatedColspan+'">'+lang['No records found']+'</td></tr>';
+            }else{
+                associatedTableClass = "pure-table pure-table-striped";
+                $.each(associatedData.results, function(index, value){
+                    <![CDATA[
+                    associatedBody += '<td><a href="'+value.link+'">'+value.id+'</a></td><td>'+value.type+'</td><td>'+value.from_+'</td><td>'+value.to_+'</td><td>'+value.active+'</td>';
+                    ]]>
+                    if (currentuser != 1){
+                        <![CDATA[
+                        associatedBody += '<td><a onclick="return confirm(\'Er du sikker på at du vil slette denne?\';" href="'+value.dellink+'">slett</a></td>';
+                        ]]>
+                    }
+                });
+            }
+            console.log(associatedBody);
+            <![CDATA[
+                var associatedTable = '<table class="'+associatedTableClass+'"><thead><tr>'+associatedHead+'</tr></thead><tbody><tr>'+associatedBody+'</tr></tbody></table>';
+            ]]>
+            $('#associated_container').html(associatedTable);
+        });
+        
+        
+            
+
+        
+
 	
 YAHOO.util.Event.addListener(window, "load", function() {
 	<![CDATA[
@@ -461,6 +543,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		url3 += 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=resource::'+ resources; 
 
 	]]>
+        console.log(url3);
 	var colDefs = [{key: 'name', label: lang['Document'], formatter: YAHOO.booking.formatLink}];
     YAHOO.booking.inlineTableHelper('regulation_documents', url3, colDefs);
 	if (resourceIds) {
@@ -468,6 +551,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
 	    var url2 = 'index.php?menuaction=booking.uiapplication.associated&sort=from_&dir=asc&phpgw_return_as=json&filter_application_id='+app_id;
 		]]>
+                console.log(url);
 	    var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
 	    YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 		if (currentuser == 1) {

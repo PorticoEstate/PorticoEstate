@@ -175,6 +175,7 @@
         public function query()
 		{
 			$groups = $this->bo->read();
+                        
 			array_walk($groups["results"], array($this, "_add_links"), $this->module.".uigroup.show");
 			foreach($groups["results"] as &$group) {
 				
@@ -196,7 +197,6 @@
 					);
 				}
 			}
-			
 			$results = $this->jquery_results($groups);
 			
 			if (is_array($parent_entity = $this->get_parent_if_inline())) {
