@@ -113,9 +113,9 @@ phpgw::import_class('booking.sopermission');
                         phpgwapi_jquery::load_widget('datepicker');
 			
 			self::add_javascript('booking', 'booking', 'completed_reservation.js');
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
@@ -179,6 +179,7 @@ phpgw::import_class('booking.sopermission');
 						array(
 							'key' => 'event_id',
 							'label' => lang('Event id'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'description',
@@ -195,6 +196,7 @@ phpgw::import_class('booking.sopermission');
 						array(
 							'key' => 'contact_name',
 							'label' => lang('Contact'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'customer_type',
@@ -307,24 +309,14 @@ phpgw::import_class('booking.sopermission');
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}
 			}
+                       
+                        $filter_to = phpgw::get_var('to', 'string', 'REQUEST', null);
 
-//			$to = strtotime(phpgw::get_var('filter_to', 'string', 'REQUEST', null));
-//			$filter_to = date("Y-m-d",$to);
-//
-//			if ($filter_to) {
-//				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
-//			}
-//                        
-//                        echo 'xxx ' . $filter_to;
-//                        exit();
-                        
-                        $filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
 			if ($filter_to) {
-				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+                            $filter_to2  = split("/", $filter_to);
+                            $filter_to = $filter_to2[1] . "/" . $filter_to2[0] . "/" . $filter_to2[2];
+                            $filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
-//                        
-//                        echo $filter_to;
-//                        exit();
 
 			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
 			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) ) { // users with the booking role admin should have access to all buildings

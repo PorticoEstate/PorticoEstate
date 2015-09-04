@@ -420,6 +420,8 @@
 			);
 
 			$applications = $this->bo->so->read($params);
+//                        var_dump($params);
+//                        exit();
 
 			foreach($applications['results'] as &$application)
 			{

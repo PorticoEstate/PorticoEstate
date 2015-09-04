@@ -524,7 +524,6 @@
                     }
                 });
             }
-            console.log(associatedBody);
             <![CDATA[
                 var associatedTable = '<table class="'+associatedTableClass+'"><thead><tr>'+associatedHead+'</tr></thead><tbody><tr>'+associatedBody+'</tr></tbody></table>';
             ]]>
@@ -543,7 +542,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		url3 += 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=resource::'+ resources; 
 
 	]]>
-        console.log(url3);
 	var colDefs = [{key: 'name', label: lang['Document'], formatter: YAHOO.booking.formatLink}];
     YAHOO.booking.inlineTableHelper('regulation_documents', url3, colDefs);
 	if (resourceIds) {
@@ -551,7 +549,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
 	    var url2 = 'index.php?menuaction=booking.uiapplication.associated&sort=from_&dir=asc&phpgw_return_as=json&filter_application_id='+app_id;
 		]]>
-                console.log(url);
 	    var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
 	    YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 		if (currentuser == 1) {

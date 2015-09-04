@@ -34,7 +34,7 @@
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'organization_id', 'organization_name', 
-			                      'shortname', 'from_', 'to_', 'active');
+			                      'organization_shortname', 'from_', 'to_', 'active');
 		}
 		
 		public function index()
@@ -43,9 +43,11 @@
 				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'allocation_list.js');
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
+                        phpgwapi_jquery::load_widget('menu');
+                        phpgwapi_jquery::load_widget('autocomplete');
                         $build_id = phpgw::get_var('buildings', 'int', 'REQUEST', null);
 			$data = array(
 				'form' => array(
@@ -104,9 +106,8 @@
 							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
-							'key' => 'shortname',
-							'label' => lang('Organization shortname'),
-                                                        'sortable' => false
+							'key' => 'organization_shortname',
+							'label' => lang('Organization shortname')
 						),
 						array(
 							'key' => 'building_name',

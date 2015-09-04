@@ -433,8 +433,9 @@
 				}
 			}
 			
-//                echo($condition);exit();
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
+//                        echo $base_sql;
+//                        exit();
                         
 			if ($results) 
 			{

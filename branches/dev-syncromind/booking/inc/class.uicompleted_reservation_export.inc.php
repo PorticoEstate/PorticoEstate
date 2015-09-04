@@ -212,7 +212,80 @@ phpgw::import_class('booking.uicommon');
         public function query() //index_json
 		{
 			$this->db = $GLOBALS['phpgw']->db;
-			$exports = $this->bo->read();
+                        
+                        
+                        $search = phpgw::get_var('search');
+                        $order = phpgw::get_var('order');
+                        $columns = phpgw::get_var('columns');
+            
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results = phpgw::get_var('length', 'int', 'REQUEST', null);
+			$query = $search['value'];
+			$sort = $columns[$order[0]['column']]['data'];
+			$dir = $order[0]['dir'];
+                        
+                        
+                        switch($sort)
+			{
+				case 'building_id':
+					$_sort = array('building_id','id');
+					break;
+				case 'season_id':
+					$_sort = array('season_id','id');
+					break;
+				case 'from_':
+					$_sort = array('from_','id');
+					break;
+				case 'to_':
+					$_sort = array('to_','id');
+					break;
+				case 'created_on':
+					$_sort = array('created_on','id');
+					break;
+                                case 'created_by_name':
+					$_sort = array('created_on','id');
+					break;
+                                case 'total_items':
+					$_sort = array('created_on','id');
+					break;
+                                case 'total_cost':
+					$_sort = array('created_on','id');
+					break;
+				default:
+					$_sort = $sort;
+					break;
+			}
+                        
+                        $filters = array();
+			foreach($this->bo->so->get_field_defs() as $field => $params) {
+				if(phpgw::get_var("filter_$field")) {
+					$filters[$field] = phpgw::get_var("filter_$field");
+				}
+			}
+                        $filter_to = phpgw::get_var('to', 'string', 'REQUEST', null);
+
+			if ($filter_to) {
+                            $filter_to2  = split("/", $filter_to);
+                            $filter_to = $filter_to2[1] . "/" . $filter_to2[0] . "/" . $filter_to2[2];
+                            $filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+			}
+                        
+
+                        
+                        
+                        
+                        $params = array(
+				'start' => $start,
+				'results' => $results,
+				'query'	=> $query,
+				'sort'	=> $_sort,
+				'dir'	=> $dir,
+				'filters' => $filters
+			);
+                        
+                        
+
+			$exports = $this->bo->so->read($params);
 			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
 
 			foreach($exports["results"] as &$export) {

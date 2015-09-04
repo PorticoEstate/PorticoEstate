@@ -84,7 +84,8 @@
 						),
 						array(
 							'key' => 'resource_list',
-							'label' => lang('Resources')
+							'label' => lang('Resources'),
+                                                        'sortable' => false
 						),
 						array(
 							'key' => 'officer_name',

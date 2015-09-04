@@ -2,8 +2,8 @@
 	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.account_ui_utils');
     
-    phpgw::import_class('booking.uidocument_building');
-	phpgw::import_class('booking.uipermission_building');
+//    phpgw::import_class('booking.uidocument_building');
+//	phpgw::import_class('booking.uipermission_building');
 	
 //	phpgw::import_class('phpgwapi.uicommon_jquery');
 

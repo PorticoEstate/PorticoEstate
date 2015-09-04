@@ -8,7 +8,7 @@
 			parent::__construct('bb_application', 
 				array(
 					'id'		=> array('type' => 'int'),
-                    'id_string' => array('type' => 'string', 'required' => false, 'default' => '0', 'query' => true),
+                                        'id_string' => array('type' => 'string', 'required' => false, 'default' => '0', 'query' => true),
 					'active'	=> array('type' => 'int'),
 					'display_in_dashboard' => array('type' => 'int'),
 					'type'		=> array('type' => 'string'),
@@ -40,7 +40,7 @@
 							'column' 	=> 'name'
 					)),
 					'description'	=> array('type' => 'string', 'query' => true, 'required' => true),
-                    'equipment'	=> array('type' => 'string', 'query' => true, 'required' => false),
+                                        'equipment'	=> array('type' => 'string', 'query' => true, 'required' => false),
 					'contact_name'	=> array('type' => 'string', 'query' => true, 'required'=> true),
 					'contact_email'	=> array('type' => 'string', 'required'=> true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),
