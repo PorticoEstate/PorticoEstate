@@ -76,8 +76,12 @@ JqueryPortico.formatLinkGeneric = function(key, oData) {
 		var name = 'Link';
 		var link = data;
 	}
-
-	return '<a href="' + link + '">' + name + '</a>';
+        if (link){
+            return '<a href="' + link + '">' + name + '</a>';
+        }else{
+            return name;
+        }
+	
 };
 
 JqueryPortico.formatLinkGenericLlistAttribute = function(key, oData) {

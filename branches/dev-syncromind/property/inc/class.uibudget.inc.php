@@ -470,10 +470,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $acl_location));
 			}
 
-            if( phpgw::get_var('phpgw_return_as') == 'json' )
-            {
-				return $this->query();
-            }
+                        if( phpgw::get_var('phpgw_return_as') == 'json' )
+                        {
+                                            return $this->query();
+                        }
 			
 			$acl_add		= $this->acl->check($acl_location, PHPGW_ACL_ADD, 'property');
 			$acl_edit		= $this->acl->check($acl_location, PHPGW_ACL_EDIT, 'property');
@@ -481,35 +481,35 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::budget';
 
-            $data   = array(
-                'datatable_name'    => lang('list budget'),
-                'form'  => array(
-                               'toolbar'    => array(
-                                   'item'   => array()
-								)
-                            ),
-                'datatable' =>  array(
-                    'source'    => self::link(array(
-							'menuaction'		=> 'property.uibudget.index',
-							'phpgw_return_as'   => 'json'
-                    )),
-					'download'	=> self::link(array(
-							'menuaction'	=> 'property.uibudget.download',
-							'export'		=> true,
-							'allrows'		=> true,
-							'download'		=> 'budget'
-					)),
-                    'allrows'		=> true,
-                    'editor_action' => '',
-                    'field'			=>  array()
-                )
-            );
+                        $data   = array(
+                            'datatable_name'    => lang('list budget'),
+                            'form'  => array(
+                                           'toolbar'    => array(
+                                               'item'   => array()
+                                                                            )
+                                        ),
+                            'datatable' =>  array(
+                                'source'    => self::link(array(
+                                                                    'menuaction'		=> 'property.uibudget.index',
+                                                                    'phpgw_return_as'   => 'json'
+                                )),
+                                                    'download'	=> self::link(array(
+                                                                    'menuaction'	=> 'property.uibudget.download',
+                                                                    'export'		=> true,
+                                                                    'allrows'		=> true,
+                                                                    'download'		=> 'budget'
+                                                    )),
+                                'allrows'		=> true,
+                                'editor_action' => '',
+                                'field'			=>  array()
+                            )
+                        );
 			
-            $filters = $this->_get_Filters();
-			krsort($filters);
-            foreach($filters as $filter){
-                array_unshift($data['form']['toolbar']['item'], $filter);
-            }
+                        $filters = $this->_get_Filters();
+                                    krsort($filters);
+                        foreach($filters as $filter){
+                            array_unshift($data['form']['toolbar']['item'], $filter);
+                        }
 			
 			if($acl_add)
 			{
@@ -537,10 +537,10 @@
 				array('hidden'=>false,'key'=>'budget_cost','label'=>lang('budget cost'),'className'=>'right','sortable'=>true,'formatter'=>'JqueryPortico.FormatterAmount0'),
 			);
 
-            foreach ($uicols as $col) 
-			{
-                array_push($data['datatable']['field'], $col);
-            }
+                        foreach ($uicols as $col) 
+                                    {
+                            array_push($data['datatable']['field'], $col);
+                        }
 
 			$parameters = array('parameter' => array(array('name'=> 'budget_id', 'source'=> 'budget_id')));
 			
@@ -568,6 +568,20 @@
 				);
 			}*/
 			unset($parameters);
+//                        var_dump($data['form']['toolbar']['item']);
+//                        echo "<hr>";
+//                        var_dump($data['form']['toolbar']['item'][0]);
+//                        echo "<hr>";
+//                        var_dump($data['form']['toolbar']['item'][1]);
+//                        echo "<hr>";
+//                        var_dump($data['form']['toolbar']['item'][2]);
+//                        echo "<hr>";
+//                        var_dump($data['form']['toolbar']['item'][3]);
+//                        echo "<hr>";
+//                        var_dump($data['form']['toolbar']['item'][4]);
+//                        echo "<hr>";
+//                        var_dump($data['form']['toolbar']['item'][5]);
+//                        exit();
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . lang('list budget');
@@ -581,22 +595,22 @@
         public function query()
         {
             $search			= phpgw::get_var('search');
-			$order			= phpgw::get_var('order');
-			$draw			= phpgw::get_var('draw', 'int');
-			$columns		= phpgw::get_var('columns');
-			$order_field	= '';
-			
-			switch($columns[$order[0]['column']]['data'])
-			{
-				case 'ecodimb':
-					$order_field = 'fm_budget.ecodimb';
-					break;
-				case 'grouping':
-					$order_field = 'category';
-					break;
-				default:
-					$order_field = $columns[$order[0]['column']]['data'];
-			}
+            $order			= phpgw::get_var('order');
+            $draw			= phpgw::get_var('draw', 'int');
+            $columns		= phpgw::get_var('columns');
+            $order_field	= '';
+
+            switch($columns[$order[0]['column']]['data'])
+            {
+                    case 'ecodimb':
+                            $order_field = 'fm_budget.ecodimb';
+                            break;
+                    case 'grouping':
+                            $order_field = 'category';
+                            break;
+                    default:
+                            $order_field = $columns[$order[0]['column']]['data'];
+            }
 
             $params = array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -607,7 +621,7 @@
 				'allrows' => phpgw::get_var('length', 'int') == -1
             );
 			
-			$values = $this->bo->read($params);	
+            $values = $this->bo->read($params);	
 
             if( phpgw::get_var('export','bool'))
             {
@@ -617,10 +631,10 @@
             $result_data = array('results'  => $values);
             $result_data['total_records'] = $this->bo->total_records;
             $result_data['draw'] = $draw;
-			$result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+            $result_data['sum_budget'] = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
             
             return $this->jquery_results($result_data);
-		}		
+        }		
 		
 		
 		function basis()

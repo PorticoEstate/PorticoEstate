@@ -434,8 +434,6 @@
 			}
 			
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
-//                        echo $base_sql;
-//                        exit();
                         
 			if ($results) 
 			{
@@ -444,7 +442,6 @@
 				$offset = ($start > 0) ?  'OFFSET ' . $start . ' ' : ' ';
 				$this->db->query($base_sql.$offset, __LINE__, __FILE__);
 			}
-			
 			$results = array();
 			while ($this->db->next_record())
 			{
@@ -512,13 +509,14 @@
     				}
     			}
 		    }
-			return array(
-				'total_records' => $total_records,
-				'results'		=> $results,
-				'start'			=> $start,
-				'sort'			=> is_array($sort) ? $sort[0] : $sort,
-				'dir'			=> $dir
-			);
+
+                    return array(
+                            'total_records' => $total_records,
+                            'results'		=> $results,
+                            'start'			=> $start,
+                            'sort'			=> is_array($sort) ? $sort[0] : $sort,
+                            'dir'			=> $dir
+                    );
 		}
 		
 		protected function is_auto_field_def(array &$field_def, $action) {
