@@ -33,12 +33,22 @@ class rental_uibilling extends rental_uicommon
 	
 	public function add()
 	{
+		$contract_type = phpgw::get_var('contract_type');
 		// No messages so far
 		$errorMsgs = array();
 		$warningMsgs = array();
 		$infoMsgs = array();
 		$step = null; // Used for overriding the user's selection and choose where to go by code
 		
+		$link_add = array
+			(
+				'menuaction'	=> 'rental.uibilling.add'
+			);
+		
+		$tabs = array();
+		$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
+		$active_tab = 'details';
+			
 		// Step 3 - the billing job
 		if(phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) // User clicked next on step 2
 		{
@@ -82,12 +92,12 @@ class rental_uibilling extends rental_uicommon
 				$errorMsgs[] = lang('No contracts were selected.');
 				$step = 2; // Go back to step 2
 			}
-		}
+		}	
 		// Step 2 - list of contracts that should be billed
 		if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
 		{
 			//Responsibility area
-			$contract_type = phpgw::get_var('contract_type');
+			//$contract_type = phpgw::get_var('contract_type');
 			
 			//Check permission
 			$names = $this->locations->get_name($contract_type);
@@ -305,86 +315,160 @@ class rental_uibilling extends rental_uicommon
 				}
 			}
 				
-			$data = array
-			(
-				'contracts' => $contracts,
-				'irregular_contracts' => $irregular_contracts,
-				'removed_contracts'	=> $removed_contracts,
-				'not_billed_contracts'	=> $not_billed_contracts,
-				'contracts_with_one_time' => $contracts_with_one_time,
-				'bill_from_timestamp' => $bill_from_timestamp,
-				'contract_type' => phpgw::get_var('contract_type'),
-				'billing_term' => $billing_term,
-				'billing_term_label' => $billing_term_label,
-				'billing_term_selection' => $billing_term_selection,
-				'year' => $year,
-				'month' => $month,
-				'title' => $title,
-				'use_existing' => $use_existing,
-				'existing_billing' => $existing_billing,
-				'export_format'	=> phpgw::get_var('export_format'),
-				'errorMsgs' => $errorMsgs,
-				'warningMsgs' => $warningMsgs,
-				'infoMsgs' => $infoMsgs
-			);
-			$template = 'step2';
-			//$this->render('billing_step2.php', $data);
-		}
-		else if($step == 1 || (phpgw::get_var('step') == '0' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '2' && phpgw::get_var('previous') != null) // User clicked next on step 0 or previous on step 2
-		{
-				$contract_type = phpgw::get_var('contract_type');
-				$export_format = rental_sobilling::get_instance()->get_agresso_export_format($contract_type);
-				$existing_billing = phpgw::get_var('existing_billing');
-				
-				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-				foreach($fields as $id => $label)
+			$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach($fields as $id => $label)
+			{
+				if($id == $contract_type)
 				{
-					if($id == $contract_type)
+					$fields_of_responsibility_label = lang($label);
+				}
+			}
+			
+			$billing_start = date($this->dateFormat, $bill_from_timestamp);
+			
+			if ($billing_term == 1) 
+			{
+				foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
+				{
+					if($term_id == $billing_term)
 					{
-						$fields_of_responsibility_id = $id;
-						$fields_of_responsibility_label = lang($label);
+						$billing_term_label = lang($term_title);
 					}
 				}
-				
-				$existing_billing_options = array();
-				$result_objects = rental_sobilling::get_instance()->get(null, null, null, null, null, null, array('location_id' => $contract_type));
-			 	foreach($result_objects as $billing){
-			 		if($billing->get_location_id() == $contract_type)
-					{
-						$selected = ($billing->get_id() == $existing_billing) ? 1 : 0;
-						$existing_billing_options[] = array('id'=>$billing->get_id(), 'name'=>$billing->get_title(), 'selected'=>$selected);
-			 		}
-			 	}
-				
-				$this_year = date('Y');
-				$years = rental_contract::get_year_range();
-				$year_options = array();
-				foreach($years as $year)
+			}
+
+			
+			$data = array
+			(
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', $link_add),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'rental.uibilling.index')),
+				'contracts'						=> $contracts,
+				'irregular_contracts'			=> $irregular_contracts,
+				'contract_type'					=> $contract_type,
+				'removed_contracts'				=> $removed_contracts,
+				'not_billed_contracts'			=> $not_billed_contracts,
+				'contracts_with_one_time'		=> $contracts_with_one_time,
+				'billing_start'					=> $billing_start,
+				'billing_term'					=> $billing_term,
+				'billing_term_label'			=> $billing_term_label,
+				'billing_term_selection'		=> $billing_term_selection,
+				'fields_of_responsibility_label'=> $fields_of_responsibility_label,
+				'year'							=> $year,
+				'month'							=> lang('month ' . $month . ' capitalized'),
+				'title'							=> $title,
+				'use_existing'					=> $use_existing,
+				'existing_billing'				=> $existing_billing,
+				'export_format'					=> phpgw::get_var('export_format'),
+				'errorMsgs'						=> $errorMsgs,
+				'warningMsgs'					=> $warningMsgs,
+				'infoMsgs'						=> $infoMsgs,
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+			);
+			$template = 'step2';
+		}
+		else if($step == null || (phpgw::get_var('next') != null) || phpgw::get_var('step') == '2' && phpgw::get_var('previous') != null) // User clicked next on step 0 or previous on step 2
+		{
+			//$contract_type = phpgw::get_var('contract_type');
+			$export_format = rental_sobilling::get_instance()->get_agresso_export_format($contract_type);
+			$existing_billing = phpgw::get_var('existing_billing');
+
+			$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach($fields as $id => $label)
+			{
+				if($id == $contract_type)
 				{
-					$selected = ($this_year == $year) ? 1 : 0;
-					$year_options[] = array('id'=>$year, 'name'=>$year, 'selected'=>$selected);
+					$fields_of_responsibility_label = lang($label);
 				}
-				$data = array
-				(
-					'contract_type' => $contract_type,
-					'billing_term' => phpgw::get_var('billing_term'),
-					'billing_term_selection' => phpgw::get_var('billing_term_selection'),
-					'title' => phpgw::get_var('title'),
-					'year' => phpgw::get_var('year'),
-					'existing_billing' => $existing_billing,
-					'fields_of_responsibility_id' => $fields_of_responsibility_id,
-					'fields_of_responsibility_label' => $fields_of_responsibility_label,
-					'list_existing_billing'	=> array('options' => $existing_billing_options),
-					'list_year'	=> array('options' => $year_options),
-					'export_format' => $export_format,
-					'errorMsgs' => $errorMsgs,
-					'warningMsgs' => $warningMsgs,
-					'infoMsgs' => $infoMsgs
-				);
-				$template = 'step1';
-				//$this->render('billing_step1.php', $data);
+			}
+
+			$existing_billing_options[] = array('id'=>'new_billing', 'name'=>lang('new_billing'));
+			$result_objects = rental_sobilling::get_instance()->get(null, null, null, null, null, null, array('location_id' => $contract_type));
+			foreach($result_objects as $billing){
+				if($billing->get_location_id() == $contract_type)
+				{
+					$selected = ($billing->get_id() == $existing_billing) ? 1 : 0;
+					$existing_billing_options[] = array('id'=>$billing->get_id(), 'name'=>$billing->get_title(), 'selected'=>$selected);
+				}
+			}
+
+			$this_year = date('Y');
+			$years = rental_contract::get_year_range();
+			$year_options = array();
+			foreach($years as $year)
+			{
+				$selected = ($this_year == $year) ? 1 : 0;
+				$year_options[] = array('id'=>$year, 'name'=>$year, 'selected'=>$selected);
+			}
+
+			$current=0;
+			$billing_term_group_options = array();
+			foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
+			{
+				$options = array();
+				if($current == 0)
+				{
+					$options[] = array('id'=>$term_id.'-1', 'name'=>lang($term_title));
+				}
+				else if($current == 1)
+				{
+					$options[] = array('id'=>$term_id.'-1', 'name'=>'1. halv&aring;r');
+					$options[] = array('id'=>$term_id.'-2', 'name'=>'2. halv&aring;r');						
+				}
+				else if($current == 2)
+				{
+					$options[] = array('id'=>$term_id.'-1', 'name'=>'1. kvartal');
+					$options[] = array('id'=>$term_id.'-2', 'name'=>'2. kvartal');
+					$options[] = array('id'=>$term_id.'-3', 'name'=>'3. kvartal');
+					$options[] = array('id'=>$term_id.'-4', 'name'=>'4. kvartal');
+				}
+				else if($current == 3)
+				{
+					for($i=1; $i<=12; $i++)
+					{
+						$options[] = array('id'=>$term_id.'-'.$i, 'name'=>lang('month ' . $i . ' capitalized'));						
+					}						
+				} 
+				else {
+					$options[] = array('id'=>$term_id.'-1', 'name'=>lang($term_title));
+				}
+				$current++;
+				$billing_term_group_options[] = array('label'=>lang($term_title), 'options'=>$options);
+			}
+
+			$data = array
+			(
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', $link_add),
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'rental.uibilling.index')),
+				'lang_next'						=> lang('next'),
+				'lang_cancel'					=> lang('cancel'),			
+				'contract_type'					=> $contract_type,
+				'billing_term'					=> phpgw::get_var('billing_term'),
+				'billing_term_selection'		=> phpgw::get_var('billing_term_selection'),
+				'title'							=> phpgw::get_var('title'),
+				'year'							=> phpgw::get_var('year'),
+				'existing_billing'				=> $existing_billing,
+				'fields_of_responsibility_label'=> $fields_of_responsibility_label,
+				'list_existing_billing'			=> array('options' => $existing_billing_options),
+				'list_year'						=> array('options' => $year_options),
+				'list_billing_term_group'		=> array('option_group' => $billing_term_group_options),
+				'export_format'					=> $export_format,
+				'errorMsgs'						=> $errorMsgs,
+				'warningMsgs'					=> $warningMsgs,
+				'infoMsgs'						=> $infoMsgs,
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+			);
+			$template = 'step1';
 		}	
-		
+
+		$code =	<<<JS
+			var thousandsSeparator = '$this->thousandsSeparator';
+			var decimalSeparator = '$this->decimalSeparator';
+			var decimalPlaces = '$this->decimalPlaces';
+			var currency_suffix = '$this->currency_suffix';
+			var area_suffix = '$this->area_suffix';
+JS;
+		$GLOBALS['phpgw']->js->add_code('', $code);
+			
 		self::render_template_xsl(array('billing', 'datatable_inline'), array($template => $data));
 	}
 		
@@ -515,7 +599,8 @@ class rental_uibilling extends rental_uicommon
 				'parameters'	=> json_encode($parameters)
 			);
 
-
+		self::add_javascript('rental', 'rental', 'billing.index.js');
+		phpgwapi_jquery::load_widget('numberformat');
 		self::render_template_xsl('datatable_jquery', $data);
 	}
 	
