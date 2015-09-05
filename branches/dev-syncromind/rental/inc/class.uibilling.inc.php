@@ -31,6 +31,21 @@ class rental_uibilling extends rental_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('invoice_menu');
 	}
 	
+	private function __object_to_array($contract)
+	{
+		$values['old_contract_id'] = $contract->get_old_contract_id();
+		$values['start_date'] = ($contract->get_contract_date()->has_start_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_start_date()) : '';
+		$values['end_date'] = ($contract->get_contract_date()->has_end_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_end_date()) : '';
+		$values['composite_name'] = substr($contract->get_composite_name(),0,15); echo strlen($contract->get_composite_name()) > 15 ? '...' : '';
+		$values['party_name'] = substr($contract->get_party_name(),0,15);  echo strlen($contract->get_party_name()) > 15 ? '...' : '';
+		$values['total_price'] = $this->currency_suffix.' '. number_format($contract->get_total_price(),2,',',' ');
+		$values['rented_area'] = $contract->get_rented_area().' '.$this->area_suffix;
+		$values['billing_start_date'] = date($this->dateFormat, $contract->get_billing_start_date());
+		$values['id'] = $contract->get_id();
+		
+		return  $values;
+	}
+	
 	public function add()
 	{
 		$contract_type = phpgw::get_var('contract_type');
@@ -218,26 +233,34 @@ class rental_uibilling extends rental_uicommon
 						$aditional_contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract_price_item->get_contract_id(), 'contract_type' => $contract_type));
 						if(count($aditional_contracts) == 1)
 						{
-							$c = $aditional_contracts[$contract_price_item->get_contract_id()];
-							$c->set_bill_only_one_time();
+							$cid = $contract_price_item->get_contract_id();
+							$c = $aditional_contracts[$cid];
+							$c->set_bill_only_one_time();						
 							//$contracts[$contract_price_item->get_contract_id()] = $c;
-							$contracts_with_one_time[$contract_price_item->get_contract_id()] = $c; // used for information purposes
+							//$contracts_with_one_time[$contract_price_item->get_contract_id()] = $c; // used for information purposes
 						}
 					}
 					else
 					{
 						$cid = $contract_price_item->get_contract_id();
-						$contracts_with_one_time[$cid] = $contracts[$cid];
+						$c = $contracts[$cid];					
+						//$contracts_with_one_time[$cid] = $c;
+					}
+					
+					if (!empty($c))
+					{
+						$total_price = $socontract_price_item->get_total_price_invoice($c->get_id(), $billing_term, $month, $year);
+						$c->set_total_price($total_price);							
+						$contracts_with_one_time[$cid] = $this->__object_to_array($c);
 					}
 				}
 
-				foreach($contracts_with_one_time as $id => &$contract)
+				/*foreach($contracts_with_one_time as $id => &$contract)
 				{
 					$total_price = $socontract_price_item->get_total_price_invoice($contract->get_id(), $billing_term, $month, $year);
 					$contract->set_total_price($total_price);
-
 				}
-				unset($contract);
+				unset($contract);*/
 			
 				// Get the number of months in selected term for contract
 				$months = rental_socontract::get_instance()->get_months_in_term($billing_term);
@@ -246,6 +269,7 @@ class rental_uibilling extends rental_uicommon
 				$first_day_of_selected_month = strtotime($year . '-' . $month . '-01');
 				$bill_from_timestamp = strtotime('-'.($months-1).' month', $first_day_of_selected_month); 
 				
+				$array_contracts = array();
 				foreach($contracts as $id => $contract)
 				{	
 					if(isset($contract))
@@ -261,7 +285,7 @@ class rental_uibilling extends rental_uicommon
 						{
 							$warningMsgs[] = lang('billing_removed_KF_contract') . " " . $contract->get_old_contract_id();
 							unset($contracts[$id]);
-							$removed_contracts[$contract->get_id()] = $contract;
+							$removed_contracts[$contract->get_id()] = $this->__object_to_array($contract);
 						}
 						// A contract with responibility type contract_type_eksternleie must have a rental_contract_type 
 						else if( ($type_id == 0 && strcmp($location_title, "contract_type_eksternleie") == 0) || (empty($type_id) && strcmp($location_title, "contract_type_eksternleie") == 0 )) 
@@ -269,13 +293,13 @@ class rental_uibilling extends rental_uicommon
 							$contract->set_total_price($total_price);
 							$warningMsgs[] = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_external_contract');
 							unset($contracts[$id]);
-							$removed_contracts[$contract->get_id()] = $contract;
+							$removed_contracts[$contract->get_id()] = $this->__object_to_array($contract);
 						} 
 						else if(isset($total_price) && $total_price == 0) // Remove contract if total price is equal to zero
 						{
 							$warningMsgs[] = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_contract_part_2');
 							unset($contracts[$id]);
-							$removed_contracts[$id] = $contract;
+							$removed_contracts[$id] = $this->__object_to_array($contract);
 						}
 						else // Prepare contract for billing
 						{
@@ -288,8 +312,8 @@ class rental_uibilling extends rental_uicommon
 							if($last_bill_timestamp == null) 
 							{
 								$next_bill_timestamp = $contract->get_billing_start_date();
-								$not_billed_contracts[$id] = $contract;
-								$irregular_contracts[$id] = $contract;
+								$not_billed_contracts[$id] = $this->__object_to_array($contract);
+								$irregular_contracts[$id] = $this->__object_to_array($contract);
 								unset($contracts[$id]);
 							}
 							else
@@ -306,10 +330,14 @@ class rental_uibilling extends rental_uicommon
 								else
 								{
 									unset($contracts[$id]);
-									$irregular_contracts[$id] = $contract;
+									$irregular_contracts[$id] = $this->__object_to_array($contract);
 								}
-							}
-							
+							}							
+						}
+						
+						if (!empty($contracts[$id]))
+						{
+							$array_contracts[$id] = $this->__object_to_array($contracts[$id]);
 						}
 					}
 				}
@@ -337,17 +365,19 @@ class rental_uibilling extends rental_uicommon
 				}
 			}
 
-			
+			//print_r($irregular_contracts); die;
 			$data = array
 			(
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php', $link_add),
 				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'rental.uibilling.index')),
-				'contracts'						=> $contracts,
-				'irregular_contracts'			=> $irregular_contracts,
 				'contract_type'					=> $contract_type,
+				
+				'contracts'						=> $array_contracts,
+				'irregular_contracts'			=> $irregular_contracts,
 				'removed_contracts'				=> $removed_contracts,
 				'not_billed_contracts'			=> $not_billed_contracts,
 				'contracts_with_one_time'		=> $contracts_with_one_time,
+				
 				'billing_start'					=> $billing_start,
 				'billing_term'					=> $billing_term,
 				'billing_term_label'			=> $billing_term_label,
