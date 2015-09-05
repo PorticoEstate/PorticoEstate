@@ -128,19 +128,44 @@
 								<input type="submit" class="pure-button pure-button-primary" name="next" value="next"/>
 							</div>							
 						</div>
-						<div>
-							<div id="user_messages">
-								<h3>Meldinger</h3>
-								<xsl:choose>
-									<xsl:when test="//warningMsgs!=''">
+						<div id="user_messages">
+							<h3>Meldinger</h3>
+							<xsl:choose>
+								<xsl:when test="//errorMsgs!=''">
+									<div class="error">
+										<xsl:for-each select="errorMsgs">
+											<p class="message"><xsl:value-of select="current()"/></p>
+										</xsl:for-each>
+									</div>
+								</xsl:when>
+								<xsl:when test="//warningMsgs!=''">
+									<div class="warning">
 										<xsl:for-each select="warningMsgs">
-											<dl>
-
-											</dl>
-										</xsl:for-each>			
-									</xsl:when>
-								</xsl:choose>								
-							</div>
+											<p class="message"><xsl:value-of select="current()"/></p>
+										</xsl:for-each>
+									</div>
+								</xsl:when>
+								<xsl:when test="//infoMsgs!=''">
+									<div class="info">
+										<xsl:for-each select="infoMsgs">
+											<p class="message"><xsl:value-of select="current()"/></p>
+										</xsl:for-each>
+									</div>
+								</xsl:when>
+							</xsl:choose>
+						</div>
+						<div id="list_navigation">
+							<h3>Kontrakter i kjøring</h3>
+							<ul>
+								<li><a href="#non_cycle"><xsl:value-of select="php:function('lang', 'contracts_out_of_cycle')"/> (<xsl:value-of select="count(irregular_contracts)"/>)</a></li>
+								<li><a href="#one_time"><xsl:value-of select="php:function('lang', 'contracts_with_one_time')"/> (<xsl:value-of select="count(contracts_with_one_time)"/>)</a></li>
+								<li><a href="#cycle"><xsl:value-of select="php:function('lang', 'contracts_in_cycle')"/> (<xsl:value-of select="count(contracts)"/>)</a></li>
+							</ul>
+							<h3>Kontraktsinformasjon</h3>
+							<ul>
+								<li><a href="#new"><xsl:value-of select="php:function('lang', 'contracts_not_billed_before')"/> (<xsl:value-of select="count(not_billed_contracts)"/>)</a></li>
+								<li><a href="#removed"><xsl:value-of select="php:function('lang', 'contracts_removed')"/> (<xsl:value-of select="count(removed_contracts)"/>)</a></li>
+							</ul>
 						</div>
 					</fieldset>
 				</div>
