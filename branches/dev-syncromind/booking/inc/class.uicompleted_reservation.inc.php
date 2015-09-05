@@ -141,11 +141,6 @@ phpgw::import_class('booking.sopermission');
 								'text' => lang('To').':',
 							),
 							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search'),
-							),
-							array(
 								'type' => 'link',
 								'value' => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
 								'href' => $this->link_to('toggle_show_all_completed_reservations'),

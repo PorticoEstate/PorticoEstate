@@ -110,11 +110,6 @@
 								'text' => lang('Building').':',
 							),
 							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array(
 								'type' => 'link',
 								'value' => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all applications'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_all_dashboard_applications'))

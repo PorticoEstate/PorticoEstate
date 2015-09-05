@@ -17,7 +17,7 @@
                     
                     <div class="pure-control-group">
 
-                        <label><xsl:value-of select="php:function('lang', 'Building')" /></label>
+                        <label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label>
                             <!--div class="autocomplete"-->
                                 <input id="field_building_id" name="building_id" type="hidden">
                                     <xsl:attribute name="value"><xsl:value-of select="allocation/building_id"/></xsl:attribute>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="pure-control-group">
                         
-                        <label><xsl:value-of select="php:function('lang', 'Organization')" /></label>
+                        <label for="field_org_name"><xsl:value-of select="php:function('lang', 'Organization')" /></label>
                             <!--div class="autocomplete"-->
                                 <input id="field_org_id" name="organization_id" type="hidden">
                                     <xsl:attribute name="value"><xsl:value-of select="allocation/organization_id"/></xsl:attribute>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="pure-control-group">
                         
-                        <label><xsl:value-of select="php:function('lang', 'From')" /></label>
+                        <label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label>
                             <!--div class="time-picker"-->
                             <input id="field_from" name="from_" type="text">
                                 <xsl:attribute name="value"><xsl:value-of select="allocation/from_"/></xsl:attribute>
@@ -102,7 +102,7 @@
                     </div>
                     <div class="pure-control-group">
                     
-                        <label><xsl:value-of select="php:function('lang', 'To')" /></label>
+                        <label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label>
                             <!--div class="time-picker"-->
                             <input id="field_to" name="to_" type="text">
                                 <xsl:attribute name="value"><xsl:value-of select="allocation/to_"/></xsl:attribute>
@@ -112,18 +112,18 @@
                     </div>
                     <div class="pure-control-group">
                         
-                        <label><xsl:value-of select="php:function('lang', 'Recurring allocation')" /></label>
+                        <label for="outseason"><xsl:value-of select="php:function('lang', 'Recurring allocation')" /></label>
                                 
                                         <input type="checkbox" name="outseason" id="outseason">
                                                 <xsl:if test="outseason='on'">
                                                         <xsl:attribute name="checked">checked</xsl:attribute>
                                                 </xsl:if>
                                         </input>
-                                        <xsl:value-of select="php:function('lang', 'Out season')" />
+                                        <label style="text-align:left;margin-left:5px;" for="outseason"><xsl:value-of select="php:function('lang', 'Out season')" /></label>
                     </div>
                     <div class="pure-control-group">
                         
-                        <label>
+                        <label for="field_interval">
                             <xsl:value-of select="php:function('lang', 'Interval')" />
                         </label>
                                             <xsl:value-of select="../field_interval" />
@@ -161,7 +161,7 @@
                     </div>
                     <div class="pure-control-group">
 
-                        <label><xsl:value-of select="php:function('lang', 'Cost')" /></label>
+                        <label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
                             <input id="field_cost" name="cost" type="text">
                                 <xsl:attribute name="value"><xsl:value-of select="allocation/cost"/></xsl:attribute>
                             </input>

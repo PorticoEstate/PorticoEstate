@@ -89,11 +89,6 @@
 								'text' => lang('Building').':',
 							),
 							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only messages assigned to me') : lang('Show all messages'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))

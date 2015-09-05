@@ -107,11 +107,6 @@ phpgw::import_class('booking.uicommon');
 								'value'	=> '',
 								'text'  => lang('To').':'
 							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
 						),
 					),
 #					'list_actions' => array(

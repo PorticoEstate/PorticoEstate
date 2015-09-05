@@ -29,6 +29,7 @@
 			$this->bo = CreateObject('booking.bodocumentation');
 			$this->fields = array('category', 'description');
 			$this->module = 'booking';
+                        self::set_active_menu('booking::settings::documentation');
 		}
 		
 		public function index()

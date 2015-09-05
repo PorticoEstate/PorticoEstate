@@ -23,7 +23,7 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.bogroup');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			self::set_active_menu('booking::groups');
+			self::set_active_menu('booking::organizations::groups');
 
             $this->module = "booking";
 		}

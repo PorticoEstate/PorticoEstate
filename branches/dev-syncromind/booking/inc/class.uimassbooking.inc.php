@@ -27,7 +27,7 @@
 			
 			
 			$this->bo = CreateObject('booking.bomassbooking');
-			self::set_active_menu('booking::applications::massboooking');
+			self::set_active_menu('booking::applications::massbookings');
 		}
 				
 		public function index()
