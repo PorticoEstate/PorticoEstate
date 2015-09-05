@@ -79,12 +79,15 @@ class rental_soparty extends rental_socommon
 			if($sort_field == 'name')
 			{
 				$order = "ORDER BY party.last_name {$dir}, party.first_name {$dir}";
+				$this->sort_field = array('party.last_name', 'party.first_name');
 			}
 			else
 			{
 				if($sort_field == 'address')
 				{
 					$sort_field = 'party.address_1';
+					$this->sort_field = array('party.address_1');
+
 				}
 				$order = "ORDER BY {$this->marshal($sort_field,'field')} $dir";
 			}
