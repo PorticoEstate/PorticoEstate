@@ -221,11 +221,18 @@
 			$resource['schedule_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $resource['id']));
 			$resource['add_document_link'] = booking_uidocument::generate_inline_link('resource', $resource['id'], 'add');
 			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('resource', $resource['id'], 'add');
-			$data = array(
+
+                        $tabs = array();
+                        $tabs['generic'] = array(
+                            'label' => lang('Resource'),
+                            'link' => '#resource'
+                        );
+                        $active_tab = 'generic';
+                        $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $data = array(
 				'resource'	=>	$resource
 			);
-			
-			self::render_template('resource', $data);
+			self::render_template_xsl('resource', $data);
             
 		}
 

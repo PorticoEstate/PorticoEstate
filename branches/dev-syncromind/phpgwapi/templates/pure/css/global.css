@@ -38,4 +38,31 @@ div.error, div.warn
 	text-align: center;
 }
 
+.pure-form.pure-form-aligned label h4{margin: 0.66em 0;}
+.pure-g [class*="pure-u"] {padding: 10px 15px;box-sizing: border-box;}
+fieldset .heading legend h3 {margin-bottom: 0.4em;}
+fieldset h4 {margin-bottom: 0;}
+.pure-control-group dd {margin: 0px;}
 
+
+ul.pathway {
+    font-size: 110%;
+    font-weight: bolder;
+    margin: 1em 0;
+}
+ul.pathway li a {
+    color: #000;
+    text-decoration: none;
+}
+ul.pathway li a:hover {
+    color: #008;
+}
+ul.pathway li {
+    background: rgba(0, 0, 0, 0) url("../images/pathwaysep.png") no-repeat scroll 0 50%;
+    display: inline;
+    padding-left: 16px;
+}
+ul.pathway li:first-child {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    padding-left: 0;
+}
