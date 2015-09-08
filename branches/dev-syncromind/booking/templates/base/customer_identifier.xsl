@@ -3,14 +3,15 @@
 	<xsl:param name="label" select="string('Invoice information')"/>
 
 	<func:result>
+            <dl>
 		<dt>
-			<xsl:if test="not(normalize-space($label))"><xsl:attribute name="style">visibility:hidden</xsl:attribute></xsl:if>
+			<xsl:if test="not(normalize-space($label))"><xsl:attribute name="style">display:none</xsl:attribute></xsl:if>
 			<xsl:value-of select="php:function('lang', $label)" />
 			
 		</dt>
 		
 		<dd>
-			<select name='customer_identifier_type' id='field_customer_identifier_type'>
+			<select name='customer_identifier_type' id='field_customer_identifier_type' class="pure-input-1">
 				<option value=''><xsl:value-of select="php:function('lang', 'None')" /></option>
 				<xsl:for-each select="$entity/customer_identifier_types/*">
 					<option>
@@ -23,9 +24,10 @@
 					</option>
 				</xsl:for-each>
 			</select>
-			<input name="customer_ssn" type="text" id="field_customer_ssn" value="{$entity/customer_ssn}"/>
-			<input name="customer_organization_number" type="text" id="field_customer_organization_number" value="{$entity/customer_organization_number}"/>
+			<input name="customer_ssn" type="text" id="field_customer_ssn" class="pure-input-1" value="{$entity/customer_ssn}"/>
+			<input name="customer_organization_number" type="text" id="field_customer_organization_number" class="pure-input-1" value="{$entity/customer_organization_number}"/>
 		</dd>
+            </dl>
 	</func:result>
 </func:function>
 

@@ -35,6 +35,10 @@
                     </xsl:if>
             </li>
         </ul-->
+        
+        <style type="text/css">
+            .pure-form-contentTable {display: inline-block;}
+        </style>
 
         <xsl:call-template name="msgbox"/>
 		<!--xsl:call-template name="yui_booking_i18n"/-->
@@ -44,265 +48,278 @@
                             <xsl:value-of disable-output-escaping="yes" select="application/tabs"/>
                             <div id="application">
                             <fieldset>
-                                
-                                <h1>
-                                    <xsl:value-of select="application/id"/>
-                                </h1>
-                                
-                                <div class="pure-control-group">
-                                    <xsl:if test="frontend and application/status='ACCEPTED'">
-                                        <form method="POST">
-                                            <input type="hidden" name="print" value="ACCEPTED"/>
-                                            <input type="submit" value="{php:function('lang', 'Print as PDF')}" />
-                                        </form>
-                                    </xsl:if>
-                                </div>
-                                
-                                <div class="pure-control-group">
-                                    <xsl:if test="not(frontend)">
-                                            <div style="border: 3px solid red; padding: 3px 4px 3px 4px">
-                                                    <xsl:choose>
-                                                            <xsl:when test="not(application/case_officer)">
-                                                                    <xsl:value-of select="php:function('lang', 'In order to work with this application, you must first')"/>
-                                                                    <xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
-                                                                    <xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-                                                            </xsl:when>
-                                                            <xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
-                                                                    <xsl:value-of select="php:function('lang', 'The user currently assigned as the responsible case officer for this application is')"/>'<xsl:text> </xsl:text><xsl:value-of select="application/case_officer/name"/>'.
-                                                                    <br/>
-                                                                    <xsl:value-of select="php:function('lang', 'In order to work with this application, you must therefore first')"/>
-                                                                    <xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
-                                                                    <xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-                                                            </xsl:when>
-                                                            <xsl:otherwise>
-                                                                    <xsl:attribute name="style">display:none</xsl:attribute>
-                                                            </xsl:otherwise>
-                                                    </xsl:choose>
-                                            </div>
-                                    </xsl:if>
-                                </div>
-                                <xsl:if test="not(frontend)">
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <xsl:value-of select="php:function('lang', 'Status')" />
-                                        </label>
-                                            <xsl:value-of select="php:function('lang', string(application/status))"/>
-                                    </div>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <xsl:value-of select="php:function('lang', 'Created')" />
-                                        </label>
-                                            <xsl:value-of select="php:function('pretty_timestamp', application/created)"/>
-                                    </div>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <xsl:value-of select="php:function('lang', 'Modified')" />
-                                        </label>
-                                            <xsl:value-of select="php:function('pretty_timestamp', application/modified)"/>
-                                    </div>
-                                </xsl:if>
-                                <xsl:if test="frontend">
-                                        <dl class="proplist">
-                                        <span style="font-size: 110%; font-weight: bold;">Din søknad har status <xsl:value-of select="php:function('lang', string(application/status))"/></span><span class="text">, opprettet <xsl:value-of select="php:function('pretty_timestamp', application/created)"/>, sist endret <xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></span>
-                                        <span class="text"><br />Melding fra saksbehandler ligger under historikk, deretter vises kopi av din søknad.<br /> Skal du gi en melding til saksbehandler skriver du denne inn i feltet under "Legg til en kommentar"</span> 
-                                        </dl>
-                                </xsl:if>
+                                <div class="pure-g">
+                                    <div class="pure-u-1">
+                                        <h1>
+                                            <xsl:value-of select="application/id"/>
+                                        </h1>
 
-                                <div class="pure-control-group">
-                                    <label>
-                                        <xsl:value-of select="php:function('lang', 'Add a comment')" />
-                                    </label>
-                                        <form method="POST">
-                                                <textarea name="comment" style="width: 60%; height: 7em"></textarea><br/>
-                                                <input type="submit" value="{php:function('lang', 'Add comment')}" />
-                                        </form>
-                                </div>
-
-                                <div class="pure-control-group">
-                                    <dt class="heading">
-                                        <h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3>
-                                    </dt>
                                         <div class="pure-control-group">
+                                            <xsl:if test="frontend and application/status='ACCEPTED'">
+                                                <form method="POST">
+                                                    <input type="hidden" name="print" value="ACCEPTED"/>
+                                                    <input type="submit" value="{php:function('lang', 'Print as PDF')}" />
+                                                </form>
+                                            </xsl:if>
+                                        </div>
+
+                                        <div class="pure-control-group">
+                                            <xsl:if test="not(frontend)">
+                                                <div style="border: 3px solid red; padding: 3px 4px 3px 4px">
+                                                    <xsl:choose>
+                                                        <xsl:when test="not(application/case_officer)">
+                                                            <xsl:value-of select="php:function('lang', 'In order to work with this application, you must first')"/>
+                                                            <xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
+                                                            <xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
+                                                        </xsl:when>
+                                                        <xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
+                                                            <xsl:value-of select="php:function('lang', 'The user currently assigned as the responsible case officer for this application is')"/>'<xsl:text> </xsl:text><xsl:value-of select="application/case_officer/name"/>'.
+                                                            <br/>
+                                                            <xsl:value-of select="php:function('lang', 'In order to work with this application, you must therefore first')"/>
+                                                            <xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
+                                                            <xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <xsl:attribute name="style">display:none</xsl:attribute>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                                </div>
+                                            </xsl:if>
+                                        </div>
+                                        <xsl:if test="not(frontend)">
+                                            <div class="pure-control-group">
+                                                <label>
+                                                    <h4><xsl:value-of select="php:function('lang', 'Status')" /></h4>
+                                                </label>
+                                                <span><xsl:value-of select="php:function('lang', string(application/status))"/></span>
+                                            </div>
+                                            <div class="pure-control-group">
+                                                <label>
+                                                    <h4><xsl:value-of select="php:function('lang', 'Created')" /></h4>
+                                                </label>
+                                                <span><xsl:value-of select="php:function('pretty_timestamp', application/created)"/></span>
+                                            </div>
+                                            <div class="pure-control-group">
+                                                <label>
+                                                    <h4><xsl:value-of select="php:function('lang', 'Modified')" /></h4>
+                                                </label>
+                                                <span><xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></span>
+                                            </div>
+                                        </xsl:if>
+                                        <xsl:if test="frontend">
+                                                <dl class="proplist">
+                                                <span style="font-size: 110%; font-weight: bold;">Din søknad har status <xsl:value-of select="php:function('lang', string(application/status))"/></span><span class="text">, opprettet <xsl:value-of select="php:function('pretty_timestamp', application/created)"/>, sist endret <xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></span>
+                                                <span class="text"><br />Melding fra saksbehandler ligger under historikk, deretter vises kopi av din søknad.<br /> Skal du gi en melding til saksbehandler skriver du denne inn i feltet under "Legg til en kommentar"</span> 
+                                                </dl>
+                                        </xsl:if>
+                                        
+                                        <form method="POST">
+                                            <div class="pure-control-group">
+                                                <label for="comment">
+                                                    <h4><xsl:value-of select="php:function('lang', 'Add a comment')" /></h4>
+                                                </label>
+                                                <textarea name="comment" id="comment" style="width: 60%; height: 7em"></textarea><br/>                                                   
+                                            </div>
+                                            <div class="pure-control-group">
+                                                <label>&nbsp;</label>
+                                                <input type="submit" value="{php:function('lang', 'Add comment')}" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <div class="pure-u-1">
+                                        <div class="heading">
+                                            <legend><h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3></legend>
+                                        </div>                                        
                                         <xsl:for-each select="application/comments[author]">
+                                            <div class="pure-control-group">
                                                 <label>
                                                     <h4>
                                                         <xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
                                                     </h4>
                                                 </label>
                                                 <xsl:choose>
-                                                        <xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>				
-                                                                <xsl:value-of select="comment" disable-output-escaping="yes"/>
-                                                        </xsl:when>
-                                                        <xsl:otherwise>				
-                                                                <xsl:value-of select="comment"/>
-                                                        </xsl:otherwise>
-                                                        
+                                                    <xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>				
+                                                        <span><xsl:value-of select="comment" disable-output-escaping="yes"/></span>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>				
+                                                        <span><xsl:value-of select="comment"/></span>
+                                                    </xsl:otherwise>
                                                 </xsl:choose>
-                                                <br></br>
+                                            </div>
                                         </xsl:for-each>
+                                    </div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <div class="pure-u-1">
+                                        <div class="heading">
+                                            <legend><h3>2. <xsl:value-of select="php:function('lang', 'Why?')" /></h3></legend>
                                         </div>
-                                </div>
-
-                                <div class="pure-control-group">
-                                    <dt class="heading">
-                                        <h3>2. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
-                                    </dt>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
-                                        </label>
-                                        <xsl:value-of select="application/activity_name"/>
-                                    </div>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
-                                        </label>
-                                        <xsl:value-of select="application/description"/>
-                                    </div>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <h4><xsl:value-of select="config/application_equipment"/></h4>
-                                        </label>
-                                        <xsl:value-of select="application/equipment"/>
+                                        <div class="pure-control-group">
+                                            <label>
+                                                <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
+                                            </label>
+                                            <span><xsl:value-of select="application/activity_name"/></span>
+                                        </div>
+                                        <div class="pure-control-group">
+                                            <label>
+                                                <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
+                                            </label>
+                                            <span><xsl:value-of select="application/description"/></span>
+                                        </div>
+                                        <!--<div class="pure-control-group">
+                                            <label>
+                                                <h4><xsl:value-of select="config/application_equipment"/></h4>
+                                            </label>
+                                            <xsl:value-of select="application/equipment"/>
+                                        </div>-->
                                     </div>
                                 </div>
-                                <div class="pure-control-group">
-                                    <dt class="heading">
-                                        <h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
-                                    </dt>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
-                                        </label>
-                                        <xsl:value-of select="application/building_name"/>
-                                                    (<a href="javascript: void(0)" 
-                                                            onclick="window.open('{application/schedule_link}', 
-                                                                         '', 
-                                                                               'width=1048, height=600, scrollbars=yes');
-                                                                                  return false;"><xsl:value-of select="php:function('lang', 'Building schedule')" /></a>)
+                                
+                                <div class="pure-g">
+                                    <div class="pure-u-1">
+                                        <div class="heading">
+                                            <legend><h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3></legend>
+                                        </div>
+                                        <div class="pure-control-group">
+                                            <label>
+                                                <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
+                                            </label>
+                                            <span>
+                                                <xsl:value-of select="application/building_name"/>
+                                                (<a href="javascript: void(0)" onclick="window.open('{application/schedule_link}', '', 'width=1048, height=600, scrollbars=yes');return false;">
+                                                    <xsl:value-of select="php:function('lang', 'Building schedule')" />
+                                                </a>)
+                                            </span>
+                                        </div>
+                                        <!--Revizar esta linea luego-->
+                                        <div class="pure-control-group">
+                                            <label>&nbsp;</label>
+                                            <div id="resources_container" class="pure-form-contentTable"></div>
+                                        </div>
                                     </div>
-                                    <!--Revizar esta linea luego-->
-                                    <dd><div id="resources_container"/></dd>
                                 </div>
-                                <div class="pure-control-group">
-                                    <dt class="heading"><h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3></dt>
-                                                <script type="text/javascript">
-                                                        var allocationParams = {};
-                                                        var bookingParams = {};
-                                                        var eventParams = {};
-                                                        var applicationDate = {};
-                                                </script>
+                                <div class="pure-g">
+                                    <div class="pure-u-1">
+                                        <div class="heading"><h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3></div>
+                                        <script type="text/javascript">
+                                            var allocationParams = {};
+                                            var bookingParams = {};
+                                            var eventParams = {};
+                                            var applicationDate = {};
+                                        </script>
+                                        <xsl:variable name='assocdata'>
+                                                 <xsl:value-of select="assoc/data" />
+                                        </xsl:variable>
+                                        <xsl:variable name='collisiondata'>
+                                            <xsl:value-of select="collision/data" />
+                                        </xsl:variable>
 
-                                                <xsl:variable name='assocdata'>
-                                                         <xsl:value-of select="assoc/data" />
-                                                </xsl:variable>
+                                        <script type="text/javascript">
+                                            building_id = <xsl:value-of select="application/building_id"/>;
+                                        </script>
 
-                                                <xsl:variable name='collisiondata'>
-                                                    <xsl:value-of select="collision/data" />
-                                                </xsl:variable>
-                                                
-                                    <script type="text/javascript">
-                                        building_id = <xsl:value-of select="application/building_id"/>;
-                                    </script>
-
-                                                <xsl:for-each select="application/dates">
-                                                <div class="pure-control-group">    
-                                                    <label>
-                                                        <h4><xsl:value-of select="php:function('lang', 'From')" />:</h4>
-                                                    </label> 
-                                                    <xsl:value-of select="php:function('pretty_timestamp', from_)"/>
-                                                        <xsl:if test="../case_officer/is_current_user">
-                                                            <xsl:if test="contains($collisiondata, from_)">
-                                                                <xsl:if test="not(contains($assocdata, from_))">
-                                                                    <script type="text/javascript">
-                                                                        applicationDate[<xsl:value-of select="id"/>] = '<xsl:value-of select="substring(from_,0,11)"/>';
-                                                                    </script>
-                                                                    <a href="javascript: void(0)"
-                                                                       onclick="window.open('/bookingfrontend/index.php?menuaction=bookingfrontend.uibuilding.schedule&amp;id='+building_id+'&amp;backend=true&amp;date='+applicationDate[{id}],
-                                                                                 '',
-                                                                                 'width=1048, height=600, scrollbars=yes');
-                                                                                 return false;">
-                                                                                    <i class="fa fa-exclamation-circle"></i>
-                                                                    </a>
-                                                                </xsl:if>
-                                                            </xsl:if>
-                                                        </xsl:if>
-                                                </div>
-                                                <div class="pure-control-group">
-                                                    <label>
-                                                        <h4><xsl:value-of select="php:function('lang', 'To')" />:</h4>
-                                                    </label> 
-                                                        <xsl:value-of select="php:function('pretty_timestamp', to_)"/>
-                                                </div>
-
-
-                                                        <xsl:if test="../edit_link">
+                                        <xsl:for-each select="application/dates">
+                                            <div class="pure-control-group">    
+                                                <label>
+                                                    <h4><xsl:value-of select="php:function('lang', 'From')" />:</h4>
+                                                </label> 
+                                                <span><xsl:value-of select="php:function('pretty_timestamp', from_)"/></span>
+                                                <xsl:if test="../case_officer/is_current_user">
+                                                    <xsl:if test="contains($collisiondata, from_)">
+                                                        <xsl:if test="not(contains($assocdata, from_))">
                                                             <script type="text/javascript">
-                                                                    allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
-                                                                    bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
-                                                                    eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
+                                                                applicationDate[<xsl:value-of select="id"/>] = '<xsl:value-of select="substring(from_,0,11)"/>';
                                                             </script>
+                                                            <a href="javascript: void(0)"
+                                                                onclick="window.open('/bookingfrontend/index.php?menuaction=bookingfrontend.uibuilding.schedule&amp;id='+building_id+'&amp;backend=true&amp;date='+applicationDate[{id}], '', 'width=1048, height=600, scrollbars=yes');return false;">
+                                                                <i class="fa fa-exclamation-circle"></i>
+                                                            </a>
+                                                        </xsl:if>
+                                                    </xsl:if>
+                                                </xsl:if>
+                                            </div>
+                                            <div class="pure-control-group">
+                                                <label>
+                                                    <h4><xsl:value-of select="php:function('lang', 'To')" />:</h4>
+                                                </label> 
+                                                <span><xsl:value-of select="php:function('pretty_timestamp', to_)"/></span>
+                                            </div>
+                                            <xsl:if test="../edit_link">
+                                                <script type="text/javascript">
+                                                        allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
+                                                        bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
+                                                        eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
+                                                </script>
                                                 <div class="pure-control-group">
-                                                    <label></label>
+                                                    <label>&nbsp;</label>
                                                         <select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
-
-                                                                <xsl:if test="not(../case_officer/is_current_user)">
-                                                                        <xsl:attribute name="disabled">disabled</xsl:attribute>
-                                                                </xsl:if>
-
-                                                                        <xsl:if test="not(contains($assocdata, from_))">
-                                                                                <option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
-                                                                                <option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
-                                                                                <option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
-                                                                                <option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
-                                                                        </xsl:if>
-                                                                        <xsl:if test="contains($assocdata, from_)">
-                                                    <xsl:attribute name="disabled">disabled</xsl:attribute>
-                                                    <option><xsl:value-of select="php:function('lang', '- Created -')" /></option>
-                                                                        </xsl:if>
+                                                            <xsl:if test="not(../case_officer/is_current_user)">
+                                                                <xsl:attribute name="disabled">disabled</xsl:attribute>
+                                                            </xsl:if>
+                                                            <xsl:if test="not(contains($assocdata, from_))">
+                                                                <option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
+                                                                <option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
+                                                                <option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
+                                                                <option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+                                                            </xsl:if>
+                                                            <xsl:if test="contains($assocdata, from_)">
+                                                                <xsl:attribute name="disabled">disabled</xsl:attribute>
+                                                                <option><xsl:value-of select="php:function('lang', '- Created -')" /></option>
+                                                            </xsl:if>
                                                         </select>
                                                 </div>
-                                                        </xsl:if>
-                                                </xsl:for-each>
+                                            </xsl:if>
+                                        </xsl:for-each>
+                                    </div>
                                 </div>
-                                <div class="pure-control-group">
-                                    <dt class="heading"><h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3></dt>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
-                                        </label>    
+                                <div class="pure-g">
+                                    <div class="pure-u-1">
+                                        <div class="heading"><h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3></div>
+                                        <div class="pure-control-group">
+                                            <label>
+                                                <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
+                                            </label>    
                                             <label>
                                                 <ul>
                                                     <xsl:for-each select="audience">
-                                                            <xsl:if test="../application/audience=id">
-                                                                    <li><xsl:value-of select="name"/></li>
-                                                            </xsl:if>
+                                                        <xsl:if test="../application/audience=id">
+                                                            <li><xsl:value-of select="name"/></li>
+                                                        </xsl:if>
                                                     </xsl:for-each>
                                                 </ul>
                                             </label>
+                                        </div>
+                                        <div class="pure-control-group">
+                                            <label style="vertical-align: top;">
+                                                <h4><xsl:value-of select="php:function('lang', 'Number of participants')" /></h4>
+                                            </label>
+                                                <div class="pure-form-contentTable">
+                                                    <table id="agegroup" class="pure-table pure-table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><xsl:value-of select="php:function('lang', 'Name')" /></th>
+                                                                <th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+                                                                <th><xsl:value-of select="php:function('lang', 'Female')" /></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <xsl:for-each select="agegroups">
+                                                                <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+                                                                <tr>
+                                                                    <td><xsl:value-of select="name"/></td>
+                                                                    <td><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></td>
+                                                                    <td><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></td>
+                                                                </tr>
+                                                            </xsl:for-each>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                        </div>
                                     </div>
-                                    <div class="pure-control-group">
-                                        <label>
-                                            <h4><xsl:value-of select="php:function('lang', 'Number of participants')" /></h4>
-                                        </label>
-                                                
-                                                        <table id="agegroup" class="pure-table pure-table-striped">
-                                                            <thead>
-                                                                <tr><th><xsl:value-of select="php:function('lang', 'Name')" /></th><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
-                                                                    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr></thead>
-                                                            <tbody>
-                                                                <xsl:for-each select="agegroups">
-                                                                        <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-                                                                        <tr>
-                                                                                <td><xsl:value-of select="name"/></td>
-                                                                                <td><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></td>
-                                                                                <td><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></td>
-                                                                        </tr>
-                                                                </xsl:for-each>
-                                                            </tbody>
-                                                        </table>
-                                                
-                                    </div>                                             
                                 </div>
                                 <div class="clr"/>
                                 <div class="pure-control-group">

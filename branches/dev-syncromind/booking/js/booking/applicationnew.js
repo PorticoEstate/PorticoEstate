@@ -14,8 +14,8 @@ $(function() {
         html = '<div class="date-container">'+
                 '<a class="close-btn btnclose" href="javascript:void(0);">-</a>'+
                 '<div class="pure-control-group">'+
-                        '<label>!from</label>'+
-                        '<input class="time" id="start_date_'+this.counter+'" name="start_date_'+this.counter+'" type="text">'+
+                        '<label for="start_date_'+this.counter+'"><h4>!from</h4></label>'+
+                        '<input class="time pure-input-2-3" id="start_date_'+this.counter+'" name="start_date_'+this.counter+'" type="text">'+
                               // '<xsl:if test="activity/start_date != """>'+
     //                                    '<xsl:attribute name="value">'+
     //                                            '<xsl:value-of select="php:function("date", $datetime_format, number(activity/start_date))"/>'+
@@ -28,7 +28,7 @@ $(function() {
                         '</input>'+
                 '</div>'+
                 '<div class="pure-control-group">'+
-                        '<label>!to</label>'+
+                        '<label for="end_date_'+this.counter+'"><h4>!to</label></h4>'+
 //                        <xsl:if test="activity/error_msg_array/end_date != ''">
 //                                <xsl:variable name="error_msg">
 //                                        <xsl:value-of select="activity/error_msg_array/end_date" />
@@ -37,7 +37,7 @@ $(function() {
 //                                        <xsl:value-of select="php:function('lang', $error_msg)" />
 //                                </div>
 //                        </xsl:if>
-                        '<input class="time" id="end_date_'+this.counter+'" name="end_date_'+this.counter+'" type="text">'+
+                        '<input class="time pure-input-2-3" id="end_date_'+this.counter+'" name="end_date_'+this.counter+'" type="text">'+
 //                                <xsl:if test="activity/end_date != ''">
 //                                        <xsl:attribute name="value">
 //                                                <xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/>

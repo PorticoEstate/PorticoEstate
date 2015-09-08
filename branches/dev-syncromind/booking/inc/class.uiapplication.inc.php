@@ -763,31 +763,31 @@
 			$this->install_customer_identifier_ui($application);
 
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
-            if ($orgnr) {
-                $application['customer_identifier_type'] = 'organization_number';
-                $application['customer_organization_number'] = $orgnr;
-                $orgid = $this->organization_bo->so->get_orgid($orgnr);
-                $organization = $this->organization_bo->read_single($orgid);
-                if ($organization['contacts'][0]['name'] != '') {
-                    $application['contact_name'] = $organization['contacts'][0]['name'];
-                    $application['contact_email'] = $organization['contacts'][0]['email'];
-                    $application['contact_phone'] = $organization['contacts'][0]['phone'];
-                } else {
-                    $application['contact_name'] = $organization['contacts'][1]['name'];
-                    $application['contact_email'] = $organization['contacts'][1]['email'];
-                    $application['contact_phone'] = $organization['contacts'][1]['phone'];
-                }
-            }
+                        if ($orgnr) {
+                            $application['customer_identifier_type'] = 'organization_number';
+                            $application['customer_organization_number'] = $orgnr;
+                            $orgid = $this->organization_bo->so->get_orgid($orgnr);
+                            $organization = $this->organization_bo->read_single($orgid);
+                            if ($organization['contacts'][0]['name'] != '') {
+                                $application['contact_name'] = $organization['contacts'][0]['name'];
+                                $application['contact_email'] = $organization['contacts'][0]['email'];
+                                $application['contact_phone'] = $organization['contacts'][0]['phone'];
+                            } else {
+                                $application['contact_name'] = $organization['contacts'][1]['name'];
+                                $application['contact_email'] = $organization['contacts'][1]['email'];
+                                $application['contact_phone'] = $organization['contacts'][1]['phone'];
+                            }
+                        }
 			
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 			
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Application Add'), 'link' => '#application_add');
-            $active_tab = 'generic';
-            
-            $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            self::add_javascript('booking', 'booking', 'applicationnew.js');
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Application Add'), 'link' => '#application_add');
+                        $active_tab = 'generic';
+
+                        $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        self::add_javascript('booking', 'booking', 'applicationnew.js');
 			
 			self::render_template_xsl('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}
