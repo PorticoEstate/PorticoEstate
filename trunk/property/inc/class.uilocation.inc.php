@@ -1255,7 +1255,7 @@ JS;
 
 				foreach($values_combo_box[4] as &$_role)
 				{
-					$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name',$_role['id']);
+					$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name_from_role',$_role['id']);
 				}
 				$default_value = array ('id'=>'','name'=>lang('no role'));
 				array_unshift ($values_combo_box[4],$default_value);
