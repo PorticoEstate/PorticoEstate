@@ -28,10 +28,7 @@
         }
         
         
-        #agegroup td {padding: 0 0.3em;}
-        #agegroup thead th{text-align: center;}
-        #agegroup tbody th{text-align: right;}
-        
+        #agegroup td {padding: 0 0.3em;}        
         
         #field_customer_ssn {display:none;}
         #field_customer_organization_number {display:none;}
@@ -113,13 +110,13 @@
                                             <tr>
                                                 <th><xsl:value-of select="name"/></th>
                                                 <td>
-                                                    <input type="text">
+                                                    <input class="input50" type="text">
                                                         <xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
                                                         <xsl:attribute name="value"><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
                                                     </input>
                                                 </td>
                                                 <td>
-                                                    <input type="text">
+                                                    <input class="input50" type="text">
                                                         <xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
                                                         <xsl:attribute name="value"><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
                                                     </input>

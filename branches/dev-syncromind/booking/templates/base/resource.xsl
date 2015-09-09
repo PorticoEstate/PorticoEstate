@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="pure-g">
-                    <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-5-12">
+                    <div class="pure-u-1">
                         <h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
                         <div id="documents_container"></div>
                         <a class='button'>
@@ -64,7 +64,9 @@
                             </xsl:if>
                         </a>
                     </div>
-                    <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-5-12">
+                </div>
+                <div class="pure-g">
+                    <div class="pure-u-1">
                         <h3><xsl:value-of select="php:function('lang', 'Permissions')" /></h3>
                         <div id="permissions_container"></div>
                     </div>

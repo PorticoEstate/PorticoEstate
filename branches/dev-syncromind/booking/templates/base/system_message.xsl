@@ -32,43 +32,43 @@
 
                     <div class="pure-control-group">
                         <label>
-                            <xsl:value-of select="php:function('lang', 'Created')" />
+                            <h4><xsl:value-of select="php:function('lang', 'Created')" /></h4>
                         </label>
                         <xsl:value-of select="system_message/created"/>
                     </div>
                     <div class="pure-control-group">
                         <label>
-                            <xsl:value-of select="php:function('lang', 'Message')" />
+                            <h4><xsl:value-of select="php:function('lang', 'Message')" /></h4>
                         </label>
                         <xsl:value-of select="system_message/message" disable-output-escaping="yes"/>
                     </div>
                     <div class="pure-control-group">
                         <label>
-                            <xsl:value-of select="php:function('lang', 'Name')" />
+                            <h4><xsl:value-of select="php:function('lang', 'Name')" /></h4>
                         </label>
                         <xsl:value-of select="system_message/name"/>
                     </div>
                     <div class="pure-control-group">
                         <label>
-                            <xsl:value-of select="php:function('lang', 'Phone')" />
+                            <h4><xsl:value-of select="php:function('lang', 'Phone')" /></h4>
                         </label>
                         <xsl:value-of select="system_message/phone"/>
                     </div>
                     <div class="pure-control-group">
                         <label>
-                            <xsl:value-of select="php:function('lang', 'Email')" />
+                            <h4><xsl:value-of select="php:function('lang', 'Email')" /></h4>
                         </label>
                         <xsl:value-of select="system_message/email"/>
                     </div>
                     <div class="pure-control-group">
                         <label>
-                            <xsl:value-of select="php:function('lang', 'Type')" />
+                            <h4><xsl:value-of select="php:function('lang', 'Type')" /></h4>
                         </label>
                         <xsl:value-of select="system_message/type"/>
                     </div>
                     <div class="pure-control-group">
                         <label>
-                            <xsl:value-of select="php:function('lang', 'Status')" />
+                            <h4><xsl:value-of select="php:function('lang', 'Status')" /></h4>
                         </label>
                         <xsl:value-of select="system_message/status" />
                     </div>

@@ -27,100 +27,128 @@
     <xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
 
-    <form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
+    <form action="" method="POST" id='form' class="pure-form pure-form-stacked" name="form">
         <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
             <xsl:value-of disable-output-escaping="yes" select="event/tabs"/>
                 <div id="event_new">
-                    <input type="hidden" name="application_id" value="{event/application_id}"/>
-                    <div class="pure-control-group">
-                            <dt class="heading"><xsl:value-of select="php:function('lang', 'Why')" /></dt>
-                    </div>                
-                    <div class="pure-control-group">
-                                    <label><xsl:value-of select="php:function('lang', 'Activity')" /></label>
-                                            <select name="activity_id" id="field_activity">
-                                                    <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
-                                                    <xsl:for-each select="activities">
-                                                            <option>
-                                                                    <xsl:if test="../event/activity_id = id">
-                                                                            <xsl:attribute name="selected">selected</xsl:attribute>
-                                                                    </xsl:if>
-                                                                    <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                                                                    <xsl:value-of select="name"/>
-                                                            </option>
-                                                    </xsl:for-each>
-                                            </select>
-                    </div>
-                    <div class="pure-control-group">
-                                    <label><xsl:value-of select="php:function('lang', 'Description')" /></label>
+                    <fieldset>
+                        <input type="hidden" name="application_id" value="{event/application_id}"/>
+                        
+                        <div class="pure-g">                            
+                            <div class="pure-u-1">
+                                <div class="heading">
+                                    <legend><h3><xsl:value-of select="php:function('lang', 'Why')" /></h3></legend>
+                                </div>
+                                <div class="pure-control-group">
+                                    <label for="field_activity">
+                                        <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
+                                    </label>
+                                    <select name="activity_id" id="field_activity">
+                                        <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+                                        <xsl:for-each select="activities">
+                                            <option>
+                                                <xsl:if test="../event/activity_id = id">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                                <xsl:value-of select="name"/>
+                                            </option>
+                                        </xsl:for-each>
+                                    </select>
+                                </div>
+                                <div class="pure-control-group">
+                                    <label for="field_description">
+                                        <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
+                                    </label>
                                     <textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
-                    </div>
-                    <div class="pure-control-group">
-                                    <label><xsl:value-of select="php:function('lang', 'Event type')"/></label>
-                                        <select id="field_public" name="is_public">
-                                              <option value="1">
-                                                    <xsl:if test="event/is_public=1">
-                                                      <xsl:attribute name="selected">checked</xsl:attribute>
-                                                    </xsl:if>
-                                                      <xsl:value-of select="php:function('lang', 'Public event')"/>
-                                              </option>
-                                              <option value="0">
-                                                    <xsl:if test="event/is_public=0">
-                                                      <xsl:attribute name="selected">checked</xsl:attribute>
-                                                    </xsl:if>
-                                                      <xsl:value-of select="php:function('lang', 'Private event')"/>
-                                              </option>
-                                        </select>
-                    </div>
-                    <div class="pure-control-group">
-                                    <dt class="heading"><xsl:value-of select="php:function('lang', 'Where')" /></dt>
-                    </div>
-                    <div class="pure-control-group">
-                        <label><xsl:value-of select="php:function('lang', 'Building')" /></label>
-                            <!--div class="autocomplete"-->
-                                <input id="field_building_id" name="building_id" type="hidden">
-                                    <xsl:attribute name="value"><xsl:value-of select="event/building_id"/></xsl:attribute>
-                                </input>
-                                <input id="field_building_name" name="building_name" type="text">
-                                    <xsl:attribute name="value"><xsl:value-of select="event/building_name"/></xsl:attribute>
-                                </input>
-                                <!--div id="building_container"/>
-                            </div-->
-                    </div>
-                    <div class="pure-control-group">
-                        <label><xsl:value-of select="php:function('lang', 'Resources')" /></label>
-                            <!--div id="resources_container"--><xsl:value-of select="php:function('lang', 'Select a building first')" /><!--/div-->
-                    </div>
-                    <div class="pure-control-group">
-                                    <div class="heading"><xsl:value-of select="php:function('lang', 'When?')" /></div>
-                    </div>
-                    <div class="pure-control-group">
+                                </div>
+                                <div class="pure-control-group">
+                                    <label for="field_public">
+                                        <h4><xsl:value-of select="php:function('lang', 'Event type')"/></h4>
+                                    </label>
+                                    <select id="field_public" name="is_public">
+                                          <option value="1">
+                                                <xsl:if test="event/is_public=1">
+                                                  <xsl:attribute name="selected">checked</xsl:attribute>
+                                                </xsl:if>
+                                                <xsl:value-of select="php:function('lang', 'Public event')"/>
+                                          </option>
+                                          <option value="0">
+                                                <xsl:if test="event/is_public=0">
+                                                  <xsl:attribute name="selected">checked</xsl:attribute>
+                                                </xsl:if>
+                                                <xsl:value-of select="php:function('lang', 'Private event')"/>
+                                          </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pure-g">
+                            <div class="pure-u-1">
+                                <div class="heading">
+                                    <legend><h3><xsl:value-of select="php:function('lang', 'Where')" /></h3></legend>
+                                </div>
+                                <div class="pure-control-group">
+                                    <label>
+                                        <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
+                                    </label>
+                                    <!--div class="autocomplete"-->
+                                    <input id="field_building_id" name="building_id" type="hidden">
+                                        <xsl:attribute name="value"><xsl:value-of select="event/building_id"/></xsl:attribute>
+                                    </input>
+                                    <input id="field_building_name" name="building_name" type="text">
+                                        <xsl:attribute name="value"><xsl:value-of select="event/building_name"/></xsl:attribute>
+                                    </input>
+                                    <!--div id="building_container"/>
+                                    </div-->
+                                </div>
+                                <div class="pure-control-group">
+                                    <label>
+                                        <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
+                                    </label>
+                                    <!--div id="resources_container"--><xsl:value-of select="php:function('lang', 'Select a building first')" /><!--/div-->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pure-g">
+                            <div class="pure-u-1">
+                                <div class="heading">
+                                    <legend><h3><xsl:value-of select="php:function('lang', 'When?')" /></h3></legend>
+                                </div>
+                                <div class="pure-control-group">
                                     <div id="dates-container">
-                                            <xsl:for-each select="event/dates">
-                                                    <div class="date-container">
-                                                            <a href="#" class="close-btn">-</a>
-                                                        <div class="pure-control-group">
-                                                            <label>
-                                                                    <xsl:value-of select="php:function('lang', 'From')" />
-                                                            </label>
-                                                            <input class="datetime" id="start_date" name="start_date" type="text">
-                                                            </input>
-                                                        </div>
-                                                        <div class="pure-control-group">
-                                                                <label>
-                                                                        <xsl:value-of select="php:function('lang', 'To')" />
-                                                                </label>                                                                
-                                                                <input class="datetime" id="end_date" name="end_date" type="text">
-                                                                </input>
-                                                        </div>
-                                                    </div>
-                                            </xsl:for-each>
+                                        <xsl:for-each select="event/dates">
+                                            <div class="date-container">
+                                                <a href="#" class="close-btn">-</a>
+                                                <div class="pure-control-group">
+                                                    <label>
+                                                        <xsl:value-of select="php:function('lang', 'From')" />
+                                                    </label>
+                                                    <input class="datetime" id="start_date" name="start_date" type="text">
+                                                    </input>
+                                                </div>
+                                                <div class="pure-control-group">
+                                                    <label>
+                                                        <xsl:value-of select="php:function('lang', 'To')" />
+                                                    </label>                                                                
+                                                    <input class="datetime" id="end_date" name="end_date" type="text">
+                                                    </input>
+                                                </div>
+                                            </div>
+                                        </xsl:for-each>
                                     </div>
-                    </div>
-                    <div class="pure-control-group">
-                        <label></label>
+                                </div>
+                                <div class="pure-control-group">
                                     <a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a>
-                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                    
                             <dl class="form-col">
                                     <dt class="heading"><xsl:value-of select="php:function('lang', 'Who')" /></dt>
                                     <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
@@ -248,6 +276,7 @@
                             <label><xsl:value-of select="php:function('lang', 'Internal Customer')"/></label>
                             <xsl:copy-of select="phpgw:option_checkbox(event/customer_internal, 'customer_internal')"/>
                     </div>
+                    </fieldset>
                 </div>
             </div>
             <div class="form-buttons">
