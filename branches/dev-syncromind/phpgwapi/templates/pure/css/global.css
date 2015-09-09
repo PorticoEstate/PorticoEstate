@@ -38,11 +38,29 @@ div.error, div.warn
 	text-align: center;
 }
 
+.p0{padding-left: 0px !important;padding-top: 0px !important;padding-bottom: 0px !important;}
+
 .pure-form.pure-form-aligned label h4{margin: 0.66em 0;}
 .pure-g [class*="pure-u"] {padding: 10px 15px;box-sizing: border-box;}
+.pure-g [class*="pure-u"] .pure-g [class*="pure-u"],
+.pure-control-group [class*="pure-u"] {padding: 0px;box-sizing: border-box;}
+
 fieldset .heading legend h3 {margin-bottom: 0.4em;}
 fieldset h4 {margin-bottom: 0;}
 .pure-control-group dd {margin: 0px;}
+.pure-form input.input50 {width: 50px;}
+
+
+input[class*="pure-u"],
+textarea[class*="pure-u"],
+select[class*="pure-u"] {box-sizing: border-box;padding: 0.5em 0.6em !important;}
+
+input[type="checkbox"],
+input[type="radio"] {margin-right: 2px;}
+
+.pure-table th {background: #e0e0e0 none repeat scroll 0 0;}
+.pure-table thead th{text-align: center;}
+.pure-table tbody th{border-top: 1px solid #cbcbcb;text-align: right;font-weight: bold;color: #000;}
 
 
 ul.pathway {
