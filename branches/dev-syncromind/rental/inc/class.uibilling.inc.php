@@ -487,7 +487,8 @@ class rental_uibilling extends rental_uicommon
 				'billing_term_selection'		=> $billing_term_selection,
 				'fields_of_responsibility_label'=> $fields_of_responsibility_label,
 				'year'							=> $year,
-				'month'							=> lang('month ' . $month . ' capitalized'),
+				'month'							=> $month,
+				'month_label'					=> lang('month ' . $month . ' capitalized'),
 				'title'							=> $title,
 				'use_existing'					=> $use_existing,
 				'existing_billing'				=> $existing_billing,
@@ -802,16 +803,121 @@ JS;
 			$billing_job->set_timestamp_commit(time());
 			rental_sobilling::get_instance()->store($billing_job);
 		}
+		
+		$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+		foreach($fields as $id => $label)
+		{
+			if($id == $billing_job->get_location_id())
+			{
+				$contract_type = lang($label);
+			}
+		}
+		
+		$billing_terms = array();
+		if($billing_info_array != null)
+		{			
+			foreach($billing_info_array as $billing_info)
+			{	
+				if($billing_info->get_term_id() == 1)
+				{
+					$billing_terms[] = lang('month ' . $billing_info->get_month() . ' capitalized')." ".$billing_info->get_year();
+				}
+				else
+				{
+					$billing_terms[] = $billing_info->get_term_label()." ".$billing_info->get_year();
+				}
+			}
+		}
+		
+		$sum =  number_format($billing_job->get_total_sum(), $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator).' '.$this->currency_suffix;
+		$last_updated = $GLOBALS['phpgw']->common->show_date($billing_job->get_timestamp_stop(),$this->dateFormat . ' H:i:s');
+				
+		if(empty($billing_job->get_timestamp_commit()))
+		{
+			$timestamp_commit = lang('No');
+		}
+		else
+		{
+			$timestamp_commit = $GLOBALS['phpgw']->common->show_date($billing_job->get_timestamp_commit(), $this->dateFormat . ' H:i:s');
+		}
+			
+		$tabletools[] = array
+			(
+				'my_name'		=> 'view',
+				'text'			=> lang('show'),
+				'action'		=> self::link(array(
+						'menuaction'	=> 'rental.uicontract.view'
+				)),
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+			);
+		$tabletools[] = array
+			(
+				'my_name'		=> 'edit',
+				'text'			=> lang('edit'),
+				'action'		=> self::link(array(
+						'menuaction'	=> 'rental.uicontract.edit'
+				)),
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+			);
+		
+		$datatable_def[] = array
+		(
+			'container'		=> 'datatable-container_0',
+			'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uibilling.query', 'type'=>'invoices', 'editable'=>true, 'billing_id'=>$billing_job->get_id(), 'phpgw_return_as'=>'json'))),
+			'data'			=> json_encode(array()),
+			'ColumnDefs'	=> array(
+						array('key'=>'old_contract_id', 'label'=>lang('contract_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+						array('key'=>'term_label', 'label'=>lang('billing_term'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+						array('key'=>'composite_name', 'label'=>lang('composite_name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+						array('key'=>'party_name', 'label'=>lang('party_name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+						array('key'=>'total_sum', 'label'=>lang('Total sum'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
+						array('key'=>'serial_number', 'label'=>lang('serial_number'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
+			),
+			'data'			=> json_encode(array()),
+			'tabletools'	=> $tabletools,
+			'config'		=> array(
+				array('disableFilter' => true)
+			)
+		);
+			
+		$tabs = array();
+		$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
+		$active_tab = 'details';
+		
 		$data = array
 		(
-			'billing_job' => $billing_job,
-			'billing_info_array' => $billing_info_array,
-			'errorMsgs' => $errorMsgs,
-			'infoMsgs' => $infoMsgs,
-			'back_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.index'))),
-			'download_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''), 'date' => $billing_job->get_timestamp_stop(), 'export_format' => $billing_job->get_export_format())))
+			'datatable_def'					=> $datatable_def,
+			'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'rental.uibilling.index')),
+			'lang_cancel'					=> lang('cancel'),			
+			'contract_type'					=> $contract_type,
+			'billing_terms'					=> $billing_terms,
+			'sum'							=> $sum,
+			'last_updated'					=> $last_updated,
+			'commited'						=> $timestamp_commit,
+			'success'						=> $billing_job->is_success() ? lang('yes') : lang('no'),
+			'export_format'					=> lang($billing_job->get_export_format()),
+			'export_format'					=> lang($billing_job->get_export_format()),
+		
+			'billing_job'					=> $billing_job,
+			'billing_info_array'			=> $billing_info_array,
+			'errorMsgs'						=> $errorMsgs,
+			'infoMsgs'						=> $infoMsgs,
+			'download_link'					=> html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''), 'date' => $billing_job->get_timestamp_stop(), 'export_format' => $billing_job->get_export_format()))),
+			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 		);
-		$this->render('billing.php', $data);
+		//$this->render('billing.php', $data);
+		
+		$code =	<<<JS
+			var thousandsSeparator = '$this->thousandsSeparator';
+			var decimalSeparator = '$this->decimalSeparator';
+			var decimalPlaces = '$this->decimalPlaces';
+			var currency_suffix = '$this->currency_suffix';
+			var area_suffix = '$this->area_suffix';
+JS;
+		$GLOBALS['phpgw']->js->add_code('', $code);
+			
+		phpgwapi_jquery::load_widget('numberformat');
+		self::render_template_xsl(array('billing', 'datatable_inline'), array('view' => $data));
 	}
 	
 	/**
