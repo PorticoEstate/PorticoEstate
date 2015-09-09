@@ -115,43 +115,44 @@
 							<dd><xsl:value-of select="export_format"/></dd>
 							<xsl:if test="billing_term = 1">
 								<dt><xsl:value-of select="php:function('lang', 'month')"/></dt>
-								<dd><xsl:value-of select="month"/></dd>
+								<dd><xsl:value-of select="month_label"/></dd>
 							</xsl:if>
 							<dt><xsl:value-of select="php:function('lang', 'billing_term')"/></dt>
 							<dd><xsl:value-of select="billing_term_label"/></dd>																								
 						</dl>							
 					</div>
 					<div>
+						<xsl:variable name="next">
+							<xsl:value-of select="php:function('lang', 'bill2')"/>
+						</xsl:variable>						
 						<div class="proplist-col">
 							<input type="submit" class="pure-button pure-button-primary" name="previous" value="previous"/>
-							<input type="submit" class="pure-button pure-button-primary" name="next" value="next"/>
+							<input type="submit" class="pure-button pure-button-primary" name="next" value="{$next}"/>
 						</div>							
 					</div>
 					<div id="user_messages">
 						<h3>Meldinger</h3>
-						<xsl:choose>
-							<xsl:when test="//errorMsgs!=''">
-								<div class="error">
-									<xsl:for-each select="errorMsgs">
-										<p class="message"><xsl:value-of select="current()"/></p>
-									</xsl:for-each>
-								</div>
-							</xsl:when>
-							<xsl:when test="//warningMsgs!=''">
-								<div class="warning">
-									<xsl:for-each select="warningMsgs">
-										<p class="message"><xsl:value-of select="current()"/></p>
-									</xsl:for-each>
-								</div>
-							</xsl:when>
-							<xsl:when test="//infoMsgs!=''">
-								<div class="info">
-									<xsl:for-each select="infoMsgs">
-										<p class="message"><xsl:value-of select="current()"/></p>
-									</xsl:for-each>
-								</div>
-							</xsl:when>
-						</xsl:choose>
+						<xsl:if test="//errorMsgs!=''">
+							<div class="error">
+								<xsl:for-each select="errorMsgs">
+									<p class="message"><xsl:value-of select="current()"/></p>
+								</xsl:for-each>
+							</div>
+						</xsl:if>
+						<xsl:if test="//warningMsgs!=''">
+							<div class="warning">
+								<xsl:for-each select="warningMsgs">
+									<p class="message"><xsl:value-of select="current()"/></p>
+								</xsl:for-each>
+							</div>
+						</xsl:if>
+						<xsl:if test="//infoMsgs!=''">
+							<div class="info">
+								<xsl:for-each select="infoMsgs">
+									<p class="message"><xsl:value-of select="current()"/></p>
+								</xsl:for-each>
+							</div>
+						</xsl:if>
 					</div>
 					<div id="list_navigation">
 						<h3>Kontrakter i kjøring</h3>
@@ -258,9 +259,63 @@
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="details">
-					<fieldset>
-					</fieldset>
-				</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'contract_type')"/></label>
+						<xsl:value-of select="contract_type"/>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'billing_terms')"/></label>
+						<xsl:if test="//billing_terms != ''">
+							<div class="pure-custom">
+								<xsl:for-each select="billing_terms">
+									<div><xsl:value-of select="current()"/></div>
+								</xsl:for-each>
+							</div>
+						</xsl:if>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'sum')"/></label>
+						<xsl:value-of select="sum"/>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'last_updated')"/></label>
+						<xsl:value-of select="last_updated"/>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'Commited')"/></label>
+						<xsl:value-of select="commited"/>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'success')"/></label>
+						<xsl:value-of select="success"/>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'Export format')"/></label>
+						<xsl:value-of select="export_format"/>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'export')"/></label>
+						<xsl:value-of select="export_format"/>
+					</div>
+					<div class="pure-control-group">
+						<label><xsl:value-of select="php:function('lang', 'cs15_export')"/></label>
+						<xsl:value-of select="export_format"/>
+					</div>
+					<div>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_0'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>																	
+				</div>						
 			</div>
 			<div class="proplist-col">
 				<input type="button" class="pure-button pure-button-primary" name="contract_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
