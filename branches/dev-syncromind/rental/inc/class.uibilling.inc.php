@@ -669,7 +669,7 @@ JS;
 					array(
 						'key'		=> 'responsibility_title', 
 						'label'		=> lang('contract_type'), 
-						'className'	=> 'center', 
+						'className'	=> '', 
 						'sortable'	=> true, 
 						'hidden'	=> false
 					),
@@ -683,14 +683,15 @@ JS;
 					array(
 						'key'		=> 'total_sum', 
 						'label'		=> lang('sum'), 
-						'className'	=> '', 
+						'className'	=> 'right', 
 						'sortable'	=> true, 
-						'hidden'	=> false
+						'hidden'	=> false,
+						'formatter'	=> 'formatterPrice'
 					),
 					array(
 						'key'		=> 'timestamp_stop', 
 						'label'		=> lang('last_updated'), 
-						'className'	=> '', 
+						'className'	=> 'center', 
 						'sortable'	=> true, 
 						'hidden'	=> false
 					),
@@ -704,8 +705,15 @@ JS;
 					array(
 						'key'		=> 'timestamp_commit', 
 						'label'		=> lang('Commited'), 
-						'className'	=> '', 
+						'className'	=> 'center', 
 						'sortable'	=> true, 
+						'hidden'	=> false
+					),
+					array(
+						'key'		=> 'other_operations', 
+						'label'		=> lang('other operations'), 
+						"className" => 'dt-center all',
+						'sortable'	=> false, 
 						'hidden'	=> false
 					)
 				)
@@ -735,6 +743,15 @@ JS;
 				'parameters'	=> json_encode($parameters)
 			);
 
+		$code =	<<<JS
+			var thousandsSeparator = '$this->thousandsSeparator';
+			var decimalSeparator = '$this->decimalSeparator';
+			var decimalPlaces = '$this->decimalPlaces';
+			var currency_suffix = '$this->currency_suffix';
+			var area_suffix = '$this->area_suffix';
+JS;
+		$GLOBALS['phpgw']->js->add_code('', $code);
+		
 		self::add_javascript('rental', 'rental', 'billing.index.js');
 		phpgwapi_jquery::load_widget('numberformat');
 		self::render_template_xsl('datatable_jquery', $data);
@@ -753,18 +770,17 @@ JS;
 
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('invoice_run');
 
-		$errorMsgs = array();
-		$infoMsgs = array();
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
 		
 		if($billing_job == null) // Not found
 		{
-			$errorMsgs[] = lang('Could not find specified billing job.');
+			//$errorMsgs[] = lang('Could not find specified billing job.');
+			phpgwapi_cache::message_set(lang('Could not find specified billing job.'), 'error');
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uibilling.index'));
 		}
 		else if(phpgw::get_var('generate_export') != null) // User wants to generate export
 		{
-		
 			$open_and_exported = rental_soinvoice::get_instance()->number_of_open_and_exported_rental_billings($billing_job->get_location_id());
 			
 			if($open_and_exported == 0)
@@ -785,17 +801,20 @@ JS;
 				
 				if(rental_sobilling::get_instance()->generate_export($billing_job))
 				{
-					$infoMsgs[] = lang('Export generated.');
+					//$infoMsgs[] = lang('Export generated.');
+					phpgwapi_cache::message_set(lang('Export generated.'), 'message'); 
 					$billing_job->set_generated_export(true); // The template need to know that we've genereated the export
 				}
 				else
 				{
-					$errorMsgs = lang('Export failed.');
+					//$errorMsgs = lang('Export failed.');
+					phpgwapi_cache::message_set(lang('Export failed.'), 'error'); 
 				}
 			}
 			else
 			{
-				$errorMsgs[] = lang('open_and_exported_exist');
+				//$errorMsgs[] = lang('open_and_exported_exist');
+				phpgwapi_cache::message_set(lang('open_and_exported_exist'), 'error'); 
 			}
 		}
 		else if(phpgw::get_var('commit') != null) // User wants to commit/close billing so that it cannot be deleted
@@ -859,6 +878,16 @@ JS;
 				)),
 				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 			);
+		$tabletools[] = array
+			(
+				'my_name'		=> 'download',
+				'text'			=> lang('download'),
+				'download'		=> self::link(array('menuaction' => 'rental.uibilling.download',
+								'billing_id'	=> $billing_job->get_id(),
+								'type'			=> 'invoices',
+								'export'		=> true,
+								'allrows'		=> true))
+			);
 		
 		$datatable_def[] = array
 		(
@@ -870,8 +899,8 @@ JS;
 						array('key'=>'term_label', 'label'=>lang('billing_term'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
 						array('key'=>'composite_name', 'label'=>lang('composite_name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
 						array('key'=>'party_name', 'label'=>lang('party_name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-						array('key'=>'total_sum', 'label'=>lang('Total sum'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-						array('key'=>'serial_number', 'label'=>lang('serial_number'), 'className'=>'', 'sortable'=>true, 'hidden'=>false)
+						array('key'=>'total_sum', 'label'=>lang('Total sum'), 'className'=>'right', 'sortable'=>true, 'hidden'=>false, 'formatter'=>'formatterPrice'),
+						array('key'=>'serial_number', 'label'=>lang('serial_number'), 'className'=>'center', 'sortable'=>true, 'hidden'=>false)
 			),
 			'data'			=> json_encode(array()),
 			'tabletools'	=> $tabletools,
@@ -883,6 +912,35 @@ JS;
 		$tabs = array();
 		$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
 		$active_tab = 'details';
+		
+		$download_link	= self::link(array(
+				'menuaction'	=> 'rental.uibilling.download_export', 
+				'id'			=> $billing_job->get_id(), 
+				'date'			=> $billing_job->get_timestamp_stop(), 
+				'export_format' => $billing_job->get_export_format())
+		);
+		$download_link_bk	= self::link(array(
+				'menuaction'	=> 'rental.uibilling.download_export', 
+				'id'			=> $billing_job->get_id(), 
+				'date'			=> $billing_job->get_timestamp_stop(), 
+				'export_format' => $billing_job->get_export_format(),
+				'toExcel'		=> true,
+				'type'			=> 'bk'
+		));
+		$download_link_nlsh	= self::link(array(
+				'menuaction'	=> 'rental.uibilling.download_export', 
+				'id'			=> $billing_job->get_id(), 
+				'date'			=> $billing_job->get_timestamp_stop(), 
+				'export_format' => $billing_job->get_export_format(),
+				'toExcel'		=> true,
+				'type'			=> 'nlsh'			
+		));
+		$download_link_cs15	= self::link(array(
+				'menuaction'	=> 'rental.uibilling.download_export', 
+				'id'			=> $billing_job->get_id(), 
+				'date'			=> $billing_job->get_timestamp_stop(), 
+				'generate_cs15' => true		
+		));
 		
 		$data = array
 		(
@@ -896,16 +954,15 @@ JS;
 			'commited'						=> $timestamp_commit,
 			'success'						=> $billing_job->is_success() ? lang('yes') : lang('no'),
 			'export_format'					=> lang($billing_job->get_export_format()),
-			'export_format'					=> lang($billing_job->get_export_format()),
+			'has_generated_export'			=> ($billing_job->has_generated_export()) ? 1 : 0,
+			'is_commited'					=> ($billing_job->is_commited()) ? 1 : 0,
 		
-			'billing_job'					=> $billing_job,
-			'billing_info_array'			=> $billing_info_array,
-			'errorMsgs'						=> $errorMsgs,
-			'infoMsgs'						=> $infoMsgs,
-			'download_link'					=> html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''), 'date' => $billing_job->get_timestamp_stop(), 'export_format' => $billing_job->get_export_format()))),
+			'download_link'					=> $download_link,
+			'download_link_bk'				=> $download_link_bk,
+			'download_link_nlsh'			=> $download_link_nlsh,
+			'download_link_cs15'			=> $download_link_cs15,
 			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 		);
-		//$this->render('billing.php', $data);
 		
 		$code =	<<<JS
 			var thousandsSeparator = '$this->thousandsSeparator';
@@ -913,6 +970,12 @@ JS;
 			var decimalPlaces = '$this->decimalPlaces';
 			var currency_suffix = '$this->currency_suffix';
 			var area_suffix = '$this->area_suffix';
+				
+			function formatterPrice (key, oData) 
+			{
+				var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
+				return amount;
+			}
 JS;
 		$GLOBALS['phpgw']->js->add_code('', $code);
 			
@@ -932,7 +995,7 @@ JS;
 		}
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$billing_job->set_deleted(true);
-		rental_sobilling::get_instance()->store($billing_job);
+		$result = rental_sobilling::get_instance()->store($billing_job);
 		
 		//set deleted=true on billing_info
 		$billing_infos = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
@@ -954,6 +1017,18 @@ JS;
 			$invoice->set_serial_number(null);
 			rental_soinvoice::get_instance()->store($invoice);
 		}
+		
+		if (phpgw::get_var('phpgw_return_as') == 'json')
+		{
+			/*if ($result) {
+				$message['message'][] = array('msg'=>$billing_job->get_title().' '.lang('has been removed'));
+			} else {
+				$message['error'][] = array('msg'=>$billing_job->get_title().' '.lang('not removed'));
+			}*/
+			
+			$message['message'][] = array('msg'=>$billing_job->get_title().' '.lang('has been removed'));
+			return $message;
+		}
 	}
 	
 	/**
@@ -968,7 +1043,19 @@ JS;
 		}			
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$billing_job->set_timestamp_commit(time());
-		rental_sobilling::get_instance()->store($billing_job);
+		$result = rental_sobilling::get_instance()->store($billing_job);
+		
+		if (phpgw::get_var('phpgw_return_as') == 'json')
+		{
+			/*if ($result) {
+				$message['message'][] = array('msg'=>$billing_job->get_title().' '.lang('has been committed'));
+			} else {
+				$message['error'][] = array('msg'=>$billing_job->get_title().' '.lang('not committed'));
+			}*/
+			
+			$message['message'][] = array('msg'=>$billing_job->get_title().' '.lang('has been committed'));
+			return $message;
+		}
 	}
 	
 	public function query()
@@ -985,14 +1072,6 @@ JS;
 		else {
 			$user_rows_per_page = 10;
 		}
-		// YUI variables for paging and sorting
-		/*$start_index	= phpgw::get_var('startIndex', 'int');
-		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-		$sort_field		= phpgw::get_var('sort');
-		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
-		// Form variables
-		$search_for 	= phpgw::get_var('query');
-		$search_type	= phpgw::get_var('search_option');*/
 		
 		$search			= phpgw::get_var('search');
 		$order			= phpgw::get_var('order');
@@ -1009,14 +1088,13 @@ JS;
 			
 		// Create an empty result set
 		$result_objects = array();
-		$result_count = 0;
+		$object_count = 0;
 		//Retrieve the type of query and perform type specific logic
 		$query_type = phpgw::get_var('type');
 		
-		$exp_param 	= phpgw::get_var('export');
-		$export = false;
-		if(isset($exp_param)){
-			$export=true;
+		$export			= phpgw::get_var('export','bool');
+		if ($export)
+		{
 			$num_of_objects = null;
 		}
 		
@@ -1059,14 +1137,16 @@ JS;
 			}
 		}
 		
-		// ... add result data
-		//$result_data = array('results' => $rows, 'total_records' => $object_count);
-		
 		if(!$export){
 			//Add action column to each row in result table
 			array_walk($rows, array($this, 'add_actions'), array($query_type));
 		}
 
+		if($export)
+		{
+			return $rows;
+		}
+		
 		$result_data    =   array('results' =>  $rows);
 		$result_data['total_records']	= $object_count;
 		$result_data['draw']    = $draw;
@@ -1083,36 +1163,22 @@ JS;
 	 */
 	public function add_actions(&$value, $key, $params)
 	{
-		//Defining new columns
-		$value['ajax'] = array();
-		$value['actions'] = array();
-		$value['labels'] = array();
-
+		$value['other_operations'] = null;
 		$query_type = $params[0];
 		
 		switch($query_type)
 		{
 			case 'all_billings':
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');
-				if($value['timestamp_commit'] == null || $value['timestamp_commit'] == '')
+				if(empty($value['timestamp_commit']))
 				{
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.delete', 'id' => $value['id'])));
-					$value['labels'][] = lang('delete');
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.commit', 'id' => $value['id'])));
-					$value['labels'][] = lang('commit');
+					$url_delete = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.delete', 'id' => $value['id'], 'phpgw_return_as' => 'json')));
+					$actions[] = '<a onclick="onDelete(\''.$url_delete.'\')">'.lang('delete').'</a>';
+
+					$url_commit = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.commit', 'id' => $value['id'], 'phpgw_return_as' => 'json')));
+					$actions[] = '<a onclick="onCommit(\''.$url_commit.'\')">'.lang('commit').'</a>';
+					
+					$value['other_operations'] = implode(' | ', $actions);
 				}
-				break;
-			case 'invoices':
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['contract_id']))) . '#price';
-				$value['labels'][] = lang('show');
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id']))) . '#price';
-				$value['labels'][] = lang('edit');
 				break;
 		}
     }
