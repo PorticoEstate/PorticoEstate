@@ -320,8 +320,8 @@
                                 $filters2 = array('contract_id' => $contract->get_id(), 
                                                 'contract_ids_one_time' => true, 
                                                 'billing_term_id' => $billing_term, 
-                                                'year' => date('Y', $year), 
-                                                'month' => date('m', $month));
+                                                'year' => date('Y', $timestamp_invoice_start), 
+                                                'month' => date('m', $timestamp_invoice_start));
 				//$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
 				
 				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, $filters2);
