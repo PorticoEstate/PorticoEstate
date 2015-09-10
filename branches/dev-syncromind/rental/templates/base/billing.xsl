@@ -295,11 +295,33 @@
 					</div>
 					<div class="pure-control-group">
 						<label><xsl:value-of select="php:function('lang', 'export')"/></label>
-						<xsl:value-of select="export_format"/>
+						<xsl:if test="has_generated_export = 1">
+							<xsl:variable name="download_link"><xsl:value-of select="download_link"/></xsl:variable>
+							<xsl:variable name="download_link_bk"><xsl:value-of select="download_link_bk"/></xsl:variable>
+							<xsl:variable name="download_link_nlsh"><xsl:value-of select="download_link_nlsh"/></xsl:variable>
+							<div class="pure-custom">
+								<div><a href="{$download_link}"><xsl:value-of select="php:function('lang', 'Download export')"/></a></div>
+								<div><a href="{$download_link_bk}"><xsl:value-of select="php:function('lang', 'Download Excel export BK')"/></a></div>
+								<div><a href="{$download_link_nlsh}"><xsl:value-of select="php:function('lang', 'Last ned eksportfil i Excel-format NLSH')"/></a></div>
+								<xsl:if test="is_commited = 0">
+									<xsl:variable name="commit">
+										<xsl:value-of select="php:function('lang', 'Commit')"/>
+									</xsl:variable>
+									<div><input type="submit" class="pure-button pure-button-primary" name="commit" value="{$commit}"/></div>
+								</xsl:if>
+							</div>
+						</xsl:if>
+						<xsl:if test="has_generated_export = 0">
+							<xsl:variable name="generate_export">
+								<xsl:value-of select="php:function('lang', 'Generate export')"/>
+							</xsl:variable>
+							<input type="submit" class="pure-button pure-button-primary" name="generate_export" value="{$generate_export}"/>
+						</xsl:if>
 					</div>
 					<div class="pure-control-group">
 						<label><xsl:value-of select="php:function('lang', 'cs15_export')"/></label>
-						<xsl:value-of select="export_format"/>
+						<xsl:variable name="download_link_cs15"><xsl:value-of select="download_link_cs15"/></xsl:variable>
+						<a href="{$download_link_cs15}"><xsl:value-of select="php:function('lang', 'Generate cs15')"/></a>
 					</div>
 					<div>
 						<xsl:for-each select="datatable_def">
