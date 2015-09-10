@@ -261,7 +261,7 @@
 		 * @param bool $bill_only_one_time	flag to indicate if the the invoice should only bil one time price elements
 		 * @return rental_invoice	the newly created invoice
 		 */
-		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false)
+		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0)
 		{
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 			
@@ -317,7 +317,15 @@
 			// Retrieve the contract price items: only one-time or all
 			if($bill_only_one_time)
 			{
-				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id(), 'one_time' => true));
+                                $filters2 = array('contract_id' => $contract->get_id(), 
+                                                'contract_ids_one_time' => true, 
+                                                'billing_term_id' => $billing_term, 
+                                                'year' => date('Y', $year), 
+                                                'month' => date('m', $month));
+				//$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
+				
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, $filters2);
+                                //$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id(), 'one_time' => true));
 			}
 			else
 			{
