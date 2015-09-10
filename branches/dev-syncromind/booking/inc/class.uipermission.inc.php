@@ -303,11 +303,11 @@
 			
 			$this->flash_form_errors($errors);
 
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
-            $active_tab = 'generic';
-            
-            $permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
+                        $active_tab = 'generic';
+
+                        $permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('permission_form', array('permission' => $permission));
 		}

@@ -28,8 +28,7 @@
             <div id="tab-content">
                 <xsl:value-of disable-output-escaping="yes" select="tabs"/>
                 <div id="permission"> 
-                    <fieldset>
-                                            
+                    <fieldset>                                            
                         <div class="pure-control-group">
                             <xsl:if test="id">
                                     <!-- An update, add id column -->
@@ -40,81 +39,80 @@
                         </div>
 			<!-- Role -->
                         <div class="pure-control-group">
-                                    <label>
-                                        <xsl:value-of select="php:function('lang', 'Role')" />
-                                    </label>
-                                    
-                                    <xsl:value-of select="node()"/>
-                                    <select name='role' id='field_role'>
-                                            <option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
-                                            <xsl:for-each select="available_roles/*">
-                                                    <option>
-                                                            <xsl:if test="../../role = local-name()">
-                                                                    <xsl:attribute name="selected">selected</xsl:attribute>
-                                                            </xsl:if>
-
-                                                            <xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
-                                                            <xsl:value-of select="php:function('lang', string(node()))"/>
-                                                    </option>
-                                            </xsl:for-each>
-                                    </select>
+                            <label for="field_role" style="vertical-align:top;">
+                                <h4><xsl:value-of select="php:function('lang', 'Role')" /></h4>
+                            </label>
+                            <div style="display:inline-block;">  
+                                <span><xsl:value-of select="node()"/></span>
+                                <select name='role' id='field_role' style="display:block;">
+                                    <option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
+                                    <xsl:for-each select="available_roles/*">
+                                        <option>
+                                            <xsl:if test="../../role = local-name()">
+                                                <xsl:attribute name="selected">selected</xsl:attribute>
+                                            </xsl:if>
+                                            <xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
+                                            <xsl:value-of select="php:function('lang', string(node()))"/>
+                                        </option>
+                                    </xsl:for-each>
+                                </select>
+                            </div>
                         </div>
 
 			<!-- Subject -->
                         <div class="pure-control-group">
-                                    <label>
-                                        <xsl:value-of select="php:function('lang', 'Account')" />
-                                    </label>
-                                    
-                                    <!--div class="autocomplete"-->
-                                            <input id="field_subject_name" name="subject_name" type="text">
-                                                    <xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
-                                            </input>
-                                            <input id="field_subject_id" name="subject_id" type="hidden">
-                                                    <xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>
-                                            </input>
-                                            <div id="subject_container"/>
-                                    <!--/div-->
+                            <label for="field_subject_name">
+                                <h4><xsl:value-of select="php:function('lang', 'Account')" /></h4>
+                            </label>
+                            <!--div class="autocomplete"-->
+                            <input id="field_subject_name" name="subject_name" type="text">
+                                    <xsl:attribute name="value"><xsl:value-of select="subject_name"/></xsl:attribute>
+                            </input>
+                            <input id="field_subject_id" name="subject_id" type="hidden">
+                                    <xsl:attribute name="value"><xsl:value-of select="subject_id"/></xsl:attribute>
+                            </input>
+                            <div id="subject_container"></div>
+                            <!--/div-->
                         </div>
 
                         <div class="pure-control-group">
-                                        <label>
-                                            <xsl:value-of select="php:function('lang', string(object_type_label))" />
-                                        </label>
-                                        <!--div class="autocomplete"-->
-                                        <input id="field_object_name" name="object_name" type="text">
-                                                <xsl:attribute name="value"><xsl:value-of select="object_name"/></xsl:attribute>
-                                                <xsl:if test="inline = '1'">
-                                                        <xsl:attribute name="disabled">disabled</xsl:attribute>
-                                                </xsl:if>
-                                        </input>
-                                        <input id="field_object_id" name="object_id" type="hidden">
-                                                <xsl:attribute name="value"><xsl:value-of select="object_id"/></xsl:attribute>
-                                        </input>
-                                        <div id="object_container"/>
-                                        <!--/div-->
+                            <label for="field_object_name">
+                                <h4><xsl:value-of select="php:function('lang', string(object_type_label))" /></h4>
+                            </label>
+                            <!--div class="autocomplete"-->
+                            <input id="field_object_name" name="object_name" type="text">
+                                <xsl:attribute name="value"><xsl:value-of select="object_name"/></xsl:attribute>
+                                <xsl:if test="inline = '1'">
+                                    <xsl:attribute name="disabled">disabled</xsl:attribute>
+                                </xsl:if>
+                            </input>
+                            <input id="field_object_id" name="object_id" type="hidden">
+                                <xsl:attribute name="value"><xsl:value-of select="object_id"/></xsl:attribute>
+                            </input>
+                            <div id="object_container"></div>
+                            <!--/div-->
                         </div>                        
                     </fieldset>
                 </div>
             </div>
             
-                        <div class="form-buttons">
-                                <input type="submit" class="pure-button pure-button-primary">
-                                        <xsl:attribute name="value">
-                                                <xsl:choose>
-                                                        <xsl:when test="id">
-                                                                <xsl:value-of select="php:function('lang', 'Update')"/>
-                                                        </xsl:when>
-                                                        <xsl:otherwise>
-                                                                <xsl:value-of select="php:function('lang', 'Create')"/>
-                                                        </xsl:otherwise>
-                                                </xsl:choose>
-                                        </xsl:attribute>
-                                </input>
-                                <a class="cancel">
-                                    <xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
-                                    <xsl:value-of select="php:function('lang', 'Cancel')"/>
-                                </a>
-                        </div>
+            <div class="form-buttons">
+                <input type="submit" class="pure-button pure-button-primary">
+                    <xsl:attribute name="value">
+                        <xsl:choose>
+                            <xsl:when test="id">
+                                <xsl:value-of select="php:function('lang', 'Update')"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="php:function('lang', 'Create')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                </input>
+                <a class="cancel">
+                    <xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
+                    <xsl:value-of select="php:function('lang', 'Cancel')"/>
+                </a>
+            </div>
 	</form>
 </xsl:template>

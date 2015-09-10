@@ -184,69 +184,69 @@
                             </div>
                         </div>
                         
-                        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                        <div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
                             <div class="heading">
                                 <legend><h3><xsl:value-of select="php:function('lang', 'Who')" /></h3></legend>
                             </div>
-                            <div class="pure-control-group">			
-                                <label>
-                                    <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
-                                </label>
-                                <ul style="list-style:none;padding: 0 0 0 10px;">
-                                    <xsl:for-each select="audience">
-                                        <li>
-                                            <input type="checkbox" name="audience[]">
-                                                <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                                                <xsl:if test="../event/audience=id">
-                                                    <xsl:attribute name="checked">checked</xsl:attribute>
-                                                </xsl:if>
-                                            </input>
-                                            <span><xsl:value-of select="name"/></span>
-                                        </li>
-                                    </xsl:for-each>
-                                </ul>
-                            </div>
-                            <div class="pure-control-group">
-                                <label for="field_from">
-                                    <h4><xsl:value-of select="php:function('lang', 'Number of participants')" /></h4>
-                                </label>
-                                <table id="agegroup" class="pure-table pure-table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>&nbsp;</th>
-                                            <th><xsl:value-of select="php:function('lang', 'Male')" /></th>
-                                            <th><xsl:value-of select="php:function('lang', 'Female')" /></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <xsl:for-each select="agegroups">
-                                            <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-                                            <tr>
-                                                <th><xsl:value-of select="name"/></th>
-                                                <td>
-                                                    <input class="input50" type="text">
-                                                        <xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-                                                        <xsl:attribute name="value"><xsl:value-of select="../event/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
-                                                    </input>
-                                                </td>
-                                                <td>
-                                                    <input class="input50" type="text">
-                                                        <xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-                                                        <xsl:attribute name="value"><xsl:value-of select="../event/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
-                                                    </input>
-                                                </td>
-                                            </tr>
+                            <div class="pure-g">
+                                <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">			
+                                    <label>
+                                        <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
+                                    </label>
+                                    <ul style="list-style:none;padding: 0 0 0 10px;">
+                                        <xsl:for-each select="audience">
+                                            <li>
+                                                <input type="checkbox" name="audience[]">
+                                                    <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                                    <xsl:if test="../event/audience=id">
+                                                        <xsl:attribute name="checked">checked</xsl:attribute>
+                                                    </xsl:if>
+                                                </input>
+                                                <span><xsl:value-of select="name"/></span>
+                                            </li>
                                         </xsl:for-each>
-                                    </tbody>
-                                </table>
-                            </div>                
-                            <div class="pure-control-group">
-                                <label for="sms_total">
-                                    <h4><xsl:value-of select="php:function('lang', 'SMS total')" /></h4>
-                                </label>
-                                <input type="text" id="sms_total" name="sms_total">
-                                    <xsl:attribute name="value"><xsl:value-of select="event/sms_total"/></xsl:attribute>
-                                </input>
+                                    </ul>
+                                </div>
+                                <div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
+                                    <label for="field_from">
+                                        <h4><xsl:value-of select="php:function('lang', 'Number of participants')" /></h4>
+                                    </label>
+                                    <table id="agegroup" class="pure-table pure-table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>&nbsp;</th>
+                                                <th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+                                                <th><xsl:value-of select="php:function('lang', 'Female')" /></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <xsl:for-each select="agegroups">
+                                                <xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+                                                <tr>
+                                                    <th><xsl:value-of select="name"/></th>
+                                                    <td>
+                                                        <input class="input50" type="text">
+                                                            <xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+                                                            <xsl:attribute name="value"><xsl:value-of select="../event/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
+                                                        </input>
+                                                    </td>
+                                                    <td>
+                                                        <input class="input50" type="text">
+                                                            <xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+                                                            <xsl:attribute name="value"><xsl:value-of select="../event/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
+                                                        </input>
+                                                    </td>
+                                                </tr>
+                                            </xsl:for-each>
+                                        </tbody>
+                                    </table>
+                                    <label for="sms_total">
+                                        <h4><xsl:value-of select="php:function('lang', 'SMS total')" /></h4>
+                                    </label>
+                                    <input type="text" id="sms_total" name="sms_total">
+                                        <xsl:attribute name="value"><xsl:value-of select="event/sms_total"/></xsl:attribute>
+                                    </input>
+                                </div>
                             </div>
                         </div>
                         

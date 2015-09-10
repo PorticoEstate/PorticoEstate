@@ -318,10 +318,10 @@
 			}	
 			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
-            #The string replace is a workaround for a problem at Bergen Kommune 
+                        #The string replace is a workaround for a problem at Bergen Kommune 
 
-            $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
-            $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
+                        $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
+                        $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
 			$time_from = explode(" ",phpgw::get_var('from_', 'str', 'GET'));
 			$time_to = explode(" ",phpgw::get_var('to_', 'str', 'GET'));
 
@@ -341,13 +341,13 @@
 				array_set_default($booking, 'resources', array(get_var('resource', int, 'GET')));
 				$booking['organization_id'] = $allocation['organization_id'];
 				$booking['organization_name'] = $allocation['organization_name'];
-                $noallocation = False;
+                                $noallocation = False;
 			} else {
   				$season = $this->season_bo->read_single($_POST['season_id']);
 				$booking['organization_id'] = $_POST['organization_id'];
 				$booking['organization_name'] = $_POST['organization_name'];
-                $noallocation = True;
-            }
+                                $noallocation = True;
+                        }
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$today = getdate();
@@ -402,29 +402,29 @@
 
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
-                    if($noallocation) {
-                        $allocation['resources'] = $booking['resources'];
-                        $allocation['cost'] = $booking['cost'];
-                        $allocation['building_id'] = $booking['building_id'];
-                        $allocation['building_name'] = $booking['building_name'];
-                        $allocation['season_id'] = $booking['season_id'];
-                        $allocation['organization_id'] = $booking['organization_id'];
-                        $allocation['organization_name'] = $booking['organization_name'];
-						if ($application_id != '0') {
-		                    $allocation['application_id'] = $application_id;
-						}
-                        $allocation['from_'] = $booking['from_'];
-                        $allocation['to_'] = $booking['to_'];
-           				$allocation['active'] = '1';
-           				$allocation['completed'] = '0';
-                        $receipt = $this->allocation_bo->add($allocation);
-                        $booking['allocation_id'] = $receipt['id'];
-                        $booking['secret'] = $this->generate_secret();
-                        $receipt = $this->bo->add($booking);
-                    } else {
-                        $booking['secret'] = $this->generate_secret();
-                        $receipt = $this->bo->add($booking);
-                    }
+                                        if($noallocation) {
+                                            $allocation['resources'] = $booking['resources'];
+                                            $allocation['cost'] = $booking['cost'];
+                                            $allocation['building_id'] = $booking['building_id'];
+                                            $allocation['building_name'] = $booking['building_name'];
+                                            $allocation['season_id'] = $booking['season_id'];
+                                            $allocation['organization_id'] = $booking['organization_id'];
+                                            $allocation['organization_name'] = $booking['organization_name'];
+                                                                    if ($application_id != '0') {
+                                                        $allocation['application_id'] = $application_id;
+                                                                    }
+                                            $allocation['from_'] = $booking['from_'];
+                                            $allocation['to_'] = $booking['to_'];
+                                                            $allocation['active'] = '1';
+                                                            $allocation['completed'] = '0';
+                                            $receipt = $this->allocation_bo->add($allocation);
+                                            $booking['allocation_id'] = $receipt['id'];
+                                            $booking['secret'] = $this->generate_secret();
+                                            $receipt = $this->bo->add($booking);
+                                        } else {
+                                            $booking['secret'] = $this->generate_secret();
+                                            $receipt = $this->bo->add($booking);
+                                        }
 					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
 				}
 				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors && $step > 1)
@@ -464,37 +464,37 @@
 							$valid_dates[$i]['to_'] = $todate;
 							if ($step == 3)
 							{
-                                if( $noallocation ) {
-                                    $allocation['resources'] = $booking['resources'];
-                                    $allocation['cost'] = $booking['cost'];
-                                    $allocation['building_id'] = $booking['building_id'];
-                                    $allocation['building_name'] = $booking['building_name'];
-                                    $allocation['season_id'] = $booking['season_id'];
-                                    $allocation['organization_id'] = $booking['organization_id'];
-                                    $allocation['organization_name'] = $booking['organization_name'];
-									if ($application_id != '0') {
-				                        $allocation['application_id'] = $application_id;
-									}
-                                    $allocation['from_'] = $booking['from_'];
-                                    $allocation['to_'] = $booking['to_'];
-                       				$allocation['active'] = '1';
-                    				$allocation['completed'] = '0';
-                                    $receipt = $this->allocation_bo->add($allocation);
-                                    $booking['allocation_id'] = $receipt['id'];
-									if ($application_id != '0') {
-										$booking['application_id'] = $application_id;
-									}
-    								$booking['secret'] = $this->generate_secret();
-    								$receipt = $this->bo->add($booking);
-                                    $booking['allocation_id'] = '';
-                                    $this->allocation_bo->so->update_id_string();
-                                } else {
-									if ($application_id != '0') {
-										$booking['application_id'] = $application_id;
-									}
-    								$booking['secret'] = $this->generate_secret();
-    								$receipt = $this->bo->add($booking);
-                                }
+                                                                if( $noallocation ) {
+                                                                    $allocation['resources'] = $booking['resources'];
+                                                                    $allocation['cost'] = $booking['cost'];
+                                                                    $allocation['building_id'] = $booking['building_id'];
+                                                                    $allocation['building_name'] = $booking['building_name'];
+                                                                    $allocation['season_id'] = $booking['season_id'];
+                                                                    $allocation['organization_id'] = $booking['organization_id'];
+                                                                    $allocation['organization_name'] = $booking['organization_name'];
+                                                                                                        if ($application_id != '0') {
+                                                                                        $allocation['application_id'] = $application_id;
+                                                                                                        }
+                                                                    $allocation['from_'] = $booking['from_'];
+                                                                    $allocation['to_'] = $booking['to_'];
+                                                                                $allocation['active'] = '1';
+                                                                                $allocation['completed'] = '0';
+                                                                    $receipt = $this->allocation_bo->add($allocation);
+                                                                    $booking['allocation_id'] = $receipt['id'];
+                                                                                                        if ($application_id != '0') {
+                                                                                                                $booking['application_id'] = $application_id;
+                                                                                                        }
+                                                                                                $booking['secret'] = $this->generate_secret();
+                                                                                                $receipt = $this->bo->add($booking);
+                                                                    $booking['allocation_id'] = '';
+                                                                    $this->allocation_bo->so->update_id_string();
+                                                                } else {
+                                                                                                        if ($application_id != '0') {
+                                                                                                                $booking['application_id'] = $application_id;
+                                                                                                        }
+                                                                                                $booking['secret'] = $this->generate_secret();
+                                                                                                $receipt = $this->bo->add($booking);
+                                                                }
 							}
 						}
 						$i++;
@@ -530,15 +530,15 @@
 
 			$resouces_full = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Booking New'), 'link' => '#booking_new');
-            $active_tab = 'generic';
-            
-            $GLOBALS['phpgw']->jqcal->add_listener('start', 'datetime');
-            $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-            
-            $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Booking New'), 'link' => '#booking_new');
+                        $active_tab = 'generic';
+
+                        $GLOBALS['phpgw']->jqcal->add_listener('start', 'datetime');
+                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+                                    $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+
+                        $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			if ($step < 2) 
 			{
@@ -620,7 +620,7 @@
 			$booking['building_name'] = $booking['building']['name'];
 			$errors = array();
             
-            $tabs = array();
+                        $tabs = array();
 			$tabs['generic']	= array('label' => lang('Booking Edit'), 'link' => '#booking_edit');
 			$active_tab = 'generic';
             
@@ -655,10 +655,10 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
             
-            $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
+                        $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
                     
-            $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}

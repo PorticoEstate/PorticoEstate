@@ -348,11 +348,11 @@
 			
 			$this->flash_form_errors($errors);
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Document New'), 'link' => '#document');
-            $active_tab = 'generic';
-        
-            $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Document New'), 'link' => '#document');
+                        $active_tab = 'generic';
+
+                        $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('document_form', array('document' => $document));
 		}

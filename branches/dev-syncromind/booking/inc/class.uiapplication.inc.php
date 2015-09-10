@@ -740,7 +740,7 @@
 			array_set_default($application, 'dates', $default_dates);
 			
 			$this->flash_form_errors($errors);
-//			self::add_javascript('booking', 'booking', 'applicationnew.js');
+//			self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
@@ -787,7 +787,7 @@
                         $active_tab = 'generic';
 
                         $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-                        self::add_javascript('booking', 'booking', 'applicationnew.js');
+                        self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
 			
 			self::render_template_xsl('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}
@@ -803,7 +803,7 @@
 			$application['building_id'] = $building_info['id'];
 			$application['building_name'] = $building_info['name'];
             
-            $tabs = array();
+                        $tabs = array();
 			$tabs['generic']	= array('label' => lang('Application Edit'), 'link' => '#application_edit');
 			$active_tab = 'generic';
             
@@ -847,7 +847,7 @@
 			}
 			$this->flash_form_errors($errors);
 //			self::add_javascript('booking', 'booking', 'application.js');
-			self::add_javascript('booking', 'booking', 'applicationnew.js');
+			self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
 			$this->set_case_officer($application);
 			
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));

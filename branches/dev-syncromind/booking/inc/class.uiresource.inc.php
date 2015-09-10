@@ -156,11 +156,11 @@
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 //			$this->use_yui_editor();
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
-            $active_tab = 'generic';
-            
-            $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+                        $active_tab = 'generic';
+
+                        $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data, 'new_form' => true));
 		}

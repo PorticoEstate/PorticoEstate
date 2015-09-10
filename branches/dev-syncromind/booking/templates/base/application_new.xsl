@@ -1,33 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <style type="text/css">
         
-        .date-container {
-            // width: 31%;
-            position: relative;
-        }
-        
-        #dates-container .date-container .pure-control-group input.datetime,
-        #dates-container .date-container .pure-control-group input.time {
-            display: inline-block;
-        }
-        
-        .date-container .close-btn {
-            background: transparent url("phpgwapi/js/yahoo/assets/skins/sam/sprite.png") no-repeat scroll 0 -300px;
-            border: medium none;
-            color: white;
-            cursor: pointer;
-            //display: block;
-            //float: right;
-            height: 15px;
-            text-decoration: none;
-            width: 25px;
-            //margin: 4px 0 0 296px;
-            position: absolute;
-            top: 0px;
-            right: 0px;
-        }
-        
-        
         #agegroup td {padding: 0 0.3em;}        
         
         #field_customer_ssn {display:none;}
@@ -139,7 +112,9 @@
                                     </p>
                                 </xsl:if>
                                 <div class="pure-control-group">
-                                    <h4><label for="field_building_id"><xsl:value-of select="php:function('lang', 'Building')" /></label></h4>
+                                    <label for="field_building_id">
+                                        <h4><xsl:value-of select="php:function('lang', 'Building')" /></h4>
+                                    </label>
                                     <!--div class="autocomplete"-->
                                         <input id="field_building_id" name="building_id" type="hidden">
                                             <xsl:attribute name="value"><xsl:value-of select="application/building_id"/></xsl:attribute>
@@ -209,7 +184,7 @@
                                         </div>
                                     </xsl:for-each>
                                 </div>
-                                <dt><a href="javascript:;" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
+                                <div class="pure-control-group"><a href="javascript:void(0);" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></div>
                             </fieldset>
                         </div>
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">

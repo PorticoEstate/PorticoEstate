@@ -458,7 +458,7 @@
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
 			$allocation['building_name'] = $allocation['building']['name'];
 			$errors = array();
-            $tabs = array();
+                        $tabs = array();
 			$tabs['generic']	= array('label' => lang('Allocations Edit'), 'link' => '#allocations_edit');
 			$active_tab = 'generic';
             
@@ -485,9 +485,9 @@
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
-            $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
-            $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
+                        $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
             
 			self::render_template_xsl('allocation_edit', array('allocation' => $allocation));

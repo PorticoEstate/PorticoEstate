@@ -163,11 +163,11 @@
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 //			$this->use_yui_editor();
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_new');
-            $active_tab = 'generic';
-        
-            $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_form');
+                        $active_tab = 'generic';
+
+                        $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('building_form', array('building' => $building, 'new_form' => true));
 		}
@@ -183,11 +183,11 @@
 			$config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
             
-            if ($config->config_data['extra_schedule'] == 'yes') {
-                $building['extra'] = 1;
-            } else {
-                $building['extra'] = 0;
-            }
+                        if ($config->config_data['extra_schedule'] == 'yes') {
+                            $building['extra'] = 1;
+                        } else {
+                            $building['extra'] = 0;
+                        }
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -203,11 +203,11 @@
 			}
 			$this->flash_form_errors($errors);
 //			$this->use_yui_editor();
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building');
-            $active_tab = 'generic';
-        
-            $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');
+                        $active_tab = 'generic';
+
+                        $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('building_form', array('building' => $building));
 		}
@@ -227,11 +227,11 @@
 				$building['homepage'] = 'http://'.$building['homepage'];
 			}
             
-            $tabs = array();
+                        $tabs = array();
 			$tabs['generic']	= array('label' => lang('Building Show'), 'link' => '#building_show');
 			$active_tab = 'generic';
             
-             $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('building', array('building' => $building));
 		}

@@ -28,7 +28,7 @@ $(function() {
                         '</input>'+
                 '</div>'+
                 '<div class="pure-control-group">'+
-                        '<label for="end_date_'+this.counter+'"><h4>!to</label></h4>'+
+                        '<label for="end_date_'+this.counter+'"><h4>!to</h4></label>'+
 //                        <xsl:if test="activity/error_msg_array/end_date != ''">
 //                                <xsl:variable name="error_msg">
 //                                        <xsl:value-of select="activity/error_msg_array/end_date" />
