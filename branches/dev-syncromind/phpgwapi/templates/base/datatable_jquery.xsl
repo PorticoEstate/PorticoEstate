@@ -495,6 +495,11 @@
 					oParams.columns = null;
 					oParams.start = null;
 					oParams.draw = null;
+					var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
+					for (var attrname in addtional_filterdata)
+					{
+						 oParams[attrname] = addtional_filterdata[attrname];
+					}
 					var iframe = document.createElement('iframe');
 					iframe.style.height = "0px";
 					iframe.style.width = "0px";

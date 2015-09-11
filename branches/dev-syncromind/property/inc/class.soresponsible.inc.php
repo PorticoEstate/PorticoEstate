@@ -441,11 +441,11 @@
 		/**
 		 * get the responsibility name
 		 *
-		 * @param type $id
-		 * @return string name
+		 * @param type $id responsibility id
+		 * @return string responsibility name
 		 */
 		public function get_responsibility_name($id)
-		{		
+		{
 			static $names = array();
 			$i = (int) $id;
 
@@ -453,11 +453,36 @@
 			{
 				return $names[$i];
 			}
-			
 
 			$sql = "SELECT * FROM fm_responsibility WHERE id= {$id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();	
+			$this->db->next_record();
+			$name = $this->db->f('name', true);
+			$names[$i] = $name;
+			return $name;
+		}
+
+		/**
+		 * get the responsibility name from role
+		 *
+		 * @param type $id role id
+		 * @return string responsibility name
+		 */
+		public function get_responsibility_name_from_role($id)
+		{
+			static $names = array();
+			$i = (int) $id;
+
+			if ($names[$i])
+			{
+				return $names[$i];
+			}
+
+			$sql = "SELECT fm_responsibility.name FROM fm_responsibility"
+			. " {$this->join} fm_responsibility_role ON fm_responsibility.id = fm_responsibility_role.responsibility_id"
+			. " WHERE fm_responsibility_role.id= {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
 			$name = $this->db->f('name', true);
 			$names[$i] = $name;
 			return $name;

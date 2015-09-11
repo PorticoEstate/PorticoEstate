@@ -25,8 +25,9 @@
 		foreach($keys as $write_key)
 		{
 			$array_key = $options['prefix'].$write_key.$options['suffix'];
-			if(isset($array[$array_key])) {
-				$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = $array[$array_key];
+			if(isset($array[$array_key]))
+			{
+				$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = phpgw::clean_value($array[$array_key]);
 			}
 		}
 		return $result;

@@ -261,18 +261,55 @@
 
 		function download()
 		{
-			$summary		= phpgw::get_var('summary', 'bool', 'GET');
-
-			if(!$summary)
+			if (!$this->acl_read)
 			{
-				$list = $this->query();
-			}
-			else
-			{
-				$list= $this->query_summary();
+				$this->bocommon->no_access();
+				return;
 			}
 
-			$uicols	= $this->bo->uicols;
+			$download_type 	= phpgw::get_var('download_type');
+
+			switch($download_type)
+			{
+				case 'summary':
+					$list = $this->query_summary();
+					$uicols	= $this->bo->uicols;
+					break;
+				case 'responsiblility_role':
+					$user_id	= phpgw::get_var('user_id', 'int');
+					$role_id	= phpgw::get_var('role_id', 'int');
+					$type_id	= phpgw::get_var('type_id', 'int', 'GET');
+					$search		= phpgw::get_var('search');
+
+					$list = $this->bo->get_responsible(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'query' => $search['value'], 'allrows'=>true));
+
+					foreach($list as &$entry)
+					{
+						$entry['role_id'] = $role_id;
+					}
+
+					$uicols = $this->bo->uicols;
+
+					$uicols['name'][]		= 'role_id';
+					$uicols['descr'][]		= 'role_id';
+					$uicols['input_type'][]	= '';
+
+					$uicols['name'][]		= 'responsible_contact';
+					$uicols['descr'][]		= lang('responsible');
+					$uicols['input_type'][]	= '';
+
+					$uicols['name'][]		= 'contact_id';
+					$uicols['descr'][]		= 'contact_id';
+					$uicols['input_type'][]	= '';
+
+
+					break;
+				default:
+					$list = $this->query();
+					$uicols	= $this->bo->uicols;
+					break;
+			}
+
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
@@ -480,7 +517,7 @@
 			$values_combo_box[4] =   execMethod('property.sogeneric.get_list',$_role_criteria);
 			foreach($values_combo_box[4] as &$_role)
 			{
-				$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name',$_role['id']);
+				$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name_from_role',$_role['id']);
 			}
 			array_unshift ($values_combo_box[4], array('id'=>'', 'name'=>lang('no role')));
 			$combos[] = array('type' => 'filter',
@@ -1293,6 +1330,13 @@ JS;
 								'entity_id'			=> $this->entity_id,
 								'phpgw_return_as' => 'json'
 					)),
+					'download'	=> self::link(array('menuaction' => 'property.uilocation.download',
+									'type_id'		=> $type_id,
+									'role_id'		=> $role_id,
+									'export'		=> true,
+									'allrows'		=> true,
+									'download_type'	=> 'responsiblility_role'
+						)),
 					'allrows'	=> true,
 					'editor_action' => '',
 					'field' => array()
@@ -2519,9 +2563,11 @@ JS;
 								'phpgw_return_as' => 'json'
 					)),
 					'download'	=> self::link(array('menuaction' => 'property.uilocation.download',
-									'summary'			=> true,
-									'export'     => true,
-									'allrows'    => true)),
+									'summary'		 => true,
+									'export'		 => true,
+									'allrows'		 => true,
+									'download_type'	 => 'summary'
+					)),
 					'allrows'	=> true,
 					'editor_action' => '',
 					'field' => array(),

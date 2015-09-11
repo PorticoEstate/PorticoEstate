@@ -82,8 +82,18 @@
 				}
 			}
 
-			$this->db->query("SELECT finnish_date, finnish_date2 FROM fm_tts_tickets WHERE id='$id'",__LINE__,__FILE__);
+			$this->db->query("SELECT status, finnish_date, finnish_date2 FROM fm_tts_tickets WHERE id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
+
+			$status = $this->db->f('status');
+
+			/**
+			 * Kun oppdatere åpne meldinger
+			 */
+			if($status == 'X')
+			{
+				return;
+			}
 
 			$oldfinnish_date = (int)$this->db->f('finnish_date');
 			$oldfinnish_date2 = (int)$this->db->f('finnish_date2');

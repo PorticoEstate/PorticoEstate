@@ -270,6 +270,12 @@
 						'id' => 'difference',
 						'name'=> lang('difference')
 					);
+
+				$columns['order_dim1'] = array
+					(
+						'id' => 'order_dim1',
+						'name'=> lang('order_dim1')
+					);
 			}
 
 			$columns['ecodimb'] = array
@@ -552,6 +558,12 @@
 					$closed_status[] =  "C{$custom['id']}";
 				}
 			}
+			$order_dim1_list = $this->so->get_order_dim1();
+			$order_dim1_arr = array();
+			foreach($order_dim1_list as $_order_dim1)
+			{
+				$order_dim1_arr[$_order_dim1['id']] = $_order_dim1['name'];
+			}
 
 			foreach ($tickets as & $ticket)
 			{
@@ -565,6 +577,11 @@
 				if(!$ticket['subject'])
 				{
 					$ticket['subject'] = $category_name[$ticket['cat_id']];
+				}
+
+				if($ticket['order_dim1'])
+				{
+					$ticket['order_dim1'] = $order_dim1_arr[$ticket['order_dim1']];
 				}
 
 				if(!isset($account[$ticket['user_id']]))

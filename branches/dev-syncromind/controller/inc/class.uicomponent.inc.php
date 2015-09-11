@@ -183,7 +183,7 @@
 			}
 			phpgwapi_jquery::load_widget('core');
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.control');
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
 			$user_list = array();
 			foreach($users as $user)
 			{
@@ -528,7 +528,6 @@
 						)
 					);
 					$components = array_merge($components, $_components);
-
 				}
 			}
 			else if(!$location_id)
@@ -594,7 +593,7 @@
 			{
 				$location_id = $_component['location_id'];
 				$component_id = $_component['id'];
-				$all_components[$component_id] = $_component;
+				$all_components["{$location_id}_{$component_id}"] = $_component;
 
 				$short_description = $_component['short_description'];
 				$short_description .= ' [' . $_component['location_name']. ']';
@@ -645,7 +644,7 @@
 
 						$year_calendar_agg					 = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 						$calendar_array						 = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
-						$components_with_calendar_array[$component_id][]	 = array("component" => $component->toArray(),
+						$components_with_calendar_array["{$location_id}_{$component_id}"][]	 = array("component" => $component->toArray(),
 							"calendar_array" => $calendar_array);
 						
 					}
@@ -700,12 +699,12 @@
 							}
 							if(!$found_assigned_to)
 							{
-								unset($all_components[$component_id]);
+								unset($all_components["{$location_id}_{$component_id}"]);
 								continue;
 							}
 						}
 
-						$components_with_calendar_array[$component_id][] = array("component" => $component->toArray(),
+						$components_with_calendar_array["{$location_id}_{$component_id}"][] = array("component" => $component->toArray(),
 							"calendar_array" => $calendar_array);
 
 					}
@@ -727,11 +726,13 @@
 				);
 
 			$values = array();
-			foreach($components_with_calendar_array as $component_id => $entry)
+			foreach($components_with_calendar_array as $dummy => $entry)
 			{
-				unset($all_components[$component_id]);
-				$data = array();
 				$location_id = $entry[0]['component']['location_id'];
+				$component_id = $entry[0]['component']['id'];
+
+				unset($all_components["{$location_id}_{$component_id}"]);
+				$data = array();
 				$component_link_data = array
 				(
 					'menuaction'	=> 'property.uientity.edit',
@@ -828,10 +829,11 @@
 			if($all_components && count($all_components))
 			{
 				$choose_master = true;
-				foreach($all_components as $component_id => $component)
+				foreach($all_components as $dummy => $component)
 				{
 					$data = array();
 					$location_id = $component['location_id'];
+					$component_id = $component['id'];
 
 					$component_link_data = array
 					(
