@@ -177,12 +177,15 @@
 										<select id="contract_status" name="contract_status">
 											<xsl:apply-templates select="list_status/options"/>
 										</select>
-										<xsl:text> </xsl:text>
+										<label><xsl:value-of select="php:function('lang', 'date')"/></label>
+										<input type="text" id="date_status" name="date_status" value=""></input>					
+									</div>
+									<div class="pure-control-group">
 										<label><xsl:value-of select="php:function('lang', 'field_of_responsibility')"/></label>
 										<select id="contract_type" name="contract_type">
 											<xsl:apply-templates select="list_field_of_responsibility/options"/>
-										</select>																	
-									</div>
+										</select>
+									</div>										
 								</div>
 							</div>								
 							<div>
