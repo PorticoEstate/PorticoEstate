@@ -141,6 +141,8 @@
 			{
 				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
+
+			$this->send_error_messages_as_email();
 		}
 
 		protected function get_files()
@@ -388,6 +390,36 @@
 				try
 				{
 					$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '',$from,'','html');
+				}
+				catch (phpmailerException $e)
+				{
+					$this->receipt['error'][] = array('msg' => $e->getMessage());
+				}
+			}
+		}
+
+		private function send_error_messages_as_email()
+		{
+			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
+			{
+				return;
+			}
+
+			$subject = 'Feil ved oppdatering av meldinger(bestillinger) fra Agresso';
+			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
+			$to = "Lene.Christensen@bergen.kommune.no";
+			$cc = "Sigurd.Nes@bergen.kommune.no";
+			if($this->receipt['error'])
+			{
+				$errors = array();
+				foreach($this->receipt['error'] as $error)
+				{
+					$errors[] = $error['msg'];
+				}
+				$body = implode("<br/>", $errors);
+				try
+				{
+					$rc = $this->send->msg('email',$to, $subject, $body, '', $cc, '',$from,'','html');
 				}
 				catch (phpmailerException $e)
 				{
