@@ -13,10 +13,11 @@
 	];
 
 	// define buttons
-	var oNormalButton_0, oNormalButton_1;//, oNormalButton_2;
+	var oNormalButton_0, oNormalButton_1, oNormalButton_2;
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_save',	funct:"onSave"}
+	{order:1, name:'btn_save',	funct:"onSave"},
+	{order:2, name:'btn_export', funct:"onDownloadClick"}
 	];
 
 	// define Text buttons

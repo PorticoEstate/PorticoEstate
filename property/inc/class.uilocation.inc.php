@@ -120,17 +120,52 @@
 			$lookup 		= phpgw::get_var('lookup', 'bool');
 			//$lookup_name 	= phpgw::get_var('lookup_name');
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+			$download_type 	= phpgw::get_var('download_type');
 
-			if(!$summary)
+			if (!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			if($download_type == 'responsiblility_role')
+			{
+				$user_id		= phpgw::get_var('user_id', 'int');
+				$role_id		= phpgw::get_var('role_id', 'int');
+
+				$list = $this->bo->get_responsible(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows));
+
+				foreach($list as &$entry)
+				{
+					$entry['role_id'] = $role_id;
+				}
+
+				$uicols = $this->bo->uicols;
+
+				$uicols['name'][]		= 'role_id';
+				$uicols['descr'][]		= 'role_id';
+				$uicols['input_type'][]	= '';
+
+				$uicols['name'][]		= 'responsible_contact';
+				$uicols['descr'][]		= lang('responsible');
+				$uicols['input_type'][]	= '';
+
+				$uicols['name'][]		= 'contact_id';
+				$uicols['descr'][]		= 'contact_id';
+				$uicols['input_type'][]	= '';
+				
+			}
+			else if(!$summary)
 			{
 				$list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>true));
+				$uicols	= $this->bo->uicols;
 			}
 			else
 			{
 				$list= $this->bo->read_summary();
+				$uicols	= $this->bo->uicols;
 			}
 
-			$uicols	= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
@@ -1174,7 +1209,8 @@ JS;
 						'cat_id'        		=> $this->cat_id,
 						'status'        		=> $this->status,
 						'location_code'			=> $this->location_code,
-						'menu_selection'		=> $_menu_selection
+						'menu_selection'		=> $_menu_selection,
+						'download_type'		=> 'responsiblility_role'
 					));
 
 				$datatable['config']['allow_allrows'] = true;
@@ -1192,8 +1228,8 @@ JS;
 					."status:'{$this->status}',"
 					."location_code:'{$this->location_code}',"
 					."block_query:'{$block_query}',"
-					."menu_selection:'{$_menu_selection}'";
-
+					."menu_selection:'{$_menu_selection}',"
+					. "download_type:'responsiblility_role'";
 
 				$values_combo_box[0]  = execMethod('property.soadmin_location.read',array());
 				//$values_combo_box[0]  = array(array('id'=>'1','name'=> 'Eiendom'));
@@ -1255,7 +1291,7 @@ JS;
 
 				foreach($values_combo_box[4] as &$_role)
 				{
-					$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name',$_role['id']);
+					$_role['name'] .= ':: ' .  execMethod('property.soresponsible.get_responsibility_name_from_role',$_role['id']);
 				}
 				$default_value = array ('id'=>'','name'=>lang('no role'));
 				array_unshift ($values_combo_box[4],$default_value);
@@ -1294,7 +1330,8 @@ JS;
 								'filter'			=> $this->filter,
 								'sort'				=> $this->sort,
 								'order'				=> $this->order,
-								'menu_selection'	=> $_menu_selection
+								'menu_selection'	=> $_menu_selection,
+								'download_type'		=> 'responsiblility_role'
 							)
 						),
 						'fields'	=> array
@@ -1372,6 +1409,13 @@ JS;
 									'value'    => lang('search'),
 									'type' => 'button',
 									'tab_index' => 8
+								),
+								array
+								(
+									'id'	=> 'btn_export',
+									'type'	=> 'button',
+									'value'	=> lang('download'),
+									'tab_index' => 9
 								),
 								array
 								( // TEXT IMPUT
