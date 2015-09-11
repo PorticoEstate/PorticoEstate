@@ -11,7 +11,6 @@ include_class('rental', 'location_hierarchy', 'inc/locations/');
 	
 class rental_uiparty extends rental_uicommon
 {
-	private $receipt = array();
 	
 	public $public_functions = array
 	(
@@ -549,63 +548,56 @@ JS;
 	 * @param HTTP::id	the party ID
 	 */
 	public function view()
-	{
-		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
-		// Get the contract part id
-		$party_id = (int)phpgw::get_var('id');
-		if(isset($party_id) && $party_id > 0)
-		{
-			$party = rental_soparty::get_instance()->get_single($party_id); 
-		}
-		else
-		{
-			$this->render('permission_denied.php',array('error' => lang('invalid_request')));
-			return;
-		}
-		
-		if(isset($party) && $party->has_permission(PHPGW_ACL_READ))
-		{
-			return $this->render(
-				'party.php', 
-				array (
-					'party' 	=> $party,
-					'editable' => false,
-					'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => 'yes')),
-				)
-			);
-		}
-		else
-		{
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_view_party')));
-		}
+	{	
+		$this->edit(array(), $mode = 'view');
 	}
 
 	/**
 	 * Public method. Called when user wants to edit a contract party.
 	 * @param HTTP::id	the party ID
 	 */
-	public function edit()
+	public function edit($values = array(), $mode = 'edit')
 	{
-		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang($mode);
 		// Get the contract part id
 		$party_id = (int)phpgw::get_var('id');		
 		
-		// Retrieve the party object or create a new one if correct permissions
-		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		if ($mode == 'view')
 		{
 			if(isset($party_id) && $party_id > 0)
-			{	
+			{
 				$party = rental_soparty::get_instance()->get_single($party_id); 
 			}
 			else
 			{
-				$party = new rental_party();
+				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
 			}
+
+			if(!$party->has_permission(PHPGW_ACL_READ))
+			{
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_view_party')));
+			}			
 		}
 		else
-		{
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+		{	
+			// Retrieve the party object or create a new one if correct permissions
+			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			{
+				if(isset($party_id) && $party_id > 0)
+				{	
+					$party = rental_soparty::get_instance()->get_single($party_id); 
+				}
+				else
+				{
+					$party = new rental_party();
+				}
+			}
+			else
+			{
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+			}			
 		}
+
 	
 		if(isset($_POST['save_party'])) // The user has pressed the save button
 		{
@@ -637,12 +629,10 @@ JS;
 				
 				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
-					//$msgbox_data = array(lang('messages_saved_form') => 1);
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message'); 
 				}
 				else
 				{
-					//$msgbox_data = array(lang('messages_form_error') => 0);
 					phpgwapi_cache::message_set(lang('messages_form_error'), 'error'); 
 				}
 			}
@@ -676,7 +666,7 @@ JS;
 		
 		if ($party_id)
 		{
-			$GLOBALS['phpgw']->jqcal->add_listener('date_status');
+			$GLOBALS['phpgw']->jqcal->add_listener('status_date');
 			
 			$tabletools_contracts[] = array
 				(
@@ -709,7 +699,23 @@ JS;
 					)),
 					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 				);
-				
+			
+			$tabletools_contracts[] = array
+				(			
+					'my_name'		=> 'download_contracts',
+					'text'			=> lang('download'),
+					'type'			=> 'custom',
+					'custom_code'	=> "
+						var oArgs = ".json_encode(array(
+								'menuaction'		=> 'rental.uicontract.download', 
+								'party_id'			=> $party_id,
+								'type'				=> 'contracts_part',
+								'export'			=> true
+							)).";
+						downloadContracts(oArgs);
+					"
+				);
+						
 			$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
 			$datatable_def[] = array
 			(
@@ -748,71 +754,88 @@ JS;
 					array('disablePagination' => true)
 				)
 			);
+			
+			$search_contract_options = array
+			(
+				array('id' => 'all', 'name' => lang('all')),
+				array('id' => 'id', 'name' => lang('contract_id')),
+				array('id' => 'party_name', 'name' => lang('party_name')),
+				array('id' => 'composite', 'name' => lang('composite_name')),
+				array('id' => 'composite_address', 'name' => lang('composite_address')),
+				array('id' => 'location_id', 'name' => lang('object_number'))
+			);
+
+			$status_options = array
+			(
+				array('id' => 'all', 'name' => lang('all')),
+				array('id' => 'under_planning', 'name' => lang('under_planning')),
+				array('id' => 'active', 'name' => lang('active_plural')),
+				array('id' => 'under_dismissal', 'name' => lang('under_dismissal')),
+				array('id' => 'ended', 'name' => lang('ended'))
+			);
+
+			$field_of_responsibility = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$field_of_responsibility_options = array();
+			array_unshift ($field_of_responsibility_options, array('id'=>'all', 'name'=>lang('all')));
+			foreach($field_of_responsibility as $id => $label)
+			{
+				$field_of_responsibility_options[] = array('id' => $id, 'name' =>lang($label));
+			}
+
+			$link_upload_document = json_encode(self::link(array('menuaction'=>'rental.uidocument.add', 'party_id'=>$party_id, 'phpgw_return_as'=>'json')));
+
+			/******************************* document filters */
+			$document_types = rental_sodocument::get_instance()->get_document_types();
+			$document_types_options = array();
+			foreach($document_types as $id => $label)
+			{
+				$document_types_options[] = array('id'=>$id, 'name'=>lang($label));
+			}
+
+			$document_search_options[] = array('id'=>'all', 'name'=>lang('all'));
+			$document_search_options[] = array('id'=>'title', 'name'=>lang('document_title'));
+			$document_search_options[] = array('id'=>'name', 'name'=>lang('document_name'));
+			/***********************************************************************************/
 		}
 		
-		$result_units = rental_bofellesdata::get_instance()->get_result_units();
 		$party_org_enhet_id = $party->get_org_enhet_id();
-		$organization_options[] = array('id'=>'', 'name'=>lang('no_party_location'), 'selected'=>0);
-		foreach ($result_units as $result_unit)
-		{
-			$selected = ($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id) ? 1 : 0;
-			$organization_options[] = array('id'=>$result_unit['ORG_UNIT_ID'], 'name'=>$result_unit['UNIT_ID'].' - '.$result_unit['ORG_UNIT_NAME'], 'selected'=>$selected);
-		}
-		
 		$valid_email = 0;
-		$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
-		$email = $party->get_email();
-		if($email_validator->check_email_address($email) && !$GLOBALS['phpgw']->accounts->exists($email))
-		{
-			$valid_email = 1;
-			$link_create_user = array
-				(
-					'menuaction'	=> 'rental.uiparty.create_user_based_on_email',
-					'id'			=> $party_id
-				);	
-		}
-
-		$search_contract_options = array
-		(
-			array('id' => 'all', 'name' => lang('all')),
-			array('id' => 'id', 'name' => lang('contract_id')),
-			array('id' => 'party_name', 'name' => lang('party_name')),
-			array('id' => 'composite', 'name' => lang('composite_name')),
-			array('id' => 'composite_address', 'name' => lang('composite_address')),
-			array('id' => 'location_id', 'name' => lang('object_number'))
-		);
+		$organization_options = array();
 		
-		$status_options = array
-		(
-			array('id' => 'all', 'name' => lang('all')),
-			array('id' => 'under_planning', 'name' => lang('under_planning')),
-			array('id' => 'active', 'name' => lang('active_plural')),
-			array('id' => 'under_dismissal', 'name' => lang('under_dismissal')),
-			array('id' => 'ended', 'name' => lang('ended'))
-		);
-		
-		$field_of_responsibility = rental_socontract::get_instance()->get_fields_of_responsibility();
-		$field_of_responsibility_options = array();
-		array_unshift ($field_of_responsibility_options, array('id'=>'all', 'name'=>lang('all')));
-		foreach($field_of_responsibility as $id => $label)
+		if ($mode == 'view')
 		{
-			$field_of_responsibility_options[] = array('id' => $id, 'name' =>lang($label));
+			if (!empty($party_org_enhet_id))
+			{
+				$result_unit = rental_bofellesdata::get_instance()->get_result_unit($party_org_enhet_id);
+				$organization_name = $result_unit['ORG_NAME'];
+			}
+			else
+			{
+				$organization_name = lang('no_party_location');
+			}			
 		}
-		
-		$link_upload_document = json_encode(self::link(array('menuaction'=>'rental.uidocument.add', 'party_id'=>$party_id, 'phpgw_return_as'=>'json')));
-
-		/******************************* document filters */
-		$document_types = rental_sodocument::get_instance()->get_document_types();
-		$document_types_options = array();
-		foreach($document_types as $id => $label)
+		else
 		{
-			$document_types_options[] = array('id'=>$id, 'name'=>lang($label));
+			$result_units = rental_bofellesdata::get_instance()->get_result_units();
+			$organization_options[] = array('id'=>'', 'name'=>lang('no_party_location'), 'selected'=>0);
+			foreach ($result_units as $result_unit)
+			{
+				$selected = ($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id) ? 1 : 0;
+				$organization_options[] = array('id'=>$result_unit['ORG_UNIT_ID'], 'name'=>$result_unit['UNIT_ID'].' - '.$result_unit['ORG_UNIT_NAME'], 'selected'=>$selected);
+			}
+			
+			$email = $party->get_email();
+			$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
+			if($email_validator->check_email_address($email) && !$GLOBALS['phpgw']->accounts->exists($email))
+			{
+				$valid_email = 1;
+				$link_create_user = array
+					(
+						'menuaction'	=> 'rental.uiparty.create_user_based_on_email',
+						'id'			=> $party_id
+					);	
+			}			
 		}
-
-		$document_search_options[] = array('id'=>'all', 'name'=>lang('all'));
-		$document_search_options[] = array('id'=>'title', 'name'=>lang('document_title'));
-		$document_search_options[] = array('id'=>'name', 'name'=>lang('document_name'));
-		/***********************************************************************************/
 				
 		$alertMessage_get_syncData = '"Du må velge organisasjonsenhet før du kan synkronisere";';						
 		$jscode = <<<JS
@@ -833,29 +856,10 @@ JS;
 			'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 			'lang_save'						=> lang('save'),
 			'lang_sync_data'				=> lang('get_sync_data'),
-			'lang_cancel'					=> lang('cancel'),			
-			'editable'						=> true,
+			'lang_cancel'					=> lang('cancel'),
 			'party_id'						=> $party_id,
 			
-			'lang_identifier'				=> lang('identifier'),
-			'lang_firstname'				=> lang('firstname'),
-			'lang_lastname'					=> lang('lastname'),
-			'lang_job_title'				=> lang('job_title'),
-			'lang_company'					=> lang('company'),
-			'lang_department'				=> lang('department'),
-			'lang_address'					=> lang('address'),
-			'lang_postal_code_place'		=> lang('postal_code_place'),
-			'lang_inactive_party'			=> lang('inactive_party'),
-			'lang_account_number'			=> lang('account_number'),
-			'lang_phone'					=> lang('phone'),
-			'lang_mobile_phone'				=> lang('mobile_phone'),
-			'lang_fax'						=> lang('fax'),
-			'lang_email'					=> lang('email'),
-			'lang_url'						=> lang('url'),
-			'lang_unit_leader'				=> lang('unit_leader'),
-			'lang_comment'					=> lang('comment'),
-			'lang_organization'				=> lang('organization'),
-			
+			'value_name'					=> $party->get_name(),
 			'value_identifier'				=> $party->get_identifier(),
 			'value_firstname'				=> $party->get_first_name(),
 			'value_lastname'				=> $party->get_last_name(),
@@ -866,7 +870,7 @@ JS;
 			'value_address2'				=> $party->get_address_2(),
 			'value_postal_code'				=> $party->get_postal_code(),
 			'value_place'					=> $party->get_place(),
-			'value_inactive_party'			=> $party->is_inactive(),
+			'is_inactive_party'				=> $party->is_inactive() ? 1 : 0,
 			'value_account_number'			=> $party->get_account_number(),
 			'value_phone'					=> $party->get_phone(),
 			'value_mobile_phone'			=> $party->get_mobile_phone(),
@@ -878,8 +882,8 @@ JS;
 			'sync_info_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_sync_info),
 			'use_fellesdata'				=> $config->config_data['use_fellesdata'],
 			'list_organization'				=> array('options' => $organization_options),
+			'value_organization'			=> $organization_name,
 			
-			'lang_create_user'				=> lang('create_user_based_on_email_link'),
 			'valid_email'					=> $valid_email,
 			'link_create_user'				=> $GLOBALS['phpgw']->link('/index.php',$link_create_user),
 			
@@ -896,7 +900,7 @@ JS;
 		
 		self::add_javascript('rental', 'rental', 'party.edit.js');
 		phpgwapi_jquery::load_widget('numberformat');
-		self::render_template_xsl(array('party', 'datatable_inline'), array('edit' => $data));
+		self::render_template_xsl(array('party', 'datatable_inline'), array($mode => $data));
 	}
 	
 	public function download()
