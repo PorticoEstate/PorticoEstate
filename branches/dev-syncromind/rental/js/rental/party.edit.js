@@ -1,28 +1,6 @@
 
 $(document).ready(function()
-{
-	$("#date_start").change(function(){
-
-		var date_start = $("#date_start").val();
-		var billing_start = $("#billing_start_date").val();
-		if(!billing_start)
-		{
-			$("#billing_start_date").val(date_start);
-		}
-	});
-
-	$("#date_end").change(function(){
-
-		var date_end = $("#date_end").val();
-		var billing_end_date = $("#billing_end_date").val();
-		if(!billing_end_date)
-		{
-			$("#billing_end_date").val(date_end);
-		}
-	});
-
-	/******************************************************************************/
-	
+{	
 	$('#contract_search_options').change( function() 
 	{
 		filterDataContract('search_option', $(this).val());
@@ -43,6 +21,16 @@ $(document).ready(function()
 		filterDataContract('contract_status', $(this).val());
 	});
 
+	var previous_status_date;
+	$("#status_date").on('keyup change', function ()
+	{
+		if ( $.trim($(this).val()) != $.trim(previous_status_date) ) 
+		{
+			filterDataContract('status_date', $(this).val());
+			previous_status_date = $(this).val();
+		}
+	});
+					
 	$('#contract_type').change( function() 
 	{
 		filterDataContract('contract_type', $(this).val());
@@ -157,3 +145,20 @@ function formatterArea (key, oData)
 	var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + area_suffix;
 	return amount;
 }
+
+downloadContracts = function(oArgs){
+
+	if(!confirm("This will take some time..."))
+	{
+		return false;
+	}
+	
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	requestUrl += '&search_option=' + $('#contract_search_options').val();
+	requestUrl += '&search=' + $('#contract_query').val();
+	requestUrl += '&contract_type=' + $('#contract_type').val();
+	requestUrl += '&contract_status=' + $('#contract_status').val();
+
+	window.open(requestUrl,'_self');
+};
