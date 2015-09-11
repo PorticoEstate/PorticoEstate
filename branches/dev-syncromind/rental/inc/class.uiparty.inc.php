@@ -237,7 +237,7 @@ class rental_uiparty extends rental_uicommon
 				
 				if (!$export)
 				{
-					$serialized['actions'] = $this->get_actions($serialized, array(	// Parameters (non-object pointers)
+					$serialized['other_operations'] = $this->get_actions($serialized, array(	// Parameters (non-object pointers)
 													$contract_id,										// [1] The contract id
 													$type,												// [2] The type of query
 													isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
@@ -470,7 +470,7 @@ class rental_uiparty extends rental_uicommon
 			array_unshift($data['form']['toolbar']['item'], $filter);
 		}
 			
-		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
+		array_push($data['datatable']['field'], array("key" => "other_operations", "label" => lang('other operations'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
 		
 		$parameters = array
 			(
@@ -676,6 +676,40 @@ JS;
 		
 		if ($party_id)
 		{
+			$GLOBALS['phpgw']->jqcal->add_listener('date_status');
+			
+			$tabletools_contracts[] = array
+				(
+					'my_name'		=> 'edit',
+					'text'			=> lang('edit'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.edit',
+							'initial_load'	=> 'no'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+
+			$tabletools_contracts[] = array
+				(
+					'my_name'		=> 'copy',
+					'text'			=> lang('copy'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.copy_contract'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+
+			$tabletools_contracts[] = array
+				(
+					'my_name'		=> 'show',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.view',
+							'initial_load'	=> 'no'
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+				
 			$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
 			$datatable_def[] = array
 			(
@@ -693,6 +727,7 @@ JS;
 							array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false),
 							array('key'=>'contract_notification_status', 'label'=>lang('notification_status'), 'sortable'=>false)					
 				),
+				'tabletools'	=> $tabletools_contracts,
 				'config'		=> array(
 					array('disableFilter' => true)
 				)	
@@ -1024,7 +1059,7 @@ JS;
 		{
 			array_push($data['datatable']['field'], $col);
 		}
-		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
+		array_push($data['datatable']['field'], array("key" => "other_operations", "label" => lang('other operations'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
 		
 		$parameters = array
 			(
@@ -1033,18 +1068,6 @@ JS;
 					array
 					(
 						'name'		=> 'id',
-						'source'	=> 'id'
-					),
-				)
-			);
-			
-		$parameters2 = array
-			(
-				'parameter' => array
-				(
-					array
-					(
-						'name'		=> 'party_id',
 						'source'	=> 'id'
 					),
 				)
@@ -1072,57 +1095,18 @@ JS;
 				'parameters'	=> json_encode($parameters)
 			);
 				
-		switch($type)
+		if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
 		{
-			case 'included_parties':
-
-				if($editable)
-				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name'		=> 'remove',
-							'text' 			=> lang('remove'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> 'rental.uicontract.remove_party',
-								'contract_id'	=> $contract_id
-							)),
-							'parameters'	=> json_encode($parameters2)
-						);
-				}
-				break;
-			case 'not_included_parties':
-
-				if($editable)
-				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name'		=> 'add',
-							'text' 			=> lang('add'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> 'rental.uicontract.add_party',
-								'contract_id'	=> $contract_id
-							)),
-							'parameters'	=> json_encode($parameters2)
-						);
-				}
-				break;
-			default:
-					
-				if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
-				{
-					$data['datatable']['actions'][] = array
-						(
-							'my_name'		=> 'edit',
-							'text' 			=> lang('edit'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	=> 'rental.uiparty.edit'
-							)),
-							'parameters'	=> json_encode($parameters)
-						);
-				}
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('edit'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'rental.uiparty.edit'
+					)),
+					'parameters'	=> json_encode($parameters)
+				);
 		}
 		
 		$alertMessage_deleteParty = '"Du er i ferd med å slette en kontraktspart.\n\n Operasjonen kan ikke angres.\n\n Vil du gjøre dette?";';
