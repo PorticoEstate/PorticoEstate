@@ -224,11 +224,11 @@
 			
 			$this->add_template_helpers();
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Organization New'), 'link' => '#generic');
-            $active_tab = 'generic';
-            
-            $organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Organization New'), 'link' => '#organization_edit');
+                        $active_tab = 'generic';
+
+                        $organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
@@ -241,7 +241,7 @@
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
 			
 			$tabs = array();
-			$tabs['generic']	= array('label' => lang('Generic'), 'link' => '#generic');
+			$tabs['generic']	= array('label' => lang('Generic'), 'link' => '#organization_edit');
 			$active_tab = 'generic';
 			
 			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -270,7 +270,7 @@
 					}
 				}
 			}
-    		$this->flash_form_errors($errors);
+                        $this->flash_form_errors($errors);
 			$organization['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $id));
 
 			$contact_form_link = self::link(array('menuaction' => $this->module . '.uicontactperson.edit', ));

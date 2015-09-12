@@ -110,11 +110,11 @@
 			$activities = $activities['results'];
 			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Activity New'), 'link' => '#activity_add');
-            $active_tab = 'generic';
-            
-            $activity['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Activity New'), 'link' => '#activity_add');
+                        $active_tab = 'generic';
+
+                        $activity['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('activity_new', array('activity' => $activity, 'activities' => $activities));
 		}
@@ -148,12 +148,12 @@
 			}
 			$this->flash_form_errors($errors);
 			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
-            
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Activity Edit'), 'link' => '#activity_edit');
-            $active_tab = 'generic';
-            
-            $activity['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Activity Edit'), 'link' => '#activity_edit');
+                        $active_tab = 'generic';
+
+                        $activity['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('activity_edit', array('activity' => $activity, 'parent' => $parent_activity, 'activities' => $activities));
 		}

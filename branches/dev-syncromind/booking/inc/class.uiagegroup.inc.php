@@ -158,11 +158,11 @@
 			$agegroup['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
 			array_set_default($agegroup, 'sort', '0');
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Agegroup New'), 'link' => '#agegroup_add');
-            $active_tab = 'generic';
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Agegroup New'), 'link' => '#agegroup_add');
+                        $active_tab = 'generic';
 
-            $agegroup['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $agegroup['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('agegroup_new', array('agegroup' => $agegroup));
 		}
@@ -189,11 +189,11 @@
 			}
 			$this->flash_form_errors($errors);
 			
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Age Group Edit'), 'link' => '#agegroup_edit');
-            $active_tab = 'generic';
-            
-            $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Age Group Edit'), 'link' => '#agegroup_edit');
+                        $active_tab = 'generic';
+
+                        $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
 			self::render_template_xsl('agegroup_edit', array('resource' => $resource, 'lang' => $lang));

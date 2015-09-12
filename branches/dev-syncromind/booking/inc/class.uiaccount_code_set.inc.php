@@ -140,11 +140,11 @@ phpgw::import_class('booking.uicommon');
 			$config->read();
 			$this->add_default_display_data($account_code_set);
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Account set code'), 'link' => '#account');
-            $active_tab = 'generic';
-            
-            $account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Account set code'), 'link' => '#account');
+                        $active_tab = 'generic';
+
+                        $account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('account_code_set', array('account_code_set' => $account_code_set, 'config_data' => $config->config_data));
 		}
@@ -219,11 +219,11 @@ phpgw::import_class('booking.uicommon');
 			$account_code_set['cancel_link'] = $this->link_to('index');
 			$this->flash_form_errors($errors);
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Account New'), 'link' => '#account');
-            $active_tab = 'generic';
-            
-            $account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Account New'), 'link' => '#account');
+                        $active_tab = 'generic';
+
+                        $account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('account_code_set_form', array('new_form' => true, 'account_code_set' => $account_code_set , 'config_data' => $config->config_data));
 		}

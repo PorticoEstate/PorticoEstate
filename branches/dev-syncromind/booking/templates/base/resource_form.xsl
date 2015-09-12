@@ -109,7 +109,9 @@
                     <textarea id="field_description" name="description" type="text"><xsl:value-of select="resource/description"/></textarea>
                 </div>
                 <div class="pure-control-group">
-                    <label><xsl:value-of select="php:function('lang', 'organzations_ids')" /></label>
+                    <label>
+                        <h4><xsl:value-of select="php:function('lang', 'organzations_ids')" /></h4>
+                    </label>
                 </div>
                 <div class="pure-control-group">
                     <label for="field_organizations_ids">

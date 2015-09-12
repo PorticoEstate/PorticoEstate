@@ -317,10 +317,10 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Group Edit'), 'link' => '#group_edit');
-            $active_tab = 'generic';
-            $group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Group Edit'), 'link' => '#group_edit');
+                        $active_tab = 'generic';
+                        $group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('group_edit', array('group' => $group, 'module' => $this->module, 'activities' => $activities));
 		}
@@ -338,11 +338,11 @@
 			$loggedin = (int) true; // FIXME: Some sort of authentication!
 			$edit_self_link   = self::link(array('menuaction' => 'bookingfrontend.uigroup.edit', 'id' => $group['id']));
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Group'), 'link' => '#group');
-            $active_tab = 'generic';
-            
-            $group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Group'), 'link' => '#group');
+                        $active_tab = 'generic';
+
+                        $group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('group', array('group' => $group, 'loggedin' => $loggedin, 'edit_self_link' => $edit_self_link));
 		}

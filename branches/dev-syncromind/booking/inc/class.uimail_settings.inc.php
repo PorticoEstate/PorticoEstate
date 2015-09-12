@@ -38,12 +38,12 @@
 				$config->save_repository();
 			}
 //			$this->use_yui_editor();
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Mail Settings'), 'link' => '#mail_settings');
-            $active_tab = 'generic';
-            
-            $mail = array();
-            $mail['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Mail Settings'), 'link' => '#mail_settings');
+                        $active_tab = 'generic';
+
+                        $mail = array();
+                        $mail['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('mail_settings', array('config_data' =>$config->config_data, 'data' => $mail));
 		}

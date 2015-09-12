@@ -251,6 +251,10 @@ phpgw::import_class('booking.uicommon');
 			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$export_file['type'] = lang($export_file['type']);
 			$this->add_default_display_data($export_file);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Export File'), 'link' => '#export_file');
+                        $active_tab = 'generic';
+                        $export_file['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			self::render_template('completed_reservation_export_file', array('export_file' => $export_file));
 		}
 		

@@ -682,6 +682,12 @@ phpgw::import_class('booking.sopermission');
 			{
 				$show_edit_button = true;
 			}
+                        
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Group'), 'link' => '#completed_reservation');
+                        $active_tab = 'generic';
+
+                        $reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			self::render_template('completed_reservation', array('reservation' => $reservation, 'show_edit_button' => $show_edit_button));
 		}
 		
@@ -718,7 +724,8 @@ phpgw::import_class('booking.sopermission');
 			return array($entity, $errors);
 		}
 		
-		public function edit() {
+		public function edit()
+                {
 			//TODO: Display hint to user about primary type of customer identifier
 			
 			$building_role = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
@@ -750,6 +757,11 @@ phpgw::import_class('booking.sopermission');
 				}
 			}
 			
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Group'), 'link' => '#completed_reservation_edit');
+                        $active_tab = 'generic';
+                        $reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        
 			$this->add_default_display_data($reservation);
 			$this->flash_form_errors($errors);
 			$this->install_customer_identifier_ui($reservation);

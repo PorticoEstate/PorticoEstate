@@ -83,15 +83,15 @@ class booking_uireports extends booking_uicommon
 
 		$this->flash_form_errors($errors);
         
-        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-        $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-        
-        $tabs = array();
-        $tabs['generic'] = array('label' => lang('Report Participants'), 'link' => '#report_part');
-        $active_tab = 'generic';
-        
-        $data = array();
-        $data['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
+                $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
+
+                $tabs = array();
+                $tabs['generic'] = array('label' => lang('Report Participants'), 'link' => '#report_part');
+                $active_tab = 'generic';
+
+                $data = array();
+                $data['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
 		self::render_template_xsl('report_participants',array('data' => $data,'from' => $from, 'to' => $to, 'buildings' => $buildings['results']));
 	}
@@ -145,15 +145,15 @@ class booking_uireports extends booking_uicommon
 
 		$this->flash_form_errors($errors);
         
-        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-        $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-        
-        $tabs = array();
-        $tabs['generic'] = array('label' => lang('Report FreeTime'), 'link' => '#report_freetime');
-        $active_tab = 'generic';
-        
-        $data = array();
-        $data['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
+                $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
+
+                $tabs = array();
+                $tabs['generic'] = array('label' => lang('Report FreeTime'), 'link' => '#report_freetime');
+                $active_tab = 'generic';
+
+                $data = array();
+                $data['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
 		self::render_template_xsl('report_freetime',
 				array('data'=>$data, 'show' => $show, 'from' => $from, 'to' => $to, 'buildings' => $buildings['results'], 'allocations' => $allocations['results']));

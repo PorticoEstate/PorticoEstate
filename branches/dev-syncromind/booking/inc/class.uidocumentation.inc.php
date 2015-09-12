@@ -196,11 +196,11 @@
 			
 			$this->flash_form_errors($errors);
 
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
-            $active_tab = 'generic';
-            
-            $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Documentation'), 'link' => '#documentation');
+                        $active_tab = 'generic';
+
+                        $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('documentation_form', array('document' => $document));
 		}

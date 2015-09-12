@@ -1,14 +1,14 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
-		<ul class="pathway">
-			<li><a href="{season/buildings_link}"><xsl:value-of select="php:function('lang', 'Buildings')" /></a></li>
-			<li><a href="{season/building_link}"><xsl:value-of select="season/building_name"/></a></li>
-			<li><xsl:value-of select="php:function('lang', 'Season')" /></li>
-			<li><a href="{season/season_link}"><xsl:value-of select="season/name"/></a></li>
-		</ul>
+    <!--div id="content">
+        <ul class="pathway">
+                <li><a href="{season/buildings_link}"><xsl:value-of select="php:function('lang', 'Buildings')" /></a></li>
+                <li><a href="{season/building_link}"><xsl:value-of select="season/building_name"/></a></li>
+                <li><xsl:value-of select="php:function('lang', 'Season')" /></li>
+                <li><a href="{season/season_link}"><xsl:value-of select="season/name"/></a></li>
+        </ul-->
 
-		<xsl:call-template name="msgbox"/>
-		<xsl:call-template name="yui_booking_i18n"/>
+    <xsl:call-template name="msgbox"/>
+    <!--xsl:call-template name="yui_booking_i18n"/-->
 
         <dl class="form">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'Week Template')" /></dt>
@@ -85,7 +85,7 @@
 			</div>
 		</form>
 
-	</div>
+	<!--/div-->
 
 <script type="text/javascript">
 var season_id = <xsl:value-of select="season/id"/>;

@@ -74,11 +74,11 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'email_send.js');
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Building Send'), 'link' => '#building');
-            $active_tab = 'generic';
-            
-            $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Building Send'), 'link' => '#building');
+                        $active_tab = 'generic';
+
+                        $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			if ($step == 1)
 				self::render_template_xsl('email_index', 
