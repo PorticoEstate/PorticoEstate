@@ -740,7 +740,7 @@
 				$filters = array('contract_type' => $adjustment->get_responsibility_id(), 'adjustment_interval' => $adjustment->get_interval(), 'adjustment_year' => $adjustment->get_year(), 'adjustment_is_executed' => $adjustment->is_executed(), 'extra_adjustment' => $adjustment->is_extra_adjustment());
 				break;
 			case 'contracts_part': 						// Contracts for this party
-				$filters = array('party_id' => phpgw::get_var('party_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
+				$filters = array('party_id' => phpgw::get_var('party_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date'));
 				break;
 			case 'contracts_for_executive_officer': 	// Contracts for this executive officer
 				$filters = array('executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']);
@@ -803,7 +803,7 @@
 				break;
 			case 'contracts_for_composite': // ... all contracts this composite is involved in, filters (status and date)
 				$filters = array('composite_id' => phpgw::get_var('composite_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'));
-				$filters['status_date']			= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_status'));
+				$filters['status_date']			= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('status_date'));
 				break;
 			case 'get_contract_warnings':	//get the contract warnings
 				$contract = rental_socontract::get_instance()->get_single(phpgw::get_var('contract_id'));
@@ -874,6 +874,11 @@
 			array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id,$entity_id_in,$entity_id_out,$category_id_in,$category_id_out));
 		}
 
+		if($export)
+		{
+			return $rows;
+		}
+		
 		$result_data    =   array('results' =>  $rows);
 		$result_data['total_records']	= $result_count;
 		$result_data['draw']    = $draw;
