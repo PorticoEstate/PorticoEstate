@@ -186,7 +186,7 @@
 											<xsl:apply-templates select="list_status_options/options"/>
 										</select>
 										<label><xsl:value-of select="php:function('lang', 'date')"/></label>
-										<input type="text" id="date_status" name="date_status" value=""></input>
+										<input type="text" id="status_date" name="status_date" value=""></input>
 									</div>
 									<div class="pure-control-group">
 										<label><xsl:value-of select="php:function('lang', 'field_of_responsibility')"/></label>
