@@ -837,6 +837,22 @@
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
 					);
 				
+				$tabletools3[] = array
+					(			
+						'my_name'		=> 'download_contracts',
+						'text'			=> lang('download'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uicontract.download', 
+									'composite_id'		=> $composite_id,
+									'type'				=> 'contracts_for_composite',
+									'export'			=> true
+								)).";
+							downloadContracts(oArgs);
+						"
+					);
+			
 				$datatable_def[] = array
 				(
 					'container'		=> 'datatable-container_2',
@@ -865,7 +881,7 @@
 					'menuaction'	=> 'rental.uicomposite.index'
 				);
 		
-			$GLOBALS['phpgw']->jqcal->add_listener('date_status');
+			$GLOBALS['phpgw']->jqcal->add_listener('status_date');
 
 			/*$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();*/
