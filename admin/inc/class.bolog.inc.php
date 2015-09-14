@@ -19,7 +19,7 @@
 			'purge_log'		=> True
 		);
 		
-		function bolog()
+		function __construct()
 		{
 			$this->so       = createobject('admin.solog');
 		}

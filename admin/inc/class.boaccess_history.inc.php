@@ -13,7 +13,7 @@
 
 	class boaccess_history
 	{
-		function boaccess_history()
+		function __construct()
 		{
 			$this->so       = createobject('admin.soaccess_history');
 		}

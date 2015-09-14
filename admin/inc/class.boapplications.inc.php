@@ -15,7 +15,7 @@
 	{
 		var $so;
 
-		function boapplications()
+		function __construct()
 		{
 			$this->so = CreateObject('admin.soapplications');
 		}
