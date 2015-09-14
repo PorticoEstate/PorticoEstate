@@ -28,7 +28,7 @@
 		var $ix = array();
 		var $uc = array();
 
-		function schema_proc_oracle()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 			$this->m_sSequencePrefix = 'sq';

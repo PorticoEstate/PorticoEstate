@@ -6,7 +6,7 @@ class ui_tools
 		'color_picker' => true
 	);
 
-	function ui_tools()
+	function __construct()
 	{
 		$GLOBALS['phpgw']->xslttpl->add_file('form_elements', PHPGW_TEMPLATE_DIR);
 	}

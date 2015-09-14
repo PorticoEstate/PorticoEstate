@@ -2,7 +2,7 @@
 	/**
 	 * phpGroupWare portico template class
 	 *
-	 * @author Jan Åge Johnsen <janaage@hikt.no>
+	 * @author Jan Ã…ge Johnsen <janaage@hikt.no>
 	 * @copyright Copyright (C) 2007-2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	 * @package phpgroupware

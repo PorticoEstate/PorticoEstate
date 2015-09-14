@@ -155,7 +155,7 @@ class XML
 	* @param     string $file Path and name of the file to read and parsed.
 	* @see       load_file()
 	*/
-	function XML ( $file = "" )
+	function __construct ( $file = "" )
 	{
 		// Check whether a file was given.
 		if ( !empty($file) )

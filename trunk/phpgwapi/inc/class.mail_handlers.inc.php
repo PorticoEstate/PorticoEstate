@@ -12,7 +12,7 @@
 		*/
 		var $db;
 
-		function phpgwapi_mail_handlers()
+		function __construct()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 		}

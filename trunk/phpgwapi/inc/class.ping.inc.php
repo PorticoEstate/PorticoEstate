@@ -28,7 +28,7 @@
 
 		var $raw_array_of_data = array();
 
-		function ping($hostname)
+		function __construct($hostname)
 		{
 			$this->hostname = $hostname;
 			$this->re_ping();

@@ -52,7 +52,7 @@
 								 'field'	=> '',
 								 'type'		=> 'string'));
 		
-		function contact_types ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact_types', 'contact_types');
 			if($field)

@@ -59,7 +59,7 @@
 								 'sort'		=> '',
 								 'field'	=> 'descr'));
 
-		function contact_comm_descr ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact_comm_descr', 'contact_comm_descr');
 			if($field)

@@ -50,7 +50,7 @@
 		/**
 		* Class contructor
 		*/
-		function sql_builder()
+		function __construct()
 		{
 		}
 

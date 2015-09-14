@@ -176,7 +176,7 @@
 		//true, and the js framework will call an got_contact_ids method in the opening
 		//window, which is the one where the window.open() function was called to pop up
 		//the jsaddressbook
-		function uijsaddressbook($update_opener=false)
+		function __construct($update_opener=false)
 		{
 			//Grab data that MUST be propagated through all frames	
 			//Post Allways has precedence for good reason.

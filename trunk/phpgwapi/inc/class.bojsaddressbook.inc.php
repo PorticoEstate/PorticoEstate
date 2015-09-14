@@ -139,7 +139,7 @@
 		* compare it with what results from parsing the incoming contactquery. If its the same,
 		* we shouldnt refetch.
 		*/
-		function bojsaddressbook($contactquery="",$queryresults="")
+		function __construct($contactquery="",$queryresults="")
 		{
 			$this->contactsobject = createObject('phpgwapi.contacts');
 			$this->boaddressbook = createObject('addressbook.boaddressbook');

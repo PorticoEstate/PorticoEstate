@@ -53,7 +53,7 @@
 			'Dec' => '12'
 		);
 
-		function http()
+		function __construct()
 		{
 			$this->user_agent = 'phpGroupWare HTTP client v' . $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
 		}

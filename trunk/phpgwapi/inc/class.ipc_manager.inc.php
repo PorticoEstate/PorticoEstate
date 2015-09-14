@@ -33,7 +33,7 @@ class ipc_manager
 	/**
 	 * constructor
 	 */
-	function ipc_manager()
+	function __construct()
 	{
 		$this->_ipcObjectList = array();
 		$this->xmlrpc_methods = array();

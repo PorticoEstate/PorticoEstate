@@ -113,7 +113,7 @@
 
 		var $vCard_Version;
 		
-		function vcard()
+		function __construct()
 		{
 			$this->vCard_Version = '2.1';	
 			/* _debug_array($this); */

@@ -32,7 +32,7 @@
 
 		var $url_base;
 
-		function gdbutton()
+		function __construct()
 		{
 			$this->image		= 0;
 			$this->font_size	= 0;

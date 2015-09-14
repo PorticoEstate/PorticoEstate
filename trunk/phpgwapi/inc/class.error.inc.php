@@ -41,7 +41,7 @@
 			return lang($this->msg,$this->parms);
 		}
 
-		function error($parms)
+		function __construct($parms)
 		{
 			if ($parms == '')
 			{

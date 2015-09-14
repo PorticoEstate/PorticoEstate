@@ -23,7 +23,7 @@
 		var $root_level_value;        // This is what the top level name or image will be
 		var $last_column_size;
 
-		function menutree($read_from_file='text')
+		function __construct($read_from_file='text')
 		{
 			if($read_from_file == 'text')
 			{

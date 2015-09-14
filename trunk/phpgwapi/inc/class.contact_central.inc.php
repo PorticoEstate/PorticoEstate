@@ -93,7 +93,7 @@
 		
 
 
-		function contact_central ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact', 'contact_central');
 

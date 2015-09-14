@@ -111,7 +111,7 @@
 								 'field'	=> ''));
 		
 
-		function contact_others ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact_others', 'contact_others');
 			if($field)

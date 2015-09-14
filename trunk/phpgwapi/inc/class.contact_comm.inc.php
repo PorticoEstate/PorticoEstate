@@ -235,7 +235,7 @@
 								 'sort'		=> '',
 								 'field'	=> 'comm_data'));
 		
-		function contact_comm ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact_comm', 'contact_comm');
 			if($field)
