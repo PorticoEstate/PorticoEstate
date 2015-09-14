@@ -164,7 +164,7 @@
 		var $tmpurl = array();
 		var $depth;
 
-		function rssparser()
+		function __construct()
 		{
 			$this->nitems = 0;
 			$this->depth  = 0;

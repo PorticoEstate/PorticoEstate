@@ -23,7 +23,7 @@
 		var $error;
 		var $errorset = 0;
 
-		function network($addcrlf=true)
+		function __construct($addcrlf=true)
 		{
 			$this->errorset = 0;
 			$this->set_addcrlf($addcrlf);

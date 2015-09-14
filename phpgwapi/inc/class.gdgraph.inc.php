@@ -38,7 +38,7 @@
 		var $margin_right;
 		var $img;
 	
-		function gdgraph($debug = False)
+		function __construct($debug = False)
 		{
 			$this->debug			= $debug;
 

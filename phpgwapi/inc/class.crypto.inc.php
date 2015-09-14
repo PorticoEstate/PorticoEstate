@@ -26,7 +26,7 @@
 		var $iv = '';
 		var $key = '';
 
-		function crypto($vars='')
+		function __construct($vars='')
 		{
 			if(is_array($vars))
 			{

@@ -75,7 +75,7 @@
 			'SOAP'    => 'soap'
 		);
 
-		function interserver($serverid='')
+		function __construct($serverid='')
 		{
 			$this->urlparts = array(
 				'xmlrpc' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php?domain=default",

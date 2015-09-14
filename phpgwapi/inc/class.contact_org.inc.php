@@ -109,7 +109,7 @@
 				 'organizations'=> array('select'	=> 'relink_org_person'),
 				 'orgs_local'	=> array('select'	=> 'relink_org_person'));
 
-		function contact_org ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact_org', 'contact_org');
 			if($field)

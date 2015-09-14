@@ -21,7 +21,7 @@
 	{
 		var $m_sStatementTerminator;
 
-		function schema_proc_array()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 		}

@@ -30,7 +30,7 @@
 
 		var $public_functions = array();
 
-		function log_message($parms)
+		function __construct($parms)
 		{
 			if ($parms == '')
 			{

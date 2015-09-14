@@ -83,7 +83,7 @@
 		/**
 		* Constructor
 		*/
-		function clientsniffer()
+		function __construct()
 		{
 			$this->UA = $_SERVER['HTTP_USER_AGENT'];
 

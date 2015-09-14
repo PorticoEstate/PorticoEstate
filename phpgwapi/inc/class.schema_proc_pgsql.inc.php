@@ -34,7 +34,7 @@
 		var $uc = array();
 		var $indexes_sql = array();
 
-		function schema_proc_pgsql()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 		}
