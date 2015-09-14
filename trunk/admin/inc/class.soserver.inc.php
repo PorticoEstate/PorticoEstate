@@ -17,7 +17,7 @@
 		var $is = '';
 		var $debug = False;
 
-		function soserver()
+		function __construct()
 		{
 			$this->is = CreateObject('phpgwapi.interserver');
 		}

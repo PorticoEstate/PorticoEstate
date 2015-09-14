@@ -15,7 +15,7 @@
 	{
 		var $db;
 
-		function solog()
+		function __construct()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 		}

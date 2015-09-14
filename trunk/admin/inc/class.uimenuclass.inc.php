@@ -16,7 +16,7 @@
 		var $t;
 		var $rowColor = Array();
 		
-		function uimenuclass()
+		function __construct()
 		{
 			$this->t = CreateObject('phpgwapi.Template',$GLOBALS['phpgw']->common->get_tpl_dir('admin'));
 
