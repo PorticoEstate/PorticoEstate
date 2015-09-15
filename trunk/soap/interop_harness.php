@@ -223,4 +223,3 @@ function quickjump(dropdown) {
 	$GLOBALS['phpgw']->common->phpgw_footer();
 	unset($soapmsg);
 	unset($client);
-?>

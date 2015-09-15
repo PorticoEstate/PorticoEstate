@@ -241,4 +241,3 @@
 	$GLOBALS['phpgw']->common->phpgw_footer();
 	unset($soapmsg);
 	unset($soap);
-?>
