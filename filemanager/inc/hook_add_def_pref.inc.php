@@ -16,4 +16,3 @@
 	$GLOBALS['pref']->add ('filemanager','viewtextplain','viewtextplain');
 	$GLOBALS['pref']->add ('filemanager','show_help','show_help');
 	$GLOBALS['pref']->add ('filemanager','show_upload_boxes','5');
-?>

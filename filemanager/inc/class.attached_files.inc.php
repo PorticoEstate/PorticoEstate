@@ -32,7 +32,7 @@
 		var $app;
 		var $appdir;
 
-		function attached_files()
+		function __construct()
 		{
 			$this->app			= (isset($_REQUEST['app'])?$_REQUEST['app']:$GLOBALS['phpgw_info']['flags']['currentapp']);
 			$this->appdir		= $GLOBALS['phpgw_info']['server']['files_dir'] . '/' . $this->app;
@@ -190,4 +190,3 @@
 			return $GLOBALS['phpgw']->vfs->file_exists($data);
 		}
 	}
-?>
