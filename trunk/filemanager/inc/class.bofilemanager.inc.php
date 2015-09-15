@@ -80,7 +80,7 @@
 			 'load_files'	=> true
 			);
 
-		function bofilemanager()
+		function __construct()
 		{
 			if ( !isset($GLOBALS['phpgw']->vfs) || !is_object($GLOBALS['phpgw']->vfs) )
 			{
@@ -1544,4 +1544,3 @@ _debug_Array($this->quota);
 		}
 		*/
 	}
-?>
