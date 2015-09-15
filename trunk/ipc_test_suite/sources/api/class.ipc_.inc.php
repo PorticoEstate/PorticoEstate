@@ -22,7 +22,7 @@
 		* Constructor
 		* @abstract
 		*/
-		function ipc_()
+		function __construct()
 		{
 			die('call abstract method: '.__class__.'::'.__function__);
 		}
@@ -109,4 +109,3 @@
 			die('call abstract method: '.__class__.'::'.__function__);
 		}
 	}
-?>

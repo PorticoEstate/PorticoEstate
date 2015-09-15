@@ -31,7 +31,7 @@
 	  * Constructor
 		* @param object $ipcManager ipc manager object
 	  */
-		function ipc_test_suite_notes($params)
+		function __construct($params)
 		{
 			$this->ipc =& $params['ipcManager']->getIPC('notes');
 
@@ -116,4 +116,3 @@
 			//return $this->ipc->getIdList(); // get all data id's
 		}
 	}
-?>

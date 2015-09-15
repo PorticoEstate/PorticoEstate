@@ -31,7 +31,7 @@
 		* Constructor
 		* @param object $$ipcManager ipc manager object
 		*/
-		function ipc_test_suite_email($params)
+		function __construct($params)
 		{
 			$this->ipc =& $params['ipcManager']->getIPC('email');
 
@@ -103,4 +103,3 @@
 			return $this->ipc->getIdList();
 		}
 	}
-?>
