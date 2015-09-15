@@ -14,7 +14,7 @@
 	/**
 	 * Description
 	 * @package sms
-	 * Config values for SMS-command "BR" - (Brøyting) "snow clearing" in Norwegian - as example - as it is configured at BBB
+	 * Config values for SMS-command "BR" - (BrÃ¸yting) "snow clearing" in Norwegian - as example - as it is configured at BBB
 	 * This file is for redirecting from log items to the subject of the log 
 	 */
 

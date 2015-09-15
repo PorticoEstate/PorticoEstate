@@ -1,4 +1,4 @@
-<?
+<?php
 
 if(!defined("_SECURE_")){die("Intruder: IP ".$_SERVER['REMOTE_ADDR']);};
 
@@ -16,5 +16,3 @@ if ($db_row = dba_fetch_array($db_result))
 }
 
 $gateway_number = $clktl_param['sender'];
-
-?>

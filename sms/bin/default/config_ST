@@ -14,7 +14,7 @@
 	/**
 	 * Description
 	 * @package sms
-	 * Config values for SMS-command "ST" - (Strøing) "sanding the ice" in Norwegian - as example - as it is configured at BBB 
+	 * Config values for SMS-command "ST" - (StrÃ¸ing) "sanding the ice" in Norwegian - as example - as it is configured at BBB 
 	 */
 
 	//$agreement = array(48089,48329);
@@ -57,4 +57,4 @@
 	$this->db->query("SELECT id FROM phpgw_cust_attribute WHERE column_name = '$target_field' AND location_id = $location_id",__LINE__,__FILE__);
 	$this->db->next_record();
 	$attrib_id = $this->db->f('id');
-	$receipt=  utf8_encode('Strøing: ');
+	$receipt=  utf8_encode('StrÃ¸ing: ');
