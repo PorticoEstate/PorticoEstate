@@ -21,7 +21,7 @@
 		var $db;
 		var $account;
 
-		function hrm_soplace()
+		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db 			= & $GLOBALS['phpgw']->db;

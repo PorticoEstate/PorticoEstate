@@ -18,7 +18,7 @@
 
 	class hrm_socommon
 	{
-		function hrm_socommon()
+		function __construct()
 		{
 			//$GLOBALS['phpgw_info']['flags']['currentapp']	=	'hrm';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];

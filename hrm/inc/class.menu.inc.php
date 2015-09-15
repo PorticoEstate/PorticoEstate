@@ -25,7 +25,7 @@
 			'links'	=> true,
 		);
 
-		function hrm_menu($sub='')
+		function __construct($sub='')
 		{
 			$this->sub		= $sub;
 		}
