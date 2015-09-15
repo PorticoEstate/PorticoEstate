@@ -31,7 +31,7 @@
 	  * Constructor
 		* @param object $$ipcManager ipc manager object
 	  */
-		function ipc_test_suite_todo($params)
+		function __construct($params)
 		{
 			$this->ipc =& $params['ipcManager']->getIPC('todo');
 
@@ -121,4 +121,3 @@
 			return $this->ipc->getIdList(mktime(8,00,00,3,9,2004));
 		}
 	}
-?>
