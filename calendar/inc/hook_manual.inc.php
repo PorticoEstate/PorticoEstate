@@ -20,4 +20,3 @@
 	);
 //Do not modify below this line
 	display_manual_section($appname,$file);
-?>

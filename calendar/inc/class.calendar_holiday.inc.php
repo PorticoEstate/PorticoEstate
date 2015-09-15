@@ -317,4 +317,3 @@ class calendar_holiday
 		return $this->holidays[$id]['name'];
 	}
 }
-?>

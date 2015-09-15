@@ -27,7 +27,7 @@
 
 
 
-		function calendar_uiicalendar()
+		function __construct()
 		{
 			$this->bo = CreateObject('calendar.boicalendar');
 			$this->template = $GLOBALS['phpgw']->template;
@@ -206,4 +206,3 @@
 			$this->template->pparse('out','vcalimport');
 		}
 	}
-?>

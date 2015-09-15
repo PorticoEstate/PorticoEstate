@@ -153,4 +153,3 @@ class calendar_holidaycalc
 		return $date;
 	}
 }
-?>
