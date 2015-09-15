@@ -19,4 +19,3 @@
 		'Manage Fields'			=> $GLOBALS['phpgw']->link ('/index.php', array('menuaction' => 'registration.uimanagefields.admin') )
 	);
 	$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
-?>

@@ -40,7 +40,7 @@
 			'tos'     => True
 		);
 
-		function uireg()
+		function __construct()
 		{
 			$this->template = $GLOBALS['phpgw']->template;
 			$this->bo = createobject ('registration.boreg');
