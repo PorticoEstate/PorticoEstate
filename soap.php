@@ -205,4 +205,3 @@
 
 	}
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>

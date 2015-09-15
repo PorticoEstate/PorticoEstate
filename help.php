@@ -56,5 +56,3 @@
 	$GLOBALS['phpgw_info']['flags']['app_header'] = $appname . ' - ' . $appname;
 
 	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('help' => $GLOBALS['phpgw']->help->output));
-
-?>
