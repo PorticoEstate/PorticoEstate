@@ -32,7 +32,7 @@
 			'address3' => 'address3'
 		);
 
-		function uivcard()
+		function __construct()
 		{
 			$this->template = $GLOBALS['phpgw']->template;
 			$this->contacts = CreateObject('phpgwapi.contacts');

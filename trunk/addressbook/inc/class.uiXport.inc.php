@@ -30,7 +30,7 @@
 		var $filter;
 		var $cat_id;
 
-		function uiXport()
+		function __construct()
 		{
 			$this->template = $GLOBALS['phpgw']->template;
 			$this->cat      = CreateObject('phpgwapi.categories');
@@ -278,4 +278,3 @@
 			}
 		}
 	}
-?>

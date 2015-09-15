@@ -24,7 +24,7 @@
 			'java_script' => True
 			);
 		
-		function uicategorize_contacts()
+		function __construct()
 		{
 			$this->template	= &$GLOBALS['phpgw']->template;
 			$this->lists = CreateObject('addressbook.widget_lists', 'Categories', 'categorize_contacts_form');
@@ -183,4 +183,3 @@
 			$this->selected_cat = phpgw::get_var('all_cats');
 		}
 	}
-?>

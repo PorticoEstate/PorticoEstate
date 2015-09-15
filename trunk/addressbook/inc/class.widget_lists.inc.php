@@ -29,7 +29,7 @@
 		* @param array $form_name The name form where it will be this widget
 		* @param string $use_combos Use True if you want to have combos in your widget
 		*/
-		function widget_lists($title, $form_name, $use_combos=True, $use_filter=False)
+		function __construct($title, $form_name, $use_combos=True, $use_filter=False)
 		{
 			$this->template	= &$GLOBALS['phpgw']->template;
 			$this->title = $title;
@@ -371,4 +371,3 @@
 			return $tmp;
 		}
 	}
-?>

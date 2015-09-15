@@ -46,7 +46,7 @@
 			'add_vcard' => true  // call from addressbook.uivcard.in to import a vcard
 		);
 
-		function boaddressbook($session=True)
+		function __construct($session=True)
 		{
 			$this->so = CreateObject('addressbook.soaddressbook');
 			$this->rights = $this->so->rights;
