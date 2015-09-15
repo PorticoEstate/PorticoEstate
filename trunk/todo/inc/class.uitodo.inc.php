@@ -35,7 +35,7 @@
 			'matrix'	=> True
 		);
 
-		function uitodo()
+		function __construct()
 		{
 			$this->botodo		= CreateObject('todo.botodo',True);
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
@@ -861,4 +861,3 @@
 			$this->matrix->out($GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'todo.uitodo.matrix') ) );
 		}
 	}
-?>
