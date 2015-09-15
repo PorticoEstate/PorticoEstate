@@ -19,7 +19,7 @@
 		var $db;
 		var $db_fields;
 
-		function somanagefields()
+		function __construct()
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 

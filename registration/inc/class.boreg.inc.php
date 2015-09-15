@@ -33,7 +33,7 @@
 			'get_locations'=> true
 		);
 
-		function boreg()
+		function __construct()
 		{
 			$this->so = createobject ('registration.soreg');
 			$this->bomanagefields = createobject ('registration.bomanagefields');
