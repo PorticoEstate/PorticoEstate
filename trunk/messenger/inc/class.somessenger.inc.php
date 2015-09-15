@@ -44,7 +44,7 @@
 		/**
 		* @constructor
 		*/
-		function somessenger_()
+		function __construct()
 		{
 			$this->owner =& $GLOBALS['phpgw_info']['user']['account_id'];
 		}
