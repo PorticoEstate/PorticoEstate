@@ -18,11 +18,11 @@
 	{
 		var $db;
 
-		function somessenger()
+		function __construct()
 		{
 			$this->db    =& $GLOBALS['phpgw']->db;
 			$this->connected = true;
-			$this->somessenger_();
+			parent::__construct();
 		}
 
 		function update_message_status($status, $message_id)
@@ -120,4 +120,3 @@
 			$this->db->transaction_commit();
 		}
 	}
-?>
