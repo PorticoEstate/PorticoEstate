@@ -35,7 +35,7 @@
 		*
 		* @author Dave Hall
 		*/
-		function mail_dcom()
+		function __construct()
 		{
 			echo "<br />\n" . lang('php-imap support not installed - exiting') . "<br />\n";
 			echo lang('contact your system administrator');
@@ -1380,4 +1380,4 @@
 		}
 		
 	}
-?>
+

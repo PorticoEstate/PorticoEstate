@@ -206,7 +206,7 @@
 		//so that when the mainframe triggers an event, it will call some functions in the frameset (its window.parent)
 		//And when the secondary frame returns from this public functions (which are all declared and defined in this file)
 		//It will also call some of the functions in the frameset.
-		function uijsaddressbook()
+		function __construct()
 		{
 			//We create our template
 						

@@ -2273,4 +2273,3 @@
 			return $body_glob;
 		}
 	}
-?>

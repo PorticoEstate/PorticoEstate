@@ -30,7 +30,7 @@
 			'mlist' => True
 		);
 
-		function uiindex()
+		function __construct()
 		{
 			$GLOBALS['phpgw']->js->validate_file('core','base','phpgwapi');
 			
@@ -855,4 +855,3 @@ EOD;
 		
 		
 	}
-?>

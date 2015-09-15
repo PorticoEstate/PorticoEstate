@@ -39,7 +39,7 @@
 		/**
 		* Constructor
 		*/
-		function spell_svc_php()
+		function __construct()
 		{
 			$this->can_spell = True;
 			// SP_FEED_WORDS is defined in the spell class.
@@ -123,4 +123,3 @@
 			return pspell_suggest($dictionary_link, $word);
 		}
 	}
-?>

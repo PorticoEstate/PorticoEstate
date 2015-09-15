@@ -29,7 +29,7 @@ class mail_msg extends mail_msg_wrappers
 	only a few functions in this object, SO NOW this class has NO real auto called constructor,
 	instead the initialization function needs to be explicitly called, which it is in the bootstrap class.
 	*/
-	function mail_msg()
+	function __construct()
 	{
 		//$this->initialize_mail_msg();
 		return;
@@ -3140,4 +3140,3 @@ $hdr_envelope->udate = $new_time;
 	}
 
 } // end class mail_msg
-?>

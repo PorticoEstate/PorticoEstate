@@ -201,4 +201,3 @@
 			return $folder_str;
 		}
 	}
-?>

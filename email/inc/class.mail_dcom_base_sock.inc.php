@@ -264,7 +264,7 @@
 		var $attribute;
 		var $value;
 		
-		function msg_params($attrib,$val)
+		function __construct($attrib,$val)
 		{
 			$this->attribute = $attrib;
 			$this->value     = $val;
@@ -474,7 +474,7 @@
 		//var $debug_dcom=1;
 		//var $debug_dcom=2;
 		
-		function mail_dcom_base()
+		function __construct()
 		{
 			$this->errorset = 0;
 			$this->network(True);

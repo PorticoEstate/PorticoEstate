@@ -136,7 +136,7 @@
 		/**
 		* Constructor
 		*/
-		function spell()
+		function __construct()
 		{
 			if ($this->debug_init > 0) { echo 'ENTERING: email.spell.CONSTRUCTOR'.'<br />'."\r\n"; }
 			
@@ -1156,4 +1156,3 @@
 
 
 	}
-?>

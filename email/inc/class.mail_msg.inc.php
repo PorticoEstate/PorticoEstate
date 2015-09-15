@@ -25,4 +25,4 @@
 	 * Include message display
 	 */
 	include_once(PHPGW_INCLUDE_ROOT.'/email/inc/class.mail_msg_display.inc.php');
-?>
+

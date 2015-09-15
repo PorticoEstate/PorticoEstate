@@ -345,7 +345,7 @@
 		@function mail_msg_base
 		@abstract CONSTRUCTOR place holder, does nothing  
 		*/
-		function mail_msg_base()
+		function __construct()
 		{
 			if (($this->debug_logins > 0) && (is_object($this->dbug->out))) { $this->dbug->out('mail_msg('.__LINE__.'): *constructor*: $GLOBALS[PHP_SELF] = ['.$_SERVER['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'); }
 			if ($this->debug_logins > 0) { echo 'mail_msg('.__LINE__.'): *constructor*: $GLOBALS[PHP_SELF] = ['.$_SERVER['PHP_SELF'].'] $this->acctnum = ['.$this->acctnum.']  get_class($this) : "'.get_class($this).'" ; get_parent_class($this) : "'.get_parent_class($this).'"<br />'; }

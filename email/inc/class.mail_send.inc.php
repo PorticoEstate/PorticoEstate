@@ -46,7 +46,7 @@
 		var $retain_copy_ignore = True;
 		var $assembled_copy = '';
 
-		function mail_send()
+		function __construct()
 		{
 			$this->err['code'] = '';
 			$this->err['msg']  = '';
@@ -404,4 +404,4 @@ $mypassword = "xxxxxxxxxx";
 		
 	// end of class
 	}
-?>
+
