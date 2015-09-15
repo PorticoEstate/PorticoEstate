@@ -50,7 +50,7 @@
 
 		/* This is the constructor for the object. */
 
-		function help($reset = False)
+		function __construct($reset = False)
 		{
 			$this->lang			= $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			$this->title		= '';
@@ -290,4 +290,3 @@
 		return $str;
 	}*/
 	}
-?>
