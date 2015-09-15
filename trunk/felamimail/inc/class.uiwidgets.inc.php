@@ -51,7 +51,7 @@
 		* the contructor
 		*
 		*/
-		function uiwidgets()
+		function __construct()
 		{
 			$template =& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 			$this->template = $template;
@@ -645,4 +645,3 @@
 			return $this->t->get('out','quota_block');
 		}
 	}
-?>

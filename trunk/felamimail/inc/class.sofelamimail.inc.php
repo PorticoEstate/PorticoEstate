@@ -15,7 +15,7 @@
 
 	class sofelamimail
 	{
-		function sofelamimail()
+		function __construct()
 		{
 			#$this->bopreferences	=& CreateObject('felamimail.bopreferences');
 		}
@@ -34,5 +34,3 @@
 			return $retValue;
 		}
 	}
-
-?>

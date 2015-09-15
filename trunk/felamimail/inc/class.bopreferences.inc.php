@@ -25,7 +25,7 @@
 		// stores the users profile
 		var $profileData;
 		
-		function bopreferences()
+		function __construct()
 		{
 			parent::sopreferences();
 			$this->boemailadmin = CreateObject('emailadmin.emailadmin_bo');
@@ -295,4 +295,4 @@
 			parent::setProfileActive($GLOBALS['phpgw_info']['user']['account_id'], $_status, $_identity);
 		}
 	}
-?>
+

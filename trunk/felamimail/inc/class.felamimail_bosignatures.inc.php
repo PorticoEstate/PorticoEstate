@@ -17,7 +17,7 @@
 	 
 	class felamimail_bosignatures
 	{
-		function felamimail_bosignatures() {
+		function __construct() {
 			$boemailadmin = new emailadmin_bo();
 			$this->profileData = $boemailadmin->getUserProfile('felamimail');
 		}
@@ -145,4 +145,3 @@
 		}
 
 	}
-?>

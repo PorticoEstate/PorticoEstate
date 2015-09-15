@@ -37,7 +37,7 @@
 		 */
 		var $debug = false;
 	
-		function bosieve($_icServer=null)
+		function __construct($_icServer=null)
 		{
 			parent::Net_Sieve();
 			
@@ -187,4 +187,3 @@
 			return false;
 		}
 	}
-?>

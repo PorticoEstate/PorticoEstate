@@ -174,7 +174,7 @@ class xajax
 	 */
 // RalfBecker: using the not yet defined constant XAJAX_DEFAULT_CHAR_ENCODING, results in a warning, which messes up the xml
 //	function xajax($sRequestURI="",$sWrapperPrefix="xajax_",$sEncoding=XAJAX_DEFAULT_CHAR_ENCODING,$bDebug=false)
-	function xajax($sRequestURI="",$sWrapperPrefix="xajax_",$sEncoding='utf-8',$bDebug=false)
+	function __construct($sRequestURI="",$sWrapperPrefix="xajax_",$sEncoding='utf-8',$bDebug=false)
 	{
 		$this->aFunctions = array();
 		$this->aObjects = array();
