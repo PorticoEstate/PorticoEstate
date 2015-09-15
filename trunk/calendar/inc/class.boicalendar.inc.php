@@ -4257,4 +4257,3 @@ class calendar_boicalendar
 		}
 	}
 }
-?>

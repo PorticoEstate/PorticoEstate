@@ -86,4 +86,3 @@
 
 	echo "\n".'<!-- BEGIN Calendar info -->'."\n".$portalbox->draw($GLOBALS['extra_data'])."\n".'<!-- END Calendar info -->'."\n";
 	unset($cal);
-?>

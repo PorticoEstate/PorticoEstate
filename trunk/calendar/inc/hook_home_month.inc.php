@@ -25,4 +25,3 @@
 	$GLOBALS['extra_data'] = $GLOBALS['css']."\n".'<td>'."\n".'<table border="0" cols="3"><tr><td align="center" width="100%" valign="top">'
 		. ExecMethod('calendar.uicalendar.get_month')
 		.'</td>'."\n".'</tr>'."\n".'</table>'."\n".'</td>'."\n";
-?>

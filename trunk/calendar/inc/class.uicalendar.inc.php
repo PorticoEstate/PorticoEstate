@@ -98,7 +98,7 @@
 				'participants_popup'	=> true
 			);
 
-		function uicalendar()
+		function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 			$GLOBALS['phpgw']->browser    = CreateObject('phpgwapi.browser');
