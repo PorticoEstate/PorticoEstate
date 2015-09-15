@@ -45,7 +45,7 @@
 		//var $debug_struct = 3;
 		var $company_disclaimer = '';
 		
-		function bosend()
+		function __construct()
 		{
 			if ($this->debug_constructor > 0) { echo 'email.bosend *constructor*: ENTERING<br />'; }
 			
@@ -884,4 +884,3 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'email.uiindex.index'));
 		}
 	}
-?>

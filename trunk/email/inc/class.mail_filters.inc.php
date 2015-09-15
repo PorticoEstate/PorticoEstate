@@ -38,7 +38,7 @@
 		@abstract constructor
 		@author Angles
 		*/
-		function mail_filters()
+		function __construct()
 		{
 			$this->sieve_to_imap_fields = Array(
 				'from'		=> 'FROM',
@@ -389,4 +389,3 @@
 	
 	// end of class
 	}
-?>

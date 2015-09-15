@@ -38,7 +38,7 @@
 		var $debug = 0;
 		//var $debug = 3;
 		
-		function bocompose()
+		function __construct()
 		{
 			/*!
 			@class requires msg_bootstrap object
@@ -847,4 +847,3 @@
 
 
 	}
-?>

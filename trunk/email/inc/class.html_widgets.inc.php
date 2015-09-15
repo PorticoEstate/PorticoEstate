@@ -28,7 +28,7 @@
 		// @param $selected  (class var) (boolean)  whether this option should be pre-selected in a combobox, default False
 		var $selected;
 		
-		function html_option()
+		function __construct()
 		{
 			$this->value = '';
 			$this->text = '';
@@ -48,7 +48,7 @@
 		var $name;
 		var $value;
 		
-		function hiddenvar_option()
+		function __construct()
 		{
 			$this->name = '';
 			$this->value = '';
@@ -124,7 +124,7 @@
 		/**************************************************************************\
 		*	CONSTRUCTOR
 		\**************************************************************************/
-		function html_widgets()
+		function __construct()
 		{
 			if ($this->debug_init > 0) { echo 'ENTER: email.html_widgets.CONSTRUCTOR'.'<br />'."\r\n"; }
 			/*!
@@ -1924,4 +1924,4 @@
 			return $geek_bar;
 		}
 	}
-?>
+

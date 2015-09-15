@@ -528,4 +528,3 @@ if(!$catlist)
 	$GLOBALS['phpgw']->template->p('out');
 
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>

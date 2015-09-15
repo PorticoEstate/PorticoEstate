@@ -93,7 +93,7 @@
 		//if the cache is stale.... for example, caching the result form parse_contactquery and
 		//compare it with what results from parsing the incoming contactquery. If its the same,
 		//we shouldnt refetch.
-		function bojsaddressbook($contactquery="",$queryresults="")
+		function __construct($contactquery="",$queryresults="")
 		{
 			$this->contactsobject=CreateObject('phpgwapi.contacts');
 			//the idea is that here, right here, nowhere else, do we decide what to keep
@@ -428,4 +428,3 @@
 		}
 		
 	}
-?>

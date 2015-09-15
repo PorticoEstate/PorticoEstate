@@ -72,7 +72,7 @@
 		@discussion fills the "langs" vars including the "lang_warn" langs which are use to notify user 
 		of some common "bad" message attachments or other bad content. 
 		*/
-		function bomessage()
+		function __construct()
 		{
 			if ($this->debug > 0) { echo 'ENTERING: email.bomessage.*constructor*'.'<br />'; }
 			
@@ -1933,4 +1933,3 @@ $msg_headers->udate = $new_time;
 
 		}
 	}
-?>

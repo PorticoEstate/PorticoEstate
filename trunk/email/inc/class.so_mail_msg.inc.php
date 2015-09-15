@@ -37,7 +37,7 @@
 		@function so_mail_msg
 		@abstract Constructor
 		*/
-		function so_mail_msg()
+		function __construct()
 		{
 			if ($GLOBALS['phpgw']->msg->debug_so_class > 0) { $GLOBALS['phpgw']->msg->dbug->out('so_mail_msg: ('.__LINE__.'): *constructor*<br />'); }
 			return;
