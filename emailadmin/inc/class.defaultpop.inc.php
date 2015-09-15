@@ -15,7 +15,7 @@
 	{
 		var $profileData;
 		
-		function defaultpop($_profileData)
+		function __construct($_profileData)
 		{
 			$this->profileData = $_profileData;
 		}
@@ -91,4 +91,3 @@
 			return true;
 		}
 	}
-?>
