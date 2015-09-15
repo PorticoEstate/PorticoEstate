@@ -72,4 +72,3 @@ class phpgwLayersMenu extends LayersMenu
 		$this->_postParse($menu_name);
 	}
 }
-?>
