@@ -25,7 +25,7 @@
 		**/
 		function mapping_ldap($auth_info='')
 		{
-			parent::mapping($auth_info);
+			parent::__construct($auth_info);
 		}
 												
 		/**
