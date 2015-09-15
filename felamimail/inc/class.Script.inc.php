@@ -28,7 +28,7 @@ class Script {
 	var $debug=false;
 
 	// class constructor
-	function Script ($scriptname) {
+	function __construct ($scriptname) {
 		$this->name = $scriptname;
 		$this->script = '';
 		$this->size = 0;

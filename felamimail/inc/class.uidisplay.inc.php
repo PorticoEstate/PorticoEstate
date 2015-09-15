@@ -56,7 +56,7 @@
 		// the permanent id of the message
 		var $uid;
 
-		function uidisplay()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw']->js->validate_file('jsapi', 'jsapi', 'felamimail');
@@ -1372,4 +1372,3 @@
 		}
 }
 
-?>
