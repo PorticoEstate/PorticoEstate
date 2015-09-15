@@ -214,7 +214,7 @@
 			{
 				print "Correctly decoded server's response<br>";
 				// fault?
-				if(eregi('fault',$return->name))
+				if(preg_match('/fault/i',$return->name))
 				{
 					$status = 'failed';
 				}

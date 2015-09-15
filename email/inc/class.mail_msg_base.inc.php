@@ -3300,7 +3300,7 @@ HTML;
 			for ($i=0; $i<count($ignore_these_folders); $i++)
 			{
 				$match_this = $ignore_these_folders[$i];
-				if (eregi("^.*$match_this$",$folder))
+				if (preg_match("/^.*$match_this$/i",$folder))
 				{
 					$we_care = False;
 					break;
@@ -3552,9 +3552,9 @@ HTML;
 				// i.e. the compose page uses html entities when filling the To: box with a predefined value
 				$data = $this->htmlspecialchars_decode($data);
 				//reduce all multiple spaces to just one space
-				//$data = ereg_replace("[' ']{2,20}", ' ', $data);
+				//$data = preg_replace("/[' ']{2,20}/", ' ', $data);
 				$this_space = " ";
-				$data = ereg_replace("$this_space{2,20}", " ", $data);
+				$data = preg_replace("/$this_space{2,20}/", " ", $data);
 				// explode into an array of email addys
 				//$data = explode(",", $data);
 	
@@ -3696,7 +3696,7 @@ HTML;
 						// ESCAPE SPECIALS:  rfc2822 requires the "personal" comment string to escape "specials" inside the quotes
 						// the non-simple (i.e. "personal" info is included) need special escaping
 						// escape these:  ' " ( ) 
-						$addy_array[$i]['personal'] = ereg_replace('\'', "\\'", $addy_array[$i]['personal']);
+						$addy_array[$i]['personal'] = str_replace('\'', "\\'", $addy_array[$i]['personal']);
 						$addy_array[$i]['personal'] = str_replace('"', '\"', $addy_array[$i]['personal']);
 						$addy_array[$i]['personal'] = str_replace("(", "\(", $addy_array[$i]['personal']);
 						$addy_array[$i]['personal'] = str_replace(")", "\)", $addy_array[$i]['personal']);
@@ -3758,7 +3758,7 @@ HTML;
 					$addy_string = $addy_string .trim($data[$i]['plain']) .',';
 				}
 				// catch any situations where a blank string was included, resulting in two commas with nothing inbetween
-				$addy_string = ereg_replace("[,]{2}", ',', $addy_string);
+				$addy_string = preg_replace("/[,]{2}/", ',', $addy_string);
 				// trim again, strlen needs to be accurate without trailing spaces included
 				$addy_string = trim($addy_string);
 				// eliminate that final comma
@@ -3843,9 +3843,9 @@ HTML;
 		function normalize_crlf($data)
 		{
 			// this is to catch all plain \n instances and replace them with \r\n.  
-			$data = ereg_replace("\r\n", "\n", $data);
-			$data = ereg_replace("\r", "\n", $data);
-			$data = ereg_replace("\n", "\r\n", $data);
+			$data = str_replace("\r\n", "\n", $data);
+			$data = str_replace("\r", "\n", $data);
+			$data = str_replace("\n", "\r\n", $data);
 			
 			//$data = preg_replace("/(?<!\r)\n/m", "\r\n", $data);
 			//$data = preg_replace("/\r(?!\n)/m", "\r\n", $data);
@@ -4143,16 +4143,16 @@ HTML;
 			// non-us-ascii chars in email headers MUST be encoded using the special format:  
 			//  =?charset?Q?word?=
 			// currently only qprint and base64 encoding is specified by RFCs
-			if (ereg("=\?.*\?(Q|q)\?.*\?=", $data))
+			if (preg_match("/=\?.*\?(Q|q)\?.*\?=/", $data))
 			{
-				$data = ereg_replace("=\?.*\?(Q|q)\?", '', $data);
-				$data = ereg_replace("\?=", '', $data);
+				$data = preg_replace("/=\?.*\?(Q|q)\?/", '', $data);
+				$data = preg_replace("/\?=/", '', $data);
 				$data = $this->qprint(str_replace("_"," ",$data));
 			}
-			if (ereg("=\?.*\?(B|b)\?.*\?=", $data))
+			if (preg_match("/=\?.*\?(B|b)\?.*\?=/", $data))
 			{
-				$data = ereg_replace("=\?.*\?(B|b)\?", '', $data);
-				$data = ereg_replace("\?=", '', $data);
+				$data = preg_replace("/=\?.*\?(B|b)\?/", '', $data);
+				$data = preg_replace("/\?=/", '', $data);
 				$data = urldecode(base64_decode($data));
 			}
 			return $data;
@@ -4469,13 +4469,13 @@ HTML;
 		function htmlspecialchars_encode($str)
 		{
 			/*// replace  '  and  "  with htmlspecialchars */
-			$str = ereg_replace('&', '&amp;', $str);
+			$str = str_replace('&', '&amp;', $str);
 			// any ampersand & that ia already in a "&amp;" should NOT be encoded
 			//$str = preg_replace("/&(?![:alnum:]*;)/", "&amp;", $str);
-			$str = ereg_replace('"', '&quot;', $str);
-			$str = ereg_replace('\'', '&#039;', $str);
-			$str = ereg_replace('<', '&lt;', $str);
-			$str = ereg_replace('>', '&gt;', $str);
+			$str = str_replace('"', '&quot;', $str);
+			$str = str_replace('\'', '&#039;', $str);
+			$str = str_replace('<', '&lt;', $str);
+			$str = str_replace('>', '&gt;', $str);
 			// these {  and  }  must be html encoded or else they conflict with the template system
 			$str = str_replace("{", '&#123;', $str);
 			$str = str_replace("}", '&#125;', $str);
@@ -4499,11 +4499,11 @@ HTML;
 			$str = str_replace('&#125;', "}", $str);
 			$str = str_replace('&#123;', "{", $str);
 			
-			$str = ereg_replace('&gt;', '>', $str);
-			$str = ereg_replace('&lt;', '<', $str);
-			$str = ereg_replace('&#039;', '\'', $str);
-			$str = ereg_replace('&quot;', '"', $str);
-			$str = ereg_replace('&amp;', '&', $str);
+			$str = str_replace('&gt;', '>', $str);
+			$str = str_replace('&lt;', '<', $str);
+			$str = str_replace('&#039;', '\'', $str);
+			$str = str_replace('&quot;', '"', $str);
+			$str = str_replace('&amp;', '&', $str);
 			return $str;
 		}
 	
@@ -4538,14 +4538,14 @@ HTML;
 			// encode database unfriendly chars as html entities
 			// it'll work for now, and it can be easily un-done later when real DB classes take care of this issue
 			// replace  '  and  "  with htmlspecialchars
-			$str = ereg_replace('"', '&quot;', $str);
-			$str = ereg_replace('\'', '&#039;', $str);
+			$str = str_replace('"', '&quot;', $str);
+			$str = str_replace('\'', '&#039;', $str);
 			// replace  , (comma)
-			$str = ereg_replace(',', '&#044;', $str);
+			$str = str_replace(',', '&#044;', $str);
 			// replace /  (forward slash)
-			$str = ereg_replace('/', '&#047;', $str);
+			$str = str_replace('/', '&#047;', $str);
 			// replace \  (back slash)
-			$str = ereg_replace("\\\\", '&#092;', $str);
+			$str = str_replace("\\", '&#092;', $str);
 			return $str;
 		}
 	
@@ -4576,15 +4576,15 @@ HTML;
 			// ==  "poor-man's" database compatibility ==
 			// reverse of html_quotes_encode - html specialchar convert to actual ascii char
 			// backslash \ 
-			$str = ereg_replace('&#092;', "\\", $str);
+			$str = str_replace('&#092;', "\\", $str);
 			// forward slash /
-			$str = ereg_replace('&#047;', '/', $str);
+			$str = str_replace('&#047;', '/', $str);
 			// comma ,
-			$str = ereg_replace('&#044;', ',', $str);
+			$str = str_replace('&#044;', ',', $str);
 			// single quote '
-			$str = ereg_replace('&#039;', '\'', $str);
+			$str = str_replace('&#039;', '\'', $str);
 			// double quote "
-			$str = ereg_replace('&quot;', '"', $str);
+			$str = str_replace('&quot;', '"', $str);
 			return $str;
 		}
 	
@@ -4609,16 +4609,16 @@ HTML;
 		function ensure_one_urlencoding($str='')
 		{
 			// check for things we know should not exist in a URLENCODED string
-			if ( (ereg('"', $str))
-			|| (ereg('\'', $str))
+			if ( (preg_match('/"/', $str))
+			|| (preg_match('/\'/', $str))
 			// check for   , (comma)
-			|| (ereg(',', $str))
+			|| (preg_match('/,/', $str))
 			// check for  /  (forward slash)
-			|| (ereg('/', $str))
+			|| (preg_match('/\//', $str))
 			// check for  \  (back slash)
-			|| (ereg("\\\\", $str))
-			|| (ereg('~', $str))
-			|| (ereg(' ', $str))
+			|| (preg_match("/\\\\/", $str))
+			|| (preg_match('/~/', $str))
+			|| (preg_match('/ /', $str))
 			)
 			{
 				return urlencode($str);
@@ -4855,7 +4855,7 @@ HTML;
 				return False;
 			}
 			elseif ((is_string($data))
-			&& (ereg('^s:[0-9]+:"',$data) == True))
+			&& (preg_match('/^s:[0-9]+:"/',$data) == True))
 			{
 				// identify pattern of a serialized string (that did NOT have slashes added AFTER serialization )
 				return True;
@@ -4864,7 +4864,7 @@ HTML;
 			&& (is_array(unserialize($data))))
 			{
 				// if unserialization produces an array out of a string, it was serialized
-				//(ereg('^a:[0-9]+:\{',$data) == True))  also could work
+				//(preg_match('/^a:[0-9]+:\{/',$data) == True))  also could work
 				return True;
 			}
 			//Best Guess - UNKNOWN / ERROR / NOY YET SUPPORTED TYPE

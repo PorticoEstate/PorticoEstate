@@ -1432,7 +1432,7 @@
 
 			if ($_POST['save'])
 			{
-				if (empty($val) || ereg("^[ 0-9]+(,[ 0-9]+)*$",$val))
+				if (empty($val) || preg_match("/^[ 0-9]+(,[ 0-9]+)*$/",$val))
 				{
 					$this->config->value('set_quota', '0,' . $val . ',unlimited');
 				}

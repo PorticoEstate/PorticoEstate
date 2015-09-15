@@ -1085,7 +1085,7 @@
 				)
 			);
 
-			return (ereg_replace ("^\.+", '', $p->fake_name));
+			return (preg_replace ("/^\.+/", '', $p->fake_name));
 		}
 
 		/**
@@ -1105,7 +1105,7 @@
 				$data = array ();
 			}
 
-			$string = ereg_replace ("'", "\'", $data['string']);
+			$string = preg_replace ("/'/", "/\'/", $data['string']);
 
 			return $string;
 		}
@@ -1214,14 +1214,14 @@
 
 			/* Let's not return // */
 			//XXX If $basedir contains http(s):// what are we doing ??? Caeies
-			$basedir = ereg_replace('://','DOTSLASHSLASH',$basedir);
-			while (ereg ($sep . $sep, $basedir))
+			$basedir = preg_replace('/:\/\//','DOTSLASHSLASH',$basedir);
+			while (preg_match ('/'.addcslashes($sep . $sep, '/').'/', $basedir))
 			{
-				$basedir = ereg_replace ($sep . $sep, $sep, $basedir);
+				$basedir = preg_replace ('/'.addcslashes($sep . $sep, '/').'/', $sep, $basedir);
 			}
-			$basedir = ereg_replace('DOTSLASHSLASH','://',$basedir);
+			$basedir = preg_replace('/DOTSLASHSLASH/','://',$basedir);
 
-			$basedir = ereg_replace ($sep . '$', '', $basedir);
+			$basedir = preg_replace ('/'.addcslashes($sep, '/') . '$/', '', $basedir);
 
 			return $basedir;
 		}
@@ -1485,8 +1485,9 @@
 					if(preg_match("/^" . str_replace('/', '\/', "{$link_info['directory']}/{$link_info['name']}"). "(\/|$)/", $rarray['fake_full_path']))
 
 					{
-						$rarray['real_full_path'] = ereg_replace ("^$this->basedir", '', $rarray['real_full_path']);
-						$rarray['real_full_path'] = ereg_replace ("^{$link_info['directory']}/{$link_info['name']}", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
+						$rarray['real_full_path'] = preg_replace ("/^" . addcslashes($this->basedir,'/') ."/", '', $rarray['real_full_path']);
+//						$rarray['real_full_path'] = ereg_replace ("^{$link_info['directory']}/{$link_info['name']}", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
+						$rarray['real_full_path'] = preg_replace ("/^" . addcslashes("{$link_info['directory']}/{$link_info['name']}",'/') ."/", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
 
 						$p = $this->path_parts (array(
 								'string'	=> $rarray['real_full_path'],
@@ -1645,7 +1646,7 @@
 
 			if (!$data['full'])
 			{
-				$currentdir = ereg_replace ("^/", '', $currentdir);
+				$currentdir = preg_replace ("/^\//", '', $currentdir);
 			}
 
 			if ($currentdir == '' && $data['full'])

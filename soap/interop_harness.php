@@ -181,7 +181,7 @@ function quickjump(dropdown) {
 					if(get_class($return) == "soapval")
 					{
 						// fault?
-						if(eregi("fault",$return->name))
+						if(preg_match("/fault/i",$return->name))
 						{
 							$status = "failed - got fault";
 						}

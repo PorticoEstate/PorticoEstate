@@ -342,7 +342,7 @@
 				$sdc->next_record();
 				if ($sdc->f(0) != '')
 				{
-					if (ereg('nextval',$sdc->f(0)))
+					if (preg_match('/nextval/',$sdc->f(0)))
 					{
 						$default = '';
 						$nullcomma = '';

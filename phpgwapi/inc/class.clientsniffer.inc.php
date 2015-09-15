@@ -88,30 +88,30 @@
 			$this->UA = $_SERVER['HTTP_USER_AGENT'];
 
 			// Determine NAME Name and Version      
-			if ( eregi( 'MSIE ([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ||
-				eregi( 'Microsoft Internet Explorer ([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ) 
+			if (preg_match( '/MSIE ([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) ||
+				preg_match( '/Microsoft Internet Explorer ([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) )
 			{
 				$this->VERSION = $info[1];
 				$this->NAME = 'IE';
 			} 
-			elseif ( eregi( 'Opera ([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ||
-				eregi( 'Opera/([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ) 
+			elseif ( preg_match( '/Opera ([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) ||
+				preg_match( '/Opera/([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) )
 			{
 				$this->VERSION = $info[1];
 				$this->NAME = 'Opera';
 			}
-			elseif ( eregi( 'iCab ([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ||
-				eregi( 'iCab/([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ) 
+			elseif ( preg_match( '/iCab ([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) ||
+				preg_match( '/iCab\/([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) )
 			{
 				$this->VERSION = $info[1];
 				$this->NAME = 'iCab';
 			}
-			elseif ( eregi( 'Netscape6/([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ) 
+			elseif ( preg_match( '/Netscape6\/([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) )
 			{
 				$this->VERSION = $info[1];
 				$this->NAME = 'Netscape';
 			}
-			elseif ( eregi( 'Mozilla/([0-9].[0-9a-zA-Z]{1,4})',$this->UA,$info) ) 
+			elseif ( preg_match( '/Mozilla\/([0-9].[0-9a-zA-Z]{1,4})/i',$this->UA,$info) )
 			{
 				$this->VERSION = $info[1];
 				$this->NAME = 'Netscape';
@@ -123,11 +123,11 @@
 			}
 
 			// Determine if AOL or WEBTV
-			if( eregi( 'aol',$this->UA,$info))
+			if( preg_match( '/aol/i',$this->UA,$info))
 			{
 				$this->AOL = true;
 			}
-			elseif( eregi( 'webtv',$this->UA,$info))
+			elseif( preg_match( '/webtv/i',$this->UA,$info))
 			{
 				$this->WEBTV = true;
 			}
@@ -150,27 +150,27 @@
 			// Determine Platform and OS
 
 			// Check for Windows 16-bit
-			if( eregi('Win16',$this->UA)           || 
-			eregi('windows 3.1',$this->UA)     || 
-			eregi('windows 16-bit',$this->UA)  || 
-			eregi('16bit',$this->UA))
+			if( preg_match('/Win16/i',$this->UA)           ||
+			preg_match('/windows 3.1/i',$this->UA)     ||
+			preg_match('/windows 16-bit/i',$this->UA)  ||
+			preg_match('/16bit/i',$this->UA))
 			{
 				$this->PLATFORM = 'Win16';
 				$this->OS = 'Win31';
 			}
 
 			// Check for Windows 32-bit     
-			if(eregi('Win95',$this->UA) || eregi('windows 95',$this->UA)) 
+			if(preg_match('/Win95/i',$this->UA) || preg_match('/windows 95/i',$this->UA))
 			{
 				$this->PLATFORM = 'Win32'; 
 				$this->OS = 'Win95'; 
 			}
-			elseif(eregi('Win98',$this->UA) || eregi('windows 98',$this->UA)) 
+			elseif(preg_match('/Win98/i',$this->UA) || preg_match('/windows 98/i',$this->UA))
 			{
 				$this->PLATFORM = 'Win32'; 
 				$this->OS = 'Win98'; 
 			}
-			elseif(eregi('WinNT',$this->UA) || eregi('windows NT',$this->UA)) 
+			elseif(preg_match('/WinNT/i',$this->UA) || preg_match('/windows NT/i',$this->UA))
 			{
 				$this->PLATFORM = 'Win32'; 
 				$this->OS = 'WinNT'; 
@@ -182,21 +182,21 @@
 			}
 
 			// Check for OS/2
-			if( eregi('os/2',$this->UA) || eregi('ibm-webexplorer',$this->UA))
+			if( preg_match('/os\/2/i',$this->UA) || preg_match('/ibm-webexplorer/i',$this->UA))
 			{
 				$this->PLATFORM = 'OS2';
 				$this->OS = 'OS2';  
 			}
 
 			// Check for Mac 68000
-			if( eregi('68k',$this->UA) || eregi('68000',$this->UA))
+			if( preg_match('/68k/i',$this->UA) || preg_match('/68000/i',$this->UA))
 			{
 				$this->PLATFORM = 'Mac';
 				$this->OS = 'Mac68k';
 			}
 
 			//Check for Mac PowerPC
-			if( eregi('ppc',$this->UA) || eregi('powerpc',$this->UA))
+			if( preg_match('/ppc/i',$this->UA) || preg_match('/powerpc/i',$this->UA))
 			{
 				$this->PLATFORM = 'Mac';
 				$this->OS = 'MacPPC';
@@ -205,157 +205,157 @@
 			// Check for Unix Flavor
 
 			//SunOS
-			if(eregi('sunos',$this->UA)) 
+			if(preg_match('/sunos/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'sun';
 			}
-			if(eregi('sunos 4',$this->UA)) 
+			if(preg_match('/sunos 4/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'sun4';
 			}
-			elseif(eregi('sunos 5',$this->UA)) 
+			elseif(preg_match('/sunos 5/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'sun5';
 			}
-			elseif(eregi('i86',$this->UA)) 
+			elseif(preg_match('/i86/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'suni86';
 			}
 
 			// Irix
-			if(eregi('irix',$this->UA))
+			if(preg_match('/irix/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'irix';
 			}
-			if(eregi('irix 6',$this->UA)) 
+			if(preg_match('/irix 6/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'irix6';
 			}
-			elseif(eregi('irix 5',$this->UA)) 
+			elseif(preg_match('/irix 5/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'irix5';
 			}
 
 			//HP-UX
-			if(eregi('hp-ux',$this->UA))
+			if(preg_match('/hp-ux/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'hpux';
 			}
-			if(eregi('hp-ux',$this->UA) && ereg('10.',$this-UA))  
+			if(preg_match('/hp-ux/i',$this->UA) && preg_match('/10./',$this-UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'hpux10';
 			}
-			elseif(eregi('hp-ux',$this->UA) && ereg('09.',$this-UA))  
+			elseif(preg_match('hp-ux',$this->UA) && preg_match('/09./',$this-UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'hpux9';
 			}
 
 			//AIX
-			if(eregi('aix',$this->UA))
+			if(preg_match('/aix/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'aix';
 			}
-			if(eregi('aix1',$this->UA))
+			if(preg_match('/aix1/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'aix1';
 			}
-			elseif(eregi('aix2',$this->UA))
+			elseif(preg_match('/aix2/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'aix2';
 			}
-			elseif(eregi('aix3',$this->UA))
+			elseif(preg_match('/aix3/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'aix3';
 			}
-			elseif(eregi('aix4',$this->UA))
+			elseif(preg_match('/aix4/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'aix4';
 			}
 
 			// Linux
-			if(eregi('inux',$this->UA))
+			if(preg_match('/inux/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'linux';
 			}
 
 			//Unixware
-			if(eregi('unix_system_v',$this->UA))
+			if(preg_match('/unix_system_v/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'unixware';
 			}
 
 			//mpras
-			if(eregi('ncr',$this->UA))
+			if(preg_match('/ncr/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'mpras';
 			}
 
 			//Reliant
-			if(eregi('reliantunix',$this->UA))
+			if(preg_match('/reliantunix/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'reliant';
 			}
 
 			// DEC
-			if(eregi('dec',$this->UA)           ||  
-			eregi('osfl',$this->UA)          || 
-			eregi('alphaserver',$this->UA)   || 
-			eregi('ultrix',$this->UA)        || 
-			eregi('alphastation',$this->UA))
+			if(preg_match('/dec/i',$this->UA)           ||
+			preg_match('/osfl/i',$this->UA)          ||
+			preg_match('/alphaserver/i',$this->UA)   ||
+			preg_match('/ultrix/i',$this->UA)        ||
+			preg_match('/alphastation/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'dec';
 			}
 
 			// Sinix
-			if(eregi('sinix',$this->UA))    
+			if(preg_match('/sinix/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'sinix';
 			}
 
 			// FreeBSD
-			if(eregi('freebsd',$this->UA))    
+			if(preg_match('/freebsd/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'freebsd';
 			}
 
 			// BSD
-			if(eregi('bsd',$this->UA))    
+			if(preg_match('/bsd/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'bsd';
 			}
 
 			// VMS
-			if(eregi('vax',$this->UA) || eregi('openvms',$this->UA))    
+			if(preg_match('/vax/i',$this->UA) || preg_match('/openvms/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'vms';
 			}
 
 			// SCO
-			if(eregi('sco',$this->UA) || eregi('unix_sv',$this->UA))    
+			if(preg_match('/sco/i',$this->UA) || preg_match('/unix_sv/i',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'sco';
@@ -364,18 +364,18 @@
 			// Assume JavaScript Version
 
 			// make the code a bit easier to read
-			$ie  = eregi('ie',$this->NAME);
-			$ie5 = ( eregi('ie',$this->NAME) && ($this->MAJORVER >= 5) );
-			$ie4 = ( eregi('ie',$this->NAME) && ($this->MAJORVER >= 4) );
-			$ie3 = ( eregi('ie',$this->NAME) && ($this->MAJORVER >= 3) );
+			$ie  = preg_match('/ie/i',$this->NAME);
+			$ie5 = ( preg_match('/ie/i',$this->NAME) && ($this->MAJORVER >= 5) );
+			$ie4 = ( preg_match('/ie/i',$this->NAME) && ($this->MAJORVER >= 4) );
+			$ie3 = ( preg_match('/ie/i',$this->NAME) && ($this->MAJORVER >= 3) );
 
-			$nav  = eregi('netscape',$this->NAME);
-			$nav5 = ( eregi('netscape',$this->NAME) && ($this->MAJORVER >= 5) );
-			$nav4 = ( eregi('netscape',$this->NAME) && ($this->MAJORVER >= 4) );
-			$nav3 = ( eregi('netscape',$this->NAME) && ($this->MAJORVER >= 3) );
-			$nav2 = ( eregi('netscape',$this->NAME) && ($this->MAJORVER >= 2) );
+			$nav  = preg_match('/netscape/i',$this->NAME);
+			$nav5 = ( preg_match('/netscape/i',$this->NAME) && ($this->MAJORVER >= 5) );
+			$nav4 = ( preg_match('/netscape/i',$this->NAME) && ($this->MAJORVER >= 4) );
+			$nav3 = ( preg_match('/netscape/i',$this->NAME) && ($this->MAJORVER >= 3) );
+			$nav2 = ( preg_match('/netscape/i',$this->NAME) && ($this->MAJORVER >= 2) );
 
-			$opera = eregi('opera',$this->NAME);
+			$opera = preg_match('/opera/i',$this->NAME);
 
 			// do the assumption
 			// update as new versions are released

@@ -49,8 +49,8 @@
 			if(($type != 'text/x-ical') && ($type != 'text/calendar'))
 				return false;
 
-			$data = ereg_replace("\n\n", "\r\n", $data); // xml-rpc bug: \r\n -> \n\n
-			$data = ereg_replace("\r\n\r\n", "\r\n", $data); // ical from calmeno
+			$data = str_replace("\n\n", "\r\n", $data); // xml-rpc bug: \r\n -> \n\n
+			$data = str_replace("\r\n\r\n", "\r\n", $data); // ical from calmeno
 			$data_lines = explode("\r\n", $data);
 			
 			$id = $this->bo_iCal->import($data_lines, true);
@@ -171,8 +171,8 @@
 			if(!$entry || !isset($entry['uid']))
 				return false;
 
-			$data = ereg_replace("\n\n", "\r\n", $data); // xml-rpc bug: \r\n -> \n\n
-			$data = ereg_replace("\r\n\r\n", "\r\n", $data); // ical from calmeno
+			$data = str_replace("\n\n", "\r\n", $data); // xml-rpc bug: \r\n -> \n\n
+			$data = str_replace("\r\n\r\n", "\r\n", $data); // ical from calmeno
 			$data_lines = explode("\r\n", $data);
 
 			return $this->bo_iCal->import($data_lines, true);

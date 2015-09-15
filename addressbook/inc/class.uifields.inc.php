@@ -510,7 +510,7 @@
 					}
 					if($new)
 					{
-						$tmp = strtolower(ereg_replace(' ','_',$new));
+						$tmp = strtolower(preg_replace('/ /','_',$new));
 						$this->config->config_data['custom_fields'][$tmp] = $new;
 					}
 					break;
@@ -533,7 +533,7 @@
 					}
 					if($new)
 					{
-						$tmp = strtolower(ereg_replace(' ','_',$new));
+						$tmp = strtolower(preg_replace('/ /','_',$new));
 						$this->config->config_data['custom_org_fields'][$tmp] = $new;
 					}
 					break;
@@ -556,7 +556,7 @@
 					}
 					if($new)
 					{
-						$tmp = strtolower(ereg_replace(' ','_',$new));
+						$tmp = strtolower(preg_replace('/ /','_',$new));
 						$this->config->config_data['custom_fields'][$tmp] = $new;
 					}
 					if(!is_array($this->config->config_data['custom_org_fields']))
@@ -571,7 +571,7 @@
 					}
 					if($new)
 					{
-						$tmp = strtolower(ereg_replace(' ','_',$new));
+						$tmp = strtolower(preg_replace('/ /','_',$new));
 						$this->config->config_data['custom_org_fields'][$tmp] = $new;
 					}
 					break;

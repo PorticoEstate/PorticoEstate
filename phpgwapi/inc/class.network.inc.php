@@ -150,7 +150,7 @@
 				}
 			}
 			$response = $this->read_port();
-			if (!ereg(strtoupper($expected_response),strtoupper($response)))
+			if (!preg_match("/$expected_response/i",$response))
 			{
 				if(substr($expected_response,1,1) == '+')
 				{

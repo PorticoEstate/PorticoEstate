@@ -29,7 +29,7 @@
 		/* check if string contains any whitespace */
 		function has_space ($text)
 		{
-			return ereg('( |\n|\t|\r)+', $text);
+			return preg_match('/( |\n|\t|\r)+/', $text);
 		}
 
 		function chconvert ($fragment)
@@ -50,7 +50,7 @@
 		/* strips all whitespace from a string */
 		function strip_space ($text)
 		{
-			return ereg('( |\n|\t|\r)+', '', $text);
+			return preg_replace('/( |\n|\t|\r)+/', '', $text);
 		}
 
 		function is_allnumbers ($text)
@@ -113,9 +113,9 @@
 				return false;
 			}
 			
-			if (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'.'@'.
+			if (preg_match('/^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'.'@'.
 				'[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.'.
-				'[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address))
+				'[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$/', $address))
 			{
 				return true;
 			}
@@ -145,7 +145,7 @@
 			if(@$uris[$url_elements['scheme']])
 			{
 				//echo ' is valid<br>host ' . $url_elements['host'];
-				if( eregi("[a-z]", $url_elements['host']) )
+				if( preg_match("/[a-z]/i", $url_elements['host']) )
 				{
 					//echo ' is name<br>';
 					return $this->is_hostname($url_elements['host']);
@@ -198,7 +198,7 @@
 				foreach($segs as $seg)
 				{
 					//echo "Checking $seg<br>";
-					if(eregi("[a-z0-9\-]{0,62}",$seg))
+					if(preg_match("/[a-z0-9\-]{0,62}/i",$seg))
 					{
 						$return = True;	
 					}

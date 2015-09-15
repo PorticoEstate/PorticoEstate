@@ -40,7 +40,7 @@
 					$GLOBALS['phpgw']->db->from_timestamp($record['log_date']), 
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] . ' - H:i:s');
 
-				if (ereg('@',$record['log_account_lid']))
+				if ( preg_match('/@/',$record['log_account_lid']))
 				{
 					$t = split('@',$record['log_account_lid']);
 					$record['log_account_lid'] = $t[0];

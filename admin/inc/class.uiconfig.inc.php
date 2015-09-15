@@ -116,7 +116,7 @@
 					else
 					{
 						/* don't erase passwords, since we also don't print them */
-						if(!ereg('passwd',$key) && !ereg('password',$key) && !ereg('root_pw',$key))
+						if(! preg_match('/passwd/',$key) && ! preg_match('/password/',$key) && ! preg_match('/root_pw/',$key))
 						{
 							unset($c->config_data[$key]);
 						}
@@ -198,9 +198,9 @@
 							$t->set_var($value,$GLOBALS['phpgw']->translation->translate($newval, array(),false, $appname));
 							break;
 						case 'value':
-							$newval = ereg_replace(' ','_',$newval);
+							$newval = preg_replace('/ /','_',$newval);
 							/* Don't show passwords in the form */
-							if ( !isset($current_config[$newval]) || ereg('passwd',$value) || ereg('password',$value) || ereg('root_pw',$value))
+							if ( !isset($current_config[$newval]) ||  preg_match('/passwd/',$value) ||  preg_match('/password/',$value) ||  preg_match('/root_pw/',$value))
 							{
 								$t->set_var($value,'');
 							}
@@ -212,7 +212,7 @@
 						case 'checked':
 							/* '+' is used as a delimiter for the check value */
 							list($newvalue,$check) = split('\+',$newval);
-							$newval = ereg_replace(' ','_',$newvalue);
+							$newval = preg_replace('/ /','_',$newvalue);
 							if($current_config[$newval] == $check)
 							{
 								$t->set_var($value, ' checked');
@@ -244,7 +244,7 @@
 							}
 							break;
 						case 'hook':
-							$newval = ereg_replace(' ','_',$newval);
+							$newval = preg_replace('/ /','_',$newval);
 							if(function_exists($newval))
 							{
 								$t->set_var($value,$newval($current_config));

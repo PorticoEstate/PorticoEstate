@@ -135,7 +135,7 @@
 			$addresses = array();
 
 			/* Find all the email addresses in the body */
-			while(eregi($Email_RegExp_Match, $sbody, $regs)) {
+			while(preg_match("/$Email_RegExp_Match/i", $sbody, $regs)) {
 				$addresses[$regs[0]] = strtr($regs[0], array('&amp;' => '&'));
 				$start = strpos($sbody, $regs[0]) + strlen($regs[0]);
 				$sbody = substr($sbody, $start);
