@@ -34,7 +34,7 @@
 			'preferences' => True
 		);
 
-		function uipreferences()
+		function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 			$this->template = $GLOBALS['phpgw']->template;

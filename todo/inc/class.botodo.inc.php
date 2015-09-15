@@ -43,7 +43,7 @@
 			'list_methods'     => True
 		);
 
-		function botodo($session=False)
+		function __construct($session=False)
 		{
 			$this->sotodo	= CreateObject('todo.sotodo');
 			$this->datetime	=& $GLOBALS['phpgw']->datetime;
@@ -457,4 +457,3 @@
 			return True;
 		}
 	}
-?>
