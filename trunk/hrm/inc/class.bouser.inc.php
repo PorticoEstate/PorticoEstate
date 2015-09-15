@@ -55,7 +55,7 @@
 			)
 		);
 
-		function hrm_bouser($session=false)
+		function __construct($session=false)
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('hrm.souser');
