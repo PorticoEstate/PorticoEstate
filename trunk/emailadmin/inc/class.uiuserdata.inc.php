@@ -21,7 +21,7 @@
 			'saveUserData'	=> True
 		);
 
-		function uiuserdata()
+		function __construct()
 		{
 			$this->t			=& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 			$this->boemailadmin		= new emailadmin_bo();
@@ -204,4 +204,3 @@
 			$this->t->set_var('lang_update_current_address',lang('Update current email address:'));
 		}
 	}
-?>

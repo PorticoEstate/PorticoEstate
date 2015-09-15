@@ -105,7 +105,7 @@ class imap_client {
      * @param string $port      The port to connect to on the IMAP server.
      * @param string $protocol  The protocol string (See, e.g., servers.php).
      */
-    function imap_client($host, $port, $protocol)
+    function __construct($host, $port, $protocol)
     {
         $this->_host = $host;
         $this->_port = $port;
