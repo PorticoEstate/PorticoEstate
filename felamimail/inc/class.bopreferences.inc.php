@@ -27,7 +27,7 @@
 		
 		function __construct()
 		{
-			parent::sopreferences();
+			parent::__construct();
 			$this->boemailadmin = CreateObject('emailadmin.emailadmin_bo');
 		//	$this->boemailadmin = new emailadmin_bo();
 		}
