@@ -1458,15 +1458,14 @@
 					$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__,__FILE__);
 					$this->db->next_record();
 					$old_actual_cost = $this->db->f('actual_cost');
-					$new_actual_cost = $old_actual_cost + $ticket['actual_cost'];
+					$new_actual_cost =str_replace(',', '.', ($old_actual_cost + $ticket['actual_cost']));
 
-					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='" . (float) $new_actual_cost
-						. "' WHERE id='$id'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='{$new_actual_cost}' WHERE id='$id'",__LINE__,__FILE__);
 
 					$value_set_cost = array
 					(
 						'ticket_id'	=> $id,
-						'amount'	=> $ticket['actual_cost'],
+						'amount'	=> str_replace(',', '.', $ticket['actual_cost']),
 						'period'	=> $ticket['actual_cost_period'],
 						'created_on'=> time(),
 						'created_by'=> $this->account
