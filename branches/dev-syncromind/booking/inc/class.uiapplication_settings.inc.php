@@ -36,12 +36,12 @@
 				$config->save_repository();
 			}
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Application Settings'), 'link' => '#settings');
-            $active_tab = 'generic';
-            
-            $settings = array();
-            $settings['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Application Settings'), 'link' => '#settings');
+                        $active_tab = 'generic';
+
+                        $settings = array();
+                        $settings['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 //			$this->use_yui_editor();
 			self::render_template_xsl('application_settings', array('config_data' =>$config->config_data, 'data' => $settings));
 		}
