@@ -67,4 +67,3 @@
 	}
 
 	define('PHPGW_APP_INC',$tmp_app_inc);
-?>

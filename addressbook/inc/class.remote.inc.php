@@ -30,7 +30,7 @@
 
 		var $ldap = 0;
 
-		function remote($serverid='BigFoot')
+		function __construct($serverid='BigFoot')
 		{
 			$GLOBALS['phpgw']->db->query("SELECT * FROM phpgw_addressbook_servers",__LINE__,__FILE__);
 			while ($GLOBALS['phpgw']->db->next_record())
@@ -134,4 +134,3 @@
 			}
 		}
 	}
-?>

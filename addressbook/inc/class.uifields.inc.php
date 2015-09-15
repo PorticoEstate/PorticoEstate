@@ -23,7 +23,7 @@
 			'delete' => true
 		);
 
-		function uifields()
+		function __construct()
 		{
 			if ( !isset($GLOBALS['phpgw']->template) || !is_object($GLOBALS['phpgw']->template) )
 			{

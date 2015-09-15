@@ -173,4 +173,3 @@
 		}
 		$GLOBALS['phpgw']->preferences->save_repository(1);
 	}
-?>

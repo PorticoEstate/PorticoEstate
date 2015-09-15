@@ -35,34 +35,34 @@
 			'n_given'  => 'Nombre',
 			'n_family' => 'Apellidos',
 			'n_suffix' => 'Sufijo',
-			'org_name' => 'Organizaci髇',
+			'org_name' => 'Organizaci贸n',
 			'org_unit' => 'Departamento',
 			'adr_one_street' => 'Calle del Trabajo',
 			'address2' => 'Calle del trabajo 2',
 			'address3' => 'Calle del trabajo 3',
 			'adr_one_locality'    => 'Ciudad de trabajo',
 			'adr_one_region'      => 'Provincia o estado de trabajo',
-			'adr_one_postalcode'  => 'C骴igo postal del trabajo',
-			'adr_one_countryname' => 'Pa韘 de trabajo',
+			'adr_one_postalcode'  => 'C贸digo postal del trabajo',
+			'adr_one_countryname' => 'Pa铆s de trabajo',
 			'adr_two_street'      => 'Calle del domicilio',
 			'adr_two_locality'    => 'Ciudad de residencia' ,
 			'adr_two_region'      => 'Provincia o estado de residencia',
-			'adr_two_postalcode'  => 'C骴igo postal de residencia',
-			'adr_two_countryname' => 'Pa韘 de residencia',
-			'tel_msg'   => 'Tel閒ono del ayudante',
+			'adr_two_postalcode'  => 'C贸digo postal de residencia',
+			'adr_two_countryname' => 'Pa铆s de residencia',
+			'tel_msg'   => 'Tel茅fono del ayudante',
 			'tel_fax'   => 'Fax del trabajo',
-			'tel_work'  =>'Tel閒ono del trabajo',
-			'ophone'    => 'Tel閒ono del trabajo 2',
-			'tel_car'   => 'Tel閒ono del autom髒il',
+			'tel_work'  =>'Tel茅fono del trabajo',
+			'ophone'    => 'Tel茅fono del trabajo 2',
+			'tel_car'   => 'Tel茅fono del autom贸vil',
 			'tel_home'  => 'Particular',
 			'tel_isdn'  => 'RDSI',
-			'tel_cell'  => 'M髒il',
+			'tel_cell'  => 'M贸vil',
 			'tel_pager' => 'Localizador',
-			'bday'  => 'Cumplea駉s',
-			'email' => 'Direcci髇 de correo electr髇ico',
-			'email_home' => 'Direcci髇 de correo electr髇ico 2',
+			'bday'  => 'Cumplea帽os',
+			'email' => 'Direcci贸n de correo electr贸nico',
+			'email_home' => 'Direcci贸n de correo electr贸nico 2',
 			'note'  => 'Notas',
-			'url'   => 'P醙ina Web'
+			'url'   => 'P谩gina Web'
 		);
 
 		// This will store the contacts object
@@ -145,4 +145,3 @@
 			return $buffer;
 		}
 	}
-?>

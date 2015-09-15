@@ -37,7 +37,7 @@
 		*
 		* @access  public
 		*/
-		function ipc_addressbook()
+		function __construct()
 		{
 			$this->contacts = CreateObject('phpgwapi.contacts');
 			$this->vcard    = CreateObject('phpgwapi.vcard');
@@ -392,4 +392,3 @@
 		}
 
 	}
-?>

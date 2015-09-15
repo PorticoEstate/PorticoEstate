@@ -32,7 +32,7 @@
 
 		var $use_session = False;
 
-		function boXport($session=False)
+		function __construct($session=False)
 		{
 			$this->contacts = $GLOBALS['phpgw']->contacts;
 			$this->so = CreateObject('addressbook.soaddressbook');
@@ -284,4 +284,3 @@
 			return $buffer;
 		}
 	}
-?>

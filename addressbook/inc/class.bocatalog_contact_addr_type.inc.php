@@ -1,7 +1,7 @@
 <?php
 	class bocatalog_contact_addr_type
 	{
-		function bocatalog_contact_addr_type()
+		function __construct()
 		{
 			$this->so = CreateObject('addressbook.socatalog_contact_addr_type');
 		}
@@ -31,4 +31,3 @@
 			return $this->so->get_record($key);
 		}
 	}
-?>
