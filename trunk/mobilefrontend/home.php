@@ -40,7 +40,7 @@
 		foreach($_GET as $name => $value)
 		{
 			// find phpgw_ in the $_GET parameters but skip phpgw_forward because of redirect call below
-			if (ereg('phpgw_', $name) && ($name != 'phpgw_forward'))
+			if (preg_match('/phpgw_/', $name) && ($name != 'phpgw_forward'))
 			{
 				$name = substr($name, 6); // cut 'phpgw_'
 				$extra_vars[$name] = $value;

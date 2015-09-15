@@ -858,7 +858,7 @@ $msg_headers->udate = $new_time;
 			if ($list_of_files != '')
 			{
 				// get rid of the last ", "
-				$list_of_files = ereg_replace(",.$", "", $list_of_files);
+				$list_of_files = preg_replace("/,.$/", "", $list_of_files);
 				$this->xi['list_of_files'] = $list_of_files;
 				//$GLOBALS['phpgw']->template->parse('V_attach_list','B_attach_list');
 			}
@@ -1468,8 +1468,8 @@ $msg_headers->udate = $new_time;
 								//echo 'part_href (processed): ' .$part_href .'<br />';
 								
 								// strip <  and  >  from this ID
-								$replace_id = ereg_replace( '^<','',$replace_id);
-								$replace_id = ereg_replace( '>$','',$replace_id);
+								$replace_id = preg_replace( '/^</','',$replace_id);
+								$replace_id = preg_replace( '/>$/','',$replace_id);
 								// id references are typically preceeded with "cid:"
 								$replace_id = 'cid:' .$replace_id;
 								
@@ -1736,7 +1736,7 @@ $msg_headers->udate = $new_time;
 							//}
 							$dsp = $GLOBALS['phpgw']->msg->make_clickable($dsp, $GLOBALS['phpgw']->msg->get_arg_value('["msgball"]["folder"]'));
 							// (OPT 2) THIS CONVERTS UNFORMATTED TEXT TO *VERY* SIMPLE HTML - adds only <br />
-							$dsp = ereg_replace("\r\n","<br />",$dsp);
+							$dsp = nl2br($dsp, true);
 							// add a line after the last line of the message
 							$dsp = $dsp .'<br /><br />';
 							// alternate (toggle) to view unformatted, for this we add "&no_fmt=1" to the URL

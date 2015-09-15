@@ -352,9 +352,9 @@
 				if($tree[$cnt+1][0]>$tree[$cnt][0])
 				{
 					$src = $REQUEST_URI;
-					if(ereg('[\?\&]p=',$src) != 0)
+					if(preg_match('/[\?\&]p=/',$src) != 0)
 					{
-						$src = ereg_replace('[\?\&]p=([0-9\|])+','',$REQUEST_URI);
+						$src = preg_replace('/[\?\&]p=([0-9\|])+/','',$REQUEST_URI);
 					}
 	//				echo 'Src = '.$src."<br>\n";
 					if(strpos(' '.$src,'?'))

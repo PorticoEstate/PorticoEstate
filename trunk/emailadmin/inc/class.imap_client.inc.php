@@ -726,7 +726,7 @@ class imap_client {
                 return $read;
             }
 
-            if (eregi('\\* NAMESPACE +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL)', $read[0], $data)) {
+            if (preg_match('/\\* NAMESPACE +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL)/i', $read[0], $data)) {
                 for ($i = 1; $i <= 3; $i++) {
                     if ($data[$i] == 'NIL') {
                         continue;

@@ -684,7 +684,7 @@
 					$result[] = lang('file names cannot contain %1', $badchar);
 				}
 
-				if (ereg ("/", $to) || ereg ("\\\\", $to))
+				if (preg_match ("/\//", $to) || ereg ("/\\\\/", $to))
 				{
 					//echo $GLOBALS['phpgw']->common->error_list (array ("File names cannot contain \\ or /"));
 					$result[] = lang('file names cannot contain \\ or /');
@@ -1183,9 +1183,9 @@
 			{
 				$rstring = preg_replace("/=(.*)(&|$)/Ue","'='.rawurlencode(base64_encode ('\\1')).'\\2'",$string);
 			}
-			elseif (ereg('^'.$this->hostname,$string))
+			elseif (preg_match("/^{$this->hostname}/",$string))
 			{
-				$rstring = ereg_replace('^'.$this->hostname.'/','',$string);
+				$rstring = str_replace("{$this->hostname}/",'',$string, 1);
 				$rstring = preg_replace("/(.*)(\/|$)/Ue","rawurlencode (base64_encode ('\\1')).'\\2'",$rstring);
 				$rstring = $this->hostname.'/'.$rstring;
 			}

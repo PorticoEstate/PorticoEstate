@@ -204,7 +204,7 @@
 			   // see chapter 1.8.4.5
 			   function GetFKSQL($sFields)
 			   {
-				 if (ereg("\((.*)\)", $sFields, $regs))
+				 if (preg_match("/\((.*)\)/", $sFields, $regs))
 				 {
 				   $ret = "FOREIGN KEY (".$regs[1].")\n" .
 					 "  REFERENCES ".$sFields;

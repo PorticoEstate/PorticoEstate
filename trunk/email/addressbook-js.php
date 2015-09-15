@@ -273,7 +273,7 @@ if(!$catlist)
 
 
 	$GLOBALS['phpgw']->template->set_var('cats_list',
-						ereg_replace( '&nbsp;&lt;' . lang('Global') . '&nbsp;' . lang($c->app_name) . '&gt;',
+							str_replace( '&nbsp;&lt;' . lang('Global') . '&nbsp;' . lang($c->app_name) . '&gt;',
 								"",
 								$catlist
 								)

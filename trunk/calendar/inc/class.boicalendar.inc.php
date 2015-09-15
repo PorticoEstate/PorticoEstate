@@ -1617,7 +1617,7 @@ class calendar_boicalendar
 		{
 			$str = str_replace("\r\n",'',$ical_text[$this->line]);
 			$this->line = $this->line + 1;
-			while(ereg("^[[:space:]]",$ical_text[$this->line]))
+			while(preg_match("/^[[:space:]]/",$ical_text[$this->line]))
 			{
 				$str .= substr(str_replace("\r\n",'',$ical_text[$this->line]),1);
 				$this->line = $this->line + 1;
@@ -1744,7 +1744,8 @@ class calendar_boicalendar
 
 	function parse_parameters(&$event,$majortype,$value)
 	{
-		if(!ereg('[\=\;]',$value))
+//		if(!ereg('[\=\;]',$value))
+		if(!preg_match('/[\=\;]/',$value))
 		{
 			$return_value[] = array(
 					'param'	=> $majortype,
@@ -1752,7 +1753,8 @@ class calendar_boicalendar
 					);
 			$value = '';
 		}
-		elseif(ereg('(.*(\:\\\\)?.*):(.*)',$value,$temp))
+//		elseif(ereg('(.*(\:\\\\)?.*):(.*)',$value,$temp))
+		elseif(preg_match('/(.*(\:\\\\)?.*):(.*)/',$value,$temp))
 		{
 			$this->debug('Value : '._debug_array($temp,false));
 			$this->debug('Param '.$majortype.' Value : '.$temp[3]);
@@ -1764,7 +1766,8 @@ class calendar_boicalendar
 						);
 				$value = str_replace(':MAILTO','',$temp[1]);
 			}
-			while(ereg('(([A-Z\-]*)[=]([[:alnum:] \_\)\(\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)',$value,$temp))
+//			while(ereg('(([A-Z\-]*)[=]([[:alnum:] \_\)\(\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)',$value,$temp))
+			while(preg_match('/(([A-Z\-]*)[=]([[:alnum:] \_\)\(\\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)/',$value,$temp))
 			{
 				$this->debug('Value : '._debug_array($temp,false));
 				$this->debug('Param '.$temp[2].' Value : '.$temp[3]);
@@ -1778,7 +1781,8 @@ class calendar_boicalendar
 		}
 		else
 		{
-			while(ereg('(([A-Z\-]*)[=]([[:alnum:] \_\)\(\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)',$value,$temp))
+//			while(ereg('(([A-Z\-]*)[=]([[:alnum:] \_\)\(\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)',$value,$temp))
+			while(preg_match('/(([A-Z\-]*)[=]([[:alnum:] \_\)\(\\/\$\.\,\:\\\|\*\&\^\%\#\!\~\"\?\&\@\<\>\-]*))([\;]?)(.*)/',$value,$temp))
 			{
 				$this->debug('Value : '._debug_array($temp,false));
 				$this->debug('Param '.$temp[2].' Value : '.$temp[3]);
@@ -2961,7 +2965,7 @@ class calendar_boicalendar
 			//				continue;
 			//			}
 
-			ereg($property_regexp,$text,$temp);
+			preg_match("/$property_regexp/",$text,$temp);
 			$majortype = str_replace('-','_',strtolower($temp[1]));
 			$value = utf8_decode(chop($temp[2]));
 

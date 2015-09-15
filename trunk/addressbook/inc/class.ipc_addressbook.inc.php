@@ -58,7 +58,7 @@
 			if($type != 'text/x-vcard')
 				return false;
 
-			$data = ereg_replace("\n\n", "\r\n", $data);
+			$data = str_replace("\n\n", "\r\n", $data);
 			$data_lines = explode("\r\n", $data);
 		
 			$buffer = array();
@@ -334,7 +334,7 @@
 				return false;
 			}
 
-			$data = ereg_replace("\n\n", "\r\n", $data);
+			$data = str_replace("\n\n", "\r\n", $data);
 			$data_lines = explode("\r\n", $data);
 		
 			$buffer = array();

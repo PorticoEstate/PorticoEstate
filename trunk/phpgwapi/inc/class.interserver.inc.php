@@ -136,13 +136,13 @@
 			switch($this->mode)
 			{
 				case 'soap':
-					if(!ereg('soap.php',$matches[2]))
+					if(!preg_match('/soap.php/',$matches[2]))
 					{
 						$matches[2] .= $this->urlparts['soap'];
 					}
 					break;
 				case 'xmlrpc':
-					if(!ereg('xmlrpc.php',$matches[2]))
+					if(!preg_match('/xmlrpc.php/',$matches[2]))
 					{
 						$matches[2] .= $this->urlparts['xmlrpc'];
 					}

@@ -198,7 +198,7 @@
 
 				if ($type == 'email')
 				{
-					if ($post_value && (!ereg ('@', $post_value) || ! ereg ("\.", $post_value)))
+					if ($post_value && (!preg_match ('/@/', $post_value) || ! preg_match ("/\./", $post_value)))
 					{
 						if ($required == 'Y')
 						{

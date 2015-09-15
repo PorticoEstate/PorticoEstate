@@ -224,7 +224,7 @@
 		function read_at_location($location_code='')
 		{
 			$use_svn = false;
-			if(ereg('svn[s:][:/]/', $GLOBALS['phpgw_info']['server']['files_dir']))
+			if(preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
 				//		$use_svn = true;
 			}
@@ -257,7 +257,7 @@
 			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$document['document_date']		= $GLOBALS['phpgw']->common->show_date($document['document_date'],$dateformat);
 
-			if(ereg('svn[s:][:/]/', $GLOBALS['phpgw_info']['server']['files_dir']))
+			if(preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
 				$document['journal']			= $this->get_file($document_id, true, $document);
 			}
