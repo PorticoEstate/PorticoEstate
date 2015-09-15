@@ -829,5 +829,3 @@ class UniversalFeedCreator extends FeedCreator {
 	}
 
 }
-
-?>

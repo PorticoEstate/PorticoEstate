@@ -31,4 +31,3 @@
 	$this->db->next_record();
 	$attrib_id = $this->db->f('id');
 	
-?>
