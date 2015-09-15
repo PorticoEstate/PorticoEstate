@@ -38,4 +38,3 @@
 	include('./soaplib.soapinterop.php');
 
 	$server->service($HTTP_RAW_POST_DATA);
-?>
