@@ -183,4 +183,3 @@
 		#);
 		#create_select_box('use custom settings','use_custom_settings',$selectOptions);
 	}
-?>
