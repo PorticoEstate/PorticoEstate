@@ -153,12 +153,12 @@ downloadContracts = function(oArgs){
 		return false;
 	}
 	
+	oArgs['search_option'] = $('#contract_search_options').val();
+	oArgs['search'] = $('#contract_query').val();
+	oArgs['contract_type'] = $('#contract_type').val();
+	oArgs['contract_status'] = $('#contract_status').val();
+	
 	var requestUrl = phpGWLink('index.php', oArgs);
-
-	requestUrl += '&search_option=' + $('#contract_search_options').val();
-	requestUrl += '&search=' + $('#contract_query').val();
-	requestUrl += '&contract_type=' + $('#contract_type').val();
-	requestUrl += '&contract_status=' + $('#contract_status').val();
 
 	window.open(requestUrl,'_self');
 };
