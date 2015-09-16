@@ -88,13 +88,13 @@
 		{
 			return false;
 		}
+		
+		oArgs['search_option'] = $('#contracts_search_options').val();
+		oArgs['search'] = $('#contracts_query').val();
+		oArgs['contract_type'] = $('#contract_type').val();
+		oArgs['contract_status'] = $('#contract_status').val();
 
 		var requestUrl = phpGWLink('index.php', oArgs);
-
-		requestUrl += '&search_option=' + $('#contracts_search_options').val();
-		requestUrl += '&search=' + $('#contracts_query').val();
-		requestUrl += '&contract_type=' + $('#contract_type').val();
-		requestUrl += '&contract_status=' + $('#contract_status').val();
 
 		window.open(requestUrl,'_self');
 	};
@@ -130,9 +130,8 @@
 		}
 
 		var data = getRequestData(selected, parameters);
+		oArgs['level'] = document.getElementById('type_id').value;
 		var requestUrl = phpGWLink('index.php', oArgs);
-		var level = document.getElementById('type_id').value;
-		requestUrl += '&level=' + level;
 		
 		JqueryPortico.execute_ajax(requestUrl, function(result){
 
@@ -163,7 +162,6 @@
 			JqueryPortico.show_message(nTable, result);
 
 			oTable0.fnDraw();
-			oTable1.fnDraw();
 
 		}, data, 'POST', 'JSON');
 	};
