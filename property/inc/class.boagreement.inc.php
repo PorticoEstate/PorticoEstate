@@ -57,7 +57,7 @@
 			'check_perms'	 => true
 		);
 
-		function property_boagreement( $session = false )
+		function __construct( $session = false )
 		{
 			$this->so		 = CreateObject( 'property.soagreement' );
 			$this->bocommon	 = CreateObject( 'property.bocommon' );

@@ -57,7 +57,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_borequest($session=false)
+		function __construct($session=false)
 		{
 			$this->so 					= CreateObject('property.sorequest');
 			$this->bocommon 			= CreateObject('property.bocommon');

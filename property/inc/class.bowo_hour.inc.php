@@ -50,7 +50,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_bowo_hour($session=false)
+		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.sowo_hour');
 			$this->bocommon 	= CreateObject('property.bocommon');

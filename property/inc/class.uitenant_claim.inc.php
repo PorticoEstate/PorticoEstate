@@ -54,7 +54,7 @@
 				'view_file'	=> true
 			);
 
-		function property_uitenant_claim()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::claim';

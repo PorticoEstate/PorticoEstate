@@ -55,7 +55,7 @@
 				'hour'			=> true
 			);
 
-		function property_uitemplate()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::template';

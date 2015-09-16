@@ -42,7 +42,7 @@
 		var $offset;
 		var $acl_app;
 
-		function property_boadmin($session = '')
+		function __construct($session = '')
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so		 = CreateObject('property.soadmin');
