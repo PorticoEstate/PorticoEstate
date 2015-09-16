@@ -110,7 +110,7 @@
 						</div>	
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'date_emd')"/>
+								<xsl:value-of select="php:function('lang', 'date_end')"/>
 							</label>
 							<input type="text" id="date_end" name="date_end" size="10" value="{value_date_end}" readonly="readonly"/>
 						</div>
