@@ -594,13 +594,12 @@
 			</div>
 			<div class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save_contract" value="{lang_save}" onMouseout="window.status='';return true;"/>
-				<input type="button" class="pure-button pure-button-primary" name="contract_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 		<form id="form_upload" name="form_upload" method="post" action="" enctype="multipart/form-data"></form>
 	</div>
 </xsl:template>
@@ -958,13 +957,12 @@
 						</div>
 			</div>
 			<div class="proplist-col">
-				<input type="button" class="pure-button pure-button-primary" name="contract_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
 </xsl:template>
 
