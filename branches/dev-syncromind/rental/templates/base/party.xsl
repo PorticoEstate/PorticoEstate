@@ -281,13 +281,12 @@
 						<input type="button" onclick="onGetSync_data('{sync_info_url}')" class="pure-button pure-button-primary" name="synchronize" value="{lang_sync_data}" onMouseout="window.status='';return true;"/>
 					</xsl:when>
 				</xsl:choose>
-				<input type="button" class="pure-button pure-button-primary" name="party_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 		<form id="form_upload" name="form_upload" method="post" action="" enctype="multipart/form-data"></form>
 	</div>
 </xsl:template>
@@ -296,11 +295,7 @@
 <xsl:template xmlns:php="http://php.net/xsl" match="view">
 	<xsl:call-template name="top-toolbar" />
 	<div>
-		<xsl:variable name="form_action">
-			<xsl:value-of select="form_action"/>
-		</xsl:variable>
-
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="details">
@@ -509,13 +504,12 @@
 				</div>
 			</div>
 			<div class="proplist-col">
-				<input type="button" class="pure-button pure-button-primary" name="party_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
 </xsl:template>
 
