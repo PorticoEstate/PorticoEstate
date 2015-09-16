@@ -15,6 +15,7 @@ class rental_uiparty extends rental_uicommon
 	public $public_functions = array
 	(
 			'add'				=> true,
+			'save'				=> true,
 			'edit'				=> true,
 			'index'				=> true,
 			'query'				=> true,
@@ -549,7 +550,25 @@ JS;
 	 */
 	public function view()
 	{	
-		$this->edit(array(), $mode = 'view');
+		$party_id = (int)phpgw::get_var('id');		
+		
+		if(isset($party_id) && $party_id > 0)
+		{
+			$party = rental_soparty::get_instance()->get_single($party_id); 
+		}
+		else
+		{
+			$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+		}
+
+		if(isset($party) && $party->has_permission(PHPGW_ACL_READ))
+		{
+			$this->edit(array(), $mode = 'view');
+		}
+		else
+		{
+			$this->render('permission_denied.php',array('error' => lang('permission_denied_view_party')));
+		}
 	}
 
 	/**
@@ -559,88 +578,25 @@ JS;
 	public function edit($values = array(), $mode = 'edit')
 	{
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang($mode);
-		// Get the contract part id
-		$party_id = (int)phpgw::get_var('id');		
-		
-		if ($mode == 'view')
-		{
-			if(isset($party_id) && $party_id > 0)
-			{
-				$party = rental_soparty::get_instance()->get_single($party_id); 
-			}
-			else
-			{
-				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
-			}
 
-			if(!$party->has_permission(PHPGW_ACL_READ))
-			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_view_party')));
-			}			
-		}
-		else
+		$party_id = (int)phpgw::get_var('id');
+		
+		if ($mode == 'edit')
 		{	
 			// Retrieve the party object or create a new one if correct permissions
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
-			{
-				if(isset($party_id) && $party_id > 0)
-				{	
-					$party = rental_soparty::get_instance()->get_single($party_id); 
-				}
-				else
-				{
-					$party = new rental_party();
-				}
-			}
-			else
+			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
-			}			
-		}
-
-	
-		if(isset($_POST['save_party'])) // The user has pressed the save button
-		{
-			if(isset($party)) // If a party object is created
-			{
-				// ... set all parameters
-				$party->set_identifier(phpgw::get_var('identifier'));
-				$party->set_first_name(phpgw::get_var('firstname'));
-				$party->set_last_name(phpgw::get_var('lastname'));
-				$party->set_title(phpgw::get_var('title'));
-				$party->set_company_name(phpgw::get_var('company_name'));
-				$party->set_department(phpgw::get_var('department'));
-				$party->set_address_1(phpgw::get_var('address1'));
-				$party->set_address_2(phpgw::get_var('address2'));
-				$party->set_postal_code(phpgw::get_var('postal_code'));
-				$party->set_place(phpgw::get_var('place'));
-				$party->set_phone(phpgw::get_var('phone'));
-				$party->set_mobile_phone(phpgw::get_var('mobile_phone'));
-				$party->set_fax(phpgw::get_var('fax'));
-				$party->set_email(phpgw::get_var('email'));
-				$party->set_url(phpgw::get_var('url'));  
-				$party->set_account_number(phpgw::get_var('account_number'));
-				$party->set_reskontro(phpgw::get_var('reskontro'));
-				$party->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
-				$party->set_comment(phpgw::get_var('comment'));
-				//$party->set_location_id(phpgw::get_var('location_id'));
-				$party->set_org_enhet_id(phpgw::get_var('org_enhet_id'));
-				$party->set_unit_leader(phpgw::get_var('unit_leader'));
-				
-				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
-				{
-					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message'); 
-				}
-				else
-				{
-					phpgwapi_cache::message_set(lang('messages_form_error'), 'error'); 
-				}
 			}
 		}
-		
-		if (empty($party_id)) 
+			
+		if(isset($party_id) && $party_id > 0)
+		{	
+			$party = rental_soparty::get_instance()->get_single($party_id); 
+		}
+		else
 		{
-			$party_id = $party->get_id();
+			$party = new rental_party();
 		}
 
 		$config = CreateObject('phpgwapi.config','rental');
@@ -852,7 +808,7 @@ JS;
 		(
 			'datatable_def'					=> $datatable_def,
 			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
-			'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiparty.edit')),
+			'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiparty.save')),
 			'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 			'lang_save'						=> lang('save'),
 			'lang_sync_data'				=> lang('get_sync_data'),
@@ -903,6 +859,64 @@ JS;
 		self::render_template_xsl(array('party', 'datatable_inline'), array($mode => $data));
 	}
 	
+	public function save()
+	{
+		if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{
+			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+		}
+
+		$party_id = (int)phpgw::get_var('id');
+
+		if(isset($party_id) && $party_id > 0)
+		{	
+			$party = rental_soparty::get_instance()->get_single($party_id); 
+		}
+		else
+		{
+			$party = new rental_party();
+		}
+
+		if(isset($party)) // If a party object is created
+		{
+			// ... set all parameters
+			$party->set_identifier(phpgw::get_var('identifier'));
+			$party->set_first_name(phpgw::get_var('firstname'));
+			$party->set_last_name(phpgw::get_var('lastname'));
+			$party->set_title(phpgw::get_var('title'));
+			$party->set_company_name(phpgw::get_var('company_name'));
+			$party->set_department(phpgw::get_var('department'));
+			$party->set_address_1(phpgw::get_var('address1'));
+			$party->set_address_2(phpgw::get_var('address2'));
+			$party->set_postal_code(phpgw::get_var('postal_code'));
+			$party->set_place(phpgw::get_var('place'));
+			$party->set_phone(phpgw::get_var('phone'));
+			$party->set_mobile_phone(phpgw::get_var('mobile_phone'));
+			$party->set_fax(phpgw::get_var('fax'));
+			$party->set_email(phpgw::get_var('email'));
+			$party->set_url(phpgw::get_var('url'));  
+			$party->set_account_number(phpgw::get_var('account_number'));
+			$party->set_reskontro(phpgw::get_var('reskontro'));
+			$party->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
+			$party->set_comment(phpgw::get_var('comment'));
+			//$party->set_location_id(phpgw::get_var('location_id'));
+			$party->set_org_enhet_id(phpgw::get_var('org_enhet_id'));
+			$party->set_unit_leader(phpgw::get_var('unit_leader'));
+
+			if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
+			{
+				phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
+				$party_id = $party->get_id();
+			}
+			else
+			{
+				phpgwapi_cache::message_set(lang('messages_form_error'), 'error'); 
+			}
+		}
+
+		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party_id));
+	}
+		
 	public function download()
 	{
 		$list = $this->query();
