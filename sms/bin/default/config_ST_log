@@ -14,7 +14,7 @@
 	/**
 	 * Description
 	 * @package sms
-	 * Config values for SMS-command "ST" - (Strøing) "sanding the ice" in Norwegian - as example - as it is configured at BBB 
+	 * Config values for SMS-command "ST" - (StrÃ¸ing) "sanding the ice" in Norwegian - as example - as it is configured at BBB 
 	 * This file is for redirecting from log items to the subject of the log 
 	 */
 

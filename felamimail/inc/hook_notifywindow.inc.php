@@ -104,4 +104,3 @@
 		}
 		$GLOBALS['phpgw']->session->appsession('notifywindow','felamimail',$folderStatus['uidnext']);
 	}
-?>

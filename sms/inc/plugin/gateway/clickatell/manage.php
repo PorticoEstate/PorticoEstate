@@ -1,4 +1,4 @@
-<?
+<?php
 
 if(!defined("_SECURE_")){die("Intruder: IP ".$_SERVER['REMOTE_ADDR']);};
 if (!isadmin()){die("Intruder: IP ".$_SERVER['REMOTE_ADDR']);};
@@ -77,5 +77,3 @@ switch ($op)
 	header ("Location: menu_admin.php?inc=gwmod_clickatell&op=manage&err=".urlencode($error_string));
 	break;
 }
-
-?>

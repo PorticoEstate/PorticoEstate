@@ -489,7 +489,7 @@
 		*/
 		function _import_vcard($data)
 		{
-			$data = ereg_replace("\n\n", "\r\n", $data); // xml-rpc bug: \r\n -> \n\n
+			$data = str_replace("\n\n", "\r\n", $data); // xml-rpc bug: \r\n -> \n\n
 			$data_lines = explode("\r\n", $data);
 
 			$buffer = array();

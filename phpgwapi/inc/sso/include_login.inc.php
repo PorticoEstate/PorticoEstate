@@ -107,7 +107,7 @@
 		var $tmpl = null;
 		var $msg_only=false;
 
-		function phpgw_uilogin(&$tmpl, $msg_only)
+		function __construct(&$tmpl, $msg_only)
 		{
 			$this->tmpl = $tmpl;
 			$this->msg_only = $msg_only;

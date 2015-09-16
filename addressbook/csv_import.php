@@ -299,14 +299,14 @@
 						$trans_csv = $_POST['trans'][$csv_idx];
 						while(list($pattern,$replace) = each($trans_csv))
 						{
-							if(ereg((string) $pattern,$val))
+							if(preg_match("/$pattern/",$val))
 							{
 								// echo "<p>csv_idx='$csv_idx',info='$addr',trans_csv=".dump_array($trans_csv).",ereg_replace('$pattern','$replace','$val') = ";
-								$val = ereg_replace((string) $pattern,str_replace($VPre,'\\',$replace),(string) $val);
+								$val = preg_replace("/$pattern/",str_replace($VPre,'\\',$replace),(string) $val);
 								// echo "'$val'</p>";
 
 								$reg = $CPreReg.'([a-zA-Z_0-9]+)'.$CPosReg;
-								while(ereg($reg,$val,$vars))
+								while(preg_match("/$reg/",$val,$vars))
 								{	// expand all CSV fields
 									$val = str_replace($CPre . $vars[1] . $CPos, $val[0] == '@' ? "'"
 										. addslashes($fields[index($vars[1], $csv_fields)])

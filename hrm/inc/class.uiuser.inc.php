@@ -36,7 +36,7 @@
 			'view_cv'	=> true
 		);
 
-		function hrm_uiuser()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');

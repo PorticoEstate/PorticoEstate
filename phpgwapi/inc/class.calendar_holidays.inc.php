@@ -40,7 +40,7 @@
 	 *
 	 * @static
 	 */
-   function calendar_holidays()
+   function __construct()
    {
    }
    

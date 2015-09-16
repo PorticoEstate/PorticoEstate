@@ -16,7 +16,7 @@
 
 	phpgw::import_class('phpgwapi.sql_criteria');
 	class ajax_contacts {
-		function ajax_contacts() {
+		function __construct() {
 			$GLOBALS['phpgw']->session->commit_session();
 			$this->charset	= 'utf-8';
 			$this->translation = createObject('felamimail.translation');

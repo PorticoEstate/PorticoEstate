@@ -99,7 +99,7 @@
 			/* Dav properties */
 			//First check if we are asked to use svn ...
 			$use_svn = false;
-			if(ereg('svn[s:][:/]/', $this->basedir))
+			if(preg_match('/svn[s:][:\/]\//', $this->basedir))
 			{
 				$use_svn = true;
 				//so the 's' is kept
@@ -1145,7 +1145,7 @@ $this->debug('cp : success '.$result);
 
 				while (list ($num, $entry) = each ($ls))
 				{
-					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					$newdir = str_replace ($f->fake_full_path, "$t->fake_full_path", $entry['directory'], 1);
 					if ($this->mkdir (array(
 							'string'	=> $newdir.'/'.$entry['name'],
 							'relatives'	=> array ($t->mask)
@@ -1170,7 +1170,7 @@ $this->debug('cp : success '.$result);
 						continue;
 					}
 
-					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					$newdir = str_replace ($f->fake_full_path, "$t->fake_full_path", $entry['directory'], 1);
 					$this->cp (array(
 							'from'	=> "$entry[directory]/$entry[name]",
 							'to'	=> "$newdir/$entry[name]",
@@ -1257,7 +1257,7 @@ $this->debug('cp : success '.$result);
 					'string'	=> $f->fake_full_path,
 					'relatives'	=> array ($f->mask)
 				) == 'Directory'))
-				&& ereg ("^$f->fake_full_path", $t->fake_full_path)
+				&& preg_match ('/^' . addcslashes($f->fake_full_path, '/'). '/', $t->fake_full_path)
 			)
 			{
 				if (($t->fake_full_path == $f->fake_full_path) || substr ($t->fake_full_path, strlen ($f->fake_full_path), 1) == '/')
@@ -1498,7 +1498,7 @@ $this->debug('cp : success '.$result);
 			}
 
 			/* We don't allow /'s in dir names, of course */
-			if (ereg ('/', $p->fake_name))
+			if (preg_match ('/\//', $p->fake_name))
 			{
 				return False;
 			}
@@ -1861,7 +1861,7 @@ $this->debug('file_type: Mime type : '.$mime_type);
 				)
 			);
 		
-			if ($data['checksubdirs']==False && ereg('.*/$', $data['string']) && $data['nofiles'] )
+			if ($data['checksubdirs']==False && preg_match('/.*\/$/', $data['string']) && $data['nofiles'] )
 			{
 $this->debug('Returning empty for'.$data['string'],DEBUG_LS);
 				return array();

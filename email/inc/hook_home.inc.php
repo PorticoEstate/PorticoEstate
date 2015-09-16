@@ -298,4 +298,3 @@
 	// so even if we did not output any data here, we still must call this "end_request" function, it is kind of like a destructor
 	$GLOBALS['phpgw']->msg->end_request();
 
-?>

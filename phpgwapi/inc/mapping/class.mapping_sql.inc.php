@@ -23,9 +23,9 @@
 		* constructor, sets up variables
 		*
 		**/
-		function mapping_sql($auth_info='')
+		function __construct($auth_info='')
 		{
-			parent::mapping($auth_info);
+			parent::__construct($auth_info);
 		}
 		
 		/**

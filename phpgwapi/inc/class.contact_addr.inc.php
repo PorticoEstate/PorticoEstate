@@ -242,7 +242,7 @@
 		var $secondary_set;
 
 
-		function contact_addr ($ali = '', $field = '', $criteria = '')
+		function __construct ($ali = '', $field = '', $criteria = '')
 		{
 			$this->_constructor('phpgw_contact_addr', 'contact_addr');
 			if($field)

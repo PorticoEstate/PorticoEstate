@@ -1825,7 +1825,7 @@
 				}
 				$addr_details->mailbox = substr($addr_details->adl,0,$pos3);
 				$addr_details->host    = substr($addr_details->adl,$pos3+1);
-				$pos = ereg("\"",$addr_details->personal);
+				$pos = preg_match('/\"/',$addr_details->personal);
 				if ($pos)
 				{
 					$addr_details->personal = substr($addr_details->personal,1,strlen($addr_details->personal)-2);
@@ -2273,4 +2273,3 @@
 			return $body_glob;
 		}
 	}
-?>

@@ -22,7 +22,7 @@
 			'saveFilter'	=> 'True'
 		);
 
-		function uifilter()
+		function __construct()
 		{
 			
 			// get posted variables

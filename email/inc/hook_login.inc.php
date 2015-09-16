@@ -12,4 +12,3 @@
 	$sql  = 'DELETE FROM phpgw_anglemail ';
 	$sql .= "WHERE account_id='" . intval($GLOBALS['phpgw_info']["user"]["account_id"]) . "'";
     $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-?>

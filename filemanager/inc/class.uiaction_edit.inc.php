@@ -27,7 +27,7 @@
 			'edit' => True
 		);
 
-		function uiaction_edit()
+		function __construct()
 		{
 			$this->action			= CreateObject('filemanager.uiaction_base');
 			$this->bofilemanager	= $this->action->bofilemanager;
@@ -154,4 +154,4 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $output));
 		}
 	}
-?>
+

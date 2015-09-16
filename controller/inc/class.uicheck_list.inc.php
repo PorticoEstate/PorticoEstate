@@ -823,7 +823,7 @@
 					$subject = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
 					$subject .= "::{$serie['title']}::{$short_desc}";
 
-					$link_backend = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+					$link_backend = $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction'	=> 'controller.uicheck_list.add_check_list',
 						'control_id'	=> $check_list->get_control_id(),
 						'location_id'	=> $check_list->get_location_id(),
@@ -833,9 +833,9 @@
 						'assigned_to'	=> $check_list->get_assigned_to(),
 						'deadline_current'	=> true
 
-					),false,true,true).'">Serie#' . $check_list->get_serie_id() .'::Backend</a>';
+					),false,true,true);
 
-					$link_mobilefrontend = '<a href ="' . $GLOBALS['phpgw']->link('/mobilefrontend/index.php', array(
+					$link_mobilefrontend = $GLOBALS['phpgw']->link('/mobilefrontend/index.php', array(
 						'menuaction'	=> 'controller.uicheck_list.add_check_list',
 						'control_id'	=> $check_list->get_control_id(),
 						'location_id'	=> $check_list->get_location_id(),
@@ -845,12 +845,17 @@
 						'assigned_to'	=> $check_list->get_assigned_to(),
 						'deadline_current'	=> true
 
-					),false,true,true).'">Serie#' . $check_list->get_serie_id() .'::Mobilefrontend</a>';
+					),false,true,true);
 
-					$description = str_replace('&amp;', '&', "{$link_mobilefrontend}\\n\\n{$link_backend}");
+					$html_description = "<a href ='{$link_mobilefrontend}'>Serie#" . $check_list->get_serie_id() .'::Mobilefrontend</a><br/><br/>';
+					$html_description .= "<a href ='{$link_backend}'>Serie#" . $check_list->get_serie_id() .'::Backend</a>';
+
+					$_serie_id = $check_list->get_serie_id();
+					$text_description = str_replace('&amp;', '&', "Serie#{$_serie_id}::Mobilefrontend:\\n{$link_mobilefrontend}\\n\\nSerie#{$_serie_id}::Backend:\\n{$link_backend}");
+
 					if($from_address && $to_address)
 					{
-						$this->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location);
+						$this->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $html_description, $text_description, $location);
 					}
 					else
 					{
@@ -1409,11 +1414,12 @@
 		 * @param int $startTime
 		 * @param int $endTime
 		 * @param string $subject
-		 * @param string $description
+		 * @param string $html_description
+		 * @param string $text_description
 		 * @param string $location
 		 * @return type
 		 */
-		function sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location)
+		function sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $html_description,$text_description, $location)
 		{
 //			https://www.exchangecore.com/blog/sending-outlookemail-calendar-events-php/
 
@@ -1431,7 +1437,7 @@
 			<html>
 			<body>
 			<p>Dear {$to_name}</p>
-			<p>{$description}</p>
+			<p>{$html_description}</p>
 			</body>
 			</html>
 			--{$mime_boundary}
@@ -1441,7 +1447,7 @@ HTML;
 			<html>
 			<body>
 			<p>Dear {$to_name}</p>
-			<p>{$description}</p>
+			<p>{$html_description}</p>
 			</body>
 			</html>
 HTML;
@@ -1471,7 +1477,7 @@ SEQUENCE:0
 STATUS:TENTATIVE
 SUMMARY:{$subject}
 LOCATION:{$location}
-DESCRIPTION:{$description}
+DESCRIPTION:{$text_description}
 UID:{$uid}
 BEGIN:VALARM
 TRIGGER:-PT15M
@@ -1503,7 +1509,48 @@ HTML;
 				'disposition'	=> 'inline'
 			);
 
+//test
+			$mail = createObject('phpgwapi.mailer_smtp');
+			$mail->Subject = $subject;
+			$mail->Body =<<<HTML
+			<html>
+			<body>
+			<p>{$to_name}:</p>
+			<p>{$html_description}</p>
+			</body>
+			</html>
+HTML;
+			$mail->AltBody = $text_description; // For non HTML email client
+			$mail->Ical = $ical; //Your manually created ical code
+			$mail->IsHTML(true);
+			$mail->isSMTP();
+			$mail->AddAddress($to_address);
 
+
+			$from = str_replace(array('[',']'),array('<','>'),$from_address);
+			$from_array = split('<', $from);
+			unset($from);
+			if ( count($from_array) == 2 )
+			{
+				$mail->From = trim($from_array[1],'>');
+				$mail->FromName = $from_array[0];
+			}
+			else
+			{
+				$mail->From = $from_array[0];
+				$mail->FromName = $from_name;
+			}
+
+			try
+			{
+				$mail->Send();
+			}
+			catch (phpmailerException $e)
+			{
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+			}
+			return;
+//test
 			$rc = false;
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 			{

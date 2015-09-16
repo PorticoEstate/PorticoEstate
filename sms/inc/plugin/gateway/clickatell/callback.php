@@ -1,4 +1,4 @@
-<?
+<?php
 chdir("../../../");
 include "init.php";
 include "$apps_path[libs]/function.php";
@@ -81,5 +81,3 @@ if ($cb_status && $cb_apimsgid)
 	setsmsdeliverystatus($smslog_id,$uid,$p_status);
     }
 }
-
-?>

@@ -123,4 +123,3 @@
 		display_sidebox($appname,$menu_title,$file);
 	} */
 }
-?>

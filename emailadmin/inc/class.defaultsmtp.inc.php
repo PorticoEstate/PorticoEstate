@@ -28,7 +28,7 @@
 		var $defaultDomain;
 		
 		// the constructor
-		function defaultsmtp($defaultDomain=null)
+		function __construct($defaultDomain=null)
 		{
 			$this->defaultDomain = $defaultDomain ? $defaultDomain : $GLOBALS['phpgw_info']['server']['mail_suffix'];
 		}
@@ -82,4 +82,3 @@
 			return true;
 		}
 	}
-?>

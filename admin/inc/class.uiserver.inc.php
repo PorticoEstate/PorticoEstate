@@ -32,7 +32,7 @@
 		var $bo = '';
 		var $nextmatchs = '';
 
-		function uiserver()
+		function __construct()
 		{
 			$this->bo = createobject('admin.boserver',True);
 			$this->nextmatchs = createobject('phpgwapi.nextmatchs');

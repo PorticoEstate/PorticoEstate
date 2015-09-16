@@ -18,7 +18,7 @@
 	*/
 	class arrayfunctions
 	{
-		function arrayfunctions($vars='')
+		function __construct($vars='')
 		{
 		}
 

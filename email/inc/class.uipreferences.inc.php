@@ -39,7 +39,7 @@
 		//var $debug = 3;
 
 
-		function uipreferences()
+		function __construct()
 		{
 			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 			$this->bo = CreateObject('email.bopreferences');
@@ -837,4 +837,3 @@
 			}
 		}
 	}
-?>

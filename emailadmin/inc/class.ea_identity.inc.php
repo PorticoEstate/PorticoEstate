@@ -24,4 +24,3 @@
 		// the default identity
 		var $default = true;
 	}
-?>

@@ -42,7 +42,7 @@
 		// the object storing the data about the incoming imap server
 		var $icServerID=0;
 		
-		function uifelamimail()
+		function __construct()
 		{
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
 
@@ -885,4 +885,3 @@
 			$this->t->set_var('lang_updating_view',lang('updating view'));
 		}
 	}
-?>

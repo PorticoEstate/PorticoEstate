@@ -23,7 +23,7 @@
 		var $historylog;
 		var $owner;
 
-		function sotodo()
+		function __construct()
 		{
 			$this->db          =& $GLOBALS['phpgw']->db;
 			$this->grants      = $GLOBALS['phpgw']->acl->get_grants('todo');
@@ -436,4 +436,3 @@
 			}
 		}
 	}
-?>

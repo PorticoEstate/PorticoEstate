@@ -30,7 +30,7 @@
 		//var $debug = 3;
 		//var $debug = 4;
 		
-		function uiattach_file()
+		function __construct()
 		{
 			//return;
 		}
@@ -92,4 +92,3 @@
 	
 	
 	}
-?>

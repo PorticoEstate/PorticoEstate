@@ -35,7 +35,7 @@
 		
 		var $xi;
 		
-		function bofolder()
+		function __construct()
 		{
 			//return;
 		}
@@ -464,4 +464,3 @@
 		}	
 	
 	}
-?>

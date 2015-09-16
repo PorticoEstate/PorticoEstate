@@ -40,7 +40,7 @@
 		
 		var $xi;
 		
-		function boindex()
+		function __construct()
 		{
 			//return;
 		}
@@ -1307,4 +1307,3 @@
 	
 	
 	}
-?>

@@ -21,7 +21,7 @@
 			'help' => True
 		);
 
-		function uiaction_base()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 			$GLOBALS['phpgw']->xslttpl->add_file('widgets');
@@ -73,6 +73,3 @@
 					
 		}
 	}
-
-
-?>

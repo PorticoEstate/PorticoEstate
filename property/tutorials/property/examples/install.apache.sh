@@ -27,11 +27,11 @@ FREETDSTAR="freetds-stable.tgz"
 FREETDS="freetds-0.91"
 
 # Download: http://xmlsoft.org/downloads.html
-LIBXMLTAR="libxml2-2.7.8.tar.gz"
-LIBXML="libxml2-2.7.8"
+LIBXMLTAR="libxml2-2.9.2.tar.gz"
+LIBXML="libxml2-2.9.2"
 
-LIBXSLTAR="libxslt-1.1.26.tar.gz"
-LIBXSL="libxslt-1.1.26"
+LIBXSLTAR="libxslt-1.1.28.tar.gz"
+LIBXSL="libxslt-1.1.28"
 
 # Download: ftp://ftp.cac.washington.edu/imap/
 IMAPTAR="imap-2007f.tar.Z"

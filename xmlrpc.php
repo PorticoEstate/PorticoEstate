@@ -133,7 +133,7 @@
 	}
 
 	if ( isset($headers['Authorization']) 
-		&& ereg('Basic', $headers['Authorization']) )
+		&& preg_match('/Basic/', $headers['Authorization']) )
 	{
 		$tmp = $headers['Authorization'];
 		$tmp = str_replace(' ','',$tmp);

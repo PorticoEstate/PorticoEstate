@@ -85,4 +85,3 @@
 			return lang('Successfully imported %1 records into your addressbook.',$num);
 		}
 	}
-?>

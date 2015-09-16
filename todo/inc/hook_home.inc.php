@@ -26,4 +26,3 @@
 														'title'	=> lang('todo')));
 		$GLOBALS['phpgw']->portalbox->draw($extra_data);
 	}
-?>

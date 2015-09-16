@@ -33,7 +33,7 @@
 			'get_locations'=> true
 		);
 
-		function boreg()
+		function __construct()
 		{
 			$this->so = createobject ('registration.soreg');
 			$this->bomanagefields = createobject ('registration.bomanagefields');
@@ -198,7 +198,7 @@
 
 				if ($type == 'email')
 				{
-					if ($post_value && (!ereg ('@', $post_value) || ! ereg ("\.", $post_value)))
+					if ($post_value && (!preg_match ('/@/', $post_value) || ! preg_match ("/\./", $post_value)))
 					{
 						if ($required == 'Y')
 						{

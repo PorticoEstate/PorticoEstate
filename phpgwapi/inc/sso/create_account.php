@@ -84,7 +84,7 @@
 			$error[] = lang('You have to choose a login');  
 		}
 		
-		if (!eregi("^[0-9_a-z]*$",$loginn))
+		if (!preg_match("/^[0-9_a-z]*$/i",$loginn))
 		{
 			$error[] = lang('Please submit just letters and numbers for your login');
 		}

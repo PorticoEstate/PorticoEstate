@@ -4,7 +4,7 @@
 // importeren bestand en de waarden van de array zullen gebruikt worden
 // bij het aanmaken van het uitvoerbestand.
 //
-// Een uit Outlook geëxporteerd bestand ziet er uit als volgt:
+// Een uit Outlook geÃ«xporteerd bestand ziet er uit als volgt:
 //
 // Titel<tab>Voornaam<tab>Middelste naam<tab>Achternaam<tab>...
 // <tab>Jan<tab><tab>Janssens<tab>...
@@ -13,9 +13,9 @@
 // Dit is wat opgezocht zal worden voor de sleutel.
 //
 // De array hoeft in geen specifieke volgorde te staan en alle velden die
-// niet gedefiniëerd zijn, zullen ook niet worden omgezet.
+// niet gedefiniÃ«erd zijn, zullen ook niet worden omgezet.
 // Als de waarde gelijk is aan '+', zal ze worden toegevoegd aan het vorige
-// veld en alle tekst na de '+' zal worden toegevoegd vóór de waarde.
+// veld en alle tekst na de '+' zal worden toegevoegd vÃ³Ã³r de waarde.
 // Zo zal bijvoorbeeld het volgende een komma en een spatie toevoegen tussen
 // Achternaam en Voornaam en het resultaat bewaren in Volledige naam:
 //
@@ -123,4 +123,3 @@
 			return lang('Successfully imported x records into your addressbook.',$num);
 		}
 	}
-?>

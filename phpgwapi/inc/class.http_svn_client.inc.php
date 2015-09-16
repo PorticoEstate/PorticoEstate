@@ -34,7 +34,7 @@
 		var $cdata;
 		var $logentry;
 
-		function SVNParser()
+		function __construct()
 		{
 			$this->xml = xml_parser_create();
 			xml_set_object($this->xml,$this);

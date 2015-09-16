@@ -68,7 +68,7 @@
 		/*
 		This is the constructor for the object.
 		*/
-		function portalbox($title='', $primary='', $secondary='', $tertiary='')
+		function __construct($title='', $primary='', $secondary='', $tertiary='')
 		{
 			$this->setvar('title',$title);
 			// echo 'After SetVar Title = '.$this->getvar('title')."<br>\n";

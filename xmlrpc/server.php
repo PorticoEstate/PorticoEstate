@@ -171,8 +171,8 @@ function agesorter_compare($a, $b) {
 
   // don't even ask me _why_ these come padded with
   // hyphens, I couldn't tell you :p
-  $a=ereg_replace("-", "", $a);
-  $b=ereg_replace("-", "", $b);
+  $a=preg_replace("/-/", "", $a);
+  $b=preg_replace("/-/", "", $b);
 
   if ($agesorter_arr[$a]==$agesorter[$b]) return 0;
   return ($agesorter_arr[$a] > $agesorter_arr[$b]) ? -1 : 1;

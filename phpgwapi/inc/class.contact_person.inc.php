@@ -282,7 +282,7 @@
 				 'people'		=> array('select'	=> 'relink_org_person'),
 				 'people_local'		=> array('select'	=> 'relink_org_person'));
 
-		function contact_person ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact_person', 'contact_person');
 			if($field)

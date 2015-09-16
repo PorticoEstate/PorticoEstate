@@ -47,7 +47,7 @@
 		var $alternate_handlers = array();
 		var $account;
 
-		function property_historylog($appname)
+		function __construct($appname)
 		{
 			if (! $this->account)
 			{

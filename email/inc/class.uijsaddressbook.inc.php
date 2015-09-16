@@ -206,7 +206,7 @@
 		//so that when the mainframe triggers an event, it will call some functions in the frameset (its window.parent)
 		//And when the secondary frame returns from this public functions (which are all declared and defined in this file)
 		//It will also call some of the functions in the frameset.
-		function uijsaddressbook()
+		function __construct()
 		{
 			//We create our template
 						
@@ -569,7 +569,7 @@
 				//We get it from the category class and ...
 				$this->categoryobject=CreateObject('phpgwapi.categories');
 				$this->categoryobject->app_name = 'addressbook';
-				$this->catlist=ereg_replace( '&nbsp;&lt;' . lang('Global') . '&nbsp;' . lang($this->categoryobject->app_name).'&gt;'
+				$this->catlist=  str_replace( '&nbsp;&lt;' . lang('Global') . '&nbsp;' . lang($this->categoryobject->app_name).'&gt;'
 							,'',$this->categoryobject->formated_list('select','all',$this->cat_id,'True'));
 				//....save it in the cache
 //				$GLOBALS['phpgw']->session->appsession('jsuibook_catlist','email',$catlist);

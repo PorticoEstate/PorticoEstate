@@ -232,7 +232,7 @@
 				case 'text/x-vnote':
 					// handle buggy P800 version-string
 					$dataExtern = addcslashes($dataExtern, "\000");
-					$dataExtern = ereg_replace('\\\000', "", $dataExtern);
+					$dataExtern = preg_replace('/\\\000/', "", $dataExtern);
 
 					// recheck if it is really a vnote...
 					if (! preg_match('/\<\!\[CDATA\[BEGIN\:VNOTE/i', $dataExtern))

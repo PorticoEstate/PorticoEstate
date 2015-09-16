@@ -21,7 +21,7 @@
 		var $action;
 		var $template;
 
-		function nextmatchs_xslt()
+		function __construct()
 		{
 
 		}

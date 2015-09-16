@@ -105,7 +105,7 @@ class imap_client {
      * @param string $port      The port to connect to on the IMAP server.
      * @param string $protocol  The protocol string (See, e.g., servers.php).
      */
-    function imap_client($host, $port, $protocol)
+    function __construct($host, $port, $protocol)
     {
         $this->_host = $host;
         $this->_port = $port;
@@ -726,7 +726,7 @@ class imap_client {
                 return $read;
             }
 
-            if (eregi('\\* NAMESPACE +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL)', $read[0], $data)) {
+            if (preg_match('/\\* NAMESPACE +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL) +(\\( *\\(.+\\) *\\)|NIL)/i', $read[0], $data)) {
                 for ($i = 1; $i <= 3; $i++) {
                     if ($data[$i] == 'NIL') {
                         continue;

@@ -1,4 +1,4 @@
-<?
+<?php
 chdir ("../../../");
 include "init.php";
 include "$apps_path[libs]/function.php";
@@ -48,5 +48,3 @@ if ($type && $slid && $uid)
 	$db_result = dba_query($db_query);
     }
 }
-
-?>

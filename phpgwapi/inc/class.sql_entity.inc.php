@@ -69,7 +69,7 @@
 		var $ondebug;
 		var $table;
 
-		function sql_entity()
+		function __construct()
 		{
 		}
 
@@ -77,6 +77,9 @@
 		* Entity, class and general section                           *
 		\*************************************************************/
 
+		/**
+		 * FIXME - wrong name of constructor
+		 */
 		public function _constructor($table='', $alias='')
 		{
 			$this->table = $table;

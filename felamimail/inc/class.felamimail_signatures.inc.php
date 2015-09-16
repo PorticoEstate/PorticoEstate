@@ -24,7 +24,7 @@
 		
 		var $fm_defaultsignature = NULL;
 		
-		function felamimail_signatures($_signatureID = NULL) {
+		function __construct($_signatureID = NULL) {
 			$this->accountID = $GLOBALS['phpgw_info']['user']['account_id'];
 			
 			if($_signatureID !== NULL) {
@@ -166,4 +166,3 @@
 			return $signatures;
 		}
 	}
-?>

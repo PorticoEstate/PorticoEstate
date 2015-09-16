@@ -27,7 +27,7 @@
 		var $ix = array();
 		var $uc = array();
 
-		function schema_proc_mssql()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 		}

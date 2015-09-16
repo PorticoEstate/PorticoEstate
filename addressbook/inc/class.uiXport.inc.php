@@ -30,7 +30,7 @@
 		var $filter;
 		var $cat_id;
 
-		function uiXport()
+		function __construct()
 		{
 			$this->template = $GLOBALS['phpgw']->template;
 			$this->cat      = CreateObject('phpgwapi.categories');
@@ -130,7 +130,7 @@
 				sort($myfilearray);
 				for ($i=0;$i<count($myfilearray);$i++)
 				{
-					$fname = ereg_replace('_',' ',$myfilearray[$i]);
+					$fname = preg_replace('/_/',' ',$myfilearray[$i]);
 					$conv .= '<OPTION VALUE="' . $myfilearray[$i].'">' . $fname . '</OPTION>';
 				}
 
@@ -249,7 +249,7 @@
 				sort($myfilearray);
 				for ($i=0;$i<count($myfilearray);$i++)
 				{
-					$fname = ereg_replace('_',' ',$myfilearray[$i]);
+					$fname = preg_replace('/_/',' ',$myfilearray[$i]);
 					$conv .= '        <option value="'.$myfilearray[$i].'">'.$fname.'</option>'."\n";
 				}
 
@@ -278,4 +278,3 @@
 			}
 		}
 	}
-?>

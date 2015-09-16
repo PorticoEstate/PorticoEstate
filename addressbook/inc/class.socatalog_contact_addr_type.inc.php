@@ -1,13 +1,9 @@
 <?php
 	class socatalog_contact_addr_type
 	{
-		function socatalog_contact_addr_type()
+		function __construct()
 		{
 			$this->db = &$GLOBALS['phpgw']->db;
-		}
-		
-		function _constructor()
-		{
 		}
 		
 		function select_catalog()
@@ -57,4 +53,3 @@
 			return $return_fields;
 		}
 	}
-?>

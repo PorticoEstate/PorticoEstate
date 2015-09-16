@@ -25,7 +25,7 @@
 		var $m_aTables;
 		var $m_bDeltaOnly;
 
-		function schema_proc($dbms)
+		function __construct($dbms)
 		{
 			switch($dbms)
 			{

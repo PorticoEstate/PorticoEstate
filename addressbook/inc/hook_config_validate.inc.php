@@ -51,4 +51,4 @@
 			$GLOBALS['config_error'] = '';
 		}
 	}
-?>
+

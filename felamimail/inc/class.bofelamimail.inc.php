@@ -58,7 +58,7 @@
 		 */
 		var $autoFolders = array('Drafts', 'Junk', 'Sent', 'Trash', 'Templates');
 		
-		function bofelamimail($_displayCharset='utf-8')
+		function __construct($_displayCharset='utf-8')
 		{
 			$this->restoreSessionData();
 

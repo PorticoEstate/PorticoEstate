@@ -37,4 +37,3 @@
 			. ' WHERE note_owner=' . (int) $_POST['account_id'], __LINE__, __FILE__);
 	}
 	$db->unlock();
-?>

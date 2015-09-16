@@ -27,7 +27,7 @@
 		var $to_res = array();
 		var $errorInfo;
 
-		function send()
+		function __construct()
 		{
 			$this->err['code'] = ' ';
 			$this->err['msg']  = ' ';

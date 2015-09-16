@@ -1,7 +1,7 @@
 <?php
 	class bocatalog_contact_comm_descr
 	{
-		function bocatalog_contact_comm_descr()
+		function __construct()
 		{
 			$this->so = CreateObject('addressbook.socatalog_contact_comm_descr');
 		}
@@ -88,4 +88,3 @@
 			}
 		}
 	}
-?>

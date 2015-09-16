@@ -1,4 +1,4 @@
-<?
+<?php
 chdir ("../../../");
 include "init.php";
 include "$apps_path[libs]/function.php";
@@ -30,5 +30,3 @@ if ($t && $q && $a)
     // $sms_datetime, $sms_sender, $target_code, $message
     setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message);
 }
-
-?>

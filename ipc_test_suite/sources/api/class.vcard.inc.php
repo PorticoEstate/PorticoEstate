@@ -113,7 +113,7 @@
 
 		var $vCard_Version;
 		
-		function vcard()
+		function __construct()
 		{
 			$this->vCard_Version = '2.1';	
 			/* _debug_array($this); */
@@ -181,10 +181,10 @@
 					$field[$key] = strtoupper($val);
 				}
 
-				$field[0] = ereg_replace("A\.",'',$field[0]);
-				$field[0] = ereg_replace("B\.",'',$field[0]);
-				$field[0] = ereg_replace("C\.",'',$field[0]);
-				$field[0] = ereg_replace("D\.",'',$field[0]);
+				$field[0] = preg_replace("/A\./",'',$field[0]);
+				$field[0] = preg_replace("/B\./",'',$field[0]);
+				$field[0] = preg_replace("/C\./",'',$field[0]);
+				$field[0] = preg_replace("/D\./",'',$field[0]);
 				$values = split(';',$value);
 				switch ($field[0])
 				{
@@ -247,15 +247,15 @@
 					$entry['comm_media']['website'] = $values[0];
 					break;
 				case 'NOTE':
-					//$entry['note'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					//$entry['note'] = preg_replace('/=0D=0A/',"\n",$values[0]);
 					$entry['notes']['type'] = 'vcard';
-					$entry['notes']['note'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					$entry['notes']['note'] = preg_replace('/=0D=0A/',"\n",$values[0]);
 					break;
 				case 'KEY':
-					$entry['key'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					$entry['key'] = preg_replace('/=0D=0A/',"\n",$values[0]);
 					break;
 				case 'LABEL':
-					$entry['label'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					$entry['label'] = preg_replace('/=0D=0A/',"\n",$values[0]);
 					break;
 				case 'BDAY': #1969-12-31
 					// use ISO 8601
@@ -276,7 +276,7 @@
 					$entry['department'] = $values[1];
 					break;
 				case 'ADR':
-					$field[1] = ereg_replace("TYPE=",'',$field[1]);
+					$field[1] = preg_replace("/TYPE=/",'',$field[1]);
 					switch ($field[1])
 					{
 					case 'INTL':
@@ -701,7 +701,7 @@
 
 			if(isset($workaddr) && is_array($workaddr))
 			{
-				$workattr = ereg_replace('ADR;','',$workattr);
+				$workattr = preg_replace('/ADR;/','',$workattr);
 				// remember the correct order of address fields!
 				$workaddr['POSTOFFICEBOX'] = $this->vCard_encode($workaddr['POSTOFFICEBOX'], 'QUOTED-PRINTABLE', false);
 				$workaddr['EXT']           = $this->vCard_encode($workaddr['EXT'], 'QUOTED-PRINTABLE', false);
@@ -720,7 +720,7 @@
 
 			if(isset($homeaddr) && is_array($homeaddr))
 			{
-				$homeattr = ereg_replace('ADR;','',$homeattr);
+				$homeattr = preg_replace('/ADR;/','',$homeattr);
 				// remember the correct order of address fields!
 				$homeaddr['POSTOFFICEBOX'] = $this->vCard_encode($homeaddr['POSTOFFICEBOX'], 'QUOTED-PRINTABLE', false);
 				$homeaddr['EXT']           = $this->vCard_encode($homeaddr['EXT'], 'QUOTED-PRINTABLE', false);
@@ -737,7 +737,7 @@
 				$hlabel = 'LABEL;TYPE=HOME;ENCODING=QUOTED-PRINTABLE:' . $hlabel . "\r\n";
 			}
 
-			$entries = ereg_replace('PUBKEY','KEY',$entries);
+			$entries = preg_replace('/PUBKEY/','KEY',$entries);
 			$entries .= $work . $home . $wlabel . $hlabel . 'END:VCARD' . "\r\n";
 			$entries .= "\r\n";
 
@@ -956,7 +956,7 @@
 
 			if(isset($workaddr) && is_array($workaddr))
 			{
-				$workattr = ereg_replace('ADR;','',$workattr);
+				$workattr = preg_replace('/ADR;/','',$workattr);
 				// remember the correct order of address fields!
 				$workaddr['POSTOFFICEBOX'] = $this->vCard_encode($workaddr['POSTOFFICEBOX'], false, 'UTF-8');
 				$workaddr['EXT']           = $this->vCard_encode($workaddr['EXT'], false, 'UTF-8');
@@ -974,7 +974,7 @@
 			
 			if(isset($homeaddr) && is_array($homeaddr))
 			{
-				$homeattr = ereg_replace('ADR;','',$homeattr);
+				$homeattr = preg_replace('/ADR;/','',$homeattr);
 				// remember the correct order of address fields!
 				$homeaddr['POSTOFFICEBOX'] = $this->vCard_encode($homeaddr['POSTOFFICEBOX'], false, 'UTF-8');
 				$homeaddr['EXT']           = $this->vCard_encode($homeaddr['EXT'], false, 'UTF-8');
@@ -991,7 +991,7 @@
 				
 			}
 			
-			$entries = ereg_replace('PUBKEY','KEY',$entries);
+			$entries = preg_replace('/PUBKEY/','KEY',$entries);
 			//$entries .= $work . $home . $wlabel . $hlabel . 'END:VCARD' . "\r\n";
 			$entries .= $work . $home . 'END:VCARD' . "\r\n";
 
@@ -1098,7 +1098,7 @@
 					if ( strstr(strtolower($name), $this->import[$fname]) )
 					{
 						$value = trim($value);
-						//$value = ereg_replace('=0D=0A','\n',$value); // use quoted_printable_decode above
+						//$value = preg_replace('/=0D=0A/','\n',$value); // use quoted_printable_decode above
 						$parsed_line += array($name => $value);
 					}
 				}
@@ -1151,4 +1151,3 @@
 		}
 				
 	} //end class
-?>

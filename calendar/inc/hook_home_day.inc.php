@@ -32,4 +32,3 @@
 				'day'		=> $GLOBALS['g_day']
 			)
 		).'</td></tr></table>'."\n".'</td>'."\n".'</tr>'."\n".'</table>'."\n".'</td>'."\n";
-?>
