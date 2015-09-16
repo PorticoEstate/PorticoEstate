@@ -39,7 +39,7 @@
 			'folder'	=> 'folder'
 		);
 
-		function uicompose()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
@@ -574,5 +574,3 @@
 		}
 
 }
-
-?>

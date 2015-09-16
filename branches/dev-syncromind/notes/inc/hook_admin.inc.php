@@ -31,4 +31,3 @@
 		);
 		$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
 	}
-?>

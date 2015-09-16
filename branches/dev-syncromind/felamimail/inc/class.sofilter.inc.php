@@ -24,7 +24,7 @@
 		*/
 		var $filter_table = 'egw_felamimail_displayfilter';	// only reference to table-prefix
 
-		function sofilter()
+		function __construct()
 		{
 			$this->accountid	= $GLOBALS['phpgw_info']['user']['account_id'];
 //			$this->db		= clone($GLOBALS['phpgw']->db);
@@ -56,4 +56,4 @@
 			}
 		}
 	}
-?>
+

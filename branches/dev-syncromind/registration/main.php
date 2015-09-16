@@ -153,7 +153,7 @@ HTML;
 		/********* Optional classes, which can be disabled for performance increases *********/
 		while ($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
 		{
-			if (ereg('enable_', $phpgw_class_name[0]))
+			if (preg_match('/enable_/', $phpgw_class_name[0]))
 			{
 				$enable_class = str_replace('enable_', '', $phpgw_class_name[0]);
 				$enable_class = str_replace('_class', '', $enable_class);

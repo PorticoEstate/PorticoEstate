@@ -80,4 +80,3 @@
 			. '<p><a href="' . $GLOBALS['phpgw']->link('/index.php') 
 			. lang('return to phpgroupware') . "\"></p>\n";
 	}
-?>

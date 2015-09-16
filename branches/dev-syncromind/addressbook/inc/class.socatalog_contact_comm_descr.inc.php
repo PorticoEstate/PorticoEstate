@@ -1,15 +1,12 @@
 <?php
 	class socatalog_contact_comm_descr
 	{
-		function socatalog_contact_comm_descr()
+		function __construct()
 		{
 			$this->db = &$GLOBALS['phpgw']->db;
 		}
 		
-		function _constructor()
-		{
-		}
-		
+	
 		function select_catalog()
 		{
 			$comm_type = CreateObject('phpgwapi.contact_comm_descr');
@@ -72,4 +69,3 @@
 			return $return_fields;
 		}
 	}
-?>

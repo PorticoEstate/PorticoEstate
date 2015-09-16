@@ -1,4 +1,4 @@
-<?
+<?php
 
 if(!defined("_SECURE_")){die("Intruder: IP ".$_SERVER['REMOTE_ADDR']);};
 
@@ -99,5 +99,3 @@ function gw_set_incoming_action()
 	}
     }
 }
-
-?>

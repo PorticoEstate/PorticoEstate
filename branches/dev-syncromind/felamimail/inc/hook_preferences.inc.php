@@ -38,4 +38,3 @@
 	//Do not modify below this line
 	display_section($appname,$title,$file);
 }
-?>

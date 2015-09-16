@@ -83,7 +83,7 @@
 		 * Note : when host and port are defined, the connection is immediate
 		 * @see Connect()
 		 **/	
-		function net_http_client( $host= NULL, $port= NULL, $ssl=False )
+		function __construct( $host= NULL, $port= NULL, $ssl=False )
 		{
 			if( $this->debug & DBGTRACE ) echo "net_http_client( $host, $port )\n";
 				

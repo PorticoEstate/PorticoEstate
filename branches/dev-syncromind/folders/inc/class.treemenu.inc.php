@@ -23,7 +23,7 @@
 class phpGWTreeMenu extends TreeMenu
 {
 
-	function phpGWTreeMenu()
+	function __construct()
 	{
 		$this->TreeMenu();
 	}
@@ -284,4 +284,3 @@ class phpGWTreeMenu extends TreeMenu
   }	
 	
 }
-?>

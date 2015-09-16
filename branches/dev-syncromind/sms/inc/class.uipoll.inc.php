@@ -32,7 +32,7 @@
 			);
 
 
-		function sms_uipoll()
+		function __construct()
 		{
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];

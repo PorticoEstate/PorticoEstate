@@ -23,4 +23,3 @@
 	include('../header.inc.php');
 
 	execmethod('emailadmin.emailadmin_ui.listProfiles');
-?>

@@ -185,4 +185,3 @@ if($method && $nserver){
 	print "<strong>Response:</strong><br><xmp>$soapclient->response</xmp>";
 	unset($soapclient);
 }
-?>

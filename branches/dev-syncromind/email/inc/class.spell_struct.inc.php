@@ -64,7 +64,7 @@
 		 */
 		var $suggestions;
 		
-		function correction_info()
+		function __construct()
 		{
 			$this->orig_word='';
 			$this->orig_word_clean = '';
@@ -73,4 +73,3 @@
 			$this->suggestions=array();
 		}
 	}
-?>

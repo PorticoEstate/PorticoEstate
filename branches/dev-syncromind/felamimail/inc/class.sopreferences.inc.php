@@ -23,7 +23,7 @@
 		 */
 		var $db;
 		
-		function sopreferences()
+		function __construct()
 		{
 		//	$this->db = clone($GLOBALS['phpgw']->db);
 			$this->db = CreateObject('felamimail.egw_db');
@@ -127,4 +127,4 @@
 			), $where,__LINE__,__FILE__,'felamimail');	
 		}
 	}
-?>
+

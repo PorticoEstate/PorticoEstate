@@ -38,7 +38,7 @@
 		@function ui_mail_debug
 		@abstract CONSTRUCTOR
 		*/
-		function ui_mail_debug()
+		function __construct()
 		{
 			if ($this->debug > 0) { echo 'ENTERING: email.ui_mail_debug.CONSTRUCTOR'.'<br />'."\r\n"; }
 			
@@ -703,4 +703,3 @@
 		*/
 		
 	}
-?>

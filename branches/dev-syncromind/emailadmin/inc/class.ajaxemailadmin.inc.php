@@ -14,7 +14,7 @@
 
 	class ajaxemailadmin
 	{
-		function ajaxemailadmin()
+		function __construct()
 		{
 			$this->bo		= new emailadmin_bo();
 /*			$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$GLOBALS['phpgw']->translation->charset());
@@ -71,4 +71,3 @@
 		}
 		
 	}
-?>

@@ -28,7 +28,7 @@
 		);
 		var $soap_functions = array();
 
-		function bomessenger()
+		function __construct()
 		{
 			$this->so = createobject('messenger.somessenger');
 		}

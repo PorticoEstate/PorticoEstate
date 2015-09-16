@@ -31,7 +31,7 @@
 		*
 		* @access public
 		*/
-		function csstooltip()
+		function __construct()
 		{
 			if(!is_object($GLOBALS['phpgw']->css))
 			{

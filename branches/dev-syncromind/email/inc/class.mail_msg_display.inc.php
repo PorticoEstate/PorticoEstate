@@ -29,7 +29,7 @@ class mail_msg extends mail_msg_wrappers
 	only a few functions in this object, SO NOW this class has NO real auto called constructor,
 	instead the initialization function needs to be explicitly called, which it is in the bootstrap class.
 	*/
-	function mail_msg()
+	function __construct()
 	{
 		//$this->initialize_mail_msg();
 		return;
@@ -2356,13 +2356,13 @@ class mail_msg extends mail_msg_wrappers
 
 		while ( list ($key,$line) = each ($lines))
 		{
-			$line = eregi_replace("([ \t]|^)www\."," http://www.",$line);
-			$line = eregi_replace("([ \t]|^)ftp\."," ftp://ftp.",$line);
-			$line = eregi_replace("(http://[^ )\r\n]+)","<A href=\"\\1\" target=\"_new\">\\1</A>",$line);
-			$line = eregi_replace("(https://[^ )\r\n]+)","<A href=\"\\1\" target=\"_new\">\\1</A>",$line);
-			$line = eregi_replace("(ftp://[^ )\r\n]+)","<A href=\"\\1\" target=\"_new\">\\1</A>",$line);
-			$line = eregi_replace("(irc://[^ )\r\n]+)","<A href=\"\\1\">\\1</A>",$line);//added by skwashd for chatzilla :)
-			$line = eregi_replace("([-a-z0-9_]+(\.[_a-z0-9-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)+))",
+			$line = preg_replace("/([ \t]|^)www\./i"," http://www.",$line);
+			$line = preg_replace("/([ \t]|^)ftp\./'"," ftp://ftp.",$line);
+			$line = preg_replace("/(http:\/\/[^ )\r\n]+)/i","<A href=\"\\1\" target=\"_new\">\\1</A>",$line);
+			$line = preg_replace("/(https:\/\/[^ )\r\n]+)/i","<A href=\"\\1\" target=\"_new\">\\1</A>",$line);
+			$line = preg_replace("/(ftp:\/\/[^ )\r\n]+)/i","<A href=\"\\1\" target=\"_new\">\\1</A>",$line);
+			$line = preg_replace("/(irc:\/\/[^ )\r\n]+)/i","<A href=\"\\1\">\\1</A>",$line);//added by skwashd for chatzilla :)
+			$line = preg_replace("/([-a-z0-9_]+(\.[_a-z0-9-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)+))/i",
 				"<a href=\"".$GLOBALS['phpgw']->link("/".$GLOBALS['phpgw_info']['flags']['currentapp']."/compose.php",array('folder'=>$this->prep_folder_out($folder)))
 				."&to=\\1\">\\1</a>", $line);
 
@@ -3063,12 +3063,12 @@ $hdr_envelope->udate = $new_time;
 			if($GLOBALS['phpgw']->common->show_date($hdr_envelope->udate,'Ymd') != date('Ymd'))
 			{
 				// this strips the time part, leaving only the date, better for single line TD cells
-				$msg_list_display[$x]['msg_date'] = ereg_replace(" - .*$", '', $msg_date_time);
+				$msg_list_display[$x]['msg_date'] = preg_replace("/ - .*$/", '', $msg_date_time);
 			}
 			else
 			{
 				// this strips the time part, leaving only the date, better for single line TD cells
-				$msg_list_display[$x]['msg_date'] = ereg_replace("^.* -", '', $msg_date_time);
+				$msg_list_display[$x]['msg_date'] = preg_replace("/^.* -/", '', $msg_date_time);
 			}
 			// *raw* date for utility purposes, such as appending and specifying a date
 			// php built in append does not let you specify the data during an append
@@ -3140,4 +3140,3 @@ $hdr_envelope->udate = $new_time;
 	}
 
 } // end class mail_msg
-?>

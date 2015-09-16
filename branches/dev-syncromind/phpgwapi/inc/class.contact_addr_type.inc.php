@@ -44,7 +44,7 @@
 																 'field'        => 'description',
 								 'type'		=> 'string'));
 				
-				function contact_addr_type ($ali = '', $field = '', $criteria = '')
+				function __construct ($ali = '', $field = '', $criteria = '')
 				{
 						$this->_constructor('phpgw_contact_addr_type', 'contact_addr_type');
 						if($field)

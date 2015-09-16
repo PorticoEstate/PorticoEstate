@@ -28,9 +28,9 @@
 
 	class help_helper extends help
 	{
-		function help_helper()
+		function __construct()
 		{
-			$this->help();
+			parent::__construct();
 		}
 
 		function set_params($param)
@@ -104,4 +104,3 @@
 			$this->draw_box();
 		}
 	}
-?>

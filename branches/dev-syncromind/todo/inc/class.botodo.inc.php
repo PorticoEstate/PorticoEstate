@@ -43,7 +43,7 @@
 			'list_methods'     => True
 		);
 
-		function botodo($session=False)
+		function __construct($session=False)
 		{
 			$this->sotodo	= CreateObject('todo.sotodo');
 			$this->datetime	=& $GLOBALS['phpgw']->datetime;
@@ -334,7 +334,7 @@
 				$error[] = lang('Description can not exceed 8000 characters in length');
 			}
 
-			if ($values['daysfromstart'] && ! ereg('^[0-9]+$',$values[daysfromstart]))
+			if ($values['daysfromstart'] && ! preg_match('/^[0-9]+$/',$values[daysfromstart]))
 			{
 				$error[] = lang('You can only enter numbers for days from now');
 			}
@@ -457,4 +457,3 @@
 			return True;
 		}
 	}
-?>

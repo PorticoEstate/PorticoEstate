@@ -152,7 +152,7 @@
 					$extra_vars['phpgw_forward'] = $forward;
 					foreach ($_GET as $name => $value)
 					{
-						if (ereg('phpgw_', $name))
+						if (preg_match('/phpgw_/', $name))
 						{
 							$name				 = urlencode($name);
 							$extra_vars[$name]	 = urlencode($value);
@@ -232,7 +232,7 @@
 					$extra_vars['phpgw_forward'] = $forward;
 					foreach ($_GET as $name => $value)
 					{
-						if (ereg('phpgw_', $name))
+						if (preg_match('/phpgw_/', $name))
 						{
 							$name				 = urlencode($name);
 							$extra_vars[$name]	 = urlencode($value);
@@ -305,7 +305,7 @@
 					$extra_vars['phpgw_forward'] = $forward;
 					foreach ($_GET as $name => $value)
 					{
-						if (ereg('phpgw_', $name))
+						if (preg_match('/phpgw_/', $name))
 						{
 							//$extra_vars[$name] = $value;
 							$name				 = urlencode($name);

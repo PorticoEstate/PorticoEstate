@@ -46,4 +46,3 @@
 	);
 
 	$soap_defencoding = 'UTF-8';
-?>

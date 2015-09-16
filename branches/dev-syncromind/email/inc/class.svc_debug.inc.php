@@ -40,7 +40,7 @@
 		@function svc_debug
 		@abstract CONSTRUCTOR 
 		*/
-		function svc_debug()
+		function __construct()
 		{
 			// fill a timestamp
 			if ($this->t_on_creation == '##NOTHING##')
@@ -483,4 +483,4 @@ EOD;
 		}
 		
 	}
-?>
+

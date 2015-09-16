@@ -918,4 +918,3 @@ class calendar_socalendar_ extends calendar_socalendar__
 		return $this->get_event_ids($repeats,$user_where.$wheremod.$extra.$order_by);
 	}
 }
-

@@ -256,7 +256,7 @@
 			$dh = dir(PHPGW_SERVER_ROOT . '/phpgwapi/themes');
 			while ($file = $dh->read())
 			{
-				if (eregi("\.theme$", $file))
+				if (preg_match("/\.theme$/i", $file))
 				{
 					$list[] = substr($file,0,strpos($file,'.'));
 				}

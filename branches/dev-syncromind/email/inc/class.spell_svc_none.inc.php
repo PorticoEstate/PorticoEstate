@@ -40,7 +40,7 @@
 		/**
 		* Constructor
 		*/
-		function spell_svc_none()
+		function __construct()
 		{
 			// this is a dummy module for installations with no spell capability
 			$this->can_spell = False;
@@ -123,4 +123,3 @@
 			return array();
 		}
 	}
-?>

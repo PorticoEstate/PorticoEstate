@@ -37,7 +37,7 @@
 		@function svc_nextmatches
 		@abstract constructor
 		*/
-		function svc_nextmatches($website=False)
+		function __construct($website=False)
 		{
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) &&
 				intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) > 0)
@@ -398,4 +398,3 @@
 			}
 		}
 	}
-?>

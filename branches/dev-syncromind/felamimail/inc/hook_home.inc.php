@@ -114,4 +114,3 @@
 			.$portalbox->draw($extra_data)
 			.'<!-- ends Mailox info -->'."\r\n";
 	}
-?>

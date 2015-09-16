@@ -241,7 +241,7 @@
 				'log_account_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'log_account_lid' => array('type' => 'varchar','precision' => 25,'nullable' => False),
 				'log_app' => array('type' => 'varchar','precision' => 25,'nullable' => False),
-				'log_severity' => array('type' => 'char','precision' => 1,'nullable' => False),
+				'log_severity' => array('type' => 'char','precision' => 2,'nullable' => False),
 				'log_file' => array('type' => 'varchar','precision' => 255,'nullable' => False,'default' => ''),
 				'log_line' => array('type' => 'int','precision' => 4,'nullable' => False,'default' => '0'),
 				'log_msg' => array('type' => 'text','nullable' => False)

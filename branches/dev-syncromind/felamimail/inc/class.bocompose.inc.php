@@ -23,7 +23,7 @@
 		var $attachments;	// Array of attachments
 		var $preferences;	// the prefenrences(emailserver, username, ...)
 
-		function bocompose($_composeID = '', $_charSet = 'utf-8')
+		function __construct($_composeID = '', $_charSet = 'utf-8')
 		{
 			$this->displayCharset	= strtolower($_charSet);
 			$this->bopreferences	=& CreateObject('felamimail.bopreferences');

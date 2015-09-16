@@ -33,7 +33,7 @@
 			'getAttachment'		=> 'True'
 		);
 
-		function uipreferences()
+		function __construct()
 		{
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
 
@@ -743,5 +743,3 @@
 			$this->t->set_var("bg03",$GLOBALS['phpgw_info']["theme"]["bg03"]);
 		}
 	}
-
-?>

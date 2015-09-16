@@ -41,7 +41,7 @@
 			return lang($this->msg,$this->parms);
 		}
 
-		function error($parms)
+		function __construct($parms)
 		{
 			if ($parms == '')
 			{
@@ -67,7 +67,7 @@
 			}
 			$fname = $parms['file'];
 			$line  = $parms['line'];
-			if (eregi('([DIWEF])-([[:alnum:]]*)\, (.*)',$etext,$match))
+			if (preg_match('/([DIWEF])-([[:alnum:]]*)\, (.*)/i',$etext,$match))
 			{
 				$this->severity = strtoupper($match[1]);
 				$this->code     = $match[2];

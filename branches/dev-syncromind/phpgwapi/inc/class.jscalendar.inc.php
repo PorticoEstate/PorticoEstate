@@ -25,7 +25,7 @@ class jscalendar
 	*
 	 * @param $do_header if true, necessary javascript and css gets loaded, only needed for input
 	 */
-	function jscalendar($do_header=True)
+	function __construct($do_header=True)
 	{
 		$GLOBALS['phpgw']->js->validate_file('jscalendar', 'calendar_stripped');
 		$this->phpgw_js_url = $GLOBALS['phpgw_info']['server']['webserver_url'].'/phpgwapi/js';

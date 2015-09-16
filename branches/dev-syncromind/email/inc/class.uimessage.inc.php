@@ -29,7 +29,7 @@
 			'printable' => True
 		);
 
-		function uimessage()
+		function __construct()
 		{
 			//return;
 		}
@@ -654,4 +654,3 @@
 		}
 		
 	}
-?>

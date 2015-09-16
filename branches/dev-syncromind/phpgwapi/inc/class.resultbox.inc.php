@@ -25,7 +25,7 @@
 		 space for variables. In this circumstance it is not necessary.
 		*/
 		//constructor 
-		function resultbox($title='', $primary='', $secondary='', $tertiary='')
+		function __construct($title='', $primary='', $secondary='', $tertiary='')
 		{
 			$this->portalbox($title, $primary, $secondary, $tertiary);
 			$this->setvar('outerwidth',400);

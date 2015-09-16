@@ -55,7 +55,7 @@
 		/**
 		 * Constructor
 		 */
-		function schema_proc_sapdb()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 		}

@@ -18,11 +18,11 @@
 	{
 		var $db;
 
-		function somessenger()
+		function __construct()
 		{
 			$this->db    =& $GLOBALS['phpgw']->db;
 			$this->connected = true;
-			$this->somessenger_();
+			parent::__construct();
 		}
 
 		function update_message_status($status, $message_id)
@@ -84,7 +84,7 @@
 				$this->owner = -1;
 			}
 
-			if (! ereg('^[0-9]+$',$message['to']))
+			if (!preg_match('/^[0-9]+$/',$message['to']))
 			{
 				$message['to'] = $GLOBALS['phpgw']->accounts->name2id($message['to']);
 			}
@@ -120,4 +120,3 @@
 			$this->db->transaction_commit();
 		}
 	}
-?>

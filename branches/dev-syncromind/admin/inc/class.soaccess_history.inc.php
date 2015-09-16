@@ -15,7 +15,7 @@
 	{
 		var $db;
 
-		function soaccess_history()
+		function __construct()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
 		}

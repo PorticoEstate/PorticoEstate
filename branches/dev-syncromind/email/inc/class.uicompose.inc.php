@@ -28,7 +28,7 @@
 			'compose' => True
 		);
 
-		function uicompose()
+		function __construct()
 		{
 			//return;
 		}
@@ -195,4 +195,3 @@
 			$GLOBALS['phpgw']->msg->end_request();
 		}
 	}
-?>

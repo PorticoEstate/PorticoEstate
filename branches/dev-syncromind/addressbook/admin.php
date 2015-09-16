@@ -66,4 +66,3 @@
 
 	$t->pparse('out','admin');
 	$phpgw->common->phpgw_footer();
-?>

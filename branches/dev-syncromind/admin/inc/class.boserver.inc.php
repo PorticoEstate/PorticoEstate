@@ -36,7 +36,7 @@
 
 		var $use_session = False;
 
-		function boserver($session=False)
+		function __construct($session=False)
 		{
 			$this->so = CreateObject('admin.soserver');
 

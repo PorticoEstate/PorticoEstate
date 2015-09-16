@@ -3278,3 +3278,25 @@
 		}
 	}
 
+	$test[] = '0.9.17.547';
+	/**
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_547()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_log','log_severity',array(
+			'type' => 'char',
+			'precision' => 2,
+			'nullable' => false,
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.548';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+

@@ -22,7 +22,7 @@
 		/**
 		* Constructor
 		*/
-		function ipc_test_suite()
+		function __construct()
 		{}
 		
 		/**

@@ -28,7 +28,7 @@
 		// boolean if openConnection was successfull or not
 		var $_connectionStatus;
 		
-		function ajaxfelamimail() 
+		function __construct()
 		{
 			if($this->_debug) error_log("ajaxfelamimail::ajaxfelamimail");
 			$this->charset		=  'utf-8';
@@ -1061,4 +1061,4 @@
 		}
 		
 	}
-?>
+

@@ -98,7 +98,7 @@
 				'participants_popup'	=> true
 			);
 
-		function uicalendar()
+		function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 			$GLOBALS['phpgw']->browser    = CreateObject('phpgwapi.browser');
@@ -3246,7 +3246,7 @@ HTML;
 			$vars['title']['tr_color'] = $this->theme['th_bg'];
 			foreach($vars['participants']['data'] as $user => $str)
 			{
-				if ($this->bo->check_perms(PHPGW_ACL_EDIT,0,$user) && ereg('^(.*) \((.*)\)$',$str,$parts))
+				if ($this->bo->check_perms(PHPGW_ACL_EDIT,0,$user) && preg_match('/^(.*) \((.*)\)$/',$str,$parts))
 				{
 					 $vars['participants']['data'][$user] = $parts[1].' (<a href="'.$this->page('edit_status',array('cal_id'=>$event['id'],'owner'=>$user)).'">'.$parts[2].'</a>)';
 				}

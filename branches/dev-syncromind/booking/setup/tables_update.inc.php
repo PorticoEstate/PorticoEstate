@@ -3002,7 +3002,6 @@
 	$test[] = '0.2.20';
 	/**
 	 * Update booking version from 0.2.20 to 0.2.21
-	 * add another tilsynsvakt to buidling
 	 *
 	 */
 	function booking_upgrade0_2_20()

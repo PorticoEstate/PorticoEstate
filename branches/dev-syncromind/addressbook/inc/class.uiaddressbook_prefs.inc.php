@@ -75,7 +75,7 @@ class uiaddressbook_prefs
 		var $lang_fields;
 		var $bo;
 		var $submit;
-		function uiaddressbook_prefs()
+		function __construct()
 		{
 			$this->template = $GLOBALS['phpgw']->template;
 			if(!$this->session_data_saved())
@@ -963,4 +963,3 @@ class uiaddressbook_prefs
 		
 
 }
-?>

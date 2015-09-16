@@ -62,7 +62,7 @@
 		*
 		* @param bool $useacl respect the access controls - should be true unless you know what you are doing
 		*/
-		function soaddressbook($useacl = true)
+		function __construct($useacl = true)
 		{
 			$this->contacts = CreateObject('phpgwapi.contacts');
 

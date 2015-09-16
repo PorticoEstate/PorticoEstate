@@ -47,7 +47,7 @@
 		var $allowed_protocols = array('http', 'https', 'ftp', 'news', 'nntp', 'telnet', 'gopher', 'mailto');
 		var $allowed_html      = array();
 
-		function kses()
+		function __construct()
 		{
 		}
 
@@ -683,4 +683,4 @@
 			return '0.0.2 (OOP fork of kses 0.2.1)';
 		} # function _version
 	}
-?>
+

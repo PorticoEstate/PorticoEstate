@@ -32,7 +32,7 @@
 
 		var $url_base;
 
-		function gdbutton()
+		function __construct()
 		{
 			$this->image		= 0;
 			$this->font_size	= 0;
@@ -188,7 +188,7 @@
 			{
 				while( list($key, $val) = each($_POST))
 				{
-					if (ereg("(.*)_x",$key,$varName) && $_POST[$varName[1]."_y"])
+					if (preg_match("/(.*)_x/",$key,$varName) && $_POST[$varName[1]."_y"])
 					{
 						$name = $varName[1];
 						global $$name;

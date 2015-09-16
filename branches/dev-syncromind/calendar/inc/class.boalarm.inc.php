@@ -209,4 +209,3 @@
 			return $deleted;
 		}
 	}
-?>

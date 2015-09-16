@@ -69,7 +69,7 @@
 			)
 		);
 
-		function bonotes($is_active=False)
+		function __construct($is_active=False)
 		{
 			$this->sonotes	= CreateObject('notes.sonotes');
 			$this->start	= 0;
@@ -450,4 +450,3 @@
 			return $keyExtern;
 		}
 	}
-?>

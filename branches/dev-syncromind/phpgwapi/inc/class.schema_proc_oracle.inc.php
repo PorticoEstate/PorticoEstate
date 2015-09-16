@@ -28,7 +28,7 @@
 		var $ix = array();
 		var $uc = array();
 
-		function schema_proc_oracle()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 			$this->m_sSequencePrefix = 'sq';
@@ -204,7 +204,7 @@
 			   // see chapter 1.8.4.5
 			   function GetFKSQL($sFields)
 			   {
-				 if (ereg("\((.*)\)", $sFields, $regs))
+				 if (preg_match("/\((.*)\)/", $sFields, $regs))
 				 {
 				   $ret = "FOREIGN KEY (".$regs[1].")\n" .
 					 "  REFERENCES ".$sFields;

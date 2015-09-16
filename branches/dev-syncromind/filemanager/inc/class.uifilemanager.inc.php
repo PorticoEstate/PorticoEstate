@@ -75,7 +75,7 @@
 			'message'			=> 'message'
 		);
 
-		function uifilemanager()
+		function __construct()
 		{
 			$this->action			= CreateObject('filemanager.uiaction_base');
 			$this->bofilemanager	= $this->action->bofilemanager;
@@ -1432,7 +1432,7 @@
 
 			if ($_POST['save'])
 			{
-				if (empty($val) || ereg("^[ 0-9]+(,[ 0-9]+)*$",$val))
+				if (empty($val) || preg_match("/^[ 0-9]+(,[ 0-9]+)*$/",$val))
 				{
 					$this->config->value('set_quota', '0,' . $val . ',unlimited');
 				}
@@ -1731,4 +1731,4 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('config' => $data));
 		}
 	}
-?>
+

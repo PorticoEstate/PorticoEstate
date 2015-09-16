@@ -62,7 +62,7 @@
 		also_undo_defang as True. 
 		@author Angles
 		*/
-		function bofilters()
+		function __construct()
 		{
 			if ($this->debug > 0) { echo 'email.bofilters *constructor*: ENTERING <br />'; }
 			
@@ -2103,4 +2103,3 @@
 	
 	// end of class
 	}
-?>

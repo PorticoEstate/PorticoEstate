@@ -15,7 +15,7 @@
 	{
 		var $db;
 
-		function soapplications()
+		function __construct()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
 		}

@@ -24,4 +24,3 @@
 
 	$GLOBALS['extra_data'] = '<table width="100%" cellpadding="0"><tr><td bgcolor="white">'.
 		ExecMethod('calendar.uicalendar.planner').'</td></tr></table>';
-?>

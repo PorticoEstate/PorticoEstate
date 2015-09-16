@@ -264,7 +264,7 @@
 		var $attribute;
 		var $value;
 		
-		function msg_params($attrib,$val)
+		function __construct($attrib,$val)
 		{
 			$this->attribute = $attrib;
 			$this->value     = $val;
@@ -474,7 +474,7 @@
 		//var $debug_dcom=1;
 		//var $debug_dcom=2;
 		
-		function mail_dcom_base()
+		function __construct()
 		{
 			$this->errorset = 0;
 			$this->network(True);
@@ -762,9 +762,9 @@
 					break;
 			}
 			$header[$key] = $value;
-			if (ereg('^multipart/mixed;',$value))
+			if (preg_match('/^multipart/mixed;/',$value))
 			{
-				if (! ereg('boundary',$header[$key]))
+				if (! preg_match('/boundary/',$header[$key]))
 				{
 					if ($line2 == 'True')
 					{
@@ -1123,7 +1123,7 @@
 		*/
 		function decode_base64($string)
 		{
-			$string = ereg_replace("'", "\'", $string);
+			$string = str_replace("'", "\'", $string);
 			$string = preg_replace("/\=\?(.*?)\?b\?(.*?)\?\=/ieU",base64_decode("\\2"),$string);
 			return $string;
 		}
@@ -1137,7 +1137,7 @@
 		*/
 		function decode_qp($string)
 		{
-			$string = ereg_replace("'", "\'", $string);
+			$string = str_replace("'", "\'", $string);
 			$string = preg_replace("/\=\?(.*?)\?q\?(.*?)\?\=/ieU",$this->phpGW_quoted_printable_decode2("\\2"),$string);
 			return $string;
 		}
@@ -1181,13 +1181,13 @@
 			*/
 			/* 1st case */
 			//if (eregi("(.*) <([-a-z0-9\_\$\+\.]+\@[-a-z0-9\_\.]+[-a-z0-9\_]+)>",
-			if (eregi("(.*) <([-a-z0-9_$+.]+@[-a-z0-9_.]+[-a-z0-9_]+)>",$author, $regs))
+			if (preg_match("/(.*) <([-a-z0-9_$+.]+@[-a-z0-9_.]+[-a-z0-9_]+)>/i",$author, $regs))
 			{
 				$email = $regs[2];
 				$name = $regs[1];
 			}
 			/* 2nd case */
-			elseif (eregi("([-a-z0-9_$+.]+@[-a-z0-9_.]+[-a-z0-9_]+) ((.*))",$author, $regs))
+			elseif (preg_match("/([-a-z0-9_$+.]+@[-a-z0-9_.]+[-a-z0-9_]+) ((.*))/i",$author, $regs))
 			{
 			//if (eregi("([-a-z0-9\_\$\+\.]+\@[-a-z0-9\_\.]+[-a-z0-9\_]+) \((.*)\)",$author, $regs))
 				$email = $regs[1];
@@ -1202,8 +1202,8 @@
 			{
 				$name = $email;
 			}
-			$name = eregi_replace("^\"(.*)\"$", "\\1", $name);
-			$name = eregi_replace("^\((.*)\)$", "\\1", $name);
+			$name = preg_replace("/^\"(.*)\"$", "\\1/i", $name);
+			$name = preg_replace("/^\((.*)\)$", "\\1/i", $name);
 		}
 		
 		// OBSOLETED ?

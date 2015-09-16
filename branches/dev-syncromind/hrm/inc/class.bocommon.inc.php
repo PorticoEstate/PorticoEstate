@@ -34,7 +34,7 @@
 		);
 
 
-		function hrm_bocommon()
+		function __construct()
 		{
 			$this->socommon			= CreateObject('hrm.socommon');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

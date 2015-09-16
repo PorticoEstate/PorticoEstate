@@ -47,7 +47,7 @@
 		*/
 		public $total_records = 0;
 
-		function demo_sodemo($acl_location)
+		function __construct($acl_location)
 		{
 			$this->account			= & $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db 				= & $GLOBALS['phpgw']->db;

@@ -19,7 +19,7 @@
 	*/
 	class service_contacts extends service
 	{
-		function service_contacts()
+		function __construct()
 		{
 			$this->provider = $GLOBALS['phpgw_info']['notes_service'] ? $GLOBALS['phpgw_info']['notes_service'] : 'notes';
 			$this->svc = $this->provider . '.bo' . $this->provider;

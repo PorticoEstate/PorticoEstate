@@ -24,4 +24,3 @@
 //Do not modify below this line
 	$GLOBALS['phpgw']->common->display_mainscreen($appname,$file);
 }
-?>

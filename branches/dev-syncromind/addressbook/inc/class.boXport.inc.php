@@ -32,7 +32,7 @@
 
 		var $use_session = False;
 
-		function boXport($session=False)
+		function __construct($session=False)
 		{
 			$this->contacts = $GLOBALS['phpgw']->contacts;
 			$this->so = CreateObject('addressbook.soaddressbook');
@@ -243,8 +243,8 @@
 				{
 				if ( substr($col,0,6) == 'extra_' )
 					{
-						$field = ereg_replace('extra_','',$col);
-							$field = ereg_replace(' ','_',$field);
+						$field = preg_replace('/extra_/','',$col);
+							$field = preg_replace('/ /','_',$field);
 						$customfields[$field] = ucfirst($field);
 					}
 				}
@@ -284,4 +284,3 @@
 			return $buffer;
 		}
 	}
-?>

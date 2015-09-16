@@ -35,7 +35,7 @@
 			'delete' => true
 		);
 
-		function hrm_uiplace()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];

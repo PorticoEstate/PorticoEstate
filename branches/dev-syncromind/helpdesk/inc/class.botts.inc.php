@@ -58,7 +58,7 @@
 				'save'			=> true,
 			);
 
-		function helpdesk_botts($session=false)
+		function __construct($session=false)
 		{
 			$this->so 					= CreateObject('helpdesk.sotts');
 			$this->bocommon 			= CreateObject('property.bocommon');

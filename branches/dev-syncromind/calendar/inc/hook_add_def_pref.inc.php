@@ -19,4 +19,3 @@
   $pref->change("calendar","defaultcalendar","month.php");
   $pref->change("calendar","defaultfilter","all");
   $pref->change("calendar","mainscreen_showevents","Y");
-?>

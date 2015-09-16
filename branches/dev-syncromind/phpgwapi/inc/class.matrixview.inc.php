@@ -50,7 +50,7 @@
 		* @param  int 	year (for example: 2001)
 		*
 		*/
-		function matrixview ($month_int = 0, $year_int = 0)
+		function __construct ($month_int = 0, $year_int = 0)
 		{
 			if ( !$month_int )
 			{

@@ -31,7 +31,7 @@
 		var $font;
 		var $temp_file;
 
-		function gdimage()
+		function __construct()
 		{
 			$this->gd = $this->check_gd();
 
