@@ -55,7 +55,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_bodocument($session=false)
+		function __construct($session=false)
 		{
 			$this->so 				= CreateObject('property.sodocument');
 			$this->bocommon 		= CreateObject('property.bocommon');

@@ -56,7 +56,7 @@
 				'add_activity'	=> true
 			);
 
-		function property_uiagreement()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');

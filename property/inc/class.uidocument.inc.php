@@ -57,7 +57,7 @@
 				'delete' 	=> true
 			);
 
-		function property_uidocument()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation";

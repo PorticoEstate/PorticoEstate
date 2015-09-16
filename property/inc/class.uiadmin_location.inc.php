@@ -57,7 +57,7 @@
 				'edit_attrib_group'		=> true,
 			);
 
-		function property_uiadmin_location()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::location';

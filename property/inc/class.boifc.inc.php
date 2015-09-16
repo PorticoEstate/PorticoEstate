@@ -57,7 +57,7 @@
 				'check_perms'	=> true
 			);
 
-		function boifc($session=false)
+		function __construct($session=false)
 		{
 	//		$this->so 			= CreateObject('property.soifc');
 			$this->bocommon		= createObject('property.bocommon');

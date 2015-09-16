@@ -61,7 +61,7 @@
 				'convert_to_eav'		=> true
 			);
 
-		function property_uiadmin_entity()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
