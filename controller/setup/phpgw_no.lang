@@ -386,3 +386,4 @@ status components	controller	no	Status komponenter
 controle time	common	no	Kontrolltid
 service time	common	no	Servicetid
 total time	common	no	Totaltid
+request ical event	controller	no	Send MøteInnkalling

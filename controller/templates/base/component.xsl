@@ -238,10 +238,10 @@
 
 			if(user_id < 0 || custom_frontend ==1)
 			{
-				$( "#entity_group_id" ).hide();
-				$("[for='entity_group_id']").hide();
-				$( "#location_id" ).hide();
-				$("[for='location_id']").hide();
+//				$( "#entity_group_id" ).hide();
+//				$("[for='entity_group_id']").hide();
+//				$( "#location_id" ).hide();
+//				$("[for='location_id']").hide();
 				$("[name='all_items']").hide();
 				$("[for='all_items']").hide();
 				$( "#org_unit_id" ).hide();

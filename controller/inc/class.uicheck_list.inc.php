@@ -369,6 +369,7 @@
 			$config->read();
 
 			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+			$request_ical_event = isset($config->config_data['request_ical_event']) && $config->config_data['request_ical_event'] ? $config->config_data['request_ical_event'] : false;
 
 			$data = array
 			(
@@ -386,7 +387,8 @@
 				'check_list_type' => 'add_check_list',
 				'serie_id'			=> $serie_id,
 				'required_actual_hours'	=> $required_actual_hours,
-				'integration'			=> $this->_get_component_integration($location_id, $component_arr)
+				'integration'			=> $this->_get_component_integration($location_id, $component_arr),
+				'request_ical_event'	=> $request_ical_event
 
 			);
 
@@ -495,6 +497,7 @@
 			$config->read();
 
 			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
+			$request_ical_event = isset($config->config_data['request_ical_event']) && $config->config_data['request_ical_event'] ? $config->config_data['request_ical_event'] : false;
 
 			$data = array
 			(
@@ -510,7 +513,8 @@
 				'building_location_code' => $building_location_code,
 				'location_level' => $level,
 				'required_actual_hours'	=> $required_actual_hours,
-				'integration'			=> $this->_get_component_integration($location_id, $component_arr)
+				'integration'			=> $this->_get_component_integration($location_id, $component_arr),
+				'request_ical_event'	=> $request_ical_event,
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -785,7 +789,7 @@
 				/**
 				 * Add an iCal-event if there is a serie - and the checklist is visited the first time - or assigned is changed
 				 */
-				if(($check_list_id && $serie && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to) )
+				if((phpgw::get_var('request_ical_event', 'bool') && $check_list_id && $serie))// && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to) )
 				{
 					$bocommon= CreateObject('property.bocommon');
 					$current_prefs_user = $bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
