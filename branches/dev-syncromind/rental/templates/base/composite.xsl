@@ -47,16 +47,16 @@
 								<xsl:value-of select="php:function('lang', 'address')"/>
 							</label>
 						</div>
-						<xsl:if test="count(//list_composite_standard/options) > 0">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'composite standard')"/>
-								</label>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'composite standard')"/>
+							</label>
+							<xsl:if test="count(//list_composite_standard/options) > 0">
 								<select id="composite_standard_id" name="composite_standard_id">
 									<xsl:apply-templates select="list_composite_standard/options"/>
 								</select>
-							</div>
-						</xsl:if>
+							</xsl:if>
+						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'furnish_type')"/>
@@ -237,11 +237,7 @@
 
 	<xsl:call-template name="top-toolbar" />
 	<div>
-		<xsl:variable name="form_action">
-			<xsl:value-of select="form_action"/>
-		</xsl:variable>
-
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="details">
@@ -251,61 +247,50 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'name')"/>
 							</label>
-							<input type="text" name="name" id="name" value="{value_name}"/>
+							<xsl:value-of select="value_name"/>
+						</div>
+						<div class="pure-control-group">
+							<xsl:if test="has_custom_address = 1">
+								<label>
+									<xsl:value-of select="php:function('lang', 'custom_address')"/>
+								</label>								
+								<div class="pure-custom">
+									<div><xsl:value-of select="value_custom_address_1"/></div>
+									<xsl:if test="value_custom_address_2 != ''">
+										<div><xsl:value-of select="value_custom_address_2"/></div>
+									</xsl:if>
+									<xsl:if test="value_custom_house_number != ''">
+										<div><xsl:value-of select="value_custom_house_number"/></div>
+									</xsl:if>
+									<xsl:if test="value_custom_postcode != ''">
+										<div><xsl:value-of select="value_custom_postcode"/><xsl:text> </xsl:text><xsl:value-of select="value_custom_place"/></div>
+									</xsl:if>																											
+								</div>
+							</xsl:if>
+							<xsl:if test="has_custom_address = 0">
+								<label>
+									<xsl:value-of select="php:function('lang', 'address')"/>
+								</label>								
+								<xsl:value-of select="value_address_1"/>
+							</xsl:if>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'address')"/>
+								<xsl:value-of select="php:function('lang', 'composite standard')"/>
 							</label>
+							<xsl:value-of select="value_composite_standard_name"/>
 						</div>
-						<xsl:if test="count(//list_composite_standard/options) > 0">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'composite standard')"/>
-								</label>
-								<select id="composite_standard_id" name="composite_standard_id">
-									<xsl:apply-templates select="list_composite_standard/options"/>
-								</select>
-							</div>
-						</xsl:if>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'furnish_type')"/>
 							</label>
-							<select id="furnish_type_id" name="furnish_type_id">
-								<xsl:apply-templates select="list_furnish_type/options"/>
-							</select>
+							<xsl:value-of select="value_furnish_type_name"/>
 						</div>	
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'has_custom_address')"/>
-							</label>
-							<input type="checkbox" name="has_custom_address" id="has_custom_address">
-								<xsl:if test="has_custom_address = 1">
-									<xsl:attribute name="checked" value="checked"/>
-								</xsl:if>
-							</input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'overridden_address')"/> / <xsl:value-of select="php:function('lang', 'house_number')"/>
-							</label>
-							<input type="text" name="address_1" id="address_1" value="{value_custom_address_1}"/>
-							<input type="text" name="house_number" id="house_number" value="{value_custom_house_number}"/>
-							<input type="text" name="address_2" id="address_2" value="{value_custom_address_2}"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'post_code')"/> / <xsl:value-of select="php:function('lang', 'post_place')"/>
-							</label>
-							<input type="text" name="postcode" id="postcode" value="{value_custom_postcode}"/>
-							<input type="text" name="place" id="place" value="{value_custom_place}"/>
-						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'description')"/>
 							</label>
-							<textarea name="description" id="description" rows="10" cols="50"><xsl:value-of select="value_description"/></textarea>
+							<xsl:value-of select="value_description"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -323,7 +308,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'available ?')"/>
 							</label>
-							<input type="checkbox" name="is_active" id="is_active">
+							<input type="checkbox" name="is_active" id="is_active" disabled="disabled">
 								<xsl:if test="is_active = 1">
 									<xsl:attribute name="checked" value="checked"/>
 								</xsl:if>
@@ -379,7 +364,7 @@
 					</div>
 					<div>
 						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_2'">
+							<xsl:if test="container = 'datatable-container_1'">
 								<xsl:call-template name="table_setup">
 									<xsl:with-param name="container" select ='container'/>
 									<xsl:with-param name="requestUrl" select ='requestUrl' />
