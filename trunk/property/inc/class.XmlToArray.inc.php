@@ -154,7 +154,7 @@
 		 * @param   bool	$includeEmptyValues (optional) Defaults to no/false
 		 * @return  object  XmlToArray instance
 		 */
-		function XmlToArray( $encoding = NULL, $stripLinebreaks = NULL,
+		function __construct( $encoding = NULL, $stripLinebreaks = NULL,
 					   $includeRootElement = NULL, $automaticUtf8Decoding = NULL,
 					   $includeEmptyValues = NULL )
 		{

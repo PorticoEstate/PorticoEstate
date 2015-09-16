@@ -60,7 +60,7 @@
 				'get_vendor_member_info'=> true
 			);
 
-		function property_uis_agreement()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::service';

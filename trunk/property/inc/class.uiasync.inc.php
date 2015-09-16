@@ -51,7 +51,7 @@
 				'delete' => true
 			);
 
-		function property_uiasync()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::async';
