@@ -53,7 +53,7 @@
 			);
 
 
-		function property_boinvestment($session=false)
+		function __construct($session=false)
 		{
 			$this->so 		= CreateObject('property.soinvestment');
 			$this->bocommon = CreateObject('property.bocommon');

@@ -50,7 +50,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_botemplate($session=false)
+		function __construct($session=false)
 		{
 			$this->so 		= CreateObject('property.sotemplate');
 			$this->bocommon		= CreateObject('property.bocommon');

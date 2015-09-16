@@ -46,7 +46,7 @@
 		 */
 		public $supertransaction = false;
 
-		function property_boinvoice($session=false)
+		function __construct($session=false)
 		{
 			$this->so			= CreateObject('property.soinvoice',true);
 			$this->bocommon		= CreateObject('property.bocommon');

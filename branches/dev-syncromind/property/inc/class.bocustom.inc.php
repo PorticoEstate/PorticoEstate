@@ -50,7 +50,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_bocustom($session=false)
+		function __construct($session=false)
 		{
 			$this->so = CreateObject('property.socustom');
 

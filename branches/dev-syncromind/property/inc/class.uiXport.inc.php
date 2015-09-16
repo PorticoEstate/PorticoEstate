@@ -48,7 +48,7 @@
 		var $filter;
 		var $cat_id;
 
-		function property_uiXport()
+		function __construct()
 		{
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app']			 = true;

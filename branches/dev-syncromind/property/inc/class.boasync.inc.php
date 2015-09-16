@@ -51,7 +51,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_boasync($session=false)
+		function __construct($session=false)
 		{
 			$this->so 		= CreateObject('property.soasync');
 			$this->socommon = CreateObject('property.socommon');

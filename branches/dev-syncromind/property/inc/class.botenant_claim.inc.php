@@ -43,7 +43,7 @@
 		var $order;
 		var $cat_id;
 
-		function property_botenant_claim($session=false)
+		function __construct($session=false)
 		{
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->so = CreateObject('property.sotenant_claim');

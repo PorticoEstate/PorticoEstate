@@ -51,7 +51,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_bopricebook($session=false)
+		function __construct($session=false)
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sopricebook');

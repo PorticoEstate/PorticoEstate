@@ -54,7 +54,7 @@
 			'check_perms'	 => true
 		);
 
-		function property_boadmin_location( $session = false )
+		function __construct( $session = false )
 		{
 			$this->so		 = CreateObject( 'property.soadmin_location' );
 			$this->bocommon	 = CreateObject( 'property.bocommon' );

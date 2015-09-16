@@ -62,7 +62,7 @@
 				'check_perms'		=> true
 			);
 
-		function property_bobudget($session=false)
+		function __construct($session=false)
 		{
 			$this->so 				= CreateObject('property.sobudget');
 			$this->bocommon 		= CreateObject('property.bocommon');

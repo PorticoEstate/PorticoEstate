@@ -37,7 +37,7 @@
 		public $allrows;
 		public $method_id;
 
-		function property_boalarm($session = '')
+		function __construct($session = '')
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 			if (!is_object($GLOBALS['phpgw']->asyncservice))

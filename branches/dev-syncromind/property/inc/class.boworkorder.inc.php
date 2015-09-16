@@ -54,7 +54,7 @@
 				'get_category'	=> true
 			);
 
-		function property_boworkorder($session=false)
+		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.soworkorder');
 			$this->bocommon 	= CreateObject('property.bocommon');
