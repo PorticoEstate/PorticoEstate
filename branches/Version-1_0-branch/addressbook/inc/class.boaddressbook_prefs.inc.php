@@ -29,7 +29,7 @@ class boaddressbook_prefs
 	var $org_columns_forced=false;
 	var $default_category_forced=false;
 	var $public=array('read_preferences' => True);
-	function boaddressbook_prefs()
+	function __construct()
 	{
 		$this->preferences=CreateObject('phpgwapi.preferences');
 	}

@@ -73,4 +73,3 @@
 	echo("</br><H1>Dumping response:</H1></br>".$client->getLastResponse());
 
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>

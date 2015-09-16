@@ -109,4 +109,3 @@
 		}
 		$GLOBALS['phpgw']->common->appsession($current_uid);
 	}
-?>

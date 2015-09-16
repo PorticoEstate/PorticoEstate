@@ -35,7 +35,7 @@
 		*
 		* @author Dave Hall
 		*/
-		function mail_dcom()
+		function __construct()
 		{
 			echo "<br />\n" . lang('php-imap support not installed - exiting') . "<br />\n";
 			echo lang('contact your system administrator');
@@ -1205,17 +1205,17 @@
 				while(chop($response)!='')
 				{
 					if ($this->debug_dcom >= 2) { echo 'imap: fetch_header: Response = '.$response."<br />\r\n"; } 
-					if(ereg('^\*',$response))
+					if(preg_match('/^\*/',$response))
 					{
 						$field = explode(' ',$response);
 						$msg_num = $field[1];
 					}
-					if(ereg('^'.$element,$response))
+					if(preg_match("/^$element/",$response))
 					{
 						$field_element[$msg_num] = $this->phpGW_quoted_printable_decode2(substr($response,strlen($element)+1));
 						if ($this->debug_dcom >= 2) { echo 'imap: fetch_header: <b>Field:</b> '.$field_element[$msg_num]."\t = <b>Msg Num</b> ".$msg_num."<br />\r\n"; } 
 					}
-					elseif(ereg('^'.strtoupper($element),$response))
+					elseif(preg_match('/^'.strtoupper($element).'/',$response))
 					{
 						$field_element[$msg_num] = $this->phpGW_quoted_printable_decode2(substr($response,strlen(strtoupper($element))+1));
 						if ($this->debug_dcom >= 2) { echo 'imap: fetch_header: <b>Field:</b> '.$field_element[$msg_num]."\t = <b>Msg Num</b> ".$msg_num."<br />\r\n"; } 
@@ -1242,7 +1242,7 @@
 				$this->error();
 			}
 			$response = $this->read_port();
-			while(!ereg('FETCH completed',$response))
+			while(!preg_match('/FETCH completed/',$response))
 			{
 				//echo 'Response = '.$response."<br />\n";
 				$field = explode(' ',$response);
@@ -1380,4 +1380,4 @@
 		}
 		
 	}
-?>
+

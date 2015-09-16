@@ -48,7 +48,7 @@
 		@function boattach_file *CONSTRUCTOR*
 		@abstract checks and makes sure we have a X->msg object to work with and initialized some blank data
 		*/
-		function boattach_file()
+		function __construct()
 		{
 			// we need a msg object BUT NO LOGIN IS NEEDED
 			$this->msg_bootstrap = CreateObject("email.msg_bootstrap");

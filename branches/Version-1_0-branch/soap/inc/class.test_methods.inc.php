@@ -28,7 +28,7 @@
 			'echoStruct' => array('inputStruct' => array( 'varString' => 'test_value', 'varInt' => '34', 'varFloat' => '42.42')),
 			'echoStructArray' => array('inputStructArray' => array( 'test_key' => array( 'varString' => 'test_value', 'varInt' => '34', 'varFloat' => '42.42'), 'test_key 2' => array( 'varString' => 'test_value', 'varInt' => '34', 'varFloat' => '42.42'), 'item' => array( 'varString' => 'plop', 'varInt' => '1', 'varFloat' => 45.456789 )))
 			);
-		function test_methods()
+		function __construct()
 		{
 			$this->public_functions = array( 'uitest_methods' => True);
 			$this->app			= (isset($_REQUEST['app']) && $_REQUEST['app'])?$_REQUEST['app']:$GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -177,4 +177,3 @@
 			$GLOBALS['phpgw']->common->phpgw_footer();
 		}
 	}
-?>

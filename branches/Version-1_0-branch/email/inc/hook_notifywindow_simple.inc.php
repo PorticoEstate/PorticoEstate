@@ -50,4 +50,3 @@
 		// end the mailserver request
 		$GLOBALS['phpgw']->msg->end_request();
 	}
-?>

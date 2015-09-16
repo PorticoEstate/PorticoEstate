@@ -1,15 +1,12 @@
 <?php
 	class socatalog_contact_note_type
 	{
-		function socatalog_contact_note_type()
+		function __construct()
 		{
 			$this->db = &$GLOBALS['phpgw']->db;
 		}
 		
-		function _constructor()
-		{
-		}
-		
+
 		function select_catalog()
 		{
 			$comm_type = CreateObject('phpgwapi.contact_note_type');
@@ -57,4 +54,3 @@
 			return $return_fields;
 		}
 	}
-?>

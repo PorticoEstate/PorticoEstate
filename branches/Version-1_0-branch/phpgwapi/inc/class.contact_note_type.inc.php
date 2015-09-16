@@ -44,7 +44,7 @@
 								 'field'	=> 'description',
 								 'type'		=> 'string'));
 		
-		function contact_note_type ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_contact_note_type', 'contact_note_type');
 			if($field)

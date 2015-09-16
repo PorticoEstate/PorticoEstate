@@ -40,4 +40,3 @@
 	);
 
 	$GLOBALS['phpgw']->help->draw();
-?>

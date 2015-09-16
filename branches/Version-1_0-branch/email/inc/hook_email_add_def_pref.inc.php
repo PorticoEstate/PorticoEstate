@@ -15,4 +15,3 @@
   $pref->change("email","default_sorting","old_new");
   $pref->change("email","show_addresses","from");
   $pref->change("email","email_sig","");
-?>

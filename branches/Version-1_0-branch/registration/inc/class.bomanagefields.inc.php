@@ -25,7 +25,7 @@
 		var $so;
 		var $fields;
 		
-		function bomanagefields()
+		function __construct()
 		{
 			$this->so = CreateObject ('registration.somanagefields');
 			$this->fields = $this->get_field_list();

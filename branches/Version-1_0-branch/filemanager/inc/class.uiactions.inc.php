@@ -22,7 +22,7 @@
 		);
 		var $actions = array();
 		
-		function uiactions()
+		function __construct()
 		{
 			//Construct the action objects
 			foreach($this->action_classes as $action_class)
@@ -63,4 +63,3 @@
 			
 		}*/
 	}
-?>

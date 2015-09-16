@@ -46,7 +46,7 @@
 		var $debug = false;
 
 
-		function bofolders()
+		function __construct()
 		{
 			$this->mid = new phpGWTreeMenu();
 

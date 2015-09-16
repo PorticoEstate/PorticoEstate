@@ -21,7 +21,7 @@
 	{
 		var $record;
 		
-		function addressbook_importer()
+		function __construct()
 		{
 		}
 		
@@ -47,4 +47,3 @@
 			$this->record['notes'][$args][$element] = $value;
 		}
 	}
-?>

@@ -184,9 +184,9 @@
 
 		for($i=0;$i<sizeof($contents);$i++)
 		{
-			if (! ereg("^#",$contents[$i]))
+			if (!preg_match("/^#/",$contents[$i]))
 			{
-				$line=split("[[:space:]]+", $contents[$i]);
+				$line=preg_split("/[[:space:]]+/", $contents[$i]);
 				if (sizeof($line) >= 2)
 				{
 					for($j=1;$j<sizeof($line);$j++)
@@ -235,7 +235,7 @@
 	function analysedir($dirline)
 	{
 		$dirinfo = array();
-		if (ereg("([-dl])[rwxst-]{9}",substr($dirline,0,10)))
+		if (preg_match("/([-dl])[rwxst-]{9}/",substr($dirline,0,10)))
 		{
 			$GLOBALS['systyp'] = 'UNIX';
 		}
@@ -246,13 +246,13 @@
 		}
 		elseif($GLOBALS['systyp'] == 'Windows_NT')
 		{
-			if (ereg("[-0-9]+ *[0-9:]+[PA]?M? +<DIR> {10}(.*)",$dirline,$regs))
+			if (preg_match("/[-0-9]+ *[0-9:]+[PA]?M? +<DIR> {10}(.*)/",$dirline,$regs))
 			{
 				$dirinfo[0] = 1;
 				$dirinfo[1] = 0;
 				$dirinfo[2] = $regs[1];
 			}
-			elseif(ereg("[-0-9]+ *[0-9:]+[PA]?M? +([0-9]+) (.*)",$dirline,$regs))
+			elseif(preg_match("/[-0-9]+ *[0-9:]+[PA]?M? +([0-9]+) (.*)/",$dirline,$regs))
 			{
 				$dirinfo[0] = 0;
 				$dirinfo[1] = $regs[1];

@@ -300,6 +300,10 @@ _debug_array($error_line);
 				case 'S': // Strict
 					$error_reporting = E_STRICT | E_PARSE;
 					break;
+
+				case 'DP': // Deprecated
+					$error_reporting = E_ERROR | E_USER_ERROR| E_DEPRECATED | E_USER_DEPRECATED;
+					break;
 			}
 
 			if( !(!!($error_reporting & $error_level)))

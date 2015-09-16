@@ -797,7 +797,7 @@ if ( DEBUG_CACHEPROP ) _debug_array("Cache hit Dir ! : $uri/");
 			else
 			{
 if ( DEBUG_CACHEPROP ) _debug_array("Cache Miss! : $uri");
-				if ( $is_dir && !ereg('#/$#',$uri) )
+				if ( $is_dir && !preg_match('/#\/$#/',$uri) )
 				{
 if ( DEBUG_CACHEPROP ) _debug_array("Cache dir (is_dir)! : $uri/");
 					$this->cached_propfind[$uri.'/'] = $this->http_client->PropFind( $uri.'/', $scope);
@@ -871,7 +871,7 @@ if (DEBUG_CACHE) echo '<b>proppatch: cache cleared</b><br />';
 			}
 			$this->http_client->requestBody = $davxml;
 			//Ok if we know that this is a dir add a / if needed
-			if ( $is_dir && !ereg('#./$#',$uri) )
+			if ( $is_dir && !preg_match('/#.\/$#/',$uri) )
 			{
 				if( $this->http_client->sendCommand( 'PROPPATCH '.$uri.'/ HTTP/1.1' ) )
 				{

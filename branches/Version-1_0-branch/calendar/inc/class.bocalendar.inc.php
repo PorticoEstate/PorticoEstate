@@ -182,7 +182,7 @@
 			}
 //_debug_array($owner);
 			$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
-			ereg('menuaction=([a-zA-Z.]+)', $referer, $regs);
+			preg_match('/menuaction=([a-zA-Z.]+)/', $referer, $regs);
 			$from = $regs[1];
 			if ((substr($_SERVER['PHP_SELF'],-8) == 'home.php' && substr($this->prefs['calendar']['defaultcalendar'],0,7) == 'planner'
 				 || ( isset($GLOBALS['phpgw_info']['menuaction']) && $GLOBALS['phpgw_info']['menuaction'] == 'calendar.uicalendar.planner')

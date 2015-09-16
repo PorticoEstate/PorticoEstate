@@ -139,7 +139,7 @@
 		 *
 		 * @return void
 		 */
-		function defaultimap() 
+		function __construct()
 		{
 			if (function_exists('mb_convert_encoding')) {
 				$this->mbAvailable = TRUE;
@@ -508,4 +508,3 @@
 			return $this->hasCapability($_capability);
 		}
 	}
-?>

@@ -34,7 +34,7 @@
 		 the parent class, I simply call the parent constructor. Of course,
 		 if I then wanted to override any of the values, I could easily do so.
 		*/
-		function listbox($param)
+		function __construct($param)
 		{
 			$this->setvar('classname','listbox');
 			$this->setvar('outerwidth',300);
@@ -54,7 +54,7 @@
 					$this->setvar($key, $value);
 				}
 			}
-			$this->portalbox($param['title'], $param['primary'], $param['secondary'], $param['tertiary']);
+			parent::__construct($param['title'], $param['primary'], $param['secondary'], $param['tertiary']);
 			$this->start_template();
 		}
 

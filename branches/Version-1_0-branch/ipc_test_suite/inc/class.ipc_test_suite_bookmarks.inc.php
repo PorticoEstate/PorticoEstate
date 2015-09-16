@@ -31,7 +31,7 @@
 	   * Constructor
 		 * @param object $$ipcManager ipc manager object
 	   */
-		function ipc_test_suite_bookmarks($params)
+		function __construct($params)
 		{
 			$this->ipc =& $params['ipcManager']->getIPC('bookmarks');
 			
@@ -120,4 +120,3 @@
 			return $this->ipc->getIdList();
 		}
 	}
-?>

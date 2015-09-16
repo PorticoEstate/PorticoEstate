@@ -33,7 +33,7 @@ class data_cleaner
 	*
 	* @param string $data the data to be cleaned
 	*/
-	function data_cleaner($data = '')
+	function __construct($data = '')
 	{
 		$this->data = $data;
 	}

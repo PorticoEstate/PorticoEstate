@@ -39,7 +39,7 @@ class ipc_notes extends ipc_
 	 *
 	 * @access public
 	 */
-	function ipc_notes()
+	function __construct()
 	{
 		$this->bonotes = CreateObject('notes.bonotes');
 	}
@@ -177,4 +177,3 @@ class ipc_notes extends ipc_
 		return !is_null($this->bonotes->read_single($id));
 	}
 }
-?>

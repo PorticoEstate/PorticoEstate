@@ -105,4 +105,3 @@
 		echo "\n<!-- Birthday info -->\n";
 	}
 */
-?>

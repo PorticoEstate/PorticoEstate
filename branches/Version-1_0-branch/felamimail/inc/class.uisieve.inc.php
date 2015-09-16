@@ -50,7 +50,7 @@
 		
 		var $errorStack;
 
-		function uisieve()
+		function __construct()
 		{
 			if(empty($GLOBALS['phpgw_info']['user']['preferences']['felamimail']['sieveScriptName'])) {
 				$GLOBALS['phpgw']->preferences->add('felamimail','sieveScriptName','felamimail', 'forced');
@@ -1071,4 +1071,3 @@
 			}
 		}
 	}
-?>

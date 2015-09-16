@@ -45,7 +45,7 @@
 								 'type'		=> 'integer'));
 		
 		
-		function contact_categories ($ali = '', $field = '', $criteria = 	'')
+		function __construct ($ali = '', $field = '', $criteria = 	'')
 		{
 			$this->_constructor('phpgw_categories', 'contact_categories');
 			if($field)

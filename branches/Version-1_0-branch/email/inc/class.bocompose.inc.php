@@ -38,7 +38,7 @@
 		var $debug = 0;
 		//var $debug = 3;
 		
-		function bocompose()
+		function __construct()
 		{
 			/*!
 			@class requires msg_bootstrap object
@@ -229,7 +229,7 @@
 					// we need *some* line breaks in the body so we know where to add the ">" quoting char(s)
 					// some relatively short emails may not have any CRLF pairs, but may have a few real long lines
 					//so, add linebreaks to the body if none are already existing
-					if (!ereg("\r\n", $bodystring))
+					if (!preg_match("/[\n|\r]/", $bodystring ))
 					{
 						// aim for a 74-80 char line length
 						$bodystring = $GLOBALS['phpgw']->msg->body_hard_wrap($bodystring, 74);
@@ -357,7 +357,7 @@
 						$my_reply_plain = $my_reply->mailbox.'@'.$my_reply->host;
 						
 						// sometimes, the "To:" and the "Reply-To: / From" are the same, such as with mailing lists
-						if (!ereg(".*$my_reply_plain.*", $to))
+						if (!preg_match("/.*$my_reply_plain.*/", $to))
 						{
 							// it's ok to add $from_or_reply_to, it is not a duplicate
 							$my_reply_addr_spec = $GLOBALS['phpgw']->msg->make_rfc2822_address($my_reply);
@@ -847,4 +847,3 @@
 
 
 	}
-?>

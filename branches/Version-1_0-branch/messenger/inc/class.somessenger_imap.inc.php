@@ -18,7 +18,7 @@ class somessenger extends somessenger_
 	/**
 	 * @constructor
 	 */
-	function somessenger()
+	function __construct()
 	{
 		$this->imap_host = $GLOBALS['phpgw']->config->config_data['imap_message_host'];
 		$this->imap = @imap_open("\{{$this->imap_host}:143/imap/notls}INBOX", $GLOBALS['phpgw_info']['user']['account_lid'], $GLOBALS['phpgw_info']['user']['passwd']);
@@ -27,7 +27,7 @@ class somessenger extends somessenger_
 			$this->stat = imap_status($this->imap, "\{{$this->imap_host}}INBOX", SA_MESSAGES);
 			$this->connected = true;
 		}
-		$this->somessenger_();
+		parent::__construct();
 	}
 	/**
 	 * Delete a message
@@ -198,4 +198,3 @@ class somessenger extends somessenger_
 		}
 	}
 }
-?>

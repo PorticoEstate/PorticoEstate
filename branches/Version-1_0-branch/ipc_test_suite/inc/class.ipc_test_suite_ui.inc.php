@@ -41,7 +41,7 @@
 		/**
 		* Constructor
 		*/
-		function ipc_test_suite_ui()
+		function __construct()
 		{
 			// test the following applications, true->run the test, false->no test
 			$this->test = array(
@@ -101,4 +101,3 @@
 			}
 		}
 	}
-?>

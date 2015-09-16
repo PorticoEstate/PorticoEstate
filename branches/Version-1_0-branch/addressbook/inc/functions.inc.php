@@ -139,8 +139,8 @@
 		{
 			if ( substr($col,0,6) == 'extra_' )
 			{
-				$fields[$j]['name'] = ereg_replace('extra_','',$col);
-				$fields[$j]['name'] = ereg_replace(' ','_',$fields[$j]['name']);
+				$fields[$j]['name'] = preg_replace('/extra_/','',$col);
+				$fields[$j]['name'] = preg_replace('/ /','_',$fields[$j]['name']);
 				$fields[$j]['id'] = $i;
 
 				if ($query && ($fields[$j]['name'] != $query))
@@ -173,4 +173,3 @@
 		}
 		$GLOBALS['phpgw']->preferences->save_repository(1);
 	}
-?>

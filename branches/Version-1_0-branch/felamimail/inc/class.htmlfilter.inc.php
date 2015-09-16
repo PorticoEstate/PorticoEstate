@@ -991,4 +991,3 @@ function sanitize($body,
 }
 // class end
 }
-?>

@@ -136,7 +136,7 @@
 		/**
 		* Constructor
 		*/
-		function spell()
+		function __construct()
 		{
 			if ($this->debug_init > 0) { echo 'ENTERING: email.spell.CONSTRUCTOR'.'<br />'."\r\n"; }
 			
@@ -453,7 +453,8 @@
 			$body_display = $GLOBALS['phpgw']->msg->htmlspecialchars_encode($body_display);
 			// 2) convert linebreaks to <br /> tags
 			//$body_display = ereg_replace("\r\n","_CRLF_",$body_display);
-			$body_display = ereg_replace("\r\n","<br />",$body_display);
+			//$body_display = ereg_replace("\r\n","<br />",$body_display);
+			$body_display = nl2br($body_display, true);
 			return $body_display;
 		}
 		
@@ -1034,7 +1035,7 @@
 				$this->body_with_suggest .= $this_line_str."\r\n";
 			}
 			
-			$this->body_with_suggest = ereg_replace("\r\n","<br />",$this->body_with_suggest);
+			$this->body_with_suggest = nl2br($this->body_with_suggest,true);
 			$GLOBALS['phpgw']->template->set_var('body_with_suggestions', $this->body_with_suggest);
 			
 			// BUTTONS
@@ -1156,4 +1157,3 @@
 
 
 	}
-?>

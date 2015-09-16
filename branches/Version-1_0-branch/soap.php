@@ -71,7 +71,7 @@
 	include(PHPGW_API_INC.'/functions.inc.php');
 
 	$headers = getallheaders();
-	if(ereg('Basic',$headers['Authorization']))
+	if(preg_match('/Basic/',$headers['Authorization']))
 	{
 		$tmp = $headers['Authorization'];
 		$tmp = str_replace(' ','',$tmp);
@@ -205,4 +205,3 @@
 
 	}
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>

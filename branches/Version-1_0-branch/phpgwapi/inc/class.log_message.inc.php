@@ -30,7 +30,7 @@
 
 		var $public_functions = array();
 
-		function log_message($parms)
+		function __construct($parms)
 		{
 			if ($parms == '')
 			{
@@ -51,7 +51,7 @@
 
 			// This code is left in for backward compatibility with the 
 			// old log code.  Consider it deprecated.
-			if ( !isset( $parms['severity']) && eregi('([DIWEF])-([[:alnum:]]*)\, (.*)',$etext,$match))
+			if ( !isset( $parms['severity']) && preg_match('/([DIWEF])-([[:alnum:]]*)\, (.*)/i',$etext,$match))
 			{
 				$this->severity = strtoupper($match[1]);
 				$this->msg      = trim($match[3]);

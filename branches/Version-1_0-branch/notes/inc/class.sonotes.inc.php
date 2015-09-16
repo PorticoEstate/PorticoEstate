@@ -36,7 +36,7 @@
 		var $db;
 		var $account;
 
-		function sonotes()
+		function __construct()
 		{
 			$this->db		= &$GLOBALS['phpgw']->db;
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];

@@ -71,4 +71,3 @@
 	}
 	// shut down this transaction
 	$GLOBALS['phpgw']->common->phpgw_exit(False);
-?>

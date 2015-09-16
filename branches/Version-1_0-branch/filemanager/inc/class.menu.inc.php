@@ -25,7 +25,7 @@
 			'links'	=> true,
 		);
 
-		function filemanager_menu($sub='')
+		function __construct($sub='')
 		{
 			$this->sub		= $sub;
 		}

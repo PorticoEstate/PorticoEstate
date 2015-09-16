@@ -38,7 +38,7 @@
 		var $margin_right;
 		var $img;
 	
-		function gdgraph($debug = False)
+		function __construct($debug = False)
 		{
 			$this->debug			= $debug;
 
@@ -788,7 +788,7 @@
 		{
 		print('<script language="JavaScript">');
 		print('window.open(\'main.php3?menuAction=boGraph.Show&');
-		if (ereg('MSIE', $GLOBALS['HTTP_USER_AGENT']))
+		if (preg_match('/MSIE/i', $GLOBALS['HTTP_USER_AGENT']))
 			print('DCLINFO=' . $GLOBALS['DCLINFO'] . '&');
 		print($this->ToURL() . '\', \'graph\', \'width=' . ($this->graph_width + 20) . ',height=' . ($this->graph_height + 20) . ',resizable=yes,scrollbars=yes\');');
 		print('</script>');

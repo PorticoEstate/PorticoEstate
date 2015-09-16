@@ -47,7 +47,7 @@
 		@author Angles
 		@access private
 		*/
-		function mail_dcom_base()
+		function __construct()
 		{
 			$this->err["code"] = " ";
 			$this->err["msg"]  = " ";
@@ -343,4 +343,4 @@
 		}
 
 	} // end of class mail_dcom
-?>
+

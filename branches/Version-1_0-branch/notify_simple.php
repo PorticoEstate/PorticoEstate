@@ -26,4 +26,3 @@
 	echo '<html><body>';
 	$GLOBALS['phpgw']->hooks->process('notifywindow_simple',array('email'));
 	echo '</body></html>';
-?>

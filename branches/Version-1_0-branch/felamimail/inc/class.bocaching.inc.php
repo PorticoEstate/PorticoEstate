@@ -31,7 +31,7 @@
 		var $uidnext;		// the next uid to be used in the mailbox
 		var $uidvalidity;	// the next uid to be used in the mailbox
 		
-		function bocaching($_hostname, $_accountname, $_foldername)
+		function __construct($_hostname, $_accountname, $_foldername)
 		{
 			$this->hostname		= $_hostname;
 			$this->accountname	= $_accountname;
@@ -153,4 +153,3 @@
 		
 	}
 
-?>

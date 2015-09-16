@@ -75,7 +75,7 @@
 			'SOAP'    => 'soap'
 		);
 
-		function interserver($serverid='')
+		function __construct($serverid='')
 		{
 			$this->urlparts = array(
 				'xmlrpc' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php?domain=default",
@@ -136,13 +136,13 @@
 			switch($this->mode)
 			{
 				case 'soap':
-					if(!ereg('soap.php',$matches[2]))
+					if(!preg_match('/soap.php/',$matches[2]))
 					{
 						$matches[2] .= $this->urlparts['soap'];
 					}
 					break;
 				case 'xmlrpc':
-					if(!ereg('xmlrpc.php',$matches[2]))
+					if(!preg_match('/xmlrpc.php/',$matches[2]))
 					{
 						$matches[2] .= $this->urlparts['xmlrpc'];
 					}

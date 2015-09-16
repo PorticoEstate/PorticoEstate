@@ -24,7 +24,7 @@
 			'submit' => True
 		);
 
-		function uimanagefields ()
+		function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatches = CreateObject ('phpgwapi.nextmatchs');
 

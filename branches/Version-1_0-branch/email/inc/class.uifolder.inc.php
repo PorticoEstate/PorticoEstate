@@ -28,7 +28,7 @@
 			'folder' => True
 		);
 
-		function uifolder()
+		function __construct()
 		{
 			//return;
 		}
@@ -164,4 +164,3 @@
 			unset($GLOBALS['phpgw']->msg);
 		}
 	}
-?>

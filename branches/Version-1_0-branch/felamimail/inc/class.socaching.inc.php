@@ -24,7 +24,7 @@
 		var $folder_table = 'egw_felamimail_folderstatus';
 		var $hostname,$accountname,$foldername,$accountid,$host_account_folder;	// set by the constructor
 		
-		function socaching($_hostname, $_accountname, $_foldername, $_accountid)
+		function __construct($_hostname, $_accountname, $_foldername, $_accountid)
 		{
 			$this->hostname		= $_hostname;
 			$this->accountname	= $_accountname;
@@ -278,4 +278,4 @@
 			$this->db->insert($this->folder_table,$data,$this->host_account_folder,__LINE__,__FILE__);
 		}
 	}
-?>
+

@@ -38,7 +38,7 @@
 		/**
 		 * constructor
 		 */
-		function uifolders()
+		function __construct()
 		{
 			$this->t = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
 		}

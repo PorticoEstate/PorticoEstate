@@ -45,7 +45,7 @@
 		* constructor, sets up variables
 		* @param array $auth_info the information sur source authentication: location, auth_type
 		*/
-		function mapping($auth_info)
+		function __construct($auth_info)
 		{
 			$this->location = $auth_info['location'];
 			$this->auth_type = $auth_info['auth_type'];

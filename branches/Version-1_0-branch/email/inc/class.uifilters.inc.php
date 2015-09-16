@@ -48,7 +48,7 @@
 		menuaction. 
 		@author Angles
 		*/
-		function uifilters()
+		function __construct()
 		{
 			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
 	//		$this->theme = $GLOBALS['phpgw_info']['theme'];
@@ -864,4 +864,3 @@
 		
 		
 	}
-?>

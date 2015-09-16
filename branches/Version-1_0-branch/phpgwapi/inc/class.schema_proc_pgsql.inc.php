@@ -34,7 +34,7 @@
 		var $uc = array();
 		var $indexes_sql = array();
 
-		function schema_proc_pgsql()
+		function __construct()
 		{
 			$this->m_sStatementTerminator = ';';
 		}
@@ -342,7 +342,7 @@
 				$sdc->next_record();
 				if ($sdc->f(0) != '')
 				{
-					if (ereg('nextval',$sdc->f(0)))
+					if (preg_match('/nextval/',$sdc->f(0)))
 					{
 						$default = '';
 						$nullcomma = '';

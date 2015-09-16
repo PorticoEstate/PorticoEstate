@@ -613,7 +613,7 @@
 		*/
 		var $trans = False;
 
-		function contacts_($session=True)
+		function __construct($session=True)
 		{
 			$this->db = &$GLOBALS['phpgw']->db;
 			if(!is_object($GLOBALS['phpgw']->session))
