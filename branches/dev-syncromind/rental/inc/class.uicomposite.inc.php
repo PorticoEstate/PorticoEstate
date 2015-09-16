@@ -573,9 +573,8 @@
 		 */
 		public function view()
 		{
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
-			//Retrieve the composite object
 			$composite_id = (int)phpgw::get_var('id');
+			
 			if(isset($composite_id) && $composite_id > 0)
 			{
 				$composite = rental_socomposite::get_instance()->get_single($composite_id);
@@ -583,25 +582,16 @@
 			else
 			{
 				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
-				return;
 			}
 
 			if(isset($composite) && $composite->has_permission(PHPGW_ACL_READ))
 			{
-				return $this->render(
-					'composite.php', 
-					array (
-						'composite' 	=> $composite,
-						'editable' => false,
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => 'yes'))
-					)
-				);	
+				$this->edit(array(), $mode = 'view');
 			}
 			else
 			{
 				$this->render('permission_denied.php',array('error' => lang('permission_denied_view_composite')));
 			}
-			
 		}
 
 		/**
@@ -610,19 +600,16 @@
 		 */
 		public function edit($values = array(), $mode = 'edit')
 		{
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
-			
-			// Retrieve the party object or create a new one if correct permissions
-			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
-			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
-			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang($mode);
 			
 			$composite_id = (int)phpgw::get_var('id');
 			
-			if (!empty($values['composite_id']))
-			{
-				$composite_id = $values['composite_id'];
+			if ($mode == 'edit')
+			{	
+				if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
+				{
+					$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+				}
 			}
 		
 			if(isset($composite_id) && $composite_id > 0)
@@ -642,12 +629,6 @@
 			{
 				$tabs['units']	= array('label' => lang('Units'), 'link' => '#units');
 				$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
-				
-				$tabletools1 = array
-				(
-					array('my_name'	=> 'select_all'),
-					array('my_name'	=> 'select_none')
-				);
 
 				$tabletools1[] = array
 					(
@@ -659,22 +640,23 @@
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
 					);
 				
-				//$remove_unit_link = self::link(array('menuaction'=>'rental.uicomposite.remove_unit', 'phpgw_return_as'=>'json'));
-
-				$tabletools1[] = array
-					(
-						'my_name'		=> 'delete',
-						'text'			=> lang('remove_location'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-											var oArgs = ".json_encode(array(
-													'menuaction'		=> 'rental.uicomposite.remove_unit', 
-													'phpgw_return_as'	=> 'json'
-												)).";
-											var parameters = ".json_encode(array('parameter'=>array(array('name'=>'ids', 'source'=>'id')))).";
-											removeUnit(oArgs, parameters);
-						"					
-					);
+				if ($mode == 'edit')
+				{
+					$tabletools1[] = array
+						(
+							'my_name'		=> 'delete',
+							'text'			=> lang('remove_location'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uicomposite.remove_unit', 
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'ids', 'source'=>'id')))).";
+								removeUnit(oArgs, parameters);
+							"					
+						);
+				}
 		
 				$datatable_def[] = array
 				(
@@ -697,55 +679,56 @@
 					)
 				);
 				
-				$tabletools2[] = array
-					(
-						'my_name'		=> 'view',
-						'text'			=> lang('show'),
-						'action'		=> self::link(array(
-								'menuaction'	=> 'property.uilocation.view'
-						)),
-						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
-					);
-				
-				//$add_unit_link = self::link(array('menuaction'=>'rental.uicomposite.add_unit', 'composite_id'=>$composite_id, 'phpgw_return_as'=>'json'));
+				if ($mode == 'edit')
+				{				
+					$tabletools2[] = array
+						(
+							'my_name'		=> 'view',
+							'text'			=> lang('show'),
+							'action'		=> self::link(array(
+									'menuaction'	=> 'property.uilocation.view'
+							)),
+							'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
+						);
+	
+					$tabletools2[] = array
+						(
+							'my_name'		=> 'add',
+							'text'			=> lang('add_location'),
+							'type'			=> 'custom',
+							'custom_code'	=> "
+								var oArgs = ".json_encode(array(
+										'menuaction'		=> 'rental.uicomposite.add_unit', 
+										'composite_id'		=> $composite_id,
+										'phpgw_return_as'	=> 'json'
+									)).";
+								var parameters = ".json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code')))).";
+								addUnit(oArgs, parameters);
+							"					
+						);
 
-				$tabletools2[] = array
+					$datatable_def[] = array
 					(
-						'my_name'		=> 'add',
-						'text'			=> lang('add_location'),
-						'type'			=> 'custom',
-						'custom_code'	=> "
-										var oArgs = ".json_encode(array(
-												'menuaction'		=> 'rental.uicomposite.add_unit', 
-												'composite_id'		=> $composite_id,
-												'phpgw_return_as'	=> 'json'
-											)).";
-										var parameters = ".json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code')))).";
-										addUnit(oArgs, parameters);
-						"					
+						'container'		=> 'datatable-container_1',
+						'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uiproperty_location.query', 'composite_id'=>$composite_id, 'phpgw_return_as'=>'json'))),
+						'ColumnDefs'	=> array(
+									array('key'=>'location_code', 'label'=>lang('location_code'), 'sortable'=>true),
+									array('key'=>'loc1_name', 'label'=>lang('name'), 'sortable'=>false),
+									array('key'=>'loc2_name', 'label'=>lang('building'), 'sortable'=>false),
+									array('key'=>'loc3_name', 'label'=>lang('floor'), 'sortable'=>false),
+									array('key'=>'loc4_name', 'label'=>lang('section'), 'sortable'=>false),
+									array('key'=>'loc5_name', 'label'=>lang('room'), 'sortable'=>false),
+									array('key'=>'adresse1', 'label'=>lang('address'), 'sortable'=>false),
+									array('key'=>'postnummer', 'label'=>lang('post_code'), 'sortable'=>false),
+									array('key'=>'poststed', 'label'=>lang('post_place'), 'sortable'=>false),
+									array('key'=>'gab', 'label'=>lang('gab'), 'sortable'=>false)
+						),
+						'tabletools'	=> $tabletools2,
+						'config'		=> array(
+							array('disableFilter' => true)
+						)
 					);
-				
-				$datatable_def[] = array
-				(
-					'container'		=> 'datatable-container_1',
-					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uiproperty_location.query', 'composite_id'=>$composite_id, 'phpgw_return_as'=>'json'))),
-					'ColumnDefs'	=> array(
-								array('key'=>'location_code', 'label'=>lang('location_code'), 'sortable'=>true),
-								array('key'=>'loc1_name', 'label'=>lang('name'), 'sortable'=>false),
-								array('key'=>'loc2_name', 'label'=>lang('building'), 'sortable'=>false),
-								array('key'=>'loc3_name', 'label'=>lang('floor'), 'sortable'=>false),
-								array('key'=>'loc4_name', 'label'=>lang('section'), 'sortable'=>false),
-								array('key'=>'loc5_name', 'label'=>lang('room'), 'sortable'=>false),
-								array('key'=>'adresse1', 'label'=>lang('address'), 'sortable'=>false),
-								array('key'=>'postnummer', 'label'=>lang('post_code'), 'sortable'=>false),
-								array('key'=>'poststed', 'label'=>lang('post_place'), 'sortable'=>false),
-								array('key'=>'gab', 'label'=>lang('gab'), 'sortable'=>false)
-					),
-					'tabletools'	=> $tabletools2,
-					'config'		=> array(
-						array('disableFilter' => true)
-					)
-				);
+				}
 				
 				$tabletools3[] = array
 					(
@@ -795,9 +778,11 @@
 						"
 					);
 			
+				$datatable_container_name = ($mode == 'edit') ? 'datatable-container_2' : 'datatable-container_1';
+				
 				$datatable_def[] = array
 				(
-					'container'		=> 'datatable-container_2',
+					'container'		=> $datatable_container_name,
 					'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uicontract.query', 'type'=>'contracts_for_composite', 'composite_id'=>$composite_id, 'editable'=>0, 'phpgw_return_as'=>'json'))),
 					'ColumnDefs'	=> array(
 								array('key'=>'old_contract_id', 'label'=>lang('contract_id'), 'sortable'=>true),
@@ -817,15 +802,18 @@
 					)
 				);
 				
-				$search_options[] = array('id'=>'objno_name_address', 'name'=>lang('objno_name_address'), 'selected'=>1);
-				$search_options[] = array('id'=>'gab', 'name'=>lang('gab'), 'selected'=>0);
+				if ($mode == 'edit')
+				{
+					$search_options[] = array('id'=>'objno_name_address', 'name'=>lang('objno_name_address'), 'selected'=>1);
+					$search_options[] = array('id'=>'gab', 'name'=>lang('gab'), 'selected'=>0);
 
-				$level_options[] = array('id'=>'1', 'name'=>lang('property'), 'selected'=>0);
-				$level_options[] = array('id'=>'2', 'name'=>lang('building'), 'selected'=>1);
-				$level_options[] = array('id'=>'3', 'name'=>lang('floor'), 'selected'=>0);
-				$level_options[] = array('id'=>'4', 'name'=>lang('section'), 'selected'=>0);
-				$level_options[] = array('id'=>'5', 'name'=>lang('room'), 'selected'=>0);
-
+					$level_options[] = array('id'=>'1', 'name'=>lang('property'), 'selected'=>0);
+					$level_options[] = array('id'=>'2', 'name'=>lang('building'), 'selected'=>1);
+					$level_options[] = array('id'=>'3', 'name'=>lang('floor'), 'selected'=>0);
+					$level_options[] = array('id'=>'4', 'name'=>lang('section'), 'selected'=>0);
+					$level_options[] = array('id'=>'5', 'name'=>lang('room'), 'selected'=>0);
+				}
+				
 				$contracts_search_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
 				$contracts_search_options[] = array('id'=>'id', 'name'=>lang('contract_id'), 'selected'=>0);
 				$contracts_search_options[] = array('id'=>'party_name', 'name'=>lang('party_name'), 'selected'=>0);
@@ -854,24 +842,37 @@
 		
 			$GLOBALS['phpgw']->jqcal->add_listener('status_date');
 	
+			$composite_standard_name = '';
 			$cur_standard_id = $composite->get_standard_id();
 			$composite_standard_arr = $composite->get_standards($cur_standard_id);
 			$composite_standard_options = array();
 			foreach($composite_standard_arr as $composite_standard)
 			{
 				$selected = ($composite_standard['selected']) ? 1 : 0;
+				if ($selected)
+				{
+					$composite_standard_name = $composite_standard['name'];
+				}
 				$composite_standard_options[] = array('id'=>$composite_standard['id'], 'name'=>$composite_standard['name'], 'selected'=>$selected);				
 			}			
 		
+			$furnish_type_name = '';
 			$furnish_types_arr = $composite->get_furnish_types();
 			$cur_furnish_type_id = $composite->get_furnish_type_id();
 			$furnish_types_options = array();
 			foreach($furnish_types_arr as $id => $title)
 			{
 				$selected = ($cur_furnish_type_id == $id) ? 1 : 0;
+				if ($selected)
+				{
+					$furnish_type_name = $title;
+				}				
 				$furnish_types_options[] = array('id'=>$id, 'name'=>$title, 'selected'=>$selected);				
 			}
 						
+			$units = $composite->get_units();
+			$address_1 = $units[0]->get_location()->get_address_1();
+								
 			$code =	<<<JS
 				var thousandsSeparator = '$this->thousandsSeparator';
 				var decimalSeparator = '$this->decimalSeparator';
@@ -888,12 +889,14 @@ JS;
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uicomposite.save')),
 				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 				'lang_save'						=> lang('save'),
-				'lang_cancel'					=> lang('cancel'),			
-				'editable'						=> true,
+				'lang_cancel'					=> lang('cancel'),
 
 				'value_name'					=> $composite->get_name(),
+				'value_composite_standard_name' => $composite_standard_name,
 				'list_composite_standard'		=> array('options' => $composite_standard_options),
+				'value_furnish_type_name'		=> $furnish_type_name,
 				'list_furnish_type'				=> array('options' => $furnish_types_options),
+				'value_address_1'				=> $address_1,
 				'has_custom_address'			=> ($composite->has_custom_address()) ? 1 : 0,
 				'value_custom_address_1'		=> $composite->get_custom_address_1(),
 				'value_custom_house_number'		=> $composite->get_custom_house_number(),
@@ -917,9 +920,9 @@ JS;
 				'validator'				=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 
-			self::add_javascript('rental', 'rental', 'composite.edit.js');
+			self::add_javascript('rental', 'rental', 'composite.'.$mode.'.js');
 			phpgwapi_jquery::load_widget('numberformat');
-			self::render_template_xsl(array('composite', 'datatable_inline'), array('edit' => $data));
+			self::render_template_xsl(array('composite', 'datatable_inline'), array($mode => $data));
 		}
 
 		
@@ -965,8 +968,8 @@ JS;
 					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
 				}
 			}
-			
-			$this->edit(array('composite_id'=>$composite_id));
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id));
 		}
 	
 		/**
