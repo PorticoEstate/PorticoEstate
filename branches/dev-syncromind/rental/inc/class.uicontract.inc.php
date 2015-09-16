@@ -1747,12 +1747,16 @@ JS;
 			if( strcmp($responsibility_area, "contract_type_eksternleie") != 0 )
 			{ 
 				$contract_type_options[] = array('id'=>'', 'name'=>lang('Ingen type'), 'selected'=>0);
-			}
-			$contract_types = rental_socontract::get_instance()->get_contract_types($contract->get_location_id());		
+			}		
+			//rental_socontract::get_instance()->get_contract_types($contract->get_location_id());
+			$contract_types = rental_socontract::get_instance()->get_contract_types($contract->get_location_id());
 			foreach($contract_types as $contract_type_id => $contract_type_label)
 			{
-				$selected = ($contract_type_id == $current_contract_type_id) ? 1 : 0;
-				$contract_type_options[] = array('id'=>$contract_type_id, 'name'=>lang($contract_type_label), 'selected'=>$selected);
+				if ($contract_type_id)
+				{
+					$selected = ($contract_type_id == $current_contract_type_id) ? 1 : 0;
+					$contract_type_options[] = array('id'=>$contract_type_id, 'name'=>lang($contract_type_label), 'selected'=>$selected);
+				}
 			}
 
 			$location_name = $contract->get_field_of_responsibility_name();
@@ -2182,18 +2186,20 @@ JS;
 						$db_contract->transaction_commit();
 						$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
 						$message = lang('messages_new_contract_from_composite').' '.$comp_name;
-					
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+						phpgwapi_cache::message_set($message, 'message'); 
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id()));
 					}
 					else{
 						$db_contract->transaction_abort();
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+						phpgwapi_cache::message_set(lang('messages_form_error'), 'error'); 
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id()));
 					}
 				}
 				else
 				{
 					$db_contract->transaction_abort();
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+					phpgwapi_cache::message_set(lang('messages_form_error'), 'error'); 
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id()));
 				}
 			}
 		
