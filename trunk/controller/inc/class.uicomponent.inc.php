@@ -514,23 +514,23 @@
 			{
 				$user_id = $user_id * -1;
 				$all_items = false;
-
-				$keep_only_assigned_to = $user_id;
-				$assigned_components = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id);
-				foreach($assigned_components as $_location_id => $component_list)
-				{
-					$_components = execMethod('property.soentity.read',array(
-						'filter_entity_group'		=> $entity_group_id,
-						'location_id'				=> $_location_id,
-						'district_id'				=> $district_id,
-						'allrows'					=> true,
-						'filter_item'				=> $component_list
-						)
-					);
-					$components = array_merge($components, $_components);
-				}
+				$user_only = true;
+//				$keep_only_assigned_to = $user_id;
+//				$assigned_components = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id);
+//				foreach($assigned_components as $_location_id => $component_list)
+//				{
+//					$_components = execMethod('property.soentity.read',array(
+//						'filter_entity_group'		=> $entity_group_id,
+//						'location_id'				=> $_location_id,
+//						'district_id'				=> $district_id,
+//						'allrows'					=> true,
+//						'filter_item'				=> $component_list
+//						)
+//					);
+//					$components = array_merge($components, $_components);
+//				}
 			}
-			else if(!$location_id)
+			if(!$location_id)
 			{
 				//nothing
 			}
@@ -684,6 +684,8 @@
 
 						if($user_only && $user_id)
 						{
+							$keep_only_assigned_to = $user_id;
+
 							$found_assigned_to = false;
 
 							if($calendar_array)

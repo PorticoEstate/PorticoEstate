@@ -31,6 +31,15 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_request_ical_event}.</td>
+			<td>
+				<select name="newsettings[request_ical_event]">
+					<option value="" {selected_request_ical_event_}>{lang_no}</option>
+					<option value="1" {selected_request_ical_event_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_on">
 			<td>Antall planlagte kontroller som skal vises.</td>
 			<td>
