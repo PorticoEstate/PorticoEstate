@@ -1193,24 +1193,20 @@ JS;
 			if(isset($contract_id) && $contract_id > 0)
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
-
+				
+				if(!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
+				{
+					$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
+				}
+				
 				// Gets responsibility area from db (ex: eksternleie, internleie)
 				$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
 
 				// Redirect with error message if responsibility area is eksternleie and contract type not set
 				if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) )
 				{
-					//$error = lang('billing_removed_external_contract');
 					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));	
 					phpgwapi_cache::message_set(lang('billing_removed_external_contract'), 'error'); 
-					$this->edit();
-				}
-
-				if(!$contract->has_permission(PHPGW_ACL_EDIT))
-				{
-					unset($contract);
-					//$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
-					phpgwapi_cache::message_set(lang('permission_denied_edit_contract'), 'error'); 
 					$this->edit();
 				}
 			}
@@ -1221,8 +1217,7 @@ JS;
 
 				// Redirect with error message if responsibility area is eksternleie and contract type not set
 				if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) )
-				{
-					//$error = lang('billing_removed_external_contract');						
+				{					
 					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'location_id' => $location_id, 'message' => $message, 'error' => $error));
 					phpgwapi_cache::message_set(lang('billing_removed_external_contract'), 'error'); 
 					$this->edit();					
@@ -1331,7 +1326,6 @@ JS;
 				}
 				else{
 					$error = $contract->get_validation_errors();
-					//return $this->viewedit(true, $contract_id, $contract, $location_id,$notification, $message, $error);
 				}
 			}
 			
@@ -1345,88 +1339,6 @@ JS;
 			}
 			$this->edit(array('contract_id'=>$contract_id));	
 		}
-		
-		/**
-		 * Common function for viewing or editing a contract
-		 *
-		 * @param $editable whether or not the contract should be editable in the view
-		 * @param $contract_id the id of the contract to show
-		 */
-		public function viewedit($editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null)
-		{				
-			$cancel_link = self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes'));
-			$adjustment_id = (int)phpgw::get_var('adjustment_id');
-			if($adjustment_id){
-				$cancel_link = self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts','id' => $adjustment_id));
-				$cancel_text = 'contract_regulation_back';
-			}
-			
-			if (isset($contract_id) && $contract_id > 0) {
-				if($contract == null){
-					$contract = rental_socontract::get_instance()->get_single($contract_id);
-				}
-				if ($contract) {
-					
-					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
-					{
-						$editable = false;
-						$error .= '<br/>'.lang('permission_denied_edit_contract');
-					}
-					
-					if(!$editable && !$contract->has_permission(PHPGW_ACL_READ))
-					{
-						$this->render('permission_denied.php',array('error' => lang('permission_denied_view_contract')));
-						return;
-					}
-					
-					$data = array
-					(
-						'contract' 	=> $contract,
-						'notification' => $notification,
-						'editable' => $editable,
-						'message' => isset($message) ? $message : phpgw::get_var('message'),
-						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'cancel_link' => $cancel_link,
-						'cancel_text' => $cancel_text
-					);
-					$contract->check_consistency();
-					$this->render('contract.php', $data);
-				}
-			}
-			else
-			{
-				if($this->isAdministrator() || $this->isExecutiveOfficer()){
-					$created = strtotime('now');
-					$created_by = $GLOBALS['phpgw_info']['user']['account_id'];
-					if(!isset($contract)){
-						$contract = new rental_contract();
-						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-						$contract->set_location_id($location_id);
-						$contract->set_contract_type_title($fields[$location_id]);
-					}
-					if ($contract) {
-						$data = array
-						(
-							'contract' 	=> $contract,
-							'notification' => $notification,
-							'created' => $created,
-							'created_by' => $created_by,
-							'editable' => true,
-							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error'),
-							'cancel_link' => $cancel_link,
-							'cancel_text' => $cancel_text
-						);
-						$this->render('contract.php', $data);
-					}
-				}
-				else
-				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
-					return;	
-				}
-			}
-		}
 
 		/**
 		 * View a contract
@@ -1439,17 +1351,13 @@ JS;
 			if (!empty($contract_id)) 
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
-				$created = date($this->dateFormat, $contract->get_last_updated());  
-				$created_by = $contract->get_last_edited_by();
-					
-				if ($contract) 
-				{					
-					if(!$contract->has_permission(PHPGW_ACL_READ))
-					{
-						$this->render('permission_denied.php',array('error' => lang('permission_denied_view_contract')));
-						return;
-					}
+										
+				if(!($contract && $contract->has_permission(PHPGW_ACL_READ)))
+				{
+					$this->render('permission_denied.php',array('error' => lang('permission_denied_view_contract')));
 				}
+				$created = date($this->dateFormat, $contract->get_last_updated());  
+				$created_by = $contract->get_last_edited_by();				
 				$contract->check_consistency();
 			} 
 			else 
@@ -1693,19 +1601,15 @@ JS;
 			if (!empty($contract_id)) 
 			{
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
-				$created = date($this->dateFormat, $contract->get_last_updated());  
-				$created_by = $contract->get_last_edited_by();
 					
-				if ($contract) {
-					
-					if(!$contract->has_permission(PHPGW_ACL_EDIT))
-					{
-						$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
-						return;
-					}
-					$contract->check_consistency();
-					$list_consistency_warnings = $contract->get_consistency_warnings();
+				if(!($contract && $contract->has_permission(PHPGW_ACL_EDIT)))
+				{
+					$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
 				}
+				$created = date($this->dateFormat, $contract->get_last_updated());  
+				$created_by = $contract->get_last_edited_by();					
+				$contract->check_consistency();
+				$list_consistency_warnings = $contract->get_consistency_warnings();
 			}
 			else
 			{
