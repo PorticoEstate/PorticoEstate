@@ -61,7 +61,7 @@
 				'download_2'			=> true
 			);
 
-		function property_uipricebook()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');

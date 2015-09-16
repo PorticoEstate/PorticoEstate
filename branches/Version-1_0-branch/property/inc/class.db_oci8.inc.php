@@ -45,7 +45,7 @@
 		var $persistent = false;
 		
 		/* public: constructor */
-		function DB_OCI8($query = "")
+		function __construct($query = "")
 		{
 			if($query)
 			{

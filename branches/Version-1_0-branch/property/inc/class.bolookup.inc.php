@@ -42,7 +42,7 @@
 		public $cat_id;
 		public $total_records = 0;
 
-		function property_bolookup($session=false)
+		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.solookup');
 			$this->solocation	= CreateObject('property.solocation');

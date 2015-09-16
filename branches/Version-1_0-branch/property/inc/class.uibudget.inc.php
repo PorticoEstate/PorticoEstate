@@ -54,7 +54,7 @@
 				'delete'		=> true,
 				'delete_basis'	=> true
 			);
-		function property_uibudget()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::budget';

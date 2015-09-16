@@ -53,7 +53,7 @@
 			);
 		private $bo;
 
-		function property_uialarm()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::admin_async';

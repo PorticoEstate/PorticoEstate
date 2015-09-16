@@ -48,7 +48,7 @@
 		var $cat_id;
 		var $use_session		 = false;
 
-		function property_boXport($session = false)
+		function __construct($session = false)
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
