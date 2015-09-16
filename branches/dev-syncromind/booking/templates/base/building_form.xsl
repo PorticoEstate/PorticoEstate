@@ -52,8 +52,7 @@
                                 <!--div class="autocomplete"-->
                                 <input id="field_location_code" name="location_code" type="hidden" value="{building/location_code}"/>
                                 <input id="field_location_code_name" name="location_code_name" type="text" value="{building/location_code}"/>
-                                <!--div id="location_code_container"/>
-                                </div-->
+                                <div id="location_code_container"></div>
                             </div>
                             <div class="pure-control-group">
                                 <label>
@@ -253,6 +252,13 @@
                     </div>
 		</form>
 	<!--/div-->
+        
+        <script type="text/javascript">
+            <![CDATA[
+            JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.properties&phpgw_return_as=json&',
+                                     	'field_location_code_name', 'field_location_code', 'location_code_container');
+            ]]>
+        </script>
 
 	<!--script type="text/javascript">
 		<![CDATA[

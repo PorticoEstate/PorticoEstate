@@ -188,12 +188,20 @@
     var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order')"/>;
     
     <![CDATA[
-    var resourceURL     = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-    var documentURL     = 'index.php?menuaction=booking.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-    var permissionURL   = 'index.php?menuaction=booking.uipermission_building.index&sort=name&filter_object_id=' + building_id + '&phpgw_return_as=json&';
+    var resourcesURL     = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
+    var documentsURL     = 'index.php?menuaction=booking.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+    var permissionsURL   = 'index.php?menuaction=booking.uipermission_building.index&sort=name&filter_object_id=' + building_id + '&phpgw_return_as=json&';
     ]]>
+    var colDefsResources = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], genericLink}, {key: 'type', label: lang['Resource Type']}];
+    var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}];
+    var colDefsPermissions = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}];
     
-    
+    createTable('resources_container',resourcesURL,colDefsResources);
+    createTable('documents_container',documentsURL,colDefsDocuments);
+    createTable('permissions_container',permissionsURL,colDefsPermissions);
+
+
+    /*
     $.get(resourceURL, function(resourceData){
         var resourceBody = '';
         var resourceTableClass = "pure-table";
@@ -264,6 +272,7 @@
         ]]>
         $('#permissions_container').html(permissionTable);
     });
+    */
  </script>
  <!--script>   
     

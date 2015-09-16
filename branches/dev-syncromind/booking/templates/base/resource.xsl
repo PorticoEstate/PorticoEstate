@@ -99,11 +99,25 @@
     var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Edit', 'Delete', 'Account', 'Role', 'No records found')"/>;
         
     <![CDATA[
-    var documentURL = 'index.php?menuaction=booking.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
-    var permissionURL = 'index.php?menuaction=booking.uipermission_resource.index&sort=name&filter_object_id=' + resource_id + '&phpgw_return_as=json&';
+    var documentsURL = 'index.php?menuaction=booking.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
+    var permissionsURL = 'index.php?menuaction=booking.uipermission_resource.index&sort=name&filter_object_id=' + resource_id + '&phpgw_return_as=json&';
     ]]>
     
-    $.get(documentURL, function(documentData){
+    var colDefsDocuments = [
+        {key: 'name', label: lang['Name'], formatter: genericLink},
+        {key: 'category', label: lang['Category']},
+        {key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}
+    ];	
+    var colDefsPermissions = [
+        {key: 'subject_name', label: lang['Account']},
+        {key: 'role', label: lang['Role']},
+        {key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}
+    ];
+    createTable('documents_container',documentsURL,colDefsDocuments);
+    createTable('permissions_container',permissionsURL,colDefsPermissions);
+
+    /*
+    $.get(documentsURL, function(documentData){
         var documentBody = '';
         var documentTableClass = "pure-table";
         <![CDATA[
@@ -126,7 +140,7 @@
     });
     
     
-    $.get(permissionURL, function(permissionData){
+    $.get(permissionsURL, function(permissionData){
         var permissionBody = '';
         var permissionTableClass = "pure-table";
         <![CDATA[
@@ -149,17 +163,18 @@
     });
         
     <![CDATA[
-/*YAHOO.util.Event.addListener(window, "load", function() {
+        YAHOO.util.Event.addListener(window, "load", function() {
 
-	var url = 'index.php?menuaction=booking.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
-	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
-	
-	var url = 'index.php?menuaction=booking.uipermission_resource.index&sort=name&filter_object_id=' + resource_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
-	YAHOO.booking.inlineTableHelper('permissions_container', url, colDefs);
-});*/
-]]>
+            var url = 'index.php?menuaction=booking.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
+            var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
+            YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
+
+            var url = 'index.php?menuaction=booking.uipermission_resource.index&sort=name&filter_object_id=' + resource_id + '&phpgw_return_as=json&';
+            var colDefs = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
+            YAHOO.booking.inlineTableHelper('permissions_container', url, colDefs);
+        });
+    ]]>
+*/
 </script>
 
 </xsl:template>

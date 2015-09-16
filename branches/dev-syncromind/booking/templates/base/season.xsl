@@ -95,8 +95,22 @@
                 
     <![CDATA[
         var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
-        var permissionURL   = 'index.php?menuaction=booking.uipermission_season.index&sort=name&filter_object_id=' + season_id + '&phpgw_return_as=json&';
+        var permissionsURL   = 'index.php?menuaction=booking.uipermission_season.index&sort=name&filter_object_id=' + season_id + '&phpgw_return_as=json&';
     ]]>
+    var colDefsRespurces = [
+        {key: 'name', label: lang['Name'], formatter: genericLink},
+        {key: 'type', label: lang['Resource Type']}
+    ];
+    var colDefsPermissions = [
+        {key: 'subject_name', label: lang['Account']},
+        {key: 'role', label: lang['Role']},
+        {key: 'actions', label: lang['Actions'], formatter: genericLink(lang['Edit'], lang['Delete'])}
+    ];
+    createTable('resources_container', resourcesURL, colDefsRespurces);
+    createTable('permissions_container', permissionsURL, colDefsPermissions);
+
+
+/*
     $.get(resourcesURL, function(resourcesData){
         var resourcesBody = '';
         var resourcesTableClass = "pure-table";
@@ -116,7 +130,7 @@
         $('#resources_container').html(resourcesTable);
     });
     
-    $.get(permissionURL, function(permissionData){
+    $.get(permissionsURL, function(permissionData){
         var permissionBody = '';
         var permissionTableClass = "pure-table";
         <![CDATA[
@@ -137,7 +151,7 @@
         ]]>
         $('#permissions_container').html(permissionTable);
     });
-
+*/
 </script>
 <!--script>
             

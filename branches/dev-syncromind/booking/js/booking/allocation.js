@@ -1,3 +1,58 @@
+
+
+
+$(document).ready(function() {
+    JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.index&phpgw_return_as=json&', 
+                                                  'field_building_name', 'field_building_id', 'building_container');
+
+
+    JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&', 
+                                         'field_org_name', 'field_org_id', 'org_container');
+});
+
+
+$(window).load(function() {
+    $("#field_building_name").on("autocompleteselect", function(event, ui){
+        var building_id = ui.item.value;
+        populateSelectSeason(building_id);
+        populateTableChkResources(building_id)
+    });
+});
+
+function populateSelectSeason (building_id) {
+    var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
+    var container = $('#season_container');
+    populateSelect(url, container);    
+}
+function populateTableChkResources (building_id) {
+    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&'
+    var container = 'resources_container';
+    populateTableChk(url, container)
+}
+
+function populateTableChk (url, container) {
+    var colDefsResources = [{label: '', object: [{type: 'checkbox', name: 'resources[]', value: 'id'}]},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+    createTable(container,url,colDefsResources);
+}
+function populateSelect (url, container) {
+    container.html("");
+    var select = document.createElement('select');
+    var option = document.createElement('option');
+    container.append(select);
+    option.setAttribute('value', '');
+    option.text = '-----';
+    select.appendChild(option);
+    $.get(url, function(r){
+        $.each(r.data, function(index, value){
+            var option = document.createElement('option');
+            option.text = value.name;
+            option.setAttribute('value', value.id);
+            select.appendChild(option);
+        });
+    });
+}
+
+/*
 populateSeasonTable = function(building_id, selection) {
     YAHOO.booking.radioTableHelper('season_container', 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
     'season_id', selection);
@@ -54,3 +109,4 @@ populateSeasonSelect = function(building_id, selection) {
 		argument: this
 	});
 }
+*/

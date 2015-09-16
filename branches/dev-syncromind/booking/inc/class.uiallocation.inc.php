@@ -310,7 +310,7 @@
 				{
 					try {
 						$receipt = $this->bo->add($allocation);
-                        $this->bo->so->update_id_string();
+                                                $this->bo->so->update_id_string();
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$receipt['id']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
@@ -356,7 +356,7 @@
 					}
 					if ($step == 3) 
 					{
-                        $this->bo->so->update_id_string();
+                                                $this->bo->so->update_id_string();
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$receipt['id']));
 					}
 				}
@@ -382,14 +382,14 @@
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
 
-            $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
             
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
-            $active_tab = 'generic';
-            
-            $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
+                        $active_tab = 'generic';
+
+                        $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			if ($step < 2) 
 			{

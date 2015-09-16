@@ -147,8 +147,10 @@
                     </select>
                 </div>
                 <div class="pure-control-group">
-                    <label><h4><xsl:value-of select="php:function('lang', 'Season')" /></h4></label>
-                    <!--div id="season_container"--><xsl:value-of select="php:function('lang', 'Select a building first')" /><!--/div-->
+                    <label style="vertical-align:top;">
+                        <h4><xsl:value-of select="php:function('lang', 'Season')" /></h4>
+                    </label>
+                    <div id="season_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                 </div>
                 <div class="pure-control-group">
                     <label for="field_cost"><h4><xsl:value-of select="php:function('lang', 'Cost')" /></h4></label>
@@ -157,8 +159,10 @@
                     </input>
                 </div>
                 <div class="pure-control-group">
-                    <label><h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4></label>
-                    <!--div id="resources_container"--><xsl:value-of select="php:function('lang', 'Select a building first')" /><!--/div-->
+                    <label style="vertical-align:top;">
+                        <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
+                    </label>
+                    <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                 </div>
             </div>
         </div>
@@ -173,6 +177,12 @@
         </div>
     </form>
     <!--/div-->
+    
+    <script type="text/javascript">
+        var season_id = '<xsl:value-of select="allocation/season_id"/>';
+        var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
+        var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
+    </script>
     <!--script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="allocation/season_id"/>';
         YAHOO.booking.initialSelection = <xsl:value-of select="allocation/resources_json"/>;

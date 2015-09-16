@@ -77,24 +77,29 @@
     <![CDATA[
         var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
     ]]>
+    var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
+    createTable('resources_container',resourcesURL,colDefsResources);
+    
+    /*
     $.get(resourcesURL, function(resourcesData){
-            var resourcesBody = '';
-            var resourcesTableClass = "pure-table";
-            if (resourcesData.data.length === 0){
-                resourcesBody = '<tr><td colspan="2">'+lang['No records found']+'</td></tr>';
-            }else{
-                resourcesTableClass = "pure-table pure-table-striped";
-                $.each(resourcesData.data , function(index,value){
-                    <![CDATA[
-                    resourcesBody += '<tr><td><a href='+value.link+'>'+value.name+'</a></td><td>'+value.type+'</td></tr>';
-                    ]]>
-                });
-            }
-            <![CDATA[
-                var resourcesTable = '<table class="'+resourcesTableClass+'"><thead><tr><th>'+lang['Name']+'</th><th>'+lang['Resource Type']+'</th></tr></thead><tbody>'+resourcesBody+'</tbody></table>';
-            ]]>
-            $('#resources_container').html(resourcesTable);
-        });    
+        var resourcesBody = '';
+        var resourcesTableClass = "pure-table";
+        if (resourcesData.data.length === 0){
+            resourcesBody = '<tr><td colspan="2">'+lang['No records found']+'</td></tr>';
+        }else{
+            resourcesTableClass = "pure-table pure-table-striped";
+            $.each(resourcesData.data , function(index,value){
+                <![CDATA[
+                resourcesBody += '<tr><td><a href='+value.link+'>'+value.name+'</a></td><td>'+value.type+'</td></tr>';
+                ]]>
+            });
+        }
+        <![CDATA[
+            var resourcesTable = '<table class="'+resourcesTableClass+'"><thead><tr><th>'+lang['Name']+'</th><th>'+lang['Resource Type']+'</th></tr></thead><tbody>'+resourcesBody+'</tbody></table>';
+        ]]>
+        $('#resources_container').html(resourcesTable);
+    });
+        */
 </script>
 <!--script type="text/javascript">
     var resourceIds = '<xsl:value-of select="booking/resource_ids"/>';

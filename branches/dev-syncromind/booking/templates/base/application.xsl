@@ -502,26 +502,26 @@
         ]]>
         
         
-        var colDefsResources = [{key: 'name', label: lang['Resources'], formatter: genericLink()}, {key: 'type', label: lang['Resource Type']}];
+        var colDefsResources = [{key: 'name', label: lang['Resources'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
         
         if (currentuser == 1) {
             var colDefsAssociated = [
-                        {key: 'id', label: lang['ID'], formatter: genericLink()},
+                        {key: 'id', label: lang['ID'], formatter: genericLink},
                         {key: 'type', label: lang['Type']},
                         {key: 'from_', label: lang['From']},
                         {key: 'to_', label: lang['To']},
                         {key: 'active', label: lang['Active']},
-                        {key: 'dellink', label: lang['Delete'], formatter: genericLink2()}];
+                        {key: 'dellink', label: lang['Delete'], formatter: genericLink2}];
         } else {
             var colDefsAssociated = [
-                        {key: 'id', label: lang['ID'], formatter: genericLink()},
+                        {key: 'id', label: lang['ID'], formatter: genericLink},
                         {key: 'type', label: lang['Type']},
                         {key: 'from_', label: lang['From']},
                         {key: 'to_', label: lang['To']},
                         {key: 'active', label: lang['Active']}];
         }
                 
-        var colDefsDocuments = [{key: 'name', label: lang['Document'], formatter: genericLink()}];
+        var colDefsDocuments = [{key: 'name', label: lang['Document'], formatter: genericLink}];
         
         createTable('resources_container',resourcesURL,colDefsResources);
         createTable('associated_container',associatedURL,colDefsAssociated,'results');

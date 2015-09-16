@@ -48,7 +48,6 @@
                     <label for="field_parent_id">
                         <h4><xsl:value-of select="php:function('lang', 'Parent activity')"/></h4>
                     </label>
-                    <!--div class="autocomplete"-->
                     <select name="parent_id" id="field_parent_id">
                         <option value="0"><xsl:value-of select="php:function('lang', 'No parent')"/></option>
                         <xsl:for-each select="activities">
@@ -63,8 +62,6 @@
                             </option>
                         </xsl:for-each>
                     </select>
-                    <div id="parent_container"></div>
-                    <!--/div-->
                 </div>
             </div>
         </div>

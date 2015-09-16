@@ -26,21 +26,18 @@
                     <label for="field_parent_id">
                         <h4><xsl:value-of select="php:function('lang', 'Parent activity')" /></h4>
                     </label>
-                    <!--div class="autocomplete"-->
                     <select name="parent_id" id="field_parent_id">
                         <option value="0"><xsl:value-of select="php:function('lang', 'No Parent')" /></option>
                         <xsl:for-each select="activities">
                                 <option>
-                                        <xsl:if test="../activity/parent_id = id">
-                                                <xsl:attribute name="selected">selected</xsl:attribute>
-                                        </xsl:if>
-                                        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                                        <xsl:value-of select="name"/>
+                                    <xsl:if test="../activity/parent_id = id">
+                                            <xsl:attribute name="selected">selected</xsl:attribute>
+                                    </xsl:if>
+                                    <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                    <xsl:value-of select="name"/>
                                 </option>
                         </xsl:for-each>
                     </select>
-                    <div id="parent_container"/>
-                    <!--/div-->
                 </div>
             </div>
         </div>

@@ -162,6 +162,9 @@
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 //			$this->use_yui_editor();
+                        
+                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_form');
