@@ -105,6 +105,20 @@
 						<xsl:value-of select="check_list/billable_hours"/>
 					</div>
 				</xsl:if>
+				<xsl:if test="request_ical_event = 1">
+					<div class="row">
+						<label>
+							<xsl:value-of select="php:function('lang', 'request ical event')"/>
+						</label>
+						<input >
+						  <xsl:attribute name="id">request_ical_event</xsl:attribute>
+						  <xsl:attribute name="name">request_ical_event</xsl:attribute>
+						  <xsl:attribute name="type">checkbox</xsl:attribute>
+						  <xsl:attribute name="value">1</xsl:attribute>
+						</input>
+						<xsl:text> </xsl:text>
+					</div>
+				</xsl:if>
 		    </fieldset>
 		    <fieldset class="col_2">
 			    <div class="row">
