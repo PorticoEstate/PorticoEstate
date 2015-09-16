@@ -634,8 +634,15 @@
 				$composite = new rental_composite();
 			}
 			
+			$tabs = array();
+			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
+			$active_tab = 'details';
+		
 			if($composite_id)
 			{
+				$tabs['units']	= array('label' => lang('Units'), 'link' => '#units');
+				$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
+				
 				$tabletools1 = array
 				(
 					array('my_name'	=> 'select_all'),
@@ -652,53 +659,21 @@
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
 					);
 				
-				$remove_unit_link = self::link(array('menuaction'=>'rental.uicomposite.remove_unit', 'phpgw_return_as'=>'json'));
+				//$remove_unit_link = self::link(array('menuaction'=>'rental.uicomposite.remove_unit', 'phpgw_return_as'=>'json'));
 
 				$tabletools1[] = array
 					(
 						'my_name'		=> 'delete',
 						'text'			=> lang('remove_location'),
 						'type'			=> 'custom',
-						'custom_code'	=> "    
-											var oTT = TableTools.fnGetInstance( 'datatable-container_0' );
-											var selected = oTT.fnGetSelectedData();
-											var numSelected = selected.length;
-
-											if (numSelected == '0'){
-												alert('None selected');
-												return false;
-											}
-
-											var values = {};
-
-											for ( var n = 0; n < selected.length; ++n )
-											{
-												var aData = selected[n];
-												values[n] = aData['id'];
-											}
-
-											var data = {'ids': values};
-											var requestUrl = '".$remove_unit_link."';
-											JqueryPortico.execute_ajax(requestUrl, function(result){
-											
-												document.getElementById('message').innerHTML = '';
-
-												if (typeof(result.message) !== 'undefined')
-												{
-													$.each(result.message, function (k, v) {
-														document.getElementById('message').innerHTML += v.msg + '<br/>';
-													});
-												}
-
-												if (typeof(result.error) !== 'undefined')
-												{
-													$.each(result.error, function (k, v) {
-														document.getElementById('message').innerHTML += v.msg + '<br/>';
-													});
-												}
-												oTable0.fnDraw();
-
-											}, data, 'POST', 'JSON');"
+						'custom_code'	=> "
+											var oArgs = ".json_encode(array(
+													'menuaction'		=> 'rental.uicomposite.remove_unit', 
+													'phpgw_return_as'	=> 'json'
+												)).";
+											var parameters = ".json_encode(array('parameter'=>array(array('name'=>'ids', 'source'=>'id')))).";
+											removeUnit(oArgs, parameters);
+						"					
 					);
 		
 				$datatable_def[] = array
@@ -732,55 +707,22 @@
 						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code'))))
 					);
 				
-				$add_unit_link = self::link(array('menuaction'=>'rental.uicomposite.add_unit', 'composite_id'=>$composite_id, 'phpgw_return_as'=>'json'));
+				//$add_unit_link = self::link(array('menuaction'=>'rental.uicomposite.add_unit', 'composite_id'=>$composite_id, 'phpgw_return_as'=>'json'));
 
 				$tabletools2[] = array
 					(
 						'my_name'		=> 'add',
 						'text'			=> lang('add_location'),
 						'type'			=> 'custom',
-						'custom_code'	=> "    
-											var oTT = TableTools.fnGetInstance( 'datatable-container_1' );
-											var selected = oTT.fnGetSelectedData();
-											var numSelected = selected.length;
-
-											if (numSelected == '0'){
-												alert('None selected');
-												return false;
-											}
-
-											var values = {};
-
-											for ( var n = 0; n < selected.length; ++n )
-											{
-												var aData = selected[n];
-												values[n] = aData['location_code'];
-											}
-
-											var data = {'location_code': values};
-											var requestUrl = '".$add_unit_link."';
-											var level = document.getElementById('type_id').value;
-											requestUrl += '&level=' + level;
-											JqueryPortico.execute_ajax(requestUrl, function(result){
-
-												document.getElementById('message').innerHTML = '';
-
-												if (typeof(result.message) !== 'undefined')
-												{
-													$.each(result.message, function (k, v) {
-														document.getElementById('message').innerHTML += v.msg + '<br/>';
-													});
-												}
-
-												if (typeof(result.error) !== 'undefined')
-												{
-													$.each(result.error, function (k, v) {
-														document.getElementById('message').innerHTML += v.msg + '<br/>';
-													});
-												}
-												oTable0.fnDraw();
-
-											}, data, 'POST', 'JSON');"
+						'custom_code'	=> "
+										var oArgs = ".json_encode(array(
+												'menuaction'		=> 'rental.uicomposite.add_unit', 
+												'composite_id'		=> $composite_id,
+												'phpgw_return_as'	=> 'json'
+											)).";
+										var parameters = ".json_encode(array('parameter'=>array(array('name'=>'location_code', 'source'=>'location_code')))).";
+										addUnit(oArgs, parameters);
+						"					
 					);
 				
 				$datatable_def[] = array
@@ -874,6 +816,35 @@
 						array('disableFilter' => true)
 					)
 				);
+				
+				$search_options[] = array('id'=>'objno_name_address', 'name'=>lang('objno_name_address'), 'selected'=>1);
+				$search_options[] = array('id'=>'gab', 'name'=>lang('gab'), 'selected'=>0);
+
+				$level_options[] = array('id'=>'1', 'name'=>lang('property'), 'selected'=>0);
+				$level_options[] = array('id'=>'2', 'name'=>lang('building'), 'selected'=>1);
+				$level_options[] = array('id'=>'3', 'name'=>lang('floor'), 'selected'=>0);
+				$level_options[] = array('id'=>'4', 'name'=>lang('section'), 'selected'=>0);
+				$level_options[] = array('id'=>'5', 'name'=>lang('room'), 'selected'=>0);
+
+				$contracts_search_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
+				$contracts_search_options[] = array('id'=>'id', 'name'=>lang('contract_id'), 'selected'=>0);
+				$contracts_search_options[] = array('id'=>'party_name', 'name'=>lang('party_name'), 'selected'=>0);
+				$contracts_search_options[] = array('id'=>'composite', 'name'=>lang('composite_name'), 'selected'=>0);
+				$contracts_search_options[] = array('id'=>'composite_address', 'name'=>lang('composite_address'), 'selected'=>0);
+				$contracts_search_options[] = array('id'=>'location_id', 'name'=>lang('object_number'), 'selected'=>0);
+
+				$status_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
+				$status_options[] = array('id'=>'under_planning', 'name'=>lang('under_planning'), 'selected'=>0);
+				$status_options[] = array('id'=>'active', 'name'=>lang('active_plural'), 'selected'=>0);
+				$status_options[] = array('id'=>'under_dismissal', 'name'=>lang('under_dismissal'), 'selected'=>0);
+				$status_options[] = array('id'=>'ended', 'name'=>lang('ended'), 'selected'=>0);
+
+				$fields_of_responsibility_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>0);
+				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+				foreach($types as $id => $label)
+				{
+					$fields_of_responsibility_options[] = array('id'=>$id, 'name'=>lang($label), 'selected'=>0);
+				}
 			}
 			
 			$link_index = array
@@ -882,9 +853,6 @@
 				);
 		
 			$GLOBALS['phpgw']->jqcal->add_listener('status_date');
-
-			/*$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();*/
 	
 			$cur_standard_id = $composite->get_standard_id();
 			$composite_standard_arr = $composite->get_standards($cur_standard_id);
@@ -903,46 +871,7 @@
 				$selected = ($cur_furnish_type_id == $id) ? 1 : 0;
 				$furnish_types_options[] = array('id'=>$id, 'name'=>$title, 'selected'=>$selected);				
 			}
-			
-			$search_options[] = array('id'=>'objno_name_address', 'name'=>lang('objno_name_address'), 'selected'=>1);
-			$search_options[] = array('id'=>'gab', 'name'=>lang('gab'), 'selected'=>0);
-			
-			$level_options[] = array('id'=>'1', 'name'=>lang('property'), 'selected'=>0);
-			$level_options[] = array('id'=>'2', 'name'=>lang('building'), 'selected'=>1);
-			$level_options[] = array('id'=>'3', 'name'=>lang('floor'), 'selected'=>0);
-			$level_options[] = array('id'=>'4', 'name'=>lang('section'), 'selected'=>0);
-			$level_options[] = array('id'=>'5', 'name'=>lang('room'), 'selected'=>0);
-			
-			$contracts_search_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
-			$contracts_search_options[] = array('id'=>'id', 'name'=>lang('contract_id'), 'selected'=>0);
-			$contracts_search_options[] = array('id'=>'party_name', 'name'=>lang('party_name'), 'selected'=>0);
-			$contracts_search_options[] = array('id'=>'composite', 'name'=>lang('composite_name'), 'selected'=>0);
-			$contracts_search_options[] = array('id'=>'composite_address', 'name'=>lang('composite_address'), 'selected'=>0);
-			$contracts_search_options[] = array('id'=>'location_id', 'name'=>lang('object_number'), 'selected'=>0);
-			
-			$status_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>1);
-			$status_options[] = array('id'=>'under_planning', 'name'=>lang('under_planning'), 'selected'=>0);
-			$status_options[] = array('id'=>'active', 'name'=>lang('active_plural'), 'selected'=>0);
-			$status_options[] = array('id'=>'under_dismissal', 'name'=>lang('under_dismissal'), 'selected'=>0);
-			$status_options[] = array('id'=>'ended', 'name'=>lang('ended'), 'selected'=>0);
-			
-			$fields_of_responsibility_options[] = array('id'=>'all', 'name'=>lang('all'), 'selected'=>0);
-			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-			foreach($types as $id => $label)
-			{
-				$fields_of_responsibility_options[] = array('id'=>$id, 'name'=>lang($label), 'selected'=>0);
-			}
-			
-			$tabs = array();
-			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
-			$active_tab = 'details';
-		
-			if ($composite_id)
-			{
-				$tabs['units']	= array('label' => lang('Units'), 'link' => '#units');
-				$tabs['contracts']	= array('label' => lang('Contracts'), 'link' => '#contracts');
-			}
-			
+						
 			$code =	<<<JS
 				var thousandsSeparator = '$this->thousandsSeparator';
 				var decimalSeparator = '$this->decimalSeparator';
@@ -961,25 +890,6 @@ JS;
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),			
 				'editable'						=> true,
-				
-				'lang_name'						=> lang('name'),
-				'lang_address'					=> lang('address'),
-				'lang_composite_standard'		=> lang('composite standard'),
-				'lang_furnish_type'				=> lang('furnish_type'),
-				'lang_has_custom_address'		=> lang('has_custom_address'),
-				'lang_overridden_address'		=> lang('overridden_address'),
-				'lang_house_number'				=> lang('house_number'),
-				'lang_post_code'				=> lang('post_code'),
-				'lang_post_place'				=> lang('post_place'),
-				'lang_area_gros'				=> lang('area_gros'),
-				'lang_area_net'					=> lang('area_net'),
-				'lang_available'				=> lang('available ?'),
-				'lang_description'				=> lang('description'),
-				
-				'lang_search_options'			=> lang('search_options'),
-				'lang_search_for'				=> lang('search_for'),
-				'lang_search_where'				=> lang('search_where'),
-				'lang_level'					=> lang('level'),
 
 				'value_name'					=> $composite->get_name(),
 				'list_composite_standard'		=> array('options' => $composite_standard_options),
