@@ -290,37 +290,6 @@ JS;
 		return $this->jquery_results($result_data);
 	}
 	
-	public function add_actions(&$value, $key, $params)
-	{
-		$value['ajax'] = array();
-		$value['actions'] = array();
-		$value['labels'] = array();
-
-		$type = $params[0];
-		
-		switch($type)
-		{
-			default:
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.edit', 'id' => $value['id'])));
-				$value['labels'][] = lang('edit');
-				/*$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.run_adjustments')));
-				$value['labels'][] = lang('execute_adjustments');*/
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.delete', 'id' => $value['id'])));
-				$value['labels'][] = lang('delete');
-				//$value['ajax'][] = false;
-				//$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts', 'id' => $value['id'])));
-				//$value['labels'][] = lang('show_affected_contracts');
-				
-			}
-	}
-
-	
 	public function save()
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
@@ -343,7 +312,7 @@ JS;
 			if(isset($responsibility_id) && ($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$adjustment = new rental_adjustment();
-				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+				//$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 				$adjustment->set_responsibility_id($responsibility_id);
 			}
 		}
@@ -407,9 +376,6 @@ JS;
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
 		$responsibility_id = (int)phpgw::get_var('responsibility_id');
-		
-		$message = null;
-		$error = null;
 			
 		if ($values['adjustment_id'])
 		{
@@ -419,20 +385,10 @@ JS;
 		if (!empty($adjustment_id)) 
 		{
 			$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
-
-			if ($adjustment) 
-			{				
-				if(!$adjustment->has_permission(PHPGW_ACL_EDIT))
-				{
-					$editable = false;
-					$error .= '<br/>'.lang('permission_denied_edit_adjustment');
-				}
-				
-				if(!$adjustment->has_permission(PHPGW_ACL_READ))
-				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_view_adjustment')));
-					return;
-				}
+		
+			if(!($adjustment && $adjustment->has_permission(PHPGW_ACL_EDIT)))
+			{
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_adjustment')));
 			}
 		}
 		else
@@ -440,13 +396,12 @@ JS;
 			if($this->isAdministrator() || $this->isExecutiveOfficer())
 			{
 				$adjustment = new rental_adjustment();
-				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+				//$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 				$adjustment->set_responsibility_id($responsibility_id);
 			}
 			else
 			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_new_adjustment')));
-				return;	
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_new_adjustment')));	
 			}
 		}
 
@@ -490,14 +445,6 @@ JS;
 			'lang_cancel'					=> lang('cancel'),			
 			'editable'						=> true,
 			
-			'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
-			'lang_adjustment_type'			=> lang('adjustment_type'),
-			'lang_percent'					=> lang('percent'),
-			'lang_interval'					=> lang('interval'),
-			'lang_year'						=> lang('year'),
-			'lang_adjustment_date'			=> lang('adjustment_date'),
-			'lang_extra_adjustment'			=> lang('extra_adjustment'),
-			
 			'value_field_of_responsibility'	=> lang(rental_socontract::get_instance()->get_responsibility_title($adjustment->get_responsibility_id())),
 			'list_adjustment_type'			=> array('options' => $adjustment_type_options),
 			'value_percent'					=> $adjustment->get_percent(),
@@ -519,76 +466,19 @@ JS;
 	/**
 	 * View an adjustment
 	 */
-	public function view() {
-		$adjustment_id = (int)phpgw::get_var('id');
-		return $this->viewedit(false, $adjustment_id);
-	}
-	
-	public function viewedit($editable, $adjustment_id, $adjustment = null, $responsibility_id = null, string $message = null, string $error = null)
+	public function view() 
 	{
-		
-		if (isset($adjustment_id) && $adjustment_id > 0) {
-			if($adjustment == null){
-				$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
-			}
-			if ($adjustment) {
-				
-				if($editable && !$adjustment->has_permission(PHPGW_ACL_EDIT))
-				{
-					$editable = false;
-					$error .= '<br/>'.lang('permission_denied_edit_adjustment');
-				}
-				
-				if(!$editable && !$adjustment->has_permission(PHPGW_ACL_READ))
-				{
-					$this->render('permission_denied.php',array('error' => lang('permission_denied_view_adjustment')));
-					return;
-				}
-				
-				$data = array
-				(
-					'adjustment' 	=> $adjustment,
-					'editable' => $editable,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uiadjustment.index'))
-				);
-				$this->render('adjustment.php', $data);
-			}
-		}
-		else
-		{
-			if($this->isAdministrator() || $this->isExecutiveOfficer()){
-				$adjustment = new rental_adjustment();
-				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-				$adjustment->set_responsibility_id($responsibility_id);
-				if ($adjustment) {
-					$data = array
-					(
-						'adjustment' => $adjustment,
-						'editable' => true,
-						'message' => isset($message) ? $message : phpgw::get_var('message'),
-						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'cancel_link' => self::link(array('menuaction' => 'rental.uiadjustment.index'))
-					);
-					$this->render('adjustment.php', $data);
-				}
-			}
-			else
-			{
-				$this->render('permission_denied.php',array('error' => lang('permission_denied_new_adjustment')));
-				return;	
-			}
-		}
+		$this->render('permission_denied.php',array('error' => lang('permission_denied_view_adjustment')));
 	}
 	
 	public function delete()
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
+			
+		$result = rental_soadjustment::get_instance()->delete($adjustment_id);
 		
 		if( phpgw::get_var('phpgw_return_as') == 'json' )
 		{
-			$result = rental_soadjustment::get_instance()->delete($adjustment_id);
 			if($result)
 			{
 				$msg = lang('id %1 has been deleted', $adjustment_id);
@@ -599,8 +489,7 @@ JS;
 			}
 			return $msg;
 		} 
-			
-		$result = rental_soadjustment::get_instance()->delete($adjustment_id);
+		
 		if($result)
 		{
 			$this->render('adjustment_list.php', array('error' => lang('adjustment_not_deleted')));
@@ -694,16 +583,7 @@ JS;
 			'datatable_def'					=> $datatable_def,
 			'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),		
 			'cancel_url'					=> self::link(array('menuaction' => 'rental.uiadjustment.index')),
-			'lang_cancel'					=> lang('cancel'),			
-			
-			'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
-			'lang_adjustment_type'			=> lang('adjustment_type'),
-			'lang_percent'					=> lang('percent'),
-			'lang_interval'					=> lang('interval'),
-			'lang_year'						=> lang('year'),
-			'lang_adjustment_date'			=> lang('adjustment_date'),
-			'lang_extra_adjustment'			=> lang('extra_adjustment'),
-			'lang_adjustment_list_out_of_date'	=> lang('adjustment_list_out_of_date'),
+			'lang_cancel'					=> lang('cancel'),
 			
 			'value_field_of_responsibility'	=> lang(rental_socontract::get_instance()->get_responsibility_title($adjustment->get_responsibility_id())),
 			'value_adjustment_type'			=> ($adjustment->get_adjustment_type()) ? lang($adjustment->get_adjustment_type()) : lang('none'),
