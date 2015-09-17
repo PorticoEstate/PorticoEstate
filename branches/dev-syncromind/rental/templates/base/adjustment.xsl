@@ -18,37 +18,37 @@
 				<div id="details">
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="lang_field_of_responsibility"/>
+							<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 						</label>
 						<xsl:value-of select="value_field_of_responsibility"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="lang_adjustment_type"/>
+							<xsl:value-of select="php:function('lang', 'adjustment_type')"/>
 						</label>
 						<xsl:value-of select="value_adjustment_type"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="lang_percent"/>
+							<xsl:value-of select="php:function('lang', 'percent')"/>
 						</label>
 						<xsl:value-of select="value_percent"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="lang_interval"/>
+							<xsl:value-of select="php:function('lang', 'interval')"/>
 						</label>
 						<xsl:value-of select="value_interval"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="lang_year"/>
+							<xsl:value-of select="php:function('lang', 'year')"/>
 						</label>
 						<xsl:value-of select="value_year"/>
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="lang_adjustment_date"/>
+							<xsl:value-of select="php:function('lang', 'adjustment_date')"/>
 						</label>
 						<xsl:value-of select="value_adjustment_date"/>
 					</div>
@@ -56,7 +56,7 @@
 						<xsl:when test="is_extra_adjustment">				
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="lang_extra_adjustment"/>
+									<xsl:value-of select="php:function('lang', 'extra_adjustment')"/>
 								</label>
 								<input type="checkbox" name="extra_adjustment" id="extra_adjustment" disabled="disabled">
 									<xsl:if test="is_extra_adjustment = 1">
@@ -87,7 +87,7 @@
 						</xsl:if>
 						<xsl:if test="show_affected_list = 0">
 							<h2>
-								<xsl:value-of select="lang_adjustment_list_out_of_date"/>
+								<xsl:value-of select="php:function('lang', 'adjustment_list_out_of_date')"/>
 							</h2>
 						</xsl:if>
 					</div>
@@ -111,8 +111,6 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 
-		<xsl:value-of select="validator"/>
-
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
@@ -121,7 +119,7 @@
 						<input type="hidden" name="id" value="{adjustment_id}"/>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_field_of_responsibility"/>
+								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 							</label>
 							<xsl:choose>
 								<xsl:when test="adjustment_id = 0 or adjustment_id = ''">
@@ -132,7 +130,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_adjustment_type"/>
+								<xsl:value-of select="php:function('lang', 'adjustment_type')"/>
 							</label>
 							<select id="adjustment_type" name="adjustment_type">
 								<xsl:apply-templates select="list_adjustment_type/options"/>
@@ -140,13 +138,13 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_percent"/>
+								<xsl:value-of select="php:function('lang', 'percent')"/>
 							</label>
 							<input type="text" id="percent" name="percent" size="10" value="{value_percent}"/> %
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_interval"/>
+								<xsl:value-of select="php:function('lang', 'interval')"/>
 							</label>
 							<select id="interval" name="interval">
 								<xsl:apply-templates select="list_interval/options"/>
@@ -154,7 +152,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_year"/>
+								<xsl:value-of select="php:function('lang', 'year')"/>
 							</label>
 							<select id="adjustment_year" name="adjustment_year">
 								<xsl:apply-templates select="list_years/options"/>
@@ -162,7 +160,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_adjustment_date"/>
+								<xsl:value-of select="php:function('lang', 'adjustment_date')"/>
 							</label>
 							<input type="text" id="adjustment_date" name="adjustment_date" size="10" value="{value_adjustment_date}" readonly="readonly"/>
 						</div>
@@ -170,7 +168,7 @@
 							<xsl:when test="is_extra_adjustment">				
 								<div class="pure-control-group">
 									<label>
-										<xsl:value-of select="lang_extra_adjustment"/>
+										<xsl:value-of select="php:function('lang', 'extra_adjustment')"/>
 									</label>
 									<input type="checkbox" name="extra_adjustment" id="extra_adjustment">
 										<xsl:if test="is_extra_adjustment = 1">
