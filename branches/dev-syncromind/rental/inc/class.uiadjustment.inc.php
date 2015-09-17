@@ -633,6 +633,39 @@ JS;
 
 		if ($adjustment_id)
 		{
+			$tabletools_contracts[] = array
+				(
+					'my_name'		=> 'edit',
+					'text'			=> lang('edit'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.edit',
+							'adjustment_id'	=> $adjustment_id
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+
+			$tabletools_contracts[] = array
+				(
+					'my_name'		=> 'copy',
+					'text'			=> lang('copy'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.copy_contract',
+							'adjustment_id'	=> $adjustment_id
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+
+			$tabletools_contracts[] = array
+				(
+					'my_name'		=> 'show',
+					'text'			=> lang('show'),
+					'action'		=> self::link(array(
+							'menuaction'	=> 'rental.uicontract.view',
+							'adjustment_id'	=> $adjustment_id
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+			
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_0',
@@ -650,9 +683,9 @@ JS;
 							array('key'=>'contract_status', 'label'=>lang('contract_status'), 'sortable'=>false, 'className'=>'center'),
 							array('key'=>'adjustment_interval', 'label'=>lang('adjustment_interval'), 'sortable'=>false, 'className'=>'center'),
 							array('key'=>'adjustment_share', 'label'=>lang('adjustment_share'), 'sortable'=>false, 'className'=>'center'),
-							array('key'=>'adjustment_year', 'label'=>lang('adjustment_year'), 'sortable'=>false, 'className'=>'center'),
-							array('key'=>'actions', 'label'=>lang('actions'), 'sortable'=>false, 'hidden'=>false, 'className'=>'dt-center all')
-				)	
+							array('key'=>'adjustment_year', 'label'=>lang('adjustment_year'), 'sortable'=>false, 'className'=>'center')
+				),
+				'tabletools'	=> $tabletools_contracts
 			);
 		}
 		
