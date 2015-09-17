@@ -211,7 +211,7 @@
 							break;
 						case 'checked':
 							/* '+' is used as a delimiter for the check value */
-							list($newvalue,$check) = split('\+',$newval);
+							list($newvalue,$check) = preg_split('/\+/',$newval);
 							$newval = preg_replace('/ /','_',$newvalue);
 							if($current_config[$newval] == $check)
 							{

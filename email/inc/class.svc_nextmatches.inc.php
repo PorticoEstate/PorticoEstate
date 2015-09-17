@@ -83,7 +83,7 @@
 			$extra = explode('&', $extra);
 			foreach( $extra as $v )
 			{
-				$b = split('=', $v);
+				$b = explode('=', $v);
 				if(isset($b[0]) && $b[0])
 				{
 					$new_extra[$b[0]] = $b[1];
@@ -197,7 +197,7 @@
 				$extravar = explode('&', $extravar);
 				foreach( $extravar as $v )
 				{
-					$b = split('=', $v);
+					$b = explode('=', $v);
 					if(isset($b[0]) && $b[0])
 					{
 						$new_extravar[$b[0]] = $b[1];

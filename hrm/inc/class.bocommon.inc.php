@@ -120,8 +120,8 @@
 		{
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$fields = split('[./-]',$datestr);
-			foreach(split('[./-]',$dateformat) as $n => $field)
+			$fields = preg_split('/[.\/-]/',$datestr);
+			foreach(preg_split('/[.\/-]/',$dateformat) as $n => $field)
 			{
 				$date[$field] = intval($fields[$n]);
 

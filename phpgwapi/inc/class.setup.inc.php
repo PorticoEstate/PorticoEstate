@@ -229,17 +229,17 @@
 
 		function checkip($remoteip='')
 		{
-			$allowed_ips = split(',',$GLOBALS['phpgw_info']['server']['setup_acl']);
+			$allowed_ips = explode(',',$GLOBALS['phpgw_info']['server']['setup_acl']);
 			if(is_array($allowed_ips))
 			{
 				$foundip = False;
 				while(list(,$value) = @each($allowed_ips))
 				{
-					$test = split("\.",$value);
+					$test = preg_split("/\./",$value);
 					if(count($test) < 3)
 					{
 						$value .= ".0.0";
-						$tmp = split("\.",$remoteip);
+						$tmp = preg_split("/\./",$remoteip);
 						$tmp[2] = 0;
 						$tmp[3] = 0;
 						$testremoteip = join('.',$tmp);
@@ -247,14 +247,14 @@
 					elseif(count($test) < 4)
 					{
 						$value .= ".0";
-						$tmp = split("\.",$remoteip);
+						$tmp = preg_split("/\./",$remoteip);
 						$tmp[3] = 0;
 						$testremoteip = join('.',$tmp);
 					}
 					elseif(count($test) == 4 &&
 						intval($test[3]) == 0)
 					{
-						$tmp = split("\.",$remoteip);
+						$tmp = preg_split("/\./",$remoteip);
 						$tmp[3] = 0;
 						$testremoteip = join('.',$tmp);
 					}
