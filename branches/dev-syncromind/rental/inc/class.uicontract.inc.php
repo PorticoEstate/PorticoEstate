@@ -934,42 +934,7 @@
 				}
 				break;
 			case 'contracts_for_adjustment':
-				if(!isset($ids) || count($ids) > 0)
-				{
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit',
-																				'id' => $value['id'], 
-																				'initial_load' => 'no',
-																				'adjustment_id' => $adjustment_id)));
-					$value['labels'][] = lang('edit');*/
-					$url1  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit',
-																				'id' => $value['id'], 
-																				'initial_load' => 'no',
-																				'adjustment_id' => $adjustment_id)));
-					$actions[] = '<a href="'.$url1.'">'.lang('edit').'</a>';
-					
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract',
-																								'id' => $value['id'],
-																								'adjustment_id' => $adjustment_id)));
-					$value['labels'][] = lang('copy');*/
-					$url2  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract',
-																								'id' => $value['id'],
-																								'adjustment_id' => $adjustment_id)));
-					$actions[] = '<a href="'.$url2.'">'.lang('copy').'</a>';
-				}
-				/*$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view',
-																								'id' => $value['id'], 
-																								'initial_load' => 'no',
-																								'adjustment_id' => $adjustment_id)));
-				$value['labels'][] = lang('show');*/
-				$url3  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view',
-																								'id' => $value['id'], 
-																								'initial_load' => 'no',
-																								'adjustment_id' => $adjustment_id)));
-				$actions[] = '<a href="'.$url3.'">'.lang('show').'</a>';
-
+				$actions[] = '';
 				break;
 			default:
 				if(!isset($ids) || count($ids) > 0)
@@ -1346,6 +1311,7 @@ JS;
 		public function view()
 		{
 			$contract_id = (int)phpgw::get_var('id');
+			$adjustment_id = (int)phpgw::get_var('adjustment_id');
 			$mode = 'view';
 			
 			if (!empty($contract_id)) 
@@ -1430,10 +1396,17 @@ JS;
 			$current_interval = $contract->get_adjustment_interval();
 			$current_share = $contract->get_adjustment_share();
 				
-			$link_index = array
+			$link_cancel = array
 				(
 					'menuaction'	=> 'rental.uicontract.index',
 				);
+			$cancel_text = 'cancel';
+			
+			if($adjustment_id)
+			{
+				$link_cancel = array('menuaction' => 'rental.uiadjustment.show_affected_contracts','id' => $adjustment_id);
+				$cancel_text = 'contract_regulation_back';
+			}
 			
 			$tabs = array();
 			$tabs['details']	= array('label' => lang('Details'), 'link' => '#details');
@@ -1516,8 +1489,8 @@ JS;
 			$data = array
 				(
 					'datatable_def'					=> $datatable_def,
-					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
-					'lang_cancel'					=> lang('cancel'),
+					'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_cancel),
+					'lang_cancel'					=> lang($cancel_text),
 
 					'value_contract_number'			=> $contract->get_old_contract_id(),
 					'value_parties'					=> $contract->get_party_name_as_list(),
@@ -1743,7 +1716,7 @@ JS;
 			
 			if($adjustment_id)
 			{
-				$link_cancel = self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts','id' => $adjustment_id));
+				$link_cancel = array('menuaction' => 'rental.uiadjustment.show_affected_contracts','id' => $adjustment_id);
 				$cancel_text = 'contract_regulation_back';
 			}
 			
