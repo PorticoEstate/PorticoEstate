@@ -70,39 +70,36 @@
 						<label></label>
 						<xsl:value-of select="msg_executed"/>
 					</div>
-					<div class="pure-control-group">
-						<div>
-							<xsl:if test="show_affected_list = 1">
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_0'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl' />
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-											<xsl:with-param name="tabletools" select ='tabletools' />
-											<xsl:with-param name="data" select ='data' />
-											<xsl:with-param name="config" select ='config' />
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
-							</xsl:if>
-							<xsl:if test="show_affected_list = 0">
-								<h2>
-									<xsl:value-of select="lang_adjustment_list_out_of_date"/>
-								</h2>
-							</xsl:if>
-						</div>
+					<div>
+						<xsl:if test="show_affected_list = 1">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:if>
+						<xsl:if test="show_affected_list = 0">
+							<h2>
+								<xsl:value-of select="lang_adjustment_list_out_of_date"/>
+							</h2>
+						</xsl:if>
 					</div>
 				</div>
 			</div>
 			<div class="proplist-col">
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
 </xsl:template>
 
@@ -192,13 +189,12 @@
 			</div>
 			<div class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save" value="{lang_save}" onMouseout="window.status='';return true;"/>
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
 </xsl:template>
 
