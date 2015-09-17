@@ -1,3 +1,16 @@
+$(window).load(function(){
+    building_id = $('#field_building_id').val();
+    var url = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::'+building_id;
+    var colDefs = [{key: 'name', label: lang['Name'], formatter: genericLink}];
+    createTable('regulation_documents',url,colDefs);
+});
+
+
+
+
+
+
+/*
 YAHOO.booking.RegulationsTable = function() { 
 	this.building_id = null;
 	this.resources = [];
@@ -146,3 +159,4 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 });
 
+*/

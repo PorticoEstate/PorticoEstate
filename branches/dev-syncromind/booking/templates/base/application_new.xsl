@@ -1,11 +1,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <style type="text/css">
-        
-        #agegroup td {padding: 0 0.3em;}        
-        
+        #agegroup td {padding: 0 0.3em;}
         #field_customer_ssn {display:none;}
-        #field_customer_organization_number {display:none;}
-        
+        #field_customer_organization_number {display:none;}        
     </style>
     <!--div id="content">
         <h3><xsl:value-of select="php:function('lang', 'New application')"/></h3-->

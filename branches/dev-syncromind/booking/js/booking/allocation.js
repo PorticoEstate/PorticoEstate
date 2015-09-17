@@ -1,40 +1,48 @@
-
-
-
+var building_id_selection = "";
 $(document).ready(function() {
     JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.index&phpgw_return_as=json&', 
                                                   'field_building_name', 'field_building_id', 'building_container');
 
-
     JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&', 
                                          'field_org_name', 'field_org_id', 'org_container');
+    
+    
 });
 
 
 $(window).load(function() {
+    var building_id = $('#field_building_id').val();
+    if(building_id) {
+        populateSelectSeason(building_id, season_id);
+        populateTableChkResources(building_id, initialSelection);
+        building_id_selection = building_id;
+    }
     $("#field_building_name").on("autocompleteselect", function(event, ui){
-        var building_id = ui.item.value;
-        populateSelectSeason(building_id);
-        populateTableChkResources(building_id)
+        var building_id = ui.item.value;        
+        if (building_id != building_id_selection){
+            populateSelectSeason(building_id, season_id);
+            populateTableChkResources(building_id, initialSelection);
+            building_id_selection = building_id;
+        }
     });
 });
 
-function populateSelectSeason (building_id) {
+function populateSelectSeason (building_id, selection) {
     var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = $('#season_container');
-    populateSelect(url, container);    
+    populateSelect(url, selection, container);    
 }
-function populateTableChkResources (building_id) {
+function populateTableChkResources (building_id, initialSelection) {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&'
     var container = 'resources_container';
-    populateTableChk(url, container)
+    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'}]}], value: 'id', checked: initialSelection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+    populateTableChk(url, container, colDefsResources)
 }
 
-function populateTableChk (url, container) {
-    var colDefsResources = [{label: '', object: [{type: 'checkbox', name: 'resources[]', value: 'id'}]},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
-    createTable(container,url,colDefsResources);
+function populateTableChk (url, container, colDefs) {    
+    createTable(container,url,colDefs);
 }
-function populateSelect (url, container) {
+function populateSelect (url, selection, container) {
     container.html("");
     var select = document.createElement('select');
     var option = document.createElement('option');
@@ -47,6 +55,9 @@ function populateSelect (url, container) {
             var option = document.createElement('option');
             option.text = value.name;
             option.setAttribute('value', value.id);
+            if(value.id == selection) {
+                    option.selected = true;
+            }
             select.appendChild(option);
         });
     });

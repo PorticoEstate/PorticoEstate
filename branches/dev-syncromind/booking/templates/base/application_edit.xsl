@@ -3,11 +3,9 @@
         #agegroup td {padding: 0 0.3em;}
     </style>
 	<!--div id="content"-->
-
 	<h3></h3>
 	<xsl:call-template name="msgbox"/>
 	<!--xsl:call-template name="yui_booking_i18n"/-->
-
 	<form action="" method="POST" id='application_form' class= "pure-form pure-form-stacked" name="application_form">
             <input type="hidden" name="tab" value=""/>
             <div id="tab-content">
@@ -263,6 +261,7 @@
 	</form>
         <script type="text/javascript">
             $('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
+            var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
         </script>
 	<!--/div-->
 	<!--script type="text/javascript">

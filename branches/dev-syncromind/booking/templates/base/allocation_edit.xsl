@@ -57,16 +57,16 @@
                             </select>
                         </div>
                         <div class="pure-control-group">
-                            <label>
+                            <label style="vertical-align:top;">
                                 <h4><xsl:value-of select="php:function('lang', 'Season')" /></h4>
                             </label>
-                            <xsl:value-of select="php:function('lang', 'Select a building first')" />
+                            <div id="season_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                         </div>
                         <div class="pure-control-group">    
-                            <label>
+                            <label style="vertical-align:top;">
                                 <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
                             </label>
-                            <xsl:value-of select="php:function('lang', 'Select a building first')" />
+                            <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                         </div>
                         <div class="pure-control-group">
                             <label for="field_org_name">
@@ -111,7 +111,7 @@
                             <label for="field_mail">
                                 <h4><xsl:value-of select="php:function('lang', 'Inform contact persons')" /></h4>
                             </label>
-                            <p style="display: inline-block;">
+                            <p style="display: inline-block;max-width:80%;">
                                 <span><xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" /></span>
                                 <textarea id="field_mail" name="mail" class="full-width" style="display: block;"></textarea>
                             </p>
@@ -130,6 +130,11 @@
             </div>
     </form>
     <!--/div-->
+    <script type="text/javascript">
+        var season_id = '<xsl:value-of select="allocation/season_id"/>';
+        var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
+        var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
+    </script>
     <!--script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="allocation/season_id"/>';
         YAHOO.booking.initialSelection = <xsl:value-of select="allocation/resources_json"/>;

@@ -793,11 +793,11 @@
 		}
 
 		public function edit()
-		{	
+		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 			
-			$this->check_application_assigned_to_current_user($application);
+//			$this->check_application_assigned_to_current_user($application);
 			
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
@@ -846,7 +846,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-//			self::add_javascript('booking', 'booking', 'application.js');
+			self::add_javascript('booking', 'booking', 'application.js');
 			self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
 			$this->set_case_officer($application);
 			
@@ -863,12 +863,12 @@
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
                         //test
             
-            $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
-            $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-            
-            self::render_template_xsl('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+                                    $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+            //			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+                        $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+
+                        self::render_template_xsl('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		private function check_date_availability(&$allocation)
