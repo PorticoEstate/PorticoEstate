@@ -32,13 +32,13 @@
 						<input type="hidden" name="id" value="{price_item_id}"/>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_title"/>
+								<xsl:value-of select="php:function('lang', 'title')"/>
 							</label>
 							<input type="text" name="title" id="title" value="{value_title}"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_field_of_responsibility"/>
+								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 							</label>
 							<xsl:choose>
 								<xsl:when test="price_item_id = 0 or price_item_id = ''">
@@ -49,13 +49,13 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_agresso_id"/>
+								<xsl:value-of select="php:function('lang', 'agresso_id')"/>
 							</label>
 							<input type="text" name="agresso_id" id="agresso_id" value="{value_agresso_id}"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_area"/>
+								<xsl:value-of select="php:function('lang', 'is_area')"/>
 							</label>
 							<div class="pure-custom">
 								<div>
@@ -64,21 +64,21 @@
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
 									</input> 
-									<xsl:value-of select="lang_calculate_price_per_area"/>
+									<xsl:value-of select="php:function('lang', 'calculate_price_per_area')"/>
 								</div>
 								<div>
 									<input type="radio" name="is_area" value="false">
 										<xsl:if test="is_area = 0">
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
-									</input> 
-									<xsl:value-of select="lang_calculate_price_apiece"/>
+									</input>
+									<xsl:value-of select="php:function('lang', 'calculate_price_apiece')"/>
 								</div>
 							</div>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_type"/>
+								<xsl:value-of select="php:function('lang', 'type')"/>
 							</label>
 							<select id="price_type_id" name="price_type_id">
 								<xsl:apply-templates select="list_type/options"/>
@@ -86,13 +86,13 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_price"/>
+								<xsl:value-of select="php:function('lang', 'price')"/>
 							</label>
 							<input type="text" name="price" id="price" value="{value_price}"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_inactive"/>
+								<xsl:value-of select="php:function('lang', 'is_inactive')"/>
 							</label>
 							<input type="checkbox" name="is_inactive" id="is_inactive">
 								<xsl:if test="is_inactive = 1">
@@ -108,7 +108,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_adjustable"/>
+								<xsl:value-of select="php:function('lang', 'is_adjustable')"/>
 							</label>
 							<input type="checkbox" name="is_adjustable" id="is_adjustable">
 								<xsl:if test="is_adjustable = 1">
@@ -118,7 +118,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_standard"/>
+								<xsl:value-of select="php:function('lang', 'is_standard')"/>
 							</label>
 							<input type="checkbox" name="is_standard" id="is_standard">
 								<xsl:if test="is_standard = 1">
@@ -159,25 +159,25 @@
 					<fieldset>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_title"/>
+								<xsl:value-of select="php:function('lang', 'title')"/>
 							</label>
 							<xsl:value-of select="value_title"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_field_of_responsibility"/>
+								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 							</label>						
 							<xsl:value-of select="value_field_of_responsibility"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_agresso_id"/>
+								<xsl:value-of select="php:function('lang', 'agresso_id')"/>
 							</label>
 							<xsl:value-of select="value_agresso_id"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_area"/>
+								<xsl:value-of select="php:function('lang', 'is_area')"/>
 							</label>
 							<div class="pure-custom">
 								<div>
@@ -186,7 +186,7 @@
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
 									</input> 
-									<xsl:value-of select="lang_calculate_price_per_area"/>
+									<xsl:value-of select="php:function('lang', 'calculate_price_per_area')"/>
 								</div>
 								<div>
 									<input type="radio" name="is_area" value="false" disabled="disabled">
@@ -194,25 +194,25 @@
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
 									</input> 
-									<xsl:value-of select="lang_calculate_price_apiece"/>
+									<xsl:value-of select="php:function('lang', 'calculate_price_apiece')"/>
 								</div>
 							</div>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_type"/> 
+								<xsl:value-of select="php:function('lang', 'type')"/>
 							</label>
 							<xsl:value-of select="lang_current_price_type"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_price"/>
+								<xsl:value-of select="php:function('lang', 'price')"/>
 							</label>
 							<xsl:value-of select="value_price_formatted"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_inactive"/>
+								<xsl:value-of select="php:function('lang', 'is_inactive')"/>
 							</label>
 							<input type="checkbox" name="is_inactive" id="is_inactive" disabled="disabled">
 								<xsl:if test="is_inactive = 1">
@@ -225,13 +225,13 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_adjustable"/>
+								<xsl:value-of select="php:function('lang', 'is_adjustable')"/>
 							</label>
 							<xsl:value-of select="lang_adjustable_text"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="lang_is_standard"/>
+								<xsl:value-of select="php:function('lang', 'is_standard')"/>
 							</label>
 							<xsl:value-of select="lang_standard_text"/>
 						</div>
@@ -253,14 +253,17 @@
 	<div class="toolbar-container">
 		<div class="pure-g">
 			<div class="pure-u-1">
-				<div>
-					<xsl:value-of select="lang_manual_adjust_price_item_select"/> 
+				<div> 
+					<xsl:value-of select="php:function('lang', 'manual_adjust_price_item_select')"/>
 					<select id="price_item_id" name="price_item_id">
 						<xsl:apply-templates select="list_type/options"/>
 					</select>
-					<xsl:value-of select="lang_price"/> 
+					<xsl:value-of select="php:function('lang', 'price')"/>
 					<input type="text" id="ctrl_adjust_price_item_price" name="ctrl_adjust_price_item_price"/>
-					<input type="button" class="pure-button pure-button-primary" name="adjust_price" value="{lang_adjust_price}"  onClick="onAdjust_price()"/>
+					<xsl:variable name="lang_adjust_price">
+						<xsl:value-of select="php:function('lang', 'adjust_price')"/>
+					</xsl:variable>			
+					<input type="button" class="pure-button pure-button-primary" name="adjust_price" value="{$lang_adjust_price}"  onClick="onAdjust_price()"/>
 				</div>
 			</div>
 		</div>
