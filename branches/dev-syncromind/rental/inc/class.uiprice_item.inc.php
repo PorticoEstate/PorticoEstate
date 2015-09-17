@@ -227,9 +227,6 @@ JS;
 			$this->render('permission_denied.php');
 			return;
 		}
-		/*$id = (int)phpgw::get_var('id');
-		$price_item = rental_price_item::get($id);
-		return $this->viewedit(false, $price_item);*/
 		
 		$this->edit(array(), 'view');
 	}
@@ -298,19 +295,6 @@ JS;
 				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_index),
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
-
-				'lang_title'					=> lang('title'),
-				'lang_field_of_responsibility'	=> lang('field_of_responsibility'),
-				'lang_agresso_id'				=> lang('agresso_id'),
-				'lang_is_area'					=> lang('is_area'),
-				'lang_calculate_price_per_area' => lang('calculate_price_per_area'),
-				'lang_calculate_price_apiece'	=> lang('calculate_price_apiece'),
-				'lang_type'						=> lang('type'),
-				'lang_price'					=> lang('price'),
-				'lang_is_inactive'				=> lang('is_inactive'),
-				'lang_price_element_in_use'		=> lang('price_element_in_use'),
-				'lang_is_adjustable'			=> lang('is_adjustable'),
-				'lang_is_standard'				=> lang('is_standard'),
 				
 				'lang_current_price_type'		=> lang($price_item->get_price_type_title()),
 				'lang_adjustable_text'			=> $price_item->get_adjustable_text(),
@@ -349,21 +333,7 @@ JS;
 			$this->render('permission_denied.php');
 			return;
 		}
-			
-		/*$title = phpgw::get_var('price_item_title');
-		$responsibility_id = phpgw::get_var('responsibility_id');
-		if ($title) {
-			$price_item = new rental_price_item();
-			$price_item->set_title($title);
-			$price_item->set_responsibility_id($responsibility_id);
-			if (rental_soprice_item::get_instance()->store($price_item)) {
-				// The object was stored, forward to edit it further
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiprice_item.edit', 'id' => $price_item->get_id()));
-			}
-		}
-
-		return $this->index();*/
-		
+	
 		$this->edit();
 	}
 
@@ -427,24 +397,6 @@ JS;
 
 	}
 
-	/**
-	 * View or edit rental price_item
-	 *
-	 * @param $editable true renders fields editable, false renders fields disabled
-	 * @param $price_item the price item to display
-	 */
-	/*protected function viewedit($editable, $price_item, $message = '', $error = '')
-	{
-		$data = array
-		(
-				'price_item' 	=> $price_item,
-				'editable' => $editable,
-				'message' => $message,
-				'error' => $error,
-				'cancel_link' => self::link(array('menuaction' => 'rental.uiprice_item.index'))
-		);
-		$this->render('admin_price_item.php', $data);
-	}*/
 	/**
 	 * (non-PHPdoc)
 	 * @see rental/inc/rental_uicommon#query()
@@ -546,7 +498,6 @@ JS;
 	 */
 	public function add_actions(&$value, $key, $params)
 	{
-
 		$value['actions'] = array();
 		$value['labels'] = array();
 
@@ -585,18 +536,8 @@ JS;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => $contract_id, 'factor' => $composite_standard['factor'])));
 						$value['labels'][] = lang('add') . " {$composite_standard['name']}";
 					}
-
-	//FIXME: Add actions for composite standard factors
 				}
 				break;
-			/*default:
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.view', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');
-
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.edit', 'id' => $value['id'])));
-				$value['labels'][] = lang('edit');*/
 		}
 	}
 	
@@ -618,12 +559,6 @@ JS;
 		{
 			$types_options[] = array('id'=>$id, 'name'=>lang($label));
 		}
-			
-		$tabletools = array
-		(
-			array('my_name'	=> 'select_all'),
-			array('my_name'	=> 'select_none')
-		);
 			
 		$parameters = array
 			(
@@ -753,11 +688,6 @@ JS;
 		$data = array
 			(
 				'datatable_def'					=> $datatable_def,
-
-				'lang_manual_adjust_price_item_select'	=> lang('manual_adjust_price_item_select'),
-				'lang_price'					=> lang('price'),
-				'lang_adjust_price'				=> lang('adjust_price'),
-		
 				'list_type'						=> array('options' => $types_options),
 			);
 		
