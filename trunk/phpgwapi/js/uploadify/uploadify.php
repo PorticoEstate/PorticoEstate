@@ -32,7 +32,7 @@ if (!empty($_FILES)) {
 	
 	// $fileTypes  = str_replace('*.','',$_REQUEST['fileext']);
 	// $fileTypes  = str_replace(';','|',$fileTypes);
-	// $typesArray = split('\|',$fileTypes);
+	// $typesArray = preg_split('/\|/',$fileTypes);
 	// $fileParts  = pathinfo($_FILES['Filedata']['name']);
 	
 	// if (in_array($fileParts['extension'],$typesArray)) {
@@ -45,4 +45,3 @@ if (!empty($_FILES)) {
 	// 	echo 'Invalid file type.';
 	// }
 }
-?>

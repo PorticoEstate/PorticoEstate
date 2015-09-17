@@ -147,7 +147,7 @@ phpgw::import_class('phpgwapi.datetime');
 			$sql = 'AND (phpgw_cal_user.cal_login IN ('.implode(',',$members).')) AND '.
 				'(phpgw_cal_user.cal_login='.intval($this->owner).' OR phpgw_cal.is_public=1) AND (';
 
-			$words = split(' ',$keywords);
+			$words = explode(' ',$keywords);
 			foreach($words as $i => $word)
 			{
 				$sql .= $i > 0 ? ' OR ' : '';
