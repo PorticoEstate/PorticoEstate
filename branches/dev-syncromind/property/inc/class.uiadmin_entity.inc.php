@@ -45,7 +45,7 @@
 		var $order;
 		var $sub;
 		var $currentapp;
-		var $receipt = array();
+		var $receipt			 = array();
 		var $public_functions = array
 			(
 			'query'						 => true,
@@ -115,8 +115,8 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
 			}
 
 			$this->bocommon->reset_fm_cache();
@@ -324,7 +324,7 @@
 			switch($data['method'])
 			{
 				case 'list_attribute':
-					$variable = array(
+					$variable	 = array(
 						'menuaction' => 'property.uiadmin_entity.list_attribute',
 						'entity_id'	 => $entity_id,
 						'cat_id'	 => $cat_id,
@@ -334,7 +334,7 @@
 					array_walk($result_data['results'], array($this, '_add_links'), $variable);
 					break;
 				case 'list_attribute_group':
-					$variable = array(
+					$variable	 = array(
 						'menuaction' => 'property.uiadmin_entity.list_attribute_group',
 						'entity_id'	 => $entity_id,
 						'cat_id'	 => $cat_id,
@@ -351,8 +351,8 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id = phpgw::get_var('entity_id', 'int');
@@ -640,7 +640,7 @@
 				try
 				{
 
-					$this->receipt	 = $this->bo->save($values, $action);
+					$this->receipt = $this->bo->save($values, $action);
 
 					if(!$id)
 					{
@@ -679,7 +679,7 @@
 				$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiadmin_entity.edit',
-					'type' => $this->type, 'id' => $id));
+					'type'		 => $this->type, 'id'		 => $id));
 			}
 			else
 			{
@@ -691,17 +691,17 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 2, 'acl_location'	 => $this->acl_location));
 			}
 			$id		 = (int)phpgw::get_var('id');
 			$values	 = phpgw::get_var('values');
 			$config	 = CreateObject('phpgwapi.config', $this->type_app[$this->type]);
 
-            $tabs = array();
-			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-			$active_tab = 'general';
-            
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
+			$active_tab		 = 'general';
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
 			if($id)
@@ -735,7 +735,7 @@
 				'lang_name_standardtext'		 => lang('Enter a name of the standard'),
 				'form_action'					 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.index',
-					'type' => $this->type)),
+					'type'		 => $this->type)),
 				'lang_id'						 => lang('standard ID'),
 				'lang_name'						 => lang('Name'),
 				'lang_descr'					 => lang('Descr'),
@@ -765,8 +765,9 @@
 				'lang_documentation'			 => lang('documentation'),
 				'value_documentation'			 => $values['documentation'],
 				'lang_documentation_statustext'	 => lang('If this entity type is to be linked to documents'),
-                'tabs'                           => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-                'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+				'tabs'							 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
+					'date', 'security', 'file'))
 			);
 
 			$appname = lang('entity');
@@ -852,19 +853,19 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => PHPGW_ACL_ADD, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => PHPGW_ACL_ADD, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id		 = phpgw::get_var('entity_id', 'int');
 			$id				 = phpgw::get_var('id', 'int');
 			$values			 = phpgw::get_var('values');
 			$template_attrib = phpgw::get_var('template_attrib');
-            
-            $tabs = array();
-			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-			$active_tab = 'general';
-            
+
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
+			$active_tab		 = 'general';
+
 			if($template_attrib)
 			{
 				$values['template_attrib'] = array_values(explode(',', $template_attrib));
@@ -938,31 +939,34 @@
 
 
 			$myColumnDefs = array(
-				array('key' => 'attrib_id', 'label' => lang('id'),'sortable' => false, 'resizeable' => true, 'hidden' => false),
+				array('key' => 'attrib_id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true,
+					'hidden' => false),
 				array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'datatype', 'label' => lang('datatype'), 'sortable' => false,'resizeable' => true),
-				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'resizeable' => false,	'formatter' => 'myFormatterCheck', 'width' => 30)
+				array('key' => 'datatype', 'label' => lang('datatype'), 'sortable' => false,
+					'resizeable' => true),
+				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'resizeable' => false,
+					'formatter' => 'myFormatterCheck', 'width' => 30)
 			);
 
 			$datatable_def = array();
 
 			$datatable_def[] = array
-			(
-				'container'		=> 'datatable-container_0',
-				'requestUrl'	=> "''",
-				'ColumnDefs'	=> $myColumnDefs,
-				'data'			=> json_encode(array()),
-				'config'		=> array(
-					array('disableFilter'	=> true),
-					array('disablePagination'	=> true)
+				(
+				'container'	 => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => $myColumnDefs,
+				'data'		 => json_encode(array()),
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
 				)
 			);
 
 
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data		 = $this->bocommon->msgbox_data($this->receipt);
 			$location_level_list = $this->bo->get_location_level_list();
 
-			array_unshift ($location_level_list,array ('id'=> -2,'name'=>lang('no locations')));
+			array_unshift($location_level_list, array('id' => -2, 'name' => lang('no locations')));
 
 			foreach($location_level_list as &$entry)
 			{
@@ -970,18 +974,18 @@
 			}
 
 			$data = array
-			(
-				'datatable_def'					=> $datatable_def,
-				'td_count'						=> 3,
-				'base_java_url'					=> "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
-				'lang_entity'				 => lang('entity'),
-				'entity_name'				 => $id ? $entity['name'] . ' :: ' . implode(' >> ', $this->bo->get_path($entity_id, $id)) : $entity['name'],
-				'msgbox_data'				 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'lang_prefix_standardtext'	 => lang('Enter a standard prefix for the id'),
-				'lang_name_standardtext'	 => lang('Enter a name of the standard'),
+				(
+				'datatable_def'							 => $datatable_def,
+				'td_count'								 => 3,
+				'base_java_url'							 => "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
+				'lang_entity'							 => lang('entity'),
+				'entity_name'							 => $id ? $entity['name'] . ' :: ' . implode(' >> ', $this->bo->get_path($entity_id, $id)) : $entity['name'],
+				'msgbox_data'							 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'lang_prefix_standardtext'				 => lang('Enter a standard prefix for the id'),
+				'lang_name_standardtext'				 => lang('Enter a name of the standard'),
 				'form_action'							 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action'							 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
-																'entity_id' => $entity_id, 'type' => $this->type)),
+					'entity_id'	 => $entity_id, 'type'		 => $this->type)),
 				'lang_save'								 => lang('save'),
 				'lang_done'								 => lang('done'),
 				'value_id'								 => $id,
@@ -1021,24 +1025,27 @@
 				'value_enable_bulk'						 => $values['enable_bulk'],
 				'value_enable_controller'				 => $values['enable_controller'],
 				'jasperupload'							 => true,
-				'entity_group_list'						=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'entity_group', 'selected' => $values['entity_group_id'], 'add_empty' => true))),
-				'category_list'							=> $category_list,
-				'parent_list'							=> $parent_list,
-                'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+				'entity_group_list'						 => array('options' => execMethod('property.bogeneric.get_list', array(
+						'type' => 'entity_group', 'selected' => $values['entity_group_id'], 'add_empty' => true))),
+				'category_list'							 => $category_list,
+				'parent_list'							 => $parent_list,
+				'tabs'									 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'								 => phpgwapi_jquery::formvalidator_generate(array('location',
+					'date', 'security', 'file'))
 			);
 
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-            
-            phpgwapi_jquery::load_widget('core');
+
+			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
-            
+
 //			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_custom_function' => $data));
-           
-            self::render_template_xsl(array('admin_entity','datatable_inline','nextmatchs'), array('edit' => $data));
-            
+
+			self::render_template_xsl(array('admin_entity', 'datatable_inline', 'nextmatchs'), array(
+				'edit' => $data));
+
 //			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 			//---datatable settings--------------------
 //
@@ -1055,7 +1062,8 @@
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
 
-			$attrib_list = $this->bo->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' => true));
+			$attrib_list = $this->bo->read_attrib(array('entity_id' => $template_entity_id,
+				'cat_id' => $template_cat_id, 'allrows' => true));
 
 			$content = array();
 			foreach($attrib_list as $_entry)
@@ -1069,10 +1077,10 @@
 			}
 
 			$result_data = array
-			(
-				'results' => $content,
-				'total_records' => count($content),
-				'draw' => phpgw::get_var('draw', 'int')
+				(
+				'results'		 => $content,
+				'total_records'	 => count($content),
+				'draw'			 => phpgw::get_var('draw', 'int')
 			);
 			return $this->jquery_results($result_data);
 		}
@@ -1087,8 +1095,8 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-						'perm' => 8, 'acl_location' => $this->acl_location));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+						'perm'			 => 8, 'acl_location'	 => $this->acl_location));
 				}
 			}
 
@@ -1184,8 +1192,8 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id	 = $this->entity_id;
@@ -1217,9 +1225,9 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$appname		 = lang('attribute group');
-			$function_msg	 = lang('list entity attribute group');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$appname										 = lang('attribute group');
+			$function_msg									 = lang('list entity attribute group');
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$data = array(
 				'datatable_name' => $appname,
@@ -1376,10 +1384,10 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name'		 => 'list_attribute',
-				'statustext'	 => lang('list attribute'),
-				'text'			 => lang('list attribute'),
-				'action'		 => $GLOBALS['phpgw']->link
+				'my_name'	 => 'list_attribute',
+				'statustext' => lang('list attribute'),
+				'text'		 => lang('list attribute'),
+				'action'	 => $GLOBALS['phpgw']->link
 				(
 				'/index.php', array
 					(
@@ -1389,15 +1397,15 @@
 					'type'		 => $this->type
 				)
 				),
-				'parameters'	 => json_encode($parameters2)
+				'parameters' => json_encode($parameters2)
 			);
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name'		 => 'new_attribute',
-				'statustext'	 => lang('new attribute'),
-				'text'			 => lang('new attribute'),
-				'action'		 => $GLOBALS['phpgw']->link
+				'my_name'	 => 'new_attribute',
+				'statustext' => lang('new attribute'),
+				'text'		 => lang('new attribute'),
+				'action'	 => $GLOBALS['phpgw']->link
 				(
 				'/index.php', array
 					(
@@ -1407,7 +1415,7 @@
 					'type'		 => $this->type
 				)
 				),
-				'parameters'	 => json_encode($parameters2)
+				'parameters' => json_encode($parameters2)
 			);
 
 			unset($parameters);
@@ -1419,8 +1427,8 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id	 = $this->entity_id;
@@ -1483,7 +1491,7 @@
 									'menuaction' => 'property.uiadmin_entity.category',
 									'entity_id'	 => $entity_id,
 									'type'		 => $this->type
-									)
+								)
 								),
 								'class'	 => 'new_item'
 							)
@@ -1643,19 +1651,19 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 2, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id	 = phpgw::get_var('entity_id', 'int');
 			$cat_id		 = phpgw::get_var('cat_id', 'int');
 			$id			 = phpgw::get_var('id', 'int');
 			$values		 = phpgw::get_var('values');
-            
-            $tabs = array();
-			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-			$active_tab = 'general';
-            
+
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
+			$active_tab		 = 'general';
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			if(!$values)
@@ -1765,34 +1773,35 @@
 
 			$data = array
 				(
-				'lang_entity'	 => lang('entity'),
-				'entity_name'	 => $entity['name'],
-				'lang_category'	 => lang('category'),
-				'category_name'	 => $category['name'],
-				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_attribute_group',
-					'entity_id' => $entity_id, 'cat_id' => $cat_id, 'type' => $this->type)),
-				'lang_id'				 => lang('Attribute group ID'),
-				'lang_entity_type'		 => lang('Entity type'),
-				'lang_no_entity_type'	 => lang('No entity type'),
-				'lang_save'				 => lang('save'),
-				'lang_done'				 => lang('done'),
-				'value_id'				 => $id,
+				'lang_entity'				 => lang('entity'),
+				'entity_name'				 => $entity['name'],
+				'lang_category'				 => lang('category'),
+				'category_name'				 => $category['name'],
+				'msgbox_data'				 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'				 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action'				 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_attribute_group',
+					'entity_id'	 => $entity_id, 'cat_id'	 => $cat_id, 'type'		 => $this->type)),
+				'lang_id'					 => lang('Attribute group ID'),
+				'lang_entity_type'			 => lang('Entity type'),
+				'lang_no_entity_type'		 => lang('No entity type'),
+				'lang_save'					 => lang('save'),
+				'lang_done'					 => lang('done'),
+				'value_id'					 => $id,
 				'lang_group_name'			 => lang('group name'),
 				'value_group_name'			 => $values['group_name'],
 				'lang_group_name_statustext' => lang('enter the name for the group'),
-				'lang_descr'			 => lang('descr'),
-				'value_descr'			 => $values['descr'],
-				'lang_descr_statustext'	 => lang('enter the input text for records'),
-				'lang_remark'			 => lang('remark'),
-				'lang_remark_statustext' => lang('Enter a remark for the group'),
-				'value_remark'			 => $values['remark'],
-				'lang_done_attribtext'	 => lang('Back to the list'),
-				'lang_save_attribtext'	 => lang('Save the attribute'),
-				'parent_list'			 => $parent_list,
-                'tabs'                           => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-                'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+				'lang_descr'				 => lang('descr'),
+				'value_descr'				 => $values['descr'],
+				'lang_descr_statustext'		 => lang('enter the input text for records'),
+				'lang_remark'				 => lang('remark'),
+				'lang_remark_statustext'	 => lang('Enter a remark for the group'),
+				'value_remark'				 => $values['remark'],
+				'lang_done_attribtext'		 => lang('Back to the list'),
+				'lang_save_attribtext'		 => lang('Save the attribute'),
+				'parent_list'				 => $parent_list,
+				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'					 => phpgwapi_jquery::formvalidator_generate(array('location',
+					'date', 'security', 'file'))
 			);
 			//_debug_array($values);
 
@@ -1807,8 +1816,8 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 2, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id	 = phpgw::get_var('entity_id', 'int');
@@ -1817,10 +1826,10 @@
 			$values		 = phpgw::get_var('values');
 			$group_id	 = phpgw::get_var('group_id', 'int');
 
-             $tabs = array();
-			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-			$active_tab = 'general';
-            
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
+			$active_tab		 = 'general';
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			if(!$values)
@@ -1962,10 +1971,10 @@
 				'msgbox_data'						 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action'						 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_attribute',
-															'entity_id' => $entity_id,
-															'cat_id'	=> $cat_id,
-															'type'		=> $this->type)
-															),
+					'entity_id'	 => $entity_id,
+					'cat_id'	 => $cat_id,
+					'type'		 => $this->type)
+				),
 				'value_id'							 => $id,
 				'value_column_name'					 => $values['column_name'],
 				'value_input_text'					 => $values['input_text'],
@@ -1989,8 +1998,9 @@
 				'value_get_single_function_input'	 => print_r($values['get_single_function_input'], true),
 				'value_short_description'			 => $values['short_description'],
 				'value_javascript_action'			 => $values['javascript_action'],
-                'tabs'                           => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-                'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+				'tabs'								 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
+					'date', 'security', 'file'))
 			);
 
 			$appname = lang('entity');
@@ -2004,8 +2014,8 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id	 = $this->entity_id;
@@ -2147,8 +2157,8 @@
 							$datatable['rows']['row'][$j]['column'][$k]['value']	 = $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['target']	 = '_blank';
 							$url													 = '"' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_custom_function',
-								'resort' => 'up', 'entity_id' => $entity_id, 'cat_id' => $cat_id, 'id' => $custom_entry['id'],
-								'allrows' => $this->allrows, 'type' => $this->type)) . '"';
+								'resort'	 => 'up', 'entity_id'	 => $entity_id, 'cat_id'	 => $cat_id, 'id'		 => $custom_entry['id'],
+								'allrows'	 => $this->allrows, 'type'		 => $this->type)) . '"';
 							$datatable['rows']['row'][$j]['column'][$k]['link']		 = 'move_record(' . $url . ')';
 						}
 
@@ -2158,8 +2168,8 @@
 							$datatable['rows']['row'][$j]['column'][$k]['value']	 = $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['target']	 = '_blank';
 							$url													 = '"' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_custom_function',
-								'resort' => 'down', 'entity_id' => $entity_id, 'cat_id' => $cat_id, 'id' => $custom_entry['id'],
-								'allrows' => $this->allrows, 'type' => $this->type)) . '"';
+								'resort'	 => 'down', 'entity_id'	 => $entity_id, 'cat_id'	 => $cat_id, 'id'		 => $custom_entry['id'],
+								'allrows'	 => $this->allrows, 'type'		 => $this->type)) . '"';
 							$datatable['rows']['row'][$j]['column'][$k]['link']		 = 'move_record(' . $url . ')';
 						}
 					}
@@ -2393,19 +2403,19 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 2, 'acl_location'	 => $this->acl_location));
 			}
 
 			$entity_id	 = phpgw::get_var('entity_id', 'int');
 			$cat_id		 = phpgw::get_var('cat_id', 'int');
 			$id			 = phpgw::get_var('id', 'int');
 			$values		 = phpgw::get_var('values');
-            
-            $tabs = array();
-			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-			$active_tab = 'general';
-            
+
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
+			$active_tab		 = 'general';
+
 //			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
 			if($values['save'])
@@ -2478,47 +2488,49 @@
 
 			$data = array
 				(
-				'lang_entity'	 => lang('entity'),
-				'entity_name'	 => $entity['name'],
-				'lang_category'	 => lang('category'),
-				'category_name'	 => $category['name'],
-				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_custom_function',
-					'entity_id' => $entity_id, 'cat_id' => $cat_id, 'type' => $this->type)),
-				'lang_id'				 => lang('Custom function ID'),
-				'lang_entity_type'		 => lang('Entity type'),
-				'lang_no_entity_type'	 => lang('No entity type'),
-				'lang_save'				 => lang('save'),
-				'lang_done'				 => lang('done'),
-				'value_id'				 => $id,
-				'lang_descr'					 => lang('descr'),
-				'lang_descr_custom_functiontext' => lang('Enter a descr for the custom function'),
-				'value_descr'					 => $values['descr'],
-				'lang_done_custom_functiontext'	 => lang('Back to the list'),
-				'lang_save_custom_functiontext'	 => lang('Save the custom function'),
+				'lang_entity'						 => lang('entity'),
+				'entity_name'						 => $entity['name'],
+				'lang_category'						 => lang('category'),
+				'category_name'						 => $category['name'],
+				'msgbox_data'						 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action'						 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_custom_function',
+					'entity_id'	 => $entity_id, 'cat_id'	 => $cat_id, 'type'		 => $this->type)),
+				'lang_id'							 => lang('Custom function ID'),
+				'lang_entity_type'					 => lang('Entity type'),
+				'lang_no_entity_type'				 => lang('No entity type'),
+				'lang_save'							 => lang('save'),
+				'lang_done'							 => lang('done'),
+				'value_id'							 => $id,
+				'lang_descr'						 => lang('descr'),
+				'lang_descr_custom_functiontext'	 => lang('Enter a descr for the custom function'),
+				'value_descr'						 => $values['descr'],
+				'lang_done_custom_functiontext'		 => lang('Back to the list'),
+				'lang_save_custom_functiontext'		 => lang('Save the custom function'),
 				'lang_custom_function'				 => lang('custom function'),
 				'lang_custom_function_statustext'	 => lang('Select a custom function'),
 				'lang_no_custom_function'			 => lang('No custom function'),
 				'custom_function_list'				 => $this->bo->select_custom_function($values['custom_function_file']),
-				'value_active'			 => $values['active'],
-				'value_client_side'		 => $values['client_side'],
-				'lang_active'			 => lang('Active'),
-				'lang_active_statustext' => lang('check to activate custom function'),
-                'tabs'									=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator'								=> phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file')) 
+				'value_active'						 => $values['active'],
+				'value_client_side'					 => $values['client_side'],
+				'lang_active'						 => lang('Active'),
+				'lang_active_statustext'			 => lang('check to activate custom function'),
+				'tabs'								 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
+					'date', 'security', 'file'))
 			);
 
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-            
-            phpgwapi_jquery::load_widget('core');
+
+			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
-            
+
 //			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_custom_function' => $data));
-           
-            self::render_template_xsl(array('admin_entity','datatable_inline','nextmatchs'), array('edit_custom_function' => $data));
+
+			self::render_template_xsl(array('admin_entity', 'datatable_inline', 'nextmatchs'), array(
+				'edit_custom_function' => $data));
 		}
 
 		function convert_to_eav()

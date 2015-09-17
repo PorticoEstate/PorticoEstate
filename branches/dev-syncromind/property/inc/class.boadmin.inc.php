@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * phpGroupWare - property: a Facilities Management System.
 	 *
@@ -45,13 +44,13 @@
 		function __construct($session = '')
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so		 = CreateObject('property.soadmin');
-			$this->acl		 = & $GLOBALS['phpgw']->acl;
-			$this->bocommon	 = CreateObject('property.bocommon');
-			$this->right	 = array(1, 2, 4, 8, 16);
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->so			 = CreateObject('property.soadmin');
+			$this->acl			 = & $GLOBALS['phpgw']->acl;
+			$this->bocommon		 = CreateObject('property.bocommon');
+			$this->right		 = array(1, 2, 4, 8, 16);
+			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			if ($session)
+			if($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -64,13 +63,13 @@
 			$filter			 = phpgw::get_var('filter', 'int');
 			$cat_id			 = phpgw::get_var('cat_id', 'string');
 			$permission		 = phpgw::get_var('permission');
-	//		$location		 = get_var('location',array('POST','GET')); // don't work for some reason...
+			//		$location		 = get_var('location',array('POST','GET')); // don't work for some reason...
 			$module			 = phpgw::get_var('module');
 			$granting_group	 = phpgw::get_var('granting_group', 'int');
 			$allrows		 = phpgw::get_var('allrows', 'bool');
 			$acl_app		 = 'property'; //get_var('acl_app',array('POST','GET'));
 
-			if ($start)
+			if($start)
 			{
 				$this->start = $start;
 			}
@@ -79,38 +78,38 @@
 				$this->start = 0;
 			}
 
-			if (isset($query))
+			if(isset($query))
 			{
 				$this->query = $query;
 			}
-			if (isset($filter))
+			if(isset($filter))
 			{
 				$this->filter = $filter;
 			}
-			if (isset($sort))
+			if(isset($sort))
 			{
 				$this->sort = $sort;
 			}
-			if (isset($order))
+			if(isset($order))
 			{
 				$this->order = $order;
 			}
-			if (isset($cat_id))
+			if(isset($cat_id))
 			{
 				$this->cat_id = $cat_id;
 			}
-			if (isset($module))
+			if(isset($module))
 			{
 				$this->location = $module;
 			}
-			if (isset($granting_group))
+			if(isset($granting_group))
 			{
 				$this->granting_group = $granting_group;
 			}
 
 			$this->allrows = $allrows ? $allrows : '';
 
-			if (isset($acl_app))
+			if(isset($acl_app))
 			{
 				$this->acl_app = $acl_app;
 			}
@@ -132,7 +131,7 @@
 
 		function save_sessiondata($data)
 		{
-			if ($this->use_session)
+			if($this->use_session)
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'fm_admin', $data);
 			}
@@ -140,7 +139,7 @@
 
 		function select_category_list($format = '', $selected = '')
 		{
-			switch ($format)
+			switch($format)
 			{
 				case 'select':
 					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
@@ -160,17 +159,17 @@
 
 		function set_permission2($values, $r_processed, $grantor = -1, $type = 0)
 		{
-			if (!is_array($values))
+			if(!is_array($values))
 			{
 				//				return;
 			}
 
 			$totalacl = array();
-			foreach ($values as $rowinfo => $perm)
+			foreach($values as $rowinfo => $perm)
 			{
 				list($user_id, $rights) = explode('_', $rowinfo);
 
-				if (!isset($totalacl[$user_id]))
+				if(!isset($totalacl[$user_id]))
 				{
 					$totalacl[$user_id] = 0;
 				}
@@ -179,7 +178,7 @@
 			}
 
 			$user_checked = array();
-			foreach ($totalacl as $user_id => $rights)
+			foreach($totalacl as $user_id => $rights)
 			{
 				$user_checked[]	 = $user_id;
 				$this->acl->set_account_id($user_id, true, $this->acl_app, $this->location, $account_type	 = 'accounts');
@@ -188,7 +187,7 @@
 				$this->acl->save_repository($this->acl_app, $this->location);
 			}
 
-			if (is_array($r_processed) && count($user_checked))
+			if(is_array($r_processed) && count($user_checked))
 			{
 				$user_delete = array_diff($r_processed, $user_checked);
 			}
@@ -199,11 +198,11 @@
 
 			$users_at_location = $this->acl->get_accounts_at_location($this->acl_app, $this->location, $grantor, $type);
 
-			if (is_array($user_delete) && count($user_delete) > 0)
+			if(is_array($user_delete) && count($user_delete) > 0)
 			{
-				foreach ($user_delete as $user_id)
+				foreach($user_delete as $user_id)
 				{
-					if (isset($users_at_location[$user_id]) && $users_at_location[$user_id])
+					if(isset($users_at_location[$user_id]) && $users_at_location[$user_id])
 					{
 						$this->acl->set_account_id($user_id, true);
 						$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
@@ -217,27 +216,27 @@
 		{
 			$this->acl->enable_inheritance = phpgw::get_var('enable_inheritance', 'bool', 'POST');
 
-			if ($initials)
+			if($initials)
 			{
 				$this->so->set_initials($initials);
 			}
 
 			$process = explode('_', $r_processed);
 
-			if (!isset($values['right']) || !is_array($values['right']))
+			if(!isset($values['right']) || !is_array($values['right']))
 			{
 				$values['right'] = array();
 			}
 
-			if (!isset($values['mask']) || !is_array($values['mask']))
+			if(!isset($values['mask']) || !is_array($values['mask']))
 			{
 				$values['mask'] = array();
 			}
 
 			$grantor = -1;
-			if ($set_grant)
+			if($set_grant)
 			{
-				if ($this->granting_group)
+				if($this->granting_group)
 				{
 					$grantor = $this->granting_group;
 				}
@@ -258,19 +257,19 @@
 
 		function get_user_list($type = '', $get_grants = '')
 		{
-			if ($type == 'groups')
+			if($type == 'groups')
 			{
-				$check_account_type = array('accounts');
+				$check_account_type	 = array('accounts');
 				$acl_account_type	 = 'accounts';
 				$valid_users		 = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'property');
 			}
 			else
 			{
-				$check_account_type = array('groups', 'accounts');
+				$check_account_type	 = array('groups', 'accounts');
 				$acl_account_type	 = 'both';
 				$_valid_users		 = $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $this->acl_app);
 				$valid_users		 = array();
-				foreach ($_valid_users as $_user)
+				foreach($_valid_users as $_user)
 				{
 					$valid_users[] = $_user['account_id'];
 				}
@@ -279,9 +278,9 @@
 			}
 
 			$grantor = -1;
-			if ($get_grants)
+			if($get_grants)
 			{
-				if ($this->granting_group)
+				if($this->granting_group)
 				{
 					$grantor = $this->granting_group;
 				}
@@ -291,7 +290,7 @@
 				}
 			}
 
-			if ($this->location == '.invoice')
+			if($this->location == '.invoice')
 			{
 				$this->right = array(1, 2, 4, 8, 16, 32, 64, 128);
 			}
@@ -302,9 +301,9 @@
 
 			//			$allusers	= array_intersect_key($allusers, $valid_users);
 
-			foreach ($allusers as $user)
+			foreach($allusers as $user)
 			{
-				if (!in_array($user->id, $valid_users))
+				if(!in_array($user->id, $valid_users))
 				{
 					unset($allusers[$user->id]);
 				}
@@ -315,7 +314,7 @@
 			$this->total_records = count($allusers);
 			$length				 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
-			if ($this->allrows)
+			if($this->allrows)
 			{
 				$this->start = 0;
 				$length		 = $this->total_records;
@@ -324,17 +323,17 @@
 			$allusers = array_slice($allusers, $this->start, $length, true);
 
 			$user_list = array();
-			if (isset($allusers) && is_array($allusers))
+			if(isset($allusers) && is_array($allusers))
 			{
 				$j = 0;
-				foreach ($allusers as $account)
+				foreach($allusers as $account)
 				{
 					$user_list[$j]['account_id']		 = $account->id;
 					$user_list[$j]['account_lid']		 = $account->lid;
 					$user_list[$j]['account_firstname']	 = $account->firstname;
 					$user_list[$j]['account_lastname']	 = $account->lastname;
 
-					if ($this->location == '.invoice')
+					if($this->location == '.invoice')
 					{
 						$user_list[$j]['initials'] = $this->so->get_initials($account->id);
 					}
@@ -343,23 +342,23 @@
 
 					$count_right = count($right);
 
-					for ($i = 0; $i < $count_right; ++$i)
+					for($i = 0; $i < $count_right; ++$i)
 					{
-						if ($this->acl->check_rights($this->location, $right[$i], $this->acl_app, $grantor, 0, $check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i], $this->acl_app, $grantor, 0, $check_account_type))
 						{
-							if ($this->acl->account_type == 'g')
+							if($this->acl->account_type == 'g')
 							{
 								$user_list[$j]['right'][$right[$i]] = 'from_group';
 							}
 							else
 							{
-								$user_list[$j]['right'][$right[$i]]	 = 'checked';
+								$user_list[$j]['right'][$right[$i]] = 'checked';
 							}
 							$user_list[$j]['result'][$right[$i]] = 'checked';
 						}
-						if ($this->acl->check_rights($this->location, $right[$i], $this->acl_app, $grantor, 1, $check_account_type))
+						if($this->acl->check_rights($this->location, $right[$i], $this->acl_app, $grantor, 1, $check_account_type))
 						{
-							if ($this->acl->account_type == 'g')
+							if($this->acl->account_type == 'g')
 							{
 								$user_list[$j]['mask'][$right[$i]] = 'from_group';
 							}
@@ -388,5 +387,4 @@
 		{
 			return $this->so->edit_id($values);
 		}
-
 	}

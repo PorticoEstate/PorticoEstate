@@ -315,5 +315,4 @@
 				_debug_array($receipt);
 			}
 		}
-
-	}	
+	}

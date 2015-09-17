@@ -1,36 +1,35 @@
 <?php
-  /**************************************************************************\
-  * phpGroupWare API - MS SQL Server support                                 *
-  * (C) Copyright 1998 Cameron Taggart (cameront@wolfenet.com)               *
-  *  Modified by Guarneri carmelo (carmelo@melting-soft.com)                 *
-  *  Modified by Cameron Just     (C.Just@its.uq.edu.au)                     *
-  * ------------------------------------------------------------------------ *
-  * This program is free software; you can redistribute it and/or modify it  *
-  * under the terms of the GNU Lesser General Public License as published    *
-  * by the Free Software Foundation; either version 2.1 of the License, or   *
-  * any later version.                                                       *
-  \**************************************************************************/
+	/*	 * ************************************************************************\
+	 * phpGroupWare API - MS SQL Server support                                 *
+	 * (C) Copyright 1998 Cameron Taggart (cameront@wolfenet.com)               *
+	 *  Modified by Guarneri carmelo (carmelo@melting-soft.com)                 *
+	 *  Modified by Cameron Just     (C.Just@its.uq.edu.au)                     *
+	 * ------------------------------------------------------------------------ *
+	 * This program is free software; you can redistribute it and/or modify it  *
+	 * under the terms of the GNU Lesser General Public License as published    *
+	 * by the Free Software Foundation; either version 2.1 of the License, or   *
+	 * any later version.                                                       *
+	  \************************************************************************* */
 
 	class db_mssql
 	{
-		var $Host				= '';
-		var $Database			= '';
-		var $User				= '';
-		var $Password			= '';
 
-		var $Link_ID			= 0;
-		var $Query_ID			= 0;
-		var $Record				= array();
-		var $Row				= 0;
-		var $VEOF				= -1;
-
-		var $Errno				= 0;
-		var $Error				= '';
-		var $Auto_Free			= 0;     ## set this to 1 to automatically free results
-		var $Debug				= false;
-		var $auto_stripslashes	= false;
-		protected $Transaction	= false;
-		var $fetchmode			= 'ASSOC';//'BOTH';
+		var $Host	 = '';
+		var $Database = '';
+		var $User	 = '';
+		var $Password = '';
+		var $Link_ID	 = 0;
+		var $Query_ID = 0;
+		var $Record	 = array();
+		var $Row		 = 0;
+		var $VEOF	 = -1;
+		var $Errno				 = 0;
+		var $Error				 = '';
+		var $Auto_Free			 = 0;	 ## set this to 1 to automatically free results
+		var $Debug				 = false;
+		var $auto_stripslashes	 = false;
+		protected $Transaction		 = false;
+		var $fetchmode			 = 'ASSOC';//'BOTH';
 
 		function connect()
 		{
@@ -38,15 +37,15 @@
 			{
 				if($GLOBALS['phpgw_info']['server']['db_persistent'])
 				{
-					$this->Link_ID=mssql_pconnect($this->Host, $this->User, $this->Password);
+					$this->Link_ID = mssql_pconnect($this->Host, $this->User, $this->Password);
 				}
 				else
 				{
-					$this->Link_ID=mssql_connect($this->Host, $this->User, $this->Password);
+					$this->Link_ID = mssql_connect($this->Host, $this->User, $this->Password);
 				}
 				if(!$this->Link_ID)
 				{
-					$this->halt('Link-ID == false, mssql_'.($GLOBALS['phpgw_info']['server']['db_persistent']?'p':'').'connect failed');
+					$this->halt('Link-ID == false, mssql_' . ($GLOBALS['phpgw_info']['server']['db_persistent'] ? 'p' : '') . 'connect failed');
 				}
 				else
 				{
@@ -57,6 +56,7 @@
 
 		function disconnect()
 		{
+
 		}
 
 		function db_addslashes($str)
@@ -70,12 +70,12 @@
 
 		function free_result()
 		{
-			if ($this->Query_ID)
+			if($this->Query_ID)
 			{
 				mssql_free_result($this->Query_ID);
 			}
-			$this->Query_ID = 0;
-			$this->VEOF = -1;
+			$this->Query_ID	 = 0;
+			$this->VEOF		 = -1;
 		}
 
 		function query($Query_String, $line = '', $file = '')
@@ -87,8 +87,8 @@
 				$this->connect();
 			}
 
-			$this->Query_ID = mssql_query($Query_String, $this->Link_ID);
-			$this->Row = 0;
+			$this->Query_ID	 = mssql_query($Query_String, $this->Link_ID);
+			$this->Row		 = 0;
 			if(!$this->Query_ID)
 			{
 				$this->halt("Invalid SQL: " . $Query_String, $line, $file);
@@ -115,9 +115,9 @@
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 
-			$Query_String = str_replace('SELECT ', 'SELECT TOP ', $Query_String);
-			$Query_String = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
-			$Query_String = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
+			$Query_String	 = str_replace('SELECT ', 'SELECT TOP ', $Query_String);
+			$Query_String	 = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
+			$Query_String	 = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
 
 			if($this->Debug)
 			{
@@ -160,8 +160,8 @@
 						{
 							$this->Record[$i] = $rec[$i];
 						}
-						$o = mssql_fetch_field($this->Query_ID, $i);
-						$this->Record[$o->name] = $rec[$i];
+						$o						 = mssql_fetch_field($this->Query_ID, $i);
+						$this->Record[$o->name]	 = $rec[$i];
 					}
 				}
 				else
@@ -213,15 +213,15 @@
 
 		function seek($pos)
 		{
-			mssql_data_seek($this->Query_ID,$pos);
+			mssql_data_seek($this->Query_ID, $pos);
 			$this->Row = $pos;
 		}
 
 		function metadata($table)
 		{
-			$count = 0;
-			$id    = 0;
-			$res   = array();
+			$count	 = 0;
+			$id		 = 0;
+			$res	 = array();
 
 			$this->connect();
 			$id = mssql_query("select * from $table", $this->Link_ID);
@@ -232,20 +232,20 @@
 
 			$count = mssql_num_fields($id);
 
-			for($i=0; $i<$count; $i++)
+			for($i = 0; $i < $count; $i++)
 			{
-				$info = mssql_fetch_field($id, $i);
-				$res[$info->name]  = $info;
-/*
-				$res[$i]['table'] = $table;
-				$res[$i]['name']  = $info->name;
-				$res[$i]['len']   = $info->max_length;
-				$res[$i]['flags'] = $info->numeric;
-				$res[$i]['type'] = $info->type;
-*/
- 			}
+				$info				 = mssql_fetch_field($id, $i);
+				$res[$info->name]	 = $info;
+				/*
+				  $res[$i]['table'] = $table;
+				  $res[$i]['name']  = $info->name;
+				  $res[$i]['len']   = $info->max_length;
+				  $res[$i]['flags'] = $info->numeric;
+				  $res[$i]['type'] = $info->type;
+				 */
+			}
 
- 			$this->free_result();
+			$this->free_result();
 			return $res;
 		}
 
@@ -284,9 +284,9 @@
 
 		public function f($name, $strip_slashes = False)
 		{
-			if( isset($this->Record[$name]) )
+			if(isset($this->Record[$name]))
 			{
-				if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
+				if($strip_slashes || ($this->auto_stripslashes && !$strip_slashes))
 				{
 					return htmlspecialchars_decode(stripslashes($this->Record[$name]));
 				}
@@ -302,8 +302,8 @@
 		{
 			print $this->f($Field_Name);
 		}
-
 		/* public: table locking */
+
 		function get_last_insert_id($table, $field)
 		{
 			/* This will get the last insert ID created on the current connection.  Should only be called
@@ -324,7 +324,7 @@
 			return mssql_result($result, 0, 0);
 		}
 
-		function lock($table, $mode="write")
+		function lock($table, $mode = "write")
 		{
 			/* /me really, really, really hates locks - transactions serve just fine */
 			return $this->transaction_begin();
@@ -334,8 +334,8 @@
 		{
 			return $this->transaction_commit();
 		}
-
 		/* private: error handling */
+
 		function halt($msg, $line = '', $file = '')
 		{
 			$this->transaction_abort();
@@ -356,12 +356,12 @@
 
 			if($file)
 			{
-				printf("<br><b>File:</b> %s",$file);
+				printf("<br><b>File:</b> %s", $file);
 			}
 
 			if($line)
 			{
-				printf("<br><b>Line:</b> %s",$line);
+				printf("<br><b>Line:</b> %s", $line);
 			}
 
 			if($this->Halt_On_Error != "report")
@@ -383,18 +383,18 @@
 		function table_names()
 		{
 			$this->query("select name from sysobjects where type='u' and name != 'dtproperties'");
-			$i = 0;
-			while($info = @mssql_fetch_row($this->Query_ID))
+			$i		 = 0;
+			while($info	 = @mssql_fetch_row($this->Query_ID))
 			{
-				$return[$i]['table_name'] = $info[0];
-				$return[$i]['tablespace_name'] = $this->Database;
-				$return[$i]['database'] = $this->Database;
+				$return[$i]['table_name']		 = $info[0];
+				$return[$i]['tablespace_name']	 = $this->Database;
+				$return[$i]['database']			 = $this->Database;
 				$i++;
 			}
 			return $return;
 		}
-
 		/* Surely we can do this, eh */
+
 		function index_names()
 		{
 			$return = array();
@@ -407,65 +407,65 @@
 		}
 
 		/**
-		* Get the correct date format for DATE field for a particular RDBMS
-		*
-		* @internal the string is compatiable with PHP's date()
-		* @return string the date format string
-		*/
+		 * Get the correct date format for DATE field for a particular RDBMS
+		 *
+		 * @internal the string is compatiable with PHP's date()
+		 * @return string the date format string
+		 */
 		public static function date_format()
 		{
 			static $date_format = null;
-			if ( is_null($date_format) )
+			if(is_null($date_format))
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
 					case 'mssql':
-						$date_format 		= 'M d Y';
+						$date_format = 'M d Y';
 						break;
 					case 'mysql':
 					case 'pgsql':
 					case 'postgres':
 					default:
-						$date_format 		= 'Y-m-d';
+						$date_format = 'Y-m-d';
 				}
 			}
 			return $date_format;
-	 	}
-	
+		}
+
 		/**
-		* Get the correct datetime format for DATETIME field for a particular RDBMS
-		*
-		* @internal the string is compatiable with PHP's date()
-		* @return string the date format string
-		*/
+		 * Get the correct datetime format for DATETIME field for a particular RDBMS
+		 *
+		 * @internal the string is compatiable with PHP's date()
+		 * @return string the date format string
+		 */
 		public static function datetime_format()
 		{
 			static $datetime_format = null;
-			if ( is_null($datetime_format) )
+			if(is_null($datetime_format))
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
 					case 'mssql':
-						$datetime_format 		= 'M d Y g:iA';
+						$datetime_format = 'M d Y g:iA';
 						break;
 					case 'mysql':
 					case 'pgsql':
 					case 'postgres':
 					default:
-						$datetime_format 		= 'Y-m-d G:i:s';
+						$datetime_format = 'Y-m-d G:i:s';
 				}
 			}
 			return $datetime_format;
-	 	}
+		}
 
 		/**
-		* Get the correct datetime format for MONEY field for a particular RDBMS
-		*
-		* @return string the formatted string
-		*/
+		 * Get the correct datetime format for MONEY field for a particular RDBMS
+		 *
+		 * @return string the formatted string
+		 */
 		public static function money_format($amount)
 		{
-			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mssql')
 			{
 				return "CONVERT(MONEY,'{$amount}',0)";
 			}
@@ -474,7 +474,6 @@
 				return "'{$amount}'";
 			}
 		}
-
 
 		/**
 		 * Prepare the VALUES component of an INSERT sql statement by guessing data types
@@ -487,28 +486,28 @@
 		 */
 		public function validate_insert($values)
 		{
-			if ( !is_array($values) || !count($values) )
+			if(!is_array($values) || !count($values))
 			{
 				return '';
 			}
-			
+
 			$insert_value = array();
-			foreach ( $values as $value )
+			foreach($values as $value)
 			{
-				if($value || (is_numeric($value) && $value == 0) )
+				if($value || (is_numeric($value) && $value == 0))
 				{
-					if ( is_numeric($value) )
+					if(is_numeric($value))
 					{
-						$insert_value[]	= "'$value'";
+						$insert_value[] = "'$value'";
 					}
 					else
 					{
-						$insert_value[]	= "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
+						$insert_value[] = "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
 					}
 				}
 				else
 				{
-					$insert_value[]	= 'NULL';
+					$insert_value[] = 'NULL';
 				}
 			}
 			return implode(",", $insert_value);
@@ -522,38 +521,37 @@
 		 */
 		public function validate_update($value_set)
 		{
-			if ( !is_array($value_set) || !count($value_set) )
+			if(!is_array($value_set) || !count($value_set))
 			{
 				return '';
 			}
-			
+
 			$value_entry = array();
-			foreach ( $value_set as $field => $value )
+			foreach($value_set as $field => $value)
 			{
-				if($value || (is_numeric($value) && $value == 0) )
+				if($value || (is_numeric($value) && $value == 0))
 				{
-					if ( is_numeric($value) )
+					if(is_numeric($value))
 					{
-						if((strlen($value) > 1 && strpos($value,'0') === 0))
+						if((strlen($value) > 1 && strpos($value, '0') === 0))
 						{
-							$value_entry[]= "{$field}='{$value}'";
+							$value_entry[] = "{$field}='{$value}'";
 						}
 						else
 						{
-							$value_entry[]= "{$field}={$value}";
+							$value_entry[] = "{$field}={$value}";
 						}
 					}
 					else
 					{
-						$value_entry[]= "{$field}='{$value}'";
+						$value_entry[] = "{$field}='{$value}'";
 					}
 				}
 				else
 				{
-					$value_entry[]= "{$field}=NULL";
+					$value_entry[] = "{$field}=NULL";
 				}
 			}
 			return implode(',', $value_entry);
 		}
-
 	}

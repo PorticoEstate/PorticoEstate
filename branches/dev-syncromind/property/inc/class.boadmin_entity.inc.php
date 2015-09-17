@@ -304,7 +304,8 @@
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
 
-			$attrib_group_list = $this->read_attrib_group( array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' =>true) );
+			$attrib_group_list = $this->read_attrib_group(array('entity_id' => $template_entity_id,
+				'cat_id' => $template_cat_id, 'allrows' => true));
 
 			foreach($attrib_group_list as $attrib_group)
 			{
@@ -319,7 +320,8 @@
 				$this->custom->add_group($group);
 			}
 
-			$attrib_list = $this->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' =>true));
+			$attrib_list = $this->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id,
+				'allrows' => true));
 
 			$template_attribs = array();
 			foreach($attrib_list as $attrib)
@@ -384,7 +386,8 @@
 
 		function get_attrib_group_list($entity_id, $cat_id, $selected)
 		{
-			$group_list = $this->read_attrib_group( array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' =>true) );
+			$group_list = $this->read_attrib_group(array('entity_id' => $entity_id, 'cat_id' => $cat_id,
+				'allrows' => true));
 
 			foreach($group_list as &$group)
 			{
@@ -398,8 +401,8 @@
 
 		function read_attrib_group($data = array())
 		{
-			$entity_id = $data['entity_id'];
-			$cat_id = $data['cat_id'];
+			$entity_id	 = $data['entity_id'];
+			$cat_id		 = $data['cat_id'];
 			if($data['allrows'])
 			{
 				$this->allrows = $data['allrows'];
@@ -418,7 +421,7 @@
 			{
 				$this->allrows = $data['allrows'];
 			}
-			$attrib	 = $this->custom->find(	$this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['start'], $data['query'], $data['sort'], $data['order'], $this->allrows);
+			$attrib				 = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['start'], $data['query'], $data['sort'], $data['order'], $this->allrows);
 			$this->total_records = $this->custom->total_records;
 			return $attrib;
 		}

@@ -38,7 +38,7 @@
 
 		protected $old_files_deleted;
 		protected $debug;
-		protected $orders_affected = array();
+		protected $orders_affected	 = array();
 		protected $db;
 		protected $db2;
 		protected $soXport;
@@ -47,11 +47,11 @@
 
 		function __construct()
 		{
-			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->join		 = & $this->db->join;
-			$this->db2		 = clone($this->db);
-			$this->soXport	 = CreateObject('property.soXport');
-			$this->config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->db				 = & $GLOBALS['phpgw']->db;
+			$this->join				 = & $this->db->join;
+			$this->db2				 = clone($this->db);
+			$this->soXport			 = CreateObject('property.soXport');
+			$this->config			 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$this->invoice_approval	 = isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval'] ? $this->config->config_data['common']['invoice_approval'] : 2;
 		}
 
@@ -190,44 +190,44 @@
 			while($this->db->next_record())
 			{
 				$invoice_roleback[] = array
-				(
-					'id'						=> $this->db->f('id'),
-					'bilagsnr'					=> $this->db->f('bilagsnr'),
-					'kidnr'						=> $this->db->f('kidnr'),
-					'typeid'					=> $this->db->f('typeid'),
-					'kildeid'					=> $this->db->f('kildeid'),
-					'pmwrkord_code'				=> $this->db->f('pmwrkord_code'),
-					'belop'						=> $this->db->f('belop'),
-					'fakturadato'				=> $this->db->f('fakturadato'),
-					'periode'					=> $this->db->f('periode'),
-					'forfallsdato'				=> $this->db->f('forfallsdato'),
-					'fakturanr'					=> $this->db->f('fakturanr'),
-					'spbudact_code'				=> $this->db->f('spbudact_code'),
-					'regtid'					=> $this->db->f('regtid'),
-					'artid'						=> $this->db->f('artid'),
-					'godkjentbelop'				=> $this->db->f('godkjentbelop'),
-					'spvend_code'				=> $this->db->f('spvend_code'),
-					'dima'						=> $this->db->f('dima'),
-					'loc1'						=> $this->db->f('loc1'),
-					'dimb'						=> $this->db->f('dimb'),
-					'dime'						=> $this->db->f('dime'),
-					'mvakode'					=> $this->db->f('mvakode'),
-					'dimd'						=> $this->db->f('dimd'),
-					'project_id'				=> $this->db->f('project_id'),
-					'kostra_id'					=> $this->db->f('kostra_id'),
-					'item_type'					=> $this->db->f('item_type'),
-					'item_id'					=> $this->db->f('item_id'),
-					'oppsynsmannid'				=> $this->db->f('oppsynsmannid'),
-					'saksbehandlerid'			=> $this->db->f('saksbehandlerid'),
-					'budsjettansvarligid'		=> $this->db->f('budsjettansvarligid'),
-					'oppsynsigndato'			=> $this->db->f('oppsynsigndato'),
-					'saksigndato'				=> $this->db->f('saksigndato'),
-					'budsjettsigndato'			=> $this->db->f('budsjettsigndato'),
-					'merknad'					=> $this->db->f('merknad'),
-					'splitt'					=> $this->db->f('splitt'),
-					'ordrebelop'				=> $this->db->f('ordrebelop'),
-					'utbetalingid'				=> $this->db->f('utbetalingid'),
-					'utbetalingsigndato'		=> $this->db->f('utbetalingsigndato'),
+					(
+					'id'					 => $this->db->f('id'),
+					'bilagsnr'				 => $this->db->f('bilagsnr'),
+					'kidnr'					 => $this->db->f('kidnr'),
+					'typeid'				 => $this->db->f('typeid'),
+					'kildeid'				 => $this->db->f('kildeid'),
+					'pmwrkord_code'			 => $this->db->f('pmwrkord_code'),
+					'belop'					 => $this->db->f('belop'),
+					'fakturadato'			 => $this->db->f('fakturadato'),
+					'periode'				 => $this->db->f('periode'),
+					'forfallsdato'			 => $this->db->f('forfallsdato'),
+					'fakturanr'				 => $this->db->f('fakturanr'),
+					'spbudact_code'			 => $this->db->f('spbudact_code'),
+					'regtid'				 => $this->db->f('regtid'),
+					'artid'					 => $this->db->f('artid'),
+					'godkjentbelop'			 => $this->db->f('godkjentbelop'),
+					'spvend_code'			 => $this->db->f('spvend_code'),
+					'dima'					 => $this->db->f('dima'),
+					'loc1'					 => $this->db->f('loc1'),
+					'dimb'					 => $this->db->f('dimb'),
+					'dime'					 => $this->db->f('dime'),
+					'mvakode'				 => $this->db->f('mvakode'),
+					'dimd'					 => $this->db->f('dimd'),
+					'project_id'			 => $this->db->f('project_id'),
+					'kostra_id'				 => $this->db->f('kostra_id'),
+					'item_type'				 => $this->db->f('item_type'),
+					'item_id'				 => $this->db->f('item_id'),
+					'oppsynsmannid'			 => $this->db->f('oppsynsmannid'),
+					'saksbehandlerid'		 => $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid'	 => $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato'		 => $this->db->f('oppsynsigndato'),
+					'saksigndato'			 => $this->db->f('saksigndato'),
+					'budsjettsigndato'		 => $this->db->f('budsjettsigndato'),
+					'merknad'				 => $this->db->f('merknad'),
+					'splitt'				 => $this->db->f('splitt'),
+					'ordrebelop'			 => $this->db->f('ordrebelop'),
+					'utbetalingid'			 => $this->db->f('utbetalingid'),
+					'utbetalingsigndato'	 => $this->db->f('utbetalingsigndato'),
 				);
 			}
 			return $invoice_roleback;
@@ -237,7 +237,7 @@
 		function bilag_update_overf($BilagOverf)
 		{
 			$values = array
-			(
+				(
 				$BilagOverf['project_id'],
 				$BilagOverf['kostra_id'],
 				$BilagOverf['pmwrkord_code'],
@@ -370,8 +370,8 @@
 
 					$Belop = sprintf("%01.2f", $BilagOverf[$i]['ordrebelop']) * 100;
 
-					$actual_cost_field = 'act_vendor_cost';
-					$operator = '-';
+					$actual_cost_field	 = 'act_vendor_cost';
+					$operator			 = '-';
 
 					$this->soXport->correct_actual_cost($BilagOverf[$i]['pmwrkord_code'], $Belop, $actual_cost_field, $operator);
 				}
@@ -438,7 +438,7 @@
 			}
 			else
 			{
-				$sql = "SELECT sum(belop) AS belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL  AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";				
+				$sql = "SELECT sum(belop) AS belop, fakturanr, bilagsnr FROM fm_ecobilag WHERE periode='{$periode}' AND budsjettsigndato IS NOT NULL  AND utbetalingsigndato IS NOT NULL group by bilagsnr, fakturanr";
 			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -667,9 +667,8 @@
 				$Status			 = 'N';// verdi: N, type: c1, plass: 380 - 380
 //				$Resk_type		 = 'P';// verdi: Blank, type: c1, plass: 381 - 381
 				$Resk_type		 = ' ';// verdi: Blank, type: c1, plass: 381 - 381
-
 //				$Resk_nr		 = sprintf("%-9s", $invoice['spvend_code']);// verdi: Blank., type: i4, plass: 382 - 390
-				$Resk_nr		 = sprintf("%-9s", '');// verdi: Blank., type: i4, plass: 382 - 390
+				$Resk_nr = sprintf("%-9s", '');// verdi: Blank., type: i4, plass: 382 - 390
 
 				$Forskudd		 = '0';// verdi: 0, type: i1, plass: 391 - 391
 				$Fakturaref		 = '000000000';// verdi: 0, type: i4, plass: 392 - 400
@@ -758,7 +757,7 @@
 					$Dim_4	 = sprintf("%-8s", '');// verdi: Ressurs, type: c8, plass: 53 - 60
 					$Dim_5	 = sprintf("%-12s", $invoice_line['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
 
-					$Dim_6	 = sprintf("%-4s", $invoice_line['dimd']);// Kategori, type: c4, plass: 73 - 76
+					$Dim_6 = sprintf("%-4s", $invoice_line['dimd']);// Kategori, type: c4, plass: 73 - 76
 
 					$Dim_7 = sprintf("%-4s", '');// verdi: Blank, type: c4, plass: 77 - 80
 
@@ -777,7 +776,7 @@
 
 					$Tekst = sprintf("%-50s", substr("{$invoice['spvend_code']}::{$invoice_line['fakturanr']}", 0, 50));
 
-	//				$Fakturanr = sprintf("%-15s", substr(utf8_decode($invoice_line['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
+					//				$Fakturanr = sprintf("%-15s", substr(utf8_decode($invoice_line['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
 					$Fakturanr = sprintf("%-15s", '');// verdi: Fakturanr, type: c15, plass: 283 - 297
 
 					$Ordrenummer = sprintf("%-9s", $invoice_line['pmwrkord_code']);// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
@@ -800,7 +799,7 @@
 					if($_key == $last_record)
 					{
 						$Konto		 = sprintf("%-8s", '2139915');// verdi: Art, type: c8, plass: 21 - 28
-			//			$Dim_1		 = sprintf("%-8s", $invoice_line['dimb']);//sprintf("%-8s",'');// verdi: Ansvarssted, type: c8, plass: 29 - 36
+						//			$Dim_1		 = sprintf("%-8s", $invoice_line['dimb']);//sprintf("%-8s",'');// verdi: Ansvarssted, type: c8, plass: 29 - 36
 						$Dim_2		 = sprintf("%-8s", '');// verdi: Tjeneste, type: c8, plass: 37 - 44
 						$Dim_3		 = sprintf("%-8s", '');// verdi: Objekt, type: c8, plass: 45 - 52
 						$Dim_4		 = sprintf("%-8s", '');// verdi: Ressurs, type: c8, plass: 53 - 60
@@ -810,7 +809,7 @@
 						$Fakturanr	 = sprintf("%-15s", '');// verdi: Fakturanr, type: c15, plass: 283 - 297
 						$Ordrenummer = sprintf("%-9s", '');// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
 						//	$Tekst		= sprintf("%-50s",'');//sprintf("%-50s",substr($invoice_line['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
-			//			$Tekst		 = sprintf("%-50s", '');// verdi: Tekst, type: text (50), plass: 201 - 250
+						//			$Tekst		 = sprintf("%-50s", '');// verdi: Tekst, type: text (50), plass: 201 - 250
 						//Ikke fortegnskifte for kostfordeling (GL)
 						if($Belop_motpost < 0)
 						{
@@ -960,4 +959,4 @@
 				}
 			}
 		}
-	}	
+	}

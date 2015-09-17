@@ -79,7 +79,8 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop', 'perm' => 2, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 2, 'acl_location' => $this->acl_location));
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::import';
@@ -272,7 +273,8 @@
 				'menu'								 => $this->bocommon->get_menu(),
 				'msgbox_data'						 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'cancel_action'						 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'sub' => $sub)),
+				'cancel_action'						 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index',
+					'sub' => $sub)),
 				'lang_cancel'						 => lang('Cancel'),
 				'lang_cancel_statustext'			 => lang('cancel the import'),
 				'action_url'						 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property' . '.uiXport.import')),
@@ -428,7 +430,8 @@
 				'cancel_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data_cancel)
 			);
 
-			$vendor = $this->contacts->read_single(array('id' => $invoice_common['vendor_id']), array('attributes' => array(array('column_name' => 'org_name'))));
+			$vendor = $this->contacts->read_single(array('id' => $invoice_common['vendor_id']), array(
+				'attributes' => array(array('column_name' => 'org_name'))));
 
 			foreach($vendor['attributes'] as $attribute)
 			{
@@ -481,7 +484,8 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop', 'perm' => 16, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 16, 'acl_location' => $this->acl_location));
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::export';
@@ -501,7 +505,8 @@
 				}
 				else if($values['conv_type'] && !$values['file'])
 				{
-					$receipt = $this->bo->export(array('conv_type' => $values['conv_type'], 'download' => $values['download'], 'force_period_year' => $values['force_period_year']));
+					$receipt = $this->bo->export(array('conv_type' => $values['conv_type'], 'download' => $values['download'],
+						'force_period_year' => $values['force_period_year']));
 					if(!$values['download'])
 					{
 						$GLOBALS['phpgw_info']['flags'][noheader]		 = true;
@@ -560,7 +565,8 @@
 		{
 			if(!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop', 'perm' => 16, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 16, 'acl_location' => $this->acl_location));
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::rollback';
@@ -586,7 +592,7 @@
 
 				if(!$receipt['error'])
 				{
-					$receipt = $this->bo->rollback($values['conv_type'], $values['file'], $date, $values['voucher_id'],$values['voucher_id_intern']);
+					$receipt = $this->bo->rollback($values['conv_type'], $values['file'], $date, $values['voucher_id'], $values['voucher_id_intern']);
 				}
 			}
 			else
@@ -633,5 +639,4 @@
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('rollback' => $data));
 		}
-
-	}	
+	}

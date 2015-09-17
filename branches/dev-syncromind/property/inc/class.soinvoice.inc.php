@@ -41,17 +41,17 @@
 
 		function __construct()
 		{
-			$this->account_id		 = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->acl				 = & $GLOBALS['phpgw']->acl;
-			$this->db				 = & $GLOBALS['phpgw']->db;
-			$this->join				 = & $this->db->join;
-			$this->left_join		 = & $this->db->left_join;
-			$this->like				 = & $this->db->like;
-			$this->config			 = CreateObject('phpgwapi.config', 'property');
+			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->acl			 = & $GLOBALS['phpgw']->acl;
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->join			 = & $this->db->join;
+			$this->left_join	 = & $this->db->left_join;
+			$this->like			 = & $this->db->like;
+			$this->config		 = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
-			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$custom_config		 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
-			$this->invoice_approval	 = isset($custom_config->config_data['common']['invoice_approval']) && $custom_config->config_data['common']['invoice_approval'] ? $custom_config->config_data['common']['invoice_approval'] : 2;
+			$this->invoice_approval = isset($custom_config->config_data['common']['invoice_approval']) && $custom_config->config_data['common']['invoice_approval'] ? $custom_config->config_data['common']['invoice_approval'] : 2;
 		}
 
 		function read_invoice($data)
@@ -127,7 +127,7 @@
 
 			if($ecodimb)
 			{
-				$filtermethod .= " $where dimb = " . (int) $ecodimb;
+				$filtermethod .= " $where dimb = " . (int)$ecodimb;
 				$where = 'AND';
 			}
 
@@ -184,7 +184,7 @@
 			$no_q = false;
 			if($voucher_id)
 			{
-				$filtermethod	 = " WHERE bilagsnr = " . (int) $voucher_id . " OR bilagsnr_ut = '{$voucher_id}'";// OR spvend_code = ". (int)$query;
+				$filtermethod	 = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}'";// OR spvend_code = ". (int)$query;
 				$no_q			 = true;
 			}
 
@@ -209,7 +209,7 @@
 
 			if($query && !$no_q)
 			{
-				$query		 = (int) $query;
+				$query		 = (int)$query;
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
@@ -374,15 +374,15 @@
 
 		function read_invoice_sub($data)
 		{
-			$start		 = isset($data['start']) && $data['start'] ? (int) $data['start'] : 0;
+			$start		 = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$filter		 = isset($data['filter']) ? $data['filter'] : 'none';
 			$sort		 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order		 = isset($data['order']) ? $data['order'] : '';
-			$voucher_id	 = isset($data['voucher_id']) && $data['voucher_id'] ? (int) $data['voucher_id'] : 0;
+			$voucher_id	 = isset($data['voucher_id']) && $data['voucher_id'] ? (int)$data['voucher_id'] : 0;
 			$paid		 = isset($data['paid']) ? $data['paid'] : '';
-			$project_id	 = isset($data['project_id']) && $data['project_id'] ? (int) $data['project_id'] : 0;
+			$project_id	 = isset($data['project_id']) && $data['project_id'] ? (int)$data['project_id'] : 0;
 			$order_id	 = isset($data['order_id']) && $data['order_id'] ? $data['order_id'] : 0;//might be bigint
-			$results	 = isset($data['results']) && $data['results'] ? (int) $data['results'] : 0;
+			$results	 = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 			if($paid)
 			{
@@ -522,14 +522,14 @@
 
 		function read_invoice_sub_sum($data)
 		{
-			$start		 = isset($data['start']) && $data['start'] ? (int) $data['start'] : 0;
+			$start		 = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$filter		 = isset($data['filter']) ? $data['filter'] : 'none';
 			$sort		 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order		 = isset($data['order']) ? $data['order'] : '';
-			$voucher_id	 = isset($data['voucher_id']) && $data['voucher_id'] ? (int) $data['voucher_id'] : 0;
+			$voucher_id	 = isset($data['voucher_id']) && $data['voucher_id'] ? (int)$data['voucher_id'] : 0;
 			$paid		 = isset($data['paid']) ? $data['paid'] : '';
 			$year		 = isset($data['year']) ? $data['year'] : '';
-			$project_id	 = isset($data['project_id']) && $data['project_id'] ? (int) $data['project_id'] : 0;
+			$project_id	 = isset($data['project_id']) && $data['project_id'] ? (int)$data['project_id'] : 0;
 			$order_id	 = isset($data['order_id']) && $data['order_id'] ? $data['order_id'] : 0;//might be bigint
 
 			if($paid)
@@ -641,12 +641,12 @@
 				$query			 = isset($data['query']) ? $data['query'] : '';
 				$sort			 = isset($data['sort']) ? $data['sort'] : 'DESC';
 				$order			 = isset($data['order']) ? $data['order'] : '';
-				$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? (int) $data['cat_id'] : 0;
+				$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
 				$start_date		 = isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
 				$end_date		 = isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
-				$vendor_id		 = isset($data['vendor_id']) ? (int) $data['vendor_id'] : 0;
+				$vendor_id		 = isset($data['vendor_id']) ? (int)$data['vendor_id'] : 0;
 				$loc1			 = isset($data['loc1']) ? $data['loc1'] : '';
-				$district_id	 = isset($data['district_id']) ? (int) $data['district_id'] : 0;
+				$district_id	 = isset($data['district_id']) ? (int)$data['district_id'] : 0;
 				$workorder_id	 = isset($data['workorder_id']) && $data['workorder_id'] ? $data['workorder_id'] : 0;
 				$b_account_class = isset($data['b_account_class']) ? $data['b_account_class'] : '';
 				$b_account		 = isset($data['b_account']) ? $data['b_account'] : '';
@@ -709,7 +709,7 @@
 
 			if($ecodimb)
 			{
-				$filtermethod .= " $where dimb = " . (int) $ecodimb;
+				$filtermethod .= " $where dimb = " . (int)$ecodimb;
 				$where = 'AND';
 			}
 
@@ -733,7 +733,7 @@
 			while($this->db->next_record())
 			{
 				$consume[] = array
-				(
+					(
 					'consume'		 => round($this->db->f('consume')),
 					'period'		 => $this->db->f('periode'),
 					'district_id'	 => $this->db->f('district_id'),
@@ -756,7 +756,7 @@
 			while($this->db->next_record())
 			{
 				$consume[] = array
-				(
+					(
 					'consume'		 => round($this->db->f('consume')),
 					'period'		 => $this->db->f('periode'),
 					'district_id'	 => $this->db->f('district_id'),
@@ -818,7 +818,7 @@
 				$n = $entry[0];
 
 				//_debug_array($entry);
-				$id				 = (int) $values['id'][$n];
+				$id				 = (int)$values['id'][$n];
 				$approved_amount = isset($values['approved_amount'][$n]) && $values['approved_amount'][$n] ? str_replace(',', '.', $values['approved_amount'][$n]) : 0;
 				if(!$approved_amount || $approved_amount == '00.0')
 				{
@@ -831,7 +831,7 @@
 				{
 
 					$budget_account = $values['budget_account'][$n];
-					if (!$this->check_valid_b_account($budget_account))
+					if(!$this->check_valid_b_account($budget_account))
 					{
 						$receipt['error'][]	 = array('msg' => lang('This account is not valid:') . " " . $budget_account);
 						$local_error		 = true;
@@ -864,7 +864,7 @@
 					$dimb_field = "dimb='{$dimb}'";
 				}
 
-					
+
 				if(!$values['dimd'][$n])
 				{
 					$dimd_field			 = "dimd=NULL";
@@ -916,7 +916,7 @@
 
 				if(!$local_error)
 				{
-					$tax_code		 = (int) $values['tax_code'][$n];
+					$tax_code		 = (int)$values['tax_code'][$n];
 					$workorder_id	 = $values['workorder_id'][$n];
 					if(isset($values['close_order'][$n]) && $values['close_order'][$n] && !$values['close_order_orig'][$n])
 					{
@@ -1019,7 +1019,7 @@
 		{
 			$this->db->transaction_begin();
 
-			$id = (int) $values['id'];
+			$id = (int)$values['id'];
 
 			$table = 'fm_ecobilag';
 
@@ -1028,7 +1028,7 @@
 				$table = 'fm_ecobilagoverf';
 
 				$value_set = array
-				(
+					(
 					//			'project_id'	=> $values['project_group'] ? $values['project_group'] : '',
 					'pmwrkord_code' => $values['order_id'],
 				//			'process_log'	=> $this->db->db_addslashes($values['process_log']),
@@ -1177,7 +1177,7 @@
 
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
-				$dimb						 = (int) $dimb;
+				$dimb						 = (int)$dimb;
 				$filter_dimb				 = $dimb ? "AND ecodimb = {$dimb}" : '';
 				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id IN (1, 2, 3) {$filter_dimb} AND expired_on IS NULL AND active_from < " . time() . ' AND (active_to > ' . time() . ' OR active_to = 0)');
 				$this->db->next_record();
@@ -1206,7 +1206,7 @@
 		function get_dimb_role_user($role_id, $dimb = '', $selected = '')
 		{
 			$filter_dimb = $dimb ? "AND ecodimb = {$dimb}" : '';
-			$role_id	 = (int) $role_id;
+			$role_id	 = (int)$role_id;
 			switch($role_id)
 			{
 				case 1:
@@ -1249,14 +1249,14 @@
 
 		function get_default_dimb_role_user($role_id, $dimb)
 		{
-			$dimb	 = (int) $dimb;
-			$role_id = (int) $role_id;
+			$dimb	 = (int)$dimb;
+			$role_id = (int)$role_id;
 			$sql	 = "SELECT user_id FROM fm_ecodimb_role_user"
 			. " WHERE role_id = {$role_id} AND ecodimb = {$dimb} AND expired_on IS NULL AND default_user = 1  AND active_from < " . time() . ' AND (active_to > ' . time() . ' OR active_to = 0)';
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			return (int) $this->db->f('user_id');
+			return (int)$this->db->f('user_id');
 		}
 
 		function check_count($voucher_id)
@@ -1336,7 +1336,7 @@
 			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name = '{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
 			$bilagsnr	 = $this->db->f('value') + 1;
-			$start_date	 = (int) $this->db->f('start_date');
+			$start_date	 = (int)$this->db->f('start_date');
 
 			$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = '{$name}' AND start_date = $start_date");
 			return $bilagsnr;
@@ -1410,13 +1410,13 @@
 		//----------
 		function select_dimb_list($selected = 0)
 		{
-			$selected			 = (int) $selected;
+			$selected			 = (int)$selected;
 			$include_selected	 = false;
 
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
-				$sql = "SELECT DISTINCT fm_ecodimb.* FROM fm_ecodimb {$this->db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"
-				. ' WHERE fm_ecodimb_role_user.user_id = ' . (int) $this->account_id
+				$sql				 = "SELECT DISTINCT fm_ecodimb.* FROM fm_ecodimb {$this->db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"
+				. ' WHERE fm_ecodimb_role_user.user_id = ' . (int)$this->account_id
 				. ' AND expired_on IS NULL'
 				. ' ORDER BY descr ASC';
 				$include_selected	 = true;
@@ -1514,8 +1514,8 @@
 				$table = 'fm_ecobilagoverf';
 			}
 
-			$bilagsnr	 = (int) $bilagsnr;
-			$id			 = (int) $id;
+			$bilagsnr	 = (int)$bilagsnr;
+			$id			 = (int)$id;
 
 			if($bilagsnr)
 			{
@@ -1589,9 +1589,9 @@
 					'periodization_start'	 => $this->db->f('periodization_start'),
 					'continuous'			 => $this->db->f('continuous'),
 					'regtid'				 => $this->db->f('regtid'),
-					'item_type'				=> $this->db->f('item_type'),
-					'item_id'				=> $this->db->f('item_id'),
-					'external_voucher_id'	=> $this->db->f('external_voucher_id'),
+					'item_type'				 => $this->db->f('item_type'),
+					'item_id'				 => $this->db->f('item_id'),
+					'external_voucher_id'	 => $this->db->f('external_voucher_id'),
 				);
 			}
 
@@ -1654,15 +1654,15 @@
 						}
 						else
 						{
-							$this->db->query("SELECT DISTINCT spbudact_code FROM fm_ecobilag WHERE bilagsnr = '{$values['voucher_id'][$n]}' AND spbudact_code IS NOT NULL",__LINE__,__FILE__);
+							$this->db->query("SELECT DISTINCT spbudact_code FROM fm_ecobilag WHERE bilagsnr = '{$values['voucher_id'][$n]}' AND spbudact_code IS NOT NULL", __LINE__, __FILE__);
 							$_check_b_accounts = array();
-							while ($this->db->next_record())
+							while($this->db->next_record())
 							{
 								$_check_b_accounts[] = $this->db->f('spbudact_code');
 							}
 							foreach($_check_b_accounts as $_check_b_account)
 							{
-								if (!$this->check_valid_b_account($_check_b_account))
+								if(!$this->check_valid_b_account($_check_b_account))
 								{
 									$receipt['error'][]	 = array('msg' => lang('this account is not valid:') . " " . $_check_b_account);
 									$local_error		 = true;
@@ -1908,11 +1908,11 @@
 
 			if($line_id)
 			{
-				$condition = 'WHERE fm_ecobilag.id =' . (int) $line_id;
+				$condition = 'WHERE fm_ecobilag.id =' . (int)$line_id;
 			}
 			else if($voucher_id)
 			{
-				$condition = 'WHERE fm_ecobilag.bilagsnr =' . (int) $voucher_id;
+				$condition = 'WHERE fm_ecobilag.bilagsnr =' . (int)$voucher_id;
 			}
 
 			if(!$condition)
@@ -1985,7 +1985,6 @@
 			}
 			return $values;
 		}
-
 		/*
 		 * Orders without related historic invoices, tagged as 'delivered'
 		 *  - And orders related to active (not processed) invoices.
@@ -2013,7 +2012,6 @@
 
 			return $values;
 		}
-
 		/*
 		 *  Forward vouchers to other responsible
 		 */
@@ -2025,11 +2023,11 @@
 			$global_check = false;
 			if(isset($data['forward']) && is_array($data['forward']) && isset($data['line_id']) && $data['line_id'])
 			{
-				$condition = 'WHERE id =' . (int) $data['line_id'];
+				$condition = 'WHERE id =' . (int)$data['line_id'];
 			}
 			else if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
 			{
-				$condition		 = 'WHERE bilagsnr =' . (int) $data['voucher_id'];
+				$condition		 = 'WHERE bilagsnr =' . (int)$data['voucher_id'];
 				$global_check	 = true;
 			}
 
@@ -2038,16 +2036,16 @@
 			if($condition)
 			{
 				/*
-				* Look for roles at lower level
-				*/
+				 * Look for roles at lower level
+				 */
 
 				$this->db->query("SELECT * FROM fm_ecobilag {$condition}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$oppsynsigndato			= $this->db->f('oppsynsigndato');
-				$oppsynsmannid			= $this->db->f('oppsynsmannid');
-				$saksigndato			= $this->db->f('saksigndato');
-				$saksbehandlerid		= $this->db->f('saksbehandlerid');
-				$budsjettansvarligid	= $this->db->f('budsjettansvarligid');
+				$oppsynsigndato		 = $this->db->f('oppsynsigndato');
+				$oppsynsmannid		 = $this->db->f('oppsynsmannid');
+				$saksigndato		 = $this->db->f('saksigndato');
+				$saksbehandlerid	 = $this->db->f('saksbehandlerid');
+				$budsjettansvarligid = $this->db->f('budsjettansvarligid');
 
 
 				//start check
@@ -2113,55 +2111,55 @@
 					switch($data['sign_orig'])
 					{
 						case 'is_janitor':
-							$value_set['oppsynsigndato']	 = null;
+							$value_set['oppsynsigndato'] = null;
 							if($oppsynsmannid == $saksbehandlerid)
 							{
-								$value_set['oppsynsmannid']		 = null;
+								$value_set['oppsynsmannid'] = null;
 							}
-							if($saksbehandlerid ==$budsjettansvarligid)
+							if($saksbehandlerid == $budsjettansvarligid)
 							{
-								$value_set['oppsynsmannid']		 = null;
+								$value_set['oppsynsmannid'] = null;
 							}
 							break;
 						case 'is_supervisor':
-							$value_set['saksigndato']		 = null;
-							if($saksbehandlerid ==$budsjettansvarligid)
+							$value_set['saksigndato'] = null;
+							if($saksbehandlerid == $budsjettansvarligid)
 							{
-								$value_set['saksbehandlerid']		 = null;							
+								$value_set['saksbehandlerid'] = null;
 							}
 							break;
 						case 'is_budget_responsible':
-							$value_set['budsjettsigndato']	 = null;
+							$value_set['budsjettsigndato'] = null;
 							break;
 					}
 
 					switch($data['approve'])
 					{
 						case 'is_janitor':
-							$value_set['oppsynsigndato']		 = date($this->db->datetime_format());
-							$value_set['oppsynsmannid']			 = $data['my_initials'];
+							$value_set['oppsynsigndato']	 = date($this->db->datetime_format());
+							$value_set['oppsynsmannid']		 = $data['my_initials'];
 							break;
 						case 'is_supervisor':
-							$value_set['saksigndato']			 = date($this->db->datetime_format());
-							$value_set['saksbehandlerid']		 = $data['my_initials'];
+							$value_set['saksigndato']		 = date($this->db->datetime_format());
+							$value_set['saksbehandlerid']	 = $data['my_initials'];
 							if($data['forward']['oppsynsmannid'] == $data['my_initials'] && $oppsynsmannid == $data['my_initials'])
 							{
-								$value_set['oppsynsmannid']		 = '';
-								$value_set['oppsynsigndato']	 = '';
+								$value_set['oppsynsmannid']	 = '';
+								$value_set['oppsynsigndato'] = '';
 							}
 							break;
 						case 'is_budget_responsible':
 							$value_set['budsjettsigndato']		 = date($this->db->datetime_format());
 							$value_set['budsjettansvarligid']	 = $data['my_initials'];
-							if( $data['forward']['saksbehandlerid'] == $data['my_initials'] && $saksbehandlerid == $data['my_initials'])
+							if($data['forward']['saksbehandlerid'] == $data['my_initials'] && $saksbehandlerid == $data['my_initials'])
 							{
 								$value_set['saksbehandlerid']	 = '';
 								$value_set['saksigndato']		 = '';
 							}
 							if($data['forward']['oppsynsmannid'] == $data['my_initials'] && $oppsynsmannid == $data['my_initials'])
 							{
-								$value_set['oppsynsmannid']		 = '';
-								$value_set['oppsynsigndato']	 = '';
+								$value_set['oppsynsmannid']	 = '';
+								$value_set['oppsynsigndato'] = '';
 							}
 							break;
 					}
@@ -2185,7 +2183,7 @@
 		{
 			$order_info	 = array();
 			$toarray	 = array();
-			$order_id	 = (int) $order_id;
+			$order_id	 = (int)$order_id;
 			$sql		 = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_project.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -2239,7 +2237,7 @@
 			}
 
 			$GLOBALS['phpgw']->db->transaction_begin();
-			$this->db->query("SELECT * FROM fm_ecobilag WHERE id =" . (int) $line_id, __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM fm_ecobilag WHERE id =" . (int)$line_id, __LINE__, __FILE__);
 
 			$this->db->next_record();
 			$old_janitor			 = $this->db->f('oppsynsmannid');
@@ -2275,7 +2273,7 @@
 			$value_set['budsjettansvarligid']	 = $order_info['budget_responsible'];
 			$value_set['project_id']			 = execMethod('property.soXport.get_project', $order_id);
 			$value_set							 = $this->db->validate_update($value_set);
-			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id =" . (int) $line_id, __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id =" . (int)$line_id, __LINE__, __FILE__);
 			return $GLOBALS['phpgw']->db->transaction_commit();
 		}
 
@@ -2287,7 +2285,7 @@
 				return false;
 			}
 
-			$this->db->query("SELECT pmwrkord_code as order_id FROM fm_ecobilag WHERE id = " . (int) $data['line_id'], __LINE__, __FILE__);
+			$this->db->query("SELECT pmwrkord_code as order_id FROM fm_ecobilag WHERE id = " . (int)$data['line_id'], __LINE__, __FILE__);
 			$this->db->next_record();
 			if($data['order_id'] != $this->db->f('order_id'))
 			{
@@ -2312,11 +2310,11 @@
 			$value_set['kreditnota']			 = !!$data['park_invoice'];
 
 			$value_set = $this->db->validate_update($value_set);
-			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr =" . (int) $data['voucher_id'], __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr =" . (int)$data['voucher_id'], __LINE__, __FILE__);
 			unset($value_set);
 
-			$value_set_line = array();
-			$process_log = '';
+			$value_set_line	 = array();
+			$process_log	 = '';
 			if(isset($data['process_log']) && $data['process_log'])
 			{
 				if(stripos($data['process_log'], '::'))
@@ -2340,7 +2338,7 @@
 			$value_set_line['process_code']	 = $data['process_code'];
 
 			$value_set_line = $this->db->validate_update($value_set_line);
-			$this->db->query("UPDATE fm_ecobilag SET {$value_set_line} WHERE id = " . (int) $data['line_id'], __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_ecobilag SET {$value_set_line} WHERE id = " . (int)$data['line_id'], __LINE__, __FILE__);
 			unset($value_set_line);
 
 			//update workorder
@@ -2421,7 +2419,9 @@
 
 					$value_set = array();
 
-					$skip_values = array('id', 'project_id', 'pmwrkord_code', 'dima', 'dime', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text', 'oppsynsmannid', 'saksbehandlerid', 'oppsynsigndato', 'saksigndato', 'budsjettsigndato', 'process_code', 'process_log');
+					$skip_values = array('id', 'project_id', 'pmwrkord_code', 'dima', 'dime', 'loc1',
+						'mvakode', 'dimd', 'merknad', 'line_text', 'oppsynsmannid', 'saksbehandlerid',
+						'oppsynsigndato', 'saksigndato', 'budsjettsigndato', 'process_code', 'process_log');
 
 					foreach($metadata as $_field)
 					{
@@ -2553,7 +2553,7 @@
 				switch($data['criteria'])
 				{
 					case 'voucher_id':
-						$query		 = (int) $data['query'];
+						$query		 = (int)$data['query'];
 						$querymethod = " $where (bilagsnr = {$query} OR bilagsnr_ut = {$query})";
 						break;
 
@@ -2568,7 +2568,7 @@
 						break;
 
 					case 'vendor_id':
-						$query		 = (int) $data['query'];
+						$query		 = (int)$data['query'];
 						$querymethod = " $where (spvend_code = {$query} OR org_name {$this->like} '%{$data['query']}%')";
 						break;
 
@@ -2578,7 +2578,7 @@
 						break;
 
 					case 'dimb':
-						$query		 = (int) $data['query'];
+						$query		 = (int)$data['query'];
 						$querymethod = " $where dimb = {$query}";
 						break;
 
@@ -2665,7 +2665,7 @@
 
 		public function get_auto_generated_invoice_num($vendor_id)
 		{
-			$vendor_id	 = (int) $vendor_id;
+			$vendor_id	 = (int)$vendor_id;
 			$sql		 = "SELECT max(cast(fakturanr as int)) as invoice_num FROM fm_ecobilagoverf WHERE spvend_code = {$vendor_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
@@ -2675,9 +2675,9 @@
 
 		public function reassign_order($line_id, $order_id)
 		{
-			$line_id = (int) $line_id;
-			$order_info = $this->get_order_info($order_id); // henter default verdier selv om  $order_id ikke er gyldig.
-			$value_set = array();
+			$line_id	 = (int)$line_id;
+			$order_info	 = $this->get_order_info($order_id); // henter default verdier selv om  $order_id ikke er gyldig.
+			$value_set	 = array();
 
 			if(!$order_id)
 			{
@@ -2685,7 +2685,7 @@
 				phpgwapi_cache::message_set(lang('Project is closed'), 'error');
 				return false;
 			}
-			else if (!$order_info['order_exist'])
+			else if(!$order_info['order_exist'])
 			{
 				$remark = 'bestillingsnummeret ikke gyldig: ' . $order_id;
 				phpgwapi_cache::message_set($remark, 'error');
@@ -2693,18 +2693,18 @@
 			}
 			else
 			{
-				$value_set['project_id']			 = execMethod('property.soXport.get_project', $order_id);
+				$value_set['project_id'] = execMethod('property.soXport.get_project', $order_id);
 			}
 
 			phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
 
-			$value_set['pmwrkord_code']		= $order_id;
-			$value_set['dima'] 				= $order_info['dima'];
-			$value_set['dimb'] 				= $order_info['dimb'];
-			$value_set['dime'] 				= $order_info['dime'];
-			$value_set['loc1'] 				= $order_info['loc1'];
-			$value_set['line_text']			= $order_info['title'];
-			$value_set['spbudact_code'] = $order_info['spbudact_code'];
+			$value_set['pmwrkord_code']	 = $order_id;
+			$value_set['dima']			 = $order_info['dima'];
+			$value_set['dimb']			 = $order_info['dimb'];
+			$value_set['dime']			 = $order_info['dime'];
+			$value_set['loc1']			 = $order_info['loc1'];
+			$value_set['line_text']		 = $order_info['title'];
+			$value_set['spbudact_code']	 = $order_info['spbudact_code'];
 			if(isset($order_info['janitor']) && $order_info['janitor'])
 			{
 				$value_set['oppsynsmannid'] = $order_info['janitor'];
@@ -2712,16 +2712,15 @@
 
 			if(isset($order_info['supervisor']) && $order_info['supervisor'])
 			{
-				$value_set['saksbehandlerid']		= $order_info['supervisor'];
+				$value_set['saksbehandlerid'] = $order_info['supervisor'];
 			}
 
 			if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
 			{
-				$value_set['budsjettansvarligid']	= $order_info['budget_responsible'];
+				$value_set['budsjettansvarligid'] = $order_info['budget_responsible'];
 			}
-			$value_set	= $this->db->validate_update($value_set);
-			return $this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id = $line_id",__LINE__,__FILE__);
-
+			$value_set = $this->db->validate_update($value_set);
+			return $this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id = $line_id", __LINE__, __FILE__);
 		}
 
 		/**
@@ -2731,7 +2730,7 @@
 		 */
 		function check_valid_b_account($b_account_id)
 		{
-			$this->db->query("SELECT active FROM fm_b_account WHERE id = '{$b_account_id}'",__LINE__,__FILE__);
+			$this->db->query("SELECT active FROM fm_b_account WHERE id = '{$b_account_id}'", __LINE__, __FILE__);
 			$this->db->next_record();
 			return !!$this->db->f('active');
 		}
@@ -2747,9 +2746,9 @@
 			{
 				throw new Exception('soinvoice::perform_bulk_split() - Not a valid input');
 			}
-			$voucher_id = (int) $voucher_id;
-			$voucher = $this->read_single_voucher($voucher_id);
-			$voucher_line = $voucher[0];
+			$voucher_id		 = (int)$voucher_id;
+			$voucher		 = $this->read_single_voucher($voucher_id);
+			$voucher_line	 = $voucher[0];
 
 			$amount = 0;
 			foreach($voucher as $entry)
@@ -2782,42 +2781,42 @@
 
 			foreach($data as $entry)
 			{
-				$value_set = array
-				(
-					'bilagsnr'				=> $voucher_line['voucher_id'],
-					'bilagsnr_ut'			=> $voucher_line['voucher_out_id'],
-					'typeid'				=> $voucher_line['type'],
-					'kildeid'				=> 1,
-					'belop'					=> $entry[2],
-					'fakturadato'			=> $voucher_line['invoice_date'],
-					'merknad'				=> $voucher_line['merknad'],
-					'periode'				=> $voucher_line['period'],
-					'forfallsdato'			=> $voucher_line['payment_date'],
-					'fakturanr'				=> $voucher_line['invoice_id'],
-					'regtid'				=> $voucher_line['regtid'],
-					'artid'					=> $voucher_line['art'],
-					'godkjentbelop'			=> $entry[2],
-					'budsjettansvarligid'	=> $voucher_line['budget_responsible'],
-					'splitt'				=> $_last_line_id,
-					'kreditnota'			=> $voucher_line['parked'],
-					'item_type'				=> $voucher_line['item_type'],
-					'item_id'				=> $voucher_line['item_id'],
-					'spvend_code'			=> $voucher_line['vendor_id'],
-					'external_ref'			=> $voucher_line['external_ref'],
-					'external_voucher_id'	=> $voucher_line['external_voucher_id'],
-					'currency'				=> $voucher_line['currency'],
-					'process_log'			=> $voucher_line['process_log'],
-					'process_code'			=> $voucher_line['process_code'],
-					'periodization'			=> $voucher_line['periodization'],
-					'periodization_start'	=> $voucher_line['periodization_start'],
-					'line_text'				=> $voucher_line['line_text'],
-					'external_voucher_id'	=> $voucher_line['external_voucher_id'],
-					'spbudact_code'			=> $voucher_line['b_account_id'],
-					'kostra_id'				=> $voucher_line['kostra_id'],
-					'mvakode'				=> $voucher_line['tax_code'],
+				$value_set	 = array
+					(
+					'bilagsnr'				 => $voucher_line['voucher_id'],
+					'bilagsnr_ut'			 => $voucher_line['voucher_out_id'],
+					'typeid'				 => $voucher_line['type'],
+					'kildeid'				 => 1,
+					'belop'					 => $entry[2],
+					'fakturadato'			 => $voucher_line['invoice_date'],
+					'merknad'				 => $voucher_line['merknad'],
+					'periode'				 => $voucher_line['period'],
+					'forfallsdato'			 => $voucher_line['payment_date'],
+					'fakturanr'				 => $voucher_line['invoice_id'],
+					'regtid'				 => $voucher_line['regtid'],
+					'artid'					 => $voucher_line['art'],
+					'godkjentbelop'			 => $entry[2],
+					'budsjettansvarligid'	 => $voucher_line['budget_responsible'],
+					'splitt'				 => $_last_line_id,
+					'kreditnota'			 => $voucher_line['parked'],
+					'item_type'				 => $voucher_line['item_type'],
+					'item_id'				 => $voucher_line['item_id'],
+					'spvend_code'			 => $voucher_line['vendor_id'],
+					'external_ref'			 => $voucher_line['external_ref'],
+					'external_voucher_id'	 => $voucher_line['external_voucher_id'],
+					'currency'				 => $voucher_line['currency'],
+					'process_log'			 => $voucher_line['process_log'],
+					'process_code'			 => $voucher_line['process_code'],
+					'periodization'			 => $voucher_line['periodization'],
+					'periodization_start'	 => $voucher_line['periodization_start'],
+					'line_text'				 => $voucher_line['line_text'],
+					'external_voucher_id'	 => $voucher_line['external_voucher_id'],
+					'spbudact_code'			 => $voucher_line['b_account_id'],
+					'kostra_id'				 => $voucher_line['kostra_id'],
+					'mvakode'				 => $voucher_line['tax_code'],
 				);
-				$cols	 = implode(',', array_keys($value_set));
-				$values	 = $this->db->validate_insert(array_values($value_set));
+				$cols		 = implode(',', array_keys($value_set));
+				$values		 = $this->db->validate_insert(array_values($value_set));
 
 				$this->db->query("INSERT INTO fm_ecobilag ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 				$_last_line_id = $this->db->get_last_insert_id('fm_ecobilag', 'id');

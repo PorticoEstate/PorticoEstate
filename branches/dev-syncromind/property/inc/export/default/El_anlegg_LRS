@@ -1,32 +1,31 @@
 <?php
 	/**
-	* phpGroupWare - property: a Facilities Management System.
-	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
-	* @subpackage export
- 	* @version $Id$
-	*/
-
+	 * phpGroupWare - property: a Facilities Management System.
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package property
+	 * @subpackage export
+	 * @version $Id$
+	 */
 	/**
 	 * Description
 	 * @package property
@@ -35,100 +34,101 @@
 
 	class export_conv
 	{
+
 		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
 
-		var $debug = false;
-		protected $connection = false;
-		protected $receipt = array();
-		protected $type = '211';
+		var $debug			 = false;
+		protected $connection	 = false;
+		protected $receipt		 = array();
+		protected $type			 = '211';
 
-		function  __construct()
+		function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-			$this->db 					= & $GLOBALS['phpgw']->db;
-			$this->join					= & $this->db->join;
+			$GLOBALS['phpgw_info']['flags']['currentapp']	 = 'property';
+			$this->db										 = & $GLOBALS['phpgw']->db;
+			$this->join										 = & $this->db->join;
 
-			$this->config				= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
 
 		protected function get_xmldata()
 		{
-			$sql= "SELECT * FROM fm_entity_1_11 WHERE auto_kontering = 1 AND category = 2";//kun fellesmålere som er merket med autokontering
+			$sql = "SELECT * FROM fm_entity_1_11 WHERE auto_kontering = 1 AND category = 2";//kun fellesmålere som er merket med autokontering
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 			$anlegg = array();
 
-			$TreeID = $this->type;
-			$PeriodFrom = date('Ym');
-			$PeriodTo = 209912;
+			$TreeID		 = $this->type;
+			$PeriodFrom	 = date('Ym');
+			$PeriodTo	 = 209912;
 
 			$memory = xmlwriter_open_memory();
-			xmlwriter_set_indent ( $memory , true );
-			xmlwriter_start_document($memory,'1.0','UTF-8');
-			xmlwriter_start_element($memory,'TreeListe');
-				xmlwriter_write_attribute($memory,'TreeID',$TreeID);
-				xmlwriter_write_attribute($memory,'xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance');
-				xmlwriter_write_attribute($memory,'xsi:noNamespaceSchemaLocation','TreeListe.xsd');
+			xmlwriter_set_indent($memory, true);
+			xmlwriter_start_document($memory, '1.0', 'UTF-8');
+			xmlwriter_start_element($memory, 'TreeListe');
+			xmlwriter_write_attribute($memory, 'TreeID', $TreeID);
+			xmlwriter_write_attribute($memory, 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+			xmlwriter_write_attribute($memory, 'xsi:noNamespaceSchemaLocation', 'TreeListe.xsd');
 
-			while ($this->db->next_record())
+			while($this->db->next_record())
 			{
-				xmlwriter_start_element($memory,'Tree');
-					xmlwriter_write_element($memory,'ID', 'TJ');
-					xmlwriter_write_element($memory,'Verdi', substr($this->db->f('maalepunkt_id'),-8));
-					xmlwriter_write_element($memory,'Beskrivelse', $this->db->f('address'));
-					xmlwriter_write_element($memory,'Firma', 'BB');
-					xmlwriter_write_element($memory,'PeriodeFra', $PeriodFrom);
-					xmlwriter_write_element($memory,'PeriodeTil', $PeriodTo);
-					xmlwriter_write_element($memory,'Status', 'N');
-				    xmlwriter_start_element($memory,'BegrepsLister');
-						xmlwriter_start_element($memory,'BegrepsListe');
-						    xmlwriter_write_attribute($memory,'Prosent', 100);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'Firma' );
-								xmlwriter_write_element($memory,'ID', 'A3');
-								xmlwriter_write_element($memory,'Verdi', 'BB');
-							xmlwriter_end_element($memory);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'Art' );
-								xmlwriter_write_element($memory,'ID', 'A0');
-								xmlwriter_write_element($memory,'Verdi', '12304121');
-							xmlwriter_end_element($memory);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'Asvar' );
-								xmlwriter_write_element($memory,'ID', 'C1');
-								xmlwriter_write_element($memory,'Verdi', 45);
-							xmlwriter_end_element($memory);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'Tjeneste' );
-								xmlwriter_write_element($memory,'ID', 'TJE');
-								xmlwriter_write_element($memory,'Verdi', '');
-							xmlwriter_end_element($memory);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'Objekt' );
-								xmlwriter_write_element($memory,'ID', 'F0');
-								xmlwriter_write_element($memory,'Verdi', $this->db->f('loc1'));
-							xmlwriter_end_element($memory);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'Prosjekt' );
-								xmlwriter_write_element($memory,'ID', 'B0');
-								xmlwriter_write_element($memory,'Verdi', '');
-							xmlwriter_end_element($memory);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'Fagkode' );
-								xmlwriter_write_element($memory,'ID', 'B1');
-								xmlwriter_write_element($memory,'Verdi', '999');
-							xmlwriter_end_element($memory);
-							xmlwriter_start_element($memory,'Begrep');
-								xmlwriter_write_comment($memory , 'AV' );
-								xmlwriter_write_element($memory,'ID', 'AV');
-								xmlwriter_write_element($memory,'Verdi', '');
-							xmlwriter_end_element($memory);
-						xmlwriter_end_element($memory);
-					xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Tree');
+				xmlwriter_write_element($memory, 'ID', 'TJ');
+				xmlwriter_write_element($memory, 'Verdi', substr($this->db->f('maalepunkt_id'), -8));
+				xmlwriter_write_element($memory, 'Beskrivelse', $this->db->f('address'));
+				xmlwriter_write_element($memory, 'Firma', 'BB');
+				xmlwriter_write_element($memory, 'PeriodeFra', $PeriodFrom);
+				xmlwriter_write_element($memory, 'PeriodeTil', $PeriodTo);
+				xmlwriter_write_element($memory, 'Status', 'N');
+				xmlwriter_start_element($memory, 'BegrepsLister');
+				xmlwriter_start_element($memory, 'BegrepsListe');
+				xmlwriter_write_attribute($memory, 'Prosent', 100);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'Firma');
+				xmlwriter_write_element($memory, 'ID', 'A3');
+				xmlwriter_write_element($memory, 'Verdi', 'BB');
+				xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'Art');
+				xmlwriter_write_element($memory, 'ID', 'A0');
+				xmlwriter_write_element($memory, 'Verdi', '12304121');
+				xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'Asvar');
+				xmlwriter_write_element($memory, 'ID', 'C1');
+				xmlwriter_write_element($memory, 'Verdi', 45);
+				xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'Tjeneste');
+				xmlwriter_write_element($memory, 'ID', 'TJE');
+				xmlwriter_write_element($memory, 'Verdi', '');
+				xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'Objekt');
+				xmlwriter_write_element($memory, 'ID', 'F0');
+				xmlwriter_write_element($memory, 'Verdi', $this->db->f('loc1'));
+				xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'Prosjekt');
+				xmlwriter_write_element($memory, 'ID', 'B0');
+				xmlwriter_write_element($memory, 'Verdi', '');
+				xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'Fagkode');
+				xmlwriter_write_element($memory, 'ID', 'B1');
+				xmlwriter_write_element($memory, 'Verdi', '999');
+				xmlwriter_end_element($memory);
+				xmlwriter_start_element($memory, 'Begrep');
+				xmlwriter_write_comment($memory, 'AV');
+				xmlwriter_write_element($memory, 'ID', 'AV');
+				xmlwriter_write_element($memory, 'Verdi', '');
+				xmlwriter_end_element($memory);
+				xmlwriter_end_element($memory);
+				xmlwriter_end_element($memory);
 				xmlwriter_end_element($memory);
 			}
 			xmlwriter_end_element($memory);
-			$xml = xmlwriter_output_memory($memory,true);
+			$xml = xmlwriter_output_memory($memory, true);
 
 			if($this->debug)
 			{
@@ -142,21 +142,21 @@
 
 		protected function log_end()
 		{
-			$msgbox_data =  $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
-			$insert_values= array
-			(
+			$insert_values = array
+				(
 				0,
 				date($this->db->datetime_format()),
 				'El_anlegg_LRS',
-				implode(',',(array_keys($msgbox_data)))
+				implode(',', (array_keys($msgbox_data)))
 			);
 
-			$insert_values	= $this->db->validate_insert($insert_values);
+			$insert_values = $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
-					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
+			. "VALUES ($insert_values)";
+			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
 		public function overfor($download)
@@ -165,27 +165,26 @@
 //			$download = 'on';
 //			$download = False;
 //			$this->debug=True;
-
 			//Bestem filnavn
 			$Filnavn = $this->LagFilnavn();
 
-			if (!$Filnavn)
+			if(!$Filnavn)
 			{
-				$message='LagFilnavn: Filnavn er i bruk';
-				$receipt['error'][]= array('msg' => $message);
+				$message			 = 'LagFilnavn: Filnavn er i bruk';
+				$receipt['error'][]	 = array('msg' => $message);
 				$this->log_end();
 				return;
 			}
 
 			//Test om filen kan opprettes og skrives til
-			if (@fopen($Filnavn, "wb"))
+			if(@fopen($Filnavn, "wb"))
 			{
 				unlink($Filnavn);
 			}
 			else
 			{
-				$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
-				$receipt['error'][]= array('msg' => $message);
+				$message			 = 'kan ikke lagre til fil: ' . $Filnavn . '<br>';
+				$receipt['error'][]	 = array('msg' => $message);
 				if(!$this->debug)
 				{
 					$this->log_end();
@@ -195,14 +194,14 @@
 			//Velg ut alle anlegg som skal overføres
 			$xmldata = $this->get_xmldata();
 
-			if ($xmldata)
+			if($xmldata)
 			{
 				$this->transfer_anlegg($xmldata, $Filnavn, $download);
 			}
 
 			if($this->connection)
 			{
-				switch ($this->config->config_data['common']['method'])
+				switch($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
 						ftp_quit($this->connection);
@@ -213,7 +212,7 @@
 				}
 			}
 			//Lagre melding
-			if ($download=='on')
+			if($download == 'on')
 			{
 				$this->log_end();
 			}
@@ -221,16 +220,15 @@
 			return $receipt;
 		}
 
-
 		protected function LagFilnavn()
 		{
-			$timestamp = date('YmdHi', phpgwapi_datetime::user_localtime());
+			$timestamp	 = date('YmdHi', phpgwapi_datetime::user_localtime());
 			$fil_katalog = $this->config->config_data['export']['path'];
 
 			$Filnavn = $fil_katalog . "/konteringstre_{$this->type}_{$timestamp}.xml";
 
 			//Sjekk om filen eksisterer
-			if (file_exists($Filnavn))
+			if(file_exists($Filnavn))
 			{
 				unlink($Filnavn);
 			}
@@ -240,35 +238,35 @@
 
 		protected function transfer_anlegg($xmldata, $Filnavn, $download)
 		{
-			if ($download=='on' && !$this->debug)
+			if($download == 'on' && !$this->debug)
 			{
-				$file_written = false;
-				$fp = fopen($Filnavn, "wb");
-				fwrite($fp,$xmldata);
+				$file_written	 = false;
+				$fp				 = fopen($Filnavn, "wb");
+				fwrite($fp, $xmldata);
 
 				if(fclose($fp))
 				{
-					$file_written=true;
+					$file_written = true;
 				}
 
-				if( $file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
+				if($file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
 				{
 					$transfer_ok = true;
 				}
 				else if($file_written)
 				{
-					$transfer_ok = $this->transfer($xmldata,$Filnavn);
+					$transfer_ok = $this->transfer($xmldata, $Filnavn);
 				}
 
 				if($transfer_ok)
 				{
 					$message = "El Anlegg er overført, fil: {$Filnavn}";
-					phpgwapi_cache::message_set($message, 'message'); 
+					phpgwapi_cache::message_set($message, 'message');
 				}
 				else
 				{
 					$message = 'Noe gikk galt med overføring av El Anlegg';
-					phpgwapi_cache::message_set($message, 'error'); 
+					phpgwapi_cache::message_set($message, 'error');
 				}
 			}
 			else
@@ -279,15 +277,14 @@
 			}
 		}
 
-
-		protected function transfer($xmldata,$Filnavn)
+		protected function transfer($xmldata, $Filnavn)
 		{
 			$transfer_ok = false;
-			if($this->config->config_data['common']['method']=='ftp' || $this->config->config_data['common']['method']=='ssh')
+			if($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
 			{
 				if(!$connection = $this->connection)
 				{
-					$connection	= $this->phpftp_connect();
+					$connection = $this->phpftp_connect();
 				}
 
 				$basedir = $this->config->config_data['export']['remote_basedir'];
@@ -300,47 +297,47 @@
 					$remote_file = basename($Filnavn);
 				}
 
-				switch ($this->config->config_data['common']['method'])
+				switch($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
-						$transfer_ok = ftp_put($connection,$remote_file, $Filnavn, FTP_BINARY);
+						$transfer_ok	 = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
 						break;
 					case 'ssh';
-						$sftp = ssh2_sftp($connection);
-						$stream = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
-						$data_to_send = @file_get_contents($Filnavn);
+						$sftp			 = ssh2_sftp($connection);
+						$stream			 = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
+						$data_to_send	 = @file_get_contents($Filnavn);
 						fwrite($stream, $data_to_send);
-						$transfer_ok = @fclose($stream);
+						$transfer_ok	 = @fclose($stream);
 						break;
 					default:
-						$transfer_ok = false;
+						$transfer_ok	 = false;
 				}
 
-				if (!$transfer_ok)
+				if(!$transfer_ok)
 				{
 					unlink($Filnavn);
 				}
 			}
-			return 	$transfer_ok;
+			return $transfer_ok;
 		}
 
 		protected function phpftp_connect()
 		{
-			$server				= $this->config->config_data['common']['host'];
-			$user				= $this->config->config_data['common']['user'];
-			$password			= $this->config->config_data['common']['password'];
-			$port				= 22;
+			$server		 = $this->config->config_data['common']['host'];
+			$user		 = $this->config->config_data['common']['user'];
+			$password	 = $this->config->config_data['common']['password'];
+			$port		 = 22;
 
-			switch ($this->config->config_data['common']['method'])
+			switch($this->config->config_data['common']['method'])
 			{
 				case 'ftp';
 					if($connection = ftp_connect($server))
 					{
-						ftp_login($connection,$user,$password);
+						ftp_login($connection, $user, $password);
 					}
 					break;
 				case 'ssh';
-					if (!function_exists("ssh2_connect"))
+					if(!function_exists("ssh2_connect"))
 					{
 						die("function ssh2_connect doesn't exist");
 					}
