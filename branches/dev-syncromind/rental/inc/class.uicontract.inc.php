@@ -805,13 +805,13 @@
 				$filters = array('composite_id' => phpgw::get_var('composite_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'));
 				$filters['status_date']			= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('status_date'));
 				break;
-			case 'get_contract_warnings':	//get the contract warnings
+			/*case 'get_contract_warnings':	//get the contract warnings
 				$contract = rental_socontract::get_instance()->get_single(phpgw::get_var('contract_id'));
 				$contract->check_consistency();
 				$rows = $contract->get_consistency_warnings();
 				$result_count = count($rows);
 				$export=true;
-				break;
+				break;*/
 			case 'all_contracts':
 			default:
 				phpgwapi_cache::session_set('rental', 'contract_query', $search_for);
@@ -825,40 +825,34 @@
 				$filters['end_date_report']		= phpgwapi_datetime::date_to_timestamp(phpgw::get_var('end_date_report'));
 		}
 		
-		if($type != 'get_contract_warnings')
-		{
-			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
+		$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+		$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
 
-			//Serialize the contracts found
-			$rows = array();
-			foreach ($result_objects as $result) {
-				if(isset($result))
+		//Serialize the contracts found
+		$rows = array();
+		foreach ($result_objects as $result) {
+			if(isset($result))
+			{
+				if(isset($price_items_only))
 				{
-					if(isset($price_items_only))
-					{
-						//export contract price items
-						$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $result->get_id(),'export'=>'true','include_billed'=>'true'));
-						foreach ($result_objects_pi as $result_pi) {
-							if(isset($result_pi))
-							{
-								$rows[] = $result_pi->serialize();
-							}
+					//export contract price items
+					$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $result->get_id(),'export'=>'true','include_billed'=>'true'));
+					foreach ($result_objects_pi as $result_pi) {
+						if(isset($result_pi))
+						{
+							$rows[] = $result_pi->serialize();
 						}
 					}
-					else
-					{
-						//export contracts
-						$rows[] = $result->serialize();
-					}
+				}
+				else
+				{
+					//export contracts
+					$rows[] = $result->serialize();
 				}
 			}
-			//var_dump("Usage " .memory_get_usage() . " bytes after serializing");
 		}
-
-		if(!$export){
-			//Add context menu columns (actions and labels)
-			//$config	= CreateObject('phpgwapi.config','rental');
+		
+		/*if(!$export){
 
 			//Check if user has access to Catch module
 			$access = $this->acl->check('.',PHPGW_ACL_READ,'catch');
@@ -872,7 +866,7 @@
 			}
 
 			array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id,$entity_id_in,$entity_id_out,$category_id_in,$category_id_out));
-		}
+		}*/
 
 		if($export)
 		{
@@ -895,10 +889,6 @@
 	 */
 	public function add_actions(&$value, $key, $params)
 	{
-		/*$value['ajax'] = array();
-		$value['actions'] = array();
-		$value['labels'] = array();*/
-
 		$type = $params[0];
 		$ids = $params[1];
 		$adjustment_id = $params[2];
@@ -918,17 +908,11 @@
 			case 'terminated_contracts':
 				if(count($ids) > 0)
 				{
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
-					$value['labels'][] = lang('edit_contract');*/
 					$url  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
 					$actions[] = '<a href="'.$url.'">'.lang('edit_contract').'</a>';
 				}
 				else
 				{
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
-					$value['labels'][] = lang('show');*/
 					$url  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 					$actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
 				}
@@ -939,48 +923,30 @@
 			default:
 				if(!isset($ids) || count($ids) > 0)
 				{
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
-					$value['labels'][] = lang('edit');*/
 					$url1  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
 					$actions[] = '<a href="'.$url1.'">'.lang('edit').'</a>';
 					
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
-					$value['labels'][] = lang('copy');*/
 					$url2  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
 					$actions[] = '<a href="'.$url2.'">'.lang('copy').'</a>';
 				}
-				/*$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
-				$value['labels'][] = lang('show');*/
 				$url3  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 				$actions[] = '<a href="'.$url3.'">'.lang('show').'</a>';
 				$temlate_counter = 0;
-				foreach ($this->pdf_templates as $pdf_template){
-
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.view', 'id' => $value['id'], 'pdf_template' => $temlate_counter )));
-					$value['labels'][] = lang('make_pdf').": ". $pdf_template[0];*/
+				foreach ($this->pdf_templates as $pdf_template)
+				{
 					$url4  = html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.view', 'id' => $value['id'], 'pdf_template' => $temlate_counter )));
 					$actions[] = '<a href="'.$url4.'">'.lang('make_pdf').": ". $pdf_template[0].'</a>';
 					$temlate_counter++;
 				}
-				//http://portico/pe/index.php?menuaction=property.uientity.index&second_display=1&entity_id=3&cat_id=1&type=catch&district_id=0&query=Tes&start_date=&end_date=&click_history=06014d0abc7293bfb52ff5d1c04f3cb8&phpgw_return_as=json
+				
 				if(isset($entity_id_in) && $entity_id_in != '' && isset($category_id_in) && $category_id_in != '')
 				{
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_in, 'cat_id' => $category_id_in,'query' => $value['old_contract_id'], 'type' => 'catch')));
-					$value['labels'][] = lang('show_move_in_reports');*/
 					$url5  = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_in, 'cat_id' => $category_id_in,'query' => $value['old_contract_id'], 'type' => 'catch')));
 					$actions[] = '<a href="'.$url5.'">'.lang('show_move_in_reports').'</a>';
 				}
 
 				if(isset($entity_id_out) && $entity_id_out != '' && isset($category_id_out) && $category_id_out != '')
 				{
-					/*$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_out, 'cat_id' => $category_id_out,'query' => $value['old_contract_id'], 'type' => 'catch')));
-					$value['labels'][] = lang('show_move_out_reports');*/
 					$url6  = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_out, 'cat_id' => $category_id_out,'query' => $value['old_contract_id'], 'type' => 'catch')));
 					$actions[] = '<a href="'.$url6.'">'.lang('show_move_out_reports').'</a>';
 				}
@@ -1108,13 +1074,14 @@
 					array(
 						'key'		=> 'contract_status', 
 						'label'		=> lang('contract_status'), 
-						'className'	=> '', 
+						'className'	=> 'center', 
 						'sortable'	=> false, 
 						'hidden'	=> false
 					),
 					array(
 						'key'		=> 'contract_notification_status', 
 						'label'		=> lang('notification_status'), 
+						'className'	=> 'center', 
 						'sortable'	=> false,
 						'hidden'	=> false
 					)
@@ -1128,8 +1095,98 @@
 			array_unshift($data['form']['toolbar']['item'], $filter);
 		}
 			
-		array_push($data['datatable']['field'], array("key" => "actions", "label" => lang('actions'), "sortable"=>false, "hidden"=>false, "className"=>'dt-center all'));
+		$data['datatable']['actions'][] = array
+			(
+				'my_name'		=> 'view',
+				'text' 			=> lang('view'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				(
+					'menuaction'	=> 'rental.uicontract.view'
+				)),
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+			);
 		
+		$data['datatable']['actions'][] = array
+			(
+				'my_name'		=> 'edit',
+				'text' 			=> lang('edit'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				(
+					'menuaction'	=> 'rental.uicontract.edit'
+				)),
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+			);
+			
+		$data['datatable']['actions'][] = array
+			(
+				'my_name'		=> 'copy',
+				'text'			=> lang('copy'),
+				'action'		=> self::link(array(
+					'menuaction'	=> 'rental.uicontract.copy_contract'
+				)),
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+			);
+			
+		$temlate_counter = 0;
+		foreach ($this->pdf_templates as $pdf_template)
+		{
+			$data['datatable']['actions'][] = array
+				(
+					'my_name'		=> 'make_pdf_'.$pdf_template[0],
+					'text' 			=> lang('make_pdf').': '. $pdf_template[0],
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'rental.uimakepdf.view',
+						'pdf_template'	=> $temlate_counter
+					)),
+					'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				);
+			$temlate_counter++;
+		}
+
+		$access = $this->acl->check('.',PHPGW_ACL_READ,'catch');
+		if($access)
+		{
+			$entity_id_in = $this->config->config_data['entity_config_move_in'];
+			$entity_id_out = $this->config->config_data['entity_config_move_out'];
+			$category_id_in = $this->config->config_data['category_config_move_in'];	
+			$category_id_out = $this->config->config_data['category_config_move_out'];
+			
+			if (!empty($entity_id_in) && !empty($category_id_in))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'show_move_in_reports',
+						'text' 			=> lang('show_move_in_reports'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uientity.index',
+							'entity_id'		=> $entity_id_in,
+							'cat_id'		=> $category_id_in,
+							'type'			=> 'catch'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'query', 'source'=>'old_contract_id'))))
+					);
+			}
+			
+			if (!empty($entity_id_out) && !empty($category_id_out))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'show_move_out_reports',
+						'text' 			=> lang('show_move_out_reports'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uientity.index',
+							'entity_id'		=> $entity_id_out,
+							'cat_id'		=> $category_id_out,
+							'type'			=> 'catch'
+						)),
+						'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'query', 'source'=>'old_contract_id'))))
+					);
+			}
+		}
+				
 		$code =	<<<JS
 			var thousandsSeparator = '$this->thousandsSeparator';
 			var decimalSeparator = '$this->decimalSeparator';
