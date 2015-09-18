@@ -70,14 +70,13 @@
 				</div>
 			</div>
 			<div class="proplist-col">
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 				<input type="submit" class="pure-button pure-button-primary" name="next" value="{lang_next}" onMouseout="window.status='';return true;"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
 </xsl:template>
 
@@ -87,7 +86,9 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-
+		
+		<h3><xsl:value-of select="php:function('lang', 'invoice_run')"/>:<xsl:text> </xsl:text> <xsl:value-of select="title"/></h3>
+		
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
@@ -103,34 +104,60 @@
 					<input type="hidden" name="billing_term_selection" value="{billing_term_selection}"/>
 					<input type="hidden" name="export_format" value="{export_format}"/>
 
-					<div>
-						<dl>
-							<dt><xsl:value-of select="php:function('lang', 'contract_type')"/></dt>
-							<dd><xsl:value-of select="fields_of_responsibility_label"/></dd>
-							<dt><xsl:value-of select="php:function('lang', 'billing_start')"/></dt> 
-							<dd><xsl:value-of select="billing_start"/></dd>
-							<dt><xsl:value-of select="php:function('lang', 'year')"/></dt>
-							<dd><xsl:value-of select="year"/></dd>
-							<dt><xsl:value-of select="php:function('lang', 'Export format')"/></dt>
-							<dd><xsl:value-of select="export_format"/></dd>
-							<xsl:if test="billing_term = 1">
-								<dt><xsl:value-of select="php:function('lang', 'month')"/></dt>
-								<dd><xsl:value-of select="month_label"/></dd>
-							</xsl:if>
-							<dt><xsl:value-of select="php:function('lang', 'billing_term')"/></dt>
-							<dd><xsl:value-of select="billing_term_label"/></dd>																								
-						</dl>							
+				<div class="pure-g">
+					<div class="pure-u-1-3">
+						<h3>Fakturakjøringsdetaljer</h3>
+						<div class="pure-control-group">
+							<label><xsl:value-of select="php:function('lang', 'contract_type')"/></label>
+							<xsl:value-of select="fields_of_responsibility_label"/>
+						</div>
+						<div class="pure-control-group">
+							<label><xsl:value-of select="php:function('lang', 'billing_start')"/></label>
+							<xsl:value-of select="billing_start"/>
+						</div>
+						<div class="pure-control-group">
+							<label><xsl:value-of select="php:function('lang', 'year')"/></label>
+							<xsl:value-of select="year"/>
+						</div>
+						<div class="pure-control-group">
+							<label><xsl:value-of select="php:function('lang', 'Export format')"/></label>
+							<xsl:value-of select="export_format"/>
+						</div>
+						<xsl:if test="billing_term = 1">
+							<div class="pure-control-group">
+								<label><xsl:value-of select="php:function('lang', 'month')"/></label>
+								<xsl:value-of select="month_label"/>
+							</div>								
+						</xsl:if>
+						<div class="pure-control-group">
+							<label><xsl:value-of select="php:function('lang', 'billing_term')"/></label>
+							<xsl:value-of select="billing_term_label"/>
+						</div>
+						<h3>Fakturakjøringsvalg</h3>
+						<div class="pure-control-group">
+							<xsl:variable name="next">
+								<xsl:value-of select="php:function('lang', 'bill2')"/>
+							</xsl:variable>						
+							<div class="proplist-col">
+								<input type="submit" class="pure-button pure-button-primary" name="previous" value="previous"/>
+								<input type="submit" class="pure-button pure-button-primary" name="next" value="{$next}"/>
+							</div>							
+						</div>
 					</div>
-					<div>
-						<xsl:variable name="next">
-							<xsl:value-of select="php:function('lang', 'bill2')"/>
-						</xsl:variable>						
-						<div class="proplist-col">
-							<input type="submit" class="pure-button pure-button-primary" name="previous" value="previous"/>
-							<input type="submit" class="pure-button pure-button-primary" name="next" value="{$next}"/>
-						</div>							
+					<div class="pure-u-1-3">
+						<h3>Kontrakter i kjøring</h3>
+						<ul>
+							<li><a href="#non_cycle"><xsl:value-of select="php:function('lang', 'contracts_out_of_cycle')"/> (<xsl:value-of select="count(irregular_contracts)"/>)</a></li>
+							<li><a href="#one_time"><xsl:value-of select="php:function('lang', 'contracts_with_one_time')"/> (<xsl:value-of select="count(contracts_with_one_time)"/>)</a></li>
+							<li><a href="#cycle"><xsl:value-of select="php:function('lang', 'contracts_in_cycle')"/> (<xsl:value-of select="count(contracts)"/>)</a></li>
+						</ul>
+						<h3>Kontraktsinformasjon</h3>
+						<ul>
+							<li><a href="#new"><xsl:value-of select="php:function('lang', 'contracts_not_billed_before')"/> (<xsl:value-of select="count(not_billed_contracts)"/>)</a></li>
+							<li><a href="#removed"><xsl:value-of select="php:function('lang', 'contracts_removed')"/> (<xsl:value-of select="count(removed_contracts)"/>)</a></li>
+						</ul>
 					</div>
-					<div id="user_messages">
+					<div class="pure-u-1-3">
 						<h3>Meldinger</h3>
 						<xsl:if test="//errorMsgs!=''">
 							<div class="error">
@@ -154,19 +181,7 @@
 							</div>
 						</xsl:if>
 					</div>
-					<div id="list_navigation">
-						<h3>Kontrakter i kjøring</h3>
-						<ul>
-							<li><a href="#non_cycle"><xsl:value-of select="php:function('lang', 'contracts_out_of_cycle')"/> (<xsl:value-of select="count(irregular_contracts)"/>)</a></li>
-							<li><a href="#one_time"><xsl:value-of select="php:function('lang', 'contracts_with_one_time')"/> (<xsl:value-of select="count(contracts_with_one_time)"/>)</a></li>
-							<li><a href="#cycle"><xsl:value-of select="php:function('lang', 'contracts_in_cycle')"/> (<xsl:value-of select="count(contracts)"/>)</a></li>
-						</ul>
-						<h3>Kontraktsinformasjon</h3>
-						<ul>
-							<li><a href="#new"><xsl:value-of select="php:function('lang', 'contracts_not_billed_before')"/> (<xsl:value-of select="count(not_billed_contracts)"/>)</a></li>
-							<li><a href="#removed"><xsl:value-of select="php:function('lang', 'contracts_removed')"/> (<xsl:value-of select="count(removed_contracts)"/>)</a></li>
-						</ul>
-					</div>
+				</div>
 					<div>
 						<h2><xsl:value-of select="php:function('lang', 'contracts_out_of_cycle')"/> (<xsl:value-of select="count(irregular_contracts)"/>)</h2>
 						<xsl:for-each select="datatable_def">
@@ -340,13 +355,12 @@
 				</div>						
 			</div>
 			<div class="proplist-col">
-				<input type="button" class="pure-button pure-button-primary" name="contract_back" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="document.cancel_form.submit();"/>
+				<xsl:variable name="cancel_url">
+					<xsl:value-of select="cancel_url"/>
+				</xsl:variable>				
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
-		<xsl:variable name="cancel_url">
-			<xsl:value-of select="cancel_url"/>
-		</xsl:variable>
-		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post"></form>
 	</div>
 </xsl:template>
 
