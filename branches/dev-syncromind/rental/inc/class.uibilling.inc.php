@@ -351,7 +351,7 @@ class rental_uibilling extends rental_uicommon
 					}
 				}
 			}
-				
+			
 			$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 			foreach($fields as $id => $label)
 			{
@@ -360,7 +360,7 @@ class rental_uibilling extends rental_uicommon
 					$fields_of_responsibility_label = lang($label);
 				}
 			}
-			
+
 			$billing_start = date($this->dateFormat, $bill_from_timestamp);
 			
 			if ($billing_term == 1) 
@@ -501,7 +501,7 @@ class rental_uibilling extends rental_uicommon
 			$template = 'step2';
 		}
 		else if($step == null || (phpgw::get_var('next') != null) || phpgw::get_var('step') == '2' && phpgw::get_var('previous') != null) // User clicked next on step 0 or previous on step 2
-		{
+		{			
 			//$contract_type = phpgw::get_var('contract_type');
 			$export_format = rental_sobilling::get_instance()->get_agresso_export_format($contract_type);
 			$existing_billing = phpgw::get_var('existing_billing');
@@ -524,8 +524,12 @@ class rental_uibilling extends rental_uicommon
 					$existing_billing_options[] = array('id'=>$billing->get_id(), 'name'=>$billing->get_title(), 'selected'=>$selected);
 				}
 			}
-
-			$this_year = date('Y');
+			
+			$this_year = phpgw::get_var('year');
+			if (empty($this_year))
+			{
+				$this_year = date('Y');
+			}
 			$years = rental_contract::get_year_range();
 			$year_options = array();
 			foreach($years as $year)
@@ -533,7 +537,8 @@ class rental_uibilling extends rental_uicommon
 				$selected = ($this_year == $year) ? 1 : 0;
 				$year_options[] = array('id'=>$year, 'name'=>$year, 'selected'=>$selected);
 			}
-
+			
+			$billing_term_selection = phpgw::get_var('billing_term_selection');
 			$current=0;
 			$billing_term_group_options = array();
 			foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
@@ -541,29 +546,29 @@ class rental_uibilling extends rental_uicommon
 				$options = array();
 				if($current == 0)
 				{
-					$options[] = array('id'=>$term_id.'-1', 'name'=>lang($term_title));
+					$options[] = array('id'=>$term_id.'-1', 'name'=>lang($term_title), 'selected'=>(($term_id.'-1' == $billing_term_selection) ? 1 : 0));
 				}
 				else if($current == 1)
 				{
-					$options[] = array('id'=>$term_id.'-1', 'name'=>'1. halv&aring;r');
-					$options[] = array('id'=>$term_id.'-2', 'name'=>'2. halv&aring;r');						
+					$options[] = array('id'=>$term_id.'-1', 'name'=>'1. halv&aring;r', 'selected'=>(($term_id.'-1' == $billing_term_selection) ? 1 : 0));
+					$options[] = array('id'=>$term_id.'-2', 'name'=>'2. halv&aring;r', 'selected'=>(($term_id.'-2' == $billing_term_selection) ? 1 : 0));						
 				}
 				else if($current == 2)
 				{
-					$options[] = array('id'=>$term_id.'-1', 'name'=>'1. kvartal');
-					$options[] = array('id'=>$term_id.'-2', 'name'=>'2. kvartal');
-					$options[] = array('id'=>$term_id.'-3', 'name'=>'3. kvartal');
-					$options[] = array('id'=>$term_id.'-4', 'name'=>'4. kvartal');
+					$options[] = array('id'=>$term_id.'-1', 'name'=>'1. kvartal', 'selected'=>(($term_id.'-1' == $billing_term_selection) ? 1 : 0));
+					$options[] = array('id'=>$term_id.'-2', 'name'=>'2. kvartal', 'selected'=>(($term_id.'-2' == $billing_term_selection) ? 1 : 0));
+					$options[] = array('id'=>$term_id.'-3', 'name'=>'3. kvartal', 'selected'=>(($term_id.'-3' == $billing_term_selection) ? 1 : 0));
+					$options[] = array('id'=>$term_id.'-4', 'name'=>'4. kvartal', 'selected'=>(($term_id.'-4' == $billing_term_selection) ? 1 : 0));
 				}
 				else if($current == 3)
 				{
 					for($i=1; $i<=12; $i++)
 					{
-						$options[] = array('id'=>$term_id.'-'.$i, 'name'=>lang('month ' . $i . ' capitalized'));						
+						$options[] = array('id'=>$term_id.'-'.$i, 'name'=>lang('month ' . $i . ' capitalized'), 'selected'=>(($term_id.'-'.$i == $billing_term_selection) ? 1 : 0));						
 					}						
 				} 
 				else {
-					$options[] = array('id'=>$term_id.'-1', 'name'=>lang($term_title));
+					$options[] = array('id'=>$term_id.'-1', 'name'=>lang($term_title), 'selected'=>(($term_id.'-1' == $billing_term_selection) ? 1 : 0));
 				}
 				$current++;
 				$billing_term_group_options[] = array('label'=>lang($term_title), 'options'=>$options);
@@ -577,9 +582,7 @@ class rental_uibilling extends rental_uicommon
 				'lang_cancel'					=> lang('cancel'),			
 				'contract_type'					=> $contract_type,
 				'billing_term'					=> phpgw::get_var('billing_term'),
-				'billing_term_selection'		=> phpgw::get_var('billing_term_selection'),
 				'title'							=> phpgw::get_var('title'),
-				'year'							=> phpgw::get_var('year'),
 				'existing_billing'				=> $existing_billing,
 				'fields_of_responsibility_label'=> $fields_of_responsibility_label,
 				'list_existing_billing'			=> array('options' => $existing_billing_options),
@@ -643,7 +646,7 @@ JS;
 						),
 						array(
 							'type'   => 'link',
-							'value'  => lang('new'),
+							'value'  => lang('create_billing'),
 							'onclick'=> 'onCreateBilling()',
 							'class'  => 'new_item'
 						)						
@@ -867,7 +870,7 @@ JS;
 				'action'		=> self::link(array(
 						'menuaction'	=> 'rental.uicontract.view'
 				)),
-				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'contract_id'))))
 			);
 		$tabletools[] = array
 			(
@@ -876,7 +879,7 @@ JS;
 				'action'		=> self::link(array(
 						'menuaction'	=> 'rental.uicontract.edit'
 				)),
-				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'id'))))
+				'parameters'	=> json_encode(array('parameter'=>array(array('name'=>'id', 'source'=>'contract_id'))))
 			);
 		$tabletools[] = array
 			(
