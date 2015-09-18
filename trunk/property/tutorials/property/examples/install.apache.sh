@@ -269,7 +269,7 @@ make &&\
 make install
 
 
-
+#export ORACLE_HOME=/opt/instantclient_12_1/ &&\
 #export LDFLAGS=-lstdc++ &&\
 #./configure \
 # --with-sybase-ct=/usr/local/freetds\
