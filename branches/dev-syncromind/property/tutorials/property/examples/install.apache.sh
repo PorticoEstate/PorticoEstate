@@ -1,12 +1,12 @@
 #!/bin/bash
-# $Id$ 
+# $Id$
 
 #/**
-#  * installscript for APACHE with PHP, IMAP, POSTGRESQL, MYSQL, LIBXML, XSLT, FREEDTS(MSSQL) and EACCELERATOR
-#  * 
-#  * 
+#  * installscript for APACHE with PHP, IMAP, POSTGRESQL, MYSQL, LIBXML, XSLT, FREEDTS(MSSQL), PCRE, APR, APR-UTIL
+#  *
+#  *
 #  * Download all tarballs to one directory(here: '/opt/web') and place this script in the same place
-#  * 
+#  *
 #  * NOTE: Do not add spaces after bash variables.
 #  *
 #  * @author            Sigurd Nes <Sigurdne (inside) online (dot) no>
@@ -17,14 +17,24 @@
 # should be edited
 ##############################
 
+#PCRE from ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
+PCRETAR="pcre-8.36.tar.gz"
+PCRE="pcre-8.36"
+
+#APR from http://apr.apache.org/
+APRTAR="apr-1.5.2.tar.gz"
+APR="apr-1.5.2"
+APR_UTIL_TAR="apr-util-1.5.4.tar.gz"
+APR_UTIL="apr-util-1.5.4"
+
 #/**
 #  * Name of the freetds package e.g freetds-stable.tgz
-#  * 
+#  *
 #  * @var               string FREETDS, FREETDSTAR
 #  * Download: http://www.freetds.org/software.html
 #  */
-FREETDSTAR="freetds-stable.tgz"
-FREETDS="freetds-0.91"
+FREETDSTAR="freetds-patched.tar.gz"
+FREETDS="freetds-0.95.19"
 
 # Download: http://xmlsoft.org/downloads.html
 LIBXMLTAR="libxml2-2.9.2.tar.gz"
@@ -41,36 +51,24 @@ PHP_PREFIX="/usr/local"
 
 #/**
 #  * Name of the APACHE tarball e.g httpd-2.2.6.tar.gz
-#  * 
+#  *
 #  * @var               string APACHE, APACHETAR
 #  * Download: http://php.net/
 #  */
-APACHETAR="httpd-2.2.21.tar.gz"
-APACHE="httpd-2.2.21"
+APACHETAR="httpd-2.4.16.tar.gz"
+APACHE="httpd-2.4.16"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
-#  * 
+#  *
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.8.tar.bz2"
-PHP="php-5.3.8"
+PHPTAR="php-7.0.0RC2.tar.bz2"
+PHP="php-7.0.0RC2"
 
-#/**
-#  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
-#  * 
-#  * @var               string EACCELERATOR, EACCELERATORTAR
-#  * Download: http://eaccelerator.net/
-#  */
-EACCELERATORTAR="eaccelerator-0.9.6.1.tar.bz2"
-EACCELERATOR="eaccelerator-0.9.6.1"
 PHP_PREFIX="/usr/local"
 
-# APC as Alternative:
-# Download: http://pecl.php.net/package/APC
-# APCTAR="APC-3.1.2.tgz"
-# APC="APC-3.1.2"
 
 #/**
 #  * Oracle PDO-Support
@@ -81,9 +79,9 @@ PHP_PREFIX="/usr/local"
 #ORACLE="instantclient_11_2"
 #ORACLEDEVELTAR="instantclient-sdk-linux32-11.2.0.1.zip"
 
-ORACLETAR="instantclient-basic-linux-x86-64-11.2.0.2.0.zip"
-ORACLE="instantclient_11_2"
-ORACLEDEVELTAR="instantclient-sdk-linux-x86-64-11.2.0.2.0.zip"
+ORACLETAR="instantclient-basic-linux.x64-12.1.0.2.0.zip"
+ORACLE="instantclient_12_1"
+ORACLEDEVELTAR="instantclient-sdk-linux.x64-12.1.0.2.0.zip"
 
 ORACLE_PDO=""
 
@@ -103,17 +101,17 @@ function include_oracle()
 
     unzip $1
     mv $2 /opt/
-    unzip $ORACLEDEVELTAR 
+    unzip $ORACLEDEVELTAR
     mv $2/sdk /opt/$2/
     export ORACLE_HOME=/opt/$2/
-    ln -s /opt/$2/libclntsh.so.11.1 /opt/$2/libclntsh.so
-    ln -s /opt/$2/libocci.so.11.1 /opt/$2/libocci.so
+    ln -s /opt/$2/libclntsh.so.12.1 /opt/$2/libclntsh.so
+    ln -s /opt/$2/libocci.so.12.1 /opt/$2/libocci.so
     ln -s /opt/$2/ /opt/$2/lib
 }
 
 
 # clean up from previous
-
+rm $PCRE -rf &&\
 rm $FREETDS -rf &&\
 rm $LIBXML -rf &&\
 rm $LIBXSL -rf &&\
@@ -196,13 +194,20 @@ if [ $svar = "yes" ];then
     echo "Skipping MSSQL"
 fi
 
-
+tar -xzf $APRTAR &&\
+tar -xzf $APR_UTIL_TAR &&\
+tar -xzf $PCRETAR &&\
 tar -xzf $LIBXMLTAR &&\
 tar -xzf $LIBXSLTAR &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
-bunzip2 -c $EACCELERATORTAR | tar xvf -&&\
-cd $LIBXML &&\
+mv $APR $APACHE/srclib/apr &&\
+mv $APR_UTIL $APACHE/srclib/apr-util &&\
+cd $PCRE &&\
+./configure &&\
+make &&\
+make install &&\
+cd ../$LIBXML &&\
 ./configure &&\
 make &&\
 make install &&\
@@ -261,20 +266,43 @@ export LDFLAGS=-lstdc++ &&\
  --enable-zip \
  $ORACLE_PDO &&\
 make &&\
-make install &&\
-cd ../$EACCELERATOR &&\
-$PHP_PREFIX/bin/phpize &&\
-./configure --enable-eaccelerator=shared --with-php-config=$PHP_PREFIX/bin/php-config &&\
-make &&\
-make install &&\
-mkdir /tmp/eaccelerator &&\
-chmod 0777 /tmp/eaccelerator
+make install
 
 
-#cd ../$APC &&\
-#$PHP_PREFIX/bin/phpize &&\
-#./configure --enable-apc-mmap --with-apxs --with-php-config=$PHP_PREFIX/bin/php-config &&\
-#make &&\
-#make install
+
+#export LDFLAGS=-lstdc++ &&\
+#./configure \
+# --with-sybase-ct=/usr/local/freetds\
+# --with-apxs2=/usr/local/apache2/bin/apxs\
+# --with-xsl\
+# --with-zlib\
+# --with-pspell\
+# --with-jpeg-dir=/usr/lib\
+# --with-png-dir=/usr/lib\
+# --with-freetype-dir=/usr/lib\
+# --with-gd\
+# --enable-ftp\
+# --with-pgsql\
+# --with-mysql\
+# --with-mysqli\
+# --enable-shmop\
+# --enable-sysvsem\
+# --enable-sysvshm\
+# --enable-calendar\
+# --enable-pdo\
+# --with-pdo-sqlite\
+# --with-sqlite\
+# --with-pdo-pgsql\
+# --with-pdo-mysql\
+# --with-openssl\
+# --enable-mbstring\
+# --with-mcrypt\
+# --enable-soap\
+# --with-xmlrpc \
+# --with-gettext \
+# --with-snmp \
+# --with-curl \
+# --enable-zip \
+# --with-oci8=instantclient,/opt/instantclient_12_1/ --with-pdo-oci
 
 # vim: set expandtab :

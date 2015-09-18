@@ -88,7 +88,7 @@
 
 			foreach ($config_info as & $entry)
 			{
-				list($entity_id, $cat_id) = split('[_]', $entry['schema']);
+				list($entity_id, $cat_id) = preg_split('/[_]/', $entry['schema']);
 				$category = $entity->read_single_category($entity_id, $cat_id);
 				$entry['schema'] = "{$entry['schema']} {$category['name']}";
 			}
@@ -101,7 +101,7 @@
 			$values 				= $this->so->read_single_type($id);
 			$entity					= CreateObject('property.soadmin_entity');
 			$entity->type 			= 'catch';
-			list($entity_id, $cat_id) = split('[_]', $values['schema']);
+			list($entity_id, $cat_id) = preg_split('/[_]/', $values['schema']);
 			$category				= $entity->read_single_category($entity_id, $cat_id);
 			$values['schema_text']	= "{$values['schema']} {$category['name']}";
 			return $values;

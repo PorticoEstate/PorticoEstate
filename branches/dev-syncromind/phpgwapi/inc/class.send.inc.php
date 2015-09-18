@@ -71,7 +71,7 @@
 		{
 			$mail = createObject('phpgwapi.mailer_smtp');
 			$from = str_replace(array('[',']'),array('<','>'),$from);
-			$from_array = split('<', $from);
+			$from_array = explode('<', $from);
 			unset($from);
 			if ( count($from_array) == 2 )
 			{
@@ -89,7 +89,7 @@
 			foreach ($to as $entry)
 			{
 				$entry = str_replace(array('[',']'),array('<','>'),$entry);
-				$to_array = split('<', $entry);
+				$to_array = explode('<', $entry);
 				if ( count($to_array) == 2 )
 				{
 					$mail->AddAddress(trim($to_array[1],'>'), $to_array[0]);
@@ -108,7 +108,7 @@
 				foreach ($cc as $entry)
 				{
 					$entry = str_replace(array('[',']'),array('<','>'),$entry);
-					$cc_array = split('<', $entry);
+					$cc_array = explode('<', $entry);
 					if ( count($cc_array) == 2 )
 					{
 						$mail->AddCC(trim($cc_array[1],'>'), $cc_array[0]);
@@ -127,7 +127,7 @@
 				foreach ($bcc as $entry)
 				{
 					$entry = str_replace(array('[',']'),array('<','>'),$entry);
-					$bcc_array = split('<', $entry);
+					$bcc_array = explode('<', $entry);
 					if ( count($bcc_array) == 2 )
 					{
 						$mail->AddBCC(trim($bcc_array[1],'>'), $bcc_array[0]);

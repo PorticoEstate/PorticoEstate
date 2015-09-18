@@ -77,7 +77,7 @@
 
 			while (is_array($category_list) && list(,$category) = each($category_list))
 			{
-				$words = split(' ',$category['descr']);
+				$words = explode(' ',$category['descr']);
 				$first = "$words[0] $words[1] $words[2] $words[3]";
 
 				$content[] = array

@@ -579,7 +579,7 @@
 				$selector = "";
 				switch($search_type){
 					case 'unit_leader':
-							$search_words = split(' ', $search_for);
+							$search_words = explode(' ', $search_for);
 							$count = 0;
 							$selector = "(";
 							foreach($search_words as $search_word){
@@ -719,7 +719,7 @@
 				$selector = "";
 				switch($search_type){
 					case 'unit_leader':
-							$search_words = split(' ', $search_for);
+							$search_words = explode(' ', $search_for);
 							$count = 0;
 							$selector = "(";
 							foreach($search_words as $search_word)

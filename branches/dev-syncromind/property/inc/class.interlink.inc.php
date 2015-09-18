@@ -168,7 +168,6 @@
 
 			$location					 = ltrim($location, '.');
 			$parts						 = explode('.', $location);
-			//			list($type, $entity_id, $cat_id) = split('[.]', $location);
 			$this->boadmin_entity->type	 = $parts[0];
 			switch($parts[0])
 			{

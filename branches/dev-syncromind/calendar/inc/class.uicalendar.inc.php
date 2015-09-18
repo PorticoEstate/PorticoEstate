@@ -2298,7 +2298,7 @@ HTML;
 				$params = explode('&', $params);
 				foreach( $params as $v )
 				{
-					$b = split('=', $v);
+					$b = explode('=', $v);
 					if(isset($b[0]) && $b[0])
 					{
 						$new_params[$b[0]] = $b[1];

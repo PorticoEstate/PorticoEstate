@@ -248,7 +248,7 @@
 			$totalacl = array();
 			foreach ( $values as $rowinfo => $perm )
 			{
-				list($user_id,$rights) = split('_', $rowinfo);
+				list($user_id,$rights) = explode('_', $rowinfo);
 
 				if ( !isset($totalacl[$user_id]) )
 				{

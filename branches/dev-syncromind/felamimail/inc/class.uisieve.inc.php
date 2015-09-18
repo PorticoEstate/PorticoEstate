@@ -260,7 +260,7 @@
 			
 			if ($_vacation['forwards'])
 			{
-				foreach(split(', ?',$_vacation['forwards']) as $addr)
+				foreach(preg_split('/, ?/',$_vacation['forwards']) as $addr)
 				{
 					if (!preg_match($regexp,$addr)) 
 					{

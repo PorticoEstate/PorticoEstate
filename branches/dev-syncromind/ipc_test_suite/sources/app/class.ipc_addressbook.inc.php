@@ -627,7 +627,7 @@
 							$add_parts = explode(',', utf8_decode($data[$attribute][0]));
 							for($k=0;$k<count($add_parts);++$k)
 							{
-								list($name, $value) = split('=', $add_parts[$k], 2);
+								list($name, $value) = explode('=', $add_parts[$k], 2);
 								$value = utf8_decode($value);
 								switch(strtolower($name))
 								{
@@ -690,7 +690,7 @@
 							$add_parts = explode(';', utf8_decode($data[$attribute][0]));
 							for($k=0;$k<count($add_parts);++$k)
 							{
-								list($name, $value) = split('=', $add_parts[$k], 2);
+								list($name, $value) = explode('=', $add_parts[$k], 2);
 								switch(strtolower($name))
 								{
 									case 'c':

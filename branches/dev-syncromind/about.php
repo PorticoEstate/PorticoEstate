@@ -93,7 +93,7 @@
 							if (is_array($infos))
 							{
 								$names = explode('<br />',$infos['name']);
-								$emails = split('@|<br />',$infos['email']);
+								$emails = preg_split('/@|<br \/>/',$infos['email']);
 								if (count($names) < count($emails)/2)
 								{
 									$names = '';

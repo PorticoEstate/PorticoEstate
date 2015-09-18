@@ -689,13 +689,13 @@
 			$date_end = phpgw::get_var('date_end');
 
 			if(isset($date_start)){
-				$aDate = split ("/", $date_start);
+				$aDate = explode("/", $date_start);
 				$date_start = $aDate[1]."/".$aDate[0]."/".$aDate[2];
 				$timestamp_invoice_start = strtotime($date_start);
 			}
 
 			if(isset($date_end)){
-				$aDate = split ("/", $date_end);
+				$aDate = explode("/", $date_end);
 				$date_end = $aDate[1]."/".$aDate[0]."/".$aDate[2];
 				$timestamp_invoice_end = strtotime($date_end);
 			}

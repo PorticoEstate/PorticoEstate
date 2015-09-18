@@ -1522,7 +1522,7 @@ HTML;
 
 
 			$from = str_replace(array('[',']'),array('<','>'),$from_address);
-			$from_array = split('<', $from);
+			$from_array = explode('<', $from);
 			unset($from);
 			if ( count($from_array) == 2 )
 			{

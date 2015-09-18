@@ -19,7 +19,7 @@ function clktl_getsmsstatus($smslog_id)
 	$fd = @implode ('', file ($url));
 	if ($fd)
 	{
-    	    $response = split (" ", $fd);
+    	    $response = explode(" ", $fd);
     	    $err_code = trim ($response[1]);
 	    $credit = 0;
     	    if ((strtoupper(trim($response[2])) == "CHARGE:"))
@@ -149,7 +149,7 @@ function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$ui
     setsmsdeliverystatus($smslog_id,$uid,$p_status);
     if ($fd)
     {
-        $response = split (":", $fd);
+        $response = explode(":", $fd);
         $err_code = trim ($response[1]);
         if ((strtoupper($response[0]) == "ID"))
         {
