@@ -216,7 +216,7 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 	var disableFilter		= options['disableFilter'] || false;
 	var TableTools_def		= options['TableTools'] || false;
 	var order				= options['order'] || [0, 'desc'];
-//console.log(options);
+
 	data = data || {};
 
 //	if (Object.keys(data).length == 0)
@@ -420,7 +420,13 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 						phpgw_return_as: "json"
 					},
 					success: function( data ) {
-						response( $.map( data.ResultSet.Result, function( item ) {
+                                            var data_t = "";
+                                            if (data.ResultSet){
+                                                data_t = data.ResultSet.Result;
+                                            }else if (data.data){
+                                                data_t = data.data;
+                                            }
+						response( $.map( data_t, function( item ) {
 							return {
 								label: item.name,
 								value: item.id
@@ -523,3 +529,206 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 		mydiv.appendChild(myA);
 		return mydiv;
 	}
+
+
+
+
+
+
+//d => div contenedor
+//u => URL
+//c => columnas
+//r => respuesta
+function createTable (d,u,c,r,cl) {
+    r = (r) ? r : 'data';
+    tableClass = (cl) ? cl : "pure-table pure-table-striped";
+
+    var tableHead = "<thead><tr>";
+    $.each(c, function(i, v) {
+        var label = (v.label) ? v.label : "";
+        tableHead += "<th>"+label+"</th>";
+    });
+    tableHead += "</tr></thead>";
+
+    var tableBody = "<tbody>";
+
+    $.get(u, function(data) {
+        if (!data[r]){
+            return;
+        }
+        if (data[r].length == 0) {
+            tableClass = "pure-table pure-table-bordered";
+            tableBody += "<tr><td colspan='"+c.length+"'>No records found</td></tr>";
+        }else {
+            $.each(data[r], function(id, vd) {
+                tableBody += "<tr>";
+                $.each(c, function(ic, vc) {
+                    tableBody += "<td>";
+                    if (vc['object']){
+                        objects = [];
+                        $.each(vc['object'], function(io, vo){
+                            var array_attr = new Array();
+                            $.each(vo['attrs'], function(ia, va){
+                                array_attr.push({name: va['name'],value: va['value']});
+                            });
+                            if ((vc['value'])) {
+                                var value_found = 0;
+                                $.each(array_attr, function(i, v){
+                                    if (v['name'] == 'value'){
+                                        value_found++;
+                                    };
+                                });
+                                if (value_found == 0) {
+                                    array_attr.push({name: 'value',value: vd[vc['value']]});
+                                }
+                            }
+                            if ((vc['checked'])) {
+                                vcc = vc['checked'];
+                                $.each(array_attr, function(i,v){
+                                   if (v['name'] == 'value'){
+                                        if (typeof(vcc) == 'string'){
+                                            if (vcc == v['value']) {
+                                                array_attr.push({name: 'checked',value: 'checked'});
+                                            }
+                                        }else{
+                                            if ((jQuery.inArray(v['value'], vcc) == 0) || (jQuery.inArray(v['value'].toString(), vcc) == 0) || (jQuery.inArray(parseInt(v['value']), vcc) == 0)){
+                                                array_attr.push({name: 'checked',value: 'checked'});
+                                            }
+                                        }
+                                   }
+                                });
+                            }
+                            objects.push({type: vo['type'],attrs: array_attr});
+                        });
+                        var object = createObject(objects);
+                        tableBodyTd = object;
+                    }else if (vc['formatter']) {
+                        vcfa = [];
+                        vcft = 'genericLink';                        
+                        if (typeof(vc['formatter']) == 'function'){
+                            vcfa = [];
+                            vcft = (vc['formatter'] == genericLink2) ? 'genericLink2' : 'genericLink';
+                        }else if (typeof(vc['formatter']) == 'object'){
+                            vcfa = vc['formatter']['arguments'];
+                            vcft = vc['formatter']['type'];
+                        }                        
+                        var k = vc.key;
+                        var link = "";
+                        var label = "";
+                        if (vcfa.length > 0) {
+                            $.each(vcfa, function(i, v){                                
+                                if (typeof(v) == 'string') {
+                                    label = v;
+                                    label_name = v;
+                                }else{
+                                    label = (v['label']) ? v['label'] : vd[k];
+                                    label_name = (v['name']) ? v['name'] : '';
+                                }
+                                if (label_name == 'Edit' || label_name == 'edit') {
+                                    vcfLink = 'opcion_edit';
+                                }else if (label_name == 'Delete' || label_name == 'delete') {
+                                    vcfLink = 'opcion_delete';
+                                }else if (label_name == 'dellink') {
+                                    vcfLink = 'dellink';
+                                    label = 'slett';
+                                }else{
+                                    vcfLink = '';
+                                }
+                                link += (i > 0) ? '&nbsp;' : '';
+                                link += (vcft == 'genericLink2') ? formatGenericLink2(label,vd[vcfLink]) : formatGenericLink(label,vd[vcfLink]);
+                            });                            
+                        }else {
+                            link = vd[k];
+                            if (vcft == 'genericLink2'){
+                                link = (vd['dellink']) ? formatGenericLink2('slett',vd[k]) : link;
+                            }else {
+                                link = (vd['link']) ? formatGenericLink(vd[k],vd['link']) : link;
+                            }
+                        }
+                        tableBodyTd = link;
+                    }else {
+                        var k = vc.key;
+                        tableBodyTd = vd[k];
+                    }
+                    tableBody += tableBodyTd;
+                    tableBody += "</td>";
+                });
+                tableBody += "</tr>";
+            });
+        }
+        tableBody += "</tbody>";
+        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</tabel>");
+    });
+}
+
+
+function createObject (object) {
+    var obj = "";
+    if (typeof(object)) {
+        $.each(object, function(i,v){
+            type = v['type']            
+            var element = document.createElement(type);
+            $.each(v['attrs'], function(i,v){
+                element.setAttribute(v['name'], v['value']);
+            });
+            obj += (i > 0) ? '&nbsp;' : '';
+            obj += element.outerHTML;
+        });
+    };
+    return obj;
+}
+
+function createTableObject (object) {
+    var obj = "";
+    if (typeof(object) == 'object') {
+//        console.log(object);
+        $.each(object, function(io, vo){
+            var type = vo['type'];
+            var attrs = "";
+//            console.log(vo);
+//            console.log(typeof(vo));
+//            console.log(io);
+            $.each(vo.attrs, function(iv, vv){
+//                console.log(iv + " -> " + vv);
+//                console.log("aaa");
+//                console.log(typeof(vv));
+//                console.log(vv);
+                attrs += vv['attrs']['name'] + "='" + vv['attrs']['value'] + "' ";
+            });
+//            console.log(attrs);
+            var element = "";            
+            element += "<"+type+" "+attrs+">";
+            obj += (io > 0) ? '&nbsp;' : '';
+            obj += element;
+        });    
+    }
+    return obj;
+}
+function genericLink() {
+    var data = [];
+    data['arguments'] = arguments;
+    data['type'] = 'genericLink';
+    return data;
+}
+function genericLink2() {
+    var data = [];
+    data['arguments'] = arguments;
+    data['type'] = 'genericLink2';
+    return data;
+}
+
+// nl = numero links
+function formatGenericLink(name, link) {
+    if (!name || !link){
+        return name;
+    }else{
+        return "<a href='"+link+"'>"+name+"</a>";
+    }
+}
+function formatGenericLink2(name, link) {
+    if (!name || !link){
+        return name;
+    }else{
+        return "<a onclick='return confirm(\"Er du sikker på at du vil slette denne?\")' href='"+link+"'>"+name+"</a>";
+    }
+}
