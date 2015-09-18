@@ -32,11 +32,11 @@ function populateSelectSeason (building_id, selection) {
     var container = $('#season_container');
     populateSelect(url, selection, container);    
 }
-function populateTableChkResources (building_id, initialSelection) {
-    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&'
+function populateTableChkResources (building_id, selection) {
+    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&';
     var container = 'resources_container';
-    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'}]}], value: 'id', checked: initialSelection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
-    populateTableChk(url, container, colDefsResources)
+    var colDefsResources = [{label: '', object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'}]}], value: 'id', checked: selection},{key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}];
+    populateTableChk(url, container, colDefsResources);
 }
 
 function populateTableChk (url, container, colDefs) {    
