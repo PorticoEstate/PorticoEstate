@@ -16,6 +16,15 @@ function formatterArea (key, oData)
 	return amount;
 }
 	
+function formatterPayer (key, oData) 
+{
+	var value = oData[key];
+	if (value == '') {
+		value = oData['other_operations'];
+	};
+	return value;
+}
+
 $(document).ready(function()
 {
 	$("#date_start").change(function(){
@@ -376,6 +385,16 @@ removeParty = function(oArgs, parameters){
 		oTable4.fnDraw();
 
 	}, data, 'POST', 'JSON');
+};
+
+setPayer = function(requestUrl)
+{
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+		
+		JqueryPortico.show_message(3, result);
+		oTable3.fnDraw();
+
+	}, '', "POST", "JSON");
 };
 
 downloadParties = function(oArgs){
