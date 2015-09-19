@@ -833,6 +833,9 @@
 				{
 					$fields_of_responsibility_options[] = array('id'=>$id, 'name'=>lang($label), 'selected'=>0);
 				}
+				
+				$units = $composite->get_units();
+				$address_1 = $units[0]->get_location()->get_address_1();				
 			}
 			
 			$link_index = array
@@ -869,9 +872,6 @@
 				}				
 				$furnish_types_options[] = array('id'=>$id, 'name'=>$title, 'selected'=>$selected);				
 			}
-						
-			$units = $composite->get_units();
-			$address_1 = $units[0]->get_location()->get_address_1();
 								
 			$code =	<<<JS
 				var thousandsSeparator = '$this->thousandsSeparator';
