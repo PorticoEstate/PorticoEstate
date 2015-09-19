@@ -358,8 +358,8 @@ class rental_uiparty extends rental_uicommon
 				{
 					if($value['id'] != $serialized_contract['payer_id'])
 					{
-						$url  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer', 'party_id' => $value['id'], 'contract_id' => $params[0])));
-						$actions[] = '<a href="'.$url.'">'.lang('set_payer').'</a>';
+						$url  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer', 'party_id' => $value['id'], 'contract_id' => $params[0], 'phpgw_return_as' => 'json')));
+						$actions[] = '<a onclick="setPayer(\''.$url.'\')">'.lang('set_payer').'</a>';
 					}
 				}
 				break;
