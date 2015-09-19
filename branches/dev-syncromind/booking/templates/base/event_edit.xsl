@@ -142,7 +142,7 @@
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
                                 </label>
-                                <xsl:value-of select="php:function('lang', 'Select a building first')" />
+                                <div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                             </div>
                         </div>
                         
@@ -196,13 +196,15 @@
                                     <ul style="list-style:none;padding: 0 0 0 10px;">
                                         <xsl:for-each select="audience">
                                             <li>
-                                                <input type="checkbox" name="audience[]">
-                                                    <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                                                    <xsl:if test="../event/audience=id">
-                                                        <xsl:attribute name="checked">checked</xsl:attribute>
-                                                    </xsl:if>
-                                                </input>
-                                                <span><xsl:value-of select="name"/></span>
+                                                <label style="display:inline-block">
+                                                    <input type="checkbox" name="audience[]">
+                                                        <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                                        <xsl:if test="../event/audience=id">
+                                                            <xsl:attribute name="checked">checked</xsl:attribute>
+                                                        </xsl:if>
+                                                    </input>
+                                                    <span><xsl:value-of select="name"/></span>
+                                                </label>
                                             </li>
                                         </xsl:for-each>
                                     </ul>
@@ -426,6 +428,8 @@
     </form>
     <script type="text/javascript">
         $('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
+        var initialSelection = <xsl:value-of select="event/resources_json"/>;
+        var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
     </script>
     <!--/div-->
     <!--script type="text/javascript">

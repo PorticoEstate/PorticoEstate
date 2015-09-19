@@ -316,6 +316,8 @@
 //			$this->use_yui_editor();
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
+                        
+                        phpgwapi_jquery::load_widget('autocomplete');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Group Edit'), 'link' => '#group_edit');

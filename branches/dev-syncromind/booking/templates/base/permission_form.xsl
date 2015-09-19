@@ -7,10 +7,10 @@
 </xsl:template>
 
 <xsl:template match="data/permission" xmlns:php="http://php.net/xsl">
-	<!--script type="text/javascript">
-		YAHOO.booking.objectType = "<xsl:value-of select="object_type"/>";
-		YAHOO.booking.objectAutocomplete = <xsl:value-of select="inline"/> == 0;
-	</script-->
+	<script type="text/javascript">
+            objectType = "<xsl:value-of select="object_type"/>";
+            objectAutocomplete = <xsl:value-of select="inline"/> == 0;
+	</script>
 
 	<!-- Add pathway later -->
 	<!--ul class="pathway">

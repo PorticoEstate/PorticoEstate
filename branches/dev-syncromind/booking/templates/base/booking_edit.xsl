@@ -90,13 +90,13 @@
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'Season')"/></h4>
                                 </label>
-                                <xsl:value-of select="php:function('lang', 'Select a building first')"/>
+                                <div id="season_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
                             </div>
                             <div class="pure-control-group">
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'Resources')"/></h4>
                                 </label>
-                                <xsl:value-of select="php:function('lang', 'Select a building first')"/>
+                                <div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
                             </div>
                         </div>                        
 
@@ -122,7 +122,7 @@
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'Group')"/></h4>
                                 </label>
-                                    <!--div id="group_container"--><xsl:value-of select="php:function('lang', 'Loading...')"/><!--/div-->
+                                    <div id="group_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
                             </div>
                             <div class="pure-control-group">
                                 <label for="field_from">
@@ -316,9 +316,13 @@
             </a>
         </div>
     </form>
-    
     <!--/div-->
-	
+    <script>
+        var season_id = '<xsl:value-of select="booking/season_id"/>';
+        var group_id = '<xsl:value-of select="booking/group_id"/>';
+        var initialSelection = <xsl:value-of select="booking/resources_json"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
+    </script>
     <!--script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';
         YAHOO.booking.group_id = '<xsl:value-of select="booking/group_id"/>';

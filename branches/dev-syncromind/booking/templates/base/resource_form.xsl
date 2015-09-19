@@ -62,8 +62,8 @@
                             <xsl:attribute name="disabled">disabled</xsl:attribute>
                         </xsl:if>
                     </input>
-                    <!--div id="building_container"/>
-                    </div-->
+                    <div id="building_container"></div>
+                    <!--/div-->
                 </div>
                 <div class="pure-control-group">
                     <label for="field_type">
@@ -141,10 +141,12 @@
     </form>
     <!--/div-->	
     <script type="text/javascript">
+        /*
             <![CDATA[
             YAHOO.util.Event.addListener(window, "load", function() {
             YAHOO.booking.rtfEditorHelper('field_description');
             });
             ]]>
+        */
     </script>
 </xsl:template>

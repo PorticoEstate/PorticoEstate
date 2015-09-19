@@ -41,8 +41,8 @@
 			$this->assoc_bo = new booking_boapplication_association();
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->resource_bo = CreateObject('booking.boresource');
-            $this->building_bo = CreateObject('booking.bobuilding');
-            $this->organization_bo = CreateObject('booking.boorganization');
+                        $this->building_bo = CreateObject('booking.bobuilding');
+                        $this->organization_bo = CreateObject('booking.boorganization');
 			$this->document_bo = CreateObject('booking.bodocument_building');
 			self::set_active_menu('booking::applications');
 			$this->fields = array('description', 'equipment', 'resources', 'activity_id',
@@ -638,16 +638,16 @@
 
     public function add()
 		{
-            $config	= CreateObject('phpgwapi.config','booking');
+                        $config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
-            $orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
-            $application_text = $config->config_data;
+                        $orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+                        $application_text = $config->config_data;
 
 			$errors = array();
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-                $building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'GET'))));
+                                $building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'GET'))));
 
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
@@ -687,9 +687,9 @@
 						$errors['agegroups'] = lang('Agegroups can not be larger than 9999 peoples');
 					}
 				}
-                if ($building['results'][0]['deactivate_application']) {
-                    $errors['application_deactivated'] = lang('Application on this building is not possible.');
-                }
+                                if ($building['results'][0]['deactivate_application']) {
+                                        $errors['application_deactivated'] = lang('Application on this building is not possible.');
+                                }
 
 				if(!$errors)
 				{
@@ -702,7 +702,7 @@
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 					$this->bo->send_notification($application, true);
-                    $this->bo->so->update_id_string();
+                                        $this->bo->so->update_id_string();
 					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
 								 lang("A Case officer will review your application as soon as possible.")."<br />".
 								 lang("Please check your Spam Filter if you are missing mail."));
@@ -711,12 +711,12 @@
 			}
 			if(phpgw::get_var('resource', 'GET') == 'null')
 			{			
-			array_set_default($application, 'resources', array());
+                                array_set_default($application, 'resources', array());
 			}
 			else 
 			{
-                $resources = explode(",",phpgw::get_var('resource', 'GET'));
-                array_set_default($application, 'resources', $resources);
+                                $resources = explode(",",phpgw::get_var('resource', 'GET'));
+                                array_set_default($application, 'resources', $resources);
 
 			}
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
@@ -787,6 +787,7 @@
                         $active_tab = 'generic';
 
                         $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        self::add_javascript('booking', 'booking', 'application.js');
                         self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
 			
 			self::render_template_xsl('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
@@ -797,7 +798,7 @@
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 			
-//			$this->check_application_assigned_to_current_user($application);
+			$this->check_application_assigned_to_current_user($application);
 			
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
@@ -933,18 +934,18 @@
 		
 		public function show()
 		{
-            $config	= CreateObject('phpgwapi.config','booking');
+                        $config	= CreateObject('phpgwapi.config','booking');
 			$config->read();
 			$application_text = $config->config_data;
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 
-            $tabs = array();
+                         $tabs = array();
 			$tabs['generic']	= array('label' => lang('Application'), 'link' => '#application');
 			$active_tab = 'generic';
             
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                if($_POST['create'])
+                         if($_POST['create'])
 				{
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 				}
@@ -1007,8 +1008,8 @@
 					$notify = true;
 				}
 				
-                $update AND $receipt = $this->bo->update($application);
-                $notify AND $this->bo->send_notification($application);
+                                $update AND $receipt = $this->bo->update($application);
+                                $notify AND $this->bo->send_notification($application);
 
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
@@ -1061,15 +1062,15 @@
 			else
 				$application['currentuser'] = false;
 
-            $collision_dates = array();
-            foreach($application['dates'] as &$date)
-            {
-                $collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_']);
-                if($collision) {
-                    $collision_dates[] = $date['from_'];
-                }
-            }
-            $collision_dates = array("data" => implode(',',$collision_dates));
+                        $collision_dates = array();
+                        foreach($application['dates'] as &$date)
+                        {
+                            $collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_']);
+                            if($collision) {
+                                $collision_dates[] = $date['from_'];
+                            }
+                        }
+                        $collision_dates = array("data" => implode(',',$collision_dates));
 			self::check_date_availability($application);
 //            echo '<pre>';print_r($application); echo '</pre>';
 //            echo '<pre>';print_r($audience); echo '</pre>';
@@ -1079,7 +1080,7 @@
 //            echo '<pre>';print_r($collision_dates); echo '</pre>';
 //            echo '<pre>';print_r($comments); echo '</pre>';
 //            echo '<pre>';print_r($application_text); echo '</pre>';
-            $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('application', array('application' => $application,
 								  'audience' => $audience, 'agegroups' => $agegroups,

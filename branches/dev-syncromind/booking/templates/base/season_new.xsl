@@ -112,7 +112,7 @@
     </form>
     <!--/div-->
 <script type="text/javascript">
-    YAHOO.booking.initialSelection = <xsl:value-of select="season/resources_json"/>;
-    var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
+    initialSelection = <xsl:value-of select="season/resources_json"/>;
+    var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
 </script>
 </xsl:template>

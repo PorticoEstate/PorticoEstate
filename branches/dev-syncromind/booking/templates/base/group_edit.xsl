@@ -178,6 +178,7 @@
 
 <script type="text/javascript">
 var endpoint = '<xsl:value-of select="module" />';
+/*
 <![CDATA[
 var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
     height: '300px',
@@ -199,12 +200,14 @@ var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
         }
 });
 descEdit.render();
+]]>
+*/
 
-YAHOO.booking.autocompleteHelper('index.php?menuaction=' + endpoint + '.uiorganization.index&phpgw_return_as=json&',
-    'field_organization_name',
-    'field_organization_id',
-    'organization_container'
-);
+<![CDATA[
+$(document).ready(function() {
+    JqueryPortico.autocompleteHelper('index.php?menuaction=' + endpoint + '.uiorganization.index&phpgw_return_as=json&', 
+                                                  'field_organization_name', 'field_organization_id', 'organization_container');    
+});
 ]]>
 </script>
 </xsl:template>

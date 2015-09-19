@@ -337,6 +337,7 @@
 			}
 			
 			self::add_javascript('booking', 'booking', 'document.js');
+                        phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($document);
 			
@@ -380,16 +381,17 @@
 			}
 			
 			self::add_javascript('booking', 'booking', 'document.js');
+                        phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($document);
 			
 			$this->flash_form_errors($errors);
 			
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Document Edit'), 'link' => '#document');
-            $active_tab = 'generic';
-            
-            $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Document Edit'), 'link' => '#document');
+                        $active_tab = 'generic';
+
+                        $document['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('document_form', array('document' => $document));
 		}

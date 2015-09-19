@@ -163,8 +163,7 @@
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 //			$this->use_yui_editor();
                         
-                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+                        phpgwapi_jquery::load_widget('autocomplete');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_form');
@@ -206,6 +205,9 @@
 			}
 			$this->flash_form_errors($errors);
 //			$this->use_yui_editor();
+                        
+                        phpgwapi_jquery::load_widget('autocomplete');
+                        
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');
                         $active_tab = 'generic';

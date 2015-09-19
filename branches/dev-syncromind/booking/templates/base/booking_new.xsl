@@ -57,13 +57,13 @@
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'Season')"/></h4>
                                 </label>
-                                <!--div id="season_container"--><xsl:value-of select="php:function('lang', 'Select a building first')"/><!--/div-->
+                                <div id="season_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
                             </div>
                             <div class="pure-control-group">
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'Resources')"/></h4>
                                 </label>
-                                <!--div id="resources_container"--><xsl:value-of select="php:function('lang', 'Select a building first')"/><!--/div-->
+                                <div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')"/></div>
                             </div>
                         </div>
                         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
@@ -79,14 +79,14 @@
                                 <input id="field_org_name" name="organization_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
                                     <xsl:attribute name="value"><xsl:value-of select="booking/organization_name"/></xsl:attribute>
                                 </input>
-                                <!--div id="org_container"/>
-                                </div-->
+                                <div id="org_container"></div>
+                                <!--/div-->
                             </div>
                             <div class="pure-control-group">
                                 <label>
                                     <h4><xsl:value-of select="php:function('lang', 'Group')"/></h4>
                                 </label>
-                                <!--div id="group_container"--><xsl:value-of select="php:function('lang', 'Select an organization first')"/><!--/div-->
+                                <div id="group_container"><xsl:value-of select="php:function('lang', 'Select an organization first')"/></div>
                             </div>
                             <div class="pure-control-group">
                                 <label>
@@ -276,10 +276,16 @@
         </div>
     </form>
     <!--/div-->
+    <script type="text/javascript">
+        season_id = '<xsl:value-of select="booking/season_id"/>';
+        group_id = '<xsl:value-of select="booking/group_id"/>';
+        initialSelection = <xsl:value-of select="booking/resources_json"/>;
+        var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
+    </script>
     <!--script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';
         YAHOO.booking.group_id = '<xsl:value-of select="booking/group_id"/>';
         YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
+        var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
     </script-->
 </xsl:template>

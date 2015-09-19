@@ -74,7 +74,7 @@
                 <div class="form-buttons">
                     <xsl:if test="resource/permission/write">
                         <button>
-                            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/edit_link"/>"</xsl:attribute>
+                            <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="resource/edit_link"/>'</xsl:attribute>
                             <xsl:value-of select="php:function('lang', 'Edit')" />
                         </button>
                     </xsl:if>

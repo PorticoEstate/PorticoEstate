@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="pure-control-group">
                                     <label><h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4></label>
-                                    <xsl:value-of select="php:function('lang', 'Select a building first')" />
+                                    <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                                 </div>
                             </fieldset>
                         </div>
@@ -307,10 +307,10 @@
         </form>
     <!--/div-->
     <script type="text/javascript">
-        YAHOO.booking.initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
-        YAHOO.booking.initialAcceptAllTerms = false;
-        YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
-        YAHOO.booking.initialAudience = <xsl:value-of select="application/audience_json"/>;
+        var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
+        var initialAcceptAllTerms = false;
+        var initialSelection = <xsl:value-of select="application/resources_json"/>;
+        var initialAudience = <xsl:value-of select="application/audience_json"/>;
         var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
     </script>
 </xsl:template>

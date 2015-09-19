@@ -1,8 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <style type="text/css">
-
-        #agegroup td {padding: 0 0.3em;}
-        
+        #agegroup td {padding: 0 0.3em;}        
     </style>
     <!--div id="content">
 
@@ -93,7 +91,7 @@
                                     <label>
                                         <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
                                     </label>
-                                    <!--div id="resources_container"--><xsl:value-of select="php:function('lang', 'Select a building first')" /><!--/div-->
+                                    <div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                                 </div>
                             </div>
                             
@@ -136,10 +134,10 @@
                                         <label>
                                             <h4><xsl:value-of select="php:function('lang', 'Target audience')" /></h4>
                                         </label>
-                                        <ul>
+                                        <ul style="list-style:none;">
                                             <xsl:for-each select="audience">
                                                 <li>
-                                                    <label>
+                                                    <label style="display:inline-block;">
                                                         <input type="checkbox" name="audience[]">
                                                             <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
                                                             <xsl:if test="../event/audience=id">
@@ -317,6 +315,8 @@
     </form>
     <script type="text/javascript">
         $('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
+        var initialSelection = <xsl:value-of select="event/resources_json"/>;
+        var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'From', 'To', 'Resource Type')"/>;
     </script>
     <!--/div>
     <script type="text/javascript">

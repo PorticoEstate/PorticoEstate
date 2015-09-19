@@ -1,36 +1,39 @@
 var building_id_selection = "";
 var regulations_select_all = "";
+
 $(document).ready(function() {
     JqueryPortico.autocompleteHelper('index.php?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 
                                                   'field_building_name', 'field_building_id', 'building_container');
 });
 
-
-
-
 $(window).load(function(){
     building_id = $('#field_building_id').val();
     regulations_select_all = initialAcceptAllTerms;
+    resources = initialSelection;
     if (building_id) {
         populateTableChkResources(building_id, initialSelection);
-        populateTableChkRegulations(building_id, initialDocumentSelection);
+        populateTableChkRegulations(building_id, initialDocumentSelection, resources);
         building_id_selection = building_id;
     }
     $("#field_building_name").on("autocompleteselect", function(event, ui){
         var building_id = ui.item.value;
+        var selection = [];
+        var resources = [];
         if (building_id != building_id_selection){
             populateTableChkResources(building_id, initialSelection);
-            populateTableChkRegulations(building_id, initialDocumentSelection);
+            populateTableChkRegulations(building_id, selection, resources);
             building_id_selection = building_id;
         }
     });
-    $('#resources_container').on('click', '.chkRegulations', function(){
-       if($(this).is(':checked')) {  
-            alert("Está activado, id: " + $(this).val());
-        }  
+    $('#resources_container').on('change', '.chkRegulations', function(){
+        var resources = new Array();
+        $('#resources_container input.chkRegulations[name="resources[]"]:checked').each(function() {
+            resources.push($(this).val());
+        });
+        var selection = [];
+        populateTableChkRegulations(building_id_selection, selection, resources);
     });
 });
-
 
 
 function populateTableChkResources (building_id, selection) {
@@ -40,13 +43,19 @@ function populateTableChkResources (building_id, selection) {
     populateTableResources(url, container, colDefsResources);
 }
 
-function populateTableChkRegulations (building_id, selection) {
+function populateTableChkRegulations (building_id, selection, resources) {
+    console.log(selection);
+    console.log(resources);
     var url = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::'+building_id;
+    for(var r in resources) {
+        url += '&owner[]=resource::'+resources[r];
+    }
     var container = 'regulation_documents';
     var colDefsRegulations = [{label: lang['Accepted'], object: [{type: 'input', attrs: [{name: 'type', value: 'checkbox'},{name: 'name', value: 'resources[]'}]}], value: 'id', checked: selection},{key: 'name',label: lang['Document'],formatter: genericLink}];
     if (regulations_select_all){
         colDefsRegulations[0]['object'][0]['attrs'].push({name:'checked',value: 'checked'});
     }
+    regulations_select_all = false;
     populateTableRegulations(url, container, colDefsRegulations);
 }
 
@@ -57,7 +66,6 @@ function populateTableResources (url, container, colDefs) {
 function populateTableRegulations (url, container, colDefs) {
     createTable(container,url,colDefs);
 }
-
 
 
 

@@ -150,6 +150,7 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
+                        phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('autocomplete');
 			$activity_data = $this->activity_bo->fetch_activities();
@@ -195,19 +196,19 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('autocomplete');
+//			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_jquery::load_widget('autocomplete');
 			$activity_data = $this->activity_bo->fetch_activities();
 			foreach($activity_data['results'] as $acKey => $acValue)
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
 //			$this->use_yui_editor();
-            $tabs = array();
-            $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
-            $active_tab = 'generic';
-            
-            $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $tabs = array();
+                        $tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+                        $active_tab = 'generic';
+
+                        $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data));
 		}

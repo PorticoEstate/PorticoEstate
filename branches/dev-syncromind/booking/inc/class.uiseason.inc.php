@@ -11,7 +11,7 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
-            'query'         =>  true,
+                        'query'         =>  true,
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
@@ -214,8 +214,8 @@
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
             
-                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'date');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Season New'), 'link' => '#season_new');

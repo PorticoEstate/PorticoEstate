@@ -1,8 +1,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<!--script type="text/javascript">
-		YAHOO.booking.documentOwnerType = "<xsl:value-of select="document/owner_type"/>";
-		YAHOO.booking.documentOwnerAutocomplete = <xsl:value-of select="document/inline"/> == 0;
-	</script-->
+	<script type="text/javascript">
+		var documentOwnerType = "<xsl:value-of select="document/owner_type"/>";
+		var documentOwnerAutocomplete = <xsl:value-of select="document/inline"/> == 0;
+	</script>
 	
     <!--div id="content"-->
         
@@ -28,7 +28,6 @@
                     <fieldset>
                         <div class="pure-g">
                             <div class="pure-u-1">
-
                                 <xsl:if test="document/id">
                                     <div class="heading">
                                         <legend><h3><xsl:value-of select="php:function('lang', 'Edit document')" /></h3></legend>

@@ -20,8 +20,8 @@ $(window).load(function() {
     $("#field_building_name").on("autocompleteselect", function(event, ui){
         var building_id = ui.item.value;        
         if (building_id != building_id_selection){
-            populateSelectSeason(building_id, season_id);
-            populateTableChkResources(building_id, initialSelection);
+            populateSelectSeason(building_id, '');
+            populateTableChkResources(building_id, []);
             building_id_selection = building_id;
         }
     });
@@ -42,26 +42,7 @@ function populateTableChkResources (building_id, selection) {
 function populateTableChk (url, container, colDefs) {    
     createTable(container,url,colDefs);
 }
-function populateSelect (url, selection, container) {
-    container.html("");
-    var select = document.createElement('select');
-    var option = document.createElement('option');
-    container.append(select);
-    option.setAttribute('value', '');
-    option.text = '-----';
-    select.appendChild(option);
-    $.get(url, function(r){
-        $.each(r.data, function(index, value){
-            var option = document.createElement('option');
-            option.text = value.name;
-            option.setAttribute('value', value.id);
-            if(value.id == selection) {
-                    option.selected = true;
-            }
-            select.appendChild(option);
-        });
-    });
-}
+
 
 /*
 populateSeasonTable = function(building_id, selection) {

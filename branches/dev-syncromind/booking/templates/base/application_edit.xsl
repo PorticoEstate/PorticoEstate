@@ -98,7 +98,7 @@
                                     <label>
                                         <h4><xsl:value-of select="php:function('lang', 'Resources')" /></h4>
                                     </label>
-                                    <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>                                    
+                                    <div id="resources_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                                 </div>
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
@@ -265,6 +265,7 @@
             var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
             var initialAcceptAllTerms = true;
             var initialSelection = <xsl:value-of select="application/resources_json"/>;
+            console.log(initialDocumentSelection);
         </script>
 	<!--/div-->
 	<!--script type="text/javascript">

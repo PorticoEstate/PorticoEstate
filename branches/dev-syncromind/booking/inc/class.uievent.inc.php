@@ -12,7 +12,7 @@ class booking_uievent extends booking_uicommon
 	public $public_functions = array
 	(
 		'index'			=>	true,
-        'query'         =>  true,
+                'query'         =>  true,
 		'add'			=>	true,
 		'edit'			=>	true,
 		'delete'			=>	true,
@@ -508,7 +508,7 @@ class booking_uievent extends booking_uicommon
 			$this->flash_form_errors($errors);
 		}
 
-//		self::add_javascript('booking', 'booking', 'event.js');
+		self::add_javascript('booking', 'booking', 'event.js');
 		array_set_default($event, 'resources', array());
 		$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 		$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
@@ -522,15 +522,15 @@ class booking_uievent extends booking_uicommon
 
 		$this->install_customer_identifier_ui($event);
         
-        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-        $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-        
-        $tabs = array();
-        $tabs['generic'] = array('label' => lang('Event New'), 'link' => '#event_new');
-        $active_tab = 'generic';
-        
-        $event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-        self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
+                $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+                $GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+
+                $tabs = array();
+                $tabs['generic'] = array('label' => lang('Event New'), 'link' => '#event_new');
+                $active_tab = 'generic';
+
+                $event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
         
 		$this->add_template_helpers();
 		self::render_template_xsl('event_new', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));

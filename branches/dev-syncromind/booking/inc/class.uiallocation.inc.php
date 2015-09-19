@@ -596,7 +596,7 @@
                         $active_tab = 'generic';
                         $allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         
-                        $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'datetime');
+                        $GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
                         
 			if ($step < 2) 
                         {
