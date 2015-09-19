@@ -294,9 +294,9 @@
 							array('key'=>'identifier', 'label'=>lang('identifier'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
 							array('key'=>'name', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
 							array('key'=>'address', 'label'=>lang('address'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-							array('key'=>'is_payer', 'label'=>lang('is_payer'), 'sortable'=>false, 'hidden'=>false)
+							array('key'=>'is_payer', 'label'=>lang('is_payer'), 'sortable'=>false, 'hidden'=>false, "className"=>'center')
 						);
-
+		
 		$tabletools_party1[] = array
 			(
 				'my_name'		=> 'view',
@@ -320,6 +320,8 @@
 		
 		if ($mode == 'edit')
 		{
+			$columns_def[3]['formatter'] = 'formatterPayer';
+			
 			$tabletools_party1[] = array
 				(
 					'my_name'		=> 'delete',
@@ -887,7 +889,7 @@
 	 * @param $key ?
 	 * @param $params [type of query, editable]
 	 */
-	public function add_actions(&$value, $key, $params)
+	/*public function add_actions(&$value, $key, $params)
 	{
 		$type = $params[0];
 		$ids = $params[1];
@@ -953,7 +955,7 @@
 		}
 		
 		$value['actions'] = implode(' | ', $actions);
-	}
+	}*/
 
 	/**
 	 * View a list of all contracts
@@ -2260,11 +2262,18 @@ JS;
 			$party_id = (int)phpgw::get_var('party_id');
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
+			
+			$message = array();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return $so_contract->set_payer($contract_id,$party_id);
+				$result = $so_contract->set_payer($contract_id,$party_id);
+				if ($result) {
+					$message['message'][] = array('msg'=>lang('party has been saved'));
+				} else {
+					$message['error'][] = array('msg'=>lang('party not saved'));
+				}							
 			}
-			return false;
+			return $message;
 		}
 
 		/**
