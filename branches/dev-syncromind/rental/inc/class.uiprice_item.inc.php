@@ -568,6 +568,11 @@ JS;
 					(
 						'name'		=> 'id',
 						'source'	=> 'id'
+					),
+					array
+					(
+						'name'		=> 'responsibility_id',
+						'source'	=> 'responsibility_id'
 					)
 				)
 			);

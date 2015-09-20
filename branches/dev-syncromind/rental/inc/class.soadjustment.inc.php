@@ -41,14 +41,16 @@
 				$id					 = $this->marshal($filters[$this->get_id_field_name()], 'int');
 				$filter_clauses[]	 = "{$this->get_id_field_name()} = {$id}";
 			}
-
-			if(isset($filters['manual_adjustment']))
-			{
-				$clauses[] = "is_manual";
-			}
 			else
 			{
-				$clauses[] = "NOT is_manual";
+				if(isset($filters['manual_adjustment']))
+				{
+					$clauses[] = "is_manual";
+				}
+				else
+				{
+					$clauses[] = "NOT is_manual";
+				}
 			}
 
 			if(count($filter_clauses))
