@@ -536,7 +536,10 @@
 
 		function adjust_contract_price_items(int $price_item_id, $new_price)
 		{
-			$q_contract_price_items = "SELECT * from rental_contract_price_item where price_item_id=$price_item_id";
+			$this->db->transaction_begin();
+			$number_affected = 0;
+			$db2 = clone($this->db);
+			$q_contract_price_items = "SELECT * FROM rental_contract_price_item WHERE price_item_id={$price_item_id}";
 			$this->db->query($q_contract_price_items);
 			while($this->db->next_record())
 			{
@@ -554,14 +557,14 @@
 					$total_price = $count * $new_price;
 				}
 				$query = "UPDATE rental_contract_price_item SET price=$new_price, total_price=$total_price WHERE id=$curr_id";
-				$this->db->query($query);
+				$db2->query($query);
+
+				$number_affected ++;
 			}
 
-			$query2 = "SELECT count(*) as count FROM rental_contract_price_item WHERE price_item_id=$price_item_id";
-			$this->db->query($query2);
-			if($this->db->next_record())
+			if($this->db->transaction_commit())
 			{
-				return $this->db->f('count');
+				return $number_affected;
 			}
 			else
 			{
