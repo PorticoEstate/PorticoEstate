@@ -163,6 +163,7 @@ class rental_adjustment extends rental_model
 			'id' => $this->get_id(),
 			'price_item_id' => $this->get_price_item_id(),
 			'responsibility_title' => lang(rental_socontract::get_instance()->get_responsibility_title($this->get_responsibility_id())),
+			'responsibility_id' => $this->get_responsibility_id(),
 			'new_price' => $this->get_new_price(),
 			'percent' => $this->get_percent(),
 			'interval' => $this->get_interval(),
