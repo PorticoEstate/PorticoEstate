@@ -368,12 +368,6 @@
 				$where = 'AND';
 			}
 
-			if ($id > 0)
-			{
-				$filtermethod .= " $where fm_document.p_num='{$id}'";
-				$where = 'AND';
-			}
-
 			if ($filter > 0)
 			{
 				$filtermethod .= "  $where fm_document.user_id='$filter' ";
