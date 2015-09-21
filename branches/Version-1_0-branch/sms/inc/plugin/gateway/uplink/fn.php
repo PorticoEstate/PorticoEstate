@@ -53,7 +53,7 @@ function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$ui
 	$fd = @implode ('', file ($url));
 	if ($fd)
 	{
-	    $response = split (" ", $fd);
+	    $response = explode(" ", $fd);
 	    if ($response[0] == "OK")
 	    {
 		$remote_slid = $response[1];

@@ -79,7 +79,7 @@
  				$this->pickup_path = $config_data['pickup_path'];
  				$target = $config_data['target'];
  				$target_table = "fm_catch_{$target}";
-				list($entity_id, $cat_id) = split('[_]', $target);
+				list($entity_id, $cat_id) = preg_split('/[_]/', $target);
 				$this->category_dir = "catch_{$entity_id}_{$cat_id}";
 				$category			= $admin_entity->read_single_category($entity_id, $cat_id);
 				$schema_text		= "{$target} {$category['name']}";

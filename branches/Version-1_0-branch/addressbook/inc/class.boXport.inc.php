@@ -133,7 +133,7 @@
 				while ($data = fgets($fp,8000))
 				{
 					$url = "";
-					list($name,$value,$extra) = split(':', $data);
+					list($name,$value,$extra) = preg_split('/:/', $data);
 					if (substr($name,0,2) == 'dn')
 					{
 						$buffer = $contacts->import_start_record($buffer);
@@ -156,7 +156,7 @@
 
 					if ($name && $value)
 					{
-						$test = split(',mail=',$value);
+						$test = preg_split('/,mail=/',$value);
 						if ($test[1])
 						{
 							$name = "mail";

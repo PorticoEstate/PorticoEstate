@@ -722,7 +722,7 @@
 				if( $this->debug & DBGINDATA ) echo "HEADER : $str;";
 				$finished = ( $str == $lastLine );
 				if ( !$finished ) {
-					list( $hdr, $value ) = split( ": ", $str, 2 );
+					list( $hdr, $value ) = preg_split( "/: /", $str, 2 );
 					// nasty workaround broken multiple same headers (eg. Set-Cookie headers) @FIXME
 					if( isset( $headers[$hdr]) )
 						$headers[$hdr] .= "; " . trim($value);

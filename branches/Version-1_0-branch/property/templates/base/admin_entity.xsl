@@ -1449,6 +1449,10 @@
 	<!-- add attribute / edit attribute -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_attrib">
 		<div align="left">
+			<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
+				<form method="post" action="{$form_action}">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -1459,10 +1463,6 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action">
-					<xsl:value-of select="form_action"/>
-				</xsl:variable>
-				<form method="post" action="{$form_action}">
 					<tr>
 						<td class="th_text" align="left">
 							<xsl:value-of select="php:function('lang', 'entity')"/>
@@ -1808,7 +1808,9 @@
 							</input>
 						</td>
 					</tr>
+				</table>
 				</form>
+				<table>
 				<tr>
 					<td>
 						<xsl:variable name="done_action">
@@ -2242,21 +2244,37 @@
 
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="choice">
+		<xsl:variable name="lang_id">
+			<xsl:value-of select="php:function('lang', 'id')"/>
+		</xsl:variable>
+		<xsl:variable name="lang_value">
+			<xsl:value-of select="php:function('lang', 'value')"/>
+		</xsl:variable>
+		<xsl:variable name="lang_sorting">
+			<xsl:value-of select="php:function('lang', 'sorting')"/>
+		</xsl:variable>
+		<xsl:variable name="lang_delete_value">
+			<xsl:value-of select="php:function('lang', 'delete value')"/>
+		</xsl:variable>
+		<xsl:variable name="lang_delete_title">
+				<xsl:value-of select="php:function('lang', 'delete this value from the list of multiple choice')"/>
+		</xsl:variable>
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="left">
 			<xsl:choose>
 				<xsl:when test="value_choice!=''">
 					<tr class="th">
 						<td class="th_text" width="5%" align="left">
-							<xsl:value-of select="php:function('lang', 'id')"/>
+							<xsl:value-of select="$lang_id"/>
 						</td>
 						<td class="th_text" width="85%" align="left">
-							<xsl:value-of select="php:function('lang', 'value')"/>
+							<xsl:value-of select="$lang_value"/>
 						</td>
 						<td class="th_text" width="85%" align="left">
-							<xsl:value-of select="php:function('lang', 'order')"/>
+							<xsl:value-of select="$lang_sorting"/>
 						</td>
 						<td class="th_text" width="15%" align="center">
-							<xsl:value-of select="php:function('lang', 'delete value')"/>
+							<xsl:value-of select="$lang_delete_value"/>
 						</td>
 					</tr>
 					<xsl:for-each select="value_choice">
@@ -2280,21 +2298,21 @@
 							<td align="left">
 								<input type="textbox" name="values[edit_choice][{id}]" value="{value}" size="15">
 									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'value')"/>
+										<xsl:value-of select="$lang_value"/>
 									</xsl:attribute>
 								</input>
 							</td>
 							<td align="center">
 								<input type="textbox" name="values[order_choice][{id}]" value="{order}" size="4">
 									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'order')"/>
+										<xsl:value-of select="$lang_sorting"/>
 									</xsl:attribute>
 								</input>
 							</td>
 							<td align="center">
 								<input type="checkbox" name="values[delete_choice][]" value="{id}">
 									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'delete this value from the list of multiple choice')"/>
+										<xsl:value-of select="$lang_delete_title"/>
 									</xsl:attribute>
 								</input>
 							</td>
