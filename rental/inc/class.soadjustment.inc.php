@@ -38,14 +38,16 @@ class rental_soadjustment extends rental_socommon
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "{$this->get_id_field_name()} = {$id}";
 		}
-		
-		if(isset($filters['manual_adjustment']))
-		{
-			$clauses[] = "is_manual";
-		}
 		else
 		{
-			$clauses[] = "NOT is_manual";
+			if(isset($filters['manual_adjustment']))
+			{
+				$clauses[] = "is_manual";
+			}
+			else
+			{
+				$clauses[] = "NOT is_manual";
+			}
 		}
 		
 		if(count($filter_clauses))
@@ -143,14 +145,15 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->get_percent(),
 			$adjustment->get_interval(),
 			$adjustment->get_adjustment_date(),
-			'\''.$adjustment->get_adjustment_type().'\'',
+			$adjustment->get_adjustment_type(),
 			($adjustment->is_manual() ? "true" : "false"),
 			($adjustment->is_executed() ? "true" : "false"),
                         ($adjustment->is_extra_adjustment() ? "true" : "false"),
 			$adjustment->get_year()
 		);
 
-		$query ="INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		$values_insert = $this->db->validate_insert($values);
+		$query ="INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES ({$values_insert})";
 		$result = $this->db->query($query);
 
 		$adjustment_id = $this->db->get_last_insert_id('rental_adjustment', 'id');

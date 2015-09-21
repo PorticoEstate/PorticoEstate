@@ -357,7 +357,9 @@ class rental_uiprice_item extends rental_uicommon
 				$adjustment = new rental_adjustment();
 				$adjustment->set_price_item_id($price_item->get_id());
 				$adjustment->set_new_price($new_price);
+				$adjustment->set_year(date('Y'));
 				$adjustment->set_percent(0);
+				$adjustment->set_interval(0);
 				$adjustment->set_responsibility_id($price_item->get_responsibility_id());
 				$adjustment->set_is_manual(true);
 				$adjustment->set_adjustment_date(time());
