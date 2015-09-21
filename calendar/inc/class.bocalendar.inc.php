@@ -2564,7 +2564,7 @@
 					$details['startdate'] = $GLOBALS['phpgw']->common->show_date($starttime);
 					$details['enddate']   = $GLOBALS['phpgw']->common->show_date($endtime);
 				
-					list($subject,$body) = split("\n",$GLOBALS['phpgw']->preferences->parse_notify($notify_msg,$details),2);
+					list($subject,$body) = explode("\n",$GLOBALS['phpgw']->preferences->parse_notify($notify_msg,$details),2);
 					$subject = trim($send->encode_subject($subject));
 					switch($part_prefs['calendar']['update_format'])
  					{

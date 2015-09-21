@@ -177,8 +177,8 @@ HTML;
 			{
 				return False;
 			}
-			$fields = split('[./-]',$datestr);
-			foreach(split('[./-]',$this->dateformat) as $n => $field)
+			$fields = preg_split('/[.\/-]/',$datestr);
+			foreach(preg_split('/[.\/-]/',$this->dateformat) as $n => $field)
 			{
 				$date[$field] = intval($fields[$n]);
 				if($field == 'M')

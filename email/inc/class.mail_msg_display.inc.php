@@ -2352,7 +2352,7 @@ class mail_msg extends mail_msg_wrappers
 		}
 
 		$newText = '';
-		$lines = split("\n",$data);
+		$lines = explode("\n",$data);
 
 		while ( list ($key,$line) = each ($lines))
 		{

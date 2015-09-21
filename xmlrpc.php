@@ -139,7 +139,7 @@
 		$tmp = str_replace(' ','',$tmp);
 		$tmp = str_replace('Basic','',$tmp);
 		$auth = base64_decode(trim($tmp));
-		list($login,$password) = split(':',$auth);
+		list($login,$password) = explode(':',$auth);
 
 		if($GLOBALS['phpgw']->session->create($login, $password))
 		{

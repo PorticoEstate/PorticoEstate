@@ -42,7 +42,7 @@
 
 				if ( preg_match('/@/',$record['log_account_lid']))
 				{
-					$t = split('@',$record['log_account_lid']);
+					$t = preg_split('/@/',$record['log_account_lid']);
 					$record['log_account_lid'] = $t[0];
 				}
 				

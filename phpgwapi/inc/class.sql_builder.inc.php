@@ -789,7 +789,7 @@
 			elseif(is_string($data))
 			{
 				$this->ldebug('criteria', 'Query a string is', 'msg');
-				list($field, $filter) = split ('=', str_replace(' ', '', $data));
+				list($field, $filter) = explode('=', str_replace(' ', '', $data));
 				$ent = $this->get_entity($field);
 				$this->entities[$ent]->add_criteria($field, $filter);
 			}

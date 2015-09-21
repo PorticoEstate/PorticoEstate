@@ -174,7 +174,7 @@
 			/* Following is a lot of pain and little magic */
 			while ( list($name,$value) = @each($buffer) )
 			{
-				$field  = split(';',$name);
+				$field  = explode(';',$name);
 
 				while (list($key,$val) = each($field))
 				{
@@ -185,7 +185,7 @@
 				$field[0] = preg_replace("/B\./",'',$field[0]);
 				$field[0] = preg_replace("/C\./",'',$field[0]);
 				$field[0] = preg_replace("/D\./",'',$field[0]);
-				$values = split(';',$value);
+				$values = explode(';',$value);
 				switch ($field[0])
 				{
 				case 'N':
@@ -207,7 +207,7 @@
 					}
 					break;
 				case 'FN':
-					$fn = split(" ", $values[0], 3);
+					$fn = explode(" ", $values[0], 3);
 					switch (count($fn))
 					{
 						case 1:
@@ -479,7 +479,7 @@
 				}
 			}
 
-			if (count($street = split("\r*\n",$buffer['adr_one_street'],3)) > 1)
+			if (count($street = preg_split("/\r*\n/",$buffer['adr_one_street'],3)) > 1)
 			{
 				$entry['adr_one_street'] = $street[0];			// RB 2001/05/08 added for Lotus Organizer to split multiline adresses
 				$entry['address2']		  = $street[1];

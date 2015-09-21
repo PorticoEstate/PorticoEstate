@@ -191,7 +191,7 @@
 
 				if (!$title)
 				{
-					$words = split(' ',$GLOBALS['phpgw']->strip_html($todo_list[$i]['descr']));
+					$words = explode(' ',$GLOBALS['phpgw']->strip_html($todo_list[$i]['descr']));
 					$title = "$words[0] $words[1] $words[2] $words[3] ...";
 				}
 
@@ -385,7 +385,7 @@
 				}
 				if (! $todo['title'])
 				{
-					$words = split(' ',$GLOBALS['phpgw']->strip_html($todo['descr']));
+					$words = explode(' ',$GLOBALS['phpgw']->strip_html($todo['descr']));
 					$title = "$words[0] $words[1] $words[2] $words[3] ...";
 					$todo_select .= ">$title";
 				}

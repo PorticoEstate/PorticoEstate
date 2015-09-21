@@ -33,7 +33,7 @@
 		public function properties()
 		{
 			$q = phpgw::get_var('query', 'str', 'REQUEST', null);
-			$type_id = count(split('-', $q));
+			$type_id = count(explode('-', $q));
 			$so = CreateObject('property.solocation');
 			$ret = $so->read(array('type_id' => $type_id, 'location_code'=>$q));
 			foreach($ret as &$r)

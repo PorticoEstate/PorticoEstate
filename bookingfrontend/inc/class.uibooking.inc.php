@@ -101,8 +101,8 @@
             #The string replace is a workaround for a problem at Bergen Kommune 
             $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
             $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
-			$time_from = split(" ",phpgw::get_var('from_', 'str', 'GET'));
-			$time_to = 	split(" ",phpgw::get_var('to_', 'str', 'GET'));
+			$time_from = explode(" ",phpgw::get_var('from_', 'str', 'GET'));
+			$time_to = explode(" ",phpgw::get_var('to_', 'str', 'GET'));
 
 			$step = phpgw::get_var('step', 'str', 'POST');
 			if (! isset($step)) $step = 1;
