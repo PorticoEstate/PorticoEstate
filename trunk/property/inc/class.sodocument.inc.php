@@ -326,13 +326,14 @@
 				$filter			= isset($data['filter']) && $data['filter'] ? (int) $data['filter']: 0;
 				$entity_id		= isset($data['entity_id']) && $data['entity_id'] ? (int)$data['entity_id']:0;
 				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id']: 0;
+				$p_num			= isset($data['p_num']) && $data['p_num'] ? (int)$data['p_num']: 0;
 				$id				= isset($data['id']) && $data['id'] ? (int)$data['id']: 0;
 				$doc_type		= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']: 0;
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$location_code	= isset($data['location_code'])?$data['location_code']:'';
 			}
 
-			if( !$location_code && !($entity_id && $cat_id ))
+			if( !$location_code && !($entity_id && $cat_id && $p_num))
 			{
 				return array();
 			}
@@ -363,7 +364,7 @@
 			}
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_document.p_cat_id={$cat_id} AND fm_document.p_entity_id={$entity_id}";
+				$filtermethod .= " $where fm_document.p_cat_id={$cat_id} AND fm_document.p_entity_id={$entity_id} AND p_num = '{$p_num}'";
 				$where = 'AND';
 			}
 
