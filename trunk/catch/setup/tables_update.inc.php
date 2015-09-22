@@ -621,3 +621,39 @@
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.520';
+	function catch_upgrade0_9_17_520()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_catch_category");
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+				'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id')
+			);
+		}
+
+		$tables = $GLOBALS['phpgw_setup']->oProc->m_odb->table_names();
+
+		foreach ($categories as $category)
+		{
+			$table = "fm_catch_{$category['entity_id']}_{$category['cat_id']}";
+			if(in_array($table, $tables))
+			{
+				$GLOBALS['phpgw_setup']->oProc->AddColumn($table,'modified_by', array('type' => 'int', 'precision' => 4,'nullable' => true));
+				$GLOBALS['phpgw_setup']->oProc->AddColumn($table,'modified_on', array('type' => 'int', 'precision' => 8,'nullable' => true));
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.521';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}

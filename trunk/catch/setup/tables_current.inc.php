@@ -145,7 +145,9 @@
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'unitid' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'user_' => array('type' => 'int','precision' => '4','nullable' => False)
+				'user_' => array('type' => 'int','precision' => '4','nullable' => False),
+				'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'modified_on' => array('type' => 'int','precision' => 8,'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
