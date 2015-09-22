@@ -406,6 +406,7 @@ JqueryPortico.substr_count = function(haystack, needle, offset, length)
 		
 		
 JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, label_attr) {
+    label_attr = (label_attr) ? label_attr : 'name';
 	$(document).ready(function () 
 	{
 		$("#" + field).autocomplete({
@@ -428,7 +429,7 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
                                             }
 						response( $.map( data_t, function( item ) {
 							return {
-								label: item.name,
+								label: item[label_attr],
 								value: item.id
 							};
 						}));
@@ -591,7 +592,7 @@ function createTable (d,u,c,r,cl) {
                                                 array_attr.push({name: 'checked',value: 'checked'});
                                             }
                                         }else{
-                                            if ((jQuery.inArray(v['value'], vcc) == 0) || (jQuery.inArray(v['value'].toString(), vcc) == 0) || (jQuery.inArray(parseInt(v['value']), vcc) == 0)){
+                                            if ((jQuery.inArray(v['value'], vcc) != -1) || (jQuery.inArray(v['value'].toString(), vcc) != -1) || (jQuery.inArray(parseInt(v['value']), vcc) != -1)){
                                                 array_attr.push({name: 'checked',value: 'checked'});
                                             }
                                         }
@@ -704,6 +705,28 @@ function createTableObject (object) {
     }
     return obj;
 }
+
+function populateSelect (url, selection, container) {
+    container.html("");
+    var select = document.createElement('select');
+    var option = document.createElement('option');
+    container.append(select);
+    option.setAttribute('value', '');
+    option.text = '-----';
+    select.appendChild(option);
+    $.get(url, function(r){
+        $.each(r.data, function(index, value){
+            var option = document.createElement('option');
+            option.text = value.name;
+            option.setAttribute('value', value.id);
+            if(value.id == selection) {
+                    option.selected = true;
+            }
+            select.appendChild(option);
+        });
+    });
+}
+
 function genericLink() {
     var data = [];
     data['arguments'] = arguments;

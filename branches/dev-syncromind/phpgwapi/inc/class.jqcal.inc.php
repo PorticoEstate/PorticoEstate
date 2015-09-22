@@ -34,7 +34,7 @@
 			phpgwapi_jquery::load_widget('datepicker');
 
 			$theme = 'ui-lightness';
-			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.8.19.custom.css");
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
 			$this->img_cal = $GLOBALS['phpgw']->common->image('phpgwapi','cal');
 			$this->dateformat = str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$this->lang_select_date      = lang('select date');
