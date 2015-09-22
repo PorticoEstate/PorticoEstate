@@ -431,7 +431,14 @@
 							array('key'=>'agresso_id', 'label'=>lang('agresso_id'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
 							array('key'=>'title', 'label'=>lang('name'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
 							array('key'=>'is_area', 'label'=>lang('title'), 'className'=>'', 'sortable'=>true, 'hidden'=>false),
-							array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right')
+							array('key'=>'price', 'label'=>lang('price'), 'sortable'=>false, 'hidden'=>false, 'formatter'=>'formatterPrice', 'className'=>'right'),
+							array("key"=>"area", "label"=>lang('area'), "formatter"=>"formatterArea", 'className'=>'right'),
+							array("key"=>"count", "label"=>lang('count')),
+							array("key"=>"total_price", "label"=>lang('total_price'), 'formatter'=>'formatterPrice', 'className'=>'right'),
+							array("key"=>"date_start", "label"=>lang('date_start'), 'formatter'=>'formatterDateStart_price_item', 'className'=>'center'),
+							array("key"=>"date_end", "label"=>lang('date_end'), 'formatter'=>'formatterDateEnd_price_item', 'className'=>'center'),
+							array("key"=>"is_one_time", "label"=>lang('is_one_time'), 'className'=>'center'),
+							array("key"=>"price_type_title", "label"=>lang('type'), 'className'=>'center')
 						);
 		
 		if ($mode == 'edit')
@@ -517,7 +524,14 @@
 						"
 					);					
 			}
-
+			
+			unset($columns_def[4]);
+			unset($columns_def[5]);
+			unset($columns_def[6]);
+			unset($columns_def[7]);
+			unset($columns_def[8]);
+			unset($columns_def[9]);
+			
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_6',
