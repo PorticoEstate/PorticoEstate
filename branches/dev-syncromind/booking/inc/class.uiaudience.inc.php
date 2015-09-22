@@ -71,10 +71,10 @@
 			}
 			
 			
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('treeview');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('treeview');
 			$sessionLink = $this->link(array('menuaction' => 'booking.uiaudience.index', 'sessionShowAll' => 'activate'));
 			$data = array(
 				'form' => array(

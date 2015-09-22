@@ -46,9 +46,9 @@ class booking_uievent extends booking_uicommon
 		if(phpgw::get_var('phpgw_return_as') == 'json') {
 			return $this->query();
 		}
-		self::add_javascript('booking', 'booking', 'datatable.js');
-		phpgwapi_yui::load_widget('datatable');
-		phpgwapi_yui::load_widget('paginator');
+//		self::add_javascript('booking', 'booking', 'datatable.js');
+//		phpgwapi_yui::load_widget('datatable');
+//		phpgwapi_yui::load_widget('paginator');
 		$data = array(
 			'form' => array(
 				'toolbar' => array(

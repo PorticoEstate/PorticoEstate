@@ -62,9 +62,9 @@ phpgw::import_class('booking.uicommon');
 			$config->read();
 			
 			self::add_javascript('booking', 'booking', 'account_code_set.js');
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
 			$data = array(
 				'form' => array(
 					'toolbar' => array(

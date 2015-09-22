@@ -56,10 +56,10 @@
 				return $this->query();
 			}
 			
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('treeview');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
+//			phpgwapi_yui::load_widget('treeview');
 			$data = array(
 				'form' => array(
 					'toolbar' => array(

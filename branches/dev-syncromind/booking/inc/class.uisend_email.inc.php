@@ -73,6 +73,7 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'email_send.js');
+                        phpgwapi_jquery::load_widget('autocomplete');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Building Send'), 'link' => '#building');

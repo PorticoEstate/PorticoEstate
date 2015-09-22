@@ -59,9 +59,9 @@
 				return $this->query();
 			}
 
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
 	
 			$data = array(
 				'form' => array(
@@ -182,7 +182,7 @@
 		// }
 		
 		public function add()
-		{	
+		{
 			$errors = array();
 			$permission = array();
 			
@@ -198,6 +198,7 @@
 			}
 			
 			self::add_javascript('booking', 'booking', 'permission_root.js');
+                        phpgwapi_jquery::load_widget('autocomplete');
 			
 			$this->add_default_display_data($permission);
 			

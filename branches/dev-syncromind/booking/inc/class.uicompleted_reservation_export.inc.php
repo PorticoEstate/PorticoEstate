@@ -89,19 +89,19 @@ phpgw::import_class('booking.uicommon');
 				$this->generate_files();
 			}
 			
-            $GLOBALS['phpgw']->jqcal->add_listener('filter_to');
-            phpgwapi_jquery::load_widget('datepicker');
+                        $GLOBALS['phpgw']->jqcal->add_listener('filter_to');
+                        phpgwapi_jquery::load_widget('datepicker');
             
-			self::add_javascript('booking', 'booking', 'datatable.js');            
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');            
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
                         
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
-                                'type'	=> 'date-picker',
+                                                                'type'	=> 'date-picker',
 								'id'	=> 'to',
 								'name'	=> 'to',
 								'value'	=> '',

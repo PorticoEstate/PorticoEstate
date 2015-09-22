@@ -138,9 +138,9 @@
 
 			$this->redirect_to_parent_if_inline();
 			
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
 						
 			$data = array(
 				'form' => array(
@@ -200,7 +200,7 @@
 			}	
 			
 //			self::render_template('datatable', $data);
-            self::render_template_xsl('datatable_jquery',$data);
+                        self::render_template_xsl('datatable_jquery',$data);
 		}
 
         public function query()

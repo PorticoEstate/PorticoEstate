@@ -52,9 +52,10 @@
 				return $this->query();
 			}
 			self::add_javascript('booking', 'booking', 'allocation_list.js');
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
+                        phpgwapi_jquery::load_widget('autocomplete');
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
@@ -139,6 +140,7 @@
 
         public function query()
 		{
+            
 			if(isset($_SESSION['showall']))
 			{
                             unset($filters['building_name']);

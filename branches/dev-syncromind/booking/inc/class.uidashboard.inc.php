@@ -69,9 +69,10 @@
 			}
             
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
-			self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+//			self::add_javascript('booking', 'booking', 'datatable.js');
+//			phpgwapi_yui::load_widget('datatable');
+//			phpgwapi_yui::load_widget('paginator');
+                        phpgwapi_jquery::load_widget('autocomplete');
             
 			$data = array(
 				'form' => array(
@@ -158,10 +159,15 @@
 							'key' => 'link',
 							'hidden' => true
 						)
+                                                ,
+						array(
+							'key' => 'building',
+							'hidden' => true
+						)
 					)
 				)
 			);
-            self::render_template_xsl('datatable_jquery',$data);
+                        self::render_template_xsl('datatable_jquery',$data);
 //			self::render_template('datatable', $data);
 		}
         

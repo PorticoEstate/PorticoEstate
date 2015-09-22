@@ -25,10 +25,10 @@
                     </div-->
                 </div>
                 <div class="pure-control-group">
-                    <label>
+                    <label style="vertical-align:top;">
                         <h4><xsl:value-of select="php:function('lang', 'Season')" /></h4>
                     </label>
-                    <!--div id="season_container"--><xsl:value-of select="php:function('lang', 'Select a building first')" /><!--/div-->
+                    <div id="season_container" style="display:inline-block;"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
                 </div>
                 <div class="pure-control-group">
                     <label for="field_mailsubject">
@@ -52,5 +52,8 @@
             </input>
         </div>
     </form>
+    <script type="text/javascript">
+        var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
+    </script>
     <!--/div-->
 </xsl:template>
