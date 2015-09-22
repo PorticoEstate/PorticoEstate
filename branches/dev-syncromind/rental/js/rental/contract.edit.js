@@ -25,6 +25,86 @@ function formatterPayer (key, oData)
 	return value;
 }
 
+function changeDate_price_item (param, value) 
+{
+	var oArgs_request = {menuaction: 'rental.uiprice_item.set_value'};
+	var arr = param.split('__');
+	
+	var data = {};
+	data['id'] = arr[1];
+	data['field'] = arr[0];
+	data['value'] = value;
+	
+	var requestUrl = phpGWLink('index.php', oArgs_request, true);
+	
+	JqueryPortico.execute_ajax(requestUrl, function(result){
+
+		JqueryPortico.show_message(5, result);
+		
+		oTable5.fnDraw();
+
+	}, data, 'POST', 'JSON');
+}
+
+setDatePicker_price_item = function()
+{
+	var date_start = $('.date_start');
+
+	date_start.each(function(i, obj) 
+	{
+		$( "#" + obj.id ).datepicker({ 
+				dateFormat: 'dd/mm/yy',
+				showWeek: true,
+				changeMonth: true,
+				changeYear: true,
+				showOn: "button",
+				showButtonPanel:true,
+				buttonImage: "/portico/phpgwapi/templates/base/images/cal.png",
+				buttonText: "Select date",
+				buttonImageOnly: true
+			});
+			
+		$("#" + obj.id).on('change', function ()
+		{
+			changeDate_price_item(obj.id, $(this).val());
+		});			
+	});
+	
+	var date_end = $('.date_end');
+
+	date_end.each(function(i, obj) 
+	{
+		$( "#" + obj.id ).datepicker({ 
+				dateFormat: 'dd/mm/yy',
+				showWeek: true,
+				changeMonth: true,
+				changeYear: true,
+				showOn: "button",
+				showButtonPanel:true,
+				buttonImage: "/portico/phpgwapi/templates/base/images/cal.png",
+				buttonText: "Select date",
+				buttonImageOnly: true
+			});
+			
+		$("#" + obj.id).on('change', function ()
+		{
+			changeDate_price_item(obj.id, $(this).val());
+		});				
+	});
+};
+
+function formatterDateStart_price_item (key, oData) 
+{
+	var name = 'date_start__' + oData['id'];
+	return '<input id="'+ name +'" class="date_start" name="'+ name +'" size="10" value="' + oData[key] + '" type="text" readonly="readonly"></input>';
+}
+
+function formatterDateEnd_price_item (key, oData) 
+{
+	var name = 'date_end__' + oData['id'];
+	return '<input id="'+ name +'" class="date_end" name="'+ name +'" size="10" value="' + oData[key] + '" type="text" readonly="readonly"></input>';
+}
+
 $(document).ready(function()
 {
 	$("#date_start").change(function(){
@@ -174,6 +254,9 @@ $(document).ready(function()
 		{
 			oTable5.dataTableSettings[5]['oFeatures']['bServerSide'] = true;
 			JqueryPortico.updateinlineTableHelper(oTable5, link_included_price_items);
+			
+			var api = oTable5.api();
+			api.on( 'draw', setDatePicker_price_item );
 			
 			oTable6.dataTableSettings[6]['oFeatures']['bServerSide'] = true;
 			oTable6.dataTableSettings[6]['ajax'] = {url: link_not_included_price_items, data: {}, type: 'GET'};
