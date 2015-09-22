@@ -393,8 +393,16 @@ JS;
 
 		$price_item = rental_socontract_price_item::get_instance()->get_single($id);
 		$price_item->set_field($field, $value);	
-		rental_socontract_price_item::get_instance()->store($price_item);
-
+		$result = rental_socontract_price_item::get_instance()->store($price_item);
+		
+		$message = array();
+		if ($result) {
+			$message['message'][] = array('msg'=>lang('date has been saved'));
+		} else {
+			$message['error'][] = array('msg'=>lang('date has not been saved'));
+		}
+		
+		return $message;
 	}
 
 	/**
@@ -469,9 +477,8 @@ JS;
 			}
 		}
 
-		$editable = phpgw::get_var('editable') == 'true' ? true : false;
+		/*$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
-		//Add action column to each row in result table
 		array_walk(
 			$rows, 
 			array($this, 'add_actions'), 
@@ -480,7 +487,7 @@ JS;
 				$type,
 				$editable
 			)
-		);
+		);*/
 		
 		$result_data    =   array('results' =>  $rows);
 		$result_data['total_records']	= $object_count;
