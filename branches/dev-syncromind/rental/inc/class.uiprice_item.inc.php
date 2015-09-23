@@ -392,7 +392,7 @@ JS;
 		$id = phpgw::get_var('id');
 
 		$price_item = rental_socontract_price_item::get_instance()->get_single($id);
-		$price_item->set_field($field, $value);	
+		$price_item->set_field($field, phpgwapi_datetime::date_to_timestamp($value));	
 		$result = rental_socontract_price_item::get_instance()->store($price_item);
 		
 		$message = array();
