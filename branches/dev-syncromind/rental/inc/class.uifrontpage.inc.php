@@ -407,7 +407,6 @@
 			$tableDef_notifications = $this->_get_tableDef_notifications();
 			
 			$datatable_def = array_merge(
-					array(), 
 					$tableDef_working, 
 					$tableDef_executive_officer, 
 					$tableDef_contracts_under_dismissal, 
