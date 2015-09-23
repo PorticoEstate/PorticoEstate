@@ -202,19 +202,24 @@ class rental_uinotification extends rental_uicommon
 	public function dismiss_notification_for_all()
 	{
 		//the source notification
-		$notification_id = (int)phpgw::get_var('id');
-		$contract_id = (int)phpgw::get_var('contract_id');
-		$contract = rental_socontract::get_instance()->get_single($contract_id);
+		//$notification_id = (int)phpgw::get_var('id');
+		$list_notification_id = phpgw::get_var('id');
+		$list_contract_id = phpgw::get_var('contract_id');
+		//$contract_id = (int)phpgw::get_var('contract_id');
+		$contract = rental_socontract::get_instance()->get_single($list_contract_id[0]);
 		
 		$message = array();
 		if($contract->has_permission(PHPGW_ACL_EDIT))
 		{
-			$result = rental_soworkbench_notification::get_instance()->dismiss_notification_for_all($notification_id);
-		
-			if ($result) {
-				$message['message'][] = array('msg'=>lang('notification been removed'));
-			} else {
-				$message['error'][] = array('msg'=>lang('notification not removed'));
+			//$result = rental_soworkbench_notification::get_instance()->dismiss_notification_for_all($notification_id);
+			foreach ($list_notification_id as $notification_id)
+			{
+				$result = rental_soworkbench_notification::get_instance()->dismiss_notification_for_all($notification_id);
+				if ($result) {
+					$message['message'][] = array('msg'=>'notification '.$notification_id.' '.lang('has been removed'));
+				} else {
+					$message['error'][] = array('msg'=>'notification '.$notification_id.' '.lang('not removed'));
+				}				
 			}
 		}
 		
