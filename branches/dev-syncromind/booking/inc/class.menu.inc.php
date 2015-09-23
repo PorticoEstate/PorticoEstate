@@ -213,12 +213,12 @@
                             'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime') ),
 							'image' => array('property', 'report'),
                         ),
-#                        'free_time2' => array
-#                        (
-#                            'text'  => lang('Free time2'),
-#                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime2') ),
-#							'image' => array('property', 'report'),
-#                        )
+                        'add_generic' => array
+                        (
+                            'text'  => 'TESTING::add_generic',
+                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.add') ),
+							'image' => array('property', 'report'),
+                        )
                     )       
                 ),      
 			);
