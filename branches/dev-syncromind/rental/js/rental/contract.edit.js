@@ -55,8 +55,8 @@ setDatePicker_price_item = function()
 		$( "#" + obj.id ).datepicker({
 			    beforeShow: function(input, inst)
 				{
-					alert('setDatePicker_price_item::date_start should open...');
-					console.log(inst);
+					$( this ).datepicker( "setDate", $.trim(input.value) );
+					//console.log(inst);
 	//			    inst.dpDiv.css({marginTop: -input.offsetHeight + 'px', marginLeft: input.offsetWidth + 'px'});
 				},
 				dateFormat: dateformat,
@@ -68,7 +68,6 @@ setDatePicker_price_item = function()
 				buttonImage: img_cal,
 				buttonText: lang_select_date,
 				buttonImageOnly: true
-
 			});
 			
 		$("#" + obj.id).on('change', function ()
@@ -83,9 +82,9 @@ setDatePicker_price_item = function()
 	{
 		$( "#" + obj.id ).datepicker({ 
 			    beforeShow: function(input, inst)
-				{
-					alert('setDatePicker_price_item::date_end should open...');
-					console.log(inst);
+				{					
+					$( this ).datepicker( "setDate", $.trim(input.value) );
+					//console.log(inst);
 		//		    inst.dpDiv.css({marginTop: -input.offsetHeight + 'px', marginLeft: input.offsetWidth + 'px'});
 				},
 				dateFormat: dateformat,
