@@ -52,22 +52,29 @@ setDatePicker_price_item = function()
 
 	date_start.each(function(i, obj) 
 	{
-		$( "#" + obj.id ).datepicker({ 
-				dateFormat: 'dd/mm/yy',
+		$( "#" + obj.id ).datepicker({
+			    beforeShow: function(input, inst)
+				{
+					alert('setDatePicker_price_item::date_start should open...');
+					console.log(inst);
+	//			    inst.dpDiv.css({marginTop: -input.offsetHeight + 'px', marginLeft: input.offsetWidth + 'px'});
+				},
+				dateFormat: dateformat,
 				showWeek: true,
 				changeMonth: true,
 				changeYear: true,
 				showOn: "button",
 				showButtonPanel:true,
-				buttonImage: "/portico/phpgwapi/templates/base/images/cal.png",
-				buttonText: "Select date",
+				buttonImage: img_cal,
+				buttonText: lang_select_date,
 				buttonImageOnly: true
+
 			});
 			
 		$("#" + obj.id).on('change', function ()
 		{
 			changeDate_price_item(obj.id, $(this).val());
-		});			
+		});
 	});
 	
 	var date_end = $('.date_end');
@@ -75,14 +82,20 @@ setDatePicker_price_item = function()
 	date_end.each(function(i, obj) 
 	{
 		$( "#" + obj.id ).datepicker({ 
-				dateFormat: 'dd/mm/yy',
+			    beforeShow: function(input, inst)
+				{
+					alert('setDatePicker_price_item::date_end should open...');
+					console.log(inst);
+		//		    inst.dpDiv.css({marginTop: -input.offsetHeight + 'px', marginLeft: input.offsetWidth + 'px'});
+				},
+				dateFormat: dateformat,
 				showWeek: true,
 				changeMonth: true,
 				changeYear: true,
 				showOn: "button",
 				showButtonPanel:true,
-				buttonImage: "/portico/phpgwapi/templates/base/images/cal.png",
-				buttonText: "Select date",
+				buttonImage: img_cal,
+				buttonText: lang_select_date,
 				buttonImageOnly: true
 			});
 			

@@ -408,6 +408,9 @@
 								<script type="text/javascript">
 									var link_included_price_items = <xsl:value-of select="link_included_price_items"/>;
 									var link_not_included_price_items = <xsl:value-of select="link_not_included_price_items"/>;
+									var	img_cal = <xsl:value-of select="img_cal"/>;
+									var	dateformat = "<xsl:value-of select="dateformat"/>";
+									var	lang_select_date = "<xsl:value-of select="php:function('lang', 'select date')"/>";
 								</script>
 								<div>
 									<xsl:for-each select="datatable_def">

@@ -2056,7 +2056,10 @@ JS;
 				
 					'link_upload_document'			=> $link_upload_document,
 				
-					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+					'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+
+					'img_cal'						=> json_encode($GLOBALS['phpgw']->common->image('phpgwapi','cal')),
+					'dateformat'					=> str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 				);
 
 			//$appname	=  $this->location_info['name'];
