@@ -164,6 +164,7 @@
 //			$this->use_yui_editor();
                         
                         phpgwapi_jquery::load_widget('autocomplete');
+                        phpgwapi_jquery::init_ckeditor('field_description');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Building New'), 'link' => '#building_form');
@@ -207,6 +208,7 @@
 //			$this->use_yui_editor();
                         
                         phpgwapi_jquery::load_widget('autocomplete');
+                        phpgwapi_jquery::init_ckeditor('field_description');
                         
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');
@@ -251,11 +253,11 @@
 			));
 			self::add_javascript('booking', 'booking', 'schedule.js');
             
-            $tabs = array();
+                        $tabs = array();
 			$tabs['generic']	= array('label' => lang('Building Schedule'), 'link' => '#building_schedule');
 			$active_tab = 'generic';
             
-             $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
 			self::render_template_xsl('building_schedule', array('building' => $building));
 		}

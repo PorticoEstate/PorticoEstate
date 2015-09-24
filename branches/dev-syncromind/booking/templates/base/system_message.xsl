@@ -37,10 +37,10 @@
                         <xsl:value-of select="system_message/created"/>
                     </div>
                     <div class="pure-control-group">
-                        <label>
+                        <label style="vertical-align:top;">
                             <h4><xsl:value-of select="php:function('lang', 'Message')" /></h4>
                         </label>
-                        <xsl:value-of select="system_message/message" disable-output-escaping="yes"/>
+                        <div style="display:inline-block;max-width:80%;"><xsl:value-of select="system_message/message" disable-output-escaping="yes"/></div>
                     </div>
                     <div class="pure-control-group">
                         <label>

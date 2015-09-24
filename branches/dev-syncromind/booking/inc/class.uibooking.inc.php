@@ -71,6 +71,7 @@
 								'name' => 'season',
 								'ui' => 'season',
 								'text' => lang('Season').':',
+                                                                'depends' => 'building',
 								'requestGenerator' => 'requestWithBuildingFilter',
 							),
 							array('type' => 'filter', 

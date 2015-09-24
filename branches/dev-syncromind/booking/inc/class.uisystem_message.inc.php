@@ -368,7 +368,10 @@
 			}
 			$this->flash_form_errors($errors);
 
-			$this->use_yui_editor();
+//			$this->use_yui_editor();
+                        
+                        phpgwapi_jquery::init_ckeditor('field_description');
+                        
 			self::render_template('system_message_edit', array('system_message' => $system_message, 'module' => $this->module));
 		}
 		

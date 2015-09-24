@@ -219,8 +219,9 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			
-			$this->install_customer_identifier_ui($organization);	
+			$this->install_customer_identifier_ui($organization);
 //			$this->use_yui_editor();
+                        phpgwapi_jquery::init_ckeditor('field_description');
 			
 			$this->add_template_helpers();
             
@@ -279,9 +280,10 @@
 			$activities = $activities['results'];
 			
 			$this->install_customer_identifier_ui($organization);
-			$this->use_yui_editor();
+//			$this->use_yui_editor();
+                        phpgwapi_jquery::init_ckeditor('field_description');
 			
-			$this->rich_text_editor('field-description');
+//			$this->rich_text_editor('field-description');
             
 			$this->add_template_helpers();
 			self::render_template_xsl('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));

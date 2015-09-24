@@ -103,10 +103,12 @@
                     </xsl:if>
                 </div>
                 <div class="pure-control-group">
-                    <label for="field_description">
+                    <label for="field_description" style="vertical-align:top;">
                         <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
                     </label>
-                    <textarea id="field_description" name="description" type="text"><xsl:value-of select="resource/description"/></textarea>
+                    <div style="display:inline-block;max-width:80%;">
+                        <textarea id="field_description" name="description" type="text"><xsl:value-of select="resource/description"/></textarea>
+                    </div>
                 </div>
                 <div class="pure-control-group">
                     <label>

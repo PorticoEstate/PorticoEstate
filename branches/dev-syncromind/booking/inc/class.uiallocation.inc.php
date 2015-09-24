@@ -2,7 +2,7 @@
 	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.boorganization');
     
-    phpgw::import_class('booking.uidocument_building');
+        phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
 	
 //	phpgw::import_class('phpgwapi.uicommon_jquery');
@@ -64,6 +64,7 @@
 								'name' => 'season',
 								'ui' => 'season',
 								'text' => lang('Season').':',
+                                                                'depends' => 'building',
 								'requestGenerator' => 'requestWithBuildingFilter',
 							),
 							array('type' => 'filter', 
@@ -382,8 +383,8 @@
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
 
-                        $GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+                        $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
+			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'time');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');

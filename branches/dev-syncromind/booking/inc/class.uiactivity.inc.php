@@ -38,7 +38,8 @@
 						"type"=>"text", 
 						"href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 
 						                           'id' => $activity['id'])), 'target' => '_self', 
-						                           'label' => $activity['name'], 
+						                           'label' => $activity['name'],
+                                                                           'text' => $activity['name'],
 						                           'children' => $this->treeitem($children, $activity['id'], $show_all)
 					);
 					if (!$this->bo->allow_write($activity)) {
@@ -73,7 +74,8 @@
 				$children[$activity['parent_id']][] = $activity;
 			}
 			$treedata = json_encode($this->treeitem($children, null, $show_all));
-			phpgwapi_yui::load_widget('treeview');
+//			phpgwapi_yui::load_widget('treeview');
+                        phpgwapi_jquery::load_widget('treeview');
 			$links = array(
 				'show_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => 'true')),
 				'hide_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => ''))

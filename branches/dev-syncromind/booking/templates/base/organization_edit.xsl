@@ -216,30 +216,36 @@
                         </div>                    
                     </div>                    
                     <div class="pure-g">
-                        <div class="pure-u-1 pure-u-sm-11 pure-u-md-2-3 pure-u-lg-1-2">
-                            <div class="pure-control-group">
-                                <label for="field_activity">
-                                    <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
-                                </label>
-                                <select name="activity_id" id="field_activity" class="pure-u-2-3">
-                                    <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
-                                    <xsl:for-each select="activities">
-                                        <option>
-                                            <xsl:if test="../organization/activity_id = id">
-                                                <xsl:attribute name="selected">selected</xsl:attribute>
-                                            </xsl:if>
-                                            <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                                            <xsl:value-of select="name"/>
-                                        </option>
-                                    </xsl:for-each>
-                                </select>
+                        <div class="pure-u-1">
+                            <div class="pure-g">
+                                <div class="pure-control-group pure-u-sm-1-1 pure-u-md-2-3 pure-u-lg-1-2">
+                                    <label for="field_activity">
+                                        <h4><xsl:value-of select="php:function('lang', 'Activity')" /></h4>
+                                    </label>
+                                    <select name="activity_id" id="field_activity" class="pure-u-2-3">
+                                        <option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+                                        <xsl:for-each select="activities">
+                                            <option>
+                                                <xsl:if test="../organization/activity_id = id">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+                                                <xsl:value-of select="name"/>
+                                            </option>
+                                        </xsl:for-each>
+                                    </select>
+                                </div>
+                                <div class="pure-control-group pure-u-1">
+                                    <label for="field_description">
+                                        <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
+                                    </label>
+                                    <div style="max-width:650px;">
+                                        <textarea rows="4" id="field_description" name="description" type="text" class="pure-u-2-3"><xsl:value-of select="organization/description"/></textarea>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="pure-control-group">
-                                <label for="field_description">
-                                    <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
-                                </label>
-                                <textarea rows="4" id="field-description" name="description" type="text" class="pure-u-2-3"><xsl:value-of select="organization/description"/></textarea>
-                            </div>
+                            
+                                
                         </div>
                     </div>
                     <xsl:if test='new_form or organization/permission/write'>
@@ -316,6 +322,7 @@
 
 <script type="text/javascript">
     var endpoint = '<xsl:value-of select="module" />';
+    /*
     <![CDATA[
     var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
         height: '300px',
@@ -339,6 +346,7 @@
     descEdit.render();
 
     ]]>
+    */
 </script>
 </xsl:template>
 

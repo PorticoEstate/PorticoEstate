@@ -318,6 +318,7 @@
 			$activities = $activities['results'];
                         
                         phpgwapi_jquery::load_widget('autocomplete');
+                        phpgwapi_jquery::init_ckeditor('field_description');
             
                         $tabs = array();
                         $tabs['generic'] = array('label' => lang('Group Edit'), 'link' => '#group_edit');

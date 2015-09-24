@@ -42,6 +42,7 @@
 
                         $settings = array();
                         $settings['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        phpgwapi_jquery::init_ckeditor('field_description');
 //			$this->use_yui_editor();
 			self::render_template_xsl('application_settings', array('config_data' =>$config->config_data, 'data' => $settings));
 		}
