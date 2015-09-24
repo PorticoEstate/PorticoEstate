@@ -488,11 +488,14 @@ class rental_uiparty extends rental_uicommon
 			(
 				'my_name'		=> 'download_agresso',
 				'text' 			=> lang('Download Agresso import file'),
-				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-				(
-					'menuaction'	=> 'rental.uiparty.download_agresso'
-				)),
-				'parameters'	=> json_encode(array())
+				'type'			=> 'custom',
+				'custom_code'	=> "
+					var oArgs = ".json_encode(array(
+							'menuaction'		=> 'rental.uiparty.download_agresso', 
+							'export'			=> true
+						)).";
+					downloadAgresso(oArgs);
+				"				
 			);
 		
 		$data['datatable']['actions'][] = array
