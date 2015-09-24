@@ -982,9 +982,7 @@
 		}
 		
 		$editable		= phpgw::get_var('editable', 'bool');
-		$user_is		= $this->type_of_user;
-			
-		self::set_active_menu('rental::parties');
+
 		$appname = lang('contracts');
 		$type = 'all_contracts';
 				
