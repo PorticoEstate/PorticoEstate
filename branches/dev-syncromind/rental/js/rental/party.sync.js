@@ -39,5 +39,16 @@ function onDelete_party(requestUrl)
 		oTable.fnDraw();
 
 	}, '', "POST", "JSON");
-		
+}
+
+function downloadAgresso(oArgs)
+{
+	if(!confirm("This will take some time..."))
+	{
+		return false;
+	}
+	
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	window.open(requestUrl,'_self');
 }
