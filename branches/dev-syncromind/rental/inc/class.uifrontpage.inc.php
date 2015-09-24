@@ -360,31 +360,7 @@
 		}
 		
 		
-		public function query()
-		{
-			$type = phpgw::get_var('type');
-			
-			switch($type){
-				case 'save_panel_settings':
-					$panel = phpgw::get_var('name');
-					$visibility = phpgw::get_var('visibility');
-					$x = phpgw::get_var('x');
-					$y = phpgw::get_var('y');
-					$panel_config = array($visibility,$x,$y);
-					$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
-					$GLOBALS['phpgw']->preferences->read();
-					$GLOBALS['phpgw']->preferences->add('rental','rental_frontpage_panel_'.$panel,$panel_config,'user');
-					$GLOBALS['phpgw']->preferences->save_repository();
-					break;
-				case 'reset_panel_settings':
-					$panel = phpgw::get_var('name');
-					$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
-					$GLOBALS['phpgw']->preferences->read();
-					$GLOBALS['phpgw']->preferences->delete('rental','rental_frontpage_panel_'.$panel,'','user');
-					$GLOBALS['phpgw']->preferences->save_repository();
-					break;
-			}
-		}
+		public function query(){}
 		
 		public function index()
 		{
@@ -395,8 +371,6 @@
 			$tabs['contracts_closing_due_date']	= array('label' => lang('contracts_closing_due_date'), 'link' => '#contracts_closing_due_date', 'function' => 'getData_contracts_closing_due_date()');
 			$tabs['terminated_contracts']	= array('label' => lang('terminated_contracts'), 'link' => '#terminated_contracts', 'function' => 'getData_terminated_contracts()');
 			$tabs['notifications']	= array('label' => lang('notifications'), 'link' => '#notifications', 'function' => 'getData_notifications()');
-			$tabs['save_setup']	= array('label' => lang('save_setup'), 'link' => '#save_setup');
-			$tabs['frontpage_reset_setup']	= array('label' => lang('frontpage_reset_setup'), 'link' => '#frontpage_reset_setup');
 			$active_tab = 'working_on';
 		
 			$tableDef_working = $this->_get_tableDef_working();
