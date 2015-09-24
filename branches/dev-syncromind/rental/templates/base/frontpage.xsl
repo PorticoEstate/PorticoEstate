@@ -18,11 +18,7 @@
 		var params_notifications = <xsl:value-of select="params_notifications"/>;
 	</script>
 	<div>
-		<xsl:variable name="form_action">
-			<xsl:value-of select="form_action"/>
-		</xsl:variable>
-
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="working_on">
@@ -120,16 +116,6 @@
 							</xsl:if>
 						</xsl:for-each>
 					</div>
-				</div>
-				<div id="save_setup">
-					<fieldset>
-
-					</fieldset>
-				</div>
-				<div id="frontpage_reset_setup">
-					<fieldset>
-
-					</fieldset>
 				</div>
 			</div>
 		</form>
