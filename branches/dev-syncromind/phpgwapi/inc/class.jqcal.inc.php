@@ -50,6 +50,11 @@
 					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
 					$_type = 'datetime';
 					break;
+                                case 'time':
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");	
+					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
+					$_type = 'time';
+					break;
 				default:
 					$_type = 'date';
 			}
