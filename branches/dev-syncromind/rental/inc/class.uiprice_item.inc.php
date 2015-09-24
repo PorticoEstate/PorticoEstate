@@ -159,7 +159,7 @@ class rental_uiprice_item extends rental_uicommon
 						'key'		=> 'price_type_title', 
 						'label'		=> lang('type'), 
 						'className'	=> '', 
-						'sortable'	=> true, 
+						'sortable'	=> false, 
 						'hidden'	=> false
 					)					
 				)
