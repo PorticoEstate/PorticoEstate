@@ -272,6 +272,7 @@
 
 <xsl:template xmlns:php="http://php.net/xsl" match="adjustment_price">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
+	<h3><xsl:value-of select="php:function('lang', 'manual_adjust_price_item')"/></h3>
 	<div>
 		<xsl:call-template name="top-toolbar" />
 		<br/>
