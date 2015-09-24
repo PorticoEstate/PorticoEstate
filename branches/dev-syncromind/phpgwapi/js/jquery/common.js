@@ -270,7 +270,7 @@ JqueryPortico.inlineTableHelper = function(container, ajax_url, columns, options
 				{
 					if(typeof(JqueryPortico.render_tabs) == 'function')
 					{
-						var delay=15;//allow extra 15 milliseconds to really finish
+						var delay=350;//allow extra 350 milliseconds to really finish
 						setTimeout(function()
 						{
 							JqueryPortico.render_tabs();
