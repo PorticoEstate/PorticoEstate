@@ -530,7 +530,7 @@ class booking_uievent extends booking_uicommon
                 $active_tab = 'generic';
 
                 $event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-                self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
+				self::adddatetimepicker();
         
 		$this->add_template_helpers();
 		self::render_template_xsl('event_new', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));

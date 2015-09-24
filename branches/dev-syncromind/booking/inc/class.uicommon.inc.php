@@ -649,4 +649,86 @@
 					return $defaultType;
 			}
 		}
+
+		protected function adddatetimepicker($type = 'datetime')
+		{
+			switch($type)
+			{
+				case 'datetime':
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
+					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
+					$_type = 'datetime';
+					break;
+				case 'time':
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
+					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
+					$_type = 'time';
+					break;
+				default:
+					$_type = 'date';
+			}
+
+			$img_cal	= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+			$dateformat =  str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$lang_select_date = lang('select date');
+			$lang_from = lang('from');
+			$lang_to = lang('to');
+
+			$js =<<<JS
+
+			$(function() {
+
+				$('#add-date-link').click(function(){
+					var add = $(this);
+					var html = '';
+
+					if (!this.counter) { this.counter = 0; }
+
+					html = '<div class="date-container">'+
+						'<a class="close-btn btnclose" href="javascript:void(0);">-</a>'+
+						'<div class="pure-control-group">'+
+							'<label for="start_date_'+this.counter+'"><h4>{$lang_from}</h4></label>'+
+							'<input class="time pure-input-2-3" id="start_date_'+this.counter+'" name="start_date_'+this.counter+'" type="text">'+
+							'</input>'+
+						'</div>'+
+						'<div class="pure-control-group">'+
+							'<label for="end_date_'+this.counter+'"><h4>{$lang_to}</h4></label>'+
+							'<input class="time pure-input-2-3" id="end_date_'+this.counter+'" name="end_date_'+this.counter+'" type="text">'+
+							'</input>'+
+						'</div>'
+				 '</div>';
+
+					this.counter++;
+
+					add.parent().parent().children('#dates-container').append(html);
+
+					$( ".time" ).{$_type}picker({
+						dateFormat: '{$dateformat}',
+							showWeek: true,
+							changeMonth: true,
+							changeYear: true,
+							showOn: "button",
+							showButtonPanel:true,
+							buttonImage: "{$img_cal}",
+							buttonText: "{$lang_select_date}",
+							buttonImageOnly: true
+					});
+
+				});
+
+			});
+
+			$(document).on("click",".btnclose",function(){
+				var the = $(this);
+				RemoveDate(the);
+			});
+
+			RemoveDate = function(the){
+				the.parent().remove();
+			}
+
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+
+		}
 	}

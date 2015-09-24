@@ -187,7 +187,7 @@
 			$active_tab		 = 'generic';
 
 			$report['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
+//			self::adddatetimepicker();
 
 			$this->add_template_helpers();
 			self::render_template_xsl('report_new', array('report' => $report, 'activities' => $activities,

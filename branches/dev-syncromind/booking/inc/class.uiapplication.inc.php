@@ -740,7 +740,6 @@
 			array_set_default($application, 'dates', $default_dates);
 			
 			$this->flash_form_errors($errors);
-//			self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
@@ -788,7 +787,7 @@
 
                         $application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
                         self::add_javascript('booking', 'booking', 'application.js');
-                        self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
+						self::adddatetimepicker();
 			
 			self::render_template_xsl('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}
@@ -848,7 +847,7 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
-			self::add_javascript('booking', 'booking', 'adddatetimepicker.js');
+			self::adddatetimepicker();
 			$this->set_case_officer($application);
 			
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
