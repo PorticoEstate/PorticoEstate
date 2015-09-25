@@ -466,7 +466,7 @@ class rental_socomposite extends rental_socommon
 		
 		$uicols['name'][]		= 'address';
 		$uicols['descr'][]		= lang('address');
-		$uicols['sortable'][]	= true;
+		$uicols['sortable'][]	= false;
 		$uicols['input_type'][]	= 'text';
 		
 		$uicols['name'][]		= 'gab_id';
