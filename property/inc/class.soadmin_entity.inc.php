@@ -600,10 +600,12 @@
 			$fd['contact_phone'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
 	//		$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 
-			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['entry_date'] = array('type' => 'int', 'precision' => 8, 'nullable' => true);
 			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['org_unit_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['entity_group_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['modified_by'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['modified_on'] = array('type' => 'int', 'precision' => 8, 'nullable' => true);
 			return $fd;
 		}
 
