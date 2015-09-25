@@ -438,7 +438,7 @@
 							array("key"=>"date_start", "label"=>lang('date_start'), 'formatter'=>'formatterDateStart_price_item', 'className'=>'center'),
 							array("key"=>"date_end", "label"=>lang('date_end'), 'formatter'=>'formatterDateEnd_price_item', 'className'=>'center'),
 							array("key"=>"is_one_time", "label"=>lang('is_one_time'), 'className'=>'center'),
-							array("key"=>"price_type_title", "label"=>lang('type'), 'className'=>'center')
+							array("key"=>"price_type_title", "label"=>lang('type'), 'sortable'=>false, 'className'=>'center')
 						);
 		
 		if ($mode == 'edit')
