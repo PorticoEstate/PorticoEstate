@@ -21,7 +21,7 @@
 		$options = array_merge($default_options, $options);
 		$result = array();
 
-		$isIndexed = array_values($keys) === $arr;
+		$isIndexed = array_values($keys) === $keys;
 		if($isIndexed)
 		{
 			foreach($keys as $write_key)
@@ -40,6 +40,10 @@
 			{
 				switch($type)
 				{
+					case 'string':
+					default:
+						$_type = 'string';
+						break;
 					case 'bool':
 					case 'boolean':
 						$_type = 'bool';
@@ -78,9 +82,6 @@
 						break;
 					case 'html':
 						$_type = 'html';
-						break;
-					default:
-						$_type = 'string';
 						break;
 				}
 				$array_key = $options['prefix'].$write_key.$options['suffix'];
