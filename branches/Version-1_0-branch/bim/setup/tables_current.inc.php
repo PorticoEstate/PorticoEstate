@@ -62,6 +62,8 @@
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'org_unit_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'entity_group_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'modified_on' => array('type' => 'int','precision' => 8,'nullable' => true),
 			),
 			'pk' => array('type','id'),
 			'fk' => array(

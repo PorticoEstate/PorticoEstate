@@ -217,3 +217,21 @@
 			return $GLOBALS['setup_info']['bim']['currentver'];
 		}
 	}
+
+	/**
+	* Update bim version from 0.9.17.509 to 0.9.17.510
+	*/
+	$test[] = '0.9.17.509';
+	function bim_upgrade0_9_17_509()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_bim_item','modified_by', array('type' => 'int', 'precision' => 4,'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_bim_item','modified_on', array('type' => 'int', 'precision' => 8,'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['bim']['currentver'] = '0.9.17.510';
+			return $GLOBALS['setup_info']['bim']['currentver'];
+		}
+	}
