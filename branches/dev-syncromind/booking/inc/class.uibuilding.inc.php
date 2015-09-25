@@ -251,7 +251,7 @@
 				'building_id' => $building['id'], 
 				'phpgw_return_as' => 'json',
 			));
-			self::add_javascript('booking', 'booking', 'schedule.js');
+			self::add_javascript('booking', 'booking', 'schedule_new.js');
             
                         $tabs = array();
 			$tabs['generic']	= array('label' => lang('Building Schedule'), 'link' => '#building_schedule');
@@ -259,6 +259,6 @@
             
                         $building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
             
-			self::render_template_xsl('building_schedule', array('building' => $building));
+			self::render_template_xsl('schedule', array('building' => $building));
 		}
 	}
