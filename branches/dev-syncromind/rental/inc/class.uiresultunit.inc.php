@@ -11,7 +11,9 @@
 			'index'				=> true,
 			'edit'				=> true,
 			'query'				=> true,
-			'remove_delegate'	=> true
+			'remove_delegate'	=> true,
+			'search_user'		=> true,
+			'add'				=> true
 		);
 
 		public function __construct()
@@ -39,11 +41,11 @@
 
 			$start_index	= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$num_of_objects	= (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
-			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'org_unit_id'; 
+			$sort_field		= ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'ORG_UNIT_ID'; 
 			$sort_ascending	= ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
 			$search_for 	= $search['value'];
-			$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+			$search_type	= phpgw::get_var('search_option', 'string', 'REQUEST', 'unit_name');
 
 			// Create an empty result set
 			$result_count = 0;
@@ -59,7 +61,7 @@
 			}
 
 			$result_data    =   array('results' =>  $result_units);
-			$result_data['total_records']	= 0;
+			$result_data['total_records']	= $result_count;
 			$result_data['draw']    = $draw;
 
 			return $this->jquery_results($result_data);
@@ -145,8 +147,13 @@
 						array
 						(
 							'name'		=> 'id',
-							'source'	=> 'org_unit_id'
-						)
+							'source'	=> 'ORG_UNIT_ID'
+						),
+						array
+						(
+							'name'		=> 'level',
+							'source'	=> 'ORG_UNIT_LEVEL'
+						)						
 					)
 				);
 
@@ -166,7 +173,7 @@
 		}
 
 
-		public function add_actions(&$value)
+		/*public function add_actions(&$value)
 		{
 			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
@@ -174,7 +181,7 @@
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiresultunit.edit', 'id' => $value['ORG_UNIT_ID'], 'level' => $value['ORG_UNIT_LEVEL'])));
 				$value['labels'][] = lang('edit');
 			}
-		}
+		}*/
 
 		public function edit()
 		{
@@ -185,83 +192,147 @@
 
 			$unit_id = (int)phpgw::get_var('id');
 			$unit_level = (int)phpgw::get_var('level');
+				
+			$datatable_def = array();
 
-			if (isset($unit_id) && $unit_id > 0 && $use_fellesdata) {
+			$link_index = array
+				(
+					'menuaction'	=> 'rental.uiresultunit.index'
+				);
+		
+			$tabletools = array();
+			if(($this->isExecutiveOfficer() || $this->isAdministrator()) && $use_fellesdata)
+			{
+				$tabletools[] = array
+					(
+						'my_name'		=> 'delete',
+						'text'			=> lang('delete'),
+						'type'			=> 'custom',
+						'custom_code'	=> "
+							var oArgs = ".json_encode(array(
+									'menuaction'		=> 'rental.uiresultunit.remove_delegate', 
+									'id'				=> $unit_id,
+									'phpgw_return_as'	=> 'json'
+								)).";
+							var parameters = ".json_encode(array('parameter'=>array(array('name'=>'account_id', 'source'=>'account_id'),array('name'=>'owner_id', 'source'=>'owner_id')))).";
+							removeDelegate(oArgs, parameters);
+						"
+					);
+			}
+			
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction'=>'rental.uidelegate.query', 'unit_id'=>$unit_id, 'type'=>'included_delegates', 'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> array(
+							array('key'=>'account_lastname', 'label'=>lang('lastname'), 'sortable'=>true),
+							array('key'=>'account_firstname', 'label'=>lang('firstname'), 'sortable'=>true)					
+				),
+				'tabletools'	=> $tabletools,
+				'config'		=> array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+			
+			$tabs = array();
+			$tabs['delegates']	= array('label' => lang('Delegates'), 'link' => '#delegates');
+			$active_tab = 'delegates';
 
-				$msglog['error']['msg'] = phpgw::get_var('error');
-				$msglog['message']['msg'] = phpgw::get_var('message');
+			$bofelles = rental_bofellesdata::get_instance();
+			$unit = $bofelles->get_result_unit_with_leader($unit_id, $unit_level);
 
-				if(isset($_POST['search']))
+			$delegates_per_org_unit = frontend_bofrontend::get_delegates($unit_id);
+			$unit['UNIT_NO_OF_DELEGATES'] = count($delegates_per_org_unit);
+				
+			$data = array
+			(
+				'datatable_def'					=> $datatable_def,
+
+				'cancel_url'					=> $GLOBALS['phpgw']->link('/index.php', $link_index),
+				'lang_search'					=> lang('search'),
+				'lang_add'						=> lang('add'),
+				'lang_cancel'					=> lang('cancel'),
+				
+				'value_org_unit_id'				=> $unit["ORG_UNIT_ID"],
+				'value_org_unit_name'			=> $unit["ORG_UNIT_NAME"],
+				'value_leader_fullname'			=> $unit["LEADER_FULLNAME"],
+				'value_unit_no_of_delegates'	=> $unit["UNIT_NO_OF_DELEGATES"],
+				
+				'unit_id'						=> $unit_id,
+				'unit_level'					=> $unit_level,
+
+				'tabs'							=> phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+			);
+			
+			self::add_javascript('rental', 'rental', 'resultunit.edit.js');
+			self::render_template_xsl(array('resultunit', 'datatable_inline'), array('edit' => $data));
+		}
+
+		public function search_user()
+		{
+			$username = phpgw::get_var('username');
+			$result = array();
+			if(!isset($username))
+			{
+				$result['error']['msg'] = lang('lacking_username');
+			}
+			else
+			{
+				$account_id = frontend_bofrontend::delegate_exist($username);
+				if($account_id)
 				{
-					$username = phpgw::get_var('username');
-					if(!isset($username))
+					$search_result = frontend_bofrontend::get_account_info($account_id);
+					$result['message']['msg'] = lang('user_found_in_PE');
+				}
+				else
+				{
+					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
+					if($fellesdata_user)
 					{
-						$msglog['error']['msg'] = lang('lacking_username');
+						$search_result = $fellesdata_user;
+						$result['message']['msg'] = lang('user_found_in_Fellesdata');
 					}
 					else
 					{
-						$account_id = frontend_bofrontend::delegate_exist($username);
-						if($account_id)
-						{
-							$search_result = frontend_bofrontend::get_account_info($account_id);
-							$msglog['message']['msg'] = lang('user_found_in_PE');
-						}
-						else
-						{
-							$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
-							if($fellesdata_user)
-							{
-								$search_result = $fellesdata_user;
-								$msglog['message']['msg'] = lang('user_found_in_Fellesdata');
-							}
-							else
-							{
-								$msglog['error']['msg'] = lang('no_hits');
-							}
-						}
+						$result['error']['msg'] = lang('no_hits');
 					}
 				}
-				else if(isset($_POST['add']))
-				{
-					$account_id = phpgw::get_var('account_id');
-					//var_dump($account_id);
-
-					$bofelles = rental_bofellesdata::get_instance();
-					$unit = $bofelles->get_result_unit($unit_id, $unit_level);
-					//var_dump($unit);
-					if($account_id){
-						$res = $this->add_delegate($account_id,$unit['ORG_UNIT_ID'],$unit['ORG_NAME']);
-						//var_dump($res);
-						if(!$res)
-						{
-							$msglog['error']['msg'] = lang('delegation_error');
-						}
-						else
-						{
-							$msglog['message']['msg'] = lang('delegation_successful');
-						}
-					}
-					else{
-						$msglog['error']['msg'] = lang('unknown_user');
-					}
-				}
-
-				$bofelles = rental_bofellesdata::get_instance();
-				$unit = $bofelles->get_result_unit_with_leader($unit_id, $unit_level);
-
-				$delegates_per_org_unit = frontend_bofrontend::get_delegates($unit_id);
-				$unit['UNIT_NO_OF_DELEGATES'] = count($delegates_per_org_unit);
-
-				$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'rental.uiresultunit.edit', 'id' => $unit_id, 'level' => $unit_level));
-
-				$this->render('resultunit.php', array ('unit' => $unit,
-														'form_action' => $form_action,
-														'search_result' => isset($search_result) ? $search_result : array(),
-														'msglog' => $msglog,
-														'cancel_link' => self::link(array('menuaction' => 'rental.uiresultunit.index', 'populate_form' => 'yes'))));
 			}
-		}
+			$result['data'] = $search_result;
 
+			return $result;
+		}
+		
+		public function add()
+		{
+			$unit_id = (int)phpgw::get_var('id');
+			$unit_level = (int)phpgw::get_var('level');			
+			$account_id = phpgw::get_var('account_id');
+			
+			$bofelles = rental_bofellesdata::get_instance();
+			$unit = $bofelles->get_result_unit($unit_id, $unit_level);
+		
+			$result = array();
+			if($account_id)
+			{
+				$res = $this->add_delegate($account_id,$unit['ORG_UNIT_ID'],$unit['ORG_NAME']);
+				if(!$res)
+				{
+					$result['error']['msg'] = lang('delegation_error');
+				}
+				else
+				{
+					$result['message']['msg'] = lang('delegation_successful');
+				}
+			}
+			else{
+				$result['error']['msg'] = lang('unknown_user');
+			}
+
+			return $result;
+		}
+		
 		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{
 			$config	= CreateObject('phpgwapi.config','rental');
@@ -320,18 +391,19 @@
 		public function remove_delegate()
 		{
 			$unit_id = phpgw::get_var('id');
-			$account_id = phpgw::get_var('account_id');
+			$list_account_id = phpgw::get_var('account_id');
 
-			$result = frontend_bofrontend::remove_delegate($account_id,null,$unit_id);
-
-			$args = array('menuaction' => 'rental.uiresultunit.edit', 'id' => $unit_id);
-
-			if($result){
-				$args['message'] = lang('delegate_removed');
+			$message = array();
+			foreach ($list_account_id as $account_id)
+			{
+				$result = frontend_bofrontend::remove_delegate($account_id,null,$unit_id);
+				if ($result) {
+					$message['message'][] = array('msg'=>lang('delegate_removed'));
+				} else {
+					$message['error'][] = array('msg'=>lang('failed_removing_delegate'));
+				}				
 			}
-			else{
-				$args['error'] = lang('failed_removing_delegate');
-			}
-			$GLOBALS['phpgw']->redirect_link('/index.php', $args);
+			
+			return $message;
 		}
 	}
