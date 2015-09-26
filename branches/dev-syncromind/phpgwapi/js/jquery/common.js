@@ -536,13 +536,14 @@ JqueryPortico.autocompleteHelper = function(baseUrl, field, hidden, container, l
 
 
 
-//d => div contenedor
-//u => URL
-//c => columnas
-//r => respuesta
+//d  => div contenedor
+//u  => URL
+//c  => columnas
+//r  => respuesta
+//cl => clase
 function createTable (d,u,c,r,cl) {
     r = (r) ? r : 'data';
-    tableClass = (cl) ? cl : "pure-table pure-table-striped";
+    var tableClass = (cl) ? cl : "pure-table pure-table-striped";
 
     var tableHead = "<thead><tr>";
     $.each(c, function(i, v) {
@@ -554,17 +555,28 @@ function createTable (d,u,c,r,cl) {
     var tableBody = "<tbody>";
 
     $.get(u, function(data) {
-        if (!data[r]){
+        var selected = new Array();
+        if (typeof(r) == 'object') {
+            selected = data;
+            $.each(r, function(i, e){
+                selected = selected[e['n']];
+            });
+        }else {
+            selected = data[r];
+        }
+
+        if (!selected){
             return;
         }
-        if (data[r].length == 0) {
+        if (selected.length == 0) {
             tableClass = "pure-table pure-table-bordered";
             tableBody += "<tr><td colspan='"+c.length+"'>No records found</td></tr>";
         }else {
-            $.each(data[r], function(id, vd) {
+            $.each(selected, function(id, vd) {
                 tableBody += "<tr>";
                 $.each(c, function(ic, vc) {
                     tableBody += "<td>";
+                    var tableBodyTd = "";
                     if (vc['object']){
                         objects = [];
                         $.each(vc['object'], function(io, vo){
@@ -658,7 +670,7 @@ function createTable (d,u,c,r,cl) {
             });
         }
         tableBody += "</tbody>";
-        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</tabel>");
+        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
     });
 }
 
@@ -726,6 +738,163 @@ function populateSelect (url, selection, container) {
         });
     });
 }
+
+
+
+function createTableSchedule (d,u,c,r,cl) {
+    restartColors ();
+    r = (r) ? r : 'data';
+    var tableClass = (cl) ? cl : "pure-table pure-table-striped";
+
+    var tableHead = "<thead><tr>";
+    $.each(c, function(i, v) {
+        var label = (v.label) ? v.label : "";
+        tableHead += "<th>"+label+"</th>";
+    });
+    tableHead += "</tr></thead>";
+
+    var tableBody = "<tbody><tr><td colspan="+c.length+">Loading...</td></tr></tbody>";
+    $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
+    $.get(u, function(data) {
+        tableBody = "<tbody>";
+        var selected = new Array();
+        if (typeof(r) == 'object') {
+            selected = data;
+            $.each(r, function(i, e){
+                selected = selected[e['n']];
+            });
+        }else {
+            selected = data[r];
+        }
+        if (!selected){
+            return;
+        }
+        if (selected.length == 0) {
+            tableClass = "pure-table pure-table-bordered";
+            tableBody += "<tr><td colspan='"+c.length+"'>No records found</td></tr>";
+        }else {
+            var colorCell = "transparent";
+            var borderTop = "0"
+            $.each(selected, function(id, vd) {
+                tableBody += "<tr>";
+                $.each(c, function(ic, vc) {                    
+                    var k = vc.key;
+                    var tableBodyTd = "";
+                    var tableBodyType = "td";
+                    if (vc['formatter']) {
+                        if (vc['formatter'] == "scheduleDateColumn"){
+//                            if (vd[k]){
+//                                if (vd[k]['conflicts']){
+//                                    if (vd[k]['conflicts'].length > 0){
+//                                        console.log(vd[k]);
+//                                    }
+//                                }
+//                            }
+                            tableBodyTd = (vd[k]) ? formatScheduleDateColumn(vd[k]['id'],formatScheduleShorten(vd[k]['name'],9),vd[k]['type']) : "...";
+                            colorCell = (vd[k]) ? formatScheduleCellDateColumn(vd[k]['name'],vd[k]['type']) : "";
+                        }
+                        if (vc['formatter'] == "scheduleResourceColumn"){
+                            tableBodyTd = (vd[k]) ? formatGenericLink(vd['resource'],vd['resource_link']) : "";
+                            colorCell = "";
+                        }
+                    }else {
+                        tableBodyTd = (vd[k]) ? vd[k] : "";
+                        colorCell = "";
+                    }
+                    
+                    if (k == "time") {
+                        tableBodyType = "th";
+                        borderTop = (vd[k]) ? "2" : "1";
+                    }
+                    if (ic == 0){
+                        borderTop2 = borderTop;
+                        borderTop = (!vd[k]) ? "0" : borderTop;                      
+                    }else {
+                        borderTop = borderTop2;
+                    }
+                    tableBody +=  "<"+tableBodyType+" style='border-top:"+borderTop+"px solid #cbcbcb;' class='"+colorCell+"'>";
+                    tableBody += tableBodyTd;
+                    tableBody += "</"+tableBodyType+">";
+                });
+                tableBody += "</tr>";
+            });
+        }
+        tableBody += "</tbody>";
+        $('#'+d).html("").append("<table class='"+tableClass+"'>"+tableHead+tableBody+"</table>");
+    });    
+}
+
+function restartColors () {
+    colors = [
+            'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10',
+            'color11', 'color12', 'color13', 'color14', 'color15', 'color16', 'color17', 'color18', 'color19', 'color20',
+            'color21', 'color22', 'color23', 'color24', 'color25', 'color26', 'color27', 'color28', 'color29', 'color30',
+            'color31', 'color32', 'color33', 'color34', 'color35', 'color36', 'color37', 'color38', 'color39', 'color40',
+            'color41', 'color42', 'color43', 'color44', 'color45', 'color46', 'color47', 'color48', 'color49', 'color50',
+            'color51', 'color52', 'color53', 'color54', 'color55', 'color56', 'color57', 'color58', 'color59', 'color60',
+        ];
+    colorMap = {};
+}
+    
+function formatScheduleCellDateColumn(name, type){
+    if(!colorMap[name]) {
+        colorMap[name] = colors.length ? colors.shift() : 'color60';
+    }
+    var color = colorMap[name];
+    return color;
+}
+function formatScheduleDateColumn(id, name, type){
+    var link = "";
+    var text = "";
+    if (type == "booking") {
+        link = 'index.php?menuaction=booking.uibooking.edit&id=' + id;
+    }
+    else if (type == "allocation") {
+        link = 'index.php?menuaction=booking.uiallocation.edit&id=' + id;
+    }
+    else if (type == "event") {
+        link = 'index.php?menuaction=booking.uievent.edit&id=' + id;
+    }
+    text = formatGenericLink(name, link);
+//    if (type == "event" && ){}
+    return text;
+}
+
+function formatScheduleShorten(text, max) {
+    if (max && text.length > max) {
+        text = text.substr(text, max) + '...';
+    }
+    return text;
+}
+
+function getUrlData(string) {
+    if (typeof(string) !== "string") {
+        return;
+    }
+    var n = self.location.href.indexOf("#");
+    if (n > 0) {
+        var hash = self.location.href.substr(n+1);
+        var states = hash.split("&");
+        var l = states.length;
+        for (var i = 0; i < l; i++) {
+            var tokens = states[i].split("=");
+            if (tokens.length == 2) {
+                var token = tokens[0];
+                if (token == string){
+                    return _decodeStringUrl(tokens[1]);
+                }
+            }
+        }
+    }else {
+        return;
+    }
+}
+
+function _decodeStringUrl(string) {
+    return decodeURIComponent(string.replace(/\+/g, ' '));
+}
+
+
 
 function genericLink() {
     var data = [];
