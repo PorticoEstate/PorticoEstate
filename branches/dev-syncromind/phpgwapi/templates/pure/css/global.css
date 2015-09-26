@@ -62,6 +62,8 @@ input[type="radio"] {margin-right: 2px;}
 .pure-table thead th{text-align: center;}
 .pure-table tbody th{border-top: 1px solid #cbcbcb;text-align: right;font-weight: bold;color: #000;}
 
+#schedule_container .pure-table thead th {line-height: 1.4;}
+
 .date-container {position: relative;}
         
 #dates-container .date-container .pure-control-group input.datetime,
