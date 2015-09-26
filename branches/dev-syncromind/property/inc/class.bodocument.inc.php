@@ -40,6 +40,7 @@
 		var $filter;
 		var $sort;
 		var $order;
+		var $p_num;
 		var $cat_id;
 		var $entity_id;
 		var $status_id;
@@ -71,29 +72,31 @@
 				$this->use_session = true;
 			}
 
-			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			 = phpgw::get_var('query');
-			$sort			 = phpgw::get_var('sort');
-			$order			 = phpgw::get_var('order');
-			$filter			 = phpgw::get_var('filter', 'int');
-			$cat_id			 = phpgw::get_var('cat_id', 'int');
-			$status_id		 = phpgw::get_var('status_id');
-			$entity_id		 = phpgw::get_var('entity_id', 'int');
-			$doc_type		 = phpgw::get_var('doc_type');
-			$query_location	 = phpgw::get_var('query_location');
-			$allrows		 = phpgw::get_var('allrows', 'bool');
+			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query					= phpgw::get_var('query');
+			$sort					= phpgw::get_var('sort');
+			$order					= phpgw::get_var('order');
+			$filter					= phpgw::get_var('filter', 'int');
+			$p_num					= phpgw::get_var('p_num', 'int');
+			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$status_id				= phpgw::get_var('status_id');
+			$entity_id				= phpgw::get_var('entity_id', 'int');
+			$doc_type				= phpgw::get_var('doc_type');
+			$query_location			= phpgw::get_var('query_location');
+			$allrows				= phpgw::get_var('allrows', 'bool');
 
-			$this->start			 = $start ? $start : 0;
-			$this->query			 = isset($query) ? $query : '';
-			$this->sort				 = isset($sort) && $sort ? $sort : '';
-			$this->order			 = isset($order) && $order ? $order : '';
-			$this->filter			 = isset($filter) && $filter ? $filter : '';
-			$this->cat_id			 = isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->status_id		 = isset($status_id) && $status_id ? $status_id : '';
-			$this->entity_id		 = isset($entity_id) && $entity_id ? $entity_id : '';
-			$this->doc_type			 = isset($doc_type) && $doc_type ? $doc_type : '';
-			$this->query_location	 = isset($query_location) && $query_location ? $query_location : '';
-			$this->allrows			 = isset($allrows) && $allrows ? $allrows : '';
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : '';
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->filter			= isset($filter) && $filter ? $filter : '';
+			$this->p_num			= isset($p_num) && $p_num ? $p_num : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->status_id		= isset($status_id) && $status_id ? $status_id : '';
+			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
+			$this->doc_type			= isset($doc_type) && $doc_type ? $doc_type : '';
+			$this->query_location	= isset($query_location) && $query_location ? $query_location : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 		}
 
 		function save_sessiondata($data)
@@ -230,10 +233,9 @@
 			}
 
 
-			$document			 = $this->so->read_at_location(array('start'			 => $this->start, 'query'			 => $this->query,
-				'sort'			 => $this->sort, 'order'			 => $this->order,
-				'filter'		 => $this->filter, 'cat_id'		 => $this->cat_id, 'entity_id'		 => $this->entity_id,
-				'location_code'	 => $location_code, 'doc_type'		 => $this->doc_type, 'allrows'		 => $this->allrows));
+			$document = $this->so->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+				'filter' => $this->filter,'p_num' =>$this->p_num, 'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,
+				'location_code' => $location_code,'doc_type'=>$this->doc_type, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

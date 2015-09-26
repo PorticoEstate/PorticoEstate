@@ -19,7 +19,7 @@
 		{
 			if(in_array($key, array_keys($array)))
 			{
-				$result[$key] = $array[$key];
+				$result[$key] = phpgw::clean_value($array[$key]);
 			}
 		}
 		return $result;

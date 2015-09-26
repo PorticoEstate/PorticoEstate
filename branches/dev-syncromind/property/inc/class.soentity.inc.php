@@ -47,6 +47,7 @@
 			'entity' => 'property',
 			'catch'	 => 'catch'
 		);
+		private $account;
 
 		function __construct($entity_id = '', $cat_id = '')
 		{
@@ -938,6 +939,7 @@
 						'get_single_function_input'	 => $uicols['get_single_function_input'][$key]
 					);
 				}
+				unset($key);
 
 
 				//Start: get short descripion - if any
@@ -1306,6 +1308,17 @@
 				$uicols['exchange'][]	 = false;
 				$uicols['formatter'][]	 = '';
 				$uicols['classname'][]	 = '';
+
+
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'modified_on';
+				$uicols['descr'][]			= lang('modified on');
+				$uicols['statustext'][]		= lang('date' );
+				$uicols['datatype'][]		= 'timestamp';
+				$uicols['sortable'][]		= true;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]	= '';
+				$uicols['classname'][]	= '';
 
 				$uicols['cols_return_extra'][$i] = array
 					(
@@ -2322,15 +2335,17 @@
 //			_debug_array($xml);
 
 			$value_set = array
-				(
-				'xml_representation' => $this->db->db_addslashes($xml),
-				'p_location_id'		 => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
-				'p_id'				 => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
-				'location_code'		 => $data['location_code'],
-				'loc1'				 => $data['loc1'],
-				'address'			 => $data['address'],
-				'org_unit_id'		 => $data['org_unit_id'],
-				'entity_group_id'	 => $data['entity_group_id']
+			(
+				'xml_representation'	=> $this->db->db_addslashes($xml),
+				'p_location_id'			=> isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+				'p_id'					=> isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+				'location_code'			=> $data['location_code'],
+				'loc1'					=> $data['loc1'],
+				'address'				=> $data['address'],
+				'org_unit_id'			=> $data['org_unit_id'],
+				'entity_group_id'		=> $data['entity_group_id'],
+				'modified_by'			=> $this->account,
+				'modified_on'			=> time()
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -2502,8 +2517,11 @@
 					$value_set['p_num'] = $p_id;
 				}
 
-				$value_set = $this->db->validate_update($value_set);
-				$this->db->query("UPDATE $table set $value_set WHERE id=" . $values['id'], __LINE__, __FILE__);
+				$value_set['modified_by']	= $this->account;
+				$value_set['modified_on']	= time();
+
+				$value_set	= $this->db->validate_update($value_set);
+				$this->db->query("UPDATE $table set $value_set WHERE id=" . $values['id'],__LINE__,__FILE__);
 			}
 
 			if(isset($history_set) && is_array($history_set))

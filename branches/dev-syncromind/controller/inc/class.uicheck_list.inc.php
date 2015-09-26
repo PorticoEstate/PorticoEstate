@@ -913,7 +913,7 @@
 				if($doc_type)
 				{
 					$document_list = array_merge($document_list, $sodocument->read_at_location(array(
-						'entity_id' => $entity_id,'cat_id' => $cat_id, 'id' =>$data['id'], 'doc_type' => $doc_type, 'allrows' => true)));
+						'entity_id' => $entity_id,'cat_id' => $cat_id, 'p_num' =>$data['id'], 'doc_type' => $doc_type, 'allrows' => true)));
 				}
 			}
 		

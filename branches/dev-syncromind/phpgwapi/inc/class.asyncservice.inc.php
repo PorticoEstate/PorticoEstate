@@ -428,8 +428,19 @@
 					{
 						try
 						{
-							echo "{$job['method']}\n";
+							echo 'Start job: ' . date('Y/m/d H:i:s ') . "\n";
+							echo "--id: {$job['id']}\n";
+							echo "--method: {$job['method']}\n";
+							if(isset($job['data']) && $job['data'])
+							{
+								echo "--data: ";
+								print_r($job['data']);
+								echo "\n";
+							}
 							ExecMethod($job['method'],$job['data']);
+
+							echo 'End job: ' . date('Y/m/d H:i:s ') . "\n\n";
+
 						}
 						catch (Exception $e)
 						{
@@ -453,24 +464,24 @@
 
 					$GLOBALS['phpgw']->db->Exception_On_Error = $this->Exception_On_Error;
 
-						if ($job['next'] = $this->next_run($job['times']))
-						{
-							$updated_jobs = $this->read($id);
-							if (isset($updated_jobs[$id]) && isset($updated_jobs[$id]['data']))
-							{ // update async data field, it could be changed during ExecMethod()
-								$job['data'] = $updated_jobs[$id]['data'];
-							}
-							// TK 20.11.06 write job to get 'next' and alarm updated
-							$job['data']['time'] = $job['next'];
-							$this->write($job);
+					if ($job['next'] = $this->next_run($job['times']))
+					{
+						$updated_jobs = $this->read($id);
+						if (isset($updated_jobs[$id]) && isset($updated_jobs[$id]['data']))
+						{ // update async data field, it could be changed during ExecMethod()
+							$job['data'] = $updated_jobs[$id]['data'];
 						}
-						else	// no further runs
+						// TK 20.11.06 write job to get 'next' and alarm updated
+						$job['data']['time'] = $job['next'];
+						$this->write($job);
+					}
+					else	// no further runs
+					{
+						if($job['next'] <= time())
 						{
-							if($job['next'] <= time())
-							{
-								$this->delete($job['id']);
-							}
+							$this->delete($job['id']);
 						}
+					}
 
 				}
 			}

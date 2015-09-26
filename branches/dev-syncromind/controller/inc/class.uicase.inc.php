@@ -632,7 +632,7 @@
 					$message_details .= "Hvor: {$short_desc}\n";
 				}
 
-				$message_details .=  'Hva: ' . $case->get_descr() . "\n";
+				$message_details .=  'Hva: ' . $case->get_descr() . "\n\n";
 				$counter++;
 			}
 			

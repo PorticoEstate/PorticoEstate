@@ -60,7 +60,8 @@
 
 	echo "Domain: {$GLOBALS['phpgw_info']['user']['domain']}\n";
 	echo 'Start cron: ' . date('Y/m/d H:i:s ') . "\n";
-	$num = ExecMethod('phpgwapi.asyncservice.check_run','crontab');
+	$num = (int) ExecMethod('phpgwapi.asyncservice.check_run','crontab');
+	echo "Number of jobs: {$num}\n";
 	echo 'End cron: ' . date('Y/m/d H:i:s ') . "\n";
 	// if the following comment got removed, you will get an email from cron for every check performed
 	//echo date('Y/m/d H:i:s ').$_GET['domain'].': '.($num ? "$num job(s) executed" : 'Nothing to execute')."\n";

@@ -20,16 +20,79 @@
 		);
 		
 		$options = array_merge($default_options, $options);
-		
 		$result = array();
-		foreach($keys as $write_key)
+
+		$isIndexed = array_values($keys) === $keys;
+		if($isIndexed)
 		{
-			$array_key = $options['prefix'].$write_key.$options['suffix'];
-			if(isset($array[$array_key]))
+			foreach($keys as $write_key)
 			{
-				$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = phpgw::clean_value($array[$array_key]);
+				$array_key = $options['prefix'].$write_key.$options['suffix'];
+				if(isset($array[$array_key]))
+				{
+					$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = phpgw::clean_value($array[$array_key]);
+				}
+
 			}
 		}
+		else
+		{
+			foreach($keys as $write_key => $type)
+			{
+				switch($type)
+				{
+					case 'string':
+					default:
+						$_type = 'string';
+						break;
+					case 'bool':
+					case 'boolean':
+						$_type = 'bool';
+						break;
+					case 'int':
+					case 'integer':
+					case 'number':
+						$_type = 'int';
+						break;
+					case 'float':
+					case 'double':
+						$_type = 'float';
+						break;
+						/* Specific string types */
+					case 'color':
+						$_type = 'color';
+						break;
+					case 'email':
+						$_type = 'email';
+						break;
+					case 'filename':
+						$_type = 'filename';
+						break;
+					case 'ip':
+						$_type = 'ip';
+						break;
+					case 'location':
+						$_type = 'location';
+						break;
+					case 'url':
+						$_type = 'url';
+						break;
+					/* only use this if you really know what you are doing */
+					case 'raw':
+						$_type = 'raw';
+						break;
+					case 'html':
+						$_type = 'html';
+						break;
+				}
+				$array_key = $options['prefix'].$write_key.$options['suffix'];
+				if(isset($array[$array_key]))
+				{
+					$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = phpgw::clean_value($array[$array_key],$_type);
+				}
+			}
+		}
+		
 		return $result;
 	}
 	
