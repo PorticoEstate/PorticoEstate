@@ -70,6 +70,8 @@ class phpgwapi_jquery {
 					"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 //						"js/jquery-migrate-1.2.1"
 				);
+                                $GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/ui-lightness/jquery-ui-1.10.4.custom.css");
+                                $GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 				break;
 
 			case 'validator':
