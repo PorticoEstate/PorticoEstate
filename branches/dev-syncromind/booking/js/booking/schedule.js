@@ -1,3 +1,105 @@
+var schedule = new Array();
+
+schedule.renderSchedule = function(container, url, date, colFormatter, includeResource) {
+    while(date.getDay() != 1) {
+        date.setDate(date.getDate()-1);
+    }
+//    var container = document.getElementById(container);
+//    container.innerHTML = '';
+    url += '&date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+
+    var lang = {
+            WEEKDAYS_FULL: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            MONTHS_LONG: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            LBL_TIME: 'Time',
+            LBL_RESOURCE: 'Resource',
+            LBL_WEEK: 'Week'
+    };
+    
+    var colDefs = [{key: 'time', label: date.getFullYear() +'<br/>' + lang['LBL_TIME']}];
+    if(includeResource) {
+        colDefs.push({key: 'resource', label: lang['LBL_RESOURCE'], formatter: 'scheduleResourceColumn'});
+    }
+    schedule.dates = {};
+    var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (var i=0;i<7;i++) {
+        var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        d.setDate(d.getDate() + i);
+        var x = (i<6) ? i+1 : 0;
+        schedule.dates[keys[x]] = d;
+        colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: 'scheduleDateColumn', date: d});
+    }
+    var r = [{n: 'ResultSet'},{n: 'Result'}];
+//    createta d u c r cl
+    createTableSchedule(container, url, colDefs, r, "pure-table");
+
+};
+
+schedule.setupWeekPicker = function(){}
+
+$(function() {
+    $( "#cal_container #datepicker" ).datepicker({
+        showWeek: true,
+        changeMonth: true,
+        changeYear: true,
+        firstDay: 1,
+        onSelect: function(a,e){
+            console.log(a);
+            var date = new Date(a);
+            schedule.updateSchedule(date);
+        }
+    });
+    $("#cal_container #pickerImg").on('click', function(){
+        $( "#cal_container #datepicker" ).datepicker( "show" );
+    });
+});
+
+schedule.updateSchedule = function (date) {
+    schedule.week = $.datepicker.iso8601Week(date);
+    $('#cal_container #numberWeek').text(schedule.week);
+    $("#cal_container #datepicker").datepicker("setDate", date);
+    
+    var url = self.location.href;
+    url = url.substr(0, (url.indexOf("#date")));
+    url += '#date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+    location.replace(url);
+    schedule.renderSchedule('schedule_container', schedule.datasourceUrl, date, schedule.backendScheduleColorFormatter, schedule.includeResource);
+    schedule.date = date;
+}
+
+schedule.moveWeek = function (n) {
+    var date = schedule.date;
+    while(date.getDay() != 1) {
+        date.setDate(date.getDate()-1);
+    }
+    date.setDate(date.getDate() + n);
+    schedule.updateSchedule(date);
+}
+schedule.prevWeek = function () {
+    schedule.moveWeek(-7)
+};
+schedule.nextWeek = function () {
+    schedule.moveWeek(7)
+}
+
+
+schedule.nextWeek2 = function () {
+    var date = schedule.date;
+    while(date.getDay() != 1) {
+        date.setDate(date.getDate()-1);
+    }
+    date.setDate(date.getDate()+7);
+    var url = self.location.href;
+    url = url.substr(0, (url.indexOf("#date")));
+    console.log(url);
+    url += '#date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+    console.log(url);
+    location.replace(url);
+    location.reload();
+};
+
+
+/*
 colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10',
 		  'color11', 'color12', 'color13', 'color14', 'color15', 'color16', 'color17', 'color18', 'color19', 'color20',
           'color21', 'color22', 'color23', 'color24', 'color25', 'color26', 'color27', 'color28', 'color29', 'color30',
@@ -248,4 +350,4 @@ YAHOO.booking.closeOverlay = function() {
 	var o = YAHOO.util.Dom.get('overlay-info');
 	o.parentNode.removeChild(o);
 }
-
+*/

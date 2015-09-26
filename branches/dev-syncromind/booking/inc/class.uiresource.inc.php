@@ -247,7 +247,17 @@
 				'resource_id' => $resource['id'], 
 				'phpgw_return_as' => 'json',
 			));
+                        
+                        $tabs = array();
+			$tabs['generic'] = array('label' => lang('Resource Schedule'), 'link' => '#resource_schedule');
+			$active_tab = 'generic';
+            
+                        $resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        
 			self::add_javascript('booking', 'booking', 'schedule.js');
+                        
+                        phpgwapi_jquery::load_widget("datepicker");
+                        
 			self::render_template('resource_schedule', array('resource' => $resource));
 		}
 	}
