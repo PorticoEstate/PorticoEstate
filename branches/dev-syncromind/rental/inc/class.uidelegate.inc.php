@@ -21,15 +21,18 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('delegates');
 		}
 		
-		public function query(){
+		public function query()
+		{
 			$unit_id = (int)phpgw::get_var('unit_id');
+			$draw	= phpgw::get_var('draw', 'int', 'REQUEST', 1);
 			
-			$delegates_data = array();
+			$delegates_per_org_unit = array();
 			
-			if (isset($unit_id) && $unit_id > 0) {
+			if (isset($unit_id) && $unit_id > 0) 
+			{
 				$delegates_per_org_unit = frontend_bofrontend::get_delegates($unit_id);
 
-				$delegates_data = array('results' => $delegates_per_org_unit, 'total_records' => count($delegates_per_org_unit));
+				/*$delegates_data = array('results' => $delegates_per_org_unit, 'total_records' => count($delegates_per_org_unit));
 				
 				$editable = phpgw::get_var('editable') == 'true' ? true : false;
 				array_walk(
@@ -37,11 +40,14 @@
 							array($this, 'add_actions'),
 							array(			// Parameters (non-object pointers)
 									$unit_id	// [1] The unit id
-					));
-			
+					));			*/
 			}
 
-			return $this->yui_results($delegates_data, 'total_records', 'results');
+			$result_data    =   array('results' =>  $delegates_per_org_unit);
+			$result_data['total_records']	= count($delegates_per_org_unit);
+			$result_data['draw']    = $draw;
+
+			return $this->jquery_results($result_data);
 		}
 		
 		public function index(){
