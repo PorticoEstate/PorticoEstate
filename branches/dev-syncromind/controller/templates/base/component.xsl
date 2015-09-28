@@ -364,7 +364,7 @@
 				success: function(data) {
 					if( data != null)
 					{
-console.log(data);
+//console.log(data);
 						var message = data.message;
 
 						htmlString = "";

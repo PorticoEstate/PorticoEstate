@@ -35,4 +35,25 @@
 			return $errors;
 		}
 
+		public function get_path($id)
+		{
+
+			$sql = "SELECT name, parent_id FROM bb_activity WHERE id =" . (int) $id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+
+			$parent_id = $this->db->f('parent_id');
+
+			$name = $this->db->f('name', true);
+
+			$path = array(array('id' => $id,'name' => $name));
+
+			if($parent_id)
+			{
+				$path = array_merge($this->get_path($parent_id), $path);
+			}
+			return $path;
+		}
+
 	}

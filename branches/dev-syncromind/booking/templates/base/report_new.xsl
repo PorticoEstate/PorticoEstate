@@ -23,7 +23,7 @@
 							<div class="heading">
 								<legend>
 									<h3>
-										<xsl:value-of select="php:function('lang', 'Why')" />
+										<xsl:value-of select="php:function('lang', 'what')" />
 									</h3>
 								</legend>
 							</div>
@@ -64,7 +64,7 @@
 					</div>
                         
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -104,7 +104,7 @@
 							</div>
 						</div>
                             
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -112,56 +112,77 @@
 									</h3>
 								</legend>
 							</div>
-							<div id="dates-container"  class="pure-control-group">
-								<xsl:for-each select="report/dates">
-									<div class="date-container">
-										<div class="pure-control-group">
-											<label for="start_date">
-												<xsl:value-of select="php:function('lang', 'From')" />
-											</label>
-											<input class="datetime pure-input-2-3" id="start_date" name="start_date" type="text">
-											</input>
+							<div class="pure-g">
+								<div id="dates-container" class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
+									<xsl:for-each select="report/dates">
+										<div class="date-container">
+											<div class="pure-control-group">
+												<label for="start_date">
+													<xsl:value-of select="php:function('lang', 'From')" />
+												</label>
+												<input class="datetime pure-input-1-2" id="start_date" name="start_date" type="text">
+												</input>
+											</div>
+											<div class="pure-control-group">
+												<label for="end_date">
+													<xsl:value-of select="php:function('lang', 'To')" />
+												</label>
+												<input class="datetime pure-input-1-2" id="end_date" name="end_date" type="text">
+												</input>
+											</div>
 										</div>
-										<div class="pure-control-group">
-											<label for="end_date">
-												<xsl:value-of select="php:function('lang', 'To')" />
-											</label>
-											<input class="datetime pure-input-2-3" id="end_date" name="end_date" type="text">
+									</xsl:for-each>
+									<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
+										<label for="start_time">
+											<xsl:value-of select="php:function('lang', 'start time')" />
+										</label>
+										<span>
+											<input maxlength="2" size="2" id="start_hour" name="start_hour" type="text" placeholder = "00">
 											</input>
-										</div>
-									</div>
-								</xsl:for-each>
-								<div class="pure-control-group">
-									<label for="start_time">
-										<xsl:value-of select="php:function('lang', 'start_time')" />
-									</label>
-									<span>
-										<input maxlength="2" size="2" id="start_hour" name="start_hour" type="text">
+											<xsl:text>:</xsl:text>
+											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text" placeholder = "00">
+											</input>
+										</span>
+										<label for="end_time">
+											<xsl:value-of select="php:function('lang', 'end time')" />
+										</label>
+										<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text" placeholder = "00">
 										</input>
 										<xsl:text>:</xsl:text>
-										<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text">
+										<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text" placeholder = "00">
 										</input>
-									</span>
-								</div>
-								<div class="pure-control-group">
-									<label for="end_time">
-										<xsl:value-of select="php:function('lang', 'end_time')" />
-									</label>
-									<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text">
-									</input>
-									<xsl:text>:</xsl:text>
-									<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text">
-									</input>
-								</div>
+									</div>
 
+								</div>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_weekday" style="vertical-align:top;">
+									<h4>
+										<xsl:value-of select="php:function('lang', 'Weekdays')" />
+									</h4>
+								</label>
+								<ul id="field_weekday" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
+									<xsl:for-each select="report/days">
+										<li>
+											<label>
+												<input type="checkbox" value="{id}" name="weekdays[]" >
+													<xsl:if test="selected = 1">
+														<xsl:attribute name="checked">checked</xsl:attribute>
+													</xsl:if>
+												</input>
+												<xsl:value-of select="name" />
+											</label>
+										</li>
+									</xsl:for-each>
+								</ul>
 							</div>
 						</div>
 
-						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>
-										<xsl:value-of select="php:function('lang', 'Who')" />
+										<xsl:value-of select="php:function('lang', 'variables')" />
 									</h3>
 								</legend>
 							</div>
@@ -169,85 +190,61 @@
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<label>
 										<h4>
-											<xsl:value-of select="php:function('lang', 'Target audience')" />
+											<xsl:value-of select="php:function('lang', 'Horizontal')" />
 										</h4>
 									</label>
-									<ul style="list-style:none;">
-										<xsl:for-each select="audience">
+									<ul id= "variable_horizontal" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
+										<xsl:for-each select="report/variables">
 											<li>
-												<label style="display:inline-block;">
-													<input type="checkbox" name="audience[]">
-														<xsl:attribute name="value">
-															<xsl:value-of select="id"/>
-														</xsl:attribute>
-														<xsl:if test="../report/audience=id">
+												<label>
+													<input type="radio" value="{id}" name="variable_horizontal" >
+														<xsl:if test="selected = 1">
 															<xsl:attribute name="checked">checked</xsl:attribute>
 														</xsl:if>
 													</input>
-													<xsl:value-of select="name"/>
+													<xsl:value-of select="name" />
 												</label>
 											</li>
 										</xsl:for-each>
+										<div id="custom_elements_horizontal"></div>
 									</ul>
 								</div>
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<label>
 										<h4>
-											<xsl:value-of select="php:function('lang', 'Number of participants')" />
+											<xsl:value-of select="php:function('lang', 'vertical')" />
 										</h4>
 									</label>
-									<table id="agegroup" class="pure-table pure-table-bordered">
-										<thead>
-											<tr>
-												<th></th>
-												<th>
-													<xsl:value-of select="php:function('lang', 'Male')" />
-												</th>
-												<th>
-													<xsl:value-of select="php:function('lang', 'Female')" />
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											<xsl:for-each select="agegroups">
-												<xsl:variable name="id">
-													<xsl:value-of select="id"/>
-												</xsl:variable>
-												<tr>
-													<th>
-														<xsl:value-of select="name"/>
-													</th>
-													<td>
-														<input type="text" class="input50">
-															<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-															<xsl:attribute name="value">
-																<xsl:value-of select="../report/agegroups/male[../agegroup_id = $id]"/>
-															</xsl:attribute>
-														</input>
-													</td>
-													<td>
-														<input type="text" class="input50">
-															<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-															<xsl:attribute name="value">
-																<xsl:value-of select="../report/agegroups/female[../agegroup_id = $id]"/>
-															</xsl:attribute>
-														</input>
-													</td>
-												</tr>
-											</xsl:for-each>
-										</tbody>
-									</table>
+									<ul id= "variable_vertical" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
+										<xsl:for-each select="report/variables">
+											<li>
+												<label>
+													<input type="radio" value="{id}" name="variable_vertical" >
+														<xsl:if test="selected = 1">
+															<xsl:attribute name="checked">checked</xsl:attribute>
+														</xsl:if>
+													</input>
+													<xsl:value-of select="name" />
+												</label>
+											</li>
+										</xsl:for-each>
+										<div id = "custom_elements_vertical"></div>
+									</ul>
 								</div>
 							</div>
+
 						</div>
+
+				
 					</div>
+
 				</fieldset>
 			</div>
 		</div>
 		<div class="form-buttons">
 			<input type="submit" class="button pure-button pure-button-primary">
 				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'Create')"/>
+					<xsl:value-of select="php:function('lang', 'Create report')"/>
 				</xsl:attribute>
 			</input>
 			<a class="cancel">

@@ -55,4 +55,10 @@
 		{
 			return $this->activity_so->read_single($id);
 		}
+
+		public function get_path($id)
+		{
+			return $this->so->get_path($id);
+		}
+
 	}

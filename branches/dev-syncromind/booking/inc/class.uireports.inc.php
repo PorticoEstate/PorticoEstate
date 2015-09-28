@@ -13,6 +13,7 @@
 			'participants'	 => true,
 			'freetime'		 => true,
 			'add'			 => true,
+			'get_custom'	 => true
 		);
 
 		public function __construct()
@@ -47,6 +48,8 @@
 
 		public function add()
 		{
+			self::set_active_menu('booking::reportcenter::add_generic');
+
 			$errors	 = array();
 			$report	 = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -172,12 +175,27 @@
 			array_set_default($report, 'cost', '0');
 			$activities				 = $this->activity_bo->fetch_activities();
 			$activities				 = $activities['results'];
-			$agegroups				 = $this->agegroup_bo->fetch_age_groups();
-			$agegroups				 = $agegroups['results'];
-			$audience				 = $this->audience_bo->fetch_target_audience();
-			$audience				 = $audience['results'];
+//			$agegroups				 = $this->agegroup_bo->fetch_age_groups();
+//			$agegroups				 = $agegroups['results'];
+//			$audience				 = $this->audience_bo->fetch_target_audience();
+//			$audience				 = $audience['results'];
 
-	//		$this->install_customer_identifier_ui($report);
+			$report['days'] = array(
+				array('id' => 1, 'name' => lang('Monday')),
+				array('id' => 2, 'name' => lang('Tuesday')),
+				array('id' => 3, 'name' => lang('Wednesday')),
+				array('id' => 4, 'name' => lang('Thursday')),
+				array('id' => 5, 'name' => lang('Friday')),
+				array('id' => 6, 'name' => lang('Saturday')),
+				array('id' => 7, 'name' => lang('Sunday'))
+			);
+			$report['variables'] = array(
+				array('id' => 'resource', 'name' => lang('resource')),
+				array('id' => 'audience', 'name' => lang('audience')),
+				array('id' => 'agegroup', 'name' => lang('agegroup')),
+				array('id' => 'activity', 'name' => lang('activities')),
+			);
+
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
@@ -193,6 +211,82 @@
 			self::render_template_xsl('report_new', array('report' => $report, 'activities' => $activities,
 				'agegroups' => $agegroups, 'audience' => $audience));
 		}
+
+		public function get_custom()
+		{
+			$activity_id = phpgw::get_var('activity_id', 'int');
+			$activity_path	 = $this->activity_bo->get_path($activity_id);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+
+
+			$location = ".application.{$top_level_activity}";
+			$organized_fields = $this->get_attributes($location);
+			$variable_vertical = '';
+			$variable_horizontal = '';
+			foreach($organized_fields as $group)
+			{
+				if($group[id] > 0)
+				{
+					$header_level = $group['level'] + 2;
+					if(isset($group['attributes']) && is_array($group['attributes']))
+					{
+						foreach ($group['attributes'] as $attribute)
+						{
+							$variable_vertical .= <<<HTML
+
+								<li><input type = "radio" name = "variable_vertical" value ="{$attribute['id']}" ></input>
+								{$attribute['input_text']} [{$attribute['trans_datatype']}] </li>
+HTML;
+							$variable_horizontal .= <<<HTML
+
+								<li><input type = "radio" name = "variable_horizontal" value ="{$attribute['id']}" ></input>
+								{$attribute['input_text']} [{$attribute['trans_datatype']}] </li>
+HTML;
+						}
+					}
+				}
+			}
+
+			$fields = print_r($organized_fields, true);
+
+
+	//		$path = print_r($activity_path, true);
+
+		
+			return array
+			(
+				'status'	=> 'ok',
+				'message'	=> 'melding',
+				'variable_vertical'	=> $variable_vertical,
+				'variable_horizontal'	=> $variable_horizontal
+			);
+		}
+		/**
+		 *
+		 * @param type $location
+		 * @return  array the grouped attributes
+		 */
+		private function get_attributes($location)
+		{
+			$appname = 'booking';
+			$attributes = $GLOBALS['phpgw']->custom_fields->find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
+			return $this->get_attribute_groups($appname, $location, $attributes);
+		}
+
+		/**
+		 * Arrange attributes within groups
+		 *
+		 * @param string  $location    the name of the location of the attribute
+		 * @param array   $attributes  the array of the attributes to be grouped
+		 *
+		 * @return array the grouped attributes
+		 */
+
+		private function get_attribute_groups($appname, $location, $attributes = array())
+		{
+			return $GLOBALS['phpgw']->custom_fields->get_attribute_groups($appname, $location, $attributes);
+		}
+
 
 		public function participants()
 		{

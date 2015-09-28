@@ -31,3 +31,41 @@ function populateTableChkResources(building_id, selection) {
 function populateTableChk(url, container, colDefs) {
 	createTable(container, url, colDefs);
 }
+
+$(document).ready(function(){
+
+	$("#field_activity").change(function () {
+		oArgs = {menuaction: 'booking.uireports.get_custom'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		var activity_id =$("#field_activity").val();
+
+		$.ajax({
+				type: 'POST',
+				data: {activity_id:activity_id},
+				dataType: 'json',
+				url: requestUrl,
+				success: function(data) {
+					if( data != null)
+					{
+						var message = data.message;
+						var variable_horizontal = data.variable_horizontal;
+						var variable_vertical = data.variable_vertical;
+
+						htmlString = "";
+						var msg_class = "msg_good";
+						if(data.status =='error')
+						{
+							msg_class = "error";
+						}
+						htmlString += "<div class=\"" + msg_class + "\">";
+						htmlString += message;
+						htmlString += '</div>';
+						//$("#receipt").html(htmlString);
+						$("#custom_elements_horizontal").html( variable_horizontal );
+						$("#custom_elements_vertical").html( variable_vertical );
+					}
+				}
+			});
+
+	});
+});
