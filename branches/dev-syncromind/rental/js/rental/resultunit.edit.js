@@ -27,7 +27,10 @@ function searchUser()
 			document.getElementById('username').value = result.data.username;
 			document.getElementById('firstname').value = result.data.firstname;
 			document.getElementById('lastname').value = result.data.lastname;
-			document.getElementById('email').value = result.data.email;
+			if (typeof(result.data.email) !== 'undefined')
+			{
+				document.getElementById('email').value = result.data.email;
+			}
 			document.getElementById('account_id').value = result.data.account_id;
 			
 	}, data, "POST", "JSON");		
