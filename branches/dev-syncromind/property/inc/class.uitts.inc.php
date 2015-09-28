@@ -142,6 +142,9 @@
 				'end_date'			 => $this->bo->end_date,
 				'location_code'		 => $this->bo->location_code,
 				'p_num'				 => $this->bo->p_num,
+				'building_part'		 => $this->bo->building_part,
+				'b_account'			 => $this->bo->b_account,
+				'ecodimb'			 => $this->bo->ecodimb,
 				'branch_id'			 => phpgw::get_var('branch_id'),
 				'order_dim1'		 => phpgw::get_var('order_dim1'),
 			);
@@ -720,13 +723,17 @@
 					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 				}
 
+				$buildingpart_list = $this->bocommon->select_category_list(array('type' => 'building_part',
+						'selected' => $this->building_part, 'order' => 'id', 'id_in_name' => 'num',
+						'filter' => $_filter_buildingpart));
+
+				array_unshift($buildingpart_list, array('id' => '', 'name' => lang('select')));
+
 				$combos[] = array('type'	 => 'filter',
 					'name'	 => 'building_part',
 					'extra'	 => '',
 					'text'	 => lang('building part'),
-					'list'	 => $this->bocommon->select_category_list(array('type' => 'building_part',
-						'selected' => $this->building_part, 'order' => 'id', 'id_in_name' => 'num',
-						'filter' => $_filter_buildingpart))
+					'list'	 => $buildingpart_list
 				);
 
 				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list'] == 1)

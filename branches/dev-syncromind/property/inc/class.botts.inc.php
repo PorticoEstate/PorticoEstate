@@ -503,7 +503,7 @@
 			return $locations;
 		}
 
-		function read($data = array()/* $start_date='',$end_date='', $external='',$dry_run = '', $download = '' */)
+		function read($data = array())
 		{
 			static $category_name	 = array();
 			static $account			 = array();
@@ -513,13 +513,6 @@
 			$start_date	 = $this->bocommon->date_to_timestamp($start_date);
 			$end_date	 = $this->bocommon->date_to_timestamp($end_date);
 
-			/* $tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
-			  'part_of_town_id' => $this->part_of_town_id, 'start_date'=>$start_date,'end_date'=>$end_date,
-			  'allrows'=>$this->allrows,'user_id' => $this->user_id,'reported_by' => $this->reported_by, 'external'=>$external, 'dry_run' => $dry_run,
-			  'location_code' => $this->location_code, 'p_num' => $this->p_num, 'vendor_id' => $this->vendor_id,
-			  'ecodimb' => $this->ecodimb, 'b_account' => $this->b_account, 'building_part' => $this->building_part,
-			  'branch_id' => $this->branch_id ,'order_dim1' => $this->order_dim1)); */
 			$tickets = $this->so->read($data);
 
 			$this->total_records	 = $this->so->total_records;
