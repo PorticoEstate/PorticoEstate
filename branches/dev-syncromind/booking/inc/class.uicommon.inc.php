@@ -713,7 +713,7 @@
 			}
 		}
 
-		protected function adddatetimepicker($type = 'datetime')
+		public function adddatetimepicker($type = 'datetime')
 		{
 			switch($type)
 			{
