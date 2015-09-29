@@ -27,7 +27,7 @@ schedule.renderSchedule = function(container, url, date, colFormatter, includeRe
         d.setDate(d.getDate() + i);
         var x = (i<6) ? i+1 : 0;
         schedule.dates[keys[x]] = d;
-        colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, date: d});
+        colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, date: d, day: d.getDate()});
     }
     var r = [{n: 'ResultSet'},{n: 'Result'}];
 //    createta d u c r cl
@@ -62,7 +62,7 @@ schedule.updateSchedule = function (date) {
     url = url.substr(0, (url.indexOf("#date")));
     url += '#date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
     location.replace(url);
-    schedule.renderSchedule('schedule_container', schedule.datasourceUrl, date, schedule.backendScheduleColorFormatter, schedule.includeResource);
+    schedule.renderSchedule('schedule_container', schedule.datasourceUrl, date, schedule.colFormatter, schedule.includeResource);
     schedule.date = date;
 }
 
@@ -94,6 +94,60 @@ schedule.nextWeek2 = function () {
     location.replace(url);
     location.reload();
 };
+
+schedule.newApplicationForm = function(date, _from, _to, resource) {
+    resource = (resource) ? resource : null;
+    date = (date) ? date : schedule.date;
+    _from = _from ? '%20' + _from: '';
+    _to = _to ? '%20' + _to: '';
+    var url = schedule.newApplicationUrl;
+    var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+    var day = date.getDay();
+    var weekday=new Array(7);
+    weekday[0]="sunday";
+    weekday[1]="monday";
+    weekday[2]="tuesday";
+    weekday[3]="wednesday";
+    weekday[4]="thursday";
+    weekday[5]="friday";
+    weekday[6]="saturday";
+    url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource + '&weekday=' + weekday[day];
+    window.location.href = url;
+}
+
+schedule.showInfo = function(url, resource) {
+    var content_overlay = document.getElementById('content_overlay');
+    var overlay = document.createElement('div');
+    var img = document.createElement('img');
+    img.setAttribute('src','/portico/phpgwapi/templates/pure/images/loading_overlay.gif');    
+    overlay.appendChild(img);
+    content_overlay.appendChild(overlay);
+    var hc = $('#content_overlay').height();
+    var ho = $('#schedule_overlay').height();
+    var top = (hc-(ho+42))/2;
+    overlay.style.top = top+"px";
+    overlay.style.display = 'block';
+    resource = (resource) ? resource : null;
+    url = url.replace(/&amp;/gi, '&') + '&resource=' + resource;
+    overlay.setAttribute('id', 'schedule_overlay');
+    content_overlay.appendChild(overlay);
+    $.get(url, function(data){
+       overlay.innerHTML = data;
+       var hc = $('#content_overlay').height();
+       var ho = $('#schedule_overlay').height();
+       var top = (hc-(ho+42))/2;
+       overlay.style.top = top+"px";
+       overlay.style.display = 'block';
+    })
+    .fail(function() {
+        $('#schedule_overlay').hide().remove();
+        alert( "Failed to load booking details page" );
+    });
+}
+
+schedule.closeOverlay = function(){
+    $('#schedule_overlay').hide().remove();
+}
 
 
 /*
