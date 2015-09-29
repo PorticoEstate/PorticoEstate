@@ -37,7 +37,8 @@
 						<input type="text" id="username" name="username"/> 
 						<xsl:text> </xsl:text>
 						<input type="button" class="pure-button pure-button-primary" onclick="searchUser()" name="search" id="search" value="search" />
-						<div id='message' class='message'/>
+						<div class="loading"></div>
+						<div id='custom_message' class='custom-message'/>
 					</div>
 					<div class="pure-control-group">
 						<label><xsl:value-of select="php:function('lang', 'firstname')"/></label>
