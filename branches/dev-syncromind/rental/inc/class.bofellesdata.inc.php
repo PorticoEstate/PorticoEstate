@@ -174,7 +174,9 @@
 
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
 				if($level)
+				{
 					$sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
+				}
 				if($db->Type == "postgres")
 				{
 					$sql = strtolower($sql);
@@ -216,7 +218,9 @@
 
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID = $org_unit_id";
 				if($level)
+				{
 					$sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
+				}
 
 				if($db->Type == "postgres")
 				{
@@ -590,7 +594,9 @@
 								"upper(BRUKERNAVN) LIKE '%$search_word%')";
 							}
 							if($count < (count($search_words) - 1))
+							{
 								$selector	 = $selector . " OR ";
+							}
 							$count		 = ($count + 1);
 						}
 						$selector = $selector . ")";
@@ -748,7 +754,9 @@
 								"upper(BRUKERNAVN) LIKE '%$search_word%')";
 							}
 							if($count < (count($search_words) - 1))
+							{
 								$selector	 = $selector . " OR ";
+							}
 							$count		 = ($count + 1);
 						}
 						$selector = $selector . ")";
