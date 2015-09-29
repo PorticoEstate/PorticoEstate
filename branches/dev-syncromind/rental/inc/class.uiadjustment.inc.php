@@ -473,31 +473,35 @@ JS;
 	
 	public function delete()
 	{
-		$adjustment_id = (int)phpgw::get_var('id');
-			
-		$result = rental_soadjustment::get_instance()->delete($adjustment_id);
+		$list_adjustment_id = phpgw::get_var('id');
+		$message = array();
 		
-		if( phpgw::get_var('phpgw_return_as') == 'json' )
+		if (is_array($list_adjustment_id))
 		{
+			foreach ($list_adjustment_id as $adjustment_id)
+			{
+				$result = rental_soadjustment::get_instance()->delete($adjustment_id);
+				if ($result) {
+					$message['message'][] = array('msg'=>lang('id %1 has been deleted', $adjustment_id));
+				} else {
+					$message['error'][] = array('msg'=>lang('adjustment_not_deleted'));
+				}				
+			}		
+		} 
+		else 
+		{
+			$result = rental_soadjustment::get_instance()->delete($list_adjustment_id);	
 			if($result)
 			{
-				$msg = lang('id %1 has been deleted', $adjustment_id);
+				$message = lang('adjustment_deleted');
 			}
 			else
 			{
-				$msg =  lang('adjustment_not_deleted');	
-			}
-			return $msg;
-		} 
+				$message = lang('adjustment_not_deleted');	
+			}			
+		}	 
 		
-		if($result)
-		{
-			$this->render('adjustment_list.php', array('error' => lang('adjustment_not_deleted')));
-		}
-		else
-		{
-			$this->render('adjustment_list.php', array('message' => lang('adjustment_deleted')));	
-		}
+		return $message;
 	}
 	
 	public function show_affected_contracts()
