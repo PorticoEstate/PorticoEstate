@@ -131,7 +131,7 @@
                                     </xsl:for-each>
                                 </div>
                                 <div>
-                                    <a href="javascript:;" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a>
+                                    <a href="javascript:void(0)" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a>
                                 </div>
                             </div>
                             <div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
@@ -265,7 +265,6 @@
             var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
             var initialAcceptAllTerms = true;
             var initialSelection = <xsl:value-of select="application/resources_json"/>;
-            console.log(initialDocumentSelection);
         </script>
 	<!--/div-->
 	<!--script type="text/javascript">
