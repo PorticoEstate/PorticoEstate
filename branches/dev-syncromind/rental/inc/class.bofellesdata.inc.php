@@ -539,7 +539,7 @@
 
 			if($db->Type == "postgres")
 			{
-				$sql = strtolower($str);
+				$sql = strtolower($sql);
 			}
 
 			$db->query($sql,__LINE__,__FILE__);
