@@ -283,24 +283,23 @@
 				if($account_id)
 				{
 					$search_result = frontend_bofrontend::get_account_info($account_id);
-					$result['message']['msg'] = lang('user_found_in_PE');
+					$msg = lang('user_found_in_PE');
 				}
 				else
 				{
-					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
-					if($fellesdata_user)
-					{
-						$search_result = $fellesdata_user;
-						$result['message']['msg'] = lang('user_found_in_Fellesdata');
-					}
-					else
-					{
-						$result['error']['msg'] = lang('no_hits');
-					}
+					$search_result = frontend_bofellesdata::get_instance()->get_user($username);
+					$msg = lang('user_found_in_Fellesdata');
+				}
+				
+				if ($search_result)
+				{
+					$result['message']['msg'] = $msg;
+					$result['data'] = $search_result;
+				} else {
+					$result['error']['msg'] = lang('no_hits');
 				}
 			}
-			$result['data'] = $search_result;
-
+			
 			return $result;
 		}
 		
