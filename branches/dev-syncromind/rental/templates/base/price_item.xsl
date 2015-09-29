@@ -34,7 +34,11 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'title')"/>
 							</label>
-							<input type="text" name="title" id="title" value="{value_title}"/>
+							<input type="text" name="title" id="title" value="{value_title}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</input>							
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -51,7 +55,11 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'agresso_id')"/>
 							</label>
-							<input type="text" name="agresso_id" id="agresso_id" value="{value_agresso_id}"/>
+							<input type="text" name="agresso_id" id="agresso_id" value="{value_agresso_id}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
